@@ -24,6 +24,21 @@ class ViewStorageController extends ConfigStorageController {
   protected $uuidFactory = NULL;
 
   /**
+   * Overrides Drupal\config\ConfigStorageController::load();
+   */
+  public function load(array $ids = NULL) {
+    $entities = parent::load($ids);
+
+    // Only return views for enabled modules.
+    return array_filter($entities, function ($entity) {
+      if (module_exists($entity->getModule())) {
+        return TRUE;
+      }
+      return FALSE;
+    });
+  }
+
+  /**
    * Overrides Drupal\config\ConfigStorageController::attachLoad();
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
@@ -80,6 +95,7 @@ class ViewStorageController extends ConfigStorageController {
       'core',
       'display',
       'uuid',
+      'module',
     );
 
     foreach ($config_properties as $property) {

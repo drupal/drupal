@@ -1,5 +1,6 @@
 disabled: true
 api_version: '3.0'
+module: node
 name: archive
 description: 'Display a list of months that link to content for that month.'
 tag: default

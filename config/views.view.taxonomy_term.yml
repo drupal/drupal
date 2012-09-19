@@ -1,5 +1,6 @@
 disabled: true
 api_version: '3.0'
+module: taxonomy
 name: taxonomy_term
 description: 'A view to emulate Drupal core''s handling of taxonomy/term.'
 tag: default

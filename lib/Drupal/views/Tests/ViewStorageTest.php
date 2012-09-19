@@ -26,6 +26,7 @@ class ViewStorageTest extends WebTestBase {
   protected $config_properties = array(
     'disabled',
     'api_version',
+    'module',
     'name',
     'description',
     'tag',
@@ -54,7 +55,7 @@ class ViewStorageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views');
+  public static $modules = array('views', 'node', 'search', 'comment', 'taxonomy');
 
   public static function getInfo() {
     return array(

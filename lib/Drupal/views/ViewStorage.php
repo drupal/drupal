@@ -119,6 +119,13 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   public $original;
 
   /**
+   * The module implementing this view.
+   *
+   * @var string
+   */
+  public $module = 'views';
+
+  /**
    * Stores the executable version of this view.
    *
    * @param Drupal\views\ViewExecutable $executable
@@ -182,6 +189,13 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     elseif (property_exists($this->executable, $name)) {
       $this->executable->{$name} = $value;
     }
+  }
+
+  /**
+   * Returns the name of the module implementing this view.
+   */
+  public function getModule() {
+    return $this->module;
   }
 
   /**

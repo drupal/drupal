@@ -1,5 +1,6 @@
 disabled: true
 api_version: '3.0'
+module: comment
 name: comments_recent
 description: 'Contains a block and a page to list recent comments; the block will automatically link to the page, which displays the comment body as well as a link to the node.'
 tag: default
