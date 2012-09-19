@@ -1,0 +1,88 @@
+api_version: '3.0'
+base_table: users
+core: 8.0-dev
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        perm: 'access user profiles'
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          alter:
+            absolute: '0'
+            alter_text: '0'
+            ellipsis: '0'
+            html: '0'
+            make_link: '0'
+            strip_tags: '0'
+            trim: '0'
+            word_boundary: '0'
+          empty_zero: '0'
+          field: name
+          hide_empty: '0'
+          id: name
+          label: ''
+          link_to_user: '1'
+          overwrite_anonymous: '0'
+          table: users
+      filters:
+        uid_raw:
+          admin_label: ''
+          expose:
+            description: ''
+            identifier: ''
+            label: ''
+            multiple: '0'
+            operator: ''
+            operator_id: '0'
+            remember: '0'
+            remember_roles:
+              authenticated: authenticated
+            required: '0'
+            use_operator: '0'
+          exposed: '0'
+          field: uid_raw
+          group: '1'
+          group_info:
+            default_group: All
+            default_group_multiple: {  }
+            description: ''
+            group_items: {  }
+            identifier: ''
+            label: ''
+            multiple: '0'
+            optional: '1'
+            remember: '0'
+            widget: select
+          group_type: group
+          id: uid_raw
+          is_grouped: '0'
+          operator: '>'
+          relationship: none
+          table: users
+          value:
+            max: ''
+            min: ''
+            value: '1'
+      pager:
+        type: full
+      query:
+        type: views_query
+      row_plugin: fields
+      style_plugin: default
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: test_alias
+module: views
+name: test_alias
+tag: default
+uuid: 3bdfd3e6-15aa-4324-9005-5ad8b321d265

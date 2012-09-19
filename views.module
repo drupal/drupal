@@ -1330,7 +1330,7 @@ function views_get_handler($table, $field, $type, $override = NULL) {
     }
 
     $definition = $data[$field][$type];
-    foreach (array('group', 'title', 'title short', 'help', 'real field') as $key) {
+    foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table') as $key) {
       if (!isset($definition[$key])) {
         // First check the field level
         if (!empty($data[$field][$key])) {

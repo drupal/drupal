@@ -120,6 +120,11 @@ abstract class HandlerBase extends PluginBase {
       $this->table = $options['table'];
     }
 
+    // Allow alliases on both fields and tables.
+    if (isset($this->definition['real table'])) {
+      $this->table = $this->definition['real table'];
+    }
+
     if (isset($this->definition['real field'])) {
       $this->realField = $this->definition['real field'];
     }
