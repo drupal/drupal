@@ -23,9 +23,7 @@ function _views_theme_functions($hook, $view, $display = NULL) {
   if ($display) {
     $themes[] = $hook . '__' . $view->name . '__' . $display->id;
     $themes[] = $hook . '__' . $display->id;
-    $themes[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($view->tag));
-
-    // Add theme suggestions foreach single tag.
+    // Add theme suggestions for each single tag.
     foreach (drupal_explode_tags($view->tag) as $tag) {
       $themes[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($tag));
     }
