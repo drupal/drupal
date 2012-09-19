@@ -191,20 +191,36 @@ function _rdf_get_default_mapping($type) {
  *   The bundle the mapping refers to.
  *
  * @return
- *   An RDF mapping structure or an empty array if no record was found.
+ *   An RDF mapping structure or, FALSE if the mapping does not exist.
  */
 function _rdf_mapping_load($type, $bundle) {
-  $mapping = db_select('rdf_mapping')
-    ->fields(NULL, array('mapping'))
-    ->condition('type', $type)
-    ->condition('bundle', $bundle)
-    ->execute()
-    ->fetchField();
+  $mappings = _rdf_mapping_load_multiple($type, array($bundle));
+  return $mappings ? reset($mappings) : FALSE;
+}
 
-  if (!$mapping) {
-    return array();
+/**
+ * Helper function to retrieve a set of RDF mappings from the database.
+ *
+ * @param $type
+ *   The entity type of the mappings.
+ * @param $bundles
+ *   The bundles the mappings refer to.
+ *
+ * @return
+ *   An array of RDF mapping structures, or an empty array.
+ */
+function _rdf_mapping_load_multiple($type, array $bundles) {
+  $mappings = db_select('rdf_mapping')
+    ->fields(NULL, array('bundle', 'mapping'))
+    ->condition('type', $type)
+    ->condition('bundle', $bundles)
+    ->execute()
+    ->fetchAllKeyed();
+
+  foreach ($mappings as $bundle => $mapping) {
+    $mappings[$bundle] = unserialize($mapping);
   }
-  return unserialize($mapping);
+  return $mappings;
 }
 
 /**
@@ -376,10 +392,13 @@ function rdf_modules_uninstalled($modules) {
 function rdf_entity_info_alter(&$entity_info) {
   // Loop through each entity type and its bundles.
   foreach ($entity_info as $entity_type => $entity_type_info) {
-    if (isset($entity_type_info['bundles'])) {
-      foreach ($entity_type_info['bundles'] as $bundle => $bundle_info) {
-        if ($mapping = _rdf_mapping_load($entity_type, $bundle)) {
-          $entity_info[$entity_type]['bundles'][$bundle]['rdf_mapping'] = $mapping;
+    if (!empty($entity_type_info['bundles'])) {
+      $bundles = array_keys($entity_type_info['bundles']);
+      $mappings = _rdf_mapping_load_multiple($entity_type, $bundles);
+
+      foreach ($bundles as $bundle) {
+        if (isset($mappings[$bundle])) {
+          $entity_info[$entity_type]['bundles'][$bundle]['rdf_mapping'] = $mappings[$bundle];
         }
         else {
           // If no mapping was found in the database, assign the default RDF
