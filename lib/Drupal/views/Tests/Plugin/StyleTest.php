@@ -11,6 +11,8 @@ use stdClass;
 
 /**
  * Tests some general style plugin related functionality.
+ *
+ * @see Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
 class StyleTest extends StyleTestBase {
 
@@ -20,6 +22,41 @@ class StyleTest extends StyleTestBase {
       'description' => 'Test general style functionality.',
       'group' => 'Views Plugins',
     );
+  }
+
+  /**
+   * Tests the general renderering of styles.
+   */
+  public function testStyle() {
+    $view = $this->getView();
+    $view->display_handler->setOption('style_plugin', 'test_style');
+    $view->initDisplay();
+    $view->initStyle();
+    $this->assertTrue($view->style_plugin instanceof \Drupal\views_test_data\Plugin\views\style\StyleTest, 'Make sure the right style plugin class is loaded.');
+
+    $random_text = $this->randomName();
+    // Set some custom text to the output and make sure that this value is
+    // rendered.
+    $view->style_plugin->setOutput($random_text);
+    $output = $view->preview();
+    $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Take sure that the rendering of the style plugin appears in the output of the view.');
+
+    // This run use the test row plugin and render with it.
+    $view = $this->getView();
+    $view->display_handler->setOption('style_plugin', 'test_style');
+    $view->display_handler->setOption('row_plugin', 'test_row');
+    $view->initDisplay();
+    $view->initStyle();
+    $view->style_plugin->setUsesRowPlugin(TRUE);
+    // Reinitialize the style as it supports row plugins now.
+    $view->style_plugin->init($view, $view->display[$view->current_display], array());
+    $this->assertTrue($view->style_plugin->row_plugin instanceof \Drupal\views_test_data\Plugin\views\row\RowTest, 'Make sure the right row plugin class is loaded.');
+
+    $random_text = $this->randomName();
+    $view->style_plugin->row_plugin->setOutput($random_text);
+
+    $output = $view->preview();
+    $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Take sure that the rendering of the row plugin appears in the output of the view.');
   }
 
   /**
