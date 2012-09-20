@@ -1984,6 +1984,9 @@ function node_menu() {
     'page callback' => 'node_feed',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    // Pass a FALSE and array argument to ensure that additional path components
+    // are not passed to node_feed().
+    'page arguments' => array(FALSE, array()),
   );
   // @todo Remove this loop when we have a 'description callback' property.
   // Reset internal static cache of _node_types_build(), forces to rebuild the
