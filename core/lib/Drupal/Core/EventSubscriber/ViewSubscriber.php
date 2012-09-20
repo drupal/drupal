@@ -69,7 +69,7 @@ class ViewSubscriber implements EventSubscriberInterface {
           '#markup' => $page_result,
         );
       }
-      $event->setResponse(new Response(drupal_render($page_result)));
+      $event->setResponse(new Response(drupal_render_page($page_result)));
     }
   }
 
