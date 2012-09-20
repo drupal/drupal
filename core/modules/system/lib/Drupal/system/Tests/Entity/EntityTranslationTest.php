@@ -87,18 +87,22 @@ class EntityTranslationTest extends WebTestBase {
     $value = $entity->get($this->field_name);
     $this->assertEqual($value, array(0 => array('value' => 'default value')), 'Untranslated value retrieved.');
 
-    // Set the value in a certain language. As the entity is not
-    // language-specific it should use the default language and so ignore the
-    // specified language.
-    $entity->set($this->field_name, array(0 => array('value' => 'default value2')), $this->langcodes[1]);
-    $value = $entity->get($this->field_name);
-    $this->assertEqual($value, array(0 => array('value' => 'default value2')), 'Untranslated value updated.');
-    $this->assertFalse($entity->translations(), 'No translations are available');
+    $message = "An exception is thrown when trying to set a field with an invalid language";
 
-    // Test getting a field value using the default language for a not
+    // Set the value in a certain language. As the entity is not
+    // language-specific it will throw an exception.
+    try {
+      $entity->set($this->field_name, array(0 => array('value' => 'default value2')), $this->langcodes[1]);
+      $this->fail($message);
+    }
+    catch (Exception $e) {
+      $this->assertTrue($e instanceof InvalidArgumentException, $message);
+    }
+
+    // Test getting a field value using a specific language for a not
     // language-specific entity.
     $value = $entity->get($this->field_name, $this->langcodes[1]);
-    $this->assertEqual($value, array(0 => array('value' => 'default value2')), 'Untranslated value retrieved.');
+    $this->assertNull($value, 'Returned NULL for getter with invalid language.');
 
     // Now, make the entity language-specific by assigning a language and test
     // translating it.

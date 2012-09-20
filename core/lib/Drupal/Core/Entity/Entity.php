@@ -184,7 +184,9 @@ class Entity implements EntityInterface {
     $entity_info = $this->entityInfo();
     if ($entity_info['fieldable'] && field_info_instance($this->entityType, $property_name, $this->bundle())) {
       $field = field_info_field($property_name);
-      $langcode = $this->getFieldLangcode($field, $langcode);
+      // Prevent getFieldLangcode() from throwing an exception in case a
+      // $langcode has been passed and it is invalid for the field.
+      $langcode = $this->getFieldLangcode($field, $langcode, FALSE);
       return isset($this->{$property_name}[$langcode]) ? $this->{$property_name}[$langcode] : NULL;
     }
     else {
@@ -202,6 +204,7 @@ class Entity implements EntityInterface {
     $entity_info = $this->entityInfo();
     if ($entity_info['fieldable'] && field_info_instance($this->entityType, $property_name, $this->bundle())) {
       $field = field_info_field($property_name);
+      // Throws an exception if the $langcode is invalid.
       $langcode = $this->getFieldLangcode($field, $langcode);
       $this->{$property_name}[$langcode] = $value;
     }
@@ -213,9 +216,45 @@ class Entity implements EntityInterface {
   }
 
   /**
-   * Determines the language code to use for accessing a field value in a certain language.
+   * Determines the language code for accessing a field value.
+   *
+   * The effective language code to be used for a field varies:
+   * - If the entity is language-specific and the requested field is
+   *   translatable, the entity's language code should be used to access the
+   *   field value when no language is explicitly provided.
+   * - If the entity is not language-specific, LANGUAGE_NOT_SPECIFIED should be
+   *   used to access all field values.
+   * - If a field's values are non-translatable (shared among all language
+   *   versions of an entity), LANGUAGE_NOT_SPECIFIED should be used to access
+   *   them.
+   *
+   * There cannot be valid field values if a field is not translatable and the
+   * requested langcode is not LANGUAGE_NOT_SPECIFIED. Therefore, this function
+   * throws an exception in that case (or returns NULL when $strict is FALSE).
+   *
+   * @param string $field
+   *   Field the language code is being determined for.
+   * @param string|null $langcode
+   *   (optional) The language code attempting to be applied to the field.
+   *   Defaults to the entity language.
+   * @param bool $strict
+   *   (optional) When $strict is TRUE, an exception is thrown if the field is
+   *   not translatable and the langcode is not LANGUAGE_NOT_SPECIFIED. When
+   *   $strict is FALSE, NULL is returned and no exception is thrown. For
+   *   example, EntityInterface::set() passes TRUE, since it must not set field
+   *   values for invalid langcodes. EntityInterface::get() passes FALSE to
+   *   determine whether any field values exist for a specific langcode.
+   *   Defaults to TRUE.
+   *
+   * @return string|null
+   *   The langcode if appropriate, LANGUAGE_NOT_SPECIFIED for non-translatable
+   *   fields, or NULL when an invalid langcode was used in non-strict mode.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown in case a $langcode other than LANGUAGE_NOT_SPECIFIED is passed
+   *   for a non-translatable field and $strict is TRUE.
    */
-  protected function getFieldLangcode($field, $langcode = NULL) {
+  protected function getFieldLangcode($field, $langcode = NULL, $strict = TRUE) {
     // Only apply the given langcode if the entity is language-specific.
     // Otherwise translatable fields are handled as non-translatable fields.
     if (field_is_translatable($this->entityType, $field) && ($default_language = $this->language()) && !language_is_locked($this->langcode)) {
@@ -224,9 +263,21 @@ class Entity implements EntityInterface {
       return isset($langcode) ? $langcode : $default_language->langcode;
     }
     else {
-      // If there is a langcode defined for this field, just return it. Otherwise
-      // return LANGUAGE_NOT_SPECIFIED.
-      return (isset($this->langcode) ? $this->langcode : LANGUAGE_NOT_SPECIFIED);
+      // The field is not translatable, but the caller requested a specific
+      // langcode that does not exist.
+      if (isset($langcode) && $langcode !== LANGUAGE_NOT_SPECIFIED) {
+        if ($strict) {
+          throw new \InvalidArgumentException(format_string('Unable to resolve @langcode for non-translatable field @field_name. Use langcode LANGUAGE_NOT_SPECIFIED instead.', array(
+            '@field_name' => $field['field_name'],
+            '@langcode' => $langcode,
+          )));
+        }
+        else {
+          return NULL;
+        }
+      }
+      // The field is not translatable and no $langcode was specified.
+      return LANGUAGE_NOT_SPECIFIED;
     }
   }
 
