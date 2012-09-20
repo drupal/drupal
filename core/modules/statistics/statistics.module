@@ -102,9 +102,9 @@ function statistics_permission() {
  * Implements hook_node_view().
  */
 function statistics_node_view(Node $node, $view_mode) {
-  if (!empty($node->nid) && $view_mode == 'full') {
+  if (!empty($node->nid) && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
     $node->content['#attached']['library'][] = array('statistics', 'drupal.statistics');
-    $settings = array('nid' => $node->nid);
+    $settings = array('data' => array('nid' => $node->nid), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));
     $node->content['#attached']['js'][] = array(
       'data' => array('statistics' => $settings),
       'type' => 'setting',
