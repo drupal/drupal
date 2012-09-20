@@ -4012,9 +4012,6 @@ function drupal_pre_render_scripts($elements) {
     '#type' => 'html_tag',
     '#tag' => 'script',
     '#value' => '',
-    '#attributes' => array(
-      'type' => 'text/javascript',
-    ),
   );
 
   // Loop through each group.

@@ -859,15 +859,15 @@ www.example.com with a newline in comments -->
     $f = _filter_htmlcorrector('<p>دروبال');
     $this->assertEqual($f, '<p>دروبال</p>', t('HTML corrector -- Encoding is correctly kept.'));
 
-    $f = _filter_htmlcorrector('<script type="text/javascript">alert("test")</script>');
-    $this->assertEqual($f, '<script type="text/javascript">
+    $f = _filter_htmlcorrector('<script>alert("test")</script>');
+    $this->assertEqual($f, '<script>
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
 </script>', t('HTML corrector -- CDATA added to script element'));
 
-    $f = _filter_htmlcorrector('<p><script type="text/javascript">alert("test")</script></p>');
-    $this->assertEqual($f, '<p><script type="text/javascript">
+    $f = _filter_htmlcorrector('<p><script>alert("test")</script></p>');
+    $this->assertEqual($f, '<p><script>
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
@@ -918,12 +918,12 @@ body {color:red}
       t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'))
     );
 
-    $filtered_data = _filter_htmlcorrector('<p><script type="text/javascript">
+    $filtered_data = _filter_htmlcorrector('<p><script>
 <!--//--><![CDATA[// ><!--
   alert("test");
 //--><!]]>
 </script></p>');
-    $this->assertEqual($filtered_data, '<p><script type="text/javascript">
+    $this->assertEqual($filtered_data, '<p><script>
 <!--//--><![CDATA[// ><!--
 
 <!--//--><![CDATA[// ><!--
@@ -935,12 +935,12 @@ body {color:red}
       t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--//--><![CDATA[// ><!--'))
     );
 
-    $filtered_data = _filter_htmlcorrector('<p><script type="text/javascript">
+    $filtered_data = _filter_htmlcorrector('<p><script>
 // <![CDATA[
   alert("test");
 // ]]>
 </script></p>');
-    $this->assertEqual($filtered_data, '<p><script type="text/javascript">
+    $this->assertEqual($filtered_data, '<p><script>
 <!--//--><![CDATA[// ><!--
 
 // <![CDATA[

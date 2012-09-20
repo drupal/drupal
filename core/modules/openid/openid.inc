@@ -94,7 +94,7 @@ function openid_redirect($url, $message) {
   $output .= "<body>\n";
   $elements = drupal_get_form('openid_redirect_form', $url, $message);
   $output .= drupal_render($elements);
-  $output .= '<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>' . "\n";
+  $output .= '<script>document.getElementById("openid-redirect-form").submit();</script>' . "\n";
   $output .= "</body>\n";
   $output .= "</html>\n";
   print $output;

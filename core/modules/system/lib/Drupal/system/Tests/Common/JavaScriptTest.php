@@ -107,8 +107,8 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js('core/misc/collapse.js', array('async' => TRUE));
     $javascript = drupal_get_js();
 
-    $expected_1 = '<script type="text/javascript" src="http://example.com/script.js?' . $default_query_string . '" async="async"></script>';
-    $expected_2 = '<script type="text/javascript" src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" async="async"></script>';
+    $expected_1 = '<script src="http://example.com/script.js?' . $default_query_string . '" async="async"></script>';
+    $expected_2 = '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" async="async"></script>';
 
     $this->assertTrue(strpos($javascript, $expected_1) > 0, t('Rendered external JavaScript with correct async attribute.'));
     $this->assertTrue(strpos($javascript, $expected_2) > 0, t('Rendered internal JavaScript with correct async attribute.'));
@@ -125,8 +125,8 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js('core/misc/collapse.js', array('defer' => TRUE));
     $javascript = drupal_get_js();
 
-    $expected_1 = '<script type="text/javascript" src="http://example.com/script.js?' . $default_query_string . '" defer="defer"></script>';
-    $expected_2 = '<script type="text/javascript" src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" defer="defer"></script>';
+    $expected_1 = '<script src="http://example.com/script.js?' . $default_query_string . '" defer="defer"></script>';
+    $expected_2 = '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" defer="defer"></script>';
 
     $this->assertTrue(strpos($javascript, $expected_1) > 0, t('Rendered external JavaScript with correct defer attribute.'));
     $this->assertTrue(strpos($javascript, $expected_2) > 0, t('Rendered internal JavaScript with correct defer attribute.'));
@@ -173,11 +173,11 @@ class JavaScriptTest extends WebTestBase {
     $this->assertTrue($associative_array_override, t('drupal_add_js() correctly overrides settings within an associative array.'));
     // Check in a rendered page.
     $this->drupalGet('common-test/query-string');
-    $this->assertPattern('@<script type="text/javascript">.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
+    $this->assertPattern('@<script>.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
     $path = array('source' => 'common-test/query-string', 'alias' => 'common-test/currentpath-check');
     path_save($path);
     $this->drupalGet('common-test/currentpath-check');
-    $this->assertPattern('@<script type="text/javascript">.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings for an aliased path');
+    $this->assertPattern('@<script>.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings for an aliased path');
   }
 
   /**
@@ -264,8 +264,8 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js('jQuery(function () { });', array('type' => 'inline', 'browsers' => array('IE' => FALSE)));
     $javascript = drupal_get_js();
 
-    $expected_1 = "<!--[if lte IE 8]>\n" . '<script type="text/javascript" src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>' . "\n<![endif]-->";
-    $expected_2 = "<!--[if !IE]><!-->\n" . '<script type="text/javascript">' . "\n<!--//--><![CDATA[//><!--\n" . 'jQuery(function () { });' . "\n//--><!]]>\n" . '</script>' . "\n<!--<![endif]-->";
+    $expected_1 = "<!--[if lte IE 8]>\n" . '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>' . "\n<![endif]-->";
+    $expected_2 = "<!--[if !IE]><!-->\n" . '<script>' . "\n<!--//--><![CDATA[//><!--\n" . 'jQuery(function () { });' . "\n//--><!]]>\n" . '</script>' . "\n<!--<![endif]-->";
 
     $this->assertTrue(strpos($javascript, $expected_1) > 0, t('Rendered JavaScript within downlevel-hidden conditional comments.'));
     $this->assertTrue(strpos($javascript, $expected_2) > 0, t('Rendered JavaScript within downlevel-revealed conditional comments.'));
@@ -299,10 +299,10 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js('core/misc/batch.js', array('every_page' => TRUE));
     $javascript = drupal_get_js();
     $expected = implode("\n", array(
-      '<script type="text/javascript" src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>',
-      '<script type="text/javascript" src="' . file_create_url('core/misc/batch.js') . '?' . $default_query_string . '"></script>',
-      '<script type="text/javascript" src="' . file_create_url('core/misc/ajax.js') . '?' . $default_query_string . '"></script>',
-      '<script type="text/javascript" src="' . file_create_url('core/misc/autocomplete.js') . '?' . $default_query_string . '"></script>',
+      '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>',
+      '<script src="' . file_create_url('core/misc/batch.js') . '?' . $default_query_string . '"></script>',
+      '<script src="' . file_create_url('core/misc/ajax.js') . '?' . $default_query_string . '"></script>',
+      '<script src="' . file_create_url('core/misc/autocomplete.js') . '?' . $default_query_string . '"></script>',
     ));
     $this->assertTrue(strpos($javascript, $expected) > 0, t('Unaggregated JavaScript is added in the expected group order.'));
 
@@ -320,8 +320,8 @@ class JavaScriptTest extends WebTestBase {
     $js_items = drupal_add_js();
     $javascript = drupal_get_js();
     $expected = implode("\n", array(
-      '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/collapse.js' => $js_items['core/misc/collapse.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
-      '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']))) . '"></script>',
+      '<script src="' . file_create_url(drupal_build_js_cache(array('core/misc/collapse.js' => $js_items['core/misc/collapse.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
+      '<script src="' . file_create_url(drupal_build_js_cache(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']))) . '"></script>',
     ));
     $this->assertTrue(strpos($javascript, $expected) !== FALSE, t('JavaScript is aggregated in the expected groups and order.'));
   }
