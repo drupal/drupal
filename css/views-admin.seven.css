@@ -105,15 +105,11 @@ fieldset.fieldset-no-legend {
 }
 
 /* @group Dependent options
- *
- * Dependent options are identified in CTools dependent.js
  */
 
-/* The .dependent-options.form-item is necessary to supercede the Seven .form-item
+/* This is necessary to supercede the Seven .form-item
  * reset declaration that sets the margin to zero.
  */
-.dependent-options,
-.dependent-options.form-item,
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-description {
@@ -123,10 +119,7 @@ fieldset.fieldset-no-legend {
 .views-admin-dependent .form-item .form-item,
 .views-admin-dependent .form-type-checkboxes,
 .views-admin-dependent .form-type-radios,
-.views-admin-dependent .dependent-options,
 .views-admin-dependent .form-item .form-item,
-.views-admin-dependent .dependent-options .form-type-select,
-.views-admin-dependent .dependent-options .form-type-textfield,
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-description {
@@ -139,8 +132,6 @@ fieldset.fieldset-no-legend {
   margin-bottom: 2px;
   margin-top: 2px;
 }
-
-/* @end */
 
 /* @end */
 

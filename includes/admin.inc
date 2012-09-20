@@ -3944,7 +3944,6 @@ function views_ui_add_item_form($form, &$form_state) {
       '#type' => 'select',
       '#title' => t('Filter'),
       '#options' => array(),
-      '#attributes' => array('class' => array('ctools-master-dependent')),
     );
 
     $form['options']['name'] = array(
@@ -3954,8 +3953,7 @@ function views_ui_add_item_form($form, &$form_state) {
       '#default_value' => 'all',
     );
 
-    // Group options first to simplify the DOM objects that Views
-    // dependent JS will act upon.
+    // Group options first to simplify the usage of #states.
     $grouped_options = array();
     foreach ($options as $key => $option) {
       $group = preg_replace('/[^a-z0-9]/', '-', strtolower($option['group']));
@@ -3980,7 +3978,6 @@ function views_ui_add_item_form($form, &$form_state) {
     }
 
     foreach ($grouped_options as $group => $group_options) {
-      $form['options']['name'][$group . '_start']['#markup'] = '<div class="ctools-dependent-all ctools-dependent-' . $group . '">';
       $zebra = 0;
       foreach ($group_options as $key => $option) {
         $zebra_class = ($zebra % 2) ? 'odd' : 'even';
@@ -3991,10 +3988,19 @@ function views_ui_add_item_form($form, &$form_state) {
           '#return_value' => $key,
           '#prefix' => "<div class='$zebra_class filterable-option'>",
           '#suffix' => '</div>',
+          '#states' => array(
+            'visible' => array(
+              array(
+                ':input[name="group"]' => array('value' => 'all'),
+              ),
+              array(
+                ':input[name="group"]' => array('value' => $group),
+              ),
+            )
+          )
         );
         $zebra++;
       }
-      $form['options']['name'][$group . '_end']['#markup'] = '</div>';
     }
 
     $form['options']['controls']['group']['#options'] = $groups;
