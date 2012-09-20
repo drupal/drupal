@@ -155,6 +155,11 @@
 .views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
   opacity: 1.0;
 }
+
+.js .views-ui-display-tab-bucket:first-of-type {
+  border-top: none;
+}
+
 /* @end */
 
 /* @group Attachment details new section button */
@@ -180,7 +185,6 @@
 /* @group Attachment details collapsible fieldset */
 
 .views-display-tab .fieldset-legend {
-  left: -5px; /* LTR */
   position: relative;
 }
 
@@ -188,16 +192,31 @@
   position: relative;
 }
 
-/* @end */
+.views-display-columns fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
 
-/* @group Attachment details actions
- *
- * Display the "Delete" and "Duplicate" buttons to the right.
- */
-.views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
-  position: absolute;
-  right: 0; /* LTR */
-  top: -5px;
+.views-display-columns fieldset .fieldset-legend {
+  padding-left: 0; /* LTR */
+}
+
+.views-display-columns .fieldset-legend {
+  margin-top: 0;
+  padding: 6px 0;
+}
+
+.views-display-columns .fieldset-wrapper {
+  padding: 0;
+}
+
+.views-display-column {
+  box-sizing: border-box;
+}
+
+.js .views-display-column fieldset.collapsed {
+  height: auto;
 }
 
 /* @end */
@@ -206,14 +225,12 @@
 
 .views-display-columns > * {
   float: left; /* LTR */
-  margin-left: 1%; /* LTR */
-  padding-left: 1%; /* LTR */
+  margin-left: 2%; /* LTR */
   width: 32%;
 }
 
 .views-display-columns > *:first-child {
   margin-left: 0; /* LTR */
-  padding-left: 0; /* LTR */
 }
 
 /* @end */

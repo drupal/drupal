@@ -1036,12 +1036,9 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
     $form_state['display_id'] = $display_id;
 
     // The part of the page where editing will take place.
-    // This element is the collapsible fieldset for the display edit elements.
     $form['displays']['settings'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'container',
       '#id' => 'edit-display-settings',
-      '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
     );
     $display_title = views_ui_get_display_label($view, $display_id, FALSE);
 
@@ -1608,12 +1605,16 @@ function views_ui_get_display_tab_details($view, $display) {
   // The third column buckets are wrapped in a fieldset.
   $build['columns']['third'] = array(
     '#type' => 'fieldset',
-    '#title' => '<h3>' . t('Advanced') . '</h3>',
-    '#attributes' => array(
-      'class' => array('views-display-column', 'third'),
-    ),
+    '#title' => t('Advanced'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#theme_wrappers' => array('fieldset', 'container'),
+    '#attributes' => array(
+      'class' => array(
+        'views-display-column',
+        'third',
+      ),
+    ),
   );
 
   // Collapse the fieldset by default.

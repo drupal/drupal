@@ -210,6 +210,38 @@
   margin-top: 12px;
 }
 
+.views-display-column .fieldset-wrapper {
+  margin-top: 0;
+}
+
+.views-display-column fieldset legend {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: inherit;
+  position: relative;
+  text-indent: 0;
+  text-shadow: none;
+  top: 3px;
+}
+
+.views-display-columns fieldset {
+  position: inherit;
+}
+
+.views-display-columns fieldset .fieldset-legend {
+  padding: 0 0 4px 2px; /* LTR */
+}
+
+.views-display-columns a.fieldset-title {
+  color: #0071B3;
+}
+
+.views-display-columns a.fieldset-title:hover {
+  color: #018FE2;
+}
+
 .views-ui-display-tab-actions .ctools-button input {
   color: #0071B3;
 }

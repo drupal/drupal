@@ -531,6 +531,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 /* @end */
 
 /* @group Attachment details */
+#edit-display-settings {
+  margin: 12px 12px 0 12px
+}
+
 
 #edit-display-settings-title {
   font-size: 14px;
@@ -539,10 +543,15 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 }
 
 #edit-display-settings-top {
+  border: 1px solid #F3F3F3;
+  line-height: 20px;
+  margin: 0;
+  padding-top: 4px;
   padding-bottom: 4px;
+  position: relative;
 }
 
-#edit-display-settings-content {
+#edit-displays-settings-settings-content {
   margin-top: 12px;
 }
 
@@ -557,9 +566,17 @@ ul#views-display-menu-tabs li.add ul.action-list li{
  * The columns that contain the option buckets e.g. Format and Basic Settings
  */
 
+.views-display-column {
+  border: 1px solid #F3F3F3;
+}
+
 .views-display-column + .views-display-column {
    margin-top: 0;
  }
+
+.views-display-column fieldset.collapsible legend {
+  font-size: 13px;
+}
 
  /* @end */
 
@@ -611,10 +628,14 @@ ul#views-display-menu-tabs li.add ul.action-list li{
  */
 
 .views-ui-display-tab-bucket {
-  border: 1px solid #f3f3f3;
+  border-bottom: 1px solid #f3f3f3;
   line-height: 20px;
   margin: 0;
   padding-top: 4px;
+}
+
+.views-ui-display-tab-bucket:last-of-type {
+  border-bottom: none;
 }
 
 .views-ui-display-tab-bucket + .views-ui-display-tab-bucket {

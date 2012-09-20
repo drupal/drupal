@@ -44,20 +44,8 @@ fieldset.fieldset-no-legend {
   padding-right: 0;
 }
 
-.views-display-tab fieldset {
-  padding: 0 12px;
-}
-
-.views-display-tab .fieldset-wrapper {
-  padding: 10px 12px 12px;
-}
-
 .views-display-tab fieldset.box-padding .fieldset-wrapper {
   padding: 0;
-}
-
-.views-display-tab legend + .fieldset-wrapper {
-  padding-top: 2.5em;
 }
 
 .views-admin .form-item label.option,
