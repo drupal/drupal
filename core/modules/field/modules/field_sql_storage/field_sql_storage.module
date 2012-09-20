@@ -558,6 +558,8 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
     }
   }
 
+  $entity_type = FALSE;
+  $entity_base_table = FALSE;
   if ($query->propertyConditions || $has_property_order) {
     if (empty($query->entityConditions['entity_type']['value'])) {
       throw new EntityFieldQueryException('Property conditions and orders must have an entity type defined.');
@@ -565,12 +567,40 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
     $entity_type = $query->entityConditions['entity_type']['value'];
     $entity_base_table = _field_sql_storage_query_join_entity($select_query, $entity_type, $field_base_table);
     $query->entityConditions['entity_type']['operator'] = '=';
-    foreach ($query->propertyConditions as $property_condition) {
-      $query->addCondition($select_query, "$entity_base_table." . $property_condition['column'], $property_condition);
-    }
+    $query->joinPropertyData($select_query, $entity_type, $field_base_table, 'entity_id');
+    $query->addPropertyConditions($select_query, $entity_type);
   }
+
+  // The entity base keys require joining the entity base table.
+  $entity_base_keys = array('langcode', 'uuid');
   foreach ($query->entityConditions as $key => $condition) {
-    $query->addCondition($select_query, "$field_base_table.$key", $condition);
+    $table = FALSE;
+    if (!in_array($key, $entity_base_keys)) {
+      $table = $field_base_table;
+    }
+    else {
+      // Join only if we did not already before.
+      if (empty($entity_base_table)) {
+        if (empty($query->entityConditions['entity_type']['value'])) {
+          throw new EntityFieldQueryException('Property conditions and orders must have an entity type defined.');
+        }
+        $entity_type = $query->entityConditions['entity_type']['value'];
+        $entity_base_table = _field_sql_storage_query_join_entity($select_query, $entity_type, $field_base_table);
+      }
+      if (empty($entity_schema)) {
+        $entity_schema = drupal_get_schema($entity_base_table);
+        $entity_info = entity_get_info($entity_type);
+      }
+      $key = !empty($entity_info['entity keys'][$key]) ? $entity_info['entity keys'][$key] : $key;
+      if (!empty($entity_schema['fields'][$key])) {
+        $table = $entity_base_table;
+      }
+    }
+    // Apply the condition only if we have a valid table: entity conditions may
+    // refer to non existing columns.
+    if ($table) {
+      $query->addCondition($select_query, "$table.$key", $condition);
+    }
   }
 
   // Order the query.
@@ -587,7 +617,7 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
       $select_query->orderBy($sql_field, $order['direction']);
     }
     elseif ($order['type'] == 'property') {
-      $select_query->orderBy("$entity_base_table." . $order['specifier'], $order['direction']);
+      $query->addPropertyOrderBy($select_query, $entity_type, $order);
     }
   }
 

@@ -17,6 +17,7 @@ function entity_test_entity_info() {
       'default' => 'Drupal\entity_test\EntityTestFormController',
     ),
     'base table' => 'entity_test',
+    'data table' => 'entity_test_property_data',
     'fieldable' => TRUE,
     'entity keys' => array(
       'id' => 'id',

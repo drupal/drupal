@@ -9,8 +9,10 @@ namespace Drupal\system\Tests\Entity;
 
 use Exception;
 use InvalidArgumentException;
-use Drupal\simpletest\WebTestBase;
+
+use Drupal\Core\Entity\EntityFieldQuery;
 use Drupal\Core\Language\Language;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests entity translation.
@@ -234,5 +236,38 @@ class EntityTranslationTest extends WebTestBase {
     $this->assertEqual(count($entities), 1, 'One entity loaded by name translation and language specifying to look for translations.');
     $entities = entity_load_multiple_by_properties('entity_test', array('uid' => $properties[$langcode]['uid'], 'default_langcode' => NULL));
     $this->assertEqual(count($entities), 2, 'Two entities loaded by uid without caring about property translatability.');
+
+    // Test property conditions and orders with multiple languages in the same
+    // query.
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'entity_test');
+    $query->entityCondition('langcode', $default_langcode);
+    $query->propertyCondition('uid', $properties[$default_langcode]['uid'], NULL, 'original');
+    $query->propertyCondition('name', $properties[$default_langcode]['name'], NULL, 'original');
+    $query->propertyLanguageCondition($default_langcode, NULL, 'original');
+    $query->propertyCondition('name', $properties[$langcode]['name'], NULL, 'translation');
+    $query->propertyLanguageCondition($langcode, NULL, 'translation');
+    $query->propertyOrderBy('name', 'ASC', 'original');
+    $result = $query->execute();
+    $this->assertEqual(count($result), 1, 'One entity loaded by name and uid using different language meta conditions.');
+
+    // Test mixed property and field conditions.
+    $entity = entity_load('entity_test', key($result['entity_test']), TRUE);
+    $field_value = $this->randomString();
+    $entity->set($this->field_name, array(array('value' => $field_value)), $langcode);
+    $entity->save();
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'entity_test');
+    $query->entityCondition('langcode', $default_langcode);
+    $query->propertyCondition('uid', $properties[$default_langcode]['uid'], NULL, 'original');
+    $query->propertyCondition('name', $properties[$default_langcode]['name'], NULL, 'original');
+    $query->propertyLanguageCondition($default_langcode, NULL, 'original');
+    $query->propertyCondition('name', $properties[$langcode]['name'], NULL, 'translation');
+    $query->propertyLanguageCondition($langcode, NULL, 'translation');
+    $query->fieldCondition($this->field_name, 'value', $field_value, NULL, NULL, 'translation');
+    $query->fieldLanguageCondition($this->field_name, $langcode, NULL, NULL, 'translation');
+    $query->propertyOrderBy('name', 'ASC', 'original');
+    $result = $query->execute();
+    $this->assertEqual(count($result), 1, 'One entity loaded by name, uid and field value using different language meta conditions.');
   }
 }

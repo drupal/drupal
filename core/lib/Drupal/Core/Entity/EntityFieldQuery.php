@@ -148,6 +148,13 @@ class EntityFieldQuery {
   public $fields = array();
 
   /**
+   * A list of used properties keyed by group.
+   *
+   * @var array
+   */
+  public $properties = array();
+
+  /**
    * TRUE if this is a count query, FALSE if it isn't.
    *
    * @var boolean
@@ -420,17 +427,88 @@ class EntityFieldQuery {
    *     of the same type as the column.
    *   The operator can be omitted, and will default to 'IN' if the value is an
    *   array, or to '=' otherwise.
+   * @param $langcode_group
+   *   (optional) An arbitrary identifier: conditions in the same group must
+   *   have the same group identifier. This is used to group the condition with
+   *   a related set of other property conditions and meta conditions. By
+   *   default all conditions belong to the same group.
    *
    * @return Drupal\Core\Entity\EntityFieldQuery
    *   The called object.
+   *
+   * @see Drupal\entity\EntityFieldQuery::propertyLanguageCondition()
    */
-  public function propertyCondition($column, $value, $operator = NULL) {
+  public function propertyCondition($column, $value, $operator = NULL, $langcode_group = 0) {
+    $this->properties[$langcode_group][$column] = $column;
     $this->propertyConditions[] = array(
       'column' => $column,
       'value' => $value,
       'operator' => $operator,
+      'langcode_group' => $langcode_group,
     );
     return $this;
+  }
+
+
+  /**
+   * Adds a condition on the property language.
+   *
+   * Since the entity storage controller may support multilingual properties,
+   * there may be cases where different conditions on different languages may be
+   * needed. This method allows to specify which language a particular set of
+   * conditions and order settings should have. For example:
+   * @code
+   *   $query = new EntityFieldQuery();
+   *   $query->entityCondition('entity_type', 'entity_test');
+   *   // Find all English entities.
+   *   $query->entityCondition('langcode', 'en');
+   *   // Having the specified English values for uid and name.
+   *   $query->propertyCondition('uid', $uid, '=', 'original');
+   *   $query->propertyCondition('name', $name, '=', 'original');
+   *   $query->propertyLanguageCondition('en', '=', 'original');
+   *   // And having the specified Italian value for name.
+   *   $query->propertyCondition('name', $name_it, '=', 'translation');
+   *   $query->propertyLanguageCondition('it', '=', 'translation');
+   *   // Order the result set by the English name.
+   *   $query->propertyOrderBy('name', 'ASC', 'original');
+   *   $result = $query->execute();
+   * @endcode
+   * Without specifiying two different language groupings there would be no way
+   * to apply both name conditions, as they would mutually exclude each other.
+   *
+   * @param $langcode
+   *   The language code that the properties belonging to the language group
+   *   should match.
+   * @param $operator
+   *   The operator to be used to test the given value.
+   * @param $langcode_group
+   *   (optional) An arbitrary identifier: conditions in the same group must
+   *   have the same group identifier. This is used to group the language meta
+   *   condition with a related set of property conditions. By default all
+   *   conditions belong to the same group.
+   *
+   * @return Drupal\entity\EntityFieldQuery
+   *   The called object.
+   *
+   * @see Drupal\entity\EntityFieldQuery::addFieldCondition()
+   * @see Drupal\entity\EntityFieldQuery::deleted()
+   */
+  public function propertyLanguageCondition($langcode = NULL, $operator = NULL, $langcode_group = 0) {
+    // We have a separate method here to ensure there is a distinction at API
+    // level between properties and metadata, even if from the implementation
+    // perspective both conditions are implemented the same way. However this
+    // might not be the case in other storages.
+    // @todo Actually we could also implement the same functionality and keep
+    // this distinction by using language codes as group identifiers:
+    //
+    // $query->propertyCondition('title', 'english_title', NULL, 'en');
+    // $query->propertyCondition('uid', 1, NULL, 'en');
+    // $query->propertyCondition('title', 'german_title', NULL, 'de');
+    //
+    // We probably want to move to this approach when refactoring EFQ to work
+    // with storage-independent entities. For now we are keeping the current
+    // approach for consistency with field meta conditions.
+    return $this->propertyCondition('langcode', $langcode, $operator, $langcode_group);
   }
 
   /**
@@ -515,15 +593,25 @@ class EntityFieldQuery {
    *   The column on which to order.
    * @param $direction
    *   The direction to sort. Legal values are "ASC" and "DESC".
+   * @param $langcode_group
+   *   (optional) An arbitrary identifier: order settings in the same group must
+   *   have the same group identifier. This is used to group the property order
+   *   setting with a related set of property conditions, meta conditions and
+   *   other order settings. By default all conditions and order settings belong
+   *   to the same group.
    *
    * @return Drupal\Core\Entity\EntityFieldQuery
    *   The called object.
+   *
+   * @see Drupal\entity\EntityFieldQuery::propertyLanguageCondition()
    */
-  public function propertyOrderBy($column, $direction = 'ASC') {
+  public function propertyOrderBy($column, $direction = 'ASC', $langcode_group = 0) {
+    $this->properties[$langcode_group][$column] = $column;
     $this->order[] = array(
       'type' => 'property',
       'specifier' => $column,
       'direction' => $direction,
+      'langcode_group' => $langcode_group,
     );
     return $this;
   }
@@ -797,26 +885,31 @@ class EntityFieldQuery {
     if (empty($this->entityConditions['entity_type'])) {
       throw new EntityFieldQueryException(t('For this query an entity type must be specified.'));
     }
+
     $entity_type = $this->entityConditions['entity_type']['value'];
     $entity_info = entity_get_info($entity_type);
     if (empty($entity_info['base table'])) {
       throw new EntityFieldQueryException(t('Entity %entity has no base table.', array('%entity' => $entity_type)));
     }
+
     $base_table = $entity_info['base table'];
-    $base_table_schema = drupal_get_schema($base_table);
     $select_query = db_select($base_table);
     $select_query->addExpression(':entity_type', 'entity_type', array(':entity_type' => $entity_type));
-    // Process the property conditions.
-    foreach ($this->propertyConditions as $property_condition) {
-      $this->addCondition($select_query, $base_table . '.' . $property_condition['column'], $property_condition);
-    }
-    // Process the four possible entity condition.
-    // The id field is always present in entity keys.
     $sql_field = $entity_info['entity keys']['id'];
+
+    // If a data table is defined we need to join it and make sure that only one
+    // record per entity is returned.
+    $this->joinPropertyData($select_query, $entity_type, $base_table);
+
+    // Process the property conditions.
+    $this->addPropertyConditions($select_query, $entity_type);
+
+    // Process the six possible entity condition.
+    // The id field is always present in entity keys.
     $id_map['entity_id'] = $sql_field;
     $select_query->addField($base_table, $sql_field, 'entity_id');
     if (isset($this->entityConditions['entity_id'])) {
-      $this->addCondition($select_query, $base_table . '.' . $sql_field, $this->entityConditions['entity_id']);
+      $this->addCondition($select_query, "$base_table.$sql_field", $this->entityConditions['entity_id']);
     }
 
     // If there is a revision key defined, use it.
@@ -824,7 +917,7 @@ class EntityFieldQuery {
       $sql_field = $entity_info['entity keys']['revision'];
       $select_query->addField($base_table, $sql_field, 'revision_id');
       if (isset($this->entityConditions['revision_id'])) {
-        $this->addCondition($select_query, $base_table . '.' . $sql_field, $this->entityConditions['revision_id']);
+        $this->addCondition($select_query, "$base_table.$sql_field", $this->entityConditions['revision_id']);
       }
     }
     else {
@@ -835,9 +928,9 @@ class EntityFieldQuery {
 
     // Handle bundles.
     if (!empty($entity_info['entity keys']['bundle'])) {
+      $base_table_schema = drupal_get_schema($base_table);
       $sql_field = $entity_info['entity keys']['bundle'];
       $having = FALSE;
-
       if (!empty($base_table_schema['fields'][$sql_field])) {
         $select_query->addField($base_table, $sql_field, 'bundle');
       }
@@ -847,14 +940,25 @@ class EntityFieldQuery {
       $select_query->addExpression(':bundle', 'bundle', array(':bundle' => $entity_type));
       $having = TRUE;
     }
+
     $id_map['bundle'] = $sql_field;
+
     if (isset($this->entityConditions['bundle'])) {
       if (!empty($entity_info['entity keys']['bundle'])) {
-        $this->addCondition($select_query, $base_table . '.' . $sql_field, $this->entityConditions['bundle'], $having);
+        $this->addCondition($select_query, "$base_table.$sql_field", $this->entityConditions['bundle'], $having);
       }
       else {
         // This entity has no bundle, so invalidate the query.
         $select_query->where('1 = 0');
+      }
+    }
+
+    foreach (array('uuid', 'langcode') as $key) {
+      if (isset($this->entityConditions[$key])) {
+        $sql_field = !empty($entity_info['entity keys'][$key]) ? $entity_info['entity keys'][$key] : $key;
+        if (isset($base_table_schema[$sql_field])) {
+          $this->addCondition($select_query, "$base_table.$sql_field", $this->entityConditions[$key]);
+        }
       }
     }
 
@@ -868,7 +972,7 @@ class EntityFieldQuery {
         $select_query->orderBy($id_map[$key], $order['direction']);
       }
       elseif ($order['type'] == 'property') {
-        $select_query->orderBy($base_table . '.' . $order['specifier'], $order['direction']);
+        $this->addPropertyOrderBy($select_query, $entity_type, $order);
       }
     }
 
@@ -961,4 +1065,104 @@ class EntityFieldQuery {
     }
   }
 
+  /**
+   * Adds property conditions to a select query performing the needed joins.
+   *
+   * @param SelectQuery $select_query
+   *   The SelectQuery the conditions should be applied to.
+   * @param $entity_type
+   *   The entity type the query applies to.
+   */
+  public function addPropertyConditions(Select $select_query, $entity_type) {
+    $entity_info = entity_get_info($entity_type);
+    $entity_base_table = $entity_info['base table'];
+    list($data_table, $data_table_schema) = $this->getPropertyDataSchema($entity_type);
+
+    foreach ($this->propertyConditions as $property_condition) {
+      $column = $property_condition['column'];
+      // @todo Property conditions should always apply to the data table (if
+      // available), however UUIDs are used in load conditions and thus treated
+      // as properties, instead of being set as entity conditions. Remove this
+      // once we can reliably distinguish between properties and metadata living
+      // on the base table.
+      $table = !empty($data_table_schema['fields'][$column]) ? $data_table  . '_' . $property_condition['langcode_group'] : $entity_base_table;
+      $this->addCondition($select_query, "$table.$column", $property_condition);
+    }
+  }
+
+  /**
+   * Adds a property order by to the given select query.
+   *
+   * @param SelectQuery $select_query
+   *   The SelectQuery the conditions should be applied to.
+   * @param $entity_type
+   *   The entity type the query applies to.
+   * @param array $order
+   *   An order array as defined in EntityFieldQuery::propertyOrderBy().
+   */
+  public function addPropertyOrderBy(Select $select_query, $entity_type, array $order) {
+    $entity_info = entity_get_info($entity_type);
+    list($data_table, $data_table_schema) = $this->getPropertyDataSchema($entity_type);
+    $specifier = $order['specifier'];
+    $table = !empty($data_table_schema['fields'][$specifier]) ? $data_table  . '_' . $order['langcode_group'] : $entity_info['base table'];
+    $select_query->orderBy("$table.$specifier", $order['direction']);
+  }
+
+  /**
+   * Joins the needed data tables based on the specified property conditions.
+   *
+   * @param SelectQuery $select_query
+   *   A SelectQuery containing at least one table as specified by $base_table.
+   * @param $entity_type
+   *   The entity type the query applies to.
+   * @param $base_table
+   *   The name of the base table to join on.
+   * @param $base_id_key
+   *   The primary id column name to use to join on the base table.
+   */
+  public function joinPropertyData(Select $select_query, $entity_type, $base_table, $base_id_key = NULL) {
+    list($data_table, $data_table_schema) = $this->getPropertyDataSchema($entity_type);
+
+    // If we have no data table there are no property meta conditions to handle.
+    if (!empty($data_table)) {
+      $entity_info = entity_get_info($entity_type);
+      $id_key = $entity_info['entity keys']['id'];
+      $base_id_key = !empty($base_id_key) ? $base_id_key : $id_key;
+
+      foreach ($this->properties as $key => $property) {
+        // Every property needs a new join on the data table.
+        $table_alias = $data_table . '_' . $key;
+        $table_aliases[$key] = $table_alias;
+        $select_query->join($data_table, $table_alias, "$table_alias.$id_key = $base_table.$base_id_key");
+      }
+
+      // Ensure we return just one value.
+      $select_query->distinct();
+    }
+  }
+
+  /**
+   * Returns the data table schema for the given entity type.
+   *
+   * @param $entity_type
+   *   The entity type the query applies to.
+   *
+   * @return array
+   *   An array containing the table data name (or FALSE if none is defined) and
+   *   its schema.
+   */
+  protected function getPropertyDataSchema($entity_type) {
+    $entity_info = entity_get_info($entity_type);
+
+    if (!empty($entity_info['data table'])) {
+      $data_table = $entity_info['data table'];
+      $data_table_schema = drupal_get_schema($data_table);
+    }
+    else {
+      $data_table = FALSE;
+      $data_table_schema = array();
+    }
+
+    return array($data_table, $data_table_schema);
+  }
 }

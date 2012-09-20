@@ -9,8 +9,9 @@ namespace Drupal\entity_test;
 
 use PDO;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityFieldQuery;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Defines the controller class for the test entity.
@@ -23,38 +24,22 @@ class EntityTestStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::loadByProperties().
    */
-  public function loadByProperties(array $values) {
-    $query = db_select($this->entityInfo['base table'], 'base');
-    $query->addTag($this->entityType . '_load_multiple');
-    if ($values) {
-      // Conditions need to be applied the property data table.
-      $query->addJoin('inner', 'entity_test_property_data', 'data', "base.{$this->idKey} = data.{$this->idKey}");
-      $query->distinct(TRUE);
-
-      // @todo We should not be using a condition to specify whether conditions
-      // apply to the default language or not. We need to move this to a
-      // separate parameter during the following API refactoring.
-      // Default to the original entity language if not explicitly specified
-      // otherwise.
-      if (!array_key_exists('default_langcode', $values)) {
-        $values['default_langcode'] = 1;
-      }
-      // If the 'default_langcode' flag is esplicitly not set, we do not care
-      // whether the queried values are in the original entity language or not.
-      elseif ($values['default_langcode'] === NULL) {
-        unset($values['default_langcode']);
-      }
-
-      $data_schema = drupal_get_schema('entity_test_property_data');
-      $query->addField('data', $this->idKey);
-      foreach ($values as $field => $value) {
-        // Check on which table the condition needs to be added.
-        $table = isset($data_schema['fields'][$field]) ? 'data' : 'base';
-        $query->condition($table . '.' . $field, $value);
-      }
+  protected function buildPropertyQuery(EntityFieldQuery $entity_query, array $values) {
+    // @todo We should not be using a condition to specify whether conditions
+    // apply to the default language or not. We need to move this to a
+    // separate parameter during the following API refactoring.
+    // Default to the original entity language if not explicitly specified
+    // otherwise.
+    if (!array_key_exists('default_langcode', $values)) {
+      $values['default_langcode'] = 1;
     }
-    $ids = $query->execute()->fetchCol();
-    return $ids ? $this->load($ids) : array();
+    // If the 'default_langcode' flag is esplicitly not set, we do not care
+    // whether the queried values are in the original entity language or not.
+    elseif ($values['default_langcode'] === NULL) {
+      unset($values['default_langcode']);
+    }
+
+    parent::buildPropertyQuery($entity_query, $values);
   }
 
   /**
