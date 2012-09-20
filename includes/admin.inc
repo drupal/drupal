@@ -930,8 +930,6 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
     }
   }
 
-  $form['#attached']['js'][] = drupal_get_path('module', 'ctools') . '/js/collapsible-div.js';
-
   $form['#tree'] = TRUE;
   // @todo When more functionality is added to this form, cloning here may be
   //   too soon. But some of what we do with $view later in this function
@@ -1038,21 +1036,17 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
     $form_state['display_id'] = $display_id;
 
     // The part of the page where editing will take place.
-    // This element is the ctools collapsible-div container for the display edit elements.
+    // This element is the collapsible fieldset for the display edit elements.
     $form['displays']['settings'] = array(
-      '#theme_wrappers' => array('container'),
-      '#attributes' => array(
-        'class' => array(
-          'views-display-settings',
-          'box-margin',
-          'ctools-collapsible-container',
-        ),
-      ),
+      '#type' => 'fieldset',
       '#id' => 'edit-display-settings',
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
     );
     $display_title = views_ui_get_display_label($view, $display_id, FALSE);
-    // Add a handle for the ctools collapsible-div. The handle is the title of the display
-    $form['displays']['settings']['tab_title']['#markup'] = '<h2 id="edit-display-settings-title" class="ctools-collapsible-handle">' . t('@display_title details', array('@display_title' => ucwords($display_title))) . '</h2>';
+
+    $form['displays']['settings']['#title'] = '<h2>' . t('@display_title details', array('@display_title' => ucwords($display_title))) . '</h2>';
+
     // Add a text that the display is disabled.
     if (!empty($view->display[$display_id]->handler)) {
       $enabled = $view->display[$display_id]->handler->getOption('enabled');
@@ -1060,15 +1054,9 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
         $form['displays']['settings']['disabled']['#markup'] = t('This display is disabled.');
       }
     }
-    // The ctools collapsible-div content
+
     $form['displays']['settings']['settings_content']= array(
       '#theme_wrappers' => array('container'),
-      '#id' => 'edit-display-settings-content',
-      '#attributes' => array(
-        'class' => array(
-          'ctools-collapsible-content',
-        ),
-      ),
     );
     // Add the edit display content
     $form['displays']['settings']['settings_content']['tab_content'] = views_ui_get_display_tab($view, $display_id);
@@ -1617,21 +1605,21 @@ function views_ui_get_display_tab_details($view, $display) {
   $build['columns']['second']['footer'] = array();
   $build['columns']['second']['pager'] = array();
 
-  // The third column buckets are wrapped in a CTools collapsible div
-  $build['columns']['third']['#theme_wrappers'] = array('container');
-  $build['columns']['third']['#attributes'] = array('class' => array('views-display-column', 'third', 'ctools-collapsible-container', 'ctools-collapsible-remember'));
-  // Specify an id that won't change after AJAX requests, so ctools can keep
-  // track of the user's preferred collapsible state. Use the same id across
-  // different displays of the same view, so changing displays doesn't
-  // recollapse the column.
-  $build['columns']['third']['#attributes']['id'] = 'views-ui-advanced-column-' . $view->name;
-  // Collapse the div by default.
-  if (!config('views.settings')->get('ui.show.advanced_column')) {
-    $build['columns']['third']['#attributes']['class'][] = 'ctools-collapsed';
+  // The third column buckets are wrapped in a fieldset.
+  $build['columns']['third'] = array(
+    '#type' => 'fieldset',
+    '#title' => '<h3>' . t('Advanced') . '</h3>',
+    '#attributes' => array(
+      'class' => array('views-display-column', 'third'),
+    ),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+
+  // Collapse the fieldset by default.
+  if (config('views.settings')->get('ui.show.advanced_column')) {
+    $build['columns']['third']['#collapsed'] = FALSE;
   }
-  $build['columns']['third']['advanced'] = array('#markup' => '<h3 class="ctools-collapsible-handle"><a href="">' . t('Advanced') . '</a></h3>');
-  $build['columns']['third']['collapse']['#theme_wrappers'] = array('container');
-  $build['columns']['third']['collapse']['#attributes'] = array('class' => array('ctools-collapsible-content'));
 
   // Each option (e.g. title, access, display as grid/table/list) fits into one
   // of several "buckets," or boxes (Format, Fields, Sort, and so on).
@@ -1659,20 +1647,10 @@ function views_ui_get_display_tab_details($view, $display) {
       $column = 'third';
     }
     if (isset($bucket['build']) && is_array($bucket['build'])) {
-      // The third column is a CTools collapsible div, so
-      // the structure of the form is a little different for this column
-      if ($column === 'third') {
-        $build['columns'][$column]['collapse'][$id] = $bucket['build'];
-        $build['columns'][$column]['collapse'][$id]['#theme_wrappers'][] = 'views_ui_display_tab_bucket';
-        $build['columns'][$column]['collapse'][$id]['#title'] = !empty($bucket['title']) ? $bucket['title'] : '';
-        $build['columns'][$column]['collapse'][$id]['#name'] = !empty($bucket['title']) ? $bucket['title'] : $id;
-      }
-      else {
-        $build['columns'][$column][$id] = $bucket['build'];
-        $build['columns'][$column][$id]['#theme_wrappers'][] = 'views_ui_display_tab_bucket';
-        $build['columns'][$column][$id]['#title'] = !empty($bucket['title']) ? $bucket['title'] : '';
-        $build['columns'][$column][$id]['#name'] = !empty($bucket['title']) ? $bucket['title'] : $id;
-      }
+      $build['columns'][$column][$id] = $bucket['build'];
+      $build['columns'][$column][$id]['#theme_wrappers'][] = 'views_ui_display_tab_bucket';
+      $build['columns'][$column][$id]['#title'] = !empty($bucket['title']) ? $bucket['title'] : '';
+      $build['columns'][$column][$id]['#name'] = !empty($bucket['title']) ? $bucket['title'] : $id;
     }
   }
 
@@ -1681,9 +1659,9 @@ function views_ui_get_display_tab_details($view, $display) {
   $build['columns']['first']['sorts'] = views_ui_edit_form_get_bucket('sort', $view, $display);
   $build['columns']['second']['header'] = views_ui_edit_form_get_bucket('header', $view, $display);
   $build['columns']['second']['footer'] = views_ui_edit_form_get_bucket('footer', $view, $display);
-  $build['columns']['third']['collapse']['arguments'] = views_ui_edit_form_get_bucket('argument', $view, $display);
-  $build['columns']['third']['collapse']['relationships'] = views_ui_edit_form_get_bucket('relationship', $view, $display);
-  $build['columns']['third']['collapse']['empty'] = views_ui_edit_form_get_bucket('empty', $view, $display);
+  $build['columns']['third']['arguments'] = views_ui_edit_form_get_bucket('argument', $view, $display);
+  $build['columns']['third']['relationships'] = views_ui_edit_form_get_bucket('relationship', $view, $display);
+  $build['columns']['third']['empty'] = views_ui_edit_form_get_bucket('empty', $view, $display);
 
   return $build;
 }
