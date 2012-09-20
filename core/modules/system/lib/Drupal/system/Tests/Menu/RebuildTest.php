@@ -38,7 +38,7 @@ class RebuildTest extends WebTestBase {
 
     // Now we enable the rebuild variable and send a request to rebuild the menu
     // item. Now 'admin' should exist.
-    variable_set('menu_rebuild_needed', TRUE);
+    state()->set('menu_rebuild_needed', TRUE);
     // The request should trigger the rebuild.
     $this->drupalGet('<front>');
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();

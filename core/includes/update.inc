@@ -130,6 +130,36 @@ function update_prepare_d8_bootstrap() {
     update_extra_requirements($requirements);
 
     if ($has_required_schema) {
+      if (!db_table_exists('key_value')) {
+        $specs = array(
+          'description' => 'Generic key-value storage table. See state() for an example.',
+          'fields' => array(
+            'collection' => array(
+              'description' => 'A named collection of key and value pairs.',
+              'type' => 'varchar',
+              'length' => 128,
+              'not null' => TRUE,
+              'default' => '',
+            ),
+            'name' => array(
+              'description' => 'The key of the key-value pair. As KEY is a SQL reserved keyword, name was chosen instead.',
+              'type' => 'varchar',
+              'length' => 128,
+              'not null' => TRUE,
+              'default' => '',
+            ),
+            'value' => array(
+              'description' => 'The value.',
+              'type' => 'blob',
+              'not null' => TRUE,
+              'size' => 'big',
+              'translatable' => TRUE,
+            ),
+          ),
+          'primary key' => array('collection', 'name'),
+        );
+        db_create_table('key_value', $specs);
+      }
       // Bootstrap variables so we can update theme while preparing the update
       // process.
       drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);

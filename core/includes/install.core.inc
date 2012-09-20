@@ -311,7 +311,9 @@ function install_begin_request(&$install_state) {
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
       ->addArgument(new Reference('dispatcher'));
-
+    $container
+      ->register('state.storage', 'Drupal\Core\KeyValueStore\DatabaseStorage')
+      ->addArgument('state');
     drupal_container($container);
   }
 

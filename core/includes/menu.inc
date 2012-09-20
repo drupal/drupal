@@ -451,7 +451,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
   if (!isset($router_items[$path])) {
     // Rebuild if we know it's needed, or if the menu masks are missing which
     // occurs rarely, likely due to a race condition of multiple rebuilds.
-    if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
+    if (state()->get('menu_rebuild_needed') || !variable_get('menu_masks', array())) {
       menu_router_rebuild();
     }
     $original_map = arg(NULL, $path);
@@ -2666,7 +2666,7 @@ function menu_router_rebuild() {
     menu_cache_clear_all();
     _menu_clear_page_cache();
     // Indicate that the menu has been successfully rebuilt.
-    variable_del('menu_rebuild_needed');
+    state()->delete('menu_rebuild_needed');
   }
   catch (Exception $e) {
     $transaction->rollback();

@@ -2504,8 +2504,26 @@ function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
     $container
       ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
       ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+    $container
+      ->register('state.storage', 'Drupal\Core\KeyValueStore\DatabaseStorage')
+      ->addArgument('state');
   }
   return $container;
+}
+
+/**
+ * Returns the state storage service.
+ *
+ * Use this to store machine-generated data, local to a specific environment
+ * that does not need deploying and does not need human editing; for example,
+ * the last time cron was run. Data which needs to be edited by humans and
+ * needs to be the same across development, production, etc. environments
+ * (for example, the system maintenance message) should use config() instead.
+ *
+ * @return Drupal\Core\KeyValueStore\KeyValueStoreInterface
+ */
+function state() {
+  return drupal_container()->get('state.storage');
 }
 
 /**

@@ -175,7 +175,7 @@ function search_admin_settings_submit($form, &$form_state) {
   if ($config->get('active_modules') != $new_modules) {
     $config->set('active_modules', $new_modules);
     drupal_set_message(t('The active search modules have been changed.'));
-    variable_set('menu_rebuild_needed', TRUE);
+    state()->set('menu_rebuild_needed', TRUE);
   }
   $config->save();
 }

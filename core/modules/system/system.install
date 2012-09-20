@@ -868,6 +868,34 @@ function system_schema() {
     ),
   );
 
+  $schema['key_value'] = array(
+    'description' => 'Generic key-value storage table. See state() for an example.',
+    'fields' => array(
+      'collection' => array(
+        'description' => 'A named collection of key and value pairs.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'name' => array(
+        'description' => 'The key of the key-value pair. As KEY is a SQL reserved keyword, name was chosen instead.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'value' => array(
+        'description' => 'The value.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'primary key' => array('collection', 'name'),
+  );
+
   $schema['menu_router'] = array(
     'description' => 'Maps paths to various callbacks (access, page and title)',
     'fields' => array(

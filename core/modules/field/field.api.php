@@ -1553,7 +1553,7 @@ function hook_field_available_languages_alter(&$langcodes, $context) {
 function hook_field_attach_create_bundle($entity_type, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add the
   // Field UI menu item tabs.
-  variable_set('menu_rebuild_needed', TRUE);
+  state()->set('menu_rebuild_needed', TRUE);
 }
 
 /**
