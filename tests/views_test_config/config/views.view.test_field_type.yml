@@ -1,0 +1,20 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      fields:
+        type:
+          field: type
+          id: type
+          table: node
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: ''
+name: test_field_type
+tag: ''

@@ -37,7 +37,7 @@ class Type extends String {
   }
 
   function node_type($type) {
-    $output = node_type_get_name($type);
+    $output = node_type_get_label($type);
     if (empty($output)) {
       $output = t('Unknown content type');
     }
