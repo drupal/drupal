@@ -290,8 +290,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
       '#type' => 'container',
       '#fieldset' => 'argument_present',
     );
-    // @todo The mockup wanted to use "Validate using" here, but it doesn't
-    // work well with many options (they'd need to be changed as well)
     $form['validate']['type'] = array(
       '#type' => 'select',
       '#title' => t('Validator'),

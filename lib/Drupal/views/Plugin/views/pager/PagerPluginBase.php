@@ -12,7 +12,10 @@ use Drupal\views\Plugin\views\PluginBase;
 /**
  * @defgroup views_pager_plugins Views pager plugins
  * @{
- * @todo.
+ * The base plugin to handler pagers of a view.
+ *
+ * The pager takes care about altering the query for its needs, altering some
+ * global information of pagers and finally rendering itself.
  *
  * @see hook_views_plugins()
  */

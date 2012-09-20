@@ -13,7 +13,10 @@ use Drupal\Core\Database\Query\Select;
 /**
  * @defgroup views_cache_plugins Views cache plugins
  * @{
- * @todo.
+ * The base plugin to handler caching of a view.
+ *
+ * Cache plugins can handle both caching of just the database result and
+ * the rendered output of the view.
  *
  * @see hook_views_plugins()
  */

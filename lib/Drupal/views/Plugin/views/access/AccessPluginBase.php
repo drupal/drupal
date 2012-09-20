@@ -12,7 +12,10 @@ use Drupal\views\Plugin\views\PluginBase;
 /**
  * @defgroup views_access_plugins Views access plugins
  * @{
- * @todo.
+ * The base plugin to handle access to a view.
+ *
+ * Therefore it primarily has to implement the access and the get_access_callback
+ * method.
  *
  * @see hook_views_plugins()
  */
