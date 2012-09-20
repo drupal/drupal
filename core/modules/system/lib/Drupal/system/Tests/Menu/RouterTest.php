@@ -178,7 +178,7 @@ class RouterTest extends WebTestBase {
 
     $this->drupalGet('user/login');
     // Check that we got to 'user'.
-    $this->assertTrue($this->url == url('user', array('absolute' => TRUE)), "Logged-in user redirected to user on accessing user/login");
+    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid, array('absolute' => TRUE)), "Logged-in user redirected to user on accessing user/login");
 
     // user/register should redirect to user/UID/edit.
     $this->drupalGet('user/register');
