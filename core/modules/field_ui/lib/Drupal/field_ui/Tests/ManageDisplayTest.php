@@ -150,6 +150,17 @@ class ManageDisplayTest extends FieldUiTestBase {
   }
 
   /**
+   * Tests hiding the view modes fieldset when there's only one available.
+   */
+  function testSingleViewMode() {
+    $this->drupalGet('admin/config/people/accounts/display');
+    $this->assertNoText('Use custom display settings for the following view modes', t('Custom display settings fieldset found.'));
+
+    // This may not trigger a notice when 'view_modes_custom' isn't available.
+    $this->drupalPost('admin/config/people/accounts/display', array(), t('Save'));
+  }
+
+  /**
    * Asserts that a string is found in the rendered node in a view mode.
    *
    * @param Node $node

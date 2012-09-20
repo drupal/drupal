@@ -1372,7 +1372,7 @@ function field_ui_display_overview_form_submit($form, &$form_state) {
   }
 
   // Save view modes data.
-  if ($view_mode == 'default') {
+  if ($view_mode == 'default' && !empty($form_values['view_modes_custom'])) {
     $entity_info = entity_get_info($entity_type);
     foreach ($form_values['view_modes_custom'] as $view_mode_name => $value) {
       // Display a message for each view mode newly configured to use custom

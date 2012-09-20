@@ -25,7 +25,7 @@ abstract class FieldUiTestBase extends WebTestBase {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy', 'administer users'));
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
