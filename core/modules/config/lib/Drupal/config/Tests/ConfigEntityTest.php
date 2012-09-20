@@ -45,7 +45,8 @@ class ConfigEntityTest extends WebTestBase {
     );
     $this->drupalPost('admin/structure/config_test/add', $edit, 'Save');
     $this->assertResponse(200);
-    $this->assertText($label1);
+    $message_insert = format_string('%label configuration has been created.', array('%label' => $label1));
+    $this->assertRaw($message_insert);
 
     // Update the configuration entity.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id);
@@ -54,8 +55,9 @@ class ConfigEntityTest extends WebTestBase {
     );
     $this->drupalPost('admin/structure/config_test/manage/' . $id, $edit, 'Save');
     $this->assertResponse(200);
-    $this->assertNoText($label1);
-    $this->assertText($label2);
+    $message_update = format_string('%label configuration has been updated.', array('%label' => $label2));
+    $this->assertNoRaw($message_insert);
+    $this->assertRaw($message_update);
 
     // Delete the configuration entity.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id . '/delete');

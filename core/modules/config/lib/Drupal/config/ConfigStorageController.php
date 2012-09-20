@@ -284,13 +284,13 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     }
 
     if (!$config->isNew()) {
-      $return = SAVED_NEW;
+      $return = SAVED_UPDATED;
       $config->save();
       $this->postSave($entity, TRUE);
       $this->invokeHook('update', $entity);
     }
     else {
-      $return = SAVED_UPDATED;
+      $return = SAVED_NEW;
       $config->save();
       $entity->enforceIsNew(FALSE);
       $this->postSave($entity, FALSE);
