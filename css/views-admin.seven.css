@@ -500,37 +500,3 @@ table th {
 }
 
 /* @end */
-
-/* @group Collapsible */
-
-.ctools-toggle {
-  margin-top: 0.6667em;
-}
-
-.ctools-toggle.ctools-toggle-collapsed {
-  margin-top: 0.5em;
-}
-
-.views-display-settings .ctools-toggle {
-  color: #008BCB;
-}
-
-.views-display-column > .ctools-toggle {
-  margin-top: 14px;
-}
-
-.views-display-column > .ctools-toggle.ctools-toggle-collapsed {
-  margin-top: 12px;
-}
-
-.views-display-column > .ctools-collapsible-handle {
-  color: #008BCB;
-}
-
-.views-ui-display-tab-actions .ctools-button-processed input {
-  color: #0074BD;
-}
-
-/* @end */
-
-/* @end */

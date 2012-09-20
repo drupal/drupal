@@ -192,24 +192,6 @@
 
 /* @end */
 
-/* @group Collapsible */
-
-.ctools-toggle {
-  margin-top: 0.9em;
-}
-
-.ctools-toggle.ctools-toggle-collapsed {
-  margin-top: 0.72em;
-}
-
-.views-display-column > .ctools-toggle {
-  margin-top: 14px;
-}
-
-.views-display-column > .ctools-toggle.ctools-toggle-collapsed {
-  margin-top: 12px;
-}
-
 .views-display-column .fieldset-wrapper {
   margin-top: 0;
 }
