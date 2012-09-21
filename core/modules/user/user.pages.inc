@@ -420,8 +420,7 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
 function user_page() {
   global $user;
   if ($user->uid) {
-    $request = drupal_container()->get('request');
-    return new RedirectResponse($request->getUriForPath('/user/' . $user->uid));
+    return new RedirectResponse(url('user/' . $user->uid, array('absolute' => TRUE)));
   }
   else {
     return drupal_get_form('user_login');
