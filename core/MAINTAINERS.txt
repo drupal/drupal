@@ -243,6 +243,7 @@ Poll module
 
 RDF module
 - Stéphane Corlosquet 'scor' http://drupal.org/user/52142
+- Lin Clark 'linclark' http://drupal.org/user/396253
 
 Search module
 - Doug Green 'douggreen' http://drupal.org/user/29191
