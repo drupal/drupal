@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Upgrade;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
 use Exception;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
  * Perform end-to-end tests of the upgrade path.
@@ -246,7 +247,14 @@ abstract class UpgradePathTestBase extends WebTestBase {
     module_load_all(FALSE, TRUE);
 
     // Rebuild caches.
-    drupal_flush_all_caches();
+    // @todo Remove the try/catch when UpgradePathTestBase::setup() is fixed to
+    //   boot DrupalKernel (as WebTestBase::setup() does).
+    drupal_static_reset();
+    try {
+      drupal_flush_all_caches();
+    }
+    catch (InvalidArgumentException $e) {
+    }
 
     // Reload global $conf array and permissions.
     $this->refreshVariables();
