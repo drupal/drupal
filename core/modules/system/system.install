@@ -1948,7 +1948,7 @@ function system_update_8016() {
  * @ingroup config_upgrade
  */
 function system_update_8017() {
-  update_variables_to_config('system.site', array(
+  update_variables_to_config('system.performance', array(
     'cache' => 'cache.page.enabled',
     'page_cache_maximum_age' => 'cache.page.max_age',
     'page_compression' => 'response.gzip',
