@@ -308,7 +308,7 @@ function views_ui_cache_load($name) {
   else {
     // Keep disabled/enabled status real.
     if ($original_view) {
-      $view->disabled = !empty($original_view->disabled);
+      $view->disabled = $original_view->disabled;
     }
   }
 

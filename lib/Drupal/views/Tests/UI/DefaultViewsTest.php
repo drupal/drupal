@@ -55,6 +55,15 @@ class DefaultViewsTest extends UITestBase {
     $this->assertResponse(200);
     $this->assertText($new_title);
 
+    // Save another view in the UI.
+    $this->drupalPost('admin/structure/views/nojs/display/archive/page/title', array(), t('Apply'));
+    $this->drupalPost('admin/structure/views/view/archive/page', array(), t('Save'));
+
+    // Check there is an enable link. i.e. The view has not been enabled after
+    // editing.
+    $this->drupalGet('admin/structure/views');
+    $this->assertLinkByHref('admin/structure/views/view/archive/enable');
+
     // It should now be possible to revert the view. Do that, and make sure the
     // view title we added above no longer is displayed.
     // $this->drupalGet('admin/structure/views');
