@@ -694,13 +694,10 @@ function node_views_analyze($view) {
   $ret = array();
   // Check for something other than the default display:
   if ($view->base_table == 'node') {
-    foreach ($view->display as $id => $display) {
-      if (empty($display->handler)) {
-        continue;
-      }
-      if (!$display->handler->isDefaulted('access') || !$display->handler->isDefaulted('filters')) {
+    foreach ($view->displayHandlers as $id => $display) {
+      if (!$display->isDefaulted('access') || !$display->isDefaulted('filters')) {
         // check for no access control
-        $access = $display->handler->getOption('access');
+        $access = $display->getOption('access');
         if (empty($access['type']) || $access['type'] == 'none') {
           $select = db_select('role', 'r');
           $select->innerJoin('role_permission', 'p', 'r.rid = p.rid');
@@ -715,23 +712,23 @@ function node_views_analyze($view) {
             $roles[$role->rid] = $role;
           }
           if (!($roles['anonymous']->safe && $roles['authenticated']->safe)) {
-            $ret[] = Analyzer::formatMessage(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display->display_title)), 'warning');
+            $ret[] = Analyzer::formatMessage(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display['display_title'])), 'warning');
           }
-          $filters = $display->handler->getOption('filters');
+          $filters = $display->getOption('filters');
           foreach ($filters as $filter) {
             if ($filter['table'] == 'node' && ($filter['field'] == 'status' || $filter['field'] == 'status_extra')) {
               continue 2;
             }
           }
-          $ret[] = Analyzer::formatMessage(t('Display %display has no access control but does not contain a filter for published nodes.', array('%display' => $display->display_title)), 'warning');
+          $ret[] = Analyzer::formatMessage(t('Display %display has no access control but does not contain a filter for published nodes.', array('%display' => $display['display_title'])), 'warning');
         }
       }
     }
   }
   foreach ($view->display as $id => $display) {
-    if ($display->display_plugin == 'page') {
-      if ($display->handler->getOption('path') == 'node/%') {
-        $ret[] = Analyzer::formatMessage(t('Display %display has set node/% as path. This will not produce what you want. If you want to have multiple versions of the node view, use panels.', array('%display' => $display->display_title)), 'warning');
+    if ($display->getPluginId() == 'page') {
+      if ($display->getOption('path') == 'node/%') {
+        $ret[] = Analyzer::formatMessage(t('Display %display has set node/% as path. This will not produce what you want. If you want to have multiple versions of the node view, use panels.', array('%display' => $display['display_title'])), 'warning');
       }
     }
   }

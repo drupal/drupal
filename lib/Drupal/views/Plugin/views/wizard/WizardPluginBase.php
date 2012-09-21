@@ -662,8 +662,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * or a different row plugin.
    *
    * @return array
-   *   Returns an array of display options, which are used in
-   *   ViewDisplay::$display_options.
+   *   Returns an array of display options.
    */
   protected function default_display_options() {
     $display_options = array();
@@ -869,8 +868,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   The current state of the wizard form.
    *
    * @return array
-   *   Returns an array of display options, which are used in
-   *   ViewDisplay::$display_options.
+   *   Returns an array of display options.
    */
   protected function page_display_options(array $form, array &$form_state) {
     $display_options = array();
@@ -916,8 +914,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   The current state of the wizard form.
    *
    * @return array
-   *   Returns an array of display options, which are used in
-   *   ViewDisplay::$display_options.
+   *   Returns an array of display options.
    */
   protected function block_display_options(array $form, array &$form_state) {
     $display_options = array();
@@ -939,8 +936,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   The current state of the wizard form.
    *
    * @return array
-   *   Returns an array of display options, which are used in
-   *   ViewDisplay::$display_options.
+   *   Returns an array of display options.
    */
   protected function page_feed_display_options($form, $form_state) {
     $display_options = array();

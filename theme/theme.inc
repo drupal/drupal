@@ -21,16 +21,16 @@ function _views_theme_functions($hook, $view, $display = NULL) {
   $themes = array();
 
   if ($display) {
-    $themes[] = $hook . '__' . $view->name . '__' . $display->id;
-    $themes[] = $hook . '__' . $display->id;
+    $themes[] = $hook . '__' . $view->name . '__' . $display['id'];
+    $themes[] = $hook . '__' . $display['id'];
     // Add theme suggestions for each single tag.
     foreach (drupal_explode_tags($view->tag) as $tag) {
       $themes[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($tag));
     }
 
-    if ($display->id != $display->display_plugin) {
-      $themes[] = $hook . '__' . $view->name . '__' . $display->display_plugin;
-      $themes[] = $hook . '__' . $display->display_plugin;
+    if ($display['id'] != $display['display_plugin']) {
+      $themes[] = $hook . '__' . $view->name . '__' . $display['display_plugin'];
+      $themes[] = $hook . '__' . $display['display_plugin'];
     }
   }
   $themes[] = $hook . '__' . $view->name;
@@ -129,7 +129,7 @@ function template_preprocess_views_view(&$vars) {
             'view_args' => check_plain(implode('/', $view->args)),
             'view_path' => check_plain(current_path()),
             // Pass through URL to ensure we get e.g. language prefixes.
-//            'view_base_path' => isset($view->display['page']) ? substr(url($view->display['page']->display_options['path']), strlen($base_path)) : '',
+//            'view_base_path' => isset($view->display['page']) ? substr(url($view->display['page']['display_options']['path']), strlen($base_path)) : '',
             'view_base_path' => $view->getPath(),
             'view_dom_id' => $vars['dom_id'],
             // To fit multiple views on a page, the programmer may have
@@ -867,7 +867,7 @@ function template_preprocess_views_view_rss(&$vars) {
   // one, use the global $base_url
   $link_display_id = $view->display_handler->getLinkDisplay();
   if ($link_display_id && !empty($view->display[$link_display_id])) {
-    $path = $view->display[$link_display_id]->handler->getPath();
+    $path = $view->displayHandlers[$link_display_id]->getPath();
   }
 
   if ($path) {

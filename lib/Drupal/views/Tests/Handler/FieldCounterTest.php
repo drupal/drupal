@@ -28,7 +28,7 @@ class FieldCounterTest extends HandlerTestBase {
 
   function testSimple() {
     $view = $this->getView();
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'counter' => array(
         'id' => 'counter',
         'table' => 'views',
@@ -51,7 +51,7 @@ class FieldCounterTest extends HandlerTestBase {
 
     $view = $this->getView();
     $rand_start = rand(5, 10);
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'counter' => array(
         'id' => 'counter',
         'table' => 'views',

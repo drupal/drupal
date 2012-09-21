@@ -48,7 +48,7 @@ class FieldFileSizeTest extends HandlerTestBase {
   public function testFieldFileSize() {
     $view = $this->getView();
 
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'age' => array(
         'id' => 'age',
         'table' => 'views_test_data',

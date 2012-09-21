@@ -69,7 +69,7 @@ class FilterStringTest extends HandlerTestBase {
 
   protected function getBasicView() {
     $view = parent::getBasicView();
-    $view->display['default']->options['fields']['description'] = array(
+    $view->displayHandlers['default']->options['fields']['description'] = array(
       'id' => 'description',
       'table' => 'views_test_data',
       'field' => 'description',
@@ -82,7 +82,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -109,7 +109,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Name, Operator: =, Value: Ringo
     $filters['name']['group_info']['default_group'] = 1;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -126,7 +126,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -163,7 +163,7 @@ class FilterStringTest extends HandlerTestBase {
     $filters['name']['group_info']['default_group'] = '2';
 
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -189,7 +189,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -217,7 +217,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Name, Operator: contains, Value: ing
     $filters['name']['group_info']['default_group'] = '3';
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -235,7 +235,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -261,7 +261,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -289,7 +289,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Name, Operator: contains, Value: ing
     $filters['name']['group_info']['default_group'] = '3';
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -308,7 +308,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Description, Operator: contains, Value: actor
     $filters['description']['group_info']['default_group'] = '1';
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
     $resultset = array(
@@ -326,7 +326,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -353,7 +353,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Name, Operator: starts, Value: George
     $filters['description']['group_info']['default_group'] = 2;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -369,7 +369,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -403,7 +403,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Name, Operator: not_starts, Value: George
     $filters['description']['group_info']['default_group'] = 3;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -426,7 +426,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -456,7 +456,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Descriptino, Operator: ends, Value: Beatles
     $filters['description']['group_info']['default_group'] = 4;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -475,7 +475,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -506,7 +506,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Description, Operator: not_ends, Value: Beatles
     $filters['description']['group_info']['default_group'] = 5;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -526,7 +526,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -558,7 +558,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Description, Operator: not (does not contains), Value: Beatles
     $filters['description']['group_info']['default_group'] = 6;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -579,7 +579,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -609,7 +609,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Name, Operator: shorterthan, Value: 5
     $filters['name']['group_info']['default_group'] = 4;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
     $resultset = array(
@@ -627,7 +627,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -654,7 +654,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Name, Operator: longerthan, Value: 4
     $filters['name']['group_info']['default_group'] = 5;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
     $resultset = array(
@@ -670,7 +670,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Change the filtering
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
         'table' => 'views_test_data',
@@ -696,7 +696,7 @@ class FilterStringTest extends HandlerTestBase {
     // Filter: Description, Operator: empty, Value:
     $filters['description']['group_info']['default_group'] = 7;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->overrideOption('filters', $filters);
+    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
 
     $this->executeView($view);
     $resultset = array(

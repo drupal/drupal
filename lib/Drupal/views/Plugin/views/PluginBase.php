@@ -27,6 +27,17 @@ abstract class PluginBase extends ComponentPluginBase {
   public $view = NULL;
 
   /**
+   * The display object this plugin is for.
+   *
+   * For display plugins this is empty.
+   *
+   * @todo find a better description
+   *
+   * @var Drupal\views\Plugin\views\display\DisplayPluginBase
+   */
+  public $displayHandler;
+
+  /**
    * Plugins's definition
    *
    * @var array
@@ -39,6 +50,7 @@ abstract class PluginBase extends ComponentPluginBase {
    * @var bool
    */
   protected $usesOptions = FALSE;
+
 
   /**
    * Constructs a Plugin object.
@@ -164,7 +176,7 @@ abstract class PluginBase extends ComponentPluginBase {
    * Provide a full list of possible theme templates used by this style.
    */
   public function themeFunctions() {
-    return views_theme_functions($this->definition['theme'], $this->view, $this->display);
+    return views_theme_functions($this->definition['theme'], $this->view, $this->view->display_handler->display);
   }
 
   /**
@@ -174,7 +186,7 @@ abstract class PluginBase extends ComponentPluginBase {
     $funcs = array();
     if (!empty($this->definition['additional themes'])) {
       foreach ($this->definition['additional themes'] as $theme => $type) {
-        $funcs[] = views_theme_functions($theme, $this->view, $this->display);
+        $funcs[] = views_theme_functions($theme, $this->view, $this->view->display_handler->display);
       }
     }
     return $funcs;

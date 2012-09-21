@@ -107,8 +107,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $changed = FALSE;
 
     // Make some modifications:
-    if (!isset($options) && isset($display->display_options)) {
-      $options = $display->display_options;
+    if (!isset($options) && isset($display['display_options'])) {
+      $options = $display['display_options'];
     }
 
     if ($this->isDefaultDisplay() && isset($options['defaults'])) {
@@ -666,9 +666,9 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getLinkDisplay() {
     $display_id = $this->getOption('link_display');
     // If unknown, pick the first one.
-    if (empty($display_id) || empty($this->view->display[$display_id])) {
-      foreach ($this->view->display as $display_id => $display) {
-        if (!empty($display->handler) && $display->handler->hasPath()) {
+    if (empty($display_id) || empty($this->view->displayHandlers[$display_id])) {
+      foreach ($this->view->displayHandlers as $display_id => $display) {
+        if (!empty($display) && $display->hasPath()) {
           return $display_id;
         }
       }
@@ -691,8 +691,8 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     $display_id = $this->getLinkDisplay();
-    if ($display_id && !empty($this->view->display[$display_id]) && is_object($this->view->display[$display_id]->handler)) {
-      return $this->view->display[$display_id]->handler->getPath();
+    if ($display_id && !empty($this->view->displayHandlers[$display_id]) && is_object($this->view->displayHandlers[$display_id])) {
+      return $this->view->displayHandlers[$display_id]->getPath();
     }
   }
 
@@ -800,10 +800,10 @@ abstract class DisplayPluginBase extends PluginBase {
         return;
       }
       if ($type != 'query') {
-        $plugin->init($this->view, $this->display, $options);
+        $plugin->init($this->view, $this, $options);
       }
       else {
-        $display_id = $this->isDefaulted($option_name) ? $this->display->id : 'default';
+        $display_id = $this->isDefaulted($option_name) ? $this->display['id'] : 'default';
 
         if (!isset($this->base_field)) {
           $views_data = views_fetch_data($this->view->base_table);
@@ -950,7 +950,7 @@ abstract class DisplayPluginBase extends PluginBase {
     // Set this in two places: On the handler where we'll notice it
     // but also on the display object so it gets saved. This should
     // only be a temporary fix.
-    $this->display->display_options[$option] = $value;
+    $this->display['display_options'][$option] = $value;
     return $this->options[$option] = $value;
   }
 
@@ -980,7 +980,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $title = $text;
     }
 
-    return l($text, 'admin/structure/views/nojs/display/' . $this->view->name . '/' . $this->display->id . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display->id . '-' . $section)), 'html' => TRUE));
+    return l($text, 'admin/structure/views/nojs/display/' . $this->view->name . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
   }
 
   /**
@@ -1060,11 +1060,11 @@ abstract class DisplayPluginBase extends PluginBase {
       ),
     );
 
-    if ($this->display->id != 'default') {
+    if ($this->display['id'] != 'default') {
       $options['display_id'] = array(
         'category' => 'other',
         'title' => t('Machine Name'),
-        'value' => !empty($this->display->new_id) ? check_plain($this->display->new_id) : check_plain($this->display->id),
+        'value' => !empty($this->display['new_id']) ? check_plain($this->display['new_id']) : check_plain($this->display['id']),
         'desc' => t('Change the machine name of this display.'),
       );
     }
@@ -1266,7 +1266,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     if ($this->usesLinkDisplay()) {
       $display_id = $this->getLinkDisplay();
-      $link_display = empty($this->view->display[$display_id]) ? t('None') : check_plain($this->view->display[$display_id]->display_title);
+      $link_display = empty($this->view->display[$display_id]) ? t('None') : check_plain($this->view->display[$display_id]['display_title']);
       $link_display =  $this->getOption('link_display') == 'custom_url' ? t('Custom URL') : $link_display;
       $options['link_display'] = array(
         'category' => 'other',
@@ -1337,7 +1337,7 @@ abstract class DisplayPluginBase extends PluginBase {
     if ($this->defaultableSections($form_state['section'])) {
       views_ui_standard_display_dropdown($form, $form_state, $form_state['section']);
     }
-    $form['#title'] = check_plain($this->display->display_title) . ': ';
+    $form['#title'] = check_plain($this->display['display_title']) . ': ';
 
     // Set the 'section' to hilite on the form.
     // If it's the item we're looking at is pulling from the default display,
@@ -1347,7 +1347,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $form['#section'] = 'default-' . $form_state['section'];
     }
     else {
-      $form['#section'] = $this->display->id . '-' . $form_state['section'];
+      $form['#section'] = $this->display['id'] . '-' . $form_state['section'];
     }
 
     switch ($form_state['section']) {
@@ -1356,7 +1356,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['display_id'] = array(
           '#type' => 'textfield',
           '#description' => t('This is machine name of the display.'),
-          '#default_value' => !empty($this->display->new_id) ? $this->display->new_id : $this->display->id,
+          '#default_value' => !empty($this->display['new_id']) ? $this->display['new_id'] : $this->display['id'],
           '#required' => TRUE,
           '#size' => 64,
         );
@@ -1367,7 +1367,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#title' => t('Name'),
           '#type' => 'textfield',
           '#description' => t('This name will appear only in the administrative interface for the View.'),
-          '#default_value' => $this->display->display_title,
+          '#default_value' => $this->display['display_title'],
         );
         $form['display_description'] = array(
           '#title' => t('Description'),
@@ -1670,8 +1670,8 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'link_display':
         $form['#title'] .= t('Which display to use for path');
         foreach ($this->view->display as $display_id => $display) {
-          if ($display->handler->hasPath()) {
-            $options[$display_id] = $display->display_title;
+          if ($this->view->displayHandlers[$display_id]->hasPath()) {
+            $options[$display_id] = $display['display_title'];
           }
         }
         $options['custom_url'] = t('Custom URL');
@@ -2128,7 +2128,7 @@ abstract class DisplayPluginBase extends PluginBase {
           }
 
           foreach ($this->view->display as $id => $display) {
-            if ($id != $this->view->current_display && ($form_state['values']['display_id'] == $id || (isset($display->new_id) && $form_state['values']['display_id'] == $display->new_id))) {
+            if ($id != $this->view->current_display && ($form_state['values']['display_id'] == $id || (isset($display['new_id']) && $form_state['values']['display_id'] == $display['new_id']))) {
               form_error($form['display_id'], t('Display id should be unique.'));
             }
           }
@@ -2194,11 +2194,11 @@ abstract class DisplayPluginBase extends PluginBase {
     switch ($section) {
       case 'display_id':
         if (isset($form_state['values']['display_id'])) {
-          $this->display->new_id = $form_state['values']['display_id'];
+          $this->display['new_id'] = $form_state['values']['display_id'];
         }
         break;
       case 'display_title':
-        $this->display->display_title = $form_state['values']['display_title'];
+        $this->display['display_title'] = $form_state['values']['display_title'];
         $this->setOption('display_description', $form_state['values']['display_description']);
         break;
       case 'access':
@@ -2209,7 +2209,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $access = array('type' => $form_state['values']['access']['type']);
             $this->setOption('access', $access);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('access_options'));
+              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('access_options'));
             }
           }
         }
@@ -2230,7 +2230,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $cache = array('type' => $form_state['values']['cache']['type']);
             $this->setOption('cache', $cache);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('cache_options'));
+              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('cache_options'));
             }
           }
         }
@@ -2288,7 +2288,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('row_options'));
+              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('row_options'));
             }
           }
         }
@@ -2303,7 +2303,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $this->setOption('style_options', array());
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('style_options'));
+              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('style_options'));
             }
           }
         }
@@ -2329,7 +2329,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
             $this->setOption('exposed_form', $exposed_form);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('exposed_form_options'));
+              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('exposed_form_options'));
             }
           }
         }
@@ -2356,7 +2356,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->setOption('pager', $pager);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('pager_options'));
+              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('pager_options'));
             }
           }
         }
@@ -2410,15 +2410,15 @@ abstract class DisplayPluginBase extends PluginBase {
       if ($new_state) {
         // Revert to defaults.
         unset($this->options[$option]);
-        unset($this->display->display_options[$option]);
+        unset($this->display['display_options'][$option]);
       }
       else {
         // copy existing values into our display.
         $this->options[$option] = $this->getOption($option);
-        $this->display->display_options[$option] = $this->options[$option];
+        $this->display['display_options'][$option] = $this->options[$option];
       }
       $this->options['defaults'][$option] = $new_state;
-      $this->display->display_options['defaults'][$option] = $new_state;
+      $this->display['display_options']['defaults'][$option] = $new_state;
     }
   }
 
@@ -2465,7 +2465,7 @@ abstract class DisplayPluginBase extends PluginBase {
         if (!empty($this->view->exposed_raw_input)) {
           $url_options['query'] = $this->view->exposed_raw_input;
         }
-        $theme = views_theme_functions('views_more', $this->view, $this->display);
+        $theme = views_theme_functions('views_more', $this->view, $this->view->display[$this->view->current_display]);
         $path = check_url(url($path, $url_options));
 
         return theme($theme, array('more_url' => $path, 'link_text' => check_plain($this->useMoreText()), 'view' => $this->view));
@@ -2610,19 +2610,19 @@ abstract class DisplayPluginBase extends PluginBase {
       }
 
       if (!$fields) {
-        $errors[] = t('Display "@display" uses fields but there are none defined for it or all are excluded.', array('@display' => $this->display->display_title));
+        $errors[] = t('Display "@display" uses fields but there are none defined for it or all are excluded.', array('@display' => $this->display['display_title']));
       }
     }
 
     if ($this->hasPath() && !$this->getOption('path')) {
-      $errors[] = t('Display "@display" uses a path but the path is undefined.', array('@display' => $this->display->display_title));
+      $errors[] = t('Display "@display" uses a path but the path is undefined.', array('@display' => $this->display['display_title']));
     }
 
     // Validate style plugin
     $name = $this->getOption('style_plugin');
     $style = $this->getPlugin('style', $name);
     if (empty($style)) {
-      $errors[] = t('Display "@display" has an invalid style plugin.', array('@display' => $this->display->display_title));
+      $errors[] = t('Display "@display" has an invalid style plugin.', array('@display' => $this->display['display_title']));
     }
     else {
       $result = $style->validate();
@@ -2690,8 +2690,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $blocks = array();
 
     if ($this->usesExposedFormInBlock()) {
-      $delta = '-exp-' . $this->view->name . '-' . $this->display->id;
-      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->name, '@display_id' => $this->display->id));
+      $delta = '-exp-' . $this->view->name . '-' . $this->display['id'];
+      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->name, '@display_id' => $this->display['id']));
 
       $blocks[$delta] = array(
         'info' => $desc,

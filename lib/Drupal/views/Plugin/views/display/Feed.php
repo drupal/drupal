@@ -153,7 +153,7 @@ class Feed extends Page {
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
       if (!empty($this->view->display[$display])) {
-        $attach_to = check_plain($this->view->display[$display]->display_title);
+        $attach_to = check_plain($this->view->display[$display]['display_title']);
       }
     }
 
@@ -196,8 +196,9 @@ class Feed extends Page {
         $form['#title'] .= t('Attach to');
         $displays = array();
         foreach ($this->view->display as $display_id => $display) {
-          if (!empty($display->handler) && $display->handler->acceptAttachments()) {
-            $displays[$display_id] = $display->display_title;
+          // @todo The display plugin should have display_title and id as well.
+          if (!empty($this->view->displayHandlers[$display_id]) && $this->view->displayHandlers[$display_id]->acceptAttachments()) {
+            $displays[$display_id] = $display['display_title'];
           }
         }
         $form['displays'] = array(
@@ -244,7 +245,7 @@ class Feed extends Page {
     $plugin = $this->getPlugin('style', $name);
     if ($plugin) {
       $clone = $this->view->cloneView();
-      $clone->setDisplay($this->display->id);
+      $clone->setDisplay($this->display['id']);
       $clone->buildTitle();
       $plugin->attach_to($display_id, $this->getPath(), $clone->getTitle());
 

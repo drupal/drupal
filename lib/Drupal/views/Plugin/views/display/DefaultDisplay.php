@@ -73,7 +73,7 @@ class DefaultDisplay extends DisplayPluginBase {
    * data if necessary.
    */
   public function execute() {
-    return $this->view->render($this->display->id);
+    return $this->view->render($this->display['id']);
   }
 
 }

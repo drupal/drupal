@@ -35,7 +35,7 @@ class FieldUrlTest extends HandlerTestBase {
   public function testFieldUrl() {
     $view = $this->getView();
 
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -53,7 +53,7 @@ class FieldUrlTest extends HandlerTestBase {
     $view->destroy();
     $view = $this->getView();
 
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',

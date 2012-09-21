@@ -678,56 +678,56 @@ function hook_views_default_views() {
 
   /* Display: Master */
   $handler = $view->newDisplay('default', 'Master', 'default');
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'node';
+  $handler->display['display_options']['access']['type'] = 'none';
+  $handler->display['display_options']['cache']['type'] = 'none';
+  $handler->display['display_options']['query']['type'] = 'views_query';
+  $handler->display['display_options']['query']['options']['query_comment'] = FALSE;
+  $handler->display['display_options']['exposed_form']['type'] = 'basic';
+  $handler->display['display_options']['pager']['type'] = 'full';
+  $handler->display['display_options']['style_plugin'] = 'default';
+  $handler->display['display_options']['row_plugin'] = 'node';
   /* Sort criterion: Content: Sticky */
-  $handler->display->display_options['sorts']['sticky']['id'] = 'sticky';
-  $handler->display->display_options['sorts']['sticky']['table'] = 'node';
-  $handler->display->display_options['sorts']['sticky']['field'] = 'sticky';
-  $handler->display->display_options['sorts']['sticky']['order'] = 'DESC';
+  $handler->display['display_options']['sorts']['sticky']['id'] = 'sticky';
+  $handler->display['display_options']['sorts']['sticky']['table'] = 'node';
+  $handler->display['display_options']['sorts']['sticky']['field'] = 'sticky';
+  $handler->display['display_options']['sorts']['sticky']['order'] = 'DESC';
   /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display['display_options']['sorts']['created']['id'] = 'created';
+  $handler->display['display_options']['sorts']['created']['table'] = 'node';
+  $handler->display['display_options']['sorts']['created']['field'] = 'created';
+  $handler->display['display_options']['sorts']['created']['order'] = 'DESC';
   /* Filter criterion: Content: Promoted to front page */
-  $handler->display->display_options['filters']['promote']['id'] = 'promote';
-  $handler->display->display_options['filters']['promote']['table'] = 'node';
-  $handler->display->display_options['filters']['promote']['field'] = 'promote';
-  $handler->display->display_options['filters']['promote']['value'] = '1';
-  $handler->display->display_options['filters']['promote']['group'] = 0;
-  $handler->display->display_options['filters']['promote']['expose']['operator'] = FALSE;
+  $handler->display['display_options']['filters']['promote']['id'] = 'promote';
+  $handler->display['display_options']['filters']['promote']['table'] = 'node';
+  $handler->display['display_options']['filters']['promote']['field'] = 'promote';
+  $handler->display['display_options']['filters']['promote']['value'] = '1';
+  $handler->display['display_options']['filters']['promote']['group'] = 0;
+  $handler->display['display_options']['filters']['promote']['expose']['operator'] = FALSE;
   /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = '1';
-  $handler->display->display_options['filters']['status']['group'] = 0;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  $handler->display['display_options']['filters']['status']['id'] = 'status';
+  $handler->display['display_options']['filters']['status']['table'] = 'node';
+  $handler->display['display_options']['filters']['status']['field'] = 'status';
+  $handler->display['display_options']['filters']['status']['value'] = '1';
+  $handler->display['display_options']['filters']['status']['group'] = 0;
+  $handler->display['display_options']['filters']['status']['expose']['operator'] = FALSE;
 
   /* Display: Page */
   $handler = $view->newDisplay('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'frontpage';
+  $handler->display['display_options']['path'] = 'frontpage';
 
   /* Display: Feed */
   $handler = $view->newDisplay('feed', 'Feed', 'feed');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Front page feed';
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['style_plugin'] = 'rss';
-  $handler->display->display_options['row_plugin'] = 'node_rss';
-  $handler->display->display_options['path'] = 'rss.xml';
-  $handler->display->display_options['displays'] = array(
+  $handler->display['display_options']['defaults']['title'] = FALSE;
+  $handler->display['display_options']['title'] = 'Front page feed';
+  $handler->display['display_options']['pager']['type'] = 'some';
+  $handler->display['display_options']['style_plugin'] = 'rss';
+  $handler->display['display_options']['row_plugin'] = 'node_rss';
+  $handler->display['display_options']['path'] = 'rss.xml';
+  $handler->display['display_options']['displays'] = array(
     'default' => 'default',
     'page' => 'page',
   );
-  $handler->display->display_options['sitename_title'] = '1';
+  $handler->display['display_options']['sitename_title'] = '1';
 
   // (Export ends here.)
 
@@ -750,16 +750,16 @@ function hook_views_default_views() {
  * @code
  *   $handler =& $view->display['DISPLAY_ID']->handler;
  *   // Add the user name field to the view.
- *   $handler->display->display_options['fields']['name']['id'] = 'name';
- *   $handler->display->display_options['fields']['name']['table'] = 'users';
- *   $handler->display->display_options['fields']['name']['field'] = 'name';
- *   $handler->display->display_options['fields']['name']['label'] = 'Author';
- *   $handler->display->display_options['fields']['name']['link_to_user'] = 1;
+ *   $handler->display['display_options']['fields']['name']['id'] = 'name';
+ *   $handler->display['display_options']['fields']['name']['table'] = 'users';
+ *   $handler->display['display_options']['fields']['name']['field'] = 'name';
+ *   $handler->display['display_options']['fields']['name']['label'] = 'Author';
+ *   $handler->display['display_options']['fields']['name']['link_to_user'] = 1;
  * @endcode
  */
 function hook_views_default_views_alter(&$views) {
   if (isset($views['taxonomy_term'])) {
-    $views['taxonomy_term']->display['default']->display_options['title'] = 'Categories';
+    $views['taxonomy_term']->display['default']['display_options']['title'] = 'Categories';
   }
 }
 

@@ -50,7 +50,7 @@ class Fields extends RowPluginBase {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $options = $this->display->handler->getFieldLabels();
+    $options = $this->displayHandler->getFieldLabels();
 
     if (empty($this->options['inline'])) {
       $this->options['inline'] = array();

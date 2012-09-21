@@ -49,7 +49,7 @@ class SortRandomTest extends HandlerTestBase {
     $view = $this->getView();
 
     // Add a random ordering.
-    $view->display['default']->handler->overrideOption('sorts', array(
+    $view->displayHandlers['default']->overrideOption('sorts', array(
       'random' => array(
         'id' => 'random',
         'field' => 'random',

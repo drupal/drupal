@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageController;
 use Drupal\views\ViewStorage;
 use Drupal\views\ViewDisplay;
@@ -86,6 +87,9 @@ class ViewStorageTest extends WebTestBase {
     $this->deleteTests();
     $this->displayTests();
     $this->statusTests();
+
+    // Helper method tests
+    $this->displayMethodTests();
   }
 
   /**
@@ -109,14 +113,13 @@ class ViewStorageTest extends WebTestBase {
     // Check each ViewDisplay object and confirm that it has the correct key and
     // property values.
     foreach ($view->display as $key => $display) {
-      $this->assertTrue($display instanceof ViewDisplay, format_string('Display: @display is instance of ViewDisplay.', array('@display' => $key)));
-      $this->assertEqual($key, $display->id, 'The display has the correct ID assigned.');
+      $this->assertEqual($key, $display['id'], 'The display has the correct ID assigned.');
 
       // Get original display data and confirm that the display options array
       // exists.
       $original_options = $data['display'][$key];
       foreach ($original_options as $orig_key => $value) {
-        $this->assertIdentical($display->{$orig_key}, $value, format_string('@key is identical to saved data', array('@key' => $key)));
+        $this->assertIdentical($display[$orig_key], $value, format_string('@key is identical to saved data', array('@key' => $key)));
       }
     }
 
@@ -174,7 +177,6 @@ class ViewStorageTest extends WebTestBase {
 
     // Test created displays.
     foreach ($created->display as $key => $display) {
-      $this->assertTrue($display instanceof ViewDisplay, format_string('Display @display is an instance of ViewDisplay.', array('@display' => $key)));
     }
 
     // Check the uuid of the loaded View.
@@ -217,8 +219,8 @@ class ViewStorageTest extends WebTestBase {
     $created_loaded = $this->loadView($created->id());
     $values_loaded = config('views.view.archive')->get();
 
-    $this->assertTrue(isset($created_loaded->display['default']->display_options), 'Make sure that the display options exist.');
-    $this->assertEqual($created_loaded->display['default']->display_plugin, 'default', 'Make sure the right display plugin is set.');
+    $this->assertTrue(isset($created_loaded->display['default']['display_options']), 'Make sure that the display options exist.');
+    $this->assertEqual($created_loaded->display['default']['display_plugin'], 'default', 'Make sure the right display plugin is set.');
 
     $this->assertEqual($values, $values_loaded, 'The loaded config is the same as the original loaded one.');
 
@@ -247,11 +249,10 @@ class ViewStorageTest extends WebTestBase {
     $view->newDisplay('page', 'Test', 'test');
 
     $new_display = $view->display['test'];
-    $this->assertTrue($new_display instanceof ViewDisplay, 'New page display "test" created.');
 
     // Ensure the right display_plugin is created/instantiated.
-    $this->assertEqual($new_display->display_plugin, 'page', 'New page display "test" uses the right display plugin.');
-    $this->assertTrue($new_display->handler instanceof Page, 'New page display "test" uses the right display plugin.');
+    $this->assertEqual($new_display['display_plugin'], 'page', 'New page display "test" uses the right display plugin.');
+    $this->assertTrue($view->executable->displayHandlers[$new_display['id']] instanceof Page, 'New page display "test" uses the right display plugin.');
 
 
     $view->set('name', 'frontpage_new');
@@ -299,6 +300,137 @@ class ViewStorageTest extends WebTestBase {
   protected function loadView($view_name) {
     $load = $this->controller->load(array($view_name));
     return reset($load);
+  }
+
+  /**
+   * Tests the display related functions like getDisplaysList().
+   */
+  protected function displayMethodTests() {
+    $config['display'] = array(
+      'page' => array(
+        'display_options' => array('path' => 'test'),
+        'display_plugin' => 'page',
+        'id' => 'page_2',
+        'display_title' => 'Page 2',
+        'position' => 1
+      ),
+      'feed' => array(
+        'display_options' => array('path' => 'test.xml'),
+        'display_plugin' => 'feed',
+        'id' => 'feed',
+        'display_title' => 'Feed',
+        'position' => 2
+      ),
+      'page_2' => array(
+        'display_options' => array('path' => 'test/%/extra'),
+        'display_plugin' => 'page',
+        'id' => 'page_2',
+        'display_title' => 'Page 2',
+        'position' => 3
+      )
+    );
+    $view = $this->controller->create($config);
+
+    $this->assertEqual($view->getDisplaysList(), array('Feed', 'Page'), 'Make sure the display admin names are returns in alphabetic order.');
+
+    // Paths with a "%" shouldn't not be linked
+    $expected_paths = array();
+    $expected_paths[] = l('/test', 'test');
+    $expected_paths[] = l('/test.xml', 'test.xml');
+    $expected_paths[] = '/test/%/extra';
+
+    $this->assertEqual($view->getPaths(), $expected_paths, 'Make sure the paths in the ui are generated as expected.');
+
+    // Tests Drupal\views\ViewStorage::addDisplay()
+    $view = $this->controller->create(array());
+    $random_title = $this->randomName();
+
+    $id = $view->addDisplay('page', $random_title);
+    $this->assertEqual($id, 'page_1', format_string('Make sure the first display (%id_new) has the expected id (%id)', array('%id_new' => $id, '%id' => 'page_1')));
+    $this->assertEqual($view->display[$id]['display_title'], $random_title);
+
+    $random_title = $this->randomName();
+    $id = $view->addDisplay('page', $random_title);
+    $this->assertEqual($id, 'page_2', format_string('Make sure the second display (%id_new) has the expected id (%id)', array('%id_new' => $id, '%id' => 'page_2')));
+    $this->assertEqual($view->display[$id]['display_title'], $random_title);
+
+    $id = $view->addDisplay('page');
+    $this->assertEqual($view->display[$id]['display_title'], 'Page 3');
+
+    // Tests Drupal\views\ViewStorage::generateDisplayId().
+    // @todo Sadly this method is not public so it cannot be tested.
+    // $view = $this->controller->create(array());
+    // $this->assertEqual($view->generateDisplayId('default'), 'default', 'The plugin id for default is always default.');
+    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_1', 'The generated id for the first instance of a plugin type should have an suffix of _1.');
+    // $view->addDisplay('feed', 'feed title');
+    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_2', 'The generated id for the first instance of a plugin type should have an suffix of _2.');
+
+    // Tests Drupal\views\ViewStorage::newDisplay().
+    $view = $this->controller->create(array());
+    $view->newDisplay('default');
+
+    $display = $view->newDisplay('page');
+    $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Page);
+    $this->assertTrue($view->executable->displayHandlers['page_1'] instanceof \Drupal\views\Plugin\views\display\Page);
+    $this->assertTrue($view->executable->displayHandlers['page_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+
+    $display = $view->newDisplay('page');
+    $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Page);
+    $this->assertTrue($view->executable->displayHandlers['page_2'] instanceof \Drupal\views\Plugin\views\display\Page);
+    $this->assertTrue($view->executable->displayHandlers['page_2']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+
+    $display = $view->newDisplay('feed');
+    $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Feed);
+    $this->assertTrue($view->executable->displayHandlers['feed_1'] instanceof \Drupal\views\Plugin\views\display\Feed);
+    $this->assertTrue($view->executable->displayHandlers['feed_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+
+    // Tests item related methods().
+    $view = $this->controller->create(array('base_table' => 'views_test_data'));
+    $executable = new ViewExecutable($view);
+    $view->addDisplay('default');
+
+    $display_id = 'default';
+    $expected_items = array();
+    // Tests addItem with getItem.
+    // Therefore add one item without any optioins and one item with some
+    // options.
+    $id1 = $view->addItem($display_id, 'field', 'views_test_data', 'id');
+    $item1 = $view->getItem($display_id, 'field', 'id');
+    $expected_items[$id1] = $expected_item = array(
+      'id' => 'id',
+      'table' => 'views_test_data',
+      'field' => 'id'
+    );
+    $this->assertEqual($item1, $expected_item);
+
+    $options = array(
+      'alter' => array(
+        'text' => $this->randomName()
+      )
+    );
+    $id2 = $view->addItem($display_id, 'field', 'views_test_data', 'name', $options);
+    $item2 = $view->getItem($display_id, 'field', 'name');
+    $expected_items[$id2] = $expected_item = array(
+      'id' => 'name',
+      'table' => 'views_test_data',
+      'field' => 'name'
+    ) + $options;
+    $this->assertEqual($item2, $expected_item);
+
+    // Tests the expected fields from the previous additions.
+    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+
+    // Alter an existing item via setItem and check the result via getItem
+    // and getItems.
+    $item = array(
+      'alter' => array(
+        'text' => $this->randomName(),
+      )
+    ) + $item1;
+    $expected_items[$id1] = $item;
+    $view->setItem($display_id, 'field', $id1, $item);
+    $this->assertEqual($view->getItem($display_id, 'field', 'id'), $item);
+    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
   }
 
 }

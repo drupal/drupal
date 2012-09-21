@@ -80,7 +80,7 @@ abstract class Mapping extends StylePluginBase {
     $options = array_intersect_key($this->options['mapping'], $mapping);
 
     // Get the labels of the fields added to this display.
-    $field_labels = $this->display->handler->getFieldLabels();
+    $field_labels = $this->displayHandler->getFieldLabels();
 
     // Provide some default values.
     $defaults = array(

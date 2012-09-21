@@ -65,10 +65,10 @@ abstract class CachePluginBase extends PluginBase {
   public function init(&$view, &$display) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
-    $this->display = &$display;
+    $this->displayHandler = &$display;
 
-    if (is_object($display->handler)) {
-      $options = $display->handler->getOption('cache');
+    if (is_object($display)) {
+      $options = $display->getOption('cache');
       // Overlay incoming options on top of defaults
       $this->unpackOptions($this->options, $options);
     }
@@ -302,7 +302,7 @@ abstract class CachePluginBase extends PluginBase {
         }
       }
 
-      $this->_results_key = $this->view->name . ':' . $this->display->id . ':results:' . md5(serialize($key_data));
+      $this->_results_key = $this->view->name . ':' . $this->displayHandler->display['id'] . ':results:' . md5(serialize($key_data));
     }
 
     return $this->_results_key;
@@ -320,7 +320,7 @@ abstract class CachePluginBase extends PluginBase {
         'base_url' => $GLOBALS['base_url'],
       );
 
-      $this->_output_key = $this->view->name . ':' . $this->display->id . ':output:' . md5(serialize($key_data));
+      $this->_output_key = $this->view->name . ':' . $this->displayHandler->display['id'] . ':output:' . md5(serialize($key_data));
     }
 
     return $this->_output_key;

@@ -49,7 +49,7 @@ class HandlerAliasTest extends ViewTestBase {
     $view->initDisplay();
 
     // Change the filtering.
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'test_filter' => array(
         'id' => 'test_filter',
         'table' => 'views_test_data_alias',

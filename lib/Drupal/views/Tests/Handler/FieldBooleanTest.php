@@ -43,7 +43,7 @@ class FieldBooleanTest extends HandlerTestBase {
   public function testFieldBoolean() {
     $view = $this->getView();
 
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'age' => array(
         'id' => 'age',
         'table' => 'views_test_data',

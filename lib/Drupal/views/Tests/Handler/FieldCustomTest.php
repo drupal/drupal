@@ -37,7 +37,7 @@ class FieldCustomTest extends HandlerTestBase {
 
     // Alter the text of the field to a random string.
     $random = $this->randomName();
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',

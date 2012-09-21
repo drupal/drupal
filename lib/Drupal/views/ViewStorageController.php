@@ -103,11 +103,11 @@ class ViewStorageController extends ConfigStorageController {
         $displays = array();
         foreach ($entity->display as $key => $display) {
           $displays[$key] = array(
-            'display_options' => $display->display_options,
-            'display_plugin' => $display->display_plugin,
-            'id' => $display->id,
-            'display_title' => $display->display_title,
-            'position' => isset($display->position) ? $display->position : 0,
+            'display_options' => $display['display_options'],
+            'display_plugin' => $display['display_plugin'],
+            'id' => $display['id'],
+            'display_title' => $display['display_title'],
+            'position' => isset($display['position']) ? $display['position'] : 0,
           );
         }
         $config->set('display', $displays);
@@ -162,7 +162,7 @@ class ViewStorageController extends ConfigStorageController {
   }
 
   /**
-   * Attaches an array of ViewDisplay objects to the view display property.
+   * Add defaults to the display options.
    *
    * @param Drupal\Core\Entity\EntityInterface $entity
    */
@@ -178,8 +178,8 @@ class ViewStorageController extends ConfigStorageController {
           'display_title' => '',
           'position' => NULL,
         );
-        // Create a ViewDisplay object using the display options.
-        $displays[$key] = new ViewDisplay($options);
+        // Add the defaults for the display.
+        $displays[$key] = $options;
       }
 
       $entity->set('display', $displays);

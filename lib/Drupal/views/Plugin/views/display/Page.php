@@ -80,7 +80,7 @@ class Page extends DisplayPluginBase {
     // views_arg_load -- which lives in views.module
 
     $bits = explode('/', $this->getOption('path'));
-    $page_arguments = array($this->view->name, $this->display->id);
+    $page_arguments = array($this->view->name, $this->display['id']);
     $this->view->initHandlers();
     $view_arguments = $this->view->argument;
 
@@ -141,7 +141,7 @@ class Page extends DisplayPluginBase {
         'access callback' => 'views_access',
         'access arguments' => $access_arguments,
         // Identify URL embedded arguments and correlate them to a handler
-        'load arguments'  => array($this->view->name, $this->display->id, '%index'),
+        'load arguments'  => array($this->view->name, $this->display['id'], '%index'),
       );
       $menu = $this->getOption('menu');
       if (empty($menu)) {
@@ -202,7 +202,7 @@ class Page extends DisplayPluginBase {
               'access callback' => 'views_access',
               'access arguments' => $access_arguments,
               // Identify URL embedded arguments and correlate them to a handler
-              'load arguments'  => array($this->view->name, $this->display->id, '%index'),
+              'load arguments'  => array($this->view->name, $this->display['id'], '%index'),
               'title' => $tab_options['title'],
               'description' => $tab_options['description'],
               'menu_name' => $tab_options['name'],
@@ -609,7 +609,7 @@ class Page extends DisplayPluginBase {
         $this->setOption('menu', $form_state['values']['menu']);
         // send ajax form to options page if we use it.
         if ($form_state['values']['menu']['type'] == 'default tab') {
-          views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('tab_options'));
+          views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('tab_options'));
         }
         break;
       case 'tab_options':
@@ -623,13 +623,13 @@ class Page extends DisplayPluginBase {
 
     $menu = $this->getOption('menu');
     if (!empty($menu['type']) && $menu['type'] != 'none' && empty($menu['title'])) {
-      $errors[] = t('Display @display is set to use a menu but the menu link text is not set.', array('@display' => $this->display->display_title));
+      $errors[] = t('Display @display is set to use a menu but the menu link text is not set.', array('@display' => $this->display['display_title']));
     }
 
     if ($menu['type'] == 'default tab') {
       $tab_options = $this->getOption('tab_options');
       if (!empty($tab_options['type']) && $tab_options['type'] != 'none' && empty($tab_options['title'])) {
-        $errors[] = t('Display @display is set to use a parent menu but the parent menu link text is not set.', array('@display' => $this->display->display_title));
+        $errors[] = t('Display @display is set to use a parent menu but the parent menu link text is not set.', array('@display' => $this->display['display_title']));
       }
     }
 

@@ -50,8 +50,8 @@ class ViewTest extends ViewTestBase {
   }
 
   function assertViewDestroy($view) {
-    $this->assertFalse(isset($view->display['default']->handler), 'Make sure all displays are destroyed.');
-    $this->assertFalse(isset($view->display['attachment_1']->handler), 'Make sure all displays are destroyed.');
+    $this->assertFalse(isset($view->displayHandlers['default']), 'Make sure all displays are destroyed.');
+    $this->assertFalse(isset($view->displayHandlers['attachment_1']), 'Make sure all displays are destroyed.');
 
     $this->assertFalse(isset($view->filter), 'Make sure all handlers are destroyed');
     $this->assertFalse(isset($view->field), 'Make sure all handlers are destroyed');

@@ -45,7 +45,7 @@ abstract class PagerPluginBase extends PluginBase {
   public function init(&$view, &$display, $options = array()) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
-    $this->display = &$display;
+    $this->displayHandler = &$display;
 
     $this->unpackOptions($this->options, $options);
   }

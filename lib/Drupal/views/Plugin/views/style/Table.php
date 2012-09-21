@@ -164,7 +164,7 @@ class Table extends StylePluginBase {
   function sanitize_columns($columns, $fields = NULL) {
     $sanitized = array();
     if ($fields === NULL) {
-      $fields = $this->display->handler->getOption('fields');
+      $fields = $this->displayHandler->getOption('fields');
     }
     // Preconfigure the sanitized array so that the order is retained.
     foreach ($fields as $field => $info) {
@@ -197,7 +197,7 @@ class Table extends StylePluginBase {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $handlers = $this->display->handler->getHandlers('field');
+    $handlers = $this->displayHandler->getHandlers('field');
     if (empty($handlers)) {
       $form['error_markup'] = array(
         '#markup' => '<div class="error messages">' . t('You need at least one field before you can configure your table settings') . '</div>',
@@ -233,7 +233,7 @@ class Table extends StylePluginBase {
     $columns = $this->sanitize_columns($this->options['columns']);
 
     // Create an array of allowed columns from the data we know:
-    $field_names = $this->display->handler->getFieldLabels();
+    $field_names = $this->displayHandler->getFieldLabels();
 
     if (isset($this->options['default'])) {
       $default = $this->options['default'];

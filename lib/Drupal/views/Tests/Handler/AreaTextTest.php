@@ -33,7 +33,7 @@ class AreaTextTest extends HandlerTestBase {
 
     // add a text header
     $string = $this->randomName();
-    $view->display['default']->handler->overrideOption('header', array(
+    $view->displayHandlers['default']->overrideOption('header', array(
       'area' => array(
         'id' => 'area',
         'table' => 'views',

@@ -296,13 +296,12 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
       'display_plugin' => $plugin_id,
       'id' => $id,
       'display_title' => $title,
+      'position' => NULL,
+      'display_options' => array(),
     );
 
-    // Create the new display object
-    $display = new ViewDisplay($display_options);
-
-    // Add the new display object to the view.
-    $this->display[$id] = $display;
+    // Add the display options to the view.
+    $this->display[$id] = $display_options;
     return $id;
   }
 
@@ -376,23 +375,24 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     $id = $this->addDisplay($plugin_id, $title, $id);
 
     // Create a handler.
-    $this->display[$id]->handler = views_get_plugin('display', $this->display[$id]->display_plugin);
-    if (empty($this->display[$id]->handler)) {
+    $this->executable->displayHandlers[$id] = views_get_plugin('display', $this->display[$id]['display_plugin']);
+    if (empty($this->executable->displayHandlers[$id])) {
       // provide a 'default' handler as an emergency. This won't work well but
       // it will keep things from crashing.
-      $this->display[$id]->handler = views_get_plugin('display', 'default');
+      $this->executable->displayHandlers[$id] = views_get_plugin('display', 'default');
     }
 
-    if (!empty($this->display[$id]->handler)) {
+    if (!empty($this->executable->displayHandlers[$id])) {
       // Initialize the new display handler with data.
-      $this->display[$id]->handler->init($this, $this->display[$id]);
+      $this->executable->displayHandlers[$id]->init($this, $this->display[$id]);
       // If this is NOT the default display handler, let it know which is
       if ($id != 'default') {
-        $this->display[$id]->handler->default_display = &$this->display['default']->handler;
+        // @todo is the '&' still required in php5?
+        $this->executable->displayHandlers[$id]->default_display = &$this->executable->displayHandlers['default'];
       }
     }
 
-    return $this->display[$id]->handler;
+    return $this->executable->displayHandlers[$id];
   }
 
   /**
@@ -402,12 +402,12 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    *   An array of display types that this view includes.
    */
   function getDisplaysList() {
-    $this->initDisplay();
-
+    $manager = drupal_container()->get('plugin.manager.views.display');
     $displays = array();
     foreach ($this->display as $display) {
-      if (!empty($display->handler->definition['admin'])) {
-        $displays[$display->handler->definition['admin']] = TRUE;
+      $definition = $manager->getDefinition($display['display_plugin']);
+      if (!empty($definition['admin'])) {
+        $displays[$definition['admin']] = TRUE;
       }
     }
 
@@ -427,10 +427,9 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
       $all_paths[] = t('Edit this view to add a display.');
     }
     else {
-      $this->initDisplay();   // Make sure all the handlers are set up
       foreach ($this->display as $display) {
-        if (!empty($display->handler) && $display->handler->hasPath()) {
-          $path = $display->handler->getOption('path');
+        if (!empty($display['display_options']['path'])) {
+          $path = $display['display_options']['path'];
           if ($this->isEnabled() && strpos($path, '%') === FALSE) {
             $all_paths[] = l('/' . $path, $path);
           }
@@ -470,7 +469,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     $types = ViewExecutable::viewsHandlerTypes();
     $this->setDisplay($display_id);
 
-    $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
+    $fields = $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
 
     if (empty($id)) {
       $id = $this->generateItemId($field, $fields);
@@ -488,7 +487,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
       'field' => $field,
     ) + $options;
 
-    $this->display[$display_id]->handler->setOption($types[$type]['plural'], $fields);
+    $this->executable->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
 
     return $id;
   }
@@ -514,7 +513,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
 
     // Get info about the types so we can get the right data.
     $types = ViewExecutable::viewsHandlerTypes();
-    return $this->display[$display_id]->handler->getOption($types[$type]['plural']);
+    return $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
   }
 
   /**
@@ -538,7 +537,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     $this->setDisplay($display_id);
 
     // Get the existing configuration
-    $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
+    $fields = $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
 
     return isset($fields[$id]) ? $fields[$id] : NULL;
   }
@@ -564,7 +563,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     $this->setDisplay($display_id);
 
     // Get the existing configuration.
-    $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
+    $fields = $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
     if (isset($item)) {
       $fields[$id] = $item;
     }
@@ -573,7 +572,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     }
 
     // Store.
-    $this->display[$display_id]->handler->setOption($types[$type]['plural'], $fields);
+    $this->executable->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
   }
 
   /**

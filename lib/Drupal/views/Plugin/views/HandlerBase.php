@@ -326,7 +326,7 @@ abstract class HandlerBase extends PluginBase {
     $type = $form_state['type'];
     $id = $form_state['id'];
 
-    $form['#title'] = check_plain($view->display[$display_id]->display_title) . ': ';
+    $form['#title'] = check_plain($view->display[$display_id]['display_title']) . ': ';
     $form['#title'] .= t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $this->adminLabel()));
 
     $form['#section'] = $display_id . '-' . $type . '-' . $id;

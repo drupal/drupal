@@ -44,7 +44,7 @@ class Some extends PagerPluginBase {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $pager_text = $this->display->handler->getPagerText();
+    $pager_text = $this->displayHandler->getPagerText();
     $form['items_per_page'] = array(
       '#title' => $pager_text['items per page title'],
       '#type' => 'textfield',

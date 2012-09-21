@@ -61,9 +61,9 @@ class HandlerFieldFieldTest extends FieldTestBase {
     }
 
     foreach ($this->fields as $key => $field) {
-      $this->view->display_handler->display->display_options['fields'][$field['field_name']]['id'] = $field['field_name'];
-      $this->view->display_handler->display->display_options['fields'][$field['field_name']]['table'] = 'field_data_' . $field['field_name'];
-      $this->view->display_handler->display->display_options['fields'][$field['field_name']]['field'] = $field['field_name'];
+      $this->view->display_handler->display['display_options']['fields'][$field['field_name']]['id'] = $field['field_name'];
+      $this->view->display_handler->display['display_options']['fields'][$field['field_name']]['table'] = 'field_data_' . $field['field_name'];
+      $this->view->display_handler->display['display_options']['fields'][$field['field_name']]['field'] = $field['field_name'];
     }
   }
 
@@ -100,8 +100,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
    */
   public function _testFormatterSimpleFieldRender() {
     $view = $this->getView();
-    $view->display['default']->handler->options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
-    $view->display['default']->handler->options['fields'][$this->fields[0]['field_name']]['settings'] = array(
+    $view->displayHandlers['default']->options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
+    $view->displayHandlers['default']->options['fields'][$this->fields[0]['field_name']]['settings'] = array(
       'trim_length' => 3,
     );
     $this->executeView($view);
@@ -118,8 +118,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view = $this->getView();
 
     // Test delta limit.
-    $view->display['default']->handler->options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']->handler->options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->displayHandlers['default']->options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->displayHandlers['default']->options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -139,9 +139,9 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + offset
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_offset'] = 1;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_offset'] = 1;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -157,10 +157,10 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + reverse.
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_offset'] = 0;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_reversed'] = TRUE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_offset'] = 0;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_reversed'] = TRUE;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -177,10 +177,10 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta first last.
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 0;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_first_last'] = TRUE;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_reversed'] = FALSE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 0;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_first_last'] = TRUE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_reversed'] = FALSE;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -194,10 +194,10 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + custom seperator.
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_first_last'] = FALSE;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['separator'] = ':';
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_first_last'] = FALSE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['separator'] = ':';
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {

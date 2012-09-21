@@ -49,7 +49,7 @@ class StyleTest extends StyleTestBase {
     $view->initStyle();
     $view->style_plugin->setUsesRowPlugin(TRUE);
     // Reinitialize the style as it supports row plugins now.
-    $view->style_plugin->init($view, $view->display[$view->current_display], array());
+    $view->style_plugin->init($view, $view->display_handler, array());
     $this->assertTrue($view->style_plugin->row_plugin instanceof \Drupal\views_test_data\Plugin\views\row\RowTest, 'Make sure the right row plugin class is loaded.');
 
     $random_text = $this->randomName();
@@ -71,13 +71,13 @@ class StyleTest extends StyleTestBase {
 
     // Reduce the amount of items to make the test a bit easier.
     // Set up the pager.
-    $view->display['default']->handler->overrideOption('pager', array(
+    $view->displayHandlers['default']->overrideOption('pager', array(
       'type' => 'some',
       'options' => array('items_per_page' => 3),
     ));
 
     // Add the job field .
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -170,13 +170,13 @@ class StyleTest extends StyleTestBase {
 
     // Reduce the amount of items to make the test a bit easier.
     // Set up the pager.
-    $view->display['default']->handler->overrideOption('pager', array(
+    $view->displayHandlers['default']->overrideOption('pager', array(
       'type' => 'some',
       'options' => array('items_per_page' => 3),
     ));
 
     // Add the job and age field.
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',

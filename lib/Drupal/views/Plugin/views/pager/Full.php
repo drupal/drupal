@@ -67,7 +67,7 @@ class Full extends PagerPluginBase {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $pager_text = $this->display->handler->getPagerText();
+    $pager_text = $this->displayHandler->getPagerText();
     $form['items_per_page'] = array(
       '#title' => $pager_text['items per page title'],
       '#type' => 'number',
@@ -291,7 +291,7 @@ class Full extends PagerPluginBase {
   }
 
   function render($input) {
-    $pager_theme = views_theme_functions('pager', $this->view, $this->display);
+    $pager_theme = views_theme_functions('pager', $this->view, $this->view->display[$this->view->current_display]);
     // The 0, 1, 3, 4 index are correct. See theme_pager documentation.
     $tags = array(
       0 => $this->options['tags']['first'],

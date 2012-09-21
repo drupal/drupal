@@ -92,13 +92,13 @@ abstract class StylePluginBase extends PluginBase {
   public function init(&$view, &$display, $options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
-    $this->display = &$display;
+    $this->displayHandler = &$display;
 
     // Overlay incoming options on top of defaults
-    $this->unpackOptions($this->options, isset($options) ? $options : $display->handler->getOption('style_options'));
+    $this->unpackOptions($this->options, isset($options) ? $options : $display->getOption('style_options'));
 
-    if ($this->usesRowPlugin() && $display->handler->getOption('row_plugin')) {
-      $this->row_plugin = $display->handler->getPlugin('row');
+    if ($this->usesRowPlugin() && $display->getOption('row_plugin')) {
+      $this->row_plugin = $display->getPlugin('row');
     }
 
     $this->options += array(
@@ -243,7 +243,7 @@ abstract class StylePluginBase extends PluginBase {
     // @TODO: Document "usesGrouping" in docs.php when docs.php is written.
     if ($this->usesFields() && $this->usesGrouping()) {
       $options = array('' => t('- None -'));
-      $field_labels = $this->display->handler->getFieldLabels(TRUE);
+      $field_labels = $this->displayHandler->getFieldLabels(TRUE);
       $options += $field_labels;
       // If there are no fields, we can't group on them.
       if (count($options) > 1) {
@@ -438,7 +438,7 @@ abstract class StylePluginBase extends PluginBase {
       $row = reset($set['rows']);
       // Render as a grouping set.
       if (is_array($row) && isset($row['group'])) {
-        $output .= theme(views_theme_functions('views_view_grouping', $this->view, $this->display),
+        $output .= theme(views_theme_functions('views_view_grouping', $this->view, $this->view->display[$this->view->current_display]),
           array(
             'view' => $this->view,
             'grouping' => $this->options['grouping'][$level],
@@ -662,8 +662,8 @@ abstract class StylePluginBase extends PluginBase {
     $errors = parent::validate();
 
     if ($this->usesRowPlugin()) {
-      $name = $this->display->handler->getOption('row_plugin');
-      $plugin = $this->display->handler->getPlugin('row', $name);
+      $name = $this->displayHandler->getOption('row_plugin');
+      $plugin = $this->displayHandler->getPlugin('row', $name);
       if (empty($plugin)) {
         $errors[] = t('Style @style requires a row style but the row plugin is invalid.', array('@style' => $this->definition['title']));
       }

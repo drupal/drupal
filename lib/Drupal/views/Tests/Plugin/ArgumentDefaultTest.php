@@ -142,7 +142,7 @@ class ArgumentDefaultTest extends PluginTestBase {
    */
   protected function getBasicView() {
     $view = $this->createViewFromConfig('test_argument_default_fixed');
-    $view->display['default']->display_options['arguments']['null']['default_argument_options']['argument'] = $this->random;
+    $view->display['default']['display_options']['arguments']['null']['default_argument_options']['argument'] = $this->random;
     return $view;
   }
 

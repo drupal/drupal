@@ -49,7 +49,7 @@ class FieldXssTest extends HandlerTestBase {
   public function testFieldXss() {
     $view = $this->getView();
 
-    $view->display['default']->handler->overrideOption('fields', array(
+    $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',

@@ -209,6 +209,16 @@ class ViewExecutable {
   public $display_handler;
 
   /**
+   * The list of used displays of the view.
+   *
+   * An array containing Drupal\views\Plugin\views\display\DisplayPluginBase
+   * objects.
+   *
+   * @var array
+   */
+  public $displayHandlers;
+
+  /**
    * The current used style plugin.
    *
    * @var Drupal\views\Plugin\views\style\StylePluginBase
@@ -717,32 +727,22 @@ class ViewExecutable {
 
     // Instantiate all displays
     foreach (array_keys($this->display) as $id) {
-      // Correct for shallow cloning
-      // Often we'll have a cloned view so we don't mess up each other's
-      // displays, but the clone is pretty shallow and doesn't necessarily
-      // clone the displays. We can tell this by looking to see if a handler
-      // has already been set; if it has, but $this->current_display is not
-      // set, then something is dreadfully wrong.
-      if (!empty($this->display[$id]->handler)) {
-        $this->display[$id] = clone $this->display[$id];
-        unset($this->display[$id]->handler);
-      }
-      $this->display[$id]->handler = views_get_plugin('display', $this->display[$id]->display_plugin);
-      if (!empty($this->display[$id]->handler)) {
+      $this->displayHandlers[$id] = views_get_plugin('display', $this->storage->display[$id]['display_plugin']);
+      if (!empty($this->displayHandlers[$id])) {
         // Initialize the new display handler with data.
-        $this->display[$id]->handler->init($this, $this->display[$id]);
+        $this->displayHandlers[$id]->init($this, $this->storage->display[$id]);
         // If this is NOT the default display handler, let it know which is
         // since it may well utilize some data from the default.
         // This assumes that the 'default' handler is always first. It always
         // is. Make sure of it.
         if ($id != 'default') {
-          $this->display[$id]->handler->default_display = &$this->display['default']->handler;
+          $this->displayHandlers[$id]->default_display =& $this->displayHandlers['default'];
         }
       }
     }
 
     $this->current_display = 'default';
-    $this->display_handler = $this->storage->display['default']->handler;
+    $this->display_handler = $this->displayHandlers['default'];
 
     return TRUE;
   }
@@ -750,8 +750,11 @@ class ViewExecutable {
   /**
    * Get the first display that is accessible to the user.
    *
-   * @param $displays
+   * @param array|string $displays
    *   Either a single display id or an array of display ids.
+   *
+   * @return string
+   *   The first accessible display id, at least default.
    */
   public function chooseDisplay($displays) {
     if (!is_array($displays)) {
@@ -761,7 +764,7 @@ class ViewExecutable {
     $this->initDisplay();
 
     foreach ($displays as $display_id) {
-      if ($this->display[$display_id]->handler->access()) {
+      if ($this->displayHandlers[$display_id]->access()) {
         return $display_id;
       }
     }
@@ -807,12 +810,12 @@ class ViewExecutable {
     $this->current_display = $display_id;
 
     // Ensure requested display has a working handler.
-    if (empty($this->display[$display_id]->handler)) {
+    if (empty($this->displayHandlers[$display_id])) {
       return FALSE;
     }
 
     // Set a shortcut
-    $this->display_handler = $this->storage->display[$display_id]->handler;
+    $this->display_handler = $this->displayHandlers[$display_id];
 
     return TRUE;
   }
@@ -840,7 +843,7 @@ class ViewExecutable {
     }
 
     // init the new style handler with data.
-    $this->style_plugin->init($this, $this->display[$this->current_display], $this->style_options);
+    $this->style_plugin->init($this, $this->display_handler, $this->style_options);
     return TRUE;
   }
 
@@ -1315,7 +1318,7 @@ class ViewExecutable {
     }
 
     // Don't allow to use deactivated displays, but display them on the live preview.
-    if (!$this->display[$this->current_display]->handler->getOption('enabled') && empty($this->live_preview)) {
+    if (!$this->display_handler->getOption('enabled') && empty($this->live_preview)) {
       $this->build_info['fail'] = TRUE;
       return FALSE;
     }
@@ -1615,8 +1618,8 @@ class ViewExecutable {
     $this->is_attachment = TRUE;
     // Give other displays an opportunity to attach to the view.
     foreach ($this->display as $id => $display) {
-      if (!empty($this->display[$id]->handler)) {
-        $this->display[$id]->handler->attachTo($this->current_display);
+      if (!empty($this->display[$id])) {
+        $this->displayHandlers[$id]->attachTo($this->current_display);
       }
     }
     $this->is_attachment = FALSE;
@@ -1684,8 +1687,8 @@ class ViewExecutable {
     // calls this one.
     $displays = (array)$displays;
     foreach ($displays as $display_id) {
-      if (!empty($this->display[$display_id]->handler)) {
-        if ($this->display[$display_id]->handler->access($account)) {
+      if (!empty($this->displayHandlers[$display_id])) {
+        if ($this->displayHandlers[$display_id]->access($account)) {
           return TRUE;
         }
       }
@@ -1972,7 +1975,7 @@ class ViewExecutable {
   public function cloneView() {
     $clone = clone $this->storage;
 
-    $keys = array('current_display', 'display_handler', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'exposed_widgets', 'many_to_one_tables', 'feed_icon');
+    $keys = array('current_display', 'display_handler', 'displayHandlers', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'exposed_widgets', 'many_to_one_tables', 'feed_icon');
     foreach ($keys as $key) {
       unset($clone->$key);
     }
@@ -1983,17 +1986,6 @@ class ViewExecutable {
     $clone->attachment_after = '';
     $clone->result = array();
 
-    // Shallow cloning means that all the display objects *were not cloned*, so
-    // we must clone them ourselves.
-    $displays = array();
-    foreach ($clone->display as $id => $display) {
-      $displays[$id] = clone $display;
-      if (isset($displays[$id]->handler)) {
-        unset($displays[$id]->handler);
-      }
-    }
-    $clone->display = $displays;
-
     return $clone;
   }
 
@@ -2002,10 +1994,10 @@ class ViewExecutable {
    * collected.
    */
   public function destroy() {
-    foreach (array_keys($this->display) as $display_id) {
-      if (isset($this->display[$display_id]->handler)) {
-        $this->display[$display_id]->handler->destroy();
-        unset($this->display[$display_id]->handler);
+    foreach (array_keys($this->displayHandlers) as $display_id) {
+      if (isset($this->displayHandlers[$display_id])) {
+        $this->displayHandlers[$display_id]->destroy();
+        unset($this->displayHandlers[$display_id]);
       }
     }
 
@@ -2023,7 +2015,7 @@ class ViewExecutable {
       $this->style_plugin->destroy();
     }
 
-    $keys = array('current_display', 'display_handler', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
+    $keys = array('current_display', 'display_handler', 'displayHandlers', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
     foreach ($keys as $key) {
       unset($this->$key);
     }
@@ -2056,13 +2048,13 @@ class ViewExecutable {
     $this->display_errors = NULL;
 
     $current_display = $this->current_display;
-    foreach ($this->display as $id => $display) {
-      if ($display->handler) {
+    foreach ($this->displayHandlers as $id => $display) {
+      if (!empty($display)) {
         if (!empty($display->deleted)) {
           continue;
         }
 
-        $result = $this->display[$id]->handler->validate();
+        $result = $this->displayHandlers[$id]->validate();
         if (!empty($result) && is_array($result)) {
           $errors = array_merge($errors, $result);
           // Mark this display as having validation errors.

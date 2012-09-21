@@ -69,7 +69,7 @@ class AccessTest extends PluginTestBase {
   function testAccessRole() {
     $view = $this->createViewFromConfig('test_access_role');
 
-    $view->display['default']->handler->options['access']['role'] = array(
+    $view->displayHandlers['default']->options['access']['role'] = array(
       $this->normal_role => $this->normal_role,
     );
 

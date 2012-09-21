@@ -36,10 +36,10 @@ abstract class AccessPluginBase extends PluginBase {
   public function init(&$view, &$display) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
-    $this->display = &$display;
+    $this->displayHandler = &$display;
 
-    if (is_object($display->handler)) {
-      $options = $display->handler->getOption('access');
+    if (is_object($display)) {
+      $options = $display->getOption('access');
       // Overlay incoming options on top of defaults
       $this->unpackOptions($this->options, $options);
     }

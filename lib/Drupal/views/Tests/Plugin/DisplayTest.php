@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\views\ViewDisplay;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
 
 /**
@@ -57,7 +56,7 @@ class DisplayTest extends PluginTestBase {
 
     $this->assertTrue(isset($view->display['display_test_1']), 'Added display has been assigned to "display_test_1"');
 
-    // Create an expected ViewDisplay and check that it's equal.
+    // Check the the display options are like expected.
     $options = array(
       'display_options' => array(),
       'display_plugin' => 'display_test',
@@ -65,8 +64,7 @@ class DisplayTest extends PluginTestBase {
       'display_title' => 'Display test',
       'position' => NULL,
     );
-    $expected_display = new ViewDisplay($options);
-    $this->assertEqual($view->display['display_test_1'], $expected_display);
+    $this->assertEqual($view->display['display_test_1'], $options);
 
     $view->setDisplay('display_test_1');
 
@@ -110,9 +108,9 @@ class DisplayTest extends PluginTestBase {
     $view->initDisplay();
 
     // mark is as overridden, yes FALSE, means overridden.
-    $view->display['page']->handler->setOverride('filter_groups', FALSE);
-    $this->assertFalse($view->display['page']->handler->isDefaulted('filter_groups'), "Take sure that 'filter_groups' is marked as overridden.");
-    $this->assertFalse($view->display['page']->handler->isDefaulted('filters'), "Take sure that 'filters'' is marked as overridden.");
+    $view->displayHandlers['page']->setOverride('filter_groups', FALSE);
+    $this->assertFalse($view->displayHandlers['page']->isDefaulted('filter_groups'), "Take sure that 'filter_groups' is marked as overridden.");
+    $this->assertFalse($view->displayHandlers['page']->isDefaulted('filters'), "Take sure that 'filters'' is marked as overridden.");
   }
 
 }

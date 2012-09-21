@@ -27,7 +27,7 @@ class ArgumentLanguage extends LanguageTestBase {
   public function testFilter() {
     foreach (array('en' => 'John', 'xx-lolspeak' => 'George') as $langcode => $name) {
       $view = $this->getView();
-      $view->display['default']->handler->overrideOption('arguments', array(
+      $view->displayHandlers['default']->overrideOption('arguments', array(
         'langcode' => array(
           'id' => 'langcode',
           'table' => 'views_test_data',

@@ -44,10 +44,10 @@ abstract class RowPluginBase extends PluginBase {
   public function init(&$view, &$display, $options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
-    $this->display = &$display;
+    $this->displayHandler = &$display;
 
-    // Overlay incoming options on top of defaults
-      $this->unpackOptions($this->options, isset($options) ? $options : $display->handler->getOption('row_options'));
+    // Overlay incoming options on top of defaults.
+      $this->unpackOptions($this->options, isset($options) ? $options : $display->getOption('row_options'));
   }
 
   /**

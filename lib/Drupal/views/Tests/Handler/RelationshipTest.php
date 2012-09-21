@@ -93,7 +93,7 @@ class RelationshipTest extends HandlerTestBase {
 
     $view = $this->getBasicView();
 
-    $view->display['default']->handler->overrideOption('relationships', array(
+    $view->displayHandlers['default']->overrideOption('relationships', array(
       'uid' => array(
         'id' => 'uid',
         'table' => 'views_test_data',
@@ -101,7 +101,7 @@ class RelationshipTest extends HandlerTestBase {
       ),
     ));
 
-    $view->display['default']->handler->overrideOption('filters', array(
+    $view->displayHandlers['default']->overrideOption('filters', array(
       'uid' => array(
         'id' => 'uid',
         'table' => 'users',
@@ -110,8 +110,8 @@ class RelationshipTest extends HandlerTestBase {
       ),
     ));
 
-    $fields = $view->display['default']->handler->getOption('fields');
-    $view->display['default']->handler->overrideOption('fields', $fields + array(
+    $fields = $view->displayHandlers['default']->getOption('fields');
+    $view->displayHandlers['default']->overrideOption('fields', $fields + array(
       'uid' => array(
         'id' => 'uid',
         'table' => 'users',

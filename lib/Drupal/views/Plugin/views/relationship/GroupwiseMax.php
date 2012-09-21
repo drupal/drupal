@@ -128,7 +128,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       // Only get views that are suitable:
       // - base must the base that our relationship joins towards
       // - must have fields.
-      if ($view->base_table == $this->definition['base'] && !empty($view->display['default']->display_options['fields'])) {
+      if ($view->base_table == $this->definition['base'] && !empty($view->display['default']['display_options']['fields'])) {
         // TODO: check the field is the correct sort?
         // or let users hang themselves at this stage and check later?
         if ($view->type == 'Default') {
@@ -195,7 +195,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     if ($options['subquery_view']) {
       $temp_view = views_get_view($options['subquery_view']);
       // Remove all fields from default display
-      unset($temp_view->display['default']->display_options['fields']);
+      unset($temp_view->display['default']['display_options']['fields']);
     }
     else {
       // Create a new view object on the fly, which we use to generate a query

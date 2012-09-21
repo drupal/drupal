@@ -23,7 +23,7 @@ class ArgumentValidatorTest extends PluginTestBase {
   function testArgumentValidatePhp() {
     $string = $this->randomName();
     $view = $this->createViewFromConfig('test_view_argument_validate_php');
-    $view->display['default']->handler->options['arguments']['null']['validate_options']['code'] = 'return $argument == \''. $string .'\';';
+    $view->displayHandlers['default']->options['arguments']['null']['validate_options']['code'] = 'return $argument == \''. $string .'\';';
 
     $view->preExecute();
     $view->initHandlers();

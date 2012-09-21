@@ -32,7 +32,7 @@ class Mini extends PagerPluginBase {
   }
 
   function render($input) {
-    $pager_theme = views_theme_functions('views_mini_pager', $this->view, $this->display);
+    $pager_theme = views_theme_functions('views_mini_pager', $this->view, $this->view->display[$this->view->current_display]);
     return theme($pager_theme, array(
       'parameters' => $input, 'element' => $this->options['id']));
   }

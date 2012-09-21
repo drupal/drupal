@@ -23,14 +23,14 @@ function views_ui_views_analyze($view) {
   // You can give a page display the same path as an alias existing in the
   // system, so the alias will not work anymore. Report this to the user,
   // because he probably wanted something else.
-  foreach ($view->display as $id => $display) {
-    if (empty($display->handler)) {
+  foreach ($view->displayHandlers as $display) {
+    if (empty($display)) {
       continue;
     }
-    if ($display->handler->hasPath() && $path = $display->handler->getOption('path')) {
+    if ($display->hasPath() && $path = $display->getOption('path')) {
       $normal_path = drupal_get_normal_path($path);
       if ($path != $normal_path) {
-        $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', array('%display' => $display->display_title)), 'warning');
+        $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', array('%display' => $display['display_title'])), 'warning');
       }
     }
   }

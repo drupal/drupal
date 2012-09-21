@@ -50,7 +50,7 @@ class Attachment extends DisplayPluginBase {
   }
 
   public function execute() {
-    return $this->view->render($this->display->id);
+    return $this->view->render($this->display['id']);
   }
 
   public function attachmentPositions($position = NULL) {
@@ -91,7 +91,7 @@ class Attachment extends DisplayPluginBase {
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
       if (!empty($this->view->display[$display])) {
-        $attach_to = check_plain($this->view->display[$display]->display_title);
+        $attach_to = check_plain($this->view->display[$display]['display_title']);
       }
     }
 
@@ -194,8 +194,8 @@ class Attachment extends DisplayPluginBase {
         $form['#title'] .= t('Attach to');
         $displays = array();
         foreach ($this->view->display as $display_id => $display) {
-          if (!empty($display->handler) && $display->handler->acceptAttachments()) {
-            $displays[$display_id] = $display->display_title;
+          if (!empty($this->view->displayHandlers[$display_id]) && $this->view->displayHandlers[$display_id]->acceptAttachments()) {
+            $displays[$display_id] = $display['display_title'];
           }
         }
         $form['displays'] = array(
@@ -247,13 +247,13 @@ class Attachment extends DisplayPluginBase {
 
     $args = $this->getOption('inherit_arguments') ? $this->view->args : array();
     $view->setArguments($args);
-    $view->setDisplay($this->display->id);
+    $view->setDisplay($this->display['id']);
     if ($this->getOption('inherit_pager')) {
       $view->display_handler->usesPager = $this->view->display[$display_id]->handler->usesPager();
       $view->display_handler->setOption('pager', $this->view->display[$display_id]->handler->getOption('pager'));
     }
 
-    $attachment = $view->executeDisplay($this->display->id, $args);
+    $attachment = $view->executeDisplay($this->display['id'], $args);
 
     switch ($this->getOption('attachment_position')) {
       case 'before':
