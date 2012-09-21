@@ -119,28 +119,3 @@
 
 /* @end */
 
-/* @group Export */
-
-/* Override for filter button on the views list screen */
-#ctools-export-ui-list-form .form-submit {
-  margin-top: 0 !important;
-  margin-right: 0;
-}
-
-.ctools-export-ui-row + .ctools-export-ui-row {
-  margin-top: 1em;
-}
-
-.ctools-export-ui-fourth-row input {
-  margin-top: 5px !important;
-}
-
-/* @end */
-
-/* @group Jump list */
-
-#views-live-preview .ctools-jump-menu-select{
-  max-width: 450px;
-}
-
-/* @end */

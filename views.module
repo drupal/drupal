@@ -2394,13 +2394,6 @@ function views_array_key_plus($array) {
   return $array;
 }
 
-/**
- * Report to CTools that we use hook_views_api instead of hook_ctools_plugin_api()
- */
-function views_ctools_plugin_api_hook_name() {
-  return 'views_api';
-}
-
 // Declare API compatibility on behalf of core modules:
 
 /**

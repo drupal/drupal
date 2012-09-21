@@ -28,33 +28,6 @@ class SettingsTest extends UITestBase {
   }
 
   /**
-   * Tests the settings for the views listing page.
-   *
-   * @todo Decide if this functionality should be implemented.
-  function testViewsListing() {
-    $this->drupalLogin($this->adminUser);
-
-    // Configure to hide listing filters.
-    $edit = array(
-      'ui_show_listing_filters' => FALSE,
-    );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
-    $this->drupalGet('admin/structure/views');
-
-    $this->assertFieldByXPath("//div[contains(@class, 'ctools-export-ui-row')][contains(@class, 'element-invisible')]");
-
-    // Configure to show listing filters.
-    $edit = array(
-      'ui_show_listing_filters' => TRUE,
-    );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
-    $this->drupalGet('admin/structure/views');
-
-    $this->assertNoFieldByXPath("//div[contains(@class, 'ctools-export-ui-row')][contains(@class, 'element-invisible')]");
-  }
-   */
-
-  /**
    * Tests the settings for the edit ui.
    */
   function testEditUI() {

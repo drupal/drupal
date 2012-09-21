@@ -72,16 +72,6 @@ fieldset.fieldset-no-legend {
   margin-right: 1em;
 }
 
-/* Override for filter button on the views list screen */
-#ctools-export-ui-list-form .form-submit {
-  margin-bottom: 0;
-}
-
-#ctools-export-ui-list-form .ctools-export-ui-first-row .form-item {
-  margin-top: 3px;
-  margin-right: 5px; /* LTR */
-}
-
 .form-item,
 .form-item .form-item {
   margin-bottom: 0;

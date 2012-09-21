@@ -1117,7 +1117,6 @@ function views_ui_preview_form($form, &$form_state, $view, $display_id = 'defaul
     '#title' => t('Preview with contextual filters:'),
     '#description' => t('Separate contextual filter values with a "/". For example, %example.', array('%example' => '40/12/10')),
     '#id' => 'preview-args',
-//      '#attributes' => array('class' => array('ctools-auto-submit')),
   );
 
   // Add the preview button
