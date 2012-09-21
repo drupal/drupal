@@ -2,7 +2,7 @@ api_version: '3.0'
 base_table: node
 core: '8'
 description: ''
-disabled: '0'
+disabled: '1'
 display:
   attachment_1:
     display_options:
