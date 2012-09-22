@@ -48,7 +48,7 @@ class PathMatcherTest extends UnitTestBase {
   public function tearDown() {
     $this->fixtures->dropTables(Database::getConnection());
 
-   parent::tearDown();
+    parent::tearDown();
   }
 
   /**
@@ -62,8 +62,6 @@ class PathMatcherTest extends UnitTestBase {
     $parts = array('node', '5', 'edit');
 
     $candidates = $matcher->getCandidateOutlines($parts);
-
-    //debug($candidates);
 
     $candidates = array_flip($candidates);
 
@@ -275,7 +273,7 @@ class PathMatcherTest extends UnitTestBase {
   }
 
   /**
-   * Confirm that an exception is thrown when no matching path is found.
+   * Confirms that an exception is thrown when no matching path is found.
    */
   function testOutlinePathNoMatch() {
     $connection = Database::getConnection();

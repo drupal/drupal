@@ -41,6 +41,7 @@ class HtmlPageController implements ContainerAwareInterface {
    *   The request object.
    * @param type $_content
    *   The body content callable that contains the body region of this page.
+   *
    * @return \Symfony\Component\HttpFoundation\Response
    */
   public function content(Request $request, $_content) {

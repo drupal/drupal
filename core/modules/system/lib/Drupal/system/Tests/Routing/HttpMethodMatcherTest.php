@@ -44,10 +44,7 @@ class HttpMethodMatcherTest extends UnitTestBase {
 
     $this->fixtures = new RoutingFixtures();
   }
-  public function setUp() {
-    parent::setUp();
-  }
-
+  
   /**
    * Confirms that the HttpMethod matcher matches properly.
    */
@@ -106,4 +103,3 @@ class HttpMethodMatcherTest extends UnitTestBase {
 
   }
 }
-

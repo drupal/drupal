@@ -28,7 +28,7 @@ interface FinalMatcherInterface {
    *   A Request object against which to match.
    *
    * @return array
-   *   An array of parameters
+   *   An array of parameters.
    */
   public function matchRequest(Request $request);
 }

@@ -27,6 +27,7 @@ class ChainMatcher implements RequestMatcherInterface, RequestContextAwareInterf
 
   /**
    * Array of RequestMatcherInterface objects, sorted.
+   *
    * @var type
    */
   protected $sortedMatchers = array();
@@ -111,8 +112,8 @@ class ChainMatcher implements RequestMatcherInterface, RequestContextAwareInterf
     * @param MatcherInterface $matcher
     *   The matcher to add.
     * @param int $priority
-    *   The priority of the matcher. Higher number matchers will be checked
-    *   first.
+    *   (optional) The priority of the matcher. Higher number matchers will be checked
+    *   first. Default to 0.
     */
   public function add(RequestMatcherInterface $matcher, $priority = 0) {
     if (empty($this->matchers[$priority])) {

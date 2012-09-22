@@ -44,9 +44,6 @@ class FirstEntryFinalMatcherTest extends UnitTestBase {
 
     $this->fixtures = new RoutingFixtures();
   }
-  public function setUp() {
-    parent::setUp();
-  }
 
   /**
    * Confirms the final matcher returns correct attributes for static paths.
@@ -113,4 +110,3 @@ class FirstEntryFinalMatcherTest extends UnitTestBase {
     $this->assertEqual($attributes['value'], 'poink', 'Optional placeholder value used default.');
   }
 }
-

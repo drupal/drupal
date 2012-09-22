@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 class NestedMatcher implements NestedMatcherInterface {
 
   /**
-   * The final matcher
+   * The final matcher.
    *
-   * @var RequestMatcherInterface
+   * @var Symfony\Component\Routing\Matcher\RequestMatcherInterface
    */
   protected $finalMatcher;
 
@@ -32,14 +32,14 @@ class NestedMatcher implements NestedMatcherInterface {
   /**
    * The initial matcher to match against.
    *
-   * @var InitialMatcherInterface
+   * @var Drupal\core\Routing\InitialMatcherInterface
    */
   protected $initialMatcher;
 
   /**
    * The request context.
    *
-   * @var RequestContext
+   * @var Symfony\Component\Routing\RequestContext
    */
   protected $context;
 
@@ -50,7 +50,7 @@ class NestedMatcher implements NestedMatcherInterface {
    * Partial matchers will be run in the order in which they are added.
    *
    * @param PartialMatcherInterface $matcher
-   *   A partial
+   *   A partial.
    *
    * @return NestedMatcherInterface
    *   The current matcher.
@@ -101,9 +101,11 @@ class NestedMatcher implements NestedMatcherInterface {
     * If the matcher can not find information, it must throw one of the exceptions documented
     * below.
     *
-    * @param Request $request The request to match
+    * @param Request $request
+    *   The request to match.
     *
-    * @return array An array of parameters
+    * @return array
+    *   An array of parameters.
     *
     * @throws ResourceNotFoundException If no matching resource could be found
     * @throws MethodNotAllowedException If a matching resource was found but the request method is not allowed
@@ -146,4 +148,3 @@ class NestedMatcher implements NestedMatcherInterface {
   }
 
 }
-

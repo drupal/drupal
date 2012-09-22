@@ -39,6 +39,15 @@ class MatcherDumper implements MatcherDumperInterface {
    */
   protected $tableName;
 
+  /**
+   * Construct the MatcherDumper.
+   *
+   * @param Drupal\Core\Database\Connection $connection
+   *   The database connection which will be used to store the route
+   *   information.
+   * @param string $table
+   *   (optional) The table to store the route info in. Defaults to 'router'.
+   */
   public function __construct(Connection $connection, $table = 'router') {
     $this->connection = $connection;
 
@@ -63,20 +72,17 @@ class MatcherDumper implements MatcherDumperInterface {
    * Dumps a set of routes to the router table in the database.
    *
    * Available options:
+   * - route_set:  The route grouping that is being dumped. All existing
+   *   routes with this route set will be deleted on dump.
+   * - base_class: The base class name
    *
-   *  * route_set:  The route grouping that is being dumped. All existing
-   *     routes with this route set will be deleted on dump.
-   *  * base_class: The base class name
-   *
-   * @param $options array
-   *   $options An array of options
+   * @param array $options
+   *   An array of options
    */
   public function dump(array $options = array()) {
     $options += array(
       'route_set' => '',
     );
-
-    //$compiled = $this->compileRoutes($this->routes, $route_set);
 
     // Convert all of the routes into database records.
     $insert = $this->connection->insert($this->tableName)->fields(array(
@@ -104,7 +110,7 @@ class MatcherDumper implements MatcherDumperInterface {
         // compiled route object. Remove this once
         // https://github.com/symfony/symfony/pull/4755 is merged and brought
         // back downstream.
-       'route' => serialize(clone($route)),
+        'route' => serialize(clone($route)),
       );
       $insert->values($values);
     }
@@ -160,4 +166,3 @@ class MatcherDumper implements MatcherDumperInterface {
     return $fit;
   }
 }
-

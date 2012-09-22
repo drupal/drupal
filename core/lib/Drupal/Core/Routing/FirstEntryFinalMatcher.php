@@ -35,7 +35,9 @@ class FirstEntryFinalMatcher implements FinalMatcherInterface {
     return $this;
   }
 
-
+  /**
+   * Implements Drupal\Core\Routing\FinalMatcherInterface::matchRequest().
+   */
   public function matchRequest(Request $request) {
     // Return whatever the first route in the collection is.
     foreach ($this->routes as $name => $route) {
@@ -54,12 +56,12 @@ class FirstEntryFinalMatcher implements FinalMatcherInterface {
    * Get merged default parameters.
    *
    * @param array $params
-   *  The parameters
+   *  The parameters.
    * @param array $defaults
-   *   The defaults
+   *   The defaults.
    *
    * @return array
-   *   Merged default parameters
+   *   Merged default parameters.
    */
   protected function mergeDefaults($params, $defaults) {
     $parameters = $defaults;
@@ -73,4 +75,3 @@ class FirstEntryFinalMatcher implements FinalMatcherInterface {
   }
 
 }
-

@@ -16,10 +16,19 @@ class RouteBuilder {
 
   protected $dumper;
 
+  /**
+   * Construcs the RouteBuilder using the passed MatcherDumperInterface
+   *
+   * @param Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface $dumper
+   *   The matcher dumper used to store the route information.
+   */
   public function __construct(MatcherDumperInterface $dumper) {
     $this->dumper = $dumper;
   }
 
+  /**
+   * Rebuilds the route info and dumps to dumper.
+   */
   public function rebuild() {
     // We need to manually call each module so that we can know which module
     // a given item came from.

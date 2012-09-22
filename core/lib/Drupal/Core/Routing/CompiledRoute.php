@@ -36,17 +36,22 @@ class CompiledRoute {
    * @var Symfony\Component\Routing\Route
    */
   protected $route;
-
   protected $variables;
   protected $tokens;
   protected $staticPrefix;
+
+  /**
+   * The regular expression to match placeholders out of this path.
+   *
+   * @var string
+   */
   protected $regex;
 
 
   /**
    * Constructs a new CompiledRoute object.
    *
-   * @param Route  $route
+   * @param Route $route
    *   A original Route instance.
    * @param int $fit
    *   The fitness of the route.
@@ -66,7 +71,7 @@ class CompiledRoute {
   }
 
   /**
-   * Returns the fit of this route
+   * Returns the fit of this route.
    *
    * See RouteCompiler for a definition of how the fit is calculated.
    *
@@ -117,7 +122,7 @@ class CompiledRoute {
     * Returns the Route instance.
     *
     * @return Route
-    *   A Route instance
+    *   A Route instance.
     */
   public function getRoute() {
     return $this->route;
@@ -126,7 +131,8 @@ class CompiledRoute {
   /**
     * Returns the pattern.
     *
-    * @return string The pattern
+    * @return string
+    *   The pattern.
     */
   public function getPattern() {
     return $this->route->getPattern();
@@ -135,7 +141,8 @@ class CompiledRoute {
   /**
     * Returns the options.
     *
-    * @return array The options
+    * @return array
+    *   The options.
     */
   public function getOptions() {
     return $this->route->getOptions();
@@ -144,7 +151,8 @@ class CompiledRoute {
   /**
     * Returns the defaults.
     *
-    * @return array The defaults
+    * @return array
+    *   The defaults.
     */
   public function getDefaults() {
     return $this->route->getDefaults();
@@ -153,11 +161,11 @@ class CompiledRoute {
   /**
     * Returns the requirements.
     *
-    * @return array The requirements
+    * @return array
+    *   The requirements.
     */
   public function getRequirements() {
     return $this->route->getRequirements();
   }
 
 }
-

@@ -22,18 +22,18 @@ class RouteCompiler implements RouteCompilerInterface {
 
   /**
    * Utility constant to use for regular expressions against the path.
-*/
+   */
   const REGEX_DELIMITER = '#';
 
   /**
-    * Compiles the current route instance.
-    *
-    * @param \Symfony\Component\Routing\Route $route
-    *   A Route instance
-    *
-    * @return CompiledRoute
-    *   A CompiledRoute instance
-    */
+   * Compiles the current route instance.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   A Route instance.
+   *
+   * @return CompiledRoute
+   *   A CompiledRoute instance.
+   */
   public function compile(Route $route) {
 
     $stripped_path = $this->getPathWithoutDefaults($route);
@@ -62,7 +62,9 @@ class RouteCompiler implements RouteCompilerInterface {
    *   The route object.
    * @param string $pattern
    *   The pattern for which we want a matching regex.
+   *
    * @return type
+   *
    * @throws \LogicException
    */
   public function getRegex(Route $route, $pattern) {
@@ -107,11 +109,11 @@ class RouteCompiler implements RouteCompilerInterface {
     }
 
     // find the first optional token
-    $firstOptional = INF;
+    $first_optional = INF;
     for ($i = count($tokens) - 1; $i >= 0; $i--) {
         $token = $tokens[$i];
         if ('variable' === $token[0] && $route->hasDefault($token[3])) {
-            $firstOptional = $i;
+            $first_optional = $i;
         } else {
             break;
         }
@@ -120,50 +122,56 @@ class RouteCompiler implements RouteCompilerInterface {
     // compute the matching regexp
     $regexp = '';
     for ($i = 0, $nbToken = count($tokens); $i < $nbToken; $i++) {
-        $regexp .= $this->computeRegexp($tokens, $i, $firstOptional);
+        $regexp .= $this->computeRegexp($tokens, $i, $first_optional);
     }
 
     return self::REGEX_DELIMITER.'^'.$regexp.'$'.self::REGEX_DELIMITER.'s';
   }
 
   /**
-    * Computes the regexp used to match a specific token. It can be static text or a subpattern.
-    *
-    * @param array   $tokens        The route tokens
-    * @param integer $index         The index of the current token
-    * @param integer $firstOptional The index of the first optional token
-    *
-    * @return string The regexp pattern for a single token
-    */
-  private function computeRegexp(array $tokens, $index, $firstOptional) {
-      $token = $tokens[$index];
-      if ('text' === $token[0]) {
-          // Text tokens
-          return preg_quote($token[1], self::REGEX_DELIMITER);
-      } else {
-          // Variable tokens
-          if (0 === $index && 0 === $firstOptional) {
-              // When the only token is an optional variable token, the separator is required
-              return sprintf('%s(?<%s>%s)?', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
-          } else {
-              $regexp = sprintf('%s(?<%s>%s)', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
-              if ($index >= $firstOptional) {
-                  // Enclose each optional token in a subpattern to make it optional.
-                  // "?:" means it is non-capturing, i.e. the portion of the subject string that
-                  // matched the optional subpattern is not passed back.
-                  $regexp = "(?:$regexp";
-                  $nbTokens = count($tokens);
-                  if ($nbTokens - 1 == $index) {
-                      // Close the optional subpatterns
-                      $regexp .= str_repeat(")?", $nbTokens - $firstOptional - (0 === $firstOptional ? 1 : 0));
-                  }
-              }
-
-              return $regexp;
-          }
+   * Computes the regexp used to match a specific token. It can be static text or a subpattern.
+   *
+   * @param array $tokens
+   *   The route tokens
+   * @param integer $index
+   *   The index of the current token
+   * @param integer $first_optional
+   *   The index of the first optional token
+   *
+   * @return string
+   *   The regexp pattern for a single token
+   */
+  private function computeRegexp(array $tokens, $index, $first_optional) {
+    $token = $tokens[$index];
+    if ('text' === $token[0]) {
+      // Text tokens
+      return preg_quote($token[1], self::REGEX_DELIMITER);
+    }
+    else {
+      // Variable tokens
+      if (0 === $index && 0 === $first_optional) {
+        // When the only token is an optional variable token, the separator is
+        // required.
+        return sprintf('%s(?<%s>%s)?', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
       }
-  }
+      else {
+        $regexp = sprintf('%s(?<%s>%s)', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
+        if ($index >= $first_optional) {
+          // Enclose each optional token in a subpattern to make it optional.
+          // "?:" means it is non-capturing, i.e. the portion of the subject
+          // string that matched the optional subpattern is not passed back.
+          $regexp = "(?:$regexp";
+          $nbTokens = count($tokens);
+          if ($nbTokens - 1 == $index) {
+            // Close the optional subpatterns.
+            $regexp .= str_repeat(")?", $nbTokens - $first_optional - (0 === $first_optional ? 1 : 0));
+          }
+        }
 
+        return $regexp;
+      }
+    }
+  }
 
   /**
    * Returns the pattern outline.
@@ -217,6 +225,7 @@ class RouteCompiler implements RouteCompilerInterface {
    * problem.
    *
    * @param \Symfony\Component\Routing\Route $route
+   *   The route to have the placeholders removed from.
    *
    * @return string
    *   The path string, stripped of placeholders that have default values.
@@ -236,4 +245,3 @@ class RouteCompiler implements RouteCompilerInterface {
   }
 
 }
-

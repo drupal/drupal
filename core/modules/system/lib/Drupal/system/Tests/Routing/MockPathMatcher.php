@@ -9,14 +9,23 @@ use Symfony\Component\Routing\RouteCollection;
 use Drupal\Core\Routing\InitialMatcherInterface;
 
 /**
- * Description of MockPathMatcher
- *
- * @author crell
+ * Provides a mock path matcher.
  */
 class MockPathMatcher implements InitialMatcherInterface {
 
+  /**
+   * Routes to be matched.
+   *
+   * @var Symfony\Component\Routing\RouteCollection
+   */
   protected $routes;
 
+  /**
+   * Construct the matcher given the route collection.
+   *
+   * @param Symfony\Component\Routing\RouteCollection $routes
+   *   The routes being matched.
+   */
   public function __construct(RouteCollection $routes) {
     $this->routes = $routes;
   }

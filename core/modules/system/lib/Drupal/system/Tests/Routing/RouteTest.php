@@ -45,8 +45,8 @@ class RouteTest extends UnitTestBase {
    * Confirms that a compiled route with default values has the correct outline.
    */
   public function testCompilationDefaultValue() {
-    // Because "here" has a default value, it should not factor into the
-    // outline or the fitness.
+    // Because "here" has a default value, it should not factor into the outline
+    // or the fitness.
     $route = new Route('/test/{something}/more/{here}', array(
       'here' => 'there',
     ));

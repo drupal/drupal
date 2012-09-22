@@ -24,6 +24,9 @@ class RouteProcessorSubscriber implements EventSubscriberInterface {
 
   /**
    * Sets a default controller for a route if one was not specified.
+   *
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   Event that is created to create a response for a request.
    */
   public function onRequestSetController(GetResponseEvent $event) {
     $request = $event->getRequest();

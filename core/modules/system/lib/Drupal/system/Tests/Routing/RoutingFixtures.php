@@ -12,6 +12,12 @@ use Drupal\Core\Database\Connection;
  */
 class RoutingFixtures {
 
+  /**
+   * Create the tables required for the sample data.
+   *
+   * @param Drupal\Core\Database\Connection $connection
+   *   The connection to use to create the tables.
+   */
   public function createTables(Connection $connection) {
     $tables = $this->routingTableDefinition();
     $schema = $connection->schema();
@@ -22,6 +28,12 @@ class RoutingFixtures {
     }
   }
 
+  /**
+   * Drop the tables used for the sample data.
+   *
+   * @param Drupal\Core\Database\Connection $connection
+   *   The connection to use to drop the tables.
+   */
   public function dropTables(Connection $connection) {
     $tables = $this->routingTableDefinition();
     $schema = $connection->schema();
@@ -91,6 +103,12 @@ class RoutingFixtures {
     return $collection;
   }
 
+  /**
+   * Returns the table definition for the routing fixtures.
+   *
+   * @return array
+   *   Table definitions.
+   */
   public function routingTableDefinition() {
 
     $tables['test_routes'] = array(

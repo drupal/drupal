@@ -17,6 +17,7 @@ use Drupal\Core\Database\Connection;
  * Initial matcher to match a route against a built database, by path.
  */
 class PathMatcher implements InitialMatcherInterface {
+
   /**
    * The database connection from which to read route information.
    *
@@ -86,6 +87,7 @@ class PathMatcher implements InitialMatcherInterface {
    *
    * @param array $parts
    *   The parts of the path for which we want candidates.
+   *
    * @return array
    *   An array of outlines that could match the specified path parts.
    */
@@ -130,4 +132,3 @@ class PathMatcher implements InitialMatcherInterface {
     return $ancestors;
   }
 }
-

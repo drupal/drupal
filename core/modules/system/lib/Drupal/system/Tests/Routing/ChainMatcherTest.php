@@ -22,6 +22,7 @@ use Exception;
  * Basic tests for the ChainMatcher.
  */
 class ChainMatcherTest extends UnitTestBase {
+  
   public static function getInfo() {
     return array(
       'name' => 'Chain matcher tests',

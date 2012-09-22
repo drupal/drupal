@@ -44,9 +44,6 @@ class NestedMatcherTest extends UnitTestBase {
 
     $this->fixtures = new RoutingFixtures();
   }
-  public function setUp() {
-    parent::setUp();
-  }
 
   /**
    * Confirms we can nest multiple partial matchers.
@@ -66,4 +63,3 @@ class NestedMatcherTest extends UnitTestBase {
     $this->assertEqual($attributes['_route'], 'route_a', 'The correct matching route was found.');
   }
 }
-

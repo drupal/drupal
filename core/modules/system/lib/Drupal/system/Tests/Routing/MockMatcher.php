@@ -21,6 +21,9 @@ use Closure;
  */
 class MockMatcher implements RequestMatcherInterface {
 
+  /**
+   * The matcher being tested.
+   */
   protected $matcher;
 
   public function __construct(Closure $matcher) {
@@ -32,4 +35,3 @@ class MockMatcher implements RequestMatcherInterface {
     return $matcher($request);
   }
 }
-
