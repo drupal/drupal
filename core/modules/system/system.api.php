@@ -566,6 +566,51 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
 }
 
 /**
+ * Defines routes in the new router system.
+ *
+ * A route is a Symfony Route object.  See the Symfony documentation for more
+ * details on the available options.  Of specific note:
+ *  - _controller: This is the PHP callable that will handle a request matching
+ *              the route.
+ *  - _content: This is the PHP callable that will handle the body of a request
+ *              matching this route.  A default controller will provide the page
+ *              rendering around it.
+ *
+ * Typically you will only specify one or the other of those properties.
+ *
+ * @deprecated
+ *   This mechanism for registering routes is temporary. It will be replaced
+ *   by a more robust mechanism in the near future.  It is documented here
+ *   only for completeness.
+ */
+function hook_route_info() {
+  $collection = new RouteCollection();
+
+  $route = new Route('router_test/test1', array(
+    '_controller' => '\Drupal\router_test\TestControllers::test1'
+  ));
+  $collection->add('router_test_1', $route);
+
+  $route = new Route('router_test/test2', array(
+    '_content' => '\Drupal\router_test\TestControllers::test2'
+  ));
+  $collection->add('router_test_2', $route);
+
+  $route = new Route('router_test/test3/{value}', array(
+    '_content' => '\Drupal\router_test\TestControllers::test3'
+  ));
+  $collection->add('router_test_3', $route);
+
+  $route = new Route('router_test/test4/{value}', array(
+    '_content' => '\Drupal\router_test\TestControllers::test4',
+    'value' => 'narf',
+  ));
+  $collection->add('router_test_4', $route);
+
+  return $collection;
+}
+
+/**
  * Define menu items and page callbacks.
  *
  * This hook enables modules to register paths in order to define how URL
