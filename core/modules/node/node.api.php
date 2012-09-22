@@ -602,7 +602,7 @@ function hook_node_load($nodes, $types) {
  * @param object $langcode
  *   The language code to perform the access check operation on.
  *
- * @return integer
+ * @return string
  *   - NODE_ACCESS_ALLOW: if the operation is to be allowed.
  *   - NODE_ACCESS_DENY: if the operation is to be denied.
  *   - NODE_ACCESS_IGNORE: to not affect this operation at all.
