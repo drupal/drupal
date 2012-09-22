@@ -35,6 +35,13 @@ class ViewListController extends EntityListControllerBase {
     $items[$path]['access callback'] = 'user_access';
     $items[$path]['access arguments'] = array('administer views');
 
+    // Add a default local task, so we have tabs.
+    $items["$path/list"] = array(
+      'title' => 'List',
+      'weight' => -10,
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+    );
+
     // Set up the base for AJAX callbacks.
     $ajax_base = array(
       'page callback' => 'views_ui_listing_ajax_callback',

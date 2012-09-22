@@ -33,6 +33,10 @@ class SettingsTest extends UITestBase {
   function testEditUI() {
     $this->drupalLogin($this->adminUser);
 
+    // Test the settings tab exists.
+    $this->drupalGet('admin/structure/views');
+    $this->assertLinkByHref('admin/structure/views/settings');
+
     // Configure to always show the master display.
     $edit = array(
       'ui_show_master_display' => TRUE,
