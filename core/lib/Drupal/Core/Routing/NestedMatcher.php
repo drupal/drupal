@@ -43,14 +43,13 @@ class NestedMatcher implements NestedMatcherInterface {
    */
   protected $context;
 
-
   /**
    * Adds a partial matcher to the matching plan.
    *
    * Partial matchers will be run in the order in which they are added.
    *
-   * @param PartialMatcherInterface $matcher
-   *   A partial.
+   * @param \Drupal\Core\Routing\PartialMatcherInterface $matcher
+   *   A partial matcher.
    *
    * @return NestedMatcherInterface
    *   The current matcher.
@@ -64,11 +63,11 @@ class NestedMatcher implements NestedMatcherInterface {
   /**
    * Sets the final matcher for the matching plan.
    *
-   * @param UrlMatcherInterface $final
+   * @param \Drupal\Core\Routing\FinalMatcherInterface $final
    *   The matcher that will be called last to ensure only a single route is
    *   found.
    *
-   * @return NestedMatcherInterface
+   * @return \Drupal\Core\Routing\NestedMatcherInterface
    *   The current matcher.
    */
   public function setFinalMatcher(FinalMatcherInterface $final) {
@@ -82,11 +81,11 @@ class NestedMatcher implements NestedMatcherInterface {
    *
    * Partial matchers will be run in the order in which they are added.
    *
-   * @param InitialMatcherInterface $matcher
+   * @param \Drupal\Core\Routing\InitialMatcherInterface $matcher
    *   An initial matcher.  It is responsible for its own configuration and
    *   initial route collection
    *
-   * @return NestedMatcherInterface
+   * @return \Drupal\Core\Routing\NestedMatcherInterface
    *   The current matcher.
    */
   public function setInitialMatcher(InitialMatcherInterface $initial) {
@@ -96,20 +95,22 @@ class NestedMatcher implements NestedMatcherInterface {
   }
 
   /**
-    * Tries to match a request with a set of routes.
-    *
-    * If the matcher can not find information, it must throw one of the exceptions documented
-    * below.
-    *
-    * @param Request $request
-    *   The request to match.
-    *
-    * @return array
-    *   An array of parameters.
-    *
-    * @throws ResourceNotFoundException If no matching resource could be found
-    * @throws MethodNotAllowedException If a matching resource was found but the request method is not allowed
-    */
+   * Tries to match a request with a set of routes.
+   *
+   * If the matcher can not find information, it must throw one of the
+   * exceptions documented below.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request to match.
+   *
+   * @return array
+   *   An array of parameters.
+   *
+   * @throws ResourceNotFoundException
+   *   If no matching resource could be found.
+   * @throws MethodNotAllowedException
+   *   If a matching resource was found but the request method is not allowed.
+   */
   public function matchRequest(Request $request) {
     $collection = $this->initialMatcher->matchRequestPartial($request);
 
@@ -130,7 +131,8 @@ class NestedMatcher implements NestedMatcherInterface {
    *
    * This method is unused. It is here only to satisfy the interface.
    *
-   * @param RequestContext $context The context
+   * @param \Symfony\Component\Routing\RequestContext $context
+   *   The context
    */
   public function setContext(RequestContext $context) {
     $this->context = $context;
@@ -141,7 +143,8 @@ class NestedMatcher implements NestedMatcherInterface {
    *
    * This method is unused. It is here only to satisfy the interface.
    *
-   * @return RequestContext The context
+   * @return \Symfony\Component\Routing\RequestContext
+   *   The context
    */
   public function getContext() {
     return $this->context;

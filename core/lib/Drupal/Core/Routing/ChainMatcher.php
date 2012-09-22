@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\ChainMatcher.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -59,8 +64,6 @@ class ChainMatcher implements RequestMatcherInterface, RequestContextAwareInterf
    *
    * @param Symfony\Component\Routing\RequestContext $context
    *   The context.
-   *
-   * @api
    */
   public function setContext(RequestContext $context) {
     $this->context = $context;
@@ -87,8 +90,10 @@ class ChainMatcher implements RequestMatcherInterface, RequestContextAwareInterf
    *
    * @return array An array of parameters
    *
-   * @throws ResourceNotFoundException If no matching resource could be found
-   * @throws MethodNotAllowedException If a matching resource was found but the request method is not allowed
+   * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException
+   *   If no matching resource could be found
+   * @throws \Symfony\Component\Routing\Exception\MethodNotAllowedException
+   *   If a matching resource was found but the request method is not allowed
    */
   public function matchRequest(Request $request) {
     $methodNotAllowed = null;

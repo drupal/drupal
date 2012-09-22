@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\NestedMatcherInterface.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -14,11 +19,11 @@ interface NestedMatcherInterface extends RequestMatcherInterface {
    *
    * Partial matchers will be run in the order in which they are added.
    *
-   * @param InitialMatcherInterface $matcher
+   * @param \Drupal\Core\Routing\InitialMatcherInterface $matcher
    *   An initial matcher.  It is responsible for its own configuration and
    *   initial route collection
    *
-   * @return NestedMatcherInterface
+   * @return \Drupal\Core\Routing\NestedMatcherInterface
    *   The current matcher.
    */
   public function setInitialMatcher(InitialMatcherInterface $initial);
@@ -28,10 +33,10 @@ interface NestedMatcherInterface extends RequestMatcherInterface {
    *
    * Partial matchers will be run in the order in which they are added.
    *
-   * @param PartialMatcherInterface $matcher
+   * @param \Drupal\Core\Routing\PartialMatcherInterface $matcher
    *   A partial matcher.
    *
-   * @return NestedMatcherInterface
+   * @return \Drupal\Core\Routing\NestedMatcherInterface
    *   The current matcher.
    */
   public function addPartialMatcher(PartialMatcherInterface $matcher);
@@ -39,11 +44,11 @@ interface NestedMatcherInterface extends RequestMatcherInterface {
   /**
    * Sets the final matcher for the matching plan.
    *
-   * @param FinalMatcherInterface $final
+   * @param \Drupal\Core\Routing\FinalMatcherInterface $final
    *   The matcher that will be called last to ensure only a single route is
    *   found.
    *
-   * @return NestedMatcherInterface
+   * @return \Drupal\Core\Routing\NestedMatcherInterface
    *   The current matcher.
    */
   public function setFinalMatcher(FinalMatcherInterface $final);

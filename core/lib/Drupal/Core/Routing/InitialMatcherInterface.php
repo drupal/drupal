@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\InitialMatcherInterface.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -12,10 +17,10 @@ interface InitialMatcherInterface {
   /**
    * Matches a request against multiple routes.
    *
-   * @param Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   A Request object against which to match.
    *
-   * @return RouteCollection
+   * @return \Symfony\Component\Routing\RouteCollection
    *   A RouteCollection of matched routes.
    */
   public function matchRequestPartial(Request $request);

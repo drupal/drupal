@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\FirstEntryFinalMatcher.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +28,10 @@ class FirstEntryFinalMatcher implements FinalMatcherInterface {
   /**
    * Sets the route collection this matcher should use.
    *
-   * @param RouteCollection $collection
+   * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The collection against which to match.
    *
-   * @return FinalMatcherInterface
+   * @return \Drupal\Core\Routing\FinalMatcherInterface
    *   The current matcher.
    */
   public function setCollection(RouteCollection $collection) {

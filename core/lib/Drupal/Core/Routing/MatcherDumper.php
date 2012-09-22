@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\MatcherDumper.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface;
@@ -57,7 +62,8 @@ class MatcherDumper implements MatcherDumperInterface {
   /**
    * Adds additional routes to be dumped.
    *
-   * @param RouteCollection $routes
+   * @param Symfony\Component\Routing\RouteCollection $routes
+   *   A collection of routes to add to this dumper.
    */
   public function addRoutes(RouteCollection $routes) {
     if (empty($this->routes)) {
@@ -74,10 +80,10 @@ class MatcherDumper implements MatcherDumperInterface {
    * Available options:
    * - route_set:  The route grouping that is being dumped. All existing
    *   routes with this route set will be deleted on dump.
-   * - base_class: The base class name
+   * - base_class: The base class name.
    *
    * @param array $options
-   *   An array of options
+   *   An array of options.
    */
   public function dump(array $options = array()) {
     $options += array(
@@ -136,7 +142,7 @@ class MatcherDumper implements MatcherDumperInterface {
   /**
    * Gets the routes to match.
    *
-   * @return RouteCollection
+   * @return \Symfony\Component\Routing\RouteCollection
    *   A RouteCollection instance representing all routes currently in the
    *   dumper.
    */

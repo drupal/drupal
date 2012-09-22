@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\CompiledRoute.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\Route;
@@ -36,9 +41,6 @@ class CompiledRoute {
    * @var Symfony\Component\Routing\Route
    */
   protected $route;
-  protected $variables;
-  protected $tokens;
-  protected $staticPrefix;
 
   /**
    * The regular expression to match placeholders out of this path.
@@ -47,19 +49,18 @@ class CompiledRoute {
    */
   protected $regex;
 
-
   /**
    * Constructs a new CompiledRoute object.
    *
-   * @param Route $route
+   * @param \Symfony\Component\Routing\Route $route
    *   A original Route instance.
    * @param int $fit
    *   The fitness of the route.
    * @param string $fit
    *   The pattern outline for this route.
-   *  @param int $num_parts
+   * @param int $num_parts
    *   The number of parts in the path.
-   *  @param string $regex
+   * @param string $regex
    *   The regular expression to match placeholders out of this path.
    */
   public function __construct(Route $route, $fit, $pattern_outline, $num_parts, $regex) {
@@ -119,51 +120,51 @@ class CompiledRoute {
   }
 
   /**
-    * Returns the Route instance.
-    *
-    * @return Route
-    *   A Route instance.
-    */
+   * Returns the Route instance.
+   *
+   * @return Route
+   *   A Route instance.
+   */
   public function getRoute() {
     return $this->route;
   }
 
   /**
-    * Returns the pattern.
-    *
-    * @return string
-    *   The pattern.
-    */
+   * Returns the pattern.
+   *
+   * @return string
+   *   The pattern.
+   */
   public function getPattern() {
     return $this->route->getPattern();
   }
 
   /**
-    * Returns the options.
-    *
-    * @return array
-    *   The options.
-    */
+   * Returns the options.
+   *
+   * @return array
+   *   The options.
+   */
   public function getOptions() {
     return $this->route->getOptions();
   }
 
   /**
-    * Returns the defaults.
-    *
-    * @return array
-    *   The defaults.
-    */
+   * Returns the defaults.
+   *
+   * @return array
+   *   The defaults.
+   */
   public function getDefaults() {
     return $this->route->getDefaults();
   }
 
   /**
-    * Returns the requirements.
-    *
-    * @return array
-    *   The requirements.
-    */
+   * Returns the requirements.
+   *
+   * @return array
+   *   The requirements.
+   */
   public function getRequirements() {
     return $this->route->getRequirements();
   }

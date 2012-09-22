@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\RouteBuilder.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\RouteCompilerInterface;
@@ -14,10 +19,15 @@ use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface;
  */
 class RouteBuilder {
 
+  /**
+   * The dumper to which we should send collected routes.
+   *
+   * @var \Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface
+   */
   protected $dumper;
 
   /**
-   * Construcs the RouteBuilder using the passed MatcherDumperInterface
+   * Construcs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface $dumper
    *   The matcher dumper used to store the route information.

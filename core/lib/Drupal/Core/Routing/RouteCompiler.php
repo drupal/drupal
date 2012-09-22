@@ -31,7 +31,7 @@ class RouteCompiler implements RouteCompilerInterface {
    * @param \Symfony\Component\Routing\Route $route
    *   A Route instance.
    *
-   * @return CompiledRoute
+   * @return \Drupal\Core\Routing\CompiledRoute
    *   A CompiledRoute instance.
    */
   public function compile(Route $route) {
@@ -63,7 +63,8 @@ class RouteCompiler implements RouteCompilerInterface {
    * @param string $pattern
    *   The pattern for which we want a matching regex.
    *
-   * @return type
+   * @return string
+   *   A regular expression that will match a path against this route.
    *
    * @throws \LogicException
    */

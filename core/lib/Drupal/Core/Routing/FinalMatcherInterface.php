@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\FinalMatcherInterface.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -13,10 +18,10 @@ interface FinalMatcherInterface {
   /**
    * Sets the route collection this matcher should use.
    *
-   * @param RouteCollection $collection
+   * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The collection against which to match.
    *
-   * @return FinalMatcherInterface
+   * @return \Drupal\Core\Routing\FinalMatcherInterface
    *   The current matcher.
    */
   public function setCollection(RouteCollection $collection);
@@ -24,7 +29,7 @@ interface FinalMatcherInterface {
   /**
    * Matches a request against multiple routes.
    *
-   * @param Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   A Request object against which to match.
    *
    * @return array

@@ -20,14 +20,14 @@ class HtmlPageController implements ContainerAwareInterface {
   /**
    * The injection container for this object.
    *
-   * @var ContainerInterface
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 
   /**
    * Injects the service container used by this object.
    *
-   * @param ContainerInterface $container
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container this object should use.
    */
   public function setContainer(ContainerInterface $container = NULL) {
@@ -39,10 +39,11 @@ class HtmlPageController implements ContainerAwareInterface {
    *
    * @param Request $request
    *   The request object.
-   * @param type $_content
+   * @param callable $_content
    *   The body content callable that contains the body region of this page.
    *
    * @return \Symfony\Component\HttpFoundation\Response
+   *   A response object.
    */
   public function content(Request $request, $_content) {
 
@@ -53,8 +54,12 @@ class HtmlPageController implements ContainerAwareInterface {
     // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/InternalController.php
     $attributes = $request->attributes;
     $controller = $_content;
+
+    // We need to clean off the derived information and such so that the
+    // subrequest can be processed properly without leaking data through.
     $attributes->remove('system_path');
     $attributes->remove('_content');
+
     $response = $this->container->get('http_kernel')->forward($controller, $attributes->all(), $request->query->all());
 
     $page_content = $response->getContent();
