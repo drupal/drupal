@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 
 /**
  * A handler to run a field through check_markup, using a companion
@@ -26,7 +27,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Markup extends FieldPluginBase {
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
 
     $this->format = $this->definition['format'];

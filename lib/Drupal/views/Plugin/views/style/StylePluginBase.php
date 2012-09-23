@@ -11,6 +11,7 @@ use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\views\ViewExecutable;
 
 /**
  * @defgroup views_style_plugins Views style plugins
@@ -89,7 +90,7 @@ abstract class StylePluginBase extends PluginBase {
    *   The style options might come externally as the style can be sourced
    *   from at least two locations. If it's not included, look on the display.
    */
-  public function init(&$view, &$display, $options = NULL) {
+  public function init(ViewExecutable $view, &$display, $options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->displayHandler = &$display;

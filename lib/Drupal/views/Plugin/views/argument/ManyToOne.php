@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\ManyToOneHelper;
 
@@ -29,7 +30,7 @@ use Drupal\views\ManyToOneHelper;
  */
 class ManyToOne extends ArgumentPluginBase {
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     $this->helper = new ManyToOneHelper($this);
 

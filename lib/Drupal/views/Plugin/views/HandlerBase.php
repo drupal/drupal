@@ -87,7 +87,7 @@ abstract class HandlerBase extends PluginBase {
    *   The item from the database; the actual contents of this will vary
    *   based upon the type of handler.
    */
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $display_id = $this->view->current_display;

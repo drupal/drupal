@@ -7,6 +7,7 @@
 
 namespace Views\node\Plugin\views\field;
 
+use Drupal\views\ViewExecutable;
 use Views\node\Plugin\views\field\Node;
 use Drupal\Core\Annotation\Plugin;
 
@@ -25,7 +26,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class HistoryUserTimestamp extends Node {
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     global $user;
     if ($user->uid) {

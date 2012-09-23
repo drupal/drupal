@@ -7,6 +7,7 @@
 
 namespace Views\taxonomy\Plugin\views\field;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
 use Drupal\Core\Annotation\Plugin;
 
@@ -22,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class TaxonomyIndexTid extends PrerenderList {
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?
     if ($view->base_table == 'node_revision') {

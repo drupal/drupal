@@ -12,7 +12,6 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\TempStore\UserTempStore;
-use Drupal\views\ViewStorage;
 use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
@@ -817,7 +816,7 @@ function views_block_view($delta) {
  *   The type of the block. If it's block it's a regular views display,
  *   but 'special_block_-exp' exist as well.
  */
-function views_add_block_contextual_links(&$block, $view, $display_id, $block_type = 'block') {
+function views_add_block_contextual_links(&$block, ViewExecutable $view, $display_id, $block_type = 'block') {
   // Do not add contextual links to an empty block.
   if (!empty($block['content'])) {
     // Contextual links only work on blocks whose content is a renderable
@@ -895,7 +894,7 @@ function views_add_block_contextual_links(&$block, $view, $display_id, $block_ty
  * @see views_page_alter()
  * @see template_preprocess_views_view()
  */
-function views_add_contextual_links(&$render_element, $location, $view, $display_id) {
+function views_add_contextual_links(&$render_element, $location, ViewExecutable $view, $display_id) {
   // Do not do anything if the view is configured to hide its administrative
   // links.
   if (empty($view->hide_admin_links)) {
@@ -1741,20 +1740,6 @@ function views_move_table($table) {
   return $table;
 }
 
-/**
- * Export CRUD callback to save a view.
- */
-function views_save_view(&$view) {
-  return $view->save();
-}
-
-/**
- * Export CRUD callback to delete a view.
- */
-function views_delete_view(&$view) {
-  return $view->delete(TRUE);
-}
-
 // ------------------------------------------------------------------
 // Views form (View with form elements)
 
@@ -1784,7 +1769,7 @@ function views_view_has_form_elements($view) {
  * step (the default 'views_form_views_form' step). That way it is actually
  * possible for modules to have a multistep form if they need to.
  */
-function views_form($form, &$form_state, $view, $output) {
+function views_form($form, &$form_state, ViewExecutable $view, $output) {
   $form_state['step'] = isset($form_state['step']) ? $form_state['step'] : 'views_form_views_form';
   // Cache the built form to prevent it from being rebuilt prior to validation
   // and submission, which could lead to data being processed incorrectly,
@@ -1809,7 +1794,7 @@ function views_form($form, &$form_state, $view, $output) {
  * Callback for the main step of a Views form.
  * Invoked by views_form().
  */
-function views_form_views_form($form, &$form_state, $view, $output) {
+function views_form_views_form($form, &$form_state, ViewExecutable $view, $output) {
   $form['#prefix'] = '<div class="views-form">';
   $form['#suffix'] = '</div>';
   $form['#theme'] = 'views_form_views_form';
@@ -2111,7 +2096,7 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
 /**
  * Build a list of theme function names for use most everywhere.
  */
-function views_theme_functions($hook, $view, $display = NULL) {
+function views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
   module_load_include('inc', 'views', 'theme/theme');
   return _views_theme_functions($hook, $view, $display);
 }

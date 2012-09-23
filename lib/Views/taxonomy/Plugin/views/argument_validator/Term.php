@@ -7,6 +7,7 @@
 
 namespace Views\taxonomy\Plugin\views\argument_validator;
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
@@ -22,7 +23,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  */
 class Term extends ArgumentValidatorPluginBase {
 
-  public function init(&$view, &$argument, $options) {
+  public function init(ViewExecutable $view, &$argument, $options) {
     parent::init($view, $argument, $options);
 
     // Convert legacy vids option to machine name vocabularies.

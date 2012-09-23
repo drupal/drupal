@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 
 /**
  * Handler for GROUP BY on simple numeric fields.
@@ -18,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class GroupByNumeric extends SortPluginBase {
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
 
     // Initialize the original handler.

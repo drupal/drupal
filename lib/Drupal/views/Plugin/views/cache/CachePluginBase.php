@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
 
@@ -62,7 +63,7 @@ abstract class CachePluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  public function init(&$view, &$display) {
+  public function init(ViewExecutable $view, &$display) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->displayHandler = &$display;

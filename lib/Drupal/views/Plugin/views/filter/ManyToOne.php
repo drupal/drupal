@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\ManyToOneHelper;
 use Drupal\Core\Annotation\Plugin;
 
@@ -33,7 +34,7 @@ class ManyToOne extends InOperator {
    */
   var $helper = NULL;
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     $this->helper = new ManyToOneHelper($this);
   }

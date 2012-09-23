@@ -7,6 +7,7 @@
 
 namespace Views\field\Plugin\views\field;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -65,7 +66,7 @@ class Field extends FieldPluginBase {
    */
   public $instance;
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
 
     $this->field_info = $field = field_info_field($this->definition['field_name']);

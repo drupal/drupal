@@ -7,6 +7,7 @@
 
 namespace Views\taxonomy\Plugin\views\filter;
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 
@@ -25,7 +26,7 @@ class TaxonomyIndexTid extends ManyToOne {
   // Stores the exposed input for this filter.
   var $validated_exposed_input = NULL;
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['vocabulary'])) {
       $this->options['vocabulary'] = $this->definition['vocabulary'];

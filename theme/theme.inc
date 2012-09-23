@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
+use Drupal\views\ViewExecutable;
 
 /**
  * Provide a full array of possible themes to try for a given hook.
@@ -17,7 +18,7 @@ use Drupal\Core\Template\Attribute;
  * @param $display
  *   The display being rendered, if applicable.
  */
-function _views_theme_functions($hook, $view, $display = NULL) {
+function _views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
   $themes = array();
 
   if ($display) {

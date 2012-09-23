@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * @defgroup views_row_plugins Views row plugins
@@ -41,7 +42,7 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * Initialize the row plugin.
    */
-  public function init(&$view, &$display, $options = NULL) {
+  public function init(ViewExecutable $view, &$display, $options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->displayHandler = &$display;

@@ -12,6 +12,7 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\views\ViewExecutable;
 
 /**
  * @todo.
@@ -1402,7 +1403,7 @@ class Sql extends QueryPluginBase {
   /**
    * Let modules modify the query just prior to finalizing it.
    */
-  function alter(&$view) {
+  function alter(ViewExecutable $view) {
     foreach (module_implements('views_query_alter') as $module) {
       $function = $module . '_views_query_alter';
       $function($view, $this);
@@ -1412,7 +1413,7 @@ class Sql extends QueryPluginBase {
   /**
    * Builds the necessary info to execute the query.
    */
-  function build(&$view) {
+  function build(ViewExecutable $view) {
     // Make the query distinct if the option was set.
     if (!empty($this->options['distinct'])) {
       $this->set_distinct(TRUE);
@@ -1437,7 +1438,7 @@ class Sql extends QueryPluginBase {
    * Values to set: $view->result, $view->total_rows, $view->execute_time,
    * $view->current_page.
    */
-  function execute(&$view) {
+  function execute(ViewExecutable $view) {
     $external = FALSE; // Whether this query will run against an external database.
     $query = $view->build_info['query'];
     $count_query = $view->build_info['count_query'];
@@ -1646,7 +1647,7 @@ class Sql extends QueryPluginBase {
     }
   }
 
-  function add_signature(&$view) {
+  function add_signature(ViewExecutable $view) {
     $view->query->add_field(NULL, "'" . $view->storage->name . ':' . $view->current_display . "'", 'view_name');
   }
 

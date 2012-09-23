@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display_extender;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Annotation\Translation;
 
@@ -17,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  */
 abstract class DisplayExtenderPluginBase extends PluginBase {
 
-  public function init(&$view, &$display) {
+  public function init(ViewExecutable $view, &$display) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = $view;
     $this->display = $display;

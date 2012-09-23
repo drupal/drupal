@@ -9,6 +9,7 @@ namespace Views\user\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 
 /**
  * Field handler to provide simple renderer that allows linking to a user.
@@ -25,7 +26,7 @@ class User extends FieldPluginBase {
   /**
    * Override init function to provide generic option to link to user.
    */
-  public function init(&$view, &$data) {
+  public function init(ViewExecutable $view, &$data) {
     parent::init($view, $data);
     if (!empty($this->options['link_to_user'])) {
       $this->additional_fields['uid'] = 'uid';

@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\access;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * @defgroup views_access_plugins Views access plugins
@@ -33,7 +34,7 @@ abstract class AccessPluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  public function init(&$view, &$display) {
+  public function init(ViewExecutable $view, &$display) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->displayHandler = &$display;

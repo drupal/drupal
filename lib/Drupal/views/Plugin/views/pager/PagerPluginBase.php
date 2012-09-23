@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\pager;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * @defgroup views_pager_plugins Views pager plugins
@@ -42,7 +43,7 @@ abstract class PagerPluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  public function init(&$view, &$display, $options = array()) {
+  public function init(ViewExecutable $view, &$display, $options = array()) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->displayHandler = &$display;

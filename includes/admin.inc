@@ -793,7 +793,7 @@ function theme_views_ui_view_info($variables) {
 /**
  * Page to delete a view.
  */
-function views_ui_break_lock_confirm($form, &$form_state, $view) {
+function views_ui_break_lock_confirm($form, &$form_state, ViewExecutable $view) {
   $form_state['view'] = &$view;
   $form = array();
 
@@ -912,7 +912,7 @@ function views_ui_build_preview($view, $display_id, $render = TRUE) {
  *
  * @see views_ui_ajax_get_form()
  */
-function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
+function views_ui_edit_form($form, &$form_state, ViewExecutable $view, $display_id = NULL) {
   // Do not allow the form to be cached, because $form_state['view'] can become
   // stale between page requests.
   // See views_ui_ajax_get_form() for how this affects #ajax.
@@ -1097,7 +1097,7 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
 /**
  * Provide the preview formulas and the preview output, too.
  */
-function views_ui_preview_form($form, &$form_state, $view, $display_id = 'default') {
+function views_ui_preview_form($form, &$form_state, ViewExecutable $view, $display_id = 'default') {
   $form_state['no_cache'] = TRUE;
   $form_state['view'] = $view;
 
@@ -1672,7 +1672,7 @@ function views_ui_get_display_tab_details($view, $display) {
  * This function might be more logical as a method on an object, if a suitable
  * object emerges out of refactoring.
  */
-function views_ui_edit_form_get_build_from_option($id, $option, $view, $display) {
+function views_ui_edit_form_get_build_from_option($id, $option, ViewExecutable $view, $display) {
   $option_build = array();
   $option_build['#theme'] = 'views_ui_display_tab_setting';
 
@@ -2100,7 +2100,7 @@ function views_ui_edit_view_form_delete($form, &$form_state) {
 /**
  * Add information about a section to a display.
  */
-function views_ui_edit_form_get_bucket($type, $view, $display) {
+function views_ui_edit_form_get_bucket($type, ViewExecutable $view, $display) {
   $build = array(
     '#theme_wrappers' => array('views_ui_display_tab_bucket'),
   );
@@ -2285,7 +2285,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
 /**
  * Regenerate the current tab for AJAX updates.
  */
-function views_ui_regenerate_tab(&$view, &$output, $display_id) {
+function views_ui_regenerate_tab(ViewExecutable $view, &$output, $display_id) {
   if (!$view->setDisplay('default')) {
     return;
   }
@@ -2674,7 +2674,7 @@ function views_ui_ajax_forms($key = NULL) {
  * is the same as another. Since the arguments differ slightly
  * we do a lot of spiffy concatenation here.
  */
-function views_ui_build_identifier($key, $view, $display_id, $args) {
+function views_ui_build_identifier($key, ViewExecutable $view, $display_id, $args) {
   $form = views_ui_ajax_forms($key);
   // Automatically remove the single-form cache if it exists and
   // does not match the key.
@@ -2691,7 +2691,7 @@ function views_ui_build_identifier($key, $view, $display_id, $args) {
  * Build up a $form_state object suitable for use with drupal_build_form
  * based on known information about a form.
  */
-function views_ui_build_form_state($js, $key, &$view, $display_id, $args) {
+function views_ui_build_form_state($js, $key, ViewExecutable $view, $display_id, $args) {
   $form = views_ui_ajax_forms($key);
   // Build up form state
   $form_state = array(
@@ -2729,7 +2729,7 @@ function views_ui_build_form_url($form_state) {
  * Add another form to the stack; clicking 'apply' will go to this form
  * rather than closing the ajax popup.
  */
-function views_ui_add_form_to_stack($key, &$view, $display_id, $args, $top = FALSE, $rebuild_keys = FALSE) {
+function views_ui_add_form_to_stack($key, ViewExecutable $view, $display_id, $args, $top = FALSE, $rebuild_keys = FALSE) {
   if (empty($view->stack)) {
     $view->stack = array();
   }
@@ -2773,7 +2773,7 @@ function views_ui_add_form_to_stack($key, &$view, $display_id, $args, $top = FAL
  * We do this for consistency and to make it easy to chain forms
  * together.
  */
-function views_ui_ajax_form($js, $key, $view, $display_id = '') {
+function views_ui_ajax_form($js, $key, ViewExecutable $view, $display_id = '') {
   $form = views_ui_ajax_forms($key);
   if (empty($form)) {
     return MENU_NOT_FOUND;

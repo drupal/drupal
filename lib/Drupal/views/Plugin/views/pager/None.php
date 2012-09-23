@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -24,7 +25,7 @@ use Drupal\Core\Annotation\Translation;
  */
 class None extends PagerPluginBase {
 
-  public function init(&$view, &$display, $options = array()) {
+  public function init(ViewExecutable $view, &$display, $options = array()) {
     parent::init($view, $display, $options);
 
     // If the pager is set to none, then it should show all items.

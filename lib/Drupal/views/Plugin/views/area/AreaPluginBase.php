@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\area;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 
@@ -30,7 +31,7 @@ abstract class AreaPluginBase extends HandlerBase {
    * Make sure that no result area handlers are set to be shown when the result
    * is empty.
    */
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     parent::init($view, $options);
     if ($this->definition['plugin_type'] == 'empty') {

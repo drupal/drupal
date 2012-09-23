@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * @todo.
@@ -46,7 +47,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @param view $view
    *   The view which is executed.
    */
-  function alter(&$view) {  }
+  function alter(ViewExecutable $view) {  }
 
   /**
    * Builds the necessary info to execute the query.
@@ -54,7 +55,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @param view $view
    *   The view which is executed.
    */
-  function build(&$view) { }
+  function build(ViewExecutable $view) { }
 
   /**
    * Executes the query and fills the associated view object with according
@@ -69,7 +70,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @param view $view
    *   The view which is executed.
    */
-  function execute(&$view) {  }
+  function execute(ViewExecutable $view) {  }
 
   /**
    * Add a signature to the query, if such a thing is feasible.
@@ -80,7 +81,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @param view $view
    *   The view which is executed.
    */
-  function add_signature(&$view) { }
+  function add_signature(ViewExecutable $view) { }
 
   /**
    * Get aggregation info for group by queries.

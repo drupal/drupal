@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\relationship;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Join;
 use Drupal\Core\Annotation\Plugin;
@@ -47,7 +48,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
    * Init handler to let relationships live on tables other than
    * the table they operate on.
    */
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     parent::init($view, $options);
     if (isset($this->definition['relationship table'])) {

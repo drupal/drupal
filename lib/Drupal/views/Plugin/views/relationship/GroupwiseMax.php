@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 
 /**

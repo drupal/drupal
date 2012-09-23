@@ -7,6 +7,7 @@
 
 namespace Views\taxonomy\Plugin\views\relationship;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -22,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeTermData extends RelationshipPluginBase  {
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
 
     // Convert legacy vids option to machine name vocabularies.

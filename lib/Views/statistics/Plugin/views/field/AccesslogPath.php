@@ -7,6 +7,7 @@
 
 namespace Views\statistics\Plugin\views\field;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -25,7 +26,7 @@ class AccesslogPath extends FieldPluginBase {
   /**
    * Override init function to provide generic option to link to node.
    */
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     if (!empty($this->options['display_as_link'])) {
       $this->additional_fields['path'] = 'path';

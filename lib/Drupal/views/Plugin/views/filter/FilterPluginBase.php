@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 
 /**
  * @defgroup views_filter_handlers Views filter handlers
@@ -78,7 +79,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * This likely has to be overridden by filters which are more complex
    * than simple operator/value.
    */
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
 
     $this->operator = $this->options['operator'];

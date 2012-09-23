@@ -7,6 +7,7 @@
 
 namespace Views\node\Plugin\views\row;
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\row\RowPluginBase;
@@ -37,7 +38,7 @@ class View extends RowPluginBase {
   // Stores the nodes loaded with pre_render.
   var $nodes = array();
 
-  public function init(&$view, &$display, $options = NULL) {
+  public function init(ViewExecutable $view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
     // Handle existing views with the deprecated 'teaser' option.
     if (isset($this->options['teaser'])) {

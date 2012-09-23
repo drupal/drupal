@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 
 /**
  * A special handler to take the place of missing or broken handlers.
@@ -24,7 +25,7 @@ class Broken extends FilterPluginBase {
     return t('Broken/missing handler');
   }
 
-  public function init(&$view, &$options) { }
+  public function init(ViewExecutable $view, &$options) { }
   public function defineOptions() { return array(); }
   public function ensureMyTable() { /* No table to ensure! */ }
   public function query($group_by = FALSE) { /* No query to run */ }

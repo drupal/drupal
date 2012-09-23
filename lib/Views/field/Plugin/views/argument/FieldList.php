@@ -7,6 +7,7 @@
 
 namespace Views\field\Plugin\views\argument;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\argument\Numeric;
 use Drupal\Core\Annotation\Plugin;
 
@@ -30,7 +31,7 @@ class FieldList extends Numeric {
    */
   var $allowed_values = NULL;
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     $field = field_info_field($this->definition['field_name']);
     $this->allowed_values = options_allowed_values($field);

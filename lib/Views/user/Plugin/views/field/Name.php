@@ -9,6 +9,7 @@ namespace Views\user\Plugin\views\field;
 
 use Views\user\Plugin\views\field\User;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 
 /**
  * Field handler to provide simple renderer that allows using a themed user link.
@@ -25,7 +26,7 @@ class Name extends User {
   /**
    * Add uid in the query so we can test for anonymous if needed.
    */
-  public function init(&$view, &$data) {
+  public function init(ViewExecutable $view, &$data) {
     parent::init($view, $data);
     if (!empty($this->options['overwrite_anonymous']) || !empty($this->options['format_username'])) {
       $this->additional_fields['uid'] = 'uid';

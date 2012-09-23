@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
@@ -33,7 +34,7 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
    * Initialize this plugin with the view and the argument
    * it is linked to.
    */
-  public function init(&$view, &$argument, $options) {
+  public function init(ViewExecutable $view, &$argument, $options) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->argument = &$argument;

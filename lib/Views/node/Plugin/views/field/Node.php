@@ -7,6 +7,7 @@
 
 namespace Views\node\Plugin\views\field;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -24,7 +25,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Node extends FieldPluginBase {
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     // Don't add the additional fields to groupby
     if (!empty($this->options['link_to_node'])) {

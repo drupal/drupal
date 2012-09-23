@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\views\Plugin\views\field;
+
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -38,7 +40,7 @@ class Boolean extends FieldPluginBase {
     return $options;
   }
 
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
 
     $default_formats = array(

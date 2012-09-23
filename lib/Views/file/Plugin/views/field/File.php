@@ -7,6 +7,7 @@
 
 namespace Views\file\Plugin\views\field;
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
@@ -25,7 +26,7 @@ class File extends FieldPluginBase {
   /**
    * Constructor to provide additional field to add.
    */
-  public function init(&$view, &$options) {
+  public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     if (!empty($options['link_to_file'])) {
       $this->additional_fields['uri'] = 'uri';
