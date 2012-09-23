@@ -59,7 +59,6 @@ class PluginInstanceTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    views_include('handlers');
     $this->definitions = views_get_plugin_definitions();
   }
 

@@ -25,7 +25,7 @@ class CreatedWeek extends Date {
    * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
   function get_formula() {
-    $this->formula = views_date_sql_extract('WEEK', "***table***.$this->realField");
+    $this->formula = $this->extractSQL('WEEK');
     return parent::get_formula();
   }
 

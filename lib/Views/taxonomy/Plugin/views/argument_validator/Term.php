@@ -115,7 +115,7 @@ class Term extends ArgumentValidatorPluginBase {
 
         $tids = new stdClass();
         $tids->value = $argument;
-        $tids = views_break_phrase($argument, $tids);
+        $tids = $this->breakPhrase($argument, $tids);
         if ($tids->value == array(-1)) {
           return FALSE;
         }

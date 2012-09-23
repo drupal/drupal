@@ -1247,7 +1247,6 @@ function views_include_handlers($reset = FALSE) {
     return;
   }
 
-  views_include('handlers');
   views_include('cache');
   views_module_include();
   $finished = TRUE;
@@ -1278,9 +1277,6 @@ function views_get_handler($table, $field, $type, $override = NULL) {
 
   $data = views_fetch_data($table, FALSE);
   $handler = NULL;
-  views_include('handlers');
-
-  // Support old views_data entries conversion.
 
   // Support conversion on table level.
   if (isset($data['moved to'])) {

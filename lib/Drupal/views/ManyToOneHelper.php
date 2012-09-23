@@ -7,6 +7,8 @@
 
 namespace Drupal\views;
 
+use Drupal\views\Plugin\views\HandlerBase;
+
 /**
  * This many to one helper object is used on both arguments and filters.
  *
@@ -87,7 +89,7 @@ class ManyToOneHelper {
     // ensure_path logic. Perhaps it should be.
     $r_join = clone $join;
     while ($r_join->left_table != $base_table) {
-      $r_join = views_get_table_join($r_join->left_table, $base_table);
+      $r_join = HandlerBase::getTableJoin($r_join->left_table, $base_table);
     }
     // If we found that there are tables in between, add the relationship.
     if ($r_join->table != $join->table) {

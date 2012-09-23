@@ -25,7 +25,7 @@ class CreatedYear extends Date {
    * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
   function get_formula() {
-    $this->formula = views_date_sql_extract('YEAR', "***table***.$this->realField");
+    $this->formula = $this->extractSQL('YEAR');
     return parent::get_formula();
   }
 

@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\views\query;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
+use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\ViewExecutable;
@@ -700,7 +701,7 @@ class Sql extends QueryPluginBase {
     if (!empty($this->table_queue[$table])) {
       $table = $this->table_queue[$table]['table'];
     }
-    return views_get_table_join($table, $base_table);
+    return HandlerBase::getTableJoin($table, $base_table);
   }
 
   /**

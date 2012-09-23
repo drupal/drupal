@@ -104,7 +104,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     if (!empty($this->options['break_phrase'])) {
       $tids = new stdClass();
       $tids->value = $this->argument;
-      $tids = views_break_phrase($this->argument, $tids);
+      $tids = $this->breakPhrase($this->argument, $tids);
       if ($tids->value == array(-1)) {
         return FALSE;
       }

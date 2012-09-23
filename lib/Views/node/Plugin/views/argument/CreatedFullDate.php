@@ -26,7 +26,7 @@ class CreatedFullDate extends Date {
    * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
   function get_formula() {
-    $this->formula = views_date_sql_format($this->definition['arg_format'], "***table***.$this->realField");
+    $this->formula = $this->getSQLFormat($this->definition['arg_format']);
     return parent::get_formula();
   }
 

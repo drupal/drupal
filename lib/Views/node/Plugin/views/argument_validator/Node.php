@@ -111,7 +111,7 @@ class Node extends ArgumentValidatorPluginBase {
       case 'nids':
         $nids = new stdClass();
         $nids->value = array($argument);
-        $nids = views_break_phrase($argument, $nids);
+        $nids = $this->breakPhrase($argument, $nids);
         if ($nids->value == array(-1)) {
           return FALSE;
         }

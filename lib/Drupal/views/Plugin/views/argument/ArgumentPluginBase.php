@@ -820,7 +820,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       // if the alias is different then we're probably added, not ensured,
       // so look up the join and add it instead.
       if ($this->tableAlias != $this->name_table) {
-        $j = views_get_table_join($this->name_table, $this->table);
+        $j = HandlerBase::getTableJoin($this->name_table, $this->table);
         if ($j) {
           $join = clone $j;
           $join->left_table = $this->tableAlias;

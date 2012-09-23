@@ -26,7 +26,7 @@ class CreatedDay extends Date {
    * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
   function get_formula() {
-    $this->formula = views_date_sql_extract('DAY', "***table***.$this->realField");
+    $this->formula = $this->extractSQL('DAY');
     return parent::get_formula();
   }
 

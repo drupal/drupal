@@ -83,4 +83,63 @@ class Date extends Formula {
     return t('Date', array(), array('context' => 'Sort order'));
   }
 
+  /**
+   * Creates cross-database SQL date extraction.
+   *
+   * @param string $extract_type
+   *   The type of value to extract from the date, like 'MONTH'.
+   *
+   * @return string
+   *   An appropriate SQL string for the DB type and field type.
+   */
+  public function extractSQL($extract_type) {
+    $db_type = Database::getConnection()->databaseType();
+    $field = $this->getSQLDateField();
+
+    // Note there is no space after FROM to avoid db_rewrite problems
+    // see http://drupal.org/node/79904.
+    switch ($extract_type) {
+      case 'DATE':
+        return $field;
+      case 'YEAR':
+        return "EXTRACT(YEAR FROM($field))";
+      case 'MONTH':
+        return "EXTRACT(MONTH FROM($field))";
+      case 'DAY':
+        return "EXTRACT(DAY FROM($field))";
+      case 'HOUR':
+        return "EXTRACT(HOUR FROM($field))";
+      case 'MINUTE':
+        return "EXTRACT(MINUTE FROM($field))";
+      case 'SECOND':
+        return "EXTRACT(SECOND FROM($field))";
+      // ISO week number for date
+      case 'WEEK':
+        switch ($db_type) {
+          case 'mysql':
+            // WEEK using arg 3 in mysql should return the same value as postgres
+            // EXTRACT.
+            return "WEEK($field, 3)";
+          case 'pgsql':
+            return "EXTRACT(WEEK FROM($field))";
+        }
+      case 'DOW':
+        switch ($db_type) {
+          case 'mysql':
+            // mysql returns 1 for Sunday through 7 for Saturday php date
+            // functions and postgres use 0 for Sunday and 6 for Saturday.
+            return "INTEGER(DAYOFWEEK($field) - 1)";
+          case 'pgsql':
+            return "EXTRACT(DOW FROM($field))";
+        }
+      case 'DOY':
+        switch ($db_type) {
+          case 'mysql':
+            return "DAYOFYEAR($field)";
+          case 'pgsql':
+            return "EXTRACT(DOY FROM($field))";
+        }
+    }
+  }
+
 }
