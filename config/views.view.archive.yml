@@ -27,8 +27,6 @@ display:
         type: basic
       pager:
         type: full
-      style_plugin: default
-      row_plugin: node
       sorts:
         created:
           id: created
@@ -62,6 +60,10 @@ display:
           group: 0
           expose:
             operator: false
+      style:
+        type: default
+      row:
+        type: node
   page:
     id: page
     display_title: Page

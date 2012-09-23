@@ -63,16 +63,12 @@ abstract class CachePluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  public function init(ViewExecutable $view, &$display) {
+  public function init(ViewExecutable $view, &$display, $options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->displayHandler = &$display;
 
-    if (is_object($display)) {
-      $options = $display->getOption('cache');
-      // Overlay incoming options on top of defaults
-      $this->unpackOptions($this->options, $options);
-    }
+    $this->unpackOptions($this->options, $options);
   }
 
   /**

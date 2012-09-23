@@ -50,9 +50,11 @@ display:
           relationship: nid
           required: '0'
           table: node
-      row_plugin: fields
       sorts: {  }
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Master
     id: default
@@ -60,4 +62,3 @@ display:
 human_name: test_field_get_entity
 name: test_field_get_entity
 tag: default
-

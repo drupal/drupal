@@ -29,25 +29,6 @@ display:
         type: full
         options:
           items_per_page: 36
-      style_plugin: table
-      style_options:
-        columns:
-          title: title
-          name: name
-          changed: changed
-        default: title
-        info:
-          title:
-            sortable: 1
-            separator: ''
-          name:
-            sortable: 1
-            separator: ''
-          changed:
-            sortable: 1
-            separator: ''
-        override: 1
-        sticky: 0
       fields:
         title:
           id: title
@@ -91,6 +72,26 @@ display:
           id: uid
           table: node
           field: uid
+      style:
+        type: table
+        options:
+          columns:
+            title: title
+            name: name
+            changed: changed
+          default: title
+          info:
+            title:
+              sortable: 1
+              separator: ''
+            name:
+              sortable: 1
+              separator: ''
+            changed:
+              sortable: 1
+              separator: ''
+          override: 1
+          sticky: 0
   page:
     id: page
     display_title: Page

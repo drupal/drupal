@@ -15,7 +15,8 @@ display:
           id: id
           table: views_test_data
           field: id
-      style_plugin: html_list
+      style:
+        type: html_list
     display_plugin: default
     display_title: Master
     id: default

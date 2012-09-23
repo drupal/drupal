@@ -72,7 +72,8 @@ class WizardTest extends WizardTestBase {
     $view = views_get_view($view['name']);
     $view->initDisplay();
     $view->initHandlers();
-    $this->assertEqual($view->display_handler->getOption('row_plugin'), 'comment');
+    $row = $view->display_handler->getOption('row');
+    $this->assertEqual($row['type'], 'comment');
 
     // Check for the default filters.
     $this->assertEqual($view->filter['status']->table, 'comment');

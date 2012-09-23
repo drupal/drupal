@@ -29,39 +29,6 @@ display:
         type: full
         options:
           items_per_page: '25'
-      style_plugin: table
-      style_options:
-        columns:
-          type: type
-          title: title
-          name: name
-          comment_count: comment_count
-          last_comment_timestamp: last_comment_timestamp
-          timestamp: title
-          new_comments: comment_count
-        default: last_comment_timestamp
-        info:
-          type:
-            sortable: 1
-            separator: ''
-          title:
-            sortable: 1
-            separator: '&nbsp;'
-          name:
-            sortable: 1
-            separator: ''
-          comment_count:
-            sortable: 1
-            separator: '<br />'
-          last_comment_timestamp:
-            sortable: 1
-            separator: '&nbsp;'
-          timestamp:
-            separator: ''
-          new_comments:
-            separator: ''
-        override: 1
-        order: desc
       relationships:
         uid:
           id: uid
@@ -134,6 +101,40 @@ display:
           group: 0
           expose:
             operator: false
+      style:
+        type: table
+        options:
+          columns:
+            type: type
+            title: title
+            name: name
+            comment_count: comment_count
+            last_comment_timestamp: last_comment_timestamp
+            timestamp: title
+            new_comments: comment_count
+          default: last_comment_timestamp
+          info:
+            type:
+              sortable: 1
+              separator: ''
+            title:
+              sortable: 1
+              separator: '&nbsp;'
+            name:
+              sortable: 1
+              separator: ''
+            comment_count:
+              sortable: 1
+              separator: '<br />'
+            last_comment_timestamp:
+              sortable: 1
+              separator: '&nbsp;'
+            timestamp:
+              separator: ''
+            new_comments:
+              separator: ''
+          override: 1
+          order: desc
   page:
     id: page
     display_title: Page

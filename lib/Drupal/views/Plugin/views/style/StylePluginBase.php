@@ -95,10 +95,9 @@ abstract class StylePluginBase extends PluginBase {
     $this->view = &$view;
     $this->displayHandler = &$display;
 
-    // Overlay incoming options on top of defaults
-    $this->unpackOptions($this->options, isset($options) ? $options : $display->getOption('style_options'));
+    $this->unpackOptions($this->options, $options);
 
-    if ($this->usesRowPlugin() && $display->getOption('row_plugin')) {
+    if ($this->usesRowPlugin() && $display->getOption('row')) {
       $this->row_plugin = $display->getPlugin('row');
     }
 

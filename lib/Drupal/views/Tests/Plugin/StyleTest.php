@@ -29,7 +29,9 @@ class StyleTest extends StyleTestBase {
    */
   public function testStyle() {
     $view = $this->getView();
-    $view->display_handler->setOption('style_plugin', 'test_style');
+    $style = $view->display_handler->getOption('style');
+    $style['type'] = 'test_style';
+    $view->display_handler->setOption('style', $style);
     $view->initDisplay();
     $view->initStyle();
     $this->assertTrue($view->style_plugin instanceof \Drupal\views_test_data\Plugin\views\style\StyleTest, 'Make sure the right style plugin class is loaded.');
@@ -43,8 +45,12 @@ class StyleTest extends StyleTestBase {
 
     // This run use the test row plugin and render with it.
     $view = $this->getView();
-    $view->display_handler->setOption('style_plugin', 'test_style');
-    $view->display_handler->setOption('row_plugin', 'test_row');
+    $style = $view->display_handler->getOption('style');
+    $style['type'] = 'test_style';
+    $view->display_handler->setOption('style', $style);
+    $row = $view->display_handler->getOption('row');
+    $row['type'] = 'test_row';
+    $view->display_handler->setOption('row', $row);
     $view->initDisplay();
     $view->initStyle();
     $view->style_plugin->setUsesRowPlugin(TRUE);

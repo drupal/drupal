@@ -24,17 +24,18 @@ display:
           type: none
         cache:
           type: none
-      style_plugin: table
-      style_options:
-        info:
-          id:
-            sortable: 1
-            default_sort_order: asc
-          name:
-            sortable: 1
-            default_sort_order: desc
-          created:
-            sortable: 0
+      style:
+        type: table
+        options:
+          info:
+            id:
+              sortable: 1
+              default_sort_order: asc
+            name:
+              sortable: 1
+              default_sort_order: desc
+            created:
+              sortable: 0
     display_plugin: default
     display_title: Master
     id: default

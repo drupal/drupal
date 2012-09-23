@@ -31,11 +31,13 @@ display:
         options:
           query_comment: '0'
         type: views_query
-      row_options:
-        comments: '0'
-        links: '1'
-      row_plugin: node
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: node
+        options:
+          comments: '0'
+          links: '1'
     display_plugin: default
     display_title: Master
     id: default

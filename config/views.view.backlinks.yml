@@ -28,10 +28,6 @@ display:
         type: full
         options:
           items_per_page: 30
-      style_plugin: html_list
-      style_options:
-        type: ol
-      row_plugin: fields
       empty:
         text:
           id: area
@@ -70,6 +66,12 @@ display:
           group: 0
           expose:
             operator: false
+      style:
+        type: html_list
+        options:
+          type: ol
+      row:
+        type: fields
   page:
     id: page
     display_title: Page
@@ -101,8 +103,6 @@ display:
           row_options: false
           arguments: false
       use_more: true
-      style_plugin: html_list
-      row_plugin: fields
       arguments:
         nid:
           id: nid
@@ -117,3 +117,7 @@ display:
           specify_validation: 1
           validate:
             type: node
+      style:
+        type: html_list
+      row:
+        type: fields

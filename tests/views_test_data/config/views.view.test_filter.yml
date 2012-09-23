@@ -27,9 +27,11 @@ display:
           table: views_test_data
       query:
         type: views_query
-      row_plugin: fields
-      style_plugin: default
       use_more_always: '0'
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Master
     id: default

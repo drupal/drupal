@@ -35,8 +35,10 @@ display:
         options:
           query_comment: '0'
         type: views_query
-      row_plugin: node
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: node
     display_plugin: default
     display_title: Master
     id: default

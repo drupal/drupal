@@ -26,10 +26,12 @@ display:
         type: basic
       pager:
         type: full
-      style_plugin: default
-      row_plugin: node
-      row_options:
-        links: 1
+      style:
+        type: default
+      row:
+        type: node
+        options:
+          links: 1
       sorts:
         sticky:
           id: sticky
@@ -82,8 +84,10 @@ display:
       title: 'Front page feed'
       pager:
         type: some
-      style_plugin: rss
-      row_plugin: node_rss
+      style:
+        type: rss
+      row:
+        type: node_rss
       path: rss.xml
       displays:
         default: default

@@ -7,16 +7,19 @@ display:
   default:
     display_options:
       access:
-        perm: 'views_test_data test permission'
         type: perm
+        options:
+          perm: 'views_test_data test permission'
       cache:
         type: none
       exposed_form:
         type: basic
       pager:
         type: full
-      row_plugin: fields
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Master
     id: default

@@ -1963,15 +1963,17 @@ function views_ui_import_validate($form, &$form_state) {
         continue;
       }
 
-      $plugin = views_get_plugin('style', $display->getOption('style_plugin'));
+      $style = $display->getOption('style');
+      $plugin = views_get_plugin('style', $style['type']);
       if (!$plugin) {
-        drupal_set_message(t('Style plugin @plugin is not available.', array('@plugin' => $display->getOption('style_plugin'))), 'error');
+        drupal_set_message(t('Style plugin @plugin is not available.', array('@plugin' => $style['type'])), 'error');
         $broken = TRUE;
       }
       elseif ($plugin->usesRowPlugin()) {
-        $plugin = views_get_plugin('row', $display->getOption('row_plugin'));
+        $row = $display->getOption('row');
+        $plugin = views_get_plugin('row', $row['type']);
         if (!$plugin) {
-          drupal_set_message(t('Row plugin @plugin is not available.', array('@plugin' => $display->getOption('row_plugin'))), 'error');
+          drupal_set_message(t('Row plugin @plugin is not available.', array('@plugin' => $row['type'])), 'error');
           $broken = TRUE;
         }
       }
@@ -2122,8 +2124,8 @@ function views_ui_edit_form_get_bucket($type, ViewExecutable $view, $display) {
       break;
     case 'field':
       // Fetch the style plugin info so we know whether to list fields or not.
-      $name = $view->displayHandlers[$display['id']]->getOption('style_plugin');
-      $style_plugin = $view->displayHandlers[$display['id']]->getPlugin('style', $name);
+      $style = $view->displayHandlers[$display['id']]->getOption('style');
+      $style_plugin = $view->displayHandlers[$display['id']]->getPlugin('style', $style['type']);
       $uses_fields = $style_plugin && $style_plugin->usesFields();
       if (!$uses_fields) {
         $build['fields'][] = array(
@@ -3139,6 +3141,7 @@ function views_ui_edit_display_form($form, &$form_state) {
   if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
+  $display = &$view->display[$display_id];
 
   // Get form from the handler.
   $form['options'] = array(
@@ -4582,12 +4585,12 @@ function views_ui_config_style_form($form, &$form_state) {
 
       $form['#section'] = $display_id . '-' . $type . '-style-options';
 
-      $plugin = views_get_plugin('style', $handler->options['style_plugin']);
+      $plugin = views_get_plugin('style', $handler->options['style']['type']);
       if ($plugin) {
         $form['style_options'] = array(
           '#tree' => TRUE,
         );
-        $plugin->init($view, $view->display[$display_id], $handler->options['style_options']);
+        $plugin->init($view, $view->display[$display_id], $handler->options['style']['options']);
 
         $plugin->buildOptionsForm($form['style_options'], $form_state);
       }

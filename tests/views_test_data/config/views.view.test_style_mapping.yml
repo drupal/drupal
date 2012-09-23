@@ -39,15 +39,16 @@ display:
           order: ASC
           relationship: none
           table: views_test_data
-      style_options:
-        mapping:
-          name_field: name
-          numeric_field:
-            age: age
-          title_field: name
-          toggle_numeric_field: '1'
-          toggle_title_field: '1'
-      style_plugin: mapping_test
+      style:
+        type: mapping_test
+        options:
+          mapping:
+            name_field: name
+            numeric_field:
+              age: age
+            title_field: name
+            toggle_numeric_field: '1'
+            toggle_title_field: '1'
     display_plugin: default
     display_title: Master
     id: default

@@ -32,19 +32,15 @@ display:
           table: node
           value:
             - '1'
-      sorts:
-        nid:
-          id: nid
-          table: node
-          field: nid
-          order: asc
+      sorts: {  }
       pager:
         type: full
       query:
         type: views_query
-      row_plugin: fields
-      sorts: {  }
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Master
     id: default

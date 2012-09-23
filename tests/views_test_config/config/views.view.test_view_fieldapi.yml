@@ -17,17 +17,14 @@ display:
         type: none
       exposed_form:
         type: basic
-      fields:
-        nid:
-          field: nid
-          id: nid
-          table: node
       pager:
         type: full
       query:
         type: views_query
-      row_plugin: fields
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Master
     id: default
@@ -35,4 +32,3 @@ display:
 human_name: test_view_fieldapi
 name: test_view_fieldapi
 tag: default
-

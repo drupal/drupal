@@ -131,7 +131,6 @@ display:
           id: uid
           table: comment
           relationship: cid
-      row_plugin: fields
       sorts:
         last_comment_name:
           field: last_comment_name
@@ -141,7 +140,10 @@ display:
           field: last_comment_timestamp
           id: last_comment_timestamp
           table: node_comment_statistics
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Master
     id: default

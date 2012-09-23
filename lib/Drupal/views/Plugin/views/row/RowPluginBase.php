@@ -47,8 +47,8 @@ abstract class RowPluginBase extends PluginBase {
     $this->view = &$view;
     $this->displayHandler = &$display;
 
-    // Overlay incoming options on top of defaults.
-      $this->unpackOptions($this->options, isset($options) ? $options : $display->getOption('row_options'));
+    // Overlay incoming options on top of defaults
+    $this->unpackOptions($this->options, $options);
   }
 
   /**

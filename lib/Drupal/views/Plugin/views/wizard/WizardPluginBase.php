@@ -609,7 +609,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function alter_display_options(&$display_options, $form, $form_state) {
     foreach ($display_options as $display_type => $options) {
       // Allow style plugins to hook in and provide some settings.
-      $style_plugin = views_get_plugin('style', $options['style_plugin']);
+      $style_plugin = views_get_plugin('style', $options['style']['type']);
       $style_plugin->wizard_submit($form, $form_state, $this, $display_options, $display_type);
     }
   }
@@ -669,8 +669,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $display_options['query']['type'] = 'views_query';
     $display_options['exposed_form']['type'] = 'basic';
     $display_options['pager']['type'] = 'full';
-    $display_options['style_plugin'] = 'default';
-    $display_options['row_plugin'] = 'fields';
+    $display_options['style']['type'] = 'default';
+    $display_options['row']['type'] = 'fields';
 
     // Add a least one field so the view validates and the user has a preview.
     // The base field can provide a default in its base settings; otherwise,
@@ -856,7 +856,6 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     return $sorts;
   }
 
-
   /**
    * Retrieves the page display options.
    *
@@ -873,11 +872,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $page = $form_state['values']['page'];
     $display_options['title'] = $page['title'];
     $display_options['path'] = $page['path'];
-    $display_options['style_plugin'] = $page['style']['style_plugin'];
+    $display_options['style'] = array('type' => $page['style']['style_plugin']);
     // Not every style plugin supports row style plugins.
     // Make sure that the selected row plugin is a valid one.
     $options = $this->row_style_options();
-    $display_options['row_plugin'] = (isset($page['style']['row_plugin']) && isset($options[$page['style']['row_plugin']])) ? $page['style']['row_plugin'] : 'fields';
+    $display_options['row'] = array('type' => (isset($page['style']['row_plugin']) && isset($options[$page['style']['row_plugin']])) ? $page['style']['row_plugin'] : 'fields');
 
     // If the specific 0 items per page, use no pager.
     if (empty($page['items_per_page'])) {
@@ -918,8 +917,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $display_options = array();
     $block = $form_state['values']['block'];
     $display_options['title'] = $block['title'];
-    $display_options['style_plugin'] = $block['style']['style_plugin'];
-    $display_options['row_plugin'] = isset($block['style']['row_plugin']) ? $block['style']['row_plugin'] : 'fields';
+    $display_options['style'] = array('type' => $block['style']['style_plugin']);
+    $display_options['row'] = array('type' => isset($block['style']['row_plugin']) ? $block['style']['row_plugin'] : 'fields');
     $display_options['pager']['type'] = $block['pager'] ? 'full' : (empty($block['items_per_page']) ? 'none' : 'some');
     $display_options['pager']['options']['items_per_page'] = $block['items_per_page'];
     return $display_options;
@@ -939,8 +938,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function page_feed_display_options($form, $form_state) {
     $display_options = array();
     $display_options['pager']['type'] = 'some';
-    $display_options['style_plugin'] = 'rss';
-    $display_options['row_plugin'] = $form_state['values']['page']['feed_properties']['row_plugin'];
+    $display_options['style'] = array('type' => 'rss');
+    $display_options['row'] = array('type' => $form_state['values']['page']['feed_properties']['row_plugin']);
     $display_options['path'] = $form_state['values']['page']['feed_properties']['path'];
     $display_options['title'] = $form_state['values']['page']['title'];
     $display_options['displays'] = array(
@@ -971,8 +970,6 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   protected function setDefaultOptions($options, DisplayPluginBase $display, DisplayPluginBase $default_display) {
     foreach ($options as $option => $value) {
-      // @todo: Wouldn't it be possible to call set_override and set_option
-      //   instead.
       // If the default display supports this option, set the value there.
       // Otherwise, set it on the provided display.
       $default_value = $default_display->getOption($option);

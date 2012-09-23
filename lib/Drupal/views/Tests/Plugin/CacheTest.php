@@ -88,8 +88,10 @@ class CacheTest extends PluginTestBase {
     $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
-      'results_lifespan' => '3600',
-      'output_lifespan' => '3600',
+      'options' => array(
+        'results_lifespan' => '3600',
+        'output_lifespan' => '3600'
+      )
     ));
 
     $this->executeView($view);
@@ -108,8 +110,10 @@ class CacheTest extends PluginTestBase {
     $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
-      'results_lifespan' => '3600',
-      'output_lifespan' => '3600',
+      'options' => array(
+        'results_lifespan' => '3600',
+        'output_lifespan' => '3600'
+      )
     ));
 
     $this->executeView($view);
@@ -127,6 +131,7 @@ class CacheTest extends PluginTestBase {
     $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
+      'options' => array()
     ));
 
     $this->executeView($view);
@@ -146,6 +151,7 @@ class CacheTest extends PluginTestBase {
     $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
+      'options' => array()
     ));
 
     $this->executeView($view);
@@ -164,7 +170,9 @@ class CacheTest extends PluginTestBase {
     $view->storage->name = 'test_cache_header_storage';
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
-      'output_lifespan' => '3600',
+      'options' => array(
+        'output_lifespan' => '3600'
+      )
     ));
 
     $view->preview();

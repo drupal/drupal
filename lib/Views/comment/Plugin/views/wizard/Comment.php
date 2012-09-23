@@ -127,8 +127,8 @@ class Comment extends WizardPluginBase {
   protected  function display_options_row(&$display_options, $row_plugin, $row_options) {
     switch ($row_plugin) {
       case 'comment':
-        $display_options['row_plugin'] = 'comment';
-        $display_options['row_options']['links'] = !empty($row_options['links']);
+        $display_options['row']['type'] = 'comment';
+        $display_options['row']['options']['links'] = !empty($row_options['links']);
         break;
     }
   }

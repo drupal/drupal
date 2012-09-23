@@ -16,8 +16,6 @@ display:
         type: full
       query:
         type: views_query
-      row_plugin: fields
-      style_plugin: default
       fields:
         name:
           id: name
@@ -35,6 +33,10 @@ display:
           id: job
           table: views_test_data
           field: job
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Defaults
     id: default

@@ -40,8 +40,10 @@ display:
           items_per_page: '10'
           offset: '0'
         type: full
-      row_plugin: fields
-      style_plugin: default
+      style:
+        type: default
+      row:
+        type: fields
     display_plugin: default
     display_title: Master
     id: default

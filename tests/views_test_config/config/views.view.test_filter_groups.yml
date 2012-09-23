@@ -54,15 +54,17 @@ display:
         type: full
       query:
         type: views_query
-      row_plugin: node
       sorts:
         created:
           field: created
           id: created
           order: DESC
           table: node
-      style_plugin: default
       title: test_filter_groups
+      style:
+        type: default
+      row:
+        type: node
     display_plugin: default
     display_title: Master
     id: default

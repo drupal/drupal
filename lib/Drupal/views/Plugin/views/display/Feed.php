@@ -52,8 +52,8 @@ class Feed extends Page {
     // which we don't know until init().
     $row_plugins = views_fetch_plugin_names('row', $this->getStyleType(), array($view->storage->base_table));
     $default_row_plugin = key($row_plugins);
-    if ($this->options['row_plugin'] == '') {
-      $this->options['row_plugin'] = $default_row_plugin;
+    if (empty($this->options['row']['type'])) {
+      $this->options['row']['type'] = $default_row_plugin;
     }
   }
 
@@ -92,7 +92,7 @@ class Feed extends Page {
   }
 
   public function defaultableSections($section = NULL) {
-    if (in_array($section, array('style_options', 'style_plugin', 'row_options', 'row_plugin'))) {
+    if (in_array($section, array('style', 'row'))) {
       return FALSE;
     }
 
@@ -114,14 +114,12 @@ class Feed extends Page {
     $options['displays'] = array('default' => array());
 
     // Overrides for standard stuff:
-    $options['style_plugin']['default'] = 'rss';
-    $options['style_options']['default']  = array('description' => '');
+    $options['style']['contains']['type']['default'] = 'rss';
+    $options['style']['contains']['options']['default']  = array('description' => '');
     $options['sitename_title']['default'] = FALSE;
-    $options['row_plugin']['default'] = '';
-    $options['defaults']['default']['style_plugin'] = FALSE;
-    $options['defaults']['default']['style_options'] = FALSE;
-    $options['defaults']['default']['row_plugin'] = FALSE;
-    $options['defaults']['default']['row_options'] = FALSE;
+    $options['row']['contains']['type']['default'] = '';
+    $options['defaults']['default']['style'] = FALSE;
+    $options['defaults']['default']['row'] = FALSE;
 
     return $options;
   }

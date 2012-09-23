@@ -787,8 +787,9 @@ class ViewExecutable {
     }
 
     if (!isset($this->plugin_name)) {
-      $this->plugin_name = $this->display_handler->getOption('style_plugin');
-      $this->style_options = $this->display_handler->getOption('style_options');
+      $style = $this->display_handler->getOption('style');
+      $this->plugin_name = $style['type'];
+      $this->style_options = $style['options'];
     }
 
     $this->style_plugin = views_get_plugin('style', $this->plugin_name);

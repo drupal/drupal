@@ -1,0 +1,102 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          alter:
+            absolute: '0'
+            alter_text: '0'
+            ellipsis: '1'
+            external: '0'
+            html: '0'
+            make_link: '0'
+            nl2br: '0'
+            replace_spaces: '0'
+            strip_tags: '0'
+            trim: '0'
+            trim_whitespace: '0'
+            word_boundary: '1'
+          element_default_classes: '1'
+          element_label_colon: '1'
+          empty_zero: '0'
+          field: name
+          hide_alter_empty: '0'
+          hide_empty: '0'
+          id: name
+          link_to_user: '1'
+          overwrite_anonymous: '0'
+          table: users
+        title:
+          alter:
+            absolute: '0'
+            alter_text: '0'
+            ellipsis: '0'
+            html: '0'
+            make_link: '0'
+            strip_tags: '0'
+            trim: '0'
+            word_boundary: '0'
+          empty_zero: '0'
+          field: title
+          hide_empty: '0'
+          id: title
+          label: ''
+          link_to_node: '1'
+          table: node
+        uid:
+          alter:
+            absolute: '0'
+            alter_text: '0'
+            ellipsis: '1'
+            external: '0'
+            html: '0'
+            make_link: '0'
+            nl2br: '0'
+            replace_spaces: '0'
+            strip_tags: '0'
+            trim: '0'
+            trim_whitespace: '0'
+            word_boundary: '1'
+          element_default_classes: '1'
+          element_label_colon: '1'
+          empty_zero: '0'
+          field: uid
+          hide_alter_empty: '0'
+          hide_empty: '0'
+          id: uid
+          link_to_user: '1'
+          table: users
+      pager:
+        options:
+          items_per_page: '10'
+        type: full
+      query:
+        options:
+          query_comment: '0'
+        type: views_query
+      title: test_user_relationship
+      style:
+        type: default
+      row:
+        type: fields
+        options:
+          default_field_elements: '1'
+          hide_empty: '0'
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: test_user_relationship
+name: test_user_relationship
+tag: default

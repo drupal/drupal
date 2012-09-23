@@ -352,10 +352,8 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function defaultableSections($section = NULL) {
     $sections = array(
-      'access' => array('access', 'access_options'),
-      'access_options' => array('access', 'access_options'),
-      'cache' => array('cache', 'cache_options'),
-      'cache_options' => array('cache', 'cache_options'),
+      'access' => array('access'),
+      'cache' => array('cache'),
       'title' => array('title'),
       'css_class' => array('css_class'),
       'use_ajax' => array('use_ajax'),
@@ -369,10 +367,8 @@ abstract class DisplayPluginBase extends PluginBase {
       'link_display' => array('link_display', 'link_url'),
 
       // Force these to cascade properly.
-      'style_plugin' => array('style_plugin', 'style_options', 'row_plugin', 'row_options'),
-      'style_options' => array('style_plugin', 'style_options', 'row_plugin', 'row_options'),
-      'row_plugin' => array('style_plugin', 'style_options', 'row_plugin', 'row_options'),
-      'row_options' => array('style_plugin', 'style_options', 'row_plugin', 'row_options'),
+      'style' => array('style', 'row'),
+      'row' => array('style', 'row'),
 
       'pager' => array('pager', 'pager_options'),
       'pager_options' => array('pager', 'pager_options'),
@@ -427,21 +423,17 @@ abstract class DisplayPluginBase extends PluginBase {
           'hide_attachment_summary' => TRUE,
           'hide_admin_links' => FALSE,
           'pager' => TRUE,
-          'pager_options' => TRUE,
           'use_more' => TRUE,
           'use_more_always' => TRUE,
           'use_more_text' => TRUE,
           'exposed_form' => TRUE,
-          'exposed_form_options' => TRUE,
 
           'link_display' => TRUE,
           'link_url' => '',
           'group_by' => TRUE,
 
-          'style_plugin' => TRUE,
-          'style_options' => TRUE,
-          'row_plugin' => TRUE,
-          'row_options' => TRUE,
+          'style' => TRUE,
+          'row' => TRUE,
 
           'header' => TRUE,
           'footer' => TRUE,
@@ -523,12 +515,14 @@ abstract class DisplayPluginBase extends PluginBase {
       'access' => array(
         'contains' => array(
           'type' => array('default' => 'none'),
-         ),
+          'options' => array('default' => array()),
+        ),
       ),
       'cache' => array(
         'contains' => array(
           'type' => array('default' => 'none'),
-         ),
+          'options' => array('default' => array()),
+        ),
       ),
       'query' => array(
         'contains' => array(
@@ -536,12 +530,6 @@ abstract class DisplayPluginBase extends PluginBase {
           'options' => array('default' => array()),
          ),
       ),
-      // Note that exposed_form plugin has options in a separate array,
-      // while access and cache do not. access and cache are legacy and
-      // that pattern should not be repeated, but it is left as is to
-      // reduce the need to modify older views. Let's consider the
-      // pattern used here to be the template from which future plugins
-      // should be copied.
       'exposed_form' => array(
         'contains' => array(
           'type' => array('default' => 'basic'),
@@ -554,21 +542,17 @@ abstract class DisplayPluginBase extends PluginBase {
           'options' => array('default' => array()),
          ),
       ),
-
-      // Note that the styles have their options completely independent.
-      // Like access and cache above, this is a legacy pattern and
-      // should not be repeated.
-      'style_plugin' => array(
-        'default' => 'default',
+      'style' => array(
+        'contains' => array(
+          'type' => array('default' => 'default'),
+          'options' => array('default' => array()),
+        ),
       ),
-      'style_options' => array(
-        'default' => array(),
-      ),
-      'row_plugin' => array(
-        'default' => 'fields',
-      ),
-      'row_options' => array(
-        'default' => array(),
+      'row' => array(
+        'contains' => array(
+          'type' => array('default' => 'fields'),
+          'options' => array('default' => array()),
+        ),
       ),
 
       'exposed_block' => array(
@@ -738,8 +722,8 @@ abstract class DisplayPluginBase extends PluginBase {
    * @return bool
    */
   public function usesFields() {
-    $name = $this->getOption('style_plugin');
-    $plugin = $this->getPlugin('style', $name);
+    $style = $this->getOption('style');
+    $plugin = $this->getPlugin('style', $style['type']);
     if ($plugin) {
       return $plugin->usesFields();
     }
@@ -759,15 +743,6 @@ abstract class DisplayPluginBase extends PluginBase {
     static $cache = array();
     if (!isset($cache[$type][$name])) {
       switch ($type) {
-        case 'style':
-        case 'row':
-          $option_name = $type . '_plugin';
-          $options = $this->getOption($type . '_options');
-          if (!$name) {
-            $name = $this->getOption($option_name);
-          }
-
-          break;
         case 'query':
           $views_data = views_fetch_data($this->view->storage->base_table);
           $name = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
@@ -778,15 +753,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $name = $options['type'];
           }
 
-          // access & cache store their options as siblings with the
-          // type; all others use an 'options' array.
-          if ($type != 'access' && $type != 'cache') {
-            if (!isset($options['options'])) {
-//              debug($type);
-//              debug($options);
-            }
-            $options = $options['options'];
-          }
+          $options = $options['options'];
       }
 
       if ($type != 'query') {
@@ -1089,15 +1056,16 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => t('Change the title that this display will use.'),
     );
 
-    $name = $this->getOption('style_plugin');
+    $style_options = $this->getOption('style');
+    $name = $style_options['type'];
     $style_plugin = views_get_plugin_definition('style', $name);
-    $style_plugin_instance = $this->getPlugin('style', $name);
+    $style_plugin_instance = $this->getPlugin('style');
     $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summaryTitle();
     $style_title = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->pluginTitle();
 
     $style = '';
 
-    $options['style_plugin'] = array(
+    $options['style'] = array(
       'category' => 'format',
       'title' => t('Format'),
       'value' => $style_title,
@@ -1107,17 +1075,18 @@ abstract class DisplayPluginBase extends PluginBase {
 
     // This adds a 'Settings' link to the style_options setting if the style has options.
     if ($style_plugin_instance->usesOptions()) {
-      $options['style_plugin']['links']['style_options'] = t('Change settings for this format');
+      $options['style']['links']['style_options'] = t('Change settings for this format');
     }
 
     if ($style_plugin_instance->usesRowPlugin()) {
-      $name = $this->getOption('row_plugin');
+      $row_options = $this->getOption('row');
+      $name = $row_options['type'];
       $row_plugin = views_get_plugin_definition('row', $name);
       $row_plugin_instance = $this->getPlugin('row', $name);
       $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summaryTitle();
       $row_title = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->pluginTitle();
 
-      $options['row_plugin'] = array(
+      $options['row'] = array(
         'category' => 'format',
         'title' => t('Show'),
         'value' => $row_title,
@@ -1126,7 +1095,7 @@ abstract class DisplayPluginBase extends PluginBase {
       );
       // This adds a 'Settings' link to the row_options setting if the row style has options.
       if ($row_plugin_instance->usesOptions()) {
-        $options['row_plugin']['links']['row_options'] = t('Change settings for this style');
+        $options['row']['links']['row_options'] = t('Change settings for this style');
       }
     }
     if ($this->usesAJAX()) {
@@ -1493,16 +1462,11 @@ abstract class DisplayPluginBase extends PluginBase {
 
         break;
       case 'access_options':
-        $access = $this->getOption('access');
         $plugin = $this->getPlugin('access');
         $form['#title'] .= t('Access options');
         if ($plugin) {
           $form['access_options'] = array(
             '#tree' => TRUE,
-          );
-          $form['access_options']['type'] = array(
-            '#type' => 'value',
-            '#value' => $access['type'],
           );
           $plugin->buildOptionsForm($form['access_options'], $form_state);
         }
@@ -1532,16 +1496,11 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         break;
       case 'cache_options':
-        $cache = $this->getOption('cache');
         $plugin = $this->getPlugin('cache');
         $form['#title'] .= t('Caching options');
         if ($plugin) {
           $form['cache_options'] = array(
             '#tree' => TRUE,
-          );
-          $form['cache_options']['type'] = array(
-            '#type' => 'value',
-            '#value' => $cache['type'],
           );
           $plugin->buildOptionsForm($form['cache_options'], $form_state);
         }
@@ -1609,20 +1568,21 @@ abstract class DisplayPluginBase extends PluginBase {
           $form['field_language']['#markup'] = t("You don't have translatable entity types.");
         }
         break;
-      case 'style_plugin':
+      case 'style':
         $form['#title'] .= t('How should this view be styled');
         $form['style_plugin'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->storage->base_table)),
-          '#default_value' => $this->getOption('style_plugin'),
+          '#default_value' => $style['type'],
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
 
-        $name = $this->getOption('style_plugin');
-        $style_plugin = $this->getPlugin('style', $name);
+        $style_plugin = $this->getPlugin('style', $style['type']);
         if ($style_plugin->usesOptions()) {
           $form['markup'] = array(
-            '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->optionLink(t('settings'), 'style_options'))) . '</div>',
+            '#prefix' => '<div class="form-item description">',
+            '#suffix' => '</div>',
+            '#markup' => t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->optionLink(t('settings'), 'style_options'))),
           );
         }
 
@@ -1630,19 +1590,19 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'style_options':
         $form['#title'] .= t('Style options');
         $style = TRUE;
-        $type = 'style_plugin';
-        $name = $this->getOption('style_plugin');
+        $style_plugin = $this->getOption('style');
+        $name = $style_plugin['type'];
 
       case 'row_options':
         if (!isset($name)) {
-          $name = $this->getOption('row_plugin');
+          $row_plugin = $this->getOption('row');
+          $name = $row_plugin['type'];
         }
         // if row, $style will be empty.
         if (empty($style)) {
           $form['#title'] .= t('Row style options');
-          $type = 'row_plugin';
         }
-        $plugin = $this->getPlugin(empty($style) ? 'row' : 'style');
+        $plugin = $this->getPlugin(empty($style) ? 'row' : 'style', $name);
         if ($plugin) {
           $form[$form_state['section']] = array(
             '#tree' => TRUE,
@@ -1650,19 +1610,20 @@ abstract class DisplayPluginBase extends PluginBase {
           $plugin->buildOptionsForm($form[$form_state['section']], $form_state);
         }
         break;
-      case 'row_plugin':
+      case 'row':
         $form['#title'] .= t('How should each row in this view be styled');
         $form['row_plugin'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->storage->base_table)),
-          '#default_value' => $this->getOption('row_plugin'),
+          '#default_value' => $row['type'],
         );
 
-        $name = $this->getOption('row_plugin');
-        $row_plugin = $this->getPlugin('row', $name);
-        if ($row_plugin->usesOptions()) {
+        $row_plugin_instance = $this->getPlugin('row', $row['type']);
+        if ($row_plugin_instance->usesOptions()) {
           $form['markup'] = array(
-            '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected row style.', array('!settings' => $this->optionLink(t('settings'), 'row_options'))) . '</div>',
+            '#prefix' => '<div class="form-item description">',
+            '#suffix' => '</div>',
+            '#markup' => t('You may also adjust the !settings for the currently selected row style.', array('!settings' => $this->optionLink(t('settings'), 'row_options'))),
           );
         }
 
@@ -2128,7 +2089,7 @@ abstract class DisplayPluginBase extends PluginBase {
           }
 
           foreach ($this->view->display as $id => $display) {
-            if ($id != $this->view->current_display && ($form_state['values']['display_id'] == $id || (isset($display['new_id']) && $form_state['values']['display_id'] == $display['new_id']))) {
+            if ($id != $this->view->current_display && ($form_state['values']['display_id'] == $id || (isset($display->new_id) && $form_state['values']['display_id'] == $display->new_id))) {
               form_error($form['display_id'], t('Display id should be unique.'));
             }
           }
@@ -2216,10 +2177,12 @@ abstract class DisplayPluginBase extends PluginBase {
 
         break;
       case 'access_options':
-        $plugin = views_get_plugin('access', $form_state['values'][$section]['type']);
+        $plugin = $this->getPlugin('access');
         if ($plugin) {
+          $access = $this->getOption('access');
           $plugin->submitOptionsForm($form['access_options'], $form_state);
-          $this->setOption('access', $form_state['values'][$section]);
+          $access['options'] = $form_state['values'][$section];
+          $this->setOption('access', $access);
         }
         break;
       case 'cache':
@@ -2237,10 +2200,12 @@ abstract class DisplayPluginBase extends PluginBase {
 
         break;
       case 'cache_options':
-        $plugin = views_get_plugin('cache', $form_state['values'][$section]['type']);
+        $plugin = $this->getPlugin('cache');
         if ($plugin) {
+          $cache = $this->getOption('cache');
           $plugin->submitOptionsForm($form['cache_options'], $form_state);
-          $this->setOption('cache', $form_state['values'][$section]);
+          $cache['options'] = $form_state['values'][$section];
+          $this->setOption('cache', $cache);
         }
         break;
       case 'query':
@@ -2277,14 +2242,15 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'group_by':
         $this->setOption($section, $form_state['values'][$section]);
         break;
-      case 'row_plugin':
+      case 'row':
         // This if prevents resetting options to default if they don't change
         // the plugin.
-        if ($this->getOption($section) != $form_state['values'][$section]) {
-          $plugin = views_get_plugin('row', $form_state['values'][$section]);
+        $row = $this->getOption('row');
+        if ($row['type'] != $form_state['values'][$section]['type']) {
+          $plugin = views_get_plugin('row', $form_state['values'][$section]['type']);
           if ($plugin) {
-            $this->setOption($section, $form_state['values'][$section]);
-            $this->setOption('row_options', array());
+            $row = array('type' => $form_state['values'][$section]['type']);
+            $this->setOption($section, $row);
 
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
@@ -2293,14 +2259,15 @@ abstract class DisplayPluginBase extends PluginBase {
           }
         }
         break;
-      case 'style_plugin':
+      case 'style':
         // This if prevents resetting options to default if they don't change
         // the plugin.
-        if ($this->getOption($section) != $form_state['values'][$section]) {
-          $plugin = views_get_plugin('style', $form_state['values'][$section]);
+        $style = $this->getOption('style');
+        if ($style['type'] != $form_state['values'][$section]['type']) {
+          $plugin = views_get_plugin('style', $form_state['values'][$section]['type']);
           if ($plugin) {
-            $this->setOption($section, $form_state['values'][$section]);
-            $this->setOption('style_options', array());
+            $row = array('type' => $form_state['values'][$section]['type']);
+            $this->setOption($section, $row);
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
               views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('style_options'));
@@ -2309,14 +2276,22 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         break;
       case 'style_options':
-        $style = TRUE;
-      case 'row_options':
-        // if row, $style will be empty.
-        $plugin = $this->getPlugin(empty($style) ? 'row' : 'style');
+        $plugin = $this->getPlugin('style');
         if ($plugin) {
-          $plugin->submitOptionsForm($form['options'][$section], $form_state);
+          $style = $this->getOption('style');
+          $plugin->submitOptionsForm($form['style_options'], $form_state);
+          $style['options'] = $form_state['values'][$section];
+          $this->setOption('style', $style);
         }
-        $this->setOption($section, $form_state['values'][$section]);
+        break;
+      case 'row_options':
+        $plugin = $this->getPlugin('row');
+        if ($plugin) {
+          $row = $this->getOption('row');
+          $plugin->submitOptionsForm($form['row_options'], $form_state);
+          $row['options'] = $form_state['values'][$section];
+          $this->setOption('row', $row);
+        }
         break;
       case 'exposed_block':
         $this->setOption($section, (bool) $form_state['values'][$section]);

@@ -30,8 +30,6 @@ display:
         type: some
         options:
           items_per_page: 5
-      style_plugin: html_list
-      row_plugin: fields
       relationships:
         nid:
           id: nid
@@ -63,6 +61,10 @@ display:
           field: status_extra
           relationship: nid
           group: 0
+      style:
+        type: html_list
+      row:
+        type: fields
   page:
     id: page
     display_title: Page
@@ -78,13 +80,6 @@ display:
         row_plugin: false
         row_options: false
         fields: false
-      style_plugin: html_list
-      row_plugin: fields
-      row_options:
-        inline:
-          title: title
-          timestamp: timestamp
-          separator: '&nbsp;'
       fields:
         title:
           id: title
@@ -111,6 +106,15 @@ display:
           field: comment_body
           label: ''
       path: comments/recent
+      style:
+        type: html_list
+      row:
+        type: fields
+        options:
+          inline:
+            title: title
+            timestamp: timestamp
+            separator: '&nbsp;'
   block:
     id: block
     display_title: Block

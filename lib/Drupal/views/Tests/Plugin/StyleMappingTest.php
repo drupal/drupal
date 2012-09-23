@@ -36,7 +36,7 @@ class StyleMappingTest extends StyleTestBase {
     $this->assertTrue(strpos($output, 'job') === FALSE, 'The job field is added to the view but not in the mapping.');
 
     $view = $this->getView();
-    $view->displayHandlers['default']->options['style_options']['mapping']['name_field'] = 'job';
+    $view->displayHandlers['default']->options['style']['options']['mapping']['name_field'] = 'job';
     $output = $this->mappedOutputHelper($view);
     $this->assertTrue(strpos($output, 'job') !== FALSE, 'The job field is added to the view and is in the mapping.');
   }
