@@ -1605,22 +1605,22 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     $themes = array();
     $hook = 'views_view_field';
 
-    $display = $this->view->display[$this->view->current_display];
+    $display = $this->view->display_handler->display;
 
     if (!empty($display)) {
-      $themes[] = $hook . '__' . $this->view->name  . '__' . $display['id'] . '__' . $this->options['id'];
-      $themes[] = $hook . '__' . $this->view->name  . '__' . $display['id'];
+      $themes[] = $hook . '__' . $this->view->storage->name  . '__' . $display['id'] . '__' . $this->options['id'];
+      $themes[] = $hook . '__' . $this->view->storage->name  . '__' . $display['id'];
       $themes[] = $hook . '__' . $display['id'] . '__' . $this->options['id'];
       $themes[] = $hook . '__' . $display['id'];
       if ($display['id'] != $display['display_plugin']) {
-        $themes[] = $hook . '__' . $this->view->name  . '__' . $display['display_plugin'] . '__' . $this->options['id'];
-        $themes[] = $hook . '__' . $this->view->name  . '__' . $display['display_plugin'];
+        $themes[] = $hook . '__' . $this->view->storage->name  . '__' . $display['display_plugin'] . '__' . $this->options['id'];
+        $themes[] = $hook . '__' . $this->view->storage->name  . '__' . $display['display_plugin'];
         $themes[] = $hook . '__' . $display['display_plugin'] . '__' . $this->options['id'];
         $themes[] = $hook . '__' . $display['display_plugin'];
       }
     }
-    $themes[] = $hook . '__' . $this->view->name . '__' . $this->options['id'];
-    $themes[] = $hook . '__' . $this->view->name;
+    $themes[] = $hook . '__' . $this->view->storage->name . '__' . $this->options['id'];
+    $themes[] = $hook . '__' . $this->view->storage->name;
     $themes[] = $hook . '__' . $this->options['id'];
     $themes[] = $hook;
 

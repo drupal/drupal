@@ -124,7 +124,7 @@ function views_revert_views() {
       continue;
     }
     if ($view->type == dt('Overridden')) {
-      $overridden[$view->name] = $view->name;
+      $overridden[$view->storage->name] = $view->storage->name;
     }
   }
 
@@ -220,14 +220,14 @@ function views_revert_view($view) {
     // Revert the view.
     $view->delete();
     // Clear its cache.
-    views_temp_store()->delete($view->name);
+    views_temp_store()->delete($view->storage->name);
     // Give feedback.
-    $message = dt("Reverted the view '@viewname'", array('@viewname' => $view->name));
+    $message = dt("Reverted the view '@viewname'", array('@viewname' => $view->storage->name));
     drush_log($message, 'success');
     // Reverted one more view.
   }
   else {
-    drush_set_error(dt("The view '@viewname' is not overridden.", array('@viewname' => $view->name)));
+    drush_set_error(dt("The view '@viewname' is not overridden.", array('@viewname' => $view->storage->name)));
   }
 }
 
@@ -319,7 +319,7 @@ function drush_views_list() {
   foreach ($views as $id => $view) {
     // if options were specified, check that first
     // mismatch push the loop to the next view
-    if ($with_tags && !in_array($view->tag, $tags)) {
+    if ($with_tags && !in_array($view->storage->tag, $tags)) {
       continue;
     }
     if ($with_status && !$view->disabled == $status) {
@@ -328,21 +328,21 @@ function drush_views_list() {
     if ($with_type && strtolower($view->type) !== $type[0]) {
       continue;
     }
-    if ($with_name && !stristr($view->name, $name[0])) {
+    if ($with_name && !stristr($view->storage->name, $name[0])) {
       continue;
     }
 
     $row = array();
     // each row entry should be in the same order as the header
-    $row[] = $view->name;
-    $row[] = $view->description;
+    $row[] = $view->storage->name;
+    $row[] = $view->storage->description;
     $row[] = $view->type;
-    $row[] = $view->disabled ? dt('Disabled') : dt('Enabled');
-    $row[] = $view->tag;
+    $row[] = $view->storage->disabled ? dt('Disabled') : dt('Enabled');
+    $row[] = $view->storage->tag;
 
     // place the row in the appropiate array,
     // so we can have disabled views at the bottom
-    if ($view->disabled) {
+    if ($view->storage->disabled) {
       $disabled_views[] = $row;
       }
     else{

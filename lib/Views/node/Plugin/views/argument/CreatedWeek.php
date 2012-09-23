@@ -9,26 +9,24 @@ namespace Views\node\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Date;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Argument handler for a week.
  *
  * @Plugin(
  *   id = "node_created_week",
+ *   arg_format = "w",
  *   module = "node"
  * )
  */
 class CreatedWeek extends Date {
 
   /**
-   * Constructs a CreatedWeek object.
+   * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
-
-    $this->arg_format = 'w';
+  function get_formula() {
     $this->formula = views_date_sql_extract('WEEK', "***table***.$this->realField");
+    return parent::get_formula();
   }
 
   /**

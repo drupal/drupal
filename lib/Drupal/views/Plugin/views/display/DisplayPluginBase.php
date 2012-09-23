@@ -85,7 +85,7 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   protected $usesAttachments = FALSE;
 
-  public function init(&$view, &$display, $options = NULL) {
+  public function init(ViewExecutable $view, &$display, $options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->display = &$display;
@@ -769,7 +769,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
           break;
         case 'query':
-          $views_data = views_fetch_data($this->view->base_table);
+          $views_data = views_fetch_data($this->view->storage->base_table);
           $name = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
         default:
           $option_name = $type;
@@ -806,10 +806,10 @@ abstract class DisplayPluginBase extends PluginBase {
         $display_id = $this->isDefaulted($option_name) ? $this->display['id'] : 'default';
 
         if (!isset($this->base_field)) {
-          $views_data = views_fetch_data($this->view->base_table);
-          $this->view->base_field = !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '';
+          $views_data = views_fetch_data($this->view->storage->base_table);
+          $this->view->storage->base_field = !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '';
         }
-        $plugin->init($this->view->base_table, $this->view->base_field, $options);
+        $plugin->init($this->view->storage->base_table, $this->view->storage->base_field, $options);
       }
       $cache[$type][$name] = $plugin;
     }
@@ -980,7 +980,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $title = $text;
     }
 
-    return l($text, 'admin/structure/views/nojs/display/' . $this->view->name . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
+    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->name . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
   }
 
   /**
@@ -1478,7 +1478,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $access = $this->getOption('access');
         $form['access']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('access', NULL, array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('access', NULL, array($this->view->storage->base_table)),
           '#default_value' => $access['type'],
         );
 
@@ -1518,7 +1518,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $cache = $this->getOption('cache');
         $form['cache']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('cache', NULL, array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('cache', NULL, array($this->view->storage->base_table)),
           '#default_value' => $cache['type'],
         );
 
@@ -1584,7 +1584,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // Doesn't make sense to show a field setting here if we aren't querying
         // an entity base table. Also, we make sure that there's at least one
         // entity type with a translation handler attached.
-        if (in_array($this->view->base_table, $entity_tables) && $has_translation_handlers) {
+        if (in_array($this->view->storage->base_table, $entity_tables) && $has_translation_handlers) {
           $languages = array(
             '***CURRENT_LANGUAGE***' => t("Current user's language"),
             '***DEFAULT_LANGUAGE***' => t("Default site language"),
@@ -1613,7 +1613,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('How should this view be styled');
         $form['style_plugin'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->storage->base_table)),
           '#default_value' => $this->getOption('style_plugin'),
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
@@ -1654,7 +1654,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('How should each row in this view be styled');
         $form['row_plugin'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->storage->base_table)),
           '#default_value' => $this->getOption('row_plugin'),
         );
 
@@ -1843,7 +1843,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#markup' => '<div class="form-item description"><p>' . t('This section lists all possible templates for the display plugin and for the style plugins, ordered roughly from the least specific to the most specific. The active template for each plugin -- which is the most specific template found on the system -- is highlighted in bold.') . '</p></div>',
         );
 
-        if (isset($this->view->display[$this->view->current_display]->new_id)) {
+        if (isset($this->view->display_handler->new_id)) {
           $form['important']['new_id'] = array(
             '#prefix' => '<div class="description">',
             '#suffix' => '</div>',
@@ -2012,7 +2012,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $exposed_form = $this->getOption('exposed_form');
         $form['exposed_form']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('exposed_form', NULL, array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('exposed_form', NULL, array($this->view->storage->base_table)),
           '#default_value' => $exposed_form['type'],
         );
 
@@ -2046,7 +2046,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $pager = $this->getOption('pager');
         $form['pager']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->storage->base_table)),
           '#default_value' => $pager['type'],
         );
 
@@ -2465,7 +2465,7 @@ abstract class DisplayPluginBase extends PluginBase {
         if (!empty($this->view->exposed_raw_input)) {
           $url_options['query'] = $this->view->exposed_raw_input;
         }
-        $theme = views_theme_functions('views_more', $this->view, $this->view->display[$this->view->current_display]);
+        $theme = views_theme_functions('views_more', $this->view, $this->view->display_handler->display);
         $path = check_url(url($path, $url_options));
 
         return theme($theme, array('more_url' => $path, 'link_text' => check_plain($this->useMoreText()), 'view' => $this->view));
@@ -2690,8 +2690,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $blocks = array();
 
     if ($this->usesExposedFormInBlock()) {
-      $delta = '-exp-' . $this->view->name . '-' . $this->display['id'];
-      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->name, '@display_id' => $this->display['id']));
+      $delta = '-exp-' . $this->view->storage->name . '-' . $this->display['id'];
+      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->storage->name, '@display_id' => $this->display['id']));
 
       $blocks[$delta] = array(
         'info' => $desc,

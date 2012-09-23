@@ -67,7 +67,7 @@ class UpgradeTestCase extends ViewTestBase {
   public function testMovedTo() {
     // Test moving on field lavel.
     $view = $this->createViewFromConfig('test_views_move_to_field');
-    $view->update();
+    $view->storage->update();
     $view->build();
 
 //     $this->assertEqual('old_field_1', $view->field['old_field_1']->options['id'], "Id shouldn't change during conversion");
@@ -78,7 +78,7 @@ class UpgradeTestCase extends ViewTestBase {
 
     // Test moving on handler lavel.
     $view = $this->createViewFromConfig('test_views_move_to_handler');
-    $view->update();
+    $view->storage->update();
     $view->build();
 
 //     $this->assertEqual('old_field_2', $view->field['old_field_2']->options['id']);
@@ -91,10 +91,10 @@ class UpgradeTestCase extends ViewTestBase {
 
     // Test moving on table level.
     $view = $this->createViewFromConfig('test_views_move_to_table');
-    $view->update();
+    $view->storage->update();
     $view->build();
 
-    $this->assertEqual('views_test_data', $view->base_table, 'Make sure that view->base_table gets automatically converted.');
+    $this->assertEqual('views_test_data', $view->storage->base_table, 'Make sure that view->base_table gets automatically converted.');
 //     $this->assertEqual('id', $view->field['id']->field, 'If we move a whole table fields of this table should work, too.');
     $this->assertEqual('id', $view->field['id']->realField, 'To run the query right the realField has to be set right.');
     $this->assertEqual('views_test_data', $view->field['id']->table);

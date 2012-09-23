@@ -301,7 +301,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
     );
 
-    $validate_types = array('none' => t('- Basic validation -'));
     $plugins = views_get_plugin_definitions('argument_validator');
     foreach ($plugins as $id => $info) {
       if (!empty($info['no_ui'])) {
@@ -946,17 +945,8 @@ abstract class ArgumentPluginBase extends HandlerBase {
       return $this->argument_validated = TRUE;
     }
 
-    if ($this->options['validate']['type'] == 'none') {
-      return $this->argument_validated = $this->validate_argument_basic($arg);
-    }
-
     $plugin = $this->get_plugin('argument_validator');
-    if ($plugin) {
-      return $this->argument_validated = $plugin->validate_argument($arg);
-    }
-
-    // If the plugin isn't found, fall back to the basic validation path:
-    return $this->argument_validated = $this->validate_argument_basic($arg);
+    return $this->argument_validated = $plugin->validate_argument($arg);
   }
 
   /**
@@ -982,25 +972,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
 
     return $rc;
-  }
-
-  /**
-   * Provide a basic argument validation.
-   *
-   * This can be overridden for more complex types; the basic
-   * validator only checks to see if the argument is not NULL
-   * or is numeric if the definition says it's numeric.
-   */
-  function validate_argument_basic($arg) {
-    if (!isset($arg) || $arg === '') {
-      return FALSE;
-    }
-
-    if (!empty($this->definition['numeric']) && !isset($this->options['break_phrase']) && !is_numeric($arg)) {
-      return FALSE;
-    }
-
-    return TRUE;
   }
 
   /**

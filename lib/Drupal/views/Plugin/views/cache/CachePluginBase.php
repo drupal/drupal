@@ -177,7 +177,7 @@ abstract class CachePluginBase extends PluginBase {
    * to be sure that we catch everything. Maybe that's a bad idea.
    */
   function cache_flush() {
-    cache($this->table)->deletePrefix($this->view->name . ':');
+    cache($this->table)->deletePrefix($this->view->storage->name . ':');
   }
 
   /**
@@ -302,7 +302,7 @@ abstract class CachePluginBase extends PluginBase {
         }
       }
 
-      $this->_results_key = $this->view->name . ':' . $this->displayHandler->display['id'] . ':results:' . md5(serialize($key_data));
+      $this->_results_key = $this->view->storage->name . ':' . $this->displayHandler->display['id'] . ':results:' . md5(serialize($key_data));
     }
 
     return $this->_results_key;
@@ -320,7 +320,7 @@ abstract class CachePluginBase extends PluginBase {
         'base_url' => $GLOBALS['base_url'],
       );
 
-      $this->_output_key = $this->view->name . ':' . $this->displayHandler->display['id'] . ':output:' . md5(serialize($key_data));
+      $this->_output_key = $this->view->storage->name . ':' . $this->displayHandler->display['id'] . ':output:' . md5(serialize($key_data));
     }
 
     return $this->_output_key;

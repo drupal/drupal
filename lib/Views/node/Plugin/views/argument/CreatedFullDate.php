@@ -9,27 +9,25 @@ namespace Views\node\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Date;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Argument handler for a full date (CCYYMMDD)
  *
  * @Plugin(
  *   id = "node_created_fulldate",
+ *   arg_format = "Ymd",
+ *   format = "F j, Y",
  *   module = "node"
  * )
  */
 class CreatedFullDate extends Date {
 
   /**
-   * Constructs a CreatedFullDate object.
+   * Overrides Drupal\views\Plugin\views\argument\Formula::get_formula().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
-
-    $this->format = 'F j, Y';
-    $this->arg_format = 'Ymd';
-    $this->formula = views_date_sql_format($this->arg_format, "***table***.$this->realField");
+  function get_formula() {
+    $this->formula = views_date_sql_format($this->definition['arg_format'], "***table***.$this->realField");
+    return parent::get_formula();
   }
 
   /**
@@ -37,14 +35,14 @@ class CreatedFullDate extends Date {
    */
   function summary_name($data) {
     $created = $data->{$this->name_alias};
-    return format_date(strtotime($created . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
+    return format_date(strtotime($created . " 00:00:00 UTC"), 'custom', $this->definition['format'], 'UTC');
   }
 
   /**
    * Provide a link to the next level of the view
    */
   function title() {
-    return format_date(strtotime($this->argument . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
+    return format_date(strtotime($this->argument . " 00:00:00 UTC"), 'custom', $this->definition['format'], 'UTC');
   }
 
 }

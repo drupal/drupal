@@ -60,14 +60,6 @@ class Null extends ArgumentPluginBase {
     return $actions;
   }
 
-  function validate_argument_basic($arg) {
-    if (!empty($this->options['must_not_be'])) {
-      return !isset($arg);
-    }
-
-    return parent::validate_argument_basic($arg);
-  }
-
   /**
    * Override the behavior of query() to prevent the query
    * from being changed in any way.

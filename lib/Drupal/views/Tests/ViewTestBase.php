@@ -193,7 +193,7 @@ abstract class ViewTestBase extends WebTestBase {
     // the exposed forms cache.
     drupal_static_reset('views_exposed_form_cache');
 
-    $display = $view->newDisplay('page', 'Page', 'page_1');
+    $display = $view->storage->newDisplay('page', 'Page', 'page_1');
     return $view;
   }
 
@@ -415,7 +415,7 @@ abstract class ViewTestBase extends WebTestBase {
     $data = config("views.view.$view_name")->get();
 
     $view = entity_create('view', $data);
-    $view = new ViewExecutable($view);
+    $view = $view->getExecutable();
     $view->setDisplay();
 
     return $view;

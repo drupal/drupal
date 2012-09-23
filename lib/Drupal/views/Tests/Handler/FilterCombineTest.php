@@ -35,7 +35,7 @@ class FilterCombineTest extends HandlerTestBase {
 
   protected function getBasicView() {
     $view = parent::getBasicView();
-    $view->display['default']['display_options']['fields']['job'] = array(
+    $view->displayHandlers['default']->display['display_options']['fields']['job'] = array(
       'id' => 'job',
       'table' => 'views_test_data',
       'field' => 'job',

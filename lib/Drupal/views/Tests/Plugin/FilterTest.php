@@ -138,7 +138,7 @@ class FilterTest extends PluginTestBase {
     $this->executeView($view);
 
     // Check if we have all 5 results.
-    $this->assertEqual(count($view->result), 5, format_string('All @count results returned', array('@count' => count($view->display))));
+    $this->assertEqual(count($view->result), 5, format_string('All @count results returned', array('@count' => count($view->displayHandlers))));
   }
 
 }

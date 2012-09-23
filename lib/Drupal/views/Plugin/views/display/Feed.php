@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Annotation\Plugin;
@@ -43,13 +44,13 @@ class Feed extends Page {
    */
   protected $usesPager = FALSE;
 
-  public function init(&$view, &$display, $options = NULL) {
+  public function init(ViewExecutable $view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
 
     // Set the default row style. Ideally this would be part of the option
     // definition, but in this case it's dependent on the view's base table,
     // which we don't know until init().
-    $row_plugins = views_fetch_plugin_names('row', $this->getStyleType(), array($view->base_table));
+    $row_plugins = views_fetch_plugin_names('row', $this->getStyleType(), array($view->storage->base_table));
     $default_row_plugin = key($row_plugins);
     if ($this->options['row_plugin'] == '') {
       $this->options['row_plugin'] = $default_row_plugin;

@@ -59,18 +59,9 @@ class ViewExecutableTest extends ViewTestBase {
    */
   public function testProperties() {
     $view = $this->getView();
-    $storage = $view->storage;
-    foreach ($this->configProperties as $property) {
-      $this->assertIdentical($view->{$property}, $storage->{$property}, format_string("Property '%property' is set on the stored view.", array('%property' => $property)));
-    }
     foreach ($this->executableProperties as $property) {
       $this->assertTrue(isset($view->{$property}));
     }
-
-    // Set one storage property manually on the storage and verify that it is
-    // access on the executable.
-    $storage->human_name = $this->randomName();
-    $this->assertIdentical($view->human_name, $storage->human_name);
   }
 
   /**

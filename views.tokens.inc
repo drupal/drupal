@@ -58,15 +58,15 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'name':
-          $replacements[$original] = $sanitize ? check_plain($view->human_name) : $view->human_name;
+          $replacements[$original] = $sanitize ? check_plain($view->storage->getHumanName()) : $view->storage->getHumanName();
           break;
 
         case 'description':
-          $replacements[$original] = $sanitize ? check_plain($view->description) : $view->description;
+          $replacements[$original] = $sanitize ? check_plain($view->storage->description) : $view->storage->description;
           break;
 
         case 'machine-name':
-          $replacements[$original] = $view->name;
+          $replacements[$original] = $view->storage->name;
           break;
 
         case 'title':

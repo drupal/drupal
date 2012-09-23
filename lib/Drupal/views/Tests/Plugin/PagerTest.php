@@ -247,13 +247,6 @@ class PagerTest extends PluginTestBase {
   }
 
   /**
-   * Tests the minipager.
-   */
-  public function testMiniPager() {
-    // the functionality is the same as the normal pager, so i don't know what to test here.
-  }
-
-  /**
    * Tests rendering with NULL pager.
    */
   public function testRenderNullPager() {

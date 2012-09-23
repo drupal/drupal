@@ -15,15 +15,6 @@ use Drupal\config\ConfigEntityBase;
 class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
 
   /**
-   * Provide direct access to the UUID.
-   *
-   * @todo Change usage of this to the uuid() method.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The name of the base table this view will use.
    *
    * @var string
@@ -136,6 +127,19 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
+   * Retrieves the executable version of this view.
+   *
+   * @return Drupal\views\ViewExecutable
+   *   The executable version of this view.
+   */
+  public function getExecutable() {
+    if (!isset($this->executable)) {
+      $this->setExecutable(new ViewExecutable($this));
+    }
+    return $this->executable;
+  }
+
+  /**
    * Initializes the display.
    *
    * @todo Inspect calls to this and attempt to clean up.
@@ -146,49 +150,8 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    * @see Drupal\views\ViewExecutable::initDisplay()
    */
   public function initDisplay($reset = FALSE) {
-    if (!isset($this->executable)) {
-      $this->setExecutable(new ViewExecutable($this));
-    }
+    $this->getExecutable();
     $this->executable->initDisplay($reset);
-  }
-
-  /**
-   * Implements the magic __call() method.
-   *
-   * @todo Remove this once all calls are changed to use executable directly.
-   */
-  public function __call($name, $arguments) {
-    if (method_exists($this->executable, $name)) {
-      return call_user_func_array(array($this->executable, $name), $arguments);
-    }
-  }
-
-  /**
-   * Implements the magic __get() method.
-   *
-   * @todo Remove this once all calls are changed to use executable directly.
-   */
-  public function &__get($name) {
-    if (property_exists($this->executable, $name)) {
-      return $this->executable->{$name};
-    }
-    if (property_exists($this, $name)) {
-      return $this->{$name};
-    }
-  }
-
-  /**
-   * Implements the magic __set() method.
-   *
-   * @todo Remove this once all calls are changed to use executable directly.
-   */
-  public function __set($name, $value) {
-    if (property_exists($this, $name)) {
-      $this->{$name} = $value;
-    }
-    elseif (property_exists($this->executable, $name)) {
-      $this->executable->{$name} = $value;
-    }
   }
 
   /**
@@ -241,6 +204,19 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
       $human_name = $this->name;
     }
     return $human_name;
+  }
+
+  /**
+   * Perform automatic updates when loading or importing a view.
+   *
+   * Over time, some things about Views or Drupal data has changed.
+   * this attempts to do some automatic updates that must happen
+   * to ensure older views will at least try to work.
+   */
+  public function update() {
+    // When views are converted automatically the base_table should be renamed
+    // to have a working query.
+    $this->base_table = views_move_table($this->base_table);
   }
 
   /**
@@ -331,32 +307,6 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Generates a unique ID for an handler instance.
-   *
-   * These handler instances are typically fields, filters, sort criteria, or
-   * arguments.
-   *
-   * @param string $requested_id
-   *   The requested ID for the handler instance.
-   * @param array $existing_items
-   *   An array of existing handler instancess, keyed by their IDs.
-   *
-   * @return string
-   *   A unique ID. This will be equal to $requested_id if no handler instance
-   *   with that ID already exists. Otherwise, it will be appended with an
-   *   integer to make it unique, e.g., "{$requested_id}_1",
-   *   "{$requested_id}_2", etc.
-   */
-  public static function generateItemId($requested_id, $existing_items) {
-    $count = 0;
-    $id = $requested_id;
-    while (!empty($existing_items[$id])) {
-      $id = $requested_id . '_' . ++$count;
-    }
-    return $id;
-  }
-
-  /**
    * Creates a new display and a display handler for it.
    *
    * @param string $plugin_id
@@ -373,26 +323,8 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function &newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
     $id = $this->addDisplay($plugin_id, $title, $id);
-
-    // Create a handler.
-    $this->executable->displayHandlers[$id] = views_get_plugin('display', $this->display[$id]['display_plugin']);
-    if (empty($this->executable->displayHandlers[$id])) {
-      // provide a 'default' handler as an emergency. This won't work well but
-      // it will keep things from crashing.
-      $this->executable->displayHandlers[$id] = views_get_plugin('display', 'default');
-    }
-
-    if (!empty($this->executable->displayHandlers[$id])) {
-      // Initialize the new display handler with data.
-      $this->executable->displayHandlers[$id]->init($this, $this->display[$id]);
-      // If this is NOT the default display handler, let it know which is
-      if ($id != 'default') {
-        // @todo is the '&' still required in php5?
-        $this->executable->displayHandlers[$id]->default_display = &$this->executable->displayHandlers['default'];
-      }
-    }
-
-    return $this->executable->displayHandlers[$id];
+    $this->getExecutable();
+    return $this->executable->newDisplay($id);
   }
 
   /**
@@ -441,164 +373,6 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     }
 
     return array_unique($all_paths);
-  }
-
-  /**
-   * Adds an instance of a handler to the view.
-   *
-   * Items may be fields, filters, sort criteria, or arguments.
-   *
-   * @param string $display_id
-   *   The machine name of the display.
-   * @param string $type
-   *   The type of handler being added.
-   * @param string $table
-   *   The name of the table this handler is from.
-   * @param string $field
-   *   The name of the field this handler is from.
-   * @param array $options
-   *   (optional) Extra options for this instance. Defaults to an empty array.
-   * @param string $id
-   *   (optional) A unique ID for this handler instance. Defaults to NULL, in
-   *   which case one will be generated.
-   *
-   * @return string
-   *   The unique ID for this handler instance.
-   */
-  public function addItem($display_id, $type, $table, $field, $options = array(), $id = NULL) {
-    $types = ViewExecutable::viewsHandlerTypes();
-    $this->setDisplay($display_id);
-
-    $fields = $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
-
-    if (empty($id)) {
-      $id = $this->generateItemId($field, $fields);
-    }
-
-    // If the desired type is not found, use the original value directly.
-    $handler_type = !empty($types[$type]['type']) ? $types[$type]['type'] : $type;
-
-    // @todo This variable is never used.
-    $handler = views_get_handler($table, $field, $handler_type);
-
-    $fields[$id] = array(
-      'id' => $id,
-      'table' => $table,
-      'field' => $field,
-    ) + $options;
-
-    $this->executable->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
-
-    return $id;
-  }
-
-  /**
-   * Gets an array of handler instances for the current display.
-   *
-   * @param string $type
-   *   The type of handlers to retrieve.
-   * @param string $display_id
-   *   (optional) A specific display machine name to use. If NULL, the current
-   *   display will be used.
-   *
-   * @return array
-   *   An array of handler instances of a given type for this display.
-   */
-  public function getItems($type, $display_id = NULL) {
-    $this->setDisplay($display_id);
-
-    if (!isset($display_id)) {
-      $display_id = $this->current_display;
-    }
-
-    // Get info about the types so we can get the right data.
-    $types = ViewExecutable::viewsHandlerTypes();
-    return $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
-  }
-
-  /**
-   * Gets the configuration of a handler instance on a given display.
-   *
-   * @param string $display_id
-   *   The machine name of the display.
-   * @param string $type
-   *   The type of handler to retrieve.
-   * @param string $id
-   *   The ID of the handler to retrieve.
-   *
-   * @return array|null
-   *   Either the handler instance's configuration, or NULL if the handler is
-   *   not used on the display.
-   */
-  public function getItem($display_id, $type, $id) {
-    // Get info about the types so we can get the right data.
-    $types = ViewExecutable::viewsHandlerTypes();
-    // Initialize the display
-    $this->setDisplay($display_id);
-
-    // Get the existing configuration
-    $fields = $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
-
-    return isset($fields[$id]) ? $fields[$id] : NULL;
-  }
-
-  /**
-   * Sets the configuration of a handler instance on a given display.
-   *
-   * @param string $display_id
-   *   The machine name of the display.
-   * @param string $type
-   *   The type of handler being set.
-   * @param string $id
-   *   The ID of the handler being set.
-   * @param array|null $item
-   *   An array of configuration for a handler, or NULL to remove this instance.
-   *
-   * @see set_item_option()
-   */
-  public function setItem($display_id, $type, $id, $item) {
-    // Get info about the types so we can get the right data.
-    $types = ViewExecutable::viewsHandlerTypes();
-    // Initialize the display.
-    $this->setDisplay($display_id);
-
-    // Get the existing configuration.
-    $fields = $this->executable->displayHandlers[$display_id]->getOption($types[$type]['plural']);
-    if (isset($item)) {
-      $fields[$id] = $item;
-    }
-    else {
-      unset($fields[$id]);
-    }
-
-    // Store.
-    $this->executable->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
-  }
-
-  /**
-   * Sets an option on a handler instance.
-   *
-   * Use this only if you have just 1 or 2 options to set; if you have many,
-   * consider getting the handler instance, adding the options and using
-   * set_item() directly.
-   *
-   * @param string $display_id
-   *   The machine name of the display.
-   * @param string $type
-   *   The type of handler being set.
-   * @param string $id
-   *   The ID of the handler being set.
-   * @param string $option
-   *   The configuration key for the value being set.
-   * @param mixed $value
-   *   The value being set.
-   *
-   * @see set_item()
-   */
-  public function setItemOption($display_id, $type, $id, $option, $value) {
-    $item = $this->getItem($display_id, $type, $id);
-    $item[$option] = $value;
-    $this->setItem($display_id, $type, $id, $item);
   }
 
 }

@@ -143,7 +143,7 @@ class ViewStorageTest extends WebTestBase {
 
     // Make sure that loaded default views get a uuid.
     $view = views_get_view('frontpage');
-    $this->assertTrue($view->uuid());
+    $this->assertTrue($view->storage->uuid());
   }
 
   /**
@@ -386,8 +386,8 @@ class ViewStorageTest extends WebTestBase {
 
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));
-    $executable = new ViewExecutable($view);
     $view->addDisplay('default');
+    $view = $view->getExecutable();
 
     $display_id = 'default';
     $expected_items = array();

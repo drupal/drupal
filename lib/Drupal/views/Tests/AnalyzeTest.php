@@ -41,7 +41,6 @@ class AnalyzeTest extends ViewTestBase {
     $this->drupalLogin($this->admin);
     // Enable the frontpage view and click the analyse button.
     $view = views_get_view('frontpage');
-    $view = $view->createDuplicate();
 
     $this->drupalGet('admin/structure/views/view/frontpage/edit');
     $this->assertLink(t('analyze view'));

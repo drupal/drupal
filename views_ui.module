@@ -271,9 +271,9 @@ function views_ui_custom_theme() {
 function views_ui_edit_page_title($view) {
   module_load_include('inc', 'views_ui', 'includes/admin');
   $bases = views_fetch_base_tables();
-  $name = $view->getHumanName();
-  if (isset($bases[$view->base_table])) {
-    $name .= ' (' . $bases[$view->base_table]['title'] . ')';
+  $name = $view->storage->getHumanName();
+  if (isset($bases[$view->storage->base_table])) {
+    $name .= ' (' . $bases[$view->storage->base_table]['title'] . ')';
   }
 
   return $name;
@@ -298,7 +298,7 @@ function views_ui_cache_load($name) {
     $view = $original_view;
     if (!empty($view)) {
       // Check to see if someone else is already editing this view.
-      $view->locked = $views_temp_store->isLocked($view->name);
+      $view->locked = $views_temp_store->isLocked($view->storage->name);
       // Set a flag to indicate that this view is being edited.
       // This flag will be used e.g. to determine whether strings
       // should be localized.
@@ -308,7 +308,7 @@ function views_ui_cache_load($name) {
   else {
     // Keep disabled/enabled status real.
     if ($original_view) {
-      $view->disabled = $original_view->disabled;
+      $view->storage->disabled = $original_view->storage->disabled;
     }
   }
 
@@ -343,10 +343,8 @@ function views_ui_cache_set(&$view) {
   unset($view->display_handler);
   unset($view->default_display);
   $view->query = NULL;
-  foreach (array_keys($view->display) as $id) {
-    unset($view->displayHandlers[$id]);
-  }
-  views_temp_store()->set($view->name, $view);
+  $view->displayHandlers = array();
+  views_temp_store()->set($view->storage->name, $view);
 }
 
 /**
@@ -475,13 +473,13 @@ function views_ui_view_preview_section_handler_links($view, $type, $title = FALS
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
-      'href' => "admin/structure/views/nojs/config-item/$view->name/{$display['id']}/$type/$id",
+      'href' => "admin/structure/views/nojs/config-item/{$view->storage->name}/{$display['id']}/$type/$id",
       'attributes' => array('class' => array('views-ajax-link')),
     );
   }
   $links[$type . '-add'] = array(
     'title' => t('Add new'),
-    'href' => "admin/structure/views/nojs/add-item/$view->name/{$display['id']}/$type",
+    'href' => "admin/structure/views/nojs/add-item/{$view->storage->name}/{$display['id']}/$type",
     'attributes' => array('class' => array('views-ajax-link')),
   );
 
@@ -496,7 +494,7 @@ function views_ui_view_preview_section_display_category_links($view, $type, $tit
   $links = array(
     $type . '-edit' => array(
       'title' => t('Edit @section', array('@section' => $title)),
-      'href' => "admin/structure/views/nojs/display/$view->name/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/display/{$view->storage->name}/{$display['id']}/$type",
       'attributes' => array('class' => array('views-ajax-link')),
     ),
   );
@@ -598,7 +596,7 @@ function views_ui_get_form_wizard_instance($wizard) {
 function views_ui_views_plugins_alter(&$plugins) {
   // @todo This currently does not work, investigate annotation alters.
   // Attach contextual links to each display plugin. The links will point to
-  // paths underneath "admin/structure/views/view/{$view->name}" (i.e., paths
+  // paths underneath "admin/structure/views/view/{$view->storage->name}" (i.e., paths
   // for editing and performing other contextual actions on the view).
   foreach ($plugins['display'] as &$display) {
     $display['contextual links']['views_ui'] = array(

@@ -131,7 +131,7 @@ function views_forms($form_id, $args) {
 function views_form_id($view) {
   $parts = array(
     'views_form',
-    $view->name,
+    $view->storage->name,
     $view->current_display,
   );
 
@@ -373,7 +373,7 @@ function views_plugin_list() {
         }
 
         // Add this view to the list for this plugin.
-        $plugins[$key]['views'][$view->name] = $view->name;
+        $plugins[$key]['views'][$view->storage->name] = $view->storage->name;
       }
     }
   }
@@ -390,11 +390,11 @@ function views_plugin_list() {
  */
 function views_preprocess_node(&$vars) {
   // The 'view' attribute of the node is added in views_preprocess_node()
-  if (!empty($vars['node']->view) && !empty($vars['node']->view->name)) {
+  if (!empty($vars['node']->view) && !empty($vars['node']->view->storage->name)) {
     $vars['view'] = $vars['node']->view;
-    $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->name;
+    $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->name;
     if (!empty($vars['node']->view->current_display)) {
-      $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->name . '__' . $vars['node']->view->current_display;
+      $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->name . '__' . $vars['node']->view->current_display;
 
       // If a node is being rendered in a view, and the view does not have a path,
       // prevent drupal from accidentally setting the $page variable:
@@ -416,11 +416,11 @@ function views_preprocess_node(&$vars) {
  */
 function views_preprocess_comment(&$vars) {
   // The 'view' attribute of the node is added in template_preprocess_views_view_row_comment()
-  if (!empty($vars['node']->view) && !empty($vars['node']->view->name)) {
+  if (!empty($vars['node']->view) && !empty($vars['node']->view->storage->name)) {
     $vars['view'] = &$vars['node']->view;
-    $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['node']->view->name;
+    $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['node']->view->storage->name;
     if (!empty($vars['node']->view->current_display)) {
-      $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['node']->view->name . '__' . $vars['node']->view->current_display;
+      $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['node']->view->storage->name . '__' . $vars['node']->view->current_display;
     }
   }
 }
@@ -699,7 +699,7 @@ function views_block_info() {
     }
 
     $view->initDisplay();
-    foreach ($view->displayHandlers as $display) {
+    foreach ($view->executable->displayHandlers as $display) {
 
       if (isset($display) && !empty($display->definition['uses_hook_block'])) {
         $result = $display->executeHookBlockList();
@@ -902,7 +902,7 @@ function views_add_contextual_links(&$render_element, $location, $view, $display
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
-    $plugin = views_get_plugin_definition('display', $view->display[$display_id]['display_plugin']);
+    $plugin = views_get_plugin_definition('display', $view->displayHandlers[$display_id]->display['display_plugin']);
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
     // set 'contextual_links_locations' to, e.g., {""}.)
@@ -945,7 +945,7 @@ function views_add_contextual_links(&$render_element, $location, $view, $display
           $render_element['#views_contextual_links_info'][$module] = array(
             'location' => $location,
             'view' => $view,
-            'view_name' => $view->name,
+            'view_name' => $view->storage->name,
             'view_display_id' => $display_id,
           );
         }
@@ -1542,13 +1542,12 @@ function views_get_applicable_views($type) {
   $views = views_get_all_views();
 
   foreach ($views as $view) {
-    $view = new ViewExecutable($view);
     // Skip disabled views.
-    if (!empty($view->storage->disabled)) {
+    if (!empty($view->disabled)) {
       continue;
     }
 
-    if (empty($view->storage->display)) {
+    if (empty($view->display)) {
       // Skip this view as it is broken.
       continue;
     }
@@ -1558,9 +1557,10 @@ function views_get_applicable_views($type) {
     foreach (array_keys($view->display) as $id) {
       $plugin = views_get_plugin_definition('display', $view->display[$id]['display_plugin']);
       if (!empty($plugin[$type])) {
+        $executable = $view->getExecutable();
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.
-        $v = $view->cloneView();
+        $v = $executable->cloneView();
         if ($v->setDisplay($id) && $v->display_handler->getOption('enabled')) {
           $result[] = array($v, $id);
         }
@@ -1615,7 +1615,7 @@ function views_get_disabled_views() {
  * @param  mixed $exclude_view
  *  view or current display to exclude
  *  either a
- *  - views object (containing $exclude_view->name and $exclude_view->current_display)
+ *  - views object (containing $exclude_view->storage->name and $exclude_view->current_display)
  *  - views name as string:  e.g. my_view
  *  - views name and display id (separated by ':'): e.g. my_view:default
  * @param bool $optgroup
@@ -1648,7 +1648,7 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
     $exclude_view_display = '';
   }
   elseif (is_object($exclude_view)) {
-    $exclude_view_name = $exclude_view->name;
+    $exclude_view_name = $exclude_view->storage->name;
     $exclude_view_display = $exclude_view->current_display;
   }
   else {
@@ -1658,18 +1658,18 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
   $options = array();
   foreach ($views as $view) {
     // Return only views.
-    if ($views_only && $view->name != $exclude_view_name) {
-      $options[$view->name] = $view->getHumanName();
+    if ($views_only && $view->storage->name != $exclude_view_name) {
+      $options[$view->storage->name] = $view->storage->getHumanName();
     }
     // Return views with display ids.
     else {
       foreach ($view->display as $display_id => $display) {
-        if (!($view->name == $exclude_view_name && $display_id == $exclude_view_display)) {
+        if (!($view->storage->name == $exclude_view_name && $display_id == $exclude_view_display)) {
           if ($optgroup) {
-            $options[$view->name][$view->name . ':' . $display['id']] = t('@view : @display', array('@view' => $view->name, '@display' => $display['id']));
+            $options[$view->storage->name][$view->storage->name . ':' . $display['id']] = t('@view : @display', array('@view' => $view->storage->name, '@display' => $display['id']));
           }
           else {
-            $options[$view->name . ':' . $display['id']] = t('View: @view - Display: @display', array('@view' => $view->name, '@display' => $display['id']));
+            $options[$view->storage->name . ':' . $display['id']] = t('View: @view - Display: @display', array('@view' => $view->storage->name, '@display' => $display['id']));
           }
         }
       }
@@ -1719,10 +1719,10 @@ function views_view_is_disabled($view) {
 function views_get_view($name) {
   $view = entity_load('view', $name);
   if ($view) {
-    $executable = new ViewExecutable($view);
-    $executable->update();
+    $view->update();
+    $view = $view->getExecutable();
     // @figure out whether it makes sense to clone this here.
-    return $executable->cloneView();
+    return $view->cloneView();
   }
 }
 
@@ -1972,7 +1972,7 @@ function views_exposed_form($form, &$form_state) {
   // Let form plugins know this is for exposed widgets.
   $form_state['exposed'] = TRUE;
   // Check if the form was already created
-  if ($cache = views_exposed_form_cache($view->name, $view->current_display)) {
+  if ($cache = views_exposed_form_cache($view->storage->name, $view->current_display)) {
     return $cache;
   }
 
@@ -2006,12 +2006,12 @@ function views_exposed_form($form, &$form_state) {
     '#name' => '',
     '#type' => 'submit',
     '#value' => t('Apply'),
-    '#id' => drupal_html_id('edit-submit-' . $view->name),
+    '#id' => drupal_html_id('edit-submit-' . $view->storage->name),
   );
 
   $form['#action'] = url($view->display_handler->getUrl());
   $form['#theme'] = views_theme_functions('views_exposed_form', $view, $display);
-  $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . check_plain($view->name) . '-' . check_plain($display['id']));
+  $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . check_plain($view->storage->name) . '-' . check_plain($display['id']));
 //  $form['#attributes']['class'] = array('views-exposed-form');
 
   // If using AJAX, we need the form plugin.
@@ -2023,7 +2023,7 @@ function views_exposed_form($form, &$form_state) {
   $exposed_form_plugin->exposed_form_alter($form, $form_state);
 
   // Save the form
-  views_exposed_form_cache($view->name, $view->current_display, $form);
+  views_exposed_form_cache($view->storage->name, $view->current_display, $form);
 
   return $form;
 }

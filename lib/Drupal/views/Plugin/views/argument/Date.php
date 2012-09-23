@@ -51,7 +51,7 @@ class Date extends Formula {
    */
   function get_default_argument($raw = FALSE) {
     if (!$raw && $this->options['default_argument_type'] == 'date') {
-      return date($this->arg_format, REQUEST_TIME);
+      return date($this->definition['format'], REQUEST_TIME);
     }
     elseif (!$raw && in_array($this->options['default_argument_type'], array('node_created', 'node_changed'))) {
       foreach (range(1, 3) as $i) {
@@ -69,10 +69,10 @@ class Date extends Formula {
         return parent::get_default_argument();
       }
       elseif ($this->options['default_argument_type'] == 'node_created') {
-        return date($this->arg_format, $node->created);
+        return date($this->definition['format'], $node->created);
       }
       elseif ($this->options['default_argument_type'] == 'node_changed') {
-        return date($this->arg_format, $node->changed);
+        return date($this->definition['format'], $node->changed);
       }
     }
 

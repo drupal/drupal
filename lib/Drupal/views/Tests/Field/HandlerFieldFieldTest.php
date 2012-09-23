@@ -116,16 +116,18 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
   public function _testMultipleFieldRender() {
     $view = $this->getView();
+    $field_name = $this->fields[3]['field_name'];
 
     // Test delta limit.
-    $view->displayHandlers['default']->options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->displayHandlers['default']->options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->initDisplay();
+    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -139,15 +141,16 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + offset
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_offset'] = 1;
+    $view->initDisplay();
+    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_offset'] = 1;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 1, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -157,16 +160,17 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + reverse.
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_offset'] = 0;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_reversed'] = TRUE;
+    $view->initDisplay();
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_offset'] = 0;
+    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_reversed'] = TRUE;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
       array_splice($pure_items, 0, -3);
       $pure_items = array_reverse($pure_items);
       foreach ($pure_items as $j => $item) {
@@ -177,16 +181,17 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta first last.
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 0;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_first_last'] = TRUE;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_reversed'] = FALSE;
+    $view->initDisplay();
+    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 0;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_first_last'] = TRUE;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_reversed'] = FALSE;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
       $items[] = $pure_items[0]['value'];
       $items[] = $pure_items[4]['value'];
       $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
@@ -194,16 +199,17 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + custom seperator.
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_first_last'] = FALSE;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']['display_options']['fields'][$this->fields[3]['field_name']]['separator'] = ':';
+    $view->initDisplay();
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_first_last'] = FALSE;
+    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers['default']->options['fields'][$field_name]['separator'] = ':';
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
-      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $rendered_field = $view->style_plugin->get_field($i, $field_name);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
+      $pure_items = $this->nodes[$i]->{$field_name}[LANGUAGE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];

@@ -63,7 +63,7 @@ function views_ui_listing_entity_listing_page($entity_id) {
  */
 function views_ui_listing_ajax_callback(EntityListControllerInterface $controller, ViewExecutable $entity, $op) {
   // Perform the operation.
-  $entity->$op();
+  $entity->storage->$op();
 
   // If the request is via AJAX, return the rendered list as JSON.
   if (drupal_container()->get('request')->request->get('js')) {

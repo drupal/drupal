@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\views\Plugin\views\argument_validator\None.
+ */
+
+namespace Drupal\views\Plugin\views\argument_validator;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
+/**
+ * Do not validate the argument.
+ *
+ * @ingroup views_argument_validate_plugins
+ *
+ * @Plugin(
+ *   id = "none",
+ *   title = @Translation(" - Basic validation - ")
+ * )
+ */
+class None extends ArgumentValidatorPluginBase {
+
+  function validate_argument($argument) {
+    if (!empty($this->argument->options['must_not_be'])) {
+      return !isset($argument);
+    }
+
+    if (!isset($argument) || $argument === '') {
+      return FALSE;
+    }
+
+    if (!empty($this->argument->definition['numeric']) && !isset($this->argument->options['break_phrase']) && !is_numeric($arg)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+}

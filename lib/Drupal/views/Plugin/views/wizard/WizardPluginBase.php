@@ -565,9 +565,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $this->addDisplays($view, $display_options, $form, $form_state);
 
-    $executable = new ViewExecutable($view);
-
-    return $executable;
+    return $view->getExecutable();
   }
 
   /**

@@ -116,7 +116,7 @@ class ViewTest extends ViewTestBase {
     $this->assertTrue($copy instanceof ViewStorage, 'The copied object is a View.');
 
     // Check that the original view and the copy have different uuids.
-    $this->assertNotIdentical($view->uuid(), $copy->uuid(), 'The copied view has a new uuid.');
+    $this->assertNotIdentical($view->storage->uuid(), $copy->uuid(), 'The copied view has a new uuid.');
 
     // Check the 'name' (id) is using the View objects default value ('') as it
     // gets unset.
@@ -135,11 +135,11 @@ class ViewTest extends ViewTestBase {
     );
 
     foreach ($config_properties as $property) {
-      $this->assertIdentical($view->{$property}, $copy->{$property}, format_string('@property property is identical.', array('@property' => $property)));
+      $this->assertIdentical($view->storage->{$property}, $copy->{$property}, format_string('@property property is identical.', array('@property' => $property)));
     }
 
     // Check the displays are the same.
-    foreach ($view->display as $id => $display) {
+    foreach ($view->storage->display as $id => $display) {
       // assertIdentical will not work here.
       $this->assertEqual($display, $copy->display[$id], format_string('The @display display has been copied correctly.', array('@display' => $id)));
     }

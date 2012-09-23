@@ -514,55 +514,10 @@ class ViewExecutable {
   }
 
   /**
-   * Implements the magic __get() method.
-   *
-   * @todo Remove this once all calls are changed to use storage directly.
+   * @todo.
    */
-  public function &__get($name) {
-    if (property_exists($this->storage, $name)) {
-      return $this->storage->{$name};
-    }
-    elseif (property_exists($this, $name)) {
-      return $this->{$name};
-    }
-  }
-
-  /**
-   * Implements the magic __set() method.
-   *
-   * @todo Remove this once all calls are changed to use storage directly.
-   */
-  public function __set($name, $value) {
-    if (property_exists($this, $name)) {
-      $this->{$name} = $value;
-    }
-    elseif (property_exists($this->storage, $name)) {
-      $this->storage->{$name} = $value;
-    }
-  }
-
-  /**
-   * Implements the magic __call() method.
-   *
-   * @todo Remove this once all calls are changed to use storage directly.
-   */
-  public function __call($name, $arguments) {
-    if (method_exists($this->storage, $name)) {
-      return call_user_func_array(array($this->storage, $name), $arguments);
-    }
-  }
-
-  /**
-   * Perform automatic updates when loading or importing a view.
-   *
-   * Over time, some things about Views or Drupal data has changed.
-   * this attempts to do some automatic updates that must happen
-   * to ensure older views will at least try to work.
-   */
-  public function update() {
-    // When views are converted automatically the base_table should be renamed
-    // to have a working query.
-    $this->storage->base_table = views_move_table($this->storage->base_table);
+  public function save() {
+    $this->storage->save();
   }
 
   /**
@@ -726,7 +681,7 @@ class ViewExecutable {
     }
 
     // Instantiate all displays
-    foreach (array_keys($this->display) as $id) {
+    foreach (array_keys($this->storage->display) as $id) {
       $this->displayHandlers[$id] = views_get_plugin('display', $this->storage->display[$id]['display_plugin']);
       if (!empty($this->displayHandlers[$id])) {
         // Initialize the new display handler with data.
@@ -798,9 +753,9 @@ class ViewExecutable {
     }
 
     // Ensure the requested display exists.
-    if (empty($this->display[$display_id])) {
+    if (empty($this->displayHandlers[$display_id])) {
       $display_id = 'default';
-      if (empty($this->display[$display_id])) {
+      if (empty($this->displayHandlers[$display_id])) {
         debug('set_display() called with invalid display ID @display.', array('@display' => $display_id));
         return FALSE;
       }
@@ -852,7 +807,7 @@ class ViewExecutable {
    */
   public function initHandlers() {
     if (empty($this->inited)) {
-      foreach (ViewExecutable::viewsHandlerTypes() as $key => $info) {
+      foreach ($this::viewsHandlerTypes() as $key => $info) {
         $this->_initHandler($key, $info);
       }
       $this->inited = TRUE;
@@ -916,7 +871,7 @@ class ViewExecutable {
    * Run the preQuery() on all active handlers.
    */
   protected function _preQuery() {
-    foreach (ViewExecutable::viewsHandlerTypes() as $key => $info) {
+    foreach ($this::viewsHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
       $position = 0;
       foreach ($handlers as $id => $handler) {
@@ -931,7 +886,7 @@ class ViewExecutable {
    * Run the postExecute() on all active handlers.
    */
   protected function _postExecute() {
-    foreach (ViewExecutable::viewsHandlerTypes() as $key => $info) {
+    foreach ($this::viewsHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
       foreach ($handlers as $id => $handler) {
         $handlers[$id]->postExecute($this->result);
@@ -1087,7 +1042,7 @@ class ViewExecutable {
 
     // Create and initialize the query object.
     $views_data = views_fetch_data($this->storage->base_table);
-    $this->base_field = !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '';
+    $this->storage->base_field = !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '';
     if (!empty($views_data['table']['base']['database'])) {
       $this->base_database = $views_data['table']['base']['database'];
     }
@@ -1103,7 +1058,7 @@ class ViewExecutable {
       return FALSE;
     }
 
-    $this->query->init($this->storage->base_table, $this->base_field, $query_options['options']);
+    $this->query->init($this->storage->base_table, $this->storage->base_field, $query_options['options']);
     return TRUE;
   }
 
@@ -1583,7 +1538,7 @@ class ViewExecutable {
     }
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
-    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : md5($this->name . REQUEST_TIME . rand());
+    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : md5($this->storage->name . REQUEST_TIME . rand());
 
     // Allow the display handler to set up for execution
     $this->display_handler->preExecute();
@@ -1617,8 +1572,8 @@ class ViewExecutable {
 
     $this->is_attachment = TRUE;
     // Give other displays an opportunity to attach to the view.
-    foreach ($this->display as $id => $display) {
-      if (!empty($this->display[$id])) {
+    foreach ($this->displayHandlers as $id => $display) {
+      if (!empty($this->displayHandlers[$id])) {
         $this->displayHandlers[$id]->attachTo($this->current_display);
       }
     }
@@ -1949,7 +1904,7 @@ class ViewExecutable {
    *  data, ID, and UUID.
    */
   public function createDuplicate() {
-    $data = config('views.view.' . $this->id())->get();
+    $data = config('views.view.' . $this->storage->id())->get();
 
     // Reset the name and UUID.
     unset($data['name']);
@@ -1975,11 +1930,11 @@ class ViewExecutable {
   public function cloneView() {
     $clone = clone $this->storage;
 
-    $keys = array('current_display', 'display_handler', 'displayHandlers', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'exposed_widgets', 'many_to_one_tables', 'feed_icon');
+    $keys = array('executable', 'current_display', 'display_handler', 'displayHandlers', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'exposed_widgets', 'many_to_one_tables', 'feed_icon');
     foreach ($keys as $key) {
       unset($clone->$key);
     }
-    $clone = new ViewExecutable($clone);
+    $clone = $clone->getExecutable();
     $clone->built = $clone->executed = FALSE;
     $clone->build_info = array();
     $clone->attachment_before = '';
@@ -2001,7 +1956,7 @@ class ViewExecutable {
       }
     }
 
-    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
+    foreach ($this::viewsHandlerTypes() as $type => $info) {
       if (isset($this->$type)) {
         $handlers = &$this->$type;
         foreach ($handlers as $id => $item) {
@@ -2180,6 +2135,221 @@ class ViewExecutable {
       'style',
       'wizard',
     );
+  }
+
+  /**
+   * Adds an instance of a handler to the view.
+   *
+   * Items may be fields, filters, sort criteria, or arguments.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being added.
+   * @param string $table
+   *   The name of the table this handler is from.
+   * @param string $field
+   *   The name of the field this handler is from.
+   * @param array $options
+   *   (optional) Extra options for this instance. Defaults to an empty array.
+   * @param string $id
+   *   (optional) A unique ID for this handler instance. Defaults to NULL, in
+   *   which case one will be generated.
+   *
+   * @return string
+   *   The unique ID for this handler instance.
+   */
+  public function addItem($display_id, $type, $table, $field, $options = array(), $id = NULL) {
+    $types = $this::viewsHandlerTypes();
+    $this->setDisplay($display_id);
+
+    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+
+    if (empty($id)) {
+      $id = $this->generateItemId($field, $fields);
+    }
+
+    // If the desired type is not found, use the original value directly.
+    $handler_type = !empty($types[$type]['type']) ? $types[$type]['type'] : $type;
+
+    // @todo This variable is never used.
+    $handler = views_get_handler($table, $field, $handler_type);
+
+    $fields[$id] = array(
+      'id' => $id,
+      'table' => $table,
+      'field' => $field,
+    ) + $options;
+
+    $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
+
+    return $id;
+  }
+
+  /**
+   * Generates a unique ID for an handler instance.
+   *
+   * These handler instances are typically fields, filters, sort criteria, or
+   * arguments.
+   *
+   * @param string $requested_id
+   *   The requested ID for the handler instance.
+   * @param array $existing_items
+   *   An array of existing handler instancess, keyed by their IDs.
+   *
+   * @return string
+   *   A unique ID. This will be equal to $requested_id if no handler instance
+   *   with that ID already exists. Otherwise, it will be appended with an
+   *   integer to make it unique, e.g., "{$requested_id}_1",
+   *   "{$requested_id}_2", etc.
+   */
+  public static function generateItemId($requested_id, $existing_items) {
+    $count = 0;
+    $id = $requested_id;
+    while (!empty($existing_items[$id])) {
+      $id = $requested_id . '_' . ++$count;
+    }
+    return $id;
+  }
+
+  /**
+   * Gets an array of handler instances for the current display.
+   *
+   * @param string $type
+   *   The type of handlers to retrieve.
+   * @param string $display_id
+   *   (optional) A specific display machine name to use. If NULL, the current
+   *   display will be used.
+   *
+   * @return array
+   *   An array of handler instances of a given type for this display.
+   */
+  public function getItems($type, $display_id = NULL) {
+    $this->setDisplay($display_id);
+
+    if (!isset($display_id)) {
+      $display_id = $this->current_display;
+    }
+
+    // Get info about the types so we can get the right data.
+    $types = $this::viewsHandlerTypes();
+    return $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+  }
+
+  /**
+   * Gets the configuration of a handler instance on a given display.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler to retrieve.
+   * @param string $id
+   *   The ID of the handler to retrieve.
+   *
+   * @return array|null
+   *   Either the handler instance's configuration, or NULL if the handler is
+   *   not used on the display.
+   */
+  public function getItem($display_id, $type, $id) {
+    // Get info about the types so we can get the right data.
+    $types = $this::viewsHandlerTypes();
+    // Initialize the display
+    $this->setDisplay($display_id);
+
+    // Get the existing configuration
+    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+
+    return isset($fields[$id]) ? $fields[$id] : NULL;
+  }
+
+  /**
+   * Sets the configuration of a handler instance on a given display.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being set.
+   * @param string $id
+   *   The ID of the handler being set.
+   * @param array|null $item
+   *   An array of configuration for a handler, or NULL to remove this instance.
+   *
+   * @see set_item_option()
+   */
+  public function setItem($display_id, $type, $id, $item) {
+    // Get info about the types so we can get the right data.
+    $types = $this::viewsHandlerTypes();
+    // Initialize the display.
+    $this->setDisplay($display_id);
+
+    // Get the existing configuration.
+    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    if (isset($item)) {
+      $fields[$id] = $item;
+    }
+    else {
+      unset($fields[$id]);
+    }
+
+    // Store.
+    $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
+  }
+
+  /**
+   * Sets an option on a handler instance.
+   *
+   * Use this only if you have just 1 or 2 options to set; if you have many,
+   * consider getting the handler instance, adding the options and using
+   * set_item() directly.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being set.
+   * @param string $id
+   *   The ID of the handler being set.
+   * @param string $option
+   *   The configuration key for the value being set.
+   * @param mixed $value
+   *   The value being set.
+   *
+   * @see set_item()
+   */
+  public function setItemOption($display_id, $type, $id, $option, $value) {
+    $item = $this->getItem($display_id, $type, $id);
+    $item[$option] = $value;
+    $this->setItem($display_id, $type, $id, $item);
+  }
+
+  /**
+   * Creates and stores a new display.
+   *
+   * @param string $id
+   *   The ID for the display being added.
+   *
+   * @return Drupal\views\Plugin\views\display\DisplayPluginBase
+   *   A reference to the new handler object.
+   */
+  public function &newDisplay($id) {
+    // Create a handler.
+    $this->displayHandlers[$id] = views_get_plugin('display', $this->storage->display[$id]['display_plugin']);
+    if (empty($this->displayHandlers[$id])) {
+      // provide a 'default' handler as an emergency. This won't work well but
+      // it will keep things from crashing.
+      $this->displayHandlers[$id] = views_get_plugin('display', 'default');
+    }
+
+    if (!empty($this->displayHandlers[$id])) {
+      // Initialize the new display handler with data.
+      $this->displayHandlers[$id]->init($this, $this->storage->display[$id]);
+      // If this is NOT the default display handler, let it know which is
+      if ($id != 'default') {
+        // @todo is the '&' still required in php5?
+        $this->displayHandlers[$id]->default_display = &$this->displayHandlers['default'];
+      }
+    }
+
+    return $this->displayHandlers[$id];
   }
 
 }

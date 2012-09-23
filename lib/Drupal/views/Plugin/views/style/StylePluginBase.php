@@ -438,7 +438,7 @@ abstract class StylePluginBase extends PluginBase {
       $row = reset($set['rows']);
       // Render as a grouping set.
       if (is_array($row) && isset($row['group'])) {
-        $output .= theme(views_theme_functions('views_view_grouping', $this->view, $this->view->display[$this->view->current_display]),
+        $output .= theme(views_theme_functions('views_view_grouping', $this->view, $this->view->display_handler->display),
           array(
             'view' => $this->view,
             'grouping' => $this->options['grouping'][$level],
