@@ -747,6 +747,6 @@ function views_ui_truncate($string, $length) {
 /**
  * Magic load function. Wrapper to load a view.
  */
-function views_ui_view_load($name) {
+function views_ui_load($name) {
   return views_get_view($name);
 }

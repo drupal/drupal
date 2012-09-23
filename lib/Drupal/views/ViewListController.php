@@ -52,11 +52,11 @@ class ViewListController extends EntityListControllerBase {
     );
 
     // Add an enable link.
-    $items["$path/view/%views_ui_view/enable"] = array(
+    $items["$path/view/%views_ui/enable"] = array(
       'title' => 'Enable a view',
     ) + $ajax_base;
     // Add a disable link.
-    $items["$path/view/%views_ui_view/disable"] = array(
+    $items["$path/view/%views_ui/disable"] = array(
       'title' => 'Disable a view',
     ) + $ajax_base;
 

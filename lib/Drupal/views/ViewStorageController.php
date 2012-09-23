@@ -53,6 +53,8 @@ class ViewStorageController extends ConfigStorageController {
       }
       $this->attachDisplays($entity);
     }
+
+    parent::attachLoad($queried_entities, $revision_id);
   }
 
   /**
