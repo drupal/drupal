@@ -21,3 +21,15 @@ ui:
   always_live_preview: '1'
   always_live_preview_button: '1'
   exposed_filter_any_label: 'new_any'
+field_rewrite_elements:
+  div: DIV
+  span: SPAN
+  h1: H1
+  h2: H2
+  h3: H3
+  h4: H4
+  h5: H5
+  h6: H6
+  p: P
+  strong: STRONG
+  em: EM

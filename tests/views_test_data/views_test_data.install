@@ -17,9 +17,7 @@ function views_test_data_schema() {
  */
 function views_test_data_install() {
   // Add the marquee tag to possible html elements to test the field handler.
-  $default_values = array(
-    '' => t('- Use default -'),
-    '0' => t('- None -'),
+  $values = array(
     'div' => 'DIV',
     'span' => 'SPAN',
     'h1' => 'H1',
@@ -31,7 +29,7 @@ function views_test_data_install() {
     'p' => 'P',
     'strong' => 'STRONG',
     'em' => 'EM',
+    'marquee' => 'MARQUEE'
   );
-  $default_values['marquee'] = 'MARQUEE';
-  variable_set('views_field_rewrite_elements', $default_values);
+  config('views.settings')->set('field_rewrite_elements', $values)->save();
 }

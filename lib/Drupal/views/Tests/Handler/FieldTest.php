@@ -476,6 +476,8 @@ class FieldTest extends HandlerTestBase {
       'em',
       'marquee'
     );
+    sort($expected_elements);
+
     $this->assertEqual(array_keys($element_types), $expected_elements);
   }
 
