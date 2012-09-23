@@ -384,15 +384,7 @@ class Field extends FieldPluginBase {
     $settings = $this->options['settings'] + field_info_formatter_settings($format);
 
     // Provide an instance array for hook_field_formatter_settings_form().
-    // @todo Remove this: http://drupal.org/node/1741128.
-    ctools_include('fields');
-    $this->instance = ctools_fields_fake_field_instance($this->definition['field_name'], '_custom', $formatter, $settings);
-
-    // Store the settings in a '_custom' view mode.
-    $this->instance['display']['_custom'] = array(
-      'type' => $format,
-      'settings' => $settings,
-    );
+    $this->instance = $this->fakeFieldInstance($format, $settings);
 
     // Get the settings form.
     $settings_form = array('#value' => array());
@@ -401,6 +393,55 @@ class Field extends FieldPluginBase {
       $settings_form = $function($field, $this->instance, '_custom', $form, $form_state);
     }
     $form['settings'] = $settings_form;
+  }
+
+  /**
+   * Provides a fake field instance.
+   *
+   * @param string $formatter
+   *   The machine name of the formatter to use.
+   * @param array $formatter_settings
+   *   An associative array of settings for the formatter.
+   *
+   * @return array
+   *   An associative array of instance date for the fake field.
+   *
+   * @see field_info_instance()
+   */
+  function fakeFieldInstance($formatter, $formatter_settings) {
+    $field_name = $this->definition['field_name'];
+    $field = field_read_field($field_name);
+
+    $field_type = field_info_field_types($field['type']);
+
+    return array(
+      // Build a fake entity type and bundle.
+      'field_name' => $field_name,
+      'entity_type' => 'views_fake',
+      'bundle' => 'views_fake',
+
+      // Use the default field settings for settings and widget.
+      'settings' => field_info_instance_settings($field['type']),
+      'widget' => array(
+        'type' => $field_type['default_widget'],
+        'settings' => array(),
+      ),
+
+      // Build a dummy display mode.
+      'display' => array(
+        '_custom' => array(
+          'type' => $formatter,
+          'settings' => $formatter_settings,
+        ),
+      ),
+
+      // Set the other fields to their default values.
+      // @see _field_write_instance().
+      'required' => FALSE,
+      'label' => $field_name,
+      'description' => '',
+      'deleted' => 0,
+    );
   }
 
   /**
