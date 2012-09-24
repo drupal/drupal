@@ -595,6 +595,13 @@ abstract class WebTestBase extends TestBase {
     global $user, $conf;
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
+    // When running tests through the Simpletest UI (vs. on the command line),
+    // Simpletest's batch conflicts with the installer's batch. Batch API does
+    // not support the concept of nested batches (in which the nested is not
+    // progressive), so we need to temporarily pretend there was no batch.
+    // Backup the currently running Simpletest batch.
+    $this->originalBatch = batch_get();
+
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();
 
@@ -617,16 +624,75 @@ abstract class WebTestBase extends TestBase {
       return FALSE;
     }
 
-    // Preset the 'install_profile' system variable, so the first call into
-    // system_rebuild_module_data() (in drupal_install_system()) will register
-    // the test's profile as a module. Without this, the installation profile of
-    // the parent site (executing the test) is registered, and the test
-    // profile's hook_install() and other hook implementations are never invoked.
-    $conf['install_profile'] = $this->profile;
+    // Set the 'simpletest_parent_profile' variable to add the parent profile's
+    // search path to the child site's search paths.
+    // @see drupal_system_listing()
+    $conf['simpletest_parent_profile'] = $this->originalProfile;
 
-    // Perform the actual Drupal installation.
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    drupal_install_system();
+    // Set installer parameters.
+    // @see install.php, install.core.inc
+    $connection_info = Database::getConnectionInfo('default');
+    $this->root_user = (object) array(
+      'name' => 'admin',
+      'mail' => 'admin@example.com',
+      'pass_raw' => $this->randomName(),
+    );
+    $settings = array(
+      'interactive' => FALSE,
+      'parameters' => array(
+        'profile' => $this->profile,
+        'langcode' => 'en',
+      ),
+      'forms' => array(
+        'install_settings_form' => array(
+          'driver' => $connection_info['default']['driver'],
+          'username' => $connection_info['default']['username'],
+          'host' => $connection_info['default']['host'],
+          'port' => $connection_info['default']['port'],
+          'password' => $connection_info['default']['password'],
+          'database' => $connection_info['default']['database'],
+          'prefix' => $connection_info['default']['prefix'],
+        ),
+        'install_configure_form' => array(
+          'site_name' => 'Drupal',
+          'site_mail' => 'simpletest@example.com',
+          'account' => array(
+            'name' => $this->root_user->name,
+            'mail' => $this->root_user->mail,
+            'pass' => array(
+              'pass1' => $this->root_user->pass_raw,
+              'pass2' => $this->root_user->pass_raw,
+            ),
+          ),
+          // form_type_checkboxes_value() requires NULL instead of FALSE values
+          // for programmatic form submissions to disable a checkbox.
+          'update_status_module' => array(
+            1 => NULL,
+            2 => NULL,
+          ),
+        ),
+      ),
+    );
+
+    // Replace the global $user session with an anonymous user to resemble a
+    // regular installation.
+    $user = drupal_anonymous_user();
+
+    // Reset the static batch to remove Simpletest's batch operations.
+    $batch = &batch_get();
+    $batch = array();
+
+    // Execute the non-interactive installer.
+    require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
+    install_drupal($settings);
+
+    // Restore the original Simpletest batch.
+    $batch = &batch_get();
+    $batch = $this->originalBatch;
+
+    // Revert install_begin_request() cache and lock service overrides.
+    unset($conf['cache_classes']);
+    unset($conf['lock_backend']);
 
     // Set path variables.
     variable_set('file_public_path', $this->public_files_directory);
@@ -636,15 +702,7 @@ abstract class WebTestBase extends TestBase {
     // Set 'parent_profile' of simpletest to add the parent profile's
     // search path to the child site's search paths.
     // @see drupal_system_listing()
-    // @todo This may need to be primed like 'install_profile' above.
     config('simpletest.settings')->set('parent_profile', $this->originalProfile)->save();
-
-    // Include the testing profile.
-    variable_set('install_profile', $this->profile);
-    $profile_details = install_profile_info($this->profile, 'en');
-
-    // Install the modules specified by the testing profile.
-    module_enable($profile_details['dependencies'], FALSE);
 
     // Collect modules to install.
     $class = get_class($this);
@@ -658,14 +716,6 @@ abstract class WebTestBase extends TestBase {
     if ($modules) {
       $success = module_enable($modules, TRUE);
       $this->assertTrue($success, t('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
-    }
-
-    // Run the profile tasks.
-    $install_profile_module_exists = db_query("SELECT 1 FROM {system} WHERE type = 'module' AND name = :name", array(
-      ':name' => $this->profile,
-    ))->fetchField();
-    if ($install_profile_module_exists) {
-      module_enable(array($this->profile), FALSE);
     }
 
     // Create a new DrupalKernel for testing purposes, now that all required
@@ -686,25 +736,6 @@ abstract class WebTestBase extends TestBase {
 
     // Reset/rebuild all data structures after enabling the modules.
     $this->resetAll();
-
-    // Run cron once in that environment, as install.php does at the end of
-    // the installation process.
-    drupal_cron_run();
-
-    // Ensure that the session is not written to the new environment and replace
-    // the global $user session with uid 1 from the new test site.
-    drupal_save_session(FALSE);
-    // Login as uid 1.
-    $user = user_load(1);
-
-    // Restore necessary variables.
-    variable_set('install_task', 'done');
-    config('system.site')->set('mail', 'simpletest@example.com')->save();
-    variable_set('date_default_timezone', date_default_timezone_get());
-
-    // Set up English language.
-    unset($conf['language_default']);
-    $language_interface = language_default();
 
     // Use the test mail class instead of the default mail handler class.
     variable_set('mail_system', array('default-system' => 'Drupal\Core\Mail\VariableLog'));

@@ -10,26 +10,30 @@ use Drupal\Component\Graph\Graph;
 /**
  * Loads all the modules that have been enabled in the system table.
  *
- * @param $bootstrap
+ * @param bool $bootstrap
  *   Whether to load only the reduced set of modules loaded in "bootstrap mode"
- *   for cached pages. See bootstrap.inc.
+ *   for cached pages. See bootstrap.inc. Pass NULL to only check the current
+ *   status without loading of modules.
+ * @param bool $reset
+ *   (optional) Internal use only. Whether to reset the internal statically
+ *   cached flag of whether modules have been loaded. If TRUE, all modules are
+ *   (re)loaded in the same call. Used by the testing framework to override and
+ *   persist a limited module list for the duration of a unit test (in which no
+ *   module system exists).
  *
- * @return
- *   If $bootstrap is NULL, return a boolean indicating whether all modules
- *   have been loaded.
+ * @return bool
+ *   A Boolean indicating whether all modules have been loaded. This means all
+ *   modules; the load status of bootstrap modules cannot be checked.
  */
-function module_load_all($bootstrap = FALSE) {
-  // Already loaded code cannot be unloaded, but new modules may be added within
-  // a request, which should be loaded as well.
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  // @see theme()
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['has_run'] = &drupal_static(__FUNCTION__, FALSE);
-  }
-  $has_run = &$drupal_static_fast['has_run'];
+function module_load_all($bootstrap = FALSE, $reset = FALSE) {
+  static $has_run = FALSE;
 
-  if (isset($bootstrap)) {
+  if ($reset) {
+    $has_run = FALSE;
+  }
+
+  // Unless $boostrap is NULL, load the requested set of modules.
+  if (isset($bootstrap) && !$has_run) {
     $type = $bootstrap ? 'bootstrap' : 'module_enabled';
     foreach (module_list($type) as $module) {
       drupal_load('module', $module);
@@ -60,14 +64,29 @@ function module_load_all($bootstrap = FALSE) {
  *   list will persist until the next call with a new $fixed_list passed in.
  *   Primarily intended for internal use (e.g., in install.php and update.php).
  *   Use module_list_reset() to undo the $fixed_list override.
+ * @param bool $reset
+ *   (optional) Whether to reset/remove the $fixed_list.
  *
  * @return array
  *   An associative array whose keys and values are the names of the modules in
  *   the list.
+ *
+ * @see module_list_reset()
  */
-function module_list($type = 'module_enabled', array $fixed_list = NULL) {
-  // This static is only used for $fixed_list.
-  $module_list = &drupal_static(__FUNCTION__);
+function module_list($type = 'module_enabled', array $fixed_list = NULL, $reset = FALSE) {
+  // This static is only used for $fixed_list. It must not be a drupal_static(),
+  // since any call to drupal_static_reset() in unit tests would cause an
+  // attempt to retrieve the list of modules from the database (which does not
+  // exist).
+  static $module_list;
+
+  if ($reset) {
+    $module_list = NULL;
+    // Do nothing if no $type and no $fixed_list have been passed.
+    if (!isset($type) && !isset($fixed_list)) {
+      return;
+    }
+  }
 
   // The list that will be be returned. Separate from $module_list in order
   // to not duplicate the static cache of system_list().
@@ -93,7 +112,7 @@ function module_list($type = 'module_enabled', array $fixed_list = NULL) {
  * Subsequent calls to module_list() will no longer use a fixed list.
  */
 function module_list_reset() {
-  drupal_static_reset('module_list');
+  module_list(NULL, NULL, TRUE);
 }
 
 /**

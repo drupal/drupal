@@ -26,13 +26,17 @@ use Drupal\Core\Cache\CacheFactory;
  * @see Drupal\Core\Cache\CacheBackendInterface
  */
 function cache($bin = 'cache') {
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['cache'] = &drupal_static(__FUNCTION__, array());
+  }
+  $cache_objects = &$drupal_static_fast['cache'];
+
   // Temporary backwards compatibiltiy layer, allow old style prefixed cache
   // bin names to be passed as arguments.
   $bin = str_replace('cache_', '', $bin);
 
-  // We do not use drupal_static() here because we do not want to change the
-  // storage of a cache bin mid-request.
-  static $cache_objects;
   if (!isset($cache_objects[$bin])) {
     $cache_objects[$bin] = CacheFactory::get($bin);
   }

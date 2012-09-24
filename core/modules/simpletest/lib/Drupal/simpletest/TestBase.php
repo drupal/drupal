@@ -665,6 +665,14 @@ abstract class TestBase {
     }
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
 
+    // Additionally override global $databases, since the installer does not use
+    // the Database connection info.
+    // @see install_verify_database_settings()
+    // @see install_database_errors()
+    // @todo Fix installer to use Database connection info.
+    global $databases;
+    $databases['default']['default'] = $connection_info['default'];
+
     // Indicate the database prefix was set up correctly.
     $this->setupDatabasePrefix = TRUE;
   }
@@ -698,7 +706,10 @@ abstract class TestBase {
     // Save further contextual information.
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
-    $this->originalUser = $user;
+    $this->originalUser = clone $user;
+
+    // Ensure that the current session is not changed by the new environment.
+    drupal_save_session(FALSE);
 
     // Save and clean the shutdown callbacks array because it is static cached
     // and will be changed by the test run. Otherwise it will contain callbacks
@@ -793,6 +804,10 @@ abstract class TestBase {
     // Restore original database connection.
     Database::removeConnection('default');
     Database::renameConnection('simpletest_original_default', 'default');
+    // @see TestBase::changeDatabasePrefix()
+    global $databases;
+    $connection_info = Database::getConnectionInfo('default');
+    $databases['default']['default'] = $connection_info['default'];
 
     // Restore original globals.
     $GLOBALS['theme_key'] = $this->originalThemeKey;
@@ -801,9 +816,9 @@ abstract class TestBase {
     // Reset all static variables.
     drupal_static_reset();
 
-    // Restore has_run state.
-    $has_run = &drupal_static('module_load_all');
-    $has_run = TRUE;
+    // Reset module list and module load status.
+    module_list_reset();
+    module_load_all(FALSE, TRUE);
 
     // Restore original in-memory configuration.
     $conf = $this->originalConf;

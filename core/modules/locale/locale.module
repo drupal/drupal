@@ -254,10 +254,22 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['locale'] = &drupal_static(__FUNCTION__);
+    $drupal_static_fast['locale'] = &drupal_static(__FUNCTION__, array('cache' => array(), 'exists' => NULL));
   }
-  $locale_t = &$drupal_static_fast['locale'];
+  $locale_t = &$drupal_static_fast['locale']['cache'];
+  $locale_exists = &$drupal_static_fast['locale']['exists'];
 
+  // Check whether Locale module is actually installed and operational.
+  // The mere existence of locale() does not imply that Locale module is
+  // actually enabled and its database tables are installed. Since PHP code
+  // cannot be unloaded, this is typically the case in the environment that
+  // is executing a test.
+  if (!isset($locale_exists)) {
+    $locale_exists = function_exists('module_exists') && module_exists('locale');
+  }
+  if (!$locale_exists) {
+    return $string;
+  }
 
   if (!isset($string)) {
     // Return all cached strings if no string was specified

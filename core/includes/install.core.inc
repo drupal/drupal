@@ -94,19 +94,29 @@ function install_drupal($settings = array()) {
       throw $e;
     }
   }
+  // After execution, all tasks might be complete, in which case
+  // $install_state['installation_finished'] is TRUE. In case the last task
+  // has been processed, remove the global $install_state, so other code can
+  // reliably check whether it is running during the installer.
+  // @see drupal_installation_attempted()
+  $state = $install_state;
+  if (!empty($install_state['installation_finished'])) {
+    unset($install_state);
+  }
+
   // All available tasks for this page request are now complete. Interactive
   // installations can send output to the browser or redirect the user to the
   // next page.
-  if ($install_state['interactive']) {
-    if ($install_state['parameters_changed']) {
+  if ($state['interactive']) {
+    if ($state['parameters_changed']) {
       // Redirect to the correct page if the URL parameters have changed.
-      install_goto(install_redirect_url($install_state));
+      install_goto(install_redirect_url($state));
     }
     elseif (isset($output)) {
       // Display a page only if some output is available. Otherwise it is
       // possible that we are printing a JSON page and theme output should
       // not be shown.
-      install_display_output($output, $install_state);
+      install_display_output($output, $state);
     }
   }
 }
@@ -224,7 +234,9 @@ function install_state_defaults() {
  */
 function install_begin_request(&$install_state) {
   // Add any installation parameters passed in via the URL.
-  $install_state['parameters'] += $_GET;
+  if ($install_state['interactive']) {
+    $install_state['parameters'] += $_GET;
+  }
 
   // Validate certain core settings that are used throughout the installation.
   if (!empty($install_state['parameters']['profile'])) {
@@ -240,11 +252,10 @@ function install_begin_request(&$install_state) {
   if (!$install_state['interactive']) {
     drupal_override_server_variables($install_state['server']);
   }
-
   // The user agent header is used to pass a database prefix in the request when
   // running tests. However, for security reasons, it is imperative that no
   // installation be permitted using such a prefix.
-  if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], "simpletest") !== FALSE) {
+  elseif (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], "simpletest") !== FALSE) {
     header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
     exit;
   }

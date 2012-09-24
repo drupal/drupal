@@ -191,13 +191,13 @@ abstract class UpgradePathTestBase extends WebTestBase {
     $update_url = $GLOBALS['base_url'] . '/core/update.php';
     $this->drupalGet($update_url, array('external' => TRUE));
     if (!$this->assertResponse(200)) {
-      return FALSE;
+      throw new Exception('Initial GET to update.php did not return HTTP 200 status.');
     }
 
     // Continue.
     $this->drupalPost(NULL, array(), t('Continue'));
     if (!$this->assertResponse(200)) {
-      return FALSE;
+      throw new Exception('POST to continue update.php did not return HTTP 200 status.');
     }
 
     // The test should pass if there are no pending updates.
@@ -211,7 +211,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Go!
     $this->drupalPost(NULL, array(), t('Apply pending updates'));
     if (!$this->assertResponse(200)) {
-      return FALSE;
+      throw new Exception('POST to update.php to apply pending updates did not return HTTP 200 status.');
     }
 
     // Check for errors during the update process.
@@ -222,36 +222,30 @@ abstract class UpgradePathTestBase extends WebTestBase {
         $this->fail($message);
       }
     }
-
     if (!empty($this->upgradeErrors)) {
       // Upgrade failed, the installation might be in an inconsistent state,
       // don't process.
-      return FALSE;
+      throw new Exception('Errors during update process.');
     }
 
     // Check if there still are pending updates.
     $this->drupalGet($update_url, array('external' => TRUE));
     $this->drupalPost(NULL, array(), t('Continue'));
     if (!$this->assertText(t('No pending updates.'), t('No pending updates at the end of the update process.'))) {
-      return FALSE;
+      throw new Exception('update.php still shows pending updates after execution.');
     }
 
     // Upgrade succeed, rebuild the environment so that we can call the API
     // of the child site directly from this request.
     $this->upgradedSite = TRUE;
 
-    // Reload module list. For modules that are enabled in the test database,
-    // but not on the test client, we need to load the code here.
+    // Reload module list for modules that are enabled in the test database
+    // but not on the test client.
     system_list_reset();
-    foreach (module_list() as $module) {
-      drupal_load('module', $module);
-    }
-
-    // Reload hook implementations
     module_implements_reset();
+    module_load_all(FALSE, TRUE);
 
     // Rebuild caches.
-    drupal_static_reset();
     drupal_flush_all_caches();
 
     // Reload global $conf array and permissions.
