@@ -1076,17 +1076,16 @@ function system_modules_confirm_form($modules, $storage) {
 
   $form['text'] = array('#markup' => theme('item_list', array('items' => $items)));
 
-  if ($form) {
     // Set some default form values
-    $form = confirm_form(
-      $form,
-      t('Some required modules must be enabled'),
-      'admin/modules',
-      t('Would you like to continue with the above?'),
-      t('Continue'),
-      t('Cancel'));
-    return $form;
-  }
+  $form = confirm_form(
+    $form,
+    t('Some required modules must be enabled'),
+    'admin/modules',
+    t('Would you like to continue with the above?'),
+    t('Continue'),
+    t('Cancel'));
+
+  return $form;
 }
 
 /**
