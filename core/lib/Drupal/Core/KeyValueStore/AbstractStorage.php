@@ -35,7 +35,7 @@ abstract class AbstractStorage implements KeyValueStoreInterface {
    */
   public function get($key) {
     $values = $this->getMultiple(array($key));
-    return reset($values);
+    return isset($values[$key]) ? $values[$key] : NULL;
   }
 
   /**

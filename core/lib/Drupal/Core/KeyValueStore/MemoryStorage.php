@@ -39,7 +39,7 @@ class MemoryStorage implements KeyValueStoreInterface {
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
    */
   public function get($key) {
-    return array_key_exists($key, $this->data) ? $this->data[$key] : FALSE;
+    return array_key_exists($key, $this->data) ? $this->data[$key] : NULL;
   }
 
   /**

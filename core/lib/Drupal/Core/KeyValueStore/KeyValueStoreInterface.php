@@ -37,7 +37,7 @@ interface KeyValueStoreInterface {
    *   The key of the data to retrieve.
    *
    * @return mixed
-   *   The stored value, or FALSE if no value exists.
+   *   The stored value, or NULL if no value exists.
    */
   public function get($key);
 

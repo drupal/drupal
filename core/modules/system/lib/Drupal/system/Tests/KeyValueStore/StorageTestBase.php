@@ -36,32 +36,32 @@ abstract class StorageTestBase extends UnitTestBase {
    */
   public function testCRUD() {
     // Verify that each store returns its own collection name.
-    $this->assertEqual($this->store1->getCollectionName(), $this->collection1);
-    $this->assertEqual($this->store2->getCollectionName(), $this->collection2);
+    $this->assertIdentical($this->store1->getCollectionName(), $this->collection1);
+    $this->assertIdentical($this->store2->getCollectionName(), $this->collection2);
 
     // Verify that an item can be stored.
     $this->store1->set('foo', 'bar');
-    $this->assertEqual('bar', $this->store1->get('foo'));
+    $this->assertIdentical('bar', $this->store1->get('foo'));
     // Verify that the other collection is not affected.
     $this->assertFalse($this->store2->get('foo'));
 
     // Verify that an item can be updated.
     $this->store1->set('foo', 'baz');
-    $this->assertEqual('baz', $this->store1->get('foo'));
+    $this->assertIdentical('baz', $this->store1->get('foo'));
     // Verify that the other collection is still not affected.
     $this->assertFalse($this->store2->get('foo'));
 
     // Verify that a collection/name pair is unique.
     $this->store2->set('foo', 'other');
-    $this->assertEqual('baz', $this->store1->get('foo'));
-    $this->assertEqual('other', $this->store2->get('foo'));
+    $this->assertIdentical('baz', $this->store1->get('foo'));
+    $this->assertIdentical('other', $this->store2->get('foo'));
 
     // Verify that an item can be deleted.
     $this->store1->delete('foo');
     $this->assertFalse($this->store1->get('foo'));
 
     // Verify that the other collection is not affected.
-    $this->assertEqual('other', $this->store2->get('foo'));
+    $this->assertIdentical('other', $this->store2->get('foo'));
     $this->store2->delete('foo');
     $this->assertFalse($this->store2->get('foo'));
 
@@ -74,7 +74,7 @@ abstract class StorageTestBase extends UnitTestBase {
 
     // Verify that multiple items can be retrieved.
     $result = $this->store1->getMultiple(array('foo', 'baz'));
-    $this->assertEqual($values, $result);
+    $this->assertIdentical($values, $result);
 
     // Verify that the other collection was not affected.
     $this->assertFalse($this->store2->get('foo'));
@@ -99,6 +99,28 @@ abstract class StorageTestBase extends UnitTestBase {
     $this->assertFalse($this->store1->get('bar'));
     $this->assertFalse($this->store1->getMultiple(array('foo', 'baz')));
     // Verify that the item in the other collection still exists.
-    $this->assertEqual('other', $this->store2->get('foo'));
+    $this->assertIdentical('other', $this->store2->get('foo'));
+  }
+
+  /**
+   * Tests expected behavior for non-existing keys.
+   */
+  public function testNonExistingKeys() {
+    // Verify that a non-existing key returns NULL as value.
+    $this->assertNull($this->store1->get('foo'));
+
+    // Verify that a FALSE value can be stored.
+    $this->store1->set('foo', FALSE);
+    $this->assertIdentical($this->store1->get('foo'), FALSE);
+
+    // Verify that a deleted key returns NULL as value.
+    $this->store1->delete('foo');
+    $this->assertNull($this->store1->get('foo'));
+
+    // Verify that a non-existing key is not returned when getting multiple keys.
+    $this->store1->set('bar', 'baz');
+    $values = $this->store1->getMultiple(array('foo', 'bar'));
+    $this->assertFalse(isset($values['foo']), "Key 'foo' not found.");
+    $this->assertIdentical($values['bar'], 'baz');
   }
 }
