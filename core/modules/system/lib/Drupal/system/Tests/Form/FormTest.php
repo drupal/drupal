@@ -220,6 +220,38 @@ class FormTest extends WebTestBase {
   }
 
   /**
+   * Tests validation for required textfield element without title.
+   *
+   * Submits a test form containing a textfield form element without title.
+   * The form is submitted twice, first without value for the required field
+   * and then with value. Each submission is checked for relevant error
+   * messages.
+   *
+   * @see form_test_validate_required_form_no_title()
+   */
+  function testRequiredTextfieldNoTitle() {
+    $form = $form_state = array();
+    $form = form_test_validate_required_form_no_title($form, $form_state);
+
+    // Attempt to submit the form with no required field set.
+    $edit = array();
+    $this->drupalPost('form-test/validate-required-no-title', $edit, 'Submit');
+    $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
+
+    // Check the page for the error class on the textfield.
+    $this->assertFieldByXPath('//input[contains(@class, "error")]', FALSE, 'Error input form element class found.');
+
+    // Submit again with required fields set and verify that there are no
+    // error messages.
+    $edit = array(
+      'textfield' => $this->randomString(),
+    );
+    $this->drupalPost(NULL, $edit, 'Submit');
+    $this->assertNoFieldByXpath('//input[contains(@class, "error")]', FALSE, 'No error input form element class found.');
+    $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
+  }
+
+  /**
    * Test default value handling for checkboxes.
    *
    * @see _form_test_checkbox()
