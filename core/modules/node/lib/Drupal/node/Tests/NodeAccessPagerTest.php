@@ -62,24 +62,24 @@ class NodeAccessPagerTest extends WebTestBase {
     // View the node page. With the default 50 comments per page there should
     // be two pages (0, 1) but no third (2) page.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText($node->label(), t('Node title found.'));
-    $this->assertText(t('Comments'), t('Has a comments section.'));
-    $this->assertRaw('page=1', t('Secound page exists.'));
-    $this->assertNoRaw('page=2', t('No third page exists.'));
+    $this->assertText($node->label());
+    $this->assertText(t('Comments'));
+    $this->assertRaw('page=1');
+    $this->assertNoRaw('page=2');
   }
 
   /**
    * Tests the forum node pager for nodes with multiple grants per realm.
    */
   public function testForumPager() {
-    // Lookup the forums vocabulary vid.
+    // Look up the forums vocabulary ID.
     $vid = config('forum.settings')->get('vocabulary');
-    $this->assertTrue($vid, t('Forum navigation vocabulary found.'));
+    $this->assertTrue($vid, 'Forum navigation vocabulary ID is set.');
 
-    // Lookup the general discussion term.
+    // Look up the general discussion term.
     $tree = taxonomy_get_tree($vid, 0, 1);
     $tid = reset($tree)->tid;
-    $this->assertTrue($tid, t('General discussion term found.'));
+    $this->assertTrue($tid, 'General discussion term is found in the forum vocabulary.');
 
     // Create 30 nodes.
     for ($i = 0; $i < 30; $i++) {
@@ -98,7 +98,7 @@ class NodeAccessPagerTest extends WebTestBase {
     // page there should be two pages for 30 nodes, no more.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('forum/' . $tid);
-    $this->assertRaw('page=1', t('Secound page exists.'));
-    $this->assertNoRaw('page=2', t('No third page exists.'));
+    $this->assertRaw('page=1');
+    $this->assertNoRaw('page=2');
   }
 }

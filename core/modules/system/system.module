@@ -1187,15 +1187,11 @@ function system_library_info() {
   );
 
   // Drupal settings.
-  $libraries['drupal.settings'] = array(
+  $libraries['drupalSettings'] = array(
     'title' => 'Drupal Settings',
     'version' => VERSION,
     'js' => array(
       array('type' => 'setting', 'data' => array()),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
     ),
   );
 
@@ -1210,7 +1206,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
       array('system', 'drupal.progress'),
     ),
   );
@@ -1225,7 +1221,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
       array('system', 'drupal.progress'),
       array('system', 'jquery.once'),
     ),
@@ -1241,7 +1237,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'drupal'),
       array('system', 'jquery'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
     ),
   );
 
@@ -1270,7 +1266,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
     ),
   );
@@ -1285,7 +1281,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
       array('system', 'jquery.cookie'),
     ),
@@ -1384,7 +1380,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
       // Vertical tabs relies on drupalGetSummary in form.js
       array('system', 'drupal.form'),
     ),
@@ -1891,7 +1887,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
     ),
   );
@@ -1916,7 +1912,7 @@ function system_library_info() {
       array('system', 'jquery'),
       array('system', 'jquery.once'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
     ),
   );
 
@@ -1929,7 +1925,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
     ),
   );
   $libraries['drupal.system.cron'] = array(
@@ -1941,7 +1937,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
     ),
   );

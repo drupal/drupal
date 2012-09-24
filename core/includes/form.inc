@@ -4590,7 +4590,7 @@ function _form_set_class(&$element, $class = array()) {
     $element['#attributes']['required'] = 'required';
     $element['#attributes']['aria-required'] = 'true';
   }
-  if (isset($element['#parents']) && form_get_error($element)) {
+  if (isset($element['#parents']) && form_get_error($element) !== NULL) {
     $element['#attributes']['class'][] = 'error';
   }
 }
