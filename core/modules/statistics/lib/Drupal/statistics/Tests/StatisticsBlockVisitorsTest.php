@@ -13,8 +13,8 @@ namespace Drupal\statistics\Tests;
 class StatisticsBlockVisitorsTest extends StatisticsTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Top visitor blocking',
-      'description' => 'Tests blocking of IP addresses via the top visitors report.',
+      'name' => 'Top visitor banning',
+      'description' => 'Tests banning of IP addresses via the top visitors report.',
       'group' => 'Statistics'
     );
   }
@@ -27,32 +27,32 @@ class StatisticsBlockVisitorsTest extends StatisticsTestBase {
     $test_ip_address = '192.168.1.1';
 
     // Verify the IP address from accesslog appears on the top visitors page
-    // and that a 'block IP address' link is displayed.
+    // and that a 'ban IP address' link is displayed.
     $this->drupalLogin($this->blocking_user);
     $this->drupalGet('admin/reports/visitors');
-    $this->assertText($test_ip_address, t('IP address found.'));
-    $this->assertText(t('block IP address'), t('Block IP link displayed'));
+    $this->assertText($test_ip_address, 'IP address found.');
+    $this->assertText(t('ban IP address'), 'Ban IP link displayed');
 
     // Block the IP address.
-    $this->clickLink('block IP address');
-    $this->assertText(t('IP address blocking'), t('IP blocking page displayed.'));
+    $this->clickLink('ban IP address');
+    $this->assertText(t('IP address bans'), 'IP banning page displayed.');
     $edit = array();
     $edit['ip'] = $test_ip_address;
-    $this->drupalPost('admin/config/people/ip-blocking', $edit, t('Add'));
-    $ip = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $edit['ip']))->fetchField();
-    $this->assertNotEqual($ip, FALSE, t('IP address found in database'));
-    $this->assertRaw(t('The IP address %ip has been blocked.', array('%ip' => $edit['ip'])), t('IP address was blocked.'));
+    $this->drupalPost('admin/config/people/ban', $edit, t('Add'));
+    $ip = db_query("SELECT iid from {ban_ip} WHERE ip = :ip", array(':ip' => $edit['ip']))->fetchField();
+    $this->assertNotEqual($ip, FALSE, 'IP address found in database');
+    $this->assertRaw(t('The IP address %ip has been banned.', array('%ip' => $edit['ip'])), 'IP address was banned.');
 
     // Verify that the block/unblock link on the top visitors page has been
     // altered.
     $this->drupalGet('admin/reports/visitors');
-    $this->assertText(t('unblock IP address'), t('Unblock IP address link displayed'));
+    $this->assertText(t('unban IP address'), 'Unban IP address link displayed');
 
     // Unblock the IP address.
-    $this->clickLink('unblock IP address');
-    $this->assertRaw(t('Are you sure you want to delete %ip?', array('%ip' => $test_ip_address)), t('IP address deletion confirmation found.'));
+    $this->clickLink('unban IP address');
+    $this->assertRaw(t('Are you sure you want to delete %ip?', array('%ip' => $test_ip_address)), 'IP address deletion confirmation found.');
     $edit = array();
-    $this->drupalPost('admin/config/people/ip-blocking/delete/1', NULL, t('Delete'));
-    $this->assertRaw(t('The IP address %ip was deleted.', array('%ip' => $test_ip_address)), t('IP address deleted.'));
+    $this->drupalPost('admin/config/people/ban/delete/1', NULL, t('Delete'));
+    $this->assertRaw(t('The IP address %ip was deleted.', array('%ip' => $test_ip_address)), 'IP address deleted.');
   }
 }

@@ -19,7 +19,7 @@ abstract class StatisticsTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block', 'statistics');
+  public static $modules = array('node', 'block', 'ban', 'statistics');
 
   function setUp() {
     parent::setUp();
@@ -34,7 +34,7 @@ abstract class StatisticsTestBase extends WebTestBase {
       'access administration pages',
       'access site reports',
       'access statistics',
-      'block IP addresses',
+      'ban IP addresses',
       'administer blocks',
       'administer statistics',
       'administer users',

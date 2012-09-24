@@ -628,29 +628,6 @@ function system_schema() {
     ),
   );
 
-  $schema['blocked_ips'] = array(
-    'description' => 'Stores blocked IP addresses.',
-    'fields' => array(
-       'iid' => array(
-        'description' => 'Primary Key: unique ID for IP addresses.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'ip' => array(
-        'description' => 'IP address',
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'indexes' => array(
-      'blocked_ip' => array('ip'),
-    ),
-    'primary key' => array('iid'),
-  );
-
   $schema['cache_tags'] = array(
     'description' => 'Cache table for tracking cache tags related to the cache bin.',
     'fields' => array(
@@ -1976,6 +1953,39 @@ function system_update_8018() {
 function system_update_8019() {
   db_drop_table('registry');
   db_drop_table('registry_file');
+}
+
+/**
+ * Conditionally enable the new Ban module.
+ */
+function system_update_8020() {
+  $blocked_ips_exists = db_query_range('SELECT 1 FROM {blocked_ips}', 0, 1)->fetchField();
+  if ($blocked_ips_exists) {
+    // Rename the permission name.
+    db_update('role_permission')
+      ->fields(array(
+        'permission' => 'ban IP addresses',
+        'module' => 'ban',
+      ))
+      ->condition('permission', 'block IP addresses')
+      ->execute();
+    // Rename {blocked_ips} table into {ban_ip}.
+    db_rename_table('blocked_ips', 'ban_ip');
+    // Rename the action.
+    db_update('actions')
+      ->fields(array(
+        'aid' => 'ban_ip_action',
+        'callback' => 'ban_ip_action',
+      ))
+      ->condition('aid', 'system_block_ip_action')
+      ->execute();
+    // Enable the new Ban module.
+    update_module_enable(array('ban'));
+  }
+  else {
+    // Drop old table.
+    db_drop_table('blocked_ips');
+  }
 }
 
 /**

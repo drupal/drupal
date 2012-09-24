@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * @file
+ * Enables banning of IP addresses.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function ban_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#ban':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from given IP addresses.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Banning IP addresses') . '</dt>';
+      $output .= '<dd>' . t('Administrators can enter IP addresses to ban on the <a href="@bans">IP address bans</a> page.', array('@bans' => url('admin/config/people/ban'))) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'admin/config/people/ban':
+      return '<p>' . t('IP addresses listed here are banned from your site. Banned addresses are completely forbidden from accessing the site and instead see a brief message explaining the situation.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function ban_permission() {
+  return array(
+    'ban IP addresses' => array(
+      'title' => t('Ban IP addresses'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ban_menu() {
+  $items['admin/config/people/ban'] = array(
+    'title' => 'IP address bans',
+    'description' => 'Manage banned IP addresses.',
+    'page callback' => 'ban_admin_page',
+    'access arguments' => array('ban IP addresses'),
+    'file' => 'ban.admin.inc',
+    'weight' => 10,
+  );
+  $items['admin/config/people/ban/delete/%ban_ip'] = array(
+    'title' => 'Delete IP address',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ban_ip_delete_form', 5),
+    'access arguments' => array('ban IP addresses'),
+    'file' => 'ban.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_boot().
+ */
+function ban_boot() {
+  ban_block_denied(ip_address());
+}
+
+/**
+ * Returns whether an IP address is blocked.
+ *
+ * Blocked IP addresses are stored in the database by default. However, for
+ * performance reasons we allow an override in variables.
+ *
+ * @param string $ip
+ *   The IP address to check.
+ *
+ * @return bool
+ *   TRUE if access is denied, FALSE if access is allowed.
+ */
+function ban_is_denied($ip) {
+  $denied = FALSE;
+  // Because this function is called on every page request, we first check
+  // for an array of IP addresses in settings.php before querying the
+  // database.
+  $blocked_ips = variable_get('blocked_ips');
+  if (isset($blocked_ips) && is_array($blocked_ips)) {
+    $denied = in_array($ip, $blocked_ips);
+  }
+  // If $conf['page_cache_without_database'] = TRUE; is set in settings.php,
+  // then the database is not available yet, so IPs recorded in the database
+  // won't be denied. However, the user asked explicitly not to use the
+  // database, and in this case it's also quite likely that the user relies
+  // on higher performance solutions like a firewall.
+  elseif (class_exists('Drupal\Core\Database\Database', FALSE) && function_exists('db_query')) {
+    $denied = (bool) db_query("SELECT 1 FROM {ban_ip} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
+  }
+  return $denied;
+}
+
+/**
+ * Prints a message and exits if access from a given IP address is denied.
+ *
+ * @param string $ip
+ *   The IP address to check.
+ */
+function ban_block_denied($ip) {
+  // Check whether the given IP address has been blocked.
+  if (ban_is_denied($ip)) {
+    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+    // t() is not yet available.
+    print 'Sorry, ' . check_plain($ip) . ' has been banned.';
+    exit();
+  }
+}
+
+/**
+ * Loads a banned IP address record from the database.
+ *
+ * @param int $iid
+ *   The ID of the banned IP address to retrieve.
+ *
+ * @return array
+ *   The banned IP address record from the database as an array.
+ */
+function ban_ip_load($iid) {
+  return db_query("SELECT * FROM {ban_ip} WHERE iid = :iid", array(':iid' => $iid))->fetchAssoc();
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function ban_action_info() {
+  return array(
+    'ban_ip_action' => array(
+      'type' => 'user',
+      'label' => t('Ban IP address of current user'),
+      'configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+/**
+ * Bans the current user's IP address.
+ *
+ * @ingroup actions
+ */
+function ban_ip_action() {
+  $ip = ip_address();
+  db_insert('blocked_ips')
+    ->fields(array('ip' => $ip))
+    ->execute();
+  watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
+}

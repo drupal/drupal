@@ -1889,56 +1889,6 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
 }
 
 /**
- * Checks to see if an IP address has been blocked.
- *
- * Blocked IP addresses are stored in the database by default. However for
- * performance reasons we allow an override in settings.php. This allows us
- * to avoid querying the database at this critical stage of the bootstrap if
- * an administrative interface for IP address blocking is not required.
- *
- * @param $ip
- *   IP address to check.
- *
- * @return bool
- *   TRUE if access is denied, FALSE if access is allowed.
- */
-function drupal_is_denied($ip) {
-  // Because this function is called on every page request, we first check
-  // for an array of IP addresses in settings.php before querying the
-  // database.
-  $blocked_ips = variable_get('blocked_ips');
-  $denied = FALSE;
-  if (isset($blocked_ips) && is_array($blocked_ips)) {
-    $denied = in_array($ip, $blocked_ips);
-  }
-  // Only check if database.inc is loaded already. If
-  // $conf['page_cache_without_database'] = TRUE; is set in settings.php,
-  // then the database won't be loaded here so the IPs in the database
-  // won't be denied. However the user asked explicitly not to use the
-  // database and also in this case it's quite likely that the user relies
-  // on higher performance solutions like a firewall.
-  elseif (class_exists('Drupal\Core\Database\Database', FALSE)) {
-    $denied = (bool)db_query("SELECT 1 FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
-  }
-  return $denied;
-}
-
-/**
- * Handles denied users.
- *
- * @param $ip
- *   IP address to check. Prints a message and exits if access is denied.
- */
-function drupal_block_denied($ip) {
-  // Deny access to blocked IP addresses - t() is not yet available.
-  if (drupal_is_denied($ip)) {
-    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
-    print 'Sorry, ' . check_plain(ip_address()) . ' has been banned.';
-    exit();
-  }
-}
-
-/**
  * Returns a string of highly randomized bytes (over the full 8-bit range).
  *
  * This function is better than simply calling mt_rand() or any other built-in
@@ -2314,7 +2264,6 @@ function _drupal_bootstrap_page_cache() {
     $config = config('system.performance');
     $cache_enabled = $config->get('cache.page.enabled');
   }
-  drupal_block_denied(ip_address());
   // If there is no session cookie and cache is enabled (or forced), try
   // to serve a cached page.
   if (!isset($_COOKIE[session_name()]) && $cache_enabled) {

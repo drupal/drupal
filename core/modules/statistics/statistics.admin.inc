@@ -121,17 +121,20 @@ function statistics_top_pages() {
  *   A render array containing the top visitors information.
  */
 function statistics_top_visitors() {
+  $ban_exists = module_exists('ban');
 
   $header = array(
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Visitor'), 'field' => 'u.name'),
     array('data' => t('Total page generation time'), 'field' => 'total'),
-    array('data' => user_access('block IP addresses') ? t('Operations') : '', 'colspan' => 2),
+    array('data' => $ban_exists && user_access('ban IP addresses') ? t('Operations') : '', 'colspan' => 2),
   );
   $query = db_select('accesslog', 'a', array('target' => 'slave'))
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
-  $query->leftJoin('blocked_ips', 'bl', 'a.hostname = bl.ip');
+  if ($ban_exists) {
+    $query->leftJoin('ban_ip', 'b', 'a.hostname = b.ip');
+  }
   $query->leftJoin('users', 'u', 'a.uid = u.uid');
 
   $query->addExpression('COUNT(a.uid)', 'hits');
@@ -139,13 +142,16 @@ function statistics_top_visitors() {
   $query
     ->fields('a', array('uid', 'hostname'))
     ->fields('u', array('name'))
-    ->fields('bl', array('iid'))
     ->groupBy('a.hostname')
     ->groupBy('a.uid')
     ->groupBy('u.name')
-    ->groupBy('bl.iid')
-    ->limit(30)
-    ->orderByHeader($header);
+    ->limit(30);
+  if ($ban_exists) {
+    $query
+      ->fields('b', array('iid'))
+      ->groupBy('b.iid');
+  }
+  $query->orderByHeader($header);
 
   $uniques_query = db_select('accesslog')->distinct();
   $uniques_query->fields('accesslog', array('uid', 'hostname'));
@@ -157,8 +163,20 @@ function statistics_top_visitors() {
   $rows = array();
   $destination = drupal_get_destination();
   foreach ($result as $account) {
-    $ban_link = $account->iid ? l(t('unblock IP address'), "admin/config/people/ip-blocking/delete/$account->iid", array('query' => $destination)) : l(t('block IP address'), "admin/config/people/ip-blocking/$account->hostname", array('query' => $destination));
-    $rows[] = array($account->hits, ($account->uid ? theme('username', array('account' => $account)) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
+    if ($ban_exists) {
+      if ($account->iid) {
+        $ban_link = l(t('unban IP address'), "admin/config/people/ban/delete/$account->iid", array('query' => $destination));
+      }
+      else {
+        $ban_link = l(t('ban IP address'), "admin/config/people/ban/$account->hostname", array('query' => $destination));
+      }
+    }
+    $row = array();
+    $row[] = $account->hits;
+    $row[] = ($account->uid ? theme('username', array('account' => $account)) : $account->hostname);
+    $row[] = format_interval(round($account->total / 1000));
+    $row[] = ($ban_exists && user_access('ban IP addresses') && !$account->uid ? $ban_link : '');
+    $rows[] = $row;
   }
 
   drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(config('statistics.settings')->get('access_log.max_lifetime')))), PASS_THROUGH);
