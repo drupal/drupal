@@ -94,20 +94,18 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   public $disabled = FALSE;
 
   /**
+   * The UUID for this entity.
+   *
+   * @var string
+   */
+  public $uuid = NULL;
+
+  /**
    * Stores a reference to the executable version of this view.
    *
    * @var Drupal\views\ViewExecutable
    */
-  public $executable;
-
-  /**
-   * A copy of the original entity.
-   *
-   * @todo This should be moved to Drupal\Core\Entity\Entity.
-   *
-   * @var Drupal\Core\Entity\EntityInterface
-   */
-  public $original;
+  protected $executable;
 
   /**
    * The module implementing this view.
@@ -129,11 +127,14 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   /**
    * Retrieves the executable version of this view.
    *
+   * @param bool $reset
+   *   Get a new Drupal\views\ViewExecutable instance.
+   *
    * @return Drupal\views\ViewExecutable
    *   The executable version of this view.
    */
-  public function getExecutable() {
-    if (!isset($this->executable)) {
+  public function getExecutable($reset = FALSE) {
+    if (!isset($this->executable) || $reset) {
       $this->setExecutable(new ViewExecutable($this));
     }
     return $this->executable;
@@ -150,8 +151,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    * @see Drupal\views\ViewExecutable::initDisplay()
    */
   public function initDisplay($reset = FALSE) {
-    $this->getExecutable();
-    $this->executable->initDisplay($reset);
+    $this->getExecutable()->initDisplay($reset);
   }
 
   /**
@@ -323,8 +323,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function &newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
     $id = $this->addDisplay($plugin_id, $title, $id);
-    $this->getExecutable();
-    return $this->executable->newDisplay($id);
+    return $this->getExecutable()->newDisplay($id);
   }
 
   /**

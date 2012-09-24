@@ -698,7 +698,7 @@ function views_block_info() {
     }
 
     $view->initDisplay();
-    foreach ($view->executable->displayHandlers as $display) {
+    foreach ($view->getExecutable()->displayHandlers as $display) {
 
       if (isset($display) && !empty($display->definition['uses_hook_block'])) {
         $result = $display->executeHookBlockList();

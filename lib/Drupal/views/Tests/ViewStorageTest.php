@@ -175,10 +175,6 @@ class ViewStorageTest extends WebTestBase {
       $this->assertIdentical($values[$property], $created->{$property}, format_string('Property value: @property matches configuration value.', array('@property' => $property)));
     }
 
-    // Test created displays.
-    foreach ($created->display as $key => $display) {
-    }
-
     // Check the uuid of the loaded View.
     $created->set('name', 'glossary_new');
     $created->save();
@@ -252,7 +248,7 @@ class ViewStorageTest extends WebTestBase {
 
     // Ensure the right display_plugin is created/instantiated.
     $this->assertEqual($new_display['display_plugin'], 'page', 'New page display "test" uses the right display plugin.');
-    $this->assertTrue($view->executable->displayHandlers[$new_display['id']] instanceof Page, 'New page display "test" uses the right display plugin.');
+    $this->assertTrue($view->getExecutable()->displayHandlers[$new_display['id']] instanceof Page, 'New page display "test" uses the right display plugin.');
 
 
     $view->set('name', 'frontpage_new');
@@ -371,18 +367,18 @@ class ViewStorageTest extends WebTestBase {
 
     $display = $view->newDisplay('page');
     $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->executable->displayHandlers['page_1'] instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->executable->displayHandlers['page_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_1'] instanceof \Drupal\views\Plugin\views\display\Page);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
 
     $display = $view->newDisplay('page');
     $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->executable->displayHandlers['page_2'] instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->executable->displayHandlers['page_2']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_2'] instanceof \Drupal\views\Plugin\views\display\Page);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_2']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
 
     $display = $view->newDisplay('feed');
     $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Feed);
-    $this->assertTrue($view->executable->displayHandlers['feed_1'] instanceof \Drupal\views\Plugin\views\display\Feed);
-    $this->assertTrue($view->executable->displayHandlers['feed_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+    $this->assertTrue($view->getExecutable()->displayHandlers['feed_1'] instanceof \Drupal\views\Plugin\views\display\Feed);
+    $this->assertTrue($view->getExecutable()->displayHandlers['feed_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
 
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));

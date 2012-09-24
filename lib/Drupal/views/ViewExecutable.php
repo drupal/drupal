@@ -1818,12 +1818,6 @@ class ViewExecutable {
   /**
    * Safely clone a view.
    *
-   * Because views are complicated objects within objects, and PHP loves to
-   * do references to everything, if a View is not properly and safely
-   * cloned it will still have references to the original view, and can
-   * actually cause the original view to point to objects in the cloned
-   * view. This gets ugly fast.
-   *
    * This will completely wipe a view clean so it can be considered fresh.
    *
    * @return Drupal\views\ViewExecutable
@@ -1831,17 +1825,7 @@ class ViewExecutable {
    */
   public function cloneView() {
     $clone = clone $this->storage;
-
-    $keys = array('executable', 'current_display', 'display_handler', 'displayHandlers', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'exposed_widgets', 'many_to_one_tables', 'feed_icon');
-    foreach ($keys as $key) {
-      unset($clone->$key);
-    }
-    $clone = $clone->getExecutable();
-    $clone->built = $clone->executed = FALSE;
-    $clone->build_info = array();
-    $clone->attachment_before = '';
-    $clone->attachment_after = '';
-    $clone->result = array();
+    $clone = $clone->getExecutable(TRUE);
 
     return $clone;
   }
