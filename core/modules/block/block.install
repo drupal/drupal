@@ -79,7 +79,7 @@ function block_schema() {
       ),
       'title' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
@@ -309,6 +309,21 @@ function block_update_8002() {
     ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
     ->condition('rid', 2)
     ->execute();
+}
+
+/**
+ * Increase {block}.title length to 255 characters.
+ */
+function block_update_8003() {
+  db_change_field('block', 'title', 'title', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
+    'translatable' => TRUE,
+    )
+  );
 }
 
 /**
