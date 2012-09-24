@@ -25,10 +25,11 @@ class UserLoginTest extends WebTestBase {
    * Test the global login flood control.
    */
   function testGlobalLoginFloodControl() {
-    // Set the global login limit.
-    variable_set('user_failed_login_ip_limit', 10);
-    // Set a high per-user limit out so that it is not relevant in the test.
-    variable_set('user_failed_login_user_limit', 4000);
+    config('user.flood')
+      ->set('ip_limit', 10)
+      // Set a high per-user limit out so that it is not relevant in the test.
+      ->set('user_limit', 4000)
+      ->save();
 
     $user1 = $this->drupalCreateUser(array());
     $incorrect_user1 = clone $user1;
@@ -61,10 +62,11 @@ class UserLoginTest extends WebTestBase {
    * Test the per-user login flood control.
    */
   function testPerUserLoginFloodControl() {
-    // Set a high global limit out so that it is not relevant in the test.
-    variable_set('user_failed_login_ip_limit', 4000);
-    // Set the per-user login limit.
-    variable_set('user_failed_login_user_limit', 3);
+    config('user.flood')
+      // Set a high global limit out so that it is not relevant in the test.
+      ->set('ip_limit', 4000)
+      ->set('user_limit', 3)
+      ->save();
 
     $user1 = $this->drupalCreateUser(array());
     $incorrect_user1 = clone $user1;
@@ -139,7 +141,7 @@ class UserLoginTest extends WebTestBase {
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, t('Password value attribute is blank.'));
     if (isset($flood_trigger)) {
       if ($flood_trigger == 'user') {
-        $this->assertRaw(format_plural(variable_get('user_failed_login_user_limit', 5), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+        $this->assertRaw(format_plural(config('user.flood')->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
       }
       else {
         // No uid, so the limit is IP-based.

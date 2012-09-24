@@ -1621,19 +1621,20 @@ function user_login_name_validate($form, &$form_state) {
  */
 function user_login_authenticate_validate($form, &$form_state) {
   $password = trim($form_state['values']['pass']);
+  $flood_config = config('user.flood');
   if (!empty($form_state['values']['name']) && !empty($password)) {
     // Do not allow any login from the current user's IP if the limit has been
     // reached. Default is 50 failed attempts allowed in one hour. This is
     // independent of the per-user limit to catch attempts from one IP to log
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
-    if (!flood_is_allowed('failed_login_attempt_ip', variable_get('user_failed_login_ip_limit', 50), variable_get('user_failed_login_ip_window', 3600))) {
+    if (!flood_is_allowed('failed_login_attempt_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
       $form_state['flood_control_triggered'] = 'ip';
       return;
     }
     $account = db_query("SELECT * FROM {users} WHERE name = :name AND status = 1", array(':name' => $form_state['values']['name']))->fetchObject();
     if ($account) {
-      if (variable_get('user_failed_login_identifier_uid_only', FALSE)) {
+      if ($flood_config->get('uid_only')) {
         // Register flood events based on the uid only, so they apply for any
         // IP address. This is the most secure option.
         $identifier = $account->uid;
@@ -1648,7 +1649,7 @@ function user_login_authenticate_validate($form, &$form_state) {
 
       // Don't allow login if the limit for this user has been reached.
       // Default is to allow 5 failed attempts every 6 hours.
-      if (!flood_is_allowed('failed_login_attempt_user', variable_get('user_failed_login_user_limit', 5), variable_get('user_failed_login_user_window', 21600), $identifier)) {
+      if (!flood_is_allowed('failed_login_attempt_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
         $form_state['flood_control_triggered'] = 'user';
         return;
       }
@@ -1667,17 +1668,18 @@ function user_login_authenticate_validate($form, &$form_state) {
  * be the last one.
  */
 function user_login_final_validate($form, &$form_state) {
+  $flood_config = config('user.flood');
   if (empty($form_state['uid'])) {
     // Always register an IP-based failed login event.
-    flood_register_event('failed_login_attempt_ip', variable_get('user_failed_login_ip_window', 3600));
+    flood_register_event('failed_login_attempt_ip', $flood_config->get('ip_window'));
     // Register a per-user failed login event.
     if (isset($form_state['flood_control_user_identifier'])) {
-      flood_register_event('failed_login_attempt_user', variable_get('user_failed_login_user_window', 21600), $form_state['flood_control_user_identifier']);
+      flood_register_event('failed_login_attempt_user', $flood_config->get('user_window'), $form_state['flood_control_user_identifier']);
     }
 
     if (isset($form_state['flood_control_triggered'])) {
       if ($form_state['flood_control_triggered'] == 'user') {
-        form_set_error('name', format_plural(variable_get('user_failed_login_user_limit', 5), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+        form_set_error('name', format_plural($flood_config->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
       }
       else {
         // We did not find a uid, so the limit is IP-based.

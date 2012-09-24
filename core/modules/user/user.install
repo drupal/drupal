@@ -551,6 +551,22 @@ function user_update_8006() {
     'status_canceled_body' => 'status_canceled.body',
   ));
 }
+
+/**
+ * Moves login flood settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function user_update_8007() {
+  update_variables_to_config('user.flood', array(
+    'user_failed_login_identifier_uid_only' => 'uid_only',
+    'user_failed_login_ip_limit' => 'ip_limit',
+    'user_failed_login_ip_window' => 'ip_window',
+    'user_failed_login_user_limit' => 'user_limit',
+    'user_failed_login_user_window' => 'user_window',
+  ));
+}
+
 /**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */
