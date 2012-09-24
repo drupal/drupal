@@ -1284,9 +1284,12 @@ abstract class WebTestBase extends TestBase {
         $extra_post .= '&' . urlencode($key) . '=' . urlencode($value);
       }
     }
+    $ajax_html_ids = array();
     foreach ($this->xpath('//*[@id]') as $element) {
-      $id = (string) $element['id'];
-      $extra_post .= '&' . urlencode('ajax_html_ids[]') . '=' . urlencode($id);
+      $ajax_html_ids[] = (string) $element['id'];
+    }
+    if (!empty($ajax_html_ids)) {
+      $extra_post .= '&' . urlencode('ajax_html_ids') . '=' . urlencode(implode(' ', $ajax_html_ids));
     }
     if (isset($drupal_settings['ajaxPageState'])) {
       $extra_post .= '&' . urlencode('ajax_page_state[theme]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme']);
