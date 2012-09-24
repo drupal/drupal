@@ -8,6 +8,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\ViewExecutable;
+use Drupal\views\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\views\Plugin\views\wizard\WizardException;
 
@@ -74,7 +75,7 @@ function views_ui_add_admin_css() {
 /**
  * Returns the results of the live preview.
  */
-function views_ui_preview($view, $display_id, $args = array()) {
+function views_ui_preview(ViewUI $view, $display_id, $args = array()) {
   // When this function is invoked as a page callback, each Views argument is
   // passed separately.
   if (!is_array($args)) {
@@ -793,7 +794,7 @@ function theme_views_ui_view_info($variables) {
 /**
  * Page to delete a view.
  */
-function views_ui_break_lock_confirm($form, &$form_state, ViewExecutable $view) {
+function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
   $form_state['view'] = &$view;
   $form = array();
 
@@ -831,7 +832,7 @@ function views_ui_break_lock_confirm_submit(&$form, &$form_state) {
  *
  * This function handles access to the display.
  */
-function views_ui_edit_page_display($view, $display_id) {
+function views_ui_edit_page_display(ViewUI $view, $display_id) {
   // Determine the displays available for editing.
   if ($tabs = views_ui_edit_page_display_tabs($view, $display_id)) {
     // If a display isn't specified, use the first one.
@@ -864,7 +865,7 @@ function views_ui_edit_page_display($view, $display_id) {
 /**
  * Page callback for the Edit View page.
  */
-function views_ui_edit_page($view, $display_id = NULL) {
+function views_ui_edit_page(ViewUI $view, $display_id = NULL) {
   $display_id = views_ui_edit_page_display($view, $display_id);
   if (!in_array($display_id, array(MENU_ACCESS_DENIED, MENU_NOT_FOUND))) {
     $build = array();
@@ -878,7 +879,7 @@ function views_ui_edit_page($view, $display_id = NULL) {
   return $build;
 }
 
-function views_ui_build_preview($view, $display_id, $render = TRUE) {
+function views_ui_build_preview(ViewUI $view, $display_id, $render = TRUE) {
   $build = array(
     '#theme_wrappers' => array('container'),
     '#attributes' => array('id' => 'views-preview-wrapper', 'class' => 'views-admin clearfix'),
@@ -912,7 +913,7 @@ function views_ui_build_preview($view, $display_id, $render = TRUE) {
  *
  * @see views_ui_ajax_get_form()
  */
-function views_ui_edit_form($form, &$form_state, ViewExecutable $view, $display_id = NULL) {
+function views_ui_edit_form($form, &$form_state, ViewUI $view, $display_id = NULL) {
   // Do not allow the form to be cached, because $form_state['view'] can become
   // stale between page requests.
   // See views_ui_ajax_get_form() for how this affects #ajax.
@@ -1097,7 +1098,7 @@ function views_ui_edit_form($form, &$form_state, ViewExecutable $view, $display_
 /**
  * Provide the preview formulas and the preview output, too.
  */
-function views_ui_preview_form($form, &$form_state, ViewExecutable $view, $display_id = 'default') {
+function views_ui_preview_form($form, &$form_state, ViewUI $view, $display_id = 'default') {
   $form_state['no_cache'] = TRUE;
   $form_state['view'] = $view;
 
@@ -1149,7 +1150,7 @@ function views_ui_preview_form($form, &$form_state, ViewExecutable $view, $displ
 /**
  * Render the top of the display so it can be updated during ajax operations.
  */
-function views_ui_render_display_top($view, $display_id) {
+function views_ui_render_display_top(ViewUI $view, $display_id) {
   $element['#theme_wrappers'] = array('views_container');
   $element['#attributes']['class'] = array('views-display-top', 'clearfix');
   $element['#attributes']['id'] = array('views-display-top');
@@ -1388,7 +1389,7 @@ function views_ui_edit_form_submit_delay_destination($form, &$form_state) {
  * @param $display_id
  *    The display_id which is edited on the current request.
  */
-function views_ui_edit_page_display_tabs($view, $display_id = NULL) {
+function views_ui_edit_page_display_tabs(ViewUI $view, $display_id = NULL) {
   $tabs = array();
 
   // Create a tab for each display.
@@ -1432,7 +1433,7 @@ function views_ui_edit_page_display_tabs($view, $display_id = NULL) {
 /**
  * Controls whether or not the default display should have its own tab on edit.
  */
-function views_ui_show_default_display($view) {
+function views_ui_show_default_display(ViewUI $view) {
   // Always show the default display for advanced users who prefer that mode.
   $advanced_mode = config('views.settings')->get('ui.show.master_display');
   // For other users, show the default display only if there are no others, and
@@ -1445,7 +1446,7 @@ function views_ui_show_default_display($view) {
 /**
  * Returns a renderable array representing the edit page for one display.
  */
-function views_ui_get_display_tab($view, $display_id) {
+function views_ui_get_display_tab(ViewUI $view, $display_id) {
   $build = array();
   $display = $view->displayHandlers[$display_id];
   // If the plugin doesn't exist, display an error message instead of an edit
@@ -1474,7 +1475,7 @@ function views_ui_get_display_tab($view, $display_id) {
  * @return array
  *   A renderable page build array.
  */
-function views_ui_get_display_tab_details($view, $display) {
+function views_ui_get_display_tab_details(ViewUI $view, $display) {
   $display_title = views_ui_get_display_label($view, $display['id'], FALSE);
   $build = array(
     '#theme_wrappers' => array('container'),
@@ -1672,7 +1673,7 @@ function views_ui_get_display_tab_details($view, $display) {
  * This function might be more logical as a method on an object, if a suitable
  * object emerges out of refactoring.
  */
-function views_ui_edit_form_get_build_from_option($id, $option, ViewExecutable $view, $display) {
+function views_ui_edit_form_get_build_from_option($id, $option, ViewUI $view, $display) {
   $option_build = array();
   $option_build['#theme'] = 'views_ui_display_tab_setting';
 
@@ -2102,7 +2103,7 @@ function views_ui_edit_view_form_delete($form, &$form_state) {
 /**
  * Add information about a section to a display.
  */
-function views_ui_edit_form_get_bucket($type, ViewExecutable $view, $display) {
+function views_ui_edit_form_get_bucket($type, ViewUI $view, $display) {
   $build = array(
     '#theme_wrappers' => array('views_ui_display_tab_bucket'),
   );
@@ -2287,7 +2288,7 @@ function views_ui_edit_form_get_bucket($type, ViewExecutable $view, $display) {
 /**
  * Regenerate the current tab for AJAX updates.
  */
-function views_ui_regenerate_tab(ViewExecutable $view, &$output, $display_id) {
+function views_ui_regenerate_tab(ViewUI $view, &$output, $display_id) {
   if (!$view->setDisplay('default')) {
     return;
   }
@@ -2585,7 +2586,7 @@ function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
  *   - current: The number of the current form on the stack.
  *   - total: The total number of forms originally on the stack.
  */
-function views_ui_get_form_progress($view) {
+function views_ui_get_form_progress(ViewUI $view) {
   $progress = FALSE;
   if (!empty($view->stack)) {
     $stack = $view->stack;
@@ -2676,7 +2677,7 @@ function views_ui_ajax_forms($key = NULL) {
  * is the same as another. Since the arguments differ slightly
  * we do a lot of spiffy concatenation here.
  */
-function views_ui_build_identifier($key, ViewExecutable $view, $display_id, $args) {
+function views_ui_build_identifier($key, ViewUI $view, $display_id, $args) {
   $form = views_ui_ajax_forms($key);
   // Automatically remove the single-form cache if it exists and
   // does not match the key.
@@ -2693,7 +2694,7 @@ function views_ui_build_identifier($key, ViewExecutable $view, $display_id, $arg
  * Build up a $form_state object suitable for use with drupal_build_form
  * based on known information about a form.
  */
-function views_ui_build_form_state($js, $key, ViewExecutable $view, $display_id, $args) {
+function views_ui_build_form_state($js, $key, ViewUI $view, $display_id, $args) {
   $form = views_ui_ajax_forms($key);
   // Build up form state
   $form_state = array(
@@ -2731,7 +2732,7 @@ function views_ui_build_form_url($form_state) {
  * Add another form to the stack; clicking 'apply' will go to this form
  * rather than closing the ajax popup.
  */
-function views_ui_add_form_to_stack($key, ViewExecutable $view, $display_id, $args, $top = FALSE, $rebuild_keys = FALSE) {
+function views_ui_add_form_to_stack($key, ViewUI $view, $display_id, $args, $top = FALSE, $rebuild_keys = FALSE) {
   if (empty($view->stack)) {
     $view->stack = array();
   }
@@ -2775,7 +2776,7 @@ function views_ui_add_form_to_stack($key, ViewExecutable $view, $display_id, $ar
  * We do this for consistency and to make it easy to chain forms
  * together.
  */
-function views_ui_ajax_form($js, $key, ViewExecutable $view, $display_id = '') {
+function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
   $form = views_ui_ajax_forms($key);
   if (empty($form)) {
     return MENU_NOT_FOUND;
@@ -5203,7 +5204,7 @@ function theme_views_ui_style_plugin_table($variables) {
  *
  * @todo Remove this function once editing the display title is possible.
  */
-function views_ui_get_display_label($view, $display_id, $check_changed = TRUE) {
+function views_ui_get_display_label(ViewUI $view, $display_id, $check_changed = TRUE) {
   $title = $display_id == 'default' ? t('Master') : $view->storage->display[$display_id]['display_title'];
   $title = views_ui_truncate($title, 25);
 

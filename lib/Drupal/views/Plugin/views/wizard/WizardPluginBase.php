@@ -7,7 +7,8 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
-use Drupal\views\ViewExecutable;
+use Drupal\views\ViewStorage;
+use Drupal\views\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
@@ -565,7 +566,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $this->addDisplays($view, $display_options, $form, $form_state);
 
-    return $view->getExecutable();
+    return new ViewUI($view);
   }
 
   /**
@@ -617,7 +618,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Adds the array of display options to the view, with appropriate overrides.
    */
-  protected function addDisplays($view, $display_options, $form, $form_state) {
+  protected function addDisplays(ViewStorage $view, $display_options, $form, $form_state) {
     // Display: Master
     $default_display = $view->newDisplay('default', 'Master', 'default');
     foreach ($display_options['default'] as $option => $value) {
@@ -1028,7 +1029,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param bool $unset
    *   Should the view be removed from the list of validated views.
    *
-   * @return Drupal\views\ViewExecutable $view
+   * @return Drupal\views\ViewUI $view
    *   The validated view object.
    */
   protected function retrieve_validated_view(array $form, array &$form_state, $unset = TRUE) {
@@ -1049,10 +1050,10 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   The full wizard form array.
    * @param array $form_state
    *   The current state of the wizard form.
-   * @param Drupal\views\ViewExecutable $view
+   * @param Drupal\views\ViewUI $view
    *   The validated view object.
    */
-  protected function set_validated_view(array $form, array &$form_state, ViewExecutable $view) {
+  protected function set_validated_view(array $form, array &$form_state, ViewUI $view) {
     $key = hash('sha256', serialize($form_state['values']));
     $this->validated_views[$key] = $view;
   }

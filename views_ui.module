@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\ViewUI;
 
 /**
  * Implements hook_menu().
@@ -268,7 +269,7 @@ function views_ui_custom_theme() {
 /**
  * Page title callback for the Edit View page.
  */
-function views_ui_edit_page_title($view) {
+function views_ui_edit_page_title(ViewUI $view) {
   module_load_include('inc', 'views_ui', 'includes/admin');
   $bases = views_fetch_base_tables();
   $name = $view->storage->getHumanName();
@@ -292,7 +293,8 @@ function views_ui_edit_page_title($view) {
 function views_ui_cache_load($name) {
   $views_temp_store = views_temp_store();
   $view = $views_temp_store->get($name);
-  $original_view = views_get_view($name);
+  $storage = entity_load('view', $name);
+  $original_view = $storage ? new ViewUI($storage) : NULL;
 
   if (empty($view)) {
     $view = $original_view;
@@ -325,7 +327,7 @@ function views_ui_cache_load($name) {
  * Specialized cache function to add a flag to our view, include an appropriate
  * include, and cache more easily.
  */
-function views_ui_cache_set(ViewExecutable $view) {
+function views_ui_cache_set(ViewUI $view) {
   if (!empty($view->locked)) {
     drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
     return;
@@ -457,7 +459,7 @@ function theme_views_ui_view_preview_section($vars) {
  * @param $title
  *   Add a bolded title of this section.
  */
-function views_ui_view_preview_section_handler_links($view, $type, $title = FALSE) {
+function views_ui_view_preview_section_handler_links(ViewUI $view, $type, $title = FALSE) {
   $display = $view->display_handler->display;
   $handlers = $view->display_handler->getHandlers($type);
   $links = array();
@@ -489,7 +491,7 @@ function views_ui_view_preview_section_handler_links($view, $type, $title = FALS
 /**
  * Returns a link to editing a certain display setting.
  */
-function views_ui_view_preview_section_display_category_links($view, $type, $title) {
+function views_ui_view_preview_section_display_category_links(ViewUI $view, $type, $title) {
   $display = $view->display_handler->display;
   $links = array(
     $type . '-edit' => array(
@@ -505,7 +507,7 @@ function views_ui_view_preview_section_display_category_links($view, $type, $tit
 /**
  * Returns all contextual links for the main content part of the view.
  */
-function views_ui_view_preview_section_rows_links($view) {
+function views_ui_view_preview_section_rows_links(ViewUI $view) {
   $display = $view->display_handler->display;
   $links = array();
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'filter', TRUE));

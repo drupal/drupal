@@ -48,15 +48,6 @@ class ViewExecutable {
   public $executed = FALSE;
 
   /**
-   * Indicates if a view is currently being edited.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var bool
-   */
-  public $editing = FALSE;
-
-  /**
    * Any arguments that have been passed into the view.
    *
    * @var array
@@ -339,24 +330,6 @@ class ViewExecutable {
   protected $response = NULL;
 
   /**
-   * Stores an array of errors for any displays.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var array
-   */
-  public $display_errors;
-
-  /**
-   * Stores an array of displays that have been changed.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var array
-   */
-  public $changed_display;
-
-  /**
    * Does this view already have loaded it's handlers.
    *
    * @todo Group with other static properties.
@@ -416,83 +389,11 @@ class ViewExecutable {
   public $build_sort;
 
   /**
-   * How long the view takes to build.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var int
-   */
-  public $build_time;
-
-  /**
-   * How long the view takes to render.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var int
-   */
-  public $render_time;
-
-  /**
-   * How long the view takes to execute.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var int
-   */
-  public $execute_time;
-
-  /**
-   * If this view is locked for editing.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var bool
-   */
-  public $locked;
-
-  /**
-   * If this view has been changed.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var bool
-   */
-  public $changed;
-
-  /**
-   * Stores options temporarily while editing.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var array
-   */
-  public $temporary_options;
-
-  /**
-   * Stores a stack of UI forms to display.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var array
-   */
-  public $stack;
-
-  /**
    * Stores the many-to-one tables for performance.
    *
    * @var array
    */
   public $many_to_one_tables;
-
-  /**
-   * Is the view runned in a context of the preview in the admin interface.
-   *
-   * @todo Group with other UI-only properties.
-   *
-   * @var bool
-   */
-  public $live_preview;
 
   /**
    * A unique identifier which allows to update multiple views output via js.
