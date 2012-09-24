@@ -1710,7 +1710,7 @@ function file_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.settings'),
+      array('system', 'drupalSettings'),
     ),
   );
 

@@ -76,7 +76,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testAddSetting() {
     // Add a file in order to test default settings.
-    drupal_add_library('system', 'drupal.settings');
+    drupal_add_library('system', 'drupalSettings');
     $javascript = drupal_add_js();
     $last_settings = reset($javascript['settings']['data']);
     $this->assertTrue($last_settings['currentPath'], 'The current path JavaScript setting is set correctly.');
@@ -136,15 +136,13 @@ class JavaScriptTest extends WebTestBase {
    * Test drupal_get_js() for JavaScript settings.
    */
   function testHeaderSetting() {
-    drupal_add_library('system', 'drupal.settings');
+    drupal_add_library('system', 'drupalSettings');
 
     $javascript = drupal_get_js('header');
     $this->assertTrue(strpos($javascript, 'basePath') > 0, 'Rendered JavaScript header returns basePath setting.');
     $this->assertTrue(strpos($javascript, 'scriptPath') > 0, 'Rendered JavaScript header returns scriptPath setting.');
     $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, 'Rendered JavaScript header returns pathPrefix setting.');
     $this->assertTrue(strpos($javascript, 'currentPath') > 0, 'Rendered JavaScript header returns currentPath setting.');
-    $this->assertTrue(strpos($javascript, 'core/misc/drupal.js') > 0, 'Rendered JavaScript header includes Drupal.js.');
-    $this->assertTrue(strpos($javascript, 'core/misc/jquery.js') > 0, 'Rendered JavaScript header includes jQuery.');
 
     // Only the second of these two entries should appear in Drupal.settings.
     drupal_add_js(array('commonTest' => 'commonTestShouldNotAppear'), 'setting');
@@ -173,11 +171,11 @@ class JavaScriptTest extends WebTestBase {
     $this->assertTrue($associative_array_override, t('drupal_add_js() correctly overrides settings within an associative array.'));
     // Check in a rendered page.
     $this->drupalGet('common-test/query-string');
-    $this->assertPattern('@<script>.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
+    $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
     $path = array('source' => 'common-test/query-string', 'alias' => 'common-test/currentpath-check');
     path_save($path);
     $this->drupalGet('common-test/currentpath-check');
-    $this->assertPattern('@<script>.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings for an aliased path');
+    $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings for an aliased path');
   }
 
   /**

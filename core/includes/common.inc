@@ -77,6 +77,11 @@ const CSS_DEFAULT = 0;
 const CSS_THEME = 100;
 
 /**
+ * The default group for JavaScript settings added to the page.
+ */
+const JS_SETTING = -200;
+
+/**
  * The default group for JavaScript and jQuery libraries added to the page.
  */
 const JS_LIBRARY = -100;
@@ -90,11 +95,6 @@ const JS_DEFAULT = 0;
  * The default group for theme JavaScript code added to the page.
  */
 const JS_THEME = 100;
-
-/**
- * The default group for JavaScript settings added to the page.
- */
-const JS_SETTING = 200;
 
 /**
  * Error code indicating that the request exceeded the specified timeout.
@@ -4038,7 +4038,7 @@ function drupal_pre_render_scripts($elements) {
         switch ($item['type']) {
           case 'setting':
             $element['#value_prefix'] = $embed_prefix;
-            $element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ");";
+            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ";";
             $element['#value_suffix'] = $embed_suffix;
             break;
 

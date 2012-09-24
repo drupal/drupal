@@ -1,13 +1,16 @@
-var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
+var Drupal = Drupal || { 'behaviors': {}, 'locale': {} };
 
 // Allow other JavaScript libraries to use $.
 jQuery.noConflict();
 
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it in an anonymous closure.
-(function ($, Drupal, window, document, undefined) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
+
+// Populate Drupal.settings with the drupalSettings variable.
+Drupal.settings = drupalSettings;
 
 /**
  * Custom error type thrown after attach/detach if one or more behaviors failed.
@@ -71,7 +74,7 @@ DrupalBehaviorError.prototype = new Error();
  */
 Drupal.attachBehaviors = function (context, settings) {
   context = context || document;
-  settings = settings || Drupal.settings;
+  settings = settings || drupalSettings;
   var i, errors = [], behaviors = Drupal.behaviors;
   // Execute all of them.
   for (i in behaviors) {
@@ -133,7 +136,7 @@ Drupal.attachBehaviors = function (context, settings) {
  */
 Drupal.detachBehaviors = function (context, settings, trigger) {
   context = context || document;
-  settings = settings || Drupal.settings;
+  settings = settings || drupalSettings;
   trigger = trigger || 'unload';
   var i, errors = [], behaviors = Drupal.behaviors;
   // Execute all of them.
@@ -159,7 +162,7 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
  * @todo Temporary solution for the mobile initiative.
  */
 Drupal.checkWidthBreakpoint = function (width) {
-  width = width || Drupal.settings.widthBreakpoint || 640;
+  width = width || drupalSettings.widthBreakpoint || 640;
   return (document.documentElement.clientWidth > width);
 };
 
@@ -259,7 +262,7 @@ Drupal.t = function (str, args, options) {
  * Returns the URL to a Drupal page.
  */
 Drupal.url = function (path) {
-  return Drupal.settings.basePath + Drupal.settings.scriptPath + path;
+  return drupalSettings.basePath + drupalSettings.scriptPath + path;
 };
 
 /**
@@ -434,7 +437,7 @@ $('html').addClass('js');
 
 //Attach all behaviors.
 $(function () {
-  Drupal.attachBehaviors(document, Drupal.settings);
+  Drupal.attachBehaviors(document, drupalSettings);
 });
 
 /**
@@ -455,4 +458,4 @@ $.extend(Drupal.theme, {
   }
 });
 
-})(jQuery, Drupal, this, this.document);
+})(jQuery, Drupal, window.drupalSettings);
