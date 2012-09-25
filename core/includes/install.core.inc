@@ -101,7 +101,7 @@ function install_drupal($settings = array()) {
   // @see drupal_installation_attempted()
   $state = $install_state;
   if (!empty($install_state['installation_finished'])) {
-    unset($install_state);
+    unset($GLOBALS['install_state']);
   }
 
   // All available tasks for this page request are now complete. Interactive
