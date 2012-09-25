@@ -54,8 +54,6 @@ abstract class ExposedFormPluginBase extends PluginBase {
     $options['exposed_sorts_label'] = array('default' => 'Sort by', 'translatable' => TRUE);
     $options['sort_asc_label'] = array('default' => 'Asc', 'translatable' => TRUE);
     $options['sort_desc_label'] = array('default' => 'Desc', 'translatable' => TRUE);
-    $options['autosubmit'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['autosubmit_hide'] = array('default' => TRUE, 'bool' => TRUE);
     return $options;
   }
 
@@ -111,25 +109,6 @@ abstract class ExposedFormPluginBase extends PluginBase {
       '#description' => t('Text to use when exposed sort is ordered descending.'),
       '#default_value' => $this->options['sort_desc_label'],
       '#required' => TRUE,
-    );
-
-    $form['autosubmit'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Autosubmit'),
-      '#description' => t('Automatically submit the form once an element is changed.'),
-      '#default_value' => $this->options['autosubmit'],
-    );
-
-    $form['autosubmit_hide'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Hide submit button'),
-      '#description' => t('Hide submit button if javascript is enabled.'),
-      '#default_value' => $this->options['autosubmit_hide'],
-      '#states' => array(
-        'invisible' => array(
-          'input[name="exposed_form_options[autosubmit]"]' => array('checked' => FALSE),
-        ),
-      ),
     );
   }
 
@@ -263,19 +242,6 @@ abstract class ExposedFormPluginBase extends PluginBase {
     if ($pager) {
       $pager->exposed_form_alter($form, $form_state);
       $form_state['pager_plugin'] = $pager;
-    }
-
-
-    // Apply autosubmit values.
-    if (!empty($this->options['autosubmit'])) {
-      $form = array_merge_recursive($form, array('#attributes' => array('class' => array('ctools-auto-submit-full-form'))));
-      $form['submit']['#attributes']['class'][] = 'ctools-use-ajax';
-      $form['submit']['#attributes']['class'][] = 'ctools-auto-submit-click';
-      $form['#attached']['js'][] = drupal_get_path('module', 'ctools') . '/js/auto-submit.js';
-
-      if (!empty($this->options['autosubmit_hide'])) {
-        $form['submit']['#attributes']['class'][] = 'js-hide';
-      }
     }
   }
 
