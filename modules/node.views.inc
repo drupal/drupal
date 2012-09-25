@@ -520,6 +520,28 @@ function node_views_data() {
     ),
   );
 
+  // published status
+  $data['node_revision']['status'] = array(
+    'title' => t('Published'),
+    'help' => t('Whether or not the content is published.'),
+    'field' => array(
+      'id' => 'boolean',
+      'click sortable' => TRUE,
+      'output formats' => array(
+        'published-notpublished' => array(t('Published'), t('Not published')),
+      ),
+    ),
+    'filter' => array(
+      'id' => 'boolean',
+      'label' => t('Published'),
+      'type' => 'yes-no',
+      'use_equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
+    ),
+    'sort' => array(
+      'id' => 'standard',
+    ),
+  );
+
   // title
   $data['node_revision']['title'] = array(
     'title' => t('Title'), // The item it appears as on the UI,

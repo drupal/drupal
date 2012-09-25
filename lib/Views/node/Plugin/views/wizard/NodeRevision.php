@@ -65,7 +65,7 @@ class NodeRevision extends WizardPluginBase {
   protected $filters = array(
     'status' => array(
       'value' => TRUE,
-      'table' => 'node',
+      'table' => 'node_revision',
       'field' => 'status'
     )
   );
