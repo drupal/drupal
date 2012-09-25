@@ -1,0 +1,87 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '1'
+display:
+  block:
+    display_options:
+      defaults:
+        pager: '0'
+        pager_options: '0'
+        row_options: '0'
+        row_plugin: '0'
+        style_options: '0'
+        style_plugin: '0'
+      field:
+        title:
+          link_to_node: '1'
+      pager:
+        options:
+          items_per_page: '5'
+        type: some
+      pager_options: {  }
+      row_options:
+        build_mode: teaser
+        comments: '0'
+        links: '1'
+      row_plugin: fields
+      style_options: {  }
+      style_plugin: default
+    display_plugin: block
+    display_title: Block
+    id: block
+    position: '2'
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          field: title
+          id: title
+          table: node
+      filters:
+        status:
+          field: status
+          group: '1'
+          id: status
+          table: node
+          value: '1'
+      pager:
+        options:
+          items_per_page: '10'
+        type: full
+      query:
+        type: views_query
+      row_options:
+        build_mode: teaser
+        comments: '0'
+        links: '1'
+      row_plugin: node
+      sorts:
+        created:
+          field: created
+          id: created
+          order: DESC
+          table: node
+      style_plugin: default
+      title: 'Test Display'
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page:
+    display_options:
+      path: test-display
+    display_plugin: page
+    display_title: Page
+    id: page
+    position: '1'
+human_name: ''
+name: test_display
+tag: ''

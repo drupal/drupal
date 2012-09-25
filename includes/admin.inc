@@ -1062,7 +1062,7 @@ function views_ui_edit_form($form, &$form_state, ViewUI $view, $display_id = NUL
     $form['displays']['settings']['settings_content']['tab_content']['#attributes'] = array('class' => array('views-display-tab'));
     $form['displays']['settings']['settings_content']['tab_content']['#id'] = 'views-tab-' . $display_id;
     // Mark deleted displays as such.
-    if (!empty($view->display[$display_id]->deleted)) {
+    if (!empty($view->display[$display_id]['deleted'])) {
       $form['displays']['settings']['settings_content']['tab_content']['#attributes']['class'][] = 'views-display-deleted';
     }
     // Mark disabled displays as such.
@@ -1262,10 +1262,9 @@ function views_ui_edit_form_submit_duplicate_display($form, &$form_state) {
   $display_id = $form_state['display_id'];
 
   // Create the new display.
-  $display = $view->display[$display_id];
+  $display = $view->storage->display[$display_id];
   $new_display_id = $view->storage->addDisplay($display['display_plugin']);
-  $view->storage->display[$new_display_id] = clone $display;
-  $view->storage->display[$new_display_id]['id'] = $new_display_id;
+  $view->storage->display[$new_display_id] = $display;
 
   // By setting the current display the changed marker will appear on the new
   // display.
@@ -1284,7 +1283,7 @@ function views_ui_edit_form_submit_delete_display($form, &$form_state) {
   $display_id = $form_state['display_id'];
 
   // Mark the display for deletion.
-  $view->storage->display[$display_id]->deleted = TRUE;
+  $view->storage->display[$display_id]['deleted'] = TRUE;
   views_ui_cache_set($view);
 
   // Redirect to the top-level edit page. The first remaining display will
@@ -1298,7 +1297,7 @@ function views_ui_edit_form_submit_delete_display($form, &$form_state) {
 function views_ui_edit_form_submit_undo_delete_display($form, &$form_state) {
   // Create the new display
   $id = $form_state['display_id'];
-  $form_state['view']->storage->display[$id]->deleted = FALSE;
+  $form_state['view']->storage->display[$id]['deleted'] = FALSE;
 
   // Store in cache
   views_ui_cache_set($form_state['view']);
@@ -1393,6 +1392,7 @@ function views_ui_edit_page_display_tabs(ViewUI $view, $display_id = NULL) {
   $tabs = array();
 
   // Create a tab for each display.
+  uasort($view->storage->display, '_views_position_sort');
   foreach ($view->storage->display as $id => $display) {
     $tabs[$id] = array(
       '#theme' => 'menu_local_task',
@@ -1402,7 +1402,7 @@ function views_ui_edit_page_display_tabs(ViewUI $view, $display_id = NULL) {
         'localized_options' => array(),
       ),
     );
-    if (!empty($display->deleted)) {
+    if (!empty($display['deleted'])) {
       $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'views-display-deleted-link';
     }
     if (isset($display['display_options']['enabled']) && !$display['display_options']['enabled']) {
@@ -1485,7 +1485,7 @@ function views_ui_get_display_tab_details(ViewUI $view, $display) {
   // The following is for display purposes only. We need to determine if there is more than one button and wrap
   // the buttons in a .ctools-dropbutton class if more than one is present.  Otherwise, we'll just wrap the
   // actions in the .ctools-button class.
-  $is_display_deleted = !empty($display->deleted);
+  $is_display_deleted = !empty($display['deleted']);
   // The master display cannot be cloned.
   $is_default = $display['id'] == 'default';
   // @todo: Figure out why getOption doesn't work here.
@@ -2035,9 +2035,10 @@ function views_ui_edit_view_form_validate($form, &$form_state) {
  */
 function views_ui_edit_view_form_submit($form, &$form_state) {
   // Go through and remove displayed scheduled for removal.
-  foreach ($form_state['view']->displayHandlers as $id => $display) {
-    if (!empty($display->deleted)) {
+  foreach ($form_state['view']->storage->display as $id => $display) {
+    if (!empty($display['deleted'])) {
       unset($form_state['view']->displayHandlers[$id]);
+      unset($form_state['view']->storage->display[$id]);
     }
   }
   // Rename display ids if needed.
@@ -2864,7 +2865,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
 function views_ui_remove_display_form_restore($form, &$form_state) {
   // Create the new display
   $id = $form_state['display_id'];
-  $form_state['view']->display[$id]->deleted = FALSE;
+  $form_state['view']->storage->display[$id]['deleted'] = FALSE;
 
   // Store in cache
   views_ui_cache_set($form_state['view']);
@@ -2912,15 +2913,16 @@ function views_ui_reorder_displays_form($form, &$form_state) {
 
   $form['#tree'] = TRUE;
 
-  $last_display = end($view->display);
+  uasort($form_state['view']->storage->display, '_views_position_sort');
+  $count = count($view->storage->display);
 
-  foreach ($view->display as $display) {
+  foreach ($view->storage->display as $display) {
     $form[$display['id']] = array(
       'title'  => array('#markup' => $display['display_title']),
       'weight' => array(
         '#type' => 'weight',
         '#value' => $display['position'],
-        '#delta' => $last_display['position'],
+        '#delta' => $count,
         '#title' => t('Weight for @display', array('@display' => $display['display_title'])),
         '#title_display' => 'invisible',
       ),
@@ -2930,11 +2932,11 @@ function views_ui_reorder_displays_form($form, &$form_state) {
         '#type' => 'checkbox',
         '#id' => 'display-removed-' . $display['id'],
         '#attributes' => array('class' => array('views-remove-checkbox')),
-        '#default_value' => isset($display->deleted),
+        '#default_value' => isset($display['deleted']),
       ),
     );
 
-    if (isset($display->deleted) && $display->deleted) {
+    if (isset($display->deleted) && $display['deleted']) {
       $form[$display['id']]['deleted'] = array('#type' => 'value', '#value' => TRUE);
     }
     if ($display['id'] === 'default') {
@@ -2986,34 +2988,36 @@ function views_ui_reorder_displays_form_submit($form, &$form_state) {
       $order[$display] = $info['weight'];
     }
   }
+  debug($form_state['input']);
 
   // Sort the order array
   asort($order);
 
   // Fixing up positions
-  $position = 2;
+  $position = 1;
 
   foreach (array_keys($order) as $display) {
     $order[$display] = $position++;
   }
 
   // Setting up position and removing deleted displays
-  $displays = $form_state['view']->display;
+  $displays = $form_state['view']->storage->display;
   foreach ($displays as $display_id => $display) {
     // Don't touch the default !!!
     if ($display_id === 'default') {
+      $form_state['view']->storage->display[$display_id]['position'] = 0;
       continue;
     }
     if (isset($order[$display_id])) {
-      $form_state['view']->display[$display_id]['position'] = $order[$display_id];
+      $form_state['view']->storage->display[$display_id]['position'] = $order[$display_id];
     }
     else {
-      $form_state['view']->display[$display_id]->deleted = TRUE;
+      $form_state['view']->storage->display[$display_id]['deleted'] = TRUE;
     }
   }
 
   // Sorting back the display array as the position is not enough
-  uasort($form_state['view']->display, '_views_position_sort');
+  uasort($form_state['view']->storage->display, '_views_position_sort');
 
   // Store in cache
   views_ui_cache_set($form_state['view']);

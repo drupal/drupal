@@ -194,7 +194,7 @@ class Feed extends Page {
       case 'displays':
         $form['#title'] .= t('Attach to');
         $displays = array();
-        foreach ($this->view->display as $display_id => $display) {
+        foreach ($this->view->storage->display as $display_id => $display) {
           // @todo The display plugin should have display_title and id as well.
           if (!empty($this->view->displayHandlers[$display_id]) && $this->view->displayHandlers[$display_id]->acceptAttachments()) {
             $displays[$display_id] = $display['display_title'];
