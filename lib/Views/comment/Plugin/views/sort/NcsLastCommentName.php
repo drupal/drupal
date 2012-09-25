@@ -25,8 +25,13 @@ class NcsLastCommentName extends SortPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $join = views_get_plugin('join', 'standard');
-    $join->construct('users', $this->tableAlias, 'last_comment_uid', 'uid');
+    $definition = array(
+      'table' => 'users',
+      'field' => 'uid',
+      'left_table' => $this->tableAlias,
+      'left_field' => 'last_comment_uid',
+    );
+    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
     // @todo this might be safer if we had an ensure_relationship rather than guessing
     // the table alias. Though if we did that we'd be guessing the relationship name

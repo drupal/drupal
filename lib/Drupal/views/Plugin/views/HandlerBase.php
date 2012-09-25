@@ -782,33 +782,33 @@ abstract class HandlerBase extends PluginBase {
   public static function getTableJoin($table, $base_table) {
     $data = views_fetch_data($table);
     if (isset($data['table']['join'][$base_table])) {
-      $h = $data['table']['join'][$base_table];
-      if (!empty($h['join_id']) && class_exists($h['handler'])) {
-        $id = $h['join_id'];
+      $join_info = $data['table']['join'][$base_table];
+      if (!empty($join_info['join_id'])) {
+        $id = $join_info['join_id'];
       }
       else {
         $id = 'standard';
       }
-      $handler = views_get_plugin('join', $id);
 
-      // Fill in some easy defaults
-      $handler->definition = $h;
-      if (empty($handler->definition['table'])) {
-        $handler->definition['table'] = $table;
+      $configuration = $join_info;
+      // Fill in some easy defaults.
+      if (empty($configuration['table'])) {
+        $configuration['table'] = $table;
       }
       // If this is empty, it's a direct link.
-      if (empty($handler->definition['left_table'])) {
-        $handler->definition['left_table'] = $base_table;
+      if (empty($configuration['left_table'])) {
+        $configuration['left_table'] = $base_table;
       }
 
-      if (isset($h['arguments'])) {
-        call_user_func_array(array(&$handler, 'construct'), $h['arguments']);
-      }
-      else {
-        $handler->construct();
+      if (isset($join_info['arguments'])) {
+        foreach ($join_info['arguments'] as $key => $argument) {
+          $configuration[$key] = $argument;
+        }
       }
 
-      return $handler;
+      $join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $configuration);
+
+      return $join;
     }
   }
 

@@ -126,6 +126,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     $def['field'] = $base_field;
     $def['left_table'] = $this->tableAlias;
     $def['left_field'] = $this->realField;
+    $def['adjusted'] = TRUE;
     if (!empty($this->options['required'])) {
       $def['type'] = 'INNER';
     }
@@ -140,12 +141,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     else {
       $id = 'standard';
     }
-    $join = views_get_plugin('join', $id);
-
-    $join->definition = $def;
-    $join->options = $this->options;
-    $join->construct();
-    $join->adjusted = TRUE;
+    $join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $def);
 
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;

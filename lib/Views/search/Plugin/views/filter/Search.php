@@ -142,8 +142,14 @@ class Search extends FilterPluginBase {
       $search_condition = db_and();
 
       // Create a new join to relate the 'serach_total' table to our current 'search_index' table.
-      $join = views_get_plugin('join', 'standard');
-      $join->construct('search_total', $search_index, 'word', 'word');
+      $definition = array(
+        'table' => 'search_total',
+        'field' => 'word',
+        'left_table' => $search_index,
+        'left_field' => 'word',
+      );
+      $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
+
       $search_total = $this->query->add_relationship('search_total', $join, $search_index);
 
       $this->search_score = $this->query->add_field('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));

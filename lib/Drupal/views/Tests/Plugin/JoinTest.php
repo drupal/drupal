@@ -16,6 +16,13 @@ use Drupal\views\Plugin\views\join\JoinPluginBase;
  */
 class JoinTest extends PluginTestBase {
 
+  /**
+   * A plugin manager which handlers the instances of joins.
+   *
+   * @var Drupal\views\Plugin\Type\ViewsPluginManager
+   */
+  protected $manager;
+
   public static function getInfo() {
     return array(
       'name' => 'Join',
@@ -24,36 +31,43 @@ class JoinTest extends PluginTestBase {
     );
   }
 
+  protected function setUp() {
+    parent::setUp();
+
+    // Add a join plugin manager which can be used in all of the tests.
+    $this->manager = drupal_container()->get('plugin.manager.views.join');
+  }
+
+
   /**
    * Tests an example join plugin.
    */
   public function testExamplePlugin() {
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('join_test');
-    $this->assertTrue($join instanceof JoinTestPlugin, 'The correct join class got loaded.');
 
     // Setup a simple join and test the result sql.
     $view = views_get_view('frontpage');
     $view->initDisplay();
     $view->initQuery();
 
-    $definition = array(
+    $configuration = array(
       'left_table' => 'node',
       'left_field' => 'uid',
       'table' => 'users',
       'field' => 'uid',
     );
-    $join->definition = $definition;
-    $join->construct();
+    $join = $this->manager->createInstance('join_test', $configuration);
+    $this->assertTrue($join instanceof JoinTestPlugin, 'The correct join class got loaded.');
 
     $rand_int = rand(0, 1000);
     $join->setJoinValue($rand_int);
 
     $query = db_select('node');
     $table = array('alias' => 'users');
-    $join->build_join($query, $table, $view->query);
+    $join->buildJoin($query, $table, $view->query);
 
     $tables = $query->getTables();
     $join_info = $tables['users'];
+    debug($join_info);
     $this->assertTrue(strpos($join_info['condition'], "node.uid = $rand_int") !== FALSE, 'Make sure that the custom join plugin can extend the join base and alter the result.');
   }
 
@@ -61,8 +75,6 @@ class JoinTest extends PluginTestBase {
    * Tests the join plugin base.
    */
   public function testBasePlugin() {
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard');
-    $this->assertTrue($join instanceof JoinPluginBase, 'The correct join class got loaded.');
 
     // Setup a simple join and test the result sql.
     $view = views_get_view('frontpage');
@@ -71,56 +83,51 @@ class JoinTest extends PluginTestBase {
 
     // First define a simple join without an extra condition.
     // Set the various options on the join object.
-    $definition = array(
+    $configuration = array(
       'left_table' => 'node',
       'left_field' => 'uid',
       'table' => 'users',
       'field' => 'uid',
     );
-    $join->definition = $definition;
-    $join->construct();
+    $join = $this->manager->createInstance('standard', $configuration);
+    $this->assertTrue($join instanceof JoinPluginBase, 'The correct join class got loaded.');
 
     // Build the actual join values and read them back from the dbtng query
     // object.
     $query = db_select('node');
     $table = array('alias' => 'users');
-    $join->build_join($query, $table, $view->query);
+    $join->buildJoin($query, $table, $view->query);
 
     $tables = $query->getTables();
     $join_info = $tables['users'];
     $this->assertEqual($join_info['join type'], 'LEFT', 'Make sure the default join type is LEFT');
-    $this->assertEqual($join_info['table'], $definition['table']);
+    $this->assertEqual($join_info['table'], $configuration['table']);
     $this->assertEqual($join_info['alias'], 'users');
     $this->assertEqual($join_info['condition'], 'node.uid = users.uid');
 
     // Set a different alias and make sure table info is as expected.
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard');
-    $join->definition = $definition;
-    $join->construct();
+    $join = $this->manager->createInstance('standard', $configuration);
     $table = array('alias' => 'users1');
-    $join->build_join($query, $table, $view->query);
+    $join->buildJoin($query, $table, $view->query);
 
     $tables = $query->getTables();
     $join_info = $tables['users1'];
     $this->assertEqual($join_info['alias'], 'users1');
 
     // Set a different join type (INNER) and make sure it is used.
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard');
-    $definition['type'] = 'INNER';
-    $join->definition = $definition;
-    $join->construct();
+    $configuration['type'] = 'INNER';
+    $join = $this->manager->createInstance('standard', $configuration);
     $table = array('alias' => 'users2');
-    $join->build_join($query, $table, $view->query);
+    $join->buildJoin($query, $table, $view->query);
 
     $tables = $query->getTables();
     $join_info = $tables['users2'];
     $this->assertEqual($join_info['join type'], 'INNER');
 
     // Setup addition conditions and make sure it is used.
-    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard');
     $random_name_1 = $this->randomName();
     $random_name_2 = $this->randomName();
-    $definition['extra'] = array(
+    $configuration['extra'] = array(
       array(
         'field' => 'name',
         'value' => $random_name_1
@@ -131,10 +138,9 @@ class JoinTest extends PluginTestBase {
         'operator' => '<>'
       )
     );
-    $join->definition = $definition;
-    $join->construct();
+    $join = $this->manager->createInstance('standard', $configuration);
     $table = array('alias' => 'users3');
-    $join->build_join($query, $table, $view->query);
+    $join->buildJoin($query, $table, $view->query);
 
     $tables = $query->getTables();
     $join_info = $tables['users3'];

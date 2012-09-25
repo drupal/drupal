@@ -46,10 +46,13 @@ class JoinTest extends JoinPluginBase {
   }
 
 
-  function build_join($select_query, $table, $view_query) {
+  /**
+   * Overrides Drupal\views\Plugin\views\join\JoinPluginBase::buildJoin().
+   */
+  public function buildJoin($select_query, $table, $view_query) {
     // Add an additional hardcoded condition to the query.
     $this->extra = 'node.uid = ' . $this->getJoinValue();
-    parent::build_join($select_query, $table, $view_query);
+    parent::buildJoin($select_query, $table, $view_query);
   }
 
 }

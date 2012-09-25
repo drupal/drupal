@@ -88,8 +88,8 @@ class ManyToOneHelper {
     // Cycle through the joins. This isn't as error-safe as the normal
     // ensure_path logic. Perhaps it should be.
     $r_join = clone $join;
-    while ($r_join->left_table != $base_table) {
-      $r_join = HandlerBase::getTableJoin($r_join->left_table, $base_table);
+    while ($r_join->leftTable != $base_table) {
+      $r_join = HandlerBase::getTableJoin($r_join->leftTable, $base_table);
     }
     // If we found that there are tables in between, add the relationship.
     if ($r_join->table != $join->table) {

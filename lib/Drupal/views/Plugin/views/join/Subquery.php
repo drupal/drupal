@@ -40,7 +40,7 @@ class Subquery extends JoinPluginBase {
    * @return
    *
    */
-  function build_join($select_query, $table, $view_query) {
+  public function buildJoin($select_query, $table, $view_query) {
     if (empty($this->definition['table formula'])) {
       $right_table = "{" . $this->table . "}";
     }
@@ -92,7 +92,7 @@ class Subquery extends JoinPluginBase {
             $condition .= ' AND ' . array_shift($extras);
           }
           else {
-            $condition .= ' AND (' . implode(' ' . $this->extra_type . ' ', $extras) . ')';
+            $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
           }
         }
       }

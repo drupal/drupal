@@ -82,6 +82,7 @@ class NodeTermData extends RelationshipPluginBase  {
       $def['left_field'] = 'nid';
       $def['field'] = 'nid';
       $def['type'] = empty($this->options['required']) ? 'LEFT' : 'INNER';
+      $def['adjusted'] = TRUE;
 
       $query = db_select('taxonomy_term_data', 'td');
       $query->addJoin($def['type'], 'taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
@@ -93,11 +94,7 @@ class NodeTermData extends RelationshipPluginBase  {
       $def['table formula'] = $query;
     }
 
-    $join = views_get_plugin('join', 'standard');
-
-    $join->definition = $def;
-    $join->construct();
-    $join->adjusted = TRUE;
+    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $def);
 
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;

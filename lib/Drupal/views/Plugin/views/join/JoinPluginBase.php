@@ -6,104 +6,170 @@
  */
 
 namespace Drupal\views\Plugin\views\join;
+use Drupal\Component\Plugin\PluginBase;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * @defgroup views_join_handlers Views join handlers
  * @{
  * Handlers to tell Views how to join tables together.
  *
+ * Here is an example how to join from table one to example two so it produces
+ * the following sql:
+ * @code
+ * INNER JOIN {two} ON one.field_a = two.field_b
+ * @code.
+ * The required php code for this kind of functionality is the following:
+ * @code
+ * $configuration = array(
+ *   'table' => 'two',
+ *   'field' => 'field_b',
+ *   'left_table' => 'one',
+ *   'left_field' => 'field_a',
+ *   'operator' => '='
+ * );
+ * $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $configuration);
+ *
  * Here is how you do complex joins:
  *
  * @code
- * class JoinComplex extends Join {
- *   // PHP 4 doesn't call constructors of the base class automatically from a
- *   // constructor of a derived class. It is your responsibility to propagate
- *   // the call to constructors upstream where appropriate.
- *   function construct($table, $left_table, $left_field, $field, $extra = array(), $type = 'LEFT') {
- *     parent::construct($table, $left_table, $left_field, $field, $extra, $type);
- *   }
- *
- *   function build_join($select_query, $table, $view_query) {
+ * class JoinComplex extends JoinPluginBase {
+ *   public function buildJoin($select_query, $table, $view_query) {
+ *     // Add an additional hardcoded condition to the query.
  *     $this->extra = 'foo.bar = baz.boing';
- *     parent::build_join($select_query, $table, $view_query);
+ *     parent::buildJoin($select_query, $table, $view_query);
  *   }
  * }
  * @endcode
  */
 
 /**
- * A function class to represent a join and create the SQL necessary
- * to implement the join.
+ * Represents a join and creates the SQL necessary to implement the join.
  *
- * This is the Delegation pattern. If we had PHP5 exclusively, we would
- * declare this an interface.
+ * @todo It might make sense to create an interface for joins.
  *
  * Extensions of this class can be used to create more interesting joins.
- *
- * join definition
- *   - table: table to join (right table)
- *   - field: field to join on (right field)
- *   - left_table: The table we join to
- *   - left_field: The field we join to
- *   - type: either LEFT (default) or INNER
- *   - extra: An array of extra conditions on the join. Each condition is
- *     either a string that's directly added, or an array of items:
- *   - - table: If not set, current table; if NULL, no table. If you specify a
- *       table in cached definition, Views will try to load from an existing
- *       alias. If you use realtime joins, it works better.
- *   - - field: Field or formula
- *       in formulas we can reference the right table by using %alias
- *       @see SelectQueryInterface::addJoin()
- *   - - operator: defaults to =
- *   - - value: Must be set. If an array, operator will be defaulted to IN.
- *   - - numeric: If true, the value will not be surrounded in quotes.
- *   - - extra type: How all the extras will be combined. Either AND or OR. Defaults to AND.
  */
-class JoinPluginBase {
-
-  var $table = NULL;
-
-  var $left_table = NULL;
-
-  var $left_field = NULL;
-
-  var $field = NULL;
-
-  var $extra = NULL;
-
-  var $type = NULL;
-
-  var $definition = array();
+class JoinPluginBase extends PluginBase {
 
   /**
-   * Construct the Drupal\views\Join object.
+   * The table to join (right table).
+   *
+   * @var string
    */
-  function construct($table = NULL, $left_table = NULL, $left_field = NULL, $field = NULL, $extra = array(), $type = 'LEFT') {
-    $this->extra_type = 'AND';
-    if (!empty($table)) {
-      $this->table = $table;
-      $this->left_table = $left_table;
-      $this->left_field = $left_field;
-      $this->field = $field;
-      $this->extra = $extra;
-      $this->type = strtoupper($type);
-    }
-    elseif (!empty($this->definition)) {
-      // if no arguments, construct from definition.
-      // These four must exist or it will throw notices.
-      $this->table = $this->definition['table'];
-      $this->left_table = $this->definition['left_table'];
-      $this->left_field = $this->definition['left_field'];
-      $this->field = $this->definition['field'];
-      if (!empty($this->definition['extra'])) {
-        $this->extra = $this->definition['extra'];
-      }
-      if (!empty($this->definition['extra type'])) {
-        $this->extra_type = strtoupper($this->definition['extra type']);
-      }
+  public $table;
 
-      $this->type = !empty($this->definition['type']) ? strtoupper($this->definition['type']) : 'LEFT';
+  /**
+   * The field to join on (right field).
+   *
+   * @var string
+   */
+  public $field;
+
+  /**
+   * The table we join to.
+   *
+   * @var string
+   */
+  public $leftTable;
+
+  /**
+   * The field we join to.
+   *
+   * @var string
+   */
+  public $leftField;
+
+  /**
+   * An array of extra conditions on the join.
+   *
+   * Each condition is either a string that's directly added, or an array of
+   * items:
+   *   - table(optional): If not set, current table; if NULL, no table. If you
+   *     specify a table in cached configuration, Views will try to load from an
+   *     existing alias. If you use realtime joins, it works better.
+   *   - field(optional): Field or formula. In formulas we can reference the
+   *     right table by using %alias.
+   *   - operator(optional): The operator used, Defaults to "=".
+   *   - value: Must be set. If an array, operator will be defaulted to IN.
+   *   - numeric: If true, the value will not be surrounded in quotes.
+   *
+   * @see SelectQueryInterface::addJoin()
+   *
+   * @var array
+   */
+  public $extra;
+
+  /**
+   * The join type, so for example LEFT (default) or INNER.
+   *
+   * @var string
+   */
+  public $type;
+
+  /**
+   * The configuration array passed by initJoin.
+   *
+   * @var array
+   *
+   * @see Drupal\views\Plugin\views\join\JoinPluginBase::initJoin()
+   */
+  public $configuration = array();
+
+  /**
+   * How all the extras will be combined. Either AND or OR.
+   *
+   * @var string
+   */
+  public $extraOperator;
+
+  /**
+   * Defines whether a join has been adjusted.
+   *
+   * Views updates the join object to set the table alias instead of the table
+   * name. Once views has changed the alias it sets the adjusted value so it
+   * does not have to be updated anymore. If you create your own join object
+   * you should set the adjusted in the definition array to TRUE if you already
+   * know the table alias.
+   *
+   * @var bool
+   *
+   * @see Drupal\views\Plugin\HandlerBase::getTableJoin()
+   * @see Drupal\views\Plugin\views\query\Sql::adjust_join()
+   * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase::query()
+   */
+  public $adjusted;
+
+  /**
+   * Constructs a Drupal\views\Plugin\views\join\JoinPluginBase object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+    // Merge in some default values.
+    $configuration += array(
+      'type' => 'LEFT',
+      'extra_operator' => 'AND'
+    );
+    $this->configuration = $configuration;
+
+    if (!empty($configuration['table'])) {
+      $this->table = $configuration['table'];
     }
+
+    $this->leftTable = $configuration['left_table'];
+    $this->leftField = $configuration['left_field'];
+    $this->field = $configuration['field'];
+
+    if (!empty($configuration['extra'])) {
+      $this->extra = $configuration['extra'];
+    }
+
+    if (isset($configuration['adjusted'])) {
+      $this->extra = $configuration['adjusted'];
+    }
+
+    $this->extraOperator = strtoupper($configuration['extra_operator']);
+    $this->type = $configuration['type'];
   }
 
   /**
@@ -118,21 +184,21 @@ class JoinPluginBase {
    * @param $view_query
    *   The source query, implementation of views_plugin_query.
    */
-  function build_join($select_query, $table, $view_query) {
-    if (empty($this->definition['table formula'])) {
+  public function buildJoin($select_query, $table, $view_query) {
+    if (empty($this->configuration['table formula'])) {
       $right_table = $this->table;
     }
     else {
-      $right_table = $this->definition['table formula'];
+      $right_table = $this->configuration['table formula'];
     }
 
-    if ($this->left_table) {
-      $left = $view_query->get_table_info($this->left_table);
-      $left_field = "$left[alias].$this->left_field";
+    if ($this->leftTable) {
+      $left = $view_query->get_table_info($this->leftTable);
+      $left_field = "$left[alias].$this->leftField";
     }
     else {
       // This can be used if left_field is a formula or something. It should be used only *very* rarely.
-      $left_field = $this->left_field;
+      $left_field = $this->leftField;
     }
 
     $condition = "$left_field = $table[alias].$this->field";
@@ -199,7 +265,7 @@ class JoinPluginBase {
             $condition .= ' AND ' . array_shift($extras);
           }
           else {
-            $condition .= ' AND (' . implode(' ' . $this->extra_type . ' ', $extras) . ')';
+            $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
           }
         }
       }

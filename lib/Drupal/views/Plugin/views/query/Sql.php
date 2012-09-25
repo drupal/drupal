@@ -611,8 +611,8 @@ class Sql extends QueryPluginBase {
 
     // Does a table along this path exist?
     if (isset($this->tables[$relationship][$table]) ||
-      ($join && $join->left_table == $relationship) ||
-      ($join && $join->left_table == $this->relationships[$relationship]['table'])) {
+      ($join && $join->leftTable == $relationship) ||
+      ($join && $join->leftTable == $this->relationships[$relationship]['table'])) {
 
       // Make sure that we're linking to the correct table for our relationship.
       foreach (array_reverse($add) as $table => $path_join) {
@@ -622,20 +622,20 @@ class Sql extends QueryPluginBase {
     }
 
     // Have we been this way?
-    if (isset($traced[$join->left_table])) {
+    if (isset($traced[$join->leftTable])) {
       // we looped. Broked.
       return FALSE;
     }
 
     // Do we have to add this table?
-    $left_join = $this->get_join_data($join->left_table, $this->relationships[$relationship]['base']);
-    if (!isset($this->tables[$relationship][$join->left_table])) {
-      $add[$join->left_table] = $left_join;
+    $left_join = $this->get_join_data($join->leftTable, $this->relationships[$relationship]['base']);
+    if (!isset($this->tables[$relationship][$join->leftTable])) {
+      $add[$join->leftTable] = $left_join;
     }
 
     // Keep looking.
-    $traced[$join->left_table] = TRUE;
-    return $this->ensure_path($join->left_table, $relationship, $left_join, $traced, $add);
+    $traced[$join->leftTable] = TRUE;
+    return $this->ensure_path($join->leftTable, $relationship, $left_join, $traced, $add);
   }
 
   /**
@@ -660,23 +660,23 @@ class Sql extends QueryPluginBase {
       $join = clone $join;
 
       // Do we need to try to ensure a path?
-      if ($join->left_table != $this->relationships[$relationship]['table'] &&
-        $join->left_table != $this->relationships[$relationship]['base'] &&
-        !isset($this->tables[$relationship][$join->left_table]['alias'])) {
-        $this->ensure_table($join->left_table, $relationship);
+      if ($join->leftTable != $this->relationships[$relationship]['table'] &&
+        $join->leftTable != $this->relationships[$relationship]['base'] &&
+        !isset($this->tables[$relationship][$join->leftTable]['alias'])) {
+        $this->ensure_table($join->leftTable, $relationship);
       }
 
       // First, if this is our link point/anchor table, just use the relationship
-      if ($join->left_table == $this->relationships[$relationship]['table']) {
-        $join->left_table = $relationship;
+      if ($join->leftTable == $this->relationships[$relationship]['table']) {
+        $join->leftTable = $relationship;
       }
       // then, try the base alias.
-      elseif (isset($this->tables[$relationship][$join->left_table]['alias'])) {
-        $join->left_table = $this->tables[$relationship][$join->left_table]['alias'];
+      elseif (isset($this->tables[$relationship][$join->leftTable]['alias'])) {
+        $join->leftTable = $this->tables[$relationship][$join->leftTable]['alias'];
       }
       // But if we're already looking at an alias, use that instead.
       elseif (isset($this->table_queue[$relationship]['alias'])) {
-        $join->left_table = $this->table_queue[$relationship]['alias'];
+        $join->leftTable = $this->table_queue[$relationship]['alias'];
       }
     }
 
@@ -1304,7 +1304,7 @@ class Sql extends QueryPluginBase {
     // Add all the tables to the query via joins. We assume all LEFT joins.
     foreach ($this->table_queue as $table) {
       if (is_object($table['join'])) {
-        $table['join']->build_join($query, $table, $this);
+        $table['join']->buildJoin($query, $table, $this);
       }
     }
 

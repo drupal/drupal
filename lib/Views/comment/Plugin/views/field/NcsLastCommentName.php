@@ -27,9 +27,20 @@ class NcsLastCommentName extends FieldPluginBase {
     // have to join in a specially related user table.
     $this->ensureMyTable();
     // join 'users' to this table via vid
-    $join = views_get_plugin('join', 'standard');
-    $join->construct('users', $this->tableAlias, 'last_comment_uid', 'uid');
-    $join->extra = array(array('field' => 'uid', 'operator' => '!=', 'value' => '0'));
+    $definition = array(
+      'table' => 'users',
+      'field' => 'uid',
+      'left_table' => $this->tableAlias,
+      'left_field' => 'last_comment_uid',
+      'extra' => array(
+        array(
+          'field' => 'uid',
+          'operator' => '!=',
+          'value' => '0'
+        )
+      )
+    );
+    $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
     // ncs_user alias so this can work with the sort handler, below.
 //    $this->user_table = $this->query->add_relationship(NULL, $join, 'users', $this->relationship);

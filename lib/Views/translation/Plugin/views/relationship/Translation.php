@@ -66,6 +66,7 @@ class Translation extends RelationshipPluginBase {
     $def['field'] = $base_field;
     $def['left_table'] = $this->tableAlias;
     $def['left_field'] = $this->field;
+    $def['adjusted'] = TRUE;
     if (!empty($this->options['required'])) {
       $def['type'] = 'INNER';
     }
@@ -101,11 +102,7 @@ class Translation extends RelationshipPluginBase {
     else {
       $id = 'standard';
     }
-    $join = views_get_plugin('join', $id);
-
-    $join->definition = $def;
-    $join->construct();
-    $join->adjusted = TRUE;
+    $join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $def);
 
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;

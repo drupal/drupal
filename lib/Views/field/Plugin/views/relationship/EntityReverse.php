@@ -44,6 +44,7 @@ class EntityReverse extends RelationshipPluginBase  {
       'left_field' => $left_field,
       'table' => $this->definition['field table'],
       'field' => $this->definition['field field'],
+      'adjusted' => TRUE
     );
     if (!empty($this->options['required'])) {
       $first['type'] = 'INNER';
@@ -59,11 +60,8 @@ class EntityReverse extends RelationshipPluginBase  {
     else {
       $id = 'standard';
     }
-    $first_join = views_get_plugin('join', $id);
+    $first_join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $first);
 
-    $first_join->definition = $first;
-    $first_join->construct();
-    $first_join->adjusted = TRUE;
 
     $this->first_alias = $this->query->add_table($this->definition['field table'], $this->relationship, $first_join);
 
@@ -74,6 +72,7 @@ class EntityReverse extends RelationshipPluginBase  {
       'left_field' => 'entity_id',
       'table' => $this->definition['base'],
       'field' => $this->definition['base field'],
+      'adjusted' => TRUE
     );
 
     if (!empty($this->options['required'])) {
@@ -86,9 +85,7 @@ class EntityReverse extends RelationshipPluginBase  {
     else {
       $id = 'standard';
     }
-    $second_join = views_get_plugin('join', $id);
-    $second_join->definition = $second;
-    $second_join->construct();
+    $second_join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $second);
     $second_join->adjusted = TRUE;
 
     // use a short alias for this:
