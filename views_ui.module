@@ -7,6 +7,7 @@
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewUI;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_menu().
@@ -20,6 +21,12 @@ function views_ui_menu() {
     'access arguments' => array('administer views'),
     'file' => 'includes/admin.inc',
   );
+  // Set up the base for AJAX callbacks.
+  $ajax_base = array(
+    'page callback' => 'views_ui_ajax_callback',
+    'page arguments' => array(4, 5),
+    'type' => MENU_CALLBACK,
+  ) + $base;
 
   // Top-level Views module pages (not tied to a particular View).
   $items['admin/structure/views/add'] = array(
@@ -27,6 +34,26 @@ function views_ui_menu() {
     'page callback' => 'views_ui_add_page',
     'type' => MENU_LOCAL_ACTION,
   ) + $base;
+
+  $items['admin/structure/views'] = array(
+    'title' => 'Views',
+    'description' => 'Manage customized lists of content.',
+    'page callback' => 'views_ui_list_page',
+  ) + $base;
+
+  $items['admin/structure/views/list'] = array(
+    'title' => 'List',
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ) + $base;
+
+  $items['admin/structure/views/view/%views_ui/enable'] = array(
+    'title' => 'Enable a view',
+  ) + $ajax_base;
+
+  $items['admin/structure/views/view/%views_ui/disable'] = array(
+    'title' => 'Disable a view',
+  ) + $ajax_base;
 
   /*
   // Top-level Views module pages (not tied to a particular View).
@@ -751,4 +778,44 @@ function views_ui_truncate($string, $length) {
  */
 function views_ui_load($name) {
   return views_get_view($name);
+}
+
+/**
+ * Page callback: Calls a method on a view and reloads the listing page.
+ *
+ * @param Drupal\views\ViewExectuable $view
+ *   The config entity being acted upon.
+ * @param string $op
+ *   The operation to perform, e.g., 'enable' or 'disable'.
+ *
+ * @return mixed
+ *   Either returns the listing page as JSON, or calls drupal_goto() to
+ *   redirect back to the listing page.
+ */
+function views_ui_ajax_callback(ViewExecutable $view, $op) {
+  $controller = views_ui_entity_list_controller('view');
+  // Perform the operation.
+  $view->storage->$op();
+
+  // If the request is via AJAX, return the rendered list as JSON.
+  if (drupal_container()->get('request')->request->get('js')) {
+    return $controller->renderListAJAX();
+  }
+  // Otherwise, redirect back to the page.
+  else {
+    drupal_goto($controller->getPath());
+  }
+}
+
+/**
+ * Page callback: Lists all of the views.
+ *
+ * @return array
+ *   A render array for a page containing a list of views.
+ *
+ * @see views_ui_menu()
+ */
+function views_ui_list_page() {
+  $controller = views_ui_entity_list_controller('view');
+  return $controller->render();
 }

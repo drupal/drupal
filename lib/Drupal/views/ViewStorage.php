@@ -162,6 +162,16 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
+   * Overrides Drupal\Core\Entity\EntityInterface::uri().
+   */
+  public function uri() {
+    $info = $this->entityInfo();
+    return array(
+      'path' => $info['list path'],
+    );
+  }
+
+  /**
    * Overrides Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {

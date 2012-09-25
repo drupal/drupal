@@ -7,68 +7,20 @@
 
 namespace Drupal\views;
 
-use Drupal\views_ui_listing\EntityListControllerBase;
+use Drupal\views_ui_listing\EntityListController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides a listing of Views.
  */
-class ViewListController extends EntityListControllerBase {
-
-  public function __construct($entity_type, $entity_info = FALSE) {
-    parent::__construct($entity_type, $entity_info);
-  }
+class ViewListController extends EntityListController {
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListControllerBase::hookMenu();
+   * Overrides Drupal\views_ui_listing\EntityListController::load();
    */
-  public function hookMenu() {
-    // Find the path and the number of path arguments.
-    $path = $this->entityInfo['list path'];
-    $path_count = count(explode('/', $path));
-
-    $items = parent::hookMenu();
-    // Override the access callback.
-    // @todo Probably won't need to specify user access.
-    $items[$path]['title'] = 'Views';
-    $items[$path]['description'] = 'Manage customized lists of content.';
-    $items[$path]['access callback'] = 'user_access';
-    $items[$path]['access arguments'] = array('administer views');
-
-    // Add a default local task, so we have tabs.
-    $items["$path/list"] = array(
-      'title' => 'List',
-      'weight' => -10,
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-    );
-
-    // Set up the base for AJAX callbacks.
-    $ajax_base = array(
-      'page callback' => 'views_ui_listing_ajax_callback',
-      'page arguments' => array($this, $path_count + 1, $path_count + 2),
-      'access callback' => 'user_access',
-      'access arguments' => array('administer views'),
-      'type' => MENU_CALLBACK,
-    );
-
-    // Add an enable link.
-    $items["$path/view/%views_ui/enable"] = array(
-      'title' => 'Enable a view',
-    ) + $ajax_base;
-    // Add a disable link.
-    $items["$path/view/%views_ui/disable"] = array(
-      'title' => 'Disable a view',
-    ) + $ajax_base;
-
-    return $items;
-  }
-
-  /**
-   * Overrides Drupal\views_ui_listing\EntityListControllerBase::getList();
-   */
-  public function getList() {
-    $list = parent::getList();
-    uasort($list, function ($a, $b) {
+  public function load() {
+    $entities = parent::load();
+    uasort($entities, function ($a, $b) {
       $a_enabled = $a->isEnabled();
       $b_enabled = $b->isEnabled();
       if ($a_enabled != $b_enabled) {
@@ -76,14 +28,14 @@ class ViewListController extends EntityListControllerBase {
       }
       return $a->id() > $b->id();
     });
-    return $list;
+    return $entities;
   }
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListControllerBase::getRowData();
+   * Overrides Drupal\views_ui_listing\EntityListController::buildRow();
    */
-  public function getRowData(EntityInterface $view) {
-    $operations = $this->buildActionLinks($view);
+  public function buildRow(EntityInterface $view) {
+    $operations = $this->buildOperations($view);
     $operations['#theme'] = 'links__ctools_dropbutton';
     return array(
       'data' => array(
@@ -99,9 +51,9 @@ class ViewListController extends EntityListControllerBase {
   }
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListControllerBase::getRowData();
+   * Overrides Drupal\views_ui_listing\EntityListController::buildHeader();
    */
-  public function getHeaderData() {
+  public function buildHeader() {
     return array(
       'view_name' => array(
         'data' => t('View name'),
@@ -119,7 +71,7 @@ class ViewListController extends EntityListControllerBase {
         'data' => t('Path'),
         'class' => array('views-ui-path'),
       ),
-      'actions' => array(
+      'operations' => array(
         'data' => t('Operations'),
         'class' => array('views-ui-operations'),
       ),
@@ -127,30 +79,33 @@ class ViewListController extends EntityListControllerBase {
   }
 
   /**
-   * Implements Drupal\views_ui_listing\EntityListControllerInterface::defineActionLinks();
+   * Implements Drupal\views_ui_listing\EntityListController::getOperations();
    */
-  public function defineActionLinks(EntityInterface $view) {
-    $path = $this->entityInfo['list path'] . '/view/' . $view->id();
-    $enabled = $view->isEnabled();
+  public function getOperations(EntityInterface $view) {
+    $uri = $view->uri();
+    $path = $uri['path'] . '/view/' . $view->id();
 
-    if (!$enabled) {
+    $definition['edit'] = array(
+      'title' => t('Edit'),
+      'href' => "$path/edit",
+      'weight' => -5,
+    );
+    if (!$view->isEnabled()) {
       $definition['enable'] = array(
         'title' => t('Enable'),
         'ajax' => TRUE,
         'token' => TRUE,
         'href' => "$path/enable",
+        'weight' => -10,
       );
     }
-    $definition['edit'] = array(
-      'title' => t('Edit'),
-      'href' => "$path/edit",
-    );
-    if ($enabled) {
+    else {
       $definition['disable'] = array(
         'title' => t('Disable'),
         'ajax' => TRUE,
         'token' => TRUE,
         'href' => "$path/disable",
+        'weight' => 0,
       );
     }
     // This property doesn't exist yet.
@@ -158,22 +113,24 @@ class ViewListController extends EntityListControllerBase {
       $definition['revert'] = array(
         'title' => t('Revert'),
         'href' => "$path/revert",
+        'weight' => 5,
       );
     }
     else {
       $definition['delete'] = array(
         'title' => t('Delete'),
         'href' => "$path/delete",
+        'weight' => 10,
       );
     }
     return $definition;
   }
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListControllerBase::renderList();
+   * Overrides Drupal\views_ui_listing\EntityListController::render();
    */
-  public function renderList() {
-    $list = parent::renderList();
+  public function render() {
+    $list = parent::render();
     $list['#attached']['css'] = views_ui_get_admin_css();
     return $list;
   }

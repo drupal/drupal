@@ -1,5 +1,0 @@
-name = Views UI listing test module
-package = Views
-dependencies[] = views_ui
-dependencies[] = config_test
-hidden = TRUE
