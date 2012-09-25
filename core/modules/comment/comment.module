@@ -796,6 +796,9 @@ function comment_node_page_additions(Node $node) {
  *
  * @param Drupal\node\Node $node
  *   The node entity to be commented.
+ * @param int $pid
+ *   (optional) Some comments are replies to other comments. In those cases,
+ *   $pid is the parent comment's comment ID. Defaults to NULL.
  *
  * @return array
  *   The renderable array for the comment addition form.
