@@ -35,7 +35,7 @@ class BlockTemplateSuggestionsUnitTest extends UnitTestBase {
     $variables1['elements']['#block'] = $block1;
     $variables1['elements']['#children'] = '';
     template_preprocess_block($variables1);
-    $this->assertEqual($variables1['theme_hook_suggestions'], array('block__footer', 'block__block', 'block__block__underscore_test'), t('Found expected block suggestions for delta with underscore'));
+    $this->assertEqual($variables1['theme_hook_suggestions'], array('block__footer', 'block__block', 'block__block__underscore_test'), 'Found expected block suggestions for delta with underscore');
 
     // Define block delta with hyphens to be preprocessed. Hyphens should be
     // replaced with underscores.
@@ -49,8 +49,8 @@ class BlockTemplateSuggestionsUnitTest extends UnitTestBase {
     // Test adding a class to the block content.
     $variables2['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables2);
-    $this->assertEqual($variables2['theme_hook_suggestions'], array('block__footer', 'block__block', 'block__block__hyphen_test'), t('Hyphens (-) in block delta were replaced by underscore (_)'));
+    $this->assertEqual($variables2['theme_hook_suggestions'], array('block__footer', 'block__block', 'block__block__hyphen_test'), 'Hyphens (-) in block delta were replaced by underscore (_)');
     // Test that the default class and added class are available.
-    $this->assertEqual($variables2['content_attributes']['class'], array('test-class', 'content'), t('Default .content class added to block content_attributes_array'));
+    $this->assertEqual($variables2['content_attributes']['class'], array('test-class', 'content'), 'Default .content class added to block content_attributes_array');
   }
 }

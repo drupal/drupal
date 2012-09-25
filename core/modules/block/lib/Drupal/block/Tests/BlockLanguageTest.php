@@ -44,11 +44,11 @@ class BlockLanguageTest extends WebTestBase {
       'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('French', t('Language added successfully.'));
+    $this->assertText('French', 'Language added successfully.');
 
     // Check if the visibility setting is available.
     $this->drupalGet('admin/structure/block/add');
-    $this->assertField('langcodes[en]', t('Language visibility field is visible.'));
+    $this->assertField('langcodes[en]', 'Language visibility field is visible.');
 
     // Create a new block.
     $info_name = $this->randomString(10);
@@ -81,11 +81,11 @@ class BlockLanguageTest extends WebTestBase {
 
     // Check that a page has a block
     $this->drupalGet('', array('language' => language_load('en')));
-    $this->assertText($body, t('The body of the custom block appears on the page.'));
+    $this->assertText($body, 'The body of the custom block appears on the page.');
 
     // Check that a page doesn't has a block for the current language anymore
     $this->drupalGet('', array('language' => language_load('fr')));
-    $this->assertNoText($body, t('The body of the custom block does not appear on the page.'));
+    $this->assertNoText($body, 'The body of the custom block does not appear on the page.');
   }
 
   /**
@@ -103,7 +103,7 @@ class BlockLanguageTest extends WebTestBase {
       'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('French', t('Language added successfully.'));
+    $this->assertText('French', 'Language added successfully.');
 
     // Create a new block.
     $info_name = $this->randomString(10);
@@ -130,7 +130,7 @@ class BlockLanguageTest extends WebTestBase {
       ':module' => 'block',
       ':delta' => '1'
     ))->fetchField();
-    $this->assertTrue($count == 1, t('The block language visibility has an entry in the database.'));
+    $this->assertTrue($count == 1, 'The block language visibility has an entry in the database.');
 
     // Delete the language.
     $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
@@ -140,7 +140,7 @@ class BlockLanguageTest extends WebTestBase {
       ':module' => 'block',
       ':delta' => '1'
     ))->fetchField();
-    $this->assertTrue($count == 0, t('The block language visibility do not have an entry in the database.'));
+    $this->assertTrue($count == 0, 'The block language visibility do not have an entry in the database.');
   }
 
   /**
@@ -158,7 +158,7 @@ class BlockLanguageTest extends WebTestBase {
       'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('French', t('Language added successfully.'));
+    $this->assertText('French', 'Language added successfully.');
 
     // Create a new block.
     $info_name = $this->randomString(10);
@@ -185,7 +185,7 @@ class BlockLanguageTest extends WebTestBase {
       ':module' => 'block',
       ':delta' => '1'
     ))->fetchField();
-    $this->assertTrue($count == 1, t('The block language visibility has an entry in the database.'));
+    $this->assertTrue($count == 1, 'The block language visibility has an entry in the database.');
 
     // Delete the custom block.
     $this->drupalPost('admin/structure/block/manage/block/1/delete', array(), t('Delete'));
@@ -195,6 +195,6 @@ class BlockLanguageTest extends WebTestBase {
       ':module' => 'block',
       ':delta' => '1'
     ))->fetchField();
-    $this->assertTrue($count == 0, t('The block language visibility do not have an entry in the database.'));
+    $this->assertTrue($count == 0, 'The block language visibility do not have an entry in the database.');
   }
 }

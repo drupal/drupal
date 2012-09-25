@@ -44,7 +44,7 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
       $themes['admin'] = $admin_theme;
     }
     $count = db_query_range('SELECT 1 FROM {block} WHERE theme NOT IN (:themes)', 0, 1, array(':themes' => $themes))->fetchField();
-    $this->assertFalse($count, t('Only the default theme and the admin theme have blocks.'));
+    $this->assertFalse($count, 'Only the default theme and the admin theme have blocks.');
 
     // Populate list of all blocks for matching against new theme.
     $blocks = array();
@@ -63,7 +63,7 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
     $result = db_query('SELECT * FROM {block} WHERE theme = :theme', array(':theme' => $new_theme));
     foreach ($result as $block) {
       unset($block->theme, $block->bid);
-      $this->assertEqual($blocks[$block->module][$block->delta], $block, t('Block %name matched', array('%name' => $block->module . '-' . $block->delta)));
+      $this->assertEqual($blocks[$block->module][$block->delta], $block, format_string('Block %name matched', array('%name' => $block->module . '-' . $block->delta)));
     }
   }
 }

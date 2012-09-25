@@ -50,6 +50,6 @@ class BlockHtmlIdTest extends WebTestBase {
    */
   function testHtmlId() {
     $this->drupalGet('');
-    $this->assertRaw('block-block-test-test-html-id', t('HTML id for test block is valid.'));
+    $this->assertRaw('block-block-test-test-html-id', 'HTML id for test block is valid.');
   }
 }
