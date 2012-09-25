@@ -96,11 +96,16 @@ define('HTTP_REQUEST_TIMEOUT', -1);
  * @{
  * Constants that define each block's caching state.
  *
- * Modules specify the caching patterns for their blocks using binary
- * combinations of these constants in their hook_block_info().
- * DRUPAL_CACHE_PER_ROLE is used as a default when no caching pattern is
- * specified. Use DRUPAL_CACHE_CUSTOM to disable standard block cache and
- * implement
+ * Modules specify how their blocks can be cached in their hook_block_info()
+ * implementations. Caching can be turned off (DRUPAL_NO_CACHE), managed by the
+ * module declaring the block (DRUPAL_CACHE_CUSTOM), or managed by the core
+ * Block module. If the Block module is managing the cache, you can specify that
+ * the block is the same for every page and user (DRUPAL_CACHE_GLOBAL), or that
+ * it can change depending on the page (DRUPAL_CACHE_PER_PAGE) or by user
+ * (DRUPAL_CACHE_PER_ROLE or DRUPAL_CACHE_PER_USER). Page and user settings can
+ * be combined with a bitwise-binary or operator; for example,
+ * DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE means that the block can change
+ * depending on the user role or page it is on.
  *
  * The block cache is cleared in cache_clear_all(), and uses the same clearing
  * policy than page cache (node, comment, user, taxonomy added or updated...).
@@ -124,9 +129,8 @@ define('DRUPAL_NO_CACHE', -1);
 /**
  * The block is handling its own caching in its hook_block_view().
  *
- * From the perspective of the block cache system, this is equivalent to
- * DRUPAL_NO_CACHE. Useful when time based expiration is needed or a site uses
- * a node access which invalidates standard block cache.
+ * This setting is useful when time based expiration is needed or a site uses a
+ * node access which invalidates standard block cache.
  */
 define('DRUPAL_CACHE_CUSTOM', -2);
 
