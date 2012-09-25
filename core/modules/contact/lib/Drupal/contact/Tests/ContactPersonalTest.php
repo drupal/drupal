@@ -94,7 +94,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     $edit = array('contact_default_status' => FALSE);
     $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Setting successfully saved.');
     $this->drupalLogout();
 
     // Re-create our contacted user with personal contact forms disabled by
