@@ -51,20 +51,20 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->assertFieldByName('blocks[' . $block['module'] . '_' . $block['delta'] . '][region]', '', 'Aggregator feed block is available for positioning.');
     // Position it.
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
+    $this->assertText(t('The block settings have been updated.'), format_string('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('node');
-    $this->assertText(t($block['title']), t('Feed block is displayed on the page.'));
+    $this->assertText(t($block['title']), 'Feed block is displayed on the page.');
 
     // Find the expected read_more link.
     $href = 'aggregator/sources/' . $feed->fid;
     $links = $this->xpath('//a[@href = :href]', array(':href' => url($href)));
-    $this->assert(isset($links[0]), t('Link to href %href found.', array('%href' => $href)));
+    $this->assert(isset($links[0]), format_string('Link to href %href found.', array('%href' => $href)));
 
     // Visit that page.
     $this->drupalGet($href);
     $correct_titles = $this->xpath('//h1[normalize-space(text())=:title]', array(':title' => $feed->title));
-    $this->assertFalse(empty($correct_titles), t('Aggregator feed page is available and has the correct title.'));
+    $this->assertFalse(empty($correct_titles), 'Aggregator feed page is available and has the correct title.');
 
     // Set the number of news items to 0 to test that the block does not show
     // up.
@@ -95,7 +95,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     // Check for the presence of a pager.
     $this->drupalGet('aggregator/sources/' . $feed->fid);
     $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));
-    $this->assertTrue(!empty($elements), t('Individual source page contains a pager.'));
+    $this->assertTrue(!empty($elements), 'Individual source page contains a pager.');
 
     // Reset the number of items in rss.xml to the default value.
     $config->set('items.limit', 10);

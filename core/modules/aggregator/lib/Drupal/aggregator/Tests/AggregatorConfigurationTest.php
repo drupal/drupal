@@ -34,7 +34,7 @@ class AggregatorConfigurationTest extends AggregatorTestBase {
     $this->assertText(t('The configuration options have been saved.'));
 
     foreach ($edit as $name => $value) {
-      $this->assertFieldByName($name, $value, t('"@name" has correct default value.', array('@name' => $name)));
+      $this->assertFieldByName($name, $value, format_string('"@name" has correct default value.', array('@name' => $name)));
     }
   }
 }

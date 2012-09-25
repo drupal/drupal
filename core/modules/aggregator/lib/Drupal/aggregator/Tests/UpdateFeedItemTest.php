@@ -39,10 +39,10 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     );
 
     $this->drupalGet($edit['url']);
-    $this->assertResponse(array(200), t('URL !url is accessible', array('!url' => $edit['url'])));
+    $this->assertResponse(array(200), format_string('URL !url is accessible', array('!url' => $edit['url'])));
 
     $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
-    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
+    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
 
     $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchObject();
 
@@ -63,6 +63,6 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     aggregator_refresh($feed);
 
     $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
-    $this->assertTrue($before === $after, t('Publish timestamp of feed item was not updated (!before === !after)', array('!before' => $before, '!after' => $after)));
+    $this->assertTrue($before === $after, format_string('Publish timestamp of feed item was not updated (!before === !after)', array('!before' => $before, '!after' => $after)));
   }
 }

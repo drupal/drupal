@@ -46,10 +46,10 @@ abstract class AggregatorTestBase extends WebTestBase {
   function createFeed($feed_url = NULL) {
     $edit = $this->getFeedEditArray($feed_url);
     $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
-    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
+    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
 
     $feed = db_query("SELECT *  FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetch();
-    $this->assertTrue(!empty($feed), t('The feed found in database.'));
+    $this->assertTrue(!empty($feed), 'The feed found in database.');
     return $feed;
   }
 
@@ -61,7 +61,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    */
   function deleteFeed($feed) {
     $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->fid, array(), t('Delete'));
-    $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->title)), t('Feed deleted successfully.'));
+    $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->title)), 'Feed deleted successfully.');
   }
 
   /**
@@ -111,7 +111,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   function updateFeedItems(&$feed, $expected_count) {
     // First, let's ensure we can get to the rss xml.
     $this->drupalGet($feed->url);
-    $this->assertResponse(200, t('!url is reachable.', array('!url' => $feed->url)));
+    $this->assertResponse(200, format_string('!url is reachable.', array('!url' => $feed->url)));
 
     // Attempt to access the update link directly without an access token.
     $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
@@ -129,7 +129,7 @@ abstract class AggregatorTestBase extends WebTestBase {
       $feed->items[] = $item->iid;
     }
     $feed->item_count = count($feed->items);
-    $this->assertEqual($expected_count, $feed->item_count, t('Total items in feed equal to the total items in database (!val1 != !val2)', array('!val1' => $expected_count, '!val2' => $feed->item_count)));
+    $this->assertEqual($expected_count, $feed->item_count, format_string('Total items in feed equal to the total items in database (!val1 != !val2)', array('!val1' => $expected_count, '!val2' => $feed->item_count)));
   }
 
   /**
@@ -140,7 +140,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    */
   function removeFeedItems($feed) {
     $this->drupalPost('admin/config/services/aggregator/remove/' . $feed->fid, array(), t('Remove items'));
-    $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->title)), t('Feed items removed.'));
+    $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->title)), 'Feed items removed.');
   }
 
   /**

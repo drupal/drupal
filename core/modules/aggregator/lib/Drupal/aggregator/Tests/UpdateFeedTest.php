@@ -31,16 +31,16 @@ class UpdateFeedTest extends AggregatorTestBase {
         $edit[$same_field] = $feed->{$same_field};
       }
       $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->fid, $edit, t('Save'));
-      $this->assertRaw(t('The feed %name has been updated.', array('%name' => $edit['title'])), t('The feed %name has been updated.', array('%name' => $edit['title'])));
+      $this->assertRaw(t('The feed %name has been updated.', array('%name' => $edit['title'])), format_string('The feed %name has been updated.', array('%name' => $edit['title'])));
 
       // Check feed data.
       $this->assertEqual($this->getUrl(), url('admin/config/services/aggregator/', array('absolute' => TRUE)));
-      $this->assertTrue($this->uniqueFeed($edit['title'], $edit['url']), t('The feed is unique.'));
+      $this->assertTrue($this->uniqueFeed($edit['title'], $edit['url']), 'The feed is unique.');
 
       // Check feed source.
       $this->drupalGet('aggregator/sources/' . $feed->fid);
-      $this->assertResponse(200, t('Feed source exists.'));
-      $this->assertText($edit['title'], t('Page title'));
+      $this->assertResponse(200, 'Feed source exists.');
+      $this->assertText($edit['title'], 'Page title');
 
       // Delete feed.
       $feed->title = $edit['title']; // Set correct title so deleteFeed() will work.

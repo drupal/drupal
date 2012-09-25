@@ -26,15 +26,15 @@ class AddFeedTest extends AggregatorTestBase {
     $feed = $this->createFeed();
 
     // Check feed data.
-    $this->assertEqual($this->getUrl(), url('admin/config/services/aggregator/add/feed', array('absolute' => TRUE)), t('Directed to correct url.'));
-    $this->assertTrue($this->uniqueFeed($feed->title, $feed->url), t('The feed is unique.'));
+    $this->assertEqual($this->getUrl(), url('admin/config/services/aggregator/add/feed', array('absolute' => TRUE)), 'Directed to correct url.');
+    $this->assertTrue($this->uniqueFeed($feed->title, $feed->url), 'The feed is unique.');
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed->fid);
-    $this->assertResponse(200, t('Feed source exists.'));
-    $this->assertText($feed->title, t('Page title'));
+    $this->assertResponse(200, 'Feed source exists.');
+    $this->assertText($feed->title, 'Page title');
     $this->drupalGet('aggregator/sources/' . $feed->fid . '/categorize');
-    $this->assertResponse(200, t('Feed categorization page exists.'));
+    $this->assertResponse(200, 'Feed categorization page exists.');
 
     // Delete feed.
     $this->deleteFeed($feed);
