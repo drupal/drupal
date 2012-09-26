@@ -490,6 +490,35 @@ function field_associate_fields($module) {
 }
 
 /**
+ * Returns the PluginManager object for a given field plugin type.
+ *
+ * @param string $plugin_type
+ *   The plugin type. One of:
+ *   - field_type
+ *   - widget
+ *   - formatter
+ *   - storage
+ *
+ * @return Drupal\Component\Plugin\PluginManagerInterface
+ *   The PluginManager object.
+ */
+function field_get_plugin_manager($plugin_type) {
+  $plugin_types = &drupal_static(__FUNCTION__, array());
+
+  $classes = array(
+    'widget' => 'Drupal\field\Plugin\Type\Widget\WidgetPluginManager',
+  );
+
+  if (isset($classes[$plugin_type])) {
+    if (!isset($plugin_types[$plugin_type])) {
+      $plugin_types[$plugin_type] = new $classes[$plugin_type]();
+    }
+
+    return $plugin_types[$plugin_type];
+  }
+}
+
+/**
  * Helper function to get the default value for a field on an entity.
  *
  * @param $entity_type

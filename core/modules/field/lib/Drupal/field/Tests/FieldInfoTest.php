@@ -52,15 +52,6 @@ class FieldInfoTest extends FieldTestBase {
       $this->assertEqual($info[$f_key]['module'], 'field_test',  t("Formatter type field_test module appears"));
     }
 
-    $widget_info = field_test_field_widget_info();
-    $info = field_info_widget_types();
-    foreach ($widget_info as $w_key => $widget) {
-      foreach ($widget as $key => $val) {
-        $this->assertEqual($info[$w_key][$key], $val, t("Widget type $w_key key $key is $val"));
-      }
-      $this->assertEqual($info[$w_key]['module'], 'field_test',  t("Widget type field_test module appears"));
-    }
-
     $storage_info = field_test_field_storage_info();
     $info = field_info_storage_types();
     foreach ($storage_info as $s_key => $storage) {
@@ -208,9 +199,10 @@ class FieldInfoTest extends FieldTestBase {
     $this->assertIdentical($instance['settings'], $field_type['instance_settings'] , t('All expected instance settings are present.'));
 
     // Check that the default widget is used and expected settings are in place.
-    $this->assertIdentical($instance['widget']['type'], $field_type['default_widget'], t('Unavailable widget replaced with default widget.'));
-    $widget_type = field_info_widget_types($instance['widget']['type']);
-    $this->assertIdentical($instance['widget']['settings'], $widget_type['settings'] , t('All expected widget settings are present.'));
+    $widget = $instance->getWidget();
+    $this->assertIdentical($widget->getPluginId(), $field_type['default_widget'], t('Unavailable widget replaced with default widget.'));
+    $widget_type = $widget->getDefinition();
+    $this->assertIdentical($widget->getSettings(), $widget_type['settings'] , t('All expected widget settings are present.'));
 
     // Check that display settings are set for the 'default' mode.
     $display = $instance['display']['default'];
@@ -256,9 +248,9 @@ class FieldInfoTest extends FieldTestBase {
       $this->assertIdentical(field_info_instance_settings($type), $data['instance_settings'], "field_info_field_settings returns {$type}'s field instance settings");
     }
 
-    $info = field_test_field_widget_info();
-    foreach ($info as $type => $data) {
-      $this->assertIdentical(field_info_widget_settings($type), $data['settings'], "field_info_widget_settings returns {$type}'s widget settings");
+    foreach (array('test_field_widget', 'test_field_widget_multiple') as $type) {
+      $info = field_info_widget_types($type);
+      $this->assertIdentical(field_info_widget_settings($type), $info['settings'], "field_info_widget_settings returns {$type}'s widget settings");
     }
 
     $info = field_test_field_formatter_info();

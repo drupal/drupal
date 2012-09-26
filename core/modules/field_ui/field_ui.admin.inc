@@ -5,6 +5,8 @@
  * Administrative interface for custom field type creation.
  */
 
+use Drupal\field\FieldInstance;
+
 /**
  * Page callback: Lists all defined fields for quick reference.
  *
@@ -311,7 +313,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
   // Gather bundle information.
   $instances = field_info_instances($entity_type, $bundle);
   $field_types = field_info_field_types();
-  $widget_types = field_info_widget_types();
 
   $extra_fields = field_info_extra_fields($entity_type, $bundle, 'form');
 
@@ -349,6 +350,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
   foreach ($instances as $name => $instance) {
     $field = field_info_field($instance['field_name']);
     $admin_field_path = $admin_path . '/fields/' . $instance['field_name'];
+    $widget_definition = $instance->getWidget()->getDefinition();
+
     $table[$name] = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
       '#row_type' => 'field',
@@ -391,7 +394,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'widget_type' => array(
         '#type' => 'link',
-        '#title' => t($widget_types[$instance['widget']['type']]['label']),
+        '#title' => $widget_definition['label'],
         '#href' => $admin_field_path . '/widget-type',
         '#options' => array('attributes' => array('title' => t('Change widget type.'))),
       ),
@@ -1479,8 +1482,10 @@ function field_ui_widget_type_options($field_type = NULL, $by_label = FALSE) {
   if (!isset($options)) {
     $options = array();
     $field_types = field_info_field_types();
-    foreach (field_info_widget_types() as $name => $widget_type) {
-      foreach ($widget_type['field types'] as $widget_field_type) {
+    $widget_types = field_info_widget_types();
+    uasort($widget_types, 'drupal_sort_weight');
+    foreach ($widget_types as $name => $widget_type) {
+      foreach ($widget_type['field_types'] as $widget_field_type) {
         // Check that the field type exists.
         if (isset($field_types[$widget_field_type])) {
           $options[$widget_field_type][$name] = $widget_type['label'];
@@ -1661,7 +1666,7 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
  * @see field_ui_widget_type_form_submit()
  * @ingroup forms
  */
-function field_ui_widget_type_form($form, &$form_state, $instance) {
+function field_ui_widget_type_form($form, &$form_state, FieldInstance $instance) {
   drupal_set_title($instance['label']);
 
   $bundle = $instance['bundle'];
@@ -1670,7 +1675,7 @@ function field_ui_widget_type_form($form, &$form_state, $instance) {
 
   $field = field_info_field($field_name);
   $field_type = field_info_field_types($field['type']);
-  $widget_type = field_info_widget_types($instance['widget']['type']);
+  $widget_definition = $instance->getWidget()->getDefinition();
   $bundles = field_info_bundles();
   $bundle_label = $bundles[$entity_type][$bundle]['label'];
 
@@ -1689,7 +1694,7 @@ function field_ui_widget_type_form($form, &$form_state, $instance) {
     '#title' => t('Widget type'),
     '#required' => TRUE,
     '#options' => field_ui_widget_type_options($field['type']),
-    '#default_value' => $instance['widget']['type'],
+    '#default_value' => $instance->getWidget()->getPluginId(),
     '#description' => t('The type of form element you would like to present to the user when creating this field in the %type type.', array('%type' => $bundle_label)),
   );
 
@@ -1821,6 +1826,10 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
 
   $form['#field'] = $field;
   $form['#instance'] = $instance;
+  // Create an arbitrary entity object (used by the 'default value' widget).
+  $ids = (object) array('entity_type' => $instance['entity_type'], 'bundle' => $instance['bundle'], 'entity_id' => NULL);
+  $form['#entity'] = _field_create_entity_from_ids($ids);
+  $form['#entity']->field_ui_default_value = TRUE;
 
   if (!empty($field['locked'])) {
     $form['locked'] = array(
@@ -1910,12 +1919,9 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     $form['instance']['settings'] = $additions;
   }
 
-  // Add additional widget settings from the widget module.
-  $additions = module_invoke($widget_type['module'], 'field_widget_settings_form', $field, $instance);
-  if (is_array($additions)) {
-    $form['instance']['widget']['settings'] = $additions;
-    $form['instance']['widget']['active']['#value'] = 1;
-  }
+  // Add widget settings for the widget type.
+  $additions = $instance->getWidget()->settingsForm($form, $form_state);
+  $form['instance']['widget']['settings'] = $additions ? $additions : array('#type' => 'value', '#value' => array());
 
   // Add handling for default value if not provided by any other module.
   if (field_behaviors_widget('default value', $instance) == FIELD_BEHAVIOR_DEFAULT && empty($instance['default_value_function'])) {
@@ -2022,6 +2028,7 @@ function field_ui_field_edit_instance_pre_render($element) {
  */
 function field_ui_default_value_widget($field, $instance, &$form, &$form_state) {
   $field_name = $field['field_name'];
+  $entity = $form['#entity'];
 
   $element = array(
     '#type' => 'fieldset',
@@ -2035,13 +2042,15 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
     '#parents' => array(),
   );
 
-  // Insert the widget.
-  $items = $instance['default_value'];
+  // Adjust the instance definition used for the form element. We want a
+  // non-required input and no description.
   $instance['required'] = FALSE;
   $instance['description'] = '';
 
-  // @todo Allow multiple values (requires more work on 'add more' JS handler).
-  $element += field_default_form($instance['entity_type'], NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state, 0);
+  // Insert the widget. Since we do not use the "official" instance definition,
+  // the whole flow cannot use field_invoke_method().
+  $items = (array) $instance['default_value'];
+  $element += $instance->getWidget()->form($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
   return $element;
 }
@@ -2054,31 +2063,36 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
 function field_ui_field_edit_form_validate($form, &$form_state) {
   // Take the incoming values as the $instance definition, so that the 'default
   // value' gets validated using the instance settings being submitted.
-  $instance = $form_state['values']['instance'];
+  $instance = $form['#instance'];
   $field_name = $instance['field_name'];
+  $entity = $form['#entity'];
 
   if (isset($form['instance']['default_value_widget'])) {
     $element = $form['instance']['default_value_widget'];
 
+    // Extract the 'default value'.
+    $items = array();
+    $instance->getWidget()->submit($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+
+    // Grab the field definition from $form_state.
     $field_state = field_form_get_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state);
     $field = $field_state['field'];
 
-    // Extract the 'default value'.
-    $items = array();
-    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
-
-    // Validate the value and report errors.
+    // Validate the value.
     $errors = array();
     $function = $field['module'] . '_field_validate';
     if (function_exists($function)) {
       $function(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $errors);
     }
+
+    // Report errors.
     if (isset($errors[$field_name][LANGUAGE_NOT_SPECIFIED])) {
       // Store reported errors in $form_state.
       $field_state['errors'] = $errors[$field_name][LANGUAGE_NOT_SPECIFIED];
       field_form_set_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state, $field_state);
+
       // Assign reported errors to the correct form element.
-      field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+      $instance->getWidget()->flagErrors($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
     }
   }
 }
@@ -2089,12 +2103,12 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
  * @see field_ui_field_edit_form_validate().
  */
 function field_ui_field_edit_form_submit($form, &$form_state) {
-  $instance = $form_state['values']['instance'];
-  $field = $form_state['values']['field'];
+  $instance = $form['#instance'];
+  $field = $form['#field'];
+  $entity = $form['#entity'];
 
-  // Update any field settings that have changed.
-  $field_source = field_info_field($instance['field_name']);
-  $field = array_merge($field_source, $field);
+  // Merge incoming values into the field.
+  $field = array_merge($field, $form_state['values']['field']);
   try {
     field_update_field($field);
   }
@@ -2109,15 +2123,15 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
 
     // Extract field values.
     $items = array();
-    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
-    field_default_submit(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+    $instance->getWidget()->submit($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
     $instance['default_value'] = $items ? $items : NULL;
   }
 
-  // Retrieve the stored instance settings to merge with the incoming values.
-  $instance_source = field_read_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
-  $instance = array_merge($instance_source, $instance);
+  // Merge incoming values into the instance.
+  foreach ($form_state['values']['instance'] as $key => $value) {
+    $instance[$key] = $value;
+  }
   field_update_instance($instance);
 
   drupal_set_message(t('Saved %label configuration.', array('%label' => $instance['label'])));

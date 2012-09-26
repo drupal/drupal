@@ -337,9 +337,11 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
  */
 function field_test_entity_nested_form_validate($form, &$form_state) {
   $entity_1 = entity_create('test_entity', $form_state['values']);
+  field_attach_submit('test_entity', $entity_1, $form, $form_state);
   field_attach_form_validate('test_entity', $entity_1, $form, $form_state);
 
   $entity_2 = entity_create('test_entity', $form_state['values']['entity_2']);
+  field_attach_submit('test_entity', $entity_2, $form['entity_2'], $form_state);
   field_attach_form_validate('test_entity', $entity_2, $form['entity_2'], $form_state);
 }
 

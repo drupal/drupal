@@ -559,6 +559,14 @@ function _field_write_instance($instance, $update = FALSE) {
   $field = field_read_field($instance['field_name']);
   $field_type = field_info_field_types($field['type']);
 
+  // Temporary workaround to allow incoming $instance as arrays or classed
+  // objects.
+  // @todo remove once the external APIs have been converted to use
+  // FieldInstance objects.
+  if (is_object($instance) && get_class($instance) == 'Drupal\field\FieldInstance') {
+    $instance = $instance->getArray();
+  }
+
   // Set defaults.
   $instance += array(
     'settings' => array(),

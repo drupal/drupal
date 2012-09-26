@@ -689,13 +689,19 @@ function hook_field_is_empty($item, $field) {
  * Field API widgets specify how fields are displayed in edit forms. Fields of a
  * given @link field_types field type @endlink may be edited using more than one
  * widget. In this case, the Field UI module allows the site builder to choose
- * which widget to use. Widget types are defined by implementing
- * hook_field_widget_info().
+ * which widget to use.
+ *
+ * Widgets are Plugins managed by the
+ * Drupal\field\Plugin\Type\Widget\WidgetPluginManager class. A widget is
+ * implemented by providing a class that implements
+ * Drupal\field\Plugin\Type\Widget\WidgetInterface (in most cases, by
+ * subclassing Drupal\field\Plugin\Type\Widget\WidgetBase), and provides the
+ * proper annotation block.
  *
  * Widgets are @link forms_api_reference.html Form API @endlink
- * elements with additional processing capabilities. Widget hooks are typically
- * called by the Field Attach API during the creation of the field form
- * structure with field_attach_form().
+ * elements with additional processing capabilities. The methods of the
+ * WidgetInterface object are typically called by the Field Attach API during
+ * the creation of the field form structure with field_attach_form().
  *
  * @see field
  * @see field_types
@@ -703,179 +709,20 @@ function hook_field_is_empty($item, $field) {
  */
 
 /**
- * Expose Field API widget types.
- *
- * @return
- *   An array describing the widget types implemented by the module.
- *   The keys are widget type names. To avoid name clashes, widget type
- *   names should be prefixed with the name of the module that exposes them.
- *   The values are arrays describing the widget type, with the following
- *   key/value pairs:
- *   - label: The human-readable name of the widget type.
- *   - description: A short description for the widget type.
- *   - field types: An array of field types the widget supports.
- *   - settings: An array whose keys are the names of the settings available
- *     for the widget type, and whose values are the default values for those
- *     settings.
- *   - behaviors: (optional) An array describing behaviors of the widget, with
- *     the following elements:
- *     - multiple values: One of the following constants:
- *       - FIELD_BEHAVIOR_DEFAULT: (default) If the widget allows the input of
- *         one single field value (most common case). The widget will be
- *         repeated for each value input.
- *       - FIELD_BEHAVIOR_CUSTOM: If one single copy of the widget can receive
- *         several field values. Examples: checkboxes, multiple select,
- *         comma-separated textfield.
- *     - default value: One of the following constants:
- *       - FIELD_BEHAVIOR_DEFAULT: (default) If the widget accepts default
- *         values.
- *       - FIELD_BEHAVIOR_NONE: if the widget does not support default values.
- *   - weight: (optional) An integer to determine the weight of this widget
- *     relative to other widgets in the Field UI when selecting a widget for a
- *     given field instance.
- *
- * @see hook_field_widget_info_alter()
- * @see hook_field_widget_form()
- * @see hook_field_widget_form_alter()
- * @see hook_field_widget_WIDGET_TYPE_form_alter()
- * @see hook_field_widget_error()
- * @see hook_field_widget_settings_form()
- */
-function hook_field_widget_info() {
-  return array(
-    'text_textfield' => array(
-      'label' => t('Text field'),
-      'field types' => array('text'),
-      'settings' => array('size' => 60),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ),
-    ),
-    'text_textarea' => array(
-      'label' => t('Text area (multiple rows)'),
-      'field types' => array('text_long'),
-      'settings' => array('rows' => 5),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ),
-    ),
-    'text_textarea_with_summary' => array(
-      'label' => t('Text area with a summary'),
-      'field types' => array('text_with_summary'),
-      'settings' => array('rows' => 9, 'summary_rows' => 3),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ),
-      // As an advanced widget, force it to sink to the bottom of the choices.
-      'weight' => 2,
-    ),
-  );
-}
-
-/**
  * Perform alterations on Field API widget types.
  *
- * @param $info
- *   Array of informations on widget types exposed by hook_field_widget_info()
- *   implementations.
+ * @param array $info
+ *   An array of informations on existing widget types, as collected by the
+ *   annotation discovery mechanism.
  */
-function hook_field_widget_info_alter(&$info) {
+function hook_field_widget_info_alter(array &$info) {
   // Add a setting to a widget type.
   $info['text_textfield']['settings'] += array(
     'mymodule_additional_setting' => 'default value',
   );
 
   // Let a new field type re-use an existing widget.
-  $info['options_select']['field types'][] = 'my_field_type';
-}
-
-/**
- * Return the form for a single field widget.
- *
- * Field widget form elements should be based on the passed-in $element, which
- * contains the base form element properties derived from the field
- * configuration.
- *
- * Field API will set the weight, field name and delta values for each form
- * element. If there are multiple values for this field, the Field API will
- * invoke this hook as many times as needed.
- *
- * Note that, depending on the context in which the widget is being included
- * (regular entity form, field configuration form, advanced search form...),
- * the values for $field and $instance might be different from the "official"
- * definitions returned by field_info_field() and field_info_instance().
- * Examples: mono-value widget even if the field is multi-valued, non-required
- * widget even if the field is 'required'...
- *
- * Therefore, the FAPI element callbacks (such as #process, #element_validate,
- * #value_callback...) used by the widget cannot use the field_info_field()
- * or field_info_instance() functions to retrieve the $field or $instance
- * definitions they should operate on. The field_widget_field() and
- * field_widget_instance() functions should be used instead to fetch the
- * current working definitions from $form_state, where Field API stores them.
- *
- * Alternatively, hook_field_widget_form() can extract the needed specific
- * properties from $field and $instance and set them as ad-hoc
- * $element['#custom'] properties, for later use by its element callbacks.
- *
- * Other modules may alter the form element provided by this function using
- * hook_field_widget_form_alter().
- *
- * @param $form
- *   The form structure where widgets are being attached to. This might be a
- *   full form structure, or a sub-element of a larger form.
- * @param $form_state
- *   An associative array containing the current state of the form.
- * @param $field
- *   The field structure.
- * @param $instance
- *   The field instance.
- * @param $langcode
- *   The language associated with $items.
- * @param $items
- *   Array of default values for this field.
- * @param $delta
- *   The order of this item in the array of subelements (0, 1, 2, etc).
- * @param $element
- *   A form element array containing basic properties for the widget:
- *   - #entity_type: The name of the entity the field is attached to.
- *   - #bundle: The name of the field bundle the field is contained in.
- *   - #field_name: The name of the field.
- *   - #language: The language the field is being edited in.
- *   - #field_parents: The 'parents' space for the field in the form. Most
- *       widgets can simply overlook this property. This identifies the
- *       location where the field values are placed within
- *       $form_state['values'], and is used to access processing information
- *       for the field through the field_form_get_state() and
- *       field_form_set_state() functions.
- *   - #columns: A list of field storage columns of the field.
- *   - #title: The sanitized element label for the field instance, ready for
- *     output.
- *   - #description: The sanitized element description for the field instance,
- *     ready for output.
- *   - #required: A Boolean indicating whether the element value is required;
- *     for required multiple value fields, only the first widget's values are
- *     required.
- *   - #delta: The order of this item in the array of subelements; see $delta
- *     above.
- *
- * @return
- *   The form elements for a single widget for this field.
- *
- * @see field_widget_field()
- * @see field_widget_instance()
- * @see hook_field_widget_form_alter()
- * @see hook_field_widget_WIDGET_TYPE_form_alter()
- */
-function hook_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $element += array(
-    '#type' => $instance['widget']['type'],
-    '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
-  );
-  return $element;
+  $info['options_select']['field_types'][] = 'my_field_type';
 }
 
 /**
@@ -956,51 +803,25 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
  * of the hook involves reading from the database, it is highly recommended to
  * statically cache the information.
  *
- * @param $widget
+ * @param array $widget_properties
  *   The instance's widget properties.
- * @param $context
+ * @param array $context
  *   An associative array containing:
  *   - entity_type: The entity type; e.g., 'node' or 'user'.
- *   - entity: The entity object.
+ *   - bundle: The bundle: e.g., 'page' or 'article'.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
- *   - default: A boolean indicating whether the form is being shown as a dummy
- *     form to set default values.
  *
  * @see hook_field_widget_properties_ENTITY_TYPE_alter()
  */
-function hook_field_widget_properties_alter(&$widget, $context) {
+function hook_field_widget_properties_alter(array &$widget_properties, array $context) {
   // Change a widget's type according to the time of day.
   $field = $context['field'];
   if ($context['entity_type'] == 'node' && $field['field_name'] == 'field_foo') {
     $time = date('H');
-    $widget['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
+    $widget_properties['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
   }
 }
-
-/**
- * Flag a field-level validation error.
- *
- * @param $element
- *   An array containing the form element for the widget. The error needs to be
- *   flagged on the right sub-element, according to the widget's internal
- *   structure.
- * @param $error
- *   An associative array with the following key-value pairs, as returned by
- *   hook_field_validate():
- *   - error: the error code. Complex widgets might need to report different
- *     errors to different form elements inside the widget.
- *   - message: the human readable message to be displayed.
- * @param $form
- *   The form structure where field elements are attached to. This might be a
- *   full form structure, or a sub-element of a larger form.
- * @param $form_state
- *   An associative array containing the current state of the form.
- */
-function hook_field_widget_error($element, $error, $form, &$form_state) {
-  form_error($element, $error['message']);
-}
-
 
 /**
  * @} End of "defgroup field_widget".
@@ -2381,25 +2202,23 @@ function hook_field_extra_fields_display_alter(&$displays, $context) {
  * of the hook involves reading from the database, it is highly recommended to
  * statically cache the information.
  *
- * @param $widget
+ * @param array $widget_properties
  *   The instance's widget properties.
- * @param $context
+ * @param array $context
  *   An associative array containing:
  *   - entity_type: The entity type; e.g., 'node' or 'user'.
- *   - entity: The entity object.
+ *   - bundle: The bundle: e.g., 'page' or 'article'.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
- *   - default: A boolean indicating whether the form is being shown as a dummy
- *     form to set default values.
  *
  * @see hook_field_widget_properties_alter()
  */
-function hook_field_widget_properties_ENTITY_TYPE_alter(&$widget, $context) {
+function hook_field_widget_properties_ENTITY_TYPE_alter(array &$widget_properties, array $context) {
   // Change a widget's type according to the time of day.
   $field = $context['field'];
   if ($field['field_name'] == 'field_foo') {
     $time = date('H');
-    $widget['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
+    $widget_properties['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
   }
 }
 

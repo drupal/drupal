@@ -11,39 +11,6 @@
  */
 
 /**
- * Extracts field values from submitted form values.
- *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
- *   The entity for the operation.
- * @param $field
- *   The field structure for the operation.
- * @param $instance
- *   The instance structure for $field on $entity's bundle.
- * @param $langcode
- *   The language associated to $items.
- * @param $items
- *   The field values. This parameter is altered by reference to receive the
- *   incoming form values.
- * @param $form
- *   The form structure where field elements are attached to. This might be a
- *   full form structure, or a sub-element of a larger form.
- * @param $form_state
- *   The form state.
- */
-function field_default_extract_form_values($entity_type, $entity, $field, $instance, $langcode, &$items, $form, &$form_state) {
-  $path = array_merge($form['#parents'], array($field['field_name'], $langcode));
-  $key_exists = NULL;
-  $values = drupal_array_get_nested_value($form_state['values'], $path, $key_exists);
-  if ($key_exists) {
-    // Remove the 'value' of the 'add more' button.
-    unset($values['add_more']);
-    $items = $values;
-  }
-}
-
-/**
  * Generic field validation handler.
  *
  * Possible error codes:
@@ -84,13 +51,6 @@ function field_default_validate($entity_type, $entity, $field, $instance, $langc
       'message' => t('%name: this field cannot hold more than @count values.', array('%name' => $instance['label'], '@count' => $field['cardinality'])),
     );
   }
-}
-
-function field_default_submit($entity_type, $entity, $field, $instance, $langcode, &$items, $form, &$form_state) {
-  // Filter out empty values.
-  $items = _field_filter_items($field, $items);
-  // Reorder items to account for drag-n-drop reordering.
-  $items = _field_sort_items($field, $items);
 }
 
 /**

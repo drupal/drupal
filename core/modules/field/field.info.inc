@@ -5,6 +5,8 @@
  * Field Info API, providing information about available fields and field types.
  */
 
+use Drupal\field\FieldInstance;
+
 /**
  * @defgroup field_info Field Info API
  * @{
@@ -88,7 +90,6 @@ function _field_info_collate_types() {
     else {
       $info = array(
         'field types' => array(),
-        'widget types' => array(),
         'formatter types' => array(),
         'storage types' => array(),
       );
@@ -107,21 +108,6 @@ function _field_info_collate_types() {
         }
       }
       drupal_alter('field_info', $info['field types']);
-
-      // Populate widget types.
-      foreach (module_implements('field_widget_info') as $module) {
-        $widget_types = (array) module_invoke($module, 'field_widget_info');
-        foreach ($widget_types as $name => $widget_info) {
-          // Provide defaults.
-          $widget_info += array(
-            'settings' => array(),
-          );
-          $info['widget types'][$name] = $widget_info;
-          $info['widget types'][$name]['module'] = $module;
-        }
-      }
-      drupal_alter('field_widget_info', $info['widget types']);
-      uasort($info['widget types'], 'drupal_sort_weight');
 
       // Populate formatter types.
       foreach (module_implements('field_formatter_info') as $module) {
@@ -227,7 +213,7 @@ function _field_info_collate_fields() {
       foreach ($definitions['instances'] as $instance) {
         $field = $info['fields'][$instance['field_id']];
         $instance = _field_info_prepare_instance($instance, $field);
-        $info['instances'][$instance['entity_type']][$instance['bundle']][$instance['field_name']] = $instance;
+        $info['instances'][$instance['entity_type']][$instance['bundle']][$instance['field_name']] = new FieldInstance($instance);
         // Enrich field definitions with the list of bundles where they have
         // instances. NOTE: Deleted fields in $info['field_ids'] are not
         // enriched because all of their instances are deleted, too, and
@@ -310,8 +296,6 @@ function _field_info_prepare_instance($instance, $field) {
     $instance['default_value'] = NULL;
   }
 
-  $instance['widget'] = _field_info_prepare_instance_widget($field, $instance['widget']);
-
   foreach ($instance['display'] as $view_mode => $display) {
     $instance['display'][$view_mode] = _field_info_prepare_instance_display($field, $display);
   }
@@ -369,37 +353,6 @@ function _field_info_prepare_instance_display($field, $display) {
   }
 
   return $display;
-}
-
-/**
- * Prepares widget specifications for the current run-time context.
- *
- * @param $field
- *   The field structure for the instance.
- * @param $widget
- *   Widget specifications as found in $instance['widget'].
- */
-function _field_info_prepare_instance_widget($field, $widget) {
-  $field_type = field_info_field_types($field['type']);
-
-  // Fill in default values.
-  $widget += array(
-    'type' => $field_type['default_widget'],
-    'settings' => array(),
-    'weight' => 0,
-  );
-
-  $widget_type = field_info_widget_types($widget['type']);
-  // Fallback to default formatter if formatter type is not available.
-  if (!$widget_type) {
-    $widget['type'] = $field_type['default_widget'];
-    $widget_type = field_info_widget_types($widget['type']);
-  }
-  $widget['module'] = $widget_type['module'];
-  // Fill in default settings for the widget.
-  $widget['settings'] += field_info_widget_settings($widget['type']);
-
-  return $widget;
 }
 
 /**
@@ -496,27 +449,22 @@ function field_info_field_types($field_type = NULL) {
 }
 
 /**
- * Returns information about field widgets from hook_field_widget_info().
+ * Returns information about field widgets from AnnotatedClassDiscovery.
  *
- * @param $widget_type
+ * @param string $widget_type
  *   (optional) A widget type name. If omitted, all widget types will be
  *   returned.
  *
- * @return
- *   Either a single widget type description, as provided by
- *   hook_field_widget_info(), or an array of all existing widget types, keyed
- *   by widget type name.
+ * @return array
+ *   Either a single widget type description, as provided by class annotations,
+ *   or an array of all existing widget types, keyed by widget type name.
  */
 function field_info_widget_types($widget_type = NULL) {
-  $info = _field_info_collate_types();
-  $widget_types = $info['widget types'];
   if ($widget_type) {
-    if (isset($widget_types[$widget_type])) {
-      return $widget_types[$widget_type];
-    }
+    return field_get_plugin_manager('widget')->getDefinition($widget_type);
   }
   else {
-    return $widget_types;
+    return field_get_plugin_manager('widget')->getDefinitions();
   }
 }
 

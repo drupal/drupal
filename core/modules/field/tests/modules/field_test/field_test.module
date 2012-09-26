@@ -238,11 +238,6 @@ function field_test_field_widget_properties_alter(&$widget, $context) {
   if (in_array($context['entity_type'], array('node', 'comment')) && ($context['field']['field_name'] == 'alter_test_text')) {
     $widget['settings']['size'] = 42;
   }
-  // Set a message if this is for the form displayed to set default value for
-  // the field instance.
-  if ($context['default']) {
-    drupal_set_message('From hook_field_widget_properties_alter(): Default form is true.');
-  }
 }
 
 /**
@@ -261,11 +256,11 @@ function field_test_field_widget_properties_user_alter(&$widget, $context) {
 function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
   switch ($context['field']['field_name']) {
     case 'alter_test_text':
-      drupal_set_message('Field size: ' . $context['instance']['widget']['settings']['size']);
+      drupal_set_message('Field size: ' . $context['instance']->getWidget()->getSetting('size'));
       break;
 
     case 'alter_test_options':
-      drupal_set_message('Widget type: ' . $context['instance']['widget']['type']);
+      drupal_set_message('Widget type: ' . $context['instance']->getWidget()->getPluginId());
       break;
   }
   // Set a message if this is for the form displayed to set default value for

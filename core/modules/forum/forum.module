@@ -255,9 +255,8 @@ function forum_uri($forum) {
  */
 function _forum_node_check_node_type(Node $node) {
   // Fetch information about the forum field.
-  $field = field_info_instance('node', 'taxonomy_forums', $node->type);
-
-  return is_array($field);
+  $instance = field_info_instance('node', 'taxonomy_forums', $node->type);
+  return !empty($instance);
 }
 
 /**

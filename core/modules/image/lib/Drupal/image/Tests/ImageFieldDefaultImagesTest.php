@@ -56,12 +56,17 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $instance = field_info_instance('node', $field_name, 'article');
 
     // Add another instance with another default image to the page content type.
-    $instance2 = array_merge($instance, array(
+    $instance2 = array(
+      'field_name' => $field['field_name'],
+      'entity_type' => 'node',
       'bundle' => 'page',
+      'label' => $instance['label'],
+      'required' => $instance['required'],
       'settings' => array(
         'default_image' => $default_images['instance2']->fid,
       ),
-    ));
+      'widget' => $instance['widget'],
+    );
     field_create_instance($instance2);
     $instance2 = field_info_instance('node', $field_name, 'page');
 

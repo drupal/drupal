@@ -108,6 +108,95 @@ const FIELD_STORAGE_INSERT = 'insert';
  */
 
 /**
+ * Invoke a method on all the fields of a given entity.
+ *
+ * @todo Remove _field_invoke() and friends when field types and formatters are
+ * turned into plugins.
+ *
+ * @param string $method
+ *   The name of the method to invoke.
+ * @param Closure $target
+ *   A closure that receives an $instance object and returns the object on
+ *   which the method should be invoked.
+ * @param Drupal\Core\Entity\EntityInterface $entity
+ *   The fully formed $entity_type entity.
+ * @param mixed $a
+ *   A parameter for the invoked method. Defaults to NULL.
+ * @param mixed $b
+ *   A parameter for the invoked method. Defaults to NULL.
+ * @param array $options
+ *   An associative array of additional options, with the following keys:
+ *   - field_name: The name of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's
+ *     bundle. NOTE: This option is not compatible with the 'deleted' option;
+ *     the 'field_id' option should be used instead.
+ *   - field_id: The ID of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's'
+ *     bundles.
+ *   - deleted: If TRUE, the function will operate on deleted fields as well
+ *     as non-deleted fields. If unset or FALSE, only non-deleted fields are
+ *     operated on.
+ *   - langcode: A language code or an array of language codes keyed by field
+ *     name. It will be used to narrow down to a single value the available
+ *     languages to act on.
+ */
+function field_invoke_method($method, \Closure $target_closure, EntityInterface $entity, &$a = NULL, &$b = NULL, array $options = array()) {
+  // Merge default options.
+  $default_options = array(
+    'deleted' => FALSE,
+    'langcode' => NULL,
+  );
+  $options += $default_options;
+
+  $entity_type = $entity->entityType();
+  // Determine the list of instances to iterate on.
+  $instances = _field_invoke_get_instances($entity_type, $entity->bundle(), $options);
+
+  // Iterate through the instances and collect results.
+  $return = array();
+  foreach ($instances as $instance) {
+
+    // Let the closure determine the target object on which the method should be
+    // called.
+    $target = $target_closure($instance);
+
+    if (method_exists($target, $method)) {
+      $field = field_info_field_by_id($instance['field_id']);
+      $field_name = $field['field_name'];
+
+      // Determine the list of languages to iterate on.
+      $available_langcodes = field_available_languages($entity_type, $field);
+      $langcodes = _field_language_suggestion($available_langcodes, $options['langcode'], $field_name);
+
+      foreach ($langcodes as $langcode) {
+        $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+
+        $result = $target->$method($entity, $langcode, $items, $a, $b);
+
+        if (isset($result)) {
+          // For methods with array results, we merge results together.
+          // For methods with scalar results, we collect results in an array.
+          if (is_array($result)) {
+            $return = array_merge($return, $result);
+          }
+          else {
+            $return[] = $result;
+          }
+        }
+
+        // Populate $items back in the field values, but avoid replacing missing
+        // fields with an empty array (those are not equivalent on update).
+        if ($items !== array() || isset($entity->{$field_name}[$langcode])) {
+          $entity->{$field_name}[$langcode] = $items;
+        }
+      }
+    }
+  }
+
+  return $return;
+}
+
+/**
  * Invoke a field hook.
  *
  * @param $op
@@ -432,6 +521,20 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
 }
 
 /**
+ * Defines a 'target closure' for field_invoke_method().
+ *
+ * Used to invoke methods on an instance's widget.
+ *
+ * @return Closure
+ *   A 'target closure' for field_invoke_method().
+ */
+function _field_invoke_widget_target() {
+  return function ($instance) {
+    return $instance->getWidget();
+  };
+}
+
+/**
  * Add form elements for all fields for an entity to a form structure.
  *
  * The form elements for the entity's fields are added by reference as direct
@@ -543,7 +646,7 @@ function field_attach_form($entity_type, EntityInterface $entity, &$form, &$form
 
   // If no language is provided use the default site language.
   $options = array('langcode' => field_valid_language($langcode));
-  $form += (array) _field_invoke_default('form', $entity_type, $entity, $form, $form_state, $options);
+  $form += (array) field_invoke_method('form', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
 
   // Add custom weight handling.
   $form['#pre_render'][] = '_field_extra_fields_pre_render';
@@ -795,9 +898,6 @@ function field_attach_validate($entity_type, $entity) {
  *   An associative array containing the current state of the form.
  */
 function field_attach_form_validate($entity_type, EntityInterface $entity, $form, &$form_state) {
-  // Extract field values from submitted values.
-  _field_invoke_default('extract_form_values', $entity_type, $entity, $form, $form_state);
-
   // Perform field_level validation.
   try {
     field_attach_validate($entity_type, $entity);
@@ -812,7 +912,7 @@ function field_attach_form_validate($entity_type, EntityInterface $entity, $form
         field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
       }
     }
-    _field_invoke_default('form_errors', $entity_type, $entity, $form, $form_state);
+    field_invoke_method('flagErrors', _field_invoke_widget_target(), $entity, $form, $form_state);
   }
 }
 
@@ -836,9 +936,7 @@ function field_attach_form_validate($entity_type, EntityInterface $entity, $form
  */
 function field_attach_submit($entity_type, EntityInterface $entity, $form, &$form_state) {
   // Extract field values from submitted values.
-  _field_invoke_default('extract_form_values', $entity_type, $entity, $form, $form_state);
-
-  _field_invoke_default('submit', $entity_type, $entity, $form, $form_state);
+  field_invoke_method('submit', _field_invoke_widget_target(), $entity, $form, $form_state);
 
   // Let other modules act on submitting the entity.
   // Avoid module_invoke_all() to let $form_state be taken by reference.
