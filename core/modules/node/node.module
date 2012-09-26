@@ -679,21 +679,19 @@ function node_field_extra_fields() {
     // bundle has multilingual support.
     // Visibility of the ordering of the language selector is the same as on the
     // node/add form, i.e. node_type_language_hidden_TYPE variable.
-    if ($module_language_enabled) {
-      if (!variable_get('node_type_language_hidden_' . $bundle->type, TRUE)) {
-        $extra['node'][$bundle->type]['form']['language'] = array(
-          'label' => t('Language'),
-          'description' => $description,
-          'weight' => 0,
-        );
-      }
-      $extra['node'][$bundle->type]['display']['language'] = array(
+    if ($module_language_enabled && !variable_get('node_type_language_hidden_' . $bundle->type, TRUE)) {
+      $extra['node'][$bundle->type]['form']['language'] = array(
         'label' => t('Language'),
         'description' => $description,
         'weight' => 0,
-        'visible' => FALSE,
       );
     }
+    $extra['node'][$bundle->type]['display']['language'] = array(
+      'label' => t('Language'),
+      'description' => $description,
+      'weight' => 0,
+      'visible' => FALSE,
+    );
   }
 
   return $extra;
@@ -1172,18 +1170,6 @@ function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
   // Populate $node->content with a render() array.
   node_build_content($node, $view_mode, $langcode);
 
-  // Add language text element on node view if language module is enabled.
-  if (module_exists('language')) {
-    $node->content['language'] = array(
-      '#type' => 'item',
-      '#title' => t('Language'),
-      '#markup' => language_name($langcode),
-      '#weight' => 0,
-      '#prefix' => '<div id="field-language-display">',
-      '#suffix' => '</div>'
-    );
-  }
-
   $build = $node->content;
   // We don't need duplicate rendering info in node->content.
   unset($node->content);
@@ -1284,6 +1270,16 @@ function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
     '#theme' => 'links__node__node',
     '#links' => $links,
     '#attributes' => array('class' => array('links', 'inline')),
+  );
+
+  // Add Language field text element to node render array.
+  $node->content['language'] = array(
+    '#type' => 'item',
+    '#title' => t('Language'),
+    '#markup' => language_name($langcode),
+    '#weight' => 0,
+    '#prefix' => '<div id="field-language-display">',
+    '#suffix' => '</div>'
   );
 
   // Allow modules to make their own additions to the node.
