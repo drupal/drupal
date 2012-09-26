@@ -7,17 +7,19 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\simpletest\WebTestBase;
-use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageController;
 use Drupal\views\ViewStorage;
-use Drupal\views\ViewDisplay;
 use Drupal\views\Plugin\views\display\Page;
+use Drupal\views\Plugin\views\display\DefaultDisplay;
+use Drupal\views\Plugin\views\display\Feed;
 
 /**
- * Tests the functionality of the ViewStorageController.
+ * Tests the functionality of ViewStorage and ViewStorageController.
+ *
+ * @see Drupal\views\ViewStorage
+ * @see Drupal\views\ViewStorageController
  */
-class ViewStorageTest extends WebTestBase {
+class ViewStorageTest extends ViewTestBase {
 
   /**
    * Properties that should be stored in the configuration.
@@ -56,7 +58,7 @@ class ViewStorageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'node', 'search', 'comment', 'taxonomy');
+  public static $modules = array('node', 'search', 'comment', 'taxonomy');
 
   public static function getInfo() {
     return array(
@@ -141,7 +143,7 @@ class ViewStorageTest extends WebTestBase {
     // Check that all of these machine names match.
     $this->assertIdentical(array_keys($all_configuration_entities), array_map($prefix_map, $all_config), 'All loaded elements match.');
 
-    // Make sure that loaded default views get a uuid.
+    // Make sure that loaded default views get a UUID.
     $view = views_get_view('frontpage');
     $this->assertTrue($view->storage->uuid());
   }
@@ -175,11 +177,11 @@ class ViewStorageTest extends WebTestBase {
       $this->assertIdentical($values[$property], $created->{$property}, format_string('Property value: @property matches configuration value.', array('@property' => $property)));
     }
 
-    // Check the uuid of the loaded View.
+    // Check the UUID of the loaded View.
     $created->set('name', 'glossary_new');
     $created->save();
     $created_loaded = $this->loadView('glossary_new');
-    $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created uuid has been saved correctly.');
+    $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');
   }
 
   /**
@@ -342,12 +344,12 @@ class ViewStorageTest extends WebTestBase {
     $random_title = $this->randomName();
 
     $id = $view->addDisplay('page', $random_title);
-    $this->assertEqual($id, 'page_1', format_string('Make sure the first display (%id_new) has the expected id (%id)', array('%id_new' => $id, '%id' => 'page_1')));
+    $this->assertEqual($id, 'page_1', format_string('Make sure the first display (%id_new) has the expected ID (%id)', array('%id_new' => $id, '%id' => 'page_1')));
     $this->assertEqual($view->display[$id]['display_title'], $random_title);
 
     $random_title = $this->randomName();
     $id = $view->addDisplay('page', $random_title);
-    $this->assertEqual($id, 'page_2', format_string('Make sure the second display (%id_new) has the expected id (%id)', array('%id_new' => $id, '%id' => 'page_2')));
+    $this->assertEqual($id, 'page_2', format_string('Make sure the second display (%id_new) has the expected ID (%id)', array('%id_new' => $id, '%id' => 'page_2')));
     $this->assertEqual($view->display[$id]['display_title'], $random_title);
 
     $id = $view->addDisplay('page');
@@ -356,29 +358,29 @@ class ViewStorageTest extends WebTestBase {
     // Tests Drupal\views\ViewStorage::generateDisplayId().
     // @todo Sadly this method is not public so it cannot be tested.
     // $view = $this->controller->create(array());
-    // $this->assertEqual($view->generateDisplayId('default'), 'default', 'The plugin id for default is always default.');
-    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_1', 'The generated id for the first instance of a plugin type should have an suffix of _1.');
+    // $this->assertEqual($view->generateDisplayId('default'), 'default', 'The plugin ID for default is always default.');
+    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_1', 'The generated ID for the first instance of a plugin type should have an suffix of _1.');
     // $view->addDisplay('feed', 'feed title');
-    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_2', 'The generated id for the first instance of a plugin type should have an suffix of _2.');
+    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_2', 'The generated ID for the first instance of a plugin type should have an suffix of _2.');
 
     // Tests Drupal\views\ViewStorage::newDisplay().
     $view = $this->controller->create(array());
     $view->newDisplay('default');
 
     $display = $view->newDisplay('page');
-    $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->getExecutable()->displayHandlers['page_1'] instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->getExecutable()->displayHandlers['page_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+    $this->assertTrue($display instanceof Page);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_1'] instanceof Page);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_1']->default_display instanceof DefaultDisplay);
 
     $display = $view->newDisplay('page');
-    $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->getExecutable()->displayHandlers['page_2'] instanceof \Drupal\views\Plugin\views\display\Page);
-    $this->assertTrue($view->getExecutable()->displayHandlers['page_2']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+    $this->assertTrue($display instanceof Page);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_2'] instanceof Page);
+    $this->assertTrue($view->getExecutable()->displayHandlers['page_2']->default_display instanceof DefaultDisplay);
 
     $display = $view->newDisplay('feed');
-    $this->assertTrue($display instanceof \Drupal\views\Plugin\views\display\Feed);
-    $this->assertTrue($view->getExecutable()->displayHandlers['feed_1'] instanceof \Drupal\views\Plugin\views\display\Feed);
-    $this->assertTrue($view->getExecutable()->displayHandlers['feed_1']->default_display instanceof \Drupal\views\Plugin\views\display\DefaultDisplay);
+    $this->assertTrue($display instanceof Feed);
+    $this->assertTrue($view->getExecutable()->displayHandlers['feed_1'] instanceof Feed);
+    $this->assertTrue($view->getExecutable()->displayHandlers['feed_1']->default_display instanceof DefaultDisplay);
 
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));
@@ -427,6 +429,45 @@ class ViewStorageTest extends WebTestBase {
     $view->setItem($display_id, 'field', $id1, $item);
     $this->assertEqual($view->getItem($display_id, 'field', 'id'), $item);
     $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+  }
+
+  /**
+   * Tests the createDuplicate() View method.
+   */
+  public function testCreateDuplicate() {
+    $view = views_get_view('archive');
+    $copy = $view->createDuplicate();
+
+    $this->assertTrue($copy instanceof ViewStorage, 'The copied object is a View.');
+
+    // Check that the original view and the copy have different UUIDs.
+    $this->assertNotIdentical($view->storage->uuid(), $copy->uuid(), 'The copied view has a new UUID.');
+
+    // Check the 'name' (ID) is using the View objects default value ('') as it
+    // gets unset.
+    $this->assertIdentical($copy->id(), '', 'The ID has been reset.');
+
+    // Check the other properties.
+    // @todo Create a reusable property on the base test class for these?
+    $config_properties = array(
+      'disabled',
+      'api_version',
+      'description',
+      'tag',
+      'base_table',
+      'human_name',
+      'core',
+    );
+
+    foreach ($config_properties as $property) {
+      $this->assertIdentical($view->storage->{$property}, $copy->{$property}, format_string('@property property is identical.', array('@property' => $property)));
+    }
+
+    // Check the displays are the same.
+    foreach ($view->storage->display as $id => $display) {
+      // assertIdentical will not work here.
+      $this->assertEqual($display, $copy->display[$id], format_string('The @display display has been copied correctly.', array('@display' => $id)));
+    }
   }
 
 }
