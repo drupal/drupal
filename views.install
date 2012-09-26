@@ -18,105 +18,6 @@ function views_install() {
  * Implements hook_schema().
  */
 function views_schema() {
-  $schema['views_view'] = array(
-    'description' => 'Stores the general data for a view.',
-    'fields' => array(
-      'vid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The view ID of the field, defined by the database.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => '128',
-        'default' => '',
-        'not null' => TRUE,
-        'description' => 'The unique name of the view. This is the primary field views are loaded from, and is used so that views may be internal and not necessarily in the database. May only be alphanumeric characters plus underscores.',
-      ),
-      'human_name' => array(
-        'type' => 'varchar',
-        'length' => '255',
-        'default' => '',
-        'description' => 'A human readable name used to be displayed in the admin interface',
-      ),
-      'description' => array(
-        'type' => 'varchar',
-        'length' => '255',
-        'default' => '',
-        'description' => 'A description of the view for the admin interface.',
-      ),
-      'tag' => array(
-        'type' => 'varchar',
-        'length' => '255',
-        'default' => '',
-        'description' => 'A tag used to group/sort views in the admin interface',
-      ),
-      'base_table' => array(
-        'type' => 'varchar',
-        'length' => '64',
-        'default' => '',
-        'not null' => TRUE,
-        'description' => 'What table this view is based on, such as node, user, comment, or term.',
-      ),
-      'core' => array(
-        'type' => 'int',
-        'default' => 0,
-        'description' => 'Stores the drupal core version of the view.',
-      ),
-    ),
-    'primary key' => array('vid'),
-    'unique keys' => array('name' => array('name')),
-  );
-
-  $schema['views_display'] = array(
-    'description' => 'Stores information about each display attached to a view.',
-    'fields' => array(
-      'vid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The view this display is attached to.',
-      ),
-      'id' => array(
-        'type' => 'varchar',
-        'length' => '64',
-        'default' => '',
-        'not null' => TRUE,
-        'description' => 'An identifier for this display; usually generated from the display_plugin, so should be something like page or page_1 or block_2, etc.',
-      ),
-      'display_title' => array(
-        'type' => 'varchar',
-        'length' => '64',
-        'default' => '',
-        'not null' => TRUE,
-        'description' => 'The title of the display, viewable by the administrator.',
-      ),
-      'display_plugin' => array(
-        'type' => 'varchar',
-        'length' => '64',
-        'default' => '',
-        'not null' => TRUE,
-        'description' => 'The type of the display. Usually page, block or embed, but is pluggable so may be other things.',
-      ),
-      'position' => array(
-        'type' => 'int',
-        'default' => 0,
-        'description' => 'The order in which this display is loaded.',
-      ),
-      'display_options' => array(
-        'type' => 'text',
-        'size' => 'big',
-        'description' => 'A serialized array of options for this display; it contains options that are generally only pertinent to that display plugin type.',
-        'serialize' => TRUE,
-        'serialized default' => 'a:0:{}',
-      ),
-    ),
-    'primary key' => array('vid', 'id'),
-    'indexes' => array('vid' => array('vid', 'position')),
-  );
-
   $schema['cache_views_info'] = drupal_get_schema_unprocessed('system', 'cache');
 
   $schema['cache_views_results'] = drupal_get_schema_unprocessed('system', 'cache');
@@ -205,4 +106,12 @@ function views_update_8000() {
 function views_update_8001() {
   db_rename_table('cache_views', 'cache_views_info');
   db_rename_table('cache_views_data', 'cache_views_results');
+}
+
+/**
+ * Remove the {views_view} and {views_display} table.
+ */
+function views_update_8002() {
+  db_drop_table('views_view');
+  db_drop_table('views_display');
 }
