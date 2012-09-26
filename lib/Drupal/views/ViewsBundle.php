@@ -21,8 +21,16 @@ class ViewsBundle extends Bundle {
    */
   public function build(ContainerBuilder $container) {
     foreach (ViewExecutable::getPluginTypes() as $type) {
-      $container->register("plugin.manager.views.$type", 'Drupal\views\Plugin\Type\ViewsPluginManager')
-        ->addArgument($type);
+      if ($type == 'join') {
+        $container->register('plugin.manager.views.join', 'Drupal\views\Plugin\Type\JoinManager');
+      }
+      elseif ($type == 'wizard') {
+        $container->register('plugin.manager.views.wizard', 'Drupal\views\Plugin\Type\WizardManager');
+      }
+      else {
+        $container->register("plugin.manager.views.$type", 'Drupal\views\Plugin\Type\PluginManager')
+          ->addArgument($type);
+      }
     }
   }
 
