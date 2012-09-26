@@ -80,7 +80,7 @@ function config_test_config_import_delete($name, $new_config, $old_config) {
 function config_test_entity_info() {
   $types['config_test'] = array(
     'label' => 'Test configuration',
-    'controller class' => 'Drupal\config\ConfigStorageController',
+    'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
     'entity class' => 'Drupal\config_test\ConfigTest',
     'uri callback' => 'config_test_uri',
     'config prefix' => 'config_test.dynamic',
@@ -177,7 +177,7 @@ function config_test_delete($id) {
  */
 function config_test_list_page() {
   $entities = entity_load_multiple('config_test');
-  uasort($entities, 'Drupal\config\ConfigEntityBase::sort');
+  uasort($entities, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
 
   $rows = array();
   foreach ($entities as $config_test) {

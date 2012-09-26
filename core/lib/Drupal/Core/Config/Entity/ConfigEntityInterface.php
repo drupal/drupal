@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\config\ConfigEntityInterface.
+ * Definition of Drupal\Core\Config\Entity\ConfigEntityInterface.
  */
 
-namespace Drupal\config;
+namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
 

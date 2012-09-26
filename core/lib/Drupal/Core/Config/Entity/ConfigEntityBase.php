@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\config\ConfigEntityBase.
+ * Definition of Drupal\Core\Config\Entity\ConfigEntityBase.
  */
 
-namespace Drupal\config;
+namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\Entity\Entity;
 

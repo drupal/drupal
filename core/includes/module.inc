@@ -468,6 +468,9 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       // Allow modules to react prior to the installation of a module.
       module_invoke_all('modules_preinstall', array($module));
 
+      // Clear the entity info cache before importing new configuration.
+      entity_info_cache_clear();
+
       // Now install the module if necessary.
       if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
         drupal_install_schema($module);
@@ -494,7 +497,6 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
 
-      entity_info_cache_clear();
       // Allow modules to react prior to the enabling of a module.
       module_invoke_all('modules_preenable', array($module));
 

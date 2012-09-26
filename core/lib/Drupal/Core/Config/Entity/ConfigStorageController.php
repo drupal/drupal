@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\config\ConfigStorageController.
+ * Definition of Drupal\Core\Config\Entity\ConfigStorageController.
  */
 
-namespace Drupal\config;
+namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityInterface;
@@ -35,7 +35,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   /**
    * Additional arguments to pass to hook_TYPE_load().
    *
-   * Set before calling Drupal\config\ConfigStorageController::attachLoad().
+   * Set before calling Drupal\Core\Config\Entity\ConfigStorageController::attachLoad().
    *
    * @var array
    */

@@ -7,7 +7,7 @@
 
 namespace Drupal\config_test;
 
-use Drupal\config\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 
 /**
  * Defines the ConfigTest configuration entity.
