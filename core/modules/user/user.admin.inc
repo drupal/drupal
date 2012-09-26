@@ -145,10 +145,10 @@ function user_admin_account() {
 
   $header = array(
     'username' => array('data' => t('Username'), 'field' => 'u.name'),
-    'status' => array('data' => t('Status'), 'field' => 'u.status'),
-    'roles' => array('data' => t('Roles')),
-    'member_for' => array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc'),
-    'access' => array('data' => t('Last access'), 'field' => 'u.access'),
+    'status' => array('data' => t('Status'), 'field' => 'u.status', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
+    'roles' => array('data' => t('Roles'), 'class' => array(RESPONSIVE_PRIORITY_LOW)),
+    'member_for' => array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
+    'access' => array('data' => t('Last access'), 'field' => 'u.access', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
     'operations' => array('data' => t('Operations')),
   );
 

@@ -1,4 +1,3 @@
-
 /**
  * @file
  * Stark layout method
@@ -91,5 +90,23 @@ img {
   #sidebar-second {
     float: right; /* LTR */
     width: 20%;
+  }
+}
+
+/**
+ * Responsive tables.
+ */
+@media screen and (max-width:28.125em) { /* 450px */
+  th.priority-low,
+  td.priority-low,
+  th.priority-medium,
+  td.priority-medium {
+    display: none;
+  }
+}
+@media screen and (max-width:45em) { /* 720px */
+  th.priority-low,
+  td.priority-low {
+    display: none;
   }
 }

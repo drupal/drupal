@@ -50,6 +50,7 @@ Drupal.tableDrag = function (table, tableSettings) {
   var $table = $(table);
 
   // Required object variables.
+  this.$table = $(table);
   this.table = table;
   this.tableSettings = tableSettings;
   this.dragObject = null; // Used to hold information about a current drag operation.
@@ -143,7 +144,8 @@ Drupal.tableDrag = function (table, tableSettings) {
  * 'Drupal.tableDrag.showWeight' localStorage value.
  */
 Drupal.tableDrag.prototype.initColumns = function () {
-  var $table = $(this.table), hidden, cell, columnIndex;
+  var $table = this.$table;
+  var hidden, cell, columnIndex;
   for (var group in this.tableSettings) {
     if (this.tableSettings.hasOwnProperty(group)) { // Find the first field in this group.
       for (var d in this.tableSettings[group]) {

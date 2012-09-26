@@ -1,4 +1,3 @@
-
 /**
  * Generic elements.
  */
@@ -71,11 +70,6 @@ ul.primary {
 /**
  * Page layout.
  */
-#page {
-  padding: 20px 0 40px 0;
-  margin-left: 40px;
-  margin-right: 40px;
-}
 ul.links li,
 ul.inline li {
   padding-left: 1em;

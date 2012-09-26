@@ -1,4 +1,3 @@
-
 /**
  * Generic elements.
  */
@@ -314,12 +313,24 @@ ul.secondary li.active a.active {
  * Page layout.
  */
 #page {
-  padding: 20px 0 40px 0; /* LTR */
-  margin-right: 40px; /* LTR */
-  margin-left: 40px; /* LTR */
   background: #fff;
-  position: relative;
   color: #333;
+  margin-left: 0.8125em;
+  margin-right: 0.8125em;
+  padding: 20px 0 40px 0;
+  position: relative;
+}
+@media screen and (min-width:28.125em) { /* 450px */
+  #page {
+    margin-left: 1.25em;
+    margin-right: 1.25em;
+  }
+}
+@media screen and (min-width:45em) { /* 720px */
+  #page {
+    margin-left: 2.5em;
+    margin-right: 2.5em;
+  }
 }
 ul.links li,
 ul.inline li {
@@ -476,6 +487,23 @@ tr td:last-child {
 }
 
 
+/**
+ * Responsive tables.
+ */
+@media screen and (max-width:28.125em) { /* 450px */
+  th.priority-low,
+  td.priority-low,
+  th.priority-medium,
+  td.priority-medium {
+    display: none;
+  }
+}
+@media screen and (max-width:45em) { /* 720px */
+  th.priority-low,
+  td.priority-low {
+    display: none;
+  }
+}
 /**
  * Fieldsets.
  *

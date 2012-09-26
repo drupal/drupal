@@ -1,4 +1,3 @@
-
 /* ---------- Overall Specifications ---------- */
 
 body {
@@ -1706,5 +1705,23 @@ div.admin-panel .description {
   #triptych .block {
     margin-bottom: 2em;
     padding-bottom: 2em;
+  }
+}
+
+/**
+ * Responsive tables.
+ */
+@media screen and (max-width:28.125em) { /* 450px */
+  th.helpful,
+  td.helpful,
+  th.priority-medium,
+  td.priority-medium {
+    display: none;
+  }
+}
+@media screen and (max-width:45em) { /* 720px */
+  th.helpful,
+  td.helpful {
+    display: none;
   }
 }

@@ -33,11 +33,11 @@ function dblog_overview() {
 
   $header = array(
     '', // Icon column.
-    array('data' => t('Type'), 'field' => 'w.type'),
-    array('data' => t('Date'), 'field' => 'w.wid', 'sort' => 'desc'),
+    array('data' => t('Type'), 'field' => 'w.type', 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
+    array('data' => t('Date'), 'field' => 'w.wid', 'sort' => 'desc', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
     t('Message'),
-    array('data' => t('User'), 'field' => 'u.name'),
-    array('data' => t('Operations')),
+    array('data' => t('User'), 'field' => 'u.name', 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
+    array('data' => t('Operations'), 'class' => array(RESPONSIVE_PRIORITY_LOW)),
   );
 
   $query = db_select('watchdog', 'w')

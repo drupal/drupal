@@ -436,14 +436,32 @@ function node_admin_nodes() {
 
   // Build the sortable table header.
   $header = array(
-    'title' => array('data' => t('Title'), 'field' => 'n.title'),
-    'type' => array('data' => t('Content type'), 'field' => 'n.type'),
-    'author' => t('Author'),
-    'status' => array('data' => t('Status'), 'field' => 'n.status'),
-    'changed' => array('data' => t('Updated'), 'field' => 'n.changed', 'sort' => 'desc')
+    'title' => array(
+      'data' => t('Title'),
+      'field' => 'n.title',
+    ),
+    'type' => array(
+      'data' => t('Content type'),
+      'field' => 'n.type',
+      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
+    ),
+    'author' => array(
+      'data' => t('Author'),
+      'class' => array(RESPONSIVE_PRIORITY_LOW),
+    ),
+    'status' => array(
+      'data' => t('Status'),
+      'field' => 'n.status',
+    ),
+    'changed' => array(
+      'data' => t('Updated'),
+      'field' => 'n.changed',
+      'sort' => 'desc',
+      'class' => array(RESPONSIVE_PRIORITY_LOW)
+    ,)
   );
   if ($multilingual) {
-    $header['language_name'] = array('data' => t('Language'), 'field' => 'n.langcode');
+    $header['language_name'] = array('data' => t('Language'), 'field' => 'n.langcode', 'class' => array(RESPONSIVE_PRIORITY_LOW));
   }
   $header['operations'] = array('data' => t('Operations'));
 
