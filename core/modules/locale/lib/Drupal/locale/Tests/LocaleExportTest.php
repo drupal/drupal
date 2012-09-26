@@ -40,13 +40,9 @@ class LocaleExportTest extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
 
-    // Set the translation file directory to something writable.
-    $destination = 'translations://';
-    file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
-
-    // Copy test po files to the same directory.
-    file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.de.po', $destination, FILE_EXISTS_REPLACE);
-    file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.xx.po', $destination, FILE_EXISTS_REPLACE);
+    // Copy test po files to the translations directory.
+    file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.de.po', 'translations://', FILE_EXISTS_REPLACE);
+    file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.xx.po', 'translations://', FILE_EXISTS_REPLACE);
   }
 
   /**

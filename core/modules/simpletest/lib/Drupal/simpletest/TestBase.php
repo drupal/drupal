@@ -725,11 +725,13 @@ abstract class TestBase {
     $this->public_files_directory = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
     $this->private_files_directory = $this->public_files_directory . '/private';
     $this->temp_files_directory = $this->private_files_directory . '/temp';
+    $this->translation_files_directory = $this->public_files_directory . '/translations';
 
     // Create the directories
     file_prepare_directory($this->public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     file_prepare_directory($this->private_files_directory, FILE_CREATE_DIRECTORY);
     file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->translation_files_directory, FILE_CREATE_DIRECTORY);
     $this->generatedTestFiles = FALSE;
 
     // Create and set new configuration directories. The child site

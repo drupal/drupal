@@ -698,6 +698,7 @@ abstract class WebTestBase extends TestBase {
     variable_set('file_public_path', $this->public_files_directory);
     variable_set('file_private_path', $this->private_files_directory);
     variable_set('file_temporary_path', $this->temp_files_directory);
+    variable_set('locale_translate_file_directory', $this->translation_files_directory);
 
     // Set 'parent_profile' of simpletest to add the parent profile's
     // search path to the child site's search paths.
