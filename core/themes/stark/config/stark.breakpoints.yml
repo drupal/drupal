@@ -1,0 +1,3 @@
+mobile: '(min-width: 0px)'
+narrow: 'all and (min-width: 480px) and (max-width: 959px)'
+wide: 'all and (min-width: 960px)'
