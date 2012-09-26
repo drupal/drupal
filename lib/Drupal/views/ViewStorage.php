@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\config\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 
 /**
  * Defines a ViewStorage configuration entity class.

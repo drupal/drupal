@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\config\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
  * Defines an interface for View storage classes.

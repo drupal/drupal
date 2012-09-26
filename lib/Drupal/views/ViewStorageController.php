@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\config\ConfigStorageController;
+use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Uuid\Uuid;
 
