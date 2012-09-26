@@ -83,7 +83,7 @@ function ban_is_denied($ip) {
   // Because this function is called on every page request, we first check
   // for an array of IP addresses in settings.php before querying the
   // database.
-  $blocked_ips = variable_get('blocked_ips');
+  $blocked_ips = variable_get('ban_ips');
   if (isset($blocked_ips) && is_array($blocked_ips)) {
     $denied = in_array($ip, $blocked_ips);
   }
@@ -148,7 +148,7 @@ function ban_action_info() {
  */
 function ban_ip_action() {
   $ip = ip_address();
-  db_insert('blocked_ips')
+  db_insert('ban_ip')
     ->fields(array('ip' => $ip))
     ->execute();
   watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
