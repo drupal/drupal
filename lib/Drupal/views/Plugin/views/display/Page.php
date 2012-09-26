@@ -609,7 +609,7 @@ class Page extends DisplayPluginBase {
         $this->setOption('menu', $form_state['values']['menu']);
         // send ajax form to options page if we use it.
         if ($form_state['values']['menu']['type'] == 'default tab') {
-          views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('tab_options'));
+          $this->view->addFormToStack('display', $this->display['id'], array('tab_options'));
         }
         break;
       case 'tab_options':

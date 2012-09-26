@@ -1570,6 +1570,7 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'style':
         $form['#title'] .= t('How should this view be styled');
+        $style = $this->getOption('style');
         $form['style_plugin'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->storage->base_table)),
@@ -1612,6 +1613,7 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'row':
         $form['#title'] .= t('How should each row in this view be styled');
+        $row = $this->getOption('row');
         $form['row_plugin'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->storage->base_table)),
@@ -1630,7 +1632,7 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'link_display':
         $form['#title'] .= t('Which display to use for path');
-        foreach ($this->view->display as $display_id => $display) {
+        foreach ($this->view->storage->display as $display_id => $display) {
           if ($this->view->displayHandlers[$display_id]->hasPath()) {
             $options[$display_id] = $display['display_title'];
           }
@@ -2170,7 +2172,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $access = array('type' => $form_state['values']['access']['type']);
             $this->setOption('access', $access);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('access_options'));
+              $this->view->addFormToStack('display', $this->display['id'], array('access_options'));
             }
           }
         }
@@ -2193,7 +2195,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $cache = array('type' => $form_state['values']['cache']['type']);
             $this->setOption('cache', $cache);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('cache_options'));
+              $this->view->addFormToStack('display', $this->display['id'], array('cache_options'));
             }
           }
         }
@@ -2254,7 +2256,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('row_options'));
+              $this->view->addFormToStack('display', $this->display['id'], array('row_options'));
             }
           }
         }
@@ -2270,7 +2272,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $this->setOption($section, $row);
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('style_options'));
+              $this->view->addFormToStack('display', $this->display['id'], array('style_options'));
             }
           }
         }
@@ -2304,7 +2306,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
             $this->setOption('exposed_form', $exposed_form);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('exposed_form_options'));
+              $this->view->addFormToStack('display', $this->display['id'], array('exposed_form_options'));
             }
           }
         }
@@ -2331,7 +2333,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->setOption('pager', $pager);
             if ($plugin->usesOptions()) {
-              views_ui_add_form_to_stack('display', $this->view, $this->display['id'], array('pager_options'));
+              $this->view->addFormToStack('display', $this->display['id'], array('pager_options'));
             }
           }
         }

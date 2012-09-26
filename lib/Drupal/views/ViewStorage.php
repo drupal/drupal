@@ -129,13 +129,22 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @param bool $reset
    *   Get a new Drupal\views\ViewExecutable instance.
+   * @param bool $ui
+   *   If this should return Drupal\views\ViewUI instead.
    *
    * @return Drupal\views\ViewExecutable
    *   The executable version of this view.
    */
-  public function getExecutable($reset = FALSE) {
+  public function getExecutable($reset = FALSE, $ui = FALSE) {
     if (!isset($this->executable) || $reset) {
-      $this->setExecutable(new ViewExecutable($this));
+     // @todo Remove this approach and use proper dependency injection.
+      if ($ui) {
+        $executable = new ViewUI($this);
+      }
+      else {
+        $executable = new ViewExecutable($this);
+      }
+      $this->setExecutable($executable);
     }
     return $this->executable;
   }

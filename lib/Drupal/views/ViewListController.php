@@ -131,7 +131,7 @@ class ViewListController extends EntityListController {
    */
   public function render() {
     $list = parent::render();
-    $list['#attached']['css'] = views_ui_get_admin_css();
+    $list['#attached']['css'] = ViewUI::getAdminCSS();
     return $list;
   }
 

@@ -165,12 +165,6 @@ class ViewExecutable {
    */
   public $is_attachment = NULL;
 
-  // Stores the next steps of form items to handle.
-  // It's an array of stack items, which contain the form id, the type of form,
-  // the view, the display and some additional arguments.
-  // @see views_ui_add_form_to_stack()
-  // var $stack;
-
   /**
    * Identifier of the current display.
    *
@@ -1821,13 +1815,11 @@ class ViewExecutable {
    * This will completely wipe a view clean so it can be considered fresh.
    *
    * @return Drupal\views\ViewExecutable
-   *    The cloned view.
+   *   The cloned view.
    */
   public function cloneView() {
-    $clone = clone $this->storage;
-    $clone = $clone->getExecutable(TRUE);
-
-    return $clone;
+    $storage = clone $this->storage;
+    return $storage->getExecutable(TRUE);
   }
 
   /**

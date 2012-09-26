@@ -45,7 +45,7 @@ class Role extends AccessPluginBase {
       return t('Multiple roles');
     }
     else {
-      $rids = views_ui_get_roles();
+      $rids = user_roles();
       $rid = reset($this->options['role']);
       return check_plain($rids[$rid]);
     }
@@ -65,7 +65,7 @@ class Role extends AccessPluginBase {
       '#type' => 'checkboxes',
       '#title' => t('Role'),
       '#default_value' => $this->options['role'],
-      '#options' => array_map('check_plain', views_ui_get_roles()),
+      '#options' => array_map('check_plain', $this->getRoles()),
       '#description' => t('Only the checked roles will be able to access this display. Note that users with "access all views" can see any view, regardless of role.'),
     );
   }

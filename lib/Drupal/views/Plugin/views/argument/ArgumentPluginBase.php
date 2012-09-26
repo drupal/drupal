@@ -183,7 +183,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
     $form['default_action'] = array(
       '#type' => 'radios',
-      '#process' => array('views_ui_process_container_radios'),
+      '#process' => array(array($this, 'processContainerRadios')),
       '#default_value' => $this->options['default_action'],
       '#fieldset' => 'no_argument',
     );
@@ -1074,6 +1074,44 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   function get_sort_name() {
     return t('Default sort', array(), array('context' => 'Sort order'));
+  }
+
+  /**
+   * Custom form radios process function.
+   *
+   * Roll out a single radios element to a list of radios, using the options
+   * array as index. While doing that, create a container element underneath
+   * each option, which contains the settings related to that option.
+   *
+   * @see form_process_radios()
+   */
+  public static function processContainerRadios($element) {
+    if (count($element['#options']) > 0) {
+      foreach ($element['#options'] as $key => $choice) {
+        $element += array($key => array());
+        // Generate the parents as the autogenerator does, so we will have a
+        // unique id for each radio button.
+        $parents_for_id = array_merge($element['#parents'], array($key));
+
+        $element[$key] += array(
+          '#type' => 'radio',
+          '#title' => $choice,
+          // The key is sanitized in drupal_attributes() during output from the
+          // theme function.
+          '#return_value' => $key,
+          '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
+          '#attributes' => $element['#attributes'],
+          '#parents' => $element['#parents'],
+          '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
+          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+        );
+        $element[$key . '_options'] = array(
+          '#type' => 'container',
+          '#attributes' => array('class' => array('views-admin-dependent')),
+        );
+      }
+    }
+    return $element;
   }
 
 }

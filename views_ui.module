@@ -66,14 +66,6 @@ function views_ui_menu() {
   ) + $base;
   */
 
-  $items['admin/structure/views/import'] = array(
-    'title' => 'Import',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('views_ui_import_page'),
-    'access callback' => 'views_import_access',
-    'type' => MENU_LOCAL_ACTION,
-  ) + $base;
-
   $items['admin/structure/views/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
@@ -150,21 +142,15 @@ function views_ui_menu() {
     'type' => MENU_CALLBACK,
   ) + $base;
 
-  // NoJS/AJAX callbacks that require custom page callbacks.
-  $ajax_callbacks = array(
-    'preview' => 'views_ui_preview',
-  );
-  foreach ($ajax_callbacks as $menu => $menu_callback) {
-    $items['admin/structure/views/nojs/' . $menu . '/%views_ui_cache/%'] = array(
-      'page callback' => $menu_callback,
-      'page arguments' => array(5, 6),
-    ) + $base;
-    $items['admin/structure/views/ajax/' . $menu . '/%views_ui_cache/%'] = array(
-      'page callback' => $menu_callback,
-      'page arguments' => array(5, 6),
-      'delivery callback' => 'ajax_deliver',
-    ) + $base;
-  }
+  $items['admin/structure/views/nojs/preview/%views_ui_cache/%'] = array(
+    'page callback' => 'views_ui_preview',
+    'page arguments' => array(5, 6),
+  ) + $base;
+  $items['admin/structure/views/ajax/preview/%views_ui_cache/%'] = array(
+    'page callback' => 'views_ui_preview',
+    'page arguments' => array(5, 6),
+    'delivery callback' => 'ajax_deliver',
+  ) + $base;
 
   // Autocomplete callback for tagging a View.
   // Views module uses admin/views/... instead of admin/structure/views/... for
