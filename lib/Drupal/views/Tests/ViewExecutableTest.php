@@ -60,6 +60,35 @@ class ViewExecutableTest extends ViewTestBase {
   }
 
   /**
+   * Tests the initDisplay() and initHandlers() methods.
+   */
+  public function testInitMethods() {
+    $view = $this->getBasicView();
+    $view->initDisplay();
+
+    $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
+    $this->assertTrue($view->displayHandlers['default'] instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
+
+    $view = $this->getBasicView();
+    $view->destroy();
+    $view->initHandlers();
+
+    // Check for all handler types.
+    $handler_types = array_keys(ViewExecutable::viewsHandlerTypes());
+    foreach ($handler_types as $type) {
+      // The views_test integration doesn't have relationships.
+      if ($type == 'relationship') {
+        continue;
+      }
+      $this->assertTrue(count($view->$type), format_string('Make sure a %type instance got instantiated.', array('%type' => $type)));
+    }
+
+    // initHandlers() should create display handlers automatically as well.
+    $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
+    $this->assertTrue($view->displayHandlers['default'] instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
+  }
+
+  /**
    * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
    */
   protected function getBasicView() {

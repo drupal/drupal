@@ -86,7 +86,6 @@ class AreaTest extends HandlerTestBase {
    */
   public function testRenderArea() {
     $view = views_get_view('test_example_area');
-    $view->initDisplay();
     $view->initHandlers();
 
     // Insert a random string to the test area plugin and see whether it is

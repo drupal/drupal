@@ -62,7 +62,6 @@ class FieldTest extends HandlerTestBase {
   public function testQuery() {
     // Tests adding additional fields to the query.
     $view = $this->getBasicView();
-    $view->initDisplay();
     $view->initHandlers();
 
     $id_field = $view->field['id'];
@@ -215,7 +214,6 @@ class FieldTest extends HandlerTestBase {
    */
   public function testAlterUrl() {
     $view = $this->getBasicView();
-    $view->initDisplay();
     $view->initHandlers();
     $this->executeView($view);
     $row = $view->result[0];
@@ -364,7 +362,6 @@ class FieldTest extends HandlerTestBase {
    */
   public function testRewrite() {
     $view = $this->getBasicView();
-    $view->initDisplay();
     $view->initHandlers();
     $this->executeView($view);
     $row = $view->result[0];
@@ -385,7 +382,6 @@ class FieldTest extends HandlerTestBase {
    */
   public function testFieldClasses() {
     $view = views_get_view('test_field_classes');
-    $view->initDisplay();
     $view->initHandlers();
 
     // Tests whether the default field classes are added.
@@ -531,7 +527,6 @@ class FieldTest extends HandlerTestBase {
    */
   public function testExclude() {
     $view = views_get_view('test_field_output');
-    $view->initDisplay();
     $view->initHandlers();
     // Hide the field and see whether it's rendered.
     $view->field['name']->options['exclude'] = TRUE;
@@ -555,7 +550,6 @@ class FieldTest extends HandlerTestBase {
    */
   public function testTextRendering() {
     $view = views_get_view('test_field_output');
-    $view->initDisplay();
     $view->initHandlers();
     $name_field = $view->field['name'];
 
@@ -958,7 +952,6 @@ class FieldTest extends HandlerTestBase {
    */
   function testIsValueEmpty() {
     $view = $this->getView();
-    $view->initDisplay();
     $view->initHandlers();
     $field = $view->field['name'];
 

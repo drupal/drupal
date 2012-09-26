@@ -702,6 +702,7 @@ class ViewExecutable {
    * Acquire and attach all of the handlers.
    */
   public function initHandlers() {
+    $this->initDisplay();
     if (empty($this->inited)) {
       foreach ($this::viewsHandlerTypes() as $key => $info) {
         $this->_initHandler($key, $info);

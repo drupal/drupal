@@ -47,7 +47,6 @@ class FilterUidRevisionTest extends NodeTestBase {
     $node = $this->drupalCreateNode(array('uid' => $no_author->id()));
 
     $view = views_get_view('test_filter_node_uid_revision');
-    $view->initDisplay();
     $view->initHandlers();
     $view->filter['uid_revision']->value = array($author->uid);
 

@@ -120,7 +120,6 @@ class RelationshipTest extends HandlerTestBase {
       ),
     ));
 
-    $view->initDisplay();
     $view->initHandlers();
 
     // Check for all beatles created by admin.
@@ -137,7 +136,6 @@ class RelationshipTest extends HandlerTestBase {
     $view->destroy();
 
     // Check for all beatles created by another user, which so doesn't exist.
-    $view->initDisplay();
     $view->initHandlers();
     $view->filter['uid']->value = array(3);
     $this->executeView($view);
@@ -147,7 +145,6 @@ class RelationshipTest extends HandlerTestBase {
 
     // Set the relationship to required, so only results authored by the admin
     // should return.
-    $view->initDisplay();
     $view->initHandlers();
     $view->relationship['uid']->options['required'] = TRUE;
     $this->executeView($view);
@@ -162,7 +159,6 @@ class RelationshipTest extends HandlerTestBase {
     $view->destroy();
 
     // Set the relationship to optional should cause to return all beatles.
-    $view->initDisplay();
     $view->initHandlers();
     $view->relationship['uid']->options['required'] = FALSE;
     $this->executeView($view);

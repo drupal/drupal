@@ -70,7 +70,6 @@ class WizardTest extends WizardTestBase {
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view($view['name']);
-    $view->initDisplay();
     $view->initHandlers();
     $row = $view->display_handler->getOption('row');
     $this->assertEqual($row['type'], 'comment');
