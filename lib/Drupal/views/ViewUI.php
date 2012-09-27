@@ -789,6 +789,9 @@ class ViewUI extends ViewExecutable {
     $parents = $form_state['triggering_element']['#parents'];
     $display_type = array_pop($parents);
     $display_id = $this->storage->addDisplay($display_type);
+    // A new display got added so the asterisks symbol should appear on the new
+    // display.
+    $this->current_display = $display_id;
     views_ui_cache_set($this);
 
     // Redirect to the new display's edit page.

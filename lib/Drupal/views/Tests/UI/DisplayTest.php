@@ -73,16 +73,23 @@ class DisplayTest extends UITestBase {
    * Tests adding a display.
    */
   public function testAddDisplay() {
+    // Show the master display.
+    config('views.settings')->set('ui.show.master_display', TRUE)->save();
+
     $settings['page[create]'] = FALSE;
     $view = $this->randomView($settings);
 
     $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
     $this->drupalGet($path_prefix);
+    $this->drupalPost(NULL, array(), t('Save'));
 
     // Add a new display.
     $this->drupalPost(NULL, array(), 'Add Page');
     // @todo Revising this after http://drupal.org/node/1793700 got in.
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
+
+    $this->assertNoLink('Master*', 0, 'Make sure the master display is not marked as changed.');
+    $this->assertLink('Page*', 0, 'Make sure the added display is marked as changed.');
   }
 
   /**
