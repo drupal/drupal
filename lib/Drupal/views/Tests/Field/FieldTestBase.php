@@ -65,10 +65,9 @@ abstract class FieldTestBase extends ViewTestBase {
    */
   function clearViewsCaches() {
     // Reset views data cache.
-    $cache = &drupal_static('_views_fetch_data' . '_cache');
-    $recursion_protection = &drupal_static('_views_fetch_data' . '_recursion_protected');
-    $cache = NULL;
-    $recursion_protection = NULL;
+    drupal_static_reset('_views_fetch_data_cache');
+    drupal_static_reset('_views_fetch_data_recursion_protected');
+    drupal_static_reset('_views_fetch_data_fully_loaded');
   }
 
 }

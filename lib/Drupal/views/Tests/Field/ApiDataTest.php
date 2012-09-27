@@ -73,10 +73,7 @@ class ApiDataTest extends FieldTestBase {
     }
 
     // Reset views data cache.
-    $cache = &drupal_static('_views_fetch_data' . '_cache');
-    $recursion_protection = &drupal_static('_views_fetch_data' . '_recursion_protected');
-    $cache = NULL;
-    $recursion_protection = NULL;
+    $this->clearViewsCaches();
   }
 
   /**

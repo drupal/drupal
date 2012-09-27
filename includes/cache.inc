@@ -6,60 +6,99 @@
  */
 
 /**
- * Fetch Views' data from the cache
+ * Fetch Views' data from the cache.
  *
- * @param $move
+ * @param string|null $table
+ *   If null return views data for all tables, else
+ * @param bool $move
  *   Under certain circumstances it makes sense to not get the moved table, but the old one.
  *   One example is views_get_handler.
+ * @param bool $reset
+ *   If $reset is TRUE, rebuild the internal cache.
+ *
+ * @return array
+ *   An array of views data. If $table is NULL if will contains one info array
+ *  for each table, else just one info array.
+ *
+ * @see hook_views_data
  */
 function _views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
   $cache = &drupal_static(__FUNCTION__ . '_cache');
   $recursion_protection = &drupal_static(__FUNCTION__ . '_recursion_protected');
-  if (!isset($cache) || $reset) {
-    $start = microtime(TRUE);
-    // NOTE: This happens whether we retrieve them from cache or otherwise.
-
-    $data = views_cache_get('views_data', TRUE);
-    if (!empty($data->data)) {
-      $cache = $data->data;
-    }
-
-    if (empty($cache)) {
-      views_include_handlers();
-      $cache = module_invoke_all('views_data');
-      foreach (module_implements('views_data_alter') as $module) {
-        $function = $module . '_views_data_alter';
-        $function($cache);
-      }
-      _views_data_process_entity_types($cache);
-
-      views_cache_set('views_data', $cache, TRUE);
-    }
+  $fully_loaded = &drupal_static(__FUNCTION__ . '_fully_loaded');
+  if ($reset) {
+    $cache = NULL;
+    $fully_loaded = FALSE;
   }
-
-  if (!$table) {
-    return $cache;
-  }
-  if (isset($cache[$table])) {
-    // Support old views_data entries conversion.
-    if (isset($cache[$table]['moved to']) && $move) {
-      $moved_table = $cache[$table]['moved to'];
-      if (!empty($recursion_protection[$table])) {
-        // recursion detected!
-        return NULL;
+  if ($table) {
+    if (!isset($cache[$table])) {
+      $cid = 'views_data:' . $table;
+      $data = views_cache_get($cid, TRUE);
+      if (!empty($data->data)) {
+        $cache[$table] = $data->data;
       }
-      $recursion_protection[$table] = TRUE;
-      $data = _views_fetch_data($moved_table);
-      $recursion_protection = array();
-      return $data;
+      else {
+        // No cache entry, rebuild.
+        $cache = _views_fetch_data_build();
+        $fully_loaded = TRUE;
+      }
     }
-    else {
+    if (isset($cache[$table])) {
+      if (isset($cache[$table]['moved to']) && $move) {
+        $moved_table = $cache[$table]['moved to'];
+        if (!empty($recursion_protection[$table])) {
+          // recursion detected!
+          return NULL;
+        }
+        $recursion_protection[$table] = TRUE;
+        $data = _views_fetch_data($moved_table);
+        $recursion_protection = array();
+        return $data;
+      }
       return $cache[$table];
     }
   }
+  else {
+    if (!$fully_loaded) {
+      $data = views_cache_get('views_data', TRUE);
+      if (!empty($data->data)) {
+        $cache = $data->data;
+      }
 
+      if (empty($cache)) {
+        $cache = _views_fetch_data_build();
+      }
+      $fully_loaded = TRUE;
+    }
+    return $cache;
+  }
   // Return an empty array if there is no match.
   return array();
+}
+
+/**
+ * Build, set the views data cache if empty and return the views data.
+ *
+ * @return array
+ *   The views_data of all tables.
+ */
+function _views_fetch_data_build() {
+  views_include_handlers();
+  $cache = module_invoke_all('views_data');
+  foreach (module_implements('views_data_alter') as $module) {
+    $function = $module . '_views_data_alter';
+    $function($cache);
+  }
+  _views_data_process_entity_types($cache);
+
+  // Keep a record with all data.
+  views_cache_set('views_data', $cache, TRUE);
+  // Save data in seperate cache entries.
+  foreach ($cache as $key => $data) {
+    $cid = 'views_data:' . $key;
+    views_cache_set($cid, $data, TRUE);
+  }
+  return $cache;
 }
 
 /**
