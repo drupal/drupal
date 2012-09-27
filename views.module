@@ -145,6 +145,34 @@ function views_api_minimum_version() {
 }
 
 /**
+ * Implements hook_element_info().
+ */
+function views_element_info() {
+  $types['view'] = array(
+    '#theme_wrappers' => array('container'),
+    '#pre_render' => array('views_pre_render_view_element'),
+    '#name' => NULL,
+    '#display_id' => 'default',
+    '#arguments' => array(),
+  );
+  return $types;
+}
+
+/**
+ * View element pre render callback.
+ */
+function views_pre_render_view_element($element) {
+  $element['#attributes']['class'][] = 'views-element-container';
+
+  $view = views_get_view($element['#name']);
+  if ($view && $view->access($element['#display_id'])) {
+    $element['view']['#markup'] = $view->preview($element['#display_id'], $element['#arguments']);
+  }
+
+  return $element;
+}
+
+/**
  * Implement hook_theme(). Register views theming functions.
  */
 function views_theme($existing, $type, $theme, $path) {
