@@ -39,11 +39,12 @@ class NodeAccessFieldTest extends NodeTestBase {
     // Add a custom field to the page content type.
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field = field_create_field(array('field_name' => $this->field_name, 'type' => 'text'));
-    $this->instance = field_create_instance(array(
+    $instance = array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
-    ));
+    );
+    $this->instance = field_create_instance($instance);
   }
 
   /**

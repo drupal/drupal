@@ -54,7 +54,7 @@ class AlterTest extends WebTestBase {
       'field_name' => 'alter_test_text',
       'type' => 'text',
     ));
-    field_create_instance(array(
+    $instance = array(
       'field_name' => 'alter_test_text',
       'entity_type' => 'node',
       'bundle' => 'article',
@@ -62,7 +62,8 @@ class AlterTest extends WebTestBase {
         'type' => 'text_textfield',
         'size' => 60,
       ),
-    ));
+    );
+    field_create_instance($instance);
 
     // Test that field_test_field_widget_properties_alter() sets the size to
     // 42 and that field_test_field_widget_form_alter() reports the correct
@@ -79,22 +80,24 @@ class AlterTest extends WebTestBase {
       'type' => 'list_text'
     ));
     // Create instances on users and page nodes.
-    field_create_instance(array(
+    $instance = array(
       'field_name' => 'alter_test_options',
       'entity_type' => 'user',
       'bundle' => 'user',
       'widget' => array(
         'type' => 'options_select',
       )
-    ));
-    field_create_instance(array(
+    );
+    field_create_instance($instance);
+    $instance = array(
       'field_name' => 'alter_test_options',
       'entity_type' => 'node',
       'bundle' => 'page',
       'widget' => array(
         'type' => 'options_select',
       )
-    ));
+    );
+    field_create_instance($instance);
 
     // Test that field_test_field_widget_properties_user_alter() replaces
     // the widget and that field_test_field_widget_form_alter() reports the

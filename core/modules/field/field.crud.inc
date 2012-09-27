@@ -455,7 +455,7 @@ function field_delete_field($field_name) {
  *
  * See: @link field Field API data structures @endlink.
  */
-function field_create_instance($instance) {
+function field_create_instance(&$instance) {
   $field = field_read_field($instance['field_name']);
   if (empty($field)) {
     throw new FieldException(t("Attempt to create an instance of a field @field_name that doesn't exist or is currently inactive.", array('@field_name' => $instance['field_name'])));
@@ -555,7 +555,7 @@ function field_update_instance($instance) {
  * @param $update
  *   Whether this is a new or existing instance.
  */
-function _field_write_instance($instance, $update = FALSE) {
+function _field_write_instance(&$instance, $update = FALSE) {
   $field = field_read_field($instance['field_name']);
   $field_type = field_info_field_types($field['type']);
 
@@ -639,12 +639,12 @@ function _field_write_instance($instance, $update = FALSE) {
   // update.
   if ($update) {
     $record['id'] = $instance['id'];
-    $primary_key = array('id');
+    drupal_write_record('field_config_instance', $record, array('id'));
   }
   else {
-    $primary_key = array();
+    drupal_write_record('field_config_instance', $record);
+    $instance['id'] = $record['id'];
   }
-  drupal_write_record('field_config_instance', $record, $primary_key);
 }
 
 /**

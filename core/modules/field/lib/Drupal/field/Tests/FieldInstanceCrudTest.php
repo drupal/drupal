@@ -64,6 +64,9 @@ class FieldInstanceCrudTest extends FieldTestBase {
     $widget_type = field_info_widget_types($field_type['default_widget']);
     $formatter_type = field_info_formatter_types($field_type['default_formatter']);
 
+    // Check that the ID key is filled in.
+    $this->assertIdentical($record['id'], $this->instance_definition['id'], 'The instance id is filled in');
+
     // Check that default values are set.
     $this->assertIdentical($record['data']['required'], FALSE, t('Required defaults to false.'));
     $this->assertIdentical($record['data']['label'], $this->instance_definition['field_name'], t('Label defaults to field name.'));
@@ -140,7 +143,7 @@ class FieldInstanceCrudTest extends FieldTestBase {
 
     // Read the instance back.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue($this->instance_definition < $instance, t('The field was properly read.'));
+    $this->assertTrue($this->instance_definition == $instance, 'The field was properly read.');
   }
 
   /**

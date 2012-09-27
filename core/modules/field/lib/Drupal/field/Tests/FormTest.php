@@ -247,7 +247,7 @@ class FormTest extends FieldTestBase {
         'allowed_values' => array('yes' => 'yes', 'no' => 'no'),
       ),
     ));
-    field_create_instance(array(
+    $instance = array(
       'field_name' => 'required_radio_test',
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
@@ -255,7 +255,8 @@ class FormTest extends FieldTestBase {
       'widget' => array(
         'type' => 'options_buttons',
       ),
-    ));
+    );
+    field_create_instance($instance);
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
