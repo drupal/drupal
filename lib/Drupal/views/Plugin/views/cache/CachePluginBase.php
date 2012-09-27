@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
 
@@ -38,22 +39,25 @@ abstract class CachePluginBase extends PluginBase {
   var $table = 'views_results';
 
   /**
-   * Stores the cache id used for the results cache, once get_results_key() got
-   * executed.
+   * Stores the cache ID used for the results cache.
    *
-   * @see views_plugin_cache::get_results_key
+   * The cache ID is stored in generateResultsKey() got executed.
+   *
    * @var string
+   *
+   * @see Drupal\views\Plugin\views\cache\CachePluginBase::generateResultsKey()
    */
-  public $_results_key;
+  protected $resultsKey;
 
   /**
-   * Stores the cache id used for the output cache, once get_output_key() got
+   * Stores the cache ID used for the output cache, once generateOutputKey() got
    * executed.
    *
-   * @see views_plugin_cache::get_output_key
    * @var string
+   *
+   * @see Drupal\views\Plugin\views\cache\CachePluginBase::generateOutputKey()
    */
-  public $_output_key;
+  protected $outputKey;
 
   /**
    * Initialize the plugin.
@@ -69,6 +73,26 @@ abstract class CachePluginBase extends PluginBase {
     $this->displayHandler = &$display;
 
     $this->unpackOptions($this->options, $options);
+  }
+
+  /**
+   * Returns the outputKey property.
+   *
+   * @return string
+   *   The outputKey property.
+   */
+  public function getOutputKey() {
+    return $this->outputKey;
+  }
+
+  /**
+   * Returns the resultsKey property.
+   *
+   * @return string
+   *   The resultsKey property.
+   */
+  public function getResultsKey() {
+    return $this->resultsKey;
   }
 
   /**
@@ -99,7 +123,7 @@ abstract class CachePluginBase extends PluginBase {
     *   The cache type, either 'query', 'result' or 'output'.
     */
   function cache_set_expire($type) {
-    return CACHE_PERMANENT;
+    return CacheBackendInterface::CACHE_PERMANENT;
   }
 
 
@@ -119,12 +143,12 @@ abstract class CachePluginBase extends PluginBase {
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->getCurrentPage(),
         );
-        cache($this->table)->set($this->get_results_key(), $data, $this->cache_set_expire($type));
+        cache($this->table)->set($this->generateResultsKey(), $data, $this->cache_set_expire($type));
         break;
       case 'output':
         $this->gather_headers();
         $this->storage['output'] = $this->view->display_handler->output;
-        cache($this->table)->set($this->get_output_key(), $this->storage, $this->cache_set_expire($type));
+        cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cache_set_expire($type));
         break;
     }
   }
@@ -144,7 +168,7 @@ abstract class CachePluginBase extends PluginBase {
       case 'results':
         // Values to set: $view->result, $view->total_rows, $view->execute_time,
         // $view->current_page.
-        if ($cache = cache($this->table)->get($this->get_results_key())) {
+        if ($cache = cache($this->table)->get($this->generateResultsKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->view->result = $cache->data['result'];
             $this->view->total_rows = $cache->data['total_rows'];
@@ -155,7 +179,7 @@ abstract class CachePluginBase extends PluginBase {
         }
         return FALSE;
       case 'output':
-        if ($cache = cache($this->table)->get($this->get_output_key())) {
+        if ($cache = cache($this->table)->get($this->generateOutputKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
             $this->view->display_handler->output = $cache->data['output'];
@@ -268,14 +292,17 @@ abstract class CachePluginBase extends PluginBase {
     }
   }
 
-  function get_results_key() {
+  /**
+   * Calculates and sets a cache ID used for the result cache.
+   *
+   * @return string
+   *   The generated cache ID.
+   */
+  public function generateResultsKey() {
     global $user;
 
-    if (!isset($this->_results_key)) {
-
+    if (!isset($this->resultsKey)) {
       $build_info = $this->view->build_info;
-
-      $query_plugin = $this->view->display_handler->getPlugin('query');
 
       foreach (array('query', 'count_query') as $index) {
         // If the default query back-end is used generate SQL query strings from
@@ -299,15 +326,21 @@ abstract class CachePluginBase extends PluginBase {
         }
       }
 
-      $this->_results_key = $this->view->storage->name . ':' . $this->displayHandler->display['id'] . ':results:' . md5(serialize($key_data));
+      $this->resultsKey = $this->view->storage->name . ':' . $this->displayHandler->display['id'] . ':results:' . md5(serialize($key_data));
     }
 
-    return $this->_results_key;
+    return $this->resultsKey;
   }
 
-  function get_output_key() {
+  /**
+   * Calculates and sets a cache ID used for the output cache.
+   *
+   * @return string
+   *   The generated cache ID.
+   */
+  public function generateOutputKey() {
     global $user;
-    if (!isset($this->_output_key)) {
+    if (!isset($this->outputKey)) {
       $key_data = array(
         'result' => $this->view->result,
         'roles' => array_keys($user->roles),
@@ -317,10 +350,10 @@ abstract class CachePluginBase extends PluginBase {
         'base_url' => $GLOBALS['base_url'],
       );
 
-      $this->_output_key = $this->view->storage->name . ':' . $this->displayHandler->display['id'] . ':output:' . md5(serialize($key_data));
+      $this->outputKey = $this->view->storage->name . ':' . $this->displayHandler->display['id'] . ':output:' . md5(serialize($key_data));
     }
 
-    return $this->_output_key;
+    return $this->outputKey;
   }
 
 }

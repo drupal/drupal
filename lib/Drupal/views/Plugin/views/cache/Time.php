@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -123,7 +124,7 @@ class Time extends CachePluginBase {
       return time() + $lifespan;
     }
     else {
-      return CACHE_PERMANENT;
+      return CacheBackendInterface::CACHE_PERMANENT;
     }
   }
 
