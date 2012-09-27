@@ -1,0 +1,390 @@
+<?php
+
+/**
+ * @file
+ * Defines simple link field types.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function link_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#link':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Link module defines a simple link field type for the Field module. Links are external URLs, can have an optional title for each link, and they can be formatted when displayed. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_field_info().
+ */
+function link_field_info() {
+  $types['link'] = array(
+    'label' => t('Link'),
+    'description' => t('Stores a URL string, optional varchar title, and optional blob of attributes to assemble a link.'),
+    'instance_settings' => array(
+      'title' => DRUPAL_OPTIONAL,
+    ),
+    'default_widget' => 'link_default',
+    'default_formatter' => 'link',
+  );
+  return $types;
+}
+
+/**
+ * Implements hook_field_instance_settings_form().
+ */
+function link_field_instance_settings_form($field, $instance) {
+  $form['title'] = array(
+    '#type' => 'radios',
+    '#title' => t('Allow link title'),
+    '#default_value' => isset($instance['settings']['title']) ? $instance['settings']['title'] : DRUPAL_OPTIONAL,
+    '#options' => array(
+      DRUPAL_DISABLED => t('Disabled'),
+      DRUPAL_OPTIONAL => t('Optional'),
+      DRUPAL_REQUIRED => t('Required'),
+    ),
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_field_load().
+ */
+function link_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
+  foreach ($entities as $id => $entity) {
+    foreach ($items[$id] as $delta => &$item) {
+      // Unserialize the attributes into an array. The value stored in the
+      // field data should either be NULL or a non-empty serialized array.
+      if (empty($item['attributes'])) {
+        $item['attributes'] = array();
+      }
+      else {
+        $item['attributes'] = unserialize($item['attributes']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function link_field_is_empty($item, $field) {
+  return !isset($item['url']) || $item['url'] === '';
+}
+
+/**
+ * Implements hook_field_presave().
+ */
+function link_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  foreach ($items as $delta => &$item) {
+    // Trim any spaces around the URL and title.
+    $item['url'] = trim($item['url']);
+    $item['title'] = trim($item['title']);
+
+    // Serialize the attributes array.
+    $item['attributes'] = !empty($item['attributes']) ? serialize($item['attributes']) : NULL;
+  }
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function link_field_widget_info() {
+  $widgets['link_default'] = array(
+    'label' => 'Link',
+    'field types' => array('link'),
+  );
+  return $widgets;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function link_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $settings = $instance['settings'];
+
+  $element['url'] = array(
+    '#type' => 'url',
+    '#title' => t('URL'),
+    '#default_value' => isset($items[$delta]['url']) ? $items[$delta]['url'] : NULL,
+    '#maxlength' => 2048,
+    '#required' => $element['#required'],
+  );
+  $element['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title'),
+    '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : NULL,
+    '#maxlength' => 255,
+    '#access' => $settings['title'] != DRUPAL_DISABLED,
+  );
+  // Post-process the title field to make it conditionally required if URL is
+  // non-empty. Omit the validation on the field edit form, since the field
+  // settings cannot be saved otherwise.
+  $is_field_edit_form = ($element['#entity'] === NULL);
+  if (!$is_field_edit_form && $settings['title'] == DRUPAL_REQUIRED) {
+    $element['#element_validate'][] = 'link_field_widget_validate_title';
+  }
+
+  // Exposing the attributes array in the widget is left for alternate and more
+  // advanced field widgets.
+  $element['attributes'] = array(
+    '#type' => 'value',
+    '#tree' => TRUE,
+    '#value' => !empty($items[$delta]['attributes']) ? $items[$delta]['attributes'] : array(),
+    '#attributes' => array('class' => array('link-field-widget-attributes')),
+  );
+
+  return $element;
+}
+
+/**
+ * Form element validation handler for link_field_widget_form().
+ *
+ * Conditionally requires the link title if a URL value was filled in.
+ */
+function link_field_widget_validate_title(&$element, &$form_state, $form) {
+  if ($element['url']['#value'] !== '' && $element['title']['#value'] === '') {
+    $element['title']['#required'] = TRUE;
+    form_error($element['title'], t('!name field is required.', array('!name' => $element['title']['#title'])));
+  }
+}
+
+/**
+ * Implements hook_field_prepare_view().
+ */
+function link_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
+  foreach ($entities as $id => $entity) {
+    foreach ($items[$id] as $delta => &$item) {
+      // Split out the link into the parts required for url(): path and options.
+      $parsed = drupal_parse_url($item['url']);
+      $item['path'] = $parsed['path'];
+      $item['options'] = array(
+        'query' => $parsed['query'],
+        'fragment' => $parsed['fragment'],
+        'attributes' => &$item['attributes'],
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function link_field_formatter_info() {
+  $formatters['link'] = array(
+    'label' => t('Link'),
+    'field types' => array('link'),
+    'settings' => array(
+      'trim_length' => 80,
+      'rel' => NULL,
+      'target' => NULL,
+      'url_only' => FALSE,
+      'url_plain' => FALSE,
+    ),
+  );
+  // @todo Merge into 'link' formatter once there is a #type like 'item' that
+  //   can render a compound label and content outside of a form context.
+  $formatters['link_separate'] = array(
+    'label' => t('Separate title and URL'),
+    'field types' => array('link'),
+    'settings' => array(
+      'trim_length' => 80,
+      'rel' => NULL,
+      'target' => NULL,
+    ),
+  );
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function link_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element['trim_length'] = array(
+    '#type' => 'number',
+    '#title' => t('Trim link text length'),
+    '#field_suffix' => t('characters'),
+    '#default_value' => $settings['trim_length'],
+    '#min' => 1,
+    '#description' => t('Leave blank to allow unlimited link text lengths.'),
+  );
+  $element['url_only'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('URL only'),
+    '#default_value' => $settings['url_only'],
+    '#access' => $display['type'] == 'link',
+  );
+  $element['url_plain'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show URL as plain text'),
+    '#default_value' => $settings['url_plain'],
+    '#access' => $display['type'] == 'link',
+    '#states' => array(
+      'visible' => array(
+        ':input[name*="url_only"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $element['rel'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add rel="nofollow" to links'),
+    '#return_value' => 'nofollow',
+    '#default_value' => $settings['nofollow'],
+  );
+  $element['target'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Open link in new window'),
+    '#return_value' => '_blank',
+    '#default_value' => $settings['target'],
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function link_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = array();
+
+  if (!empty($settings['trim_length'])) {
+    $summary[] = t('Link text trimmed to @limit characters', array('@limit' => $settings['trim_length']));
+  }
+  else {
+    $summary[] = t('Link text not trimmed');
+  }
+  if (!empty($settings['url_only'])) {
+    if (!empty($settings['url_plain'])) {
+      $summary[] = t('Show URL only as plain-text');
+    }
+    else {
+      $summary[] = t('Show URL only');
+    }
+  }
+  if (!empty($settings['rel'])) {
+    $summary[] = t('Add rel="@rel"', array('@rel' => $settings['rel']));
+  }
+  if (!empty($settings['target'])) {
+    $summary[] = t('Open link in new window');
+  }
+
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_prepare_view().
+ */
+function link_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
+  foreach ($entities as $id => $entity) {
+    $settings = $displays[$id]['settings'];
+
+    foreach ($items[$id] as $delta => &$item) {
+      // Add optional 'rel' attribute to link options.
+      if (!empty($settings['rel'])) {
+        $item['options']['attributes']['rel'] = $settings['rel'];
+      }
+      // Add optional 'target' attribute to link options.
+      if (!empty($settings['target'])) {
+        $item['options']['attributes']['target'] = $settings['target'];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function link_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+
+  foreach ($items as $delta => $item) {
+    // By default use the full URL as the link title.
+    $link_title = $item['url'];
+
+    // If the title field value is available, use it for the link title.
+    if (empty($settings['url_only']) && !empty($item['title'])) {
+      // Unsanitizied token replacement here because $options['html'] is FALSE
+      // by default in theme_link().
+      $link_title = token_replace($item['title'], array($entity_type => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
+    }
+
+    // Trim the link title to the desired length.
+    if (!empty($settings['trim_length'])) {
+      $link_title = truncate_utf8($link_title, $settings['trim_length'], FALSE, TRUE);
+    }
+
+    if ($display['type'] == 'link') {
+      if (!empty($settings['url_only']) && !empty($settings['url_plain'])) {
+        $element[$delta] = array(
+          '#type' => 'markup',
+          '#markup' => check_plain($link_title),
+        );
+      }
+      else {
+        $element[$delta] = array(
+          '#type' => 'link',
+          '#title' => $link_title,
+          '#href' => $item['path'],
+          '#options' => $item['options'],
+        );
+      }
+    }
+    elseif ($display['type'] == 'link_separate') {
+      // The link_separate formatter has two titles; the link title (as in the
+      // field values) and the URL itself. If there is no title value,
+      // $link_title defaults to the URL, so it needs to be unset.
+      // The URL title may need to be trimmed as well.
+      if (empty($item['title'])) {
+        $link_title = NULL;
+      }
+      $url_title = $item['url'];
+      if (!empty($settings['trim_length'])) {
+        $url_title = truncate_utf8($item['url'], $settings['trim_length'], FALSE, TRUE);
+      }
+      $element[$delta] = array(
+        '#theme' => 'link_formatter_link_separate',
+        '#title' => $link_title,
+        '#url_title' => $url_title,
+        '#href' => $item['path'],
+        '#options' => $item['options'],
+      );
+    }
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function link_theme() {
+  return array(
+    'link_formatter_link_separate' => array(
+      'variables' => array('title' => NULL, 'url_title' => NULL, 'href' => NULL, 'options' => array()),
+    ),
+  );
+}
+
+/**
+ * Formats a link as separate title and URL elements.
+ */
+function theme_link_formatter_link_separate($vars) {
+  $output = '';
+  $output .= '<div class="link-item">';
+  if (!empty($vars['title'])) {
+    $output .= '<div class="link-title">' . check_plain($vars['title']) . '</div>';
+  }
+  $output .= '<div class="link-url">' . l($vars['url_title'], $vars['href'], $vars['options']) . '</div>';
+  $output .= '</div>';
+  return $output;
+}

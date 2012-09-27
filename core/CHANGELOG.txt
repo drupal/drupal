@@ -91,6 +91,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Reworked Gettext PO support to use pluggable read/write handlers.
       * Added language select form element in the Form API.
 - Added E-mail field type to core.
+- Added Link field type to core.
 
 Drupal 7.0, 2011-01-05
 ----------------------
