@@ -165,7 +165,6 @@ class Condition implements ConditionInterface, Countable {
       $conjunction = $conditions['#conjunction'];
       unset($conditions['#conjunction']);
       foreach ($conditions as $condition) {
-        if (!empty($GLOBALS['lg'])) debug($condition);
         if (empty($condition['operator'])) {
           // This condition is a literal string, so let it through as is.
           $condition_fragments[] = ' (' . $condition['field'] . ') ';
