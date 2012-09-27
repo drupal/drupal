@@ -83,6 +83,9 @@ class Config {
 
   /**
    * Initializes a configuration object.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function init() {
     $this->notify('init');
@@ -91,6 +94,9 @@ class Config {
 
   /**
    * Returns the name of this configuration object.
+   *
+   * @return string
+   *   The name of the configuration object.
    */
   public function getName() {
     return $this->name;
@@ -98,6 +104,9 @@ class Config {
 
   /**
    * Sets the name of this configuration object.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function setName($name) {
     $this->name = $name;
@@ -106,6 +115,9 @@ class Config {
 
   /**
    * Returns whether this configuration object is new.
+   *
+   * @return bool
+   *   TRUE if this config object does not exist in storage.
    */
   public function isNew() {
     return $this->isNew;
@@ -114,7 +126,7 @@ class Config {
   /**
    * Gets data from this config object.
    *
-   * @param $key
+   * @param string $key
    *   A string that maps to a key within the configuration data.
    *   For instance in the following configuation array:
    *   @code
@@ -133,9 +145,9 @@ class Config {
    * cause issues with Booleans, which are casted to "1" (TRUE) or "0" (FALSE).
    * In particular, code relying on === or !== will no longer function properly.
    *
-   * @see http://php.net/manual/language.operators.comparison.php.
+   * @see http://php.net/manual/language.operators.comparison.php
    *
-   * @return
+   * @return mixed
    *   The data that was requested.
    */
   public function get($key = '') {
@@ -162,6 +174,9 @@ class Config {
    *
    * @param array $data
    *   The new configuration data.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function setData(array $data) {
     $this->data = $data;
@@ -176,6 +191,9 @@ class Config {
    *
    * @param array $data
    *   The overridden values of the configuration data.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function setOverride(array $data) {
     $this->overrides = NestedArray::mergeDeepArray(array($this->overrides, $data));
@@ -187,6 +205,9 @@ class Config {
    * Sets the current data for this configuration object.
    *
    * Merges overridden configuration data into the original data.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   protected function setOverriddenData() {
     $this->overriddenData = $this->data;
@@ -201,6 +222,9 @@ class Config {
    *
    * This method should be called after the original data or the overridden data
    * has been changed.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   protected function resetOverriddenData() {
     unset($this->overriddenData);
@@ -210,10 +234,13 @@ class Config {
   /**
    * Sets value in this config object.
    *
-   * @param $key
-   *   @todo
-   * @param $value
-   *   @todo
+   * @param string $key
+   *   Identifier to store value in config.
+   * @param string $value
+   *   Value to associate with identifier.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function set($key, $value) {
     // Type-cast value into a string.
@@ -274,8 +301,11 @@ class Config {
   /**
    * Unsets value in this config object.
    *
-   * @param $key
+   * @param string $key
    *   Name of the key whose value should be unset.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function clear($key) {
     $parts = explode('.', $key);
@@ -291,6 +321,9 @@ class Config {
 
   /**
    * Loads configuration data into this object.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function load() {
     $data = $this->storage->read($this->name);
@@ -308,6 +341,9 @@ class Config {
 
   /**
    * Saves the configuration object.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function save() {
     $this->sortByKey($this->data);
@@ -322,6 +358,9 @@ class Config {
    *
    * @param $new_name
    *   The new name of the configuration object being constructed.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function rename($new_name) {
     if ($this->storage->rename($this->name, $new_name)) {
@@ -352,6 +391,9 @@ class Config {
 
   /**
    * Deletes the configuration object.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
    */
   public function delete() {
     // @todo Consider to remove the pruning of data for Config::delete().
@@ -365,6 +407,9 @@ class Config {
 
   /**
    * Retrieve the storage used to load and save this configuration object.
+   *
+   * @return Drupal\Core\Config\StorageInterface
+   *   The configuration storage object.
    */
   public function getStorage() {
     return $this->storage;
