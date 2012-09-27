@@ -3,9 +3,9 @@
 /**
  * Implements hook_watchdog().
  */
-function actions_loop_test_watchdog(array $log_entry) {
+function action_loop_test_watchdog(array $log_entry) {
   // If the triggering actions are not explicitly enabled, abort.
-  if (empty($_GET['trigger_actions_on_watchdog'])) {
+  if (empty($_GET['trigger_action_on_watchdog'])) {
     return;
   }
   // We can pass in any applicable information in $context. There isn't much in
@@ -15,25 +15,25 @@ function actions_loop_test_watchdog(array $log_entry) {
   );
   // Fire the actions on the associated object ($log_entry) and the context
   // variable.
-  $aids = (array) $_GET['trigger_actions_on_watchdog'];
+  $aids = (array) $_GET['trigger_action_on_watchdog'];
   actions_do($aids, $log_entry, $context);
 }
 
 /**
  * Implements hook_init().
  */
-function actions_loop_test_init() {
-  if (!empty($_GET['trigger_actions_on_watchdog'])) {
-    watchdog_skip_semaphore('actions_loop_test', 'Triggering action loop');
+function action_loop_test_init() {
+  if (!empty($_GET['trigger_action_on_watchdog'])) {
+    watchdog_skip_semaphore('action_loop_test', 'Triggering action loop');
   }
 }
 
 /**
  * Implements hook_action_info().
  */
-function actions_loop_test_action_info() {
+function action_loop_test_action_info() {
   return array(
-    'actions_loop_test_log' => array(
+    'action_loop_test_log' => array(
       'label' => t('Write a message to the log.'),
       'type' => 'system',
       'configurable' => FALSE,
@@ -45,10 +45,10 @@ function actions_loop_test_action_info() {
 /**
  * Write a message to the log.
  */
-function actions_loop_test_log() {
+function action_loop_test_log() {
   $count = &drupal_static(__FUNCTION__, 0);
   $count++;
-  watchdog_skip_semaphore('actions_loop_test', "Test log #$count");
+  watchdog_skip_semaphore('action_loop_test', "Test log #$count");
 }
 
 /**

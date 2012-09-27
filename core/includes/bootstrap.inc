@@ -3190,7 +3190,7 @@ function drupal_classloader_register($name, $path) {
  *   // $stack tracks the number of recursive calls.
  *   static $stack;
  *   $stack++;
- *   if ($stack > variable_get('actions_max_stack', 35)) {
+ *   if ($stack > variable_get('action_max_stack', 35)) {
  *     ...
  *     return;
  *   }

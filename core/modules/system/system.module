@@ -89,8 +89,6 @@ function system_help($path, $arg) {
       $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis. The System module manages this task by making use of a system cron job. You can verify the status of cron tasks by visiting the <a href="@status">Status report page</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>. You can set up cron job by visiting <a href="@cron">Cron configuration</a> page', array('@status' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron', '@cron' => url('admin/config/system/cron'))) . '</dd>';
       $output .= '<dt>' . t('Configuring basic site settings') . '</dt>';
       $output .= '<dd>' . t('The System module also handles basic configuration options for your site, including <a href="@date-time-settings">Date and time settings</a>, <a href="@file-system">File system settings</a>, <a href="@site-info">Site name and other information</a>, and a <a href="@maintenance-mode">Maintenance mode</a> for taking your site temporarily offline.', array('@date-time-settings' => url('admin/config/regional/date-time'), '@file-system' => url('admin/config/media/file-system'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</dd>';
-      $output .= '<dt>' . t('Configuring actions') . '</dt>';
-      $output .= '<dd>' . t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Other modules can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions. Visit the <a href="@actions">Actions page</a> to configure actions.', array('@actions' => url('admin/config/system/actions'))) . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/index':
@@ -131,13 +129,6 @@ function system_help($path, $arg) {
         return '<p>' . t('Use maintenance mode when making major updates, particularly if the updates could disrupt visitors or the update process. Examples include upgrading, importing or exporting content, modifying a theme, modifying content types, and making backups.') . '</p>';
       }
       break;
-    case 'admin/config/system/actions':
-    case 'admin/config/system/actions/manage':
-      $output = '';
-      $output .= '<p>' . t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration and are listed here automatically. Advanced actions need to be created and configured before they can be used because they have options that need to be specified; for example, sending an e-mail to a specified address or unpublishing content containing certain words. To create an advanced action, select the action from the drop-down list in the advanced action section below and click the <em>Create</em> button.') . '</p>';
-      return $output;
-    case 'admin/config/system/actions/configure':
-      return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended in order to better identify the precise action taking place.');
     case 'admin/reports/status':
       return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\"@system-requirements\">system requirements.</a>", array('@system-requirements' => 'http://drupal.org/requirements')) . '</p>';
   }
@@ -224,9 +215,6 @@ function system_permission() {
     'administer software updates' => array(
       'title' => t('Administer software updates'),
       'restrict access' => TRUE,
-    ),
-    'administer actions' => array(
-      'title' => t('Administer actions'),
     ),
     'access administration pages' => array(
       'title' => t('Use the administration pages and help'),
@@ -958,44 +946,6 @@ function system_menu() {
     'weight' => -20,
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions'] = array(
-    'title' => 'Actions',
-    'description' => 'Manage the actions defined for your site.',
-    'access arguments' => array('administer actions'),
-    'page callback' => 'system_actions_manage',
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/manage'] = array(
-    'title' => 'Manage actions',
-    'description' => 'Manage the actions defined for your site.',
-    'page callback' => 'system_actions_manage',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -2,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/configure'] = array(
-    'title' => 'Configure an advanced action',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_actions_configure'),
-    'access arguments' => array('administer actions'),
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/delete/%actions'] = array(
-    'title' => 'Delete action',
-    'description' => 'Delete an action.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_actions_delete_form', 5),
-    'access arguments' => array('administer actions'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/system/actions/orphan'] = array(
-    'title' => 'Remove orphans',
-    'page callback' => 'system_actions_remove_orphans',
-    'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/system/site-information'] = array(
@@ -3494,155 +3444,6 @@ function system_cache_flush() {
 function system_rebuild() {
   // Rebuild list of date formats.
   system_date_formats_rebuild();
-  // Synchronize any actions that were added or removed.
-  actions_synchronize();
-}
-
-/**
- * Implements hook_action_info().
- */
-function system_action_info() {
-  return array(
-    'system_message_action' => array(
-      'type' => 'system',
-      'label' => t('Display a message to the user'),
-      'configurable' => TRUE,
-      'triggers' => array('any'),
-    ),
-    'system_send_email_action' => array(
-      'type' => 'system',
-      'label' => t('Send e-mail'),
-      'configurable' => TRUE,
-      'triggers' => array('any'),
-    ),
-    'system_goto_action' => array(
-      'type' => 'system',
-      'label' => t('Redirect to URL'),
-      'configurable' => TRUE,
-      'triggers' => array('any'),
-    ),
-  );
-}
-
-/**
- * Return a form definition so the Send email action can be configured.
- *
- * @param $context
- *   Default values (if we are editing an existing action instance).
- *
- * @return
- *   Form definition.
- *
- * @see system_send_email_action_validate()
- * @see system_send_email_action_submit()
- */
-function system_send_email_action_form($context) {
-  // Set default values for form.
-  if (!isset($context['recipient'])) {
-    $context['recipient'] = '';
-  }
-  if (!isset($context['subject'])) {
-    $context['subject'] = '';
-  }
-  if (!isset($context['message'])) {
-    $context['message'] = '';
-  }
-
-  $form['recipient'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Recipient'),
-    '#default_value' => $context['recipient'],
-    '#maxlength' => '254',
-    '#description' => t('The e-mail address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
-  );
-  $form['subject'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Subject'),
-    '#default_value' => $context['subject'],
-    '#maxlength' => '254',
-    '#description' => t('The subject of the message.'),
-  );
-  $form['message'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Message'),
-    '#default_value' => $context['message'],
-    '#cols' => '80',
-    '#rows' => '20',
-    '#description' => t('The message that should be sent. You may include placeholders like [node:title], [user:name], and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
-  );
-  return $form;
-}
-
-/**
- * Validate system_send_email_action form submissions.
- */
-function system_send_email_action_validate($form, $form_state) {
-  $form_values = $form_state['values'];
-  // Validate the configuration form.
-  if (!valid_email_address($form_values['recipient']) && strpos($form_values['recipient'], ':mail') === FALSE) {
-    // We want the literal %author placeholder to be emphasized in the error message.
-    form_set_error('recipient', t('Enter a valid email address or use a token e-mail address such as %author.', array('%author' => '[node:author:mail]')));
-  }
-}
-
-/**
- * Process system_send_email_action form submissions.
- */
-function system_send_email_action_submit($form, $form_state) {
-  $form_values = $form_state['values'];
-  // Process the HTML form to store configuration. The keyed array that
-  // we return will be serialized to the database.
-  $params = array(
-    'recipient' => $form_values['recipient'],
-    'subject'   => $form_values['subject'],
-    'message'   => $form_values['message'],
-  );
-  return $params;
-}
-
-/**
- * Sends an e-mail message.
- *
- * @param object $entity
- *   An optional node entity, which will be added as $context['node'] if
- *   provided.
- * @param array $context
- *   Array with the following elements:
- *   - 'recipient': E-mail message recipient. This will be passed through
- *     token_replace().
- *   - 'subject': The subject of the message. This will be passed through
- *     token_replace().
- *   - 'message': The message to send. This will be passed through
- *     token_replace().
- *   - Other elements will be used as the data for token replacement.
- *
- * @ingroup actions
- */
-function system_send_email_action($entity, $context) {
-  if (empty($context['node'])) {
-    $context['node'] = $entity;
-  }
-
-  $recipient = token_replace($context['recipient'], $context);
-
-  // If the recipient is a registered user with a language preference, use
-  // the recipient's preferred language. Otherwise, use the system default
-  // language.
-  $recipient_account = user_load_by_mail($recipient);
-  if ($recipient_account) {
-    $langcode = user_preferred_langcode($recipient_account);
-  }
-  else {
-    $langcode = language_default()->langcode;
-  }
-  $params = array('context' => $context);
-
-  if (drupal_mail('system', 'action_send_email', $recipient, $langcode, $params)) {
-    watchdog('action', 'Sent email to %recipient', array('%recipient' => $recipient));
-  }
-  else {
-    watchdog('error', 'Unable to send email to %recipient', array('%recipient' => $recipient));
-  }
 }
 
 /**
@@ -3656,83 +3457,6 @@ function system_mail($key, &$message, $params) {
 
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
   $message['body'][] = $body;
-}
-
-function system_message_action_form($context) {
-  $form['message'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Message'),
-    '#default_value' => isset($context['message']) ? $context['message'] : '',
-    '#required' => TRUE,
-    '#rows' => '8',
-    '#description' => t('The message to be displayed to the current user. You may include placeholders like [node:title], [user:name], and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
-  );
-  return $form;
-}
-
-function system_message_action_submit($form, $form_state) {
-  return array('message' => $form_state['values']['message']);
-}
-
-/**
- * Sends a message to the current user's screen.
- *
- * @param object $entity
- *   An optional node entity, which will be added as $context['node'] if
- *   provided.
- * @param array $context
- *   Array with the following elements:
- *   - 'message': The message to send. This will be passed through
- *     token_replace().
- *   - Other elements will be used as the data for token replacement in
- *     the message.
- *
- * @ingroup actions
- */
-function system_message_action(&$entity, $context = array()) {
-  if (empty($context['node'])) {
-    $context['node'] = $entity;
-  }
-
-  $context['message'] = token_replace(filter_xss_admin($context['message']), $context);
-  drupal_set_message($context['message']);
-}
-
-/**
- * Settings form for system_goto_action().
- */
-function system_goto_action_form($context) {
-  $form['url'] = array(
-    '#type' => 'textfield',
-    '#title' => t('URL'),
-    '#description' => t('The URL to which the user should be redirected. This can be an internal URL like node/1234 or an external URL like @url.', array('@url' => 'http://drupal.org')),
-    '#default_value' => isset($context['url']) ? $context['url'] : '',
-    '#required' => TRUE,
-  );
-  return $form;
-}
-
-function system_goto_action_submit($form, $form_state) {
-  return array(
-    'url' => $form_state['values']['url']
-  );
-}
-
-/**
- * Redirects to a different URL.
- *
- * @param $entity
- *   Ignored.
- * @param array $context
- *   Array with the following elements:
- *   - 'url': URL to redirect to. This will be passed through
- *     token_replace().
- *   - Other elements will be used as the data for token replacement.
- *
- * @ingroup actions
- */
-function system_goto_action($entity, $context) {
-  drupal_goto(token_replace($context['url'], $context));
 }
 
 /**

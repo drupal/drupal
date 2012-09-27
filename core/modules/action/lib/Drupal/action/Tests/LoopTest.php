@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Actions\LoopTest.
+ * Definition of Drupal\action\Tests\LoopTest.
  */
 
-namespace Drupal\system\Tests\Actions;
+namespace Drupal\action\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
@@ -19,7 +19,7 @@ class LoopTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('dblog', 'actions_loop_test');
+  public static $modules = array('dblog', 'action_loop_test');
 
   protected $aid;
 
@@ -27,7 +27,7 @@ class LoopTest extends WebTestBase {
     return array(
       'name' => 'Actions executing in a potentially infinite loop',
       'description' => 'Tests actions executing in a loop, and makes sure they abort properly.',
-      'group' => 'Actions',
+      'group' => 'Action',
     );
   }
 
@@ -38,8 +38,8 @@ class LoopTest extends WebTestBase {
     $user = $this->drupalCreateUser(array('administer actions'));
     $this->drupalLogin($user);
 
-    $info = actions_loop_test_action_info();
-    $this->aid = actions_save('actions_loop_test_log', $info['actions_loop_test_log']['type'], array(), $info['actions_loop_test_log']['label']);
+    $info = action_loop_test_action_info();
+    $this->aid = action_save('action_loop_test_log', $info['action_loop_test_log']['type'], array(), $info['action_loop_test_log']['label']);
 
     // Delete any existing watchdog messages to clear the plethora of
     // "Action added" messages from when Drupal was installed.
@@ -48,25 +48,25 @@ class LoopTest extends WebTestBase {
     // recursion level should be kept low enough to prevent the xdebug
     // infinite recursion protection mechanism from aborting the request.
     // See http://drupal.org/node/587634.
-    variable_set('actions_max_stack', 7);
+    variable_set('action_max_stack', 7);
     $this->triggerActions();
   }
 
   /**
    * Create an infinite loop by causing a watchdog message to be set,
-   * which causes the actions to be triggered again, up to actions_max_stack
+   * which causes the actions to be triggered again, up to action_max_stack
    * times.
    */
   protected function triggerActions() {
-    $this->drupalGet('<front>', array('query' => array('trigger_actions_on_watchdog' => $this->aid)));
+    $this->drupalGet('<front>', array('query' => array('trigger_action_on_watchdog' => $this->aid)));
     $expected = array();
     $expected[] = 'Triggering action loop';
-    for ($i = 1; $i <= variable_get('actions_max_stack', 35); $i++) {
+    for ($i = 1; $i <= variable_get('action_max_stack', 35); $i++) {
       $expected[] = "Test log #$i";
     }
     $expected[] = 'Stack overflow: too many calls to actions_do(). Aborting to prevent infinite recursion.';
 
-    $result = db_query("SELECT message FROM {watchdog} WHERE type = 'actions_loop_test' OR type = 'actions' ORDER BY wid");
+    $result = db_query("SELECT message FROM {watchdog} WHERE type = 'action_loop_test' OR type = 'action' ORDER BY wid");
     $loop_started = FALSE;
     foreach ($result as $row) {
       $expected_message = array_shift($expected);

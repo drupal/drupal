@@ -552,47 +552,6 @@ function system_schema() {
     'primary key' => array('name'),
   );
 
-  $schema['actions'] = array(
-    'description' => 'Stores action information.',
-    'fields' => array(
-      'aid' => array(
-        'description' => 'Primary Key: Unique actions ID.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '0',
-      ),
-      'type' => array(
-        'description' => 'The object that that action acts on (node, user, comment, system or custom types.)',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'callback' => array(
-        'description' => 'The callback function that executes when the action runs.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'parameters' => array(
-        'description' => 'Parameters to be passed to the callback function.',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-      'label' => array(
-        'description' => 'Label of the action.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '0',
-      ),
-    ),
-    'primary key' => array('aid'),
-  );
-
   $schema['batch'] = array(
     'description' => 'Stores details about batches (processes that run in multiple HTTP requests).',
     'fields' => array(
@@ -1971,12 +1930,14 @@ function system_update_8020() {
       ->execute();
     // Rename {blocked_ips} table into {ban_ip}.
     db_rename_table('blocked_ips', 'ban_ip');
-    // Rename the action.
+    // Rename all references to the action callback.
     db_update('actions')
-      ->fields(array(
-        'aid' => 'ban_ip_action',
-        'callback' => 'ban_ip_action',
-      ))
+      ->fields(array('callback' => 'ban_ip_action'))
+      ->condition('callback', 'system_block_ip_action')
+      ->execute();
+    // Rename the action's aid.
+    db_update('actions')
+      ->fields(array('aid' => 'ban_ip_action'))
       ->condition('aid', 'system_block_ip_action')
       ->execute();
     // Enable the new Ban module.
@@ -1985,6 +1946,32 @@ function system_update_8020() {
   else {
     // Drop old table.
     db_drop_table('blocked_ips');
+  }
+}
+
+/**
+ * Enable the Actions module.
+ */
+function system_update_8021() {
+  // Enable the module without re-installing the schema.
+  update_module_enable(array('action'));
+  // Rename former System module actions.
+  $map = array(
+    'system_message_action' => 'action_message_action',
+    'system_send_email_action' => 'action_send_email_action',
+    'system_goto_action' => 'action_goto_action',
+  );
+  foreach ($map as $old => $new) {
+    // Rename all references to the action callback.
+    db_update('actions')
+      ->fields(array('callback' => $new))
+      ->condition('callback', $old)
+      ->execute();
+    // Rename the action's aid.
+    db_update('actions')
+      ->fields(array('aid' => $new))
+      ->condition('aid', $old)
+      ->execute();
   }
 }
 

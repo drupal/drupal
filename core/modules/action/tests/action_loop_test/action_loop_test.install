@@ -3,9 +3,9 @@
 /**
  * Implements hook_install().
  */
-function actions_loop_test_install() {
+function action_loop_test_install() {
    db_update('system')
     ->fields(array('weight' => 1))
-    ->condition('name', 'actions_loop_test')
+    ->condition('name', 'action_loop_test')
     ->execute();
 }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Actions\ConfigurationTest.
+ * Definition of Drupal\action\Tests\ConfigurationTest.
  */
 
-namespace Drupal\system\Tests\Actions;
+namespace Drupal\action\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
@@ -13,11 +13,19 @@ use Drupal\simpletest\WebTestBase;
  * Actions configuration.
  */
 class ConfigurationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('action');
+
   public static function getInfo() {
     return array(
       'name' => 'Actions configuration',
       'description' => 'Tests complex actions configuration by adding, editing, and deleting a complex action.',
-      'group' => 'Actions',
+      'group' => 'Action',
     );
   }
 
@@ -32,15 +40,15 @@ class ConfigurationTest extends WebTestBase {
 
     // Make a POST request to admin/config/system/actions/manage.
     $edit = array();
-    $edit['action'] = drupal_hash_base64('system_goto_action');
+    $edit['action'] = drupal_hash_base64('action_goto_action');
     $this->drupalPost('admin/config/system/actions/manage', $edit, t('Create'));
 
     // Make a POST request to the individual action configuration page.
     $edit = array();
     $action_label = $this->randomName();
-    $edit['actions_label'] = $action_label;
+    $edit['action_label'] = $action_label;
     $edit['url'] = 'admin';
-    $this->drupalPost('admin/config/system/actions/configure/' . drupal_hash_base64('system_goto_action'), $edit, t('Save'));
+    $this->drupalPost('admin/config/system/actions/configure/' . drupal_hash_base64('action_goto_action'), $edit, t('Save'));
 
     // Make sure that the new complex action was saved properly.
     $this->assertText(t('The action has been successfully saved.'), t("Make sure we get a confirmation that we've successfully saved the complex action."));
@@ -52,7 +60,7 @@ class ConfigurationTest extends WebTestBase {
     $aid = $matches[1];
     $edit = array();
     $new_action_label = $this->randomName();
-    $edit['actions_label'] = $new_action_label;
+    $edit['action_label'] = $new_action_label;
     $edit['url'] = 'admin';
     $this->drupalPost(NULL, $edit, t('Save'));
 
