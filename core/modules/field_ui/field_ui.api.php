@@ -128,6 +128,56 @@ function hook_field_formatter_settings_form($field, $instance, $view_mode, $form
 }
 
 /**
+ * Alter the formatter settings form.
+ *
+ * @param $element
+ *   Form array as returned by hook_field_formatter_settings_form().
+ * @param $form_state
+ *   The form state of the (entire) configuration form.
+ * @param $context
+ *   An associative array with the following elements:
+ *   - 'module': The module that contains the definition of this formatter.
+ *   - 'formatter': The formatter type description array.
+ *   - 'field': The field structure being configured.
+ *   - 'instance': The instance structure being configured.
+ *   - 'view_mode': The view mode being configured.
+ *   - 'form': The (entire) configuration form array.
+ */
+function hook_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
+  // Add a mysetting checkbox to the settings form for foo_field fields.
+  if ($context['field']['type'] == 'foo_field') {
+    $display = $context['instance']['display'][$context['view_mode']];
+    $element['mysetting'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('My setting'),
+      '#default_value' => $display['settings']['mysetting'],
+    );
+  }
+}
+
+/**
+ * Alter the field formatter settings summary.
+ *
+ * @param $summary
+ *   The summary as returned by hook_field_formatter_settings_summary().
+ * @param $context
+ *   An associative array with the following elements:
+ *   - 'field': The field structure being configured.
+ *   - 'instance': The instance structure being configured.
+ *   - 'view_mode': The view mode being configured.
+ */
+function hook_field_formatter_settings_summary_alter(&$summary, $context) {
+  // Append a message to the summary when an instance of foo_field has
+  // mysetting set to TRUE for the current view mode.
+  if ($context['field']['type'] == 'foo_field') {
+    $display = $context['instance']['display'][$context['view_mode']];
+    if ($display['settings']['mysetting']) {
+      $summary .= '<br />' . t('My setting enabled.');
+    }
+  }
+}
+
+/**
  * Return a short summary for the current formatter settings of an instance.
  *
  * If an empty result is returned, the formatter is assumed to have no

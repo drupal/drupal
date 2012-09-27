@@ -19,7 +19,7 @@ class ManageDisplayTest extends FieldUiTestBase {
    *
    * @var array
    */
-  public static $modules = array('search');
+  public static $modules = array('search', 'field_test');
 
   public static function getInfo() {
     return array(
@@ -75,6 +75,24 @@ class ManageDisplayTest extends FieldUiTestBase {
     $current_setting_value = $instance['display']['default']['settings'][$setting_name];
     $this->assertEqual($current_format, $format, t('The formatter was updated.'));
     $this->assertEqual($current_setting_value, $setting_value, t('The setting was updated.'));
+
+    // Assert that hook_field_formatter_settings_summary_alter() is called.
+    $this->assertText('field_test_field_formatter_settings_summary_alter');
+
+    // Click on the formatter settings button to open the formatter settings
+    // form.
+    $this->drupalPostAJAX(NULL, array(), "field_test_formatter_settings_edit");
+
+    // Assert that the field added in
+    // field_test_field_formatter_settings_form_alter() is present.
+    $fieldname = 'fields[field_test][settings_edit_form][settings][field_test_formatter_settings_form_alter]';
+    $this->assertField($fieldname, 'The field added in hook_field_formatter_settings_form_alter() is present on the settings form.');
+    $edit = array($fieldname => 'foo');
+    $this->drupalPostAJAX(NULL, $edit, "field_test_formatter_settings_update");
+
+    // Confirm that the settings are updated on the settings form.
+    $this->drupalPostAJAX(NULL, array(), "field_test_formatter_settings_edit");
+    $this->assertFieldByName($fieldname, 'foo');
   }
 
   /**
