@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the field module.
+ * Install, update, and uninstall functions for the Field module.
  */
 
 /**
@@ -167,7 +167,7 @@ function field_schema() {
 }
 
 /**
- * Utility function: create a field by writing directly to the database.
+ * Creates a field by writing directly to the database.
  *
  * @ingroup update-api-7.x-to-8.x
  */
@@ -237,7 +237,7 @@ function _update_7000_field_create_field(&$field) {
 }
 
 /**
- * Utility function: delete a field stored in SQL storage directly from the database.
+ * Deletes a field stored in SQL storage directly from the database.
  *
  * To protect user data, this function can only be used to delete fields once
  * all information it stored is gone. Delete all data from the
@@ -272,9 +272,9 @@ function _update_7000_field_delete_field($field_name) {
 
 
 /**
- * Utility function: delete an instance and all its data of a field stored in SQL Storage.
+ * Deletes an instance and all its data of a field stored in SQL Storage.
  *
- * BEWARE: this function deletes user data from the field storage tables.
+ * BEWARE: This function deletes user data from the field storage tables.
  *
  * @ingroup update-api-7.x-to-8.x
  */
@@ -298,9 +298,9 @@ function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) 
 }
 
 /**
- * Utility function: fetch all the field definitions from the database.
+ * Fetches all of the field definitions from the database.
  *
- * Warning: unlike the field_read_fields() API function, this function returns
+ * Warning: Unlike the field_read_fields() API function, this function returns
  * all fields by default, including deleted and inactive fields, unless
  * specified otherwise in the $conditions parameter.
  *
@@ -344,7 +344,7 @@ function _update_7000_field_read_fields(array $conditions = array(), $key = 'id'
 }
 
 /**
- * Utility function: write a field instance directly to the database.
+ * Writes a field instance directly to the database.
  *
  * @ingroup update-api-7.x-to-8.x
  */

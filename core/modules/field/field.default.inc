@@ -25,18 +25,18 @@
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $entity's bundle.
+ *   The instance structure for $field in $entity's bundle.
  * @param $langcode
- *   The language associated to $items.
+ *   The language associated with $items.
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  * @param $errors
  *   The array of errors, keyed by field name and by value delta, that have
- *   already been reported for the entity. The function should add its errors
- *   to this array. Each error is an associative array, with the following
- *   keys and values:
- *   - 'error': an error code (should be a string, prefixed with the module name)
- *   - 'message': the human readable message to be displayed.
+ *   already been reported for the entity. The function should add its errors to
+ *   this array. Each error is an associative array, with the following keys and
+ *   values:
+ *   - error: An error code (should be a string, prefixed with the module name).
+ *   - message: The human readable message to be displayed.
  */
 function field_default_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   // Filter out empty values.
@@ -54,11 +54,24 @@ function field_default_validate($entity_type, $entity, $field, $instance, $langc
 }
 
 /**
- * Default field 'insert' operation.
+ * Inserts a default value if no $entity->$field_name entry was provided.
  *
- * Insert default value if no $entity->$field_name entry was provided.
  * This can happen with programmatic saves, or on form-based creation where
- * the current user doesn't have 'edit' permission for the field.
+ * the current user doesn't have 'edit' permission for the field. This is the
+ * default field 'insert' operation.
+ *
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $entity
+ *   The entity for the operation.
+ * @param $field
+ *   The field structure for the operation.
+ * @param $instance
+ *   The instance structure for $field in $entity's bundle.
+ * @param $langcode
+ *   The language associated with $items.
+ * @param $items
+ *   An array that this function will populate with default values.
  */
 function field_default_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
   // _field_invoke() populates $items with an empty array if the $entity has no
@@ -79,20 +92,20 @@ function field_default_insert($entity_type, $entity, $field, $instance, $langcod
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of entities being displayed, keyed by entity id.
+ *   An array of entities being displayed, keyed by entity ID.
  * @param $field
  *   The field structure for the operation.
  * @param $instances
  *   Array of instance structures for $field for each entity, keyed by entity
- *   id.
+ *   ID.
  * @param $langcode
- *   The language associated to $items.
+ *   The language associated with $items.
  * @param $items
  *   Array of field values already loaded for the entities, keyed by entity id.
  * @param $display
  *   Can be either:
- *   - the name of a view mode
- *   - or an array of display settings to use for display, as found in the
+ *   - The name of a view mode
+ *   - An array of display settings to use for display, as found in the
  *     'display' entry of $instance definitions.
  */
 function field_default_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $display) {
@@ -204,15 +217,15 @@ function field_default_view($entity_type, $entity, $field, $instance, $langcode,
  * @param $field
  *   The field structure for the operation.
  * @param $instance
- *   The instance structure for $field on $entity's bundle.
+ *   The instance structure for $field in $entity's bundle.
  * @param $langcode
- *   The language the entity has to be translated in.
+ *   The language the entity has to be translated to.
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  * @param $source_entity
  *   The source entity holding the field values to be translated.
  * @param $source_langcode
- *   The source language from which translate.
+ *   The source language from which to translate.
  */
 function field_default_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items, $source_entity, $source_langcode) {
   $field_name = $field['field_name'];

@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * @defgroup field_storage Field Storage API
  * @{
- * Implement a storage engine for Field API data.
+ * Implements a storage engine for Field API data.
  *
  * The Field Attach API uses the Field Storage API to perform all "database
  * access". Each Field Storage API hook function defines a primitive database
@@ -31,8 +31,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Argument for an update operation.
  *
- * This is used in hook_field_storage_write when updating an
- * existing entity.
+ * This is used in hook_field_storage_write when updating an existing entity.
  */
 const FIELD_STORAGE_UPDATE = 'update';
 
@@ -50,7 +49,7 @@ const FIELD_STORAGE_INSERT = 'insert';
 /**
  * @defgroup field_attach Field Attach API
  * @{
- * Operate on Field API data attached to Drupal entities.
+ * Operates on Field API data attached to Drupal entities.
  *
  * Field Attach API functions load, store, display, generate Field API
  * structures, and perform a variety of other functions for field data attached
@@ -61,18 +60,18 @@ const FIELD_STORAGE_INSERT = 'insert';
  * of the fieldable entity, such as 'node' or 'user', and $entity is the entity
  * itself.
  *
- * hook_entity_info() is the central place for entity types to define if and
- * how Field API should operate on their entity objects. Notably, the
- * 'fieldable' property needs to be set to TRUE.
+ * hook_entity_info() is the central place for entity types to define if and how
+ * Field API should operate on their entity objects. Notably, the 'fieldable'
+ * property needs to be set to TRUE.
  *
  * The Field Attach API uses the concept of bundles: the set of fields for a
  * given entity is defined on a per-bundle basis. The collection of bundles for
  * an entity type is defined its hook_entity_info() implementation. For
  * instance, node_entity_info() exposes each node type as its own bundle. This
  * means that the set of fields of a node is determined by the node type. The
- * Field API reads the bundle name for a given entity from a particular
- * property of the entity object, and hook_entity_info() defines which property
- * to use. For instance, node_entity_info() specifies:
+ * Field API reads the bundle name for a given entity from a particular property
+ * of the entity object, and hook_entity_info() defines which property to use.
+ * For instance, node_entity_info() specifies:
  * @code $info['entity keys']['bundle'] = 'type'@endcode
  * This indicates that for a particular node object, the bundle name can be
  * found in $node->type. This property can be omitted if the entity type only
@@ -89,16 +88,16 @@ const FIELD_STORAGE_INSERT = 'insert';
  *
  * field_attach_load(), field_attach_insert(), and field_attach_update() also
  * define pre-operation hooks, e.g. hook_field_attach_pre_load(). These hooks
- * run before the corresponding Field Storage API and Field Type API
- * operations. They allow modules to define additional storage locations (e.g.
+ * run before the corresponding Field Storage API and Field Type API operations.
+ * They allow modules to define additional storage locations (e.g.
  * denormalizing, mirroring) for field data on a per-field basis. They also
  * allow modules to take over field storage completely by instructing other
  * implementations of the same hook and the Field Storage API itself not to
  * operate on specified fields.
  *
  * The pre-operation hooks do not make the Field Storage API irrelevant. The
- * Field Storage API is essentially the "fallback mechanism" for any fields
- * that aren't being intercepted explicitly by pre-operation hooks.
+ * Field Storage API is essentially the "fallback mechanism" for any fields that
+ * aren't being intercepted explicitly by pre-operation hooks.
  *
  * @link field_language Field language API @endlink provides information about
  * the structure of field objects.
@@ -298,7 +297,7 @@ function _field_invoke($op, $entity_type, EntityInterface $entity, &$a = NULL, &
 }
 
 /**
- * Invoke a field hook across fields on multiple entities.
+ * Invokes a field hook across fields on multiple entities.
  *
  * @param $op
  *   Possible operations include:
@@ -307,9 +306,9 @@ function _field_invoke($op, $entity_type, EntityInterface $entity, &$a = NULL, &
  *   For all other operations, use _field_invoke() / field_invoke_default()
  *   instead.
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of entities in $entities; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of entities, keyed by entity id.
+ *   An array of entities, keyed by entity ID.
  * @param $a
  *   - The $age parameter in the 'load' operation.
  *   - Otherwise NULL.
@@ -317,30 +316,30 @@ function _field_invoke($op, $entity_type, EntityInterface $entity, &$a = NULL, &
  *   Currently always NULL.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *  - 'field_name': The name of the field whose operation should be
- *    invoked. By default, the operation is invoked on all the fields
- *    in the entity's bundle. NOTE: This option is not compatible with
- *    the 'deleted' option; the 'field_id' option should be used instead.
- *  - 'field_id': The id of the field whose operation should be
- *    invoked. By default, the operation is invoked on all the fields
- *    in the entity's' bundles.
- *  - 'default': A boolean value, specifying which implementation of
- *    the operation should be invoked.
- *    - if FALSE (default), the field types implementation of the operation
- *      will be invoked (hook_field_[op])
- *    - If TRUE, the default field implementation of the field operation
- *      will be invoked (field_default_[op])
- *    Internal use only. Do not explicitely set to TRUE, but use
- *    _field_invoke_multiple_default() instead.
- *  - 'deleted': If TRUE, the function will operate on deleted fields
- *    as well as non-deleted fields. If unset or FALSE, only
- *    non-deleted fields are operated on.
- *  - 'langcode': A language code or an array of arrays of language codes keyed
- *    by entity id and field name. It will be used to narrow down to a single
- *    value the available language codes to act on.
+ *   - field_name: The name of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's
+ *     bundle. NOTE: This option is not compatible with the 'deleted' option;
+ *     the 'field_id' option should be used instead.
+ *   - field_id: The ID of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's
+ *     bundles.
+ *   - default: A boolean value, specifying which implementation of the
+ *     operation should be invoked.
+ *     - if FALSE (default), the field types implementation of the operation
+ *       will be invoked (hook_field_[op])
+ *     - If TRUE, the default field implementation of the field operation will
+ *       be invoked (field_default_[op])
+ *     Internal use only. Do not explicitely set to TRUE, but use
+ *     _field_invoke_multiple_default() instead.
+ *   - deleted: If TRUE, the function will operate on deleted fields as well as
+ *     non-deleted fields. If unset or FALSE, only non-deleted fields are
+ *     operated on.
+ *   - langcode: A language code or an array of arrays of language codes keyed
+ *     by entity ID and field name. It will be used to narrow down to a single
+ *     value the available languages to act on.
  *
  * @return
- *   An array of returned values keyed by entity id.
+ *   An array of returned values keyed by entity ID.
  */
 function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = NULL, $options = array()) {
   // Merge default options.
@@ -361,7 +360,7 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
   // Go through the entities and collect the fields on which the hook should be
   // invoked.
   //
-  // We group fields by id, not by name, because this function can operate on
+  // We group fields by ID, not by name, because this function can operate on
   // deleted fields which may have non-unique names. However, entities can only
   // contain data for a single field for each name, even if that field
   // is deleted, so we reference field data via the
@@ -460,6 +459,48 @@ function _field_invoke_default($op, $entity_type, EntityInterface $entity, &$a =
  * Use _field_invoke_multiple() to invoke the field type implementation,
  * hook_field_[op]().
  *
+ * @param $op
+ *   Possible operations include:
+ *   - load
+ *   - prepare_view
+ *   For all other operations, use _field_invoke() / field_invoke_default()
+ *   instead.
+ * @param $entity_type
+ *   The type of entities in $entities; e.g. 'node' or 'user'.
+ * @param $entities
+ *   An array of entities, keyed by entity ID.
+ * @param $a
+ *   - The $age parameter in the 'load' operation.
+ *   - Otherwise NULL.
+ * @param $b
+ *   Currently always NULL.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *   - field_name: The name of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's
+ *     bundle. NOTE: This option is not compatible with the 'deleted' option;
+ *     the 'field_id' option should be used instead.
+ *   - field_id: The ID of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's
+ *     bundles.
+ *   - default': A boolean value, specifying which implementation of the
+ *     operation should be invoked.
+ *     - if FALSE (default), the field types implementation of the operation
+ *       will be invoked (hook_field_[op])
+ *     - If TRUE, the default field implementation of the field operation will
+ *       be invoked (field_default_[op])
+ *     Internal use only. Do not explicitely set to TRUE, but use
+ *     _field_invoke_multiple_default() instead.
+ *   - deleted: If TRUE, the function will operate on deleted fields as well as
+ *     non-deleted fields. If unset or FALSE, only non-deleted fields are
+ *     operated on.
+ *   - language: A language code or an array of arrays of language codes keyed
+ *     by entity ID and field name. It will be used to narrow down to a single
+ *     value the available languages to act on.
+ *
+ * @return
+ *   An array of returned values keyed by entity ID.
+ *
  * @see _field_invoke_multiple()
  */
 function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL, &$b = NULL, $options = array()) {
@@ -468,7 +509,9 @@ function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL
 }
 
 /**
- * Helper for _field_invoke(): retrieves a list of instances to operate on.
+ * Retrieves a list of instances to operate on.
+ *
+ * Helper for _field_invoke().
  *
  * @param $entity_type
  *   The entity type.
@@ -476,7 +519,7 @@ function _field_invoke_multiple_default($op, $entity_type, $entities, &$a = NULL
  *   The bundle name.
  * @param $options
  *   An associative array of options, as provided to _field_invoke(). Only the
- *   following keys are considered :
+ *   following keys are considered:
  *   - deleted
  *   - field_name
  *   - field_id
@@ -535,7 +578,7 @@ function _field_invoke_widget_target() {
 }
 
 /**
- * Add form elements for all fields for an entity to a form structure.
+ * Adds form elements for all fields for an entity to a form structure.
  *
  * The form elements for the entity's fields are added by reference as direct
  * children in the $form parameter. This parameter can be a full form structure
@@ -672,26 +715,25 @@ function field_attach_form($entity_type, EntityInterface $entity, &$form, &$form
  * entity type module.
  *
  * @param $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
+ *   The type of entities in $entities; e.g., 'node' or 'user'.
  * @param $entities
- *   An array of entities for which to load fields, keyed by entity ID.
- *   Each entity needs to have its 'bundle', 'id' and (if applicable)
- *   'revision' keys filled in. The function adds the loaded field data
- *   directly in the entity objects of the $entities array.
+ *   An array of entities for which to load fields, keyed by entity ID. Each
+ *   entity needs to have its 'bundle', 'id' and (if applicable) 'revision' keys
+ *   filled in. The function adds the loaded field data directly in the entity
+ *   objects of the $entities array.
  * @param $age
- *   FIELD_LOAD_CURRENT to load the most recent revision for all
- *   fields, or FIELD_LOAD_REVISION to load the version indicated by
- *   each entity. Defaults to FIELD_LOAD_CURRENT; use
- *   field_attach_load_revision() instead of passing FIELD_LOAD_REVISION.
+ *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
+ *   FIELD_LOAD_REVISION to load the version indicated by each entity. Defaults
+ *   to FIELD_LOAD_CURRENT; use field_attach_load_revision() instead of passing
+ *   FIELD_LOAD_REVISION.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *   - 'field_id': The field ID that should be loaded, instead of
- *     loading all fields, for each entity. Note that returned entities
- *     may contain data for other fields, for example if they are read
- *     from a cache.
- *   - 'deleted': If TRUE, the function will operate on deleted fields
- *     as well as non-deleted fields. If unset or FALSE, only
- *     non-deleted fields are operated on.
+ *   - field_id: The field ID that should be loaded, instead of loading all
+ *     fields, for each entity. Note that returned entities may contain data for
+ *     other fields, for example if they are read from a cache.
+ *   - deleted: If TRUE, the function will operate on deleted fields as well as
+ *     non-deleted fields. If unset or FALSE, only non-deleted fields are
+ *     operated on.
  */
 function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $options = array()) {
   $field_info = field_info_field_by_ids();
@@ -808,7 +850,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
 }
 
 /**
- * Load all fields for previous versions of a group of entities.
+ * Loads all fields for previous versions of a group of entities.
  *
  * Loading different versions of the same entities is not supported, and should
  * be done by separate calls to the function.
@@ -818,12 +860,12 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
  * called by the entity type module.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of entities in $entities; e.g. 'node' or 'user'.
  * @param $entities
  *   An array of entities for which to load fields, keyed by entity ID. Each
- *   entity needs to have its 'bundle', 'id' and (if applicable) 'revision'
- *   keys filled. The function adds the loaded field data directly in the
- *   entity objects of the $entities array.
+ *   entity needs to have its 'bundle', 'id' and (if applicable) 'revision' keys
+ *   filled. The function adds the loaded field data directly in the entity
+ *   objects of the $entities array.
  * @param $options
  *   An associative array of additional options. See field_attach_load() for
  *   details.
@@ -833,12 +875,11 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
 }
 
 /**
- * Perform field validation against the field data in an entity.
+ * Performs field validation against the field data in an entity.
  *
- * This function does not perform field widget validation on form
- * submissions. It is intended to be called during API save
- * operations. Use field_attach_form_validate() to validate form
- * submissions.
+ * This function does not perform field widget validation on form submissions.
+ * It is intended to be called during API save operations. Use
+ * field_attach_form_validate() to validate form submissions.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -869,21 +910,21 @@ function field_attach_validate($entity_type, $entity) {
 }
 
 /**
- * Perform field validation against form-submitted field values.
+ * Performs field validation against form-submitted field values.
  *
- * There are two levels of validation for fields in forms: widget
- * validation, and field validation.
- * - Widget validation steps are specific to a given widget's own form
- *   structure and UI metaphors. They are executed through FAPI's
- *   #element_validate property during normal form validation.
+ * There are two levels of validation for fields in forms: widget validation and
+ * and field validation.
+ * - Widget validation steps are specific to a given widget's own form structure
+ *   and UI metaphors. They are executed through FAPI's #element_validate
+ *   property during normal form validation.
  * - Field validation steps are common to a given field type, independently of
  *   the specific widget being used in a given form. They are defined in the
  *   field type's implementation of hook_field_validate().
  *
- * This function performs field validation in the context of a form
- * submission. It converts field validation errors into form errors
- * on the correct form elements. Fieldable entity types should call
- * this function during their own form validation function.
+ * This function performs field validation in the context of a form submission.
+ * It converts field validation errors into form errors on the correct form
+ * elements. Fieldable entity types should call this function during their own
+ * form validation function.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -917,10 +958,10 @@ function field_attach_form_validate($entity_type, EntityInterface $entity, $form
 }
 
 /**
- * Perform necessary operations on field data submitted by a form.
+ * Performs necessary operations on field data submitted by a form.
  *
- * Currently, this accounts for drag-and-drop reordering of
- * field values, and filtering of empty values.
+ * Currently, this accounts for drag-and-drop reordering of field values, and
+ * filtering of empty values.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -947,10 +988,10 @@ function field_attach_submit($entity_type, EntityInterface $entity, $form, &$for
 }
 
 /**
- * Perform necessary operations just before fields data get saved.
+ * Performs necessary operations just before fields data get saved.
  *
- * We take no specific action here, we just give other
- * modules the opportunity to act.
+ * We take no specific action here, we just give other modules the opportunity
+ * to act.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -1019,7 +1060,7 @@ function field_attach_insert($entity_type, EntityInterface $entity) {
 }
 
 /**
- * Save field data for an existing entity.
+ * Saves field data for an existing entity.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -1071,8 +1112,8 @@ function field_attach_update($entity_type, EntityInterface $entity) {
 }
 
 /**
- * Delete field data for an existing entity. This deletes all
- * revisions of field data for the entity.
+ * Deletes field data for an existing entity. This deletes all revisions of
+ * field data for the entity.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -1106,8 +1147,8 @@ function field_attach_delete($entity_type, $entity) {
 }
 
 /**
- * Delete field data for a single revision of an existing entity. The
- * passed entity must have a revision id attribute.
+ * Delete field data for a single revision of an existing entity. The passed
+ * entity must have a revision ID attribute.
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -1136,24 +1177,23 @@ function field_attach_delete_revision($entity_type, $entity) {
 }
 
 /**
- * Prepare field data prior to display.
+ * Prepares field data prior to display.
  *
- * This function lets field types and formatters load additional data
- * needed for display that is not automatically loaded during
- * field_attach_load(). It accepts an array of entities to allow query
- * optimisation when displaying lists of entities.
+ * This function lets field types and formatters load additional data needed for
+ * display that is not automatically loaded during field_attach_load(). It
+ * accepts an array of entities to allow query optimization when displaying
+ * lists of entities.
  *
- * field_attach_prepare_view() and field_attach_view() are two halves
- * of the same operation. It is safe to call
- * field_attach_prepare_view() multiple times on the same entity
- * before calling field_attach_view() on it, but calling any Field
- * API operation on an entity between passing that entity to these two
+ * field_attach_prepare_view() and field_attach_view() are two halves of the
+ * same operation. It is safe to call field_attach_prepare_view() multiple times
+ * on the same entity before calling field_attach_view() on it, but calling any
+ * Field API operation on an entity between passing that entity to these two
  * functions may yield incorrect results.
  *
  * @param $entity_type
- *   The type of $entities; e.g. 'node' or 'user'.
+ *   The type of entities in $entities; e.g. 'node' or 'user'.
  * @param $entities
- *   An array of entities, keyed by entity id.
+ *   An array of entities, keyed by entity ID.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param $langcode
@@ -1194,13 +1234,12 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcod
  * Returns a renderable array for the fields on an entity.
  *
  * Each field is displayed according to the display options specified in the
- * $instance definition for the given $view_mode.
+ * instance definition for the given view mode.
  *
- * field_attach_prepare_view() and field_attach_view() are two halves
- * of the same operation. It is safe to call
- * field_attach_prepare_view() multiple times on the same entity
- * before calling field_attach_view() on it, but calling any Field
- * API operation on an entity between passing that entity to these two
+ * field_attach_prepare_view() and field_attach_view() are two halves of the
+ * same operation. It is safe to call field_attach_prepare_view() multiple times
+ * on the same entity before calling field_attach_view() on it, but calling any
+ * Field API operation on an entity between passing that entity to these two
  * functions may yield incorrect results.
  *
  * Sample structure:
@@ -1270,7 +1309,7 @@ function field_attach_view($entity_type, EntityInterface $entity, $view_mode, $l
 }
 
 /**
- * Populate the template variables with the field values available for rendering.
+ * Populates the template variables with the available field values.
  *
  * The $variables array will be populated with all the field instance values
  * associated with the given entity type, keyed by field name; in case of
@@ -1308,7 +1347,7 @@ function field_attach_preprocess($entity_type, EntityInterface $entity, $element
 /**
  * Prepares an entity for translation.
  *
- * This function is used to fill-in the form default values for Field API fields
+ * This function is used to fill in the form default values for Field API fields
  * while performing entity translation. By default it copies all the source
  * values in the given source language to the new entity and assigns them the
  * target language.
@@ -1345,7 +1384,7 @@ function field_attach_prepare_translation($entity_type, EntityInterface $entity,
 }
 
 /**
- * Notify field.module that a new bundle was created.
+ * Notifies field.module that a new bundle was created.
  *
  * The default SQL-based storage doesn't need to do anything about it, but
  * others might.
@@ -1364,7 +1403,7 @@ function field_attach_create_bundle($entity_type, $bundle) {
 }
 
 /**
- * Notify field.module that a bundle was renamed.
+ * Notifies field.module that a bundle was renamed.
  *
  * @param $entity_type
  *   The entity type to which the bundle is bound.
@@ -1394,12 +1433,12 @@ function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
 }
 
 /**
- * Notify field.module the a bundle was deleted.
+ * Notifies field.module the a bundle was deleted.
  *
  * This deletes the data for the field instances as well as the field instances
- * themselves. This function actually just marks the data and field instances
- * and deleted, leaving the garbage collection for a separate process, because
- * it is not always possible to delete this much data in a single page request
+ * themselves. This function actually just marks the data and field instances as
+ * deleted, leaving the garbage collection for a separate process, because it is
+ * not always possible to delete this much data in a single page request
  * (particularly since for some field types, the deletion is more than just a
  * simple DELETE query).
  *

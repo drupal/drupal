@@ -561,7 +561,7 @@ function options_field_widget_settings_form($field, $instance) {
 }
 
 /**
- * Form element validation handler for options element.
+ * Form element validation handler for options elements.
  */
 function options_field_widget_validate($element, &$form_state) {
   if ($element['#required'] && $element['#value'] == '_none') {
@@ -575,6 +575,18 @@ function options_field_widget_validate($element, &$form_state) {
 
 /**
  * Describes the preparation steps required by each widget.
+ *
+ * @param $type
+ *   The type of widget: select, buttons, or onoff.
+ * @param $multiple
+ *   TRUE if the field allows multiple values; FALSE otherwise.
+ * @param $required
+ *   TRUE if a value is required for the field; FALSE otherwise.
+ * @param $has_value
+ *   TRUE if a value is selected.
+ *
+ * @return
+ *   An array of properties for the widget.
  */
 function _options_properties($type, $multiple, $required, $has_value) {
   $base = array(
@@ -655,9 +667,12 @@ function _options_get_options($field, $instance, $properties, $entity_type, $ent
 }
 
 /**
- * Sanitizes the options.
+ * Sanitizes the options recursively to support optgroups.
  *
- * The function is recursive to support optgroups.
+ * @param $options
+ *   The option array.
+ * @param $properties
+ *   An array containing the properties of the widget.
  */
 function _options_prepare_options(&$options, $properties) {
   foreach ($options as $value => $label) {
@@ -678,6 +693,18 @@ function _options_prepare_options(&$options, $properties) {
 
 /**
  * Transforms stored field values into the format the widgets need.
+ *
+ * @param $items
+ *   An array of stored field values.
+ * @param $options
+ *   The options array.
+ * @param $column
+ *   The field storage column of the field.
+ * @param $properties
+ *   An array containing the properties of the widget.
+ *
+ * @return
+ *   An array of values in the format used by widgets.
  */
 function _options_storage_to_form($items, $options, $column, $properties) {
   $items_transposed = options_array_transpose($items);
@@ -694,6 +721,12 @@ function _options_storage_to_form($items, $options, $column, $properties) {
 
 /**
  * Transforms submitted form values into field storage format.
+ *
+ * @param $element
+ *   The form element.
+ *
+ * @return
+ *   An array of field values in field storage format.
  */
 function _options_form_to_storage($element) {
   $values = array_values((array) $element['#value']);
@@ -725,13 +758,14 @@ function _options_form_to_storage($element) {
 /**
  * Manipulates a 2D array to reverse rows and columns.
  *
- * The default data storage for fields is delta first, column names second.
- * This is sometimes inconvenient for field modules, so this function can be
- * used to present the data in an alternate format.
+ * The default data storage for fields is delta first, column names second. This
+ * is sometimes inconvenient for field modules, so this function can be used to
+ * present the data in an alternate format.
  *
  * @param $array
- *   The array to be transposed. It must be at least two-dimensional, and
- *   the subarrays must all have the same keys or behavior is undefined.
+ *   The array to be transposed. It must be at least two-dimensional, and the
+ *   subarrays must all have the same keys or behavior is undefined.
+ *
  * @return
  *   The transposed array.
  */
@@ -790,9 +824,10 @@ function options_options_list($field, $instance, $entity_type, $entity) {
 }
 
 /**
- * Returns HTML for the label for the empty value for options that are not required.
+ * Returns HTML for the label for the empty value for non-required options.
  *
- * The default theme will display N/A for a radio list and '- None -' for a select.
+ * The default theme will display N/A for a radio list and '- None -' for a
+ * select.
  *
  * @param $variables
  *   An associative array containing:

@@ -8,7 +8,7 @@
 /**
  * @defgroup field_language Field Language API
  * @{
- * Handling of multilingual fields.
+ * Handles multilingual fields.
  *
  * Fields natively implement multilingual support, and all fields use the
  * following structure:
@@ -32,10 +32,16 @@
  * module registering itself via hook_entity_info() to handle field
  * translations.
  *
+
  * By default, _field_invoke() and _field_invoke_multiple() are processing a
  * field in all available languages, unless they are given a language code
  * suggestion. Based on that suggestion, _field_language_suggestion() determines
  * the languages to act on.
+
+ * By default, _field_invoke() and _field_invoke_multiple() process a field in
+ * all available languages, unless they are given a language code suggestion.
+ * Based on that suggestion, _field_language_suggestion() determines the
+ * languages to act on.
  *
  * Most field_attach_*() functions act on all available language codes, except
  * for the following:
@@ -142,8 +148,7 @@ function field_available_languages($entity_type, $field) {
 }
 
 /**
- * Process the given language code suggestion based on the available language
- * codes.
+ * Process the language code suggestion based on the available language codes.
  *
  * If a non-empty language code suggestion is provided it must appear among the
  * available language codes, otherwise it will be ignored.
@@ -207,8 +212,8 @@ function field_is_translatable($entity_type, $field) {
 /**
  * Checks if a module is registered as a translation handler for a given entity.
  *
- * If no handler is passed, simply check if there is any translation handler
- * enabled for the given entity type.
+ * If no handler is passed, the function simply checks if there is any
+ * translation handler enabled for the given entity type.
  *
  * @param $entity_type
  *   The type of the entity whose fields are to be translated.
@@ -250,6 +255,7 @@ function field_has_translation_handler($entity_type, $handler = NULL) {
  * @param $default
  *   Whether to return the default language code or the current language code in
  *   case $langcode is invalid.
+ *
  * @return
  *   A valid language code.
  */

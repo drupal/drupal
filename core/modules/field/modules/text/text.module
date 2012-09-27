@@ -22,12 +22,12 @@ function text_help($path, $arg) {
  * Implements hook_field_info().
  *
  * Field settings:
- *   - max_length: the maximum length for a varchar field.
+ *   - max_length: The maximum length for a varchar field.
  * Instance settings:
- *   - text_processing: whether text input filters should be used.
- *   - display_summary: whether the summary field should be displayed.
- *     When empty and not displayed the summary will take its value from the
- *     trimmed value of the main text field.
+ *   - text_processing: Whether text input filters should be used.
+ *   - display_summary: Whether the summary field should be displayed. When
+ *     empty and not displayed the summary will take its value from the trimmed
+ *     value of the main text field.
  */
 function text_field_info() {
   return array(
@@ -112,8 +112,8 @@ function text_field_instance_settings_form($field, $instance) {
  * Implements hook_field_validate().
  *
  * Possible error codes:
- * - 'text_value_max_length': The value exceeds the maximum length.
- * - 'text_summary_max_length': The summary exceeds the maximum length.
+ * - text_value_max_length: The value exceeds the maximum length.
+ * - text_summary_max_length: The summary exceeds the maximum length.
  */
 function text_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
@@ -144,9 +144,9 @@ function text_field_validate($entity_type, $entity, $field, $instance, $langcode
 /**
  * Implements hook_field_load().
  *
- * Where possible, generate the sanitized version of each field early so that
- * it is cached in the field cache. This avoids looking up from the filter cache
- * separately.
+ * Where possible, the function generates the sanitized version of each field
+ * early so that it is cached in the field cache. This avoids the need to look
+ * up the field in the filter cache separately.
  *
  * @see text_field_formatter_view()
  */
@@ -302,14 +302,14 @@ function text_field_formatter_view($entity_type, $entity, $field, $instance, $la
  * @param $instance
  *   The instance definition.
  * @param $langcode
- *  The language associated to $item.
+ *  The language associated with $item.
  * @param $item
  *   The field value to sanitize.
  * @param $column
  *   The column to sanitize (either 'value' or 'summary').
  *
  * @return
- *  The sanitized string.
+ *   The sanitized string.
  */
 function _text_sanitize($instance, $langcode, $item, $column) {
   // If the value uses a cacheable text format, text_field_load() precomputes
@@ -321,27 +321,25 @@ function _text_sanitize($instance, $langcode, $item, $column) {
 }
 
 /**
- * Generate a trimmed, formatted version of a text field value.
+ * Generates a trimmed, formatted version of a text field value.
  *
  * If the end of the summary is not indicated using the <!--break--> delimiter
  * then we generate the summary automatically, trying to end it at a sensible
- * place such as the end of a paragraph, a line break, or the end of a
- * sentence (in that order of preference).
+ * place such as the end of a paragraph, a line break, or the end of a sentence
+ * (in that order of preference).
  *
  * @param $text
  *   The content for which a summary will be generated.
  * @param $format
- *   The format of the content.
- *   If the PHP filter is present and $text contains PHP code, we do not
- *   split it up to prevent parse errors.
- *   If the line break filter is present then we treat newlines embedded in
- *   $text as line breaks.
+ *   The format of the content. If the PHP filter is present and $text contains
+ *   PHP code, we do not split it up to prevent parse errors. If the line break
+ *   filter is present then we treat newlines embedded in $text as line breaks.
  *   If the htmlcorrector filter is present, it will be run on the generated
  *   summary (if different from the incoming $text).
  * @param $size
- *   The desired character length of the summary. If omitted, the default
- *   value will be used. Ignored if the special delimiter is present
- *   in $text.
+ *   The desired character length of the summary. If omitted, the default value
+ *   will be used. Ignored if the special delimiter is present in $text.
+ *
  * @return
  *   The generated summary.
  */

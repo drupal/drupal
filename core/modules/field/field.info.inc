@@ -10,11 +10,11 @@ use Drupal\field\FieldInstance;
 /**
  * @defgroup field_info Field Info API
  * @{
- * Obtain information about Field API configuration.
+ * Obtains information about Field API configuration.
  *
- * The Field Info API exposes information about field types, fields,
- * instances, bundles, widget types, display formatters, behaviors,
- * and settings defined by or with the Field API.
+ * The Field Info API exposes information about field types, fields, instances,
+ * bundles, widget types, display formatters, behaviors, and settings defined by
+ * or with the Field API.
  *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
@@ -23,9 +23,8 @@ use Drupal\field\FieldInstance;
 /**
  * Clears the field info cache without clearing the field data cache.
  *
- * This is useful when deleted fields or instances are purged.  We
- * need to remove the purged records, but no actual field data items
- * are affected.
+ * This is useful when deleted fields or instances are purged. We need to remove
+ * the purged records, but no actual field data items are affected.
  */
 function field_info_cache_clear() {
   drupal_static_reset('field_view_mode_settings');
@@ -145,7 +144,7 @@ function _field_info_collate_types() {
 }
 
 /**
- * Clear collated information on field and widget types and related structures.
+ * Clears collated information on field and widget types and related structures.
  */
 function _field_info_collate_types_reset() {
   drupal_static_reset('_field_info_collate_types');
@@ -158,15 +157,15 @@ function _field_info_collate_types_reset() {
  *
  * @return
  *   An associative array containing:
- *   - fields: Array of existing fields, keyed by field ID. This element
- *     lists deleted and non-deleted fields, but not inactive ones.
- *     Each field has an additional element, 'bundles', which is an array
- *     of all non-deleted instances of that field.
- *   - field_ids: Array of field IDs, keyed by field name. This element
- *     only lists non-deleted, active fields.
- *   - instances: Array of existing instances, keyed by entity type, bundle
- *     name and field name. This element only lists non-deleted instances
- *     whose field is active.
+ *   - fields: Array of existing fields, keyed by field ID. This element lists
+ *     deleted and non-deleted fields, but not inactive ones. Each field has an
+ *     additional element, 'bundles', which is an array of all non-deleted
+ *     instances of that field.
+ *   - field_ids: Array of field IDs, keyed by field name. This element only
+ *     lists non-deleted, active fields.
+ *   - instances: Array of existing instances, keyed by entity type, bundle name
+ *     and field name. This element only lists non-deleted instances whose field
+ *     is active.
  *
  * @see _field_info_collate_fields_reset()
  */
@@ -240,7 +239,7 @@ function _field_info_collate_fields() {
 }
 
 /**
- * Clear collated information on existing fields and instances.
+ * Clears collated information on existing fields and instances.
  */
 function _field_info_collate_fields_reset() {
   drupal_static_reset('_field_info_collate_fields');
@@ -255,6 +254,9 @@ function _field_info_collate_fields_reset() {
  *
  * @param $field
  *   The raw field structure as read from the database.
+ *
+ * @return
+ *   The field array with storage and settings data added.
  */
 function _field_info_prepare_field($field) {
   // Make sure all expected field settings are present.
@@ -277,7 +279,7 @@ function _field_info_prepare_field($field) {
  *
  * Since the instance was last saved or updated, a number of things might have
  * changed: widgets or formatters disabled, new settings expected, new view
- * modes added...
+ * modes added, etc.
  *
  * @param $instance
  *   The raw instance structure as read from the database.
@@ -327,8 +329,10 @@ function _field_info_prepare_instance($instance, $field) {
  * @param $field
  *   The field structure for the instance.
  * @param $display
- *   Display specifications as found in
- *   $instance['display']['some_view_mode'].
+ *   Display specifications as found in $instance['display']['some_view_mode'].
+ *
+ * @return
+ *   The modified $display array.
  */
 function _field_info_prepare_instance_display($field, $display) {
   $field_type = field_info_field_types($field['type']);
@@ -364,6 +368,9 @@ function _field_info_prepare_instance_display($field, $display) {
  *   The entity type.
  * @param $bundle
  *   The bundle name.
+ *
+ * @return
+ *   An array of data about extra fields.
  */
 function _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle) {
   $entity_type_info = entity_get_info($entity_type);
@@ -408,8 +415,8 @@ function _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle) 
  * Determines the behavior of a widget with respect to an operation.
  *
  * @param $op
- *   The name of the operation. Currently supported: 'default value',
- *   'multiple values'.
+ *   The name of the operation. Currently supported: 'default value', 'multiple
+ *   values'.
  * @param $instance
  *   The field instance array.
  *
@@ -428,8 +435,7 @@ function field_behaviors_widget($op, $instance) {
  * Returns information about field types from hook_field_info().
  *
  * @param $field_type
- *   (optional) A field type name. If omitted, all field types will be
- *   returned.
+ *   (optional) A field type name. If omitted, all field types will be returned.
  *
  * @return
  *   Either a field type description, as provided by hook_field_info(), or an
@@ -502,8 +508,8 @@ function field_info_formatter_types($formatter_type = NULL) {
  *
  * @return
  *   Either a storage type description, as provided by
- *   hook_field_storage_info(), or an array of all existing storage types,
- *   keyed by storage type name.
+ *   hook_field_storage_info(), or an array of all existing storage types, keyed
+ *   by storage type name.
  */
 function field_info_storage_types($storage_type = NULL) {
   $info = _field_info_collate_types();
@@ -525,9 +531,9 @@ function field_info_storage_types($storage_type = NULL) {
  *   The type of entity; e.g. 'node' or 'user'.
  *
  * @return
- *   An array of bundles for the $entity_type keyed by bundle name,
- *   or, if no $entity_type was provided, the array of all existing bundles,
- *   keyed by entity type.
+ *   An array of bundles for the $entity_type keyed by bundle name, or, if no
+ *   $entity_type was provided, the array of all existing bundles, keyed by
+ *   entity type.
  */
 function field_info_bundles($entity_type = NULL) {
   $info = entity_get_info();
@@ -549,7 +555,7 @@ function field_info_bundles($entity_type = NULL) {
  * @return
  *   An array of field definitions, keyed by field name. Each field has an
  *   additional property, 'bundles', which is an array of all the bundles to
- *   which this field belongs keyed by entity type.
+ *   which this field belongs, keyed by entity type.
  */
 function field_info_fields() {
   $fields = array();
@@ -590,13 +596,13 @@ function field_info_field($field_name) {
  * Returns data about an individual field, given a field ID.
  *
  * @param $field_id
- *   The id of the field to retrieve. $field_id can refer to a
- *   deleted field, but not an inactive one.
+ *   The ID of the field to retrieve. $field_id can refer to a deleted field,
+ *   but not an inactive one.
  *
  * @return
- *   The field array, as returned by field_read_fields(), with an
- *   additional element 'bundles', whose value is an array of all the bundles
- *   this field belongs to.
+ *   The field array, as returned by field_read_fields(), with an additional
+ *   element 'bundles', whose value is an array of all the bundles this field
+ *   belongs to.
  *
  * @see field_info_field()
  */
@@ -637,8 +643,8 @@ function field_info_field_by_ids() {
  * @return
  *   If $entity_type is not set, return all instances keyed by entity type and
  *   bundle name. If $entity_type is set, return all instances for that entity
- *   type, keyed by bundle name. If $entity_type and $bundle_name are set, return
- *   all instances for that bundle.
+ *   type, keyed by bundle name. If $entity_type and $bundle_name are set,
+ *   return all instances for that bundle.
  */
 function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
   $info = _field_info_collate_fields();
@@ -722,8 +728,8 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
  * @param $bundle
  *   The bundle name.
  * @param $context
- *   The context for which the list of pseudo-fields is requested. Either
- *   'form' or 'display'.
+ *   The context for which the list of pseudo-fields is requested. Either 'form'
+ *   or 'display'.
  *
  * @return
  *   The array of pseudo-field elements in the bundle.
@@ -749,6 +755,7 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
  * @param $context
  *   The context for which the maximum weight is requested. Either 'form', or
  *   the name of a view mode.
+ *
  * @return
  *   The maximum weight of the entity's components, or NULL if no components
  *   were found.

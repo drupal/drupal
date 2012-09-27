@@ -119,8 +119,8 @@ function number_field_instance_settings_form($field, $instance) {
  * Implements hook_field_validate().
  *
  * Possible error codes:
- * - 'number_min': The value is less than the allowed minimum value.
- * - 'number_max': The value is greater than the allowed maximum value.
+ * - number_min: The value is less than the allowed minimum value.
+ * - number_max: The value is greater than the allowed maximum value.
  */
 function number_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {

@@ -11,13 +11,12 @@ use Drupal\Core\Entity\EntityFieldQuery;
 /**
  * @defgroup field_crud Field CRUD API
  * @{
- * Create, update, and delete Field API fields, bundles, and instances.
+ * Creates, updates, and deletes Field API fields, bundles, and instances.
  *
- * Modules use this API, often in hook_install(), to create custom
- * data structures. UI modules will use it to create a user interface.
+ * Modules use this API, often in hook_install(), to create custom data
+ * structures. UI modules will use it to create a user interface.
  *
- * The Field CRUD API uses
- * @link field Field API data structures @endlink.
+ * The Field CRUD API uses @link field Field API data structures @endlink.
  *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
@@ -301,16 +300,16 @@ function field_update_field($field) {
  *
  * Generally, you should use the field_info_field() instead.
  *
- * This function will not return deleted fields. Use
- * field_read_fields() instead for this purpose.
+ * This function will not return deleted fields. Use field_read_fields() instead
+ * for this purpose.
  *
  * @param $field_name
  *   The field name to read.
  * @param array $include_additional
- *   The default behavior of this function is to not return a field that
- *   is inactive. Setting
- *   $include_additional['include_inactive'] to TRUE will override this
- *   behavior.
+ *   The default behavior of this function is to not return a field that is
+ *   inactive. Setting $include_additional['include_inactive'] to TRUE will
+ *   override this behavior.
+ *
  * @return
  *   A field definition array, or FALSE.
  */
@@ -325,15 +324,15 @@ function field_read_field($field_name, $include_additional = array()) {
  * @param array $params
  *   An array of conditions to match against.
  * @param array $include_additional
- *   The default behavior of this function is to not return fields that
- *   are inactive or have been deleted. Setting
+ *   The default behavior of this function is to not return fields that are
+ *   inactive or have been deleted. Setting
  *   $include_additional['include_inactive'] or
- *   $include_additional['include_deleted'] to TRUE will override this
- *   behavior.
+ *   $include_additional['include_deleted'] to TRUE will override this behavior.
+ *
  * @return
  *   An array of fields matching $params. If
- *   $include_additional['include_deleted'] is TRUE, the array is keyed
- *   by field id, otherwise it is keyed by field name.
+ *   $include_additional['include_deleted'] is TRUE, the array is keyed by
+ *   field ID, otherwise it is keyed by field name.
  */
 function field_read_fields($params = array(), $include_additional = array()) {
   $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC));
@@ -509,12 +508,12 @@ function field_create_instance(&$instance) {
  * Updates an instance of a field.
  *
  * @param $instance
- *   An associative array representing an instance structure. The required
- *   keys and values are:
+ *   An associative array representing an instance structure. The required keys
+ *   and values are:
  *   - entity_type: The type of the entity the field is attached to.
  *   - bundle: The bundle this field belongs to.
  *   - field_name: The name of an existing field.
- *   Read-only_id properties are assigned automatically. Any other
+ *   Read-only ID properties are assigned automatically. Any other properties
  *   properties specified in $instance overwrite the existing values for
  *   the instance.
  *
@@ -650,9 +649,9 @@ function _field_write_instance(&$instance, $update = FALSE) {
 /**
  * Reads a single instance record from the database.
  *
- * Generally, you should use field_info_instance() instead, as it
- * provides caching and allows other modules the opportunity to
- * append additional formatters, widgets, and other information.
+ * Generally, you should use field_info_instance() instead, as it provides
+ * caching and allows other modules the opportunity to append additional
+ * formatters, widgets, and other information.
  *
  * @param $entity_type
  *   The type of entity to which the field is bound.
@@ -661,11 +660,11 @@ function _field_write_instance(&$instance, $update = FALSE) {
  * @param $bundle
  *   The bundle to which the field is bound.
  * @param array $include_additional
- *   The default behavior of this function is to not return an instance that
- *   has been deleted, or whose field is inactive. Setting
+ *   The default behavior of this function is to not return an instance that has
+ *   been deleted, or whose field is inactive. Setting
  *   $include_additional['include_inactive'] or
- *   $include_additional['include_deleted'] to TRUE will override this
- *   behavior.
+ *   $include_additional['include_deleted'] to TRUE will override this behavior.
+ *
  * @return
  *   An instance structure, or FALSE.
  */
@@ -678,15 +677,15 @@ function field_read_instance($entity_type, $field_name, $bundle, $include_additi
  * Reads in field instances that match an array of conditions.
  *
  * @param $param
- *   An array of properties to use in selecting a field
- *   instance. Valid keys include any column of the
- *   field_config_instance table. If NULL, all instances will be returned.
+ *   An array of properties to use in selecting a field instance. Valid keys
+ *   include any column of the field_config_instance table. If NULL, all
+ *   instances will be returned.
  * @param $include_additional
- *   The default behavior of this function is to not return field
- *   instances that have been marked deleted, or whose field is inactive.
- *   Setting $include_additional['include_inactive'] or
- *   $include_additional['include_deleted'] to TRUE will override this
- *   behavior.
+ *   The default behavior of this function is to not return field instances that
+ *   have been marked deleted, or whose field is inactive. Setting
+ *   $include_additional['include_inactive'] or
+ *   $include_additional['include_deleted'] to TRUE will override this behavior.
+ *
  * @return
  *   An array of instances matching the arguments.
  */
@@ -777,7 +776,7 @@ function field_delete_instance($instance, $field_cleanup = TRUE) {
 /**
  * @defgroup field_purge Field API bulk data deletion
  * @{
- * Clean up after Field API bulk deletion operations.
+ * Cleans up after Field API bulk deletion operations.
  *
  * Field API provides functions for deleting data attached to individual
  * entities as well as deleting entire fields or field instances in a single
@@ -786,20 +785,19 @@ function field_delete_instance($instance, $field_cleanup = TRUE) {
  * Deleting field data items for an entity with field_attach_delete() involves
  * three separate operations:
  * - Invoking the Field Type API hook_field_delete() for each field on the
- * entity. The hook for each field type receives the entity and the specific
- * field being deleted. A file field module might use this hook to delete
- * uploaded files from the filesystem.
- * - Invoking the Field Storage API hook_field_storage_delete() to remove
- * data from the primary field storage. The hook implementation receives the
- * entity being deleted and deletes data for all of the entity's bundle's
- * fields.
+ *   entity. The hook for each field type receives the entity and the specific
+ *   field being deleted. A file field module might use this hook to delete
+ *   uploaded files from the filesystem.
+ * - Invoking the Field Storage API hook_field_storage_delete() to remove data
+ *   from the primary field storage. The hook implementation receives the entity
+ *   being deleted and deletes data for all of the entity's bundle's fields.
  * - Invoking the global Field Attach API hook_field_attach_delete() for all
- * modules that implement it. Each hook implementation receives the entity
- * being deleted and can operate on whichever subset of the entity's bundle's
- * fields it chooses to.
+ *   modules that implement it. Each hook implementation receives the entity
+ *   being deleted and can operate on whichever subset of the entity's bundle's
+ *   fields it chooses to.
  *
- * These hooks are invoked immediately when field_attach_delete() is
- * called. Similar operations are performed for field_attach_delete_revision().
+ * These hooks are invoked immediately when field_attach_delete() is called.
+ * Similar operations are performed for field_attach_delete_revision().
  *
  * When a field, bundle, or field instance is deleted, it is not practical to
  * invoke these hooks immediately on every affected entity in a single page
@@ -807,8 +805,8 @@ function field_delete_instance($instance, $field_cleanup = TRUE) {
  * appropriate field data items, instances, and/or fields are marked as deleted
  * so that subsequent load or query operations will not return them. Later, a
  * separate process cleans up, or "purges", the marked-as-deleted data by going
- * through the three-step process described above and, finally, removing
- * deleted field and instance records.
+ * through the three-step process described above and, finally, removing deleted
+ * field and instance records.
  *
  * Purging field data is made somewhat tricky by the fact that, while
  * field_attach_delete() has a complete entity to pass to the various deletion
@@ -820,12 +818,12 @@ function field_delete_instance($instance, $field_cleanup = TRUE) {
  *
  * Field API resolves this problem by using "pseudo-entities" during purge
  * operations. A pseudo-entity contains only the information from the original
- * entity that Field API knows about: entity type, id, revision id, and
- * bundle. It also contains the field data for whichever field instance is
- * currently being purged. For example, suppose that the node type 'story' used
- * to contain a field called 'subtitle' but the field was deleted. If node 37
- * was a story with a subtitle, the pseudo-entity passed to the purge hooks
- * would look something like this:
+ * entity that Field API knows about: entity type, ID, revision ID, and bundle.
+ * It also contains the field data for whichever field instance is currently
+ * being purged. For example, suppose that the node type 'story' used to contain
+ * a field called 'subtitle' but the field was deleted. If node 37 was a story
+ * with a subtitle, the pseudo-entity passed to the purge hooks would look
+ * something like this:
  *
  * @code
  *   $entity = stdClass Object(
@@ -907,8 +905,8 @@ function field_purge_batch($batch_size) {
 /**
  * Purges the field data for a single field on a single pseudo-entity.
  *
- * This is basically the same as field_attach_delete() except it only applies
- * to a single field. The entity itself is not being deleted, and it is quite
+ * This is basically the same as field_attach_delete() except it only applies to
+ * a single field. The entity itself is not being deleted, and it is quite
  * possible that other field data will remain attached to it.
  *
  * @param $entity_type
@@ -939,7 +937,7 @@ function field_purge_data($entity_type, $entity, $field, $instance) {
 /**
  * Purges a field instance record from the database.
  *
- * This function assumes all data for the instance has already been purged, and
+ * This function assumes all data for the instance has already been purged and
  * should only be called by field_purge_batch().
  *
  * @param $instance

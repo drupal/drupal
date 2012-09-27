@@ -37,12 +37,13 @@ function field_sql_storage_field_storage_info() {
 }
 
 /**
- * Generate a table name for a field data table.
+ * Generates a table name for a field data table.
  *
  * @param $field
  *   The field structure.
+ *
  * @return
- *   A string containing the generated name for the database table
+ *   A string containing the generated name for the database table.
  */
 function _field_sql_storage_tablename($field) {
   if ($field['deleted']) {
@@ -54,12 +55,13 @@ function _field_sql_storage_tablename($field) {
 }
 
 /**
- * Generate a table name for a field revision archive table.
+ * Generates a table name for a field revision archive table.
  *
  * @param $name
  *   The field structure.
+ *
  * @return
- *   A string containing the generated name for the database table
+ *   A string containing the generated name for the database table.
  */
 function _field_sql_storage_revision_tablename($field) {
   if ($field['deleted']) {
@@ -71,40 +73,43 @@ function _field_sql_storage_revision_tablename($field) {
 }
 
 /**
- * Generate a column name for a field data table.
+ * Generates a column name for a field data table.
  *
  * @param $name
- *   The name of the field
+ *   The name of the field.
  * @param $column
- *   The name of the column
+ *   The name of the column.
+ *
  * @return
- *   A string containing a generated column name for a field data
- *   table that is unique among all other fields.
+ *   A string containing a generated column name for a field data table that is
+ *   unique among all other fields.
  */
 function _field_sql_storage_columnname($name, $column) {
   return $name . '_' . $column;
 }
 
 /**
- * Generate an index name for a field data table.
+ * Generates an index name for a field data table.
  *
  * @param $name
- *   The name of the field
+ *   The name of the field.
  * @param $column
- *   The name of the index
+ *   The name of the index.
+ *
  * @return
- *   A string containing a generated index name for a field data
- *   table that is unique among all other fields.
+ *   A string containing a generated index name for a field data table that is
+ *   unique among all other fields.
  */
 function _field_sql_storage_indexname($name, $index) {
   return $name . '_' . $index;
 }
 
 /**
- * Return the database schema for a field. This may contain one or
- * more tables. Each table will contain the columns relevant for the
- * specified field. Leave the $field's 'columns' and 'indexes' keys
- * empty to get only the base schema.
+ * Returns the database schema for a field.
+ *
+ * This may contain one or more tables. Each table will contain the columns
+ * relevant for the specified field. Leave the $field's 'columns' and 'indexes'
+ * keys empty to get only the base schema.
  *
  * @param $field
  *   The field structure for which to generate a database schema.
@@ -227,8 +232,8 @@ function field_sql_storage_field_storage_create_field($field) {
 /**
  * Implements hook_field_update_forbid().
  *
- * Forbid any field update that changes column definitions if there is
- * any data.
+ * Forbids any field update that changes column definitions if there is any
+ * data.
  */
 function field_sql_storage_field_update_forbid($field, $prior_field, $has_data) {
   if ($has_data && $field['columns'] != $prior_field['columns']) {
@@ -633,11 +638,11 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
  * @param $entity_type
  *   The entity type for which the base table should be joined.
  * @param $field_base_table
- *   Name of a table in $select_query. As only INNER JOINs are used, it does
- *   not matter which.
+ *   Name of a table in $select_query. As only INNER JOINs are used, it does not
+ *   matter which.
  *
  * @return
- *   The name of the entity base table joined in.
+ *   The name of the entity base table that was joined in.
  */
 function _field_sql_storage_query_join_entity(Select $select_query, $entity_type, $field_base_table) {
   $entity_info = entity_get_info($entity_type);
@@ -754,8 +759,8 @@ function field_sql_storage_field_attach_rename_bundle($entity_type, $bundle_old,
 /**
  * Implements hook_field_storage_purge_field().
  *
- * All field data items and instances have already been purged, so all
- * that is left is to delete the table.
+ * All field data items and instances have already been purged, so all that is
+ * left is to delete the table.
  */
 function field_sql_storage_field_storage_purge_field($field) {
   $table_name = _field_sql_storage_tablename($field);

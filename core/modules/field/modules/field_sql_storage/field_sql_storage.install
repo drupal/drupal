@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the field_sql_storage module.
+ * Install, update, and uninstall functions for the Field SQL Storage module.
  */
 
 /**
@@ -25,7 +25,7 @@ function field_sql_storage_schema() {
 }
 
 /**
- * Utility function: write field data directly to SQL storage.
+ * Writes field data directly to SQL storage.
  *
  * @ingroup update-api-7.x-to-8.x
  */

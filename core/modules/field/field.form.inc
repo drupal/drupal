@@ -8,14 +8,15 @@
 /**
  * Returns HTML for an individual form element.
  *
- * Combine multiple values into a table with drag-n-drop reordering.
- * TODO : convert to a template.
+ * Combines multiple values into a table with drag-n-drop reordering.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: A render element representing the form element.
  *
  * @ingroup themeable
+ *
+ * @todo Convert to a template.
  */
 function theme_field_multiple_value_form($variables) {
   $element = $variables['element'];
@@ -82,11 +83,19 @@ function theme_field_multiple_value_form($variables) {
 }
 
 /**
- * #after_build callback for field elements in a form.
+ * After-build callback for field elements in a form.
  *
- * This stores the final location of the field within the form structure so
- * that field_default_form_errors() can assign validation errors to the right
- * form element.
+ * This stores the final location of the field within the form structure so that
+ * field_default_form_errors() can assign validation errors to the right form
+ * element.
+ *
+ * @param $element
+ *   The form element.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * @return
+ *   The $element array that was passed in as a parameter.
  *
  * @see field_default_form_errors()
  */
@@ -103,7 +112,7 @@ function field_form_element_after_build($element, &$form_state) {
 }
 
 /**
- * Submit handler for the "Add another item" button of a field form.
+ * Form submission handler for the "Add another item" button of a field form.
  *
  * This handler is run regardless of whether JS is enabled or not. It makes
  * changes to the form state. If the button was clicked with JS disabled, then
@@ -129,7 +138,7 @@ function field_add_more_submit($form, &$form_state) {
 }
 
 /**
- * Ajax callback in response to a new empty widget being added to the form.
+ * Ajax callback: Responds to a new empty widget being added to the form.
  *
  * This returns the new page content to replace the page content made obsolete
  * by the form submission.
@@ -174,12 +183,12 @@ function field_add_more_js($form, $form_state) {
  *
  * @return
  *   An array with the following key/data pairs:
- *   - field: the field definition array,
- *   - instance: the field instance definition array,
- *   - items_count: the number of widgets to display for the field,
- *   - array_parents: the location of the field's widgets within the $form
+ *   - field: The field definition array.
+ *   - instance: The field instance definition array.
+ *   - items_count: The number of widgets to display for the field.
+ *   - array_parents: The location of the field's widgets within the $form
  *     structure. This entry is populated at '#after_build' time.
- *   - errors: the array of field validation errors reported on the field. This
+ *   - errors: The array of field validation errors reported on the field. This
  *     entry is populated at field_attach_form_validate() time.
  *
  * @see field_form_set_state()
@@ -213,6 +222,16 @@ function field_form_set_state($parents, $field_name, $langcode, &$form_state, $f
 
 /**
  * Returns the location of processing information within $form_state.
+ *
+ * @param $parents
+ *   The array of #parents where the field lives in the form.
+ * @param $field_name
+ *   The field name.
+ * @param $langcode
+ *   The language in which the field values are entered.
+ *
+ * @return
+ *   The location of processing information within $form_state.
  */
 function _field_form_state_parents($parents, $field_name, $langcode) {
   // To ensure backwards compatibility on regular entity forms for widgets that
@@ -238,7 +257,7 @@ function _field_form_state_parents($parents, $field_name, $langcode) {
 /**
  * Retrieves the field definition for a widget's helper callbacks.
  *
- * Widgets helper element callbacks (such as #process, #element_validate,
+ * Widget helper element callbacks (such as #process, #element_validate,
  * #value_callback, ...) should use field_widget_field() and
  * field_widget_instance() instead of field_info_field() and
  * field_info_instance() when they need to access field or instance properties.
