@@ -1485,29 +1485,6 @@ function views_get_enabled_display_extenders() {
 // Views database functions
 
 /**
- * Get all view templates.
- *
- * Templates are special in-code views that are never active, but exist only
- * to be cloned into real views as though they were templates.
- */
-function views_get_all_templates() {
-  $templates = array();
-  $modules = views_module_include('views_template');
-
-  foreach ($modules as $module => $info) {
-    $function = $module . '_views_templates';
-    if (function_exists($function)) {
-      $new = $function();
-      if ($new && is_array($new)) {
-        $templates = array_merge($new, $templates);
-      }
-    }
-  }
-
-  return $templates;
-}
-
-/**
  * Create an empty view to work with.
  *
  * @return Drupal\views\ViewExecutable

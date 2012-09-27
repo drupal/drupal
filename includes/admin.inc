@@ -3110,32 +3110,6 @@ function theme_views_ui_style_plugin_table($variables) {
   return $output;
 }
 
-function views_ui_add_template_page() {
-  $templates = views_get_all_templates();
-
-  if (empty($templates)) {
-    return t('There are no templates available.');
-  }
-
-  $header = array(
-    t('Name'),
-    t('Description'),
-    t('Operation'),
-  );
-
-  $rows = array();
-  foreach ($templates as $name => $template) {
-    $rows[] = array(
-      array('data' => check_plain($template->getHumanName())),
-      array('data' => check_plain($template->description)),
-      array('data' => l('add', 'admin/structure/views/template/' . $template->name . '/add')),
-    );
-  }
-
-  $output = theme('table', array('header' => $header, 'rows' => $rows));
-  return $output;
-}
-
 /**
  * #process callback for a button; determines if a button is the form's triggering element.
  *
