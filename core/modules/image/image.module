@@ -628,7 +628,9 @@ function image_style_save($style) {
   $config = config('image.style.' . $style['name']);
   $is_new = $config->isNew();
 
-  $config->set('name', $style['name']);
+  $config
+    ->set('name', $style['name'])
+    ->set('label', $style['label']);
   if (isset($style['effects'])) {
     $config->set('effects', $style['effects']);
   }
@@ -702,10 +704,10 @@ function image_style_options($include_empty = TRUE) {
   if ($include_empty && !empty($styles)) {
     $options[''] = t('<none>');
   }
-  // Use the array concatenation operator '+' here instead of array_merge(),
-  // because the latter loses the datatype of the array keys, turning
-  // associative string keys into numeric ones without warning.
-  $options = $options + drupal_map_assoc(array_keys($styles));
+  foreach ($styles as $name => $style) {
+    $options[$name] = $style['label'];
+  }
+
   if (empty($options)) {
     $options[''] = t('No defined styles');
   }

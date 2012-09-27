@@ -50,13 +50,15 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    */
   function testNumericStyleName() {
     $style_name = rand();
+    $style_label = $this->randomString();
     $edit = array(
       'name' => $style_name,
+      'label' => $style_label,
     );
     $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
-    $this->assertRaw(t('Style %name was created.', array('%name' => $style_name)), t('Image style successfully created.'));
+    $this->assertRaw(t('Style %name was created.', array('%name' => $style_label)));
     $options = image_style_options();
-    $this->assertTrue(array_key_exists($style_name, $options), t('Array key %key exists.', array('%key' => $style_name)));
+    $this->assertTrue(array_key_exists($style_name, $options), format_string('Array key %key exists.', array('%key' => $style_name)));
   }
 
   /**
@@ -65,6 +67,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   function testStyle() {
     // Setup a style to be created and effects to add to it.
     $style_name = strtolower($this->randomName(10));
+    $style_label = $this->randomString();
     $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
     $effect_edits = array(
       'image_resize' => array(
@@ -99,9 +102,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $edit = array(
       'name' => $style_name,
+      'label' => $style_label,
     );
     $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
-    $this->assertRaw(t('Style %name was created.', array('%name' => $style_name)), t('Image style successfully created.'));
+    $this->assertRaw(t('Style %name was created.', array('%name' => $style_label)));
 
     // Add effect form.
 
@@ -123,7 +127,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     foreach ($style['effects'] as $ieid => $effect) {
       $this->drupalGet($style_path . '/effects/' . $ieid);
       foreach ($effect_edits[$effect['name']] as $field => $value) {
-        $this->assertFieldByName($field, $value, t('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect['name'], '%value' => $value)));
+        $this->assertFieldByName($field, $value, format_string('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect['name'], '%value' => $value)));
       }
     }
 
@@ -139,14 +143,16 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
         $order_correct = FALSE;
       }
     }
-    $this->assertTrue($order_correct, t('The order of the effects is correctly set by default.'));
+    $this->assertTrue($order_correct, 'The order of the effects is correctly set by default.');
 
     // Test the style overview form.
     // Change the name of the style and adjust the weights of effects.
     $style_name = strtolower($this->randomName(10));
+    $style_label = $this->randomString();
     $weight = count($effect_edits);
     $edit = array(
       'name' => $style_name,
+      'label' => $style_label,
     );
     foreach ($style['effects'] as $ieid => $effect) {
       $edit['effects[' . $ieid . '][weight]'] = $weight;
@@ -155,7 +161,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after saving.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+    $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style['label'], '%file' => $image_path)));
 
     $this->drupalPost($style_path, $edit, t('Update style'));
 
@@ -164,12 +170,12 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Check that the URL was updated.
     $this->drupalGet($style_path);
-    $this->assertResponse(200, t('Image style %original renamed to %new', array('%original' => $style['name'], '%new' => $style_name)));
+    $this->assertResponse(200, t('Image style %original renamed to %new', array('%original' => $style['label'], '%new' => $style_name)));
 
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
     // the old image directory has been deleted.
-    $this->assertEqual($this->getImageCount($style), 0, t('Image style %style was flushed after renaming the style and updating the order of effects.', array('%style' => $style['name'])));
+    $this->assertEqual($this->getImageCount($style), 0, format_string('Image style %style was flushed after renaming the style and updating the order of effects.', array('%style' => $style['label'])));
 
     // Load the style by the new name with the new weights.
     drupal_static_reset('image_styles');
@@ -190,12 +196,12 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after deleting an effect.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+    $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style['label'], '%file' => $image_path)));
 
     // Test effect deletion form.
     $effect = array_pop($style['effects']);
     $this->drupalPost($style_path . '/effects/' . $effect['ieid'] . '/delete', array(), t('Delete'));
-    $this->assertRaw(t('The image effect %name has been deleted.', array('%name' => $effect['label'])), t('Image effect deleted.'));
+    $this->assertRaw(t('The image effect %name has been deleted.', array('%name' => $effect['label'])));
 
     // Style deletion form.
 
@@ -204,10 +210,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Confirm the style directory has been removed.
     $directory = file_default_scheme() . '://styles/' . $style_name;
-    $this->assertFalse(is_dir($directory), t('Image style %style directory removed on style deletion.', array('%style' => $style['name'])));
+    $this->assertFalse(is_dir($directory), format_string('Image style %style directory removed on style deletion.', array('%style' => $style['label'])));
 
     drupal_static_reset('image_styles');
-    $this->assertFalse(image_style_load($style_name), t('Image style %style successfully deleted.', array('%style' => $style['name'])));
+    $this->assertFalse(image_style_load($style_name), format_string('Image style %style successfully deleted.', array('%style' => $style['label'])));
 
   }
 
@@ -217,7 +223,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   function testStyleReplacement() {
     // Create a new style.
     $style_name = strtolower($this->randomName(10));
-    image_style_save(array('name' => $style_name));
+    $style_label = $this->randomString();
+    image_style_save(array('name' => $style_name, 'label' => $style_label));
     $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
 
     // Create an image field that uses the new style.
@@ -239,8 +246,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomName(10));
+    $new_style_label = $this->randomString();
     $edit = array(
       'name' => $new_style_name,
+      'label' => $new_style_label,
     );
     $this->drupalPost('admin/config/media/image-styles/edit/' . $style_name, $edit, t('Update style'));
     $this->assertText(t('Changes to the style have been saved.'), t('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
@@ -252,8 +261,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'replacement' => 'thumbnail',
     );
     $this->drupalPost('admin/config/media/image-styles/delete/' . $new_style_name, $edit, t('Delete'));
-    $message = t('Style %name was deleted.', array('%name' => $new_style_name));
-    $this->assertRaw($message, $message);
+    $message = t('Style %name was deleted.', array('%name' => $new_style_label));
+    $this->assertRaw($message);
 
     $this->drupalGet('node/' . $nid);
     $this->assertRaw(image_style_url('thumbnail', file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style replacement style.'));
@@ -265,7 +274,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   function testEditEffect() {
     // Add a scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
-    $this->drupalPost(NULL, array('name' => 'test_style_effect_edit'), t('Create new style'));
+    $this->drupalPost(NULL, array('label' => 'Test style effect edit', 'name' => 'test_style_effect_edit'), t('Create new style'));
     $this->drupalPost(NULL, array('new' => 'image_scale_and_crop'), t('Add'));
     $this->drupalPost(NULL, array('data[width]' => '300', 'data[height]' => '200'), t('Add effect'));
     $this->assertText(t('Scale and crop 300x200'));
@@ -280,7 +289,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Add another scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
-    $this->drupalPost(NULL, array('name' => 'test_style_scale_edit_scale'), t('Create new style'));
+    $this->drupalPost(NULL, array('label' => 'Test style scale edit scale', 'name' => 'test_style_scale_edit_scale'), t('Create new style'));
     $this->drupalPost(NULL, array('new' => 'image_scale'), t('Add'));
     $this->drupalPost(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
 

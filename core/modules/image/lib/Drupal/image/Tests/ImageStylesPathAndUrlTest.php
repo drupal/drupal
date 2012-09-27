@@ -37,7 +37,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     parent::setUp();
 
     $this->style_name = 'style_foo';
-    image_style_save(array('name' => $this->style_name));
+    image_style_save(array('name' => $this->style_name, 'label' => $this->randomString()));
   }
 
   /**

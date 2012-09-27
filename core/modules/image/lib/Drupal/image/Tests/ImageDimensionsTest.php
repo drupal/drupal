@@ -41,7 +41,7 @@ class ImageDimensionsTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
 
     // Create a style.
-    $style = image_style_save(array('name' => 'test'));
+    $style = image_style_save(array('name' => 'test', 'label' => 'Test'));
     $generated_uri = 'public://styles/test/public/'. drupal_basename($original_uri);
     $url = image_style_url('test', $original_uri);
 
