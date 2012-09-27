@@ -36,10 +36,10 @@ class LoggingTest extends DatabaseTestBase {
 
     $queries = Database::getLog('testing', 'default');
 
-    $this->assertEqual(count($queries), 3, t('Correct number of queries recorded.'));
+    $this->assertEqual(count($queries), 3, 'Correct number of queries recorded.');
 
     foreach ($queries as $query) {
-      $this->assertEqual($query['caller']['function'], __FUNCTION__, t('Correct function in query log.'));
+      $this->assertEqual($query['caller']['function'], __FUNCTION__, 'Correct function in query log.');
     }
   }
 
@@ -58,8 +58,8 @@ class LoggingTest extends DatabaseTestBase {
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing2');
 
-    $this->assertEqual(count($queries1), 2, t('Correct number of queries recorded for log 1.'));
-    $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for log 2.'));
+    $this->assertEqual(count($queries1), 2, 'Correct number of queries recorded for log 1.');
+    $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for log 2.');
   }
 
   /**
@@ -79,9 +79,9 @@ class LoggingTest extends DatabaseTestBase {
 
     $queries1 = Database::getLog('testing1');
 
-    $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
-    $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
-    $this->assertEqual($queries1[1]['target'], 'slave', t('Second query used slave target.'));
+    $this->assertEqual(count($queries1), 2, 'Recorded queries from all targets.');
+    $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
+    $this->assertEqual($queries1[1]['target'], 'slave', 'Second query used slave target.');
   }
 
   /**
@@ -105,9 +105,9 @@ class LoggingTest extends DatabaseTestBase {
 
     $queries1 = Database::getLog('testing1');
 
-    $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
-    $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
-    $this->assertEqual($queries1[1]['target'], 'default', t('Second query used default target as fallback.'));
+    $this->assertEqual(count($queries1), 2, 'Recorded queries from all targets.');
+    $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
+    $this->assertEqual($queries1[1]['target'], 'default', 'Second query used default target as fallback.');
   }
 
   /**
@@ -133,7 +133,7 @@ class LoggingTest extends DatabaseTestBase {
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing1', 'test2');
 
-    $this->assertEqual(count($queries1), 1, t('Correct number of queries recorded for first connection.'));
-    $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for second connection.'));
+    $this->assertEqual(count($queries1), 1, 'Correct number of queries recorded for first connection.');
+    $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for second connection.');
   }
 }

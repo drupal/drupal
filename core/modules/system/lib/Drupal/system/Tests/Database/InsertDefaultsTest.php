@@ -32,7 +32,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
     $schema = drupal_get_schema('test');
 
     $job = db_query('SELECT job FROM {test} WHERE id = :id', array(':id' => $id))->fetchField();
-    $this->assertEqual($job, $schema['fields']['job']['default'], t('Default field value is set.'));
+    $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
   }
 
   /**
@@ -44,13 +44,13 @@ class InsertDefaultsTest extends DatabaseTestBase {
     try {
       $result = db_insert('test')->execute();
       // This is only executed if no exception has been thrown.
-      $this->fail(t('Expected exception NoFieldsException has not been thrown.'));
+      $this->fail('Expected exception NoFieldsException has not been thrown.');
     } catch (NoFieldsException $e) {
-      $this->pass(t('Expected exception NoFieldsException has been thrown.'));
+      $this->pass('Expected exception NoFieldsException has been thrown.');
     }
 
     $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before, $num_records_after, t('Do nothing as no fields are specified.'));
+    $this->assertIdentical($num_records_before, $num_records_after, 'Do nothing as no fields are specified.');
   }
 
   /**
@@ -65,6 +65,6 @@ class InsertDefaultsTest extends DatabaseTestBase {
     $schema = drupal_get_schema('test');
 
     $job = db_query('SELECT job FROM {test} WHERE id = :id', array(':id' => $id))->fetchField();
-    $this->assertEqual($job, $schema['fields']['job']['default'], t('Default field value is set.'));
+    $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
   }
 }

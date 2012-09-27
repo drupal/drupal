@@ -43,8 +43,8 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
 
-      $this->assertEqual($first->task, $sort['first'], t('Items appear in the correct order.'));
-      $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order.'));
+      $this->assertEqual($first->task, $sort['first'], 'Items appear in the correct order.');
+      $this->assertEqual($last->task, $sort['last'], 'Items appear in the correct order.');
     }
   }
 
@@ -69,8 +69,8 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
 
-      $this->assertEqual($first->task, $sort['first'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
-      $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
+      $this->assertEqual($first->task, $sort['first'], format_string('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
+      $this->assertEqual($last->task, $sort['last'], format_string('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
     }
   }
 

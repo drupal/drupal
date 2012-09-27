@@ -44,7 +44,7 @@ class InvalidDataTest extends DatabaseTestBase {
           'job' => 'Singer',
         ))
         ->execute();
-      $this->fail(t('Insert succeedded when it should not have.'));
+      $this->fail('Insert succeedded when it should not have.');
     }
     catch (Exception $e) {
       // Check if the first record was inserted.
@@ -56,14 +56,14 @@ class InvalidDataTest extends DatabaseTestBase {
           // Database engines that don't support transactions can leave partial
           // inserts in place when an error occurs. This is the case for MySQL
           // when running on a MyISAM table.
-          $this->pass(t("The whole transaction has not been rolled-back when a duplicate key insert occurs, this is expected because the database doesn't support transactions"));
+          $this->pass("The whole transaction has not been rolled-back when a duplicate key insert occurs, this is expected because the database doesn't support transactions");
         }
         else {
-          $this->fail(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+          $this->fail('The whole transaction is rolled back when a duplicate key insert occurs.');
         }
       }
       else {
-        $this->pass(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+        $this->pass('The whole transaction is rolled back when a duplicate key insert occurs.');
       }
 
       // Ensure the other values were not inserted.
@@ -72,7 +72,7 @@ class InvalidDataTest extends DatabaseTestBase {
         ->condition('age', array(17, 75), 'IN')
         ->execute()->fetchObject();
 
-      $this->assertFalse($record, t('The rest of the insert aborted as expected.'));
+      $this->assertFalse($record, 'The rest of the insert aborted as expected.');
     }
   }
 

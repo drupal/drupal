@@ -31,10 +31,10 @@ class UpdateComplexTest extends DatabaseTestBase {
         ->condition('name', 'Paul')
       );
     $num_updated = $update->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -45,10 +45,10 @@ class UpdateComplexTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->condition('name', array('John', 'Paul'), 'IN')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -61,10 +61,10 @@ class UpdateComplexTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->condition('name', array('John', 'Paul', 'George'), 'NoT IN')
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
   }
 
   /**
@@ -75,10 +75,10 @@ class UpdateComplexTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->condition('age', array(25, 26), 'BETWEEN')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -89,10 +89,10 @@ class UpdateComplexTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->condition('name', '%ge%', 'LIKE')
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
   }
 
   /**
@@ -106,15 +106,15 @@ class UpdateComplexTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->expression('age', 'age + :age', array(':age' => 4))
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
 
     $person = db_query('SELECT * FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetch();
-    $this->assertEqual($person->name, 'Ringo', t('Name set correctly.'));
-    $this->assertEqual($person->age, $before_age + 4, t('Age set correctly.'));
-    $this->assertEqual($person->job, 'Musician', t('Job set correctly.'));
+    $this->assertEqual($person->name, 'Ringo', 'Name set correctly.');
+    $this->assertEqual($person->age, $before_age + 4, 'Age set correctly.');
+    $this->assertEqual($person->job, 'Musician', 'Job set correctly.');
     $GLOBALS['larry_test'] = 0;
   }
 
@@ -127,9 +127,9 @@ class UpdateComplexTest extends DatabaseTestBase {
       ->condition('name', 'Ringo')
       ->expression('age', 'age + :age', array(':age' => 4))
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $after_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
-    $this->assertEqual($before_age + 4, $after_age, t('Age updated correctly'));
+    $this->assertEqual($before_age + 4, $after_age, 'Age updated correctly');
   }
 }

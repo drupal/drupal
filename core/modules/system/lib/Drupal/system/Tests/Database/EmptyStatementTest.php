@@ -29,8 +29,8 @@ class EmptyStatementTest extends WebTestBase {
   function testEmpty() {
     $result = new StatementEmpty();
 
-    $this->assertTrue($result instanceof StatementInterface, t('Class implements expected interface'));
-    $this->assertNull($result->fetchObject(), t('Null result returned.'));
+    $this->assertTrue($result instanceof StatementInterface, 'Class implements expected interface');
+    $this->assertNull($result->fetchObject(), 'Null result returned.');
   }
 
   /**
@@ -40,11 +40,11 @@ class EmptyStatementTest extends WebTestBase {
     $result = new StatementEmpty();
 
     foreach ($result as $record) {
-      $this->fail(t('Iterating empty result set should not iterate.'));
+      $this->fail('Iterating empty result set should not iterate.');
       return;
     }
 
-    $this->pass(t('Iterating empty result set skipped iteration.'));
+    $this->pass('Iterating empty result set skipped iteration.');
   }
 
   /**
@@ -53,6 +53,6 @@ class EmptyStatementTest extends WebTestBase {
   function testEmptyFetchAll() {
     $result = new StatementEmpty();
 
-    $this->assertEqual($result->fetchAll(), array(), t('Empty array returned from empty result set.'));
+    $this->assertEqual($result->fetchAll(), array(), 'Empty array returned from empty result set.');
   }
 }

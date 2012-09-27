@@ -43,10 +43,10 @@ class DeleteTruncateTest extends DatabaseTestBase {
       ->condition('pid', $subquery, 'IN');
 
     $num_deleted = $delete->execute();
-    $this->assertEqual($num_deleted, 1, t("Deleted 1 record."));
+    $this->assertEqual($num_deleted, 1, 'Deleted 1 record.');
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
   /**
@@ -58,10 +58,10 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_deleted = db_delete('test')
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_deleted, 1, t('Deleted 1 record.'));
+    $this->assertIdentical($num_deleted, 1, 'Deleted 1 record.');
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
   /**
@@ -73,6 +73,6 @@ class DeleteTruncateTest extends DatabaseTestBase {
     db_truncate('test')->execute();
 
     $num_records_after = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
-    $this->assertEqual(0, $num_records_after, t('Truncate really deletes everything.'));
+    $this->assertEqual(0, $num_records_after, 'Truncate really deletes everything.');
   }
 }

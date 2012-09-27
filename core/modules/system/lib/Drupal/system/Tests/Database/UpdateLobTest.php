@@ -25,7 +25,7 @@ class UpdateLobTest extends DatabaseTestBase {
    */
   function testUpdateOneBlob() {
     $data = "This is\000a test.";
-    $this->assertTrue(strlen($data) === 15, t('Test data contains a NULL.'));
+    $this->assertTrue(strlen($data) === 15, 'Test data contains a NULL.');
     $id = db_insert('test_one_blob')
       ->fields(array('blob1' => $data))
       ->execute();
@@ -37,7 +37,7 @@ class UpdateLobTest extends DatabaseTestBase {
       ->execute();
 
     $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === $data, t('Can update a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+    $this->assertTrue($r['blob1'] === $data, format_string('Can update a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
   }
 
   /**
@@ -57,6 +57,6 @@ class UpdateLobTest extends DatabaseTestBase {
       ->execute();
 
     $r = db_query('SELECT * FROM {test_two_blobs} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === 'and so' && $r['blob2'] === 'is this', t('Can update multiple blobs per row.'));
+    $this->assertTrue($r['blob1'] === 'and so' && $r['blob2'] === 'is this', 'Can update multiple blobs per row.');
   }
 }

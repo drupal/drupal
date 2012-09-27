@@ -28,10 +28,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(array('name' => 'Tiffany'))
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 1))->fetchField();
-    $this->assertIdentical($saved_name, 'Tiffany', t('Updated name successfully.'));
+    $this->assertIdentical($saved_name, 'Tiffany', 'Updated name successfully.');
   }
 
   /**
@@ -43,10 +43,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(array('age' => NULL))
       ->condition('name', 'Kermit')
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $saved_age = db_query('SELECT age FROM {test_null} WHERE name = :name', array(':name' => 'Kermit'))->fetchField();
-    $this->assertNull($saved_age, t('Updated name successfully.'));
+    $this->assertNull($saved_age, 'Updated name successfully.');
   }
 
   /**
@@ -57,10 +57,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->condition('job', 'Singer')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -71,10 +71,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->condition('age', 26, '>')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -85,10 +85,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(array('job' => 'Musician'))
       ->where('age > :age', array(':age' => 26))
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -100,10 +100,10 @@ class UpdateTest extends DatabaseTestBase {
       ->where('age > :age', array(':age' => 26))
       ->condition('name', 'Ringo');
     $num_updated = $update->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
   }
 
   /**
@@ -123,6 +123,6 @@ class UpdateTest extends DatabaseTestBase {
     $num_rows = db_update('test')
       ->expression('age', 'age * age')
       ->execute();
-    $this->assertIdentical($num_rows, 3, t('Number of affected rows are returned.'));
+    $this->assertIdentical($num_rows, 3, 'Number of affected rows are returned.');
   }
 }

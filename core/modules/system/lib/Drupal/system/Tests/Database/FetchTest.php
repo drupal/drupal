@@ -31,14 +31,14 @@ class FetchTest extends DatabaseTestBase {
   function testQueryFetchDefault() {
     $records = array();
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25));
-    $this->assertTrue($result instanceof StatementInterface, t('Result set is a Drupal statement object.'));
+    $this->assertTrue($result instanceof StatementInterface, 'Result set is a Drupal statement object.');
     foreach ($result as $record) {
       $records[] = $record;
-      $this->assertTrue(is_object($record), t('Record is an object.'));
-      $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+      $this->assertTrue(is_object($record), 'Record is an object.');
+      $this->assertIdentical($record->name, 'John', '25 year old is John.');
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -49,11 +49,11 @@ class FetchTest extends DatabaseTestBase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_OBJ));
     foreach ($result as $record) {
       $records[] = $record;
-      $this->assertTrue(is_object($record), t('Record is an object.'));
-      $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+      $this->assertTrue(is_object($record), 'Record is an object.');
+      $this->assertIdentical($record->name, 'John', '25 year old is John.');
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -64,12 +64,12 @@ class FetchTest extends DatabaseTestBase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
-        $this->assertIdentical($record['name'], 'John', t('Record can be accessed associatively.'));
+      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
+        $this->assertIdentical($record['name'], 'John', 'Record can be accessed associatively.');
       }
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -82,12 +82,12 @@ class FetchTest extends DatabaseTestBase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => 'Drupal\system\Tests\Database\FakeRecord'));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue($record instanceof FakeRecord, t('Record is an object of class FakeRecord.'))) {
-        $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+      if ($this->assertTrue($record instanceof FakeRecord, 'Record is an object of class FakeRecord.')) {
+        $this->assertIdentical($record->name, 'John', '25 year old is John.');
       }
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   // Confirm that we can fetch a record into an indexed array explicitly.
@@ -96,8 +96,8 @@ class FetchTest extends DatabaseTestBase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_NUM));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
-        $this->assertIdentical($record[0], 'John', t('Record can be accessed numerically.'));
+      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
+        $this->assertIdentical($record[0], 'John', 'Record can be accessed numerically.');
       }
     }
 
@@ -112,13 +112,13 @@ class FetchTest extends DatabaseTestBase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_BOTH));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
-        $this->assertIdentical($record[0], 'John', t('Record can be accessed numerically.'));
-        $this->assertIdentical($record['name'], 'John', t('Record can be accessed associatively.'));
+      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
+        $this->assertIdentical($record[0], 'John', 'Record can be accessed numerically.');
+        $this->assertIdentical($record['name'], 'John', 'Record can be accessed associatively.');
       }
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -128,12 +128,12 @@ class FetchTest extends DatabaseTestBase {
     $records = array();
     $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
     $column = $result->fetchCol();
-    $this->assertIdentical(count($column), 3, t('fetchCol() returns the right number of records.'));
+    $this->assertIdentical(count($column), 3, 'fetchCol() returns the right number of records.');
 
     $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
     $i = 0;
     foreach ($result as $record) {
-      $this->assertIdentical($record->name, $column[$i++], t('Column matches direct accesss.'));
+      $this->assertIdentical($record->name, $column[$i++], 'Column matches direct accesss.');
     }
   }
 }

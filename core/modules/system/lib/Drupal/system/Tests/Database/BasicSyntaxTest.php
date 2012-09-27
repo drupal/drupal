@@ -34,7 +34,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ':a4' => ' a ',
       ':a5' => 'test.',
     ));
-    $this->assertIdentical($result->fetchField(), 'This is a test.', t('Basic CONCAT works.'));
+    $this->assertIdentical($result->fetchField(), 'This is a test.', 'Basic CONCAT works.');
   }
 
   /**
@@ -47,7 +47,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ':a3' => '.',
       ':age' => 25,
     ));
-    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', t('Field CONCAT works.'));
+    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', 'Field CONCAT works.');
   }
 
   /**
@@ -66,14 +66,14 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    $this->assertIdentical($num_matches, '2', 'Found 2 records.');
     // Match only "Ring_" using a LIKE expression with no wildcards.
     $num_matches = db_select('test', 't')
       ->condition('name', db_like('Ring_'), 'LIKE')
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
+    $this->assertIdentical($num_matches, '1', 'Found 1 record.');
   }
 
   /**
@@ -97,13 +97,13 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    $this->assertIdentical($num_matches, '2', 'Found 2 records.');
     // Match only the former using a LIKE expression with no wildcards.
     $num_matches = db_select('test', 't')
       ->condition('name', db_like('abc%\_'), 'LIKE')
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
+    $this->assertIdentical($num_matches, '1', 'Found 1 record.');
   }
 }

@@ -36,11 +36,11 @@ class SelectOrderedTest extends DatabaseTestBase {
     $last_age = 0;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->age >= $last_age, t('Results returned in correct order.'));
+      $this->assertTrue($record->age >= $last_age, 'Results returned in correct order.');
       $last_age = $record->age;
     }
 
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 
   /**
@@ -67,11 +67,11 @@ class SelectOrderedTest extends DatabaseTestBase {
       $num_records++;
       foreach ($record as $kk => $col) {
         if ($expected[$k][$kk] != $results[$k][$kk]) {
-          $this->assertTrue(FALSE, t('Results returned in correct order.'));
+          $this->assertTrue(FALSE, 'Results returned in correct order.');
         }
       }
     }
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 
   /**
@@ -88,10 +88,10 @@ class SelectOrderedTest extends DatabaseTestBase {
     $last_age = 100000000;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->age <= $last_age, t('Results returned in correct order.'));
+      $this->assertTrue($record->age <= $last_age, 'Results returned in correct order.');
       $last_age = $record->age;
     }
 
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 }

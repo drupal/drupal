@@ -44,30 +44,30 @@ class RegressionTest extends DatabaseTestBase {
       ))->execute();
 
     $from_database = db_query('SELECT name FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
-    $this->assertIdentical($name, $from_database, t("The database handles UTF-8 characters cleanly."));
+    $this->assertIdentical($name, $from_database, 'The database handles UTF-8 characters cleanly.');
   }
 
   /**
    * Test the db_table_exists() function.
    */
   function testDBTableExists() {
-    $this->assertIdentical(TRUE, db_table_exists('node'), t('Returns true for existent table.'));
-    $this->assertIdentical(FALSE, db_table_exists('nosuchtable'), t('Returns false for nonexistent table.'));
+    $this->assertIdentical(TRUE, db_table_exists('node'), 'Returns true for existent table.');
+    $this->assertIdentical(FALSE, db_table_exists('nosuchtable'), 'Returns false for nonexistent table.');
   }
 
   /**
    * Test the db_field_exists() function.
    */
   function testDBFieldExists() {
-    $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), t('Returns true for existent column.'));
-    $this->assertIdentical(FALSE, db_field_exists('node', 'nosuchcolumn'), t('Returns false for nonexistent column.'));
+    $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), 'Returns true for existent column.');
+    $this->assertIdentical(FALSE, db_field_exists('node', 'nosuchcolumn'), 'Returns false for nonexistent column.');
   }
 
   /**
    * Test the db_index_exists() function.
    */
   function testDBIndexExists() {
-    $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), t('Returns true for existent index.'));
-    $this->assertIdentical(FALSE, db_index_exists('node', 'nosuchindex'), t('Returns false for nonexistent index.'));
+    $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), 'Returns true for existent index.');
+    $this->assertIdentical(FALSE, db_index_exists('node', 'nosuchindex'), 'Returns false for nonexistent index.');
   }
 }

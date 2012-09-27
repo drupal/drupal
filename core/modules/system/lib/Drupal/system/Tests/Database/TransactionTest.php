@@ -76,19 +76,19 @@ class TransactionTest extends DatabaseTestBase {
       ))
       ->execute();
 
-    $this->assertTrue($connection->inTransaction(), t('In transaction before calling nested transaction.'));
+    $this->assertTrue($connection->inTransaction(), 'In transaction before calling nested transaction.');
 
     // We're already in a transaction, but we call ->transactionInnerLayer
     // to nest another transaction inside the current one.
     $this->transactionInnerLayer($suffix, $rollback, $ddl_statement);
 
-    $this->assertTrue($connection->inTransaction(), t('In transaction after calling nested transaction.'));
+    $this->assertTrue($connection->inTransaction(), 'In transaction after calling nested transaction.');
 
     if ($rollback) {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollback();
-      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
+      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollback().');
     }
   }
 
@@ -114,7 +114,7 @@ class TransactionTest extends DatabaseTestBase {
     $txn = db_transaction();
 
     $depth2 = $connection->transactionDepth();
-    $this->assertTrue($depth < $depth2, t('Transaction depth is has increased with new transaction.'));
+    $this->assertTrue($depth < $depth2, 'Transaction depth is has increased with new transaction.');
 
     // Insert a single row into the testing table.
     db_insert('test')
@@ -124,7 +124,7 @@ class TransactionTest extends DatabaseTestBase {
       ))
       ->execute();
 
-    $this->assertTrue($connection->inTransaction(), t('In transaction inside nested transaction.'));
+    $this->assertTrue($connection->inTransaction(), 'In transaction inside nested transaction.');
 
     if ($ddl_statement) {
       $table = array(
@@ -139,14 +139,14 @@ class TransactionTest extends DatabaseTestBase {
       );
       db_create_table('database_test_1', $table);
 
-      $this->assertTrue($connection->inTransaction(), t('In transaction inside nested transaction.'));
+      $this->assertTrue($connection->inTransaction(), 'In transaction inside nested transaction.');
     }
 
     if ($rollback) {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollback();
-      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
+      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollback().');
     }
   }
 
@@ -167,9 +167,9 @@ class TransactionTest extends DatabaseTestBase {
       // Neither of the rows we inserted in the two transaction layers
       // should be present in the tables post-rollback.
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidB'))->fetchField();
-      $this->assertNotIdentical($saved_age, '24', t('Cannot retrieve DavidB row after commit.'));
+      $this->assertNotIdentical($saved_age, '24', 'Cannot retrieve DavidB row after commit.');
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
-      $this->assertNotIdentical($saved_age, '19', t('Cannot retrieve DanielB row after commit.'));
+      $this->assertNotIdentical($saved_age, '19', 'Cannot retrieve DanielB row after commit.');
     }
     catch (Exception $e) {
       $this->fail($e->getMessage());
@@ -193,9 +193,9 @@ class TransactionTest extends DatabaseTestBase {
       // Because our current database claims to not support transactions,
       // the inserted rows should be present despite the attempt to roll back.
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidB'))->fetchField();
-      $this->assertIdentical($saved_age, '24', t('DavidB not rolled back, since transactions are not supported.'));
+      $this->assertIdentical($saved_age, '24', 'DavidB not rolled back, since transactions are not supported.');
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
-      $this->assertIdentical($saved_age, '19', t('DanielB not rolled back, since transactions are not supported.'));
+      $this->assertIdentical($saved_age, '19', 'DanielB not rolled back, since transactions are not supported.');
     }
     catch (Exception $e) {
       $this->fail($e->getMessage());
@@ -215,9 +215,9 @@ class TransactionTest extends DatabaseTestBase {
 
       // Because we committed, both of the inserted rows should be present.
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidA'))->fetchField();
-      $this->assertIdentical($saved_age, '24', t('Can retrieve DavidA row after commit.'));
+      $this->assertIdentical($saved_age, '24', 'Can retrieve DavidA row after commit.');
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielA'))->fetchField();
-      $this->assertIdentical($saved_age, '19', t('Can retrieve DanielA row after commit.'));
+      $this->assertIdentical($saved_age, '19', 'Can retrieve DanielA row after commit.');
     }
     catch (Exception $e) {
       $this->fail($e->getMessage());
@@ -309,7 +309,7 @@ class TransactionTest extends DatabaseTestBase {
         // $this->fail(t('Rolling back a transaction containing DDL should fail.'));
       }
       catch (TransactionNoActiveException $e) {
-        $this->pass(t('Rolling back a transaction containing DDL should fail.'));
+        $this->pass('Rolling back a transaction containing DDL should fail.');
       }
       $this->assertRowPresent('row');
     }
@@ -362,7 +362,7 @@ class TransactionTest extends DatabaseTestBase {
    */
   function assertRowPresent($name, $message = NULL) {
     if (!isset($message)) {
-      $message = t('Row %name is present.', array('%name' => $name));
+      $message = format_string('Row %name is present.', array('%name' => $name));
     }
     $present = (boolean) db_query('SELECT 1 FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
     return $this->assertTrue($present, $message);
@@ -378,7 +378,7 @@ class TransactionTest extends DatabaseTestBase {
    */
   function assertRowAbsent($name, $message = NULL) {
     if (!isset($message)) {
-      $message = t('Row %name is absent.', array('%name' => $name));
+      $message = format_string('Row %name is absent.', array('%name' => $name));
     }
     $present = (boolean) db_query('SELECT 1 FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
     return $this->assertFalse($present, $message);
@@ -402,10 +402,10 @@ class TransactionTest extends DatabaseTestBase {
     $this->insertRow('inner');
     // Pop the inner transaction.
     unset($transaction2);
-    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the inner transaction'));
+    $this->assertTrue($database->inTransaction(), 'Still in a transaction after popping the inner transaction');
     // Pop the outer transaction.
     unset($transaction);
-    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the outer transaction'));
+    $this->assertFalse($database->inTransaction(), 'Transaction closed after popping the outer transaction');
     $this->assertRowPresent('outer');
     $this->assertRowPresent('inner');
 
@@ -418,10 +418,10 @@ class TransactionTest extends DatabaseTestBase {
     // Pop the outer transaction, nothing should happen.
     unset($transaction);
     $this->insertRow('inner-after-outer-commit');
-    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    $this->assertTrue($database->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the inner transaction, the whole transaction should commit.
     unset($transaction2);
-    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertFalse($database->inTransaction(), 'Transaction closed after popping the inner transaction');
     $this->assertRowPresent('outer');
     $this->assertRowPresent('inner');
     $this->assertRowPresent('inner-after-outer-commit');
@@ -435,11 +435,11 @@ class TransactionTest extends DatabaseTestBase {
     // Now rollback the inner transaction.
     $transaction2->rollback();
     unset($transaction2);
-    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    $this->assertTrue($database->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the outer transaction, it should commit.
     $this->insertRow('outer-after-inner-rollback');
     unset($transaction);
-    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertFalse($database->inTransaction(), 'Transaction closed after popping the inner transaction');
     $this->assertRowPresent('outer');
     $this->assertRowAbsent('inner');
     $this->assertRowPresent('outer-after-inner-rollback');
@@ -452,11 +452,11 @@ class TransactionTest extends DatabaseTestBase {
     $this->insertRow('inner');
     // Pop the outer transaction, nothing should happen.
     unset($transaction);
-    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    $this->assertTrue($database->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Now rollback the inner transaction, it should rollback.
     $transaction2->rollback();
     unset($transaction2);
-    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertFalse($database->inTransaction(), 'Transaction closed after popping the inner transaction');
     $this->assertRowPresent('outer');
     $this->assertRowAbsent('inner');
 
@@ -474,23 +474,23 @@ class TransactionTest extends DatabaseTestBase {
     try {
       $transaction->rollback();
       unset($transaction);
-      $this->fail(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
+      $this->fail('Rolling back the outer transaction while the inner transaction is active resulted in an exception.');
     }
     catch (TransactionOutOfOrderException $e) {
-      $this->pass(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
+      $this->pass('Rolling back the outer transaction while the inner transaction is active resulted in an exception.');
     }
-    $this->assertFalse($database->inTransaction(), t('No more in a transaction after rolling back the outer transaction'));
+    $this->assertFalse($database->inTransaction(), 'No more in a transaction after rolling back the outer transaction');
     // Try to commit one inner transaction.
     unset($transaction3);
-    $this->pass(t('Trying to commit an inner transaction resulted in an exception.'));
+    $this->pass('Trying to commit an inner transaction resulted in an exception.');
     // Try to rollback one inner transaction.
     try {
       $transaction->rollback();
       unset($transaction2);
-      $this->fail(t('Trying to commit an inner transaction resulted in an exception.'));
+      $this->fail('Trying to commit an inner transaction resulted in an exception.');
     }
     catch (TransactionNoActiveException $e) {
-      $this->pass(t('Trying to commit an inner transaction resulted in an exception.'));
+      $this->pass('Trying to commit an inner transaction resulted in an exception.');
     }
     $this->assertRowAbsent('outer');
     $this->assertRowAbsent('inner');

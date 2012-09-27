@@ -30,8 +30,8 @@ class NextIdTest extends WebTestBase {
     // We can test for exact increase in here because we know there is no
     // other process operating on these tables -- normally we could only
     // expect $second > $first.
-    $this->assertEqual($first + 1, $second, t('The second call from a sequence provides a number increased by one.'));
+    $this->assertEqual($first + 1, $second, 'The second call from a sequence provides a number increased by one.');
     $result = db_next_id(1000);
-    $this->assertEqual($result, 1001, t('Sequence provides a larger number than the existing ID.'));
+    $this->assertEqual($result, 1001, 'Sequence provides a larger number than the existing ID.');
   }
 }

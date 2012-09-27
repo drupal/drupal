@@ -54,7 +54,7 @@ abstract class DatabaseTestBase extends WebTestBase {
     }
 
     foreach ($schema as $name => $data) {
-      $this->assertTrue(db_table_exists($name), t('Table @name created successfully.', array('@name' => $name)));
+      $this->assertTrue(db_table_exists($name), format_string('Table @name created successfully.', array('@name' => $name)));
     }
   }
 

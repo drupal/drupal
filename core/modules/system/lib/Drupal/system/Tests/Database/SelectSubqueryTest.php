@@ -50,7 +50,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
       // WHERE tt.task = 'code'
       $people = $select->execute()->fetchCol();
 
-      $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+      $this->assertEqual(count($people), 1, 'Returned the correct number of rows.');
     }
   }
 
@@ -77,7 +77,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     //   INNER JOIN test t ON t.id=tt.pid
     $people = $select->execute()->fetchCol();
 
-    $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($people), 1, 'Returned the correct number of rows.');
   }
 
   /**
@@ -100,7 +100,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // FROM test tt2
     // WHERE tt2.pid IN (SELECT tt.pid AS pid FROM test_task tt WHERE tt.priority=1)
     $people = $select->execute()->fetchCol();
-    $this->assertEqual(count($people), 5, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($people), 5, 'Returned the correct number of rows.');
   }
 
   /**
@@ -124,7 +124,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     //   INNER JOIN (SELECT tt.pid AS pid FROM test_task tt WHERE priority=1) tt ON t.id=tt.pid
     $people = $select->execute()->fetchCol();
 
-    $this->assertEqual(count($people), 2, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($people), 2, 'Returned the correct number of rows.');
   }
 
   /**
@@ -154,7 +154,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
 
     // Ensure that we got the right record.
     $record = $result->fetch();
-    $this->assertEqual($record->name, 'George', t('Fetched name is correct using EXISTS query.'));
+    $this->assertEqual($record->name, 'George', 'Fetched name is correct using EXISTS query.');
   }
 
   /**
@@ -184,6 +184,6 @@ class SelectSubqueryTest extends DatabaseTestBase {
 
     // Ensure that we got the right number of records.
     $people = $query->execute()->fetchCol();
-    $this->assertEqual(count($people), 3, t('NOT EXISTS query returned the correct results.'));
+    $this->assertEqual(count($people), 3, 'NOT EXISTS query returned the correct results.');
   }
 }

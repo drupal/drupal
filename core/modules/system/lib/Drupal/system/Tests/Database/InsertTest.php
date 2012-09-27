@@ -34,9 +34,9 @@ class InsertTest extends DatabaseTestBase {
     $query->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before + 1, (int) $num_records_after, t('Record inserts correctly.'));
+    $this->assertIdentical($num_records_before + 1, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Yoko'))->fetchField();
-    $this->assertIdentical($saved_age, '29', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '29', 'Can retrieve after inserting.');
   }
 
   /**
@@ -63,13 +63,13 @@ class InsertTest extends DatabaseTestBase {
     $query->execute();
 
     $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before + 3, $num_records_after, t('Record inserts correctly.'));
+    $this->assertIdentical($num_records_before + 3, $num_records_after, 'Record inserts correctly.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
-    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
-    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
   /**
@@ -98,13 +98,13 @@ class InsertTest extends DatabaseTestBase {
     $query->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical((int) $num_records_before + 3, (int) $num_records_after, t('Record inserts correctly.'));
+    $this->assertIdentical((int) $num_records_before + 3, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
-    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
-    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
   /**
@@ -120,11 +120,11 @@ class InsertTest extends DatabaseTestBase {
       ->values(array('Moe', '32'))
       ->execute();
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
-    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
-    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
   /**
@@ -138,7 +138,7 @@ class InsertTest extends DatabaseTestBase {
       ))
       ->execute();
 
-    $this->assertIdentical($id, '5', t('Auto-increment ID returned successfully.'));
+    $this->assertIdentical($id, '5', 'Auto-increment ID returned successfully.');
   }
 
   /**
@@ -164,6 +164,6 @@ class InsertTest extends DatabaseTestBase {
       ->execute();
 
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Meredith'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
   }
 }

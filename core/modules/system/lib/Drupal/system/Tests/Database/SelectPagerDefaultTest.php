@@ -50,7 +50,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, t('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
     }
   }
 
@@ -84,7 +84,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, t('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
     }
   }
 
@@ -107,7 +107,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $ages = $outer_query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array(25, 26, 27, 28), t('Inner pager query returned the correct ages.'));
+    $this->assertEqual($ages, array(25, 26, 27, 28), 'Inner pager query returned the correct ages.');
   }
 
   /**
@@ -128,7 +128,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $ages = $query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array('George', 'Ringo'), t('Pager query with having expression returned the correct ages.'));
+    $this->assertEqual($ages, array('George', 'Ringo'), 'Pager query with having expression returned the correct ages.');
   }
 
   /**
@@ -145,7 +145,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->limit(1)
       ->execute()
       ->fetchField();
-    $this->assertEqual($name, 'Paul', t('Pager query #1 with a specified element ID returned the correct results.'));
+    $this->assertEqual($name, 'Paul', 'Pager query #1 with a specified element ID returned the correct results.');
 
     // Setting an element smaller than the previous one
     // should not overwrite the pager $maxElement with a smaller value.
@@ -157,7 +157,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->limit(1)
       ->execute()
       ->fetchField();
-    $this->assertEqual($name, 'George', t('Pager query #2 with a specified element ID returned the correct results.'));
+    $this->assertEqual($name, 'George', 'Pager query #2 with a specified element ID returned the correct results.');
 
     $name = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
@@ -166,7 +166,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->limit(1)
       ->execute()
       ->fetchField();
-    $this->assertEqual($name, 'John', t('Pager query #3 with a generated element ID returned the correct results.'));
+    $this->assertEqual($name, 'John', 'Pager query #3 with a generated element ID returned the correct results.');
 
     unset($_GET['page']);
   }

@@ -33,8 +33,8 @@ class TaggingTest extends DatabaseTestBase {
 
     $query->addTag('test');
 
-    $this->assertTrue($query->hasTag('test'), t('hasTag() returned true.'));
-    $this->assertFalse($query->hasTag('other'), t('hasTag() returned false.'));
+    $this->assertTrue($query->hasTag('test'), 'hasTag() returned true.');
+    $this->assertFalse($query->hasTag('other'), 'hasTag() returned false.');
   }
 
   /**
@@ -48,8 +48,8 @@ class TaggingTest extends DatabaseTestBase {
     $query->addTag('test');
     $query->addTag('other');
 
-    $this->assertTrue($query->hasAllTags('test', 'other'), t('hasAllTags() returned true.'));
-    $this->assertFalse($query->hasAllTags('test', 'stuff'), t('hasAllTags() returned false.'));
+    $this->assertTrue($query->hasAllTags('test', 'other'), 'hasAllTags() returned true.');
+    $this->assertFalse($query->hasAllTags('test', 'stuff'), 'hasAllTags() returned false.');
   }
 
   /**
@@ -62,8 +62,8 @@ class TaggingTest extends DatabaseTestBase {
 
     $query->addTag('test');
 
-    $this->assertTrue($query->hasAnyTag('test', 'other'), t('hasAnyTag() returned true.'));
-    $this->assertFalse($query->hasAnyTag('other', 'stuff'), t('hasAnyTag() returned false.'));
+    $this->assertTrue($query->hasAnyTag('test', 'other'), 'hasAnyTag() returned true.');
+    $this->assertFalse($query->hasAnyTag('other', 'stuff'), 'hasAnyTag() returned false.');
   }
 
   /**
@@ -84,9 +84,9 @@ class TaggingTest extends DatabaseTestBase {
     $query->addMetaData('test', $data);
 
     $return = $query->getMetaData('test');
-    $this->assertEqual($data, $return, t('Corect metadata returned.'));
+    $this->assertEqual($data, $return, 'Corect metadata returned.');
 
     $return = $query->getMetaData('nothere');
-    $this->assertNull($return, t('Non-existent key returned NULL.'));
+    $this->assertNull($return, 'Non-existent key returned NULL.');
   }
 }
