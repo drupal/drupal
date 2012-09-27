@@ -1485,11 +1485,26 @@ function user_uid_optional_to_arg($arg) {
 /**
  * Menu item title callback for the 'user' path.
  *
- * Anonymous users should see "User account", but authenticated users are
- * expected to see "My account".
+ * Anonymous users should see a title based on the requested page, but
+ * authenticated users are expected to see "My account".
  */
 function user_menu_title() {
-  return user_is_logged_in() ? t('My account') : t('User account');
+  if (!user_is_logged_in()) {
+    switch (current_path()) {
+      case 'user' :
+      case 'user/login' :
+        return t('Log in');
+      case 'user/register' :
+        return t('Create new account');
+      case 'user/password' :
+        return t('Request new password');
+      default :
+        return t('User account');
+    }
+  }
+  else {
+    return t('My account');
+  }
 }
 
 /**

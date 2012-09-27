@@ -94,4 +94,37 @@ class UserAccountLinksTests extends WebTestBase {
     $this->assertEqual(count($link), 0, 'My account link is not in the secondary menu.');
   }
 
+  /**
+   * Tests page title is set correctly on user account tabs.
+   */
+  function testAccountPageTitles() {
+    // Default page titles are suffixed with the site name - Drupal.
+    $title_suffix = ' | Drupal';
+
+    $this->drupalGet('user');
+    $this->assertTitle('Log in' . $title_suffix, "Page title of /user is 'Log in'");
+
+    $this->drupalGet('user/login');
+    $this->assertTitle('Log in' . $title_suffix, "Page title of /user/login is 'Log in'");
+
+    $this->drupalGet('user/register');
+    $this->assertTitle('Create new account' . $title_suffix, "Page title of /user/register is 'Create new account' for anonymous users.");
+
+    $this->drupalGet('user/password');
+    $this->assertTitle('Request new password' . $title_suffix, "Page title of /user/register is 'Request new password' for anonymous users.");
+
+    // Tests the default fallback title.
+    $this->drupalGet('user/password/' . $this->randomString());
+    $this->assertTitle('User account' . $title_suffix, "Fallback page title for user pages is 'User account' for anonymous users.");
+
+    // Check the page title for registered users is "My Account" in menus.
+    $this->drupalLogin($this->drupalCreateUser());
+    // After login, the client is redirected to /user.
+    $link = $this->xpath('//a[contains(@class, :class)]', array(
+        ':class' => 'active-trail',
+      )
+    );
+    $this->assertEqual((string) $link[0], 'My account', "Page title of /user is 'My Account' in menus for registered users");
+  }
+
 }

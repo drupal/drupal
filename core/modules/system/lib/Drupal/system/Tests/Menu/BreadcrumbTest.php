@@ -379,7 +379,7 @@ class BreadcrumbTest extends MenuTestBase {
 
     // Verify breadcrumb on user pages (without menu link) for anonymous user.
     $trail = $home;
-    $this->assertBreadcrumb('user', $trail, t('User account'));
+    $this->assertBreadcrumb('user', $trail, t('Log in'));
     $this->assertBreadcrumb('user/' . $this->admin_user->uid, $trail, $this->admin_user->name);
 
     // Verify breadcrumb on user pages (without menu link) for registered users.
