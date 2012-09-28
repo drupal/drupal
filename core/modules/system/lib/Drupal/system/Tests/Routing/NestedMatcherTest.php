@@ -53,7 +53,7 @@ class NestedMatcherTest extends UnitTestBase {
     $matcher = new NestedMatcher();
 
     $matcher->setInitialMatcher(new MockPathMatcher($this->fixtures->sampleRouteCollection()));
-    $matcher->addPartialMatcher(new HttpMethodMatcher());
+    $matcher->addPartialMatcher(new HttpMethodMatcher(), 1);
     $matcher->setFinalMatcher(new FirstEntryFinalMatcher());
 
     $request = Request::create('/path/one', 'GET');

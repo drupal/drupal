@@ -35,11 +35,14 @@ interface NestedMatcherInterface extends RequestMatcherInterface {
    *
    * @param \Drupal\Core\Routing\PartialMatcherInterface $matcher
    *   A partial matcher.
+   * @param int $priority
+   *   (optional) The priority of the matcher. Higher number matchers will be checked
+   *   first. Default to 0.
    *
-   * @return \Drupal\Core\Routing\NestedMatcherInterface
+   * @return NestedMatcherInterface
    *   The current matcher.
    */
-  public function addPartialMatcher(PartialMatcherInterface $matcher);
+  public function addPartialMatcher(PartialMatcherInterface $matcher, $priority = 0);
 
   /**
    * Sets the final matcher for the matching plan.

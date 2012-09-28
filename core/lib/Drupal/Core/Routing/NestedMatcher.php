@@ -30,6 +30,13 @@ class NestedMatcher implements NestedMatcherInterface {
   protected $partialMatchers = array();
 
   /**
+   * Array of PartialMatcherInterface objects, sorted.
+   *
+   * @var type
+   */
+  protected $sortedMatchers = array();
+
+  /**
    * The initial matcher to match against.
    *
    * @var Drupal\core\Routing\InitialMatcherInterface
@@ -50,14 +57,20 @@ class NestedMatcher implements NestedMatcherInterface {
    *
    * @param \Drupal\Core\Routing\PartialMatcherInterface $matcher
    *   A partial matcher.
+   * @param int $priority
+   *   (optional) The priority of the matcher. Higher number matchers will be checked
+   *   first. Default to 0.
    *
    * @return NestedMatcherInterface
    *   The current matcher.
    */
-  public function addPartialMatcher(PartialMatcherInterface $matcher) {
-    $this->partialMatchers[] = $matcher;
+  public function addPartialMatcher(PartialMatcherInterface $matcher, $priority = 0) {
+    if (empty($this->matchers[$priority])) {
+      $this->matchers[$priority] = array();
+    }
 
-    return $this;
+    $this->matchers[$priority][] = $matcher;
+    $this->sortedMatchers = array();
   }
 
   /**
@@ -114,7 +127,7 @@ class NestedMatcher implements NestedMatcherInterface {
   public function matchRequest(Request $request) {
     $collection = $this->initialMatcher->matchRequestPartial($request);
 
-    foreach ($this->partialMatchers as $matcher) {
+    foreach ($this->getPartialMatchers() as $matcher) {
       if ($collection) {
         $matcher->setCollection($collection);
       }
@@ -124,6 +137,39 @@ class NestedMatcher implements NestedMatcherInterface {
     $attributes = $this->finalMatcher->setCollection($collection)->matchRequest($request);
 
     return $attributes;
+  }
+
+  /**
+    * Sorts the matchers and flattens them.
+    *
+    * @return array
+    *   An array of RequestMatcherInterface objects.
+    */
+  public function getPartialMatchers() {
+    if (empty($this->sortedMatchers)) {
+      $this->sortedMatchers = $this->sortMatchers();
+    }
+
+    return $this->sortedMatchers;
+  }
+
+  /**
+    * Sort matchers by priority.
+    *
+    * The highest priority number is the highest priority (reverse sorting).
+    *
+    * @return \Symfony\Component\Routing\RequestMatcherInterface[]
+    *   An array of Matcher objects in the order they should be used.
+    */
+  protected function sortMatchers() {
+    $sortedMatchers = array();
+    krsort($this->matchers);
+
+    foreach ($this->matchers as $matchers) {
+      $sortedMatchers = array_merge($sortedMatchers, $matchers);
+    }
+
+    return $sortedMatchers;
   }
 
   /**
