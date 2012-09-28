@@ -7,12 +7,12 @@
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
  * Form controller for the test entity edit forms.
  */
-class EntityTestFormController extends EntityFormController {
+class EntityTestFormController extends EntityFormControllerNG {
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
@@ -21,23 +21,22 @@ class EntityTestFormController extends EntityFormController {
     $form = parent::form($form, $form_state, $entity);
 
     $langcode = $this->getFormLangcode($form_state);
-    $name = $entity->get('name', $langcode);
-    $uid = $entity->get('uid', $langcode);
+    $translation = $entity->getTranslation($langcode);
 
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name'),
-      '#default_value' => !empty($name) ? $name : '',
+      '#default_value' => $translation->name->value,
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => TRUE,
       '#weight' => -10,
     );
 
-    $form['uid'] = array(
+    $form['user_id'] = array(
       '#type' => 'textfield',
       '#title' => 'UID',
-      '#default_value' => !empty($uid) ? $uid : '',
+      '#default_value' => $translation->user_id->value,
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => TRUE,
@@ -53,12 +52,11 @@ class EntityTestFormController extends EntityFormController {
   public function submit(array $form, array &$form_state) {
     $entity = parent::submit($form, $form_state);
     $langcode = $this->getFormLangcode($form_state);
-
     // Updates multilingual properties.
-    foreach (array('name', 'uid') as $property) {
-      $entity->set($property, $form_state['values'][$property], $langcode);
+    $translation = $entity->getTranslation($langcode);
+    foreach (array('name', 'user_id') as $name) {
+      $translation->$name->setValue($form_state['values'][$name]);
     }
-
     return $entity;
   }
 

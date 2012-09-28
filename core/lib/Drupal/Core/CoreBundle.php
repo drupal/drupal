@@ -52,6 +52,7 @@ class CoreBundle extends Bundle
       ->setFactoryClass('Drupal\Core\Database\Database')
       ->setFactoryMethod('getConnection')
       ->addArgument('slave');
+    $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager');
 
     // @todo Replace below lines with the commented out block below it when it's
     //   performant to do so: http://drupal.org/node/1706064.

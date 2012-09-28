@@ -36,21 +36,20 @@ class EntityApiTest extends WebTestBase {
     $user1 = $this->drupalCreateUser();
 
     // Create some test entities.
-    $entity = entity_create('entity_test', array('name' => 'test', 'uid' => $user1->uid));
+    $entity = entity_create('entity_test', array('name' => 'test', 'user_id' => $user1->uid));
     $entity->save();
-    $entity = entity_create('entity_test', array('name' => 'test2', 'uid' => $user1->uid));
+    $entity = entity_create('entity_test', array('name' => 'test2', 'user_id' => $user1->uid));
     $entity->save();
-    $entity = entity_create('entity_test', array('name' => 'test', 'uid' => NULL));
+    $entity = entity_create('entity_test', array('name' => 'test', 'user_id' => NULL));
     $entity->save();
 
     $entities = array_values(entity_load_multiple_by_properties('entity_test', array('name' => 'test')));
-
-    $this->assertEqual($entities[0]->get('name'), 'test', 'Created and loaded entity.');
-    $this->assertEqual($entities[1]->get('name'), 'test', 'Created and loaded entity.');
+    $this->assertEqual($entities[0]->name->value, 'test', 'Created and loaded entity.');
+    $this->assertEqual($entities[1]->name->value, 'test', 'Created and loaded entity.');
 
     // Test loading a single entity.
-    $loaded_entity = entity_test_load($entity->id);
-    $this->assertEqual($loaded_entity->id, $entity->id, 'Loaded a single entity by id.');
+    $loaded_entity = entity_test_load($entity->id());
+    $this->assertEqual($loaded_entity->id(), $entity->id(), 'Loaded a single entity by id.');
 
     // Test deleting an entity.
     $entities = array_values(entity_load_multiple_by_properties('entity_test', array('name' => 'test2')));
@@ -60,10 +59,10 @@ class EntityApiTest extends WebTestBase {
 
     // Test updating an entity.
     $entities = array_values(entity_load_multiple_by_properties('entity_test', array('name' => 'test')));
-    $entities[0]->set('name', 'test3');
+    $entities[0]->name->value = 'test3';
     $entities[0]->save();
-    $entity = entity_test_load($entities[0]->id);
-    $this->assertEqual($entity->get('name'), 'test3', 'Entity updated.');
+    $entity = entity_test_load($entities[0]->id());
+    $this->assertEqual($entity->name->value, 'test3', 'Entity updated.');
 
     // Try deleting multiple test entities by deleting all.
     $ids = array_keys(entity_test_load_multiple());
@@ -71,27 +70,5 @@ class EntityApiTest extends WebTestBase {
 
     $all = entity_test_load_multiple();
     $this->assertTrue(empty($all), 'Deleted all entities.');
-  }
-
-  /**
-   * Tests Entity getters/setters.
-   */
-  function testEntityGettersSetters() {
-    $entity = entity_create('entity_test', array('name' => 'test', 'uid' => NULL));
-    $this->assertNull($entity->get('uid'), 'Property is not set.');
-
-    $entity->set('uid', $GLOBALS['user']->uid);
-    $this->assertEqual($entity->get('uid'), $GLOBALS['user']->uid, 'Property has been set.');
-
-    $value = $entity->get('uid');
-    $this->assertEqual($value, $entity->get('uid'), 'Property has been retrieved.');
-
-    // Make sure setting/getting translations boils down to setting/getting the
-    // regular value as the entity and property are not translatable.
-    $entity->set('uid', NULL, 'en');
-    $this->assertNull($entity->uid, 'Language neutral property has been set.');
-
-    $value = $entity->get('uid', 'en');
-    $this->assertNull($value, 'Language neutral property has been retrieved.');
   }
 }

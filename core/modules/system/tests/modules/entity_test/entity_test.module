@@ -86,7 +86,7 @@ function entity_test_add() {
  * Menu callback: displays the 'Edit existing entity_test' form.
  */
 function entity_test_edit($entity) {
-  drupal_set_title(t('entity_test @id', array('@id' => $entity->id)), PASS_THROUGH);
+  drupal_set_title(t('entity_test @id', array('@id' => $entity->id())), PASS_THROUGH);
   return entity_get_form($entity);
 }
 
