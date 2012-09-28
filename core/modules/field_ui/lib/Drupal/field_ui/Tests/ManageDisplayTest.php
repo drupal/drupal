@@ -54,8 +54,8 @@ class ManageDisplayTest extends FieldUiTestBase {
     // Display the "Manage display" screen and check that the expected formatter is
     // selected.
     $this->drupalGet($manage_display);
-    $this->assertFieldByName('fields[field_test][type]', $format, t('The expected formatter is selected.'));
-    $this->assertText("$setting_name: $setting_value", t('The expected summary is displayed.'));
+    $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
+    $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
 
     // Change the formatter and check that the summary is updated.
     $edit = array('fields[field_test][type]' => 'field_test_multiple', 'refresh_rows' => 'field_test');
@@ -64,8 +64,8 @@ class ManageDisplayTest extends FieldUiTestBase {
     $default_settings = field_info_formatter_settings($format);
     $setting_name = key($default_settings);
     $setting_value = $default_settings[$setting_name];
-    $this->assertFieldByName('fields[field_test][type]', $format, t('The expected formatter is selected.'));
-    $this->assertText("$setting_name: $setting_value", t('The expected summary is displayed.'));
+    $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
+    $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
 
     // Submit the form and check that the instance is updated.
     $this->drupalPost(NULL, array(), t('Save'));
@@ -73,8 +73,8 @@ class ManageDisplayTest extends FieldUiTestBase {
     $instance = field_info_instance('node', 'field_test', $this->type);
     $current_format = $instance['display']['default']['type'];
     $current_setting_value = $instance['display']['default']['settings'][$setting_name];
-    $this->assertEqual($current_format, $format, t('The formatter was updated.'));
-    $this->assertEqual($current_setting_value, $setting_value, t('The setting was updated.'));
+    $this->assertEqual($current_format, $format, 'The formatter was updated.');
+    $this->assertEqual($current_setting_value, $setting_value, 'The setting was updated.');
 
     // Assert that hook_field_formatter_settings_summary_alter() is called.
     $this->assertText('field_test_field_formatter_settings_summary_alter');
@@ -124,8 +124,8 @@ class ManageDisplayTest extends FieldUiTestBase {
 
     // Check that the field is displayed with the default formatter in 'rss'
     // mode (uses 'default'), and hidden in 'teaser' mode (uses custom settings).
-    $this->assertNodeViewText($node, 'rss', $output['field_test_default'], t("The field is displayed as expected in view modes that use 'default' settings."));
-    $this->assertNodeViewNoText($node, 'teaser', $value, t("The field is hidden in view modes that use custom settings."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_default'], "The field is displayed as expected in view modes that use 'default' settings.");
+    $this->assertNodeViewNoText($node, 'teaser', $value, "The field is hidden in view modes that use custom settings.");
 
     // Change fomatter for 'default' mode, check that the field is displayed
     // accordingly in 'rss' mode.
@@ -133,14 +133,14 @@ class ManageDisplayTest extends FieldUiTestBase {
       'fields[field_test][type]' => 'field_test_with_prepare_view',
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
-    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], t("The field is displayed as expected in view modes that use 'default' settings."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in view modes that use 'default' settings.");
 
     // Specialize the 'rss' mode, check that the field is displayed the same.
     $edit = array(
       "view_modes_custom[rss]" => TRUE,
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
-    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], t("The field is displayed as expected in newly specialized 'rss' mode."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in newly specialized 'rss' mode.");
 
     // Set the field to 'hidden' in the view mode, check that the field is
     // hidden.
@@ -148,7 +148,7 @@ class ManageDisplayTest extends FieldUiTestBase {
       'fields[field_test][type]' => 'hidden',
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display/rss', $edit, t('Save'));
-    $this->assertNodeViewNoText($node, 'rss', $value, t("The field is hidden in 'rss' mode."));
+    $this->assertNodeViewNoText($node, 'rss', $value, "The field is hidden in 'rss' mode.");
 
     // Set the view mode back to 'default', check that the field is displayed
     // accordingly.
@@ -156,7 +156,7 @@ class ManageDisplayTest extends FieldUiTestBase {
       "view_modes_custom[rss]" => FALSE,
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
-    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], t("The field is displayed as expected when 'rss' mode is set back to 'default' settings."));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected when 'rss' mode is set back to 'default' settings.");
 
     // Specialize the view mode again.
     $edit = array(
@@ -164,7 +164,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
     // Check that the previous settings for the view mode have been kept.
-    $this->assertNodeViewNoText($node, 'rss', $value, t("The previous settings are kept when 'rss' mode is specialized again."));
+    $this->assertNodeViewNoText($node, 'rss', $value, "The previous settings are kept when 'rss' mode is specialized again.");
   }
 
   /**
@@ -172,7 +172,7 @@ class ManageDisplayTest extends FieldUiTestBase {
    */
   function testSingleViewMode() {
     $this->drupalGet('admin/config/people/accounts/display');
-    $this->assertNoText('Use custom display settings for the following view modes', t('Custom display settings fieldset found.'));
+    $this->assertNoText('Use custom display settings for the following view modes', 'Custom display settings fieldset found.');
 
     // This may not trigger a notice when 'view_modes_custom' isn't available.
     $this->drupalPost('admin/config/people/accounts/display', array(), t('Save'));

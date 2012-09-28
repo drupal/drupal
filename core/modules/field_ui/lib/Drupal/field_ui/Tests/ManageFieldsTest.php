@@ -82,13 +82,13 @@ class ManageFieldsTest extends FieldUiTestBase {
     );
     foreach ($table_headers as $table_header) {
       // We check that the label appear in the table headings.
-      $this->assertRaw($table_header . '</th>', t('%table_header table header was found.', array('%table_header' => $table_header)));
+      $this->assertRaw($table_header . '</th>', format_string('%table_header table header was found.', array('%table_header' => $table_header)));
     }
 
     // "Add new field" and "Re-use existing field" aren't a table heading so just
     // test the text.
     foreach (array('Add new field', 'Re-use existing field') as $element) {
-      $this->assertText($element, t('"@element" was found.', array('@element' => $element)));
+      $this->assertText($element, format_string('"@element" was found.', array('@element' => $element)));
     }
   }
 
@@ -111,7 +111,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // should also appear in the 'taxonomy term' entity.
     $vocabulary = taxonomy_vocabulary_load(1);
     $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->machine_name . '/fields');
-    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), t('Existing field was found in account settings.'));
+    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in account settings.');
   }
 
   /**
@@ -134,7 +134,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertFieldSettings($this->type, $this->field_name, $string);
 
     // Assert redirection back to the "manage fields" page.
-    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), t('Redirected to "Manage fields" page.'));
+    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), 'Redirected to "Manage fields" page.');
   }
 
   /**
@@ -143,12 +143,12 @@ class ManageFieldsTest extends FieldUiTestBase {
   function addExistingField() {
     // Check "Re-use existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields');
-    $this->assertRaw(t('Re-use existing field'), t('"Re-use existing field" was found.'));
+    $this->assertRaw(t('Re-use existing field'), '"Re-use existing field" was found.');
 
     // Check that the list of options respects entity type restrictions on
     // fields. The 'comment' field is restricted to the 'comment' entity type
     // and should not appear in the list.
-    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), t('The list of options respects entity type restrictions.'));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), 'The list of options respects entity type restrictions.');
 
     // Add a new field based on an existing field.
     $edit = array(
@@ -175,12 +175,12 @@ class ManageFieldsTest extends FieldUiTestBase {
     _field_info_collate_fields_reset();
     // Assert field settings.
     $field = field_info_field($field_name);
-    $this->assertTrue($field['settings']['test_field_setting'] == $string, t('Field settings were found.'));
+    $this->assertTrue($field['settings']['test_field_setting'] == $string, 'Field settings were found.');
 
     // Assert instance and widget settings.
     $instance = field_info_instance($entity_type, $field_name, $bundle);
-    $this->assertTrue($instance['settings']['test_instance_setting'] == $string, t('Field instance settings were found.'));
-    $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, t('Field widget settings were found.'));
+    $this->assertTrue($instance['settings']['test_instance_setting'] == $string, 'Field instance settings were found.');
+    $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, 'Field widget settings were found.');
   }
 
   /**
@@ -206,31 +206,31 @@ class ManageFieldsTest extends FieldUiTestBase {
     $element_id = "edit-$field_name-$langcode-0-value";
     $element_name = "{$field_name}[$langcode][0][value]";
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '', t('The default value widget was empty.'));
+    $this->assertFieldById($element_id, '', 'The default value widget was empty.');
 
     // Check that invalid default values are rejected.
     $edit = array($element_name => '-1');
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("$field_name does not accept the value -1", t('Form vaildation failed.'));
+    $this->assertText("$field_name does not accept the value -1", 'Form vaildation failed.');
 
     // Check that the default value is saved.
     $edit = array($element_name => '1');
     $this->drupalPost($admin_path, $edit, t('Save settings'));
-    $this->assertText("Saved $field_name configuration", t('The form was successfully submitted.'));
+    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     $instance = field_info_instance('node', $field_name, $this->type);
-    $this->assertEqual($instance['default_value'], array(array('value' => 1)), t('The default value was correctly saved.'));
+    $this->assertEqual($instance['default_value'], array(array('value' => 1)), 'The default value was correctly saved.');
 
     // Check that the default value shows up in the form
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '1', t('The default value widget was displayed with the correct value.'));
+    $this->assertFieldById($element_id, '1', 'The default value widget was displayed with the correct value.');
 
     // Check that the default value can be emptied.
     $edit = array($element_name => '');
     $this->drupalPost(NULL, $edit, t('Save settings'));
-    $this->assertText("Saved $field_name configuration", t('The form was successfully submitted.'));
+    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
-    $this->assertEqual($instance['default_value'], NULL, t('The default value was correctly saved.'));
+    $this->assertEqual($instance['default_value'], NULL, 'The default value was correctly saved.');
   }
 
   /**
@@ -264,9 +264,9 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Reset the fields info.
     _field_info_collate_fields_reset();
     // Check that the field instance was deleted.
-    $this->assertNull(field_info_instance('node', $this->field_name, $this->type), t('Field instance was deleted.'));
+    $this->assertNull(field_info_instance('node', $this->field_name, $this->type), 'Field instance was deleted.');
     // Check that the field was not deleted
-    $this->assertNotNull(field_info_field($this->field_name), t('Field was not deleted.'));
+    $this->assertNotNull(field_info_field($this->field_name), 'Field was not deleted.');
 
     // Delete the second instance.
     $this->fieldUIDeleteField($bundle_path2, $this->field_name, $this->field_label, $type_name2);
@@ -274,9 +274,9 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Reset the fields info.
     _field_info_collate_fields_reset();
     // Check that the field instance was deleted.
-    $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), t('Field instance was deleted.'));
+    $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), 'Field instance was deleted.');
     // Check that the field was deleted too.
-    $this->assertNull(field_info_field($this->field_name), t('Field was deleted.'));
+    $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
   }
 
   /**
@@ -287,7 +287,7 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-add-new-field-type"]//option[@value="hidden_test_field"]'), t("The 'add new field' select respects field types 'no_ui' property."));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-new-field-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
 
     // Create a field and an instance programmatically.
     $field_name = 'hidden_test_field';
@@ -300,18 +300,18 @@ class ManageFieldsTest extends FieldUiTestBase {
       'widget' => array('type' => 'test_field_widget'),
     );
     field_create_instance($instance);
-    $this->assertTrue(field_read_instance('node', $field_name, $this->type), t('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
+    $this->assertTrue(field_read_instance('node', $field_name, $this->type), format_string('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
 
     // Check that the newly added instance appears on the 'Manage Fields'
     // screen.
     $this->drupalGet($bundle_path);
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $instance['label'], t('Field was created and appears in the overview page.'));
+    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $instance['label'], 'Field was created and appears in the overview page.');
 
     // Check that the instance does not appear in the 're-use existing field' row
     // on other bundles.
     $bundle_path = 'admin/structure/types/manage/article/fields/';
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 're-use existing field' select respects field types 'no_ui' property."));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 're-use existing field' select respects field types 'no_ui' property.");
   }
 
   /**

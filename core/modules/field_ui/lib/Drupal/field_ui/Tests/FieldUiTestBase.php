@@ -60,18 +60,18 @@ abstract class FieldUiTestBase extends WebTestBase {
 
     // First step : 'Add new field' on the 'Manage fields' page.
     $this->drupalPost("$bundle_path/fields",  $initial_edit, t('Save'));
-    $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), t('Field settings page was displayed.'));
+    $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Field settings page was displayed.');
 
     // Second step : 'Field settings' form.
     $this->drupalPost(NULL, $field_edit, t('Save field settings'));
-    $this->assertRaw(t('Updated field %label field settings.', array('%label' => $label)), t('Redirected to instance and widget settings page.'));
+    $this->assertRaw(t('Updated field %label field settings.', array('%label' => $label)), 'Redirected to instance and widget settings page.');
 
     // Third step : 'Instance settings' form.
     $this->drupalPost(NULL, $instance_edit, t('Save settings'));
-    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), t('Redirected to "Manage fields" page.'));
+    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, t('Field was created and appears in the overview page.'));
+    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, 'Field was created and appears in the overview page.');
   }
 
   /**
@@ -99,10 +99,10 @@ abstract class FieldUiTestBase extends WebTestBase {
 
     // Second step : 'Instance settings' form.
     $this->drupalPost(NULL, $instance_edit, t('Save settings'));
-    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), t('Redirected to "Manage fields" page.'));
+    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, t('Field was created and appears in the overview page.'));
+    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, 'Field was created and appears in the overview page.');
   }
 
   /**
@@ -120,13 +120,13 @@ abstract class FieldUiTestBase extends WebTestBase {
   function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label) {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
-    $this->assertRaw(t('Are you sure you want to delete the field %label', array('%label' => $label)), t('Delete confirmation was found.'));
+    $this->assertRaw(t('Are you sure you want to delete the field %label', array('%label' => $label)), 'Delete confirmation was found.');
 
     // Submit confirmation form.
     $this->drupalPost(NULL, array(), t('Delete'));
-    $this->assertRaw(t('The field %label has been deleted from the %type content type.', array('%label' => $label, '%type' => $bundle_label)), t('Delete message was found.'));
+    $this->assertRaw(t('The field %label has been deleted from the %type content type.', array('%label' => $label, '%type' => $bundle_label)), 'Delete message was found.');
 
     // Check that the field does not appear in the overview form.
-    $this->assertNoFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $label, t('Field does not appear in the overview page.'));
+    $this->assertNoFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $label, 'Field does not appear in the overview page.');
   }
 }
