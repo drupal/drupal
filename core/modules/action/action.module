@@ -168,8 +168,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       $query->addField('actions', 'callback');
       $query->addField('actions', 'parameters');
       $query->condition('aid', $conditions, 'IN');
-      $result = $query->execute();
-      foreach ($result as $action) {
+      foreach ($query->execute() as $action) {
         $actions[$action->aid] = $action->parameters ? unserialize($action->parameters) : array();
         $actions[$action->aid]['callback'] = $action->callback;
         $actions[$action->aid]['type'] = $action->type;
