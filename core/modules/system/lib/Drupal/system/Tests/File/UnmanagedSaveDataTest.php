@@ -27,15 +27,15 @@ class UnmanagedSaveDataTest extends FileTestBase {
 
     // No filename.
     $filepath = file_unmanaged_save_data($contents);
-    $this->assertTrue($filepath, t('Unnamed file saved correctly.'));
-    $this->assertEqual(file_uri_scheme($filepath), file_default_scheme(), t("File was placed in Drupal's files directory."));
-    $this->assertEqual($contents, file_get_contents($filepath), t('Contents of the file are correct.'));
+    $this->assertTrue($filepath, 'Unnamed file saved correctly.');
+    $this->assertEqual(file_uri_scheme($filepath), file_default_scheme(), "File was placed in Drupal's files directory.");
+    $this->assertEqual($contents, file_get_contents($filepath), 'Contents of the file are correct.');
 
     // Provide a filename.
     $filepath = file_unmanaged_save_data($contents, 'public://asdf.txt', FILE_EXISTS_REPLACE);
-    $this->assertTrue($filepath, t('Unnamed file saved correctly.'));
-    $this->assertEqual('asdf.txt', drupal_basename($filepath), t('File was named correctly.'));
-    $this->assertEqual($contents, file_get_contents($filepath), t('Contents of the file are correct.'));
+    $this->assertTrue($filepath, 'Unnamed file saved correctly.');
+    $this->assertEqual('asdf.txt', drupal_basename($filepath), 'File was named correctly.');
+    $this->assertEqual($contents, file_get_contents($filepath), 'Contents of the file are correct.');
     $this->assertFilePermissions($filepath, variable_get('file_chmod_file', 0664));
   }
 }

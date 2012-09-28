@@ -27,8 +27,8 @@ class UnmanagedDeleteTest extends FileTestBase {
     $uri = $this->createUri();
 
     // Delete a regular file
-    $this->assertTrue(file_unmanaged_delete($uri), t('Deleted worked.'));
-    $this->assertFalse(file_exists($uri), t('Test file has actually been deleted.'));
+    $this->assertTrue(file_unmanaged_delete($uri), 'Deleted worked.');
+    $this->assertFalse(file_exists($uri), 'Test file has actually been deleted.');
   }
 
   /**
@@ -36,7 +36,7 @@ class UnmanagedDeleteTest extends FileTestBase {
    */
   function testMissing() {
     // Try to delete a non-existing file
-    $this->assertTrue(file_unmanaged_delete(file_default_scheme() . '/' . $this->randomName()), t('Returns true when deleting a non-existent file.'));
+    $this->assertTrue(file_unmanaged_delete(file_default_scheme() . '/' . $this->randomName()), 'Returns true when deleting a non-existent file.');
   }
 
   /**
@@ -47,7 +47,7 @@ class UnmanagedDeleteTest extends FileTestBase {
     $directory = $this->createDirectory();
 
     // Try to delete a directory
-    $this->assertFalse(file_unmanaged_delete($directory), t('Could not delete the delete directory.'));
-    $this->assertTrue(file_exists($directory), t('Directory has not been deleted.'));
+    $this->assertFalse(file_unmanaged_delete($directory), 'Could not delete the delete directory.');
+    $this->assertTrue(file_exists($directory), 'Directory has not been deleted.');
   }
 }

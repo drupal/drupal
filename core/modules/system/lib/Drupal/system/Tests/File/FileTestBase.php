@@ -154,7 +154,7 @@ abstract class FileTestBase extends WebTestBase {
     if (!isset($path)) {
       $path = file_default_scheme() . '://' . $this->randomName();
     }
-    $this->assertTrue(drupal_mkdir($path) && is_dir($path), t('Directory was created successfully.'));
+    $this->assertTrue(drupal_mkdir($path) && is_dir($path), 'Directory was created successfully.');
     return $path;
   }
 

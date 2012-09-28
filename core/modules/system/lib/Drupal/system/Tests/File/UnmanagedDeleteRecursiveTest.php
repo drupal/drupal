@@ -28,8 +28,8 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
     file_put_contents($filepath, '');
 
     // Delete the file.
-    $this->assertTrue(file_unmanaged_delete_recursive($filepath), t('Function reported success.'));
-    $this->assertFalse(file_exists($filepath), t('Test file has been deleted.'));
+    $this->assertTrue(file_unmanaged_delete_recursive($filepath), 'Function reported success.');
+    $this->assertFalse(file_exists($filepath), 'Test file has been deleted.');
   }
 
   /**
@@ -40,8 +40,8 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
     $directory = $this->createDirectory();
 
     // Delete the directory.
-    $this->assertTrue(file_unmanaged_delete_recursive($directory), t('Function reported success.'));
-    $this->assertFalse(file_exists($directory), t('Directory has been deleted.'));
+    $this->assertTrue(file_unmanaged_delete_recursive($directory), 'Function reported success.');
+    $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
   }
 
   /**
@@ -56,10 +56,10 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
     file_put_contents($filepathB, '');
 
     // Delete the directory.
-    $this->assertTrue(file_unmanaged_delete_recursive($directory), t('Function reported success.'));
-    $this->assertFalse(file_exists($filepathA), t('Test file A has been deleted.'));
-    $this->assertFalse(file_exists($filepathB), t('Test file B has been deleted.'));
-    $this->assertFalse(file_exists($directory), t('Directory has been deleted.'));
+    $this->assertTrue(file_unmanaged_delete_recursive($directory), 'Function reported success.');
+    $this->assertFalse(file_exists($filepathA), 'Test file A has been deleted.');
+    $this->assertFalse(file_exists($filepathB), 'Test file B has been deleted.');
+    $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
   }
 
   /**
@@ -75,10 +75,10 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
     file_put_contents($filepathB, '');
 
     // Delete the directory.
-    $this->assertTrue(file_unmanaged_delete_recursive($directory), t('Function reported success.'));
-    $this->assertFalse(file_exists($filepathA), t('Test file A has been deleted.'));
-    $this->assertFalse(file_exists($filepathB), t('Test file B has been deleted.'));
-    $this->assertFalse(file_exists($subdirectory), t('Subdirectory has been deleted.'));
-    $this->assertFalse(file_exists($directory), t('Directory has been deleted.'));
+    $this->assertTrue(file_unmanaged_delete_recursive($directory), 'Function reported success.');
+    $this->assertFalse(file_exists($filepathA), 'Test file A has been deleted.');
+    $this->assertFalse(file_exists($filepathB), 'Test file B has been deleted.');
+    $this->assertFalse(file_exists($subdirectory), 'Subdirectory has been deleted.');
+    $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
   }
 }

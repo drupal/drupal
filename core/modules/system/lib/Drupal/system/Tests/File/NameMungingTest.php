@@ -33,8 +33,8 @@ class NameMungingTest extends FileTestBase {
     variable_set('allow_insecure_uploads', 0);
     $munged_name = file_munge_filename($this->name, '', TRUE);
     $messages = drupal_get_messages();
-    $this->assertTrue(in_array(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $munged_name)), $messages['status']), t('Alert properly set when a file is renamed.'));
-    $this->assertNotEqual($munged_name, $this->name, t('The new filename (%munged) has been modified from the original (%original)', array('%munged' => $munged_name, '%original' => $this->name)));
+    $this->assertTrue(in_array(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $munged_name)), $messages['status']), 'Alert properly set when a file is renamed.');
+    $this->assertNotEqual($munged_name, $this->name, format_string('The new filename (%munged) has been modified from the original (%original)', array('%munged' => $munged_name, '%original' => $this->name)));
   }
 
   /**
@@ -44,7 +44,7 @@ class NameMungingTest extends FileTestBase {
   function testMungeIgnoreInsecure() {
     variable_set('allow_insecure_uploads', 1);
     $munged_name = file_munge_filename($this->name, '');
-    $this->assertIdentical($munged_name, $this->name, t('The original filename (%original) matches the munged filename (%munged) when insecure uploads are enabled.', array('%munged' => $munged_name, '%original' => $this->name)));
+    $this->assertIdentical($munged_name, $this->name, format_string('The original filename (%original) matches the munged filename (%munged) when insecure uploads are enabled.', array('%munged' => $munged_name, '%original' => $this->name)));
   }
 
   /**
@@ -53,7 +53,7 @@ class NameMungingTest extends FileTestBase {
   function testMungeIgnoreWhitelisted() {
     // Declare our extension as whitelisted.
     $munged_name = file_munge_filename($this->name, $this->bad_extension);
-    $this->assertIdentical($munged_name, $this->name, t('The new filename (%munged) matches the original (%original) once the extension has been whitelisted.', array('%munged' => $munged_name, '%original' => $this->name)));
+    $this->assertIdentical($munged_name, $this->name, format_string('The new filename (%munged) matches the original (%original) once the extension has been whitelisted.', array('%munged' => $munged_name, '%original' => $this->name)));
   }
 
   /**
@@ -62,6 +62,6 @@ class NameMungingTest extends FileTestBase {
   function testUnMunge() {
     $munged_name = file_munge_filename($this->name, '', FALSE);
     $unmunged_name = file_unmunge_filename($munged_name);
-    $this->assertIdentical($unmunged_name, $this->name, t('The unmunged (%unmunged) filename matches the original (%original)', array('%unmunged' => $unmunged_name, '%original' => $this->name)));
+    $this->assertIdentical($unmunged_name, $this->name, format_string('The unmunged (%unmunged) filename matches the original (%original)', array('%unmunged' => $unmunged_name, '%original' => $this->name)));
   }
 }

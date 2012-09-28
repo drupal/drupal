@@ -56,11 +56,11 @@ class MimeTypeTest extends WebTestBase {
     foreach ($test_case as $input => $expected) {
       // Test stream [URI].
       $output = file_get_mimetype($prefix . $input);
-      $this->assertIdentical($output, $expected, t('Mimetype for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+      $this->assertIdentical($output, $expected, format_string('Mimetype for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
 
       // Test normal path equivalent
       $output = file_get_mimetype($input);
-      $this->assertIdentical($output, $expected, t('Mimetype (using default mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+      $this->assertIdentical($output, $expected, format_string('Mimetype (using default mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
     }
 
     // Now test passing in the map.
@@ -93,7 +93,7 @@ class MimeTypeTest extends WebTestBase {
 
     foreach ($test_case as $input => $expected) {
       $output = file_get_mimetype($input, $mapping);
-      $this->assertIdentical($output, $expected, t('Mimetype (using passed-in mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+      $this->assertIdentical($output, $expected, format_string('Mimetype (using passed-in mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
     }
   }
 }

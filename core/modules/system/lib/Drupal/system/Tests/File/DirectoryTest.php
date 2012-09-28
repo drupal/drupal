@@ -126,6 +126,6 @@ class DirectoryTest extends FileTestBase {
     $tmp_directory = file_directory_temp();
     $this->assertEqual(empty($tmp_directory), FALSE, t('file_directory_temp() returned a non-empty value.'));
     $setting = variable_get('file_temporary_path', '');
-    $this->assertEqual($setting, $tmp_directory, t("The 'file_temporary_path' variable has the same value that file_directory_temp() returned."));
+    $this->assertEqual($setting, $tmp_directory, "The 'file_temporary_path' variable has the same value that file_directory_temp() returned.");
   }
 }
