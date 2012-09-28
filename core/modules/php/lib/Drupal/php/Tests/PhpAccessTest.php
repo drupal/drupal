@@ -30,10 +30,10 @@ class PhpAccessTest extends PhpTestBase {
 
     // Make sure that the PHP code shows up as text.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText('print', t('PHP code was not evaluated.'));
+    $this->assertText('print', 'PHP code was not evaluated.');
 
     // Make sure that user doesn't have access to filter.
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertNoRaw('<option value="' . $this->php_code_format->format . '">', t('PHP code format not available.'));
+    $this->assertNoRaw('<option value="' . $this->php_code_format->format . '">', 'PHP code format not available.');
   }
 }
