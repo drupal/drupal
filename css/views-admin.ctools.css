@@ -8,11 +8,6 @@
   padding-top: 2px;
 }
 
-.ctools-button-processed,
-.ctools-button-processed input {
-  text-transform: lowercase;
-}
-
 .ctools-button-processed:hover {
   border-color: #b8b8b8;
 }
