@@ -51,7 +51,10 @@ class FilterSecurityTest extends WebTestBase {
   }
 
   /**
-   * Tests that filtered content is emptied when an actively used filter module is disabled.
+   * Tests removal of filtered content when an active filter is disabled.
+   *
+   * Tests that filtered content is emptied when an actively used filter module
+   * is disabled.
    */
   function testDisableFilterModule() {
     // Create a new node.
