@@ -64,7 +64,7 @@ class EntityUUIDTest extends WebTestBase {
     // Verify that entity_load_by_uuid() loads the same entity.
     $entity_loaded_by_uuid = entity_load_by_uuid('entity_test', $uuid, TRUE);
     $this->assertIdentical($entity_loaded_by_uuid->uuid(), $uuid);
-    $this->assertEqual($entity_loaded_by_uuid, $entity_loaded);
+    $this->assertEqual($entity_loaded_by_uuid->id(), $entity_loaded->id());
 
     // Creating a duplicate needs to result in a new UUID.
     $entity_duplicate = $entity->createDuplicate();

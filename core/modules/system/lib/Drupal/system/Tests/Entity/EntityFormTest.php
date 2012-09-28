@@ -45,7 +45,7 @@ class EntityFormTest extends WebTestBase {
 
     $edit = array(
       'name' => $name1,
-      'uid' => mt_rand(0, 128),
+      'user_id' => mt_rand(0, 128),
       "field_test_text[$langcode][0][value]" => $this->randomName(16),
     );
 
@@ -59,7 +59,7 @@ class EntityFormTest extends WebTestBase {
     $this->assertFalse($entity, 'The entity has been modified.');
     $entity = $this->loadEntityByName($name2);
     $this->assertTrue($entity, 'Modified entity found in the database.');
-    $this->assertNotEqual($entity->get('name'), $name1, 'The entity name has been modified.');
+    $this->assertNotEqual($entity->name->value, $name1, 'The entity name has been modified.');
 
     $this->drupalPost('entity-test/manage/' . $entity->id() . '/edit', array(), t('Delete'));
     $entity = $this->loadEntityByName($name2);

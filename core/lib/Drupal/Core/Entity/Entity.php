@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
+use IteratorAggregate;
 
 /**
  * Defines a base entity class.
@@ -18,7 +19,7 @@ use Drupal\Core\Language\Language;
  * This class can be used as-is by simple entity types. Entity types requiring
  * special handling can extend the class.
  */
-class Entity implements EntityInterface {
+class Entity implements IteratorAggregate, EntityInterface {
 
   /**
    * The language code of the entity's default language.
@@ -146,14 +147,109 @@ class Entity implements EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::language().
+   * Implements EntityInterface::get().
+   */
+  public function get($property_name, $langcode = NULL) {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+    return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
+  }
+
+  /**
+   * Implements ComplexDataInterface::set().
+   */
+  public function set($property_name, $value) {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+    $this->{$property_name} = $value;
+  }
+
+  /**
+   * Implements ComplexDataInterface::getProperties().
+   */
+  public function getProperties($include_computed = FALSE) {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Implements ComplexDataInterface::getPropertyValues().
+   */
+  public function getPropertyValues() {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Implements ComplexDataInterface::setPropertyValues().
+   */
+  public function setPropertyValues($values) {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Implements ComplexDataInterface::getPropertyDefinition().
+   */
+  public function getPropertyDefinition($name) {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Implements ComplexDataInterface::getPropertyDefinitions().
+   */
+  public function getPropertyDefinitions() {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Implements ComplexDataInterface::isEmpty().
+   */
+  public function isEmpty() {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Implements ComplexDataInterface::getIterator().
+   */
+  public function getIterator() {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Implements AccessibleInterface::access().
+   */
+  public function access(\Drupal\user\User $account = NULL) {
+    // TODO: Implement access() method.
+  }
+
+  /**
+   * Implements TranslatableInterface::language().
    */
   public function language() {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
     return !empty($this->langcode) ? language_load($this->langcode) : new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
   }
 
   /**
-   * Implements EntityInterface::translations().
+   * Implements TranslatableInterface::getTranslation().
+   */
+  public function getTranslation($langcode, $strict = TRUE) {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
+  }
+
+  /**
+   * Returns the languages the entity is translated to.
+   *
+   * @todo: Remove once all entity types implement the entity field API. This
+   * is deprecated by
+   * TranslatableInterface::getTranslationLanguages().
    */
   public function translations() {
     $languages = array();
@@ -177,108 +273,11 @@ class Entity implements EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::get().
+   * Implements TranslatableInterface::getTranslationLanguages().
    */
-  public function get($property_name, $langcode = NULL) {
-    // Handle fields.
-    $entity_info = $this->entityInfo();
-    if ($entity_info['fieldable'] && field_info_instance($this->entityType, $property_name, $this->bundle())) {
-      $field = field_info_field($property_name);
-      // Prevent getFieldLangcode() from throwing an exception in case a
-      // $langcode has been passed and it is invalid for the field.
-      $langcode = $this->getFieldLangcode($field, $langcode, FALSE);
-      return isset($this->{$property_name}[$langcode]) ? $this->{$property_name}[$langcode] : NULL;
-    }
-    else {
-      // Handle properties being not fields.
-      // @todo: Add support for translatable properties being not fields.
-      return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
-    }
-  }
-
-  /**
-   * Implements EntityInterface::set().
-   */
-  public function set($property_name, $value, $langcode = NULL) {
-    // Handle fields.
-    $entity_info = $this->entityInfo();
-    if ($entity_info['fieldable'] && field_info_instance($this->entityType, $property_name, $this->bundle())) {
-      $field = field_info_field($property_name);
-      // Throws an exception if the $langcode is invalid.
-      $langcode = $this->getFieldLangcode($field, $langcode);
-      $this->{$property_name}[$langcode] = $value;
-    }
-    else {
-      // Handle properties being not fields.
-      // @todo: Add support for translatable properties being not fields.
-      $this->{$property_name} = $value;
-    }
-  }
-
-  /**
-   * Determines the language code for accessing a field value.
-   *
-   * The effective language code to be used for a field varies:
-   * - If the entity is language-specific and the requested field is
-   *   translatable, the entity's language code should be used to access the
-   *   field value when no language is explicitly provided.
-   * - If the entity is not language-specific, LANGUAGE_NOT_SPECIFIED should be
-   *   used to access all field values.
-   * - If a field's values are non-translatable (shared among all language
-   *   versions of an entity), LANGUAGE_NOT_SPECIFIED should be used to access
-   *   them.
-   *
-   * There cannot be valid field values if a field is not translatable and the
-   * requested langcode is not LANGUAGE_NOT_SPECIFIED. Therefore, this function
-   * throws an exception in that case (or returns NULL when $strict is FALSE).
-   *
-   * @param string $field
-   *   Field the language code is being determined for.
-   * @param string|null $langcode
-   *   (optional) The language code attempting to be applied to the field.
-   *   Defaults to the entity language.
-   * @param bool $strict
-   *   (optional) When $strict is TRUE, an exception is thrown if the field is
-   *   not translatable and the langcode is not LANGUAGE_NOT_SPECIFIED. When
-   *   $strict is FALSE, NULL is returned and no exception is thrown. For
-   *   example, EntityInterface::set() passes TRUE, since it must not set field
-   *   values for invalid langcodes. EntityInterface::get() passes FALSE to
-   *   determine whether any field values exist for a specific langcode.
-   *   Defaults to TRUE.
-   *
-   * @return string|null
-   *   The langcode if appropriate, LANGUAGE_NOT_SPECIFIED for non-translatable
-   *   fields, or NULL when an invalid langcode was used in non-strict mode.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown in case a $langcode other than LANGUAGE_NOT_SPECIFIED is passed
-   *   for a non-translatable field and $strict is TRUE.
-   */
-  protected function getFieldLangcode($field, $langcode = NULL, $strict = TRUE) {
-    // Only apply the given langcode if the entity is language-specific.
-    // Otherwise translatable fields are handled as non-translatable fields.
-    if (field_is_translatable($this->entityType, $field) && ($default_language = $this->language()) && !language_is_locked($this->langcode)) {
-      // For translatable fields the values in default language are stored using
-      // the language code of the default language.
-      return isset($langcode) ? $langcode : $default_language->langcode;
-    }
-    else {
-      // The field is not translatable, but the caller requested a specific
-      // langcode that does not exist.
-      if (isset($langcode) && $langcode !== LANGUAGE_NOT_SPECIFIED) {
-        if ($strict) {
-          throw new \InvalidArgumentException(format_string('Unable to resolve @langcode for non-translatable field @field_name. Use langcode LANGUAGE_NOT_SPECIFIED instead.', array(
-            '@field_name' => $field['field_name'],
-            '@langcode' => $langcode,
-          )));
-        }
-        else {
-          return NULL;
-        }
-      }
-      // The field is not translatable and no $langcode was specified.
-      return LANGUAGE_NOT_SPECIFIED;
-    }
+  public function getTranslationLanguages($include_default = TRUE) {
+    // @todo: Replace by EntityNG implementation once all entity types have been
+    // converted to use the entity field API.
   }
 
   /**
@@ -337,5 +336,4 @@ class Entity implements EntityInterface {
     }
     return $return;
   }
-
 }

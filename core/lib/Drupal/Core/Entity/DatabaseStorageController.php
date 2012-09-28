@@ -46,6 +46,15 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   protected $entityInfo;
 
   /**
+   * An array of field information, i.e. containing definitions.
+   *
+   * @var array
+   *
+   * @see hook_entity_field_info()
+   */
+  protected $entityFieldInfo;
+
+  /**
    * Additional arguments to pass to hook_TYPE_load().
    *
    * Set before calling Drupal\Core\Entity\DatabaseStorageController::attachLoad().
@@ -201,7 +210,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       // Remove any invalid ids from the array.
       $passed_ids = array_intersect_key($passed_ids, $entities);
       foreach ($entities as $entity) {
-        $passed_ids[$entity->{$this->idKey}] = $entity;
+        $passed_ids[$entity->id()] = $entity;
       }
       $entities = $passed_ids;
     }
@@ -470,7 +479,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
 
       if (!$entity->isNew()) {
         $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
-        $this->resetCache(array($entity->{$this->idKey}));
+        $this->resetCache(array($entity->id()));
         $this->postSave($entity, TRUE);
         $this->invokeHook('update', $entity);
       }
@@ -546,5 +555,58 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     module_invoke_all($this->entityType . '_' . $hook, $entity);
     // Invoke the respective entity-level hook.
     module_invoke_all('entity_' . $hook, $entity, $this->entityType);
+  }
+
+  /**
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::getFieldDefinitions().
+   */
+  public function getFieldDefinitions(array $constraints) {
+    // @todo: Add caching for $this->propertyInfo.
+    if (!isset($this->entityFieldInfo)) {
+      $this->entityFieldInfo = array(
+        'definitions' => $this->baseFieldDefinitions(),
+        // Contains definitions of optional (per-bundle) properties.
+        'optional' => array(),
+        // An array keyed by bundle name containing the names of the per-bundle
+        // properties.
+        'bundle map' => array(),
+      );
+
+      // Invoke hooks.
+      $result = module_invoke_all($this->entityType . '_property_info');
+      $this->entityFieldInfo = array_merge_recursive($this->entityFieldInfo, $result);
+      $result = module_invoke_all('entity_field_info', $this->entityType);
+      $this->entityFieldInfo = array_merge_recursive($this->entityFieldInfo, $result);
+
+      $hooks = array('entity_field_info', $this->entityType . '_property_info');
+      drupal_alter($hooks, $this->entityFieldInfo, $this->entityType);
+
+      // Enforce fields to be multiple by default.
+      foreach ($this->entityFieldInfo['definitions'] as &$definition) {
+        $definition['list'] = TRUE;
+      }
+      foreach ($this->entityFieldInfo['optional'] as &$definition) {
+        $definition['list'] = TRUE;
+      }
+    }
+
+    $definitions = $this->entityFieldInfo['definitions'];
+
+    // Add in per-bundle properties.
+    // @todo: Should this be statically cached as well?
+    if (!empty($constraints['bundle']) && isset($this->entityFieldInfo['bundle map'][$constraints['bundle']])) {
+      $definitions += array_intersect_key($this->entityFieldInfo['optional'], array_flip($this->entityFieldInfo['bundle map'][$constraints['bundle']]));
+    }
+
+    return $definitions;
+  }
+
+  /**
+   * Defines the base properties of the entity type.
+   *
+   * @todo: Define abstract once all entity types have been converted.
+   */
+  public function baseFieldDefinitions() {
+    return array();
   }
 }

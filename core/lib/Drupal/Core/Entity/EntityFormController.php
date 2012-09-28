@@ -71,7 +71,7 @@ class EntityFormController implements EntityFormControllerInterface {
    * @see Drupal\Core\Entity\EntityFormController::build()
    */
   public function form(array $form, array &$form_state, EntityInterface $entity) {
-    // @todo Exploit the Property API to generate the default widgets for the
+    // @todo Exploit the Field API to generate the default widgets for the
     // entity properties.
     $info = $entity->entityInfo();
     if (!empty($info['fieldable'])) {
@@ -145,7 +145,7 @@ class EntityFormController implements EntityFormControllerInterface {
    * Implements Drupal\Core\Entity\EntityFormControllerInterface::validate().
    */
   public function validate(array $form, array &$form_state) {
-    // @todo Exploit the Property API to validate the values submitted for the
+    // @todo Exploit the Field API to validate the values submitted for the
     // entity properties.
     $entity = $this->buildEntity($form, $form_state);
     $info = $entity->entityInfo();
@@ -236,7 +236,7 @@ class EntityFormController implements EntityFormControllerInterface {
   public function buildEntity(array $form, array &$form_state) {
     $entity = clone $this->getEntity($form_state);
     // @todo Move entity_form_submit_build_entity() here.
-    // @todo Exploit the Property API to process the submitted entity property.
+    // @todo Exploit the Field API to process the submitted entity field.
     entity_form_submit_build_entity($entity->entityType(), $entity, $form, $form_state);
     return $entity;
   }

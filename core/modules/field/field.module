@@ -365,6 +365,65 @@ function field_system_info_alter(&$info, $file, $type) {
 }
 
 /**
+ * Implements hook_data_type_info() to register data types for all field types.
+ */
+function field_data_type_info() {
+  $field_types = field_info_field_types();
+  $items = array();
+
+  // Expose data types for all the field type items.
+  // @todo: Make 'field item class' mandatory.
+  foreach ($field_types as $type_name => $type_info) {
+
+    if (!empty($type_info['field item class'])) {
+      $items[$type_name . '_field'] = array(
+        'label' => t('Field !label item', array('!label' => $type_info['label'])),
+        'class' => $type_info['field item class'],
+        'list class' => !empty($type_info['field class']) ? $type_info['field class'] : '\Drupal\Core\Entity\Field\Type\Field',
+      );
+    }
+  }
+  return $items;
+}
+
+/**
+ * Implements hook_entity_field_info() to define all configured fields.
+ */
+function field_entity_field_info($entity_type) {
+  $property_info = array();
+  $field_types = field_info_field_types();
+
+  foreach (field_info_instances($entity_type) as $bundle_name => $instances) {
+    $optional = $bundle_name != $entity_type;
+
+    foreach ($instances as $field_name => $instance) {
+      $field = field_info_field($field_name);
+
+      if (!empty($field_types[$field['type']]['field item class'])) {
+
+        // @todo: Allow for adding field type settings.
+        $definition = array(
+          'label' => t('Field !name', array('!name' => $field_name)),
+          'type' => $field['type'] . '_field',
+          'configurable' => TRUE,
+          'translatable' => !empty($field['translatable'])
+        );
+
+        if ($optional) {
+          $property_info['optional'][$field_name] = $definition;
+          $property_info['bundle map'][$bundle_name][] = $field_name;
+        }
+        else {
+          $property_info['definitions'][$field_name] = $definition;
+        }
+      }
+    }
+  }
+
+  return $property_info;
+}
+
+/**
  * Applies language fallback rules to the fields attached to the given entity.
  *
  * Core language fallback rules simply check if fields have a field translation

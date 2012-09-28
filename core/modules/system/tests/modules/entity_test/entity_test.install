@@ -91,7 +91,7 @@ function entity_test_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'uid' => array(
+      'user_id' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
@@ -100,10 +100,10 @@ function entity_test_schema() {
       ),
     ),
     'indexes' => array(
-      'uid' => array('uid'),
+      'user_id' => array('user_id'),
     ),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'user_id' => array('users' => 'uid'),
       'id' => array('entity_test' => 'id'),
     ),
     'primary key' => array('id', 'langcode'),
