@@ -40,7 +40,7 @@ class PollTranslateTest extends PollTestBase {
     $title = $this->randomName();
     $choices = array($this->randomName(), $this->randomName());
     $poll_nid = $this->pollCreate($title, $choices, FALSE);
-    $this->assertTrue($poll_nid, t('Poll for translation logic test created.'));
+    $this->assertTrue($poll_nid, 'Poll for translation logic test created.');
 
     $this->drupalLogout();
     $this->drupalLogin($admin_user);
@@ -50,13 +50,13 @@ class PollTranslateTest extends PollTestBase {
     $edit = array();
     $edit['predefined_langcode'] = 'nl';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertRaw(t('The language %language has been created and can now be used.', array('%language' => 'Dutch')), t('Language Dutch has been created.'));
+    $this->assertRaw(t('The language %language has been created and can now be used.', array('%language' => 'Dutch')), 'Language Dutch has been created.');
 
     // Set "Poll" content type to use multilingual support with translation.
     $this->drupalGet('admin/structure/types/manage/poll');
     $edit = array('node_type_language_hidden' => FALSE, 'node_type_language_translation_enabled' => TRUE);
     $this->drupalPost('admin/structure/types/manage/poll', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Poll')), t('Poll content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Poll')), 'Poll content type has been updated.');
 
     // Edit poll.
     $this->drupalGet("node/$poll_nid/edit");
@@ -77,7 +77,7 @@ class PollTranslateTest extends PollTestBase {
     $this->assertFieldByName('choice[chid:1][chvotes]', '0', ('Found choice with vote count 0'));
     $this->assertFieldByName('choice[chid:2][chvotes]', '0', ('Found choice with vote count 0'));
     // Check that the choice names got copied from the Dutch poll.
-    $this->assertFieldByName('choice[chid:1][chtext]', $dutch_poll->choice[1]['chtext'], t('Found choice with text @text', array('@text' => $dutch_poll->choice[1]['chtext'])));
-    $this->assertFieldByName('choice[chid:2][chtext]', $dutch_poll->choice[2]['chtext'], t('Found choice with text @text', array('@text' => $dutch_poll->choice[2]['chtext'])));
+    $this->assertFieldByName('choice[chid:1][chtext]', $dutch_poll->choice[1]['chtext'], format_string('Found choice with text @text', array('@text' => $dutch_poll->choice[1]['chtext'])));
+    $this->assertFieldByName('choice[chid:2][chtext]', $dutch_poll->choice[2]['chtext'], format_string('Found choice with text @text', array('@text' => $dutch_poll->choice[2]['chtext'])));
   }
 }

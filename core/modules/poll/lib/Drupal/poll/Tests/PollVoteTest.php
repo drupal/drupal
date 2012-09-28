@@ -39,7 +39,7 @@ class PollVoteTest extends PollTestBase {
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
     $this->assertText('Total votes: 1', 'Vote count updated correctly.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(isset($elements[0]), t("'Cancel your vote' button appears."));
+    $this->assertTrue(isset($elements[0]), "'Cancel your vote' button appears.");
 
     $this->drupalGet("node/$poll_nid/votes");
     $this->assertText(t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.'), 'Vote table text.');
@@ -75,6 +75,6 @@ class PollVoteTest extends PollTestBase {
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
     $this->assertText('Total votes: 1', 'Vote count updated correctly.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(empty($elements), t("'Cancel your vote' button does not appear."));
+    $this->assertTrue(empty($elements), "'Cancel your vote' button does not appear.");
   }
 }

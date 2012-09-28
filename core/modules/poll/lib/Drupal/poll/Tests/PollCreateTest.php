@@ -54,7 +54,7 @@ class PollCreateTest extends PollTestBase {
     $this->assertEqual(end($option), $new_option, 'Last item is equal to new option.');
 
     $votes = $this->xpath('//article[@id="node-1"]//div[@class="poll"]//div[@class="percent"]');
-    $this->assertTrue(strpos(end($votes), $vote_count) > 0, t("Votes saved."));
+    $this->assertTrue(strpos(end($votes), $vote_count) > 0, "Votes saved.");
   }
 
   function testPollClose() {
@@ -76,7 +76,7 @@ class PollCreateTest extends PollTestBase {
     // Verify 'Vote' button no longer appears.
     $this->drupalGet('node/' . $poll_nid);
     $elements = $this->xpath('//input[@id="edit-vote"]');
-    $this->assertTrue(empty($elements), t("Vote button doesn't appear."));
+    $this->assertTrue(empty($elements), "Vote button doesn't appear.");
 
     // Verify status on 'poll' page is 'closed'.
     $this->drupalGet('poll');
@@ -94,7 +94,7 @@ class PollCreateTest extends PollTestBase {
     $this->drupalPost('node/' . $poll_nid, $vote_edit, t('Vote'));
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(isset($elements[0]), t("'Cancel your vote' button appears."));
+    $this->assertTrue(isset($elements[0]), "'Cancel your vote' button appears.");
 
     // Edit the poll node and close the poll.
     $this->drupalLogout();
@@ -105,6 +105,6 @@ class PollCreateTest extends PollTestBase {
     // Verify 'Cancel your vote' button no longer appears.
     $this->drupalGet('node/' . $poll_nid);
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(empty($elements), t("'Cancel your vote' button no longer appears."));
+    $this->assertTrue(empty($elements), "'Cancel your vote' button no longer appears.");
   }
 }

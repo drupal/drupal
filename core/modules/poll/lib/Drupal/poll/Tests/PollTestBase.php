@@ -75,7 +75,7 @@ abstract class PollTestBase extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertText(t('@type @title has been created.', array('@type' => node_type_get_label('poll'), '@title' => $title)), 'Poll has been created.');
-    $this->assertTrue($node->nid, t('Poll has been found in the database.'));
+    $this->assertTrue($node->nid, 'Poll has been found in the database.');
 
     return isset($node->nid) ? $node->nid : FALSE;
   }
@@ -148,7 +148,7 @@ abstract class PollTestBase extends WebTestBase {
         // The expected weight of each choice is higher than the previous one.
         $weight++;
         // Directly assert the weight form element value for this choice.
-        $this->assertFieldByName('choice[chid:' . $id . '][weight]', $weight, t('Found choice @id with weight @weight.', array(
+        $this->assertFieldByName('choice[chid:' . $id . '][weight]', $weight, format_string('Found choice @id with weight @weight.', array(
           '@id' => $id,
           '@weight' => $weight,
         )));
@@ -178,7 +178,7 @@ abstract class PollTestBase extends WebTestBase {
       $expected_order = $expected;
       foreach ($elements as $element) {
         $next_label = array_shift($expected_order);
-        $this->assertEqual((string) $element, $next_label, t('Found choice @label in preview.', array(
+        $this->assertEqual((string) $element, $next_label, format_string('Found choice @label in preview.', array(
           '@label' => $next_label,
         )));
       }

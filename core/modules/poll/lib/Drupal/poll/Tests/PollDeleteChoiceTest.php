@@ -21,7 +21,7 @@ class PollDeleteChoiceTest extends PollTestBase {
     $title = $this->randomName();
     $choices = array('First choice', 'Second choice', 'Third choice');
     $poll_nid = $this->pollCreate($title, $choices, FALSE);
-    $this->assertTrue($poll_nid, t('Poll for choice deletion logic test created.'));
+    $this->assertTrue($poll_nid, 'Poll for choice deletion logic test created.');
 
     // Edit the poll, and try to delete first poll choice.
     $this->drupalGet("node/$poll_nid/edit");
@@ -33,8 +33,8 @@ class PollDeleteChoiceTest extends PollTestBase {
     $this->clickLink($title);
 
     // Check the first poll choice is deleted, while the others remain.
-    $this->assertNoText('First choice', t('First choice removed.'));
-    $this->assertText('Second choice', t('Second choice remains.'));
-    $this->assertText('Third choice', t('Third choice remains.'));
+    $this->assertNoText('First choice', 'First choice removed.');
+    $this->assertText('Second choice', 'Second choice remains.');
+    $this->assertText('Third choice', 'Third choice remains.');
   }
 }

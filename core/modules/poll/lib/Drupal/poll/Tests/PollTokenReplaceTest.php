@@ -75,11 +75,11 @@ class PollTokenReplaceTest extends PollTestBase {
     $tests['[node:poll-duration]'] = format_interval($poll->runtime, 1, $language_interface->langcode);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $poll), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Sanitized poll token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Sanitized poll token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -87,7 +87,7 @@ class PollTokenReplaceTest extends PollTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $poll), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, t('Unsanitized poll token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Unsanitized poll token %token replaced.', array('%token' => $input)));
     }
   }
 }

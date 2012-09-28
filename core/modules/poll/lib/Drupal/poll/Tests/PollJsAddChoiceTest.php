@@ -47,8 +47,8 @@ class PollJsAddChoiceTest extends WebTestBase {
     $commands = $this->drupalPostAJAX(NULL, $edit, array('op' => t('Add another choice')));
     $this->content = $commands[1]['data'];
 
-    $this->assertFieldByName('choice[chid:0][chtext]', $edit['choice[new:0][chtext]'], t('Field !i found', array('!i' => 0)));
-    $this->assertFieldByName('choice[chid:1][chtext]', $edit['choice[new:1][chtext]'], t('Field !i found', array('!i' => 1)));
-    $this->assertFieldByName('choice[new:0][chtext]', '', t('Field !i found', array('!i' => 2)));
+    $this->assertFieldByName('choice[chid:0][chtext]', $edit['choice[new:0][chtext]'], format_string('Field !i found', array('!i' => 0)));
+    $this->assertFieldByName('choice[chid:1][chtext]', $edit['choice[new:1][chtext]'], format_string('Field !i found', array('!i' => 1)));
+    $this->assertFieldByName('choice[new:0][chtext]', '', format_string('Field !i found', array('!i' => 2)));
   }
 }
