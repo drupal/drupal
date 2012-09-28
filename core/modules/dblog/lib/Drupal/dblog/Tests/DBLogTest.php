@@ -80,7 +80,7 @@ class DBLogTest extends WebTestBase {
 
     // Check row limit variable.
     $current_limit = config('dblog.settings')->get('row_limit');
-    $this->assertTrue($current_limit == $row_limit, t('[Cache] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
+    $this->assertTrue($current_limit == $row_limit, format_string('[Cache] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
   }
 
   /**
@@ -94,14 +94,14 @@ class DBLogTest extends WebTestBase {
     $this->generateLogEntries($row_limit + 10);
     // Verify that the database log row count exceeds the row limit.
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
-    $this->assertTrue($count > $row_limit, t('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
+    $this->assertTrue($count > $row_limit, format_string('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
 
     // Run a cron job.
     $this->cronRun();
     // Verify that the database log row count equals the row limit plus one
     // because cron adds a record after it runs.
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
-    $this->assertTrue($count == $row_limit + 1, t('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
+    $this->assertTrue($count == $row_limit + 1, format_string('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
   }
 
   /**
@@ -151,35 +151,35 @@ class DBLogTest extends WebTestBase {
     $this->drupalGet('admin/help/dblog');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Database Logging'), t('DBLog help was displayed'));
+      $this->assertText(t('Database Logging'), 'DBLog help was displayed');
     }
 
     // View the database log report page.
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Recent log messages'), t('DBLog report was displayed'));
+      $this->assertText(t('Recent log messages'), 'DBLog report was displayed');
     }
 
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Top ' . $quote . 'page not found' . $quote . ' errors'), t('DBLog page-not-found report was displayed'));
+      $this->assertText(t('Top ' . $quote . 'page not found' . $quote . ' errors'), 'DBLog page-not-found report was displayed');
     }
 
     // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Top ' . $quote . 'access denied' . $quote . ' errors'), t('DBLog access-denied report was displayed'));
+      $this->assertText(t('Top ' . $quote . 'access denied' . $quote . ' errors'), 'DBLog access-denied report was displayed');
     }
 
     // View the database log event page.
     $this->drupalGet('admin/reports/event/1');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Details'), t('DBLog event node was displayed'));
+      $this->assertText(t('Details'), 'DBLog event node was displayed');
     }
   }
 
@@ -217,7 +217,7 @@ class DBLogTest extends WebTestBase {
     $this->assertResponse(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
-    $this->assertTrue($user != NULL, t('User @name was loaded', array('@name' => $name)));
+    $this->assertTrue($user != NULL, format_string('User @name was loaded', array('@name' => $name)));
     // pass_raw property is needed by drupalLogin.
     $user->pass_raw = $pass;
     // Login user.
@@ -230,7 +230,7 @@ class DBLogTest extends WebTestBase {
       $ids[] = $row->wid;
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
-    $this->assertTrue($count_before > 0, t('DBLog contains @count records for @name', array('@count' => $count_before, '@name' => $user->name)));
+    $this->assertTrue($count_before > 0, format_string('DBLog contains @count records for @name', array('@count' => $count_before, '@name' => $user->name)));
 
     // Login the admin user.
     $this->drupalLogin($this->big_user);
@@ -246,11 +246,11 @@ class DBLogTest extends WebTestBase {
     // Add user.
     // Default display includes name and email address; if too long, the email
     // address is replaced by three periods.
-    $this->assertLogMessage(t('New user: %name (%email).', array('%name' => $name, '%email' => $user->mail)), t('DBLog event was recorded: [add user]'));
+    $this->assertLogMessage(t('New user: %name (%email).', array('%name' => $name, '%email' => $user->mail)), 'DBLog event was recorded: [add user]');
     // Login user.
-    $this->assertLogMessage(t('Session opened for %name.', array('%name' => $name)), t('DBLog event was recorded: [login user]'));
+    $this->assertLogMessage(t('Session opened for %name.', array('%name' => $name)), 'DBLog event was recorded: [login user]');
     // Logout user.
-    $this->assertLogMessage(t('Session closed for %name.', array('%name' => $name)), t('DBLog event was recorded: [logout user]'));
+    $this->assertLogMessage(t('Session closed for %name.', array('%name' => $name)), 'DBLog event was recorded: [logout user]');
     // Delete user.
     $message = t('Deleted user: %name %email.', array('%name' => $name, '%email' => '<' . $user->mail . '>'));
     $message_text = truncate_utf8(filter_xss($message, array()), 56, TRUE, TRUE);
@@ -265,12 +265,12 @@ class DBLogTest extends WebTestBase {
           $link = drupal_substr($value, strpos($value, 'admin/reports/event/'));
           $this->drupalGet($link);
           // Check for full message text on the details page.
-          $this->assertRaw($message, t('DBLog event details was found: [delete user]'));
+          $this->assertRaw($message, 'DBLog event details was found: [delete user]');
           break;
         }
       }
     }
-    $this->assertTrue($link, t('DBLog event was recorded: [delete user]'));
+    $this->assertTrue($link, 'DBLog event was recorded: [delete user]');
     // Visit random URL (to generate page not found event).
     $not_found_url = $this->randomName(60);
     $this->drupalGet($not_found_url);
@@ -279,7 +279,7 @@ class DBLogTest extends WebTestBase {
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse(200);
     // Check that full-length URL displayed.
-    $this->assertText($not_found_url, t('DBLog event was recorded: [page not found]'));
+    $this->assertText($not_found_url, 'DBLog event was recorded: [page not found]');
   }
 
   /**
@@ -304,7 +304,7 @@ class DBLogTest extends WebTestBase {
     $this->assertResponse(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertTrue($node != NULL, format_string('Node @title was loaded', array('@title' => $title)));
     // Edit the node.
     $edit = $this->getContentUpdate($type);
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
@@ -327,23 +327,23 @@ class DBLogTest extends WebTestBase {
 
     // Verify that node events were recorded.
     // Was node content added?
-    $this->assertLogMessage(t('@type: added %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content added]'));
+    $this->assertLogMessage(t('@type: added %title.', array('@type' => $type, '%title' => $title)), 'DBLog event was recorded: [content added]');
     // Was node content updated?
-    $this->assertLogMessage(t('@type: updated %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content updated]'));
+    $this->assertLogMessage(t('@type: updated %title.', array('@type' => $type, '%title' => $title)), 'DBLog event was recorded: [content updated]');
     // Was node content deleted?
-    $this->assertLogMessage(t('@type: deleted %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content deleted]'));
+    $this->assertLogMessage(t('@type: deleted %title.', array('@type' => $type, '%title' => $title)), 'DBLog event was recorded: [content deleted]');
 
     // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
     $this->assertResponse(200);
     // Verify that the 'access denied' event was recorded.
-    $this->assertText(t('admin/reports/dblog'), t('DBLog event was recorded: [access denied]'));
+    $this->assertText(t('admin/reports/dblog'), 'DBLog event was recorded: [access denied]');
 
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse(200);
     // Verify that the 'page not found' event was recorded.
-    $this->assertText(t('node/@nid', array('@nid' => $node->nid)), t('DBLog event was recorded: [page not found]'));
+    $this->assertText(t('node/@nid', array('@nid' => $node->nid)), 'DBLog event was recorded: [page not found]');
   }
 
   /**
@@ -430,14 +430,14 @@ class DBLogTest extends WebTestBase {
     // Add a watchdog entry.
     dblog_watchdog($log);
     // Make sure the table count has actually been incremented.
-    $this->assertEqual($count + 1, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), t('dblog_watchdog() added an entry to the dblog :count', array(':count' => $count)));
+    $this->assertEqual($count + 1, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), format_string('dblog_watchdog() added an entry to the dblog :count', array(':count' => $count)));
     // Login the admin user.
     $this->drupalLogin($this->big_user);
     // Post in order to clear the database table.
     $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
     // Count the rows in watchdog that previously related to the deleted user.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
-    $this->assertEqual($count, 0, t('DBLog contains :count records after a clear.', array(':count' => $count)));
+    $this->assertEqual($count, 0, format_string('DBLog contains :count records after a clear.', array(':count' => $count)));
   }
 
   /**
@@ -509,7 +509,7 @@ class DBLogTest extends WebTestBase {
 
     // Clear all logs and make sure the confirmation message is found.
     $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
-    $this->assertText(t('Database log cleared.'), t('Confirmation message found'));
+    $this->assertText(t('Database log cleared.'), 'Confirmation message found');
   }
 
   /**
