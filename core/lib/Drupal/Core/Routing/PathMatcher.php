@@ -75,7 +75,7 @@ class PathMatcher implements InitialMatcherInterface {
       }
     }
 
-    if (!count($collection->all())) {
+    if (!count($collection)) {
       throw new ResourceNotFoundException();
     }
 
