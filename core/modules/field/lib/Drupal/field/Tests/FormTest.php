@@ -343,7 +343,7 @@ class FormTest extends FieldTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $this->assertFieldByName("{$this->field_name}[$langcode]", '', t('Widget is displayed.'));
+    $this->assertFieldByName("{$this->field_name}[$langcode]", '', 'Widget is displayed.');
 
     // Create entity with three values.
     $edit = array("{$this->field_name}[$langcode]" => '1, 2, 3');
@@ -357,12 +357,12 @@ class FormTest extends FieldTestBase {
 
     // Display the form, check that the values are correctly filled in.
     $this->drupalGet('test-entity/manage/' . $id . '/edit');
-    $this->assertFieldByName("{$this->field_name}[$langcode]", '1, 2, 3', t('Widget is displayed.'));
+    $this->assertFieldByName("{$this->field_name}[$langcode]", '1, 2, 3', 'Widget is displayed.');
 
     // Submit the form with more values than the field accepts.
     $edit = array("{$this->field_name}[$langcode]" => '1, 2, 3, 4, 5');
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw('this field cannot hold more than 4 values', t('Form validation failed.'));
+    $this->assertRaw('this field cannot hold more than 4 values', 'Form validation failed.');
     // Check that the field values were not submitted.
     $this->assertFieldValues($entity_init, $this->field_name, $langcode, array(1, 2, 3));
   }
@@ -410,7 +410,7 @@ class FormTest extends FieldTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $this->assertNoFieldByName("{$field_name_no_access}[$langcode][0][value]", '', t('Widget is not displayed if field access is denied.'));
+    $this->assertNoFieldByName("{$field_name_no_access}[$langcode][0][value]", '', 'Widget is not displayed if field access is denied.');
 
     // Create entity.
     $edit = array("{$field_name}[$langcode][0][value]" => 1);
@@ -420,8 +420,8 @@ class FormTest extends FieldTestBase {
 
     // Check that the default value was saved.
     $entity = field_test_entity_test_load($id);
-    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('Default value was saved for the field with no edit access.'));
-    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 1, t('Entered value vas saved for the field with edit access.'));
+    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, 'Default value was saved for the field with no edit access.');
+    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 1, 'Entered value vas saved for the field with edit access.');
 
     // Create a new revision.
     $edit = array("{$field_name}[$langcode][0][value]" => 2, 'revision' => TRUE);
@@ -430,13 +430,13 @@ class FormTest extends FieldTestBase {
     // Check that the new revision has the expected values.
     entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
-    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('New revision has the expected value for the field with no edit access.'));
-    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, t('New revision has the expected value for the field with edit access.'));
+    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, 'New revision has the expected value for the field with no edit access.');
+    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, 'New revision has the expected value for the field with edit access.');
 
     // Check that the revision is also saved in the revisions table.
     $entity = field_test_entity_test_load($id, $entity->ftvid);
-    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('New revision has the expected value for the field with no edit access.'));
-    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, t('New revision has the expected value for the field with edit access.'));
+    $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, 'New revision has the expected value for the field with no edit access.');
+    $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, 'New revision has the expected value for the field with edit access.');
   }
 
   /**
@@ -468,10 +468,10 @@ class FormTest extends FieldTestBase {
 
     // Display the 'combined form'.
     $this->drupalGet('test-entity/nested/1/2');
-    $this->assertFieldByName('field_single[und][0][value]', 0, t('Entity 1: field_single value appears correctly is the form.'));
-    $this->assertFieldByName('field_unlimited[und][0][value]', 1, t('Entity 1: field_unlimited value 0 appears correctly is the form.'));
-    $this->assertFieldByName('entity_2[field_single][und][0][value]', 10, t('Entity 2: field_single value appears correctly is the form.'));
-    $this->assertFieldByName('entity_2[field_unlimited][und][0][value]', 11, t('Entity 2: field_unlimited value 0 appears correctly is the form.'));
+    $this->assertFieldByName('field_single[und][0][value]', 0, 'Entity 1: field_single value appears correctly is the form.');
+    $this->assertFieldByName('field_unlimited[und][0][value]', 1, 'Entity 1: field_unlimited value 0 appears correctly is the form.');
+    $this->assertFieldByName('entity_2[field_single][und][0][value]', 10, 'Entity 2: field_single value appears correctly is the form.');
+    $this->assertFieldByName('entity_2[field_unlimited][und][0][value]', 11, 'Entity 2: field_unlimited value 0 appears correctly is the form.');
 
     // Submit the form and check that the entities are updated accordingly.
     $edit = array(
@@ -497,16 +497,16 @@ class FormTest extends FieldTestBase {
       'field_unlimited[und][1][value]' => -1,
     );
     $this->drupalPost('test-entity/nested/1/2', $edit, t('Save'));
-    $this->assertRaw(t('%label does not accept the value -1', array('%label' => 'Unlimited field')), t('Entity 1: the field validation error was reported.'));
+    $this->assertRaw(t('%label does not accept the value -1', array('%label' => 'Unlimited field')), 'Entity 1: the field validation error was reported.');
     $error_field = $this->xpath('//input[@id=:id and contains(@class, "error")]', array(':id' => 'edit-field-unlimited-und-1-value'));
-    $this->assertTrue($error_field, t('Entity 1: the error was flagged on the correct element.'));
+    $this->assertTrue($error_field, 'Entity 1: the error was flagged on the correct element.');
     $edit = array(
       'entity_2[field_unlimited][und][1][value]' => -1,
     );
     $this->drupalPost('test-entity/nested/1/2', $edit, t('Save'));
-    $this->assertRaw(t('%label does not accept the value -1', array('%label' => 'Unlimited field')), t('Entity 2: the field validation error was reported.'));
+    $this->assertRaw(t('%label does not accept the value -1', array('%label' => 'Unlimited field')), 'Entity 2: the field validation error was reported.');
     $error_field = $this->xpath('//input[@id=:id and contains(@class, "error")]', array(':id' => 'edit-entity-2-field-unlimited-und-1-value'));
-    $this->assertTrue($error_field, t('Entity 2: the error was flagged on the correct element.'));
+    $this->assertTrue($error_field, 'Entity 2: the error was flagged on the correct element.');
 
     // Test that reordering works on both entities.
     $edit = array(
@@ -526,10 +526,10 @@ class FormTest extends FieldTestBase {
     // 'Add more' button in the first entity:
     $this->drupalGet('test-entity/nested/1/2');
     $this->drupalPostAJAX(NULL, array(), 'field_unlimited_add_more');
-    $this->assertFieldByName('field_unlimited[und][0][value]', 3, t('Entity 1: field_unlimited value 0 appears correctly is the form.'));
-    $this->assertFieldByName('field_unlimited[und][1][value]', 2, t('Entity 1: field_unlimited value 1 appears correctly is the form.'));
-    $this->assertFieldByName('field_unlimited[und][2][value]', '', t('Entity 1: field_unlimited value 2 appears correctly is the form.'));
-    $this->assertFieldByName('field_unlimited[und][3][value]', '', t('Entity 1: an empty widget was added for field_unlimited value 3.'));
+    $this->assertFieldByName('field_unlimited[und][0][value]', 3, 'Entity 1: field_unlimited value 0 appears correctly is the form.');
+    $this->assertFieldByName('field_unlimited[und][1][value]', 2, 'Entity 1: field_unlimited value 1 appears correctly is the form.');
+    $this->assertFieldByName('field_unlimited[und][2][value]', '', 'Entity 1: field_unlimited value 2 appears correctly is the form.');
+    $this->assertFieldByName('field_unlimited[und][3][value]', '', 'Entity 1: an empty widget was added for field_unlimited value 3.');
     // 'Add more' button in the first entity (changing field values):
     $edit = array(
       'entity_2[field_unlimited][und][0][value]' => 13,
@@ -537,10 +537,10 @@ class FormTest extends FieldTestBase {
       'entity_2[field_unlimited][und][2][value]' => 15,
     );
     $this->drupalPostAJAX(NULL, $edit, 'entity_2_field_unlimited_add_more');
-    $this->assertFieldByName('entity_2[field_unlimited][und][0][value]', 13, t('Entity 2: field_unlimited value 0 appears correctly is the form.'));
-    $this->assertFieldByName('entity_2[field_unlimited][und][1][value]', 14, t('Entity 2: field_unlimited value 1 appears correctly is the form.'));
-    $this->assertFieldByName('entity_2[field_unlimited][und][2][value]', 15, t('Entity 2: field_unlimited value 2 appears correctly is the form.'));
-    $this->assertFieldByName('entity_2[field_unlimited][und][3][value]', '', t('Entity 2: an empty widget was added for field_unlimited value 3.'));
+    $this->assertFieldByName('entity_2[field_unlimited][und][0][value]', 13, 'Entity 2: field_unlimited value 0 appears correctly is the form.');
+    $this->assertFieldByName('entity_2[field_unlimited][und][1][value]', 14, 'Entity 2: field_unlimited value 1 appears correctly is the form.');
+    $this->assertFieldByName('entity_2[field_unlimited][und][2][value]', 15, 'Entity 2: field_unlimited value 2 appears correctly is the form.');
+    $this->assertFieldByName('entity_2[field_unlimited][und][3][value]', '', 'Entity 2: an empty widget was added for field_unlimited value 3.');
     // Save the form and check values are saved correclty.
     $this->drupalPost(NULL, array(), t('Save'));
     field_cache_clear();

@@ -178,6 +178,6 @@ class TextSummaryTest extends WebTestBase {
     $this->drupalPost('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title']);
 
-    $this->assertIdentical($node->body['und'][0]['summary'], $summary, t('Article with with summary and no body has been submitted.'));
+    $this->assertIdentical($node->body['und'][0]['summary'], $summary, 'Article with with summary and no body has been submitted.');
   }
 }

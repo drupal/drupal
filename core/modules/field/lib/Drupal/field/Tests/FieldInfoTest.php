@@ -76,16 +76,16 @@ class FieldInfoTest extends FieldTestBase {
     );
     field_create_field($field);
     $fields = field_info_fields();
-    $this->assertEqual(count($fields), count($core_fields) + 1, t('One new field exists'));
-    $this->assertEqual($fields[$field['field_name']]['field_name'], $field['field_name'], t('info fields contains field name'));
-    $this->assertEqual($fields[$field['field_name']]['type'], $field['type'], t('info fields contains field type'));
-    $this->assertEqual($fields[$field['field_name']]['module'], 'field_test', t('info fields contains field module'));
+    $this->assertEqual(count($fields), count($core_fields) + 1, 'One new field exists');
+    $this->assertEqual($fields[$field['field_name']]['field_name'], $field['field_name'], 'info fields contains field name');
+    $this->assertEqual($fields[$field['field_name']]['type'], $field['type'], 'info fields contains field type');
+    $this->assertEqual($fields[$field['field_name']]['module'], 'field_test', 'info fields contains field module');
     $settings = array('test_field_setting' => 'dummy test string');
     foreach ($settings as $key => $val) {
       $this->assertEqual($fields[$field['field_name']]['settings'][$key], $val, t("Field setting $key has correct default value $val"));
     }
-    $this->assertEqual($fields[$field['field_name']]['cardinality'], 1, t('info fields contains cardinality 1'));
-    $this->assertEqual($fields[$field['field_name']]['active'], 1, t('info fields contains active 1'));
+    $this->assertEqual($fields[$field['field_name']]['cardinality'], 1, 'info fields contains cardinality 1');
+    $this->assertEqual($fields[$field['field_name']]['active'], 1, 'info fields contains active 1');
 
     // Create an instance, verify that it shows up
     $instance = array(
@@ -103,8 +103,8 @@ class FieldInfoTest extends FieldTestBase {
     field_create_instance($instance);
 
     $instances = field_info_instances('test_entity', $instance['bundle']);
-    $this->assertEqual(count($instances), 1, t('One instance shows up in info when attached to a bundle.'));
-    $this->assertTrue($instance < $instances[$instance['field_name']], t('Instance appears in info correctly'));
+    $this->assertEqual(count($instances), 1, 'One instance shows up in info when attached to a bundle.');
+    $this->assertTrue($instance < $instances[$instance['field_name']], 'Instance appears in info correctly');
 
     // Test a valid entity type but an invalid bundle.
     $instances = field_info_instances('test_entity', 'invalid_bundle');
@@ -154,7 +154,7 @@ class FieldInfoTest extends FieldTestBase {
 
     // Check that all expected settings are in place.
     $field_type = field_info_field_types($field_definition['type']);
-    $this->assertIdentical($field['settings'], $field_type['settings'], t('All expected default field settings are present.'));
+    $this->assertIdentical($field['settings'], $field_type['settings'], 'All expected default field settings are present.');
   }
 
   /**
@@ -196,13 +196,13 @@ class FieldInfoTest extends FieldTestBase {
 
     // Check that all expected instance settings are in place.
     $field_type = field_info_field_types($field_definition['type']);
-    $this->assertIdentical($instance['settings'], $field_type['instance_settings'] , t('All expected instance settings are present.'));
+    $this->assertIdentical($instance['settings'], $field_type['instance_settings'] , 'All expected instance settings are present.');
 
     // Check that the default widget is used and expected settings are in place.
     $widget = $instance->getWidget();
-    $this->assertIdentical($widget->getPluginId(), $field_type['default_widget'], t('Unavailable widget replaced with default widget.'));
+    $this->assertIdentical($widget->getPluginId(), $field_type['default_widget'], 'Unavailable widget replaced with default widget.');
     $widget_type = $widget->getDefinition();
-    $this->assertIdentical($widget->getSettings(), $widget_type['settings'] , t('All expected widget settings are present.'));
+    $this->assertIdentical($widget->getSettings(), $widget_type['settings'] , 'All expected widget settings are present.');
 
     // Check that display settings are set for the 'default' mode.
     $display = $instance['display']['default'];
@@ -231,7 +231,7 @@ class FieldInfoTest extends FieldTestBase {
 
     // Disable coment module. This clears field_info cache.
     module_disable(array('comment'));
-    $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), t('No instances are returned on disabled entity types.'));
+    $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), 'No instances are returned on disabled entity types.');
   }
 
   /**

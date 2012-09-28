@@ -62,7 +62,7 @@ abstract class FieldTestBase extends WebTestBase {
     $e = clone $entity;
     field_attach_load('test_entity', array($e->ftid => $e));
     $values = isset($e->{$field_name}[$langcode]) ? $e->{$field_name}[$langcode] : array();
-    $this->assertEqual(count($values), count($expected_values), t('Expected number of values were saved.'));
+    $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
       $this->assertEqual($values[$key][$column], $value, t('Value @value was saved correctly.', array('@value' => $value)));
     }

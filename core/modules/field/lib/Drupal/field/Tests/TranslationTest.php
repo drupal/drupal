@@ -93,7 +93,7 @@ class TranslationTest extends FieldTestBase {
     $this->field['translatable'] = FALSE;
     field_update_field($this->field);
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
-    $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === LANGUAGE_NOT_SPECIFIED, t('For untranslatable fields only LANGUAGE_NOT_SPECIFIED is available.'));
+    $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === LANGUAGE_NOT_SPECIFIED, 'For untranslatable fields only LANGUAGE_NOT_SPECIFIED is available.');
   }
 
   /**
@@ -131,7 +131,7 @@ class TranslationTest extends FieldTestBase {
       $this->assertEqual($hash, $result, t('The result for %language is correctly stored.', array('%language' => $langcode)));
     }
 
-    $this->assertEqual(count($results), count($available_langcodes), t('No unavailable language has been processed.'));
+    $this->assertEqual(count($results), count($available_langcodes), 'No unavailable language has been processed.');
   }
 
   /**
@@ -214,7 +214,7 @@ class TranslationTest extends FieldTestBase {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
     $entity_info = entity_get_info('node');
-    $this->assertTrue(count($entity_info['translation']), t('Nodes are translatable.'));
+    $this->assertTrue(count($entity_info['translation']), 'Nodes are translatable.');
 
     // Prepare the field translations.
     field_test_entity_info_translatable('test_entity', TRUE);
@@ -223,7 +223,7 @@ class TranslationTest extends FieldTestBase {
     $entity = field_test_create_entity($eid, $evid, $this->instance['bundle']);
     $field_translations = array();
     $available_langcodes = field_available_languages($entity_type, $this->field);
-    $this->assertTrue(count($available_langcodes) > 1, t('Field is translatable.'));
+    $this->assertTrue(count($available_langcodes) > 1, 'Field is translatable.');
     foreach ($available_langcodes as $langcode) {
       $field_translations[$langcode] = $this->_generateTestFieldValues($this->field['cardinality']);
     }
@@ -334,7 +334,7 @@ class TranslationTest extends FieldTestBase {
     $entity->{$this->field_name}[$requested_langcode] = mt_rand(1, 127);
     drupal_static_reset('field_language');
     $display_langcode = field_language($entity_type, $entity, $this->field_name, $requested_langcode);
-    $this->assertEqual($display_langcode, $requested_langcode, t('Display language behave correctly when language fallback is disabled'));
+    $this->assertEqual($display_langcode, $requested_langcode, 'Display language behave correctly when language fallback is disabled');
   }
 
   /**

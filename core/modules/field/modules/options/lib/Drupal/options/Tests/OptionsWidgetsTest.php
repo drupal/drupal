@@ -100,7 +100,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoFieldChecked("edit-card-1-$langcode-0");
     $this->assertNoFieldChecked("edit-card-1-$langcode-1");
     $this->assertNoFieldChecked("edit-card-1-$langcode-2");
-    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', t('Option text was properly filtered.'));
+    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
 
     // Select first option.
     $edit = array("card_1[$langcode]" => 0);
@@ -154,7 +154,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoFieldChecked("edit-card-2-$langcode-0");
     $this->assertNoFieldChecked("edit-card-2-$langcode-1");
     $this->assertNoFieldChecked("edit-card-2-$langcode-2");
-    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', t('Option text was properly filtered.'));
+    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
 
     // Submit form: select first and third options.
     $edit = array(
@@ -193,7 +193,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       "card_2[$langcode][2]" => TRUE,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertText('this field cannot hold more than 2 values', t('Validation error was displayed.'));
+    $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
     $edit = array(
@@ -240,19 +240,19 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form.
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');
     // A required field without any value has a "none" option.
-    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- Select a value -'))), t('A required select list has a "Select a value" choice.'));
+    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- Select a value -'))), 'A required select list has a "Select a value" choice.');
 
     // With no field data, nothing is selected.
     $this->assertNoOptionSelected("edit-card-1-$langcode", '_none');
     $this->assertNoOptionSelected("edit-card-1-$langcode", 0);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
-    $this->assertRaw('Some dangerous &amp; unescaped markup', t('Option text was properly filtered.'));
+    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
 
     // Submit form: select invalid 'none' option.
     $edit = array("card_1[$langcode]" => '_none');
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('!title field is required.', array('!title' => $instance['field_name'])), t('Cannot save a required field when selecting "none" from the select list.'));
+    $this->assertRaw(t('!title field is required.', array('!title' => $instance['field_name'])), 'Cannot save a required field when selecting "none" from the select list.');
 
     // Submit form: select first option.
     $edit = array("card_1[$langcode]" => 0);
@@ -262,7 +262,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');
     // A required field with a value has no 'none' option.
-    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value="_none"]', array(':id' => 'edit-card-1-' . $langcode)), t('A required select list with an actual value has no "none" choice.'));
+    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value="_none"]', array(':id' => 'edit-card-1-' . $langcode)), 'A required select list with an actual value has no "none" choice.');
     $this->assertOptionSelected("edit-card-1-$langcode", 0);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
@@ -274,7 +274,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form.
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');
     // A non-required field has a 'none' option.
-    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- None -'))), t('A non-required select list has a "None" choice.'));
+    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- None -'))), 'A non-required select list has a "None" choice.');
     // Submit form: Unselect the option.
     $edit = array("card_1[$langcode]" => '_none');
     $this->drupalPost('test-entity/manage/' . $entity->ftid . '/edit', $edit, t('Save'));
@@ -291,8 +291,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoOptionSelected("edit-card-1-$langcode", 0);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
-    $this->assertRaw('Some dangerous &amp; unescaped markup', t('Option text was properly filtered.'));
-    $this->assertRaw('Group 1', t('Option groups are displayed.'));
+    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
+    $this->assertRaw('Group 1', 'Option groups are displayed.');
 
     // Submit form: select first option.
     $edit = array("card_1[$langcode]" => 0);
@@ -338,7 +338,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoOptionSelected("edit-card-2-$langcode", 0);
     $this->assertNoOptionSelected("edit-card-2-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-2-$langcode", 2);
-    $this->assertRaw('Some dangerous &amp; unescaped markup', t('Option text was properly filtered.'));
+    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
 
     // Submit form: select first and third options.
     $edit = array("card_2[$langcode][]" => array(0 => 0, 2 => 2));
@@ -365,7 +365,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: select the three options while the field accepts only 2.
     $edit = array("card_2[$langcode][]" => array(0 => 0, 1 => 1, 2 => 2));
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertText('this field cannot hold more than 2 values', t('Validation error was displayed.'));
+    $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
     $edit = array("card_2[$langcode][]" => array());
@@ -389,7 +389,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $instance['required'] = TRUE;
     field_update_instance($instance);
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');
-    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-2-' . $langcode)), t('A required select list does not have an empty key.'));
+    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-2-' . $langcode)), 'A required select list does not have an empty key.');
 
     // We do not have to test that a required select list with one option is
     // auto-selected because the browser does it for us.
@@ -408,8 +408,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoOptionSelected("edit-card-2-$langcode", 0);
     $this->assertNoOptionSelected("edit-card-2-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-2-$langcode", 2);
-    $this->assertRaw('Some dangerous &amp; unescaped markup', t('Option text was properly filtered.'));
-    $this->assertRaw('Group 1', t('Option groups are displayed.'));
+    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
+    $this->assertRaw('Group 1', 'Option groups are displayed.');
 
     // Submit form: select first option.
     $edit = array("card_2[$langcode][]" => array(0 => 0));
@@ -453,7 +453,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form: with no field data, option is unchecked.
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');
     $this->assertNoFieldChecked("edit-bool-$langcode");
-    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', t('Option text was properly filtered.'));
+    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
 
     // Submit form: check the option.
     $edit = array("bool[$langcode]" => TRUE);

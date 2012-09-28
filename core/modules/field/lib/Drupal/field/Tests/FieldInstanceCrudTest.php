@@ -68,17 +68,17 @@ class FieldInstanceCrudTest extends FieldTestBase {
     $this->assertIdentical($record['id'], $this->instance_definition['id'], 'The instance id is filled in');
 
     // Check that default values are set.
-    $this->assertIdentical($record['data']['required'], FALSE, t('Required defaults to false.'));
-    $this->assertIdentical($record['data']['label'], $this->instance_definition['field_name'], t('Label defaults to field name.'));
-    $this->assertIdentical($record['data']['description'], '', t('Description defaults to empty string.'));
-    $this->assertIdentical($record['data']['widget']['type'], $field_type['default_widget'], t('Default widget has been written.'));
-    $this->assertTrue(isset($record['data']['display']['default']), t('Display for "full" view_mode has been written.'));
-    $this->assertIdentical($record['data']['display']['default']['type'], $field_type['default_formatter'], t('Default formatter for "full" view_mode has been written.'));
+    $this->assertIdentical($record['data']['required'], FALSE, 'Required defaults to false.');
+    $this->assertIdentical($record['data']['label'], $this->instance_definition['field_name'], 'Label defaults to field name.');
+    $this->assertIdentical($record['data']['description'], '', 'Description defaults to empty string.');
+    $this->assertIdentical($record['data']['widget']['type'], $field_type['default_widget'], 'Default widget has been written.');
+    $this->assertTrue(isset($record['data']['display']['default']), 'Display for "full" view_mode has been written.');
+    $this->assertIdentical($record['data']['display']['default']['type'], $field_type['default_formatter'], 'Default formatter for "full" view_mode has been written.');
 
     // Check that default settings are set.
-    $this->assertIdentical($record['data']['settings'], $field_type['instance_settings'] , t('Default instance settings have been written.'));
-    $this->assertIdentical($record['data']['widget']['settings'], $widget_type['settings'] , t('Default widget settings have been written.'));
-    $this->assertIdentical($record['data']['display']['default']['settings'], $formatter_type['settings'], t('Default formatter settings for "full" view_mode have been written.'));
+    $this->assertIdentical($record['data']['settings'], $field_type['instance_settings'] , 'Default instance settings have been written.');
+    $this->assertIdentical($record['data']['widget']['settings'], $widget_type['settings'] , 'Default widget settings have been written.');
+    $this->assertIdentical($record['data']['display']['default']['settings'], $formatter_type['settings'], 'Default formatter settings for "full" view_mode have been written.');
 
     // Guarantee that the field/bundle combination is unique.
     try {
@@ -166,13 +166,13 @@ class FieldInstanceCrudTest extends FieldTestBase {
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertEqual($instance['required'], $instance_new['required'], t('"required" change is saved'));
-    $this->assertEqual($instance['label'], $instance_new['label'], t('"label" change is saved'));
-    $this->assertEqual($instance['description'], $instance_new['description'], t('"description" change is saved'));
-    $this->assertEqual($instance['widget']['settings']['test_widget_setting'], $instance_new['widget']['settings']['test_widget_setting'], t('Widget setting change is saved'));
-    $this->assertEqual($instance['widget']['weight'], $instance_new['widget']['weight'], t('Widget weight change is saved'));
-    $this->assertEqual($instance['display']['default']['settings']['test_formatter_setting'], $instance_new['display']['default']['settings']['test_formatter_setting'], t('Formatter setting change is saved'));
-    $this->assertEqual($instance['display']['default']['weight'], $instance_new['display']['default']['weight'], t('Widget weight change is saved'));
+    $this->assertEqual($instance['required'], $instance_new['required'], '"required" change is saved');
+    $this->assertEqual($instance['label'], $instance_new['label'], '"label" change is saved');
+    $this->assertEqual($instance['description'], $instance_new['description'], '"description" change is saved');
+    $this->assertEqual($instance['widget']['settings']['test_widget_setting'], $instance_new['widget']['settings']['test_widget_setting'], 'Widget setting change is saved');
+    $this->assertEqual($instance['widget']['weight'], $instance_new['widget']['weight'], 'Widget weight change is saved');
+    $this->assertEqual($instance['display']['default']['settings']['test_formatter_setting'], $instance_new['display']['default']['settings']['test_formatter_setting'], 'Formatter setting change is saved');
+    $this->assertEqual($instance['display']['default']['weight'], $instance_new['display']['default']['weight'], 'Widget weight change is saved');
 
     // Check that changing widget and formatter types updates the default settings.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -181,13 +181,13 @@ class FieldInstanceCrudTest extends FieldTestBase {
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertEqual($instance['widget']['type'], $instance_new['widget']['type'] , t('Widget type change is saved.'));
+    $this->assertEqual($instance['widget']['type'], $instance_new['widget']['type'] , 'Widget type change is saved.');
     $settings = field_info_widget_settings($instance_new['widget']['type']);
-    $this->assertIdentical($settings, array_intersect_key($instance_new['widget']['settings'], $settings) , t('Widget type change updates default settings.'));
-    $this->assertEqual($instance['display']['default']['type'], $instance_new['display']['default']['type'] , t('Formatter type change is saved.'));
+    $this->assertIdentical($settings, array_intersect_key($instance_new['widget']['settings'], $settings) , 'Widget type change updates default settings.');
+    $this->assertEqual($instance['display']['default']['type'], $instance_new['display']['default']['type'] , 'Formatter type change is saved.');
     $info = field_info_formatter_types($instance_new['display']['default']['type']);
     $settings = $info['settings'];
-    $this->assertIdentical($settings, array_intersect_key($instance_new['display']['default']['settings'], $settings) , t('Changing formatter type updates default settings.'));
+    $this->assertIdentical($settings, array_intersect_key($instance_new['display']['default']['settings'], $settings) , 'Changing formatter type updates default settings.');
 
     // Check that adding a new view mode is saved and gets default settings.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -195,11 +195,11 @@ class FieldInstanceCrudTest extends FieldTestBase {
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue(isset($instance_new['display']['teaser']), t('Display for the new view_mode has been written.'));
-    $this->assertIdentical($instance_new['display']['teaser']['type'], $field_type['default_formatter'], t('Default formatter for the new view_mode has been written.'));
+    $this->assertTrue(isset($instance_new['display']['teaser']), 'Display for the new view_mode has been written.');
+    $this->assertIdentical($instance_new['display']['teaser']['type'], $field_type['default_formatter'], 'Default formatter for the new view_mode has been written.');
     $info = field_info_formatter_types($instance_new['display']['teaser']['type']);
     $settings = $info['settings'];
-    $this->assertIdentical($settings, $instance_new['display']['teaser']['settings'] , t('Default formatter settings for the new view_mode have been written.'));
+    $this->assertIdentical($settings, $instance_new['display']['teaser']['settings'] , 'Default formatter settings for the new view_mode have been written.');
 
     // TODO: test failures.
   }
@@ -221,25 +221,25 @@ class FieldInstanceCrudTest extends FieldTestBase {
 
     // Test that the first instance is not deleted, and then delete it.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($instance) && empty($instance['deleted']), t('A new field instance is not marked for deletion.'));
+    $this->assertTrue(!empty($instance) && empty($instance['deleted']), 'A new field instance is not marked for deletion.');
     field_delete_instance($instance);
 
     // Make sure the instance is marked as deleted when the instance is
     // specifically loaded.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($instance['deleted']), t('A deleted field instance is marked for deletion.'));
+    $this->assertTrue(!empty($instance['deleted']), 'A deleted field instance is marked for deletion.');
 
     // Try to load the instance normally and make sure it does not show up.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue(empty($instance), t('A deleted field instance is not loaded by default.'));
+    $this->assertTrue(empty($instance), 'A deleted field instance is not loaded by default.');
 
     // Make sure the other field instance is not deleted.
     $another_instance = field_read_instance('test_entity', $this->another_instance_definition['field_name'], $this->another_instance_definition['bundle']);
-    $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), t('A non-deleted field instance is not marked for deletion.'));
+    $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), 'A non-deleted field instance is not marked for deletion.');
 
     // Make sure the field is deleted when its last instance is deleted.
     field_delete_instance($another_instance);
     $field = field_read_field($another_instance['field_name'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($field['deleted']), t('A deleted field is marked for deletion after all its instances have been marked for deletion.'));
+    $this->assertTrue(!empty($field['deleted']), 'A deleted field is marked for deletion after all its instances have been marked for deletion.');
   }
 }

@@ -404,12 +404,12 @@ class FieldSqlStorageTest extends WebTestBase {
     $instance = field_info_instance($this->instance['entity_type'], $this->instance['field_name'], $this->instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('sql', $field['storage']['details']), t('The storage type is SQL.'));
+    $this->assertTrue(array_key_exists('sql', $field['storage']['details']), 'The storage type is SQL.');
 
     // The SQL details are indexed by table name.
     $details = $field['storage']['details']['sql'];
-    $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), t('Table name is available in the instance array.'));
-    $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), t('Revision table name is available in the instance array.'));
+    $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), 'Table name is available in the instance array.');
+    $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), 'Revision table name is available in the instance array.');
 
     // Test current and revision storage details together because the columns
     // are the same.
@@ -431,14 +431,14 @@ class FieldSqlStorageTest extends WebTestBase {
     // Retrieve the field and instance with field_info and verify the foreign
     // keys are in place.
     $field = field_info_field($field_name);
-    $this->assertEqual($field['foreign keys']['format']['table'], 'filter_format', t('Foreign key table name preserved through CRUD'));
-    $this->assertEqual($field['foreign keys']['format']['columns']['format'], 'format', t('Foreign key column name preserved through CRUD'));
+    $this->assertEqual($field['foreign keys']['format']['table'], 'filter_format', 'Foreign key table name preserved through CRUD');
+    $this->assertEqual($field['foreign keys']['format']['columns']['format'], 'format', 'Foreign key column name preserved through CRUD');
     // Now grab the SQL schema and verify that too.
     $schema = drupal_get_schema(_field_sql_storage_tablename($field));
     $this->assertEqual(count($schema['foreign keys']), 1, t("There is 1 foreign key in the schema"));
     $foreign_key = reset($schema['foreign keys']);
     $filter_column = _field_sql_storage_columnname($field['field_name'], 'format');
-    $this->assertEqual($foreign_key['table'], 'filter_format', t('Foreign key table name preserved in the schema'));
-    $this->assertEqual($foreign_key['columns'][$filter_column], 'format', t('Foreign key column name preserved in the schema'));
+    $this->assertEqual($foreign_key['table'], 'filter_format', 'Foreign key table name preserved in the schema');
+    $this->assertEqual($foreign_key['columns'][$filter_column], 'format', 'Foreign key column name preserved in the schema');
   }
 }

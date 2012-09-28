@@ -52,20 +52,20 @@ class OptionsFieldUITest extends FieldTestBase {
     // Flat list of textual values.
     $string = "Zero\nOne";
     $array = array('0' => 'Zero', '1' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are accepted.'));
+    $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are accepted.');
     // Explicit integer keys.
     $string = "0|Zero\n2|Two";
     $array = array('0' => 'Zero', '2' => 'Two');
-    $this->assertAllowedValuesInput($string, $array, t('Integer keys are accepted.'));
+    $this->assertAllowedValuesInput($string, $array, 'Integer keys are accepted.');
     // Check that values can be added and removed.
     $string = "0|Zero\n1|One";
     $array = array('0' => 'Zero', '1' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Values can be added and removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values can be added and removed.');
     // Non-integer keys.
-    $this->assertAllowedValuesInput("1.1|One", 'keys must be integers', t('Non integer keys are rejected.'));
-    $this->assertAllowedValuesInput("abc|abc", 'keys must be integers', t('Non integer keys are rejected.'));
+    $this->assertAllowedValuesInput("1.1|One", 'keys must be integers', 'Non integer keys are rejected.');
+    $this->assertAllowedValuesInput("abc|abc", 'keys must be integers', 'Non integer keys are rejected.');
     // Mixed list of keyed and unkeyed values.
-    $this->assertAllowedValuesInput("Zero\n1|One", 'invalid input', t('Mixed lists are rejected.'));
+    $this->assertAllowedValuesInput("Zero\n1|One", 'invalid input', 'Mixed lists are rejected.');
 
     // Create a node with actual data for the field.
     $settings = array(
@@ -75,22 +75,22 @@ class OptionsFieldUITest extends FieldTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Check that a flat list of values is rejected once the field has data.
-    $this->assertAllowedValuesInput( "Zero\nOne", 'invalid input', t('Unkeyed lists are rejected once the field has data.'));
+    $this->assertAllowedValuesInput( "Zero\nOne", 'invalid input', 'Unkeyed lists are rejected once the field has data.');
 
     // Check that values can be added but values in use cannot be removed.
     $string = "0|Zero\n1|One\n2|Two";
     $array = array('0' => 'Zero', '1' => 'One', '2' => 'Two');
-    $this->assertAllowedValuesInput($string, $array, t('Values can be added.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values can be added.');
     $string = "0|Zero\n1|One";
     $array = array('0' => 'Zero', '1' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
-    $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', t('Values in use cannot be removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
+    $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
     node_delete($node->nid);
     $string = "0|Zero";
     $array = array('0' => 'Zero');
-    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
   }
 
   /**
@@ -103,19 +103,19 @@ class OptionsFieldUITest extends FieldTestBase {
     // Flat list of textual values.
     $string = "Zero\nOne";
     $array = array('0' => 'Zero', '1' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are accepted.'));
+    $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are accepted.');
     // Explicit numeric keys.
     $string = "0|Zero\n.5|Point five";
     $array = array('0' => 'Zero', '0.5' => 'Point five');
-    $this->assertAllowedValuesInput($string, $array, t('Integer keys are accepted.'));
+    $this->assertAllowedValuesInput($string, $array, 'Integer keys are accepted.');
     // Check that values can be added and removed.
     $string = "0|Zero\n.5|Point five\n1.0|One";
     $array = array('0' => 'Zero', '0.5' => 'Point five', '1' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Values can be added and removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values can be added and removed.');
     // Non-numeric keys.
-    $this->assertAllowedValuesInput("abc|abc\n", 'each key must be a valid integer or decimal', t('Non numeric keys are rejected.'));
+    $this->assertAllowedValuesInput("abc|abc\n", 'each key must be a valid integer or decimal', 'Non numeric keys are rejected.');
     // Mixed list of keyed and unkeyed values.
-    $this->assertAllowedValuesInput("Zero\n1|One\n", 'invalid input', t('Mixed lists are rejected.'));
+    $this->assertAllowedValuesInput("Zero\n1|One\n", 'invalid input', 'Mixed lists are rejected.');
 
     // Create a node with actual data for the field.
     $settings = array(
@@ -125,22 +125,22 @@ class OptionsFieldUITest extends FieldTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Check that a flat list of values is rejected once the field has data.
-    $this->assertAllowedValuesInput("Zero\nOne", 'invalid input', t('Unkeyed lists are rejected once the field has data.'));
+    $this->assertAllowedValuesInput("Zero\nOne", 'invalid input', 'Unkeyed lists are rejected once the field has data.');
 
     // Check that values can be added but values in use cannot be removed.
     $string = "0|Zero\n.5|Point five\n2|Two";
     $array = array('0' => 'Zero', '0.5' => 'Point five', '2' => 'Two');
-    $this->assertAllowedValuesInput($string, $array, t('Values can be added.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values can be added.');
     $string = "0|Zero\n.5|Point five";
     $array = array('0' => 'Zero', '0.5' => 'Point five');
-    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
-    $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', t('Values in use cannot be removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
+    $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
     node_delete($node->nid);
     $string = "0|Zero";
     $array = array('0' => 'Zero');
-    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
   }
 
   /**
@@ -153,21 +153,21 @@ class OptionsFieldUITest extends FieldTestBase {
     // Flat list of textual values.
     $string = "Zero\nOne";
     $array = array('Zero' => 'Zero', 'One' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are accepted.'));
+    $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are accepted.');
     // Explicit keys.
     $string = "zero|Zero\none|One";
     $array = array('zero' => 'Zero', 'one' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Explicit keys are accepted.'));
+    $this->assertAllowedValuesInput($string, $array, 'Explicit keys are accepted.');
     // Check that values can be added and removed.
     $string = "zero|Zero\ntwo|Two";
     $array = array('zero' => 'Zero', 'two' => 'Two');
-    $this->assertAllowedValuesInput($string, $array, t('Values can be added and removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values can be added and removed.');
     // Mixed list of keyed and unkeyed values.
     $string = "zero|Zero\nOne\n";
     $array = array('zero' => 'Zero', 'One' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Mixed lists are accepted.'));
+    $this->assertAllowedValuesInput($string, $array, 'Mixed lists are accepted.');
     // Overly long keys.
-    $this->assertAllowedValuesInput("zero|Zero\n" . $this->randomName(256) . "|One", 'each key must be a string at most 255 characters long', t('Overly long keys are rejected.'));
+    $this->assertAllowedValuesInput("zero|Zero\n" . $this->randomName(256) . "|One", 'each key must be a string at most 255 characters long', 'Overly long keys are rejected.');
 
     // Create a node with actual data for the field.
     $settings = array(
@@ -180,22 +180,22 @@ class OptionsFieldUITest extends FieldTestBase {
     // data.
     $string = "Zero\nOne";
     $array = array('Zero' => 'Zero', 'One' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are still accepted once the field has data.'));
+    $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are still accepted once the field has data.');
 
     // Check that values can be added but values in use cannot be removed.
     $string = "Zero\nOne\nTwo";
     $array = array('Zero' => 'Zero', 'One' => 'One', 'Two' => 'Two');
-    $this->assertAllowedValuesInput($string, $array, t('Values can be added.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values can be added.');
     $string = "Zero\nOne";
     $array = array('Zero' => 'Zero', 'One' => 'One');
-    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
-    $this->assertAllowedValuesInput("Zero", 'some values are being removed while currently in use', t('Values in use cannot be removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
+    $this->assertAllowedValuesInput("Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
     node_delete($node->nid);
     $string = "Zero";
     $array = array('Zero' => 'Zero');
-    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+    $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
   }
 
   /**
@@ -220,9 +220,9 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
     $this->assertFieldByName('off', $off, t("The 'Off' value is stored correctly."));
     $field = field_info_field($this->field_name);
-    $this->assertEqual($field['settings']['allowed_values'], $allowed_values, t('The allowed value is correct'));
-    $this->assertFalse(isset($field['settings']['on']), t('The on value is not saved into settings'));
-    $this->assertFalse(isset($field['settings']['off']), t('The off value is not saved into settings'));
+    $this->assertEqual($field['settings']['allowed_values'], $allowed_values, 'The allowed value is correct');
+    $this->assertFalse(isset($field['settings']['on']), 'The on value is not saved into settings');
+    $this->assertFalse(isset($field['settings']['off']), 'The off value is not saved into settings');
   }
 
   /**

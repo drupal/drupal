@@ -51,18 +51,18 @@ class CrudTest extends FieldTestBase {
     $record['data'] = unserialize($record['data']);
 
     // Ensure that basic properties are preserved.
-    $this->assertEqual($record['field_name'], $field_definition['field_name'], t('The field name is properly saved.'));
-    $this->assertEqual($record['type'], $field_definition['type'], t('The field type is properly saved.'));
+    $this->assertEqual($record['field_name'], $field_definition['field_name'], 'The field name is properly saved.');
+    $this->assertEqual($record['type'], $field_definition['type'], 'The field type is properly saved.');
 
     // Ensure that cardinality defaults to 1.
-    $this->assertEqual($record['cardinality'], 1, t('Cardinality defaults to 1.'));
+    $this->assertEqual($record['cardinality'], 1, 'Cardinality defaults to 1.');
 
     // Ensure that default settings are present.
     $field_type = field_info_field_types($field_definition['type']);
-    $this->assertIdentical($record['data']['settings'], $field_type['settings'], t('Default field settings have been written.'));
+    $this->assertIdentical($record['data']['settings'], $field_type['settings'], 'Default field settings have been written.');
 
     // Ensure that default storage was set.
-    $this->assertEqual($record['storage_type'], variable_get('field_storage_default'), t('The field type is properly saved.'));
+    $this->assertEqual($record['storage_type'], variable_get('field_storage_default'), 'The field type is properly saved.');
 
     // Guarantee that the name is unique.
     try {
@@ -189,7 +189,7 @@ class CrudTest extends FieldTestBase {
 
     // Read the field back.
     $field = field_read_field($field_definition['field_name']);
-    $this->assertTrue($field_definition < $field, t('The field was properly read.'));
+    $this->assertTrue($field_definition < $field, 'The field was properly read.');
   }
 
   /**
@@ -204,7 +204,7 @@ class CrudTest extends FieldTestBase {
     field_create_field($field_definition);
     $field = field_read_field($field_definition['field_name']);
     $expected_indexes = array('value' => array('value'));
-    $this->assertEqual($field['indexes'], $expected_indexes, t('Field type indexes saved by default'));
+    $this->assertEqual($field['indexes'], $expected_indexes, 'Field type indexes saved by default');
 
     // Check that indexes specified by the field definition override the field
     // type indexes.
@@ -218,7 +218,7 @@ class CrudTest extends FieldTestBase {
     field_create_field($field_definition);
     $field = field_read_field($field_definition['field_name']);
     $expected_indexes = array('value' => array());
-    $this->assertEqual($field['indexes'], $expected_indexes, t('Field definition indexes override field type indexes'));
+    $this->assertEqual($field['indexes'], $expected_indexes, 'Field definition indexes override field type indexes');
 
     // Check that indexes specified by the field definition add to the field
     // type indexes.
@@ -232,7 +232,7 @@ class CrudTest extends FieldTestBase {
     field_create_field($field_definition);
     $field = field_read_field($field_definition['field_name']);
     $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));
-    $this->assertEqual($field['indexes'], $expected_indexes, t('Field definition indexes are merged with field type indexes'));
+    $this->assertEqual($field['indexes'], $expected_indexes, 'Field definition indexes are merged with field type indexes');
   }
 
   /**
@@ -263,41 +263,41 @@ class CrudTest extends FieldTestBase {
 
     // Test that the first field is not deleted, and then delete it.
     $field = field_read_field($this->field['field_name'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($field) && empty($field['deleted']), t('A new field is not marked for deletion.'));
+    $this->assertTrue(!empty($field) && empty($field['deleted']), 'A new field is not marked for deletion.');
     field_delete_field($this->field['field_name']);
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.
     $field = field_read_field($this->field['field_name'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($field['deleted']), t('A deleted field is marked for deletion.'));
+    $this->assertTrue(!empty($field['deleted']), 'A deleted field is marked for deletion.');
 
     // Make sure that this field's instance is marked as deleted when it is
     // specifically loaded.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($instance['deleted']), t('An instance for a deleted field is marked for deletion.'));
+    $this->assertTrue(!empty($instance['deleted']), 'An instance for a deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
     $field = field_read_field($this->field['field_name']);
-    $this->assertTrue(empty($field), t('A deleted field is not loaded by default.'));
+    $this->assertTrue(empty($field), 'A deleted field is not loaded by default.');
 
     // Try to load the instance normally and make sure it does not show up.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue(empty($instance), t('An instance for a deleted field is not loaded by default.'));
+    $this->assertTrue(empty($instance), 'An instance for a deleted field is not loaded by default.');
 
     // Make sure the other field (and its field instance) are not deleted.
     $another_field = field_read_field($this->another_field['field_name']);
-    $this->assertTrue(!empty($another_field) && empty($another_field['deleted']), t('A non-deleted field is not marked for deletion.'));
+    $this->assertTrue(!empty($another_field) && empty($another_field['deleted']), 'A non-deleted field is not marked for deletion.');
     $another_instance = field_read_instance('test_entity', $this->another_instance_definition['field_name'], $this->another_instance_definition['bundle']);
-    $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), t('An instance of a non-deleted field is not marked for deletion.'));
+    $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), 'An instance of a non-deleted field is not marked for deletion.');
 
     // Try to create a new field the same name as a deleted field and
     // write data into it.
     field_create_field($this->field);
     field_create_instance($this->instance_definition);
     $field = field_read_field($this->field['field_name']);
-    $this->assertTrue(!empty($field) && empty($field['deleted']), t('A new field with a previously used name is created.'));
+    $this->assertTrue(!empty($field) && empty($field['deleted']), 'A new field with a previously used name is created.');
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue(!empty($instance) && empty($instance['deleted']), t('A new instance for a previously used field name is created.'));
+    $this->assertTrue(!empty($instance) && empty($instance['deleted']), 'A new instance for a previously used field name is created.');
 
     // Save an entity with data for the field
     $entity = field_test_create_entity(0, 0, $instance['bundle']);
@@ -450,12 +450,12 @@ class CrudTest extends FieldTestBase {
 
     // Read the field.
     $field = field_read_field($field_name);
-    $this->assertTrue($field_definition <= $field, t('The field was properly read.'));
+    $this->assertTrue($field_definition <= $field, 'The field was properly read.');
 
     module_disable($modules, FALSE);
 
     $fields = field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
-    $this->assertTrue(isset($fields[$field_name]) && $field_definition < $field, t('The field is properly read when explicitly fetching inactive fields.'));
+    $this->assertTrue(isset($fields[$field_name]) && $field_definition < $field, 'The field is properly read when explicitly fetching inactive fields.');
 
     // Re-enable modules one by one, and check that the field is still inactive
     // while some modules remain disabled.
@@ -470,6 +470,6 @@ class CrudTest extends FieldTestBase {
     // Check that the field is active again after all modules have been
     // enabled.
     $field = field_read_field($field_name);
-    $this->assertTrue($field_definition <= $field, t('The field was was marked active.'));
+    $this->assertTrue($field_definition <= $field, 'The field was was marked active.');
   }
 }

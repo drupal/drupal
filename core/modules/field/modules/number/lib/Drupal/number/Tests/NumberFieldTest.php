@@ -71,7 +71,7 @@ class NumberFieldTest extends WebTestBase {
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
     $langcode = LANGUAGE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', t('Widget is displayed'));
+    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget is displayed');
 
     // Submit a signed decimal value within the allowed precision and scale.
     $value = '-1234.5678';
@@ -81,8 +81,8 @@ class NumberFieldTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
-    $this->assertRaw(round($value, 2), t('Value is displayed.'));
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertRaw(round($value, 2), 'Value is displayed.');
 
     // Try to create entries with more than one decimal separator; assert fail.
     $wrong_entries = array(

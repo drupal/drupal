@@ -64,9 +64,9 @@ class OptionsFieldTest extends FieldTestBase {
     // All three options appear.
     $entity = field_test_create_entity();
     $form = entity_get_form($entity);
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), 'Option 1 exists');
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), 'Option 2 exists');
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), 'Option 3 exists');
 
     // Use one of the values in an actual entity, and check that this value
     // cannot be removed from the list.
@@ -90,19 +90,19 @@ class OptionsFieldTest extends FieldTestBase {
     field_update_field($this->field);
     $entity = field_test_create_entity();
     $form = entity_get_form($entity);
-    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
-    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), 'Option 1 does not exist');
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), 'Option 2 exists');
+    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), 'Option 3 does not exist');
 
     // Completely new options appear.
     $this->field['settings']['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
     field_update_field($this->field);
     $form = entity_get_form($entity);
-    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
-    $this->assertTrue(empty($form[$this->field_name][$langcode][2]), t('Option 2 does not exist'));
-    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][10]), t('Option 10 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][20]), t('Option 20 exists'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), 'Option 1 does not exist');
+    $this->assertTrue(empty($form[$this->field_name][$langcode][2]), 'Option 2 does not exist');
+    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), 'Option 3 does not exist');
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][10]), 'Option 10 exists');
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][20]), 'Option 20 exists');
 
     // Options are reset when a new field with the same name is created.
     field_delete_field($this->field_name);
@@ -120,8 +120,8 @@ class OptionsFieldTest extends FieldTestBase {
     $this->instance = field_create_instance($this->instance);
     $entity = field_test_create_entity();
     $form = entity_get_form($entity);
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), 'Option 1 exists');
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), 'Option 2 exists');
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), 'Option 3 exists');
   }
 }

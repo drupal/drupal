@@ -126,8 +126,8 @@ class TextFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', t('Format selector is not displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', 'Format selector is not displayed');
 
     // Submit with some value.
     $value = $this->randomName();
@@ -137,7 +137,7 @@ class TextFieldTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
@@ -195,8 +195,8 @@ class TextFieldTest extends WebTestBase {
     // Display the creation form. Since the user only has access to one format,
     // no format selector will be displayed.
     $this->drupalGet('test-entity/add/test_bundle');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is not displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '', 'Format selector is not displayed');
 
     // Submit with data that should be filtered.
     $value = '<em>' . $this->randomName() . '</em>';
@@ -206,14 +206,14 @@ class TextFieldTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
-    $this->assertNoRaw($value, t('HTML tags are not displayed.'));
-    $this->assertRaw(check_plain($value), t('Escaped HTML is displayed correctly.'));
+    $this->assertNoRaw($value, 'HTML tags are not displayed.');
+    $this->assertRaw(check_plain($value), 'Escaped HTML is displayed correctly.');
 
     // Create a new text format that does not escape HTML, and grant the user
     // access to it.
@@ -237,21 +237,21 @@ class TextFieldTest extends WebTestBase {
     // Display edition form.
     // We should now have a 'text format' selector.
     $this->drupalGet('test-entity/manage/' . $id . '/edit');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", NULL, t('Widget is displayed'));
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", NULL, t('Format selector is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", NULL, 'Widget is displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", NULL, 'Format selector is displayed');
 
     // Edit and change the text format to the new one that was created.
     $edit = array(
       "{$this->field_name}[$langcode][0][format]" => $format_id,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));
+    $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
 
     // Display the entity.
     entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
-    $this->assertRaw($value, t('Value is displayed unfiltered'));
+    $this->assertRaw($value, 'Value is displayed unfiltered');
   }
 }

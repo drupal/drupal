@@ -62,7 +62,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
     // Number of values per field loaded equals the field cardinality.
-    $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], t('Current revision: expected number of values'));
+    $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], 'Current revision: expected number of values');
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
       // The field value loaded matches the one inserted or updated.
       $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'] , $values[$current_revision][$delta]['value'], t('Current revision: expected value %delta was found.', array('%delta' => $delta)));
@@ -237,14 +237,14 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $instance = field_info_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('drupal_variables', $field['storage']['details']), t('The storage type is Drupal variables.'));
+    $this->assertTrue(array_key_exists('drupal_variables', $field['storage']['details']), 'The storage type is Drupal variables.');
 
     $details = $field['storage']['details']['drupal_variables'];
 
     // The field_test storage details are indexed by variable name. The details
     // are altered, so moon and mars are correct for this test.
-    $this->assertTrue(array_key_exists('moon', $details[FIELD_LOAD_CURRENT]), t('Moon is available in the instance array.'));
-    $this->assertTrue(array_key_exists('mars', $details[FIELD_LOAD_REVISION]), t('Mars is available in the instance array.'));
+    $this->assertTrue(array_key_exists('moon', $details[FIELD_LOAD_CURRENT]), 'Moon is available in the instance array.');
+    $this->assertTrue(array_key_exists('mars', $details[FIELD_LOAD_REVISION]), 'Mars is available in the instance array.');
 
     // Test current and revision storage details together because the columns
     // are the same.
@@ -268,7 +268,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Insert: missing field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}), 'Insert: missing field results in no value saved');
 
     // Insert: Field is NULL.
     field_cache_clear();
@@ -278,7 +278,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Insert: NULL field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}), 'Insert: NULL field results in no value saved');
 
     // Add some real data.
     field_cache_clear();
@@ -289,7 +289,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Field data saved'));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, 'Field data saved');
 
     // Update: Field is missing. Data should survive.
     field_cache_clear();
@@ -298,7 +298,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Update: missing field leaves existing values in place'));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, 'Update: missing field leaves existing values in place');
 
     // Update: Field is NULL. Data should be wiped.
     field_cache_clear();
@@ -308,7 +308,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Update: NULL field removes existing values'));
+    $this->assertTrue(empty($entity->{$this->field_name}), 'Update: NULL field removes existing values');
 
     // Re-add some data.
     field_cache_clear();
@@ -319,7 +319,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Field data saved'));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, 'Field data saved');
 
     // Update: Field is empty array. Data should be wiped.
     field_cache_clear();
@@ -329,7 +329,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Update: empty array removes existing values'));
+    $this->assertTrue(empty($entity->{$this->field_name}), 'Update: empty array removes existing values');
   }
 
   /**
@@ -351,7 +351,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Insert: NULL field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), 'Insert: NULL field results in no value saved');
 
     // Insert: Field is missing.
     field_cache_clear();
@@ -361,7 +361,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
     $values = field_test_default_value($entity_type, $entity, $this->field, $this->instance);
-    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Insert: missing field results in default value saved'));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, 'Insert: missing field results in default value saved');
   }
 
   /**
@@ -416,7 +416,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     }
     $read = field_test_create_entity(0, 2, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $read));
-    $this->assertIdentical($read->{$this->field_name}, array(), t('The test entity current revision is deleted.'));
+    $this->assertIdentical($read->{$this->field_name}, array(), 'The test entity current revision is deleted.');
   }
 
   /**

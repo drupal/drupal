@@ -53,7 +53,7 @@ class TextTranslationTest extends WebTestBase {
     // Set "Article" content type to use multilingual support with translation.
     $edit = array('node_type_language_hidden' => FALSE, 'node_type_language_translation_enabled' => TRUE);
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), 'Article content type has been updated.');
   }
 
   /**
@@ -81,7 +81,7 @@ class TextTranslationTest extends WebTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->drupalGet("node/$node->nid/translate");
     $this->clickLink(t('add translation'));
-    $this->assertFieldByXPath("//textarea[@name='body[$langcode][0][value]']", $body, t('The textfield widget is populated.'));
+    $this->assertFieldByXPath("//textarea[@name='body[$langcode][0][value]']", $body, 'The textfield widget is populated.');
   }
 
   /**
@@ -93,7 +93,7 @@ class TextTranslationTest extends WebTestBase {
     $edit = array('field[cardinality]' => -1);
     $this->drupalPost('admin/structure/types/manage/article/fields/body', $edit, t('Save settings'));
     $this->drupalGet('node/add/article');
-    $this->assertFieldByXPath("//input[@name='body_add_more']", t('Add another item'), t('Body field cardinality set to multiple.'));
+    $this->assertFieldByXPath("//input[@name='body_add_more']", t('Add another item'), 'Body field cardinality set to multiple.');
 
     $body = array(
       $this->randomName(),

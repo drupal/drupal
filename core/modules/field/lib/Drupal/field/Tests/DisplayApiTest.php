@@ -77,7 +77,7 @@ class DisplayApiTest extends FieldTestBase {
     $this->drupalSetContent(drupal_render($output));
     $settings = field_info_formatter_settings('field_test_default');
     $setting = $settings['test_formatter_setting'];
-    $this->assertText($this->label, t('Label was displayed.'));
+    $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
@@ -94,13 +94,13 @@ class DisplayApiTest extends FieldTestBase {
     $output = field_view_field('test_entity', $this->entity, $this->field_name, $display);
     $this->drupalSetContent(drupal_render($output));
     $setting = $display['settings']['test_formatter_setting_multiple'];
-    $this->assertNoText($this->label, t('Label was not displayed.'));
-    $this->assertText('field_test_field_attach_view_alter', t('Alter fired, display passed.'));
+    $this->assertNoText($this->label, 'Label was not displayed.');
+    $this->assertText('field_test_field_attach_view_alter', 'Alter fired, display passed.');
     $array = array();
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
     }
-    $this->assertText($setting . '|' . implode('|', $array), t('Values were displayed with expected setting.'));
+    $this->assertText($setting . '|' . implode('|', $array), 'Values were displayed with expected setting.');
 
     // Check the prepare_view steps are invoked.
     $display = array(
@@ -114,8 +114,8 @@ class DisplayApiTest extends FieldTestBase {
     $view = drupal_render($output);
     $this->drupalSetContent($view);
     $setting = $display['settings']['test_formatter_setting_additional'];
-    $this->assertNoText($this->label, t('Label was not displayed.'));
-    $this->assertNoText('field_test_field_attach_view_alter', t('Alter not fired.'));
+    $this->assertNoText($this->label, 'Label was not displayed.');
+    $this->assertNoText('field_test_field_attach_view_alter', 'Alter not fired.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
@@ -125,7 +125,7 @@ class DisplayApiTest extends FieldTestBase {
     $output = field_view_field('test_entity', $this->entity, $this->field_name, 'teaser');
     $this->drupalSetContent(drupal_render($output));
     $setting = $this->instance['display']['teaser']['settings']['test_formatter_setting'];
-    $this->assertText($this->label, t('Label was displayed.'));
+    $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
@@ -135,7 +135,7 @@ class DisplayApiTest extends FieldTestBase {
     $output = field_view_field('test_entity', $this->entity, $this->field_name, 'unknown_view_mode');
     $this->drupalSetContent(drupal_render($output));
     $setting = $this->instance['display']['default']['settings']['test_formatter_setting'];
-    $this->assertText($this->label, t('Label was displayed.'));
+    $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
