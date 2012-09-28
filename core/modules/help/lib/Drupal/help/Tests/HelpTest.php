@@ -67,13 +67,13 @@ class HelpTest extends WebTestBase {
     // Check for css on admin/help.
     $this->drupalLogin($this->big_user);
     $this->drupalGet('admin/help');
-    $this->assertRaw(drupal_get_path('module', 'help') . '/help.css', t('The help.css file is present in the HTML.'));
+    $this->assertRaw(drupal_get_path('module', 'help') . '/help.css', 'The help.css file is present in the HTML.');
 
     // Verify that introductory help text exists, goes for 100% module coverage.
     $this->assertRaw(t('For more information, refer to the specific topics listed in the next section or to the <a href="@drupal">online Drupal handbooks</a>.', array('@drupal' => 'http://drupal.org/documentation')), 'Help intro text correctly appears.');
 
     // Verify that help topics text appears.
-    $this->assertRaw('<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>', t('Help topics text correctly appears.'));
+    $this->assertRaw('<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>', 'Help topics text correctly appears.');
 
     // Make sure links are properly added for modules implementing hook_help().
     foreach ($this->getModuleList() as $module => $name) {
@@ -93,8 +93,8 @@ class HelpTest extends WebTestBase {
       $this->drupalGet('admin/help/' . $module);
       $this->assertResponse($response);
       if ($response == 200) {
-        $this->assertTitle($name . ' | Drupal', t('[' . $module . '] Title was displayed'));
-        $this->assertRaw('<h1 class="page-title">' . t($name) . '</h1>', t('[' . $module . '] Heading was displayed'));
+        $this->assertTitle($name . ' | Drupal', format_string('%module title was displayed', array('%module' => $module)));
+        $this->assertRaw('<h1 class="page-title">' . t($name) . '</h1>', format_string('%module heading was displayed', array('%module' => $module)));
        }
     }
   }

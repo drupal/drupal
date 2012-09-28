@@ -48,6 +48,6 @@ class NoHelpTest extends WebTestBase {
     $this->drupalLogin($this->big_user);
 
     $this->drupalGet('admin/help');
-    $this->assertNoText('Hook menu tests', t('Making sure the test module menu_test does not display a help link in admin/help'));
+    $this->assertNoText('Hook menu tests', 'Making sure the test module menu_test does not display a help link in admin/help');
   }
 }
