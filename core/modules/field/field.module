@@ -1001,7 +1001,8 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
   if ($field = field_info_field($field_name)) {
     if (is_array($display)) {
       // When using custom display settings, fill in default values.
-      $display = _field_info_prepare_instance_display($field, $display);
+      $cache = _field_info_field_cache();
+      $display = $cache->prepareInstanceDisplay($display, $field["type"]);
     }
 
     // Hook invocations are done through the _field_invoke() functions in

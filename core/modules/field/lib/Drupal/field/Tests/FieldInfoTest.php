@@ -63,7 +63,7 @@ class FieldInfoTest extends FieldTestBase {
 
     // Verify that no unexpected instances exist.
     $instances = field_info_instances('test_entity');
-    $expected = array('test_bundle' => array());
+    $expected = array();
     $this->assertIdentical($instances, $expected, "field_info_instances('test_entity') returns " . var_export($expected, TRUE) . '.');
     $instances = field_info_instances('test_entity', 'test_bundle');
     $this->assertIdentical($instances, array(), "field_info_instances('test_entity', 'test_bundle') returns an empty array.");
@@ -120,7 +120,7 @@ class FieldInfoTest extends FieldTestBase {
 
     // Test with an entity type that has no bundles.
     $instances = field_info_instances('user');
-    $expected = array('user' => array());
+    $expected = array();
     $this->assertIdentical($instances, $expected, "field_info_instances('user') returns " . var_export($expected, TRUE) . '.');
     $instances = field_info_instances('user', 'user');
     $this->assertIdentical($instances, array(), "field_info_instances('user', 'user') returns an empty array.");
@@ -233,6 +233,81 @@ class FieldInfoTest extends FieldTestBase {
     module_disable(array('comment'));
     $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), 'No instances are returned on disabled entity types.');
   }
+
+  /**
+   * Test field_info_field_map().
+   */
+  function testFieldMap() {
+    // We will overlook fields created by the 'standard' install profile.
+    $exclude = field_info_field_map();
+
+    // Create a new bundle for 'test_entity' entity type.
+    field_test_create_bundle('test_bundle_2');
+
+    // Create a couple fields.
+    $fields  = array(
+      array(
+        'field_name' => 'field_1',
+        'type' => 'test_field',
+      ),
+      array(
+        'field_name' => 'field_2',
+        'type' => 'hidden_test_field',
+      ),
+    );
+    foreach ($fields as $field) {
+      field_create_field($field);
+    }
+
+    // Create a couple instances.
+    $instances = array(
+      array(
+        'field_name' => 'field_1',
+        'entity_type' => 'test_entity',
+        'bundle' => 'test_bundle',
+      ),
+      array(
+        'field_name' => 'field_1',
+        'entity_type' => 'test_entity',
+        'bundle' => 'test_bundle_2',
+      ),
+      array(
+        'field_name' => 'field_2',
+        'entity_type' => 'test_entity',
+        'bundle' => 'test_bundle',
+      ),
+      array(
+        'field_name' => 'field_2',
+        'entity_type' => 'test_cacheable_entity',
+        'bundle' => 'test_bundle',
+      ),
+    );
+    foreach ($instances as $instance) {
+      field_create_instance($instance);
+    }
+
+    $expected = array(
+      'field_1' => array(
+        'type' => 'test_field',
+        'bundles' => array(
+          'test_entity' => array('test_bundle', 'test_bundle_2'),
+        ),
+      ),
+      'field_2' => array(
+        'type' => 'hidden_test_field',
+        'bundles' => array(
+          'test_entity' => array('test_bundle'),
+          'test_cacheable_entity' => array('test_bundle'),
+        ),
+      ),
+    );
+
+    // Check that the field map is correct.
+    $map = field_info_field_map();
+    $map = array_diff_key($map, $exclude);
+    $this->assertEqual($map, $expected);
+  }
+
 
   /**
    * Test that the field_info settings convenience functions work.

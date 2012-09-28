@@ -6,6 +6,29 @@
  */
 
 use Drupal\field\FieldInstance;
+use Drupal\field\FieldInfo;
+
+/**
+ * Retrieves the Drupal\field\FieldInfo object for the current request.
+ *
+ * @return Drupal\field\FieldInfo
+ *   An instance of the Drupal\field\FieldInfo class.
+ */
+function _field_info_field_cache() {
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['field_info_field_cache'] = &drupal_static(__FUNCTION__);
+  }
+  $info = &$drupal_static_fast['field_info_field_cache'];
+
+  if (!isset($info)) {
+    $info = new FieldInfo();
+  }
+
+  return $info;
+}
 
 /**
  * @defgroup field_info Field Info API
@@ -35,7 +58,7 @@ function field_info_cache_clear() {
   entity_info_cache_clear();
 
   _field_info_collate_types_reset();
-  _field_info_collate_fields_reset();
+  _field_info_field_cache()->flush();
 }
 
 /**
@@ -153,265 +176,6 @@ function _field_info_collate_types_reset() {
 }
 
 /**
- * Collates all information on existing fields and instances.
- *
- * @return
- *   An associative array containing:
- *   - fields: Array of existing fields, keyed by field ID. This element lists
- *     deleted and non-deleted fields, but not inactive ones. Each field has an
- *     additional element, 'bundles', which is an array of all non-deleted
- *     instances of that field.
- *   - field_ids: Array of field IDs, keyed by field name. This element only
- *     lists non-deleted, active fields.
- *   - instances: Array of existing instances, keyed by entity type, bundle name
- *     and field name. This element only lists non-deleted instances whose field
- *     is active.
- *
- * @see _field_info_collate_fields_reset()
- */
-function _field_info_collate_fields() {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['field_info_collate_fields'] = &drupal_static(__FUNCTION__);
-  }
-  $info = &$drupal_static_fast['field_info_collate_fields'];
-
-  if (!isset($info)) {
-    if ($cached = cache('field')->get('field_info_fields')) {
-      $info = $cached->data;
-    }
-    else {
-      $definitions = array(
-        'field_ids' => field_read_fields(array(), array('include_deleted' => 1)),
-        'instances' => field_read_instances(),
-      );
-
-      // Populate 'fields' with all fields, keyed by ID.
-      $info['fields'] = array();
-      foreach ($definitions['field_ids'] as $key => $field) {
-        $info['fields'][$key] = $definitions['field_ids'][$key] = _field_info_prepare_field($field);
-      }
-
-      // Build an array of field IDs for non-deleted fields, keyed by name.
-      $info['field_ids'] = array();
-      foreach ($info['fields'] as $key => $field) {
-        if (!$field['deleted']) {
-          $info['field_ids'][$field['field_name']] = $key;
-        }
-      }
-
-      // Populate 'instances'. Only non-deleted instances are considered.
-      $info['instances'] = array();
-      foreach (field_info_bundles() as $entity_type => $bundles) {
-        foreach ($bundles as $bundle => $bundle_info) {
-          $info['instances'][$entity_type][$bundle] = array();
-        }
-      }
-      foreach ($definitions['instances'] as $instance) {
-        $field = $info['fields'][$instance['field_id']];
-        $instance = _field_info_prepare_instance($instance, $field);
-        $info['instances'][$instance['entity_type']][$instance['bundle']][$instance['field_name']] = new FieldInstance($instance);
-        // Enrich field definitions with the list of bundles where they have
-        // instances. NOTE: Deleted fields in $info['field_ids'] are not
-        // enriched because all of their instances are deleted, too, and
-        // are thus not in $definitions['instances'].
-        $info['fields'][$instance['field_id']]['bundles'][$instance['entity_type']][] = $instance['bundle'];
-      }
-
-      // Populate 'extra_fields'.
-      $extra = module_invoke_all('field_extra_fields');
-      drupal_alter('field_extra_fields', $extra);
-      // Merge in saved settings.
-      foreach ($extra as $entity_type => $bundles) {
-        foreach ($bundles as $bundle => $extra_fields) {
-          $extra_fields = _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle);
-          $info['extra_fields'][$entity_type][$bundle] = $extra_fields;
-        }
-      }
-
-      cache('field')->set('field_info_fields', $info);
-    }
-  }
-
-  return $info;
-}
-
-/**
- * Clears collated information on existing fields and instances.
- */
-function _field_info_collate_fields_reset() {
-  drupal_static_reset('_field_info_collate_fields');
-  cache('field')->delete('field_info_fields');
-}
-
-/**
- * Prepares a field definition for the current run-time context.
- *
- * Since the field was last saved or updated, new field settings can be
- * expected.
- *
- * @param $field
- *   The raw field structure as read from the database.
- *
- * @return
- *   The field array with storage and settings data added.
- */
-function _field_info_prepare_field($field) {
-  // Make sure all expected field settings are present.
-  $field['settings'] += field_info_field_settings($field['type']);
-  $field['storage']['settings'] += field_info_storage_settings($field['storage']['type']);
-
-  // Add storage details.
-  $details = (array) module_invoke($field['storage']['module'], 'field_storage_details', $field);
-  drupal_alter('field_storage_details', $details, $field, $instance);
-  $field['storage']['details'] = $details;
-
-  // Initialize the 'bundles' list.
-  $field['bundles'] = array();
-
-  return $field;
-}
-
-/**
- * Prepares an instance definition for the current run-time context.
- *
- * Since the instance was last saved or updated, a number of things might have
- * changed: widgets or formatters disabled, new settings expected, new view
- * modes added, etc.
- *
- * @param $instance
- *   The raw instance structure as read from the database.
- * @param $field
- *   The field structure for the instance.
- *
- * @return
- *   Field instance array.
- */
-function _field_info_prepare_instance($instance, $field) {
-  // Make sure all expected instance settings are present.
-  $instance['settings'] += field_info_instance_settings($field['type']);
-
-  // Set a default value for the instance.
-  if (field_behaviors_widget('default value', $instance) == FIELD_BEHAVIOR_DEFAULT && !isset($instance['default_value'])) {
-    $instance['default_value'] = NULL;
-  }
-
-  foreach ($instance['display'] as $view_mode => $display) {
-    $instance['display'][$view_mode] = _field_info_prepare_instance_display($field, $display);
-  }
-
-  // Fallback to 'hidden' for view modes configured to use custom display
-  // settings, and for which the instance has no explicit settings.
-  $entity_info = entity_get_info($instance['entity_type']);
-  $view_modes = array_merge(array('default'), array_keys($entity_info['view modes']));
-  $view_mode_settings = field_view_mode_settings($instance['entity_type'], $instance['bundle']);
-  foreach ($view_modes as $view_mode) {
-    if ($view_mode == 'default' || !empty($view_mode_settings[$view_mode]['custom_settings'])) {
-      if (!isset($instance['display'][$view_mode])) {
-        $instance['display'][$view_mode] = array(
-          'type' => 'hidden',
-          'label' => 'above',
-          'settings' => array(),
-          'weight' => 0,
-        );
-      }
-    }
-  }
-
-  return $instance;
-}
-
-/**
- * Adapts display specifications to the current run-time context.
- *
- * @param $field
- *   The field structure for the instance.
- * @param $display
- *   Display specifications as found in $instance['display']['some_view_mode'].
- *
- * @return
- *   The modified $display array.
- */
-function _field_info_prepare_instance_display($field, $display) {
-  $field_type = field_info_field_types($field['type']);
-
-  // Fill in default values.
-  $display += array(
-    'label' => 'above',
-    'type' => $field_type['default_formatter'],
-    'settings' => array(),
-    'weight' => 0,
-  );
-  if ($display['type'] != 'hidden') {
-    $formatter_type = field_info_formatter_types($display['type']);
-    // Fallback to default formatter if formatter type is not available.
-    if (!$formatter_type) {
-      $display['type'] = $field_type['default_formatter'];
-      $formatter_type = field_info_formatter_types($display['type']);
-    }
-    $display['module'] = $formatter_type['module'];
-    // Fill in default settings for the formatter.
-    $display['settings'] += field_info_formatter_settings($display['type']);
-  }
-
-  return $display;
-}
-
-/**
- * Prepares 'extra fields' for the current run-time context.
- *
- * @param $extra_fields
- *   The array of extra fields, as collected in hook_field_extra_fields().
- * @param $entity_type
- *   The entity type.
- * @param $bundle
- *   The bundle name.
- *
- * @return
- *   An array of data about extra fields.
- */
-function _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle) {
-  $entity_type_info = entity_get_info($entity_type);
-  $bundle_settings = field_bundle_settings($entity_type, $bundle);
-  $extra_fields += array('form' => array(), 'display' => array());
-
-  $result = array();
-  // Extra fields in forms.
-  foreach ($extra_fields['form'] as $name => $field_data) {
-    $settings = isset($bundle_settings['extra_fields']['form'][$name]) ? $bundle_settings['extra_fields']['form'][$name] : array();
-    if (isset($settings['weight'])) {
-      $field_data['weight'] = $settings['weight'];
-    }
-    $result['form'][$name] = $field_data;
-  }
-
-  // Extra fields in displayed entities.
-  $data = $extra_fields['display'];
-  foreach ($extra_fields['display'] as $name => $field_data) {
-    $settings = isset($bundle_settings['extra_fields']['display'][$name]) ? $bundle_settings['extra_fields']['display'][$name] : array();
-    $field_data['visible'] = isset($field_data['visible']) ? $field_data['visible'] : TRUE;
-    $view_modes = array_merge(array('default'), array_keys($entity_type_info['view modes']));
-    foreach ($view_modes as $view_mode) {
-      if (isset($settings[$view_mode])) {
-        $field_data['display'][$view_mode] = $settings[$view_mode];
-      }
-      else {
-        $field_data['display'][$view_mode] = array(
-          'weight' => $field_data['weight'],
-          'visible' => $field_data['visible'],
-        );
-      }
-    }
-    unset($field_data['weight']);
-    $result['display'][$name] = $field_data;
-  }
-
-  return $result;
-}
-
-/**
  * Determines the behavior of a widget with respect to an operation.
  *
  * @param $op
@@ -429,6 +193,22 @@ function _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle) 
 function field_behaviors_widget($op, $instance) {
   $info = field_info_widget_types($instance['widget']['type']);
   return isset($info['behaviors'][$op]) ? $info['behaviors'][$op] : FIELD_BEHAVIOR_DEFAULT;
+}
+
+/**
+ * Returns a lightweight map of fields across bundles.
+ *
+ * The function only returns active, non deleted fields.
+ *
+ * @return
+ *   An array keyed by field name. Each value is an array with two entries:
+ *   - type: The field type.
+ *   - bundles: The bundles in which the field appears, as an array with entity
+ *     types as keys and the array of bundle names as values.
+ */
+function field_info_field_map() {
+  $cache = _field_info_field_cache();
+  return $cache->getFieldMap();
 }
 
 /**
@@ -552,19 +332,32 @@ function field_info_bundles($entity_type = NULL) {
 /**
  * Returns all field definitions.
  *
+ * Use of this function should be avoided when possible, since it loads and
+ * statically caches a potentially large array of information. Use
+ * field_info_field_map() instead.
+ *
+ * When iterating over the fields present in a given bundle after a call to
+ * field_info_instances($entity_type, $bundle), it is recommended to use
+ * field_info_field() on each individual field instead.
+ *
  * @return
  *   An array of field definitions, keyed by field name. Each field has an
  *   additional property, 'bundles', which is an array of all the bundles to
  *   which this field belongs, keyed by entity type.
+ *
+ * @see field_info_field_map()
  */
 function field_info_fields() {
+  $cache = _field_info_field_cache();
+  $info = $cache->getFields();
+
   $fields = array();
-  $info = _field_info_collate_fields();
-  foreach ($info['fields'] as $key => $field) {
+  foreach ($info as $key => $field) {
     if (!$field['deleted']) {
       $fields[$field['field_name']] = $field;
     }
   }
+
   return $fields;
 }
 
@@ -586,10 +379,8 @@ function field_info_fields() {
  * @see field_info_field_by_id()
  */
 function field_info_field($field_name) {
-  $info = _field_info_collate_fields();
-  if (isset($info['field_ids'][$field_name])) {
-    return $info['fields'][$info['field_ids'][$field_name]];
-  }
+  $cache = _field_info_field_cache();
+  return $cache->getField($field_name);
 }
 
 /**
@@ -607,17 +398,19 @@ function field_info_field($field_name) {
  * @see field_info_field()
  */
 function field_info_field_by_id($field_id) {
-  $info = _field_info_collate_fields();
-  if (isset($info['fields'][$field_id])) {
-    return $info['fields'][$field_id];
-  }
+  $cache = _field_info_field_cache();
+  return $cache->getFieldById($field_id);
 }
 
 /**
  * Returns the same data as field_info_field_by_id() for every field.
  *
- * This function is typically used when handling all fields of some entities
- * to avoid thousands of calls to field_info_field_by_id().
+ * Use of this function should be avoided when possible, since it loads and
+ * statically caches a potentially large array of information.
+ *
+ * When iterating over the fields present in a given bundle after a call to
+ * field_info_instances($entity_type, $bundle), it is recommended to use
+ * field_info_field() on each individual field instead.
  *
  * @return
  *   An array, each key is a field ID and the values are field arrays as
@@ -628,17 +421,28 @@ function field_info_field_by_id($field_id) {
  * @see field_info_field_by_id()
  */
 function field_info_field_by_ids() {
-  $info = _field_info_collate_fields();
-  return $info['fields'];
+  $cache = _field_info_field_cache();
+  return $cache->getFields();
 }
 
 /**
  * Retrieves information about field instances.
  *
+ * Use of this function to retriev instances across separate bundles (i.e. when
+ * the $bundle parameter is NULL) should be avoided when possible, since it
+ * loads and  statically caches a potentially large array of information. Use
+ * field_info_field_map() instead.
+ *
+ * When retrieving the instances of a specific bundle (i.e. when both
+ * $entity_type and $bundle_name are provided, the function also populates a
+ * static cache with the corresponding field definitions, allowing fast
+ * retrieval of field_info_field() later in the request.
+ *
  * @param $entity_type
- *   The entity type for which to return instances.
+ *   (optional) The entity type for which to return instances.
  * @param $bundle_name
- *   The bundle name for which to return instances.
+ *   (optional) The bundle name for which to return instances. If $entity_type
+ *   is NULL, the $bundle_name parameter is ignored.
  *
  * @return
  *   If $entity_type is not set, return all instances keyed by entity type and
@@ -647,21 +451,25 @@ function field_info_field_by_ids() {
  *   return all instances for that bundle.
  */
 function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
-  $info = _field_info_collate_fields();
+  $cache = _field_info_field_cache();
 
-  if (isset($entity_type) && isset($bundle_name)) {
-    return isset($info['instances'][$entity_type][$bundle_name]) ? $info['instances'][$entity_type][$bundle_name] : array();
+  if (!isset($entity_type)) {
+    return $cache->getInstances();
   }
-  elseif (isset($entity_type)) {
-    return isset($info['instances'][$entity_type]) ? $info['instances'][$entity_type] : array();
+
+  if (!isset($bundle_name)) {
+    return $cache->getInstances($entity_type);
   }
-  else {
-    return $info['instances'];
-  }
+
+  return $cache->getBundleInstances($entity_type, $bundle_name);
 }
 
 /**
  * Returns an array of instance data for a specific field and bundle.
+ *
+ * The function populates a static cache with all fields and instances used in
+ * the bundle, allowing fast retrieval of field_info_field() or
+ * field_info_instance() later in the request.
  *
  * @param $entity_type
  *   The entity type for the instance.
@@ -675,9 +483,10 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  *   NULL if the instance does not exist.
  */
 function field_info_instance($entity_type, $field_name, $bundle_name) {
-  $info = _field_info_collate_fields();
-  if (isset($info['instances'][$entity_type][$bundle_name][$field_name])) {
-    return $info['instances'][$entity_type][$bundle_name][$field_name];
+  $cache = _field_info_field_cache();
+  $info = $cache->getBundleInstances($entity_type, $bundle_name);
+  if (isset($info[$field_name])) {
+    return $info[$field_name];
   }
 }
 
@@ -735,11 +544,10 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
  *   The array of pseudo-field elements in the bundle.
  */
 function field_info_extra_fields($entity_type, $bundle, $context) {
-  $info = _field_info_collate_fields();
-  if (isset($info['extra_fields'][$entity_type][$bundle][$context])) {
-    return $info['extra_fields'][$entity_type][$bundle][$context];
-  }
-  return array();
+  $cache = _field_info_field_cache();
+  $info = $cache->getBundleExtraFields($entity_type, $bundle);
+
+  return isset($info[$context]) ? $info[$context] : array();
 }
 
 /**

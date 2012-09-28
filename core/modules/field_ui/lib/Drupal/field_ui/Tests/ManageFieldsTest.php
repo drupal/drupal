@@ -172,7 +172,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
     // Reset the fields info.
-    _field_info_collate_fields_reset();
+    field_info_cache_clear();
     // Assert field settings.
     $field = field_info_field($field_name);
     $this->assertTrue($field['settings']['test_field_setting'] == $string, 'Field settings were found.');
@@ -262,7 +262,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->fieldUIDeleteField($bundle_path1, $this->field_name, $this->field_label, $this->type);
 
     // Reset the fields info.
-    _field_info_collate_fields_reset();
+    field_info_cache_clear();
     // Check that the field instance was deleted.
     $this->assertNull(field_info_instance('node', $this->field_name, $this->type), 'Field instance was deleted.');
     // Check that the field was not deleted
@@ -272,7 +272,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->fieldUIDeleteField($bundle_path2, $this->field_name, $this->field_label, $type_name2);
 
     // Reset the fields info.
-    _field_info_collate_fields_reset();
+    field_info_cache_clear();
     // Check that the field instance was deleted.
     $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), 'Field instance was deleted.');
     // Check that the field was deleted too.

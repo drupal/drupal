@@ -498,6 +498,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       }
 
       // Allow modules to react prior to the enabling of a module.
+      entity_info_cache_clear();
       module_invoke_all('modules_preenable', array($module));
 
       // Enable the module.
