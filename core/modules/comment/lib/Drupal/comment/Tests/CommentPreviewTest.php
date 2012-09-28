@@ -51,13 +51,13 @@ class CommentPreviewTest extends CommentTestBase {
     $this->drupalPost('node/' . $this->node->nid, $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
-    $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
-    $this->assertText($edit['subject'], t('Subject displayed.'));
-    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], t('Comment displayed.'));
+    $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
+    $this->assertText($edit['subject'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], 'Comment displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
-    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
+    $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
 
     // Check that the signature is displaying with the correct text format.
     $this->assertLink($test_signature);
@@ -90,28 +90,28 @@ class CommentPreviewTest extends CommentTestBase {
     $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Preview'));
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
-    $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
-    $this->assertText($edit['subject'], t('Subject displayed.'));
-    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], t('Comment displayed.'));
-    $this->assertText($edit['name'], t('Author displayed.'));
-    $this->assertText($expected_text_date, t('Date displayed.'));
+    $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
+    $this->assertText($edit['subject'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], 'Comment displayed.');
+    $this->assertText($edit['name'], 'Author displayed.');
+    $this->assertText($expected_text_date, 'Date displayed.');
 
     // Check that the subject, comment, author and date fields are displayed with the correct values.
-    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
-    $this->assertFieldByName('name', $edit['name'], t('Author field displayed.'));
-    $this->assertFieldByName('date', $edit['date'], t('Date field displayed.'));
+    $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
+    $this->assertFieldByName('name', $edit['name'], 'Author field displayed.');
+    $this->assertFieldByName('date', $edit['date'], 'Date field displayed.');
 
     // Check that saving a comment produces a success message.
     $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Save'));
-    $this->assertText(t('Your comment has been posted.'), t('Comment posted.'));
+    $this->assertText(t('Your comment has been posted.'), 'Comment posted.');
 
     // Check that the comment fields are correct after loading the saved comment.
     $this->drupalGet('comment/' . $comment->id . '/edit');
-    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
-    $this->assertFieldByName('name', $edit['name'], t('Author field displayed.'));
-    $this->assertFieldByName('date', $expected_form_date, t('Date field displayed.'));
+    $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
+    $this->assertFieldByName('name', $edit['name'], 'Author field displayed.');
+    $this->assertFieldByName('date', $expected_form_date, 'Date field displayed.');
 
     // Submit the form using the displayed values.
     $displayed = array();
@@ -123,10 +123,10 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that the saved comment is still correct.
     $comment_loaded = comment_load($comment->id);
-    $this->assertEqual($comment_loaded->subject, $edit['subject'], t('Subject loaded.'));
-    $this->assertEqual($comment_loaded->comment_body[$langcode][0]['value'], $edit['comment_body[' . $langcode . '][0][value]'], t('Comment body loaded.'));
-    $this->assertEqual($comment_loaded->name, $edit['name'], t('Name loaded.'));
-    $this->assertEqual($comment_loaded->created, $raw_date, t('Date loaded.'));
+    $this->assertEqual($comment_loaded->subject, $edit['subject'], 'Subject loaded.');
+    $this->assertEqual($comment_loaded->comment_body[$langcode][0]['value'], $edit['comment_body[' . $langcode . '][0][value]'], 'Comment body loaded.');
+    $this->assertEqual($comment_loaded->name, $edit['name'], 'Name loaded.');
+    $this->assertEqual($comment_loaded->created, $raw_date, 'Date loaded.');
 
   }
 

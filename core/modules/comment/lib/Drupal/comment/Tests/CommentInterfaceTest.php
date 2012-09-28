@@ -34,7 +34,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text);
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+    $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
@@ -49,12 +49,12 @@ class CommentInterfaceTest extends CommentTestBase {
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+    $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Check comment display.
     $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id);
-    $this->assertText($subject_text, t('Individual comment subject found.'));
-    $this->assertText($comment_text, t('Individual comment body found.'));
+    $this->assertText($subject_text, 'Individual comment subject found.');
+    $this->assertText($comment_text, 'Individual comment body found.');
 
     // Set comments to have subject and preview to optional.
     $this->drupalLogout();
@@ -66,20 +66,20 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalGet('comment/' . $comment->id . '/edit');
     $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => ''));
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue(empty($comment_loaded->name) && $comment_loaded->uid == 0, t('Comment author successfully changed to anonymous.'));
+    $this->assertTrue(empty($comment_loaded->name) && $comment_loaded->uid == 0, 'Comment author successfully changed to anonymous.');
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomName();
     $this->drupalGet('comment/' . $comment->id . '/edit');
     $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $random_name));
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertText($random_name . ' (' . t('not verified') . ')', t('Comment author successfully changed to an unverified user.'));
+    $this->assertText($random_name . ' (' . t('not verified') . ')', 'Comment author successfully changed to an unverified user.');
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id . '/edit');
     $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $this->web_user->name));
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($comment_loaded->name == $this->web_user->name && $comment_loaded->uid == $this->web_user->uid, t('Comment author successfully changed to a registered user.'));
+    $this->assertTrue($comment_loaded->name == $this->web_user->name && $comment_loaded->uid == $this->web_user->uid, 'Comment author successfully changed to a registered user.');
 
     $this->drupalLogout();
 
@@ -87,38 +87,38 @@ class CommentInterfaceTest extends CommentTestBase {
     // subject though field enabled.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
-    $this->assertText($subject_text, t('Individual comment-reply subject found.'));
-    $this->assertText($comment_text, t('Individual comment-reply body found.'));
+    $this->assertText($subject_text, 'Individual comment-reply subject found.');
+    $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
     $reply_loaded = comment_load($reply->id);
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
-    $this->assertEqual($comment->id, $reply_loaded->pid, t('Pid of a reply to a comment is set correctly.'));
-    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.00/', $reply_loaded->thread, t('Thread of reply grows correctly.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
+    $this->assertEqual($comment->id, $reply_loaded->pid, 'Pid of a reply to a comment is set correctly.');
+    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.00/', $reply_loaded->thread, 'Thread of reply grows correctly.');
 
     // Second reply to comment #3 creating comment #4.
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
     $this->assertText($subject_text, t('Individual comment-reply subject found.'));
-    $this->assertText($comment_text, t('Individual comment-reply body found.'));
+    $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $reply_loaded = comment_load($reply->id);
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Second reply found.'));
-    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.01/', $reply_loaded->thread, t('Thread of second reply grows correctly.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
+    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.01/', $reply_loaded->thread, 'Thread of second reply grows correctly.');
 
     // Edit reply.
     $this->drupalGet('comment/' . $reply->id . '/edit');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Modified reply found.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Modified reply found.');
 
     // Correct link count
     $this->drupalGet('node');
-    $this->assertRaw('4 comments', t('Link to the 4 comments exist.'));
+    $this->assertRaw('4 comments', 'Link to the 4 comments exist.');
 
     // Confirm a new comment is posted to the correct page.
     $this->setCommentsPerPage(2);
     $comment_new_page = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
-    $this->assertTrue($this->commentExists($comment_new_page), t('Page one exists. %s'));
+    $this->assertTrue($this->commentExists($comment_new_page), 'Page one exists. %s');
     $this->drupalGet('node/' . $this->node->nid, array('query' => array('page' => 1)));
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Page two exists. %s'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Page two exists. %s');
     $this->setCommentsPerPage(50);
 
     // Attempt to reply to an unpublished comment.
@@ -129,24 +129,24 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Attempt to post to node with comments disabled.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_HIDDEN));
-    $this->assertTrue($this->node, t('Article node created.'));
+    $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertText('This discussion is closed', t('Posting to node with comments disabled'));
-    $this->assertNoField('edit-comment', t('Comment body field found.'));
+    $this->assertText('This discussion is closed', 'Posting to node with comments disabled');
+    $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with read-only comments.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_CLOSED));
-    $this->assertTrue($this->node, t('Article node created.'));
+    $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertText('This discussion is closed', t('Posting to node with comments read-only'));
-    $this->assertNoField('edit-comment', t('Comment body field found.'));
+    $this->assertText('This discussion is closed', 'Posting to node with comments read-only');
+    $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with comments enabled (check field names etc).
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
-    $this->assertTrue($this->node, t('Article node created.'));
+    $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertNoText('This discussion is closed', t('Posting to node with comments enabled'));
-    $this->assertField('edit-comment-body-' . $langcode . '-0-value', t('Comment body field found.'));
+    $this->assertNoText('This discussion is closed', 'Posting to node with comments enabled');
+    $this->assertField('edit-comment-body-' . $langcode . '-0-value', 'Comment body field found.');
 
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();
@@ -155,8 +155,8 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->deleteComment($comment_new_page);
 
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertFalse($this->commentExists($comment), t('Comment not found.'));
-    $this->assertFalse($this->commentExists($reply, TRUE), t('Reply not found.'));
+    $this->assertFalse($this->commentExists($comment), 'Comment not found.');
+    $this->assertFalse($this->commentExists($reply, TRUE), 'Reply not found.');
 
     // Enabled comment form on node page.
     $this->drupalLogin($this->admin_user);
@@ -167,7 +167,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->node->nid);
     $form_comment = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
-    $this->assertTrue($this->commentExists($form_comment), t('Form comment found.'));
+    $this->assertTrue($this->commentExists($form_comment), 'Form comment found.');
 
     // Disable comment form on node page.
     $this->drupalLogout();
@@ -188,7 +188,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertNoLink(t('@count new comments', array('@count' => 0)));
     $this->assertLink(t('Read more'));
     $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
-    $this->assertTrue(count($count) == 1, t('One child found'));
+    $this->assertTrue(count($count) == 1, 'One child found');
 
     // Create a new comment. This helper function may be run with different
     // comment settings so use comment_save() to avoid complex setup.
@@ -212,8 +212,8 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalGet('node');
     $this->assertLink(t('1 new comment'));
     $this->clickLink(t('1 new comment'));
-    $this->assertRaw('<a id="new"></a>', t('Found "new" marker.'));
-    $this->assertTrue($this->xpath('//a[@id=:new]/following-sibling::a[1][@id=:comment_id]', array(':new' => 'new', ':comment_id' => 'comment-1')), t('The "new" anchor is positioned at the right comment.'));
+    $this->assertRaw('<a id="new"></a>', 'Found "new" marker.');
+    $this->assertTrue($this->xpath('//a[@id=:new]/following-sibling::a[1][@id=:comment_id]', array(':new' => 'new', ':comment_id' => 'comment-1')), 'The "new" anchor is positioned at the right comment.');
 
     // Test if "new comment" link is correctly removed.
     $this->drupalGet('node');
@@ -350,10 +350,10 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Checks the initial values of node comment statistics with no comment.
     $node = node_load($this->node->nid);
-    $this->assertEqual($node->last_comment_timestamp, $this->node->created, t('The initial value of node last_comment_timestamp is the node created date.'));
-    $this->assertEqual($node->last_comment_name, NULL, t('The initial value of node last_comment_name is NULL.'));
-    $this->assertEqual($node->last_comment_uid, $this->web_user->uid, t('The initial value of node last_comment_uid is the node uid.'));
-    $this->assertEqual($node->comment_count, 0, t('The initial value of node comment_count is zero.'));
+    $this->assertEqual($node->last_comment_timestamp, $this->node->created, 'The initial value of node last_comment_timestamp is the node created date.');
+    $this->assertEqual($node->last_comment_name, NULL, 'The initial value of node last_comment_name is NULL.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user->uid, 'The initial value of node last_comment_uid is the node uid.');
+    $this->assertEqual($node->comment_count, 0, 'The initial value of node comment_count is zero.');
 
     // Post comment #1 as web_user2.
     $this->drupalLogin($this->web_user2);
@@ -364,9 +364,9 @@ class CommentInterfaceTest extends CommentTestBase {
     // Checks the new values of node comment statistics with comment #1.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, TRUE);
-    $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is NULL.'));
-    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is the comment #1 uid.'));
-    $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is 1.'));
+    $this->assertEqual($node->last_comment_name, NULL, 'The value of node last_comment_name is NULL.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, 'The value of node last_comment_uid is the comment #1 uid.');
+    $this->assertEqual($node->comment_count, 1, 'The value of node comment_count is 1.');
 
     // Prepare for anonymous comment submission (comment approval enabled).
     config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
@@ -389,9 +389,9 @@ class CommentInterfaceTest extends CommentTestBase {
     // ensure they haven't changed since the comment has not been moderated.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, TRUE);
-    $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is still NULL.'));
-    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is still the comment #1 uid.'));
-    $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is still 1.'));
+    $this->assertEqual($node->last_comment_name, NULL, 'The value of node last_comment_name is still NULL.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, 'The value of node last_comment_uid is still the comment #1 uid.');
+    $this->assertEqual($node->comment_count, 1, 'The value of node comment_count is still 1.');
 
     // Prepare for anonymous comment submission (no approval required).
     $this->drupalLogin($this->admin_user);
@@ -410,9 +410,9 @@ class CommentInterfaceTest extends CommentTestBase {
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, TRUE);
-    $this->assertEqual($node->last_comment_name, $comment_loaded->name, t('The value of node last_comment_name is the name of the anonymous user.'));
-    $this->assertEqual($node->last_comment_uid, 0, t('The value of node last_comment_uid is zero.'));
-    $this->assertEqual($node->comment_count, 2, t('The value of node comment_count is 2.'));
+    $this->assertEqual($node->last_comment_name, $comment_loaded->name, 'The value of node last_comment_name is the name of the anonymous user.');
+    $this->assertEqual($node->last_comment_uid, 0, 'The value of node last_comment_uid is zero.');
+    $this->assertEqual($node->comment_count, 2, 'The value of node comment_count is 2.');
   }
 
   /**
@@ -690,10 +690,10 @@ class CommentInterfaceTest extends CommentTestBase {
         if ($path == "node/$nid") {
           $elements = $this->xpath('//form[@id=:id]', array(':id' => 'comment-form'));
           if ($info['form'] == COMMENT_FORM_BELOW) {
-            $this->assertTrue(count($elements), t('Comment form found below.'));
+            $this->assertTrue(count($elements), 'Comment form found below.');
           }
           else {
-            $this->assertFalse(count($elements), t('Comment form not found below.'));
+            $this->assertFalse(count($elements), 'Comment form not found below.');
           }
         }
       }

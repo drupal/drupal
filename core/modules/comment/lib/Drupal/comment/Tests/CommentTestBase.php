@@ -64,7 +64,7 @@ abstract class CommentTestBase extends WebTestBase {
       $edit['subject'] = $subject;
     }
     else {
-      $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
+      $this->assertNoFieldByName('subject', '', 'Subject field not found.');
     }
 
     if ($contact !== NULL && is_array($contact)) {
@@ -73,19 +73,19 @@ abstract class CommentTestBase extends WebTestBase {
     switch ($preview_mode) {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
-        $this->assertNoFieldByName('op', t('Save'), t('Save button not found.'));
+        $this->assertNoFieldByName('op', t('Save'), 'Save button not found.');
         $this->drupalPost(NULL, $edit, t('Preview'));
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
-        $this->assertFieldByName('op', t('Preview'), t('Preview button found.'));
-        $this->assertFieldByName('op', t('Save'), t('Save button found.'));
+        $this->assertFieldByName('op', t('Preview'), 'Preview button found.');
+        $this->assertFieldByName('op', t('Save'), 'Save button found.');
         $this->drupalPost(NULL, $edit, t('Save'));
         break;
 
       case DRUPAL_DISABLED:
-        $this->assertNoFieldByName('op', t('Preview'), t('Preview button not found.'));
-        $this->assertFieldByName('op', t('Save'), t('Save button found.'));
+        $this->assertNoFieldByName('op', t('Preview'), 'Preview button not found.');
+        $this->assertFieldByName('op', t('Save'), 'Save button found.');
         $this->drupalPost(NULL, $edit, t('Save'));
         break;
     }
@@ -99,7 +99,7 @@ abstract class CommentTestBase extends WebTestBase {
         $this->assertText($subject, 'Comment subject posted.');
       }
       $this->assertText($comment, 'Comment body posted.');
-      $this->assertTrue((!empty($match) && !empty($match[1])), t('Comment id found.'));
+      $this->assertTrue((!empty($match) && !empty($match[1])), 'Comment id found.');
     }
 
     if (isset($match[1])) {
@@ -142,7 +142,7 @@ abstract class CommentTestBase extends WebTestBase {
    */
   function deleteComment(Comment $comment) {
     $this->drupalPost('comment/' . $comment->id . '/delete', array(), t('Delete'));
-    $this->assertText(t('The comment and all its replies have been deleted.'), t('Comment deleted.'));
+    $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
 
   /**
@@ -255,10 +255,10 @@ abstract class CommentTestBase extends WebTestBase {
 
     if ($operation == 'delete') {
       $this->drupalPost(NULL, array(), t('Delete comments'));
-      $this->assertRaw(format_plural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), t('Operation "' . $operation . '" was performed on comment.'));
+      $this->assertRaw(format_plural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation "@operation" was performed on comment.', array('@operation' => $operation)));
     }
     else {
-      $this->assertText(t('The update has been performed.'), t('Operation "' . $operation . '" was performed on comment.'));
+      $this->assertText(t('The update has been performed.'), format_string('Operation "@operation" was performed on comment.', array('@operation' => $operation)));
     }
   }
 

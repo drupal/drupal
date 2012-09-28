@@ -31,25 +31,25 @@ class CommentActionsTest extends CommentTestBase {
 
     // Unpublish a comment (direct form: doesn't actually save the comment).
     comment_unpublish_action($comment);
-    $this->assertEqual($comment->status, COMMENT_NOT_PUBLISHED, t('Comment was unpublished'));
-    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual($comment->status, COMMENT_NOT_PUBLISHED, 'Comment was unpublished');
+    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), 'Found watchdog message');
     $this->clearWatchdog();
 
     // Unpublish a comment (indirect form: modify the comment in the database).
     comment_unpublish_action(NULL, array('cid' => $comment->cid));
-    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_NOT_PUBLISHED, t('Comment was unpublished'));
-    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_NOT_PUBLISHED, 'Comment was unpublished');
+    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), 'Found watchdog message');
 
     // Publish a comment (direct form: doesn't actually save the comment).
     comment_publish_action($comment);
-    $this->assertEqual($comment->status, COMMENT_PUBLISHED, t('Comment was published'));
-    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual($comment->status, COMMENT_PUBLISHED, 'Comment was published');
+    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
     $this->clearWatchdog();
 
     // Publish a comment (indirect form: modify the comment in the database).
     comment_publish_action(NULL, array('cid' => $comment->cid));
-    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_PUBLISHED, t('Comment was published'));
-    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_PUBLISHED, 'Comment was published');
+    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
     $this->clearWatchdog();
   }
 
@@ -65,7 +65,7 @@ class CommentActionsTest extends CommentTestBase {
    */
   function assertWatchdogMessage($watchdog_message, $variables, $message) {
     $status = (bool) db_query_range("SELECT 1 FROM {watchdog} WHERE message = :message AND variables = :variables", 0, 1, array(':message' => $watchdog_message, ':variables' => serialize($variables)))->fetchField();
-    return $this->assert($status, $message);
+    return $this->assert($status, format_string('@message', array('@message'=> $message)));
   }
 
   /**

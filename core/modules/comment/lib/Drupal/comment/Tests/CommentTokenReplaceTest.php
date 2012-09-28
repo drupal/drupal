@@ -69,11 +69,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:author:name]'] = check_plain($this->admin_user->name);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Sanitized comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Sanitized comment token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -89,7 +89,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, t('Unsanitized comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
 
     // Load node so comment_count gets computed.
@@ -102,7 +102,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Node comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Node comment token %token replaced.', array('%token' => $input)));
     }
   }
 }

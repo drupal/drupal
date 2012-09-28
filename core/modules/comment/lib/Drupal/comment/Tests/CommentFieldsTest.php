@@ -30,7 +30,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Check that the 'comment_body' field is present on all comment bundles.
     $instances = field_info_instances('comment');
     foreach (node_type_get_types() as $type_name => $info) {
-      $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), t('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+      $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
       // Delete the instance along the way.
       field_delete_instance($instances['comment_node_' . $type_name]['comment_body']);
@@ -38,7 +38,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Check that the 'comment_body' field is deleted.
     $field = field_info_field('comment_body');
-    $this->assertTrue(empty($field), t('The comment_body field was deleted'));
+    $this->assertTrue(empty($field), 'The comment_body field was deleted');
 
     // Create a new content type.
     $type_name = 'test_node_type_2';
@@ -47,9 +47,9 @@ class CommentFieldsTest extends CommentTestBase {
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
     $field = field_info_field('comment_body');
-    $this->assertTrue($field, t('The comment_body field exists'));
+    $this->assertTrue($field, 'The comment_body field exists');
     $instances = field_info_instances('comment');
-    $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), t('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+    $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
   }
 
   /**
@@ -65,7 +65,7 @@ class CommentFieldsTest extends CommentTestBase {
     $edit['modules[Core][comment][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->resetAll();
-    $this->assertFalse(module_exists('comment'), t('Comment module disabled.'));
+    $this->assertFalse(module_exists('comment'), 'Comment module disabled.');
 
     // Enable core content type modules (book, and poll).
     $edit = array();
@@ -78,7 +78,7 @@ class CommentFieldsTest extends CommentTestBase {
     $edit['modules[Core][comment][enable]'] = 'comment';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->resetAll();
-    $this->assertTrue(module_exists('comment'), t('Comment module enabled.'));
+    $this->assertTrue(module_exists('comment'), 'Comment module enabled.');
 
     // Create nodes of each type.
     $book_node = $this->drupalCreateNode(array('type' => 'book'));
