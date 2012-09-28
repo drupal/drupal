@@ -140,8 +140,8 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $this->addIdentity($identity);
     $response = variable_get('openid_test_hook_openid_response_response');
     $account = variable_get('openid_test_hook_openid_response_account');
-    $this->assertEqual($response['openid.claimed_id'], $identity, t('hook_openid_response() was invoked.'));
-    $this->assertEqual($account->uid, $this->web_user->uid, t('Proper user object passed to hook_openid_response().'));
+    $this->assertEqual($response['openid.claimed_id'], $identity, 'hook_openid_response() was invoked.');
+    $this->assertEqual($account->uid, $this->web_user->uid, 'Proper user object passed to hook_openid_response().');
 
     $this->drupalLogout();
 
@@ -149,11 +149,11 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     variable_del('openid_test_hook_openid_response_response');
     variable_del('openid_test_hook_openid_response_account');
     $this->submitLoginForm($identity);
-    $this->assertLink(t('Log out'), 0, t('User was logged in.'));
+    $this->assertLink(t('Log out'), 0, 'User was logged in.');
     $response = variable_get('openid_test_hook_openid_response_response');
     $account = variable_get('openid_test_hook_openid_response_account');
-    $this->assertEqual($response['openid.claimed_id'], $identity, t('hook_openid_response() was invoked.'));
-    $this->assertEqual($account->uid, $this->web_user->uid, t('Proper user object passed to hook_openid_response().'));
+    $this->assertEqual($response['openid.claimed_id'], $identity, 'hook_openid_response() was invoked.');
+    $this->assertEqual($account->uid, $this->web_user->uid, 'Proper user object passed to hook_openid_response().');
 
     $this->drupalLogout();
 
@@ -162,12 +162,12 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $this->drupalPost('user/login', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+    $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
-    $this->assertLink(t('Log out'), 0, t('User was logged in.'));
+    $this->assertLink(t('Log out'), 0, 'User was logged in.');
 
     // Verify user was redirected away from user/login to an accessible page.
     $this->assertResponse(200);
@@ -179,9 +179,9 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     variable_set('openid_test_identity', $new_identity);
     variable_set('openid_test_request_alter', array('checkid_setup' => array('openid.identity' => $new_identity)));
     $this->submitLoginForm($identity);
-    $this->assertLink(t('Log out'), 0, t('User was logged in.'));
+    $this->assertLink(t('Log out'), 0, 'User was logged in.');
     $response = variable_get('openid_test_hook_openid_response_response');
-    $this->assertEqual($response['openid.identity'], $new_identity, t('hook_openid_request_alter() were invoked.'));
+    $this->assertEqual($response['openid.identity'], $new_identity, 'hook_openid_request_alter() were invoked.');
   }
 
   /**
@@ -204,12 +204,12 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $this->drupalPost('user/login', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+    $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
-    $this->assertLink(t('Log out'), 0, t('User was logged in.'));
+    $this->assertLink(t('Log out'), 0, 'User was logged in.');
 
     // Verify user was redirected away from user/login to an accessible page.
     $this->assertText(t('Operating in maintenance mode.'));
@@ -225,14 +225,14 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     // Add identity to user's profile.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->addIdentity($identity);
-    $this->assertText($identity, t('Identity appears in list.'));
+    $this->assertText($identity, 'Identity appears in list.');
 
     // Delete the newly added identity.
     $this->clickLink(t('Delete'));
     $this->drupalPost(NULL, array(), t('Confirm'));
 
-    $this->assertText(t('OpenID deleted.'), t('Identity deleted'));
-    $this->assertNoText($identity, t('Identity no longer appears in list.'));
+    $this->assertText(t('OpenID deleted.'), 'Identity deleted');
+    $this->assertNoText($identity, 'Identity no longer appears in list.');
   }
 
   /**
@@ -256,11 +256,11 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
       'accounts[' . $this->web_user->uid . ']' => TRUE,
     );
     $this->drupalPost('admin/people', $edit, t('Update'));
-    $this->assertRaw('The update has been performed.', t('Account was blocked.'));
+    $this->assertRaw('The update has been performed.', 'Account was blocked.');
     $this->drupalLogout();
 
     $this->submitLoginForm($identity);
-    $this->assertRaw(t('The username %name has not been activated or is blocked.', array('%name' => $this->web_user->name)), t('User login was blocked.'));
+    $this->assertRaw(t('The username %name has not been activated or is blocked.', array('%name' => $this->web_user->name)), 'User login was blocked.');
   }
 
   /**
@@ -284,14 +284,14 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $this->drupalPost('user/' . $this->web_user->uid . '/openid', $edit, t('Add an OpenID'));
 
     if ($claimed_id === FALSE) {
-      $this->assertRaw(t('Sorry, that is not a valid OpenID. Ensure you have spelled your ID correctly.'), t('Invalid identity was rejected.'));
+      $this->assertRaw(t('Sorry, that is not a valid OpenID. Ensure you have spelled your ID correctly.'), 'Invalid identity was rejected.');
       return;
     }
 
     // OpenID 1 used a HTTP redirect, OpenID 2 uses a HTML form that is submitted automatically using JavaScript.
     if ($version == 2) {
       // Check we are on the OpenID redirect form.
-      $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+      $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
       // Submit form to the OpenID Provider Endpoint.
       $this->drupalPost(NULL, array(), t('Send'));
@@ -300,7 +300,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     if (!isset($claimed_id)) {
       $claimed_id = $identity;
     }
-    $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), t('Identity %identity was added.', array('%identity' => $identity)));
+    $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), format_string('Identity %identity was added.', array('%identity' => $identity)));
   }
 
   /**
@@ -373,8 +373,8 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     variable_set('openid_test_response', $response);
     $this->submitLoginForm($identity);
     $this->assertNoRaw('OpenID login failed.');
-    $this->assertFieldByName('name', '', t('No username was supplied by provider.'));
-    $this->assertFieldByName('mail', '', t('No e-mail address was supplied by provider.'));
+    $this->assertFieldByName('name', '', 'No username was supplied by provider.');
+    $this->assertFieldByName('mail', '', 'No e-mail address was supplied by provider.');
 
     // Check that unsigned SREG fields are ignored.
     $response = array(
@@ -385,7 +385,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     variable_set('openid_test_response', $response);
     $this->submitLoginForm($identity);
     $this->assertNoRaw('OpenID login failed.');
-    $this->assertFieldByName('name', 'john', t('Username was supplied by provider.'));
-    $this->assertFieldByName('mail', '', t('E-mail address supplied by provider was ignored.'));
+    $this->assertFieldByName('name', 'john', 'Username was supplied by provider.');
+    $this->assertFieldByName('mail', '', 'E-mail address supplied by provider was ignored.');
   }
 }

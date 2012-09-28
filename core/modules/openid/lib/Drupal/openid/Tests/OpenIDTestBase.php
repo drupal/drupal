@@ -56,7 +56,7 @@ abstract class OpenIDTestBase extends WebTestBase {
     $this->drupalPost('', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+    $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
