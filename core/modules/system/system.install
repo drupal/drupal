@@ -1971,10 +1971,71 @@ function system_update_8019() {
   db_drop_table('registry_file');
 }
 
+/**
+ * Conditionally enable the new Ban module.
+ */
+function system_update_8020() {
+  $blocked_ips_exists = db_query_range('SELECT 1 FROM {blocked_ips}', 0, 1)->fetchField();
+  if ($blocked_ips_exists) {
+    // Rename the permission name.
+    db_update('role_permission')
+      ->fields(array(
+        'permission' => 'ban IP addresses',
+        'module' => 'ban',
+      ))
+      ->condition('permission', 'block IP addresses')
+      ->execute();
+    // Rename {blocked_ips} table into {ban_ip}.
+    db_rename_table('blocked_ips', 'ban_ip');
+    // Rename all references to the action callback.
+    db_update('actions')
+      ->fields(array('callback' => 'ban_ip_action'))
+      ->condition('callback', 'system_block_ip_action')
+      ->execute();
+    // Rename the action's aid.
+    db_update('actions')
+      ->fields(array('aid' => 'ban_ip_action'))
+      ->condition('aid', 'system_block_ip_action')
+      ->execute();
+    // Enable the new Ban module.
+    update_module_enable(array('ban'));
+  }
+  else {
+    // Drop old table.
+    db_drop_table('blocked_ips');
+  }
+}
+
+/**
+ * Enable the Actions module.
+ */
+function system_update_8021() {
+  // Enable the module without re-installing the schema.
+  update_module_enable(array('action'));
+  // Rename former System module actions.
+  $map = array(
+    'system_message_action' => 'action_message_action',
+    'system_send_email_action' => 'action_send_email_action',
+    'system_goto_action' => 'action_goto_action',
+  );
+  foreach ($map as $old => $new) {
+    // Rename all references to the action callback.
+    db_update('actions')
+      ->fields(array('callback' => $new))
+      ->condition('callback', $old)
+      ->execute();
+    // Rename the action's aid.
+    db_update('actions')
+      ->fields(array('aid' => $new))
+      ->condition('aid', $old)
+      ->execute();
+  }
+}
+
 /*
  * Create the new routing table.
  */
-function system_update_8020() {
+function system_update_8022() {
 
   $tables['router'] = array(
     'description' => 'Maps paths to various callbacks (access, page and title)',
@@ -2038,67 +2099,6 @@ function system_update_8020() {
   $schema->dropTable('router');
 
   $schema->createTable('router', $tables['router']);
-}
-
-/**
- * Conditionally enable the new Ban module.
- */
-function system_update_8020() {
-  $blocked_ips_exists = db_query_range('SELECT 1 FROM {blocked_ips}', 0, 1)->fetchField();
-  if ($blocked_ips_exists) {
-    // Rename the permission name.
-    db_update('role_permission')
-      ->fields(array(
-        'permission' => 'ban IP addresses',
-        'module' => 'ban',
-      ))
-      ->condition('permission', 'block IP addresses')
-      ->execute();
-    // Rename {blocked_ips} table into {ban_ip}.
-    db_rename_table('blocked_ips', 'ban_ip');
-    // Rename all references to the action callback.
-    db_update('actions')
-      ->fields(array('callback' => 'ban_ip_action'))
-      ->condition('callback', 'system_block_ip_action')
-      ->execute();
-    // Rename the action's aid.
-    db_update('actions')
-      ->fields(array('aid' => 'ban_ip_action'))
-      ->condition('aid', 'system_block_ip_action')
-      ->execute();
-    // Enable the new Ban module.
-    update_module_enable(array('ban'));
-  }
-  else {
-    // Drop old table.
-    db_drop_table('blocked_ips');
-  }
-}
-
-/**
- * Enable the Actions module.
- */
-function system_update_8021() {
-  // Enable the module without re-installing the schema.
-  update_module_enable(array('action'));
-  // Rename former System module actions.
-  $map = array(
-    'system_message_action' => 'action_message_action',
-    'system_send_email_action' => 'action_send_email_action',
-    'system_goto_action' => 'action_goto_action',
-  );
-  foreach ($map as $old => $new) {
-    // Rename all references to the action callback.
-    db_update('actions')
-      ->fields(array('callback' => $new))
-      ->condition('callback', $old)
-      ->execute();
-    // Rename the action's aid.
-    db_update('actions')
-      ->fields(array('aid' => $new))
-      ->condition('aid', $old)
-      ->execute();
-  }
 }
 
 /**
