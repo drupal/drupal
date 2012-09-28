@@ -74,8 +74,8 @@ class MultiFormTest extends AjaxTestBase {
     // each form.
     $this->drupalGet('form-test/two-instances-of-same-form');
     foreach ($field_xpaths as $form_html_id => $field_xpath) {
-      $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == 1, t('Found the correct number of field items on the initial page.'));
-      $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button on the initial page.'));
+      $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == 1, 'Found the correct number of field items on the initial page.');
+      $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, 'Found the "add more" button on the initial page.');
     }
     $this->assertNoDuplicateIds(t('Initial page contains unique IDs'), 'Other');
 
@@ -84,8 +84,8 @@ class MultiFormTest extends AjaxTestBase {
     foreach ($field_xpaths as $form_html_id => $field_xpath) {
       for ($i = 0; $i < 2; $i++) {
         $this->drupalPostAJAX(NULL, array(), array($button_name => $button_value), 'system/ajax', array(), array(), $form_html_id);
-        $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == $i+2, t('Found the correct number of field items after an AJAX submission.'));
-        $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button after an AJAX submission.'));
+        $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == $i+2, 'Found the correct number of field items after an AJAX submission.');
+        $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, 'Found the "add more" button after an AJAX submission.');
         $this->assertNoDuplicateIds(t('Updated page contains unique IDs'), 'Other');
       }
     }

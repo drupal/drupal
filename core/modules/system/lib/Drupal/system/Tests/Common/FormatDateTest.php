@@ -58,7 +58,7 @@ class FormatDateTest extends WebTestBase {
     // Add new date format.
     $admin_date_format = 'j M y';
     $edit = array('date_format' => $admin_date_format);
-    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, 'Add format');
 
     // Add new date type.
     $edit = array(
@@ -66,11 +66,11 @@ class FormatDateTest extends WebTestBase {
       'machine_name' => 'example_style',
       'date_format' => $admin_date_format,
     );
-    $this->drupalPost('admin/config/regional/date-time/types/add', $edit, t('Add date type'));
+    $this->drupalPost('admin/config/regional/date-time/types/add', $edit, 'Add date type');
 
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
-    $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07', t('Test format_date() using an admin-defined date type.'));
-    $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'medium'), t('Test format_date() defaulting to medium when $type not found.'));
+    $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07', 'Test format_date() using an admin-defined date type.');
+    $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'medium'), 'Test format_date() defaulting to medium when $type not found.');
   }
 
   /**
@@ -82,12 +82,12 @@ class FormatDateTest extends WebTestBase {
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     $timestamp = strtotime('2007-03-26T00:00:00+00:00');
-    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', t('Test all parameters.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'domingo, 25-Mar-07 17:00:00 PDT', t('Test translated format.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', '\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'l, 25-Mar-07 17:00:00 PDT', t('Test an escaped format string.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', '\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), '\\domingo, 25-Mar-07 17:00:00 PDT', t('Test format containing backslash character.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', '\\\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), '\\l, 25-Mar-07 17:00:00 PDT', t('Test format containing backslash followed by escaped format string.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London', 'en'), 'Monday, 26-Mar-07 01:00:00 BST', t('Test a different time zone.'));
+    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', 'Test all parameters.');
+    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'domingo, 25-Mar-07 17:00:00 PDT', 'Test translated format.');
+    $this->assertIdentical(format_date($timestamp, 'custom', '\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'l, 25-Mar-07 17:00:00 PDT', 'Test an escaped format string.');
+    $this->assertIdentical(format_date($timestamp, 'custom', '\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), '\\domingo, 25-Mar-07 17:00:00 PDT', 'Test format containing backslash character.');
+    $this->assertIdentical(format_date($timestamp, 'custom', '\\\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), '\\l, 25-Mar-07 17:00:00 PDT', 'Test format containing backslash followed by escaped format string.');
+    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London', 'en'), 'Monday, 26-Mar-07 01:00:00 BST', 'Test a different time zone.');
 
     // Create an admin user and add Spanish language.
     $admin_user = $this->drupalCreateUser(array('administer languages'));
@@ -120,21 +120,21 @@ class FormatDateTest extends WebTestBase {
     // Simulate a Drupal bootstrap with the logged-in user.
     date_default_timezone_set(drupal_get_user_timezone());
 
-    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', t('Test a different language.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London'), 'Monday, 26-Mar-07 01:00:00 BST', t('Test a different time zone.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T'), 'domingo, 25-Mar-07 17:00:00 PDT', t('Test custom date format.'));
-    $this->assertIdentical(format_date($timestamp, 'long'), 'domingo, 25. marzo 2007 - 17:00', t('Test long date format.'));
-    $this->assertIdentical(format_date($timestamp, 'medium'), '25. marzo 2007 - 17:00', t('Test medium date format.'));
-    $this->assertIdentical(format_date($timestamp, 'short'), '2007 Mar 25 - 5:00pm', t('Test short date format.'));
-    $this->assertIdentical(format_date($timestamp), '25. marzo 2007 - 17:00', t('Test default date format.'));
+    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', 'Test a different language.');
+    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London'), 'Monday, 26-Mar-07 01:00:00 BST', 'Test a different time zone.');
+    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T'), 'domingo, 25-Mar-07 17:00:00 PDT', 'Test custom date format.');
+    $this->assertIdentical(format_date($timestamp, 'long'), 'domingo, 25. marzo 2007 - 17:00', 'Test long date format.');
+    $this->assertIdentical(format_date($timestamp, 'medium'), '25. marzo 2007 - 17:00', 'Test medium date format.');
+    $this->assertIdentical(format_date($timestamp, 'short'), '2007 Mar 25 - 5:00pm', 'Test short date format.');
+    $this->assertIdentical(format_date($timestamp), '25. marzo 2007 - 17:00', 'Test default date format.');
     // Test HTML time element formats.
-    $this->assertIdentical(format_date($timestamp, 'html_datetime'), '2007-03-25T17:00:00-0700', t('Test html_datetime date format.'));
-    $this->assertIdentical(format_date($timestamp, 'html_date'), '2007-03-25', t('Test html_date date format.'));
-    $this->assertIdentical(format_date($timestamp, 'html_time'), '17:00:00', t('Test html_time date format.'));
-    $this->assertIdentical(format_date($timestamp, 'html_yearless_date'), '03-25', t('Test html_yearless_date date format.'));
-    $this->assertIdentical(format_date($timestamp, 'html_week'), '2007-W12', t('Test html_week date format.'));
-    $this->assertIdentical(format_date($timestamp, 'html_month'), '2007-03', t('Test html_month date format.'));
-    $this->assertIdentical(format_date($timestamp, 'html_year'), '2007', t('Test html_year date format.'));
+    $this->assertIdentical(format_date($timestamp, 'html_datetime'), '2007-03-25T17:00:00-0700', 'Test html_datetime date format.');
+    $this->assertIdentical(format_date($timestamp, 'html_date'), '2007-03-25', 'Test html_date date format.');
+    $this->assertIdentical(format_date($timestamp, 'html_time'), '17:00:00', 'Test html_time date format.');
+    $this->assertIdentical(format_date($timestamp, 'html_yearless_date'), '03-25', 'Test html_yearless_date date format.');
+    $this->assertIdentical(format_date($timestamp, 'html_week'), '2007-W12', 'Test html_week date format.');
+    $this->assertIdentical(format_date($timestamp, 'html_month'), '2007-03', 'Test html_month date format.');
+    $this->assertIdentical(format_date($timestamp, 'html_year'), '2007', 'Test html_year date format.');
 
     // Restore the original user and language, and enable session saving.
     $user = $real_user;

@@ -51,7 +51,7 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($valid_absolute_urls as $url) {
         $test_url = $scheme . '://' . $url;
         $valid_url = valid_url($test_url, TRUE);
-        $this->assertTrue($valid_url, t('@url is a valid URL.', array('@url' => $test_url)));
+        $this->assertTrue($valid_url, format_string('@url is a valid URL.', array('@url' => $test_url)));
       }
     }
   }
@@ -71,7 +71,7 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($invalid_ablosule_urls as $url) {
         $test_url = $scheme . '://' . $url;
         $valid_url = valid_url($test_url, TRUE);
-        $this->assertFalse($valid_url, t('@url is NOT a valid URL.', array('@url' => $test_url)));
+        $this->assertFalse($valid_url, format_string('@url is NOT a valid URL.', array('@url' => $test_url)));
       }
     }
   }
@@ -92,7 +92,7 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($valid_relative_urls as $url) {
         $test_url = $front . $url;
         $valid_url = valid_url($test_url);
-        $this->assertTrue($valid_url, t('@url is a valid URL.', array('@url' => $test_url)));
+        $this->assertTrue($valid_url, format_string('@url is a valid URL.', array('@url' => $test_url)));
       }
     }
   }
@@ -111,7 +111,7 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($invalid_relative_urls as $url) {
         $test_url = $front . $url;
         $valid_url = valid_url($test_url);
-        $this->assertFALSE($valid_url, t('@url is NOT a valid URL.', array('@url' => $test_url)));
+        $this->assertFALSE($valid_url, format_string('@url is NOT a valid URL.', array('@url' => $test_url)));
       }
     }
   }

@@ -94,11 +94,11 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
    * Assert that a collected error matches what we are expecting.
    */
   function assertError($error, $group, $function, $file, $message = NULL) {
-    $this->assertEqual($error['group'], $group, t("Group was %group", array('%group' => $group)));
-    $this->assertEqual($error['caller']['function'], $function, t("Function was %function", array('%function' => $function)));
-    $this->assertEqual(drupal_basename($error['caller']['file']), $file, t("File was %file", array('%file' => $file)));
+    $this->assertEqual($error['group'], $group, format_string("Group was %group", array('%group' => $group)));
+    $this->assertEqual($error['caller']['function'], $function, format_string("Function was %function", array('%function' => $function)));
+    $this->assertEqual(drupal_basename($error['caller']['file']), $file, format_string("File was %file", array('%file' => $file)));
     if (isset($message)) {
-      $this->assertEqual($error['message'], $message, t("Message was %message", array('%message' => $message)));
+      $this->assertEqual($error['message'], $message, format_string("Message was %message", array('%message' => $message)));
     }
   }
 }

@@ -43,20 +43,20 @@ class CascadingStylesheetsUnitTest extends UnitTestBase {
     foreach ($testfiles as $file) {
       $expected = file_get_contents("$path/$file.unoptimized.css");
       $unoptimized_output = drupal_load_stylesheet("$path/$file.unoptimized.css", FALSE);
-      $this->assertEqual($unoptimized_output, $expected, t('Unoptimized CSS file has expected contents (@file)', array('@file' => $file)));
+      $this->assertEqual($unoptimized_output, $expected, format_string('Unoptimized CSS file has expected contents (@file)', array('@file' => $file)));
 
       $expected = file_get_contents("$path/$file.optimized.css");
       $optimized_output = drupal_load_stylesheet("$path/$file", TRUE);
-      $this->assertEqual($optimized_output, $expected, t('Optimized CSS file has expected contents (@file)', array('@file' => $file)));
+      $this->assertEqual($optimized_output, $expected, format_string('Optimized CSS file has expected contents (@file)', array('@file' => $file)));
 
       // Repeat the tests by accessing the stylesheets by URL.
       $expected = file_get_contents("$path/$file.unoptimized.css");
       $unoptimized_output_url = drupal_load_stylesheet($GLOBALS['base_url'] . "/$path/$file.unoptimized.css", FALSE);
-      $this->assertEqual($unoptimized_output, $expected, t('Unoptimized CSS file (loaded from an URL) has expected contents (@file)', array('@file' => $file)));
+      $this->assertEqual($unoptimized_output, $expected, format_string('Unoptimized CSS file (loaded from an URL) has expected contents (@file)', array('@file' => $file)));
 
       $expected = file_get_contents("$path/$file.optimized.css");
       $optimized_output = drupal_load_stylesheet($GLOBALS['base_url'] . "/$path/$file", TRUE);
-      $this->assertEqual($optimized_output, $expected, t('Optimized CSS file (loaded from an URL) has expected contents (@file)', array('@file' => $file)));
+      $this->assertEqual($optimized_output, $expected, format_string('Optimized CSS file (loaded from an URL) has expected contents (@file)', array('@file' => $file)));
     }
   }
 }

@@ -39,7 +39,7 @@ class CascadingStylesheetsTest extends WebTestBase {
    * Check default stylesheets as empty.
    */
   function testDefault() {
-    $this->assertEqual(array(), drupal_add_css(), t('Default CSS is empty.'));
+    $this->assertEqual(array(), drupal_add_css(), 'Default CSS is empty.');
   }
 
   /**
@@ -69,7 +69,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   function testAddFile() {
     $path = drupal_get_path('module', 'simpletest') . '/simpletest.css';
     $css = drupal_add_css($path);
-    $this->assertEqual($css[$path]['data'], $path, t('Adding a CSS file caches it properly.'));
+    $this->assertEqual($css[$path]['data'], $path, 'Adding a CSS file caches it properly.');
   }
 
   /**
@@ -78,7 +78,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   function testAddExternal() {
     $path = 'http://example.com/style.css';
     $css = drupal_add_css($path, 'external');
-    $this->assertEqual($css[$path]['type'], 'external', t('Adding an external CSS file caches it properly.'));
+    $this->assertEqual($css[$path]['type'], 'external', 'Adding an external CSS file caches it properly.');
   }
 
   /**
@@ -86,7 +86,7 @@ class CascadingStylesheetsTest extends WebTestBase {
    */
   function testReset() {
     drupal_static_reset('drupal_add_css');
-    $this->assertEqual(array(), drupal_add_css(), t('Resetting the CSS empties the cache.'));
+    $this->assertEqual(array(), drupal_add_css(), 'Resetting the CSS empties the cache.');
   }
 
   /**
@@ -96,11 +96,11 @@ class CascadingStylesheetsTest extends WebTestBase {
     $css = drupal_get_path('module', 'simpletest') . '/simpletest.css';
     drupal_add_css($css);
     $styles = drupal_get_css();
-    $this->assertTrue(strpos($styles, $css) > 0, t('Rendered CSS includes the added stylesheet.'));
+    $this->assertTrue(strpos($styles, $css) > 0, 'Rendered CSS includes the added stylesheet.');
     // Verify that newlines are properly added inside style tags.
     $query_string = variable_get('css_js_query_string', '0');
     $css_processed = "<style media=\"all\">\n@import url(\"" . check_plain(file_create_url($css)) . "?" . $query_string ."\");\n</style>";
-    $this->assertEqual(trim($styles), $css_processed, t('Rendered CSS includes newlines inside style tags for JavaScript use.'));
+    $this->assertEqual(trim($styles), $css_processed, 'Rendered CSS includes newlines inside style tags for JavaScript use.');
   }
 
   /**
@@ -112,7 +112,7 @@ class CascadingStylesheetsTest extends WebTestBase {
     $styles = drupal_get_css();
     // Stylesheet URL may be the href of a LINK tag or in an @import statement
     // of a STYLE tag.
-    $this->assertTrue(strpos($styles, 'href="' . $css) > 0 || strpos($styles, '@import url("' . $css . '")') > 0, t('Rendering an external CSS file.'));
+    $this->assertTrue(strpos($styles, 'href="' . $css) > 0 || strpos($styles, '@import url("' . $css . '")') > 0, 'Rendering an external CSS file.');
   }
 
   /**
@@ -123,7 +123,7 @@ class CascadingStylesheetsTest extends WebTestBase {
     $css_preprocessed = '<style media="all">' . "\n<!--/*--><![CDATA[/*><!--*/\n" . drupal_load_stylesheet_content($css, TRUE) . "\n/*]]>*/-->\n" . '</style>';
     drupal_add_css($css, array('type' => 'inline'));
     $styles = drupal_get_css();
-    $this->assertEqual(trim($styles), $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
+    $this->assertEqual(trim($styles), $css_preprocessed, 'Rendering preprocessed inline CSS adds it to the page.');
   }
 
   /**
@@ -133,7 +133,7 @@ class CascadingStylesheetsTest extends WebTestBase {
     $css = 'body { padding: 0px; }';
     drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
     $styles = drupal_get_css();
-    $this->assertTrue(strpos($styles, $css) > 0, t('Rendering non-preprocessed inline CSS adds it to the page.'));
+    $this->assertTrue(strpos($styles, $css) > 0, 'Rendering non-preprocessed inline CSS adds it to the page.');
   }
 
   /**
@@ -168,7 +168,7 @@ class CascadingStylesheetsTest extends WebTestBase {
 
     // Fetch the page.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw($expected, t('Inline stylesheets appear in the full page rendering.'));
+    $this->assertRaw($expected, 'Inline stylesheets appear in the full page rendering.');
   }
 
   /**
@@ -199,7 +199,7 @@ class CascadingStylesheetsTest extends WebTestBase {
       $result = array();
     }
 
-    $this->assertIdentical($result, $expected, t('The CSS files are in the expected order.'));
+    $this->assertIdentical($result, $expected, 'The CSS files are in the expected order.');
   }
 
   /**
@@ -213,16 +213,16 @@ class CascadingStylesheetsTest extends WebTestBase {
 
     // The dummy stylesheet should be the only one included.
     $styles = drupal_get_css();
-    $this->assert(strpos($styles, $system . '/tests/system.base.css') !== FALSE, t('The overriding CSS file is output.'));
-    $this->assert(strpos($styles, $system . '/system.base.css') === FALSE, t('The overridden CSS file is not output.'));
+    $this->assert(strpos($styles, $system . '/tests/system.base.css') !== FALSE, 'The overriding CSS file is output.');
+    $this->assert(strpos($styles, $system . '/system.base.css') === FALSE, 'The overridden CSS file is not output.');
 
     drupal_add_css($system . '/tests/system.base.css');
     drupal_add_css($system . '/system.base.css');
 
     // The standard stylesheet should be the only one included.
     $styles = drupal_get_css();
-    $this->assert(strpos($styles, $system . '/system.base.css') !== FALSE, t('The overriding CSS file is output.'));
-    $this->assert(strpos($styles, $system . '/tests/system.base.css') === FALSE, t('The overridden CSS file is not output.'));
+    $this->assert(strpos($styles, $system . '/system.base.css') !== FALSE, 'The overriding CSS file is output.');
+    $this->assert(strpos($styles, $system . '/tests/system.base.css') === FALSE, 'The overridden CSS file is not output.');
   }
 
   /**
@@ -237,7 +237,7 @@ class CascadingStylesheetsTest extends WebTestBase {
 
     // Check to see if system.base-rtl.css was also added.
     $styles = drupal_get_css();
-    $this->assert(strpos($styles, $path . '/system.base-rtl.css') !== FALSE, t('CSS is alterable as right to left overrides are added.'));
+    $this->assert(strpos($styles, $path . '/system.base-rtl.css') !== FALSE, 'CSS is alterable as right to left overrides are added.');
 
     // Change the language back to left to right.
     $language_interface->direction = LANGUAGE_LTR;
@@ -250,7 +250,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   function testAddCssFileWithQueryString() {
     $this->drupalGet('common-test/query-string');
     $query_string = variable_get('css_js_query_string', '0');
-    $this->assertRaw(drupal_get_path('module', 'node') . '/node.admin.css?' . $query_string, t('Query string was appended correctly to css.'));
-    $this->assertRaw(drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&amp;arg2=value2', t('Query string not escaped on a URI.'));
+    $this->assertRaw(drupal_get_path('module', 'node') . '/node.admin.css?' . $query_string, 'Query string was appended correctly to css.');
+    $this->assertRaw(drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&amp;arg2=value2', 'Query string not escaped on a URI.');
   }
 }

@@ -30,16 +30,16 @@ class TimerUnitTest extends UnitTestBase {
   function testTimer() {
     timer_start('test');
     sleep(1);
-    $this->assertTrue(timer_read('test') >= 1000, t('Timer measured 1 second of sleeping while running.'));
+    $this->assertTrue(timer_read('test') >= 1000, 'Timer measured 1 second of sleeping while running.');
     sleep(1);
     timer_stop('test');
-    $this->assertTrue(timer_read('test') >= 2000, t('Timer measured 2 seconds of sleeping after being stopped.'));
+    $this->assertTrue(timer_read('test') >= 2000, 'Timer measured 2 seconds of sleeping after being stopped.');
     timer_start('test');
     sleep(1);
-    $this->assertTrue(timer_read('test') >= 3000, t('Timer measured 3 seconds of sleeping after being restarted.'));
+    $this->assertTrue(timer_read('test') >= 3000, 'Timer measured 3 seconds of sleeping after being restarted.');
     sleep(1);
     $timer = timer_stop('test');
-    $this->assertTrue(timer_read('test') >= 4000, t('Timer measured 4 seconds of sleeping after being stopped for a second time.'));
-    $this->assertEqual($timer['count'], 2, t('Timer counted 2 instances of being started.'));
+    $this->assertTrue(timer_read('test') >= 4000, 'Timer measured 4 seconds of sleeping after being stopped for a second time.');
+    $this->assertEqual($timer['count'], 2, 'Timer counted 2 instances of being started.');
   }
 }

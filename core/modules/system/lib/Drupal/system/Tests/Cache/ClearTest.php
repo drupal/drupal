@@ -45,7 +45,7 @@ class ClearTest extends CacheTestBase {
 
     foreach ($bins as $id => $bin) {
       $cid = 'test_cid_clear' . $id;
-      $this->assertFalse($this->checkCacheExists($cid, $this->default_value, $bin), t('All cache entries removed from @bin.', array('@bin' => $bin)));
+      $this->assertFalse($this->checkCacheExists($cid, $this->default_value, $bin), format_string('All cache entries removed from @bin.', array('@bin' => $bin)));
     }
   }
 }

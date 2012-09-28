@@ -49,17 +49,17 @@ class RenderTest extends WebTestBase {
     $output = drupal_render($elements);
 
     // The lowest weight element should appear last in $output.
-    $this->assertTrue(strpos($output, $second) > strpos($output, $first), t('Elements were sorted correctly by weight.'));
+    $this->assertTrue(strpos($output, $second) > strpos($output, $first), 'Elements were sorted correctly by weight.');
 
     // Confirm that the $elements array has '#sorted' set to TRUE.
-    $this->assertTrue($elements['#sorted'], t("'#sorted' => TRUE was added to the array"));
+    $this->assertTrue($elements['#sorted'], "'#sorted' => TRUE was added to the array");
 
     // Pass $elements through element_children() and ensure it remains
     // sorted in the correct order. drupal_render() will return an empty string
     // if used on the same array in the same request.
     $children = element_children($elements);
-    $this->assertTrue(array_shift($children) == 'first', t('Child found in the correct order.'));
-    $this->assertTrue(array_shift($children) == 'second', t('Child found in the correct order.'));
+    $this->assertTrue(array_shift($children) == 'first', 'Child found in the correct order.');
+    $this->assertTrue(array_shift($children) == 'second', 'Child found in the correct order.');
 
 
     // The same array structure again, but with #sorted set to TRUE.
@@ -77,7 +77,7 @@ class RenderTest extends WebTestBase {
     $output = drupal_render($elements);
 
     // The elements should appear in output in the same order as the array.
-    $this->assertTrue(strpos($output, $second) < strpos($output, $first), t('Elements were not sorted.'));
+    $this->assertTrue(strpos($output, $second) < strpos($output, $first), 'Elements were not sorted.');
   }
 
   /**
@@ -114,18 +114,18 @@ class RenderTest extends WebTestBase {
     // Render the element and verify the presence of #attached JavaScript.
     drupal_render($element);
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, $parent_js), t('The element #attached JavaScript was included.'));
-    $this->assertTrue(strpos($scripts, $child_js), t('The child #attached JavaScript was included.'));
-    $this->assertTrue(strpos($scripts, $subchild_js), t('The subchild #attached JavaScript was included.'));
+    $this->assertTrue(strpos($scripts, $parent_js), 'The element #attached JavaScript was included.');
+    $this->assertTrue(strpos($scripts, $child_js), 'The child #attached JavaScript was included.');
+    $this->assertTrue(strpos($scripts, $subchild_js), 'The subchild #attached JavaScript was included.');
 
     // Load the element from cache and verify the presence of the #attached
     // JavaScript.
     drupal_static_reset('drupal_add_js');
-    $this->assertTrue(drupal_render_cache_get($element), t('The element was retrieved from cache.'));
+    $this->assertTrue(drupal_render_cache_get($element), 'The element was retrieved from cache.');
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, $parent_js), t('The element #attached JavaScript was included when loading from cache.'));
-    $this->assertTrue(strpos($scripts, $child_js), t('The child #attached JavaScript was included when loading from cache.'));
-    $this->assertTrue(strpos($scripts, $subchild_js), t('The subchild #attached JavaScript was included when loading from cache.'));
+    $this->assertTrue(strpos($scripts, $parent_js), 'The element #attached JavaScript was included when loading from cache.');
+    $this->assertTrue(strpos($scripts, $child_js), 'The child #attached JavaScript was included when loading from cache.');
+    $this->assertTrue(strpos($scripts, $subchild_js), 'The subchild #attached JavaScript was included when loading from cache.');
 
     $_SERVER['REQUEST_METHOD'] = $request_method;
   }
@@ -280,8 +280,8 @@ class RenderTest extends WebTestBase {
 
     config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
     $this->drupalGet('common-test/drupal-render-invalid-keys');
-    $this->assertResponse(200, t('Received expected HTTP status code.'));
-    $this->assertRaw($message, t('Found error message: !message.', array('!message' => $message)));
+    $this->assertResponse(200, 'Received expected HTTP status code.');
+    $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));
   }
 
   protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {
@@ -319,13 +319,13 @@ class RenderTest extends WebTestBase {
     // process (which will set $element['#printed']).
     $element = $test_element;
     drupal_render($element);
-    $this->assertTrue(isset($element['#printed']), t('No cache hit'));
+    $this->assertTrue(isset($element['#printed']), 'No cache hit');
 
     // Render the element again and confirm that it is retrieved from the cache
     // instead (so $element['#printed'] will not be set).
     $element = $test_element;
     drupal_render($element);
-    $this->assertFalse(isset($element['#printed']), t('Cache hit'));
+    $this->assertFalse(isset($element['#printed']), 'Cache hit');
 
     // Restore the previous request method.
     $_SERVER['REQUEST_METHOD'] = $request_method;

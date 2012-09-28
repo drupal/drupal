@@ -92,10 +92,10 @@ class PercentagesUnitTest extends UnitTestBase {
       $current = $arguments['current'];
       $actual_result = _batch_api_percentage($total, $current);
       if ($actual_result === $expected_result) {
-        $this->pass(t('Expected the batch api percentage at the state @numerator/@denominator to be @expected%, and got @actual%.', array('@numerator' => $current, '@denominator' => $total, '@expected' => $expected_result, '@actual' => $actual_result)));
+        $this->pass(format_string('Expected the batch api percentage at the state @numerator/@denominator to be @expected%, and got @actual%.', array('@numerator' => $current, '@denominator' => $total, '@expected' => $expected_result, '@actual' => $actual_result)));
       }
       else {
-        $this->fail(t('Expected the batch api percentage at the state @numerator/@denominator to be @expected%, but got @actual%.', array('@numerator' => $current, '@denominator' => $total, '@expected' => $expected_result, '@actual' => $actual_result)));
+        $this->fail(format_string('Expected the batch api percentage at the state @numerator/@denominator to be @expected%, but got @actual%.', array('@numerator' => $current, '@denominator' => $total, '@expected' => $expected_result, '@actual' => $actual_result)));
       }
     }
   }

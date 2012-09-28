@@ -36,17 +36,17 @@ class VariableTest extends WebTestBase {
     // Setting and retrieving values.
     $variable = $this->randomName();
     variable_set('simpletest_bootstrap_variable_test', $variable);
-    $this->assertIdentical($variable, variable_get('simpletest_bootstrap_variable_test'), t('Setting and retrieving values'));
+    $this->assertIdentical($variable, variable_get('simpletest_bootstrap_variable_test'), 'Setting and retrieving values');
 
     // Make sure the variable persists across multiple requests.
     $this->drupalGet('system-test/variable-get');
-    $this->assertText($variable, t('Variable persists across multiple requests'));
+    $this->assertText($variable, 'Variable persists across multiple requests');
 
     // Deleting variables.
     $default_value = $this->randomName();
     variable_del('simpletest_bootstrap_variable_test');
     $variable = variable_get('simpletest_bootstrap_variable_test', $default_value);
-    $this->assertIdentical($variable, $default_value, t('Deleting variables'));
+    $this->assertIdentical($variable, $default_value, 'Deleting variables');
   }
 
   /**
@@ -54,10 +54,10 @@ class VariableTest extends WebTestBase {
    */
   function testVariableDefaults() {
     // Tests passing nothing through to the default.
-    $this->assertIdentical(NULL, variable_get('simpletest_bootstrap_variable_test'), t('Variables are correctly defaulting to NULL.'));
+    $this->assertIdentical(NULL, variable_get('simpletest_bootstrap_variable_test'), 'Variables are correctly defaulting to NULL.');
 
     // Tests passing 5 to the default parameter.
-    $this->assertIdentical(5, variable_get('simpletest_bootstrap_variable_test', 5), t('The default variable parameter is passed through correctly.'));
+    $this->assertIdentical(5, variable_get('simpletest_bootstrap_variable_test', 5), 'The default variable parameter is passed through correctly.');
   }
 
 }

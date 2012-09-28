@@ -35,7 +35,7 @@ class FrameworkTest extends AjaxTestBase {
       'command' => 'settings',
       'settings' => array('ajax' => 'test'),
     );
-    $this->assertCommand($commands, $expected, t('ajax_render() loads settings added with drupal_add_js().'));
+    $this->assertCommand($commands, $expected, 'ajax_render() loads settings added with drupal_add_js().');
 
     // Verify that Ajax settings are loaded for #type 'link'.
     $this->drupalGet('ajax-test/link');
@@ -54,7 +54,7 @@ class FrameworkTest extends AjaxTestBase {
       'command' => 'alert',
       'text' => t('An error occurred while handling the request: The server received invalid input.'),
     );
-    $this->assertCommand($commands, $expected, t('ajax_render_error() invokes alert command.'));
+    $this->assertCommand($commands, $expected, 'ajax_render_error() invokes alert command.');
 
     // Verify custom error message.
     $edit = array(
@@ -65,7 +65,7 @@ class FrameworkTest extends AjaxTestBase {
       'command' => 'alert',
       'text' => $edit['message'],
     );
-     $this->assertCommand($commands, $expected, t('Custom error message is output.'));
+     $this->assertCommand($commands, $expected, 'Custom error message is output.');
   }
 
   /**
@@ -99,16 +99,16 @@ class FrameworkTest extends AjaxTestBase {
 
     // Verify that the base page doesn't have the settings and files that are to
     // be lazy loaded as part of the next requests.
-    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), t('Page originally lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
-    $this->assertTrue(!isset($original_settings[$expected['css']]), t('Page originally lacks the %css file, as expected.', array('%css' => $expected['css'])));
-    $this->assertTrue(!isset($original_settings[$expected['js']]), t('Page originally lacks the %js file, as expected.', array('%js' => $expected['js'])));
+    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), format_string('Page originally lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
+    $this->assertTrue(!isset($original_settings[$expected['css']]), format_string('Page originally lacks the %css file, as expected.', array('%css' => $expected['css'])));
+    $this->assertTrue(!isset($original_settings[$expected['js']]), format_string('Page originally lacks the %js file, as expected.', array('%js' => $expected['js'])));
 
     // Submit the AJAX request without triggering files getting added.
     $commands = $this->drupalPostAJAX(NULL, array('add_files' => FALSE), array('op' => t('Submit')));
     $new_settings = $this->drupalGetSettings();
 
     // Verify the setting was not added when not expected.
-    $this->assertTrue(!isset($new_settings['setting_name']), t('Page still lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
+    $this->assertTrue(!isset($new_settings['setting_name']), format_string('Page still lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
     // Verify a settings command does not add CSS or scripts to Drupal.settings
     // and no command inserts the corresponding tags on the page.
     $found_settings_command = FALSE;
@@ -121,8 +121,8 @@ class FrameworkTest extends AjaxTestBase {
         $found_markup_command = TRUE;
       }
     }
-    $this->assertFalse($found_settings_command, t('Page state still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
-    $this->assertFalse($found_markup_command, t('Page still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
+    $this->assertFalse($found_settings_command, format_string('Page state still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
+    $this->assertFalse($found_markup_command, format_string('Page still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
 
     // Submit the AJAX request and trigger adding files.
     $commands = $this->drupalPostAJAX(NULL, array('add_files' => TRUE), array('op' => t('Submit')));
@@ -131,20 +131,20 @@ class FrameworkTest extends AjaxTestBase {
     $new_js = $new_settings['ajaxPageState']['js'];
 
     // Verify the expected setting was added.
-    $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], t('Page now has the %setting.', array('%setting' => $expected['setting_name'])));
+    $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], format_string('Page now has the %setting.', array('%setting' => $expected['setting_name'])));
 
     // Verify the expected CSS file was added, both to Drupal.settings, and as
     // an AJAX command for inclusion into the HTML.
-    $this->assertEqual($new_css, $original_css + array($expected['css'] => 1), t('Page state now has the %css file.', array('%css' => $expected['css'])));
-    $this->assertCommand($commands, array('data' => $expected_css_html), t('Page now has the %css file.', array('%css' => $expected['css'])));
+    $this->assertEqual($new_css, $original_css + array($expected['css'] => 1), format_string('Page state now has the %css file.', array('%css' => $expected['css'])));
+    $this->assertCommand($commands, array('data' => $expected_css_html), format_string('Page now has the %css file.', array('%css' => $expected['css'])));
 
     // Verify the expected JS file was added, both to Drupal.settings, and as
     // an AJAX command for inclusion into the HTML. By testing for an exact HTML
     // string containing the SCRIPT tag, we also ensure that unexpected
     // JavaScript code, such as a jQuery.extend() that would potentially clobber
     // rather than properly merge settings, didn't accidentally get added.
-    $this->assertEqual($new_js, $original_js + array($expected['js'] => 1), t('Page state now has the %js file.', array('%js' => $expected['js'])));
-    $this->assertCommand($commands, array('data' => $expected_js_html), t('Page now has the %js file.', array('%js' => $expected['js'])));
+    $this->assertEqual($new_js, $original_js + array($expected['js'] => 1), format_string('Page state now has the %js file.', array('%js' => $expected['js'])));
+    $this->assertCommand($commands, array('data' => $expected_js_html), format_string('Page now has the %js file.', array('%js' => $expected['js'])));
   }
 
   /**

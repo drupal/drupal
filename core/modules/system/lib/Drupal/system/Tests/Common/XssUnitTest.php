@@ -76,7 +76,7 @@ class XssUnitTest extends UnitTestBase {
     $url = 'javascript:http://www.example.com/?x=1&y=2';
     $expected_plain = 'http://www.example.com/?x=1&y=2';
     $expected_html = 'http://www.example.com/?x=1&amp;y=2';
-    $this->assertIdentical(check_url($url), $expected_html, t('check_url() filters a URL and encodes it for HTML.'));
-    $this->assertIdentical(drupal_strip_dangerous_protocols($url), $expected_plain, t('drupal_strip_dangerous_protocols() filters a URL and returns plain text.'));
+    $this->assertIdentical(check_url($url), $expected_html, 'check_url() filters a URL and encodes it for HTML.');
+    $this->assertIdentical(drupal_strip_dangerous_protocols($url), $expected_plain, 'drupal_strip_dangerous_protocols() filters a URL and returns plain text.');
   }
 }

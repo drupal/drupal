@@ -31,17 +31,17 @@ class GetFilenameUnitTest extends UnitTestBase {
     drupal_static_reset('drupal_get_filename');
 
     // Retrieving the location of a module.
-    $this->assertIdentical(drupal_get_filename('module', 'php'), 'core/modules/php/php.module', t('Retrieve module location.'));
+    $this->assertIdentical(drupal_get_filename('module', 'php'), 'core/modules/php/php.module', 'Retrieve module location.');
 
     // Retrieving the location of a theme.
-    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.info', t('Retrieve theme location.'));
+    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.info', 'Retrieve theme location.');
 
     // Retrieving the location of a theme engine.
-    $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'core/themes/engines/phptemplate/phptemplate.engine', t('Retrieve theme engine location.'));
+    $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'core/themes/engines/phptemplate/phptemplate.engine', 'Retrieve theme engine location.');
 
     // Retrieving the location of a profile. Profiles are a special case with
     // a fixed location and naming.
-    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'core/profiles/standard/standard.profile', t('Retrieve install profile location.'));
+    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'core/profiles/standard/standard.profile', 'Retrieve install profile location.');
 
     // When a file is not found in the database cache, drupal_get_filename()
     // searches several locations on the filesystem, including the core/
@@ -50,6 +50,6 @@ class GetFilenameUnitTest extends UnitTestBase {
     // Since there is already a core/scripts directory, drupal_get_filename()
     // will automatically check there for 'script' files, just as it does
     // for (e.g.) 'module' files in core/modules.
-    $this->assertIdentical(drupal_get_filename('script', 'test'), 'core/scripts/test.script', t('Retrieve test script location.'));
+    $this->assertIdentical(drupal_get_filename('script', 'test'), 'core/scripts/test.script', 'Retrieve test script location.');
   }
 }

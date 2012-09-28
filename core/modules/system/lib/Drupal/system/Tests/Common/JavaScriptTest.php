@@ -60,7 +60,7 @@ class JavaScriptTest extends WebTestBase {
    * Test default JavaScript is empty.
    */
   function testDefault() {
-    $this->assertEqual(array(), drupal_add_js(), t('Default JavaScript is empty.'));
+    $this->assertEqual(array(), drupal_add_js(), 'Default JavaScript is empty.');
   }
 
   /**
@@ -68,7 +68,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testAddFile() {
     $javascript = drupal_add_js('core/misc/collapse.js');
-    $this->assertTrue(array_key_exists('core/misc/collapse.js', $javascript), t('JavaScript files are correctly added.'));
+    $this->assertTrue(array_key_exists('core/misc/collapse.js', $javascript), 'JavaScript files are correctly added.');
   }
 
   /**
@@ -93,7 +93,7 @@ class JavaScriptTest extends WebTestBase {
   function testAddExternal() {
     $path = 'http://example.com/script.js';
     $javascript = drupal_add_js($path, 'external');
-    $this->assertTrue(array_key_exists('http://example.com/script.js', $javascript), t('Added an external JavaScript file.'));
+    $this->assertTrue(array_key_exists('http://example.com/script.js', $javascript), 'Added an external JavaScript file.');
   }
 
   /**
@@ -110,8 +110,8 @@ class JavaScriptTest extends WebTestBase {
     $expected_1 = '<script src="http://example.com/script.js?' . $default_query_string . '" async="async"></script>';
     $expected_2 = '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" async="async"></script>';
 
-    $this->assertTrue(strpos($javascript, $expected_1) > 0, t('Rendered external JavaScript with correct async attribute.'));
-    $this->assertTrue(strpos($javascript, $expected_2) > 0, t('Rendered internal JavaScript with correct async attribute.'));
+    $this->assertTrue(strpos($javascript, $expected_1) > 0, 'Rendered external JavaScript with correct async attribute.');
+    $this->assertTrue(strpos($javascript, $expected_2) > 0, 'Rendered internal JavaScript with correct async attribute.');
   }
 
   /**
@@ -128,8 +128,8 @@ class JavaScriptTest extends WebTestBase {
     $expected_1 = '<script src="http://example.com/script.js?' . $default_query_string . '" defer="defer"></script>';
     $expected_2 = '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" defer="defer"></script>';
 
-    $this->assertTrue(strpos($javascript, $expected_1) > 0, t('Rendered external JavaScript with correct defer attribute.'));
-    $this->assertTrue(strpos($javascript, $expected_2) > 0, t('Rendered internal JavaScript with correct defer attribute.'));
+    $this->assertTrue(strpos($javascript, $expected_1) > 0, 'Rendered external JavaScript with correct defer attribute.');
+    $this->assertTrue(strpos($javascript, $expected_2) > 0, 'Rendered internal JavaScript with correct defer attribute.');
   }
 
   /**
@@ -157,18 +157,18 @@ class JavaScriptTest extends WebTestBase {
 
     $javascript = drupal_get_js('header');
     // Test whether drupal_add_js can be used to override a previous setting.
-    $this->assertTrue(strpos($javascript, 'commonTestShouldAppear') > 0, t('Rendered JavaScript header returns custom setting.'));
-    $this->assertTrue(strpos($javascript, 'commonTestShouldNotAppear') === FALSE, t('drupal_add_js() correctly overrides a custom setting.'));
+    $this->assertTrue(strpos($javascript, 'commonTestShouldAppear') > 0, 'Rendered JavaScript header returns custom setting.');
+    $this->assertTrue(strpos($javascript, 'commonTestShouldNotAppear') === FALSE, 'drupal_add_js() correctly overrides a custom setting.');
 
     // Test whether drupal_add_js can be used to add numerically indexed values
     // to an array.
     $array_values_appear = strpos($javascript, 'commonTestValue0') > 0 && strpos($javascript, 'commonTestValue1') > 0 && strpos($javascript, 'commonTestValue2') > 0;
-    $this->assertTrue($array_values_appear, t('drupal_add_js() correctly adds settings to the end of an indexed array.'));
+    $this->assertTrue($array_values_appear, 'drupal_add_js() correctly adds settings to the end of an indexed array.');
 
     // Test whether drupal_add_js can be used to override the entry for an
     // existing key in an associative array.
     $associative_array_override = strpos($javascript, 'commonTestNewValue') > 0 && strpos($javascript, 'commonTestOldValue') === FALSE;
-    $this->assertTrue($associative_array_override, t('drupal_add_js() correctly overrides settings within an associative array.'));
+    $this->assertTrue($associative_array_override, 'drupal_add_js() correctly overrides settings within an associative array.');
     // Check in a rendered page.
     $this->drupalGet('common-test/query-string');
     $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
@@ -185,7 +185,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/collapse.js');
     drupal_static_reset('drupal_add_js');
-    $this->assertEqual(array(), drupal_add_js(), t('Resetting the JavaScript correctly empties the cache.'));
+    $this->assertEqual(array(), drupal_add_js(), 'Resetting the JavaScript correctly empties the cache.');
   }
 
   /**
@@ -197,7 +197,7 @@ class JavaScriptTest extends WebTestBase {
     $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
     $data = end($javascript);
-    $this->assertEqual($inline, $data['data'], t('Inline JavaScript is correctly added to the footer.'));
+    $this->assertEqual($inline, $data['data'], 'Inline JavaScript is correctly added to the footer.');
   }
 
   /**
@@ -209,7 +209,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js($external, 'external');
     $javascript = drupal_get_js();
     // Local files have a base_path() prefix, external files should not.
-    $this->assertTrue(strpos($javascript, 'src="' . $external) > 0, t('Rendering an external JavaScript file.'));
+    $this->assertTrue(strpos($javascript, 'src="' . $external) > 0, 'Rendering an external JavaScript file.');
   }
 
   /**
@@ -220,7 +220,7 @@ class JavaScriptTest extends WebTestBase {
     $inline = 'jQuery(function () { });';
     drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $javascript = drupal_get_js('footer');
-    $this->assertTrue(strpos($javascript, $inline) > 0, t('Rendered JavaScript footer returns the inline code.'));
+    $this->assertTrue(strpos($javascript, $inline) > 0, 'Rendered JavaScript footer returns the inline code.');
   }
 
   /**
@@ -229,7 +229,7 @@ class JavaScriptTest extends WebTestBase {
   function testNoCache() {
     drupal_add_library('system', 'drupal');
     $javascript = drupal_add_js('core/misc/collapse.js', array('cache' => FALSE));
-    $this->assertFalse($javascript['core/misc/collapse.js']['preprocess'], t('Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.'));
+    $this->assertFalse($javascript['core/misc/collapse.js']['preprocess'], 'Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.');
   }
 
   /**
@@ -238,7 +238,7 @@ class JavaScriptTest extends WebTestBase {
   function testDifferentGroup() {
     drupal_add_library('system', 'drupal');
     $javascript = drupal_add_js('core/misc/collapse.js', array('group' => JS_THEME));
-    $this->assertEqual($javascript['core/misc/collapse.js']['group'], JS_THEME, t('Adding a JavaScript file with a different group caches the given group.'));
+    $this->assertEqual($javascript['core/misc/collapse.js']['group'], JS_THEME, 'Adding a JavaScript file with a different group caches the given group.');
   }
 
   /**
@@ -246,7 +246,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testDifferentWeight() {
     $javascript = drupal_add_js('core/misc/collapse.js', array('weight' => 2));
-    $this->assertEqual($javascript['core/misc/collapse.js']['weight'], 2, t('Adding a JavaScript file with a different weight caches the given weight.'));
+    $this->assertEqual($javascript['core/misc/collapse.js']['weight'], 2, 'Adding a JavaScript file with a different weight caches the given weight.');
   }
 
   /**
@@ -265,8 +265,8 @@ class JavaScriptTest extends WebTestBase {
     $expected_1 = "<!--[if lte IE 8]>\n" . '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>' . "\n<![endif]-->";
     $expected_2 = "<!--[if !IE]><!-->\n" . '<script>' . "\n<!--//--><![CDATA[//><!--\n" . 'jQuery(function () { });' . "\n//--><!]]>\n" . '</script>' . "\n<!--<![endif]-->";
 
-    $this->assertTrue(strpos($javascript, $expected_1) > 0, t('Rendered JavaScript within downlevel-hidden conditional comments.'));
-    $this->assertTrue(strpos($javascript, $expected_2) > 0, t('Rendered JavaScript within downlevel-revealed conditional comments.'));
+    $this->assertTrue(strpos($javascript, $expected_1) > 0, 'Rendered JavaScript within downlevel-hidden conditional comments.');
+    $this->assertTrue(strpos($javascript, $expected_2) > 0, 'Rendered JavaScript within downlevel-revealed conditional comments.');
   }
 
   /**
@@ -277,7 +277,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js('core/misc/collapse.js', array('version' => 'foo'));
     drupal_add_js('core/misc/ajax.js', array('version' => 'bar'));
     $javascript = drupal_get_js();
-    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js?v=foo') > 0 && strpos($javascript, 'core/misc/ajax.js?v=bar') > 0 , t('JavaScript version identifiers correctly appended to URLs'));
+    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js?v=foo') > 0 && strpos($javascript, 'core/misc/ajax.js?v=bar') > 0 , 'JavaScript version identifiers correctly appended to URLs');
   }
 
   /**
@@ -302,7 +302,7 @@ class JavaScriptTest extends WebTestBase {
       '<script src="' . file_create_url('core/misc/ajax.js') . '?' . $default_query_string . '"></script>',
       '<script src="' . file_create_url('core/misc/autocomplete.js') . '?' . $default_query_string . '"></script>',
     ));
-    $this->assertTrue(strpos($javascript, $expected) > 0, t('Unaggregated JavaScript is added in the expected group order.'));
+    $this->assertTrue(strpos($javascript, $expected) > 0, 'Unaggregated JavaScript is added in the expected group order.');
 
     // Now ensure that with aggregation on, one file is made for the
     // 'every_page' files, and one file is made for the others.
@@ -321,7 +321,7 @@ class JavaScriptTest extends WebTestBase {
       '<script src="' . file_create_url(drupal_build_js_cache(array('core/misc/collapse.js' => $js_items['core/misc/collapse.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
       '<script src="' . file_create_url(drupal_build_js_cache(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']))) . '"></script>',
     ));
-    $this->assertTrue(strpos($javascript, $expected) !== FALSE, t('JavaScript is aggregated in the expected groups and order.'));
+    $this->assertTrue(strpos($javascript, $expected) !== FALSE, 'JavaScript is aggregated in the expected groups and order.');
   }
 
   /**
@@ -407,7 +407,7 @@ class JavaScriptTest extends WebTestBase {
     else {
       $result = array();
     }
-    $this->assertIdentical($result, $expected, t('JavaScript is added in the expected weight order.'));
+    $this->assertIdentical($result, $expected, 'JavaScript is added in the expected weight order.');
   }
 
   /**
@@ -420,7 +420,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_library('system', 'jquery');
     drupal_add_js('core/misc/collapse.js', array('group' => JS_LIBRARY, 'every_page' => TRUE, 'weight' => -21));
     $javascript = drupal_get_js();
-    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
+    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/misc/jquery.js'), 'Rendering a JavaScript file above jQuery.');
   }
 
   /**
@@ -437,7 +437,7 @@ class JavaScriptTest extends WebTestBase {
     // tableselect.js. See simpletest_js_alter() to see where this alteration
     // takes place.
     $javascript = drupal_get_js();
-    $this->assertTrue(strpos($javascript, 'simpletest.js') < strpos($javascript, 'core/misc/tableselect.js'), t('Altering JavaScript weight through the alter hook.'));
+    $this->assertTrue(strpos($javascript, 'simpletest.js') < strpos($javascript, 'core/misc/tableselect.js'), 'Altering JavaScript weight through the alter hook.');
   }
 
   /**
@@ -448,8 +448,8 @@ class JavaScriptTest extends WebTestBase {
     $this->assertTrue($result !== FALSE, t('Library was added without errors.'));
     $scripts = drupal_get_js();
     $styles = drupal_get_css();
-    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), t('JavaScript of library was added to the page.'));
-    $this->assertTrue(strpos($styles, 'core/misc/farbtastic/farbtastic.css'), t('Stylesheet of library was added to the page.'));
+    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), 'JavaScript of library was added to the page.');
+    $this->assertTrue(strpos($styles, 'core/misc/farbtastic/farbtastic.css'), 'Stylesheet of library was added to the page.');
   }
 
   /**
@@ -465,7 +465,7 @@ class JavaScriptTest extends WebTestBase {
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     drupal_add_library('system', 'jquery.farbtastic');
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'core/misc/jquery.form.js'), t('Altered library dependencies are added to the page.'));
+    $this->assertTrue(strpos($scripts, 'core/misc/jquery.form.js'), 'Altered library dependencies are added to the page.');
   }
 
   /**
@@ -475,7 +475,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testLibraryNameConflicts() {
     $farbtastic = drupal_get_library('common_test', 'jquery.farbtastic');
-    $this->assertEqual($farbtastic['title'], 'Custom Farbtastic Library', t('Alternative libraries can be added to the page.'));
+    $this->assertEqual($farbtastic['title'], 'Custom Farbtastic Library', 'Alternative libraries can be added to the page.');
   }
 
   /**
@@ -489,7 +489,7 @@ class JavaScriptTest extends WebTestBase {
     $result = drupal_add_library('unknown', 'unknown');
     $this->assertFalse($result, t('Unknown library returned FALSE.'));
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'unknown') === FALSE, t('Unknown library was not added to the page.'));
+    $this->assertTrue(strpos($scripts, 'unknown') === FALSE, 'Unknown library was not added to the page.');
   }
 
   /**
@@ -499,7 +499,7 @@ class JavaScriptTest extends WebTestBase {
     $element['#attached']['library'][] = array('system', 'jquery.farbtastic');
     drupal_render($element);
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
+    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), 'The attached_library property adds the additional libraries.');
   }
 
   /**
@@ -508,18 +508,18 @@ class JavaScriptTest extends WebTestBase {
   function testGetLibrary() {
     // Retrieve all libraries registered by a module.
     $libraries = drupal_get_library('common_test');
-    $this->assertTrue(isset($libraries['jquery.farbtastic']), t('Retrieved all module libraries.'));
+    $this->assertTrue(isset($libraries['jquery.farbtastic']), 'Retrieved all module libraries.');
     // Retrieve all libraries for a module not implementing hook_library_info().
     // Note: This test installs language module.
     $libraries = drupal_get_library('language');
-    $this->assertEqual($libraries, array(), t('Retrieving libraries from a module not implementing hook_library_info() returns an emtpy array.'));
+    $this->assertEqual($libraries, array(), 'Retrieving libraries from a module not implementing hook_library_info() returns an emtpy array.');
 
     // Retrieve a specific library by module and name.
     $farbtastic = drupal_get_library('common_test', 'jquery.farbtastic');
-    $this->assertEqual($farbtastic['version'], '5.3', t('Retrieved a single library.'));
+    $this->assertEqual($farbtastic['version'], '5.3', 'Retrieved a single library.');
     // Retrieve a non-existing library by module and name.
     $farbtastic = drupal_get_library('common_test', 'foo');
-    $this->assertIdentical($farbtastic, FALSE, t('Retrieving a non-existing library returns FALSE.'));
+    $this->assertIdentical($farbtastic, FALSE, 'Retrieving a non-existing library returns FALSE.');
   }
 
   /**
@@ -529,6 +529,6 @@ class JavaScriptTest extends WebTestBase {
   function testAddJsFileWithQueryString() {
     $this->drupalGet('common-test/query-string');
     $query_string = variable_get('css_js_query_string', '0');
-    $this->assertRaw(drupal_get_path('module', 'node') . '/node.js?' . $query_string, t('Query string was appended correctly to js.'));
+    $this->assertRaw(drupal_get_path('module', 'node') . '/node.js?' . $query_string, 'Query string was appended correctly to js.');
   }
 }

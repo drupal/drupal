@@ -49,7 +49,7 @@ class SystemListingTest extends WebTestBase {
     foreach ($expected_directories as $module => $directories) {
       foreach ($directories as $directory) {
         $filename = "$directory/$module/$module.module";
-        $this->assertTrue(file_exists(DRUPAL_ROOT . '/' . $filename), t('@filename exists.', array('@filename' => $filename)));
+        $this->assertTrue(file_exists(DRUPAL_ROOT . '/' . $filename), format_string('@filename exists.', array('@filename' => $filename)));
       }
     }
 
@@ -59,7 +59,7 @@ class SystemListingTest extends WebTestBase {
     foreach ($expected_directories as $module => $directories) {
       $expected_directory = array_shift($directories);
       $expected_filename = "$expected_directory/$module/$module.module";
-      $this->assertEqual($files[$module]->uri, $expected_filename, t('Module @module was found at @filename.', array('@module' => $module, '@filename' => $expected_filename)));
+      $this->assertEqual($files[$module]->uri, $expected_filename, format_string('Module @module was found at @filename.', array('@module' => $module, '@filename' => $expected_filename)));
     }
   }
 }

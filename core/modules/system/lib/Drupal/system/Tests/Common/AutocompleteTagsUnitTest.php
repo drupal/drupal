@@ -57,11 +57,11 @@ class AutocompleteTagsUnitTest extends UnitTestBase {
     $original = $this->validTags;
     foreach ($tags as $tag) {
       $key = array_search($tag, $original);
-      $this->assertTrue($key, t('Make sure tag %tag shows up in the final tags array (originally %original)', array('%tag' => $tag, '%original' => $key)));
+      $this->assertTrue($key, format_string('Make sure tag %tag shows up in the final tags array (originally %original)', array('%tag' => $tag, '%original' => $key)));
       unset($original[$key]);
     }
     foreach ($original as $leftover) {
-      $this->fail(t('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
+      $this->fail(format_string('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
     }
   }
 }

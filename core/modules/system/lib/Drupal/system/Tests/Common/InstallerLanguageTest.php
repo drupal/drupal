@@ -44,9 +44,9 @@ class InstallerLanguageTest extends WebTestBase {
 
     foreach ($expected_translation_files as $langcode => $files_expected) {
       $files_found = install_find_translation_files($langcode);
-      $this->assertTrue(count($files_found) == count($files_expected), t('@count installer languages found.', array('@count' => count($files_expected))));
+      $this->assertTrue(count($files_found) == count($files_expected), format_string('@count installer languages found.', array('@count' => count($files_expected))));
       foreach ($files_found as $file) {
-        $this->assertTrue(in_array($file->filename, $files_expected), t('@file found.', array('@file' => $file->filename)));
+        $this->assertTrue(in_array($file->filename, $files_expected), format_string('@file found.', array('@file' => $file->filename)));
       }
     }
   }

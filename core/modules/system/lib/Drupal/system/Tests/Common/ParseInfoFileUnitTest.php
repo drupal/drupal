@@ -26,8 +26,8 @@ class ParseInfoFileUnitTest extends UnitTestBase {
    */
   function testParseInfoFile() {
     $info_values = drupal_parse_info_file(drupal_get_path('module', 'system') . '/tests/common_test_info.txt');
-    $this->assertEqual($info_values['simple_string'], 'A simple string', t('Simple string value was parsed correctly.'), t('System'));
-    $this->assertEqual($info_values['simple_constant'], WATCHDOG_INFO, t('Constant value was parsed correctly.'), t('System'));
-    $this->assertEqual($info_values['double_colon'], 'dummyClassName::', t('Value containing double-colon was parsed correctly.'), t('System'));
+    $this->assertEqual($info_values['simple_string'], 'A simple string', t('Simple string value was parsed correctly.'), 'System');
+    $this->assertEqual($info_values['simple_constant'], WATCHDOG_INFO, t('Constant value was parsed correctly.'), 'System');
+    $this->assertEqual($info_values['double_colon'], 'dummyClassName::', t('Value containing double-colon was parsed correctly.'), 'System');
   }
 }

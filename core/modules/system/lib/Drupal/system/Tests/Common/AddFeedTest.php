@@ -76,7 +76,7 @@ class AddFeedTest extends WebTestBase {
 
     $this->drupalSetContent(drupal_get_html_head());
     foreach ($urls as $description => $feed_info) {
-      $this->assertPattern($this->urlToRSSLinkPattern($feed_info['output_url'], $feed_info['title']), t('Found correct feed header for %description', array('%description' => $description)));
+      $this->assertPattern($this->urlToRSSLinkPattern($feed_info['output_url'], $feed_info['title']), format_string('Found correct feed header for %description', array('%description' => $description)));
     }
   }
 

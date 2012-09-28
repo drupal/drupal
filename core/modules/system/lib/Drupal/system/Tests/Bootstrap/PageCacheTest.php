@@ -52,34 +52,34 @@ class PageCacheTest extends WebTestBase {
     $this->assertNoPattern('#<html.*<html#');
 
     $this->drupalHead('');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $etag = $this->drupalGetHeader('ETag');
     $last_modified = $this->drupalGetHeader('Last-Modified');
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
-    $this->assertResponse(304, t('Conditional request returned 304 Not Modified.'));
+    $this->assertResponse(304, 'Conditional request returned 304 Not Modified.');
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC822, strtotime($last_modified)), 'If-None-Match: ' . $etag));
-    $this->assertResponse(304, t('Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.'));
+    $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC850, strtotime($last_modified)), 'If-None-Match: ' . $etag));
-    $this->assertResponse(304, t('Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.'));
+    $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified));
     // Verify the page is not printed twice when the cache is warm.
     $this->assertNoPattern('#<html.*<html#');
-    $this->assertResponse(200, t('Conditional request without If-None-Match returned 200 OK.'));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
+    $this->assertResponse(200, 'Conditional request without If-None-Match returned 200 OK.');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC1123, strtotime($last_modified) + 1), 'If-None-Match: ' . $etag));
-    $this->assertResponse(200, t('Conditional request with new a If-Modified-Since date newer than Last-Modified returned 200 OK.'));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
+    $this->assertResponse(200, 'Conditional request with new a If-Modified-Since date newer than Last-Modified returned 200 OK.');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
-    $this->assertResponse(200, t('Conditional request returned 200 OK for authenticated user.'));
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), t('Absense of Page was not cached.'));
+    $this->assertResponse(200, 'Conditional request returned 200 OK for authenticated user.');
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Absense of Page was not cached.');
   }
 
   /**
@@ -92,35 +92,35 @@ class PageCacheTest extends WebTestBase {
 
     // Fill the cache.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Page was not cached.'));
-    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', t('Vary header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', t('Cache-Control header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', t('Custom header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', 'Vary header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', 'Cache-Control header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
     // Check cache.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
-    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', t('Vary: Cookie header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', t('Cache-Control header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', t('Custom header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', 'Vary: Cookie header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', 'Cache-Control header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
     // Check replacing default headers.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT')));
-    $this->assertEqual($this->drupalGetHeader('Expires'), 'Fri, 19 Nov 2008 05:00:00 GMT', t('Default header was replaced.'));
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Fri, 19 Nov 2008 05:00:00 GMT', 'Default header was replaced.');
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Vary', 'value' => 'User-Agent')));
-    $this->assertEqual($this->drupalGetHeader('Vary'), 'User-Agent,Accept-Encoding', t('Default header was replaced.'));
+    $this->assertEqual($this->drupalGetHeader('Vary'), 'User-Agent,Accept-Encoding', 'Default header was replaced.');
 
     // Check that authenticated users bypass the cache.
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), t('Caching was bypassed.'));
-    $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, t('Vary: Cookie header was not sent.'));
-    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', t('Cache-Control header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
-    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', t('Custom header was sent.'));
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
+    $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
   }
 
@@ -138,22 +138,22 @@ class PageCacheTest extends WebTestBase {
 
     // Fill the cache and verify that output is compressed.
     $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Page was not cached.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
     $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
-    $this->assertRaw('</html>', t('Page was gzip compressed.'));
+    $this->assertRaw('</html>', 'Page was gzip compressed.');
 
     // Verify that cached output is compressed.
     $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
-    $this->assertEqual($this->drupalGetHeader('Content-Encoding'), 'gzip', t('A Content-Encoding header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertEqual($this->drupalGetHeader('Content-Encoding'), 'gzip', 'A Content-Encoding header was sent.');
     $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
-    $this->assertRaw('</html>', t('Page was gzip compressed.'));
+    $this->assertRaw('</html>', 'Page was gzip compressed.');
 
     // Verify that a client without compression support gets an uncompressed page.
     $this->drupalGet('');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
-    $this->assertFalse($this->drupalGetHeader('Content-Encoding'), t('A Content-Encoding header was not sent.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertFalse($this->drupalGetHeader('Content-Encoding'), 'A Content-Encoding header was not sent.');
     $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => config('system.site')->get('name'))), t('Site title matches.'));
-    $this->assertRaw('</html>', t('Page was not compressed.'));
+    $this->assertRaw('</html>', 'Page was not compressed.');
   }
 }

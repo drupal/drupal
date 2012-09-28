@@ -27,14 +27,14 @@ class HtmlIdentifierUnitTest extends UnitTestBase {
   function testDrupalCleanCSSIdentifier() {
     // Verify that no valid ASCII characters are stripped from the identifier.
     $identifier = 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
-    $this->assertIdentical(drupal_clean_css_identifier($identifier, array()), $identifier, t('Verify valid ASCII characters pass through.'));
+    $this->assertIdentical(drupal_clean_css_identifier($identifier, array()), $identifier, 'Verify valid ASCII characters pass through.');
 
     // Verify that valid UTF-8 characters are not stripped from the identifier.
     $identifier = '¡¢£¤¥';
-    $this->assertIdentical(drupal_clean_css_identifier($identifier, array()), $identifier, t('Verify valid UTF-8 characters pass through.'));
+    $this->assertIdentical(drupal_clean_css_identifier($identifier, array()), $identifier, 'Verify valid UTF-8 characters pass through.');
 
     // Verify that invalid characters (including non-breaking space) are stripped from the identifier.
-    $this->assertIdentical(drupal_clean_css_identifier('invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', array()), 'invalididentifier', t('Strip invalid characters.'));
+    $this->assertIdentical(drupal_clean_css_identifier('invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', array()), 'invalididentifier', 'Strip invalid characters.');
   }
 
   /**
@@ -51,20 +51,20 @@ class HtmlIdentifierUnitTest extends UnitTestBase {
   function testDrupalHTMLId() {
     // Verify that letters, digits, and hyphens are not stripped from the ID.
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
-    $this->assertIdentical(drupal_html_id($id), $id, t('Verify valid characters pass through.'));
+    $this->assertIdentical(drupal_html_id($id), $id, 'Verify valid characters pass through.');
 
     // Verify that invalid characters are stripped from the ID.
-    $this->assertIdentical(drupal_html_id('invalid,./:@\\^`{Üidentifier'), 'invalididentifier', t('Strip invalid characters.'));
+    $this->assertIdentical(drupal_html_id('invalid,./:@\\^`{Üidentifier'), 'invalididentifier', 'Strip invalid characters.');
 
     // Verify Drupal coding standards are enforced.
-    $this->assertIdentical(drupal_html_id('ID NAME_[1]'), 'id-name-1', t('Enforce Drupal coding standards.'));
+    $this->assertIdentical(drupal_html_id('ID NAME_[1]'), 'id-name-1', 'Enforce Drupal coding standards.');
 
     // Reset the static cache so we can ensure the unique id count is at zero.
     drupal_static_reset('drupal_html_id');
 
     // Clean up IDs with invalid starting characters.
-    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id', t('Test the uniqueness of IDs #1.'));
-    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id--2', t('Test the uniqueness of IDs #2.'));
-    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id--3', t('Test the uniqueness of IDs #3.'));
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id', 'Test the uniqueness of IDs #1.');
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id--2', 'Test the uniqueness of IDs #2.');
+    $this->assertIdentical(drupal_html_id('test-unique-id'), 'test-unique-id--3', 'Test the uniqueness of IDs #3.');
   }
 }

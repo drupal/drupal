@@ -32,7 +32,7 @@ class UrlTest extends WebTestBase {
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
     $link = l($text, $path);
     $sanitized_path = check_url(url($path));
-    $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, t('XSS attack @path was filtered', array('@path' => $path)));
+    $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered', array('@path' => $path)));
   }
 
   /*
@@ -40,7 +40,7 @@ class UrlTest extends WebTestBase {
    */
   function testLActiveClass() {
     $link = l($this->randomName(), current_path());
-    $this->assertTrue($this->hasClass($link, 'active'), t('Class @class is present on link to the current page', array('@class' => 'active')));
+    $this->assertTrue($this->hasClass($link, 'active'), format_string('Class @class is present on link to the current page', array('@class' => 'active')));
   }
 
   /**
@@ -49,8 +49,8 @@ class UrlTest extends WebTestBase {
   function testLCustomClass() {
     $class = $this->randomName();
     $link = l($this->randomName(), current_path(), array('attributes' => array('class' => array($class))));
-    $this->assertTrue($this->hasClass($link, $class), t('Custom class @class is present on link when requested', array('@class' => $class)));
-    $this->assertTrue($this->hasClass($link, 'active'), t('Class @class is present on link to the current page', array('@class' => 'active')));
+    $this->assertTrue($this->hasClass($link, $class), format_string('Custom class @class is present on link when requested', array('@class' => $class)));
+    $this->assertTrue($this->hasClass($link, 'active'), format_string('Class @class is present on link to the current page', array('@class' => 'active')));
   }
 
   private function hasClass($link, $class) {
@@ -75,32 +75,32 @@ class UrlTest extends WebTestBase {
     // First-level exclusion.
     $result = $original;
     unset($result['b']);
-    $this->assertEqual(drupal_get_query_parameters($original, array('b')), $result, t("'b' was removed."));
+    $this->assertEqual(drupal_get_query_parameters($original, array('b')), $result, "'b' was removed.");
 
     // Second-level exclusion.
     $result = $original;
     unset($result['b']['d']);
-    $this->assertEqual(drupal_get_query_parameters($original, array('b[d]')), $result, t("'b[d]' was removed."));
+    $this->assertEqual(drupal_get_query_parameters($original, array('b[d]')), $result, "'b[d]' was removed.");
 
     // Third-level exclusion.
     $result = $original;
     unset($result['b']['e']['f']);
-    $this->assertEqual(drupal_get_query_parameters($original, array('b[e][f]')), $result, t("'b[e][f]' was removed."));
+    $this->assertEqual(drupal_get_query_parameters($original, array('b[e][f]')), $result, "'b[e][f]' was removed.");
 
     // Multiple exclusions.
     $result = $original;
     unset($result['a'], $result['b']['e'], $result['c']);
-    $this->assertEqual(drupal_get_query_parameters($original, array('a', 'b[e]', 'c')), $result, t("'a', 'b[e]', 'c' were removed."));
+    $this->assertEqual(drupal_get_query_parameters($original, array('a', 'b[e]', 'c')), $result, "'a', 'b[e]', 'c' were removed.");
   }
 
   /**
    * Test drupal_http_build_query().
    */
   function testDrupalHttpBuildQuery() {
-    $this->assertEqual(drupal_http_build_query(array('a' => ' &#//+%20@۞')), 'a=%20%26%23//%2B%2520%40%DB%9E', t('Value was properly encoded.'));
-    $this->assertEqual(drupal_http_build_query(array(' &#//+%20@۞' => 'a')), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', t('Key was properly encoded.'));
-    $this->assertEqual(drupal_http_build_query(array('a' => '1', 'b' => '2', 'c' => '3')), 'a=1&b=2&c=3', t('Multiple values were properly concatenated.'));
-    $this->assertEqual(drupal_http_build_query(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo')), 'a[b]=2&a[c]=3&d=foo', t('Nested array was properly encoded.'));
+    $this->assertEqual(drupal_http_build_query(array('a' => ' &#//+%20@۞')), 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.');
+    $this->assertEqual(drupal_http_build_query(array(' &#//+%20@۞' => 'a')), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.');
+    $this->assertEqual(drupal_http_build_query(array('a' => '1', 'b' => '2', 'c' => '3')), 'a=1&b=2&c=3', 'Multiple values were properly concatenated.');
+    $this->assertEqual(drupal_http_build_query(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo')), 'a[b]=2&a[c]=3&d=foo', 'Nested array was properly encoded.');
   }
 
   /**
@@ -118,7 +118,7 @@ class UrlTest extends WebTestBase {
             'query' => array('foo' => 'bar', 'bar' => 'baz', 'baz' => ''),
             'fragment' => 'foo',
           );
-          $this->assertEqual(drupal_parse_url($url), $expected, t('URL parsed correctly.'));
+          $this->assertEqual(drupal_parse_url($url), $expected, 'URL parsed correctly.');
         }
       }
     }
@@ -130,15 +130,15 @@ class UrlTest extends WebTestBase {
       'query' => array(),
       'fragment' => '',
     );
-    $this->assertEqual(drupal_parse_url($url), $result, t('Relative URL parsed correctly.'));
+    $this->assertEqual(drupal_parse_url($url), $result, 'Relative URL parsed correctly.');
 
     // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
     $url = 'http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
-    $this->assertTrue(url_is_external($url), t('Correctly identified an external URL.'));
+    $this->assertTrue(url_is_external($url), 'Correctly identified an external URL.');
 
     // Test that drupal_parse_url() does not allow spoofing a URL to force a malicious redirect.
     $parts = drupal_parse_url('forged:http://cwe.mitre.org/data/definitions/601.html');
-    $this->assertFalse(valid_url($parts['path'], TRUE), t('drupal_parse_url() correctly parsed a forged URL.'));
+    $this->assertFalse(valid_url($parts['path'], TRUE), 'drupal_parse_url() correctly parsed a forged URL.');
   }
 
   /**
@@ -192,29 +192,29 @@ class UrlTest extends WebTestBase {
     // Verify external URL can contain a fragment.
     $url = $test_url . '#drupal';
     $result = url($url);
-    $this->assertEqual($url, $result, t('External URL with fragment works without a fragment in $options.'));
+    $this->assertEqual($url, $result, 'External URL with fragment works without a fragment in $options.');
 
     // Verify fragment can be overidden in an external URL.
     $url = $test_url . '#drupal';
     $fragment = $this->randomName(10);
     $result = url($url, array('fragment' => $fragment));
-    $this->assertEqual($test_url . '#' . $fragment, $result, t('External URL fragment is overidden with a custom fragment in $options.'));
+    $this->assertEqual($test_url . '#' . $fragment, $result, 'External URL fragment is overidden with a custom fragment in $options.');
 
     // Verify external URL can contain a query string.
     $url = $test_url . '?drupal=awesome';
     $result = url($url);
-    $this->assertEqual($url, $result, t('External URL with query string works without a query string in $options.'));
+    $this->assertEqual($url, $result, 'External URL with query string works without a query string in $options.');
 
     // Verify external URL can be extended with a query string.
     $url = $test_url;
     $query = array($this->randomName(5) => $this->randomName(5));
     $result = url($url, array('query' => $query));
-    $this->assertEqual($url . '?' . http_build_query($query, '', '&'), $result, t('External URL can be extended with a query string in $options.'));
+    $this->assertEqual($url . '?' . http_build_query($query, '', '&'), $result, 'External URL can be extended with a query string in $options.');
 
     // Verify query string can be extended in an external URL.
     $url = $test_url . '?drupal=awesome';
     $query = array($this->randomName(5) => $this->randomName(5));
     $result = url($url, array('query' => $query));
-    $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result, t('External URL query string can be extended with a custom query string in $options.'));
+    $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result, 'External URL query string can be extended with a custom query string in $options.');
   }
 }

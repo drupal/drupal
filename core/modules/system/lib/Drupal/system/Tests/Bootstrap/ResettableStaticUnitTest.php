@@ -35,15 +35,15 @@ class ResettableStaticUnitTest extends UnitTestBase {
     // multiple resets can be issued without odd side effects.
     $var = 'bar';
     drupal_static_reset($name);
-    $this->assertEqual($var, 'foo', t('Variable was reset after first invocation of name-specific reset.'));
+    $this->assertEqual($var, 'foo', 'Variable was reset after first invocation of name-specific reset.');
     $var = 'bar';
     drupal_static_reset($name);
-    $this->assertEqual($var, 'foo', t('Variable was reset after second invocation of name-specific reset.'));
+    $this->assertEqual($var, 'foo', 'Variable was reset after second invocation of name-specific reset.');
     $var = 'bar';
     drupal_static_reset();
-    $this->assertEqual($var, 'foo', t('Variable was reset after first invocation of global reset.'));
+    $this->assertEqual($var, 'foo', 'Variable was reset after first invocation of global reset.');
     $var = 'bar';
     drupal_static_reset();
-    $this->assertEqual($var, 'foo', t('Variable was reset after second invocation of global reset.'));
+    $this->assertEqual($var, 'foo', 'Variable was reset after second invocation of global reset.');
   }
 }

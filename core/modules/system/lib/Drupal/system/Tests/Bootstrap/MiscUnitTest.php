@@ -30,7 +30,7 @@ class MiscUnitTest extends UnitTestBase {
     $link_options_1 = array('fragment' => 'x', 'attributes' => array('title' => 'X', 'class' => array('a', 'b')), 'language' => 'en');
     $link_options_2 = array('fragment' => 'y', 'attributes' => array('title' => 'Y', 'class' => array('c', 'd')), 'html' => TRUE);
     $expected = array('fragment' => 'y', 'attributes' => array('title' => 'Y', 'class' => array('a', 'b', 'c', 'd')), 'language' => 'en', 'html' => TRUE);
-    $this->assertIdentical(drupal_array_merge_deep($link_options_1, $link_options_2), $expected, t('drupal_array_merge_deep() returned a properly merged array.'));
+    $this->assertIdentical(drupal_array_merge_deep($link_options_1, $link_options_2), $expected, 'drupal_array_merge_deep() returned a properly merged array.');
   }
 
   /**

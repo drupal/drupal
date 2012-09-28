@@ -45,13 +45,13 @@ class AlterTest extends WebTestBase {
     $array_copy = $array;
     $array_expected = array('foo' => 'Drupal theme');
     drupal_alter('drupal_alter', $array_copy);
-    $this->assertEqual($array_copy, $array_expected, t('Single array was altered.'));
+    $this->assertEqual($array_copy, $array_expected, 'Single array was altered.');
 
     $entity_copy = clone $entity;
     $entity_expected = clone $entity;
     $entity_expected->foo = 'Drupal theme';
     drupal_alter('drupal_alter', $entity_copy);
-    $this->assertEqual($entity_copy, $entity_expected, t('Single object was altered.'));
+    $this->assertEqual($entity_copy, $entity_expected, 'Single object was altered.');
 
     // Verify alteration of multiple arguments.
     $array_copy = $array;
@@ -62,9 +62,9 @@ class AlterTest extends WebTestBase {
     $array2_copy = $array;
     $array2_expected = array('foo' => 'Drupal theme');
     drupal_alter('drupal_alter', $array_copy, $entity_copy, $array2_copy);
-    $this->assertEqual($array_copy, $array_expected, t('First argument to drupal_alter() was altered.'));
-    $this->assertEqual($entity_copy, $entity_expected, t('Second argument to drupal_alter() was altered.'));
-    $this->assertEqual($array2_copy, $array2_expected, t('Third argument to drupal_alter() was altered.'));
+    $this->assertEqual($array_copy, $array_expected, 'First argument to drupal_alter() was altered.');
+    $this->assertEqual($entity_copy, $entity_expected, 'Second argument to drupal_alter() was altered.');
+    $this->assertEqual($array2_copy, $array2_expected, 'Third argument to drupal_alter() was altered.');
 
     // Verify alteration order when passing an array of types to drupal_alter().
     // common_test_module_implements_alter() places 'block' implementation after
@@ -72,6 +72,6 @@ class AlterTest extends WebTestBase {
     $array_copy = $array;
     $array_expected = array('foo' => 'Drupal block theme');
     drupal_alter(array('drupal_alter', 'drupal_alter_foo'), $array_copy);
-    $this->assertEqual($array_copy, $array_expected, t('hook_TYPE_alter() implementations ran in correct order.'));
+    $this->assertEqual($array_copy, $array_expected, 'hook_TYPE_alter() implementations ran in correct order.');
   }
 }
