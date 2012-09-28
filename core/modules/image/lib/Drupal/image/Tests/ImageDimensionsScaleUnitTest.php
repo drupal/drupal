@@ -139,13 +139,13 @@ class ImageDimensionsScaleUnitTest extends UnitTestBase {
       $return_value = image_dimensions_scale($test['input']['dimensions'], $test['input']['width'], $test['input']['height'], $test['input']['upscale']);
 
       // Check the width.
-      $this->assertEqual($test['output']['dimensions']['width'], $test['input']['dimensions']['width'], t('Computed width (@computed_width) equals expected width (@expected_width)', array('@computed_width' => $test['output']['dimensions']['width'], '@expected_width' => $test['input']['dimensions']['width'])));
+      $this->assertEqual($test['output']['dimensions']['width'], $test['input']['dimensions']['width'], format_string('Computed width (@computed_width) equals expected width (@expected_width)', array('@computed_width' => $test['output']['dimensions']['width'], '@expected_width' => $test['input']['dimensions']['width'])));
 
       // Check the height.
-      $this->assertEqual($test['output']['dimensions']['height'], $test['input']['dimensions']['height'], t('Computed height (@computed_height) equals expected height (@expected_height)', array('@computed_height' => $test['output']['dimensions']['height'], '@expected_height' => $test['input']['dimensions']['height'])));
+      $this->assertEqual($test['output']['dimensions']['height'], $test['input']['dimensions']['height'], format_string('Computed height (@computed_height) equals expected height (@expected_height)', array('@computed_height' => $test['output']['dimensions']['height'], '@expected_height' => $test['input']['dimensions']['height'])));
 
       // Check the return value.
-      $this->assertEqual($test['output']['return_value'], $return_value, t('Correct return value.'));
+      $this->assertEqual($test['output']['return_value'], $return_value, 'Correct return value.');
     }
   }
 }

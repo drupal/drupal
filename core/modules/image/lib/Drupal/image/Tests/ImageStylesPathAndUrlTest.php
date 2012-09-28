@@ -47,11 +47,11 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $scheme = 'public';
     $actual = image_style_path($this->style_name, "$scheme://foo/bar.gif");
     $expected = "$scheme://styles/" . $this->style_name . "/$scheme/foo/bar.gif";
-    $this->assertEqual($actual, $expected, t('Got the path for a file URI.'));
+    $this->assertEqual($actual, $expected, 'Got the path for a file URI.');
 
     $actual = image_style_path($this->style_name, 'foo/bar.gif');
     $expected = "$scheme://styles/" . $this->style_name . "/$scheme/foo/bar.gif";
-    $this->assertEqual($actual, $expected, t('Got the path for a relative file path.'));
+    $this->assertEqual($actual, $expected, 'Got the path for a relative file path.');
   }
 
   /**
@@ -96,7 +96,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     // Create the directories for the styles.
     $directory = $scheme . '://styles/' . $this->style_name;
     $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    $this->assertNotIdentical(FALSE, $status, t('Created the directory for the generated images for the test style.'));
+    $this->assertNotIdentical(FALSE, $status, 'Created the directory for the generated images for the test style.');
 
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');
@@ -106,11 +106,11 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     // Let the image_module_test module know about this file, so it can claim
     // ownership in hook_file_download().
     variable_set('image_module_test_file_download', $original_uri);
-    $this->assertNotIdentical(FALSE, $original_uri, t('Created the generated image file.'));
+    $this->assertNotIdentical(FALSE, $original_uri, 'Created the generated image file.');
 
     // Get the URL of a file that has not been generated and try to create it.
     $generated_uri = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. drupal_basename($original_uri);
-    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
     $generate_url = image_style_url($this->style_name, $original_uri);
 
     if ($GLOBALS['script_path']) {
@@ -119,32 +119,32 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
-    $this->assertResponse(200, t('Image was generated at the URL.'));
-    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
-    $this->assertRaw(file_get_contents($generated_uri), t('URL returns expected file.'));
+    $this->assertResponse(200, 'Image was generated at the URL.');
+    $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
+    $this->assertRaw(file_get_contents($generated_uri), 'URL returns expected file.');
     $generated_image_info = image_get_info($generated_uri);
-    $this->assertEqual($this->drupalGetHeader('Content-Type'), $generated_image_info['mime_type'], t('Expected Content-Type was reported.'));
-    $this->assertEqual($this->drupalGetHeader('Content-Length'), $generated_image_info['file_size'], t('Expected Content-Length was reported.'));
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), $generated_image_info['mime_type'], 'Expected Content-Type was reported.');
+    $this->assertEqual($this->drupalGetHeader('Content-Length'), $generated_image_info['file_size'], 'Expected Content-Length was reported.');
     if ($scheme == 'private') {
-      $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
-      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'no-cache, private', t('Cache-Control header was set to prevent caching.'));
-      $this->assertEqual($this->drupalGetHeader('X-Image-Owned-By'), 'image_module_test', t('Expected custom header has been added.'));
+      $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
+      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'no-cache, private', 'Cache-Control header was set to prevent caching.');
+      $this->assertEqual($this->drupalGetHeader('X-Image-Owned-By'), 'image_module_test', 'Expected custom header has been added.');
 
       // Make sure that a second request to the already existing derivate works
       // too.
       $this->drupalGet($generate_url);
-      $this->assertResponse(200, t('Image was generated at the URL.'));
+      $this->assertResponse(200, 'Image was generated at the URL.');
 
       // Repeat this with a different file that we do not have access to and
       // make sure that access is denied.
       $file_noaccess = array_shift($files);
       $original_uri_noaccess = file_unmanaged_copy($file_noaccess->uri, $scheme . '://', FILE_EXISTS_RENAME);
       $generated_uri_noaccess = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. drupal_basename($original_uri_noaccess);
-      $this->assertFalse(file_exists($generated_uri_noaccess), t('Generated file does not exist.'));
+      $this->assertFalse(file_exists($generated_uri_noaccess), 'Generated file does not exist.');
       $generate_url_noaccess = image_style_url($this->style_name, $original_uri_noaccess);
 
       $this->drupalGet($generate_url_noaccess);
-      $this->assertResponse(403, t('Confirmed that access is denied for the private image style.') );
+      $this->assertResponse(403, 'Confirmed that access is denied for the private image style.');
       // Verify that images are not appended to the response. Currently this test only uses PNG images.
       if (strpos($generate_url, '.png') === FALSE ) {
         $this->fail('Confirming that private image styles are not appended require PNG file.');

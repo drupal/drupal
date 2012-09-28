@@ -170,7 +170,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Check that the URL was updated.
     $this->drupalGet($style_path);
-    $this->assertResponse(200, t('Image style %original renamed to %new', array('%original' => $style['label'], '%new' => $style_name)));
+    $this->assertResponse(200, format_string('Image style %original renamed to %new', array('%original' => $style['label'], '%new' => $style_name)));
 
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
@@ -190,7 +190,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
         $order_correct = FALSE;
       }
     }
-    $this->assertTrue($order_correct, t('The order of the effects is correctly set by default.'));
+    $this->assertTrue($order_correct, 'The order of the effects is correctly set by default.');
 
     // Image effect deletion form.
 
@@ -242,7 +242,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw(image_style_url($style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomName(10));
@@ -252,9 +252,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'label' => $new_style_label,
     );
     $this->drupalPost('admin/config/media/image-styles/edit/' . $style_name, $edit, t('Update style'));
-    $this->assertText(t('Changes to the style have been saved.'), t('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
+    $this->assertText(t('Changes to the style have been saved.'), format_string('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($new_style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style replacement style.'));
+    $this->assertRaw(image_style_url($new_style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), 'Image displayed using style replacement style.');
 
     // Delete the style and choose a replacement style.
     $edit = array(
@@ -265,7 +265,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertRaw($message);
 
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url('thumbnail', file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style replacement style.'));
+    $this->assertRaw(image_style_url('thumbnail', file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), 'Image displayed using style replacement style.');
   }
 
   /**

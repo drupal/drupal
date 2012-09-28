@@ -62,7 +62,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'height' => 20,
     );
     $default_output = theme('image', $image_info);
-    $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
+    $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Test the image linked to file formatter.
     $instance = field_info_instance('node', $field_name, 'article');
@@ -71,20 +71,20 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     field_update_instance($instance);
     $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw($default_output, t('Image linked to file formatter displaying correctly on full node view.'));
+    $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
     // Verify that the image can be downloaded.
-    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), t('File was downloaded successfully.'));
+    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
-      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', t('Content-Type header was sent.'));
-      $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', t('Content-Disposition header was sent.'));
-      $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'),'private') !== FALSE, t('Cache-Control header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', 'Content-Type header was sent.');
+      $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', 'Content-Disposition header was sent.');
+      $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'),'private') !== FALSE, 'Cache-Control header was sent.');
 
       // Log out and try to access the file.
       $this->drupalLogout();
       $this->drupalGet(file_create_url($image_uri));
-      $this->assertResponse('403', t('Access denied to original image as anonymous user.'));
+      $this->assertResponse('403', 'Access denied to original image as anonymous user.');
 
       // Log in again.
       $this->drupalLogin($this->admin_user);
@@ -95,7 +95,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     field_update_instance($instance);
     $default_output = l(theme('image', $image_info), 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw($default_output, t('Image linked to content formatter displaying correctly on full node view.'));
+    $this->assertRaw($default_output, 'Image linked to content formatter displaying correctly on full node view.');
 
     // Test the image style 'thumbnail' formatter.
     $instance['display']['default']['settings']['image_link'] = '';
@@ -110,13 +110,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $image_info['style_name'] = 'thumbnail';
     $default_output = theme('image_style', $image_info);
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw($default_output, t('Image style thumbnail formatter displaying correctly on full node view.'));
+    $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
 
     if ($scheme == 'private') {
       // Log out and try to access the file.
       $this->drupalLogout();
       $this->drupalGet(image_style_url('thumbnail', $image_uri));
-      $this->assertResponse('403', t('Access denied to image style thumbnail as anonymous user.'));
+      $this->assertResponse('403', 'Access denied to image style thumbnail as anonymous user.');
     }
   }
 
@@ -145,16 +145,16 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $instance = field_info_instance('node', $field_name, 'article');
 
     $this->drupalGet('node/add/article');
-    $this->assertText(t('Files must be less than 50 KB.'), t('Image widget max file size is displayed on article form.'));
-    $this->assertText(t('Allowed file types: ' . $test_image_extension . '.'), t('Image widget allowed file types displayed on article form.'));
-    $this->assertText(t('Images must be between 10x10 and 100x100 pixels.'), t('Image widget allowed resolution displayed on article form.'));
+    $this->assertText(t('Files must be less than 50 KB.'), 'Image widget max file size is displayed on article form.');
+    $this->assertText(t('Allowed file types: ' . $test_image_extension . '.'), 'Image widget allowed file types displayed on article form.');
+    $this->assertText(t('Images must be between 10x10 and 100x100 pixels.'), 'Image widget allowed resolution displayed on article form.');
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]', '', t('Alt field displayed on article form.'));
-    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]', '', t('Title field displayed on article form.'));
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]', '', 'Alt field displayed on article form.');
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]', '', 'Title field displayed on article form.');
     // Verify that the attached image is being previewed using the 'medium'
     // style.
     $node = node_load($nid, TRUE);
@@ -165,7 +165,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'style_name' => 'medium',
     );
     $default_output = theme('image_style', $image_info);
-    $this->assertRaw($default_output, t("Preview image is displayed using 'medium' style."));
+    $this->assertRaw($default_output, "Preview image is displayed using 'medium' style.");
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image_info = array(
@@ -181,7 +181,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
     $default_output = theme('image', $image_info);
-    $this->assertRaw($default_output, t('Image displayed using user supplied alt and title attributes.'));
+    $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
 
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
@@ -214,7 +214,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $node->nid);
     // Verify that no image is displayed on the page by checking for the class
     // that would be used on the image field.
-    $this->assertNoPattern('<div class="(.*?)field-name-' . strtr($field_name, '_', '-') . '(.*?)">', t('No image displayed when no image is attached and no default image specified.'));
+    $this->assertNoPattern('<div class="(.*?)field-name-' . strtr($field_name, '_', '-') . '(.*?)">', 'No image displayed when no image is attached and no default image specified.');
 
     // Add a default image to the public imagefield instance.
     $images = $this->drupalGetTestFiles('image');
@@ -226,10 +226,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     field_info_cache_clear();
     $field = field_info_field($field_name);
     $image = file_load($field['settings']['default_image']);
-    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, t('The default image status is permanent.'));
+    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, 'The default image status is permanent.');
     $default_output = theme('image', array('uri' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw($default_output, t('Default image displayed when no user supplied image is present.'));
+    $this->assertRaw($default_output, 'Default image displayed when no user supplied image is present.');
 
     // Create a node with an image attached and ensure that the default image
     // is not displayed.
@@ -242,8 +242,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $image_output = theme('image', $image_info);
     $this->drupalGet('node/' . $nid);
-    $this->assertNoRaw($default_output, t('Default image is not displayed when user supplied image is present.'));
-    $this->assertRaw($image_output, t('User supplied image is displayed.'));
+    $this->assertNoRaw($default_output, 'Default image is not displayed when user supplied image is present.');
+    $this->assertRaw($image_output, 'User supplied image is displayed.');
 
     // Remove default image from the field and make sure it is no longer used.
     $edit = array(
@@ -253,7 +253,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
-    $this->assertFalse($field['settings']['default_image'], t('Default image removed from field.'));
+    $this->assertFalse($field['settings']['default_image'], 'Default image removed from field.');
     // Create an image field that uses the private:// scheme and test that the
     // default image works as expected.
     $private_field_name = strtolower($this->randomName());
@@ -265,13 +265,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalPost('admin/structure/types/manage/article/fields/' . $private_field_name, $edit, t('Save settings'));
     $private_field = field_info_field($private_field_name);
     $image = file_load($private_field['settings']['default_image']);
-    $this->assertEqual('private', file_uri_scheme($image->uri), t('Default image uses private:// scheme.'));
-    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, t('The default image status is permanent.'));
+    $this->assertEqual('private', file_uri_scheme($image->uri), 'Default image uses private:// scheme.');
+    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private
     // image is displayed.
     $node = $this->drupalCreateNode(array('type' => 'article'));
     $default_output = theme('image', array('uri' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw($default_output, t('Default private image displayed when no user supplied image is present.'));
+    $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');
   }
 }
