@@ -56,10 +56,10 @@ class ConfigFileContentTest extends WebTestBase {
 
     // Verify an configuration object is returned.
     $this->assertEqual($config->getName(), $name);
-    $this->assertTrue($config, t('Config object created.'));
+    $this->assertTrue($config, 'Config object created.');
 
     // Verify the configuration object is empty.
-    $this->assertEqual($config->get(), array(), t('New config object is empty.'));
+    $this->assertEqual($config->get(), array(), 'New config object is empty.');
 
     // Verify nothing was saved.
     $data = $storage->read($name);
@@ -96,31 +96,31 @@ class ConfigFileContentTest extends WebTestBase {
     $config = config($name);
     $this->assertEqual($config->getName(), $name);
     $this->assertTrue($config, 'Config object created.');
-    $this->assertEqual($config->get($key), 'bar', t('Top level configuration value found.'));
+    $this->assertEqual($config->get($key), 'bar', 'Top level configuration value found.');
 
     // Read nested value
-    $this->assertEqual($config->get($nested_key), $nested_value, t('Nested configuration value found.'));
+    $this->assertEqual($config->get($nested_key), $nested_value, 'Nested configuration value found.');
 
     // Read array
-    $this->assertEqual($config->get($array_key), $array_value, t('Top level array configuration value found.'));
+    $this->assertEqual($config->get($array_key), $array_value, 'Top level array configuration value found.');
 
     // Read nested array
-    $this->assertEqual($config->get($nested_array_key), $array_value, t('Nested array configuration value found.'));
+    $this->assertEqual($config->get($nested_array_key), $array_value, 'Nested array configuration value found.');
 
     // Read a top level value that doesn't exist
-    $this->assertNull($config->get('i_dont_exist'), t('Non-existent top level value returned NULL.'));
+    $this->assertNull($config->get('i_dont_exist'), 'Non-existent top level value returned NULL.');
 
     // Read a nested value that doesn't exist
-    $this->assertNull($config->get('i.dont.exist'), t('Non-existent nested value returned NULL.'));
+    $this->assertNull($config->get('i.dont.exist'), 'Non-existent nested value returned NULL.');
 
     // Read false value
-    $this->assertEqual($config->get($false_key), '0', t('Boolean FALSE value returned the string \'0\'.'));
+    $this->assertEqual($config->get($false_key), '0', format_string("Boolean FALSE value returned the string '0'."));
 
     // Read true value
-    $this->assertEqual($config->get($true_key), '1', t('Boolean TRUE value returned the string \'1\'.'));
+    $this->assertEqual($config->get($true_key), '1', format_string("Boolean TRUE value returned the string '1'."));
 
     // Read false that had been nested in an array value
-    $this->assertEqual($config->get($casting_array_false_value_key), '0', t('Nested boolean FALSE value returned the string \'0\'.'));
+    $this->assertEqual($config->get($casting_array_false_value_key), '0', format_string("Nested boolean FALSE value returned the string '0'."));
 
     // Unset a top level value
     $config->clear($key);
@@ -131,10 +131,10 @@ class ConfigFileContentTest extends WebTestBase {
     $config = config($name);
 
     // Read unset top level value
-    $this->assertNull($config->get($key), t('Top level value unset.'));
+    $this->assertNull($config->get($key), 'Top level value unset.');
 
     // Read unset nested value
-    $this->assertNull($config->get($nested_key), t('Nested value unset.'));
+    $this->assertNull($config->get($nested_key), 'Nested value unset.');
 
     // Create two new configuration files to test listing
     $config = config('foo.baz');
