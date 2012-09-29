@@ -90,13 +90,6 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    */
   function get_aggregation_info() { }
 
-  /**
-   * Add settings for the ui.
-   */
-  public function buildOptionsForm(&$form, &$form_state) {
-    parent::buildOptionsForm($form, $form_state);
-  }
-
   public function validateOptionsForm(&$form, &$form_state) { }
 
   public function submitOptionsForm(&$form, &$form_state) { }

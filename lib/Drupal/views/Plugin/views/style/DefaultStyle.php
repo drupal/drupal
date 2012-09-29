@@ -40,8 +40,4 @@ class DefaultStyle extends StylePluginBase {
    */
   protected $usesRowClass = TRUE;
 
-  public function buildOptionsForm(&$form, &$form_state) {
-    parent::buildOptionsForm($form, $form_state);
-  }
-
 }
