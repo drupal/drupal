@@ -9,6 +9,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Implements hook_menu().
@@ -801,17 +802,19 @@ function views_ui_load($name) {
  *   redirect back to the listing page.
  */
 function views_ui_ajax_callback(ViewExecutable $view, $op) {
-  $controller = views_ui_entity_list_controller('view');
   // Perform the operation.
   $view->storage->$op();
 
   // If the request is via AJAX, return the rendered list as JSON.
   if (drupal_container()->get('request')->request->get('js')) {
-    return $controller->renderListAJAX();
+    $list = entity_list_controller('view')->render();
+    $commands = array(ajax_command_replace('#views-entity-list', drupal_render($list)));
+    return new JsonResponse(ajax_render($commands));
   }
   // Otherwise, redirect back to the page.
   else {
-    drupal_goto($controller->getPath());
+    $entity_info = entity_get_info('view');
+    drupal_goto($entity_info['list path']);
   }
 }
 
@@ -824,6 +827,5 @@ function views_ui_ajax_callback(ViewExecutable $view, $op) {
  * @see views_ui_menu()
  */
 function views_ui_list_page() {
-  $controller = views_ui_entity_list_controller('view');
-  return $controller->render();
+  return entity_list_controller('view')->render();
 }

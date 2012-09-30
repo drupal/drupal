@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\views_ui_listing\EntityListController;
+use Drupal\Core\Entity\EntityListController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
 class ViewListController extends EntityListController {
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListController::load();
+   * Overrides Drupal\Core\Entity\EntityListController::load();
    */
   public function load() {
     $entities = parent::load();
@@ -32,18 +32,18 @@ class ViewListController extends EntityListController {
   }
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListController::buildRow();
+   * Overrides Drupal\Core\Entity\EntityListController::buildRow();
    */
   public function buildRow(EntityInterface $view) {
-    $operations = $this->buildOperations($view);
-    $operations['#theme'] = 'links__ctools_dropbutton';
     return array(
       'data' => array(
         'view_name' => theme('views_ui_view_info', array('view' => $view)),
         'description' => $view->description,
         'tag' => $view->tag,
         'path' => implode(', ', $view->getPaths()),
-        'operations' => drupal_render($operations),
+        'operations' => array(
+          'data' => $this->buildOperations($view),
+        ),
       ),
       'title' => t('Machine name: ') . $view->id(),
       'class' => array($view->isEnabled() ? 'views-ui-list-enabled' : 'views-ui-list-disabled'),
@@ -51,7 +51,7 @@ class ViewListController extends EntityListController {
   }
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListController::buildHeader();
+   * Overrides Drupal\Core\Entity\EntityListController::buildHeader();
    */
   public function buildHeader() {
     return array(
@@ -79,7 +79,7 @@ class ViewListController extends EntityListController {
   }
 
   /**
-   * Implements Drupal\views_ui_listing\EntityListController::getOperations();
+   * Implements Drupal\Core\Entity\EntityListController::getOperations();
    */
   public function getOperations(EntityInterface $view) {
     $uri = $view->uri();
@@ -127,11 +127,32 @@ class ViewListController extends EntityListController {
   }
 
   /**
-   * Overrides Drupal\views_ui_listing\EntityListController::render();
+   * Overrides Drupal\Core\Entity\EntityListController::buildOperations();
+   */
+  public function buildOperations(EntityInterface $entity) {
+    $build = parent::buildOperations($entity);
+
+    // Allow operations to specify that they use AJAX.
+    foreach ($build['#links'] as &$operation) {
+      if (!empty($operation['ajax'])) {
+        $operation['attributes']['class'][] = 'use-ajax';
+      }
+    }
+
+    // Use theme_links__ctools_dropbutton().
+    $build['#theme'] = 'links__ctools_dropbutton';
+
+    return $build;
+  }
+
+  /**
+   * Overrides Drupal\Core\Entity\EntityListController::render();
    */
   public function render() {
     $list = parent::render();
     $list['#attached']['css'] = ViewUI::getAdminCSS();
+    $list['#attached']['library'][] = array('system', 'drupal.ajax');
+    $list['#attributes']['id'] = 'views-entity-list';
     return $list;
   }
 
