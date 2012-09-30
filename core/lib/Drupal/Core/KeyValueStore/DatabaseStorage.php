@@ -13,10 +13,10 @@ namespace Drupal\Core\KeyValueStore;
  * This is Drupal's default key/value store implementation. It uses the database
  * to store key/value data.
  */
-class DatabaseStorage extends AbstractStorage {
+class DatabaseStorage extends StorageBase {
 
   /**
-   * Overrides Drupal\Core\KeyValueStore\AbstractStorage::__construct().
+   * Overrides Drupal\Core\KeyValueStore\StorageBase::__construct().
    *
    * @param string $collection
    *   The name of the collection holding key and value pairs.

@@ -2,12 +2,15 @@
 
 /**
  * @file
- * Contains Drupal\Core\KeyValueStore\AbstractStorage.
+ * Contains Drupal\Core\KeyValueStore\StorageBase.
  */
 
 namespace Drupal\Core\KeyValueStore;
 
-abstract class AbstractStorage implements KeyValueStoreInterface {
+/**
+ * Provides a base class for key/value storage implementations.
+ */
+abstract class StorageBase implements KeyValueStoreInterface {
 
   /**
    * The name of the collection holding key and value pairs.

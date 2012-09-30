@@ -10,7 +10,8 @@ namespace Drupal\Core\KeyValueStore;
 /**
  * Defines a default key/value store implementation.
  *
- * For performance reasons, this implementation is not based on AbstractStorage.
+ * For performance reasons, this implementation is not based on
+ * Drupal\Core\KeyValueStore\StorageBase.
  */
 class MemoryStorage implements KeyValueStoreInterface {
 
