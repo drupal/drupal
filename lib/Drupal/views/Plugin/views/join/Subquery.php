@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\join;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Join handler for relationships that join with a subquery as the left field.
@@ -23,9 +24,13 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Subquery extends JoinPluginBase {
 
-  function construct($table = NULL, $left_table = NULL, $left_field = NULL, $field = NULL, $extra = array(), $type = 'LEFT') {
-    parent::construct($table, $left_table, $left_field, $field, $extra, $type);
-    $this->left_query = $this->definition['left_query'];
+  /**
+   * Constructs a Subquery object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
+    $this->left_query = $this->configuration['left_query'];
   }
 
   /**
@@ -41,11 +46,11 @@ class Subquery extends JoinPluginBase {
    *
    */
   public function buildJoin($select_query, $table, $view_query) {
-    if (empty($this->definition['table formula'])) {
+    if (empty($this->configuration['table formula'])) {
       $right_table = "{" . $this->table . "}";
     }
     else {
-      $right_table = $this->definition['table formula'];
+      $right_table = $this->configuration['table formula'];
     }
 
     // Add our join condition, using a subquery on the left instead of a field.

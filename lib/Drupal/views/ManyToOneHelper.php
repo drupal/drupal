@@ -307,7 +307,13 @@ class ManyToOneHelper {
         $this->handler->query->add_where_expression($options['group'], "$field $operator", $placeholders);
       }
       else {
-        $this->handler->query->add_where($options['group'], $field, $value, $operator);
+        $placeholder = $this->placeholder();
+        if (count($this->handler->value) > 1) {
+          $this->query->add_where_expression(0, "$field $operator($placeholder)", array($placeholder => $value));
+        }
+        else {
+          $this->handler->query->add_where_expression(0, "$field $operator $placeholder", array($placeholder => $value));
+        }
       }
     }
 
