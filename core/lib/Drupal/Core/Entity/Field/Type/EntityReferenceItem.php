@@ -68,7 +68,7 @@ class EntityReferenceItem extends FieldItemBase {
 
     // Entity is computed out of the ID, so we only need to update the ID. Only
     // set the entity field if no ID is given.
-    if (!empty($values['value'])) {
+    if (isset($values['value'])) {
       $this->properties['value']->setValue($values['value']);
     }
     else {

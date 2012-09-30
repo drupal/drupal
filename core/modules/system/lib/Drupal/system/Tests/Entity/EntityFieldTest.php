@@ -220,6 +220,16 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertEqual($values['name'], array(0 => array('value' => 'bar')), 'Field value has been retrieved via getPropertyValue() from an entity.');
     $entity->setPropertyValues(array('name' => 'foo'));
     $this->assertEqual($entity->name->value, 'foo', 'Field value has been set via setPropertyValue() on an entity.');
+
+    // Make sure the user id can be set to zero.
+    $user_item[0]['value'] = 0;
+    $entity = entity_create('entity_test', array(
+      'name' => $name_item,
+      'user_id' => $user_item,
+      'field_test_text' => $text_item,
+    ));
+    $this->assertNotNull($entity->user_id->value, 'User id is not NULL');
+    $this->assertIdentical($entity->user_id->value, 0, 'User id has been set to 0');
   }
 
   /**
