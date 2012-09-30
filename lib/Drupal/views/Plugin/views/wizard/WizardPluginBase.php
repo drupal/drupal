@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\views\ViewStorage;
-use Drupal\views\ViewUI;
+use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
@@ -1029,7 +1029,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param bool $unset
    *   Should the view be removed from the list of validated views.
    *
-   * @return Drupal\views\ViewUI $view
+   * @return Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
   protected function retrieve_validated_view(array $form, array &$form_state, $unset = TRUE) {
@@ -1050,7 +1050,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   The full wizard form array.
    * @param array $form_state
    *   The current state of the wizard form.
-   * @param Drupal\views\ViewUI $view
+   * @param Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
   protected function set_validated_view(array $form, array &$form_state, ViewUI $view) {

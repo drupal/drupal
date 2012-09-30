@@ -8,6 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\views_ui\ViewUI;
 
 /**
  * Defines a ViewStorage configuration entity class.
@@ -130,7 +131,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    * @param bool $reset
    *   Get a new Drupal\views\ViewExecutable instance.
    * @param bool $ui
-   *   If this should return Drupal\views\ViewUI instead.
+   *   If this should return Drupal\views_ui\ViewUI instead.
    *
    * @return Drupal\views\ViewExecutable
    *   The executable version of this view.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\ViewListController.
+ * Definition of Drupal\views_ui\ViewListController.
  */
 
-namespace Drupal\views;
+namespace Drupal\views_ui;
 
 use Drupal\Core\Entity\EntityListController;
 use Drupal\Core\Entity\EntityInterface;

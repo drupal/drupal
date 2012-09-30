@@ -88,7 +88,7 @@ function views_entity_info() {
       'label' => t('View'),
       'entity class' => 'Drupal\views\ViewStorage',
       'controller class' => 'Drupal\views\ViewStorageController',
-      'list controller class' => 'Drupal\views\ViewListController',
+      'list controller class' => 'Drupal\views_ui\ViewListController',
       'list path' => 'admin/structure/views',
       'form controller class' => array(
         'default' => 'Drupal\node\NodeFormController',

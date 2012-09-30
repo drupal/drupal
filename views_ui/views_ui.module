@@ -6,7 +6,7 @@
  */
 
 use Drupal\views\ViewExecutable;
-use Drupal\views\ViewUI;
+use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +21,7 @@ function views_ui_menu() {
   $base = array(
     'access callback' => 'user_access',
     'access arguments' => array('administer views'),
-    'file' => 'includes/admin.inc',
+    'file' => 'admin.inc',
   );
   // Set up the base for AJAX callbacks.
   $ajax_base = array(
@@ -181,8 +181,7 @@ function views_ui_menu() {
  * Implements hook_theme().
  */
 function views_ui_theme() {
-  $path = drupal_get_path('module', 'views');
-  require_once DRUPAL_ROOT . "/$path/includes/admin.inc";
+  $path = drupal_get_path('module', 'views_ui');
 
   return array(
     // edit a view
@@ -190,11 +189,13 @@ function views_ui_theme() {
       'variables' => array('description' => '', 'link' => '', 'settings_links' => array(), 'overridden' => FALSE, 'defaulted' => FALSE, 'description_separator' => TRUE, 'class' => array()),
       'template' => 'views-ui-display-tab-setting',
       'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
     'views_ui_display_tab_bucket' => array(
       'render element' => 'element',
       'template' => 'views-ui-display-tab-bucket',
       'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
     'views_ui_edit_item' => array(
       'variables' => array('type' => NULL, 'view' => NULL, 'display' => NULL, 'no_fields' => FALSE),
@@ -203,26 +204,32 @@ function views_ui_theme() {
     ),
     'views_ui_rearrange_form' => array(
       'render element' => 'form',
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
     'views_ui_rearrange_filter_form' => array(
       'render element' => 'form',
-      'file' => 'includes/admin.inc',
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
     'views_ui_expose_filter_form' => array(
       'render element' => 'form',
-      'file' => 'includes/admin.inc',
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
 
     // list views
     'views_ui_view_info' => array(
       'variables' => array('view' => NULL, 'base' => NULL),
-      'file' => "includes/admin.inc",
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
 
     // Group of filters.
     'views_ui_build_group_filter_form' => array(
       'render element' => 'form',
-      'file' => 'includes/admin.inc',
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
 
     // tab themes
@@ -234,24 +241,30 @@ function views_ui_theme() {
     ),
     'views_ui_reorder_displays_form' => array(
       'render element' => 'form',
-      'file' => 'includes/admin.inc',
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
 
     // On behalf of a plugin
     'views_ui_style_plugin_table' => array(
       'render element' => 'form',
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
 
     // When previewing a view.
     'views_ui_view_preview_section' => array(
       'variables' => array('view' => NULL, 'section' => NULL, 'content' => NULL, 'links' => ''),
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
 
     // Generic container wrapper, to use instead of theme_container when an id
     // is not desired.
-    'views_container' => array(
+    'views_ui_container' => array(
       'render element' => 'element',
-      'file' => 'theme/theme.inc',
+      'path' => "$path/theme",
+      'file' => 'theme.inc',
     ),
   );
 }
@@ -275,7 +288,7 @@ function views_ui_custom_theme() {
  * Page title callback for the Edit View page.
  */
 function views_ui_edit_page_title(ViewUI $view) {
-  module_load_include('inc', 'views_ui', 'includes/admin');
+  module_load_include('inc', 'views_ui', 'admin');
   $bases = views_fetch_base_tables();
   $name = $view->storage->getHumanName();
   if (isset($bases[$view->storage->base_table])) {
@@ -368,90 +381,13 @@ function views_ui_preprocess_views_view(&$vars) {
           '#view' => $view,
           '#section' => $section,
           '#content' => is_array($vars[$section]) ? drupal_render($vars[$section]) : $vars[$section],
-          '#theme_wrappers' => array('views_container'),
+          '#theme_wrappers' => array('views_ui_container'),
           '#attributes' => array('class' => 'contextual-region'),
         );
         $vars[$section] = drupal_render($vars[$section]);
       }
     }
   }
-}
-
-/**
- * Theme preprocess for theme_views_ui_view_preview_section().
- *
- * @TODO
- *    Perhaps move this to includes/admin.inc or theme/theme.inc
- */
-function template_preprocess_views_ui_view_preview_section(&$vars) {
-  switch ($vars['section']) {
-    case 'title':
-      $vars['title'] = t('Title');
-      $links = views_ui_view_preview_section_display_category_links($vars['view'], 'title', $vars['title']);
-      break;
-    case 'header':
-      $vars['title'] = t('Header');
-      $links = views_ui_view_preview_section_handler_links($vars['view'], $vars['section']);
-      break;
-    case 'empty':
-      $vars['title'] = t('No results behavior');
-      $links = views_ui_view_preview_section_handler_links($vars['view'], $vars['section']);
-      break;
-    case 'exposed':
-      // @todo Sorts can be exposed too, so we may need a better title.
-      $vars['title'] = t('Exposed Filters');
-      $links = views_ui_view_preview_section_display_category_links($vars['view'], 'exposed_form_options', $vars['title']);
-      break;
-    case 'rows':
-      // @todo The title needs to depend on what is being viewed.
-      $vars['title'] = t('Content');
-      $links = views_ui_view_preview_section_rows_links($vars['view']);
-      break;
-    case 'pager':
-      $vars['title'] = t('Pager');
-      $links = views_ui_view_preview_section_display_category_links($vars['view'], 'pager_options', $vars['title']);
-      break;
-    case 'more':
-      $vars['title'] = t('More');
-      $links = views_ui_view_preview_section_display_category_links($vars['view'], 'use_more', $vars['title']);
-      break;
-    case 'footer':
-      $vars['title'] = t('Footer');
-      $links = views_ui_view_preview_section_handler_links($vars['view'], $vars['section']);
-      break;
-    case 'attachment_before':
-      // @todo: Add links to the attachment configuration page.
-      $vars['title'] = t('Attachment before');
-      break;
-    case 'attachment_after':
-      // @todo: Add links to the attachment configuration page.
-      $vars['title'] = t('Attachment after');
-      break;
-  }
-
-  if (isset($links)) {
-    $build = array(
-      '#prefix' => '<div class="contextual">',
-      '#suffix' => '</div>',
-      '#theme' => 'links__contextual',
-      '#links' => $links,
-      '#attributes' => array('class' => array('contextual-links')),
-      '#attached' => array(
-        'library' => array(array('contextual', 'contextual-links')),
-      ),
-    );
-    $vars['links'] = drupal_render($build);
-  }
-  $vars['theme_hook_suggestions'][] = 'views_ui_view_preview_section__' . $vars['section'];
-}
-
-/**
- * Returns the HTML for a section of a View being previewed within the Views UI.
- */
-function theme_views_ui_view_preview_section($vars) {
-  return '<h1 class="section-title">' . $vars['title'] . '</h1>'
-  . $vars['links']
-  . '<div class="preview-section">'. $vars['content'] . '</div>';
 }
 
 /**

@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\views\ViewUI.
+ * Definition of Drupal\views_ui\ViewUI.
  */
 
-namespace Drupal\views;
+namespace Drupal\views_ui;
 
+use Drupal\views\ViewExecutable;
 use Drupal\views\TempStore\UserTempStore;
 
 /**
@@ -392,7 +393,7 @@ class ViewUI extends ViewExecutable {
    * Render the top of the display so it can be updated during ajax operations.
    */
   public function renderDisplayTop($display_id) {
-    $element['#theme_wrappers'] = array('views_container');
+    $element['#theme_wrappers'] = array('views_ui_container');
     $element['#attributes']['class'] = array('views-display-top', 'clearfix');
     $element['#attributes']['id'] = array('views-display-top');
 
@@ -939,7 +940,7 @@ class ViewUI extends ViewExecutable {
         if (!$uses_fields) {
           $build['fields'][] = array(
             '#markup' => t('The selected style or row format does not utilize fields.'),
-            '#theme_wrappers' => array('views_container'),
+            '#theme_wrappers' => array('views_ui_container'),
             '#attributes' => array('class' => array('views-display-setting')),
           );
           return $build;
@@ -1149,7 +1150,7 @@ class ViewUI extends ViewExecutable {
     drupal_set_message(t('The lock has been broken and you may now edit this view.'));
   }
 
-  public static function addForm($form, &$form_state) {
+  public static function buildAddForm($form, &$form_state) {
     $form['#attached']['css'] = static::getAdminCSS();
     $form['#attached']['js'][] = drupal_get_path('module', 'views_ui') . '/js/views-admin.js';
     $form['#attributes']['class'] = array('views-admin');
@@ -1242,7 +1243,7 @@ class ViewUI extends ViewExecutable {
       '#value' => t('Continue & edit'),
       '#validate' => array('views_ui_wizard_form_validate'),
       '#submit' => array('views_ui_add_form_store_edit_submit'),
-      '#process' => array_merge(array('views_ui_default_button'), element_info_property('submit', '#process', array())),
+      '#process' => array_merge(array(array(get_called_class(), 'processDefaultButton')), element_info_property('submit', '#process', array())),
     );
     $form['cancel'] = array(
       '#type' => 'submit',
@@ -1265,7 +1266,7 @@ class ViewUI extends ViewExecutable {
    *
    * @see views_ui_ajax_get_form()
    */
-  public function editForm($form, &$form_state, $display_id = NULL) {
+  public function buildEditForm($form, &$form_state, $display_id = NULL) {
     // Do not allow the form to be cached, because $form_state['view'] can become
     // stale between page requests.
     // See views_ui_ajax_get_form() for how this affects #ajax.
@@ -1487,7 +1488,7 @@ class ViewUI extends ViewExecutable {
       // as this button, not the Save button.
       // @todo This only works for JS users. To make this work for nojs users,
       //   we may need to split Preview into a separate form.
-      '#process' => array_merge(array('views_ui_default_button'), element_info_property('submit', '#process', array())),
+      '#process' => array_merge(array(array($this, 'processDefaultButton')), element_info_property('submit', '#process', array())),
     );
     $form['#action'] = url('admin/structure/views/view/' . $this->storage->name .'/preview/' . $display_id);
 
@@ -1613,7 +1614,7 @@ class ViewUI extends ViewExecutable {
       $this->stack = array();
     }
 
-    $stack = array($this->buildIdentifier($key, $display_id, $args), $key, &$this, $display_id, $args);
+    $stack = array($this->buildIdentifier($key, $display_id, $args), $key, $display_id, $args);
     // If we're being asked to add this form to the bottom of the stack, no
     // special logic is required. Our work is equally easy if we were asked to add
     // to the top of the stack, but there's nothing in it yet.
@@ -1962,6 +1963,45 @@ class ViewUI extends ViewExecutable {
     }
 
     return 0;
+  }
+
+  /**
+   * Build up a $form_state object suitable for use with drupal_build_form
+   * based on known information about a form.
+   */
+  public function buildFormState($js, $key, $display_id, $args) {
+    $form = views_ui_ajax_forms($key);
+    // Build up form state
+    $form_state = array(
+      'form_key' => $key,
+      'form_id' => $form['form_id'],
+      'view' => &$this,
+      'ajax' => $js,
+      'display_id' => $display_id,
+      'no_redirect' => TRUE,
+    );
+    // If an method was specified, use that for the callback.
+    if (isset($form['callback'])) {
+      $form_state['build_info']['args'] = array();
+      $form_state['build_info']['callback'] = array($this, $form['callback']);
+    }
+
+    foreach ($form['args'] as $id) {
+      $form_state[$id] = (!empty($args)) ? array_shift($args) : NULL;
+    }
+
+    return $form_state;
+  }
+
+  /**
+   * #process callback for a button; makes implicit form submissions trigger as this button.
+   *
+   * @see Drupal.behaviors.viewsImplicitFormSubmission
+   */
+  public static function processDefaultButton($element, &$form_state, $form) {
+    $setting['viewsImplicitFormSubmission'][$form['#id']]['defaultButton'] = $element['#id'];
+    $element['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+    return $element;
   }
 
 }
