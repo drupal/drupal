@@ -157,9 +157,9 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
 
     $this->drupalLogout();
 
-    // Test logging in via the user/login page.
+    // Test logging in via the user/login/openid page.
     $edit = array('openid_identifier' => $identity);
-    $this->drupalPost('user/login', $edit, t('Log in'));
+    $this->drupalPost('user/login/openid', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
     $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
@@ -169,7 +169,8 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
 
     $this->assertLink(t('Log out'), 0, 'User was logged in.');
 
-    // Verify user was redirected away from user/login to an accessible page.
+    // Verify user was redirected away from user/login/openid to an accessible
+    // page.
     $this->assertResponse(200);
 
     $this->drupalLogout();
@@ -199,9 +200,9 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     // Enable maintenance mode.
     config('system.maintenance')->set('enabled', TRUE)->save();
 
-    // Test logging in via the user/login page while the site is offline.
+    // Test logging in via the user/login/openid page while the site is offline.
     $edit = array('openid_identifier' => $identity);
-    $this->drupalPost('user/login', $edit, t('Log in'));
+    $this->drupalPost('user/login/openid', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
     $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
@@ -211,7 +212,8 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
 
     $this->assertLink(t('Log out'), 0, 'User was logged in.');
 
-    // Verify user was redirected away from user/login to an accessible page.
+    // Verify user was redirected away from user/login/openid to an accessible
+    // page.
     $this->assertText(t('Operating in maintenance mode.'));
     $this->assertResponse(200);
   }

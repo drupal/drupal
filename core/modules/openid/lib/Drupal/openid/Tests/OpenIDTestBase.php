@@ -19,7 +19,7 @@ abstract class OpenIDTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'openid');
+  public static $modules = array('block', 'node', 'openid');
 
   function setUp() {
     parent::setUp();
@@ -40,6 +40,10 @@ abstract class OpenIDTestBase extends WebTestBase {
       ))
       ->execute();
 
+    // Use a different front page than login page for testing OpenID login from
+    // the user login block.
+    config('system.site')->set('page.front', 'node')->save();
+
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
@@ -53,7 +57,7 @@ abstract class OpenIDTestBase extends WebTestBase {
   function submitLoginForm($identity) {
     // Fill out and submit the login form.
     $edit = array('openid_identifier' => $identity);
-    $this->drupalPost('', $edit, t('Log in'));
+    $this->drupalPost('', $edit, t('Log in'), array(), array(), 'openid-login-form');
 
     // Check we are on the OpenID redirect form.
     $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');

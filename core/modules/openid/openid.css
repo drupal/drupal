@@ -1,44 +1,21 @@
-
-#edit-openid-identifier {
+input[name="openid_identifier"] {
   background-image: url("login-bg.png");
   background-position: left 50%; /* LTR */
   background-repeat: no-repeat;
   padding-left: 20px; /* LTR */
 }
-div.form-item-openid-identifier {
-  display: block;
-}
-.js #user-login-form div.form-item-openid-identifier,
-.js #user-login div.form-item-openid-identifier {
+.js form.user-login-block.openid-login-form {
   display: none;
 }
-#user-login-form ul {
-  margin-top: 0;
-}
-#user-login ul {
-  margin: 0 0 5px;
-}
-#user-login ul li {
-  margin: 0;
-}
-#user-login-form .openid-links {
-  padding-bottom: 0;
-}
-#user-login .openid-links {
-  padding-left: 0; /* LTR */
-}
-#user-login-form .openid-links li,
-#user-login .openid-links li {
+form.user-login-block a.openid-link,
+form.user-login-block a.user-link {
   display: none;
-  list-style: none;
 }
-.js #user-login-form li.openid-link,
-.js #user-login li.openid-link {
+.js form.user-login-block a.openid-link,
+.js form.user-login-block a.user-link {
   display: block;
-  margin-left: 0; /* LTR */
 }
-#user-login-form li.openid-link a,
-#user-login li.openid-link a {
+form.user-login-block a.openid-link {
   background-image: url("login-bg.png");
   background-position: left top; /* LTR */
   background-repeat: no-repeat;

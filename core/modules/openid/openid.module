@@ -16,6 +16,13 @@ function openid_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'openid.pages.inc',
   );
+  $items['user/login/openid'] = array(
+    'title' => 'OpenID',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('openid_login_form'),
+    'access callback' => 'user_is_anonymous',
+    'type' => MENU_LOCAL_TASK,
+  );
   $items['user/%user/openid'] = array(
     'title' => 'OpenID identities',
     'page callback' => 'openid_user_identities',
@@ -41,7 +48,7 @@ function openid_menu() {
  */
 function openid_menu_site_status_alter(&$menu_site_status, $path) {
   // Allow access to openid/authenticate even if site is in offline mode.
-  if ($menu_site_status == MENU_SITE_OFFLINE && user_is_anonymous() && $path == 'openid/authenticate') {
+  if ($menu_site_status == MENU_SITE_OFFLINE && user_is_anonymous() && in_array($path, array('openid/authenticate', 'user/login/openid'))) {
     $menu_site_status = MENU_SITE_ONLINE;
   }
 }
@@ -120,56 +127,84 @@ function openid_user_logout($account) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_block_view_MODULE_DELTA_alter().
+ *
+ * Adds the OpenID login form to the user login block.
+ *
+ * @see user_login_block()
  */
-function openid_form_user_login_block_alter(&$form, &$form_state) {
-  _openid_user_login_form_alter($form, $form_state);
+function openid_block_view_user_login_alter(&$block) {
+  // Only alter the block when it is non-empty, i.e. when no user is logged in.
+  if (!isset($block['content'])) {
+    return;
+  }
+
+  $block['content']['openid_login_form'] = drupal_get_form('openid_login_form');
+  $block['content']['openid_login_form']['#attributes']['class'][] = 'user-login-block';
+  $block['content']['openid_login_form']['openid_identifier']['#size'] = $block['content']['user_login_form']['name']['#size'];
+
+  // Add links between the forms.
+  $block['content']['user_login_form']['openid_link'] = array(
+    '#type' => 'link',
+    '#title' => t('Log in using OpenID'),
+    '#href' => '#openid-login',
+    '#options' => array('external' => TRUE),
+    '#attributes' => array('class' => array('openid-link')),
+    '#attached' => array('css' => array(
+      drupal_get_path('module', 'openid') . '/openid.css'),
+    ),
+    '#weight' => 5,
+  );
+  $block['content']['openid_login_form']['user_link'] = array(
+    '#type' => 'link',
+    '#title' => t('Cancel OpenID login'),
+    '#href' => '#nogo',
+    '#options' => array('external' => TRUE),
+    '#attributes' => array('class' => array('user-link')),
+    '#weight' => 5,
+  );
+  $block['content']['openid_login_form']['links'] = $block['content']['user_login_form']['links'];
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Form constructor for the OpenID login form.
+ *
+ * @see openid_login_form_submit()
  */
-function openid_form_user_login_alter(&$form, &$form_state) {
-  _openid_user_login_form_alter($form, $form_state);
-}
-
-function _openid_user_login_form_alter(&$form, &$form_state) {
+function openid_login_form($form) {
   $form['#attached']['library'][] = array('openid', 'drupal.openid');
-  if (!empty($form_state['input']['openid_identifier'])) {
-    $form['name']['#required'] = FALSE;
-    $form['pass']['#required'] = FALSE;
-    unset($form['#submit']);
-    $form['#validate'] = array('openid_login_validate');
-  }
-
-  $items = array();
-  $items[] = array(
-    'data' => l(t('Log in using OpenID'), '#openid-login', array('external' => TRUE)),
-    'class' => array('openid-link'),
-  );
-  $items[] = array(
-    'data' => l(t('Cancel OpenID login'), '#', array('external' => TRUE)),
-    'class' => array('user-link'),
-  );
-
-  $form['openid_links'] = array(
-    '#theme' => 'item_list',
-    '#items' => $items,
-    '#attributes' => array('class' => array('openid-links')),
-    '#weight' => 1,
-  );
-
-  $form['links']['#weight'] = 2;
 
   $form['openid_identifier'] = array(
     '#type' => 'textfield',
-    '#title' => t('Log in using OpenID'),
-    '#size' => $form['name']['#size'],
+    '#title' => t('OpenID'),
     '#maxlength' => 255,
-    '#weight' => -1,
     '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE)),
+    '#required' => TRUE,
   );
-  $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => user_login_destination())));
+
+  $form['openid.return_to'] = array(
+    '#type' => 'hidden',
+    '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => user_login_destination())),
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
+
+  return $form;
+}
+
+/**
+ * Form submit handler for openid_login_form().
+ *
+ * @see openid_login_form()
+ */
+function openid_login_form_submit($form, &$form_state) {
+  $return_to = $form_state['values']['openid.return_to'];
+  if (empty($return_to)) {
+    $return_to = url('', array('absolute' => TRUE));
+  }
+
+  openid_begin($form_state['values']['openid_identifier'], $return_to, $form_state['values']);
 }
 
 /**
@@ -287,18 +322,6 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       '#markup' => check_plain($response['openid.claimed_id']),
     );
   }
-}
-
-/**
- * Login form _validate hook
- */
-function openid_login_validate($form, &$form_state) {
-  $return_to = $form_state['values']['openid.return_to'];
-  if (empty($return_to)) {
-    $return_to = url('', array('absolute' => TRUE));
-  }
-
-  openid_begin($form_state['values']['openid_identifier'], $return_to, $form_state['values']);
 }
 
 /**
@@ -1079,7 +1102,7 @@ function openid_cron() {
  * Implements hook_library_info().
  */
 function openid_library_info() {
-  $libraries['openid'] = array(
+  $libraries['drupal.openid'] = array(
     'title' => 'OpenID',
     'version' => VERSION,
     'js' => array(
@@ -1090,7 +1113,8 @@ function openid_library_info() {
     ),
     'dependencies' => array(
       array('system', 'drupal'),
-      array('system', 'jquery.cookie')
+      array('system', 'jquery.cookie'),
+      array('system', 'jquery.once'),
     ),
   );
 

@@ -747,16 +747,21 @@ function user_login_block($form) {
     '#size' => 15,
     '#required' => TRUE,
   );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit',
-    '#value' => t('Log in'),
-  );
   $items = array();
   if (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
     $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
   $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
-  $form['links'] = array('#theme' => 'item_list', '#items' => $items);
+  $form['links'] = array(
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#weight' => 10,
+  );
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit',
+    '#value' => t('Log in'),
+    '#weight' => 20,
+  );
   return $form;
 }
 
@@ -837,7 +842,7 @@ function user_block_view($delta = '') {
       if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
 
         $block['subject'] = t('User login');
-        $block['content'] = drupal_get_form('user_login_block');
+        $block['content']['user_login_form'] = drupal_get_form('user_login_block');
       }
       return $block;
 
@@ -1178,6 +1183,12 @@ function user_menu() {
     'title' => 'Log in',
     'access callback' => 'user_is_anonymous',
     'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  // Other authentication methods may add pages below user/login/.
+  $items['user/login/default'] = array(
+    'title' => 'Username and password',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
   );
 
   $items['user/register'] = array(
@@ -3078,7 +3089,8 @@ function user_modules_uninstalled($modules) {
  */
 function user_login_destination() {
   $destination = drupal_get_destination();
-  if ($destination['destination'] == 'user/login') {
+  // Modules may provide login pages under the "user/login/" path prefix.
+  if (preg_match('@^user/login(/.*|)$@', $destination['destination'])) {
     $destination['destination'] = 'user';
   }
   return $destination;
