@@ -53,6 +53,15 @@ class ErrorHandlerTest extends WebTestBase {
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
 
+    // Set error reporting to display verbose notices.
+    config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
+    $this->drupalGet('error-test/generate-warnings');
+    $this->assertResponse(200, t('Received expected HTTP status code.'));
+    $this->assertErrorMessage($error_notice);
+    $this->assertErrorMessage($error_warning);
+    $this->assertErrorMessage($error_user_notice);
+    $this->assertRaw('<pre class="backtrace">', 'Found pre element with backtrace class.');
+
     // Set error reporting to collect notices.
     $config->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
     $this->drupalGet('error-test/generate-warnings');
@@ -60,6 +69,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
+    $this->assertNoRaw('<pre class="backtrace">', 'Did not find pre element with backtrace class.');
 
     // Set error reporting to not collect notices.
     $config->set('error_level', ERROR_REPORTING_DISPLAY_SOME)->save();
@@ -68,6 +78,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertNoErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
+    $this->assertNoRaw('<pre class="backtrace">', 'Did not find pre element with backtrace class.');
 
     // Set error reporting to not show any errors.
     $config->set('error_level', ERROR_REPORTING_HIDE)->save();
@@ -76,6 +87,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertNoErrorMessage($error_notice);
     $this->assertNoErrorMessage($error_warning);
     $this->assertNoErrorMessage($error_user_notice);
+    $this->assertNoRaw('<pre class="backtrace">', 'Did not find pre element with backtrace class.');
   }
 
   /**

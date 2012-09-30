@@ -250,7 +250,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       $message = t('%type: !message in %function (line %line of %file).', $error);
 
       // Check if verbose error reporting is on.
-      $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
+      $error_level = config('system.logging')->get('error_level');
 
       if ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE) {
         // First trace is the error itself, already contained in the message.
