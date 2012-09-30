@@ -34,6 +34,10 @@
  *     different operations, the name of the operation is passed also to the
  *     constructor of the form controller class. This way, one class can be used
  *     for multiple entity forms.
+ *   - list controller class: The name of the class that is used to provide
+ *     listings of the entity. The class must implement
+ *     Drupal\Core\Entity\EntityListControllerInterface. Defaults to
+ *     Drupal\Core\Entity\EntityListController.
  *   - base table: (used by Drupal\Core\Entity\DatabaseStorageController) The
  *     name of the entity type's base table.
  *   - static cache: (used by Drupal\Core\Entity\DatabaseStorageController)

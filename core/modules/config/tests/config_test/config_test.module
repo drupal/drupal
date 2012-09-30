@@ -82,6 +82,7 @@ function config_test_entity_info() {
     'label' => 'Test configuration',
     'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
     'entity class' => 'Drupal\config_test\ConfigTest',
+    'list controller class' => 'Drupal\Core\Config\Entity\ConfigEntityListController',
     'uri callback' => 'config_test_uri',
     'config prefix' => 'config_test.dynamic',
     'entity keys' => array(
@@ -176,36 +177,8 @@ function config_test_delete($id) {
  * Page callback; Lists available ConfigTest objects.
  */
 function config_test_list_page() {
-  $entities = entity_load_multiple('config_test');
-  uasort($entities, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-
-  $rows = array();
-  foreach ($entities as $config_test) {
-    $uri = $config_test->uri();
-    $row = array();
-    $row['name']['data'] = array(
-      '#type' => 'link',
-      '#title' => $config_test->label(),
-      '#href' => $uri['path'],
-      '#options' => $uri['options'],
-    );
-    $row['delete']['data'] = array(
-      '#type' => 'link',
-      '#title' => t('Delete'),
-      '#href' => $uri['path'] . '/delete',
-      '#options' => $uri['options'],
-    );
-    $rows[] = $row;
-  }
-  $build = array(
-    '#theme' => 'table',
-    '#header' => array('Name', 'Operations'),
-    '#rows' => $rows,
-    '#empty' => format_string('No test configuration defined. <a href="@add-url">Add some</a>', array(
-      '@add-url' => url('admin/structure/config_test/add'),
-    )),
-  );
-  return $build;
+  $controller = entity_list_controller('config_test');
+  return $controller->render();
 }
 
 /**

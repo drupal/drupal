@@ -47,6 +47,7 @@ function entity_get_info($entity_type = NULL) {
           'fieldable' => FALSE,
           'entity class' => 'Drupal\Core\Entity\Entity',
           'controller class' => 'Drupal\Core\Entity\DatabaseStorageController',
+          'list controller class' => 'Drupal\Core\Entity\EntityListController',
           'form controller class' => array(
             'default' => 'Drupal\Core\Entity\EntityFormController',
           ),
@@ -529,4 +530,22 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
   if ($info['fieldable']) {
     field_attach_submit($entity_type, $entity, $form, $form_state);
   }
+}
+
+/**
+ * Returns an entity list controller for a given entity type.
+ *
+ * @param string $entity_type
+ *   The type of the entity.
+ *
+ * @return Drupal\Core\Entity\EntityListControllerInterface
+ *   An entity list controller.
+ *
+ * @see hook_entity_info()
+ */
+function entity_list_controller($entity_type) {
+  $storage = entity_get_controller($entity_type);
+  $entity_info = entity_get_info($entity_type);
+  $class = $entity_info['list controller class'];
+  return new $class($entity_type, $storage);
 }
