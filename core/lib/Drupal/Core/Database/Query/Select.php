@@ -582,7 +582,25 @@ class Select extends Query implements SelectInterface {
     return $this;
   }
 
+  /**
+   * Implements SelectInterface::countQuery().
+   */
   public function countQuery() {
+    $count = $this->prepareCountQuery();
+
+    $query = $this->connection->select($count);
+    $query->addExpression('COUNT(*)');
+
+    return $query;
+  }
+
+  /**
+   * Prepares a count query from the current query object.
+   *
+   * @return Drupal\Core\Database\Query\Select
+   *   A new query object ready to have COUNT(*) performed on it.
+   */
+  protected function prepareCountQuery() {
     // Create our new query object that we will mutate into a count query.
     $count = clone($this);
 
@@ -630,10 +648,13 @@ class Select extends Query implements SelectInterface {
       $count->distinct = FALSE;
     }
 
-    $query = $this->connection->select($count);
-    $query->addExpression('COUNT(*)');
+    // If there are any dependent queries to UNION, prepare each of those for
+    // the count query also.
+    foreach ($count->union as &$union) {
+      $union['query'] = $union['query']->prepareCountQuery();
+    }
 
-    return $query;
+    return $count;
   }
 
   public function __toString() {

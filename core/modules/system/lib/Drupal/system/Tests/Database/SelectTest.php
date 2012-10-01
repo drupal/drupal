@@ -282,6 +282,28 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests that we can get a count query for a UNION Select query.
+   */
+  function testUnionCount() {
+    $query_1 = db_select('test', 't')
+      ->fields('t', array('name', 'age'))
+      ->condition('age', array(27, 28), 'IN');
+
+    $query_2 = db_select('test', 't')
+      ->fields('t', array('name', 'age'))
+      ->condition('age', 28);
+
+    $query_1->union($query_2, 'ALL');
+    $names = $query_1->execute()->fetchCol();
+
+    $query_3 = $query_1->countQuery();
+    $count = $query_3->execute()->fetchField();
+
+    // Ensure the counts match.
+    $this->assertEqual(count($names), $count, "The count query's result matched the number of rows in the UNION query.");
+  }
+
+  /**
    * Test that random ordering of queries works.
    *
    * We take the approach of testing the Drupal layer only, rather than trying
