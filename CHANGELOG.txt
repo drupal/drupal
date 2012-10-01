@@ -18,6 +18,8 @@ Drupal 7.16, xxxx-xx-xx (development version)
   projects.
 - Fixed a regression which caused a "call to undefined function
   drupal_find_base_themes()" fatal error under rare circumstances.
+- Added hook_entity_view_mode_alter() to allow modules to change entity view
+  modes on display.
 
 Drupal 7.15, 2012-08-01
 -----------------------

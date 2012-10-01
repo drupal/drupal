@@ -149,3 +149,13 @@ function node_test_node_update($node) {
     }
   }
 }
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function node_test_entity_view_mode_alter(&$view_mode, $context) {
+  // Only alter the view mode if we are on the test callback.
+  if ($change_view_mode = variable_get('node_test_change_view_mode', '')) {
+    $view_mode = $change_view_mode;
+  }
+}

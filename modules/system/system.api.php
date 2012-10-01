@@ -466,6 +466,24 @@ function hook_entity_view_alter(&$build, $type) {
 }
 
 /**
+ * Change the view mode of an entity that is being displayed.
+ *
+ * @param string $view_mode
+ *   The view_mode that is to be used to display the entity.
+ * @param array $context
+ *   Array with contextual information, including:
+ *   - entity_type: The type of the entity that is being viewed.
+ *   - entity: The entity object.
+ *   - langcode: The langcode the entity is being viewed in.
+ */
+function hook_entity_view_mode_alter(&$view_mode, $context) {
+  // For nodes, change the view mode when it is teaser.
+  if ($context['entity_type'] == 'node' && $view_mode == 'teaser') {
+    $view_mode = 'my_custom_view_mode';
+  }
+}
+
+/**
  * Define administrative paths.
  *
  * Modules may specify whether or not the paths they define in hook_menu() are
