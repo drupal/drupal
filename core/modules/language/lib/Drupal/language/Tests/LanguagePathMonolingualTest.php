@@ -49,8 +49,8 @@ class LanguagePathMonolingualTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
 
     // Verify that French is the only language.
-    $this->assertFalse(language_multilingual(), t('Site is mono-lingual'));
-    $this->assertEqual(language_default()->langcode, 'fr', t('French is the default language'));
+    $this->assertFalse(language_multilingual(), 'Site is mono-lingual');
+    $this->assertEqual(language_default()->langcode, 'fr', 'French is the default language');
 
     // Set language detection to URL.
     $edit = array('language_interface[enabled][language-url]' => TRUE);

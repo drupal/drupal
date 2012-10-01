@@ -58,7 +58,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
     // Check URL rewriting with a non-installed language.
     $non_existing = language_default();
     $non_existing->langcode = $this->randomName();
-    $this->checkUrl($non_existing, t('Path language is ignored if language is not installed.'), t('URL language negotiation does not work with non-installed languages'));
+    $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
   }
 
   /**

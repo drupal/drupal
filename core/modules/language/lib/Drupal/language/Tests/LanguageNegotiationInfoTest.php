@@ -56,7 +56,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     $this->languageNegotiationUpdate();
     $type = LANGUAGE_TYPE_CONTENT;
     $language_types = variable_get('language_types', language_types_get_default());
-    $this->assertTrue($language_types[$type], t('Content language type is configurable.'));
+    $this->assertTrue($language_types[$type], 'Content language type is configurable.');
 
     // Enable some core and custom language negotiation methods. The test
     // language type is supposed to be configurable.
@@ -76,18 +76,18 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     variable_set('language_test_language_negotiation_info_alter', TRUE);
     $this->languageNegotiationUpdate();
     $negotiation = variable_get("language_negotiation_$type", array());
-    $this->assertFalse(isset($negotiation[$interface_method_id]), t('Interface language negotiation method removed from the stored settings.'));
-    $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Interface language negotiation method unavailable.'));
+    $this->assertFalse(isset($negotiation[$interface_method_id]), 'Interface language negotiation method removed from the stored settings.');
+    $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, 'Interface language negotiation method unavailable.');
 
     // Check that type-specific language negotiation methods can be assigned
     // only to the corresponding language types.
     foreach (language_types_get_configurable() as $type) {
       $form_field = $type . '[enabled][test_language_negotiation_method_ts]';
       if ($type == $test_type) {
-        $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language negotiation method available for %type.', array('%type' => $type)));
+        $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, format_string('Type-specific test language negotiation method available for %type.', array('%type' => $type)));
       }
       else {
-        $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language negotiation method unavailable for %type.', array('%type' => $type)));
+        $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, format_string('Type-specific test language negotiation method unavailable for %type.', array('%type' => $type)));
       }
     }
 
@@ -97,7 +97,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     foreach (language_types_get_all() as $type) {
       $langcode = $last[$type];
       $value = $type == LANGUAGE_TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
-      $this->assertEqual($langcode, $value, t('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
+      $this->assertEqual($langcode, $value, format_string('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
     }
 
     // Disable language_test and check that everything is set back to the
@@ -106,7 +106,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
 
     // Check that only the core language types are available.
     foreach (language_types_get_all() as $type) {
-      $this->assertTrue(strpos($type, 'test') === FALSE, t('The %type language is still available', array('%type' => $type)));
+      $this->assertTrue(strpos($type, 'test') === FALSE, format_string('The %type language is still available', array('%type' => $type)));
     }
 
     // Check that fixed language types are properly configured, even those
@@ -116,11 +116,11 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     // Check that unavailable language negotiation methods are not present in
     // the negotiation settings.
     $negotiation = variable_get("language_negotiation_$type", array());
-    $this->assertFalse(isset($negotiation[$test_method_id]), t('The disabled test language negotiation method is not part of the content language negotiation settings.'));
+    $this->assertFalse(isset($negotiation[$test_method_id]), 'The disabled test language negotiation method is not part of the content language negotiation settings.');
 
     // Check that configuration page presents the correct options and settings.
-    $this->assertNoRaw(t('Test language detection'), t('No test language type configuration available.'));
-    $this->assertNoRaw(t('This is a test language negotiation method'), t('No test language negotiation method available.'));
+    $this->assertNoRaw(t('Test language detection'), 'No test language type configuration available.');
+    $this->assertNoRaw(t('This is a test language negotiation method'), 'No test language negotiation method available.');
   }
 
   /**
@@ -165,7 +165,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
           list(, $info_id) = each($info['fixed']);
           $equal = $info_id == $id;
         }
-        $this->assertTrue($equal, t('language negotiation for %type is properly set up', array('%type' => $type)));
+        $this->assertTrue($equal, format_string('language negotiation for %type is properly set up', array('%type' => $type)));
       }
     }
   }

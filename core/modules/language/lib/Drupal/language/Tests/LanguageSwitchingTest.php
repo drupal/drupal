@@ -60,7 +60,7 @@ class LanguageSwitchingTest extends WebTestBase {
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertText(t('Languages'), t('Language switcher block found.'));
+    $this->assertText(t('Languages'), 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
     list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-language-' . str_replace('_', '-', $language_type)));
@@ -89,7 +89,7 @@ class LanguageSwitchingTest extends WebTestBase {
         $anchors['inactive'][] = $langcode;
       }
     }
-    $this->assertIdentical($links, array('active' => array('en'), 'inactive' => array('fr')), t('Only the current language list item is marked as active on the language switcher block.'));
-    $this->assertIdentical($anchors, array('active' => array('en'), 'inactive' => array('fr')), t('Only the current language anchor is marked as active on the language switcher block.'));
+    $this->assertIdentical($links, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language list item is marked as active on the language switcher block.');
+    $this->assertIdentical($anchors, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language anchor is marked as active on the language switcher block.');
   }
 }

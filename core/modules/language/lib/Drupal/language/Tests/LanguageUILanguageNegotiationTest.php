@@ -391,11 +391,11 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // language.
     $args = array(':url' => base_path() . $GLOBALS['script_path'] . $langcode_browser_fallback);
     $fields = $this->xpath('//div[@id="block-language-language-interface"]//a[@class="language-link active" and starts-with(@href, :url)]', $args);
-    $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, t('The browser language is the URL active language'));
+    $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, 'The browser language is the URL active language');
 
     // Check that URLs are rewritten using the given browser language.
     $fields = $this->xpath('//p[@id="site-name"]/strong/a[@rel="home" and @href=:url]', $args);
-    $this->assertTrue($fields[0] == 'Drupal', t('URLs are rewritten using the browser language.'));
+    $this->assertTrue($fields[0] == 'Drupal', 'URLs are rewritten using the browser language.');
   }
 
   /**
@@ -434,13 +434,13 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $url_scheme = ($is_https) ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
 
     // Test HTTPS via options.
     variable_set('https', TRUE);
     $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right HTTPS URL (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right HTTPS URL (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
     variable_set('https', FALSE);
 
     // Test HTTPS via current URL scheme.
@@ -448,7 +448,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $is_https = TRUE;
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right URL (via current URL scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right URL (via current URL scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
     $is_https = $temp_https;
   }
 }
