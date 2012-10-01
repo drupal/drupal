@@ -573,8 +573,7 @@ class ViewExecutable {
   /**
    * Set the display for this view and initialize the display handler.
    */
-  public function initDisplay($reset = FALSE) {
-    // The default display is always the first one in the list.
+  public function initDisplay() {
     if (isset($this->current_display)) {
       return TRUE;
     }

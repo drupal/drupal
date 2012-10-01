@@ -154,14 +154,10 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    * Initializes the display.
    *
    * @todo Inspect calls to this and attempt to clean up.
-   *
-   * @param bool $reset
-   *   If the display should be reset. Defaults to FALSE.
-   *
    * @see Drupal\views\ViewExecutable::initDisplay()
    */
-  public function initDisplay($reset = FALSE) {
-    $this->getExecutable()->initDisplay($reset);
+  public function initDisplay() {
+    $this->getExecutable()->initDisplay();
   }
 
   /**
