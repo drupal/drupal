@@ -432,10 +432,6 @@ td.group-title {
   margin-right: 0;
 }
 
-#views-display-extra-actions li {
-  padding: 3px 9px;
-}
-
 .views-display-top #views-display-top {
   max-width: 180px;
 }
@@ -1097,6 +1093,62 @@ ul#views-display-menu-tabs li.add ul.action-list li{
  */
 div.messages {
   margin-bottom: 18px;
+}
+
+/* @end */
+
+/* @group Buttons */
+
+.dropbutton,
+.dropbutton input {
+  text-transform: lowercase;
+}
+.dropbutton-multiple {
+  position: absolute;
+}
+.dropbutton-widget {
+  position: relative;
+}
+.dropbutton-arrow {
+  top: 0.567em;
+}
+.dropbutton-content {
+  font-size: 11px;
+  line-height: 1.333em;
+}
+.dropbutton-content li > * {
+  margin: 0;
+  padding: 0.2em 0.75em;
+}
+
+.views-display-top .dropbutton {
+  position: absolute;
+  right: 12px;
+  top: 7px;
+}
+.views-display-top .dropbutton a {
+  font-size: 12px;
+}
+
+.views-ui-display-tab-bucket .dropbutton {
+  position: absolute;
+  right: 5px;
+  top: 4px;
+}
+
+.views-ui-display-tab-actions .dropbutton li a,
+.views-ui-display-tab-actions .dropbutton input {
+  background: none;
+  border: medium;
+  font-family: inherit;
+  font-size: 12px;
+  padding-left: 12px;
+  margin-bottom: 0;
+}
+
+.views-ui-display-tab-actions .dropbutton input:hover {
+  background: none;
+  border: none;
 }
 
 /* @end */

@@ -101,7 +101,7 @@
       href = href.substring(3, href.length);
     }
     var chars = ['#', '?', '&'];
-    for (i in chars) {
+    for (var i in chars) {
       if (href.indexOf(chars[i]) > -1) {
         href = href.substr(0, href.indexOf(chars[i]));
       }

@@ -914,11 +914,8 @@ Drupal.behaviors.viewsRemoveIconClass.attach = function (context, settings) {
 
   "use strict";
 
-  jQuery('.ctools-button', context).once('RemoveIconClass', function () {
-    var $ = jQuery;
-    var $this = $(this);
-    $('.icon', $this).removeClass('icon');
-    $('.horizontal', $this).removeClass('horizontal');
+  jQuery(context).find('.dropbutton').once('dropbutton-icon', function () {
+    jQuery(this).find('.icon').removeClass('icon');
   });
 };
 

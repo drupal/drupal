@@ -1,0 +1,96 @@
+
+/**
+ * @file
+ * Base styles for dropbuttons.
+ */
+
+/**
+ * When a dropbutton has only one option, it is simply a button.
+ */
+.dropbutton-wrapper,
+.dropbutton-wrapper div {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.dropbutton-wrapper,
+.dropbutton-widget {
+  max-width: 100%;
+}
+.dropbutton-wrapper {
+  min-height: 1em;
+  position: relative;
+}
+.dropbutton-widget {
+  display: block;
+  position: absolute;
+  right: 0; /* LTR */
+}
+/* UL styles are over-scoped in core, so this selector needs weight parity. */
+.dropbutton-widget .dropbutton-content {
+  list-style-image: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.dropbutton-content li,
+.dropbutton-content a {
+  display: block;
+}
+
+/**
+ * The dropbutton styling.
+ *
+ * A dropbutton is a widget that displays a list of action links as a button
+ * with a primary action. Secondary actions are hidden behind a click on a
+ * twisty arrow.
+ *
+ * The arrow is created using border on a zero-width, zero-height span.
+ * The arrow inherits the link color, but can be overridden with border colors.
+ */
+.dropbutton-multiple .dropbutton-widget {
+  padding-right: 2em; /* LTR */
+}
+.dropbutton-multiple.open,
+.dropbutton-multiple.open .dropbutton-widget {
+  max-width: none;
+}
+.dropbutton-multiple.open {
+  z-index: 100;
+}
+.dropbutton-multiple .dropbutton-content .secondary-actions {
+  display: none;
+}
+.dropbutton-multiple.open .dropbutton-content .secondary-actions {
+  display: block;
+}
+.dropbutton-link {
+  bottom: 0;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  right: 0; /* LTR */
+  text-indent: 110%;
+  top: 0;
+  white-space: nowrap;
+  width: 2em;
+}
+.dropbutton-arrow {
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-style: solid;
+  border-width: 0.3333em 0.3333em 0;
+  display: block;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  right: 0.6667em; /* LTR */
+  top: 0.767em;
+  width: 0;
+}
+.dropbutton-multiple.open .dropbutton-arrow {
+  border-bottom: 0.3333em solid;
+  border-top-color: transparent;
+  top: 0.333em;
+}

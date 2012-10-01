@@ -167,25 +167,11 @@ class ViewUI extends ViewExecutable {
       '#attributes' => array('id' => 'edit-display-settings-details'),
     );
 
-    // The following is for display purposes only. We need to determine if there is more than one button and wrap
-    // the buttons in a .ctools-dropbutton class if more than one is present.  Otherwise, we'll just wrap the
-    // actions in the .ctools-button class.
     $is_display_deleted = !empty($display['deleted']);
     // The master display cannot be cloned.
     $is_default = $display['id'] == 'default';
     // @todo: Figure out why getOption doesn't work here.
     $is_enabled = $this->displayHandlers[$display['id']]->getOption('enabled');
-
-    if (!$is_display_deleted && !$is_default) {
-      $prefix = '<div class="ctools-no-js ctools-button ctools-dropbutton"><div class="ctools-link"><a href="#" class="ctools-twisty ctools-text">open</a></div><div class="ctools-content"><ul class="horizontal right actions">';
-      $suffix = '</ul></div></div>';
-      $item_element = 'li';
-    }
-    else {
-      $prefix = '<div class="ctools-button"><div class="ctools-content"><ul class="horizontal right actions">';
-      $suffix = '</ul></div></div>';
-      $item_element = 'li';
-    }
 
     if ($display['id'] != 'default') {
       $build['top']['#theme_wrappers'] = array('container');
@@ -194,8 +180,8 @@ class ViewUI extends ViewExecutable {
 
       // The Delete, Duplicate and Undo Delete buttons.
       $build['top']['actions'] = array(
-        '#prefix' => $prefix,
-        '#suffix' => $suffix,
+        '#prefix' => '<div class="dropbutton-wrapper"><div class="dropbutton-widget"><ul class="dropbutton">',
+        '#suffix' => '</ul></div></div>',
       );
 
       if (!$is_display_deleted) {
@@ -205,8 +191,8 @@ class ViewUI extends ViewExecutable {
             '#value' => t('enable @display_title', array('@display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayEnable'), array($this, 'submitDelayDestination')),
-            '#prefix' => '<' . $item_element . ' class="enable">',
-            "#suffix" => '</' . $item_element . '>',
+            '#prefix' => '<li class="enable">',
+            "#suffix" => '</li>',
           );
         }
         // Add a link to view the page.
@@ -218,8 +204,8 @@ class ViewUI extends ViewExecutable {
               '#title' => t('view @display', array('@display' => $display['display_title'])),
               '#options' => array('alt' => array(t("Go to the real page for this display"))),
               '#href' => $path,
-              '#prefix' => '<' . $item_element . ' class="view">',
-              "#suffix" => '</' . $item_element . '>',
+              '#prefix' => '<li class="view">',
+              "#suffix" => '</li>',
             );
           }
         }
@@ -229,8 +215,8 @@ class ViewUI extends ViewExecutable {
             '#value' => t('clone @display_title', array('@display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayDuplicate'), array($this, 'submitDelayDestination')),
-            '#prefix' => '<' . $item_element . ' class="duplicate">',
-            "#suffix" => '</' . $item_element . '>',
+            '#prefix' => '<li class="duplicate">',
+            "#suffix" => '</li>',
           );
         }
         // Always allow a display to be deleted.
@@ -239,8 +225,8 @@ class ViewUI extends ViewExecutable {
           '#value' => t('delete @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayDelete'), array($this, 'submitDelayDestination')),
-          '#prefix' => '<' . $item_element . ' class="delete">',
-          "#suffix" => '</' . $item_element . '>',
+          '#prefix' => '<li class="delete">',
+          "#suffix" => '</li>',
         );
         if ($is_enabled) {
           $build['top']['actions']['disable'] = array(
@@ -248,8 +234,8 @@ class ViewUI extends ViewExecutable {
             '#value' => t('disable @display_title', array('@display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
-            '#prefix' => '<' . $item_element . ' class="disable">',
-            "#suffix" => '</' . $item_element . '>',
+            '#prefix' => '<li class="disable">',
+            "#suffix" => '</li>',
           );
         }
       }
@@ -259,8 +245,8 @@ class ViewUI extends ViewExecutable {
           '#value' => t('undo delete of @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayUndoDelete'), array($this, 'submitDelayDestination')),
-          '#prefix' => '<' . $item_element . ' class="undo-delete">',
-          "#suffix" => '</' . $item_element . '>',
+          '#prefix' => '<li class="undo-delete">',
+          "#suffix" => '</li>',
         );
       }
 
@@ -399,13 +385,10 @@ class ViewUI extends ViewExecutable {
 
     // Extra actions for the display
     $element['extra_actions'] = array(
-      '#theme' => 'links__ctools_dropbutton',
+      '#theme' => 'dropbutton',
       '#attributes' => array(
-          'id' => 'views-display-extra-actions',
-          'class' => array(
-            'horizontal', 'right', 'links', 'actions',
-          ),
-        ),
+        'id' => 'views-display-extra-actions',
+      ),
       '#links' => array(
         'edit-details' => array(
           'title' => t('edit view name/description'),
@@ -771,12 +754,8 @@ class ViewUI extends ViewExecutable {
       }
       $theme_key = isset($themes[$theme_key]->base_theme) ? $themes[$theme_key]->base_theme : '';
     }
-    // Views contains style overrides for the following modules
-    $module_list = array('contextual', 'ctools');
-    foreach ($module_list as $module) {
-      if (module_exists($module)) {
-        $list[$module_path . '/css/views-admin.' . $module . '.css'] = array();
-      }
+    if (module_exists('contextual')) {
+      $list[$module_path . '/css/views-admin.contextual.css'] = array();
     }
 
     return $list;
@@ -839,7 +818,7 @@ class ViewUI extends ViewExecutable {
    * Submit handler for form buttons that do not complete a form workflow.
    *
    * The Edit View form is a multistep form workflow, but with state managed by
-   * the CTools object cache rather than $form_state['rebuild']. Without this
+   * the TempStore rather than $form_state['rebuild']. Without this
    * submit handler, buttons that add or remove displays would redirect to the
    * destination parameter (e.g., when the Edit View form is linked to from a
    * contextual link). This handler can be added to buttons whose form submission
@@ -971,12 +950,9 @@ class ViewUI extends ViewExecutable {
     }
 
     // Render the array of links
-    $build['#actions'] = theme('links__ctools_dropbutton',
+    $build['#actions'] = theme('dropbutton',
       array(
         'links' => $actions,
-        'attributes' => array(
-          'class' => array('inline', 'links', 'actions', 'horizontal', 'right')
-        ),
         'class' => array('views-ui-settings-bucket-operations'),
       )
     );
@@ -1473,7 +1449,7 @@ class ViewUI extends ViewExecutable {
     $form['button'] = array(
       '#type' => 'submit',
       '#value' => t('Update preview'),
-      '#attributes' => array('class' => array('arguments-preview', 'ctools-auto-submit-click')),
+      '#attributes' => array('class' => array('arguments-preview')),
       '#prefix' => '<div id="preview-submit-wrapper">',
       '#suffix' => '</div>',
       '#id' => 'preview-submit',

@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function views_dropbutton_theme($existing, $type, $theme, $path) {
+  return array(
+    'dropbutton' => array(
+      'variables' => array('title' => NULL, 'links' => array(), 'attributes' => array()),
+    ),
+  );
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function views_dropbutton_library_info() {
+  $path = drupal_get_path('module', 'views_dropbutton');
+  $libraries['drupal.dropbutton'] = array(
+    'title' => 'Dropbutton',
+    'website' => 'http://drupal.org/node/1608878',
+    'version' => '1.0',
+    'js' => array(
+      "$path/dropbutton.js" => array(),
+    ),
+    'css' => array(
+      "$path/dropbutton.base.css" => array(),
+      "$path/dropbutton.theme.css" => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Builds a render array for theme_dropbutton().
+ */
+function template_preprocess_dropbutton(&$variables) {
+  $variables['attributes']['class'][] = 'dropbutton';
+  $variables['element'] = array(
+    '#theme' => 'links',
+    '#links' => $variables['links'],
+    '#attributes' => $variables['attributes'],
+    '#attached' => array(
+      'library' => array(
+        array('views_dropbutton', 'drupal.dropbutton'),
+      ),
+    ),
+  );
+  if (!empty($variables['links'])) {
+    $variables['element']['#prefix'] = '<div class="dropbutton-wrapper"><div class="dropbutton-widget">';
+    $variables['element']['#suffix'] = '</div></div>';
+  }
+  // Pass through title to the dropbutton options.
+  if (isset($variables['title'])) {
+    $variables['element']['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array('dropbutton' => array('title' => $variables['title'])),
+    );
+  }
+}
+
+/**
+ * Creates a dropbutton menu.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - title: (optional) The text placed in the clickable area to activate the
+ *     dropbutton. Defaults to 'Open dropbutton'.
+ *   - links: An array of links to provide in the dropbutton.
+ *   - attributes: (optional) An associative array of HTML attributes to apply
+ *     to the dropbutton.
+ */
+function theme_dropbutton($variables) {
+  return render($variables['element']);
+}

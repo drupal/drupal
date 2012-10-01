@@ -4,3 +4,4 @@ package = Views
 core = 8.x
 configure = admin/structure/views
 dependencies[] = views
+dependencies[] = views_dropbutton

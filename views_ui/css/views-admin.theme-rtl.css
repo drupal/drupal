@@ -205,4 +205,16 @@ div.form-item-displays-live-preview {
 
 /* @end */
 
+/* @group Buttons */
+
+.no-js .views-display-top .dropbutton {
+  left: 12px;
+  right: auto;
+}
+
+.views-ui-display-tab-bucket .dropbutton {
+  left: 5px;
+  right: auto;
+}
+
 /* @end */

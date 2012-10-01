@@ -3,6 +3,29 @@
  * in the Seven admin theme.
  */
 
+/* Dropbutton */
+.dropbutton-widget {
+  background-color: #fff;
+  background-image: -moz-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  background-image: -o-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  background-image: -webkit-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  background-image: linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  border-radius: 5px;
+}
+.dropbutton-widget:hover {
+  background-color: #f0f0f0;
+  border-color: #b8b8b8;
+}
+.dropbutton-multiple.open .dropbutton-widget:hover {
+  background-color: #fff;
+}
+.dropbutton-content li:first-child > * {
+  text-overflow: ellipsis;
+}
+.dropbutton-multiple.open .dropbutton-content li:first-child > * {
+  text-overflow: clip;
+}
+
 /* @group Content */
 
 .views-ui-display-tab-bucket h1,
@@ -169,28 +192,6 @@ fieldset.fieldset-no-legend {
 .views-display-top .secondary .action-list li {
   float: none;
   margin: 0;
-}
-
-/* @end */
-
-/* @group Buttons */
-
-.ctools-button-processed ul {
-  margin: 0;
-}
-
-/* Override for input elements that are themed like ctools-buttons */
-.ctools-button-processed input.form-submit:hover {
-  background-image: none;
-  color: #0074BD;
-  text-shadow: none;
-}
-
-.ctools-button-processed input.form-submit:active {
-  background: none;
-  border: medium none;
-  color: #0074BD;
-  text-shadow: none;
 }
 
 /* @end */
@@ -391,93 +392,8 @@ table th {
 
 /* @end */
 
-/* @group CTools */
-
-/* @group Buttons */
-
-.ctools-button-processed {
-  background-image:
-    -moz-linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f9f9f9 100%);
-  background-image:
-    -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0.0, rgba(255, 255, 255, 1.0)),
-      color-stop(1.0, rgba(249, 249, 249, 1.0))
-    );
-  background-image:
-    -webkit-linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f9f9f9 100%);
-  background-image:
-    linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f9f9f9 100%);
-  border-radius: 11px;
-}
-
-.ctools-button-processed:hover {
-  background-image:
-    -moz-linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f1f1f1 100%);
-  background-image:
-    -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0.0, rgba(255, 255, 255, 1.0)),
-      color-stop(1.0, rgba(241, 241, 241, 1.0))
-    );
-  background-image:
-    -webkit-linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f1f1f1 100%);
-  background-image:
-    linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f1f1f1 100%);
-}
-
-.ctools-dropbutton-processed.open:hover {
-  background-image:
-    -moz-linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f9f9f9 100%);
-  background-image:
-    -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0.0, rgba(255, 255, 255, 1.0)),
-      color-stop(1.0, rgba(249, 249, 249, 1.0))
-    );
-  background-image:
-    -webkit-linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f9f9f9 100%);
-  background-image:
-    linear-gradient(
-      -90deg,
-      #ffffff 0,
-      #f9f9f9 100%);
-}
-
-.ctools-dropbutton-processed.open {
-  -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
-  -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
-  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+.views-ui-display-tab-actions .dropbutton input {
+  color: #0074BD;
 }
 
 /* @end */

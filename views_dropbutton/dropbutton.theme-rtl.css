@@ -1,0 +1,14 @@
+
+/**
+ * @file
+ * General RTL styles for dropbuttons.
+ */
+
+.dropbutton-multiple .dropbutton-content {
+  border-left: 1px solid #e8e8e8;
+  border-right: 0 none;
+}
+.dropbutton-multiple .dropbutton-content li > * {
+  margin-left: 0.25em;
+  margin-right: 0;
+}

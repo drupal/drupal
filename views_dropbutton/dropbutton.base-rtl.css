@@ -1,0 +1,23 @@
+
+/**
+ * @file
+ * Base RTL styles for dropbuttons.
+ */
+
+/**
+ * The dropbutton arrow.
+ */
+.dropbutton-link {
+  left: 0;
+  right: auto;
+}
+.dropbutton-arrow {
+  left: 0.6667em;
+  right: auto;
+}
+.dropbutton-multiple .dropbutton-widget {
+  left: auto;
+  padding-left: 2em;
+  padding-right: 0;
+  right: 0;
+}
