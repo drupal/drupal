@@ -145,7 +145,7 @@ class BookTest extends WebTestBase {
       $this->assertPattern($this->generateOutlinePattern($nodes), format_string('Node @number outline confirmed.', array('@number' => $number)));
     }
     else {
-      $this->pass(t('Node ' . $number . ' doesn\'t have outline.'));
+      $this->pass(format_string('Node %number does not have outline.', array('%number' => $number)));
     }
 
     // Check previous, up, and next links.
@@ -330,7 +330,7 @@ class BookTest extends WebTestBase {
      $edit = array();
      $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
      $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
-     $this->assertText(t('The changes have been saved.'), 'Permission \'node test view\' successfully assigned to anonymous users.');
+     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
      // Create a book.
      $this->createBook();
@@ -356,7 +356,7 @@ class BookTest extends WebTestBase {
 
      // Test access to delete top-level and child book nodes.
      $this->drupalGet('node/' . $this->book->nid . '/outline/remove');
-     $this->assertResponse('403', t('Deleting top-level book node properly forbidden.'));
+     $this->assertResponse('403', 'Deleting top-level book node properly forbidden.');
      $this->drupalPost('node/' . $nodes[4]->nid . '/outline/remove', $edit, t('Remove'));
      $node4 = node_load($nodes[4]->nid, TRUE);
      $this->assertTrue(empty($node4->book), 'Deleting child book node properly allowed.');
