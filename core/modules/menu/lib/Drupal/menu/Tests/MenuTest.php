@@ -85,7 +85,7 @@ class MenuTest extends WebTestBase {
     $item['options']['attributes']['title']  = $description;
     menu_link_save($item);
     $saved_item = menu_link_load($item['mlid']);
-    $this->assertEqual($description, $saved_item['options']['attributes']['title'], t('Saving an existing link updates the description (title attribute)'));
+    $this->assertEqual($description, $saved_item['options']['attributes']['title'], 'Saving an existing link updates the description (title attribute)');
     $this->resetMenuLink($item, $old_title);
   }
 
@@ -126,14 +126,14 @@ class MenuTest extends WebTestBase {
 
     // Assert the new menu.
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
-    $this->assertRaw($title, t('Custom menu was added.'));
+    $this->assertRaw($title, 'Custom menu was added.');
 
     // Edit the menu.
     $new_title = $this->randomName(16);
     $menu['title'] = $new_title;
     menu_save($menu);
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
-    $this->assertRaw($new_title, t('Custom menu was edited.'));
+    $this->assertRaw($new_title, 'Custom menu was edited.');
   }
 
   /**
@@ -182,7 +182,7 @@ class MenuTest extends WebTestBase {
     $edit['blocks[menu_' . $menu_name . '][region]'] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), t('Custom menu block was enabled'));
+    $this->assertText(t('The block settings have been updated.'), 'Custom menu block was enabled');
 
     return menu_load($menu_name);
   }
@@ -199,11 +199,11 @@ class MenuTest extends WebTestBase {
     // Delete custom menu.
     $this->drupalPost("admin/structure/menu/manage/$menu_name/delete", array(), t('Delete'));
     $this->assertResponse(200);
-    $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $title)), t('Custom menu was deleted'));
+    $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $title)), 'Custom menu was deleted');
     $this->assertFalse(menu_load($menu_name), 'Custom menu was deleted');
     // Test if all menu links associated to the menu were removed from database.
     $result = db_query("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu_name", array(':menu_name' => $menu_name))->fetchField();
-    $this->assertFalse($result, t('All menu links associated to the custom menu were deleted.'));
+    $this->assertFalse($result, 'All menu links associated to the custom menu were deleted.');
   }
 
   /**
@@ -289,13 +289,13 @@ class MenuTest extends WebTestBase {
     $item = $this->addMenuLink(0, $path);
 
     $this->drupalGet('admin/structure/menu/item/' . $item['mlid'] . '/edit');
-    $this->assertFieldByName('link_path', $path, t('Path is found with both query and fragment.'));
+    $this->assertFieldByName('link_path', $path, 'Path is found with both query and fragment.');
 
     // Now change the path to something without query and fragment.
     $path = 'node';
     $this->drupalPost('admin/structure/menu/item/' . $item['mlid'] . '/edit', array('link_path' => $path), t('Save'));
     $this->drupalGet('admin/structure/menu/item/' . $item['mlid'] . '/edit');
-    $this->assertFieldByName('link_path', $path, t('Path no longer has query or fragment.'));
+    $this->assertFieldByName('link_path', $path, 'Path no longer has query or fragment.');
   }
 
   /**
@@ -374,7 +374,7 @@ class MenuTest extends WebTestBase {
       // Verify menu link link.
       $this->clickLink($title);
       $title = $parent_node->label();
-      $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Parent menu link link target was correct'));
+      $this->assertTitle(t("@title | Drupal", array('@title' => $title)), 'Parent menu link link target was correct');
     }
 
     // Verify menu link.
@@ -384,7 +384,7 @@ class MenuTest extends WebTestBase {
     // Verify menu link link.
     $this->clickLink($title);
     $title = $item_node->label();
-    $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Menu link link target was correct'));
+    $this->assertTitle(t("@title | Drupal", array('@title' => $title)), 'Menu link link target was correct');
   }
 
   /**
@@ -436,7 +436,7 @@ class MenuTest extends WebTestBase {
     // Reset menu link.
     $this->drupalPost("admin/structure/menu/item/$mlid/reset", array(), t('Reset'));
     $this->assertResponse(200);
-    $this->assertRaw(t('The menu link was reset to its default settings.'), t('Menu link was reset'));
+    $this->assertRaw(t('The menu link was reset to its default settings.'), 'Menu link was reset');
 
     // Verify menu link.
     $this->drupalGet('');
@@ -456,7 +456,7 @@ class MenuTest extends WebTestBase {
     // Delete menu link.
     $this->drupalPost("admin/structure/menu/item/$mlid/delete", array(), t('Confirm'));
     $this->assertResponse(200);
-    $this->assertRaw(t('The menu link %title has been deleted.', array('%title' => $title)), t('Menu link was deleted'));
+    $this->assertRaw(t('The menu link %title has been deleted.', array('%title' => $title)), 'Menu link was deleted');
 
     // Verify deletion.
     $this->drupalGet('');
@@ -533,7 +533,7 @@ class MenuTest extends WebTestBase {
       $item['link_path'] .= '#' . $options['fragment'];
     }
     foreach ($expected_item as $key => $value) {
-      $this->assertEqual($item[$key], $value, t('Parameter %key had expected value.', array('%key' => $key)));
+      $this->assertEqual($item[$key], $value, format_string('Parameter %key had expected value.', array('%key' => $key)));
     }
   }
 
@@ -561,21 +561,21 @@ class MenuTest extends WebTestBase {
     $this->drupalGet('admin/help/menu');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Menu'), t('Menu help was displayed'));
+      $this->assertText(t('Menu'), 'Menu help was displayed');
     }
 
     // View menu build overview node.
     $this->drupalGet('admin/structure/menu');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Menus'), t('Menu build overview node was displayed'));
+      $this->assertText(t('Menus'), 'Menu build overview node was displayed');
     }
 
     // View navigation menu customization node.
     $this->drupalGet('admin/structure/menu/manage/navigation');
         $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Navigation'), t('Navigation menu node was displayed'));
+      $this->assertText(t('Navigation'), 'Navigation menu node was displayed');
     }
 
     // View menu edit node.
@@ -583,21 +583,21 @@ class MenuTest extends WebTestBase {
     $this->drupalGet('admin/structure/menu/item/' . $item['mlid'] . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Edit menu item'), t('Menu edit node was displayed'));
+      $this->assertText(t('Edit menu item'), 'Menu edit node was displayed');
     }
 
     // View menu settings node.
     $this->drupalGet('admin/structure/menu/settings');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Menus'), t('Menu settings node was displayed'));
+      $this->assertText(t('Menus'), 'Menu settings node was displayed');
     }
 
     // View add menu node.
     $this->drupalGet('admin/structure/menu/add');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Menus'), t('Add menu node was displayed'));
+      $this->assertText(t('Menus'), 'Add menu node was displayed');
     }
   }
 }

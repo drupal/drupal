@@ -95,7 +95,7 @@ class MenuNodeTest extends WebTestBase {
     $this->assertLink($node_title);
 
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertOptionSelected('edit-menu-weight', 17, t('Menu weight correct in edit form'));
+    $this->assertOptionSelected('edit-menu-weight', 17, 'Menu weight correct in edit form');
 
     // Edit the node and remove the menu link.
     $edit = array(
@@ -116,11 +116,11 @@ class MenuNodeTest extends WebTestBase {
 
     // Assert that disabled Management menu is not shown on the node/$nid/edit page.
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertText('Provide a menu link', t('Link in not allowed menu not shown in node edit form'));
+    $this->assertText('Provide a menu link', 'Link in not allowed menu not shown in node edit form');
     // Assert that the link is still in the management menu after save.
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $link = menu_link_load($item['mlid']);
-    $this->assertTrue($link, t('Link in not allowed menu still exists after saving node'));
+    $this->assertTrue($link, 'Link in not allowed menu still exists after saving node');
 
     // Move the menu link back to the Navigation menu.
     $item['menu_name'] = 'navigation';
