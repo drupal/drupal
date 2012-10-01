@@ -70,8 +70,8 @@ class LoopTest extends WebTestBase {
     $loop_started = FALSE;
     foreach ($result as $row) {
       $expected_message = array_shift($expected);
-      $this->assertEqual($row->message, $expected_message, t('Expected message %expected, got %message.', array('%expected' => $expected_message, '%message' => $row->message)));
+      $this->assertEqual($row->message, $expected_message, format_string('Expected message %expected, got %message.', array('%expected' => $expected_message, '%message' => $row->message)));
     }
-    $this->assertTrue(empty($expected), t('All expected messages found.'));
+    $this->assertTrue(empty($expected), 'All expected messages found.');
   }
 }
