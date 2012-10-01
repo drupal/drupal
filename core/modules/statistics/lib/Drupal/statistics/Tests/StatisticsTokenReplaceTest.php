@@ -49,11 +49,11 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $tests['[node:last-view:short]'] = format_date($statistics['timestamp'], 'short');
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Statistics token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Statistics token %token replaced.', array('%token' => $input)));
     }
   }
 }

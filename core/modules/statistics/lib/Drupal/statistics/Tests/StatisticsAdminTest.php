@@ -62,19 +62,19 @@ class StatisticsAdminTest extends WebTestBase {
    */
   function testStatisticsSettings() {
     $config = config('statistics.settings');
-    $this->assertFalse($config->get('access_log.enabled'), t('Access log is disabled by default.'));
-    $this->assertFalse($config->get('count_content_views'), t('Count content view log is disabled by default.'));
+    $this->assertFalse($config->get('access_log.enabled'), 'Access log is disabled by default.');
+    $this->assertFalse($config->get('count_content_views'), 'Count content view log is disabled by default.');
 
     $this->drupalGet('admin/reports/pages');
-    $this->assertRaw(t('No statistics available.'), t('Verifying text shown when no statistics is available.'));
+    $this->assertRaw(t('No statistics available.'), 'Verifying text shown when no statistics is available.');
 
     // Enable access log and counter on content view.
     $edit['statistics_enable_access_log'] = 1;
     $edit['statistics_count_content_views'] = 1;
     $this->drupalPost('admin/config/system/statistics', $edit, t('Save configuration'));
     $config = config('statistics.settings');
-    $this->assertTrue($config->get('access_log.enabled'), t('Access log is enabled.'));
-    $this->assertTrue($config->get('count_content_views'), t('Count content view log is enabled.'));
+    $this->assertTrue($config->get('access_log.enabled'), 'Access log is enabled.');
+    $this->assertTrue($config->get('count_content_views'), 'Count content view log is enabled.');
 
     // Hit the node.
     $this->drupalGet('node/' . $this->test_node->nid);
@@ -87,17 +87,17 @@ class StatisticsAdminTest extends WebTestBase {
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     $this->drupalGet('admin/reports/pages');
-    $this->assertText('node/1', t('Test node found.'));
+    $this->assertText('node/1', 'Test node found.');
 
     // Hit the node again (the counter is incremented after the hit, so
     // "1 view" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->test_node->nid);
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
-    $this->assertText('1 view', t('Node is viewed once.'));
+    $this->assertText('1 view', 'Node is viewed once.');
 
     $this->drupalGet('node/' . $this->test_node->nid);
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
-    $this->assertText('2 views', t('Node is viewed 2 times.'));
+    $this->assertText('2 views', 'Node is viewed 2 times.');
   }
 
   /**
@@ -157,10 +157,10 @@ class StatisticsAdminTest extends WebTestBase {
     preg_match('@http.+?(user/\d+/cancel/confirm/\d+/[^\s]+)@', $mail['body'], $matches);
     $path = $matches[1];
     $this->drupalGet($path);
-    $this->assertFalse(user_load($account->uid, TRUE), t('User is not found in the database.'));
+    $this->assertFalse(user_load($account->uid, TRUE), 'User is not found in the database.');
 
     $this->drupalGet('admin/reports/visitors');
-    $this->assertNoText($account->name, t('Did not find user in visitor statistics.'));
+    $this->assertNoText($account->name, 'Did not find user in visitor statistics.');
   }
 
   /**
@@ -184,10 +184,10 @@ class StatisticsAdminTest extends WebTestBase {
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->drupalGet('node/' . $this->test_node->nid);
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
-    $this->assertText('1 view', t('Node is viewed once.'));
+    $this->assertText('1 view', 'Node is viewed once.');
 
     $this->drupalGet('admin/reports/pages');
-    $this->assertText('node/' . $this->test_node->nid, t('Hit URL found.'));
+    $this->assertText('node/' . $this->test_node->nid, 'Hit URL found.');
 
     // statistics_cron() will subtract
     // statistics.settings:accesslog.max_lifetime config from REQUEST_TIME in
@@ -197,13 +197,13 @@ class StatisticsAdminTest extends WebTestBase {
     $this->cronRun();
 
     $this->drupalGet('admin/reports/pages');
-    $this->assertNoText('node/' . $this->test_node->nid, t('No hit URL found.'));
+    $this->assertNoText('node/' . $this->test_node->nid, 'No hit URL found.');
 
     $result = db_select('node_counter', 'nc')
       ->fields('nc', array('daycount'))
       ->condition('nid', $this->test_node->nid, '=')
       ->execute()
       ->fetchField();
-    $this->assertFalse($result, t('Daycounter is zero.'));
+    $this->assertFalse($result, 'Daycounter is zero.');
   }
 }

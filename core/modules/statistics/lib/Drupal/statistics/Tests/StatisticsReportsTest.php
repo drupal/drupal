@@ -24,9 +24,9 @@ class StatisticsReportsTest extends StatisticsTestBase {
    */
   function testRecentHits() {
     $this->drupalGet('admin/reports/hits');
-    $this->assertText('test', t('Hit title found.'));
-    $this->assertText('node/1', t('Hit URL found.'));
-    $this->assertText('Anonymous', t('Hit user found.'));
+    $this->assertText('test', 'Hit title found.');
+    $this->assertText('node/1', 'Hit URL found.');
+    $this->assertText('Anonymous', 'Hit user found.');
   }
 
   /**
@@ -34,8 +34,8 @@ class StatisticsReportsTest extends StatisticsTestBase {
    */
   function testTopPages() {
     $this->drupalGet('admin/reports/pages');
-    $this->assertText('test', t('Hit title found.'));
-    $this->assertText('node/1', t('Hit URL found.'));
+    $this->assertText('test', 'Hit title found.');
+    $this->assertText('node/1', 'Hit URL found.');
   }
 
   /**
@@ -43,7 +43,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
    */
   function testTopReferrers() {
     $this->drupalGet('admin/reports/referrers');
-    $this->assertText('http://example.com', t('Hit referrer found.'));
+    $this->assertText('http://example.com', 'Hit referrer found.');
   }
 
   /**
@@ -51,9 +51,9 @@ class StatisticsReportsTest extends StatisticsTestBase {
    */
   function testDetails() {
     $this->drupalGet('admin/reports/access/1');
-    $this->assertText('test', t('Hit title found.'));
-    $this->assertText('node/1', t('Hit URL found.'));
-    $this->assertText('Anonymous', t('Hit user found.'));
+    $this->assertText('test', 'Hit title found.');
+    $this->assertText('node/1', 'Hit URL found.');
+    $this->assertText('Anonymous', 'Hit user found.');
   }
 
   /**
@@ -62,8 +62,8 @@ class StatisticsReportsTest extends StatisticsTestBase {
   function testAccessLogging() {
     $this->drupalGet('admin/reports/referrers');
     $this->drupalGet('admin/reports/hits');
-    $this->assertText('Top referrers in the past 3 days', t('Hit title found.'));
-    $this->assertText('admin/reports/referrers', t('Hit URL found.'));
+    $this->assertText('Top referrers in the past 3 days', 'Hit title found.');
+    $this->assertText('admin/reports/referrers', 'Hit URL found.');
   }
 
   /**
@@ -95,11 +95,11 @@ class StatisticsReportsTest extends StatisticsTestBase {
 
     // Get some page and check if the block is displayed.
     $this->drupalGet('user');
-    $this->assertText('Popular content', t('Found the popular content block.'));
-    $this->assertText("Today's", t('Found today\'s popular content.'));
-    $this->assertText('All time', t('Found the alll time popular content.'));
-    $this->assertText('Last viewed', t('Found the last viewed popular content.'));
+    $this->assertText('Popular content', 'Found the popular content block.');
+    $this->assertText("Today's", "Found today's popular content.");
+    $this->assertText('All time', 'Found the all time popular content.');
+    $this->assertText('Last viewed', 'Found the last viewed popular content.');
 
-    $this->assertRaw(l($node->label(), 'node/' . $node->nid), t('Found link to visited node.'));
+    $this->assertRaw(l($node->label(), 'node/' . $node->nid), 'Found link to visited node.');
   }
 }

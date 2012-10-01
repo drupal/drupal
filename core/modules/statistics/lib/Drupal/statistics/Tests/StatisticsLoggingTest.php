@@ -81,9 +81,9 @@ class StatisticsLoggingTest extends WebTestBase {
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
-    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Testing an uncached page.'));
+    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Testing an uncached page.');
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    $this->assertTrue(is_array($log) && count($log) == 1, t('Page request was logged.'));
+    $this->assertTrue(is_array($log) && count($log) == 1, 'Page request was logged.');
     $this->assertEqual(array_intersect_key($log[0], $expected), $expected);
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '1');
@@ -92,9 +92,9 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->drupalGet($path);
     // Manually calling statistics.php, simulating ajax behavior.
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
-    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Testing a cached page.'));
+    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Testing a cached page.');
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    $this->assertTrue(is_array($log) && count($log) == 2, t('Page request was logged.'));
+    $this->assertTrue(is_array($log) && count($log) == 2, 'Page request was logged.');
     $this->assertEqual(array_intersect_key($log[1], $expected), $expected);
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '2');
@@ -106,7 +106,7 @@ class StatisticsLoggingTest extends WebTestBase {
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
     // Check the 6th item since login and account pages are also logged
-    $this->assertTrue(is_array($log) && count($log) == 6, t('Page request was logged.'));
+    $this->assertTrue(is_array($log) && count($log) == 6, 'Page request was logged.');
     $this->assertEqual(array_intersect_key($log[5], $expected), $expected);
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '3');
@@ -119,7 +119,7 @@ class StatisticsLoggingTest extends WebTestBase {
     );
     $this->drupalGet($path);
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    $this->assertTrue(is_array($log) && count($log) == 7, t('Page request was logged.'));
+    $this->assertTrue(is_array($log) && count($log) == 7, 'Page request was logged.');
     $this->assertEqual(array_intersect_key($log[6], $expected), $expected);
 
     // Create a path longer than 255 characters. Drupal's .htaccess file
