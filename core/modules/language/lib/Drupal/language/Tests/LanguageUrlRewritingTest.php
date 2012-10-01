@@ -67,6 +67,13 @@ class LanguageUrlRewritingTest extends WebTestBase {
    * The test is performed with a fixed URL (the default front page) to simply
    * check that language prefixes are not added to it and that the prefixed URL
    * is actually not working.
+   *
+   * @param string $language
+   *   The language prefix, e.g. 'es'.
+   * @param string $message1
+   *   Message to display in assertion that language prefixes are not added.
+   * @param string $message2
+   *   The message to display confirming prefixed URL is not working.
    */
   private function checkUrl($language, $message1, $message2) {
     $options = array('language' => $language, 'script' => '');
