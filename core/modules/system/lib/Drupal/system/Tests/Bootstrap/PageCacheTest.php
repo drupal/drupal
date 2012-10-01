@@ -153,7 +153,7 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertFalse($this->drupalGetHeader('Content-Encoding'), 'A Content-Encoding header was not sent.');
-    $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => config('system.site')->get('name'))), t('Site title matches.'));
+    $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => config('system.site')->get('name'))), 'Site title matches.');
     $this->assertRaw('</html>', 'Page was not compressed.');
   }
 }

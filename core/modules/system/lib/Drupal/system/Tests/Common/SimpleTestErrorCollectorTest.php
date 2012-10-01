@@ -45,7 +45,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
   function testErrorCollect() {
     $this->collectedErrors = array();
     $this->drupalGet('error-test/generate-warnings-with-report');
-    $this->assertEqual(count($this->collectedErrors), 3, t('Three errors were collected'));
+    $this->assertEqual(count($this->collectedErrors), 3, 'Three errors were collected');
 
     if (count($this->collectedErrors) == 3) {
       $this->assertError($this->collectedErrors[0], 'Notice', 'error_test_generate_warnings()', 'error_test.module', 'Undefined variable: bananas');

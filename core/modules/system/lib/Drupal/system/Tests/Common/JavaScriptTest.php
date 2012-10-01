@@ -195,7 +195,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_library('system', 'drupal');
     $inline = 'jQuery(function () { });';
     $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
-    $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
+    $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), 'jQuery is added when inline scripts are added.');
     $data = end($javascript);
     $this->assertEqual($inline, $data['data'], 'Inline JavaScript is correctly added to the footer.');
   }
@@ -445,7 +445,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testLibraryRender() {
     $result = drupal_add_library('system', 'jquery.farbtastic');
-    $this->assertTrue($result !== FALSE, t('Library was added without errors.'));
+    $this->assertTrue($result !== FALSE, 'Library was added without errors.');
     $scripts = drupal_get_js();
     $styles = drupal_get_css();
     $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), 'JavaScript of library was added to the page.');
@@ -460,7 +460,7 @@ class JavaScriptTest extends WebTestBase {
   function testLibraryAlter() {
     // Verify that common_test altered the title of Farbtastic.
     $library = drupal_get_library('system', 'jquery.farbtastic');
-    $this->assertEqual($library['title'], 'Farbtastic: Altered Library', t('Registered libraries were altered.'));
+    $this->assertEqual($library['title'], 'Farbtastic: Altered Library', 'Registered libraries were altered.');
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     drupal_add_library('system', 'jquery.farbtastic');
@@ -483,11 +483,11 @@ class JavaScriptTest extends WebTestBase {
    */
   function testLibraryUnknown() {
     $result = drupal_get_library('unknown', 'unknown');
-    $this->assertFalse($result, t('Unknown library returned FALSE.'));
+    $this->assertFalse($result, 'Unknown library returned FALSE.');
     drupal_static_reset('drupal_get_library');
 
     $result = drupal_add_library('unknown', 'unknown');
-    $this->assertFalse($result, t('Unknown library returned FALSE.'));
+    $this->assertFalse($result, 'Unknown library returned FALSE.');
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'unknown') === FALSE, 'Unknown library was not added to the page.');
   }

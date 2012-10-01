@@ -48,7 +48,7 @@ class JsonUnitTest extends UnitTestBase {
     $this->assertTrue(strlen($json) > strlen($str), 'A JSON encoded string is larger than the source string.');
 
     // The first and last characters should be ", and no others.
-    $this->assertTrue($json[0] == '"', t('A JSON encoded string begins with ".'));
+    $this->assertTrue($json[0] == '"', 'A JSON encoded string begins with ".');
     $this->assertTrue($json[strlen($json) - 1] == '"', 'A JSON encoded string ends with ".');
     $this->assertTrue(substr_count($json, '"') == 2, 'A JSON encoded string contains exactly two ".');
 

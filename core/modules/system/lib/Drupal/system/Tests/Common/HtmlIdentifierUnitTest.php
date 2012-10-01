@@ -42,7 +42,7 @@ class HtmlIdentifierUnitTest extends UnitTestBase {
    */
   function testDrupalHTMLClass() {
     // Verify Drupal coding standards are enforced.
-    $this->assertIdentical(drupal_html_class('CLASS NAME_[Ü]'), 'class-name--ü', t('Enforce Drupal coding standards.'));
+    $this->assertIdentical(drupal_html_class('CLASS NAME_[Ü]'), 'class-name--ü', 'Enforce Drupal coding standards.');
   }
 
   /**

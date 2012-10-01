@@ -295,7 +295,7 @@ class RenderTest extends WebTestBase {
     // @see Drupal\simpletest\WebTestBase::xpath()
     $xpath = $this->buildXPathQuery($xpath, $xpath_args);
     $element += array('#value' => NULL);
-    $this->assertFieldByXPath($xpath, $element['#value'], t('#type @type was properly rendered.', array(
+    $this->assertFieldByXPath($xpath, $element['#value'], format_string('#type @type was properly rendered.', array(
       '@type' => var_export($element['#type'], TRUE),
     )));
   }

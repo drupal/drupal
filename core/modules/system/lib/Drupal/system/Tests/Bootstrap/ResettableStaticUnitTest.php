@@ -29,7 +29,7 @@ class ResettableStaticUnitTest extends UnitTestBase {
   function testDrupalStatic() {
     $name = __CLASS__ . '_' . __METHOD__;
     $var = &drupal_static($name, 'foo');
-    $this->assertEqual($var, 'foo', t('Variable returned by drupal_static() was set to its default.'));
+    $this->assertEqual($var, 'foo', 'Variable returned by drupal_static() was set to its default.');
 
     // Call the specific reset and the global reset each twice to ensure that
     // multiple resets can be issued without odd side effects.
