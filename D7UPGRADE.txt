@@ -1,2 +1,0 @@
-Information about upgrading existing views from Drupal 6 to Drupal 7 is located
-in the module's advanced help under api upgrading.

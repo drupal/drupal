@@ -1,5 +1,0 @@
-- If the interface text is *bolded*, it got strong tags.
-- If it's a button they need to click, that's *bold* too.
-- If the text is not bolded (ex: links to click, options to check), it
-got /italicized/.
-- If it's user-entered text it got 'single quotes'.

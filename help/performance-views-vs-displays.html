@@ -1,5 +1,0 @@
-<p>Multiple displays in one view is <strong>appropriate</strong> when they are <strong>fundamentally similar</strong> and are <strong>sharing quite a fair amount of data</strong>. For example, showing upcoming events in either blocks or page and sorting it according to either event name or date of the event will be appropriate to be implemented by four displays (two blocks and two pages) in one view.</p>
-
-<p>In the other hand, having multiple displays in one view that contains <strong>mostly overrides</strong> will be a burden to the system and will be hard to maintain. The effect of having only couple of such displays has negligible performance difference. It will be magnified when the number of displays in one view is large.</p>
-
-<p>Another consideration is the use of Views, especially when using multiple views in conjunction with other modules such as Panels. It is entirely possible to have many views on a page due to Panels' ability to contain a view in each pane. Some people have mistaken this as a problem on Panels'  or Views' part, but realistically it is likely to be the sheer number of queries that are being run during page render. </p>
