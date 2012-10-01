@@ -40,7 +40,7 @@ class IpAddressBlockingTest extends WebTestBase {
     $edit['ip'] = '192.168.1.1';
     $this->drupalPost('admin/config/people/ban', $edit, t('Add'));
     $ip = db_query("SELECT iid from {ban_ip} WHERE ip = :ip", array(':ip' => $edit['ip']))->fetchField();
-    $this->assertTrue($ip, t('IP address found in database.'));
+    $this->assertTrue($ip, 'IP address found in database.');
     $this->assertRaw(t('The IP address %ip has been banned.', array('%ip' => $edit['ip'])), 'IP address was banned.');
 
     // Try to block an IP address that's already blocked.
