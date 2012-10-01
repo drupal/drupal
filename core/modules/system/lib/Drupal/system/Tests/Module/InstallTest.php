@@ -45,7 +45,7 @@ class InstallTest extends WebTestBase {
     // Check for data that was inserted using drupal_write_record() while the
     // 'module_test' module was being installed and enabled.
     $data = db_query("SELECT data FROM {module_test}")->fetchCol();
-    $this->assertTrue(in_array('Data inserted in hook_install()', $data), t('Data inserted using drupal_write_record() in hook_install() is correctly saved.'));
-    $this->assertTrue(in_array('Data inserted in hook_enable()', $data), t('Data inserted using drupal_write_record() in hook_enable() is correctly saved.'));
+    $this->assertTrue(in_array('Data inserted in hook_install()', $data), 'Data inserted using drupal_write_record() in hook_install() is correctly saved.');
+    $this->assertTrue(in_array('Data inserted in hook_enable()', $data), 'Data inserted using drupal_write_record() in hook_enable() is correctly saved.');
   }
 }

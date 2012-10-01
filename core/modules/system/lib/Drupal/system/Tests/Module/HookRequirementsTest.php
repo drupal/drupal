@@ -31,7 +31,7 @@ class HookRequirementsTest extends ModuleTestBase {
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
 
     // Makes sure the module was NOT installed.
-    $this->assertText(t('Requirements 1 Test failed requirements'), t('Modules status has been updated.'));
+    $this->assertText(t('Requirements 1 Test failed requirements'), 'Modules status has been updated.');
     $this->assertModules(array('requirements1_test'), FALSE);
   }
 }

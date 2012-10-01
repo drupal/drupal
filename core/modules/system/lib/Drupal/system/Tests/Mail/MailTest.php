@@ -55,7 +55,7 @@ class MailTest extends WebTestBase implements MailInterface {
     $message = drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language_interface->langcode);
 
     // Assert whether the message was sent through the send function.
-    $this->assertEqual(self::$sent_message['to'], 'testing@example.com', t('Pluggable mail system is extendable.'));
+    $this->assertEqual(self::$sent_message['to'], 'testing@example.com', 'Pluggable mail system is extendable.');
   }
 
   /**

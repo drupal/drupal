@@ -63,8 +63,8 @@ class RouterTest extends WebTestBase {
    */
   function testTitleCallbackFalse() {
     $this->drupalGet('node');
-    $this->assertText('A title with @placeholder', t('Raw text found on the page'));
-    $this->assertNoText(t('A title with @placeholder', array('@placeholder' => 'some other text')), t('Text with placeholder substitutions not found.'));
+    $this->assertText('A title with @placeholder', 'Raw text found on the page');
+    $this->assertNoText(t('A title with @placeholder', array('@placeholder' => 'some other text')), 'Text with placeholder substitutions not found.');
   }
 
   /**
@@ -95,8 +95,8 @@ class RouterTest extends WebTestBase {
   function testThemeCallbackAdministrative() {
     theme_enable(array('seven'));
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The administrative theme can be correctly set in a theme callback.'));
-    $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+    $this->assertText('Custom theme: seven. Actual theme: seven.', 'The administrative theme can be correctly set in a theme callback.');
+    $this->assertRaw('seven/style.css', "The administrative theme's CSS appears on the page.");
   }
 
   /**
@@ -105,8 +105,8 @@ class RouterTest extends WebTestBase {
   function testThemeCallbackInheritance() {
     theme_enable(array('seven'));
     $this->drupalGet('menu-test/theme-callback/use-admin-theme/inheritance');
-    $this->assertText('Custom theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', t('Theme callback inheritance correctly uses the administrative theme.'));
-    $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+    $this->assertText('Custom theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', 'Theme callback inheritance correctly uses the administrative theme.');
+    $this->assertRaw('seven/style.css', "The administrative theme's CSS appears on the page.");
   }
 
   /**
@@ -115,7 +115,7 @@ class RouterTest extends WebTestBase {
    */
   function testFileInheritance() {
     $this->drupalGet('admin/config/development/file-inheritance');
-    $this->assertText('File inheritance test description', t('File inheritance works.'));
+    $this->assertText('File inheritance test description', 'File inheritance works.');
   }
 
   /**
@@ -139,14 +139,14 @@ class RouterTest extends WebTestBase {
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertRaw('bartik/css/style.css', t("The maintenance theme's CSS appears on the page."));
+    $this->assertRaw('bartik/css/style.css', "The maintenance theme's CSS appears on the page.");
 
     // An administrator, however, should continue to see the requested theme.
     $admin_user = $this->drupalCreateUser(array('access site in maintenance mode'));
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The theme callback system is correctly triggered for an administrator when the site is in maintenance mode.'));
-    $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+    $this->assertText('Custom theme: seven. Actual theme: seven.', 'The theme callback system is correctly triggered for an administrator when the site is in maintenance mode.');
+    $this->assertRaw('seven/style.css', "The administrative theme's CSS appears on the page.");
 
     config('system.maintenance')->set('enabled', 0)->save();
   }
@@ -163,7 +163,7 @@ class RouterTest extends WebTestBase {
     $this->drupalGet('node');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
-    $this->assertText('This is menu_login_callback().', t('Maintenance mode can be bypassed through hook_menu_site_status_alter().'));
+    $this->assertText('This is menu_login_callback().', 'Maintenance mode can be bypassed through hook_menu_site_status_alter().');
 
     config('system.maintenance')->set('enabled', 0)->save();
   }
@@ -178,11 +178,11 @@ class RouterTest extends WebTestBase {
 
     $this->drupalGet('user/login');
     // Check that we got to 'user'.
-    $this->assertTrue($this->url == url('user', array('absolute' => TRUE)), t("Logged-in user redirected to user on accessing user/login"));
+    $this->assertTrue($this->url == url('user', array('absolute' => TRUE)), "Logged-in user redirected to user on accessing user/login");
 
     // user/register should redirect to user/UID/edit.
     $this->drupalGet('user/register');
-    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid . '/edit', array('absolute' => TRUE)), t("Logged-in user redirected to user/UID/edit on accessing user/register"));
+    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid . '/edit', array('absolute' => TRUE)), "Logged-in user redirected to user/UID/edit on accessing user/register");
   }
 
   /**
@@ -191,14 +191,14 @@ class RouterTest extends WebTestBase {
   function testThemeCallbackOptionalTheme() {
     // Request a theme that is not enabled.
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
-    $this->assertText('Custom theme: NONE. Actual theme: bartik.', t('The theme callback system falls back on the default theme when a theme that is not enabled is requested.'));
-    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page."));
+    $this->assertText('Custom theme: NONE. Actual theme: bartik.', 'The theme callback system falls back on the default theme when a theme that is not enabled is requested.');
+    $this->assertRaw('bartik/css/style.css', "The default theme's CSS appears on the page.");
 
     // Now enable the theme and request it again.
     theme_enable(array('stark'));
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
-    $this->assertText('Custom theme: stark. Actual theme: stark.', t('The theme callback system uses an optional theme once it has been enabled.'));
-    $this->assertRaw('stark/css/layout.css', t("The optional theme's CSS appears on the page."));
+    $this->assertText('Custom theme: stark. Actual theme: stark.', 'The theme callback system uses an optional theme once it has been enabled.');
+    $this->assertRaw('stark/css/layout.css', "The optional theme's CSS appears on the page.");
   }
 
   /**
@@ -206,8 +206,8 @@ class RouterTest extends WebTestBase {
    */
   function testThemeCallbackFakeTheme() {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
-    $this->assertText('Custom theme: NONE. Actual theme: bartik.', t('The theme callback system falls back on the default theme when a theme that does not exist is requested.'));
-    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page."));
+    $this->assertText('Custom theme: NONE. Actual theme: bartik.', 'The theme callback system falls back on the default theme when a theme that does not exist is requested.');
+    $this->assertRaw('bartik/css/style.css', "The default theme's CSS appears on the page.");
   }
 
   /**
@@ -215,8 +215,8 @@ class RouterTest extends WebTestBase {
    */
   function testThemeCallbackNoThemeRequested() {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');
-    $this->assertText('Custom theme: NONE. Actual theme: bartik.', t('The theme callback system falls back on the default theme when no theme is requested.'));
-    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page."));
+    $this->assertText('Custom theme: NONE. Actual theme: bartik.', 'The theme callback system falls back on the default theme when no theme is requested.');
+    $this->assertRaw('bartik/css/style.css', "The default theme's CSS appears on the page.");
   }
 
   /**
@@ -231,8 +231,8 @@ class RouterTest extends WebTestBase {
     // Visit a page that does not implement a theme callback. The above request
     // should be honored.
     $this->drupalGet('menu-test/no-theme-callback');
-    $this->assertText('Custom theme: stark. Actual theme: stark.', t('The result of hook_custom_theme() is used as the theme for the current page.'));
-    $this->assertRaw('stark/css/layout.css', t("The Stark theme's CSS appears on the page."));
+    $this->assertText('Custom theme: stark. Actual theme: stark.', 'The result of hook_custom_theme() is used as the theme for the current page.');
+    $this->assertRaw('stark/css/layout.css', "The Stark theme's CSS appears on the page.");
   }
 
   /**
@@ -247,8 +247,8 @@ class RouterTest extends WebTestBase {
     // The menu "theme callback" should take precedence over a value set in
     // hook_custom_theme().
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The result of hook_custom_theme() does not override what was set in a theme callback.'));
-    $this->assertRaw('seven/style.css', t("The Seven theme's CSS appears on the page."));
+    $this->assertText('Custom theme: seven. Actual theme: seven.', 'The result of hook_custom_theme() does not override what was set in a theme callback.');
+    $this->assertRaw('seven/style.css', "The Seven theme's CSS appears on the page.");
   }
 
   /**
@@ -306,7 +306,7 @@ class RouterTest extends WebTestBase {
 
     $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
     $name = db_query($sql)->fetchField();
-    $this->assertEqual($name, 'original', t('Menu name is "original".'));
+    $this->assertEqual($name, 'original', 'Menu name is "original".');
 
     // Change the menu_name parameter in menu_test.module, then force a menu
     // rebuild.
@@ -315,7 +315,7 @@ class RouterTest extends WebTestBase {
 
     $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
     $name = db_query($sql)->fetchField();
-    $this->assertEqual($name, 'changed', t('Menu name was successfully changed after rebuild.'));
+    $this->assertEqual($name, 'changed', 'Menu name was successfully changed after rebuild.');
   }
 
   /**
@@ -326,8 +326,8 @@ class RouterTest extends WebTestBase {
     $child_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent/child'))->fetchAssoc();
     $unattached_child_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent/child2/child'))->fetchAssoc();
 
-    $this->assertEqual($child_link['plid'], $parent_link['mlid'], t('The parent of a directly attached child is correct.'));
-    $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], t('The parent of a non-directly attached child is correct.'));
+    $this->assertEqual($child_link['plid'], $parent_link['mlid'], 'The parent of a directly attached child is correct.');
+    $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], 'The parent of a non-directly attached child is correct.');
   }
 
   /**
@@ -347,40 +347,40 @@ class RouterTest extends WebTestBase {
     $plid = $parent['mlid'];
 
     $link = $links['menu-test/hidden/menu/list'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/menu/add'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/menu/settings'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/menu/manage/%'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $parent = $links['menu-test/hidden/menu/manage/%'];
     $depth = $parent['depth'] + 1;
     $plid = $parent['mlid'];
 
     $link = $links['menu-test/hidden/menu/manage/%/list'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/menu/manage/%/add'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/menu/manage/%/edit'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/menu/manage/%/delete'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     // Verify links for two dynamic arguments.
     $links = db_select('menu_links', 'ml')
@@ -395,28 +395,28 @@ class RouterTest extends WebTestBase {
     $plid = $parent['mlid'];
 
     $link = $links['menu-test/hidden/block/list'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/block/add'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/block/manage/%/%'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $parent = $links['menu-test/hidden/block/manage/%/%'];
     $depth = $parent['depth'] + 1;
     $plid = $parent['mlid'];
 
     $link = $links['menu-test/hidden/block/manage/%/%/configure'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     $link = $links['menu-test/hidden/block/manage/%/%/delete'];
-    $this->assertEqual($link['depth'], $depth, t('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
-    $this->assertEqual($link['plid'], $plid, t('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
+    $this->assertEqual($link['depth'], $depth, format_string('%path depth @link_depth is equal to @depth.', array('%path' => $link['router_path'], '@link_depth' => $link['depth'], '@depth' => $depth)));
+    $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
   }
 
   /**
@@ -433,7 +433,7 @@ class RouterTest extends WebTestBase {
   function testMenuSetItem() {
     $item = menu_get_item('node');
 
-    $this->assertEqual($item['path'], 'node', t("Path from menu_get_item('node') is equal to 'node'"), 'menu');
+    $this->assertEqual($item['path'], 'node', "Path from menu_get_item('node') is equal to 'node'", 'menu');
 
     // Modify the path for the item then save it.
     $item['path'] = 'node_test';
@@ -441,7 +441,7 @@ class RouterTest extends WebTestBase {
 
     menu_set_item('node', $item);
     $compare_item = menu_get_item('node');
-    $this->assertEqual($compare_item, $item, t('Modified menu item is equal to newly retrieved menu item.'), 'menu');
+    $this->assertEqual($compare_item, $item, 'Modified menu item is equal to newly retrieved menu item.', 'menu');
   }
 
   /**
@@ -450,13 +450,13 @@ class RouterTest extends WebTestBase {
   function testMenuItemHooks() {
     // Create an item.
     menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/4', 'Menu link #4');
-    $this->assertEqual(menu_test_static_variable(), 'insert', t('hook_menu_link_insert() fired correctly'));
+    $this->assertEqual(menu_test_static_variable(), 'insert', 'hook_menu_link_insert() fired correctly');
     // Update the item.
     menu_link_maintain('menu_test', 'update', 'menu_test_maintain/4', 'Menu link updated');
-    $this->assertEqual(menu_test_static_variable(), 'update', t('hook_menu_link_update() fired correctly'));
+    $this->assertEqual(menu_test_static_variable(), 'update', 'hook_menu_link_update() fired correctly');
     // Delete the item.
     menu_link_maintain('menu_test', 'delete', 'menu_test_maintain/4', '');
-    $this->assertEqual(menu_test_static_variable(), 'delete', t('hook_menu_link_delete() fired correctly'));
+    $this->assertEqual(menu_test_static_variable(), 'delete', 'hook_menu_link_delete() fired correctly');
   }
 
   /**
@@ -481,8 +481,8 @@ class RouterTest extends WebTestBase {
 
     // Load front page.
     $this->drupalGet('node');
-    $this->assertRaw('title="Test title attribute"', t('Title attribute of a menu link renders.'));
-    $this->assertRaw('testparam=testvalue', t('Query parameter added to menu link.'));
+    $this->assertRaw('title="Test title attribute"', 'Title attribute of a menu link renders.');
+    $this->assertRaw('testparam=testvalue', 'Query parameter added to menu link.');
   }
 
   /**
@@ -515,7 +515,7 @@ class RouterTest extends WebTestBase {
     $this->drupalGet('menu-title-test/case' . $case_no);
     $this->assertResponse(200);
     $asserted_title = $override ? 'Alternative example title - Case ' . $case_no : 'Example title - Case ' . $case_no;
-    $this->assertTitle($asserted_title . ' | Drupal', t('Menu title is') . ': ' . $asserted_title, 'Menu');
+    $this->assertTitle($asserted_title . ' | Drupal', format_string('Menu title is: %title.', array('%title' => $asserted_title)), 'Menu');
   }
 
   /**
@@ -572,7 +572,7 @@ class RouterTest extends WebTestBase {
 
     foreach ($expected as $router_path => $load_functions) {
       $router_item = $this->menuLoadRouter($router_path);
-      $this->assertIdentical(unserialize($router_item['load_functions']), $load_functions, t('Expected load functions for router %router_path' , array('%router_path' => $router_path)));
+      $this->assertIdentical(unserialize($router_item['load_functions']), $load_functions, format_string('Expected load functions for router %router_path' , array('%router_path' => $router_path)));
     }
   }
 }

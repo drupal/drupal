@@ -47,7 +47,7 @@ class EnableDisableTest extends ModuleTestBase {
       }
     }
 
-    $this->assertTrue(count($modules), t('Found @count modules that can be enabled: %modules', array(
+    $this->assertTrue(count($modules), format_string('Found @count modules that can be enabled: %modules', array(
       '@count' => count($modules),
       '%modules' => implode(', ', array_keys($modules)),
     )));
@@ -95,7 +95,7 @@ class EnableDisableTest extends ModuleTestBase {
         if (count($modules_to_enable) > 1) {
           $this->drupalPost(NULL, array(), t('Continue'));
         }
-        $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+        $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
 
         // Check that hook_modules_installed() and hook_modules_enabled() were
         // invoked with the expected list of modules, that each module's
@@ -162,7 +162,7 @@ class EnableDisableTest extends ModuleTestBase {
       $edit['modules[Core][' . $name . '][enable]'] = $name;
     }
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
   }
 
   /**
@@ -176,7 +176,7 @@ class EnableDisableTest extends ModuleTestBase {
     $edit = array();
     $edit['modules[Core][' . $module . '][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->assertModules(array($module), FALSE);
 
     // Check that the appropriate hook was fired and the appropriate log
@@ -194,7 +194,7 @@ class EnableDisableTest extends ModuleTestBase {
     $edit['uninstall[' . $module . ']'] = $module;
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
-    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
+    $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $this->assertModules(array($module), FALSE);
 
     // Check that the appropriate hook was fired and the appropriate log

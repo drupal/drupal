@@ -27,14 +27,14 @@ class RebuildTest extends WebTestBase {
   function testMenuRebuildByVariable() {
     // Check if 'admin' path exists.
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
-    $this->assertEqual($admin_exists, 'admin', t("The path 'admin/' exists prior to deleting."));
+    $this->assertEqual($admin_exists, 'admin', "The path 'admin/' exists prior to deleting.");
 
     // Delete the path item 'admin', and test that the path doesn't exist in the database.
     $delete = db_delete('menu_router')
       ->condition('path', 'admin')
       ->execute();
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
-    $this->assertFalse($admin_exists, t("The path 'admin/' has been deleted and doesn't exist in the database."));
+    $this->assertFalse($admin_exists, "The path 'admin/' has been deleted and doesn't exist in the database.");
 
     // Now we enable the rebuild variable and send a request to rebuild the menu
     // item. Now 'admin' should exist.
@@ -42,7 +42,7 @@ class RebuildTest extends WebTestBase {
     // The request should trigger the rebuild.
     $this->drupalGet('<front>');
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
-    $this->assertEqual($admin_exists, 'admin', t("The menu has been rebuilt, the path 'admin' now exists again."));
+    $this->assertEqual($admin_exists, 'admin', "The menu has been rebuilt, the path 'admin' now exists again.");
   }
 
 }

@@ -82,7 +82,7 @@ class LinksTest extends WebTestBase {
 
       $menu_link = menu_link_load($mlid);
       menu_link_save($menu_link);
-      $this->assertEqual($menu_link['plid'], $plid, t('Menu link %mlid has parent of %plid, expected %expected_plid.', array('%mlid' => $mlid, '%plid' => $menu_link['plid'], '%expected_plid' => $plid)));
+      $this->assertEqual($menu_link['plid'], $plid, format_string('Menu link %mlid has parent of %plid, expected %expected_plid.', array('%mlid' => $mlid, '%plid' => $menu_link['plid'], '%expected_plid' => $plid)));
     }
   }
 

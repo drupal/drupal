@@ -39,12 +39,12 @@ class TreeDataUnitTest extends UnitTestBase {
     $tree = menu_tree_data($this->links);
 
     // Validate that parent items #1, #2, and #5 exist on the root level.
-    $this->assertSameLink($this->links[1], $tree[1]['link'], t('Parent item #1 exists.'));
-    $this->assertSameLink($this->links[2], $tree[2]['link'], t('Parent item #2 exists.'));
-    $this->assertSameLink($this->links[5], $tree[5]['link'], t('Parent item #5 exists.'));
+    $this->assertSameLink($this->links[1], $tree[1]['link'], 'Parent item #1 exists.');
+    $this->assertSameLink($this->links[2], $tree[2]['link'], 'Parent item #2 exists.');
+    $this->assertSameLink($this->links[5], $tree[5]['link'], 'Parent item #5 exists.');
 
     // Validate that child item #4 exists at the correct location in the hierarchy.
-    $this->assertSameLink($this->links[4], $tree[2]['below'][3]['below'][4]['link'], t('Child item #4 exists in the hierarchy.'));
+    $this->assertSameLink($this->links[4], $tree[2]['below'][3]['below'][4]['link'], 'Child item #4 exists in the hierarchy.');
   }
 
   /**
@@ -60,6 +60,6 @@ class TreeDataUnitTest extends UnitTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSameLink($link1, $link2, $message = '') {
-    return $this->assert($link1['mlid'] == $link2['mlid'], $message ? $message : t('First link is identical to second link'));
+    return $this->assert($link1['mlid'] == $link2['mlid'], $message ?: 'First link is identical to second link');
   }
 }

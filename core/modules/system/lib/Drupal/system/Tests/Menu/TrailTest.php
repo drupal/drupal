@@ -178,13 +178,13 @@ class TrailTest extends MenuTestBase {
       // Check that the initial trail (during the Drupal bootstrap) matches
       // what we expect.
       $initial_trail = variable_get('menu_test_active_trail_initial', array());
-      $this->assertEqual(count($initial_trail), count($expected_trail[$status_code]['initial']), t('The initial active trail for a @status_code page contains the expected number of items (expected: @expected, found: @found).', array(
+      $this->assertEqual(count($initial_trail), count($expected_trail[$status_code]['initial']), format_string('The initial active trail for a @status_code page contains the expected number of items (expected: @expected, found: @found).', array(
         '@status_code' => $status_code,
         '@expected' => count($expected_trail[$status_code]['initial']),
         '@found' => count($initial_trail),
       )));
       foreach (array_keys($expected_trail[$status_code]['initial']) as $index => $path) {
-        $this->assertEqual($initial_trail[$index]['href'], $path, t('Element number @number of the initial active trail for a @status_code page contains the correct path (expected: @expected, found: @found)', array(
+        $this->assertEqual($initial_trail[$index]['href'], $path, format_string('Element number @number of the initial active trail for a @status_code page contains the correct path (expected: @expected, found: @found)', array(
           '@number' => $index + 1,
           '@status_code' => $status_code,
           '@expected' => $path,
@@ -195,13 +195,13 @@ class TrailTest extends MenuTestBase {
       // Check that the final trail (after the user has been redirected to the
       // custom 403/404 page) matches what we expect.
       $final_trail = variable_get('menu_test_active_trail_final', array());
-      $this->assertEqual(count($final_trail), count($expected_trail[$status_code]['final']), t('The final active trail for a @status_code page contains the expected number of items (expected: @expected, found: @found).', array(
+      $this->assertEqual(count($final_trail), count($expected_trail[$status_code]['final']), format_string('The final active trail for a @status_code page contains the expected number of items (expected: @expected, found: @found).', array(
         '@status_code' => $status_code,
         '@expected' => count($expected_trail[$status_code]['final']),
         '@found' => count($final_trail),
       )));
       foreach (array_keys($expected_trail[$status_code]['final']) as $index => $path) {
-        $this->assertEqual($final_trail[$index]['href'], $path, t('Element number @number of the final active trail for a @status_code page contains the correct path (expected: @expected, found: @found)', array(
+        $this->assertEqual($final_trail[$index]['href'], $path, format_string('Element number @number of the final active trail for a @status_code page contains the correct path (expected: @expected, found: @found)', array(
           '@number' => $index + 1,
           '@status_code' => $status_code,
           '@expected' => $path,

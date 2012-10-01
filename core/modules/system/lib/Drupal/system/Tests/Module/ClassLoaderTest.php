@@ -32,7 +32,7 @@ class ClassLoaderTest extends WebTestBase {
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i=0; $i<2; $i++) {
       $this->drupalGet('module-test/class-loading');
-      $this->assertText($expected, t('Autoloader loads classes from an enabled module.'));
+      $this->assertText($expected, 'Autoloader loads classes from an enabled module.');
     }
 
     module_disable(array('module_autoload_test'), FALSE);
@@ -40,7 +40,7 @@ class ClassLoaderTest extends WebTestBase {
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i=0; $i<2; $i++) {
       $this->drupalGet('module-test/class-loading');
-      $this->assertNoText($expected, t('Autoloader does not load classes from a disabled module.'));
+      $this->assertNoText($expected, 'Autoloader does not load classes from a disabled module.');
     }
   }
 }

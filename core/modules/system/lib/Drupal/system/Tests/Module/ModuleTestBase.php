@@ -45,9 +45,9 @@ abstract class ModuleTestBase extends WebTestBase {
     $tables = db_find_tables(Database::getConnection()->prefixTables('{' . $base_table . '}') . '%');
 
     if ($count) {
-      return $this->assertTrue($tables, t('Tables matching "@base_table" found.', array('@base_table' => $base_table)));
+      return $this->assertTrue($tables, format_string('Tables matching "@base_table" found.', array('@base_table' => $base_table)));
     }
-    return $this->assertFalse($tables, t('Tables matching "@base_table" not found.', array('@base_table' => $base_table)));
+    return $this->assertFalse($tables, format_string('Tables matching "@base_table" not found.', array('@base_table' => $base_table)));
   }
 
   /**
@@ -64,7 +64,7 @@ abstract class ModuleTestBase extends WebTestBase {
         $tables_exist = FALSE;
       }
     }
-    return $this->assertTrue($tables_exist, t('All database tables defined by the @module module exist.', array('@module' => $module)));
+    return $this->assertTrue($tables_exist, format_string('All database tables defined by the @module module exist.', array('@module' => $module)));
   }
 
   /**
@@ -81,7 +81,7 @@ abstract class ModuleTestBase extends WebTestBase {
         $tables_exist = TRUE;
       }
     }
-    return $this->assertFalse($tables_exist, t('None of the database tables defined by the @module module exist.', array('@module' => $module)));
+    return $this->assertFalse($tables_exist, format_string('None of the database tables defined by the @module module exist.', array('@module' => $module)));
   }
 
   /**
@@ -147,7 +147,7 @@ abstract class ModuleTestBase extends WebTestBase {
       else {
         $message = 'Module "@module" is not enabled.';
       }
-      $this->assertEqual(module_exists($module), $enabled, t($message, array('@module' => $module)));
+      $this->assertEqual(module_exists($module), $enabled, format_string($message, array('@module' => $module)));
     }
   }
 
@@ -182,6 +182,6 @@ abstract class ModuleTestBase extends WebTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertTrue($count > 0, t('watchdog table contains @count rows for @message', array('@count' => $count, '@message' => $message)));
+    $this->assertTrue($count > 0, format_string('watchdog table contains @count rows for @message', array('@count' => $count, '@message' => $message)));
   }
 }

@@ -40,6 +40,6 @@ class UninstallTest extends WebTestBase {
 
     // Are the perms defined by module_test removed from {role_permission}.
     $count = db_query("SELECT COUNT(rid) FROM {role_permission} WHERE permission = :perm", array(':perm' => 'module_test perm'))->fetchField();
-    $this->assertEqual(0, $count, t('Permissions were all removed.'));
+    $this->assertEqual(0, $count, 'Permissions were all removed.');
   }
 }

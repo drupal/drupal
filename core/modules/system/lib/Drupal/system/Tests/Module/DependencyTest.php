@@ -27,7 +27,7 @@ class DependencyTest extends ModuleTestBase {
     $edit = array();
     $edit['modules[Core][translation][enable]'] = 'translation';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('Some required modules must be enabled'), t('Dependency required.'));
+    $this->assertText(t('Some required modules must be enabled'), 'Dependency required.');
 
     $this->assertModules(array('translation', 'locale', 'language'), FALSE);
 
@@ -35,7 +35,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertTableCount('language', FALSE);
 
     $this->drupalPost(NULL, NULL, t('Continue'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
 
     $this->assertModules(array('translation', 'language'), TRUE);
 
@@ -50,9 +50,9 @@ class DependencyTest extends ModuleTestBase {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
     $this->drupalGet('admin/modules');
-    $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst('_missing_dependency'))), t('A module with missing dependencies is marked as such.'));
+    $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst('_missing_dependency'))), 'A module with missing dependencies is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_dependencies_test][enable]"]');
-    $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
+    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
 
     // Force enable the system_dependencies_test module.
     module_enable(array('system_dependencies_test'), FALSE);
@@ -60,7 +60,7 @@ class DependencyTest extends ModuleTestBase {
     // Verify that the module is forced to be disabled when submitting
     // the module page.
     $this->drupalPost('admin/modules', array(), t('Save configuration'));
-    $this->assertText(t('The @module module is missing, so the following module will be disabled: @depends.', array('@module' => '_missing_dependency', '@depends' => 'system_dependencies_test')), t('The module missing dependencies will be disabled.'));
+    $this->assertText(t('The @module module is missing, so the following module will be disabled: @depends.', array('@module' => '_missing_dependency', '@depends' => 'system_dependencies_test')), 'The module missing dependencies will be disabled.');
 
     // Confirm.
     $this->drupalPost(NULL, NULL, t('Continue'));
@@ -81,7 +81,7 @@ class DependencyTest extends ModuleTestBase {
       '@version' => '1.0',
     )), 'A module that depends on an incompatible version of a module is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_incompatible_module_version_dependencies_test][enable]"]');
-    $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
+    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
   }
 
   /**
@@ -95,7 +95,7 @@ class DependencyTest extends ModuleTestBase {
       '@module' => 'System incompatible core version test',
     )), 'A module that depends on a module with an incompatible core version is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_incompatible_core_version_dependencies_test][enable]"]');
-    $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
+    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
   }
 
   /**
@@ -114,7 +114,7 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
 
     // Makes sure the modules were NOT installed.
-    $this->assertText(t('Requirements 1 Test failed requirements'), t('Modules status has been updated.'));
+    $this->assertText(t('Requirements 1 Test failed requirements'), 'Modules status has been updated.');
     $this->assertModules(array('requirements1_test'), FALSE);
     $this->assertModules(array('requirements2_test'), FALSE);
 
@@ -180,17 +180,17 @@ class DependencyTest extends ModuleTestBase {
     // Check that the taxonomy module cannot be uninstalled.
     $this->drupalGet('admin/modules/uninstall');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[comment]"]');
-    $this->assert(count($checkbox) == 1, t('Checkbox for uninstalling the comment module is disabled.'));
+    $this->assert(count($checkbox) == 1, 'Checkbox for uninstalling the comment module is disabled.');
 
     // Uninstall the forum module, and check that taxonomy now can also be
     // uninstalled.
     $edit = array('uninstall[forum]' => 'forum');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
-    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
+    $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $edit = array('uninstall[comment]' => 'comment');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
-    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
+    $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
   }
 }

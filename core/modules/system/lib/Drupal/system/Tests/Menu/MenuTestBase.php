@@ -45,7 +45,7 @@ abstract class MenuTestBase extends WebTestBase {
     // No parts must be left, or an expected "Home" will always pass.
     $pass = ($pass && empty($parts));
 
-    $this->assertTrue($pass, t('Breadcrumb %parts found on @path.', array(
+    $this->assertTrue($pass, format_string('Breadcrumb %parts found on @path.', array(
       '%parts' => implode(' » ', $trail),
       '@path' => $this->getUrl(),
     )));
@@ -75,7 +75,7 @@ abstract class MenuTestBase extends WebTestBase {
           $i++;
         }
         $elements = $this->xpath($xpath);
-        $this->assertTrue(!empty($elements), t('Active trail to current page was found in menu tree.'));
+        $this->assertTrue(!empty($elements), 'Active trail to current page was found in menu tree.');
 
         // Append prefix for active link asserted below.
         $xpath .= '/following-sibling::ul/descendant::';
@@ -92,7 +92,7 @@ abstract class MenuTestBase extends WebTestBase {
         ':title' => $active_link_title,
       );
       $elements = $this->xpath($xpath, $args);
-      $this->assertTrue(!empty($elements), t('Active link %title was found in menu tree, including active trail links %tree.', array(
+      $this->assertTrue(!empty($elements), format_string('Active link %title was found in menu tree, including active trail links %tree.', array(
         '%title' => $active_link_title,
         '%tree' => implode(' » ', $tree),
       )));
