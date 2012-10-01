@@ -143,7 +143,7 @@ class RssFields extends RowPluginBase {
     }
 
     // Create the RSS item object.
-    $item = new stdClass();
+    $item = new \stdClass();
     $item->title = $this->get_field($row_index, $this->options['title_field']);
     $item->link = url($this->get_field($row_index, $this->options['link_field']), array('absolute' => TRUE));
     $item->description = $this->get_field($row_index, $this->options['description_field']);

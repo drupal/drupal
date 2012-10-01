@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use stdClass;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Plugin\views\HandlerBase;
 
@@ -58,7 +57,7 @@ class HandlerTest extends ViewTestBase {
    * Tests the breakPhraseString() method.
    */
   function testBreakPhraseString() {
-    $empty_stdclass = new StdClass();
+    $empty_stdclass = new \stdClass();
     $empty_stdclass->operator = 'or';
     $empty_stdclass->value = array();
 
@@ -113,7 +112,7 @@ class HandlerTest extends ViewTestBase {
    * Tests views_break_phrase function.
    */
   function testBreakPhrase() {
-    $empty_stdclass = new StdClass();
+    $empty_stdclass = new \stdClass();
     $empty_stdclass->operator = 'or';
     $empty_stdclass->value = array();
 

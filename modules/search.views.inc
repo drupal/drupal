@@ -79,7 +79,13 @@ function search_views_data() {
   $data['search_node_links_from']['table']['group'] = t('Search');
   $data['search_node_links_from']['table']['join'] = array(
     'node' => array(
-      'arguments' => array('search_node_links', 'node', 'nid', 'nid', NULL, 'INNER'),
+      'arguments' => array(
+        'table' => 'search_node_links',
+        'left_table' => 'node',
+        'field' => 'nid',
+        'left_field' => 'nid',
+        'type' => 'INNER'
+      ),
     ),
   );
   $data['search_node_links_from']['sid'] = array(
@@ -97,7 +103,13 @@ function search_views_data() {
   $data['search_node_links_to']['table']['group'] = t('Search');
   $data['search_node_links_to']['table']['join'] = array(
     'node' => array(
-      'arguments' => array('search_node_links', 'node', 'nid', 'sid', NULL, 'INNER'),
+      'arguments' => array(
+        'table' => 'search_node_links',
+        'left_table' => 'node',
+        'field' => 'sid',
+        'left_field' => 'nid',
+        'type' => 'INNER'
+      ),
     ),
   );
   $data['search_node_links_to']['nid'] = array(

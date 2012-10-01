@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use stdClass;
-
 /**
  * Tests some general style plugin related functionality.
  *
@@ -107,16 +105,16 @@ class StyleTest extends StyleTestBase {
     $expected = array();
     // Use Job: as label, so be sure that the label is used for groupby as well.
     $expected['Job: Singer'] = array();
-    $expected['Job: Singer'][0] = new stdClass();
+    $expected['Job: Singer'][0] = new \stdClass();
     $expected['Job: Singer'][0]->views_test_data_name = 'John';
     $expected['Job: Singer'][0]->views_test_data_job = 'Singer';
     $expected['Job: Singer'][0]->views_test_data_id = '1';
-    $expected['Job: Singer'][1] = new stdClass();
+    $expected['Job: Singer'][1] = new \stdClass();
     $expected['Job: Singer'][1]->views_test_data_name = 'George';
     $expected['Job: Singer'][1]->views_test_data_job = 'Singer';
     $expected['Job: Singer'][1]->views_test_data_id = '2';
     $expected['Job: Drummer'] = array();
-    $expected['Job: Drummer'][2] = new stdClass();
+    $expected['Job: Drummer'][2] = new \stdClass();
     $expected['Job: Drummer'][2]->views_test_data_name = 'Ringo';
     $expected['Job: Drummer'][2]->views_test_data_job = 'Drummer';
     $expected['Job: Drummer'][2]->views_test_data_id = '3';
@@ -126,17 +124,17 @@ class StyleTest extends StyleTestBase {
     $expected = array();
     $expected['Job: Singer'] = array();
     $expected['Job: Singer']['group'] = 'Job: Singer';
-    $expected['Job: Singer']['rows'][0] = new stdClass();
+    $expected['Job: Singer']['rows'][0] = new \stdClass();
     $expected['Job: Singer']['rows'][0]->views_test_data_name = 'John';
     $expected['Job: Singer']['rows'][0]->views_test_data_job = 'Singer';
     $expected['Job: Singer']['rows'][0]->views_test_data_id = '1';
-    $expected['Job: Singer']['rows'][1] = new stdClass();
+    $expected['Job: Singer']['rows'][1] = new \stdClass();
     $expected['Job: Singer']['rows'][1]->views_test_data_name = 'George';
     $expected['Job: Singer']['rows'][1]->views_test_data_job = 'Singer';
     $expected['Job: Singer']['rows'][1]->views_test_data_id = '2';
     $expected['Job: Drummer'] = array();
     $expected['Job: Drummer']['group'] = 'Job: Drummer';
-    $expected['Job: Drummer']['rows'][2] = new stdClass();
+    $expected['Job: Drummer']['rows'][2] = new \stdClass();
     $expected['Job: Drummer']['rows'][2]->views_test_data_name = 'Ringo';
     $expected['Job: Drummer']['rows'][2]->views_test_data_job = 'Drummer';
     $expected['Job: Drummer']['rows'][2]->views_test_data_id = '3';
@@ -211,14 +209,14 @@ class StyleTest extends StyleTestBase {
     $expected['Job: Singer']['group'] = 'Job: Singer';
     $expected['Job: Singer']['rows']['Age: 25'] = array();
     $expected['Job: Singer']['rows']['Age: 25']['group'] = 'Age: 25';
-    $expected['Job: Singer']['rows']['Age: 25']['rows'][0] = new stdClass();
+    $expected['Job: Singer']['rows']['Age: 25']['rows'][0] = new \stdClass();
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_name = 'John';
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_job = 'Singer';
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_age = '25';
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_id = '1';
     $expected['Job: Singer']['rows']['Age: 27'] = array();
     $expected['Job: Singer']['rows']['Age: 27']['group'] = 'Age: 27';
-    $expected['Job: Singer']['rows']['Age: 27']['rows'][1] = new stdClass();
+    $expected['Job: Singer']['rows']['Age: 27']['rows'][1] = new \stdClass();
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_name = 'George';
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_job = 'Singer';
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_age = '27';
@@ -227,7 +225,7 @@ class StyleTest extends StyleTestBase {
     $expected['Job: Drummer']['group'] = 'Job: Drummer';
     $expected['Job: Drummer']['rows']['Age: 28'] = array();
     $expected['Job: Drummer']['rows']['Age: 28']['group'] = 'Age: 28';
-    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2] = new stdClass();
+    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2] = new \stdClass();
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_name = 'Ringo';
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_job = 'Drummer';
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_age = '28';

@@ -102,7 +102,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     $this->ensureMyTable();
 
     if (!empty($this->options['break_phrase'])) {
-      $tids = new stdClass();
+      $tids = new \stdClass();
       $tids->value = $this->argument;
       $tids = $this->breakPhrase($this->argument, $tids);
       if ($tids->value == array(-1)) {
