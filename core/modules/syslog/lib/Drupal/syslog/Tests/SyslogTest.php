@@ -45,7 +45,7 @@ class SyslogTest extends WebTestBase {
       $this->drupalGet('admin/config/development/logging');
       if ($this->parse()) {
         $field = $this->xpath('//option[@value=:value]', array(':value' => LOG_LOCAL6)); // Should be one field.
-        $this->assertTrue($field[0]['selected'] == 'selected', t('Facility value saved.'));
+        $this->assertTrue($field[0]['selected'] == 'selected', 'Facility value saved.');
       }
     }
   }
