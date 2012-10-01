@@ -1648,28 +1648,31 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
     $exclude_view_display = '';
   }
   elseif (is_object($exclude_view)) {
-    $exclude_view_name = $exclude_view->storage->name;
+    $exclude_view_name = $exclude_view->storage->id();
     $exclude_view_display = $exclude_view->current_display;
   }
   else {
-    list($exclude_view_name, $exclude_view_display) = explode(':', $exclude_view);
+    // Append a ':' to the $exclude_view string so we always have more than one
+    // item to explode.
+    list($exclude_view_name, $exclude_view_display) = explode(':', "$exclude_view:");
   }
 
   $options = array();
   foreach ($views as $view) {
+    $id = $view->id();
     // Return only views.
-    if ($views_only && $view->storage->name != $exclude_view_name) {
-      $options[$view->storage->name] = $view->storage->getHumanName();
+    if ($views_only && $id != $exclude_view_name) {
+      $options[$id] = $view->getHumanName();
     }
     // Return views with display ids.
     else {
       foreach ($view->display as $display_id => $display) {
-        if (!($view->storage->name == $exclude_view_name && $display_id == $exclude_view_display)) {
+        if (!($id == $exclude_view_name && $display_id == $exclude_view_display)) {
           if ($optgroup) {
-            $options[$view->storage->name][$view->storage->name . ':' . $display['id']] = t('@view : @display', array('@view' => $view->storage->name, '@display' => $display['id']));
+            $options[$id][$id . ':' . $display['id']] = t('@view : @display', array('@view' => $id, '@display' => $display['id']));
           }
           else {
-            $options[$view->storage->name . ':' . $display['id']] = t('View: @view - Display: @display', array('@view' => $view->storage->name, '@display' => $display['id']));
+            $options[$id . ':' . $display['id']] = t('View: @view - Display: @display', array('@view' => $id, '@display' => $display['id']));
           }
         }
       }

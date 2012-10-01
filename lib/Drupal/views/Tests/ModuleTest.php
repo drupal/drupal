@@ -141,6 +141,96 @@ class ModuleTest extends ViewTestBase {
   }
 
   /**
+   * Tests the load wrapper/helper functions.
+   */
+  public function testLoadFunctions() {
+    $controller = entity_get_controller('view');
+
+    // Test views_view_is_enabled/disabled.
+    $load = $controller->load(array('archive'));
+    $archive = reset($load);
+    $this->assertTrue(views_view_is_disabled($archive), 'views_view_is_disabled works as expected.');
+    // Enable the view and check this.
+    $archive->enable();
+    $this->assertTrue(views_view_is_enabled($archive), ' views_view_is_enabled works as expected.');
+
+    // We can store this now, as we have enabled/disabled above.
+    $all_views = $controller->load();
+
+    // Test views_get_all_views().
+    $this->assertIdentical(array_keys($all_views), array_keys(views_get_all_views()), 'views_get_all_views works as expected.');
+
+    // Test views_get_enabled_views().
+    $expected_enabled = array_filter($all_views, function($view) {
+      return views_view_is_enabled($view);
+    });
+    $this->assertIdentical(array_keys($expected_enabled), array_keys(views_get_enabled_views()), 'Expected enabled views returned.');
+
+    // Test views_get_disabled_views().
+    $expected_disabled = array_filter($all_views, function($view) {
+      return views_view_is_disabled($view);
+    });
+    $this->assertIdentical(array_keys($expected_disabled), array_keys(views_get_disabled_views()), 'Expected disabled views returned.');
+
+    // Test views_get_views_as_options().
+    // Test the $views_only parameter.
+    $this->assertIdentical(array_keys($all_views), array_keys(views_get_views_as_options(TRUE)), 'Expected option keys for all views were returned.');
+    $expected_options = array();
+    foreach ($all_views as $id => $view) {
+      $expected_options[$id] = $view->getHumanName();
+    }
+    $this->assertIdentical($expected_options, views_get_views_as_options(TRUE), 'Expected options array was returned.');
+
+    // Test the default.
+    $this->assertIdentical($this->formatViewOptions($all_views), views_get_views_as_options(), 'Expected options array for all views was returned.');
+    // Test enabled views.
+    $this->assertIdentical($this->formatViewOptions($expected_enabled), views_get_views_as_options(FALSE, 'enabled'), 'Expected enabled options array was returned.');
+    // Test disabled views.
+    $this->assertIdentical($this->formatViewOptions($expected_disabled), views_get_views_as_options(FALSE, 'disabled'), 'Expected disabled options array was returned.');
+
+    // Test the sort parameter.
+    $all_views_sorted = $all_views;
+    ksort($all_views_sorted);
+    $this->assertIdentical(array_keys($all_views_sorted), array_keys(views_get_views_as_options(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
+
+    // Test $exclude_view parameter.
+    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', 'archive')), 'View excluded from options based on name');
+    $this->assertFalse(array_key_exists('archive:default', views_get_views_as_options(FALSE, 'all', 'archive:default')), 'View display excluded from options based on name');
+    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', $archive->getExecutable())), 'View excluded from options based on object');
+
+    // Test the $opt_group parameter.
+    $expected_opt_groups = array();
+    foreach ($all_views as $id => $view) {
+      foreach ($view->display as $display_id => $display) {
+          $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = t('@view : @display', array('@view' => $view->id(), '@display' => $display['id']));
+      }
+    }
+    $this->assertIdentical($expected_opt_groups, views_get_views_as_options(FALSE, 'all', NULL, TRUE), 'Expected option array for an option group returned.');
+  }
+
+  /**
+   * Helper to return an expected views option array.
+   *
+   * @param array $views
+   *   An array of Drupal\views\ViewStorage objects to create an options array
+   *   for.
+   *
+   * @return array
+   *   A formatted options array that matches the expected output.
+   */
+  protected function formatViewOptions(array $views = array()) {
+    $expected_options = array();
+    foreach ($views as $id => $view) {
+      foreach ($view->display as $display_id => $display) {
+        $expected_options[$view->id() . ':' . $display['id']] = t('View: @view - Display: @display',
+          array('@view' => $view->name, '@display' => $display['id']));
+      }
+    }
+
+    return $expected_options;
+  }
+
+  /**
    * Ensure that a certain handler is a instance of a certain table/field.
    */
   function assertInstanceHandler($handler, $table, $field, $id) {
