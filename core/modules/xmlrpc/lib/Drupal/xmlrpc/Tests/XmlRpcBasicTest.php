@@ -64,7 +64,7 @@ class XmlRpcBasicTest extends WebTestBase {
     $url = url('xmlrpc.php', array('absolute' => TRUE));
     $signature = xmlrpc($url, array('system.methodSignature' => array('system.listMethods')));
     $this->assert(is_array($signature) && !empty($signature) && is_array($signature[0]),
-      t('system.methodSignature returns an array of signature arrays.'));
+      'system.methodSignature returns an array of signature arrays.');
   }
 
   /**
@@ -74,19 +74,19 @@ class XmlRpcBasicTest extends WebTestBase {
     $invalid_messages = array(
       array(
         'message' => xmlrpc_message(''),
-        'assertion' => t('Empty message correctly rejected during parsing.'),
+        'assertion' => 'Empty message correctly rejected during parsing.',
       ),
       array(
         'message' => xmlrpc_message('<?xml version="1.0" encoding="ISO-8859-1"?>'),
-        'assertion' => t('Empty message with XML declaration correctly rejected during parsing.'),
+        'assertion' => 'Empty message with XML declaration correctly rejected during parsing.',
       ),
       array(
         'message' => xmlrpc_message('<?xml version="1.0"?><params><param><value><string>value</string></value></param></params>'),
-        'assertion' => t('Non-empty message without a valid message type is rejected during parsing.'),
+        'assertion' => 'Non-empty message without a valid message type is rejected during parsing.',
       ),
       array(
         'message' => xmlrpc_message('<methodResponse><params><param><value><string>value</string></value></param></methodResponse>'),
-        'assertion' => t('Non-empty malformed message is rejected during parsing.'),
+        'assertion' => 'Non-empty malformed message is rejected during parsing.',
       ),
     );
 

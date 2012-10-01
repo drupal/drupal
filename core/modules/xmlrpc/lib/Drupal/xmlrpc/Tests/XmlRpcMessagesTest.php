@@ -39,7 +39,7 @@ class XmlRpcMessagesTest extends WebTestBase {
       $xml_message_l = xmlrpc_test_message_sized_in_kb($size);
       $xml_message_r = xmlrpc($xml_url, array('messages.messageSizedInKB' => array($size)));
 
-      $this->assertEqual($xml_message_l, $xml_message_r, t('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
+      $this->assertEqual($xml_message_l, $xml_message_r, format_string('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
     }
   }
 
@@ -57,9 +57,9 @@ class XmlRpcMessagesTest extends WebTestBase {
     $methods2 = xmlrpc($url, array('system.listMethods' => array()));
 
     $diff = array_diff($methods1, $methods2);
-    $this->assertTrue(is_array($diff) && !empty($diff), t('Method list is altered by hook_xmlrpc_alter'));
+    $this->assertTrue(is_array($diff) && !empty($diff), 'Method list is altered by hook_xmlrpc_alter');
     $removed = reset($diff);
-    $this->assertEqual($removed, 'system.methodSignature', t('Hiding builting system.methodSignature with hook_xmlrpc_alter works'));
+    $this->assertEqual($removed, 'system.methodSignature', 'Hiding builting system.methodSignature with hook_xmlrpc_alter works');
   }
 
 }
