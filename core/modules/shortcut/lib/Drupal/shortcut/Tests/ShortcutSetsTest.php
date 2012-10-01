@@ -119,7 +119,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPost('admin/config/user-interface/shortcut/' . $set->set_name . '/edit', array('title' => $existing_title), t('Save'));
     $this->assertRaw(t('The shortcut set %name already exists. Choose another name.', array('%name' => $existing_title)));
     $set = shortcut_set_load($set->set_name);
-    $this->assertNotEqual($set->title, $existing_title, t('The shortcut set %title cannot be renamed to %new-title because a shortcut set with that title already exists.', array('%title' => $set->title, '%new-title' => $existing_title)));
+    $this->assertNotEqual($set->title, $existing_title, format_string('The shortcut set %title cannot be renamed to %new-title because a shortcut set with that title already exists.', array('%title' => $set->title, '%new-title' => $existing_title)));
   }
 
   /**
