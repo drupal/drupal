@@ -52,7 +52,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   /**
    * Constructs a new entity object.
    */
-  public function __construct(array $values = array(), $entity_type) {
+  public function __construct(array $values, $entity_type) {
     $this->entityType = $entity_type;
     // Set initial values.
     foreach ($values as $key => $value) {

@@ -28,7 +28,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * Overrides Entity::__construct().
    */
-  public function __construct(array $values = array(), $entity_type) {
+  public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
 
     // Backup the original ID, if any.
