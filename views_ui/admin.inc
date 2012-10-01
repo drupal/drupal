@@ -2248,7 +2248,7 @@ function views_ui_admin_settings_basic($form, &$form_state) {
     '#type' => 'container',
     '#states' => array(
       'visible' => array(
-        ':input[name="ui.show.preview_information"]' => array('checked' => TRUE),
+        ':input[name="ui_show_preview_information"]' => array('checked' => TRUE),
       ),
     ),
   );
