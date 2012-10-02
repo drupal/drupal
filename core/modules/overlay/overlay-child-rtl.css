@@ -1,4 +1,9 @@
 
+/**
+ * @file
+ * RTL styling for Overlay child pages.
+ */
+
 html {
   direction: rtl;
 }

@@ -1,4 +1,9 @@
 
+/**
+ * @file
+ * Basic styling for the Overlay child pages.
+ */
+
 .js {
   background: transparent !important;
   overflow-y: scroll;

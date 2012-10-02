@@ -9,6 +9,9 @@
  * - $page: The rendered page content.
  * - $tabs (array): Tabs linking to any sub-pages beneath the current page
  *   (e.g., the view and edit tabs when displaying a node).
+ * Helper variables:
+ * - $classes_array: Array of HMTL class attribute values. It is flattened into
+ *   a string within the variable $classes.
  *
  * @see template_preprocess()
  * @see template_preprocess_overlay()

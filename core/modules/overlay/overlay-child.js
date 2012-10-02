@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Attaches the behaviors for the Overlay child pages.
+ */
+
 (function ($) {
 
 "use strict";

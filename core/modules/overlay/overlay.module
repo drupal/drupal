@@ -331,7 +331,7 @@ function overlay_user_dismiss_message_access() {
 }
 
 /**
- * Menu callback; dismisses the overlay accessibility message for this user.
+ * Menu callback: Dismisses the overlay accessibility message for this user.
  *
  * @see overlay_user_dismiss_message_access()
  * @see overlay_menu()
@@ -361,10 +361,12 @@ function overlay_user_dismiss_message() {
  * If the current user can access the overlay and has not previously indicated
  * that this message should be dismissed, this function returns a message
  * containing a link to disable the overlay. Nothing is returned for anonymous
- * users, because the links control per-user settings. Therefore, because some
- * screen readers are unable to properly read overlay contents, site builders
- * are discouraged from granting the "access overlay" permission to the
- * anonymous role. See http://drupal.org/node/890284.
+ * users, because the links control per-user settings. Because some screen
+ * readers are unable to properly read overlay contents, site builders are
+ * discouraged from granting the "access overlay" permission to the anonymous
+ * role.
+ *
+ * @see http://drupal.org/node/890284
  */
 function overlay_disable_message() {
   global $user;
@@ -419,7 +421,13 @@ function overlay_disable_message() {
 /**
  * Returns the HTML for the message about how to disable the overlay.
  *
- * @see overlay_disable_message()
+ * @param $variables
+ *   An associative array with an 'element' element, which itself is an
+ *   associative array containing:
+ *   - profile_link: The link to this user's account.
+ *   - dismiss_message_link: The link to dismiss the overlay.
+ *
+ * @ingroup themeable
  */
 function theme_overlay_disable_message($variables) {
   $element = $variables['element'];
@@ -505,8 +513,12 @@ function overlay_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Preprocesses template variables for overlay.tpl.php
+ * Implements template_preprocess_HOOK() for overlay.tpl.php
  *
+ * If the current page request is inside the overlay, add appropriate classes
+ * to the <body> element, and simplify the page title.
+ *
+ * @see template_process_overlay()
  * @see overlay.tpl.php
  */
 function template_preprocess_overlay(&$variables) {
@@ -517,20 +529,21 @@ function template_preprocess_overlay(&$variables) {
 }
 
 /**
- * Processes variables for overlay.tpl.php
+ * Implements template_process_HOOK() for overlay.tpl.php
+ *
+ * Places the rendered HTML for the page body into a top level variable.
  *
  * @see template_preprocess_overlay()
  * @see overlay.tpl.php
  */
 function template_process_overlay(&$variables) {
-  // Place the rendered HTML for the page body into a top level variable.
   $variables['page'] = $variables['page']['#children'];
 }
 
 /**
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  *
- * Hide tabs inside the overlay.
+ * If the current page request is inside the overlay, hide the tabs.
  *
  * @see overlay_get_mode()
  */
@@ -582,7 +595,7 @@ function overlay_page_delivery_callback_alter(&$callback) {
 }
 
 /**
- * Delivery callback to display an empty page.
+ * Prints an empty page.
  *
  * This function is used to print out a bare minimum empty page which still has
  * the scripts and styles necessary in order to trigger the overlay to close.
@@ -594,7 +607,7 @@ function overlay_deliver_empty_page() {
 }
 
 /**
- * Get the current overlay mode.
+ * Gets the current overlay mode.
  *
  * @see overlay_set_mode()
  */
@@ -787,7 +800,7 @@ function overlay_supplemental_regions() {
 }
 
 /**
- * Helper function for returning a list of page regions related to the overlay.
+ * Returns a list of page regions related to the overlay.
  *
  * @param $type
  *   The type of regions to return. This can either be 'overlay_regions' or
