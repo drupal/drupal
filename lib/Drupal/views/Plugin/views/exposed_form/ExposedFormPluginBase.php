@@ -52,6 +52,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     $options['reset_button'] = array('default' => FALSE, 'bool' => TRUE);
     $options['reset_button_label'] = array('default' => 'Reset', 'translatable' => TRUE);
     $options['exposed_sorts_label'] = array('default' => 'Sort by', 'translatable' => TRUE);
+    $options['expose_sort_order'] = array('default' => TRUE, 'bool' => TRUE);
     $options['sort_asc_label'] = array('default' => 'Asc', 'translatable' => TRUE);
     $options['sort_desc_label'] = array('default' => 'Desc', 'translatable' => TRUE);
     return $options;
@@ -95,12 +96,24 @@ abstract class ExposedFormPluginBase extends PluginBase {
       '#required' => TRUE,
     );
 
+    $form['expose_sort_order'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Expose sort order'),
+      '#description' => t('Allow the user to choose the sort order. If sort order is not exposed, the sort criteria settings for each sort will determine its order.'),
+      '#default_value' => $this->options['expose_sort_order'],
+    );
+
     $form['sort_asc_label'] = array(
       '#type' => 'textfield',
       '#title' => t('Ascending'),
       '#description' => t('Text to use when exposed sort is ordered ascending.'),
       '#default_value' => $this->options['sort_asc_label'],
       '#required' => TRUE,
+      '#states' => array(
+        'visible' => array(
+          'input[name="exposed_form_options[expose_sort_order]"]' => array('checked' => TRUE),
+        ),
+      ),
     );
 
     $form['sort_desc_label'] = array(
@@ -109,6 +122,11 @@ abstract class ExposedFormPluginBase extends PluginBase {
       '#description' => t('Text to use when exposed sort is ordered descending.'),
       '#default_value' => $this->options['sort_desc_label'],
       '#required' => TRUE,
+      '#states' => array(
+        'visible' => array(
+          'input[name="exposed_form_options[expose_sort_order]"]' => array('checked' => TRUE),
+        ),
+      ),
     );
   }
 
@@ -226,12 +244,14 @@ abstract class ExposedFormPluginBase extends PluginBase {
         $form_state['input']['sort_by'] = array_shift($keys);
       }
 
-      $form['sort_order'] = array(
-        '#type' => 'select',
-        '#options' => $sort_order,
-        '#title' => t('Order'),
-        '#default_value' => $default_sort_order,
-      );
+      if ($this->options['expose_sort_order']) {
+        $form['sort_order'] = array(
+          '#type' => 'select',
+          '#options' => $sort_order,
+          '#title' => t('Order'),
+          '#default_value' => $default_sort_order,
+        );
+      }
       $form['submit']['#weight'] = 10;
       if (isset($form['reset'])) {
         $form['reset']['#weight'] = 10;
