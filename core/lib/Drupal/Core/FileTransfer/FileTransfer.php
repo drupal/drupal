@@ -136,7 +136,7 @@ abstract class FileTransfer {
    * @param string $path
    *   The file / directory to change the permissions of.
    * @param int $mode
-   *   See the $mode argument from http://php.net/chmod.
+   *   The new file permission mode to be passed to chmod().
    * @param bool $recursive
    *   Pass TRUE to recursively chmod the entire directory specified in $path.
    *
