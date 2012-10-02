@@ -240,8 +240,7 @@ class Feed extends Page {
 
     // Defer to the feed style; it may put in meta information, and/or
     // attach a feed icon.
-    $name = $this->getOption('style_plugin');
-    $plugin = $this->getPlugin('style', $name);
+    $plugin = $this->getPlugin('style');
     if ($plugin) {
       $clone = $this->view->cloneView();
       $clone->setDisplay($this->display['id']);

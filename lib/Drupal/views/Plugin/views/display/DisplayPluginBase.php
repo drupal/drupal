@@ -39,6 +39,13 @@ abstract class DisplayPluginBase extends PluginBase {
   var $handlers = array();
 
   /**
+   * An array of instantiated plugins used in this display.
+   *
+   * @var array
+   */
+  protected $plugins = array();
+
+  /**
    * Stores all available display extenders.
    */
   var $extender = array();
@@ -722,11 +729,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * @return bool
    */
   public function usesFields() {
-    $style = $this->getOption('style');
-    $plugin = $this->getPlugin('style', $style['type']);
-    if ($plugin) {
-      return $plugin->usesFields();
-    }
+    return $this->getPlugin('style')->usesFields();
   }
 
   /**
@@ -734,54 +737,35 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    * @param string $type
    *   The type of the plugin.
-   * @param string $name
-   *   The name of the plugin defined in hook_views_plugins.
    *
-   * @return views_plugin|FALSE
+   * @return Drupal\views\Plugin\views\PluginBase
    */
-  public function getPlugin($type = 'style', $name = NULL) {
-    static $cache = array();
-    if (!isset($cache[$type][$name])) {
-      switch ($type) {
-        case 'query':
-          $views_data = views_fetch_data($this->view->storage->base_table);
-          $name = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
-        default:
-          $option_name = $type;
-          $options = $this->getOption($type);
-          if (!$name) {
-            $name = $options['type'];
-          }
+  public function getPlugin($type) {
+    // Look up the name to attempt to load it from the static cache.
+    $options = $this->getOption($type);
+    $name = $options['type'];
 
-          $options = $options['options'];
+    if (!isset($this->plugins[$type][$name])) {
+      $views_data = views_fetch_data($this->view->storage->base_table);
+      if ($type == 'query') {
+        $name = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
       }
+
+      $plugin = drupal_container()->get("plugin.manager.views.$type")->createInstance($name);
 
       if ($type != 'query') {
-        $plugin = views_get_plugin($type, $name);
+        $plugin->init($this->view, $this, $options['options']);
       }
       else {
-        $plugin = views_get_plugin('query', $name);
-      }
-
-      if (!$plugin) {
-        return;
-      }
-      if ($type != 'query') {
-        $plugin->init($this->view, $this, $options);
-      }
-      else {
-        $display_id = $this->isDefaulted($option_name) ? $this->display['id'] : 'default';
-
         if (!isset($this->base_field)) {
-          $views_data = views_fetch_data($this->view->storage->base_table);
           $this->view->storage->base_field = !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '';
         }
-        $plugin->init($this->view->storage->base_table, $this->view->storage->base_field, $options);
+        $plugin->init($this->view->storage->base_table, $this->view->storage->base_field, $options['options']);
       }
-      $cache[$type][$name] = $plugin;
+      $this->plugins[$type][$name] = $plugin;
     }
 
-    return $cache[$type][$name];
+    return $this->plugins[$type][$name];
   }
 
   /**
@@ -1056,12 +1040,9 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => t('Change the title that this display will use.'),
     );
 
-    $style_options = $this->getOption('style');
-    $name = $style_options['type'];
-    $style_plugin = views_get_plugin_definition('style', $name);
     $style_plugin_instance = $this->getPlugin('style');
-    $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summaryTitle();
-    $style_title = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->pluginTitle();
+    $style_summary = empty($style_plugin_instance->definition['title']) ? t('Missing style plugin') : $style_plugin_instance->summaryTitle();
+    $style_title = empty($style_plugin_instance->definition['title']) ? t('Missing style plugin') : $style_plugin_instance->pluginTitle();
 
     $style = '';
 
@@ -1079,12 +1060,9 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     if ($style_plugin_instance->usesRowPlugin()) {
-      $row_options = $this->getOption('row');
-      $name = $row_options['type'];
-      $row_plugin = views_get_plugin_definition('row', $name);
-      $row_plugin_instance = $this->getPlugin('row', $name);
-      $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summaryTitle();
-      $row_title = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->pluginTitle();
+      $row_plugin_instance = $this->getPlugin('row');
+      $row_summary = empty($row_plugin_instance->definition['title']) ? t('Missing style plugin') : $row_plugin_instance->summaryTitle();
+      $row_title = empty($row_plugin_instance->definition['title']) ? t('Missing style plugin') : $row_plugin_instance->pluginTitle();
 
       $options['row'] = array(
         'category' => 'format',
@@ -1570,15 +1548,14 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'style':
         $form['#title'] .= t('How should this view be styled');
-        $style = $this->getOption('style');
-        $form['style_plugin'] =  array(
+        $style_plugin = $this->getPlugin('style');
+        $form['style'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->storage->base_table)),
-          '#default_value' => $style['type'],
+          '#default_value' => $style_plugin->definition['id'],
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
 
-        $style_plugin = $this->getPlugin('style', $style['type']);
         if ($style_plugin->usesOptions()) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
@@ -1613,14 +1590,13 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'row':
         $form['#title'] .= t('How should each row in this view be styled');
-        $row = $this->getOption('row');
-        $form['row_plugin'] =  array(
+        $row_plugin_instance = $this->getPlugin('row');
+        $form['row'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->storage->base_table)),
-          '#default_value' => $row['type'],
+          '#default_value' => $row_plugin_instance->definition['id'],
         );
 
-        $row_plugin_instance = $this->getPlugin('row', $row['type']);
         if ($row_plugin_instance->usesOptions()) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
@@ -1770,8 +1746,7 @@ abstract class DisplayPluginBase extends PluginBase {
           }
         }
 
-        $name = $this->getOption('style_plugin');
-        $plugin = $this->getPlugin('style', $name);
+        $plugin = $this->getPlugin('style');
         if ($plugin) {
           $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->themeFunctions(), $plugin->additionalThemeFunctions());
           $themes = $plugin->additionalThemeFunctions();
@@ -1782,8 +1757,7 @@ abstract class DisplayPluginBase extends PluginBase {
           }
 
           if ($plugin->usesRowPlugin()) {
-            $name = $this->getOption('row_plugin');
-            $row_plugin = $this->getPlugin('row', $name);
+            $row_plugin = $this->getPlugin('row');
             if ($row_plugin) {
               $funcs[] = $this->optionLink(t('Row style output'), 'analyze-theme-row') . ': ' . $this->formatThemes($row_plugin->themeFunctions());
               $themes = $row_plugin->additionalThemeFunctions();
@@ -1885,8 +1859,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('Theming information (style)');
         $output = '<p>' . t('Back to !info.', array('!info' => $this->optionLink(t('theming information'), 'analyze-theme'))) . '</p>';
 
-        $name = $this->getOption('style_plugin');
-        $plugin = $this->getPlugin('style', $name);
+        $plugin = $this->getPlugin('style');
 
         if (empty($plugin->definition['theme'])) {
           $output .= t('This display has no style theming information');
@@ -1913,8 +1886,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('Theming information (row style)');
         $output = '<p>' . t('Back to !info.', array('!info' => $this->optionLink(t('theming information'), 'analyze-theme'))) . '</p>';
 
-        $name = $this->getOption('row_plugin');
-        $plugin = $this->getPlugin('row', $name);
+        $plugin = $this->getPlugin('row');
 
         if (empty($plugin->definition['theme'])) {
           $output .= t('This display has no row style theming information');
@@ -2248,10 +2220,10 @@ abstract class DisplayPluginBase extends PluginBase {
         // This if prevents resetting options to default if they don't change
         // the plugin.
         $row = $this->getOption('row');
-        if ($row['type'] != $form_state['values'][$section]['type']) {
-          $plugin = views_get_plugin('row', $form_state['values'][$section]['type']);
+        if ($row['type'] != $form_state['values'][$section]) {
+          $plugin = views_get_plugin('row', $form_state['values'][$section]);
           if ($plugin) {
-            $row = array('type' => $form_state['values'][$section]['type']);
+            $row = array('type' => $form_state['values'][$section]);
             $this->setOption($section, $row);
 
             // send ajax form to options page if we use it.
@@ -2265,10 +2237,10 @@ abstract class DisplayPluginBase extends PluginBase {
         // This if prevents resetting options to default if they don't change
         // the plugin.
         $style = $this->getOption('style');
-        if ($style['type'] != $form_state['values'][$section]['type']) {
-          $plugin = views_get_plugin('style', $form_state['values'][$section]['type']);
+        if ($style['type'] != $form_state['values'][$section]) {
+          $plugin = views_get_plugin('style', $form_state['values'][$section]);
           if ($plugin) {
-            $row = array('type' => $form_state['values'][$section]['type']);
+            $row = array('type' => $form_state['values'][$section]);
             $this->setOption($section, $row);
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
@@ -2596,8 +2568,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     // Validate style plugin
-    $name = $this->getOption('style_plugin');
-    $style = $this->getPlugin('style', $name);
+    $style = $this->getPlugin('style');
     if (empty($style)) {
       $errors[] = t('Display "@display" has an invalid style plugin.', array('@display' => $this->display['display_title']));
     }

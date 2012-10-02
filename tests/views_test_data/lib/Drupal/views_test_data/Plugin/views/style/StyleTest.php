@@ -33,6 +33,29 @@ class StyleTest extends StylePluginBase {
    */
   public $output;
 
+  /**
+   * Overrides Drupal\views\Plugin\views\style\StylePluginBase::defineOptions().
+   */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['test_option'] = array('default' => '');
+
+    return $options;
+  }
+
+  /**
+   * Overrides Drupal\views\Plugin\views\style\StylePluginBase::buildOptionsForm().
+   */
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
+
+    $form['test_option'] = array(
+      '#type' => 'textfield',
+      '#description' => t('This is a textfield for test_option.'),
+      '#default_value' => $this->options['test_option'],
+    );
+  }
+
   function usesRowPlugin() {
     return parent::usesRowPlugin();
   }

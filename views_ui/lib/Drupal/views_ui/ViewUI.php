@@ -917,8 +917,7 @@ class ViewUI extends ViewExecutable {
         break;
       case 'field':
         // Fetch the style plugin info so we know whether to list fields or not.
-        $style = $this->displayHandlers[$display['id']]->getOption('style');
-        $style_plugin = $this->displayHandlers[$display['id']]->getPlugin('style', $style['type']);
+        $style_plugin = $this->displayHandlers[$display['id']]->getPlugin('style');
         $uses_fields = $style_plugin && $style_plugin->usesFields();
         if (!$uses_fields) {
           $build['fields'][] = array(

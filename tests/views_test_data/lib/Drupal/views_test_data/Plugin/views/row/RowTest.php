@@ -34,6 +34,29 @@ class RowTest extends RowPluginBase {
   public $output;
 
   /**
+   * Overrides Drupal\views\Plugin\views\row\RowPluginBase::defineOptions().
+   */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['test_option'] = array('default' => '');
+
+    return $options;
+  }
+
+  /**
+   * Overrides Drupal\views\Plugin\views\row\RowPluginBase::buildOptionsForm().
+   */
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
+
+    $form['test_option'] = array(
+      '#type' => 'textfield',
+      '#description' => t('This is a textfield for test_option.'),
+      '#default_value' => $this->options['test_option'],
+    );
+  }
+
+  /**
    * Sets the output property.
    *
    * @param string $output
