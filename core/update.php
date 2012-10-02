@@ -16,6 +16,7 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\Reference;
 
 // Change the directory to the Drupal root.
 chdir('..');
@@ -444,6 +445,17 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 update_fix_d8_requirements();
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
+
+// @todo Remove after converting update.php to use DrupalKernel.
+$container = drupal_container();
+$container->register('database', 'Drupal\Core\Database\Connection')
+  ->setFactoryClass('Drupal\Core\Database\Database')
+  ->setFactoryMethod('getConnection')
+  ->addArgument('default');
+$container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
+  ->addArgument(new Reference('database'));
+$container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
+  ->addArgument(new Reference('router.dumper'));
 
 // Turn error reporting back on. From now on, only fatal errors (which are
 // not passed through the error handler) will cause a message to be printed.

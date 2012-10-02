@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Bundle class for mandatory core services.
  *
@@ -54,12 +56,25 @@ class CoreBundle extends Bundle
       ->addArgument('slave');
     $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager');
 
+    $container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
+      ->addArgument(new Reference('database'));
+    $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
+      ->addArgument(new Reference('router.dumper'));
+
     // @todo Replace below lines with the commented out block below it when it's
     //   performant to do so: http://drupal.org/node/1706064.
     $dispatcher = $container->get('dispatcher');
-    $matcher = new \Drupal\Core\LegacyUrlMatcher();
+    $matcher = new \Drupal\Core\Routing\ChainMatcher();
+    $matcher->add(new \Drupal\Core\LegacyUrlMatcher());
+
+    $nested = new \Drupal\Core\Routing\NestedMatcher();
+    $nested->setInitialMatcher(new \Drupal\Core\Routing\PathMatcher(Database::getConnection()));
+    $nested->addPartialMatcher(new \Drupal\Core\Routing\HttpMethodMatcher());
+    $nested->setFinalMatcher(new \Drupal\Core\Routing\FirstEntryFinalMatcher());
+    $matcher->add($nested, 5);
+
     $content_negotation = new \Drupal\Core\ContentNegotiation();
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RouterListener($matcher));
+    $dispatcher->addSubscriber(new \Symfony\Component\HttpKernel\EventListener\RouterListener($matcher));
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ViewSubscriber($content_negotation));
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\AccessSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\MaintenanceModeSubscriber());
@@ -69,6 +84,7 @@ class CoreBundle extends Bundle
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\FinishResponseSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RequestCloseSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RouteProcessorSubscriber());
     $container->set('content_negotiation', $content_negotation);
     $dispatcher->addSubscriber(\Drupal\Core\ExceptionController::getExceptionListener($container));
 

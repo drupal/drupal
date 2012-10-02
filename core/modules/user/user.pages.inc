@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -419,10 +420,7 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
 function user_page() {
   global $user;
   if ($user->uid) {
-    // @todo: Cleaner sub request handling.
-    $request = drupal_container()->get('request');
-    $subrequest = Request::create('/user/' . $user->uid, 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
-    return drupal_container()->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+    return new RedirectResponse(url('user/' . $user->uid, array('absolute' => TRUE)));
   }
   else {
     return drupal_get_form('user_login');

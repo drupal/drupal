@@ -10,6 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -46,13 +47,43 @@ class ViewSubscriber implements EventSubscriberInterface {
 
     $request = $event->getRequest();
 
-    $method = 'on' . $this->negotiation->getContentType($request);
+    // For a master request, we process the result and wrap it as needed.
+    // For a subrequest, all we want is the string value.  We assume that
+    // is just an HTML string from a controller, so wrap that into a response
+    // object.  The subrequest's response will get dissected and placed into
+    // the larger page as needed.
+    if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+      $method = 'on' . $this->negotiation->getContentType($request);
 
-    if (method_exists($this, $method)) {
-      $event->setResponse($this->$method($event));
+      if (method_exists($this, $method)) {
+        $event->setResponse($this->$method($event));
+      }
+      else {
+        $event->setResponse(new Response('Unsupported Media Type', 415));
+      }
+    }
+    elseif ($request->attributes->get('_legacy')) {
+      // This is an old hook_menu-based subrequest, which means we assume
+      // the body is supposed to be the complete page.
+      $page_result = $event->getControllerResult();
+      if (!is_array($page_result)) {
+        $page_result = array(
+          '#markup' => $page_result,
+        );
+      }
+      $event->setResponse(new Response(drupal_render_page($page_result)));
     }
     else {
-      $event->setResponse(new Response('Unsupported Media Type', 415));
+      // This is a new-style Symfony-esque subrequest, which means we assume
+      // the body is not supposed to be a complete page but just a page
+      // fragment.
+      $page_result = $event->getControllerResult();
+      if (!is_array($page_result)) {
+        $page_result = array(
+          '#markup' => $page_result,
+        );
+      }
+      $event->setResponse(new Response(drupal_render($page_result)));
     }
   }
 

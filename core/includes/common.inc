@@ -1,8 +1,9 @@
 <?php
 
-use Drupal\Component\Utility\NestedArray;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
@@ -6829,6 +6830,7 @@ function drupal_flush_all_caches() {
   // Rebuild the menu router based on all rebuilt data.
   // Important: This rebuild must happen last, so the menu router is guaranteed
   // to be based on up to date information.
+  drupal_container()->get('router.builder')->rebuild();
   menu_router_rebuild();
 
   // Re-initialize the maintenance theme, if the current request attempted to
