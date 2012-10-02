@@ -1,0 +1,47 @@
+api_version: '3.0'
+base_table: views_test_data
+core: 8
+display:
+  default:
+    display_options:
+      fields:
+        access_callback:
+          id: access_callback
+          table: views_test_data
+          field: access_callback
+        access_callback_arguments:
+          id: access_callback_arguments
+          table: views_test_data
+          field: access_callback_arguments
+      filters:
+        access_callback:
+          id: access_callback
+          table: views_test_data
+          field: access_callback
+        access_callback_arguments:
+          id: access_callback_arguments
+          table: views_test_data
+          field: access_callback_arguments
+      arguments:
+        access_callback:
+          id: access_callback
+          table: views_test_data
+          field: access_callback
+        access_callback_arguments:
+          id: access_callback_arguments
+          table: views_test_data
+          field: access_callback_arguments
+      sorts:
+        access_callback:
+          id: access_callback
+          table: views_test_data
+          field: access_callback
+        access_callback_arguments:
+          id: access_callback_arguments
+          table: views_test_data
+          field: access_callback_arguments
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+name: test_handler_test_access

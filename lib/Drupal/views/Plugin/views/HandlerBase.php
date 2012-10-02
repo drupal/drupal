@@ -496,9 +496,12 @@ abstract class HandlerBase extends PluginBase {
 
   /**
    * Provides a unique placeholders for handlers.
+   *
+   * @return string
+   *   A placeholder which contains the table and the fieldname.
    */
   protected function placeholder() {
-    return $this->query->placeholder($this->options['table'] . '_' . $this->options['field']);
+    return $this->query->placeholder($this->table . '_' . $this->field);
   }
 
   /**

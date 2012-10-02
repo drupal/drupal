@@ -61,4 +61,14 @@ class FieldTest extends FieldPluginBase {
     return $this->sanitizeValue($this->getTestValue());
   }
 
+  /**
+   * A mock function which allows to call placeholder from public.
+   *
+   * @return string
+   *   The result of the placeholder method.
+   */
+  public function getPlaceholder() {
+    return $this->placeholder();
+  }
+
 }

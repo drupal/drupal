@@ -1740,7 +1740,7 @@ function views_ui_config_item_form($form, &$form_state) {
       if (!empty($relationship_options)) {
         // Make sure the existing relationship is even valid. If not, force
         // it to none.
-        $base_fields = views_fetch_fields($view->base_table, $form_state['type'], $view->display_handler->useGroupBy());
+        $base_fields = views_fetch_fields($view->storage->base_table, $form_state['type'], $view->display_handler->useGroupBy());
         if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
           $relationship_options = array_merge(array('none' => t('Do not use a relationship')), $relationship_options);
         }
