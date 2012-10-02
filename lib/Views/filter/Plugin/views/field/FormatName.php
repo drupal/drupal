@@ -8,8 +8,8 @@
 namespace Views\filter\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to output the name of an input format.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class FormatName extends FieldPluginBase {
 
   /**
-   * Constructs a FormatName object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     // Be explicit about the table we are using.
     $this->additional_fields['name'] = array('table' => 'filter_formats', 'field' => 'name');

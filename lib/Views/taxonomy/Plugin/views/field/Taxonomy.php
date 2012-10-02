@@ -8,8 +8,8 @@
 namespace Views\taxonomy\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;;
 
 /**
  * Field handler to provide simple renderer that allows linking to a taxonomy
@@ -27,13 +27,13 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;;
 class Taxonomy extends FieldPluginBase {
 
   /**
-   * Constructs a Taxonomy object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    *
-   * This constructer assumes the taxonomy_term_data table. If using another
-   * table, we'll need to be more specific.
+   * This method assumes the taxonomy_term_data table. If using another table,
+   * we'll need to be more specific.
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['vid'] = 'vid';
     $this->additional_fields['tid'] = 'tid';

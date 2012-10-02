@@ -8,8 +8,8 @@
 namespace Views\node\Plugin\views\field;
 
 use Views\node\Plugin\views\field\Link;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to present a link to a node revision.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class RevisionLink extends Link {
 
   /**
-   * Constructs a RevisionLink object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['node_vid'] = array('table' => 'node_revision', 'field' => 'vid');
   }

@@ -8,8 +8,8 @@
 namespace Views\aggregator\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler that turns an item's title into a clickable link to the original
@@ -25,10 +25,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class TitleLink extends FieldPluginBase {
 
   /**
-   * Constructs a Category object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['link'] = 'link';
   }

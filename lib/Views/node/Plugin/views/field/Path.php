@@ -8,8 +8,8 @@
 namespace Views\node\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to present the path to the node.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class Path extends FieldPluginBase {
 
   /**
-   * Constructs a Path object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['nid'] = 'nid';
   }

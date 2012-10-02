@@ -8,8 +8,8 @@
 namespace Views\user\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Filter handler for the current user.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class Current extends BooleanOperator {
 
   /**
-   * Constructs a Current object.
+   * Overrides Drupal\views\Plugin\views\filter\BooleanOperator::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->value_value = t('Is the logged in user');
   }

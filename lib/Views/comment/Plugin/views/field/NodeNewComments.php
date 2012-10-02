@@ -8,8 +8,8 @@
 namespace Views\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Numeric;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to display the number of new comments.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class NodeNewComments extends Numeric {
 
   /**
-   * Constructs a NodeNewComments object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['type'] = 'type';

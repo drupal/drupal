@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Simple filter to handle matching of boolean values
@@ -40,10 +40,10 @@ class BooleanOperator extends FilterPluginBase {
   var $accept_null = FALSE;
 
   /**
-   * Constructs a BooleanOperator object.
+   * Overrides Drupal\views\Plugin\views\filter\FilterPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->value_value = t('True');
     if (isset($this->definition['label'])) {

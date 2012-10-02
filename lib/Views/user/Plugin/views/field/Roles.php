@@ -8,8 +8,8 @@
 namespace Views\user\Plugin\views\field;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to provide a list of roles.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class Roles extends PrerenderList {
 
   /**
-   * Constructs a Roles object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');
   }

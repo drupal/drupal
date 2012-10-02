@@ -8,8 +8,8 @@
 namespace Views\user\Plugin\views\field;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to provide simple renderer that allows using a themed user link.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class Picture extends FieldPluginBase {
 
   /**
-   * Constructs a Picture object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['uid'] = 'uid';
     $this->additional_fields['name'] = 'name';

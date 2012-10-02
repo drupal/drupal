@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Abstract argument handler for simple formulae.
@@ -29,10 +29,10 @@ class Formula extends ArgumentPluginBase {
   var $formula = NULL;
 
   /**
-   * Constructs a Formula object.
+   * Overrides Drupal\views\Plugin\views\argument\ArgumentPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     if (!empty($this->definition['formula'])) {
       $this->formula = $this->definition['formula'];

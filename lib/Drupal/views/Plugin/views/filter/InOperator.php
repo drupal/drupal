@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Simple filter to handle matching of multiple options selectable via checkboxes
@@ -34,10 +34,10 @@ class InOperator extends FilterPluginBase {
   var $value_options = NULL;
 
   /**
-   * Constructs a BooleanOperator object.
+   * Overrides Drupal\views\Plugin\views\filter\FilterPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->value_title = t('Options');
     $this->value_options = NULL;

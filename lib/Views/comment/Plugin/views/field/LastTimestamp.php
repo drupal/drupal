@@ -8,8 +8,8 @@
 namespace Views\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Date;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to display the timestamp of a comment with the count of comments.
@@ -24,10 +24,10 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class LastTimestamp extends Date {
 
   /**
-   * Constructs a LastTimestamp object.
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
    */
-  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
-    parent::__construct($configuration, $plugin_id, $discovery);
+  public function init(ViewExecutable $view, &$options) {
+    parent::init($view, $options);
 
     $this->additional_fields['comment_count'] = 'comment_count';
   }
