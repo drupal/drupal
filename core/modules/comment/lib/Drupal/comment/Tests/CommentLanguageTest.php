@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleCommentLanguageTest.
+ * Definition of Drupal\locale\Tests\CommentLanguageTest.
  */
 
-namespace Drupal\locale\Tests;
+namespace Drupal\comment\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Functional tests for comment language.
  */
-class LocaleCommentLanguageTest extends WebTestBase {
+class CommentLanguageTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -23,7 +23,7 @@ class LocaleCommentLanguageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'language_test');
+  public static $modules = array('language', 'language_test', 'comment_test');
 
   protected $profile = 'standard';
 
@@ -31,7 +31,7 @@ class LocaleCommentLanguageTest extends WebTestBase {
     return array(
       'name' => 'Comment language',
       'description' => 'Tests for comment language.',
-      'group' => 'Locale',
+      'group' => 'Comment',
     );
   }
 
@@ -39,7 +39,7 @@ class LocaleCommentLanguageTest extends WebTestBase {
     parent::setUp();
 
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'create article content'));
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'administer comments', 'create article content'));
     $this->drupalLogin($admin_user);
 
     // Add language.
@@ -68,6 +68,12 @@ class LocaleCommentLanguageTest extends WebTestBase {
     // French no matter what path prefix the URLs have.
     $edit = array('preferred_langcode' => 'fr');
     $this->drupalPost("user/{$admin_user->uid}/edit", $edit, t('Save'));
+
+    // Make comment body translatable.
+    $field = field_info_field('comment_body');
+    $field['translatable'] = TRUE;
+    field_update_field($field);
+    $this->assertTrue(field_is_translatable('comment', $field), 'Comment body is translatable.');
   }
 
   /**
@@ -99,19 +105,36 @@ class LocaleCommentLanguageTest extends WebTestBase {
       foreach (language_list() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
-        $edit = array("comment_body[$langcode_not_specified][0][value]" => $this->randomName());
-        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Save'));
+        $comment_values[$node_langcode][$langcode] = $this->randomName();
+        $edit = array(
+          'subject' => $this->randomName(),
+          "comment_body[$langcode][0][value]" => $comment_values[$node_langcode][$langcode],
+        );
+        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Preview'));
+        $this->drupalPost(NULL, $edit, t('Save'));
 
         // Check that comment language matches the current content language.
-        $comment = db_select('comment', 'c')
-          ->fields('c')
+        $cid = db_select('comment', 'c')
+          ->fields('c', array('cid'))
           ->condition('nid', $node->nid)
           ->orderBy('cid', 'DESC')
+          ->range(0, 1)
           ->execute()
-          ->fetchObject();
+          ->fetchField();
+        $comment = comment_load($cid);
         $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->langcode, '%langcode' => $langcode);
-        $this->assertEqual($comment->langcode, $langcode, t('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEqual($comment->langcode, $langcode, format_string('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEqual($comment->comment_body[$langcode][0]['value'], $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
+      }
+    }
+
+    // Check that comment bodies appear in the administration UI.
+    $this->drupalGet('admin/content/comment');
+    foreach ($comment_values as $node_values) {
+      foreach ($node_values as $value) {
+        $this->assertRaw($value);
       }
     }
   }
+
 }

@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing comment related hooks to test API interaction with
+ * the Comment module.
+ */
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function comment_test_entity_info_alter(&$info) {
+  if (language_multilingual()) {
+    // Enable language handling for comment fields.
+    $info['comment']['translation']['comment_test'] = TRUE;
+  }
+}

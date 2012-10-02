@@ -301,7 +301,7 @@ function field_valid_language($langcode, $default = TRUE) {
  */
 function field_language($entity_type, $entity, $field_name = NULL, $langcode = NULL) {
   $display_langcodes = &drupal_static(__FUNCTION__, array());
-  $id = $entity->bundle();
+  $id = $entity->id();
   $bundle = $entity->bundle();
   $langcode = field_valid_language($langcode, FALSE);
 

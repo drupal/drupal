@@ -20,7 +20,6 @@ class CommentFormController extends EntityFormController {
    */
   public function form(array $form, array &$form_state, EntityInterface $comment) {
     global $user;
-    $language_content = language(LANGUAGE_TYPE_CONTENT);
 
     $node = node_load($comment->nid);
     $form_state['comment']['node'] = $node;
@@ -174,16 +173,16 @@ class CommentFormController extends EntityFormController {
     }
     $form['node_type'] = array('#type' => 'value', '#value' => 'comment_node_' . $node->type);
 
-    // Make the comment inherit the node language unless specifically set.
-    $comment_langcode = $comment->langcode;
-    if ($comment_langcode == LANGUAGE_NOT_SPECIFIED) {
-      $comment_langcode = $language_content->langcode;
+    // Make the comment inherit the current content language unless specifically
+    // set.
+    if ($comment->isNew()) {
+      $language_content = language(LANGUAGE_TYPE_CONTENT);
+      $comment->langcode = $language_content->langcode;
     }
 
-    // Uses the language of the content as comment language.
     $form['langcode'] = array(
       '#type' => 'value',
-      '#value' => $comment_langcode,
+      '#value' => $comment->langcode,
     );
 
     // Attach fields.
@@ -294,7 +293,9 @@ class CommentFormController extends EntityFormController {
       // 1) Filter it into HTML
       // 2) Strip out all HTML tags
       // 3) Convert entities back to plain-text.
-      $comment_body = $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0];
+      $field = field_info_field('comment_body');
+      $langcode = field_is_translatable('comment', $field) ? $this->getFormLangcode($form_state) : LANGUAGE_NOT_SPECIFIED;
+      $comment_body = $comment->comment_body[$langcode][0];
       if (isset($comment_body['format'])) {
         $comment_text = check_markup($comment_body['value'], $comment_body['format']);
       }

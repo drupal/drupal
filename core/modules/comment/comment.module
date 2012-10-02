@@ -1690,7 +1690,8 @@ function comment_preview(Comment $comment) {
   $node = node_load($comment->nid);
 
   if (!form_get_errors()) {
-    $comment->format = $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['format'];
+    $comment_body = field_get_items('comment', $comment, 'comment_body');
+    $comment->format = $comment_body[0]['format'];
     // Attach the user and time information.
     if (!empty($comment->name)) {
       $account = user_load_by_name($comment->name);
