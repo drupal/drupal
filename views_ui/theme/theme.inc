@@ -51,7 +51,7 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
 
   $variables['content'] = $element['#children'];
   $variables['title'] = $element['#title'];
-  $variables['actions'] = !empty($element['#actions']) ? $element['#actions'] : '';
+  $variables['actions'] = !empty($element['#actions']) ? render($element['#actions']) : '';
 }
 
 /**

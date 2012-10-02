@@ -180,9 +180,12 @@ class ViewUI extends ViewExecutable {
 
       // The Delete, Duplicate and Undo Delete buttons.
       $build['top']['actions'] = array(
-        '#prefix' => '<div class="dropbutton-wrapper"><div class="dropbutton-widget"><ul class="dropbutton">',
-        '#suffix' => '</ul></div></div>',
+        '#theme_wrappers' => array('dropbutton_wrapper'),
       );
+
+      // Because some of the 'links' are actually submit buttons, we have to
+      // manually wrap each item in <li> and the whole list in <ul>.
+      $build['top']['actions']['prefix']['#markup'] = '<ul class="dropbutton">';
 
       if (!$is_display_deleted) {
         if (!$is_enabled) {
@@ -249,6 +252,7 @@ class ViewUI extends ViewExecutable {
           "#suffix" => '</li>',
         );
       }
+      $build['top']['actions']['suffix']['#markup'] = '</ul>';
 
       // The area above the three columns.
       $build['top']['display_title'] = array(
@@ -385,7 +389,7 @@ class ViewUI extends ViewExecutable {
 
     // Extra actions for the display
     $element['extra_actions'] = array(
-      '#theme' => 'dropbutton',
+      '#type' => 'dropbutton',
       '#attributes' => array(
         'id' => 'views-display-extra-actions',
       ),
@@ -950,11 +954,12 @@ class ViewUI extends ViewExecutable {
     }
 
     // Render the array of links
-    $build['#actions'] = theme('dropbutton',
-      array(
-        'links' => $actions,
+    $build['#actions'] = array(
+      '#type' => 'dropbutton',
+      '#links' => $actions,
+      '#attributes' => array(
         'class' => array('views-ui-settings-bucket-operations'),
-      )
+      ),
     );
 
     if (!$this->displayHandlers[$display['id']]->isDefaultDisplay()) {

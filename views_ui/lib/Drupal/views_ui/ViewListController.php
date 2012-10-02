@@ -139,8 +139,9 @@ class ViewListController extends EntityListController {
       }
     }
 
-    // Use theme_dropbutton().
-    $build['#theme'] = 'dropbutton';
+    // Use the dropbutton #type.
+    unset($build['#theme']);
+    $build['#type'] = 'dropbutton';
 
     return $build;
   }

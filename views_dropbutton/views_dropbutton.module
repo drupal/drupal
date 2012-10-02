@@ -5,8 +5,8 @@
  */
 function views_dropbutton_theme($existing, $type, $theme, $path) {
   return array(
-    'dropbutton' => array(
-      'variables' => array('title' => NULL, 'links' => array(), 'attributes' => array()),
+    'dropbutton_wrapper' => array(
+      'render element' => 'element',
     ),
   );
 }
@@ -39,44 +39,44 @@ function views_dropbutton_library_info() {
 }
 
 /**
- * Builds a render array for theme_dropbutton().
+ * Implements hook_element_info().
  */
-function template_preprocess_dropbutton(&$variables) {
-  $variables['attributes']['class'][] = 'dropbutton';
-  $variables['element'] = array(
-    '#theme' => 'links',
-    '#links' => $variables['links'],
-    '#attributes' => $variables['attributes'],
-    '#attached' => array(
-      'library' => array(
-        array('views_dropbutton', 'drupal.dropbutton'),
-      ),
-    ),
+function views_dropbutton_element_info() {
+  $types['dropbutton'] = array(
+    '#theme' => 'links__dropbutton',
+    '#pre_render' => array('drupal_pre_render_dropbutton'),
   );
-  if (!empty($variables['links'])) {
-    $variables['element']['#prefix'] = '<div class="dropbutton-wrapper"><div class="dropbutton-widget">';
-    $variables['element']['#suffix'] = '</div></div>';
-  }
-  // Pass through title to the dropbutton options.
-  if (isset($variables['title'])) {
-    $variables['element']['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('dropbutton' => array('title' => $variables['title'])),
-    );
-  }
+  return $types;
 }
 
 /**
- * Creates a dropbutton menu.
+ * Pre-render callback: Attaches the dropbutton library and required markup.
+ */
+function drupal_pre_render_dropbutton($element) {
+  $element['#attached']['library'][] = array('views_dropbutton', 'drupal.dropbutton');
+  $element['#attributes']['class'][] = 'dropbutton';
+  if (!isset($element['#theme_wrappers'])) {
+    $element['#theme_wrappers'] = array();
+  }
+  array_unshift($element['#theme_wrappers'], 'dropbutton_wrapper');
+
+  // Enable targeted theming of specific dropbuttons (e.g., 'operations' or
+  // 'operations__node').
+  if (isset($element['#subtype'])) {
+    $element['#theme'] .= '__' . $element['#subtype'];
+  }
+
+  return $element;
+}
+
+/**
+ * Returns HTML for wrapping a dropbutton menu.
  *
  * @param array $variables
  *   An associative array containing:
- *   - title: (optional) The text placed in the clickable area to activate the
- *     dropbutton. Defaults to 'Open dropbutton'.
- *   - links: An array of links to provide in the dropbutton.
- *   - attributes: (optional) An associative array of HTML attributes to apply
- *     to the dropbutton.
+ *   - element: An associative array containing the properties and children of
+ *     the dropbutton menu. Properties used: #children.
  */
-function theme_dropbutton($variables) {
-  return render($variables['element']);
+function theme_dropbutton_wrapper($variables) {
+  return '<div class="dropbutton-wrapper"><div class="dropbutton-widget">' . $variables['element']['#children'] . '</div></div>';
 }
