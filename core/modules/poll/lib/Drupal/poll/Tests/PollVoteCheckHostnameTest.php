@@ -49,8 +49,10 @@ class PollVoteCheckHostnameTest extends PollTestBase {
   }
 
   /**
-   * Check that anonymous users with same ip cannot vote on poll more than once
-   * unless user is logged in.
+   * Checks that anonymous users with the same IP address can only vote once.
+   *
+   * Also checks that authenticated users can only vote once, even when the
+   * user's IP address has changed.
    */
   function testHostnamePollVote() {
     // Login User1.

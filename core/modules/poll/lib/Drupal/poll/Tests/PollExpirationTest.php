@@ -7,6 +7,9 @@
 
 namespace Drupal\poll\Tests;
 
+/**
+ * Tests the expiration of polls.
+ */
 class PollExpirationTest extends PollTestBase {
   public static function getInfo() {
     return array(
@@ -16,6 +19,9 @@ class PollExpirationTest extends PollTestBase {
     );
   }
 
+  /**
+   * Tests the expiration of a poll.
+   */
   function testAutoExpire() {
     // Set up a poll.
     $title = $this->randomName();

@@ -8,7 +8,7 @@
 namespace Drupal\poll\Tests;
 
 /**
- * Test poll token replacement in strings.
+ * Tests poll token replacements in strings.
  */
 class PollTokenReplaceTest extends PollTestBase {
   public static function getInfo() {

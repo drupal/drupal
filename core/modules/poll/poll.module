@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Enables your site to capture votes on different topics in the form of multiple
- * choice questions.
+ * Collects votes on different topics in the form of multiple choice questions.
  */
 
 use Drupal\node\Node;
@@ -106,7 +105,14 @@ function poll_menu() {
 }
 
 /**
- * Callback function to see if a node is acceptable for poll menu items.
+ * Access callback: Determines if a node is acceptable for poll menu items.
+ *
+ * @param $node
+ *   The poll node object.
+ * @param $perm
+ *   A permission the user must have to view the page.
+ * @param $inspect_allowvotes
+ *   TRUE if the user can view votes, and FALSE if the user cannot view votes.
  */
 function _poll_menu_access($node, $perm, $inspect_allowvotes) {
   return user_access($perm) && ($node->type == 'poll') && ($node->allowvotes || !$inspect_allowvotes);
@@ -125,6 +131,8 @@ function poll_block_info() {
  * Implements hook_block_view().
  *
  * Generates a block containing the latest poll.
+ *
+ * @see poll_block_latest_poll_view()
  */
 function poll_block_view($delta = '') {
   if (user_access('access content')) {
@@ -342,13 +350,13 @@ function poll_form(Node $node, &$form_state) {
 }
 
 /**
- * Submit handler to add more choices to a poll form.
+ * Form submission handler for adding more than two choices to a poll.
  *
- * This handler is run regardless of whether JS is enabled or not. It makes
- * changes to the form state. If the button was clicked with JS disabled, then
- * the page is reloaded with the complete rebuilt form. If the button was
- * clicked with JS enabled, then ajax_form_callback() calls poll_choice_js() to
- * return just the changed part of the form.
+ * This handler is run regardless of whether JavaScript is enabled. It makes
+ * changes to the form state. If the button is clicked with JavaScript
+ * disabled, then the page is reloaded with the complete rebuilt form. If the
+ * button was clicked with JavaScript enabled, then ajax_form_callback() calls
+ * poll_choice_js() to return just the changed part of the form.
  */
 function poll_more_choices_submit($form, &$form_state) {
   // Add one more choice to the form.
@@ -365,6 +373,11 @@ function poll_more_choices_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
+/**
+ * Constructs one individual form choice as part of poll node form.
+ *
+ * @see poll_form()
+ */
 function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight = 0, $size = 10) {
   $form = array(
     '#tree' => TRUE,
@@ -410,12 +423,10 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
 }
 
 /**
- * Ajax callback in response to new choices being added to the form.
+ * Ajax callback for adding new choices to the poll node form.
  *
  * This returns the new page content to replace the page content made obsolete
  * by the form submission.
- *
- * @see poll_more_choices_submit()
  */
 function poll_choice_js($form, $form_state) {
   return $form['choice_wrapper']['choice'];
@@ -426,6 +437,8 @@ function poll_choice_js($form, $form_state) {
  *
  * Upon preview and final submission, we need to renumber poll choices and
  * create a teaser output.
+ *
+ * @see poll_teaser()
  */
 function poll_node_form_submit($entity_type, $entity, &$form, &$form_state) {
   // Renumber choices.
@@ -607,10 +620,12 @@ function poll_delete($node) {
 }
 
 /**
- * Return content for 'latest poll' block.
+ * Returns the content for the 'latest poll' block.
  *
  * @param Drupal\node\Node $node
  *   The node entity to load.
+ *
+ * @see poll_view_results()
  */
 function poll_block_latest_poll_view(Node $node) {
   global $user;
@@ -654,6 +669,8 @@ function poll_block_latest_poll_view(Node $node) {
 
 /**
  * Implements hook_view().
+ *
+ * @see poll_view_results()
  */
 function poll_view($node, $view_mode) {
   global $user;
@@ -672,6 +689,12 @@ function poll_view($node, $view_mode) {
  * Creates a simple teaser that lists all the choices.
  *
  * This is primarily used for RSS.
+ *
+ * @param $node
+ *   The poll node object.
+ *
+ * @return
+ *   Poll choices in a simple teaser format.
  */
 function poll_teaser($node) {
   $teaser = NULL;
@@ -686,11 +709,16 @@ function poll_teaser($node) {
 }
 
 /**
- * Generates the voting form for a poll.
+ * Form constructor for the poll voting form.
  *
- * @ingroup forms
- * @see poll_vote()
+ * @param $node
+ *   The poll node object.
+ * @param $block
+ *   (optional) TRUE if a poll should be displayed in a block. Defaults to
+ *   FALSE.
  * @see phptemplate_preprocess_poll_vote()
+ * @see poll_vote()
+ * @ingroup forms
  */
 function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
   if ($node->choice) {
@@ -727,7 +755,9 @@ function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
 }
 
 /**
- * Validation function for processing votes
+ * Form validation handler for poll_view_voting().
+ *
+ * @see poll_vote()
  */
 function poll_view_voting_validate($form, &$form_state) {
   if ($form_state['values']['choice'] == -1) {
@@ -736,7 +766,9 @@ function poll_view_voting_validate($form, &$form_state) {
 }
 
 /**
- * Submit handler for processing a vote.
+ * Form submission handler for poll_view_voting().
+ *
+ * @see poll_view_voting_validate()
  */
 function poll_vote($form, &$form_state) {
   $node = $form['#node'];
@@ -785,9 +817,7 @@ function poll_preprocess_block(&$variables) {
 }
 
 /**
- * Themes the voting form for a poll.
- *
- * Inputs: $form
+ * Implements template_preprocess_HOOK() for poll-vote.tpl.php.
  */
 function template_preprocess_poll_vote(&$variables) {
   $form = $variables['form'];
@@ -803,6 +833,9 @@ function template_preprocess_poll_vote(&$variables) {
 
 /**
  * Generates a graphical representation of the results of a poll.
+ *
+ * @see poll_block_latest_poll_view()
+ * @see poll_view()
  */
 function poll_view_results($node, $view_mode, $block = FALSE) {
   // Make sure that choices are ordered by their weight.
@@ -896,13 +929,21 @@ function theme_poll_choices($variables) {
 }
 
 /**
- * Preprocess the poll_results theme hook.
+ * Implements template_preprocess_HOOK() for poll-results.tpl.php.
  *
- * Inputs: $raw_title, $results, $votes, $raw_links, $block, $nid, $vote. The
- * $raw_* inputs to this are naturally unsafe; often safe versions are
- * made to simply overwrite the raw version, but in this case it seems likely
- * that the title and the links may be overridden by the theme layer, so they
- * are left in with a different name for that purpose.
+ * @param $variables
+ *   An associative array containing:
+ *   - raw_title: A string for the title of the poll.
+ *   - results: The results of the poll.
+ *   - votes: The total results in the poll.
+ *   - raw_links: Array containing links in the poll.
+ *   - block: A boolean to define if the poll is a block.
+ *   - nid: The node ID of the poll.
+ *   - vote: The choice number of the current user's vote.
+ *   The raw_* inputs to this are naturally unsafe; often safe versions are
+ *   made to simply overwrite the raw version, but in this case it seems likely
+ *   that the title and the links may be overridden by the theme layer, so they
+ *   are left in with a different name for that purpose.
  *
  * @see poll-results.tpl.php
  * @see poll-results--block.tpl.php
@@ -917,7 +958,10 @@ function template_preprocess_poll_results(&$variables) {
 }
 
 /**
- * Builds the cancel form for a poll.
+ * Form constructor for the poll cancel form.
+ *
+ * @param $nid
+ *   The poll node ID.
  *
  * @ingroup forms
  * @see poll_cancel()
@@ -939,7 +983,7 @@ function poll_cancel_form($form, &$form_state, $nid) {
 }
 
 /**
- * Submit callback for poll_cancel_form().
+ * Form submission handler for poll_cancel_form().
  */
 function poll_cancel($form, &$form_state) {
   global $user;

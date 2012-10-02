@@ -2,11 +2,16 @@
 
 /**
  * @file
- * User page callbacks for the poll module.
+ * Page callbacks for the Poll module.
  */
 
 /**
- * Menu callback to provide a simple list of all polls available.
+ * Page callback: Displays a simple list of all available polls.
+ *
+ * @return
+ *   The HTML for the page that shows the available polls.
+ *
+ * @see poll_menu()
  */
 function poll_page() {
   $polls_per_page = 15;
@@ -47,7 +52,17 @@ function poll_page() {
 }
 
 /**
- * Callback for the 'votes' tab for polls you can see other votes on
+ * Page callback: Displays the 'votes' tab for polls.
+ *
+ * This page displays a table containing each vote that has been cast.
+ *
+ * @param $node
+ *   The poll node object.
+ *
+ * @return
+ *   Render array containing table with votes.
+ *
+ * @see poll_menu()
  */
 function poll_votes($node) {
   $votes_per_page = 20;
@@ -91,7 +106,17 @@ function poll_votes($node) {
 }
 
 /**
- * Callback for the 'results' tab for polls you can vote on
+ * Page callback: Displays the 'results' tab for the current poll.
+ *
+ * This tab displays a summary of the votes that have been cast.
+ *
+ * @param $node
+ *   The poll node object.
+ *
+ * @return
+ *   An array suitable for use by drupal_render().
+ *
+ * @see poll_menu()
  */
 function poll_results($node) {
   drupal_set_title($node->label());

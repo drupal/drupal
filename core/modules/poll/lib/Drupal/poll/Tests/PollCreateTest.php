@@ -7,6 +7,9 @@
 
 namespace Drupal\poll\Tests;
 
+/**
+ * Tests creating a poll.
+ */
 class PollCreateTest extends PollTestBase {
   public static function getInfo() {
     return array(
@@ -16,6 +19,9 @@ class PollCreateTest extends PollTestBase {
     );
   }
 
+  /**
+   * Tests creating, listing, editing a new poll.
+   */
   function testPollCreate() {
     $title = $this->randomName();
     $choices = $this->_generateChoices(7);
@@ -57,6 +63,9 @@ class PollCreateTest extends PollTestBase {
     $this->assertTrue(strpos(end($votes), $vote_count) > 0, "Votes saved.");
   }
 
+  /**
+   * Tests creating, editing, and closing a poll.
+   */
   function testPollClose() {
     $content_user = $this->drupalCreateUser(array('create poll content', 'edit any poll content', 'access content'));
     $vote_user = $this->drupalCreateUser(array('cancel own vote', 'inspect all votes', 'vote on polls', 'access content'));

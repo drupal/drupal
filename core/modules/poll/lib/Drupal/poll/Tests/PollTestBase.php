@@ -9,6 +9,9 @@ namespace Drupal\poll\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Defines a base class for testing the Poll module.
+ */
 abstract class PollTestBase extends WebTestBase {
 
   /**
@@ -116,6 +119,9 @@ abstract class PollTestBase extends WebTestBase {
     return array($edit, count($already_submitted_choices) + count($new_choices));
   }
 
+  /*
+   * Generates random choices for the poll.
+   */
   function _generateChoices($count = 7) {
     $choices = array();
     for ($i = 1; $i <= $count; $i++) {
@@ -125,7 +131,7 @@ abstract class PollTestBase extends WebTestBase {
   }
 
   /**
-   * Assert correct poll choice order in the node form after submission.
+   * Asserts correct poll choice order in the node form after submission.
    *
    * Verifies both the order in the DOM and in the 'weight' form elements.
    *
@@ -185,6 +191,9 @@ abstract class PollTestBase extends WebTestBase {
     }
   }
 
+  /**
+   * Tests updating a poll.
+   */
   function pollUpdate($nid, $title, $edit) {
     // Edit the poll node.
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));

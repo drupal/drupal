@@ -7,6 +7,9 @@
 
 namespace Drupal\poll\Tests;
 
+/**
+ * Tests voting on a poll.
+ */
 class PollVoteTest extends PollTestBase {
   public static function getInfo() {
     return array(
@@ -20,6 +23,9 @@ class PollVoteTest extends PollTestBase {
     parent::tearDown();
   }
 
+  /**
+   * Tests voting on a poll.
+   */
   function testPollVote() {
     $title = $this->randomName();
     $choices = $this->_generateChoices(7);

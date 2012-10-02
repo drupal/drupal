@@ -10,7 +10,7 @@ namespace Drupal\poll\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test adding new choices.
+ * Tests adding new choices to a poll.
  */
 class PollJsAddChoiceTest extends WebTestBase {
 
@@ -30,7 +30,7 @@ class PollJsAddChoiceTest extends WebTestBase {
   }
 
   /**
-   * Test adding a new choice.
+   * Tests adding a new choice to a poll.
    */
   function testAddChoice() {
     $web_user = $this->drupalCreateUser(array('create poll content', 'access content'));

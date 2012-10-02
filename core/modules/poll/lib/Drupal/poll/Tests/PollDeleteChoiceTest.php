@@ -7,6 +7,9 @@
 
 namespace Drupal\poll\Tests;
 
+/**
+ * Tests the removal of poll choices.
+ */
 class PollDeleteChoiceTest extends PollTestBase {
   public static function getInfo() {
     return array(
@@ -16,6 +19,9 @@ class PollDeleteChoiceTest extends PollTestBase {
     );
   }
 
+  /**
+   * Tests removing a choice from a poll.
+   */
   function testChoiceRemoval() {
     // Set up a poll with three choices.
     $title = $this->randomName();

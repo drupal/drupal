@@ -7,6 +7,9 @@
 
 namespace Drupal\poll\Tests;
 
+/**
+ * Tests the recent poll block.
+ */
 class PollBlockTest extends PollTestBase {
 
   /**
@@ -32,6 +35,9 @@ class PollBlockTest extends PollTestBase {
     $this->drupalLogin($admin_user);
   }
 
+  /**
+   * Tests creating, viewing, voting on recent poll block.
+   */
   function testRecentBlock() {
     // Set block title to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/poll/recent/configure', array('title' => $this->randomName(8)), t('Save block'));
