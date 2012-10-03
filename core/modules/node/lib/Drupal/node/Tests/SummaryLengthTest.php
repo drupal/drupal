@@ -26,7 +26,7 @@ class SummaryLengthTest extends NodeTestBase {
       'promote' => 1,
     );
     $node = $this->drupalCreateNode($settings);
-    $this->assertTrue(node_load($node->nid), t('Node created.'));
+    $this->assertTrue(node_load($node->nid), 'Node created.');
 
     // Create user with permission to view the node.
     $web_user = $this->drupalCreateUser(array('access content', 'administer content types'));

@@ -31,6 +31,6 @@ class NodeBuildContentTest extends NodeTestBase {
     $content = node_build_content($node);
 
     // If the property doesn't exist it means the node->content was rebuilt.
-    $this->assertFalse(isset($content['test_content_property']), t('Node content was emptied prior to being built.'));
+    $this->assertFalse(isset($content['test_content_property']), 'Node content was emptied prior to being built.');
   }
 }

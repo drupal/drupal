@@ -38,13 +38,13 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPost('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
-    $this->assertTitle(t('Preview | Drupal'), t('Basic page title is preview.'));
-    $this->assertText($edit[$title_key], t('Title displayed.'));
-    $this->assertText($edit[$body_key], t('Body displayed.'));
+    $this->assertTitle(t('Preview | Drupal'), 'Basic page title is preview.');
+    $this->assertText($edit[$title_key], 'Title displayed.');
+    $this->assertText($edit[$body_key], 'Body displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
-    $this->assertFieldByName($title_key, $edit[$title_key], t('Title field displayed.'));
-    $this->assertFieldByName($body_key, $edit[$body_key], t('Body field displayed.'));
+    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
+    $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
   }
 
   /**
@@ -65,15 +65,15 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPost('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
-    $this->assertTitle(t('Preview | Drupal'), t('Basic page title is preview.'));
-    $this->assertText($edit[$title_key], t('Title displayed.'));
-    $this->assertText($edit[$body_key], t('Body displayed.'));
+    $this->assertTitle(t('Preview | Drupal'), 'Basic page title is preview.');
+    $this->assertText($edit[$title_key], 'Title displayed.');
+    $this->assertText($edit[$body_key], 'Body displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
-    $this->assertFieldByName($title_key, $edit[$title_key], t('Title field displayed.'));
-    $this->assertFieldByName($body_key, $edit[$body_key], t('Body field displayed.'));
+    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
+    $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
 
     // Check that the log field has the correct value.
-    $this->assertFieldByName('log', $edit['log'], t('Log field displayed.'));
+    $this->assertFieldByName('log', $edit['log'], 'Log field displayed.');
   }
 }

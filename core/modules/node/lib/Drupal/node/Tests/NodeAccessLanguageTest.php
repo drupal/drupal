@@ -65,7 +65,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
     // Tests the default access provided for a published Hungarian node.
     $web_user = $this->drupalCreateUser(array('access content'));
     $node = $this->drupalCreateNode(array('body' => array('hu' => array(array())), 'langcode' => 'hu'));
-    $this->assertTrue($node->langcode == 'hu', t('Node created as Hungarian.'));
+    $this->assertTrue($node->langcode == 'hu', 'Node created as Hungarian.');
     $expected_node_access = array('view' => TRUE, 'update' => FALSE, 'delete' => FALSE);
     $this->assertNodeAccess($expected_node_access, $node, $web_user);
 

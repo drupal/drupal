@@ -43,20 +43,20 @@ class PageEditTest extends NodeTestBase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
-    $this->assertTrue($node, t('Node found in database.'));
+    $this->assertTrue($node, 'Node found in database.');
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
     $edit_url = url("node/$node->nid/edit", array('absolute' => TRUE));
     $actual_url = $this->getURL();
-    $this->assertEqual($edit_url, $actual_url, t('On edit page.'));
+    $this->assertEqual($edit_url, $actual_url, 'On edit page.');
 
     // Check that the title and body fields are displayed with the correct values.
     $active = '<span class="element-invisible">' . t('(active tab)') . '</span>';
     $link_text = t('!local-task-title!active', array('!local-task-title' => t('Edit'), '!active' => $active));
-    $this->assertText(strip_tags($link_text), 0, t('Edit tab found and marked active.'));
-    $this->assertFieldByName($title_key, $edit[$title_key], t('Title field displayed.'));
-    $this->assertFieldByName($body_key, $edit[$body_key], t('Body field displayed.'));
+    $this->assertText(strip_tags($link_text), 0, 'Edit tab found and marked active.');
+    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
+    $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
 
     // Edit the content of the node.
     $edit = array();
@@ -66,8 +66,8 @@ class PageEditTest extends NodeTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Check that the title and body fields are displayed with the updated values.
-    $this->assertText($edit[$title_key], t('Title displayed.'));
-    $this->assertText($edit[$body_key], t('Body displayed.'));
+    $this->assertText($edit[$title_key], 'Title displayed.');
+    $this->assertText($edit[$body_key], 'Body displayed.');
 
     // Login as a second administrator user.
     $second_web_user = $this->drupalCreateUser(array('administer nodes', 'edit any page content'));

@@ -46,7 +46,7 @@ class NodePostSettingsTest extends NodeTestBase {
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $elements = $this->xpath('//*[contains(@class,:class)]', array(':class' => 'submitted'));
-    $this->assertEqual(count($elements), 1, t('Post information is displayed.'));
+    $this->assertEqual(count($elements), 1, 'Post information is displayed.');
   }
 
   /**
@@ -68,6 +68,6 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->assertNoRaw('<span class="submitted">', t('Post information is not displayed.'));
+    $this->assertNoRaw('<span class="submitted">', 'Post information is not displayed.');
   }
 }

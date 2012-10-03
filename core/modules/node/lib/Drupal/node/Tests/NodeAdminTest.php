@@ -94,7 +94,7 @@ class NodeAdminTest extends NodeTestBase {
       $this->assertLinkByHref('node/' . $node->nid . '/edit');
       $this->assertLinkByHref('node/' . $node->nid . '/delete');
       // Verify tableselect.
-      $this->assertFieldByName('nodes[' . $node->nid . ']', '', t('Tableselect found.'));
+      $this->assertFieldByName('nodes[' . $node->nid . ']', '', 'Tableselect found.');
     }
 
     // Verify filtering by publishing status.
@@ -103,7 +103,7 @@ class NodeAdminTest extends NodeTestBase {
     );
     $this->drupalPost(NULL, $edit, t('Filter'));
 
-    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), t('Content list is filtered by status.'));
+    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), 'Content list is filtered by status.');
 
     $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
     $this->assertLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
@@ -115,8 +115,8 @@ class NodeAdminTest extends NodeTestBase {
     );
     $this->drupalPost(NULL, $edit, t('Refine'));
 
-    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), t('Content list is filtered by status.'));
-    $this->assertRaw(t('and where %property is %value', array('%property' => t('type'), '%value' => 'Basic page')), t('Content list is filtered by content type.'));
+    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), 'Content list is filtered by status.');
+    $this->assertRaw(t('and where %property is %value', array('%property' => t('type'), '%value' => 'Basic page')), 'Content list is filtered by content type.');
 
     $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
@@ -139,7 +139,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/delete');
 
     // Verify no tableselect.
-    $this->assertNoFieldByName('nodes[' . $nodes['published_page']->nid . ']', '', t('No tableselect found.'));
+    $this->assertNoFieldByName('nodes[' . $nodes['published_page']->nid . ']', '', 'No tableselect found.');
 
     // Verify unpublished content is displayed with permission.
     $this->drupalLogout();
@@ -157,7 +157,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/delete');
 
     // Verify no tableselect.
-    $this->assertNoFieldByName('nodes[' . $nodes['unpublished_page_2']->nid . ']', '', t('No tableselect found.'));
+    $this->assertNoFieldByName('nodes[' . $nodes['unpublished_page_2']->nid . ']', '', 'No tableselect found.');
 
     // Verify node access can be bypassed.
     $this->drupalLogout();

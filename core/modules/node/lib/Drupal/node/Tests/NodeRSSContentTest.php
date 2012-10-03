@@ -53,7 +53,7 @@ class NodeRSSContentTest extends NodeTestBase {
 
     // Check that content added in 'rss' view mode appear in RSS feed.
     $rss_only_content = t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->nid));
-    $this->assertText($rss_only_content, t('Node content designated for RSS appear in RSS feed.'));
+    $this->assertText($rss_only_content, 'Node content designated for RSS appear in RSS feed.');
 
     // Check that content added in view modes other than 'rss' doesn't
     // appear in RSS feed.
@@ -66,8 +66,8 @@ class NodeRSSContentTest extends NodeTestBase {
       'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->nid)),
     );
     $test_ns = 'xmlns:drupaltest="http://example.com/test-namespace"';
-    $this->assertRaw(format_xml_elements(array($test_element)), t('Extra RSS elements appear in RSS feed.'));
-    $this->assertRaw($test_ns, t('Extra namespaces appear in RSS feed.'));
+    $this->assertRaw(format_xml_elements(array($test_element)), 'Extra RSS elements appear in RSS feed.');
+    $this->assertRaw($test_ns, 'Extra namespaces appear in RSS feed.');
 
     // Check that content added in 'rss' view mode doesn't appear when
     // viewing node.
@@ -77,6 +77,6 @@ class NodeRSSContentTest extends NodeTestBase {
     // Check that the node feed page does not try to interpret additional path
     // components as arguments for node_feed() and returns default content.
     $this->drupalGet('rss.xml/' . $this->randomName() . '/' . $this->randomName());
-    $this->assertText($rss_only_content, t('Ignore page arguments when delivering rss.xml.'));
+    $this->assertText($rss_only_content, 'Ignore page arguments when delivering rss.xml.');
   }
 }

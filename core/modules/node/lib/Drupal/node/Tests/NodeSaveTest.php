@@ -64,10 +64,10 @@ class NodeSaveTest extends NodeTestBase {
     $node->save();
     // Test the import.
     $node_by_nid = node_load($test_nid);
-    $this->assertTrue($node_by_nid, t('Node load by node ID.'));
+    $this->assertTrue($node_by_nid, 'Node load by node ID.');
 
     $node_by_title = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node_by_title, t('Node load by node title.'));
+    $this->assertTrue($node_by_title, 'Node load by node title.');
   }
 
   /**
@@ -84,8 +84,8 @@ class NodeSaveTest extends NodeTestBase {
 
     entity_create('node', $edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertEqual($node->created, REQUEST_TIME, t('Creating a node sets default "created" timestamp.'));
-    $this->assertEqual($node->changed, REQUEST_TIME, t('Creating a node sets default "changed" timestamp.'));
+    $this->assertEqual($node->created, REQUEST_TIME, 'Creating a node sets default "created" timestamp.');
+    $this->assertEqual($node->changed, REQUEST_TIME, 'Creating a node sets default "changed" timestamp.');
 
     // Store the timestamps.
     $created = $node->created;
@@ -93,15 +93,15 @@ class NodeSaveTest extends NodeTestBase {
 
     $node->save();
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
-    $this->assertEqual($node->created, $created, t('Updating a node preserves "created" timestamp.'));
+    $this->assertEqual($node->created, $created, 'Updating a node preserves "created" timestamp.');
 
     // Programmatically set the timestamps using hook_node_presave.
     $node->title = 'testing_node_presave';
 
     $node->save();
     $node = $this->drupalGetNodeByTitle('testing_node_presave', TRUE);
-    $this->assertEqual($node->created, 280299600, t('Saving a node uses "created" timestamp set in presave hook.'));
-    $this->assertEqual($node->changed, 979534800, t('Saving a node uses "changed" timestamp set in presave hook.'));
+    $this->assertEqual($node->created, 280299600, 'Saving a node uses "created" timestamp set in presave hook.');
+    $this->assertEqual($node->changed, 979534800, 'Saving a node uses "changed" timestamp set in presave hook.');
 
     // Programmatically set the timestamps on the node.
     $edit = array(
@@ -114,7 +114,7 @@ class NodeSaveTest extends NodeTestBase {
 
     entity_create('node', $edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertEqual($node->created, 280299600, t('Creating a node uses user-set "created" timestamp.'));
+    $this->assertEqual($node->created, 280299600, 'Creating a node uses user-set "created" timestamp.');
     $this->assertNotEqual($node->changed, 979534800, t('Creating a node doesn\'t use user-set "changed" timestamp.'));
 
     // Update the timestamps.
@@ -123,7 +123,7 @@ class NodeSaveTest extends NodeTestBase {
 
     $node->save();
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
-    $this->assertEqual($node->created, 979534800, t('Updating a node uses user-set "created" timestamp.'));
+    $this->assertEqual($node->created, 979534800, 'Updating a node uses user-set "created" timestamp.');
     $this->assertNotEqual($node->changed, 280299600, t('Updating a node doesn\'t use user-set "changed" timestamp.'));
   }
 

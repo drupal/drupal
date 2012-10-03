@@ -36,14 +36,14 @@ class NodeTypeTest extends NodeTestBase {
     $node_types = node_type_get_types();
     $node_names = node_type_get_names();
 
-    $this->assertTrue(isset($node_types['article']), t('Node type article is available.'));
-    $this->assertTrue(isset($node_types['page']), t('Node type basic page is available.'));
+    $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
+    $this->assertTrue(isset($node_types['page']), 'Node type basic page is available.');
 
-    $this->assertEqual($node_types['article']->name, $node_names['article'], t('Correct node type base has been returned.'));
+    $this->assertEqual($node_types['article']->name, $node_names['article'], 'Correct node type base has been returned.');
 
-    $this->assertEqual($node_types['article'], node_type_load('article'), t('Correct node type has been returned.'));
-    $this->assertEqual($node_types['article']->name, node_type_get_label('article'), t('Correct node type name has been returned.'));
-    $this->assertEqual($node_types['page']->base, node_type_get_base('page'), t('Correct node type base has been returned.'));
+    $this->assertEqual($node_types['article'], node_type_load('article'), 'Correct node type has been returned.');
+    $this->assertEqual($node_types['article']->name, node_type_get_label('article'), 'Correct node type name has been returned.');
+    $this->assertEqual($node_types['page']->base, node_type_get_base('page'), 'Correct node type base has been returned.');
   }
 
   /**
@@ -84,12 +84,12 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $instance = field_info_instance('node', 'body', 'page');
-    $this->assertEqual($instance['label'], 'Body', t('Body field was found.'));
+    $this->assertEqual($instance['label'], 'Body', 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');
-    $this->assertRaw('Title', t('Title field was found.'));
-    $this->assertRaw('Body', t('Body field was found.'));
+    $this->assertRaw('Title', 'Title field was found.');
+    $this->assertRaw('Body', 'Body field was found.');
 
     // Rename the title field.
     $edit = array(
@@ -100,8 +100,8 @@ class NodeTypeTest extends NodeTestBase {
     field_info_cache_clear();
 
     $this->drupalGet('node/add/page');
-    $this->assertRaw('Foo', t('New title label was displayed.'));
-    $this->assertNoRaw('Title', t('Old title label was not displayed.'));
+    $this->assertRaw('Foo', 'New title label was displayed.');
+    $this->assertNoRaw('Title', 'Old title label was not displayed.');
 
     // Change the name, machine name and description.
     $edit = array(
@@ -113,12 +113,12 @@ class NodeTypeTest extends NodeTestBase {
     field_info_cache_clear();
 
     $this->drupalGet('node/add');
-    $this->assertRaw('Bar', t('New name was displayed.'));
-    $this->assertRaw('Lorem ipsum', t('New description was displayed.'));
+    $this->assertRaw('Bar', 'New name was displayed.');
+    $this->assertRaw('Lorem ipsum', 'New description was displayed.');
     $this->clickLink('Bar');
-    $this->assertEqual(url('node/add/bar', array('absolute' => TRUE)), $this->getUrl(), t('New machine name was used in URL.'));
-    $this->assertRaw('Foo', t('Title field was found.'));
-    $this->assertRaw('Body', t('Body field was found.'));
+    $this->assertEqual(url('node/add/bar', array('absolute' => TRUE)), $this->getUrl(), 'New machine name was used in URL.');
+    $this->assertRaw('Foo', 'Title field was found.');
+    $this->assertRaw('Body', 'Body field was found.');
 
     // Remove the body field.
     $this->drupalPost('admin/structure/types/manage/bar/fields/body/delete', array(), t('Delete'));
@@ -126,7 +126,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalPost('admin/structure/types/manage/bar', array(), t('Save content type'));
     // Check that the body field doesn't exist.
     $this->drupalGet('node/add/bar');
-    $this->assertNoRaw('Body', t('Body field was not found.'));
+    $this->assertNoRaw('Body', 'Body field was not found.');
   }
 
   /**

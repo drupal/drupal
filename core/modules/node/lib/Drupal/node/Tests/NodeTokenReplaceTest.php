@@ -63,7 +63,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language_interface->langcode);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));

@@ -48,11 +48,11 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the Basic page has been created.
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Basic page created.'));
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), 'Basic page created.');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->assertTrue($node, t('Node found in database.'));
+    $this->assertTrue($node, 'Node found in database.');
   }
 
   /**
@@ -79,21 +79,21 @@ class NodeCreationTest extends NodeTestBase {
     if (Database::getConnection()->supportsTransactions()) {
       // Check that the node does not exist in the database.
       $node = $this->drupalGetNodeByTitle($edit['title']);
-      $this->assertFalse($node, t('Transactions supported, and node not found in database.'));
+      $this->assertFalse($node, 'Transactions supported, and node not found in database.');
     }
     else {
       // Check that the node exists in the database.
       $node = $this->drupalGetNodeByTitle($edit['title']);
-      $this->assertTrue($node, t('Transactions not supported, and node found in database.'));
+      $this->assertTrue($node, 'Transactions not supported, and node found in database.');
 
       // Check that the failed rollback was logged.
       $records = db_query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();
-      $this->assertTrue(count($records) > 0, t('Transactions not supported, and rollback error logged to watchdog.'));
+      $this->assertTrue(count($records) > 0, 'Transactions not supported, and rollback error logged to watchdog.');
     }
 
     // Check that the rollback error was logged.
     $records = db_query("SELECT wid FROM {watchdog} WHERE variables LIKE '%Test exception for rollback.%'")->fetchAll();
-    $this->assertTrue(count($records) > 0, t('Rollback explanatory error logged to watchdog.'));
+    $this->assertTrue(count($records) > 0, 'Rollback explanatory error logged to watchdog.');
   }
 
   /**
@@ -112,6 +112,6 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the user was redirected to the home page.
-    $this->assertText(t('Welcome to Drupal'), t('The user is redirected to the home page.'));
+    $this->assertText(t('Welcome to Drupal'), 'The user is redirected to the home page.');
   }
 }
