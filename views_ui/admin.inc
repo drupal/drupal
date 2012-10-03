@@ -809,6 +809,12 @@ function views_ui_build_form_url($form_state) {
  * together.
  */
 function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
+  // Reset the cache of IDs. Drupal rather aggressively prevents ID
+  // duplication but this causes it to remember IDs that are no longer even
+  // being used.
+  $seen_ids_init = &drupal_static('drupal_html_id:init');
+  $seen_ids_init = array();
+
   $form = views_ui_ajax_forms($key);
   if (empty($form)) {
     return MENU_NOT_FOUND;

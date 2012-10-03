@@ -1428,6 +1428,12 @@ class ViewUI extends ViewExecutable {
    * Provide the preview formulas and the preview output, too.
    */
   public function buildPreviewForm($form, &$form_state, $display_id = 'default') {
+    // Reset the cache of IDs. Drupal rather aggressively prevents ID
+    // duplication but this causes it to remember IDs that are no longer even
+    // being used.
+    $seen_ids_init = &drupal_static('drupal_html_id:init');
+    $seen_ids_init = array();
+
     $form_state['no_cache'] = TRUE;
     $form_state['view'] = $this;
 
@@ -1590,6 +1596,12 @@ class ViewUI extends ViewExecutable {
    * rather than closing the ajax popup.
    */
   public function addFormToStack($key, $display_id, $args, $top = FALSE, $rebuild_keys = FALSE) {
+    // Reset the cache of IDs. Drupal rather aggressively prevents ID
+    // duplication but this causes it to remember IDs that are no longer even
+    // being used.
+    $seen_ids_init = &drupal_static('drupal_html_id:init');
+    $seen_ids_init = array();
+
     if (empty($this->stack)) {
       $this->stack = array();
     }
