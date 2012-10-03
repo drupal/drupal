@@ -84,7 +84,7 @@ class CommentBlockTest extends CommentTestBase {
     $this->assertText($comment1->subject, 'Comment found in block.');
     $this->assertText($comment2->subject, 'Comment found in block.');
     $this->assertText($comment3->comment, 'Comment found in block.');
-    $this->assertText($comment4->subject, t('Comment found in block.'));
+    $this->assertText($comment4->subject, 'Comment found in block.');
 
     // Test that links to comments work when comments are across pages.
     $this->setCommentsPerPage(1);

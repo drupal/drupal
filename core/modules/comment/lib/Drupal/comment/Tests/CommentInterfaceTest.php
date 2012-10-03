@@ -97,7 +97,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Second reply to comment #3 creating comment #4.
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
-    $this->assertText($subject_text, t('Individual comment-reply subject found.'));
+    $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $reply_loaded = comment_load($reply->id);

@@ -224,7 +224,8 @@ abstract class CommentTestBase extends WebTestBase {
    */
   function setCommentSettings($name, $value, $message) {
     variable_set($name . '_article', $value);
-    $this->assertTrue(TRUE, t($message)); // Display status message.
+    // Display status message.
+    $this->assertTrue(TRUE, $message);
   }
 
   /**
