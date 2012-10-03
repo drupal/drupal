@@ -51,7 +51,7 @@ class EntityFormTest extends WebTestBase {
 
     $this->drupalPost('entity-test/add', $edit, t('Save'));
     $entity = $this->loadEntityByName($name1);
-    $this->assertTrue($entity, t('Entity found in the database.'));
+    $this->assertTrue($entity, 'Entity found in the database.');
 
     $edit['name'] = $name2;
     $this->drupalPost('entity-test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
@@ -63,7 +63,7 @@ class EntityFormTest extends WebTestBase {
 
     $this->drupalPost('entity-test/manage/' . $entity->id() . '/edit', array(), t('Delete'));
     $entity = $this->loadEntityByName($name2);
-    $this->assertFalse($entity, t('Entity not found in the database.'));
+    $this->assertFalse($entity, 'Entity not found in the database.');
   }
 
   /**

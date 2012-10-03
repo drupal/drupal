@@ -88,7 +88,7 @@ class EntityTranslationFormTest extends WebTestBase {
     $this->drupalGet('admin/structure/types/manage/page');
     $edit = array('node_type_language_hidden' => FALSE, 'node_type_language_default' => LANGUAGE_NOT_SPECIFIED);
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Create a node with language.
     $edit = array();
@@ -98,18 +98,18 @@ class EntityTranslationFormTest extends WebTestBase {
     $edit["body[$field_langcode][0][value]"] = $this->randomName(16);
     $edit['langcode'] = $langcode;
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), t('Basic page created.'));
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), 'Basic page created.');
 
     // Check to make sure the node was created.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->assertTrue($node, t('Node found in database.'));
+    $this->assertTrue($node, 'Node found in database.');
 
     // Make body translatable.
     $field = field_info_field('body');
     $field['translatable'] = TRUE;
     field_update_field($field);
     $field = field_info_field('body');
-    $this->assertTrue($field['translatable'], "Field body is translatable.");
+    $this->assertTrue($field['translatable'], 'Field body is translatable.');
 
     // Create a body translation and check the form language.
     $langcode2 = $this->langcodes[1];
