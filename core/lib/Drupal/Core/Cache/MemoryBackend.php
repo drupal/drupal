@@ -136,17 +136,6 @@ class MemoryBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deletePrefix().
-   */
-  public function deletePrefix($prefix) {
-    foreach ($this->cache as $cid => $item) {
-      if (strpos($cid, $prefix) === 0) {
-        unset($this->cache[$cid]);
-      }
-    }
-  }
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
    */
   public function flush() {

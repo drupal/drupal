@@ -37,7 +37,7 @@ class LocaleLookup extends CacheArray {
     // example, strings for admin menu items and settings forms are not cached
     // for anonymous users.
     $rids = implode(':', array_keys($GLOBALS['user']->roles));
-    parent::__construct("locale:$langcode:$context:$rids", 'cache');
+    parent::__construct("locale:$langcode:$context:$rids", 'cache', array('locale' => TRUE));
   }
 
   /**

@@ -79,17 +79,6 @@ class InstallTest extends CacheTestBase {
     $this->assertFalse($database_cache->get('cache_two'));
 
     // Store multiple items in the database cache, then use the installer's
-    // cache backend to delete them via a wildcard prefix. Afterwards, confirm
-    // that they are no longer in the database cache.
-    $database_cache->set('cache_one', 'One');
-    $database_cache->set('cache_two', 'Two');
-    $this->assertEqual($database_cache->get('cache_one')->data, 'One');
-    $this->assertEqual($database_cache->get('cache_two')->data, 'Two');
-    $install_cache->deletePrefix('cache_');
-    $this->assertFalse($database_cache->get('cache_one'));
-    $this->assertFalse($database_cache->get('cache_two'));
-
-    // Store multiple items in the database cache, then use the installer's
     // cache backend to flush the cache. Afterwards, confirm that they are no
     // longer in the database cache.
     $database_cache->set('cache_one', 'One');
@@ -117,7 +106,6 @@ class InstallTest extends CacheTestBase {
       $install_cache->isEmpty();
       $install_cache->delete('cache_one');
       $install_cache->deleteMultiple(array('cache_one', 'cache_two'));
-      $install_cache->deletePrefix('cache_');
       $install_cache->flush();
       $install_cache->expire();
       $install_cache->garbageCollection();

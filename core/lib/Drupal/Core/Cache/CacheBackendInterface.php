@@ -130,14 +130,6 @@ interface CacheBackendInterface {
   function deleteMultiple(Array $cids);
 
   /**
-   * Deletes items from the cache using a wildcard prefix.
-   *
-   * @param $prefix
-   *   A wildcard prefix.
-   */
-  function deletePrefix($prefix);
-
-  /**
    * Flushes all cache items in a bin.
    */
   function flush();

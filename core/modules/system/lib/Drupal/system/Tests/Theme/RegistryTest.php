@@ -40,7 +40,7 @@ class RegistryTest extends WebTestBase {
 
     // Directly instantiate the theme registry, this will cause a base cache
     // entry to be written in __construct().
-    $registry = new ThemeRegistry($cid, 'cache');
+    $registry = new ThemeRegistry($cid, 'cache', array('theme_registry' => TRUE));
 
     $this->assertTrue(cache()->get($cid), 'Cache entry was created.');
 
@@ -60,7 +60,7 @@ class RegistryTest extends WebTestBase {
     // Create a new instance of the class. Confirm that both the offset
     // requested previously, and one that has not yet been requested are both
     // available.
-    $registry = new ThemeRegistry($cid, 'cache');
+    $registry = new ThemeRegistry($cid, 'cache', array('theme_registry' => TRUE));
     $this->assertTrue($registry['theme_test_template_test'], 'Offset was returned correctly from the theme registry');
     $this->assertTrue($registry['theme_test_template_test_2'], 'Offset was returned correctly from the theme registry');
   }

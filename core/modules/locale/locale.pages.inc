@@ -444,7 +444,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   // Force JavaScript translation file recreation for this language.
   _locale_invalidate_js($langcode);
   // Clear locale cache.
-  cache()->deletePrefix('locale:');
+  cache()->invalidateTags(array('locale' => TRUE));
 }
 
 /**

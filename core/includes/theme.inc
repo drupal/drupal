@@ -8,8 +8,9 @@
  * customized by user themes.
  */
 
-use Drupal\Core\Utility\ThemeRegistry;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Utility\ThemeRegistry;
 
 /**
  * @defgroup content_flags Content markers
@@ -332,7 +333,7 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL, 
     return $registry;
   }
   else {
-    return new ThemeRegistry('theme_registry:runtime:' . $theme->name, 'cache');
+    return new ThemeRegistry('theme_registry:runtime:' . $theme->name, 'cache', array('theme_registry' => TRUE));
   }
 }
 
@@ -340,7 +341,7 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL, 
  * Write the theme_registry cache into the database.
  */
 function _theme_save_registry($theme, $registry) {
-  cache()->set("theme_registry:$theme->name", $registry);
+  cache()->set("theme_registry:$theme->name", $registry, CacheBackendInterface::CACHE_PERMANENT, array('theme_registry' => TRUE));
 }
 
 /**
@@ -350,7 +351,7 @@ function _theme_save_registry($theme, $registry) {
  */
 function drupal_theme_rebuild() {
   drupal_static_reset('theme_get_registry');
-  cache()->deletePrefix('theme_registry');
+  cache()->invalidateTags(array('theme_registry' => TRUE));
 }
 
 /**
@@ -578,7 +579,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
     }
     // Only cache this registry if all modules are loaded.
     if (module_load_all(NULL)) {
-      cache()->set('theme_registry:build:modules', $cache);
+      cache()->set("theme_registry:build:modules", $cache, CacheBackendInterface::CACHE_PERMANENT, array('theme_registry' => TRUE));
     }
   }
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Utility;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+
 /**
  * Builds the run-time theme registry.
  *
@@ -31,9 +33,20 @@ class ThemeRegistry extends CacheArray {
    */
   protected $completeRegistry;
 
-  function __construct($cid, $bin) {
+  /**
+   * Constructs a ThemeRegistry object.
+   *
+   * @param string $cid
+   *   The cid for the array being cached.
+   * @param string $bin
+   *   The bin to cache the array.
+   * @param array $tags
+   *   (optional) The tags to specify for the cache item.
+   */
+  function __construct($cid, $bin, $tags) {
     $this->cid = $cid;
     $this->bin = $bin;
+    $this->tags = $tags;
     $this->persistable = module_load_all(NULL) && $_SERVER['REQUEST_METHOD'] == 'GET';
 
     $data = array();
@@ -109,7 +122,7 @@ class ThemeRegistry extends CacheArray {
         $registry = $this->initializeRegistry();
         $data = array_merge($registry, $data);
       }
-      cache($this->bin)->set($this->cid, $data);
+      cache($this->bin)->set($this->cid, $data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
       if ($lock) {
         lock()->release($lock_name);
       }

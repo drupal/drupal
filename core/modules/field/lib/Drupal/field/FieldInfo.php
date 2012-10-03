@@ -7,6 +7,8 @@
 
 namespace Drupal\field;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+
 /**
  * Provides field and instance definitions for the current runtime environment.
  *
@@ -110,7 +112,7 @@ class FieldInfo {
 
     $this->bundleExtraFields = array();
 
-    cache('field')->deletePrefix('field_info:');
+    cache('field')->invalidateTags(array('field_info' => TRUE));
   }
 
   /**
@@ -155,7 +157,7 @@ class FieldInfo {
 
     // Save in "static" and persistent caches.
     $this->fieldMap = $map;
-    cache('field')->set('field_info:field_map', $map);
+    cache('field')->set('field_info:field_map', $map, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
 
     return $map;
   }
@@ -183,7 +185,7 @@ class FieldInfo {
       }
 
       // Store in persistent cache.
-      cache('field')->set('field_info:fields', $this->fieldsById);
+      cache('field')->set('field_info:fields', $this->fieldsById, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
     }
 
     // Fill the name/ID map.
@@ -234,7 +236,7 @@ class FieldInfo {
         }
 
         // Store in persistent cache.
-        cache('field')->set('field_info:instances', $this->bundleInstances);
+        cache('field')->set('field_info:instances', $this->bundleInstances, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
       }
 
       $this->loadedAllInstances = TRUE;
@@ -415,7 +417,7 @@ class FieldInfo {
     foreach ($instances as $instance) {
       $cache['fields'][] = $this->fieldsById[$instance['field_id']];
     }
-    cache('field')->set("field_info:bundle:$entity_type:$bundle", $cache);
+    cache('field')->set("field_info:bundle:$entity_type:$bundle", $cache, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
 
     return $instances;
   }
@@ -456,7 +458,7 @@ class FieldInfo {
 
     // Store in the 'static' and persistent caches.
     $this->bundleExtraFields[$entity_type][$bundle] = $info;
-    cache('field')->set("field_info:bundle_extra:$entity_type:$bundle", $info);
+    cache('field')->set("field_info:bundle_extra:$entity_type:$bundle", $info, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
 
     return $this->bundleExtraFields[$entity_type][$bundle];
   }

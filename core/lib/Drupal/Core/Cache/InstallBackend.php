@@ -77,18 +77,6 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Overrides Drupal\Core\Cache\DatabaseBackend::deletePrefix().
-   */
-  function deletePrefix($prefix) {
-    try {
-      if (class_exists('Drupal\Core\Database\Database')) {
-        parent::deletePrefix($prefix);
-      }
-    }
-    catch (Exception $e) {}
-  }
-
-  /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::invalidateTags().
    */
   function invalidateTags(array $tags) {

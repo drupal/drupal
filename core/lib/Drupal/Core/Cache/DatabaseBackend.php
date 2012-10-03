@@ -169,15 +169,6 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deletePrefix().
-   */
-  function deletePrefix($prefix) {
-    Database::getConnection()->delete($this->bin)
-      ->condition('cid', Database::getConnection()->escapeLike($prefix) . '%', 'LIKE')
-      ->execute();
-  }
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
    */
   function flush() {

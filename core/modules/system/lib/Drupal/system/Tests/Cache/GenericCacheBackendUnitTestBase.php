@@ -336,41 +336,6 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::deletePrefix().
-   */
-  public function testDeletePrefix() {
-    $backend = $this->getCacheBackend();
-
-    // Set numerous testing keys.
-    $backend->set('banana_test1', 1);
-    $backend->set('monkey_test2', 3);
-    $backend->set('monkey_banana_test3', 5);
-    $backend->set('banana_test_4', 7);
-    $backend->set('pony_monkey_test5_banana', 11);
-    $backend->set('monkey_test6', 13);
-    $backend->set('banana_pony_test7_monkey', 17);
-
-    $backend->deletePrefix('banana');
-    // Keys starting with banana have been deleted.
-    $this->assertIdentical(FALSE, $backend->get('banana_test1'), "Cache id banana_test1 deleted.");
-    $this->assertIdentical(FALSE, $backend->get('banana_test_4'), "Cache id banana_test_4 deleted.");
-    $this->assertIdentical(FALSE, $backend->get('banana_pony_test7_monkey'), "Cache id banana_pony_test7_monkey deleted.");
-    // Keys not starting with banana still exist.
-    $this->assertNotIdentical(FALSE, $backend->get('monkey_test2'), "Cache id monkey_test2 exists.");
-    $this->assertNotIdentical(FALSE, $backend->get('monkey_banana_test3'), "Cache id monkey_banana_test3 exists.");
-    $this->assertNotIdentical(FALSE, $backend->get('pony_monkey_test5_banana'), "Cache id poney_monkey_test5_banana exists.");
-    $this->assertNotIdentical(FALSE, $backend->get('monkey_test6'), "Cache id monkey_test6 exists.");
-
-    $backend->deletePrefix('monkey');
-    // Keys starting with monkey have been deleted.
-    $this->assertIdentical(FALSE, $backend->get('monkey_test2'), "Cache id monkey_test2 deleted.");
-    $this->assertIdentical(FALSE, $backend->get('monkey_banana_test3'), "Cache id monkey_banana_test3 deleted.");
-    $this->assertIdentical(FALSE, $backend->get('banana_pony_test7_monkey'), "Cache id banana_pony_test7_monkey deleted.");
-    // Keys not starting with monkey still exist.
-    $this->assertNotIdentical(FALSE, $backend->get('pony_monkey_test5_banana'), "Cache id pony_monkey_test5_banana exists.");
-  }
-
-  /**
    * Test Drupal\Core\Cache\CacheBackendInterface::flush().
    */
   public function testFlush() {

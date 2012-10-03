@@ -30,6 +30,8 @@ function _field_info_field_cache() {
   return $info;
 }
 
+use Drupal\Core\Cache\CacheBackendInterface;
+
 /**
  * @defgroup field_info Field Info API
  * @{
@@ -159,7 +161,7 @@ function _field_info_collate_types() {
       }
       drupal_alter('field_storage_info', $info['storage types']);
 
-      cache('field')->set("field_info_types:$langcode", $info);
+      cache('field')->set("field_info_types:$langcode", $info, CacheBackendInterface::CACHE_PERMANENT, array('field_info_types' => TRUE));
     }
   }
 
@@ -172,7 +174,7 @@ function _field_info_collate_types() {
 function _field_info_collate_types_reset() {
   drupal_static_reset('_field_info_collate_types');
   // Clear all languages.
-  cache('field')->deletePrefix('field_info_types:');
+  cache('field')->invalidateTags(array('field_info_types' => TRUE));
 }
 
 /**

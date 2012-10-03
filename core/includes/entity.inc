@@ -6,6 +6,7 @@
  */
 
 use \InvalidArgumentException;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityFieldQuery;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
@@ -83,7 +84,7 @@ function entity_get_info($entity_type = NULL) {
       }
       // Let other modules alter the entity info.
       drupal_alter('entity_info', $entity_info);
-      cache()->set("entity_info:$langcode", $entity_info);
+      cache()->set("entity_info:$langcode", $entity_info, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
     }
   }
 
@@ -101,7 +102,7 @@ function entity_get_info($entity_type = NULL) {
 function entity_info_cache_clear() {
   drupal_static_reset('entity_get_info');
   // Clear all languages.
-  cache()->deletePrefix('entity_info:');
+  cache()->invalidateTags(array('entity_info' => TRUE));
 }
 
 /**

@@ -5,6 +5,7 @@
  * Schema API handling functions.
  */
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\SchemaCache;
 
@@ -97,7 +98,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         cache()->set('schema', $schema);
       }
       if ($rebuild) {
-        cache()->deletePrefix('schema:');
+        cache()->invalidateTags(array('schema' => TRUE));
       }
     }
   }

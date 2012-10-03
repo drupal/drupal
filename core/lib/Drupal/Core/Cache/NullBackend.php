@@ -55,11 +55,6 @@ class NullBackend implements CacheBackendInterface {
   function deleteMultiple(array $cids) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deletePrefix().
-   */
-  function deletePrefix($prefix) {}
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
    */
   function flush() {}

@@ -4,6 +4,7 @@
  * @file
  * Framework for handling the filtering of content.
  */
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -285,7 +286,7 @@ function filter_format_save($format) {
     $return = SAVED_UPDATED;
 
     // Clear the filter cache whenever a text format is updated.
-    cache('filter')->deletePrefix($format->format . ':');
+    cache('filter')->invalidateTags(array('filter_format' => $format->format));
   }
 
   filter_formats_reset();
@@ -315,7 +316,7 @@ function filter_format_disable($format) {
 
   // Clear the filter cache whenever a text format is disabled.
   filter_formats_reset();
-  cache('filter')->deletePrefix($format->format . ':');
+  cache('filter')->invalidateTags(array('filter_format' => $format->format));
 }
 
 /**
@@ -439,7 +440,7 @@ function filter_formats($account = NULL) {
         ->execute()
         ->fetchAllAssoc('format');
 
-      cache()->set("filter_formats:{$language_interface->langcode}", $formats['all']);
+      cache()->set("filter_formats:{$language_interface->langcode}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
     }
   }
 
@@ -462,8 +463,8 @@ function filter_formats($account = NULL) {
  * @see filter_formats()
  */
 function filter_formats_reset() {
-  cache()->deletePrefix('filter_formats');
-  cache()->deletePrefix('filter_list_format');
+  cache()->invalidateTags(array('filter_formats' => TRUE));
+  cache()->delete('filter_list_format');
   drupal_static_reset('filter_list_format');
   drupal_static_reset('filter_formats');
 }
@@ -810,7 +811,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
   // automatically flushed when the text format is updated.
   // @see filter_format_save()
   if ($cache) {
-    cache('filter')->set($cache_id, $text);
+    cache('filter')->set($cache_id, $text, CacheBackendInterface::CACHE_PERMANENT, array('filter_format' => $format->format));
   }
 
   return $text;

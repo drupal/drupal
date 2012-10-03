@@ -10,6 +10,7 @@
 
 use Symfony\Component\HttpFoundation\Response;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -868,7 +869,7 @@ function _node_types_build($rebuild = FALSE) {
 
   asort($_node_types->names);
 
-  cache()->set($cid, $_node_types);
+  cache()->set($cid, $_node_types, CacheBackendInterface::CACHE_PERMANENT, array('node_types' => TRUE));
 
   return $_node_types;
 }
@@ -877,7 +878,7 @@ function _node_types_build($rebuild = FALSE) {
  * Clears the node type cache.
  */
 function node_type_cache_reset() {
-  cache()->deletePrefix('node_types:');
+  cache()->invalidateTags(array('node_types' => TRUE));
   drupal_static_reset('_node_types_build');
 }
 

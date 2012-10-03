@@ -543,7 +543,7 @@ function locale_translate_batch_finished($success, $results) {
 
     // Clear cache and force refresh of JavaScript translations.
     _locale_invalidate_js();
-    cache()->deletePrefix('locale:');
+    cache()->invalidateTags(array('locale' => TRUE));
   }
 }
 

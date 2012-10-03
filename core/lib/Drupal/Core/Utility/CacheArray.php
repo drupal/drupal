@@ -8,6 +8,7 @@
 namespace Drupal\Core\Utility;
 
 use ArrayAccess;
+use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Provides a caching wrapper to be used in place of large array structures.
@@ -67,35 +68,53 @@ abstract class CacheArray implements ArrayAccess {
 
   /**
    * A cid to pass to cache()->set() and cache()->get().
+   *
+   * @var string
    */
   protected $cid;
 
   /**
+   * A tags array to pass to cache()->set().
+   *
+   * @var array
+   */
+  protected $tags;
+
+  /**
    * A bin to pass to cache()->set() and cache()->get().
+   *
+   * @var string
    */
   protected $bin;
 
   /**
    * An array of keys to add to the cache at the end of the request.
+   *
+   * @var array
    */
   protected $keysToPersist = array();
 
   /**
    * Storage for the data itself.
+   *
+   * @var array
    */
   protected $storage = array();
 
   /**
    * Constructs a DrupalCacheArray object.
    *
-   * @param $cid
+   * @param string $cid
    *   The cid for the array being cached.
-   * @param $bin
+   * @param string $bin
    *   The bin to cache the array.
+   * @param array $tags
+   *   (optional) The tags to specify for the cache item.
    */
-  public function __construct($cid, $bin) {
+  public function __construct($cid, $bin, $tags = array()) {
     $this->cid = $cid;
     $this->bin = $bin;
+    $this->tags = $tags;
 
     if ($cached = cache($bin)->get($this->cid)) {
      $this->storage = $cached->data;
@@ -185,7 +204,7 @@ abstract class CacheArray implements ArrayAccess {
       if ($cached = cache($this->bin)->get($this->cid)) {
         $data = $cached->data + $data;
       }
-      cache($this->bin)->set($this->cid, $data);
+      cache($this->bin)->set($this->cid, $data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
       if ($lock) {
         lock()->release($lock_name);
       }
