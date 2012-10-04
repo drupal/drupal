@@ -1100,7 +1100,7 @@ div.messages {
 /* @group Buttons */
 
 .dropbutton,
-.dropbutton input {
+.dropbutton-wrapper input {
   text-transform: lowercase;
 }
 .dropbutton-multiple {
@@ -1112,32 +1112,32 @@ div.messages {
 .dropbutton-arrow {
   top: 0.567em;
 }
-.dropbutton-content {
+.dropbutton {
   font-size: 11px;
   line-height: 1.333em;
 }
-.dropbutton-content li > * {
+.dropbutton li > * {
   margin: 0;
   padding: 0.2em 0.75em;
 }
 
-.views-display-top .dropbutton {
+.views-display-top .dropbutton-wrapper {
   position: absolute;
   right: 12px;
   top: 7px;
 }
-.views-display-top .dropbutton a {
+.views-display-top .dropbutton-wrapper a {
   font-size: 12px;
 }
 
-.views-ui-display-tab-bucket .dropbutton {
+.views-ui-display-tab-bucket .dropbutton-wrapper {
   position: absolute;
   right: 5px;
   top: 4px;
 }
 
-.views-ui-display-tab-actions .dropbutton li a,
-.views-ui-display-tab-actions .dropbutton input {
+.views-ui-display-tab-actions .dropbutton-wrapper li a,
+.views-ui-display-tab-actions .dropbutton-wrapper input {
   background: none;
   border: medium;
   font-family: inherit;
@@ -1146,7 +1146,7 @@ div.messages {
   margin-bottom: 0;
 }
 
-.views-ui-display-tab-actions .dropbutton input:hover {
+.views-ui-display-tab-actions .dropbutton-wrapper input:hover {
   background: none;
   border: none;
 }

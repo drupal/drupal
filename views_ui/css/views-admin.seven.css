@@ -19,10 +19,10 @@
 .dropbutton-multiple.open .dropbutton-widget:hover {
   background-color: #fff;
 }
-.dropbutton-content li:first-child > * {
+.dropbutton li:first-child > * {
   text-overflow: ellipsis;
 }
-.dropbutton-multiple.open .dropbutton-content li:first-child > * {
+.dropbutton-multiple.open .dropbutton li:first-child > * {
   text-overflow: clip;
 }
 
@@ -392,7 +392,7 @@ table th {
 
 /* @end */
 
-.views-ui-display-tab-actions .dropbutton input {
+.views-ui-display-tab-actions .dropbutton-wrapper input {
   color: #0074BD;
 }
 
