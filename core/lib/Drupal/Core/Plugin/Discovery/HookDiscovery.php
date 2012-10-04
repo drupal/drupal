@@ -51,7 +51,6 @@ class HookDiscovery implements DiscoveryInterface {
         $definitions[$plugin_id] = $definition;
       }
     }
-    drupal_alter($this->hook, $definitions);
     return $definitions;
   }
 }
