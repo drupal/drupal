@@ -311,7 +311,11 @@ function overlay_page_alter(&$page) {
 }
 
 /**
- * Access callback; determines access to dismiss the overlay accessibility message.
+ * Access callback: Determines access to dismiss the accessibility message.
+ *
+ * @return
+ *   TRUE if the user has permission to dismiss the accessibility message or if
+ *   the user is anonymous. FALSE if otherwise.
  *
  * @see overlay_user_dismiss_message()
  * @see overlay_menu()
@@ -331,7 +335,10 @@ function overlay_user_dismiss_message_access() {
 }
 
 /**
- * Menu callback: Dismisses the overlay accessibility message for this user.
+ * Page callback: Dismisses the overlay accessibility message for this user.
+ *
+ * @return
+ *   A render array for a page containing a list of content.
  *
  * @see overlay_user_dismiss_message_access()
  * @see overlay_menu()
@@ -554,7 +561,7 @@ function overlay_preprocess_page(&$variables) {
 }
 
 /**
- * Callback to request that the overlay display an empty page.
+ * Stores and returns whether an empty page override is needed.
  *
  * This is used to prevent a page request which closes the overlay (for
  * example, a form submission) from being fully re-rendered before the overlay
@@ -731,12 +738,13 @@ function overlay_overlay_child_initialize() {
 }
 
 /**
- * Callback to request that the overlay close as soon as the page is displayed.
+ * Requests that the overlay overlay closes when the page is displayed.
  *
  * @param $redirect
  *   (optional) The path that should open in the parent window after the
  *   overlay closes. If not set, no redirect will be performed on the parent
  *   window.
+ *
  * @param $redirect_options
  *   (optional) An associative array of options to use when generating the
  *   redirect URL.
@@ -966,7 +974,7 @@ function overlay_store_rendered_content($id = NULL, $content = NULL) {
 }
 
 /**
- * Request that the parent window refresh a particular page region.
+ * Requests that the parent window refreshes a particular page region.
  *
  * @param $region
  *   The name of the page region to refresh. The parent window will trigger a
@@ -981,7 +989,7 @@ function overlay_request_refresh($region) {
 }
 
 /**
- * Request that the entire parent window be reloaded when the overlay closes.
+ * Requests that the entire parent window is reloaded when the overlay closes.
  *
  * @see overlay_trigger_refresh()
  */
@@ -990,7 +998,7 @@ function overlay_request_page_refresh() {
 }
 
 /**
- * Check if the parent window needs to be refreshed on this page load.
+ * Checks if the parent window needs to be refreshed on this page load.
  *
  * If the previous page load requested that any page regions be refreshed, or
  * if it requested that the entire page be refreshed when the overlay closes,
