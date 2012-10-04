@@ -3,20 +3,6 @@
  * in the Bartik theme.
  */
 
-/* ---------- Dropbutton ----------- */
-
-.dropbutton-widget {
-  background-color: white;
-  border-radius: 5px;
-}
-.dropbutton-widget:hover {
-  background-color: #f8f8f8;
-  border-color: #b8b8b8;
-}
-.dropbutton-multiple.open .dropbutton-widget:hover {
-  background-color: white;
-}
-
 /* @group Lists */
 
 .views-display-top .secondary .action-list {

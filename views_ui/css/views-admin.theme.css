@@ -1109,12 +1109,18 @@ div.messages {
 .dropbutton-widget {
   position: relative;
 }
-.dropbutton-arrow {
-  top: 0.567em;
+.dropbutton-multiple .dropbutton-widget {
+  padding-right: 1.75em;
 }
-.dropbutton {
+.dropbutton-toggle {
+  width: 1.75em;
+}
+.dropbutton-arrow {
+  top: 0.6667em;
+}
+.dropbutton-wrapper {
   font-size: 11px;
-  line-height: 1.333em;
+  line-height: 1.4555;
 }
 .dropbutton li > * {
   margin: 0;
