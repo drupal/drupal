@@ -1608,6 +1608,19 @@ div.admin-panel .description {
   margin: 0;
 }
 
+/* ---------- Dropbutton ----------- */
+.dropbutton-widget {
+  background-color: white;
+  border-radius: 5px;
+}
+.dropbutton-widget:hover {
+  background-color: #f8f8f8;
+  border-color: #b8b8b8;
+}
+.dropbutton-multiple.open .dropbutton-widget:hover {
+  background-color: white;
+}
+
 /* ----------- media queries ------------------------------- */
 
 @media all and (min-width: 461px) and (max-width: 900px) {

@@ -1,0 +1,91 @@
+
+/**
+ * @file
+ * Base styles for dropbuttons.
+ */
+
+/**
+ * When a dropbutton has only one option, it is simply a button.
+ */
+.dropbutton-wrapper,
+.dropbutton-wrapper div {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.dropbutton-wrapper {
+  display: inline-block;
+}
+.dropbutton-widget {
+  position: relative;
+}
+/* UL styles are over-scoped in core, so this selector needs weight parity. */
+.dropbutton-widget .dropbutton {
+  list-style-image: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.dropbutton li,
+.dropbutton a {
+  display: block;
+}
+
+/**
+ * The dropbutton styling.
+ *
+ * A dropbutton is a widget that displays a list of action links as a button
+ * with a primary action. Secondary actions are hidden behind a click on a
+ * twisty arrow.
+ *
+ * The arrow is created using border on a zero-width, zero-height span.
+ * The arrow inherits the link color, but can be overridden with border colors.
+ */
+.dropbutton-multiple .dropbutton-widget {
+  padding-right: 2em; /* LTR */
+}
+.dropbutton-multiple .dropbutton .secondary-action {
+  display: none;
+}
+.dropbutton-multiple.open .dropbutton .secondary-action {
+  display: block;
+}
+.dropbutton-toggle {
+  bottom: 0;
+  display: block;
+  position: absolute;
+  right: 0; /* LTR */
+  text-indent: 110%;
+  top: 0;
+  white-space: nowrap;
+  width: 2em;
+}
+.dropbutton-toggle button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.dropbutton-arrow {
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-style: solid;
+  border-width: 0.3333em 0.3333em 0;
+  display: block;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  right: 40%; /* 0.6667em; */ /* LTR */
+  top: 0.9em;
+  width: 0;
+}
+.dropbutton-multiple.open .dropbutton-arrow {
+  border-bottom: 0.3333em solid;
+  border-top-color: transparent;
+  top: 0.6667em;
+}

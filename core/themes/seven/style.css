@@ -971,6 +971,31 @@ div.add-or-remove-shortcuts {
   margin-left: 1.5em; /* LTR */
 }
 
+/* Dropbutton */
+.dropbutton-widget {
+  background-color: #fff;
+  background-image: -moz-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  background-image: -o-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  background-image: -webkit-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  background-image: linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
+  border-radius: 5px;
+}
+.dropbutton-widget:hover {
+  background-color: #f0f0f0;
+  border-color: #b8b8b8;
+}
+.dropbutton-multiple.open .dropbutton-widget:hover {
+  background-color: #fff;
+}
+.dropbutton-content li:first-child > * {
+  text-overflow: ellipsis;
+}
+.dropbutton-multiple.open .dropbutton-content li:first-child > * {
+  text-overflow: clip;
+}
+.dropbutton-arrow {
+  right: 35%;
+}
 /* Disable overlay message */
 #overlay-disable-message {
   background-color: #addafc;

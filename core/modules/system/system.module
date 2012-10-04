@@ -535,6 +535,14 @@ function system_element_info() {
     '#default_tab' => '',
     '#process' => array('form_process_vertical_tabs'),
   );
+  $types['dropbutton'] = array(
+    '#theme' => 'links__dropbutton',
+    '#pre_render' => array('drupal_pre_render_dropbutton'),
+  );
+  $types['operations'] = array(
+    '#theme' => 'links__dropbutton__operations',
+    '#pre_render' => array('drupal_pre_render_dropbutton'),
+  );
 
   $types['container'] = array(
     '#theme_wrappers' => array('container'),
@@ -1328,6 +1336,26 @@ function system_library_info() {
     ),
     'dependencies' => array(
       array('system', 'jquery'),
+    ),
+  );
+
+  // Dropbutton.
+  $libraries['drupal.dropbutton'] = array(
+    'title' => 'Dropbutton',
+    'website' => 'http://drupal.org/node/1608878',
+    'version' => '1.0',
+    'js' => array(
+      'core/misc/dropbutton/dropbutton.js' => array(),
+    ),
+    'css' => array(
+      'core/misc/dropbutton/dropbutton.base.css' => array(),
+      'core/misc/dropbutton/dropbutton.theme.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'jquery.once'),
     ),
   );
 

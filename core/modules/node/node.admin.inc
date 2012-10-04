@@ -412,6 +412,9 @@ function node_admin_nodes() {
     '#title' => t('Update options'),
     '#attributes' => array('class' => array('container-inline')),
     '#access' => $admin_access,
+    '#attached' => array (
+      'css' => array(drupal_get_path('module', 'node') . '/node.admin.css'),
+    ),
   );
   $options = array();
   foreach (module_invoke_all('node_operations') as $operation => $array) {
@@ -539,9 +542,9 @@ function node_admin_nodes() {
       // Render an unordered list of operations links.
       $options[$node->nid]['operations'] = array(
         'data' => array(
-          '#theme' => 'links__node_operations',
+          '#type' => 'operations',
+          '#subtype' => 'node',
           '#links' => $operations,
-          '#attributes' => array('class' => array('links', 'inline')),
         ),
       );
     }

@@ -5462,6 +5462,26 @@ function drupal_pre_render_links($element) {
 }
 
 /**
+ * Pre-render callback: Attaches the dropbutton library and required markup.
+ */
+function drupal_pre_render_dropbutton($element) {
+  $element['#attached']['library'][] = array('system', 'drupal.dropbutton');
+  $element['#attributes']['class'][] = 'dropbutton';
+  if (!isset($element['#theme_wrappers'])) {
+    $element['#theme_wrappers'] = array();
+  }
+  array_unshift($element['#theme_wrappers'], 'dropbutton_wrapper');
+
+  // Enable targeted theming of specific dropbuttons (e.g., 'operations' or
+  // 'operations__node').
+  if (isset($element['#subtype'])) {
+    $element['#theme'] .= '__' . $element['#subtype'];
+  }
+
+  return $element;
+}
+
+/**
  * Pre-render callback: Appends contents in #markup to #children.
  *
  * This needs to be a #pre_render callback, because eventually assigned
