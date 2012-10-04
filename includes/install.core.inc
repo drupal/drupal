@@ -6,8 +6,7 @@
  */
 
 /**
- * Global flag to indicate that a task should not be run during the current
- * installation request.
+ * Do not run the task during the current installation request.
  *
  * This can be used to skip running an installation task when certain
  * conditions are met, even though the task may still show on the list of
@@ -20,8 +19,7 @@
 define('INSTALL_TASK_SKIP', 1);
 
 /**
- * Global flag to indicate that a task should be run on each installation
- * request that reaches it.
+ * Run the task on each installation request until the database is set up.
  *
  * This is primarily used by the Drupal installer for bootstrap-related tasks.
  */
@@ -200,7 +198,7 @@ function install_state_defaults() {
 }
 
 /**
- * Begin an installation request, modifying the installation state as needed.
+ * Begins an installation request, modifying the installation state as needed.
  *
  * This function performs commands that must run at the beginning of every page
  * request. It throws an exception if the installation should not proceed.
@@ -709,7 +707,7 @@ function install_display_output($output, $install_state) {
 }
 
 /**
- * Installation task; verify the requirements for installing Drupal.
+ * Verifies the requirements for installing Drupal.
  *
  * @param $install_state
  *   An array of information about the current installation state.
@@ -786,7 +784,7 @@ function install_system_module(&$install_state) {
 }
 
 /**
- * Verify and return the last installation task that was completed.
+ * Verifies and returns the last installation task that was completed.
  *
  * @return
  *   The last completed task, if there is one. An exception is thrown if Drupal
@@ -830,7 +828,7 @@ function install_verify_settings() {
 }
 
 /**
- * Verify PDO library.
+ * Verifies the PDO library.
  */
 function install_verify_pdo() {
   // PDO was moved to PHP core in 5.2.0, but the old extension (targeting 5.0
@@ -842,15 +840,13 @@ function install_verify_pdo() {
 }
 
 /**
- * Installation task; define a form to configure and rewrite settings.php.
+ * Form constructor for a form to configure and rewrite settings.php.
  *
- * @param $form_state
- *   An associative array containing the current state of the form.
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
- *   The form API definition for the database configuration form.
+ * @see install_settings_form_validate()
+ * @see install_settings_form_submit()
  */
 function install_settings_form($form, &$form_state, &$install_state) {
   global $databases;
@@ -913,7 +909,9 @@ function install_settings_form($form, &$form_state, &$install_state) {
 }
 
 /**
- * Form API validate for install_settings form.
+ * Form validation handler for install_settings_form().
+ *
+ * @see install_settings_form_submit()
  */
 function install_settings_form_validate($form, &$form_state) {
   $driver = $form_state['values']['driver'];
@@ -970,7 +968,9 @@ function install_database_errors($database, $settings_file) {
 }
 
 /**
- * Form API submit for install_settings form.
+ * Form submission handler for install_settings_form().
+ *
+ * @see install_settings_form_validate()
  */
 function install_settings_form_submit($form, &$form_state) {
   global $install_state;
@@ -1001,7 +1001,7 @@ function install_find_profiles() {
 }
 
 /**
- * Installation task; select which profile to install.
+ * Selects which profile to install.
  *
  * @param $install_state
  *   An array of information about the current installation state. The chosen
@@ -1041,8 +1041,7 @@ function install_select_profile(&$install_state) {
 }
 
 /**
- * Helper function for automatically selecting an installation profile from a
- * list or from a selection passed in via $_POST.
+ * Selects an installation profile from a list or from a $_POST submission.
  */
 function _install_select_profile($profiles) {
   if (sizeof($profiles) == 0) {
@@ -1065,7 +1064,7 @@ function _install_select_profile($profiles) {
 }
 
 /**
- * Form API array definition for the profile selection form.
+ * Form constructor for the profile selection form.
  *
  * @param $form_state
  *   Array of metadata about state of form processing.
@@ -1297,7 +1296,7 @@ function install_already_done_error() {
 }
 
 /**
- * Installation task; load information about the chosen profile.
+ * Loads information about the chosen profile during installation.
  *
  * @param $install_state
  *   An array of information about the current installation state. The loaded
@@ -1316,7 +1315,7 @@ function install_load_profile(&$install_state) {
 }
 
 /**
- * Installation task; perform a full bootstrap of Drupal.
+ * Performs a full bootstrap of Drupal during installation.
  *
  * @param $install_state
  *   An array of information about the current installation state.
@@ -1326,7 +1325,7 @@ function install_bootstrap_full(&$install_state) {
 }
 
 /**
- * Installation task; install required modules via a batch process.
+ * Installs required modules via a batch process.
  *
  * @param $install_state
  *   An array of information about the current installation state.
@@ -1379,7 +1378,7 @@ function install_profile_modules(&$install_state) {
 }
 
 /**
- * Installation task; import languages via a batch process.
+ * Imports languages via a batch process during installation.
  *
  * @param $install_state
  *   An array of information about the current installation state.
@@ -1413,15 +1412,13 @@ function install_import_locales(&$install_state) {
 }
 
 /**
- * Installation task; configure settings for the new site.
+ * Form constructor for a form to configure the new site.
  *
- * @param $form_state
- *   An associative array containing the current state of the form.
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
- *   The form API definition for the site configuration form.
+ * @see install_configure_form_validate()
+ * @see install_configure_form_submit()
  */
 function install_configure_form($form, &$form_state, &$install_state) {
   drupal_set_title(st('Configure site'));
@@ -1487,7 +1484,7 @@ function install_import_locales_remaining(&$install_state) {
 }
 
 /**
- * Installation task; perform final steps and display a 'finished' page.
+ * Finishes importing files at end of installation.
  *
  * @param $install_state
  *   An array of information about the current installation state.
@@ -1674,7 +1671,11 @@ function install_check_requirements($install_state) {
 }
 
 /**
- * Form API array definition for site configuration.
+ * Returns a Form API array definition for site configuration.
+ *
+ * @see install_configure_form()
+ * @see install_configure_form_validate()
+ * @see install_configure_form_submit()
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
@@ -1787,7 +1788,9 @@ function _install_configure_form($form, &$form_state, &$install_state) {
 }
 
 /**
- * Form API validate for the site configuration form.
+ * Form validation handler for install_configure_form().
+ *
+ * @see install_configure_form_submit()
  */
 function install_configure_form_validate($form, &$form_state) {
   if ($error = user_validate_name($form_state['values']['account']['name'])) {
@@ -1802,7 +1805,9 @@ function install_configure_form_validate($form, &$form_state) {
 }
 
 /**
- * Form API submit for the site configuration form.
+ * Form submission handler for install_configure_form().
+ *
+ * @see install_configure_form_validate()
  */
 function install_configure_form_submit($form, &$form_state) {
   global $user;
