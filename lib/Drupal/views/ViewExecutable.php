@@ -516,10 +516,6 @@ class ViewExecutable {
     if (!empty($this->pager)) {
       return $this->pager->use_pager();
     }
-    // Maybe other code stores something on the view object, so allow that.
-    else {
-      $this->{$name} = $value;
-    }
   }
 
   /**
