@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Module;
 
 /**
- * Test module enabling/disabling functionality.
+ * Tests functionality for enabling and disabling modules.
  */
 class EnableDisableTest extends ModuleTestBase {
   public static function getInfo() {
@@ -20,7 +20,7 @@ class EnableDisableTest extends ModuleTestBase {
   }
 
   /**
-   * Test that all core modules can be enabled, disabled and uninstalled.
+   * Tests that all core modules can be enabled, disabled and uninstalled.
    */
   function testEnableDisable() {
     // Try to enable, disable and uninstall all core modules, unless they are
@@ -168,7 +168,7 @@ class EnableDisableTest extends ModuleTestBase {
   /**
    * Disables and uninstalls a module and asserts that it was done correctly.
    *
-   * @param $module
+   * @param string $module
    *   The name of the module to disable and uninstall.
    */
   function assertSuccessfulDisableAndUninstall($module) {

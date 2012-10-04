@@ -715,16 +715,19 @@ function list_themes($refresh = FALSE) {
 }
 
 /**
- * Find all the base themes for the specified theme.
+ * Finds all the base themes for the specified theme.
  *
- * Themes can inherit templates and function implementations from earlier themes.
+ * Themes can inherit templates and function implementations from earlier
+ * themes.
  *
  * @param $themes
  *   An array of available themes.
  * @param $key
  *   The name of the theme whose base we are looking for.
  * @param $used_keys
- *   A recursion parameter preventing endless loops.
+ *   (optional) A recursion parameter preventing endless loops. Defaults to
+ *   NULL.
+ *
  * @return
  *   Returns an array of all of the theme's ancestors; the first element's value
  *   will be NULL if an error occurred.

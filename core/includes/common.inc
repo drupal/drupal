@@ -7160,11 +7160,11 @@ function drupal_get_filetransfer_info() {
  * Instantiates and statically caches the correct class for a queue.
  *
  * The following variables can be set by variable_set or $conf overrides:
- * - queue_class_$name: the class to be used for the queue $name.
- * - queue_default_class: the class to use when queue_class_$name is not
+ * - queue_class_$name: The class to be used for the queue $name.
+ * - queue_default_class: The class to use when queue_class_$name is not
  *   defined. Defaults to Drupal\Core\Queue\System, a reliable backend using
  *   SQL.
- * - queue_default_reliable_class: the class to use when queue_class_$name is
+ * - queue_default_reliable_class: The class to use when queue_class_$name is
  *   not defined and the queue_default_class is not reliable. Defaults to
  *   Drupal\Core\Queue\System.
  *

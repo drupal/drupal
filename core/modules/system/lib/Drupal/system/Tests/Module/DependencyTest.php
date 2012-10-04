@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Module;
 
 /**
- * Test module dependency functionality.
+ * Tests module dependency functionality.
  */
 class DependencyTest extends ModuleTestBase {
   public static function getInfo() {
@@ -20,7 +20,7 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Attempt to enable translation module without language enabled.
+   * Attempts to enable translation module without language enabled.
    */
   function testEnableWithoutDependency() {
     // Attempt to enable content translation without language enabled.
@@ -44,7 +44,7 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Attempt to enable a module with a missing dependency.
+   * Attempts to enable a module with a missing dependency.
    */
   function testMissingModules() {
     // Test that the system_dependencies_test module is marked

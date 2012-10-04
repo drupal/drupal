@@ -37,7 +37,7 @@ class UuidUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test generating a UUID.
+   * Tests generating a UUID.
    */
   public function testGenerateUuid() {
     $uuid = $this->uuid->generate();
@@ -45,7 +45,7 @@ class UuidUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test that generated UUIDs are unique.
+   * Tests that generated UUIDs are unique.
    */
   public function testUuidIsUnique() {
     $uuid1 = $this->uuid->generate();
@@ -54,7 +54,7 @@ class UuidUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test UUID validation.
+   * Tests UUID validation.
    */
   function testUuidValidation() {
     // These valid UUIDs.

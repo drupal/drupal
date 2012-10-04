@@ -13,7 +13,7 @@ namespace Drupal\Core\Mail;
 class PhpMail implements MailInterface {
 
   /**
-   * Concatenates and wrap the e-mail body for plain-text mails.
+   * Concatenates and wraps the e-mail body for plain-text mails.
    *
    * @param array $message
    *   A message array, as described in hook_mail_alter().

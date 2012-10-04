@@ -11,7 +11,19 @@
  */
 
 /**
- * Retrieve settings for the GD2 toolkit.
+ * Image toolkit callback: Returns GD-specific image toolkit settings.
+ *
+ * This function verifies that the GD PHP extension is installed.  If it is not,
+ * a form error message is set, informing the user about the missing extension.
+ *
+ * The form elements returned by this function are integrated into the form
+ * built by system_image_toolkit_settings().
+ *
+ * @return
+ *   An array of Form API elements to be added to the form.
+ *
+ * @see hook_image_toolkits()
+ * @see system_image_toolkit_settings()
  */
 function image_gd_settings() {
   if (image_gd_check_settings()) {
@@ -38,10 +50,14 @@ function image_gd_settings() {
 }
 
 /**
- * Verify GD2 settings (that the right version is actually installed).
+ * Verifies GD2 settings (that the right version is actually installed).
  *
  * @return
- *   A boolean indicating if the GD toolkit is available on this machine.
+ *   A Boolean indicating whether the correct version of the GD toolkit is
+ *   available on this machine.
+ *
+ * @see image_gd_settings()
+ * @see system_image_toolkits()
  */
 function image_gd_check_settings() {
   if ($check = get_extension_funcs('gd')) {
@@ -54,7 +70,7 @@ function image_gd_check_settings() {
 }
 
 /**
- * Scale an image to the specified size using GD.
+ * Image toolkit callback: Scales an image to the specified size using GD.
  *
  * @param $image
  *   An image object. The $image->resource, $image->info['width'], and
@@ -63,9 +79,11 @@ function image_gd_check_settings() {
  *   The new width of the resized image, in pixels.
  * @param $height
  *   The new height of the resized image, in pixels.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
+ * @see hook_image_toolkits()
  * @see image_resize()
  */
 function image_gd_resize(stdClass $image, $width, $height) {
@@ -84,7 +102,7 @@ function image_gd_resize(stdClass $image, $width, $height) {
 }
 
 /**
- * Rotate an image the given number of degrees.
+ * Image toolkit callback: Rotates an image a specified number of degrees.
  *
  * @param $image
  *   An image object. The $image->resource, $image->info['width'], and
@@ -92,11 +110,12 @@ function image_gd_resize(stdClass $image, $width, $height) {
  * @param $degrees
  *   The number of (clockwise) degrees to rotate the image.
  * @param $background
- *   An hexadecimal integer specifying the background color to use for the
- *   uncovered area of the image after the rotation. E.g. 0x000000 for black,
- *   0xff00ff for magenta, and 0xffffff for white. For images that support
- *   transparency, this will default to transparent. Otherwise it will
+ *   (optional) A hexadecimal integer specifying the background color to use
+ *   for the uncovered area of the image after the rotation. E.g. 0x000000 for
+ *   black, 0xff00ff for magenta, and 0xffffff for white. For images that
+ *   support transparency, this will default to transparent. Otherwise it will
  *   be white.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
@@ -154,7 +173,7 @@ function image_gd_rotate(stdClass $image, $degrees, $background = NULL) {
 }
 
 /**
- * Crop an image using the GD toolkit.
+ * Image toolkit callback: Crops an image using the GD toolkit.
  *
  * @param $image
  *   An image object. The $image->resource, $image->info['width'], and
@@ -167,9 +186,11 @@ function image_gd_rotate(stdClass $image, $degrees, $background = NULL) {
  *   The width of the cropped area, in pixels.
  * @param $height
  *   The height of the cropped area, in pixels.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
+ * @see hook_image_toolkits()
  * @see image_crop()
  */
 function image_gd_crop(stdClass $image, $x, $y, $width, $height) {
@@ -188,15 +209,17 @@ function image_gd_crop(stdClass $image, $x, $y, $width, $height) {
 }
 
 /**
- * Convert an image resource to grayscale.
+ * Image toolkit callback: Converts an image to grayscale using the GD toolkit.
  *
  * Note that transparent GIFs loose transparency when desaturated.
  *
  * @param $image
  *   An image object. The $image->resource value will be modified by this call.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
+ * @see hook_image_toolkits()
  * @see image_desaturate()
  */
 function image_gd_desaturate(stdClass $image) {
@@ -210,13 +233,15 @@ function image_gd_desaturate(stdClass $image) {
 }
 
 /**
- * GD helper function to create an image resource from a file.
+ * Image toolkit callback: Creates a GD image resource from a file.
  *
  * @param $image
  *   An image object. The $image->resource value will populated by this call.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
+ * @see hook_image_toolkits()
  * @see image_load()
  */
 function image_gd_load(stdClass $image) {
@@ -238,15 +263,17 @@ function image_gd_load(stdClass $image) {
 }
 
 /**
- * GD helper to write an image resource to a destination file.
+ * Image toolkit callback: Writes an image resource to a destination file.
  *
  * @param $image
  *   An image object.
  * @param $destination
  *   A string file URI or path where the image should be saved.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
+ * @see hook_image_toolkits()
  * @see image_save()
  */
 function image_gd_save(stdClass $image, $destination) {
@@ -287,7 +314,7 @@ function image_gd_save(stdClass $image, $destination) {
 }
 
 /**
- * Create a truecolor image preserving transparency from a provided image.
+ * Creates a truecolor image preserving transparency from a provided image.
  *
  * @param $image
  *   An image object.
@@ -295,6 +322,7 @@ function image_gd_save(stdClass $image, $destination) {
  *   The new width of the new image, in pixels.
  * @param $height
  *   The new height of the new image, in pixels.
+ *
  * @return
  *   A GD image handle.
  */
@@ -331,9 +359,11 @@ function image_gd_create_tmp(stdClass $image, $width, $height) {
 
 /**
  * Get details about an image.
+ * Image toolkit callback: Retrieves details about an image.
  *
  * @param $image
  *   An image object.
+ *
  * @return
  *   FALSE, if the file could not be found or is not an image. Otherwise, a
  *   keyed array containing information about the image:
@@ -342,6 +372,7 @@ function image_gd_create_tmp(stdClass $image, $width, $height) {
  *   - "extension": Commonly used file extension for the image.
  *   - "mime_type": MIME type ('image/jpeg', 'image/gif', 'image/png').
  *
+ * @see hook_image_toolkits()
  * @see image_get_info()
  */
 function image_gd_get_info(stdClass $image) {

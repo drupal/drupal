@@ -15,10 +15,10 @@ namespace Drupal\Core\Queue;
  */
 interface QueueInterface {
   /**
-   * Start working with a queue.
+   * Initializes a new queue object.
    *
    * @param $name
-   *   Arbitrary string. The name of the queue to work with.
+   *   An arbitrary string. The name of the queue to work with.
    */
   public function __construct($name);
 
