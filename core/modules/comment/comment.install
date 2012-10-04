@@ -105,12 +105,14 @@ function comment_schema() {
       ),
       'nid' => array(
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The {node}.nid to which this comment is a reply.',
       ),
       'uid' => array(
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The {users}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
@@ -234,6 +236,7 @@ function comment_schema() {
       ),
       'last_comment_uid' => array(
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The user ID of the latest author to post a comment on this node, from {comment}.uid.',
@@ -314,6 +317,54 @@ function comment_update_8001() {
   else {
     db_add_field('comment', 'uuid', $spec, $keys);
   }
+}
+
+/**
+ * Make *id fields unsigned.
+ */
+function comment_update_8002() {
+  db_drop_index('comment', 'comment_num_new');
+  db_drop_index('comment', 'comment_nid_langcode');
+  db_change_field('comment', 'nid', 'nid',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'The {node}.nid to which this comment is a reply.',
+    ),
+    array('indexes' => array(
+      'comment_num_new' => array('nid', 'status', 'created', 'cid', 'thread'),
+      'comment_nid_langcode' => array('nid', 'langcode'),
+    ))
+  );
+  db_drop_index('comment', 'comment_uid');
+  db_change_field('comment', 'uid', 'uid',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'The {users}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
+    ),
+    array('indexes' => array(
+      'comment_uid' => array('uid'),
+    ))
+  );
+
+  db_drop_index('node_comment_statistics', 'last_comment_uid');
+  db_change_field('node_comment_statistics', 'last_comment_uid', 'last_comment_uid',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'The user ID of the latest author to post a comment on this node, from {comment}.uid.',
+    ),
+    array('indexes' => array(
+      'last_comment_uid' => array('last_comment_uid'),
+    ))
+  );
 }
 
 /**

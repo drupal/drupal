@@ -79,6 +79,7 @@ function tracker_schema() {
       'uid' => array(
         'description' => 'The {users}.uid of the node author or commenter.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -129,6 +130,26 @@ function tracker_update_8000() {
   update_variables_to_config('tracker.settings', array(
     'tracker_batch_size' => 'cron_index_limit',
   ));
+}
+
+/**
+ * Make *id fields unsigned.
+ */
+function tracker_update_8001() {
+  db_drop_primary_key('tracker_user');
+  db_drop_index('tracker_user', 'tracker');
+  db_change_field('tracker_user', 'uid', 'uid',
+    array(
+      'description' => 'The {users}.uid of the node author or commenter.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array('primary key' => array('nid', 'uid'), 'indexes' => array(
+      'tracker' => array('uid', 'published', 'changed'),
+    ))
+  );
 }
 
 /**

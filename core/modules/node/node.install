@@ -57,6 +57,7 @@ function node_schema() {
       'uid' => array(
         'description' => 'The {users}.uid that owns this node; initially, this is the user that created it.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -215,6 +216,7 @@ function node_schema() {
       'uid' => array(
         'description' => 'The {users}.uid that created this version.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -410,12 +412,14 @@ function node_schema() {
       'uid' => array(
         'description' => 'The {users}.uid that read the {node} nid.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'nid' => array(
         'description' => 'The {node}.nid that was read.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -600,6 +604,63 @@ function node_update_8004() {
   else {
     db_add_field('node', 'uuid', $spec, $keys);
   }
+}
+
+/**
+ * Make *id fields unsigned.
+ */
+function node_update_8005() {
+  db_drop_index('node', 'uid');
+  db_change_field('node', 'uid', 'uid',
+    array(
+      'description' => 'The {users}.uid that owns this node; initially, this is the user that created it.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array('indexes' => array(
+      'uid' => array('uid'),
+    ))
+  );
+
+  db_drop_index('node_revision', 'uid');
+  db_change_field('node_revision', 'uid', 'uid',
+    array(
+      'description' => 'The {users}.uid that created this version.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array('indexes' => array(
+      'uid' => array('uid'),
+    ))
+  );
+
+  db_drop_primary_key('history');
+  db_drop_index('history', 'nid');
+  db_change_field('history', 'uid', 'uid',
+    array(
+      'description' => 'The {users}.uid that read the {node} nid.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    )
+  );
+  db_change_field('history', 'nid', 'nid',
+    array(
+      'description' => 'The {node}.nid that was read.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array('primary key' => array('uid', 'nid'), 'indexes' => array(
+      'nid' => array('nid'),
+    ))
+  );
 }
 
 /**

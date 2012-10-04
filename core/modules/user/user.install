@@ -20,6 +20,7 @@ function user_schema() {
       ),
       'uid' => array(
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => "User's {users}.uid.",
@@ -565,6 +566,21 @@ function user_update_8007() {
     'user_failed_login_user_limit' => 'user_limit',
     'user_failed_login_user_window' => 'user_window',
   ));
+}
+
+/**
+ * Make *id fields unsigned.
+ */
+function user_update_8008() {
+  db_change_field('authmap', 'uid', 'uid',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => "User's {users}.uid.",
+    )
+  );
 }
 
 /**
