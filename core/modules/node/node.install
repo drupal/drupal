@@ -454,6 +454,9 @@ function node_install() {
 
 /**
  * Implements hook_uninstall().
+ *
+ * @see node_ranking()
+ * @see _node_rankings()
  */
 function node_uninstall() {
   // Delete node type variables.
@@ -473,7 +476,6 @@ function node_uninstall() {
   }
 
   // Delete node search ranking variables.
-  // @see node_ranking(), _node_rankings()
   variable_del('node_rank_relevance');
   variable_del('node_rank_sticky');
   variable_del('node_rank_promote');

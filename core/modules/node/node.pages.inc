@@ -14,6 +14,12 @@ use Drupal\node\Node;
 /**
  * Page callback: Presents the node editing form.
  *
+ * @param object $node
+ *   A node object.
+ *
+ * @return array
+ *   A form array as expected by drupal_render().
+ *
  * @see node_menu()
  */
 function node_page_edit($node) {
@@ -25,6 +31,11 @@ function node_page_edit($node) {
  * Page callback: Displays add content links for available content types.
  *
  * Redirects to node/add/[type] if only one content type is available.
+ *
+ * @return array
+ *   A render array for a list of the node types that can be added; however, if
+ *   there is only one node type defined for the site, the function redirects
+ *   to the node add page for that one node type and does not return at all.
  *
  * @see node_menu()
  */
@@ -51,7 +62,11 @@ function node_add_page() {
  *   An associative array containing:
  *   - content: An array of content types.
  *
+ * @return string
+ *   An HTML-formatted string.
+ *
  * @see node_add_page()
+ *
  * @ingroup themeable
  */
 function theme_node_add_list($variables) {
@@ -79,8 +94,8 @@ function theme_node_add_list($variables) {
  * @param $node_type
  *   The node type object for the submitted node.
  *
- * @return
- *   Returns a node submission form.
+ * @return array
+ *   A node submission form.
  *
  * @see node_menu()
  */
@@ -107,7 +122,7 @@ function node_add($node_type) {
  *   The node to preview.
  *
  * @return
- *   Themed node preview.
+ *   An HTML-formatted string of a node preview.
  *
  * @see node_form_build_preview()
  */
@@ -155,6 +170,7 @@ function node_preview(Node $node) {
  *   - node: The node entity which is being previewed.
  *
  * @see NodeFormController::preview()
+ *
  * @ingroup themeable
  */
 function theme_node_preview($variables) {
@@ -187,6 +203,12 @@ function theme_node_preview($variables) {
 /**
  * Page callback: Form constructor for node deletion confirmation form.
  *
+ * @param object $node
+ *   A node object.
+ *
+ * @return array
+ *   A form array.
+ *
  * @see node_menu()
  */
 function node_delete_confirm($form, &$form_state, $node) {
@@ -217,6 +239,12 @@ function node_delete_confirm_submit($form, &$form_state) {
 
 /**
  * Page callback: Generates an overview table of older revisions of a node.
+ *
+ * @param object $node
+ *   A node object.
+ *
+ * @return array
+ *   An array as expected by drupal_render().
  *
  * @see node_menu()
  */
@@ -276,6 +304,12 @@ function node_revision_overview($node) {
  *
  * This form prevents against CSRF attacks.
  *
+ * @param int $node_revision
+ *   The node revision ID.
+ *
+ * @return array
+ *   An array as expected by drupal_render().
+ *
  * @see node_menu()
  * @see node_revision_revert_confirm_submit()
  */
@@ -310,6 +344,12 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
  * Page callback: Form constructor for the revision deletion confirmation form.
  *
  * This form prevents against CSRF attacks.
+ *
+ * @param $node_revision
+ *   The node revision ID.
+ *
+ * @return
+ *   An array as expected by drupal_render().
  *
  * @see node_menu()
  * @see node_revision_delete_confirm_submit()

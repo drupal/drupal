@@ -287,6 +287,9 @@ function node_field_display_node_alter(&$display, $context) {
  *
  * @param Drupal\node\Node $node
  *   A node entity.
+ *
+ * @return array
+ *   An array with 'path' as the key and Node ID as its value.
  */
 function node_uri(Node $node) {
   return array(
@@ -360,6 +363,13 @@ function node_tag_new(Node $node) {
 
 /**
  * Retrieves the timestamp for the current user's last view of a specified node.
+ *
+ * @param int $nid
+ *   A node ID.
+ *
+ * @return int
+ *   If a node has been previously viewed by the user, the timestamp in seconds
+ *   of when the last view occurred; otherwise, zero.
  */
 function node_last_viewed($nid) {
   global $user;
@@ -411,6 +421,7 @@ function node_mark($nid, $timestamp) {
  * @return
  *   An array of node types, as objects, keyed by the type.
  *
+ * @see _node_types_build()
  * @see node_type_load()
  */
 function node_type_get_types() {
@@ -445,6 +456,8 @@ function node_type_get_base($type) {
  *
  * @return
  *   An array of node type labels, keyed by the node type name.
+ *
+ * @see _node_types_build()
  */
 function node_type_get_names() {
   return _node_types_build()->names;
@@ -784,7 +797,8 @@ function node_type_update_nodes($old_type, $type) {
  * until node_types_rebuild() is called.
  *
  * @param $rebuild
- *  TRUE to rebuild node types. Equivalent to calling node_types_rebuild().
+ *  (optional) TRUE to rebuild node types. Equivalent to calling
+ *  node_types_rebuild(). Defaults to FALSE.
  *
  * @return
  *   An object with two properties:
@@ -897,6 +911,8 @@ function node_type_cache_reset() {
  *
  * @return
  *   A node type object, with missing values in $info set to their defaults.
+ *
+ * @see hook_node_ifo()
  */
 function node_type_set_defaults($info = array()) {
   $info = (array) $info;
@@ -999,7 +1015,8 @@ function node_hook($type, $hook) {
  * @param $hook
  *   A string containing the name of the hook.
  * @param $a2, $a3, $a4
- *   Arguments to pass on to the hook, after the $node argument.
+ *   (optional) Arguments to pass on to the hook, after the $node argument. All
+ *   default to NULL.
  *
  * @return
  *   The returned value of the invoked hook.
@@ -1020,7 +1037,8 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * @param array $nids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
- *   (optional) Whether to reset the internal node_load() cache.
+ *   (optional) Whether to reset the internal node_load() cache.  Defaults to
+ *   FALSE.
  *
  * @return array
  *   An array of node entities indexed by nid.
@@ -1038,7 +1056,8 @@ function node_load_multiple(array $nids = NULL, $reset = FALSE) {
  * @param int $nid
  *   The node ID.
  * @param bool $reset
- *   (optional) Whether to reset the node_load_multiple() cache.
+ *   (optional) Whether to reset the node_load_multiple() cache. Defaults to
+ *   FALSE.
  *
  * @return Drupal\node\Node|false
  *   A fully-populated node entity, or FALSE if the node is not found.
@@ -1062,6 +1081,12 @@ function node_revision_load($vid = NULL) {
 
 /**
  * Prepares a node for saving by populating the author and creation date.
+ *
+ * @param object $node
+ *   A node object.
+ *
+ * @return object
+ *   An updated node object.
  */
 function node_submit($node) {
   global $user;
@@ -1129,7 +1154,7 @@ function node_delete_multiple($nids) {
  *   The revision ID to delete.
  *
  * @return
- *   TRUE if the revision deletion was successful.
+ *   TRUE if the revision deletion was successful; otherwise, FALSE.
  */
 function node_revision_delete($revision_id) {
   if ($revision = node_revision_load($revision_id)) {
@@ -1295,7 +1320,7 @@ function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
  *   A node entity.
  * @param $message
  *   (optional) A flag which sets a page title relevant to the revision being
- *   viewed.
+ *   viewed.  Default is FALSE.
  *
  * @return
  *   A $page element suitable for use by drupal_render().
@@ -1764,10 +1789,11 @@ function theme_node_search_admin($variables) {
  * @param object $account
  *   (optional) A user object representing the user for whom the operation is
  *   to be performed. Determines access for a user other than the current user.
+ *   Defaults to NULL.
  * @param $langcode
  *   (optional) Language code for the variant of the node. Different language
  *   variants might have different permissions associated. If NULL, the
- *   original langcode of the node is used.
+ *   original langcode of the node is used. Defaults to NULL.
  *
  * @return
  *   TRUE if the operation may be performed, FALSE otherwise.
@@ -2050,6 +2076,9 @@ function node_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  * @param $type
  *   The node type object.
  *
+ * @return string
+ *   An unsanitized string that is the title of the node type edit form.
+ *
  * @see node_menu()
  */
 function node_type_page_title($type) {
@@ -2061,6 +2090,9 @@ function node_type_page_title($type) {
  *
  * @param Drupal\node\Node $node
  *   The node entity.
+ *
+ * @return
+ *   An unsanitized string that is the title of the node.
  *
  * @see node_menu()
  */
@@ -2086,6 +2118,9 @@ function node_last_changed($nid) {
  *
  * @param Drupal\node\Node $node
  *   The node entity.
+ *
+ * @return
+ *   An associative array keyed by node revision number.
  */
 function node_revision_list(Node $node) {
   $revisions = array();
@@ -2440,6 +2475,9 @@ function node_block_list_alter(&$blocks) {
  *   @link http://cyber.law.harvard.edu/rss/rss.html RSS 2.0 Specification. @endlink
  *   The link should be an absolute URL.
  *
+ * @return Symfony\Component\HttpFoundation\Response
+ *   A response object.
+ *
  * @see node_menu()
  */
 function node_feed($nids = FALSE, $channel = array()) {
@@ -2545,6 +2583,9 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcod
 /**
  * Page callback: Generates a listing of promoted nodes.
  *
+ * @return array
+ *   An array in the format expected by drupal_render().
+ *
  * @see node_menu()
  */
 function node_page_default() {
@@ -2600,6 +2641,9 @@ function node_page_default() {
  *
  * @param Drupal\node\Node $node
  *   The node entity.
+ *
+ * @return
+ *   A page array suitable for use by drupal_render().
  *
  * @see node_menu()
  */
@@ -2908,10 +2952,11 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * @param $account
  *   (optional) A user object representing the user for whom the operation is to
  *   be performed. Determines access for a user other than the current user.
+ *   Defaults to NULL.
  * @param $langcode
  *   (optional) Language code for the variant of the node. Different language
  *   variants might have different permissions associated. If NULL, the
- *   original langcode of the node is used.
+ *   original langcode of the node is used. Defaults to NULL.
  *
  * @return
  *   TRUE if the operation may be performed, FALSE otherwise.
@@ -3123,7 +3168,7 @@ function node_permissions_get_configured_types() {
  *   The operation that the user is trying to perform.
  * @param $account
  *   (optional) The user object for the user performing the operation. If
- *   omitted, the current user is used.
+ *   omitted, the current user is used.  Defaults to NULL.
  *
  * @return
  *   An associative array in which the keys are realms, and the values are
@@ -3157,7 +3202,7 @@ function node_access_grants($op, $account = NULL) {
  *
  * @param $account
  *   (optional) The user object for the user whose access is being checked. If
- *   omitted, the current user is used.
+ *   omitted, the current user is used. Defaults to NULL.
  *
  * @return
  *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
@@ -3242,6 +3287,9 @@ function node_query_entity_field_access_alter(AlterableInterface $query) {
  *   Either 'node' or 'entity' depending on what sort of query it is. See
  *   node_query_node_access_alter() and node_query_entity_field_access_alter()
  *   for more.
+ *
+ * @see node_query_node_access_alter()
+ * @see node_query_entity_field_access_alter()
  */
 function _node_query_node_access_alter($query, $type) {
   global $user;
@@ -3420,11 +3468,12 @@ function node_access_acquire_grants(Node $node, $delete = TRUE) {
  *   is a module-defined id to define grant privileges. each grant_* field
  *   is a boolean value.
  * @param $realm
- *   (optional) If provided, read/write grants for that realm only.
+ *   (optional) If provided, read/write grants for that realm only. Defaults to
+ *   NULL.
  * @param $delete
  *   (optional) If false, does not delete records. This is only for optimization
  *   purposes, and assumes the caller has already performed a mass delete of
- *   some form.
+ *   some form. Defaults to TRUE.
  */
 function _node_access_write_grants(Node $node, $grants, $realm = NULL, $delete = TRUE) {
   if ($delete) {
@@ -3499,7 +3548,8 @@ function node_access_needs_rebuild($rebuild = NULL) {
  *   has a large number of nodes). hook_update_N() and any form submit handler
  *   are safe contexts to use the 'batch mode'. Less decidable cases (such as
  *   calls from hook_user(), hook_taxonomy(), etc.) might consider using the
- *   non-batch mode.
+ *   non-batch mode. Defaults to FALSE.
+ *
  * @see node_access_needs_rebuild()
  */
 function node_access_rebuild($batch_mode = FALSE) {
@@ -3559,6 +3609,9 @@ function node_access_rebuild($batch_mode = FALSE) {
  * This is a multistep operation : we go through all nodes by packs of 20.
  * The batch processing engine interrupts processing and sends progress
  * feedback after 1 second execution time.
+ *
+ * @param array $context
+ *   An array of contextual key/value information for rebuild batch process.
  */
 function _node_access_rebuild_batch_operation(&$context) {
   if (empty($context['sandbox'])) {
@@ -3590,6 +3643,13 @@ function _node_access_rebuild_batch_operation(&$context) {
 
 /**
  * Post-processing for node_access_rebuild_batch.
+ *
+ * @param bool $success
+ *   A boolean indicating whether the re-build process has completed.
+ * @param array $results
+ *   An array of results information.
+ * @param array $operations
+ *   An array of function calls (not used in this function).
  */
 function _node_access_rebuild_batch_finished($success, $results, $operations) {
   if ($success) {
@@ -3913,6 +3973,12 @@ function node_assign_owner_action_submit($form, $form_state) {
 
 /**
  * Generates settings form for node_unpublish_by_keyword_action().
+ *
+ * @param array $context
+ *   Array of additional information about what triggered this action.
+ *
+ * @return array
+ *   A form array.
  */
 function node_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(

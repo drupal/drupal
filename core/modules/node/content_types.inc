@@ -8,6 +8,9 @@
 /**
  * Page callback: Displays the content type admin overview page.
  *
+ * @return array
+ *   An array as expected by drupal_render().
+ *
  * @see node_menu()
  */
 function node_overview_types() {
@@ -62,6 +65,9 @@ function node_overview_types() {
  *   - name: The human-readable name of the content type.
  *   - type: An object containing the 'type' (machine name) and 'description' of
  *     the content type.
+ *
+ * @return string
+ *   An HTML-formatted string of the description for this node type.
  *
  * @ingroup themeable
  */
@@ -278,6 +284,12 @@ function node_type_form($form, &$form_state, $type = NULL) {
 
 /**
  * Helper function for teaser length choices.
+ *
+ * @param int $length
+ *   An integer representing the desired length of the teaser string.
+ *
+ * @return string
+ *   A string that reprents the teaser length options.
  */
 function _node_characters($length) {
   return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
