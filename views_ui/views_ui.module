@@ -534,14 +534,13 @@ function views_ui_get_form_wizard_instance($wizard) {
 }
 
 /**
- * Implements hook_views_plugins_alter().
+ * Implements hook_views_plugins_display_alter().
  */
-function views_ui_views_plugins_alter(&$plugins) {
-  // @todo This currently does not work, investigate annotation alters.
+function views_ui_views_plugins_display_alter(&$plugins) {
   // Attach contextual links to each display plugin. The links will point to
   // paths underneath "admin/structure/views/view/{$view->storage->name}" (i.e., paths
   // for editing and performing other contextual actions on the view).
-  foreach ($plugins['display'] as &$display) {
+  foreach ($plugins as &$display) {
     $display['contextual links']['views_ui'] = array(
       'parent path' => 'admin/structure/views/view',
       'argument properties' => array('name'),

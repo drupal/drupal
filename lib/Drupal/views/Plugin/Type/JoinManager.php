@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 
@@ -28,7 +29,7 @@ class JoinManager extends PluginManagerBase {
     // @todo Remove this hack in http://drupal.org/node/1708404.
     views_init();
 
-    $this->discovery = new CacheDecorator(new AnnotatedClassDiscovery('views', 'join'), 'views:join', 'views_info');
+    $this->discovery = new CacheDecorator(new AlterDecorator(new AnnotatedClassDiscovery('views', 'join'), 'views_plugins_join'), 'views:join', 'views_info');
     $this->factory = new DefaultFactory($this);
 
     $this->coreModules = views_core_modules();

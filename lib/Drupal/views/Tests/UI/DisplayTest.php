@@ -145,4 +145,21 @@ class DisplayTest extends UITestBase {
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after cloning the new display appears in the UI');
   }
 
+  /**
+   * Tests views_ui_views_plugins_display_alter is altering plugin definitions.
+   */
+  public function testDisplayPluginsAlter() {
+    $definitions = drupal_container()->get('plugin.manager.views.display')->getDefinitions();
+
+    $expected = array(
+      'parent path' => 'admin/structure/views/view',
+      'argument properties' => array('name'),
+    );
+
+    // Test the expected views_ui array exists on each definition.
+    foreach ($definitions as $definition) {
+      $this->assertIdentical($definition['contextual links']['views_ui'], $expected, 'Expected views_ui array found in plugin definition.');
+    }
+  }
+
 }

@@ -937,7 +937,7 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
     if (!isset($plugin['contextual_links_locations'])) {
       $plugin['contextual_links_locations'] = array('view');
     }
-    elseif ($plugin['contextual_links_locations'] = array() || $plugin['contextual_links_locations'] == array('')) {
+    elseif ($plugin['contextual_links_locations'] == array() || $plugin['contextual_links_locations'] == array('')) {
       $plugin['contextual_links_locations'] = array();
     }
     else {
@@ -954,14 +954,15 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
         if (!empty($link['argument properties'])) {
           foreach ($link['argument properties'] as $property) {
             // If the plugin is trying to create an invalid contextual link
-            // (for example, "path/to/{$view->property}", where $view->property
-            // does not exist), we cannot construct the link, so we skip it.
-            if (!property_exists($view, $property)) {
+            // (for example, "path/to/{$view->storage->property}", where
+            // $view->storage->{property} does not exist), we cannot construct
+            // the link, so we skip it.
+            if (!property_exists($view->storage, $property)) {
               $valid = FALSE;
               break;
             }
             else {
-              $args[] = $view->{$property};
+              $args[] = $view->storage->{$property};
             }
           }
         }
