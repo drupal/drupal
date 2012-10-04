@@ -1648,7 +1648,7 @@ function hook_mail_alter(&$message) {
  * purposes of hook_module_implements_alter(), these variants are treated as
  * a single hook. Thus, to ensure that your implementation of
  * hook_form_FORM_ID_alter() is called at the right time, you will have to
- * have to change the order of hook_form_alter() implementation in
+ * change the order of hook_form_alter() implementation in
  * hook_module_implements_alter().
  *
  * @param $implementations
