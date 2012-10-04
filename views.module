@@ -721,7 +721,7 @@ function views_block_info() {
   $views = views_get_all_views();
   foreach ($views as $view) {
     // disabled views get nothing.
-    if (!empty($view->disabled)) {
+    if (!$view->isEnabled()) {
       continue;
     }
 
@@ -1543,7 +1543,7 @@ function views_get_applicable_views($type) {
 
   foreach ($views as $view) {
     // Skip disabled views.
-    if (!empty($view->disabled)) {
+    if (!$view->isEnabled()) {
       continue;
     }
 

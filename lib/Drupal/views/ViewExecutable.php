@@ -1522,7 +1522,7 @@ class ViewExecutable {
    */
   public function access($displays = NULL, $account = NULL) {
     // Noone should have access to disabled views.
-    if (!empty($this->storage->disabled)) {
+    if (!$this->storage->isEnabled()) {
       return FALSE;
     }
 
