@@ -1561,7 +1561,7 @@ function views_get_applicable_views($type) {
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.
         $v = $executable->cloneView();
-        if ($v->setDisplay($id) && $v->display_handler->getOption('enabled')) {
+        if ($v->setDisplay($id) && $v->display_handler->isEnabled()) {
           $result[] = array($v, $id);
         }
         // In PHP 4.4.7 and presumably earlier, if we do not unset $v

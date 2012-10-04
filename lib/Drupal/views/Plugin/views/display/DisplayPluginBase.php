@@ -248,6 +248,16 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
+   * Whether the display is enabled.
+   *
+   * @return bool
+   *   Returns TRUE if the display is marked as enabled, else FALSE.
+   */
+  public function isEnabled() {
+    return (bool) $this->getOption('enabled');
+  }
+
+  /**
    * Whether the display allows the use of a pager or not.
    *
    * @return bool

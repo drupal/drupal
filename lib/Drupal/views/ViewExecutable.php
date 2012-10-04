@@ -1169,7 +1169,7 @@ class ViewExecutable {
     }
 
     // Don't allow to use deactivated displays, but display them on the live preview.
-    if (!$this->display_handler->getOption('enabled') && empty($this->live_preview)) {
+    if (!$this->display_handler->isEnabled() && empty($this->live_preview)) {
       $this->build_info['fail'] = TRUE;
       return FALSE;
     }

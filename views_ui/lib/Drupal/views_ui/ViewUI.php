@@ -171,7 +171,7 @@ class ViewUI extends ViewExecutable {
     // The master display cannot be cloned.
     $is_default = $display['id'] == 'default';
     // @todo: Figure out why getOption doesn't work here.
-    $is_enabled = $this->displayHandlers[$display['id']]->getOption('enabled');
+    $is_enabled = $this->displayHandlers[$display['id']]->isEnabled();
 
     if ($display['id'] != 'default') {
       $build['top']['#theme_wrappers'] = array('container');
@@ -1376,8 +1376,7 @@ class ViewUI extends ViewExecutable {
 
       // Add a text that the display is disabled.
       if (!empty($this->displayHandlers[$display_id])) {
-        $enabled = $this->displayHandlers[$display_id]->getOption('enabled');
-        if (empty($enabled)) {
+        if ($this->displayHandlers[$display_id]->isEnabled()) {
           $form['displays']['settings']['disabled']['#markup'] = t('This display is disabled.');
         }
       }

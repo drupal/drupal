@@ -98,6 +98,12 @@ class DisplayTest extends PluginTestBase {
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/frontpage/edit/display_test_1');
     $this->assertRaw($this->randomString);
+
+    // Test the enable/disable status of a display.
+    $view->display_handler->setOption('enabled', FALSE);
+    $this->assertFalse($view->display_handler->isEnabled(), 'Make sure that isEnabled returns FALSE on a disabled display.');
+    $view->display_handler->setOption('enabled', TRUE);
+    $this->assertTrue($view->display_handler->isEnabled(), 'Make sure that isEnabled returns TRUE on a disabled display.');
   }
 
   /**
