@@ -44,6 +44,7 @@ class HookDiscovery implements DiscoveryInterface {
    * Implements Drupal\Component\Plugin\Discovery\DicoveryInterface::getDefinitions().
    */
   public function getDefinitions() {
+    $definitions = array();
     foreach (module_implements($this->hook) as $module) {
       $function = $module . '_' . $this->hook;
       foreach ($function() as $plugin_id => $definition) {
