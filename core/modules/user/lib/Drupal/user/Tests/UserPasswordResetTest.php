@@ -13,7 +13,6 @@ use Drupal\simpletest\WebTestBase;
  * Tests resetting a user password.
  */
 class UserPasswordResetTest extends WebTestBase {
-  protected $profile = 'standard';
 
   public static function getInfo() {
     return array(
