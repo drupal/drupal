@@ -1,0 +1,51 @@
+# Drupal git normalization
+# @see http://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
+# @see http://drupal.org/node/1542048
+
+# Shorthand for text files.
+# - Treat them as text.
+# - Ensure no CRLF line-endings, neither on checkout nor on checkin.
+# - Detect whitespace errors.
+#   - Exposed by default in `git diff --color` on the CLI.
+#   - Validate with `git diff --check`.
+#   - Deny applying with `git apply --whitespace=error-all`.
+#   - Fix automatically with `git apply --whitespace=fix`.
+[attr]drupaltext    text eol=lf whitespace=blank-at-eol,-blank-at-eof,-space-before-tab,tab-in-indent,tabwidth=2
+
+# Shorthand for binary files.
+# - Do not treat them as text.
+# - Include binary diff in patches instead of "binary files differ."
+[attr]drupalbinary  -text diff
+
+# Auto-detect text files, ensure they use LF.
+*         text=auto eol=lf
+
+# Define text file attributes.
+*.css     drupaltext
+*.engine  drupaltext diff=php
+*.html    drupaltext diff=html
+*.inc     drupaltext diff=php
+*.info    drupaltext
+*.install drupaltext diff=php
+*.js      drupaltext
+*.json    drupaltext
+*.lock    drupaltext
+*.md      drupaltext
+*.module  drupaltext diff=php
+*.php     drupaltext diff=php
+*.po      drupaltext
+*.script  drupaltext
+*.sh      drupaltext diff=php
+*.sql     drupaltext
+*.test    drupaltext diff=php
+*.txt     drupaltext
+*.xml     drupaltext
+*.yml     drupaltext
+
+# Define binary file attributes.
+*.gif     drupalbinary
+*.gz      drupalbinary
+*.ico     drupalbinary
+*.jpg     drupalbinary
+*.png     drupalbinary
+*.phar    drupalbinary
