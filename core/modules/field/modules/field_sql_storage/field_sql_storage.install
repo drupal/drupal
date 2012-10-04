@@ -27,7 +27,7 @@ function field_sql_storage_schema() {
 /**
  * Writes field data directly to SQL storage.
  *
- * @ingroup update-api-7.x-to-8.x
+ * @ingroup update_api
  */
 function _update_8000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
   $table_name = "field_data_{$field_name}";

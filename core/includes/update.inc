@@ -1125,17 +1125,3 @@ function update_variables_to_config($config_name, array $variable_map) {
   // Delete the migrated variables.
   db_delete('variable')->condition('name', array_keys($variable_map), 'IN')->execute();
 }
-
-/**
- * @defgroup update-api-7.x-to-8.x Update versions of API functions
- * @{
- * Functions similar to normal API function but not firing hooks.
- *
- * During update, it is impossible to judge the consequences of firing a hook
- * as it might hit a module not yet updated. So simplified versions of some
- * core APIs are provided.
- */
-
-/**
- * @} End of "defgroup update-api-7.x-to-8.x".
- */
