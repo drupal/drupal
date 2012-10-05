@@ -7,9 +7,6 @@
  */
 Drupal.behaviors.tableHeader = {
   attach: function (context) {
-    if (!$.support.fixedPosition) {
-      return;
-    }
     $(window).one('scroll.TableHeaderInit', {context: context}, tableHeaderInitHandler);
   }
 };
