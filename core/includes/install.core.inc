@@ -943,7 +943,7 @@ function install_verify_completed_task() {
  */
 function install_verify_database_settings() {
   global $databases;
-  if (!empty($databases) && install_verify_pdo()) {
+  if (!empty($databases)) {
     $database = $databases['default']['default'];
     drupal_static_reset('conf_path');
     $settings_file = './' . conf_path(FALSE) . '/settings.php';
@@ -953,18 +953,6 @@ function install_verify_database_settings() {
     }
   }
   return FALSE;
-}
-
-/**
- * Verifies the PDO library.
- */
-function install_verify_pdo() {
-  // PDO was moved to PHP core in 5.2.0, but the old extension (targeting 5.0
-  // and 5.1) is still available from PECL, and can still be built without
-  // errors. To verify that the correct version is in use, we check the
-  // PDO::ATTR_DEFAULT_FETCH_MODE constant, which is not available in the
-  // PECL extension.
-  return extension_loaded('pdo') && defined('PDO::ATTR_DEFAULT_FETCH_MODE');
 }
 
 /**
