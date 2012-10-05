@@ -133,7 +133,7 @@ class EntityListController implements EntityListControllerInterface {
     $operations = $this->getOperations($entity);
     uasort($operations, 'drupal_sort_weight');
     $build = array(
-      '#theme' => 'links',
+      '#type' => 'operations',
       '#links' => $operations,
     );
     return $build;
