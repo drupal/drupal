@@ -466,7 +466,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       if (isset($info['template'])) {
         // Prepend the current theming path when none is set.
         if (!isset($info['path'])) {
-          $result[$hook]['template'] = $path . '/' . $info['template'];
+          $result[$hook]['template'] = $path . '/templates/' . $info['template'];
         }
       }
 
@@ -1226,7 +1226,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     // Match templates based on the 'template' filename.
     foreach ($cache as $hook => $info) {
       if (isset($info['template'])) {
-        $template_candidates = array($info['template'], str_replace($info['theme path'] . '/', '', $info['template']));
+        $template_candidates = array($info['template'], str_replace($info['theme path'] . '/templates/', '', $info['template']));
         if (in_array($template, $template_candidates)) {
           $implementations[$hook] = array(
             'template' => $template,

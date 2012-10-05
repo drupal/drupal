@@ -40,7 +40,6 @@ function toolbar_theme($existing, $type, $theme, $path) {
   $items['toolbar'] = array(
     'render element' => 'toolbar',
     'template' => 'toolbar',
-    'path' => drupal_get_path('module', 'toolbar'),
   );
   $items['toolbar_toggle'] = array(
     'variables' => array(
