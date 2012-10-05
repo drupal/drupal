@@ -814,7 +814,7 @@ function system_modules($form, $form_state = array()) {
   // Used when checking if module implements a help page.
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
-  // Used when displaying modules that are required by the install profile.
+  // Used when displaying modules that are required by the installation profile.
   require_once DRUPAL_ROOT . '/core/includes/install.inc';
   $distribution_name = check_plain(drupal_install_profile_distribution_name());
 
@@ -1274,8 +1274,8 @@ function system_modules_uninstall($form, $form_state = NULL) {
         '#title_display' => 'invisible',
       );
       // All modules which depend on this one must be uninstalled first, before
-      // we can allow this module to be uninstalled. (The install profile is
-      // excluded from this list.)
+      // we can allow this module to be uninstalled. (The installation profile
+      // is excluded from this list.)
       foreach (array_keys($module->required_by) as $dependent) {
         if ($dependent != $profile && drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED) {
           $dependent_name = isset($all_modules[$dependent]->info['name']) ? $all_modules[$dependent]->info['name'] : $dependent;

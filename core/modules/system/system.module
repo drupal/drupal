@@ -2840,11 +2840,11 @@ function _system_rebuild_module_data() {
   // Find installation profiles.
   $profiles = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles', 'name', 0);
 
-  // Include the install profile in modules that are loaded.
+  // Include the installation profile in modules that are loaded.
   $profile = drupal_get_profile();
   $modules[$profile] = $profiles[$profile];
 
-  // Install profile hooks are always executed last.
+  // Installation profile hooks are always executed last.
   $modules[$profile]->weight = 1000;
 
   // Set defaults for module info.
@@ -2889,7 +2889,7 @@ function _system_rebuild_module_data() {
       $module->info['scripts'] = _system_info_add_path($module->info['scripts'], $path);
     }
 
-    // Install profiles are hidden by default, unless explicitly specified
+    // Installation profiles are hidden by default, unless explicitly specified
     // otherwise in the .info file.
     if ($key == $profile && !isset($modules[$key]->info['hidden'])) {
       $modules[$key]->info['hidden'] = TRUE;
@@ -2902,7 +2902,7 @@ function _system_rebuild_module_data() {
   }
 
   if (isset($modules[$profile])) {
-    // The install profile is required, if it's a valid module.
+    // The installation profile is required, if it's a valid module.
     $modules[$profile]->info['required'] = TRUE;
     // Add a default distribution name if the profile did not provide one. This
     // matches the default value used in install_profile_info().

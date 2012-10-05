@@ -41,7 +41,7 @@ class GetFilenameUnitTest extends UnitTestBase {
 
     // Retrieving the location of a profile. Profiles are a special case with
     // a fixed location and naming.
-    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'core/profiles/standard/standard.profile', 'Retrieve install profile location.');
+    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'core/profiles/standard/standard.profile', 'Retrieve installation profile location.');
 
     // When a file is not found in the database cache, drupal_get_filename()
     // searches several locations on the filesystem, including the core/

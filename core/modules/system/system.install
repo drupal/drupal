@@ -18,7 +18,7 @@ use Drupal\Core\Database\Database;
 function system_requirements($phase) {
   global $base_url;
   $requirements = array();
-  // Ensure translations don't break at install time
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   // Report Drupal version
@@ -30,13 +30,13 @@ function system_requirements($phase) {
       'weight' => -10,
     );
 
-    // Display the currently active install profile, if the site
-    // is not running the default install profile.
+    // Display the currently active installation profile, if the site
+    // is not running the default installation profile.
     $profile = drupal_get_profile();
     if ($profile != 'standard') {
       $info = system_get_info('module', $profile);
       $requirements['install_profile'] = array(
-        'title' => $t('Install profile'),
+        'title' => $t('Installation profile'),
         'value' => $t('%profile_name (%profile-%version)', array(
           '%profile_name' => $info['name'],
           '%profile' => $profile,
@@ -317,7 +317,7 @@ function system_requirements($phase) {
     variable_get('file_private_path', FALSE),
   );
 
-  // Do not check for the temporary files directory at install time
+  // Do not check for the temporary files directory during installation
   // unless it has been set in settings.php. In this case the user has
   // no alternative but to fix the directory if it is not writable.
   if ($phase == 'install') {
@@ -436,7 +436,7 @@ function system_requirements($phase) {
     $profile = drupal_get_profile();
     $files = system_rebuild_module_data();
     foreach ($files as $module => $file) {
-      // Ignore disabled modules and install profiles.
+      // Ignore disabled modules and installation profiles.
       if (!$file->status || $module == $profile) {
         continue;
       }

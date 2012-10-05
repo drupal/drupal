@@ -238,7 +238,7 @@ class FieldInfoTest extends FieldTestBase {
    * Test field_info_field_map().
    */
   function testFieldMap() {
-    // We will overlook fields created by the 'standard' install profile.
+    // We will overlook fields created by the 'standard' installation profile.
     $exclude = field_info_field_map();
 
     // Create a new bundle for 'test_entity' entity type.

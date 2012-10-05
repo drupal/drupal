@@ -624,7 +624,7 @@ function install_tasks($install_state) {
   $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
 
   // Start with the core installation tasks that run before handing control
-  // to the install profile.
+  // to the installation profile.
   $tasks = array(
     'install_select_language' => array(
       'display_name' => st('Choose language'),
@@ -655,7 +655,7 @@ function install_tasks($install_state) {
       'run' => INSTALL_TASK_RUN_IF_REACHED,
     ),
     'install_profile_modules' => array(
-      'display_name' => count($install_state['profiles']) == 1 ? st('Install site') : st('Install profile'),
+      'display_name' => count($install_state['profiles']) == 1 ? st('Install site') : st('Installation profile'),
       'type' => 'batch',
     ),
     'install_import_translations' => array(
@@ -905,7 +905,7 @@ function install_base_system(&$install_state) {
   // variable_set() can be used now that system.module is installed.
   $modules = $install_state['profile_info']['dependencies'];
 
-  // The install profile is also a module, which needs to be installed
+  // The installation profile is also a module, which needs to be installed
   // after all the dependencies have been installed.
   $modules[] = drupal_get_profile();
 
@@ -1596,7 +1596,7 @@ function install_configure_form($form, &$form_state, &$install_state) {
   // Add JavaScript time zone detection.
   drupal_add_library('system', 'drupal.timezone');
   // We add these strings as settings because JavaScript translation does not
-  // work on install time.
+  // work during installation.
   drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
   // Add JS to show / hide the 'Email administrator about site updates' elements
   drupal_add_js('jQuery(function () { Drupal.hideEmailAdministratorCheckbox() });', 'inline');
@@ -1646,7 +1646,7 @@ function install_finished(&$install_state) {
   // Remember the profile which was used.
   variable_set('install_profile', drupal_get_profile());
 
-  // Install profiles are always loaded last.
+  // Installation profiles are always loaded last.
   db_update('system')
     ->fields(array('weight' => 1000))
     ->condition('type', 'module')
@@ -1655,7 +1655,7 @@ function install_finished(&$install_state) {
 
   // Flush all caches to ensure that any full bootstraps during the installer
   // do not leave stale cached data, and that any content types or other items
-  // registered by the install profile are registered correctly.
+  // registered by the installation profile are registered correctly.
   drupal_flush_all_caches();
 
   drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_distribution_name())), PASS_THROUGH);

@@ -2521,7 +2521,7 @@ function hook_file_url_alter(&$uri) {
  */
 function hook_requirements($phase) {
   $requirements = array();
-  // Ensure translations don't break at install time
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   // Report Drupal version
@@ -2573,7 +2573,7 @@ function hook_requirements($phase) {
  * more tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.
  *
- * This hook is called at both install and uninstall time, and in the latter
+ * This hook is called at install and uninstall time, and in the latter
  * case, it cannot rely on the .module file being loaded or hooks being known.
  * If the .module file is needed, it may be loaded with drupal_load().
  *

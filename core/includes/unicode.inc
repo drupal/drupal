@@ -65,7 +65,7 @@ define('PREG_CLASS_UNICODE_WORD_BOUNDARY',
  * Return Unicode library status and errors.
  */
 function unicode_requirements() {
-  // Ensure translations don't break at install time
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   $libraries = array(
