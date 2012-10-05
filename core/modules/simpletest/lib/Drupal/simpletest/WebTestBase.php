@@ -593,7 +593,6 @@ abstract class WebTestBase extends TestBase {
    */
   protected function setUp() {
     global $user, $conf;
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // When running tests through the Simpletest UI (vs. on the command line),
     // Simpletest's batch conflicts with the installer's batch. Batch API does
