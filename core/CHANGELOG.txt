@@ -128,8 +128,8 @@ Drupal 7.0, 2011-01-05
       order can now be customized using the Views module.
     * Removed the 'related terms' feature from taxonomy module since this can
       now be achieved with Field API.
-    * Added additional features to the default install profile, and implemented
-      a "slimmed down" install profile designed for developers.
+    * Added additional features to the default installation profile, and
+      implemented a "slimmed down" profile designed for developers.
     * Added a built-in, automated cron run feature, which is triggered by site
       visitors.
     * Added an administrator role which is assigned all permissions for
@@ -321,7 +321,7 @@ Drupal 6.0, 2008-02-13
    * Expands the severity levels from 3 (Error, Warning, Notice) to the 8
      levels defined in RFC 3164.
    * The watchdog module is now called dblog, and is optional, but enabled by
-     default in the default install profile.
+     default in the default installation profile.
    * Extended the database log module so log messages can be filtered.
    * Added syslog module: useful for monitoring large Drupal installations.
 - Added optional e-mail notifications when users are approved, blocked, or
@@ -376,7 +376,7 @@ Drupal 6.0, 2008-02-13
     * Themed the installer with the Garland theme.
     * Added form to provide initial site information during installation.
     * Added ability to provide extra installation steps programmatically.
-    * Made it possible to import interface translations at install time.
+    * Made it possible to import interface translations during installation.
 - Added the HTML corrector filter:
     * Fixes faulty and chopped off HTML in postings.
     * Tags are now automatically closed at the end of the teaser.
@@ -466,7 +466,7 @@ Drupal 5.0, 2007-01-15
 - Added web-based installer which can:
     * Check installation and run-time requirements
     * Automatically generate the database configuration file
-    * Install pre-made 'install profiles' or distributions
+    * Install pre-made installation profiles or distributions
     * Import the database structure with automatic table prefixing
     * Be localized
 - Added new default Garland theme

@@ -229,7 +229,7 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
 }
 
 /**
- * Gets the name of the currently active install profile.
+ * Gets the name of the currently active installation profile.
  *
  * When this function is called during Drupal's initial installation process,
  * the name of the profile that's about to be installed is stored in the global
@@ -238,7 +238,7 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
  * variable_get() to determine what one is active.
  *
  * @return $profile
- *   The name of the install profile.
+ *   The name of the installation profile.
  */
 function drupal_get_profile() {
   global $install_state;
@@ -5100,7 +5100,7 @@ function drupal_cron_cleanup() {
  * drupal_system_listing("/\.module$/", "modules", 'name', 0);
  * @endcode
  * this function will search the site-wide modules directory (i.e., /modules/),
- * your install profile's directory (i.e.,
+ * your installation profile's directory (i.e.,
  * /profiles/your_site_profile/modules/), the all-sites directory (i.e.,
  * /modules/), and your site-specific directory (i.e.,
  * /sites/your_site_dir/modules/), in that order, and return information about

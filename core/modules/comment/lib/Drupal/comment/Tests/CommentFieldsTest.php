@@ -24,7 +24,7 @@ class CommentFieldsTest extends CommentTestBase {
    */
   function testCommentDefaultFields() {
     // Do not make assumptions on default node types created by the test
-    // install profile, and create our own.
+    // installation profile, and create our own.
     $this->drupalCreateContentType(array('type' => 'test_node_type'));
 
     // Check that the 'comment_body' field is present on all comment bundles.

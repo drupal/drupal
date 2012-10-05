@@ -946,7 +946,7 @@ function drupal_required_modules() {
   $files = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'modules', 'name', 0);
   $required = array();
 
-  // An install profile is required and one must always be loaded.
+  // An installation profile is required and one must always be loaded.
   $required[] = drupal_get_profile();
 
   foreach ($files as $name => $file) {

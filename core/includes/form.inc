@@ -4771,7 +4771,7 @@ function batch_set($batch_definition) {
     }
 
     // Base and default properties for the batch set.
-    // Use get_t() to allow batches at install time.
+    // Use get_t() to allow batches during installation.
     $t = get_t();
     $init = array(
       'sandbox' => array(),
