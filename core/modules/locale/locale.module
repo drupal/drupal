@@ -2,13 +2,12 @@
 
 /**
  * @file
- *   Add language handling functionality and enables the translation of the
- *   user interface to languages other than English.
+ * Enables the translation of the user interface to languages other than English.
  *
- *   When enabled, multiple languages can be set up. The site interface
- *   can be displayed in different languages, as well as nodes can have languages
- *   assigned. The setup of languages and translations is completely web based.
- *   Gettext portable object files are supported.
+ * When enabled, multiple languages can be set up. The site interface can be
+ * displayed in different languages, and nodes can have languages assigned. The
+ * setup of languages and translations is completely web based. Gettext portable
+ * object files are supported.
  */
 
 use Drupal\locale\LocaleLookup;
@@ -65,9 +64,6 @@ const LOCALE_NOT_CUSTOMIZED = 0;
  * interface or are imported as customized.
  */
 const LOCALE_CUSTOMIZED = 1;
-
-// ---------------------------------------------------------------------------------
-// Hook implementations
 
 /**
  * Implements hook_help().
@@ -230,8 +226,6 @@ function locale_language_delete($language) {
   cache()->delete('locale:' . $language->langcode);
 }
 
-
-// ---------------------------------------------------------------------------------
 // Locale core functionality
 
 /**
@@ -570,7 +564,9 @@ function locale_form_language_admin_add_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Set a batch for newly added language.
+ * Form submission handler for language_admin_add_form().
+ *
+ * Set a batch for a newly-added language.
  */
 function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
   if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
@@ -599,14 +595,17 @@ function locale_form_language_admin_edit_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Submission handler to record our custom setting.
+ * Form submission handler for language_admin_edit_form().
  */
 function locale_form_language_admin_edit_form_alter_submit($form, $form_state) {
   variable_set('locale_translate_english', $form_state['values']['locale_translate_english']);
 }
 
 /**
- * Utility function to tell if locale translates to English.
+ * Checks whether locale translates to English.
+ *
+ * @return bool
+ *   Returns TRUE if content should be translated to English, FALSE otherwise.
  */
 function locale_translate_english() {
   return variable_get('locale_translate_english', FALSE);

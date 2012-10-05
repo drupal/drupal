@@ -2835,7 +2835,9 @@ function system_add_date_formats_form_submit($form, &$form_state) {
 }
 
 /**
- * Display edit date format links for each language.
+ * Page callback: Displays edit date format links for each language.
+ *
+ * @see locale_menu()
  */
 function system_date_format_language_overview_page() {
   $header = array(
@@ -2856,7 +2858,14 @@ function system_date_format_language_overview_page() {
 }
 
 /**
- * Provide date localization configuration options to users.
+ * Form constructor for the date localization configuration form.
+ *
+ * @param $langcode
+ *   The code for the current language.
+ *
+ * @see locale_menu()
+ * @see system_date_format_localize_form_submit()
+ * @ingroup forms
  */
 function system_date_format_localize_form($form, &$form_state, $langcode) {
   // Display the current language name.
@@ -2915,7 +2924,7 @@ function system_date_format_localize_form($form, &$form_state, $langcode) {
 }
 
 /**
- * Submit handler for configuring localized date formats on the locale_date_format_form.
+ * Form submission handler for system_date_format_localize_form().
  */
 function system_date_format_localize_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
@@ -2965,10 +2974,14 @@ function theme_system_date_format_localize_form($variables) {
 }
 
 /**
- * Reset locale specific date formats to the global defaults.
+ * Form constructor for the reset date format form.
  *
  * @param $langcode
  *   Language code, e.g. 'en'.
+ *
+ * @see locale_menu()
+ * @see system_date_format_localize_reset_form_submit()
+ * @ingroup forms
  */
 function system_date_format_localize_reset_form($form, &$form_state, $langcode) {
   $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
@@ -2980,7 +2993,7 @@ function system_date_format_localize_reset_form($form, &$form_state, $langcode) 
 }
 
 /**
- * Reset date formats for a specific language to global defaults.
+ * Form submission handler for locale_date_format_reset_form().
  */
 function system_date_format_localize_reset_form_submit($form, &$form_state) {
   db_delete('date_format_locale')

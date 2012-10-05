@@ -8,7 +8,9 @@
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * String search screen.
+ * Page callback: Shows the string search screen.
+ *
+ * @see locale_menu()
  */
 function locale_translate_page() {
   return array(
@@ -238,7 +240,11 @@ function locale_translate_filter_form_submit($form, &$form_state) {
 }
 
 /**
- * User interface for string editing as one table.
+ * Form constructor for the string editing form.
+ *
+ * @see locale_menu()
+ * @see locale_translate_edit_form_validate()
+ * @see locale_translate_edit_form_submit()
  *
  * @ingroup forms
  */
@@ -369,7 +375,9 @@ function locale_translate_edit_form($form, &$form_state) {
 }
 
 /**
- * Validate string editing form submissions.
+ * Form validation handler for locale_translate_edit_form().
+ *
+ * @see locale_translate_edit_form_submit()
  */
 function locale_translate_edit_form_validate($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
@@ -385,7 +393,9 @@ function locale_translate_edit_form_validate($form, &$form_state) {
 }
 
 /**
- * Process string editing form submissions.
+ * Form submission handler for locale_translate_edit_form().
+ *
+ * @see locale_translate_edit_form_validate()
  */
 function locale_translate_edit_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];

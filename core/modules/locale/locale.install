@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the locale module.
+ * Install, update, and uninstall functions for the Locale module.
  */
 
 /**
@@ -220,11 +220,11 @@ function locale_schema() {
  */
 
 /**
- * Drop textgroup support.
+ * Drops textgroup support.
  *
- * Update assumes i18n migrated this data before the update happened. Core
- * never used textgroups for anything, so it is not our job to find place
- * for the data elsewhere.
+ * Update assumes i18n migrated this data before the update happened. Core never
+ * used textgroups for anything, so it is not our job to find a place for the
+ * data elsewhere.
  */
 function locale_update_8000() {
   $subquery = db_select('locales_source', 'ls')

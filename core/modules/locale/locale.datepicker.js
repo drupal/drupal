@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Datepicker JavaScript for the Locale module.
+ */
+
 (function ($) {
 
 "use strict";
