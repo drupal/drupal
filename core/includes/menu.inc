@@ -554,7 +554,7 @@ function _menu_load_objects(&$item, &$map) {
 }
 
 /**
- * Checks access to a menu item using the access callback
+ * Checks access to a menu item using the access callback.
  *
  * @param $item
  *   A menu router or menu link item
@@ -1568,7 +1568,7 @@ function _menu_tree_data(&$links, $parents, $depth) {
 }
 
 /**
- * Preprocesses the rendered tree for theme_menu_tree().
+ * Implements template_preprocess_HOOK() for theme_menu_tree().
  */
 function template_preprocess_menu_tree(&$variables) {
   $variables['tree'] = $variables['tree']['#children'];
@@ -2229,7 +2229,13 @@ function menu_local_tabs() {
 /**
  * Returns HTML for primary and secondary local tasks.
  *
+ * @param $variables
+ *   An associative array containing:
+ *     - primary: (optional) An array of local tasks (tabs).
+ *     - secondary: (optional) An array of local tasks (tabs).
+ *
  * @ingroup themeable
+ * @see menu_local_tasks()
  */
 function theme_menu_local_tasks(&$variables) {
   $output = '';
