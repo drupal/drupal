@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the image module.
  */
 
+use Drupal\Component\Uuid\Uuid;
+
 /**
  * Implements hook_install().
  */
@@ -102,4 +104,66 @@ function image_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Loads all effects for an image style.
+ *
+ * @param array $style
+ *   The image style (array) to retrieve effects for.
+ *
+ * @return array
+ *   An array of effects keyed by UUIDs.
+ *
+ * @see image_update_8000()
+ */
+function _image_update_get_style_with_effects(array $style) {
+  // Retrieve image effects.
+  $effects = array();
+  $result = db_select('image_effects', NULL, array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('image_effects')
+    ->condition('isid', $style['isid'])
+    ->execute();
+  foreach ($result as $effect) {
+    unset($effect['isid']);
+    $effect['data'] = unserialize($effect['data']);
+
+    // Generate a unique image effect ID for the effect.
+    $uuid = new Uuid();
+    $effect['ieid'] = $uuid->generate();
+
+    $effects[$effect['ieid']] = $effect;
+  }
+  return $effects;
+}
+
+/**
+ * Convert existing image styles to the new config system.
+ */
+function image_update_8000() {
+  $styles = array();
+  $result = db_select('image_styles', NULL, array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('image_styles')
+    ->execute()
+    ->fetchAllAssoc('name', PDO::FETCH_ASSOC);
+  foreach ($result as $style_name => $style) {
+    $style['effects'] = _image_update_get_style_with_effects($style);
+    $styles[$style_name] = $style;
+  }
+
+  // Convert each style into a configuration object.
+  foreach ($styles as $name => $style) {
+    $config = config('image.style.' . $name);
+    $config->set('name', $name);
+    $config->set('effects', $style['effects']);
+    $config->save();
+  }
+}
+
+/**
+ * Remove the {image_styles} and {image_effects} tables.
+ */
+function image_update_8001() {
+  db_drop_table('image_styles');
+  db_drop_table('image_effects');
 }
