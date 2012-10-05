@@ -12,7 +12,10 @@ use Drupal\Core\Language\Language;
 
 
 /**
- * User interface for the translation import screen.
+ * Form constructor for the translation import screen.
+ *
+ * @see locale_translate_import_form_submit()
+ * @ingroup forms
  */
 function locale_translate_import_form($form, &$form_state) {
   drupal_static_reset('language_list');
@@ -101,7 +104,7 @@ function locale_translate_import_form($form, &$form_state) {
 }
 
 /**
- * Processes the locale import form submission.
+ * Form submission handler for locale_translate_import_form().
  */
 function locale_translate_import_form_submit($form, &$form_state) {
   // Ensure we have the file uploaded.
@@ -135,7 +138,10 @@ function locale_translate_import_form_submit($form, &$form_state) {
 }
 
 /**
- * Builds form to export Gettext translation files.
+ * Form constructor for the Gettext translation files export form.
+ *
+ * @see locale_translate_export_form_submit()
+ * @ingroup forms
  */
 function locale_translate_export_form($form, &$form_state) {
   $languages = language_list();
@@ -207,7 +213,7 @@ function locale_translate_export_form($form, &$form_state) {
 }
 
 /**
- * Processes a translation (or template) export form submission.
+ * Form submission handler for locale_translate_export_form().
  */
 function locale_translate_export_form_submit($form, &$form_state) {
   // If template is required, language code is not given.
@@ -259,7 +265,7 @@ function locale_translate_export_form_submit($form, &$form_state) {
 }
 
 /**
- * Sets a batch for a newly added language.
+ * Sets a batch for a newly-added language.
  *
  * @param array $options
  *   An array with options that can have the following elements:

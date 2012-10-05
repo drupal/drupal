@@ -1,3 +1,7 @@
+/**
+ * @file
+ * JavaScript for locale_test.module.
+ */
 
 Drupal.t("Standard Call t");
 Drupal
