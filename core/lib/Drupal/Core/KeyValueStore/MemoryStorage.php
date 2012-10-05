@@ -9,11 +9,8 @@ namespace Drupal\Core\KeyValueStore;
 
 /**
  * Defines a default key/value store implementation.
- *
- * For performance reasons, this implementation is not based on
- * Drupal\Core\KeyValueStore\StorageBase.
  */
-class MemoryStorage implements KeyValueStoreInterface {
+class MemoryStorage extends StorageBase {
 
   /**
    * The actual storage of key-value pairs.
@@ -21,20 +18,6 @@ class MemoryStorage implements KeyValueStoreInterface {
    * @var array
    */
   protected $data = array();
-
-  /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::__construct().
-   */
-  public function __construct($collection, array $options = array()) {
-    $this->collection = $collection;
-  }
-
-  /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getCollectionName().
-   */
-  public function getCollectionName() {
-    return $this->collection;
-  }
 
   /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().

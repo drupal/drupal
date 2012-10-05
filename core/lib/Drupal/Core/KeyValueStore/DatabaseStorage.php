@@ -20,14 +20,12 @@ class DatabaseStorage extends StorageBase {
    *
    * @param string $collection
    *   The name of the collection holding key and value pairs.
-   * @param array $options
-   *   An associative array of options for the key/value storage collection.
-   *   Keys used:
-   *   - table. The name of the SQL table to use, defaults to key_value.
+   * @param string $table
+   *   The name of the SQL table to use, defaults to key_value.
    */
-  public function __construct($collection, array $options = array()) {
-    parent::__construct($collection, $options);
-    $this->table = isset($options['table']) ? $options['table'] : 'key_value';
+  public function __construct($collection, $table = 'key_value') {
+    parent::__construct($collection);
+    $this->table = $table;
   }
 
   /**

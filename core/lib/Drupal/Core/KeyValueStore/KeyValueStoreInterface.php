@@ -13,16 +13,6 @@ namespace Drupal\Core\KeyValueStore;
 interface KeyValueStoreInterface {
 
   /**
-   * Constructs a new key/value collection.
-   *
-   * @param string $collection
-   *   The name of the collection holding key and value pairs.
-   * @param array $options
-   *   An associative array of options for the key/value storage collection.
-   */
-  public function __construct($collection, array $options = array());
-
-  /**
    * Returns the name of this collection.
    *
    * @return string

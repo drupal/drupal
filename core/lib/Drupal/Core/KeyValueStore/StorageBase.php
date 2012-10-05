@@ -22,7 +22,7 @@ abstract class StorageBase implements KeyValueStoreInterface {
   /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::__construct().
    */
-  public function __construct($collection, array $options = array()) {
+  public function __construct($collection) {
     $this->collection = $collection;
   }
 
