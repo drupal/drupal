@@ -323,7 +323,7 @@ function field_cron() {
   field_sync_field_status();
 
   // Do a pass of purging on deleted Field API data, if any exists.
-  $limit = variable_get('field_purge_batch_size', 10);
+  $limit = config('field.settings')->get('purge_batch_size');
   field_purge_batch($limit);
 }
 
