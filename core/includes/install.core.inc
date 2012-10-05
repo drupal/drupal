@@ -963,6 +963,7 @@ function install_verify_database_settings() {
  *
  * @see install_settings_form_validate()
  * @see install_settings_form_submit()
+ * @ingroup forms
  */
 function install_settings_form($form, &$form_state, &$install_state) {
   global $databases;
@@ -1182,6 +1183,8 @@ function _install_select_profile($profiles) {
  *
  * @param array $install_state
  *   An array of information about the current installation state.
+ *
+ * @ingroup forms
  */
 function install_select_profile_form($form, &$form_state, $install_state) {
   $profiles = array();
@@ -1242,6 +1245,13 @@ function install_select_profile_form($form, &$form_state, $install_state) {
 
 /**
  * Finds all .po files that are useful to the installer.
+ *
+ * @return
+ *   An associative array of file information objects keyed by file URIs as
+ *   returned by file_scan_directory(). English is removed from the array and
+ *   the object is prepared for database insertion.
+ *
+ * @see file_scan_directory()
  */
 function install_find_translations() {
   $files = install_find_translation_files();
@@ -1364,6 +1374,13 @@ function install_select_language(&$install_state) {
 
 /**
  * Form constructor for the language selection form.
+ *
+ * @param $files
+ *   An associative array of file information objects keyed by file URIs as
+ *   returned by file_scan_directory().
+ *
+ * @see file_scan_directory()
+ * @ingroup forms
  */
 function install_select_language_form($form, &$form_state, $files) {
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
@@ -1574,6 +1591,7 @@ function install_import_translations(&$install_state) {
  *
  * @see install_configure_form_validate()
  * @see install_configure_form_submit()
+ * @ingroup forms
  */
 function install_configure_form($form, &$form_state, &$install_state) {
   drupal_set_title(st('Configure site'));
@@ -1830,11 +1848,15 @@ function install_check_requirements($install_state) {
 }
 
 /**
- * Returns a Form API array definition for site configuration.
+ * Form constructor for a site configuration form.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
  *
  * @see install_configure_form()
  * @see install_configure_form_validate()
  * @see install_configure_form_submit()
+ * @ingroup forms
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
   $form['site_information'] = array(

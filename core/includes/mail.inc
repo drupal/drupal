@@ -301,6 +301,9 @@ function drupal_mail_system($module, $key) {
  * @param $indent (optional)
  *   A string to indent the text with. Only '>' characters are repeated on
  *   subsequent wrapped lines. Others are replaced by spaces.
+ *
+ * @return
+ *   The content of the email as a string with formatting applied.
  */
 function drupal_wrap_mail($text, $indent = '') {
   // Convert CRLF into LF.
