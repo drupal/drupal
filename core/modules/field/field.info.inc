@@ -194,7 +194,7 @@ function _field_info_collate_types_reset() {
  */
 function field_behaviors_widget($op, $instance) {
   $info = field_info_widget_types($instance['widget']['type']);
-  return isset($info['behaviors'][$op]) ? $info['behaviors'][$op] : FIELD_BEHAVIOR_DEFAULT;
+  return isset($info[$op]) ? $info[$op] : FIELD_BEHAVIOR_DEFAULT;
 }
 
 /**

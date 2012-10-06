@@ -231,6 +231,13 @@ class ManageFieldsTest extends FieldUiTestBase {
     field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
     $this->assertEqual($instance['default_value'], NULL, 'The default value was correctly saved.');
+
+    // Change the widget to TestFieldWidgetNoDefault.
+    $instance['widget']['type'] = 'test_field_widget_no_default';
+    field_update_instance($instance);
+
+    $this->drupalGet($admin_path);
+    $this->assertNoFieldById($element_id, '', t('No default value was possible for widget that disables default value.'));
   }
 
   /**

@@ -209,6 +209,7 @@ class FieldInfoTest extends FieldTestBase {
     $this->assertIdentical($display['type'], $field_type['default_formatter'], t("Formatter is set for the 'default' view mode"));
     $formatter_type = field_info_formatter_types($display['type']);
     $this->assertIdentical($display['settings'], $formatter_type['settings'] , t("Formatter settings are set for the 'default' view mode"));
+
   }
 
   /**

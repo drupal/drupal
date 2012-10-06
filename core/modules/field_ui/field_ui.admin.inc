@@ -1944,7 +1944,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   $form['instance']['widget']['settings'] = $additions ? $additions : array('#type' => 'value', '#value' => array());
 
   // Add handling for default value if not provided by any other module.
-  if (field_behaviors_widget('default value', $instance) == FIELD_BEHAVIOR_DEFAULT && empty($instance['default_value_function'])) {
+  if (field_behaviors_widget('default_value', $instance) == FIELD_BEHAVIOR_DEFAULT && empty($instance['default_value_function'])) {
     $form['instance']['default_value_widget'] = field_ui_default_value_widget($field, $instance, $form, $form_state);
   }
 
@@ -1968,7 +1968,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
 
   // Build the configurable field values.
   $description = t('Maximum number of values users can enter for this field.');
-  if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
+  if (field_behaviors_widget('multiple_values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
     $description .= '<br/>' . t("'Unlimited' will provide an 'Add more' button so the users can add as many values as they like.");
   }
   $form['field']['cardinality'] = array(

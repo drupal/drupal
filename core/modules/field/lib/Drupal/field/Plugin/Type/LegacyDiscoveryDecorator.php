@@ -66,7 +66,10 @@ class LegacyDiscoveryDecorator implements DiscoveryInterface {
           $definition['multiple_values'] = $definition['behaviors']['multiple values'];
           unset($definition['behaviors']['multiple values']);
         }
-
+        if (isset($definition['behaviors']['default value'])) {
+          $definition['default_value'] = $definition['behaviors']['default value'];
+          unset($definition['behaviors']['default value']);
+        }
         $definitions[$plugin_id] = $definition;
       }
     }

@@ -23,6 +23,7 @@ class WidgetPluginManager extends PluginManagerBase {
   protected $defaults = array(
     'settings' => array(),
     'multiple_values' => FALSE,
+    'default_value' => TRUE,
   );
 
   /**
