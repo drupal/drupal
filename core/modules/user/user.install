@@ -9,118 +9,6 @@
  * Implements hook_schema().
  */
 function user_schema() {
-  $schema['authmap'] = array(
-    'description' => 'Stores distributed authentication mapping.',
-    'fields' => array(
-      'aid' => array(
-        'description' => 'Primary Key: Unique authmap ID.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => "User's {users}.uid.",
-      ),
-      'authname' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Unique authentication name.',
-      ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Module which is controlling the authentication.',
-      ),
-    ),
-    'unique keys' => array(
-      'authname' => array('authname'),
-    ),
-    'primary key' => array('aid'),
-    'foreign keys' => array(
-      'user' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
-  $schema['role_permission'] = array(
-    'description' => 'Stores the permissions assigned to user roles.',
-    'fields' => array(
-      'rid' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => 'Foreign Key: {role}.rid.',
-      ),
-      'permission' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'A single permission granted to the role identified by rid.',
-      ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "The module declaring the permission.",
-      ),
-    ),
-    'primary key' => array('rid', 'permission'),
-    'indexes' => array(
-      'permission' => array('permission'),
-    ),
-    'foreign keys' => array(
-      'role' => array(
-        'table' => 'role',
-        'columns' => array('rid' => 'rid'),
-      ),
-    ),
-  );
-
-  $schema['role'] = array(
-    'description' => 'Stores user roles.',
-    'fields' => array(
-      'rid' => array(
-        'type' => 'varchar',
-        // The role ID is often used as part of a compound index; at least MySQL
-        // has a maximum index length of 1000 characters (333 on utf8), so we
-        // limit the maximum length.
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique role ID.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Role label.',
-        'translatable' => TRUE,
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The weight of this role in listings and the user interface.',
-      ),
-    ),
-    'primary key' => array('rid'),
-    'indexes' => array(
-      'name_weight' => array('name', 'weight'),
-    ),
-  );
-
   // The table name here is plural, despite Drupal table naming standards,
   // because "user" is a reserved word in many databases.
   $schema['users'] = array(
@@ -268,6 +156,118 @@ function user_schema() {
       'signature_format' => array(
         'table' => 'filter_format',
         'columns' => array('signature_format' => 'format'),
+      ),
+    ),
+  );
+
+  $schema['authmap'] = array(
+    'description' => 'Stores distributed authentication mapping.',
+    'fields' => array(
+      'aid' => array(
+        'description' => 'Primary Key: Unique authmap ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "User's {users}.uid.",
+      ),
+      'authname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Unique authentication name.',
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Module which is controlling the authentication.',
+      ),
+    ),
+    'unique keys' => array(
+      'authname' => array('authname'),
+    ),
+    'primary key' => array('aid'),
+    'foreign keys' => array(
+      'user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  $schema['role'] = array(
+    'description' => 'Stores user roles.',
+    'fields' => array(
+      'rid' => array(
+        'type' => 'varchar',
+        // The role ID is often used as part of a compound index; at least MySQL
+        // has a maximum index length of 1000 characters (333 on utf8), so we
+        // limit the maximum length.
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique role ID.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Role label.',
+        'translatable' => TRUE,
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The weight of this role in listings and the user interface.',
+      ),
+    ),
+    'primary key' => array('rid'),
+    'indexes' => array(
+      'name_weight' => array('name', 'weight'),
+    ),
+  );
+
+  $schema['role_permission'] = array(
+    'description' => 'Stores the permissions assigned to user roles.',
+    'fields' => array(
+      'rid' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'Foreign Key: {role}.rid.',
+      ),
+      'permission' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'A single permission granted to the role identified by rid.',
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The module declaring the permission.",
+      ),
+    ),
+    'primary key' => array('rid', 'permission'),
+    'indexes' => array(
+      'permission' => array('permission'),
+    ),
+    'foreign keys' => array(
+      'role' => array(
+        'table' => 'role',
+        'columns' => array('rid' => 'rid'),
       ),
     ),
   );

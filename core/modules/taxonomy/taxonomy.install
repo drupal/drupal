@@ -23,6 +23,68 @@ function taxonomy_uninstall() {
  * Implements hook_schema().
  */
 function taxonomy_schema() {
+  $schema['taxonomy_vocabulary'] = array(
+    'description' => 'Stores vocabulary information.',
+    'fields' => array(
+      'vid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique vocabulary ID.',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this vocabulary.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the vocabulary.',
+        'translatable' => TRUE,
+      ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The vocabulary machine name.',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Description of the vocabulary.',
+        'translatable' => TRUE,
+      ),
+      'hierarchy' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The weight of this vocabulary in relation to other vocabularies.',
+      ),
+    ),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
+    'unique keys' => array(
+      'machine_name' => array('machine_name'),
+    ),
+  );
+
   $schema['taxonomy_term_data'] = array(
     'description' => 'Stores term information.',
     'fields' => array(
@@ -125,68 +187,6 @@ function taxonomy_schema() {
       ),
     ),
     'primary key' => array('tid', 'parent'),
-  );
-
-  $schema['taxonomy_vocabulary'] = array(
-    'description' => 'Stores vocabulary information.',
-    'fields' => array(
-      'vid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique vocabulary ID.',
-      ),
-      'langcode' => array(
-        'description' => 'The {language}.langcode of this vocabulary.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Name of the vocabulary.',
-        'translatable' => TRUE,
-      ),
-      'machine_name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The vocabulary machine name.',
-      ),
-      'description' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'description' => 'Description of the vocabulary.',
-        'translatable' => TRUE,
-      ),
-      'hierarchy' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The weight of this vocabulary in relation to other vocabularies.',
-      ),
-    ),
-    'primary key' => array('vid'),
-    'indexes' => array(
-      'list' => array('weight', 'name'),
-    ),
-    'unique keys' => array(
-      'machine_name' => array('machine_name'),
-    ),
   );
 
   $schema['taxonomy_index'] = array(
