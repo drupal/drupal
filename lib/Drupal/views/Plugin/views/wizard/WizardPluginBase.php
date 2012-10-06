@@ -543,18 +543,19 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Instantiates a view object from form values.
    *
-   * @return Drupal\views\ViewExecutable
-   *   The instantiated view object.
+   * @return Drupal\views_ui\ViewUI
+   *   The instantiated view UI object.
    */
   protected function instantiate_view($form, &$form_state) {
-    // Build the basic view properties.
-    $view = views_new_view();
-    $view->name = $form_state['values']['name'];
-    $view->human_name = $form_state['values']['human_name'];
-    $view->description = $form_state['values']['description'];
-    $view->tag = 'default';
-    $view->core = VERSION;
-    $view->base_table = $this->base_table;
+    // Build the basic view properties and create the view.
+    $values = array(
+      'name' => $form_state['values']['name'],
+      'human_name' => $form_state['values']['human_name'],
+      'description' => $form_state['values']['description'],
+      'base_table' => $this->base_table,
+    );
+
+    $view = views_create_view($values);
 
     // Build all display options for this view.
     $display_options = $this->build_display_options($form, $form_state);
