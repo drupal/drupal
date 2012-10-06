@@ -2344,6 +2344,9 @@ abstract class WebTestBase extends TestBase {
    *   The expected themed output string.
    * @param $message
    *   (optional) An assertion message.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
    */
   protected function assertThemeOutput($callback, array $variables = array(), $expected, $message = '') {
     $output = theme($callback, $variables);
@@ -2356,7 +2359,7 @@ abstract class WebTestBase extends TestBase {
       $message = '%callback rendered correctly.';
     }
     $message = format_string($message, array('%callback' => 'theme_' . $callback . '()'));
-    $this->assertIdentical($output, $expected, $message);
+    return $this->assertIdentical($output, $expected, $message);
   }
 
   /**
