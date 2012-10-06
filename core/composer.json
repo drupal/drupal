@@ -1,4 +1,7 @@
 {
+  "name": "drupal/drupal",
+  "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+  "license": "GPL-2.0+",
   "require": {
     "symfony/class-loader": "2.1.*",
     "symfony/dependency-injection": "2.1.*",
