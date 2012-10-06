@@ -38,7 +38,7 @@ class FileInclusionTest extends WebTestBase {
   }
 
   /**
-   * Tests loading a custom specified inlcude.
+   * Tests loading a custom specified include.
    */
   function testLoadCustomInclude() {
     $this->drupalPost('form-test/load-include-custom', array(), t('Save'));

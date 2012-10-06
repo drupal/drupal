@@ -1407,16 +1407,11 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
       $is_empty_string = (is_string($elements['#value']) && drupal_strlen(trim($elements['#value'])) == 0);
       $is_empty_value = ($elements['#value'] === 0);
       if ($is_empty_multiple || $is_empty_string || $is_empty_value) {
-        // Although discouraged, a #title is not mandatory for form elements. In
-        // case there is no #title, we cannot set a form error message.
-        // Instead of setting no #title, form constructors are encouraged to set
-        // #title_display to 'invisible' to improve accessibility.
-        if (isset($elements['#title'])) {
-          form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
-        }
-        else {
-          form_error($elements);
-        }
+        // Flag this element as #required_but_empty to allow #element_validate
+        // handlers to set a custom required error message, but without having
+        // to re-implement the complex logic to figure out whether the field
+        // value is empty.
+        $elements['#required_but_empty'] = TRUE;
       }
     }
 
@@ -1431,6 +1426,27 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
         $function($elements, $form_state, $form_state['complete_form']);
       }
     }
+
+    // Ensure that a #required form error is thrown, regardless of whether
+    // #element_validate handlers changed any properties. If $is_empty_value
+    // is defined, then above #required validation code ran, so the other
+    // variables are also known to be defined and we can test them again.
+    if (isset($is_empty_value) && ($is_empty_multiple || $is_empty_string || $is_empty_value)) {
+      if (isset($elements['#required_error'])) {
+        form_error($elements, $elements['#required_error']);
+      }
+      // A #title is not mandatory for form elements, but without it we cannot
+      // set a form error message. So when a visible title is undesirable, form
+      // constructors are encouraged to set #title anyway, and then set
+      // #title_display to 'invisible'. This improves accessibility.
+      elseif (isset($elements['#title'])) {
+        form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
+      }
+      else {
+        form_error($elements);
+      }
+    }
+
     $elements['#validated'] = TRUE;
   }
 

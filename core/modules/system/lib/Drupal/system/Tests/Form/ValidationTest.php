@@ -186,4 +186,50 @@ class ValidationTest extends WebTestBase {
     $this->drupalPost('form-test/pattern', $edit, 'Submit');
     $this->assertNoRaw(t('%name field is not in the right format.', array('%name' => 'Client side validation')));
   }
+
+   /**
+   * Tests #required with custom validation errors.
+   *
+   * @see form_test_validate_required_form()
+   */
+  function testCustomRequiredError() {
+    $form = $form_state = array();
+    $form = form_test_validate_required_form($form, $form_state);
+
+    // Verify that a custom #required error can be set.
+    $edit = array();
+    $this->drupalPost('form-test/validate-required', $edit, 'Submit');
+
+    foreach (element_children($form) as $key) {
+      if (isset($form[$key]['#required_error'])) {
+        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertText($form[$key]['#required_error']);
+      }
+      elseif (isset($form[$key]['#form_test_required_error'])) {
+        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertText($form[$key]['#form_test_required_error']);
+      }
+    }
+    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+
+    // Verify that no custom validation error appears with valid values.
+    $edit = array(
+      'textfield' => $this->randomString(),
+      'checkboxes[foo]' => TRUE,
+      'select' => 'foo',
+    );
+    $this->drupalPost('form-test/validate-required', $edit, 'Submit');
+
+    foreach (element_children($form) as $key) {
+      if (isset($form[$key]['#required_error'])) {
+        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertNoText($form[$key]['#required_error']);
+      }
+      elseif (isset($form[$key]['#form_test_required_error'])) {
+        $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
+        $this->assertNoText($form[$key]['#form_test_required_error']);
+      }
+    }
+    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+  }
 }

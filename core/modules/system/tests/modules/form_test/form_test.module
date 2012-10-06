@@ -461,23 +461,29 @@ function form_test_validate_form_validate(&$form, &$form_state) {
  */
 function form_test_validate_required_form($form, &$form_state) {
   $options = drupal_map_assoc(array('foo', 'bar'));
+  $validate = array('form_test_validate_required_form_element_validate');
 
   $form['textfield'] = array(
     '#type' => 'textfield',
-    '#title' => 'Textfield',
+    '#title' => 'Name',
     '#required' => TRUE,
+    '#required_error' => t('Please enter a name.'),
   );
   $form['checkboxes'] = array(
     '#type' => 'checkboxes',
     '#title' => 'Checkboxes',
     '#options' => $options,
     '#required' => TRUE,
+    '#form_test_required_error' => t('Please choose at least one option.'),
+    '#element_validate' => $validate,
   );
   $form['select'] = array(
     '#type' => 'select',
     '#title' => 'Select',
     '#options' => $options,
     '#required' => TRUE,
+    '#form_test_required_error' => t('Please select something.'),
+    '#element_validate' => $validate,
   );
   $form['radios'] = array(
     '#type' => 'radios',
@@ -499,6 +505,16 @@ function form_test_validate_required_form($form, &$form_state) {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => 'Submit');
   return $form;
+}
+
+/**
+ * Form element validation handler for 'Name' field in form_test_validate_required_form().
+ */
+function form_test_validate_required_form_element_validate($element, &$form_state) {
+  // Set a custom validation error on the #required element.
+  if (!empty($element['#required_but_empty']) && isset($element['#form_test_required_error'])) {
+    form_error($element, $element['#form_test_required_error']);
+  }
 }
 
 /**

@@ -172,7 +172,15 @@ class FormTest extends WebTestBase {
     // messages for each field.
     $expected = array();
     foreach (array('textfield', 'checkboxes', 'select', 'radios') as $key) {
-      $expected[] = t('!name field is required.', array('!name' => $form[$key]['#title']));
+      if (isset($form[$key]['#required_error'])) {
+        $expected[] = $form[$key]['#required_error'];
+      }
+      elseif (isset($form[$key]['#form_test_required_error'])) {
+        $expected[] = $form[$key]['#form_test_required_error'];
+      }
+      else {
+        $expected[] = t('!name field is required.', array('!name' => $form[$key]['#title']));
+      }
     }
 
     // Check the page for error messages.
