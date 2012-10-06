@@ -55,6 +55,11 @@ class CoreBundle extends Bundle
       ->setFactoryMethod('getConnection')
       ->addArgument('slave');
     $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager');
+    // Add the user's storage for temporary, non-cache data.
+    $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
+    $container->register('user.tempstore', 'Drupal\user\TempStoreFactory')
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('lock'));
 
     $container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
       ->addArgument(new Reference('database'));

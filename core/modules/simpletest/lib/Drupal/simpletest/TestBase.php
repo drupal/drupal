@@ -439,6 +439,35 @@ abstract class TestBase {
   }
 
   /**
+   * Checks to see if two objects are identical.
+   *
+   * @param object $object1
+   *   The first object to check.
+   * @param object $object2
+   *   The second object to check.
+   * @param $message
+   *   The message to display along with the assertion.
+   * @param $group
+   *   The type of assertion - examples are "Browser", "PHP".
+   *
+   * @return
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertIdenticalObject($object1, $object2, $message = '', $group = '') {
+    $message = $message ?: format_string('!object1 is identical to !object2', array(
+      '!object1' => var_export($object1, TRUE),
+      '!object2' => var_export($object2, TRUE),
+    ));
+    $identical = TRUE;
+    foreach ($object1 as $key => $value) {
+      $identical = $identical && isset($object2->$key) && $object2->$key === $value;
+    }
+    return $this->assertTrue($identical, $message);
+  }
+
+
+
+  /**
    * Fire an assertion that is always positive.
    *
    * @param $message
@@ -937,6 +966,26 @@ abstract class TestBase {
       $str .= chr($values[mt_rand(0, $max)]);
     }
     return $str;
+  }
+
+  /**
+   * Generates a random PHP object.
+   *
+   * @param int $size
+   *   The number of random keys to add to the object.
+   *
+   * @return \stdClass
+   *   The generated object, with the specified number of random keys. Each key
+   *   has a random string value.
+   */
+  public static function randomObject($size = 4) {
+    $object = new \stdClass();
+    for ($i = 0; $i < $size; $i++) {
+      $random_key = self::randomName();
+      $random_value = self::randomString();
+      $object->{$random_key} = $random_value;
+    }
+    return $object;
   }
 
   /**

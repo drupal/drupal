@@ -48,6 +48,17 @@ class MemoryStorage extends StorageBase {
   }
 
   /**
+   * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setIfNotExists().
+   */
+  public function setIfNotExists($key, $value) {
+    if (!isset($this->data[$key])) {
+      $this->data[$key] = $value;
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setMultiple().
    */
   public function setMultiple(array $data) {

@@ -63,6 +63,19 @@ interface KeyValueStoreInterface {
   public function set($key, $value);
 
   /**
+   * Saves a value for a given key if it does not exist yet.
+   *
+   * @param string $key
+   *   The key of the data to store.
+   * @param mixed $value
+   *   The data to store.
+   *
+   * @return bool
+   *   TRUE if the data was set, FALSE if it already existed.
+   */
+  public function setIfNotExists($key, $value);
+
+  /**
    * Saves key/value pairs.
    *
    * @param array $data
