@@ -1270,6 +1270,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
+      array('system', 'drupalSettings'),
       // collapse.js relies on drupalGetSummary in form.js
       array('system', 'drupal.form'),
     ),
