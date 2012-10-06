@@ -477,6 +477,9 @@ function template_preprocess_views_view_table(&$vars) {
   $active   = !empty($handler->active) ? $handler->active : '';
   $order    = !empty($handler->order) ? $handler->order : 'asc';
 
+  // A boolean variable which stores whether the table has a responsive class.
+  $responsive = FALSE;
+
   $query    = tablesort_get_query_parameters();
   if (isset($view->exposed_raw_input)) {
     $query += $view->exposed_raw_input;
@@ -534,6 +537,11 @@ function template_preprocess_views_view_table(&$vars) {
         }
         $vars['header_classes'][$field] .= $class;
       }
+      // Add responsive header classes.
+      if (!empty($options['info'][$field]['responsive'])) {
+        $vars['header_classes'][$field] .= ' ' . $options['info'][$field]['responsive'];
+        $responsive = TRUE;
+      }
       // Add a CSS align class to each field if one was set
       if (!empty($options['info'][$field]['align'])) {
         $vars['header_classes'][$field] .= ' ' . drupal_clean_css_identifier($options['info'][$field]['align']);
@@ -568,6 +576,11 @@ function template_preprocess_views_view_table(&$vars) {
 
         $vars['field_classes'][$field][$num] .= $classes;
       }
+      // Add responsive header classes.
+      if (!empty($options['info'][$field]['responsive'])) {
+        $vars['field_classes'][$field][$num] .= ' ' . $options['info'][$field]['responsive'];
+      }
+
       $vars['field_attributes'][$field][$num] = array();
 
       if (!empty($fields[$field]) && empty($fields[$field]->options['exclude'])) {
@@ -648,6 +661,15 @@ function template_preprocess_views_view_table(&$vars) {
 
   if (!empty($handler->options['summary'])) {
     $vars['attributes_array'] = array('summary' => $handler->options['summary']);
+  }
+  // If the table has headers and it should react responsively to columns hidden
+  // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
+  // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
+  if (count($vars['header']) && $responsive) {
+    drupal_add_library('system', 'drupal.tableresponsive');
+    // Add 'responsive-enabled' class to the table to identify it for JS.
+    // This is needed to target tables constructed by this function.
+    $vars['attributes']['class'][] = 'responsive-enabled';
   }
 }
 
@@ -761,6 +783,15 @@ function template_preprocess_views_view_grid(&$vars) {
   $vars['rows'] = $rows;
   if (!empty($handler->options['summary'])) {
     $vars['attributes_array'] = array('summary' => $handler->options['summary']);
+  }
+  // If the table has headers and it should react responsively to columns hidden
+  // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
+  // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
+  if (count($vars['header']) && $responsive) {
+    drupal_add_library('system', 'drupal.tableresponsive');
+    // Add 'responsive-enabled' class to the table to identify it for JS.
+    // This is needed to target tables constructed by this function.
+    $vars['attributes']['class'][] = 'responsive-enabled';
   }
 }
 

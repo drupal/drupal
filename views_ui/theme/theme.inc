@@ -396,6 +396,10 @@ function theme_views_ui_style_plugin_table($variables) {
       'data' => t('Hide empty column'),
       'align' => 'center',
     ),
+    array(
+      'data' => t('Responsive'),
+      'align' => 'center',
+    ),
   );
   $rows = array();
   foreach (element_children($form['columns']) as $id) {
@@ -427,11 +431,15 @@ function theme_views_ui_style_plugin_table($variables) {
       'data' => drupal_render($form['info'][$id]['empty_column']),
       'align' => 'center',
     );
+    $row[] = array(
+      'data' => drupal_render($form['info'][$id]['responsive']),
+      'align' => 'center',
+    );
     $rows[] = $row;
   }
 
   // Add the special 'None' row.
-  $rows[] = array(t('None'), '', '', '', '', '', array('align' => 'center', 'data' => drupal_render($form['default'][-1])), '');
+  $rows[] = array(t('None'), '', '', '', '', '', array('align' => 'center', 'data' => drupal_render($form['default'][-1])), '', '');
 
   $output .= theme('table', array('header' => $header, 'rows' => $rows));
   $output .= drupal_render_children($form);
