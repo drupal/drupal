@@ -309,6 +309,19 @@ function form_test_menu() {
   return $items;
 }
 
+
+/**
+ * Implements hook_permission().
+ */
+function form_test_permission() {
+  $perms = array(
+    'access vertical_tab_test tabs' => array(
+      'title' => t('Access vertical_tab_test tabs'),
+    ),
+  );
+  return $perms;
+}
+
 /**
  * Form submit handler to return form values as JSON.
  */
@@ -798,6 +811,7 @@ function _form_test_vertical_tabs_form($form, &$form_state) {
     '#title' => t('Tab 1'),
     '#collapsible' => TRUE,
     '#group' => 'vertical_tabs',
+    '#access' => user_access('access vertical_tab_test tabs')
   );
   $form['tab1']['field1'] = array(
     '#title' => t('Field 1'),
@@ -808,6 +822,7 @@ function _form_test_vertical_tabs_form($form, &$form_state) {
     '#title' => t('Tab 2'),
     '#collapsible' => TRUE,
     '#group' => 'vertical_tabs',
+    '#access' => user_access('access vertical_tab_test tabs')
   );
   $form['tab2']['field2'] = array(
     '#title' => t('Field 2'),

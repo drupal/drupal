@@ -3815,11 +3815,25 @@ function form_process_vertical_tabs($element, &$form_state) {
  */
 function theme_vertical_tabs($variables) {
   $element = $variables['element'];
-  // Add required JavaScript and Stylesheet.
-  drupal_add_library('system', 'drupal.vertical-tabs');
+  // Even if there are no tabs the element will still have a child element for
+  // the active tab. We need to iterate over the tabs to ascertain if any
+  // are visible before showing the wrapper and h2.
+  $visible_tab = FALSE;
+  $output = '';
+  foreach (element_children($element['group']) as $tab_index) {
+    if (!isset($element['group'][$tab_index]['#access']) ||
+        !empty($element['group'][$tab_index]['#access'])) {
+      $visible_tab = TRUE;
+      break;
+    }
+  }
+  if ($visible_tab) {
+    // Add required JavaScript and Stylesheet.
+    drupal_add_library('system', 'drupal.vertical-tabs');
 
-  $output = '<h2 class="element-invisible">' . t('Vertical Tabs') . '</h2>';
-  $output .= '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
+    $output = '<h2 class="element-invisible">' . t('Vertical Tabs') . '</h2>';
+    $output .= '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
+  }
   return $output;
 }
 
