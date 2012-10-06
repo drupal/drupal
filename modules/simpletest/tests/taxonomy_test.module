@@ -3,6 +3,8 @@
 /**
  * @file
  * Test module for Taxonomy hooks and functions not used in core.
+ *
+ * @see TaxonomyHooksTestCase::testTaxonomyTermHooks()
  */
 
 /**
@@ -52,6 +54,34 @@ function taxonomy_test_taxonomy_term_delete($term) {
   db_delete('taxonomy_term_antonym')
     ->condition('tid', $term->tid)
     ->execute();
+}
+
+/**
+ * Implements hook_taxonomy_term_view().
+ */
+function taxonomy_test_taxonomy_term_view($term, $view_mode, $langcode) {
+  if ($view_mode == 'full') {
+    $term->content['taxonomy_test_term_view_check'] = array(
+      '#prefix' => '<div>',
+      '#markup' => t('The antonym is %antonym', array('%antonym' => $term->antonym)),
+      '#suffix' => '</div>',
+      '#weight' => 10,
+    );
+  }
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function taxonomy_test_entity_view($entity, $type, $view_mode, $langcode) {
+  if ($type == 'taxonomy_term' && $view_mode == 'full') {
+    $entity->content['taxonomy_test_entity_view_check'] = array(
+      '#prefix' => '<div>',
+      '#markup' => t('The antonym is %antonym', array('%antonym' => $entity->antonym)),
+      '#suffix' => '</div>',
+      '#weight' => 20,
+    );
+  }
 }
 
 /**

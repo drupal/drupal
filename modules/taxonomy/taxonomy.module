@@ -743,6 +743,102 @@ function taxonomy_term_delete($tid) {
 }
 
 /**
+ * Generates an array which displays a term detail page.
+ *
+ * @param term
+ *   A taxonomy term object.
+ * @return
+ *   A $page element suitable for use by drupal_page_render().
+ */
+function taxonomy_term_show($term) {
+  return taxonomy_term_view_multiple(array($term->tid => $term), 'full');
+}
+
+/**
+ * Constructs a drupal_render() style array from an array of loaded terms.
+ *
+ * @param $terms
+ *   An array of taxonomy terms as returned by taxonomy_term_load_multiple().
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
+ * @param $weight
+ *   An integer representing the weight of the first node in the list.
+ * @param $langcode
+ *   (optional) A language code to use for rendering. Defaults to the global
+ *   content language of the current request.
+ *
+ * @return
+ *   An array in the format expected by drupal_render().
+ */
+function taxonomy_term_view_multiple($terms, $view_mode = 'teaser', $weight = 0, $langcode = NULL) {
+  field_attach_prepare_view('taxonomy_term', $terms, $view_mode, $langcode);
+  entity_prepare_view('taxonomy_term', $terms, $langcode);
+  $build = array();
+  foreach ($terms as $term) {
+    $build['taxonomy_terms'][$term->tid] = taxonomy_term_view($term, $view_mode, $langcode);
+    $build['taxonomy_terms'][$term->tid]['#weight'] = $weight;
+    $weight++;
+  }
+  $build['taxonomy_terms']['#sorted'] = TRUE;
+  return $build;
+}
+
+/**
+ * Builds a structured array representing the term's content.
+ *
+ * The content built for the taxonomy term (field values, file attachments or
+ * other term components) will vary depending on the $view_mode parameter.
+ *
+ * Drupal core defines the following view modes for terms, with the following
+ * default use cases:
+ *   - full (default): term is displayed on its own page (taxonomy/term/123)
+ * Contributed modules might define additional view modes, or use existing
+ * view modes in additional contexts.
+ *
+ * @param $term
+ *   A taxonomy term object.
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   (optional) A language code to use for rendering. Defaults to the global
+ *   content language of the current request.
+ */
+function taxonomy_term_build_content($term, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
+  // Remove previously built content, if exists.
+  $term->content = array();
+
+  // Try to add in the core taxonomy pieces like description and nodes.
+  $type = 'taxonomy_term';
+  $entity_ids = entity_extract_ids($type, $term);
+  $settings = field_view_mode_settings($type, $entity_ids[2]);
+  $fields = field_extra_fields_get_display($type, $entity_ids[2], $view_mode);
+  if (!empty($term->description) && isset($fields['description']) && $fields['description']['visible']) {
+    $term->content['description'] = array(
+      '#markup' => check_markup($term->description, $term->format, '', TRUE),
+      '#weight' => $fields['description']['weight'],
+      '#prefix' => '<div class="taxonomy-term-description">',
+      '#suffix' => '</div>',
+    );
+  }
+
+  // Build fields content.
+  // In case of a multiple view, taxonomy_term_view_multiple() already ran the
+  // 'prepare_view' step. An internal flag prevents the operation from running
+  // twice.
+  field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode, $langcode);
+  entity_prepare_view('taxonomy_term', array($term->tid => $term), $langcode);
+  $term->content += field_attach_view('taxonomy_term', $term, $view_mode, $langcode);
+
+  // Allow modules to make their own additions to the taxonomy term.
+  module_invoke_all('taxonomy_term_view', $term, $view_mode, $langcode);
+  module_invoke_all('entity_view', $term, 'taxonomy_term', $view_mode, $langcode);
+}
+
+/**
  * Generate an array for rendering the given term.
  *
  * @param $term
@@ -769,31 +865,23 @@ function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
   );
   drupal_alter('entity_view_mode', $view_mode, $context);
 
-  field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode, $langcode);
-  entity_prepare_view('taxonomy_term', array($term->tid => $term), $langcode);
+  // Populate $node->content with a render() array.
+  taxonomy_term_build_content($term, $view_mode, $langcode);
+  $build = $term->content;
 
-  $build = array(
+  // We don't need duplicate rendering info in $term->content.
+  unset($term->content);
+
+  $build += array(
     '#theme' => 'taxonomy_term',
     '#term' => $term,
     '#view_mode' => $view_mode,
     '#language' => $langcode,
   );
 
-  $build += field_attach_view('taxonomy_term', $term, $view_mode, $langcode);
-
-  // Add term description if the term has one.
-  if (!empty($term->description)) {
-    $build['description'] = array(
-      '#markup' => check_markup($term->description, $term->format, '', TRUE),
-      '#weight' => 0,
-      '#prefix' => '<div class="taxonomy-term-description">',
-      '#suffix' => '</div>',
-    );
-  }
-
   $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/taxonomy.css';
 
-  // Allow modules to modify the structured term.
+  // Allow modules to modify the structured taxonomy term.
   $type = 'taxonomy_term';
   drupal_alter(array('taxonomy_term_view', 'entity_view'), $build, $type);
 
