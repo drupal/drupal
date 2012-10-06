@@ -27,7 +27,7 @@
  * @ingroup views_templates
  */
 ?>
-<div <?php print $attributes; ?>">
+<div <?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
     <?php print $title; ?>
