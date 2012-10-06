@@ -1597,3 +1597,64 @@ class ImageFieldDefaultImagesTestCase extends ImageFieldTestCase {
   }
 
 }
+
+/**
+ * Tests image theme functions.
+ */
+class ImageThemeFunctionWebTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Image theme functions',
+      'description' => 'Test that the image theme functions work correctly.',
+      'group' => 'Image',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('image'));
+  }
+
+  /**
+   * Tests usage of the image field formatters.
+   */
+  function testImageFormatterTheme() {
+    // Create an image.
+    $files = $this->drupalGetTestFiles('image');
+    $file = reset($files);
+    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+
+    // Create a style.
+    image_style_save(array('name' => 'test'));
+    $url = image_style_url('test', $original_uri);
+
+    // Test using theme_image_formatter() without an image title, alt text, or
+    // link options.
+    $path = $this->randomName();
+    $element = array(
+      '#theme' => 'image_formatter',
+      '#image_style' => 'test',
+      '#item' => array(
+        'uri' => $original_uri,
+      ),
+      '#path' => array(
+        'path' => $path,
+      ),
+    );
+    $rendered_element = render($element);
+    $expected_result = '<a href="' . url($path) . '"><img typeof="foaf:Image" src="' . $url . '" alt="" /></a>';
+    $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders without title, alt, or path options.');
+
+    // Link the image to a fragment on the page, and not a full URL.
+    $fragment = $this->randomName();
+    $element['#path']['path'] = '';
+    $element['#path']['options'] = array(
+      'external' => TRUE,
+      'fragment' => $fragment,
+    );
+    $rendered_element = render($element);
+    $expected_result = '<a href="#' . $fragment . '"><img typeof="foaf:Image" src="' . $url . '" alt="" /></a>';
+    $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders a link fragment.');
+  }
+
+}
