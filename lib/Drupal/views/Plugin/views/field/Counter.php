@@ -42,7 +42,10 @@ class Counter extends FieldPluginBase {
     // do nothing -- to override the parent query.
   }
 
-  function render($values) {
+  /**
+   * Overrides Drupal\views\Plugin\views\field\FieldPluginBas::get_value()
+   */
+  public function get_value($values, $field = NULL) {
     // Note:  1 is subtracted from the counter start value below because the
     // counter value is incremented by 1 at the end of this function.
     $count = is_numeric($this->options['counter_start']) ? $this->options['counter_start'] - 1 : 0;
