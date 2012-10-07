@@ -12,7 +12,7 @@ use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**
- * Defines a Display test plugin.
+ * Defines a join test plugin.
  *
  * @Plugin(
  *   id = "join_test",
