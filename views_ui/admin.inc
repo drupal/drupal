@@ -443,7 +443,7 @@ function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
     $cancel = 'admin/structure/views/view/' . $view->storage->name . '/edit';
   }
 
-  $account = user_load($view->locked->ownerID);
+  $account = user_load($view->locked->owner);
   $form = confirm_form($form,
                   t('Are you sure you want to break the lock on view %name?',
                   array('%name' => $view->storage->name)),
@@ -642,7 +642,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   drupal_set_message(t('The view %name has been saved.', array('%name' => $form_state['view']->storage->getHumanName())));
 
   // Remove this view from cache so we can edit it properly.
-  views_temp_store()->delete($form_state['view']->storage->name);
+  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->name);
 }
 
 /**
@@ -650,7 +650,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
  */
 function views_ui_edit_view_form_cancel($form, &$form_state) {
   // Remove this view from cache so edits will be lost.
-  views_temp_store()->delete($form_state['view']->storage->name);
+  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->name);
   if (empty($form['view']->vid)) {
     // I seem to have to drupal_goto here because I can't get fapi to
     // honor the redirect target. Not sure what I screwed up here.

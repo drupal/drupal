@@ -309,7 +309,7 @@ function views_ui_edit_page_title(ViewUI $view) {
  *   someone else is already editing the view.
  */
 function views_ui_cache_load($name) {
-  $views_temp_store = views_temp_store();
+  $views_temp_store = drupal_container()->get('user.tempstore')->get('views');
   $view = $views_temp_store->get($name);
   $storage = entity_load('view', $name);
   $original_view = $storage ? new ViewUI($storage) : NULL;
@@ -318,7 +318,6 @@ function views_ui_cache_load($name) {
     $view = $original_view;
     if (!empty($view)) {
       // Check to see if someone else is already editing this view.
-      $view->locked = $views_temp_store->isLocked($view->storage->name);
       // Set a flag to indicate that this view is being edited.
       // This flag will be used e.g. to determine whether strings
       // should be localized.
@@ -335,10 +334,9 @@ function views_ui_cache_load($name) {
   if (empty($view)) {
     return FALSE;
   }
+  $view->locked = $views_temp_store->getMetadata($view->storage->name);
 
-  else {
-    return $view;
-  }
+  return $view;
 }
 
 /**
@@ -346,7 +344,7 @@ function views_ui_cache_load($name) {
  * include, and cache more easily.
  */
 function views_ui_cache_set(ViewUI $view) {
-  if (!empty($view->locked)) {
+  if (isset($view->locked) && is_object($view->locked) && $view->locked->owner != $GLOBALS['user']->uid) {
     drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
     return;
   }
@@ -364,7 +362,7 @@ function views_ui_cache_set(ViewUI $view) {
   unset($view->default_display);
   $view->query = NULL;
   $view->displayHandlers = array();
-  views_temp_store()->set($view->storage->name, $view);
+  drupal_container()->get('user.tempstore')->get('views')->set($view->storage->name, $view);
 }
 
 /**

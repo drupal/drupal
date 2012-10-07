@@ -8,7 +8,6 @@
 namespace Drupal\views_ui;
 
 use Drupal\views\ViewExecutable;
-use Drupal\views\TempStore\UserTempStore;
 
 /**
  * Stores UI related temporary settings.
@@ -1125,7 +1124,7 @@ class ViewUI extends ViewExecutable {
    * Submit handler to break_lock a view.
    */
   public function submitBreakLock(&$form, &$form_state) {
-    UserTempStore::clearAll('view', $this->storage->name);
+    drupal_container()->get('user.tempstore')->get('views')->delete($this->storage->name);
     $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit';
     drupal_set_message(t('The lock has been broken and you may now edit this view.'));
   }
@@ -1299,27 +1298,29 @@ class ViewUI extends ViewExecutable {
 
     $form['#attributes']['class'] = array('form-edit');
 
-    if (isset($this->locked) && is_object($this->locked)) {
+    if (isset($this->locked) && is_object($this->locked) && $this->locked->owner != $GLOBALS['user']->uid) {
       $form['locked'] = array(
         '#theme_wrappers' => array('container'),
         '#attributes' => array('class' => array('view-locked', 'messages', 'warning')),
-        '#markup' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($this->locked->ownerID))), '!age' => format_interval(REQUEST_TIME - $this->locked->updated), '!break' => url('admin/structure/views/view/' . $this->storage->name . '/break-lock'))),
+        '#markup' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($this->locked->owner))), '!age' => format_interval(REQUEST_TIME - $this->locked->updated), '!break' => url('admin/structure/views/view/' . $this->storage->name . '/break-lock'))),
       );
     }
-    if (isset($this->vid) && $this->vid == 'new') {
-      $message = t('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard the view.');
-    }
     else {
-      $message = t('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard your changes.');
-    }
+      if (isset($this->vid) && $this->vid == 'new') {
+        $message = t('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard the view.');
+      }
+      else {
+        $message = t('* All changes are stored temporarily. Click Save to make your changes permanent. Click Cancel to discard your changes.');
+      }
 
-    $form['changed'] = array(
-      '#theme_wrappers' => array('container'),
-      '#attributes' => array('class' => array('view-changed', 'messages', 'warning')),
-      '#markup' => $message,
-    );
-    if (empty($this->changed)) {
-      $form['changed']['#attributes']['class'][] = 'js-hide';
+      $form['changed'] = array(
+        '#theme_wrappers' => array('container'),
+        '#attributes' => array('class' => array('view-changed', 'messages', 'warning')),
+        '#markup' => $message,
+      );
+      if (empty($this->changed)) {
+        $form['changed']['#attributes']['class'][] = 'js-hide';
+      }
     }
 
     $form['help_text'] = array(
