@@ -624,7 +624,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     foreach ($this->extender as $extender) {
-      $extender->options_definition_alter($options);
+      $extender->defineOptionsAlter($options);
     }
 
     return $options;

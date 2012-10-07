@@ -21,13 +21,13 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
   public function init(ViewExecutable $view, &$display) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = $view;
-    $this->display = $display;
+    $this->displayHandler = $display;
   }
 
   /**
    * Provide a form to edit options for this plugin.
    */
-  public function options_definition_alter(&$options) { }
+  public function defineOptionsAlter(&$options) { }
 
   /**
    * Provide a form to edit options for this plugin.

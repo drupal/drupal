@@ -1502,12 +1502,8 @@ function views_get_plugin_definition($type, $plugin_id) {
  */
 function views_get_enabled_display_extenders() {
   $enabled = array_filter((array) config('views.settings')->get('display_extenders'));
-  $options = views_fetch_plugin_names('display_extender');
-  foreach ($options as $name => $plugin) {
-    $enabled[$name] = $name;
-  }
 
-  return array_filter($enabled);
+  return drupal_map_assoc($enabled);
 }
 
 // -----------------------------------------------------------------------
