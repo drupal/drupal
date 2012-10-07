@@ -1,9 +1,7 @@
 name = Views
 description = Create customized lists and queries from your database.
-package = Views
+package = Core
+version = VERSION
 core = 8.x
-php = 5.2
 dependencies[] = config
-
-; Always available CSS
 stylesheets[all][] = css/views.base.css
