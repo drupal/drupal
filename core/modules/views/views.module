@@ -20,56 +20,6 @@ use Drupal\views\ViewStorage;
 const VIEWS_API_VERSION = '3.0';
 
 /**
- * Advertise the current views api version
- */
-function views_api_version() {
-  return VIEWS_API_VERSION;
-}
-
-/**
- * Returns a list of Drupal core modules.
- *
- * @return array
- */
-function views_core_modules() {
-  return array(
-    'aggregator',
-    'book',
-    'block',
-    'comment',
-    'contact',
-    'field',
-    'filter',
-    'file',
-    'language',
-    'locale',
-    'node',
-    'search',
-    'statistics',
-    'system',
-    'taxonomy',
-    'translation',
-    'user'
-  );
-}
-
-/**
- * Implements hook_init().
- */
-function views_init() {
-  $path = drupal_get_path('module', 'views');
-  $loader = drupal_classloader();
-  // Just register enabled modules.
-  $modules = array_intersect(views_core_modules(), module_list('module_enabled'));
-  foreach ($modules as $module) {
-    $function = $module . '_views_api';
-    if (function_exists($function)) {
-      $loader->registerNamespace('Views\\' . $module, DRUPAL_ROOT . '/' . $path . '/lib');
-    }
-  }
-}
-
-/**
  * Implements hook_entity_info().
  */
 function views_entity_info() {
@@ -125,13 +75,6 @@ function views_form_id($view) {
   );
 
   return implode('_', $parts);
-}
-
-/**
- * Views will not load plugins advertising a version older than this.
- */
-function views_api_minimum_version() {
-  return '2';
 }
 
 /**
@@ -1176,35 +1119,6 @@ function views_include($file) {
 }
 
 /**
- * Load views files on behalf of modules.
- *
- * @todo Remove this function once the views integration got moved into the
- *   core modules itself.
- */
-function views_module_include() {
-  $loaded_files = &drupal_static(__FUNCTION__, array());
-
-  $minimum_version = views_api_minimum_version();
-  $current_version = views_api_version();
-  foreach (module_implements('views_api') as $module) {
-    if (isset($loaded_files[$module])) {
-      continue;
-    }
-    $info = module_invoke($module, 'views_api');
-    $version = $info['api'];
-    $path = isset($info['path']) ? $info['path'] : drupal_get_path('module', $module);
-    // Only process if version is between minimum and current, inclusive.
-    if (version_compare($version, $minimum_version, '>=') && version_compare($version, $current_version, '<=')) {
-      $path = $path . "/$module.views.inc";
-      if (file_exists($path)) {
-        include_once $path;
-        $loaded_files[$module] = TRUE;
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_hook_info().
  */
 function views_hook_info() {
@@ -1246,21 +1160,6 @@ function views_add_js($file) {
     $ajax = FALSE;
   }
   drupal_add_js($path . "/js/$file.js");
-}
-
-/**
- * Load views files on behalf of modules.
- */
-function views_include_handlers($reset = FALSE) {
-  static $finished = FALSE;
-  // Ensure this only gets run once.
-  if ($finished && !$reset) {
-    return;
-  }
-
-  views_include('cache');
-  views_module_include();
-  $finished = TRUE;
 }
 
 /**
@@ -1521,15 +1420,9 @@ function views_get_applicable_views($type) {
 }
 
 /**
- * Return an array of all views as fully loaded $view objects.
- *
- * @todo Figure out whether you expect to return config entities or
- *   view executables.
- * @param $reset
- *   If TRUE, reset the static cache forcing views to be reloaded.
- *
+ * Returns an array of all views as fully loaded $view objects.
  */
-function views_get_all_views($reset = FALSE) {
+function views_get_all_views() {
   return entity_get_controller('view')->load();
 }
 
@@ -2320,95 +2213,4 @@ function views_array_key_plus($array) {
   }
   asort($array);
   return $array;
-}
-
-// Declare API compatibility on behalf of core modules:
-
-/**
- * Implements hook_views_api().
- *
- * This one is used as the base to reduce errors when updating.
- */
-function views_views_api() {
-  return array(
-    // in your modules do *not* use views_api_version()!!!
-    'api' => views_api_version(),
-    'path' => drupal_get_path('module', 'views') . '/modules',
-  );
-}
-
-if (!function_exists('aggregator_views_api')) {
-  function aggregator_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('book_views_api')) {
-  function book_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('block_views_api')) {
-  function block_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('comment_views_api')) {
-  function comment_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('field_views_api')) {
-  function field_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('file_views_api')) {
-  function file_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('filter_views_api')) {
-  function filter_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('image_views_api')) {
-  function image_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('language_views_api')) {
-  function language_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('locale_views_api')) {
-  function locale_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('node_views_api')) {
-  function node_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('poll_views_api')) {
-  function poll_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('search_views_api')) {
-  function search_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('statistics_views_api')) {
-  function statistics_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('system_views_api')) {
-  function system_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('taxonomy_views_api')) {
-  function taxonomy_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('translation_views_api')) {
-  function translation_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('user_views_api')) {
-  function user_views_api() { return views_views_api(); }
-}
-
-if (!function_exists('contact_views_api')) {
-  function contact_views_api() { return views_views_api(); }
 }

@@ -20,16 +20,6 @@ function views_test_data_permission() {
 }
 
 /**
- * Implements hook_views_api().
- */
-function views_test_data_views_api() {
-  return array(
-    'api' => 3.0,
-    'template path' => drupal_get_path('module', 'views_test_data') . '/templates',
-  );
-}
-
-/**
  * Implements hook_views_data().
  */
 function views_test_data_views_data() {

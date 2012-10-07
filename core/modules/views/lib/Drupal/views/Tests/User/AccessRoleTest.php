@@ -1,16 +1,18 @@
 <?php
 
-  /**
-   * @file
-   * Definition of Drupal\views\Tests\User\AccessRoleTest.
-   */
+/**
+ * @file
+ * Definition of Drupal\views\Tests\User\AccessRoleTest.
+ */
 
 namespace Drupal\views\Tests\User;
+
+use Drupal\user\Plugin\views\access\Role;
 
 /**
  * Tests views role access plugin.
  *
- * @see Views\user\Plugin\views\access\Role
+ * @see Drupal\user\Plugin\views\access\Role
  */
 class AccessRoleTest extends AccessTestBase {
 
@@ -33,7 +35,7 @@ class AccessRoleTest extends AccessTestBase {
     );
 
     $access_plugin = $view->display_handler->getPlugin('access');
-    $this->assertTrue($access_plugin instanceof \Views\user\Plugin\views\access\Role, 'Make sure the right class got instantiated.');
+    $this->assertTrue($access_plugin instanceof Role, 'Make sure the right class got instantiated.');
 
 
     $this->assertTrue($view->display_handler->access($this->adminUser), t('Admin-Account should be able to access the view everytime'));

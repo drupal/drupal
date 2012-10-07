@@ -71,7 +71,6 @@ function _views_fetch_data($table = NULL, $reset = FALSE) {
  *   The views_data of all tables.
  */
 function _views_fetch_data_build() {
-  views_include_handlers();
   $cache = module_invoke_all('views_data');
   foreach (module_implements('views_data_alter') as $module) {
     $function = $module . '_views_data_alter';

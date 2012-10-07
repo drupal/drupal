@@ -8,14 +8,14 @@
 namespace Drupal\views\Tests\Node;
 
 /**
- * Tests the Views\node\Plugin\views\field\Type handler.
+ * Tests the Drupal\node\Plugin\views\field\Type handler.
  */
 class FieldTypeTest extends NodeTestBase {
 
   public static function getInfo() {
     return array(
       'name' => 'Node: Node Type field',
-      'description' => 'Tests the Views\node\Plugin\views\field\Type handler.',
+      'description' => 'Tests the Drupal\node\Plugin\views\field\Type handler.',
       'group' => 'Views Modules',
     );
   }

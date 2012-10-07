@@ -1205,10 +1205,7 @@ class ViewUI extends ViewExecutable {
 
     // Build the rest of the form based on the currently selected wizard plugin.
     $wizard_key = $show_form['wizard_key']['#default_value'];
-
-    views_include_handlers();
     $wizard_instance = views_get_plugin('wizard', $wizard_key);
-
     $form = $wizard_instance->build_form($form, $form_state);
 
     $form['save'] = array(

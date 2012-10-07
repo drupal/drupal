@@ -31,14 +31,8 @@ abstract class ViewTestBase extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // @todo Remove this hack or move it to child classes.
-    views_init();
-    views_get_all_views(TRUE);
-    menu_router_rebuild();
-
     $this->view = $this->getBasicView();
   }
-
 
   /**
    * Sets up the views_test_data.module.
