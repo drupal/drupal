@@ -1376,7 +1376,7 @@ class ViewUI extends ViewExecutable {
 
       // Add a text that the display is disabled.
       if (!empty($this->displayHandlers[$display_id])) {
-        if ($this->displayHandlers[$display_id]->isEnabled()) {
+        if (!$this->displayHandlers[$display_id]->isEnabled()) {
           $form['displays']['settings']['disabled']['#markup'] = t('This display is disabled.');
         }
       }
@@ -1394,7 +1394,7 @@ class ViewUI extends ViewExecutable {
         $form['displays']['settings']['settings_content']['tab_content']['#attributes']['class'][] = 'views-display-deleted';
       }
       // Mark disabled displays as such.
-      if (empty($enabled)) {
+      if (!$this->displayHandlers[$display_id]->isEnabled()) {
         $form['displays']['settings']['settings_content']['tab_content']['#attributes']['class'][] = 'views-display-disabled';
       }
 

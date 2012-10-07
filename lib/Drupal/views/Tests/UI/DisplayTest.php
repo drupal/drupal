@@ -146,6 +146,27 @@ class DisplayTest extends UITestBase {
   }
 
   /**
+   * Tests disabling of a display.
+   */
+  public function testDisableDisplay() {
+    $view = $this->randomView();
+    $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
+
+    $this->drupalGet($path_prefix);
+    $this->assertFalse($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class does not appear after initial adding of a view.');
+
+    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', '', 'Make sure the disable button is visible.');
+    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', '', 'Make sure the enable button is not visible.');
+    $this->drupalPost(NULL, array(), 'disable Page');
+    $this->assertTrue($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class appears once the display is marked as such.');
+
+    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', '', 'Make sure the disable button is not visible.');
+    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', '', 'Make sure the enable button is visible.');
+    $this->drupalPost(NULL, array(), 'enable Page');
+    $this->assertFalse($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class does not appears once the display is enabled again.');
+  }
+
+  /**
    * Tests views_ui_views_plugins_display_alter is altering plugin definitions.
    */
   public function testDisplayPluginsAlter() {
