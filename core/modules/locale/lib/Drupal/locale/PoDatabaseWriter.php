@@ -11,6 +11,8 @@ use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoReaderInterface;
 use Drupal\Component\Gettext\PoWriterInterface;
+use Drupal\locale\SourceString;
+use Drupal\locale\TranslationString;
 
 /**
  * Gettext PO writer working with the locale module database.
@@ -226,12 +228,11 @@ class PoDatabaseWriter implements PoWriterInterface {
 
 
     // Look up the source string and any existing translation.
-    $string = db_query("SELECT s.lid, t.customized FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context", array(
-      ':source' => $source,
-      ':context' => $context,
-      ':language' => $this->_langcode,
-        ))
-        ->fetchObject();
+    $string = locale_storage()->findTranslation(array(
+      'language' => $this->_langcode,
+      'source' => $source,
+      'context' => $context
+    ));
 
     if (!empty($translation)) {
       // Skip this string unless it passes a check for dangerous code.
@@ -240,64 +241,43 @@ class PoDatabaseWriter implements PoWriterInterface {
         $this->_report['skips']++;
         return 0;
       }
-      elseif (isset($string->lid)) {
-        if (!isset($string->customized)) {
+      elseif ($string) {
+        $string->setString($translation);
+        if ($string->isNew()) {
           // No translation in this language.
-          db_insert('locales_target')
-            ->fields(array(
-              'lid' => $string->lid,
-              'language' => $this->_langcode,
-              'translation' => $translation,
-              'customized' => $customized,
-            ))
-            ->execute();
-
+          $string->setValues(array(
+            'language' => $this->_langcode,
+            'customized' => $customized
+          ));
+          $string->save();
           $this->_report['additions']++;
         }
         elseif ($overwrite_options[$string->customized ? 'customized' : 'not_customized']) {
           // Translation exists, only overwrite if instructed.
-          db_update('locales_target')
-            ->fields(array(
-              'translation' => $translation,
-              'customized' => $customized,
-            ))
-            ->condition('language', $this->_langcode)
-            ->condition('lid', $string->lid)
-            ->execute();
-
+          $string->customized = $customized;
+          $string->save();
           $this->_report['updates']++;
         }
         return $string->lid;
       }
       else {
         // No such source string in the database yet.
-        $lid = db_insert('locales_source')
-          ->fields(array(
-            'source' => $source,
-            'context' => $context,
-          ))
-          ->execute();
-
-        db_insert('locales_target')
-          ->fields(array(
-            'lid' => $lid,
-            'language' => $this->_langcode,
-            'translation' => $translation,
-            'customized' => $customized,
-          ))
-          ->execute();
+        $string = locale_storage()->createString(array('source' => $source, 'context' => $context))
+          ->save();
+        $target = locale_storage()->createTranslation(array(
+          'lid' => $string->getId(),
+          'language' => $this->_langcode,
+          'translation' => $translation,
+          'customized' => $customized,
+        ))->save();
 
         $this->_report['additions']++;
-        return $lid;
+        return $string->lid;
       }
     }
-    elseif (isset($string->lid) && isset($string->customized) && $overwrite_options[$string->customized ? 'customized' : 'not_customized']) {
+    elseif ($string && !$string->isNew() && $overwrite_options[$string->customized ? 'customized' : 'not_customized']) {
       // Empty translation, remove existing if instructed.
-      db_delete('locales_target')
-        ->condition('language', $this->_langcode)
-        ->condition('lid', $string->lid)
-        ->execute();
-
+      $string->delete();
       $this->_report['deletes']++;
       return $string->lid;
     }

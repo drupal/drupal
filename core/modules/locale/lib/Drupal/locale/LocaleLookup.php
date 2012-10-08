@@ -8,6 +8,8 @@
 namespace Drupal\locale;
 
 use Drupal\Core\Utility\CacheArray;
+use Drupal\locale\SourceString;
+use Drupal\locale\TranslationString;
 
 /**
  * Extends CacheArray to allow for dynamic building of the locale cache.
@@ -27,11 +29,19 @@ class LocaleLookup extends CacheArray {
   protected $context;
 
   /**
+   * The locale storage
+   *
+   * @var Drupal\locale\StringStorageInterface
+   */
+  protected $stringStorage;
+
+  /**
    * Constructs a LocaleCache object.
    */
-  public function __construct($langcode, $context) {
+  public function __construct($langcode, $context, $stringStorage) {
     $this->langcode = $langcode;
     $this->context = (string) $context;
+    $this->stringStorage = $stringStorage;
 
     // Add the current user's role IDs to the cache key, this ensures that, for
     // example, strings for admin menu items and settings forms are not cached
@@ -44,36 +54,30 @@ class LocaleLookup extends CacheArray {
    * Overrides DrupalCacheArray::resolveCacheMiss().
    */
   protected function resolveCacheMiss($offset) {
-    $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context", array(
-      ':language' => $this->langcode,
-      ':source' => $offset,
-      ':context' => $this->context,
-    ))->fetchObject();
+    $translation = $this->stringStorage->findTranslation(array(
+      // These are the search conditions.
+      'language' => $this->langcode,
+      'source' => $offset,
+      'context' => $this->context
+    ), array(
+      // Search options. We just need this limited set of fields.
+      'fields' => array('lid', 'version', 'translation'),
+    ));
+
     if ($translation) {
-      if ($translation->version != VERSION) {
-        // This is the first use of this string under current Drupal version.
-        // Update the {locales_source} table to indicate the string is current.
-        db_update('locales_source')
-          ->fields(array('version' => VERSION))
-          ->condition('lid', $translation->lid)
-          ->execute();
-      }
+      $this->stringStorage->checkVersion($translation, VERSION);
       $value = !empty($translation->translation) ? $translation->translation : TRUE;
     }
     else {
       // We don't have the source string, update the {locales_source} table to
       // indicate the string is not translated.
-      db_merge('locales_source')
-        ->insertFields(array(
-          'location' => request_uri(),
-          'version' => VERSION,
-        ))
-        ->key(array(
-          'source' => $offset,
-          'context' => $this->context,
-        ))
-        ->execute();
-        $value = TRUE;
+      $this->stringStorage->createString(array(
+        'source' => $offset,
+        'context' => $this->context,
+        'location' => request_uri(),
+        'version' => VERSION
+      ))->save();
+      $value = TRUE;
     }
     $this->storage[$offset] = $value;
     // Disabling the usage of string caching allows a module to watch for

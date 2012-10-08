@@ -5,6 +5,8 @@
  * Interface translation summary, editing and deletion user interfaces.
  */
 
+use Drupal\locale\SourceString;
+use Drupal\locale\TranslationString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -20,42 +22,42 @@ function locale_translate_page() {
 }
 
 /**
- * Build a string search query.
+ * Builds a string search query and returns an array of string objects.
+ *
+ * @return array
+ *   Array of Drupal\locale\TranslationString objects.
  */
-function locale_translate_query() {
+function locale_translate_filter_load_strings() {
   $filter_values = locale_translate_filter_values();
 
-  $sql_query = db_select('locales_source', 's');
   // Language is sanitized to be one of the possible options in
   // locale_translate_filter_values().
-  $sql_query->leftJoin('locales_target', 't', "t.lid = s.lid AND t.language = :langcode", array(':langcode' => $filter_values['langcode']));
-  $sql_query->fields('s', array('source', 'location', 'context', 'lid'));
-  $sql_query->fields('t', array('translation', 'language', 'customized'));
+  $conditions = array('language' => $filter_values['langcode']);
+  $options = array('pager limit' => 30, 'translated' => TRUE, 'untranslated' => TRUE);
 
-  if (!empty($filter_values['string'])) {
-    $sql_query->condition(db_or()
-      ->condition('s.source', '%' . db_like($filter_values['string']) . '%', 'LIKE')
-      ->condition('t.translation', '%' . db_like($filter_values['string']) . '%', 'LIKE')
-    );
-  }
-
-  // Add translation status conditions.
+  // Add translation status conditions and options.
   switch ($filter_values['translation']) {
     case 'translated':
-      $sql_query->isNotNull('t.translation');
+      $conditions['translated'] = TRUE;
       if ($filter_values['customized'] != 'all') {
-        $sql_query->condition('t.customized', $filter_values['customized']);
+        $conditions['customized'] = $filter_values['customized'];
       }
       break;
 
     case 'untranslated':
-      $sql_query->isNull('t.translation');
+      $conditions['translated'] = FALSE;
       break;
 
   }
 
-  $sql_query = $sql_query->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(30);
-  return $sql_query->execute();
+  if (!empty($filter_values['string'])) {
+    $options['filters']['source'] = $filter_values['string'];
+    if ($options['translated']) {
+      $options['filters']['translation'] = $filter_values['string'];
+    }
+  }
+
+  return locale_storage()->getTranslations($conditions, $options);
 }
 
 /**
@@ -276,14 +278,16 @@ function locale_translate_edit_form($form, &$form_state) {
   );
 
   if (isset($langcode)) {
-    $strings = locale_translate_query();
+    $strings = locale_translate_filter_load_strings();
 
     $plural_formulas = variable_get('locale_translation_plurals', array());
 
     foreach ($strings as $string) {
+      // Cast into source string, will do for our purposes.
+      $source = new SourceString($string);
       // Split source to work with plural values.
-      $source_array = explode(LOCALE_PLURAL_DELIMITER, $string->source);
-      $translation_array = explode(LOCALE_PLURAL_DELIMITER, $string->translation);
+      $source_array = $source->getPlurals();
+      $translation_array = $string->getPlurals();
       if (count($source_array) == 1) {
         // Add original string value and mark as non-plural.
         $form['strings'][$string->lid]['plural'] = array(
@@ -400,9 +404,8 @@ function locale_translate_edit_form_validate($form, &$form_state) {
 function locale_translate_edit_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
   foreach ($form_state['values']['strings'] as $lid => $translations) {
-    // Serialize plural variants in one string by LOCALE_PLURAL_DELIMITER.
-    $translation_new = implode(LOCALE_PLURAL_DELIMITER, $translations['translations']);
-    $translation_old = db_query("SELECT translation FROM {locales_target} WHERE lid = :lid AND language = :language", array(':lid' => $lid, ':language' => $langcode))->fetchField();
+    // Get target string, that may be NULL if there's no translation.
+    $target = locale_storage()->findTranslation(array('language' => $langcode, 'lid' => $lid));
     // No translation when all strings are empty.
     $has_translation = FALSE;
     foreach ($translations['translations'] as $string) {
@@ -413,35 +416,15 @@ function locale_translate_edit_form_submit($form, &$form_state) {
     }
     if ($has_translation) {
       // Only update or insert if we have a value to use.
-      if (!empty($translation_old) && $translation_old != $translation_new) {
-        db_update('locales_target')
-          ->fields(array(
-            'translation' => $translation_new,
-            'customized' => LOCALE_CUSTOMIZED,
-          ))
-          ->condition('lid', $lid)
-          ->condition('language', $langcode)
-          ->execute();
-      }
-      if (empty($translation_old)) {
-        db_insert('locales_target')
-          ->fields(array(
-            'lid' => $lid,
-            'translation' => $translation_new,
-            'language' => $langcode,
-            'customized' => LOCALE_CUSTOMIZED,
-          ))
-          ->execute();
-      }
+      $target = $target && !$target->isNew() ? $target : locale_storage()->createTranslation(array('lid' => $lid, 'language' => $langcode));
+      $target->setPlurals($translations['translations'])
+        ->setCustomized()
+        ->save();
     }
-    elseif (!empty($translation_old)) {
+    elseif ($target) {
       // Empty translation entered: remove existing entry from database.
-      db_delete('locales_target')
-        ->condition('lid', $lid)
-        ->condition('language', $langcode)
-        ->execute();
+      $target->delete();
     }
-
   }
 
   drupal_set_message(t('The strings have been saved.'));

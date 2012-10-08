@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleTranslationTest.
+ * Definition of Drupal\locale\Tests\TranslationStringTest.
  */
 
 namespace Drupal\locale\Tests;
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Functional test for string translation and validation.
  */
-class LocaleTranslationTest extends WebTestBase {
+class TranslationStringTest extends WebTestBase {
 
   /**
    * Modules to enable.

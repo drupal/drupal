@@ -10,6 +10,8 @@ namespace Drupal\locale;
 use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoReaderInterface;
+use Drupal\locale\TranslationString;
+use PDO;
 
 /**
  * Gettext PO reader working with the locale module database.
@@ -106,71 +108,67 @@ class PoDatabaseReader implements PoReaderInterface {
   /**
    * Builds and executes a database query based on options set earlier.
    */
-  private function buildQuery() {
+  private function loadStrings() {
     $langcode = $this->_langcode;
     $options = $this->_options;
+    $conditions = array();
 
     if (array_sum($options) == 0) {
       // If user asked to not include anything in the translation files,
       // that would not make sense, so just fall back on providing a template.
       $langcode = NULL;
+      // Force option to get both translated and untranslated strings.
+      $options['not_translated'] = TRUE;
     }
-
     // Build and execute query to collect source strings and translations.
-    $query = db_select('locales_source', 's');
     if (!empty($langcode)) {
-      if ($options['not_translated']) {
-        // Left join to keep untranslated strings in.
-        $query->leftJoin('locales_target', 't', 's.lid = t.lid AND t.language = :language', array(':language' => $langcode));
-      }
-      else {
-        // Inner join to filter for only translations.
-        $query->innerJoin('locales_target', 't', 's.lid = t.lid AND t.language = :language', array(':language' => $langcode));
-      }
+      $conditions['language'] = $langcode;
+      // Translate some options into field conditions.
       if ($options['customized']) {
         if (!$options['not_customized']) {
           // Filter for customized strings only.
-          $query->condition('t.customized', LOCALE_CUSTOMIZED);
+          $conditions['customized'] = LOCALE_CUSTOMIZED;
         }
         // Else no filtering needed in this case.
       }
       else {
         if ($options['not_customized']) {
           // Filter for non-customized strings only.
-          $query->condition('t.customized', LOCALE_NOT_CUSTOMIZED);
+          $conditions['customized'] = LOCALE_NOT_CUSTOMIZED;
         }
         else {
           // Filter for strings without translation.
-          $query->isNull('t.translation');
+          $conditions['translated'] = FALSE;
         }
       }
-      $query->fields('t', array('translation'));
+      if (!$options['not_translated']) {
+        // Filter for string with translation.
+        $conditions['translated'] = TRUE;
+      }
+      return locale_storage()->getTranslations($conditions);
     }
     else {
-      $query->leftJoin('locales_target', 't', 's.lid = t.lid');
+      // If no language, we don't need any of the target fields.
+      return locale_storage()->getStrings($conditions);
     }
-    $query->fields('s', array('lid', 'source', 'context', 'location'));
-
-    $this->_result = $query->execute();
   }
 
   /**
    * Get the database result resource for the given language and options.
    */
-  private function getResult() {
+  private function readString() {
     if (!isset($this->_result)) {
-      $this->buildQuery();
+      $this->_result = $this->loadStrings();
     }
-    return $this->_result;
+    return array_shift($this->_result);
   }
 
   /**
    * Implements Drupal\Component\Gettext\PoReaderInterface::readItem().
    */
   function readItem() {
-    $result = $this->getResult();
-    $values = $result->fetchAssoc();
-    if ($values) {
+    if ($string = $this->readString()) {
+      $values = (array)$string;
       $poItem = new PoItem();
       $poItem->setFromArray($values);
       return $poItem;

@@ -12,7 +12,10 @@
 
 use Drupal\locale\LocaleLookup;
 use Drupal\locale\LocaleConfigSubscriber;
+use Drupal\locale\SourceString;
+use Drupal\locale\StringDatabaseStorage;
 use Drupal\locale\TranslationsStream;
+use Drupal\Core\Database\Database;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -209,9 +212,7 @@ function locale_language_update($language) {
  */
 function locale_language_delete($language) {
   // Remove translations.
-  db_delete('locales_target')
-    ->condition('language', $language->langcode)
-    ->execute();
+  locale_storage()->deleteTranslations(array('language' => $language->langcode));
 
   // Remove interface translation files.
   module_load_include('inc', 'locale', 'locale.bulk');
@@ -275,7 +276,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
   // Strings are cached by langcode, context and roles, using instances of the
   // LocaleLookup class to handle string lookup and caching.
   if (!isset($locale_t[$langcode][$context]) && isset($language_interface)) {
-    $locale_t[$langcode][$context] = new LocaleLookup($langcode, $context);
+    $locale_t[$langcode][$context] = new LocaleLookup($langcode, $context, locale_storage());
   }
   return ($locale_t[$langcode][$context][$string] === TRUE ? $string : $locale_t[$langcode][$context][$string]);
 }
@@ -285,6 +286,20 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
  */
 function locale_reset() {
   drupal_static_reset('locale');
+}
+
+/**
+ * Gets the locale storage controller class .
+ *
+ * @return Drupal\locale\StringStorageInterface
+ */
+function locale_storage() {
+  $storage = &drupal_static(__FUNCTION__);
+  if (!isset($storage)) {
+    $options = array('target' => 'default');
+    $storage = new StringDatabaseStorage(Database::getConnection($options['target']), $options);
+  }
+  return $storage;
 }
 
 /**
@@ -513,16 +528,16 @@ function locale_library_info_alter(&$libraries, $module) {
 function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
   $languages = $form['languages']['#languages'];
 
-  $total_strings = db_query("SELECT COUNT(*) FROM {locales_source}")->fetchField();
+  $total_strings = locale_storage()->countStrings();
   $stats = array_fill_keys(array_keys($languages), array());
 
   // If we have source strings, count translations and calculate progress.
   if (!empty($total_strings)) {
-    $translations = db_query("SELECT COUNT(*) AS translated, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY language");
-    foreach ($translations as $data) {
-      $stats[$data->language]['translated'] = $data->translated;
-      if ($data->translated > 0) {
-        $stats[$data->language]['ratio'] = round($data->translated / $total_strings * 100, 2);
+    $translations = locale_storage()->countTranslations();
+    foreach ($translations as $langcode => $translated) {
+      $stats[$langcode]['translated'] = $translated;
+      if ($translated > 0) {
+        $stats[$langcode]['ratio'] = round($translated / $total_strings * 100, 2);
       }
     }
   }
@@ -759,7 +774,7 @@ function _locale_parse_js_file($filepath) {
     $string =  implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['string'], 1, -1)));
     $context = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['context'], 1, -1)));
 
-    $source = db_query("SELECT lid, location FROM {locales_source} WHERE source = :source AND context = :context", array(':source' => $string, ':context' => $context))->fetchObject();
+    $source = locale_storage()->findString(array('source' => $string, 'context' => $context));
     if ($source) {
       // We already have this source string and now have to add the location
       // to the location column, if this file is not yet present in there.
@@ -770,23 +785,17 @@ function _locale_parse_js_file($filepath) {
         $locations = implode('; ', $locations);
 
         // Save the new locations string to the database.
-        db_update('locales_source')
-          ->fields(array(
-            'location' => $locations,
-          ))
-          ->condition('lid', $source->lid)
-          ->execute();
+        $source->setValues(array('location' => $locations))
+          ->save();
       }
     }
     else {
       // We don't have the source string yet, thus we insert it into the database.
-      db_insert('locales_source')
-        ->fields(array(
-          'location'  => $filepath,
-          'source'    => $string,
-          'context'   => $context,
-        ))
-        ->execute();
+      locale_storage()->createString(array(
+        'location'  => $filepath,
+        'source'    => $string,
+        'context'   => $context,
+      ))->save();
     }
   }
 }
@@ -845,10 +854,11 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // Only add strings with a translation to the translations array.
-  $result = db_query("SELECT s.lid, s.source, s.context, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.location LIKE '%.js%'", array(':language' => $language->langcode));
-
+  $options['filters']['location'] = '.js';
+  $options['fields'] = array('lid', 'context', 'source', 'translation');
+  $conditions['language'] = $language->langcode;
   $translations = array();
-  foreach ($result as $data) {
+  foreach (locale_storage()->getTranslations($conditions, $options) as $data) {
     $translations[$data->context][$data->source] = $data->translation;
   }
 
