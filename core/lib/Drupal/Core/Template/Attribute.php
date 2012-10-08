@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Template;
 
-use ArrayAccess;
-use IteratorAggregate;
 
 /**
  * A class that can be used for collecting then rendering HTML attributtes.
@@ -32,7 +30,7 @@ use IteratorAggregate;
  *  // Produces <cat class="cat black-cat white-cat black-white-cat" id="socks">
  * @endcode
  */
-class Attribute implements ArrayAccess, IteratorAggregate {
+class Attribute implements \ArrayAccess, \IteratorAggregate {
 
   /**
    * Stores the attribute data.
@@ -129,7 +127,7 @@ class Attribute implements ArrayAccess, IteratorAggregate {
    * Implements IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    return new ArrayIterator($this->storage);
+    return new \ArrayIterator($this->storage);
   }
 
   /**

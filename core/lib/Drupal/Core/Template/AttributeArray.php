@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Template;
 
-use ArrayAccess;
-use IteratorAggregate;
 
 /**
  * A class that defines a type of Attribute that can be added to as an array.
@@ -28,7 +26,7 @@ use IteratorAggregate;
  *
  * @see Drupal\Core\Template\Attribute
  */
-class AttributeArray extends AttributeValueBase implements ArrayAccess, IteratorAggregate {
+class AttributeArray extends AttributeValueBase implements \ArrayAccess, \IteratorAggregate {
 
   /**
    * Implements ArrayAccess::offsetGet().
@@ -75,7 +73,7 @@ class AttributeArray extends AttributeValueBase implements ArrayAccess, Iterator
    * Implements IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    return new ArrayIterator($this->value);
+    return new \ArrayIterator($this->value);
   }
 
   /**
