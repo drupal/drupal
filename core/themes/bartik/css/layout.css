@@ -71,7 +71,7 @@ body,
   padding: 0 10px;
 }
 
-@media all and (min-width: 560px) and (max-width:850px) {
+@media all and (min-width: 560px) and (max-width: 850px) {
 
   #sidebar-first,
   .region-triptych-first,
