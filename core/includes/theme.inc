@@ -371,7 +371,7 @@ function drupal_theme_rebuild() {
  *     defined, 'template' is not used.
  *   - 'template': The filename of the template generating output for this
  *     theme hook. The template is in the directory defined by the 'path' key of
- *     hook_theme() or defaults to $path.
+ *     hook_theme() or defaults to "$path/templates".
  *   - 'variables': The variables for this theme hook as defined in
  *     hook_theme(). If there is more than one implementation and 'variables' is
  *     not specified in a later one, then the previous definition is kept.
