@@ -582,8 +582,6 @@ function node_update_8003() {
 
 /**
  * Create a UUID column for nodes.
- *
- * @todo UUID upgrade path: http://drupal.org/node/1642526
  */
 function node_update_8004() {
   $spec = array(
@@ -661,6 +659,22 @@ function node_update_8005() {
       'nid' => array('nid'),
     ))
   );
+}
+
+/**
+ * Generate an UUID for all nodes.
+ */
+function node_update_8006(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['last'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(nid) FROM {node} WHERE uuid IS NULL')->fetchField();
+  }
+
+  $nids = db_query_range('SELECT nid FROM {node} WHERE nid > :nid AND uuid IS NULL ORDER BY nid ASC', 0, 10, array(':nid' => $sandbox['last']))->fetchCol();
+  update_add_uuids($sandbox, 'node', 'nid', $nids);
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }
 
 /**

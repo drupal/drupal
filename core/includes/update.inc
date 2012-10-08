@@ -11,6 +11,7 @@
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;
+use Drupal\Component\Uuid\Uuid;
 
 /**
  * Minimum schema version of Drupal 7 required for upgrade to Drupal 8.
@@ -1124,4 +1125,31 @@ function update_variables_to_config($config_name, array $variable_map) {
 
   // Delete the migrated variables.
   db_delete('variable')->condition('name', array_keys($variable_map), 'IN')->execute();
+}
+
+/**
+ * Helper function to update entities with uuid.
+ *
+ * @param array $sandbox
+ *   A sandbox where conversion happens.
+ * @param string $table
+ *   A table whose data should be updated.
+ * @param string $primary_key
+ *   A $table primary key column.
+ * @param array $values
+ *   A $primary_key values of rows to be updated.
+ */
+function update_add_uuids(&$sandbox, $table, $primary_key, $values) {
+  $uuid = new Uuid();
+  foreach ($values as $value) {
+    db_update($table)
+      ->fields(array(
+        'uuid' => $uuid->generate(),
+      ))
+      ->condition($primary_key, $value)
+      ->isNull('uuid')
+      ->execute();
+    $sandbox['progress']++;
+    $sandbox['last'] = $value;
+  }
 }

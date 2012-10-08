@@ -312,8 +312,6 @@ function taxonomy_update_8001() {
 
 /**
  * Create a UUID column for taxonomy terms.
- *
- * @todo UUID upgrade path: http://drupal.org/node/1642526
  */
 function taxonomy_update_8002() {
   $spec = array(
@@ -334,4 +332,20 @@ function taxonomy_update_8002() {
   else {
     db_add_field('taxonomy_term_data', 'uuid', $spec, $keys);
   }
+}
+
+/**
+ * Generate an UUID for all terms.
+ */
+function taxonomy_update_8003(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['last'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(tid) FROM {taxonomy_term_data} WHERE uuid IS NULL')->fetchField();
+  }
+
+  $tids = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE tid > :tid AND uuid IS NULL ORDER BY tid ASC', 0, 10, array(':tid' => $sandbox['last']))->fetchCol();
+  update_add_uuids($sandbox, 'taxonomy_term_data', 'tid', $tids);
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }

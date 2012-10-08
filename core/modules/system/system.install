@@ -1937,8 +1937,6 @@ function system_update_8014() {
 
 /**
  * Create a UUID column for managed files.
- *
- * @todo UUID upgrade path: http://drupal.org/node/1642526
  */
 function system_update_8015() {
   $spec = array(
@@ -2182,6 +2180,22 @@ function system_update_8023() {
   );
 
   db_create_table('key_value_expire', $table);
+}
+
+/**
+ * Generate an UUID for all files.
+ */
+function system_update_8024(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['last'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(fid) FROM {file_managed} WHERE uuid IS NULL')->fetchField();
+  }
+
+  $fids = db_query_range('SELECT fid FROM {file_managed} WHERE fid > :fid AND uuid IS NULL ORDER BY fid ASC', 0, 10, array(':fid' => $sandbox['last']))->fetchCol();
+  update_add_uuids($sandbox, 'file_managed', 'fid', $fids);
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }
 
 /**

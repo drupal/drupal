@@ -458,8 +458,6 @@ function user_update_8002() {
 
 /**
  * Create a UUID column for users.
- *
- * @todo UUID upgrade path: http://drupal.org/node/1642526
  */
 function user_update_8003() {
   $spec = array(
@@ -581,6 +579,23 @@ function user_update_8008() {
       'description' => "User's {users}.uid.",
     )
   );
+}
+
+/**
+ * Generate an UUID for all users.
+ */
+function user_update_8009(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    // The first user id is 0, so it needs to start with -1.
+    $sandbox['last'] = -1;
+    $sandbox['max'] = db_query('SELECT COUNT(uid) FROM {users} WHERE uuid IS NULL')->fetchField();
+  }
+
+  $uids = db_query_range('SELECT uid FROM {users} WHERE uid > :uid AND uuid IS NULL ORDER BY uid ASC', 0, 10, array(':uid' => $sandbox['last']))->fetchCol();
+  update_add_uuids($sandbox, 'users', 'uid', $uids);
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }
 
 /**

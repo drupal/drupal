@@ -295,8 +295,6 @@ function comment_update_8000() {
 
 /**
  * Create a UUID column for comments.
- *
- * @todo UUID upgrade path: http://drupal.org/node/1642526
  */
 function comment_update_8001() {
   $spec = array(
@@ -365,6 +363,22 @@ function comment_update_8002() {
       'last_comment_uid' => array('last_comment_uid'),
     ))
   );
+}
+
+/**
+ * Generate an UUID for all comments.
+ */
+function comment_update_8003(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['last'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(cid) FROM {comment} WHERE uuid IS NULL')->fetchField();
+  }
+
+  $cids = db_query_range('SELECT cid FROM {comment} WHERE cid > :cid AND uuid IS NULL ORDER BY cid ASC', 0, 10, array(':cid' => $sandbox['last']))->fetchCol();
+  update_add_uuids($sandbox, 'comment', 'cid', $cids);
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }
 
 /**
