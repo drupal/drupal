@@ -9,27 +9,3 @@
 .revision-current {
   background: #ffc;
 }
-
-/**
- * Operations dropbuttons
- */
-.dropbutton-wrapper {
-  display: block;
-  min-height: 2em;
-  position: relative;
-}
-.dropbutton-widget {
-  position: absolute;
-  right: 0; /* LTR */
-}
-.dropbutton-wrapper,
-.dropbutton-widget {
-  max-width: 100%;
-}
-.dropbutton-multiple.open,
-.dropbutton-multiple.open .dropbutton-widget {
-  max-width: none;
-}
-.dropbutton-multiple.open {
-  z-index: 100;
-}

@@ -7,6 +7,10 @@
 /**
  * The dropbutton arrow.
  */
+.dropbutton-widget {
+  left: 0;
+  right: auto;
+}
 .dropbutton-toggle {
   left: 0;
   right: auto;

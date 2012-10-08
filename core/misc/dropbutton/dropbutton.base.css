@@ -14,10 +14,17 @@
   box-sizing: border-box;
 }
 .dropbutton-wrapper {
-  display: inline-block;
+  display: block;
+  min-height: 2em;
+  position: relative;
 }
 .dropbutton-widget {
-  position: relative;
+  position: absolute;
+  right: 0; /* LTR */
+}
+.dropbutton-wrapper,
+.dropbutton-widget {
+  max-width: 100%;
 }
 /* UL styles are over-scoped in core, so this selector needs weight parity. */
 .dropbutton-widget .dropbutton {
@@ -43,6 +50,13 @@
  */
 .dropbutton-multiple .dropbutton-widget {
   padding-right: 2em; /* LTR */
+}
+.dropbutton-multiple.open,
+.dropbutton-multiple.open .dropbutton-widget {
+  max-width: none;
+}
+.dropbutton-multiple.open {
+  z-index: 100;
 }
 .dropbutton-multiple .dropbutton .secondary-action {
   display: none;
