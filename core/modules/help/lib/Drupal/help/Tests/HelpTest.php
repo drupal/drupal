@@ -107,12 +107,9 @@ class HelpTest extends WebTestBase {
    */
   protected function getModuleList() {
     $modules = array();
-    $result = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
-    foreach ($result as $module) {
-      if (file_exists($module->filename) && function_exists($module->name . '_help')) {
-        $fullname = unserialize($module->info);
-        $modules[$module->name] = $fullname['name'];
-      }
+    $module_data = system_rebuild_module_data();
+    foreach (module_implements('help') as $module) {
+      $modules[$module] = $module_data[$module]->info['name'];
     }
     return $modules;
   }

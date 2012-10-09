@@ -1252,7 +1252,7 @@ function system_modules_uninstall($form, $form_state = NULL) {
   $all_modules = system_rebuild_module_data();
   $disabled_modules = array();
   foreach ($all_modules as $name => $module) {
-    if (empty($module->status) && $module->schema_version > SCHEMA_UNINSTALLED) {
+    if (empty($module->status) && drupal_get_installed_schema_version($name) > SCHEMA_UNINSTALLED) {
       $disabled_modules[$name] = $module;
     }
   }

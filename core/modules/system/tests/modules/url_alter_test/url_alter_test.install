@@ -5,8 +5,5 @@
  */
 function url_alter_test_install() {
   // Set the weight of this module to one higher than forum.module.
-  db_update('system')
-    ->fields(array('weight' => 2))
-    ->condition('name', 'url_alter_test')
-    ->execute();
+  module_set_weight('url_alter_test', 2);
 }

@@ -189,8 +189,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
   protected function performUpgrade($register_errors = TRUE) {
 
     // Load the first update screen.
-    $update_url = $GLOBALS['base_url'] . '/core/update.php';
-    $this->drupalGet($update_url, array('external' => TRUE));
+    $this->getUpdatePhp();
     if (!$this->assertResponse(200)) {
       throw new Exception('Initial GET to update.php did not return HTTP 200 status.');
     }
@@ -230,7 +229,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     }
 
     // Check if there still are pending updates.
-    $this->drupalGet($update_url, array('external' => TRUE));
+    $this->getUpdatePhp();
     $this->drupalPost(NULL, array(), t('Continue'));
     if (!$this->assertText(t('No pending updates.'), t('No pending updates at the end of the update process.'))) {
       throw new Exception('update.php still shows pending updates after execution.');
@@ -264,21 +263,35 @@ abstract class UpgradePathTestBase extends WebTestBase {
   }
 
   /**
-   * Force uninstall all modules from a test database, except those listed.
+   * Gets update.php without calling url().
    *
-   * @param $modules
-   *   The list of modules to keep installed. Required core modules will
-   *   always be kept.
+   * Required since WebTestBase::drupalGet() calls t(), which calls into
+   * system_list(), from the parent site/test runner, before update.php is even
+   * executed.
+   *
+   * @see WebTestBase::drupalGet()
    */
-  protected function uninstallModulesExcept(array $modules) {
-    $required_modules = array('block', 'dblog', 'filter', 'node', 'system', 'update', 'user');
+  protected function getUpdatePhp() {
+    $path = $GLOBALS['base_url'] . '/core/update.php';
+    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $path, CURLOPT_NOBODY => FALSE));
+    // Ensure that any changes to variables in the other thread are picked up.
+    $this->refreshVariables();
 
-    $modules = array_merge($required_modules, $modules);
-
-    db_delete('system')
-      ->condition('type', 'module')
-      ->condition('name', $modules, 'NOT IN')
-      ->execute();
+    // Replace original page output with new output from redirected page(s).
+    if ($new = $this->checkForMetaRefresh()) {
+      $out = $new;
+    }
+    // @todo TestBase::verbose() cannot be called here yet, since Simpletest
+    //   verbose output parameters are not prepared before test execution and
+    //   instead determined at runtime; i.e., file_create_url() calls into
+    //   system_list(), before update.php has upgraded the system list.
+    // @see http://drupal.org/node/1611430
+    /*
+    $this->verbose('GET request to: ' . $path .
+      '<hr />Ending URL: ' . $this->getUrl() .
+      '<hr />' . $out);
+    */
+    return $out;
   }
 
 }

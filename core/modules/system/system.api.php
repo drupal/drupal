@@ -2167,10 +2167,7 @@ function hook_cache_flush() {
  * @see drupal_flush_all_caches()
  */
 function hook_rebuild() {
-  // Rehash blocks for active themes. We don't use list_themes() here,
-  // because if MAINTENANCE_MODE is defined it skips reading the database,
-  // and we can't tell which themes are active.
-  $themes = db_query("SELECT name FROM {system} WHERE type = 'theme' AND status = 1");
+  $themes = list_themes();
   foreach ($themes as $theme) {
     _block_rehash($theme->name);
   }
@@ -2983,8 +2980,8 @@ function hook_update_last_removed() {
  * - variables that the module has set using variable_set() or system_settings_form()
  * - modifications to existing tables
  *
- * The module should not remove its entry from the {system} table. Database
- * tables defined by hook_schema() will be removed automatically.
+ * The module should not remove its entry from the module configuration.
+ * Database tables defined by hook_schema() will be removed automatically.
  *
  * The uninstall hook must be implemented in the module's .install file. It
  * will fire when the module gets uninstalled but before the module's database

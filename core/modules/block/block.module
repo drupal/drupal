@@ -958,12 +958,10 @@ function block_cache_flush() {
  * Implements hook_rebuild().
  */
 function block_rebuild() {
-  // Rehash blocks for active themes. We don't use list_themes() here,
-  // because if MAINTENANCE_MODE is defined it skips reading the database,
-  // and we can't tell which themes are active.
-  $themes = db_query("SELECT name FROM {system} WHERE type = 'theme' AND status = 1");
-  foreach ($themes as $theme) {
-    _block_rehash($theme->name);
+  foreach (list_themes() as $name => $data) {
+    if ($data->status) {
+      _block_rehash($name);
+    }
   }
 }
 

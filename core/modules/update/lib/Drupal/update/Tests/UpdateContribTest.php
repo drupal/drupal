@@ -166,11 +166,7 @@ class UpdateContribTest extends UpdateTestBase {
    */
   function testUpdateBaseThemeSecurityUpdate() {
     // Only enable the subtheme, not the base theme.
-    db_update('system')
-      ->fields(array('status' => 1))
-      ->condition('type', 'theme')
-      ->condition('name', 'update_test_subtheme')
-      ->execute();
+    theme_enable(array('update_test_subtheme'));
 
     // Define the initial state for core and the subtheme.
     $system_info = array(
@@ -208,11 +204,13 @@ class UpdateContribTest extends UpdateTestBase {
   function testUpdateShowDisabledThemes() {
     $update_settings = config('update.settings');
     // Make sure all the update_test_* themes are disabled.
-    db_update('system')
-      ->fields(array('status' => 0))
-      ->condition('type', 'theme')
-      ->condition('name', 'update_test_%', 'LIKE')
-      ->execute();
+    $theme_config = config('system.theme');
+    foreach ($theme_config->get('enabled') as $theme => $weight) {
+      if (preg_match('/^update_test_/', $theme)) {
+        $theme_config->clear("enabled.$theme");
+      }
+    }
+    $theme_config->save();
 
     // Define the initial state for core and the test contrib themes.
     $system_info = array(

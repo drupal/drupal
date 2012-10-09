@@ -2654,120 +2654,10 @@ function system_check_directory($form_element) {
 }
 
 /**
- * Retrieves the current status of an array of files in the system table.
- *
- * @param $files
- *   An array of files to check.
- * @param $type
- *   The type of the files.
- */
-function system_get_files_database(&$files, $type) {
-  // Extract current files from database.
-  $result = db_query("SELECT filename, name, type, status, schema_version, weight FROM {system} WHERE type = :type", array(':type' => $type));
-  foreach ($result as $file) {
-    if (isset($files[$file->name]) && is_object($files[$file->name])) {
-      $file->uri = $file->filename;
-      foreach ($file as $key => $value) {
-        if (!isset($files[$file->name]->$key)) {
-          $files[$file->name]->$key = $value;
-        }
-      }
-    }
-  }
-}
-
-/**
- * Updates the records in the system table based on the files array.
- *
- * @param $files
- *   An array of files.
- * @param $type
- *   The type of the files.
- */
-function system_update_files_database(&$files, $type) {
-  $result = db_query("SELECT * FROM {system} WHERE type = :type", array(':type' => $type));
-
-  // Add all files that need to be deleted to a DatabaseCondition.
-  $delete = db_or();
-  foreach ($result as $file) {
-    if (isset($files[$file->name]) && is_object($files[$file->name])) {
-      // Keep the old filename from the database in case the file has moved.
-      $old_filename = $file->filename;
-
-      $updated_fields = array();
-
-      // Handle info specially, compare the serialized value.
-      $serialized_info = serialize($files[$file->name]->info);
-      if ($serialized_info != $file->info) {
-        $updated_fields['info'] = $serialized_info;
-      }
-      unset($file->info);
-
-      // Scan remaining fields to find only the updated values.
-      foreach ($file as $key => $value) {
-        if (isset($files[$file->name]->$key) && $files[$file->name]->$key != $value) {
-          $updated_fields[$key] = $files[$file->name]->$key;
-        }
-      }
-
-      // Update the record.
-      if (count($updated_fields)) {
-        db_update('system')
-          ->fields($updated_fields)
-          ->condition('filename', $old_filename)
-          ->execute();
-      }
-
-      // Indicate that the file exists already.
-      $files[$file->name]->exists = TRUE;
-    }
-    else {
-      // File is not found in file system, so delete record from the system table.
-      $delete->condition('filename', $file->filename);
-    }
-  }
-
-  if (count($delete) > 0) {
-    // Delete all missing files from the system table, but only if the plugin
-    // has never been installed.
-    db_delete('system')
-      ->condition($delete)
-      ->condition('schema_version', -1)
-      ->execute();
-  }
-
-  // All remaining files are not in the system table, so we need to add them.
-  $query = db_insert('system')->fields(array('filename', 'name', 'type', 'owner', 'info'));
-  foreach ($files as &$file) {
-    if (isset($file->exists)) {
-      unset($file->exists);
-    }
-    else {
-      $query->values(array(
-        'filename' => $file->uri,
-        'name' => $file->name,
-        'type' => $type,
-        'owner' => isset($file->owner) ? $file->owner : '',
-        'info' => serialize($file->info),
-      ));
-      $file->type = $type;
-      $file->status = 0;
-      $file->schema_version = -1;
-    }
-  }
-  $query->execute();
-
-  // If any module or theme was moved to a new location, we need to reset the
-  // system_list() cache or we will continue to load the old copy, look for
-  // schema updates in the wrong place, etc.
-  system_list_reset();
-}
-
-/**
  * Returns an array of information about enabled modules or themes.
  *
- * This function returns the information from the {system} table corresponding
- * to the cached contents of the .info file for each active module or theme.
+ * This function returns the contents of the .info file for each enabled module
+ * or theme.
  *
  * @param $type
  *   Either 'module' or 'theme'.
@@ -2788,9 +2678,9 @@ function system_update_files_database(&$files, $type) {
 function system_get_info($type, $name = NULL) {
   $info = array();
   if ($type == 'module') {
-    $result = db_query('SELECT name, info FROM {system} WHERE type = :type AND status = 1', array(':type' => 'module'));
-    foreach ($result as $record) {
-      $info[$record->name] = unserialize($record->info);
+    $data = system_rebuild_module_data();
+    foreach (module_list() as $module) {
+      $info[$module] = $data[$module]->info;
     }
   }
   else {
@@ -2928,17 +2818,31 @@ function system_rebuild_module_data() {
   // reference from system_list_reset() during the rebuild.
   if (!isset($modules_cache)) {
     $modules = _system_rebuild_module_data();
+    $files = array();
     ksort($modules);
-    system_get_files_database($modules, 'module');
-    system_update_files_database($modules, 'module');
+    // Add name, status, weight, and schema version.
+    $enabled_modules = config('system.module')->get('enabled');
+    $disabled_modules = config('system.module.disabled')->get();
+    $all_modules = $enabled_modules + $disabled_modules;
+    foreach ($modules as $module => $record) {
+      $record->name = $module;
+      $record->weight = isset($all_modules[$module]) ? $all_modules[$module] : 0;
+      $record->status = (int) isset($enabled_modules[$module]);
+      $record->schema_version = SCHEMA_UNINSTALLED;
+      $files[$module] = $record->filename;
+    }
     $modules = _module_build_dependencies($modules);
     $modules_cache = $modules;
+
+    // Store filenames to allow system_list() and drupal_get_filename() to
+    // retrieve them without having to rebuild or scan the filesystem.
+    state()->set('system.module.files', $files);
   }
   return $modules_cache;
 }
 
 /**
- * Refresh bootstrap column in the system table.
+ * Refreshes the list of bootstrap modules.
  *
  * This is called internally by module_enable/disable() to flag modules that
  * implement hooks used during bootstrap, such as hook_boot(). These modules
@@ -2948,20 +2852,10 @@ function _system_update_bootstrap_status() {
   $bootstrap_modules = array();
   foreach (bootstrap_hooks() as $hook) {
     foreach (module_implements($hook) as $module) {
-      $bootstrap_modules[] = $module;
+      $bootstrap_modules[$module] = drupal_get_filename('module', $module);
     }
   }
-  $query = db_update('system')->fields(array('bootstrap' => 0));
-  if ($bootstrap_modules) {
-    db_update('system')
-      ->fields(array('bootstrap' => 1))
-      ->condition('name', $bootstrap_modules, 'IN')
-      ->execute();
-    $query->condition('name', $bootstrap_modules, 'NOT IN');
-  }
-  $query->execute();
-  // Reset the cached list of bootstrap modules.
-  system_list_reset();
+  state()->set('system.module.bootstrap', $bootstrap_modules);
 }
 
 /**
@@ -3093,8 +2987,27 @@ function _system_rebuild_theme_data() {
 function system_rebuild_theme_data() {
   $themes = _system_rebuild_theme_data();
   ksort($themes);
-  system_get_files_database($themes, 'theme');
-  system_update_files_database($themes, 'theme');
+  // @todo This function has no business in determining/setting the status of
+  //   a theme, but various other functions expect it to return themes with a
+  //   $status property. system_list() stores the return value of this function
+  //   in state, and ensures to set/override the $status property for each theme
+  //   based on the current config. Remove this code when themes have a proper
+  //   installation status.
+  // @see http://drupal.org/node/1067408
+  $enabled_themes = config('system.theme')->get('enabled');
+  $files = array();
+  foreach ($themes as $name => $theme) {
+    $theme->status = (int) isset($enabled_themes[$name]);
+    $files[$name] = $theme->filename;
+  }
+  // Replace last known theme data state.
+  // @todo Obsolete with proper installation status for themes.
+  state()->set('system.theme.data', $themes);
+
+  // Store filenames to allow system_list() and drupal_get_filename() to
+  // retrieve them without having to rebuild or scan the filesystem.
+  state()->set('system.theme.files', $files);
+
   return $themes;
 }
 

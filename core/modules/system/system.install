@@ -510,11 +510,6 @@ function system_install() {
   // Enable the default theme. Can't use theme_enable() this early in
   // installation.
   variable_set('theme_default', 'stark');
-  db_update('system')
-    ->fields(array('status' => 1))
-    ->condition('type', 'theme')
-    ->condition('name', 'stark')
-    ->execute();
   config_install_default_config('theme', 'stark');
 
   // Populate the cron key variable.
@@ -1423,75 +1418,6 @@ function system_schema() {
     ),
   );
 
-  $schema['system'] = array(
-    'description' => "A list of all modules, themes, and theme engines that are or have been installed in Drupal's file system.",
-    'fields' => array(
-      'filename' => array(
-        'description' => 'The path of the primary file for this item, relative to the Drupal root; e.g. modules/node/node.module.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'name' => array(
-        'description' => 'The name of the item; e.g. node.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'type' => array(
-        'description' => 'The type of the item, either module, theme, or theme_engine.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'owner' => array(
-        'description' => "A theme's 'parent' . Can be either a theme or an engine.",
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'status' => array(
-        'description' => 'Boolean indicating whether or not this item is enabled.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'bootstrap' => array(
-        'description' => "Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted).",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'schema_version' => array(
-        'description' => "The module's database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed.",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => -1,
-        'size' => 'small',
-      ),
-      'weight' => array(
-        'description' => "The order in which this module's hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name.",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'info' => array(
-        'description' => "A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, and php.",
-        'type' => 'blob',
-        'not null' => FALSE,
-      ),
-    ),
-    'primary key' => array('filename'),
-    'indexes' => array(
-      'system_list' => array('status', 'bootstrap', 'type', 'weight', 'name'),
-      'type_name' => array('type', 'name'),
-    ),
-  );
-
   $schema['url_alias'] = array(
     'description' => 'A list of URL aliases for Drupal paths; a user may visit either the source or destination path.',
     'fields' => array(
@@ -2196,6 +2122,13 @@ function system_update_8024(&$sandbox) {
   update_add_uuids($sandbox, 'file_managed', 'fid', $fids);
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+}
+
+/**
+ * Remove {system} table.
+ */
+function system_update_8025() {
+  db_drop_table('system');
 }
 
 /**

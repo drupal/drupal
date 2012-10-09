@@ -890,28 +890,27 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   elseif (isset($files[$type][$name])) {
     // nothing
   }
-  // Verify that we have an active database connection, before querying
-  // the database. This is required because this function is called both
-  // before we have a database connection (i.e. during installation) and
-  // when a database connection fails.
   else {
-    try {
-      if (function_exists('db_query')) {
-        $file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField();
-        if ($file && file_exists(DRUPAL_ROOT . '/' . $file)) {
-          $files[$type][$name] = $file;
+    // Verify that we have an keyvalue service before using it. This is required
+    // because this function is called during installation.
+    // @todo Inject database connection into KeyValueStore\DatabaseStorage.
+    if (drupal_container()->hasDefinition('keyvalue') && function_exists('db_query')) {
+      try {
+        $file_list = state()->get('system.' . $type . '.files');
+        if ($file_list && isset($file_list[$name]) && file_exists(DRUPAL_ROOT . '/' . $file_list[$name])) {
+          $files[$type][$name] = $file_list[$name];
         }
       }
-    }
-    catch (Exception $e) {
-      // The database table may not exist because Drupal is not yet installed,
-      // or the database might be down. We have a fallback for this case so we
-      // hide the error completely.
+      catch (Exception $e) {
+        // The keyvalue service raised an exception because the backend might
+        // be down. We have a fallback for this case so we hide the error
+        // completely.
+      }
     }
     // Fallback to searching the filesystem if the database could not find the
     // file or the file returned by the database is not found.
     if (!isset($files[$type][$name])) {
-      // We have a consistent directory naming: modules, themes...
+      // We have consistent directory naming: modules, themes...
       $dir = $type . 's';
       if ($type == 'theme_engine') {
         $dir = 'themes/engines';
@@ -2466,9 +2465,10 @@ function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
     $container
       ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
       ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+
+    // Register the KeyValueStore factory.
     $container
-      ->register('state.storage', 'Drupal\Core\KeyValueStore\DatabaseStorage')
-      ->addArgument('state');
+      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory');
   }
   return $container;
 }
@@ -2485,7 +2485,7 @@ function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
  * @return Drupal\Core\KeyValueStore\KeyValueStoreInterface
  */
 function state() {
-  return drupal_container()->get('state.storage');
+  return drupal_container()->get('keyvalue')->get('state');
 }
 
 /**
@@ -2504,16 +2504,22 @@ function typed_data() {
 /**
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
+ * @param string $new_prefix
+ *   Internal use only. A new prefix to be stored. Passed in by tests that use
+ *   the test runner from within a test.
+ *
  * @return
  *   Either the simpletest prefix (the string "simpletest" followed by any
  *   number of digits) or FALSE if the user agent does not contain a valid
  *   HMAC and timestamp.
  */
-function drupal_valid_test_ua() {
+function drupal_valid_test_ua($new_prefix = NULL) {
   global $drupal_hash_salt;
-  // No reason to reset this.
   static $test_prefix;
 
+  if (isset($new_prefix)) {
+    $test_prefix = $new_prefix;
+  }
   if (isset($test_prefix)) {
     return $test_prefix;
   }

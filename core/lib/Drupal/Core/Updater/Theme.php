@@ -72,7 +72,7 @@ class Theme extends Updater implements UpdaterInterface {
    * Overrides Drupal\Core\Updater\Updater::postInstall().
    */
   public function postInstall() {
-    // Update the system table.
+    // Update the theme info.
     clearstatcache();
     system_rebuild_theme_data();
   }

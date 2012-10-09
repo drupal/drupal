@@ -49,11 +49,7 @@ class ModuleApiTest extends WebTestBase {
     $this->assertModuleList($module_list, t('After adding a module'));
 
     // Try to mess with the module weights.
-    db_update('system')
-      ->fields(array('weight' => 20))
-      ->condition('name', 'contact')
-      ->condition('type', 'module')
-      ->execute();
+    module_set_weight('contact', 20);
     // Reset the module list.
     system_list_reset();
     // Move contact to the end of the array.

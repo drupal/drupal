@@ -48,8 +48,11 @@ class LocaleCompareTest extends WebTestBase {
     // info of the locale_test and locale_test_disabled modules.
     variable_set('locale_translation_test_system_info_alter', TRUE);
 
-    // Check if interface translation data is collected from hook_info.
+    // Reset static system list caches to reflect info changes.
     drupal_static_reset('locale_translation_project_list');
+    system_list_reset();
+
+    // Check if interface translation data is collected from hook_info.
     $projects = locale_translation_project_list();
     $this->assertEqual($projects['locale_test']['info']['interface translation server pattern'], 'core/modules/locale/test/modules/locale_test/%project-%version.%language.po', 'Interface translation parameter found in project info.');
     $this->assertEqual($projects['locale_test']['name'] , 'locale_test', format_string('%key found in project info.', array('%key' => 'interface translation project')));

@@ -10,10 +10,7 @@
  */
 function field_test_install() {
   // hook_entity_info_alter() needs to be executed as last.
-  db_update('system')
-    ->fields(array('weight' => 1))
-    ->condition('name', 'field_test')
-    ->execute();
+  module_set_weight('field_test', 1);
 }
 
 /**

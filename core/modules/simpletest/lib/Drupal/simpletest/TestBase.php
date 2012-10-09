@@ -122,6 +122,13 @@ abstract class TestBase {
   protected $verboseDirectory;
 
   /**
+   * The original database prefix when running inside Simpletest.
+   *
+   * @var string
+   */
+  protected $originalPrefix;
+
+  /**
    * Constructor for Test.
    *
    * @param $test_id
@@ -722,6 +729,13 @@ abstract class TestBase {
     global $user, $conf;
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
+    // When running the test runner within a test, back up the original database
+    // prefix and re-set the new/nested prefix in drupal_valid_test_ua().
+    if (drupal_valid_test_ua()) {
+      $this->originalPrefix = drupal_valid_test_ua();
+      drupal_valid_test_ua($this->databasePrefix);
+    }
+
     // Backup current in-memory configuration.
     $this->originalConf = $conf;
 
@@ -858,6 +872,9 @@ abstract class TestBase {
     drupal_container($this->originalContainer);
     $language_interface = $this->originalLanguage;
     $GLOBALS['config_directories'] = $this->originalConfigDirectories;
+    if (isset($this->originalPrefix)) {
+      drupal_valid_test_ua($this->originalPrefix);
+    }
 
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();

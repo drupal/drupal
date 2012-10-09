@@ -9,16 +9,6 @@ use Drupal\Core\Database\Database;
 use Drupal\locale\Gettext;
 
 /**
- * Indicates that a module has not been installed yet.
- */
-const SCHEMA_UNINSTALLED = -1;
-
-/**
- * Indicates that a module has been installed.
- */
-const SCHEMA_INSTALLED = 0;
-
-/**
  * Requirement severity -- Informational message only.
  */
 const REQUIREMENT_INFO = -1;
@@ -420,27 +410,23 @@ function drupal_install_system() {
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
-  db_insert('system')
-    ->fields(array('filename', 'name', 'type', 'owner', 'status', 'schema_version', 'bootstrap'))
-    ->values(array(
-        'filename' => $system_path . '/system.module',
-        'name' => 'system',
-        'type' => 'module',
-        'owner' => '',
-        'status' => 1,
-        'schema_version' => $system_version,
-        'bootstrap' => 0,
-      ))
-    ->execute();
+  drupal_container()
+    ->get('keyvalue')
+    ->get('system.schema')
+    ->set('system', $system_version);
 
-  // Clear out module list and hook implementation statics before calling
-  // system_rebuild_theme_data().
+  // System module needs to be enabled and the system/module lists need to be
+  // reset first in order to allow config_install_default_config() to invoke
+  // config import callbacks.
+  // @todo Installation profiles may override the system.module config object.
+  config('system.module')
+    ->set('enabled.system', 0)
+    ->save();
+
+  // Clear out module list and hook implementation statics.
   system_list_reset();
   module_list_reset();
   module_implements_reset();
-
-  system_rebuild_module_data();
-  system_rebuild_theme_data();
 
   config_install_default_config('module', 'system');
 

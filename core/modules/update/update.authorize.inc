@@ -66,7 +66,8 @@ function update_authorize_run_update($filetransfer, $projects) {
  *   The FileTransfer object created by authorize.php for use during this
  *   operation.
  * @param string $project
- *   The canonical project short name (e.g., {system}.name).
+ *   The canonical project short name; i.e., the name of the module, theme, or
+ *   profile.
  * @param string $updater_name
  *   The name of the Drupal\Core\Updater\Updater class to use for installing
  *   this project.

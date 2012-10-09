@@ -323,16 +323,16 @@ function simpletest_test_get_all() {
     else {
       // Select all PSR-0 classes in the Tests namespace of all modules.
       $classes = array();
-      $system_list = db_query("SELECT name, filename FROM {system}")->fetchAllKeyed();
-
-      foreach ($system_list as $name => $filename) {
+      $module_data = system_rebuild_module_data();
+      $all_data = $module_data + system_rebuild_theme_data();
+      foreach ($all_data as $name => $data) {
         // Build directory in which the test files would reside.
-        $tests_dir = DRUPAL_ROOT . '/' . dirname($filename) . '/lib/Drupal/' . $name . '/Tests';
+        $tests_dir = DRUPAL_ROOT . '/' . dirname($data->filename) . '/lib/Drupal/' . $name . '/Tests';
         // Scan it for test files if it exists.
         if (is_dir($tests_dir)) {
           $files = file_scan_directory($tests_dir, '/.*\.php/');
           if (!empty($files)) {
-            $basedir = DRUPAL_ROOT . '/' . dirname($filename) . '/lib/';
+            $basedir = DRUPAL_ROOT . '/' . dirname($data->filename) . '/lib/';
             foreach ($files as $file) {
               // Convert the file name into the namespaced class name.
               $replacements = array(
@@ -357,7 +357,7 @@ function simpletest_test_get_all() {
           // If this test class requires a non-existing module, skip it.
           if (!empty($info['dependencies'])) {
             foreach ($info['dependencies'] as $module) {
-              if (!drupal_get_filename('module', $module)) {
+              if (!isset($module_data[$module])) {
                 continue 2;
               }
             }
@@ -385,12 +385,10 @@ function simpletest_test_get_all() {
  * Registers namespaces for disabled modules.
  */
 function simpletest_classloader_register() {
-  // Get the cached test modules list and register a test namespace for each.
-  $disabled_modules = db_query("SELECT name, filename FROM {system} WHERE status = 0")->fetchAllKeyed();
-  if ($disabled_modules) {
-    foreach ($disabled_modules as $name => $filename) {
-      drupal_classloader_register($name, dirname($filename));
-    }
+  $all_data = system_rebuild_module_data();
+  $all_data += system_rebuild_theme_data();
+  foreach ($all_data as $name => $data) {
+    drupal_classloader_register($name, dirname($data->filename));
   }
 }
 

@@ -15,6 +15,16 @@ use Drupal\Core\Utility\SchemaCache;
  */
 
 /**
+ * Indicates that a module has not been installed yet.
+ */
+const SCHEMA_UNINSTALLED = -1;
+
+/**
+ * Indicates that a module has been installed.
+ */
+const SCHEMA_INSTALLED = 0;
+
+/**
  * Gets the schema definition of a table, or the whole database schema.
  *
  * The returned schema will include any modifications made by any
@@ -156,7 +166,7 @@ function drupal_get_schema_versions($module) {
  * @param string $module
  *   A module name.
  * @param bool $reset
- *   Set to TRUE after modifying the system table.
+ *   Set to TRUE after installing or uninstalling an extension.
  * @param bool $array
  *   Set to TRUE if you want to get information about all modules in the
  *   system.
@@ -173,10 +183,8 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
   }
 
   if (!$versions) {
-    $versions = array();
-    $result = db_query("SELECT name, schema_version FROM {system} WHERE type = :type", array(':type' => 'module'));
-    foreach ($result as $row) {
-      $versions[$row->name] = $row->schema_version;
+    if (!$versions = drupal_container()->get('keyvalue')->get('system.schema')->getAll()) {
+      $versions = array();
     }
   }
 
@@ -197,11 +205,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
  *   The new schema version.
  */
 function drupal_set_installed_schema_version($module, $version) {
-  db_update('system')
-    ->fields(array('schema_version' => $version))
-    ->condition('name', $module)
-    ->execute();
-
+  drupal_container()->get('keyvalue')->get('system.schema')->set($module, $version);
   // Reset the static cache of module schema versions.
   drupal_get_installed_schema_version(NULL, TRUE);
 }

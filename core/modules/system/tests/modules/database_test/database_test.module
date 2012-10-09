@@ -84,7 +84,7 @@ function database_test_menu() {
  * table should automatically dropped.
  */
 function database_test_db_query_temporary() {
-  $table_name = db_query_temporary('SELECT status FROM {system}', array());
+  $table_name = db_query_temporary('SELECT age FROM {test}', array());
   return new JsonResponse(array(
     'table_name' => $table_name,
     'row_count' => db_select($table_name)->countQuery()->execute()->fetchField(),

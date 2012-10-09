@@ -10,10 +10,7 @@
  */
 function forum_install() {
   // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
-  db_update('system')
-    ->fields(array('weight' => 1))
-    ->condition('name', 'forum')
-    ->execute();
+  module_set_weight('forum', 1);
   // Forum topics are published by default, but do not have any other default
   // options set (for example, they are not promoted to the front page).
   // @todo Convert to default module configuration, once Node module's content

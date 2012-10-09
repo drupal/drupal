@@ -217,10 +217,7 @@ function block_install() {
   // Block should go first so that other modules can alter its output
   // during hook_page_alter(). Almost everything on the page is a block,
   // so before block module runs, there will not be much to alter.
-  db_update('system')
-    ->fields(array('weight' => -5))
-    ->condition('name', 'block')
-    ->execute();
+  module_set_weight('block', -5);
 }
 
 /**
