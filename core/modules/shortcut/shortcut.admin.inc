@@ -157,21 +157,33 @@ function shortcut_set_switch_submit($form, &$form_state) {
  */
 function shortcut_set_admin() {
   $shortcut_sets = shortcut_sets();
-  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 4));
+  $header = array(t('Name'), t('Operations'));
 
   $rows = array();
   foreach ($shortcut_sets as $set) {
     $row = array(
       check_plain($set->title),
-      l(t('list links'), "admin/config/user-interface/shortcut/$set->set_name"),
-      l(t('edit set name'), "admin/config/user-interface/shortcut/$set->set_name/edit"),
+    );
+    $links['list'] = array(
+      'title' => t('list links'),
+      'href' => "admin/config/user-interface/shortcut/$set->set_name",
+    );
+    $links['edit'] = array(
+      'title' => t('list links'),
+      'href' => "admin/config/user-interface/shortcut/$set->set_name/edit",
     );
     if (shortcut_set_delete_access($set)) {
-      $row[] = l(t('delete set'), "admin/config/user-interface/shortcut/$set->set_name/delete");
+      $links['delete'] = array(
+        'title' => t('delete set'),
+        'href' => "admin/config/user-interface/shortcut/$set->set_name/delete",
+      );
     }
-    else {
-      $row[] = '';
-    }
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
 
     $rows[] = $row;
   }
@@ -271,8 +283,18 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
       '#attributes' => array('class' => array('shortcut-weight')),
     );
 
-    $form['shortcuts']['links'][$mlid]['edit']['#markup'] = l(t('edit'), 'admin/config/user-interface/shortcut/link/' . $mlid);
-    $form['shortcuts']['links'][$mlid]['delete']['#markup'] = l(t('delete'), 'admin/config/user-interface/shortcut/link/' . $mlid . '/delete');
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => "admin/config/user-interface/shortcut/link/$mlid",
+    );
+    $links['delete'] = array(
+      'title' => t('delete'),
+      'href' => "admin/config/user-interface/shortcut/link/$mlid/delete",
+    );
+    $form['shortcuts']['links'][$mlid]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
+    );
   }
 
   $form['actions'] = array(
@@ -322,15 +344,14 @@ function theme_shortcut_set_customize($variables) {
     $row = array();
     $row[] = drupal_render($shortcut['name']);
     $row[] = drupal_render($shortcut['weight']);
-    $row[] = drupal_render($shortcut['edit']);
-    $row[] = drupal_render($shortcut['delete']);
+    $row[] = drupal_render($shortcut['operations']);
     $rows[] = array(
       'data' => $row,
       'class' => array('draggable'),
     );
   }
 
-  $header = array(t('Name'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Name'), t('Weight'), t('Operations'));
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'shortcuts'), 'empty' => t('No shortcuts available. <a href="@link">Add a shortcut</a>.', array('@link' => url('admin/config/user-interface/shortcut/' . $form['#shortcut_set_name'] . '/add-link')))));
   $output .= drupal_render($form['actions']);
   $output = drupal_render_children($form) . $output;

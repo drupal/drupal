@@ -19,10 +19,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 function statistics_node_tracker() {
   if ($node = node_load(arg(1))) {
     $header = array(
-        array('data' => t('Time'), 'field' => 'a.timestamp', 'sort' => 'desc'),
-        array('data' => t('Referrer'), 'field' => 'a.url'),
-        array('data' => t('User'), 'field' => 'u.name'),
-        array('data' => t('Operations')));
+      array('data' => t('Time'), 'field' => 'a.timestamp', 'sort' => 'desc'),
+      array('data' => t('Referrer'), 'field' => 'a.url'),
+      array('data' => t('User'), 'field' => 'u.name'),
+      t('Operations'),
+    );
 
     $query = db_select('accesslog', 'a', array('target' => 'slave'))
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
@@ -41,12 +42,22 @@ function statistics_node_tracker() {
     $result = $query->execute();
     $rows = array();
     foreach ($result as $log) {
-      $rows[] = array(
-        array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
-        _statistics_link($log->url),
-        theme('username', array('account' => $log)),
-        l(t('details'), "admin/reports/access/$log->aid"),
+      $row = array();
+      $row[] = array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap'));
+      $row[] = _statistics_link($log->url);
+      $row[] = theme('username', array('account' => $log));
+      $links = array();
+      $links['details'] = array(
+        'title' => t('details'),
+        'href' => "admin/reports/access/$log->aid",
       );
+      $row[] = array(
+        'data' => array(
+          '#type' => 'operations',
+          '#links' => $links,
+        ),
+      );
+      $rows[] = $row;
     }
 
     // Do not use $node->label() here, because $node comes from the database.
@@ -78,9 +89,10 @@ function statistics_user_tracker() {
   if ($account = user_load(arg(1))) {
 
     $header = array(
-        array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
-        array('data' => t('Page'), 'field' => 'path'),
-        array('data' => t('Operations')));
+      array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
+      array('data' => t('Page'), 'field' => 'path'),
+      t('Operations'),
+    );
     $query = db_select('accesslog', 'a', array('target' => 'slave'))
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('Drupal\Core\Database\Query\TableSortExtender');
@@ -93,10 +105,21 @@ function statistics_user_tracker() {
     $result = $query->execute();
     $rows = array();
     foreach ($result as $log) {
-      $rows[] = array(
-        array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
-        _statistics_format_item($log->title, $log->path),
-        l(t('details'), "admin/reports/access/$log->aid"));
+      $row = array();
+      $row[] = array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap'));
+      $row[] = _statistics_format_item($log->title, $log->path);
+      $links = array();
+      $links['details'] = array(
+        'title' => t('details'),
+        'href' => "admin/reports/access/$log->aid",
+      );
+      $row[] = array(
+        'data' => array(
+          '#type' => 'operations',
+          '#links' => $links,
+        ),
+      );
+      $rows[] = $row;
     }
 
     drupal_set_title(user_format_name($account));

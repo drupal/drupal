@@ -17,31 +17,46 @@ function node_overview_types() {
   $types = node_type_get_types();
   $names = node_type_get_names();
   $field_ui = module_exists('field_ui');
-  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => $field_ui ? '4' : '2'));
+  $header = array(t('Name'), t('Operations'));
   $rows = array();
 
   foreach ($names as $key => $name) {
     $type = $types[$key];
     if (node_hook($type->type, 'form')) {
       $row = array(theme('node_admin_overview', array('name' => $name, 'type' => $type)));
-      // Set the edit column.
-      $row[] = array('data' => l(t('edit'), 'admin/structure/types/manage/' . $type->type));
+      $links['edit'] = array(
+        'title' => t('edit'),
+        'href' => 'admin/structure/types/manage/' . $type->type,
+        'weight' => 0,
+      );
 
       if ($field_ui) {
-        // Manage fields.
-        $row[] = array('data' => l(t('manage fields'), 'admin/structure/types/manage/' . $type->type . '/fields'));
-
-        // Display fields.
-        $row[] = array('data' => l(t('manage display'), 'admin/structure/types/manage/' . $type->type . '/display'));
+        $links['fields'] = array(
+          'title' => t('manage fields'),
+          'href' => 'admin/structure/types/manage/' . $type->type . '/fields',
+          'weight' => 5,
+        );
+        $links['display'] = array(
+          'title' => t('manage display'),
+          'href' => 'admin/structure/types/manage/' . $type->type . '/display',
+          'weight' => 10,
+        );
       }
 
-      // Set the delete column.
       if ($type->custom) {
-        $row[] = array('data' => l(t('delete'), 'admin/structure/types/manage/' . $type->type . '/delete'));
+        $links['delete'] = array(
+          'title' => t('delete'),
+          'href' => 'admin/structure/types/manage/' . $type->type . '/delete',
+          'weight' => 15,
+        );
       }
-      else {
-        $row[] = array('data' => '');
-      }
+
+      $row[] = array(
+        'data' => array(
+          '#type' => 'operations',
+          '#links' => $links,
+        ),
+      );
 
       $rows[] = $row;
     }

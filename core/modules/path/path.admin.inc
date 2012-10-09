@@ -25,7 +25,7 @@ function path_admin_overview($keys = NULL) {
   if ($multilanguage) {
     $header[] = array('data' => t('Language'), 'field' => 'langcode');
   }
-  $header[] = array('data' => t('Operations'));
+  $header[] = t('Operations');
 
   $query = db_select('url_alias')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
@@ -68,7 +68,7 @@ function path_admin_overview($keys = NULL) {
     );
     $row['data']['operations'] = array(
       'data' => array(
-        '#theme' => 'links',
+        '#type' => 'operations',
         '#links' => $operations,
         '#attributes' => array('class' => array('links', 'inline', 'nowrap')),
       ),

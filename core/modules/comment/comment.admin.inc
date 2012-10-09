@@ -76,7 +76,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     'author' => array('data' => t('Author'), 'field' => 'name', 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
     'posted_in' => array('data' => t('Posted in'), 'field' => 'node_title', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
     'changed' => array('data' => t('Updated'), 'field' => 'c.changed', 'sort' => 'desc', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
-    'operations' => array('data' => t('Operations')),
+    'operations' => t('Operations'),
   );
 
   $query = db_select('comment', 'c')
@@ -129,14 +129,16 @@ function comment_admin_overview($form, &$form_state, $arg) {
         ),
       ),
       'changed' => format_date($comment->changed, 'short'),
-      'operations' => array(
-        'data' => array(
-          '#type' => 'link',
-          '#title' => t('edit'),
-          '#href' => 'comment/' . $comment->cid . '/edit',
-          '#options' => array('query' => $destination),
-        ),
-      ),
+    );
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => 'comment/' . $comment->cid . '/edit',
+      'query' => $destination,
+    );
+    $options[$comment->cid]['operations']['data'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
     );
   }
 

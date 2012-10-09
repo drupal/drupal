@@ -17,10 +17,20 @@ function ban_admin_page($default_ip = '') {
   $header = array(t('banned IP addresses'), t('Operations'));
   $result = db_query('SELECT * FROM {ban_ip}');
   foreach ($result as $ip) {
-    $rows[] = array(
-      $ip->ip,
-      l(t('delete'), "admin/config/people/ban/delete/$ip->iid"),
+    $row = array();
+    $row[] = $ip->ip;
+    $links = array();
+    $links['delete'] = array(
+      'title' => t('delete'),
+      'href' => "admin/config/people/ban/delete/$ip->iid",
     );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
   }
 
   $build['ban_ip_form'] = drupal_get_form('ban_ip_form', $default_ip);

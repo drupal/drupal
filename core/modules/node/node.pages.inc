@@ -251,7 +251,7 @@ function node_delete_confirm_submit($form, &$form_state) {
 function node_revision_overview($node) {
   drupal_set_title(t('Revisions for %title', array('%title' => $node->label())), PASS_THROUGH);
 
-  $header = array(t('Revision'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Revision'), t('Operations'));
 
   $revisions = node_revision_list($node);
 
@@ -266,25 +266,35 @@ function node_revision_overview($node) {
   }
   foreach ($revisions as $revision) {
     $row = array();
-    $operations = array();
-
     if ($revision->current_vid > 0) {
       $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', array('account' => $revision))))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
                      'class' => array('revision-current'));
-      $operations[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'), 'colspan' => 2);
+      $row[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'));
     }
     else {
       $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
-        $operations[] = l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert");
+        $links['revert'] = array(
+          'title' => t('revert'),
+          'href' => "node/$node->nid/revisions/$revision->vid/revert",
+        );
       }
       if ($delete_permission) {
-        $operations[] = l(t('delete'), "node/$node->nid/revisions/$revision->vid/delete");
+        $links['delete'] = array(
+          'title' => t('delete'),
+          'href' => "node/$node->nid/revisions/$revision->vid/delete",
+        );
       }
+      $row[] = array(
+        'data' => array(
+          '#type' => 'operations',
+          '#links' => $links,
+        ),
+      );
     }
-    $rows[] = array_merge($row, $operations);
+    $rows[] = $row;
   }
 
   $build['node_revisions_table'] = array(

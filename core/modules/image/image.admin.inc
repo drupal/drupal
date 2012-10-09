@@ -84,6 +84,21 @@ function image_style_form($form, &$form_state, $style) {
         '#default_value' => $effect['weight'],
       );
 
+      $links = array();
+      if (isset($effect['form callback'])) {
+        $links['edit'] = array(
+          'title' => t('edit'),
+          'href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key,
+        );
+      }
+      $links['delete'] = array(
+        'title' => t('delete'),
+        'href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key . '/delete',
+      );
+      $form['effects'][$key]['operations'] = array(
+        '#type' => 'operations',
+        '#links' => $links,
+      );
       $form['effects'][$key]['configure'] = array(
         '#type' => 'link',
         '#title' => t('edit'),
@@ -583,19 +598,28 @@ function image_rotate_form($data) {
 function theme_image_style_list($variables) {
   $styles = $variables['styles'];
 
-  $header = array(t('Style name'), array('data' => t('Operations'), 'colspan' => 3));
+  $header = array(t('Style name'), t('Operations'));
   $rows = array();
-  $link_attributes = array(
-    'attributes' => array(
-      'class' => array('image-style-link'),
-    ),
-  );
-
   foreach ($styles as $style) {
     $row = array();
     $row[] = l($style['label'], 'admin/config/media/image-styles/edit/' . $style['name']);
-    $row[] = l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'], $link_attributes);
-    $row[] = l(t('delete'), 'admin/config/media/image-styles/delete/' . $style['name'], $link_attributes);
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => 'admin/config/media/image-styles/edit/' . $style['name'],
+      'class' => array('image-style-link'),
+    );
+    $links['delete'] = array(
+      'title' => t('delete'),
+      'href' => 'admin/config/media/image-styles/delete/' . $style['name'],
+      'class' => array('image-style-link'),
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
     $rows[] = $row;
   }
 
@@ -629,14 +653,13 @@ function theme_image_style_effects($variables) {
       $summary = drupal_render($form[$key]['summary']);
       $row[] = drupal_render($form[$key]['label']) . (empty($summary) ? '' : ' ' . $summary);
       $row[] = drupal_render($form[$key]['weight']);
-      $row[] = drupal_render($form[$key]['configure']);
-      $row[] = drupal_render($form[$key]['remove']);
+      $row[] = array('data' => $form[$key]['operations']);
     }
     else {
       // Add the row for adding a new image effect.
       $row[] = '<div class="image-style-new">' . drupal_render($form['new']['new']) . drupal_render($form['new']['add']) . '</div>';
       $row[] = drupal_render($form['new']['weight']);
-      $row[] = array('data' => '', 'colspan' => 2);
+      $row[] = '';
     }
 
     $rows[] = array(
@@ -648,7 +671,7 @@ function theme_image_style_effects($variables) {
   $header = array(
     t('Effect'),
     t('Weight'),
-    array('data' => t('Operations'), 'colspan' => 2),
+    t('Operations'),
   );
 
   if (count($rows) == 1 && (!isset($form['new']['#access']) || $form['new']['#access'])) {

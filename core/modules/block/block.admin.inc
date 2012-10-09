@@ -146,18 +146,20 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
       '#title' => t('Region for @block block', array('@block' => $block['info'])),
       '#options' => $block_regions,
     );
-    $form['blocks'][$key]['configure'] = array(
-      '#type' => 'link',
-      '#title' => t('configure'),
-      '#href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure',
+    $links['configure'] = array(
+      'title' => t('configure'),
+      'href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure',
     );
     if ($block['module'] == 'block') {
-      $form['blocks'][$key]['delete'] = array(
-        '#type' => 'link',
-        '#title' => t('delete'),
-        '#href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/delete',
+      $links['delete'] = array(
+        'title' => t('delete'),
+        'href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/delete',
      );
     }
+    $form['blocks'][$key]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
+    );
   }
   // Do not allow disabling the main system content block when it is present.
   if (isset($form['blocks']['system_main']['region'])) {
@@ -806,8 +808,7 @@ function template_preprocess_block_admin_display_form(&$variables) {
     $variables['block_listing'][$region][$i]->block_title = drupal_render($block['info']);
     $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
     $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);
-    $variables['block_listing'][$region][$i]->configure_link = drupal_render($block['configure']);
-    $variables['block_listing'][$region][$i]->delete_link = !empty($block['delete']) ? drupal_render($block['delete']) : '';
+    $variables['block_listing'][$region][$i]->operations = drupal_render($block['operations']);
     $variables['block_listing'][$region][$i]->printed = FALSE;
   }
 

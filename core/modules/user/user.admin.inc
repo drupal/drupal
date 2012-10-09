@@ -149,7 +149,7 @@ function user_admin_account() {
     'roles' => array('data' => t('Roles'), 'class' => array(RESPONSIVE_PRIORITY_LOW)),
     'member_for' => array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
     'access' => array('data' => t('Last access'), 'field' => 'u.access', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
-    'operations' => array('data' => t('Operations')),
+    'operations' => t('Operations'),
   );
 
   $query = db_select('users', 'u');
@@ -210,7 +210,16 @@ function user_admin_account() {
       'roles' => theme('item_list', array('items' => $users_roles)),
       'member_for' => format_interval(REQUEST_TIME - $account->created),
       'access' =>  $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
-      'operations' => array('data' => array('#type' => 'link', '#title' => t('edit'), '#href' => "user/$account->uid/edit", '#options' => array('query' => $destination))),
+    );
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => "user/$account->uid/edit",
+      'query' => $destination,
+    );
+    $options[$account->uid]['operations']['data'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
     );
   }
 
@@ -886,15 +895,19 @@ function user_admin_roles($form, $form_state) {
       '#default_value' => $role->weight,
       '#attributes' => array('class' => array('role-weight')),
     );
-    $form['roles'][$role->rid]['edit'] = array(
-      '#type' => 'link',
-      '#title' => t('edit role'),
-      '#href' => 'admin/people/roles/edit/' . $role->rid,
+    $links['edit'] = array(
+      'title' => t('edit role'),
+      'href' => 'admin/people/roles/edit/' . $role->rid,
+      'weight' => 0,
     );
-    $form['roles'][$role->rid]['permissions'] = array(
-      '#type' => 'link',
-      '#title' => t('edit permissions'),
-      '#href' => 'admin/people/permissions/' . $role->rid,
+    $links['permissions'] = array(
+      'title' => t('edit permissions'),
+      'href' => 'admin/people/permissions/' . $role->rid,
+      'weight' => 5,
+    );
+    $form['roles'][$role->rid]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
     );
   }
 
@@ -946,7 +959,7 @@ function user_admin_roles_order_submit($form, &$form_state) {
 function theme_user_admin_roles($variables) {
   $form = $variables['form'];
 
-  $header = array(t('Name'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Name'), t('Weight'), t('Operations'));
   foreach (element_children($form['roles']) as $rid) {
     $row = array();
     foreach (element_children($form['roles'][$rid]) as $column) {

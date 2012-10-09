@@ -15,7 +15,7 @@ function contact_category_list() {
     t('Category'),
     t('Recipients'),
     t('Selected'),
-    array('data' => t('Operations'), 'colspan' => 2),
+    t('Operations'),
   );
   $rows = array();
 
@@ -30,13 +30,26 @@ function contact_category_list() {
 
   // Loop through the categories and add them to the table.
   foreach ($categories as $category) {
-    $rows[] = array(
-      check_plain($category->category),
-      check_plain($category->recipients),
-      ($category->selected ? t('Yes') : t('No')),
-      l(t('Edit'), 'admin/structure/contact/edit/' . $category->cid),
-      l(t('Delete'), 'admin/structure/contact/delete/' . $category->cid),
+    $row = array();
+    $row[] = check_plain($category->category);
+    $row[] = check_plain($category->recipients);
+    $row[] = ($category->selected ? t('Yes') : t('No'));
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('Edit'),
+      'href' => 'admin/structure/contact/edit/' . $category->cid,
     );
+    $links['delete'] = array(
+      'title' => t('Delete'),
+      'href' => 'admin/structure/contact/delete/' . $category->cid,
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
   }
 
   if (!$rows) {

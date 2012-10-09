@@ -29,7 +29,7 @@ function action_admin_manage() {
   $header = array(
     array('data' => t('Action type'), 'field' => 'type'),
     array('data' => t('Label'), 'field' => 'label'),
-    array('data' => $instances_present ? t('Operations') : '', 'colspan' => '2')
+    $instances_present ? t('Operations') : '',
   );
   $query = db_select('actions')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
@@ -41,21 +41,37 @@ function action_admin_manage() {
     ->execute();
 
   foreach ($result as $action) {
+    $row = array();
+    $row[] = $action->type;
+    $row[] = check_plain($action->label);
+    $links = array();
+    if ($action->parameters) {
+      $links['configure'] = array(
+        'title' => t('configure'),
+        'href' => "admin/config/system/actions/configure/$action->aid",
+      );
+      $links['delete'] = array(
+        'title' => t('delete'),
+        'href' => "admin/config/system/actions/delete/$action->aid",
+      );
+    }
     $row[] = array(
-      array('data' => $action->type),
-      array('data' => check_plain($action->label)),
-      array('data' => $action->parameters ? l(t('configure'), "admin/config/system/actions/configure/$action->aid") : ''),
-      array('data' => $action->parameters ? l(t('delete'), "admin/config/system/actions/delete/$action->aid") : '')
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
     );
+
+    $rows[] = $row;
   }
 
-  if ($row) {
+  if ($rows) {
     $pager = theme('pager');
     if (!empty($pager)) {
-      $row[] = array(array('data' => $pager, 'colspan' => '3'));
+      $rows[] = array(array('data' => $pager, 'colspan' => '3'));
     }
     $build['action_header'] = array('#markup' => '<h3>' . t('Available actions:') . '</h3>');
-    $build['action_table'] = array('#markup' => theme('table', array('header' => $header, 'rows' => $row)));
+    $build['action_table'] = array('#markup' => theme('table', array('header' => $header, 'rows' => $rows)));
   }
 
   if ($actions_map) {

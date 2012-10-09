@@ -19,7 +19,21 @@ function book_admin_overview() {
 
   // Add any recognized books to the table list.
   foreach (book_get_books() as $book) {
-    $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), 'admin/content/book/' . $book['nid']));
+    $row = array(
+      l($book['title'], $book['href'], $book['options']),
+    );
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit order and titles'),
+      'href' => 'admin/content/book/' . $book['nid'],
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
   }
 
   return theme('table', array('header' => $headers, 'rows' => $rows, 'empty' => t('No books available.')));
@@ -265,7 +279,7 @@ function theme_book_admin_table($variables) {
   drupal_add_tabledrag('book-outline', 'match', 'parent', 'book-plid', 'book-plid', 'book-mlid', TRUE, MENU_MAX_DEPTH - 2);
   drupal_add_tabledrag('book-outline', 'order', 'sibling', 'book-weight');
 
-  $header = array(t('Title'), t('Weight'), t('Parent'), array('data' => t('Operations'), 'colspan' => '3'));
+  $header = array(t('Title'), t('Weight'), t('Parent'), t('Operations'));
 
   $rows = array();
   $destination = drupal_get_destination();
@@ -283,9 +297,29 @@ function theme_book_admin_table($variables) {
       theme('indentation', array('size' => $form[$key]['depth']['#value'] - 2)) . drupal_render($form[$key]['title']),
       drupal_render($form[$key]['weight']),
       drupal_render($form[$key]['plid']) . drupal_render($form[$key]['mlid']),
-      l(t('view'), $href),
-      $access ? l(t('edit'), 'node/' . $nid . '/edit', array('query' => $destination)) : '&nbsp;',
-      $access ? l(t('delete'), 'node/' . $nid . '/delete', array('query' => $destination) )  : '&nbsp;',
+    );
+    $links = array();
+    $links['view'] = array(
+      'title' => t('view'),
+      'href' => $href,
+    );
+    if ($access) {
+      $links['edit'] = array(
+        'title' => t('edit'),
+        'href' => "node/$nid/edit",
+        'query' => $destination,
+      );
+      $links['delete'] = array(
+        'title' => t('delete'),
+        'href' => "node/$nid/delete",
+        'query' => $destination,
+      );
+    }
+    $data[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
     );
     $row = array('data' => $data);
     if (isset($form[$key]['#attributes'])) {

@@ -28,9 +28,23 @@ function taxonomy_overview_vocabularies($form) {
       '#delta' => 10,
       '#default_value' => $vocabulary->weight,
     );
-    $form[$vocabulary->vid]['edit'] = array('#type' => 'link', '#title' => t('edit vocabulary'), '#href' => "admin/structure/taxonomy/$vocabulary->machine_name/edit");
-    $form[$vocabulary->vid]['list'] = array('#type' => 'link', '#title' => t('list terms'), '#href' => "admin/structure/taxonomy/$vocabulary->machine_name");
-    $form[$vocabulary->vid]['add'] = array('#type' => 'link', '#title' => t('add terms'), '#href' => "admin/structure/taxonomy/$vocabulary->machine_name/add");
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit vocabulary'),
+      'href' => "admin/structure/taxonomy/$vocabulary->machine_name/edit",
+    );
+    $links['list'] = array(
+      'title' => t('list terms'),
+      'href' => "admin/structure/taxonomy/$vocabulary->machine_name",
+    );
+    $links['add'] = array(
+      'title' => t('add terms'),
+      'href' => "admin/structure/taxonomy/$vocabulary->machine_name/add",
+    );
+    $form[$vocabulary->vid]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
+    );
   }
 
   // Only make this form include a submit button and weight if more than one
@@ -85,9 +99,7 @@ function theme_taxonomy_overview_vocabularies($variables) {
         $vocabulary['weight']['#attributes']['class'] = array('vocabulary-weight');
         $row[] = drupal_render($vocabulary['weight']);
       }
-      $row[] = drupal_render($vocabulary['edit']);
-      $row[] = drupal_render($vocabulary['list']);
-      $row[] = drupal_render($vocabulary['add']);
+      $row[] = drupal_render($vocabulary['operations']);
       $rows[] = array('data' => $row, 'class' => array('draggable'));
     }
   }
@@ -97,7 +109,7 @@ function theme_taxonomy_overview_vocabularies($variables) {
     $header[] = t('Weight');
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
   }
-  $header[] = array('data' => t('Operations'), 'colspan' => '3');
+  $header[] = t('Operations');
   return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add'))), 'attributes' => array('id' => 'taxonomy'))) . drupal_render_children($form);
 }
 
@@ -278,7 +290,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
       'delete' => array('title' => t('delete'), 'href' => 'taxonomy/term/' . $term->tid . '/delete', 'query' => drupal_get_destination()),
     );
     $form[$key]['operations'] = array(
-      '#theme' => 'links',
+      '#type' => 'operations',
       '#links' => $operations,
       '#attributes' => array('class' => array('links', 'inline')),
     );

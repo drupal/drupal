@@ -180,10 +180,6 @@ function language_theme() {
       'render element' => 'form',
       'file' => 'language.admin.inc',
     ),
-    'language_admin_operations' => array(
-      'render element' => 'elements',
-      'file' => 'language.admin.inc',
-    ),
     'language_negotiation_configure_form' => array(
       'render element' => 'form',
     ),

@@ -333,7 +333,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       t('Machine name'),
       t('Field type'),
       t('Widget'),
-      array('data' => t('Operations'), 'colspan' => 2),
+      t('Operations'),
     ),
     '#parent_options' => array(),
     '#regions' => array(
@@ -398,23 +398,25 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#href' => $admin_field_path . '/widget-type',
         '#options' => array('attributes' => array('title' => t('Change widget type.'))),
       ),
-      'edit' => array(
-        '#type' => 'link',
-        '#title' => t('edit'),
-        '#href' => $admin_field_path,
-        '#options' => array('attributes' => array('title' => t('Edit instance settings.'))),
-      ),
-      'delete' => array(
-        '#type' => 'link',
-        '#title' => t('delete'),
-        '#href' => $admin_field_path . '/delete',
-        '#options' => array('attributes' => array('title' => t('Delete instance.'))),
-      ),
+    );
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => $admin_field_path,
+      'attributes' => array('title' => t('Edit instance settings.')),
+    );
+    $links['delete'] = array(
+      'title' => t('delete'),
+      'href' => "$admin_field_path/delete",
+      'attributes' => array('title' => t('Delete instance.')),
+    );
+    $table[$name]['operations']['data'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
     );
 
     if (!empty($instance['locked'])) {
-      $table[$name]['edit'] = array('#value' => t('Locked'));
-      $table[$name]['delete'] = array();
+      $table[$name]['operations'] = array('#value' => t('Locked'));
       $table[$name]['#attributes']['class'][] = 'menu-disabled';
     }
   }
@@ -459,11 +461,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#markup' => isset($extra_field['description']) ? $extra_field['description'] : '',
         '#cell_attributes' => array('colspan' => 2),
       ),
-      'edit' => array(
-        '#markup' => isset($extra_field['edit']) ? $extra_field['edit'] : '',
-      ),
-      'delete' => array(
-        '#markup' => isset($extra_field['delete']) ? $extra_field['delete'] : '',
+      'operations' => array(
+        '#markup' => '',
       ),
     );
   }

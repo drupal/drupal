@@ -19,6 +19,11 @@ function filter_admin_overview($form) {
 
   $form['#tree'] = TRUE;
   foreach ($formats as $id => $format) {
+    $links = array();
+    $links['configure'] = array(
+      'title' => t('configure'),
+      'href' => "admin/config/content/formats/$id",
+    );
     // Check whether this is the fallback text format. This format is available
     // to all roles and cannot be disabled via the admin interface.
     $form['formats'][$id]['#is_fallback'] = ($id == $fallback_format);
@@ -30,10 +35,16 @@ function filter_admin_overview($form) {
       $form['formats'][$id]['name'] = array('#markup' => check_plain($format->name));
       $roles = array_map('check_plain', filter_get_roles_by_format($format));
       $roles_markup = $roles ? implode(', ', $roles) : t('No roles may use this format');
+      $links['disable'] = array(
+        'title' => t('disable'),
+        'href' => "admin/config/content/formats/$id/disable",
+      );
     }
     $form['formats'][$id]['roles'] = array('#markup' => $roles_markup);
-    $form['formats'][$id]['configure'] = array('#type' => 'link', '#title' => t('configure'), '#href' => 'admin/config/content/formats/' . $id);
-    $form['formats'][$id]['disable'] = array('#type' => 'link', '#title' => t('disable'), '#href' => 'admin/config/content/formats/' . $id . '/disable', '#access' => !$form['formats'][$id]['#is_fallback']);
+    $form['formats'][$id]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
+    );
     $form['formats'][$id]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight for @title', array('@title' => $format->name)),
@@ -78,18 +89,18 @@ function theme_filter_admin_overview($variables) {
   $rows = array();
   foreach (element_children($form['formats']) as $id) {
     $form['formats'][$id]['weight']['#attributes']['class'] = array('text-format-order-weight');
-    $rows[] = array(
+    $row = array(
       'data' => array(
         drupal_render($form['formats'][$id]['name']),
         drupal_render($form['formats'][$id]['roles']),
         drupal_render($form['formats'][$id]['weight']),
-        drupal_render($form['formats'][$id]['configure']),
-        drupal_render($form['formats'][$id]['disable']),
+        drupal_render($form['formats'][$id]['operations']),
       ),
       'class' => array('draggable'),
     );
+    $rows[] = $row;
   }
-  $header = array(t('Name'), t('Roles'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Name'), t('Roles'), t('Weight'), t('Operations'));
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'text-format-order')));
   $output .= drupal_render_children($form);
 

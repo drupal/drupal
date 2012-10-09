@@ -28,18 +28,35 @@ function aggregator_view() {
 
   $output = '<h3>' . t('Feed overview') . '</h3>';
 
-  $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
+  $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), t('Operations'));
   $rows = array();
   foreach ($result as $feed) {
-    $rows[] = array(
-      l($feed->title, "aggregator/sources/$feed->fid"),
-      format_plural($feed->items, '1 item', '@count items'),
-      ($feed->checked ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked))) : t('never')),
-      ($feed->checked && $feed->refresh ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never')),
-      l(t('edit'), "admin/config/services/aggregator/edit/feed/$feed->fid"),
-      l(t('remove items'), "admin/config/services/aggregator/remove/$feed->fid"),
-      l(t('update items'), "admin/config/services/aggregator/update/$feed->fid", array('query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")))),
+    $row = array();
+    $row[] = l($feed->title, "aggregator/sources/$feed->fid");
+    $row[] = format_plural($feed->items, '1 item', '@count items');
+    $row[] = ($feed->checked ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked))) : t('never'));
+    $row[] = ($feed->checked && $feed->refresh ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never'));
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => "admin/config/services/aggregator/edit/feed/$feed->fid",
     );
+    $links['remove'] = array(
+      'title' => t('remove items'),
+      'href' => "admin/config/services/aggregator/remove/$feed->fid",
+    );
+    $links['update'] = array(
+      'title' => t('update items'),
+      'href' => "admin/config/services/aggregator/update/$feed->fid",
+      'query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")),
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
   }
   $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => url('admin/config/services/aggregator/add/feed')))));
 
@@ -50,7 +67,21 @@ function aggregator_view() {
   $header = array(t('Title'), t('Items'), t('Operations'));
   $rows = array();
   foreach ($result as $category) {
-    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '@count items'), l(t('edit'), "admin/config/services/aggregator/edit/category/$category->cid"));
+    $row = array();
+    $row[] = l($category->title, "aggregator/categories/$category->cid");
+    $row[] = format_plural($category->items, '1 item', '@count items');
+    $links = array();
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => "admin/config/services/aggregator/edit/category/$category->cid",
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
   }
   $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/config/services/aggregator/add/category')))));
 

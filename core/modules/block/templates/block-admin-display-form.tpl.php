@@ -16,8 +16,7 @@
  * - $data->block_title: Block title.
  * - $data->region_select: Drop-down menu for assigning a region.
  * - $data->weight_select: Drop-down menu for setting weights.
- * - $data->configure_link: Block configuration link.
- * - $data->delete_link: For deleting user added blocks.
+ * - $data->operations: Block operations.
  *
  * @see template_preprocess_block_admin_display_form()
  * @see theme_block_admin_display()
@@ -31,7 +30,7 @@
       <th><?php print t('Block'); ?></th>
       <th><?php print t('Region'); ?></th>
       <th><?php print t('Weight'); ?></th>
-      <th colspan="2"><?php print t('Operations'); ?></th>
+      <th><?php print t('Operations'); ?></th>
     </tr>
   </thead>
   <tbody>
@@ -48,8 +47,7 @@
         <td class="block"><?php print $data->block_title; ?></td>
         <td><?php print $data->region_select; ?></td>
         <td><?php print $data->weight_select; ?></td>
-        <td><?php print $data->configure_link; ?></td>
-        <td><?php print $data->delete_link; ?></td>
+        <td><?php print $data->operations; ?></td>
       </tr>
       <?php $row++; ?>
       <?php endforeach; ?>

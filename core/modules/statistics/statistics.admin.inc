@@ -22,7 +22,7 @@ function statistics_recent_hits() {
     array('data' => t('Timestamp'), 'field' => 'a.timestamp', 'sort' => 'desc'),
     array('data' => t('Page'), 'field' => 'a.path'),
     array('data' => t('User'), 'field' => 'u.name'),
-    array('data' => t('Operations'))
+    t('Operations'),
   );
 
   $query = db_select('accesslog', 'a', array('target' => 'slave'))
@@ -38,11 +38,22 @@ function statistics_recent_hits() {
   $result = $query->execute();
   $rows = array();
   foreach ($result as $log) {
-    $rows[] = array(
-      array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
-      _statistics_format_item($log->title, $log->path),
-      theme('username', array('account' => $log)),
-      l(t('details'), "admin/reports/access/$log->aid"));
+    $row = array();
+    $row[] = array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap'));
+    $row[] = _statistics_format_item($log->title, $log->path);
+    $row[] = theme('username', array('account' => $log));
+    $links = array();
+    $links['details'] = array(
+      'title' => t('details'),
+      'href' => "admin/reports/access/$log->aid",
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
   }
 
   $build['statistics_table'] = array(
@@ -127,7 +138,7 @@ function statistics_top_visitors() {
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Visitor'), 'field' => 'u.name'),
     array('data' => t('Total page generation time'), 'field' => 'total'),
-    array('data' => $ban_exists && user_access('ban IP addresses') ? t('Operations') : '', 'colspan' => 2),
+    $ban_exists && user_access('Ban IP addresses') ? t('Operations') : '',
   );
   $query = db_select('accesslog', 'a', array('target' => 'slave'))
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
@@ -163,19 +174,33 @@ function statistics_top_visitors() {
   $rows = array();
   $destination = drupal_get_destination();
   foreach ($result as $account) {
-    if ($ban_exists) {
+    $links = array();
+    if ($ban_exists && user_access('ban IP addresses') && !$account->uid) {
       if ($account->iid) {
-        $ban_link = l(t('unban IP address'), "admin/config/people/ban/delete/$account->iid", array('query' => $destination));
+        $links['unban'] = array(
+          'title' => t('unban IP address'),
+          'href' => "admin/config/people/ban/delete/$account->iid",
+          'query' => $destination,
+        );
       }
       else {
-        $ban_link = l(t('ban IP address'), "admin/config/people/ban/$account->hostname", array('query' => $destination));
+        $links['ban'] = array(
+          'title' => t('ban IP address'),
+          'href' => "admin/config/people/ban/$account->hostname",
+          'query' => $destination,
+        );
       }
     }
     $row = array();
     $row[] = $account->hits;
     $row[] = ($account->uid ? theme('username', array('account' => $account)) : $account->hostname);
     $row[] = format_interval(round($account->total / 1000));
-    $row[] = ($ban_exists && user_access('ban IP addresses') && !$account->uid ? $ban_link : '');
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
     $rows[] = $row;
   }
 

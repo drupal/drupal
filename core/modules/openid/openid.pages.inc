@@ -51,7 +51,20 @@ function openid_user_identities($account) {
 
   $result = db_query("SELECT * FROM {authmap} WHERE module='openid' AND uid=:uid", array(':uid' => $account->uid));
   foreach ($result as $identity) {
-    $rows[] = array(check_plain($identity->authname), l(t('Delete'), 'user/' . $account->uid . '/openid/delete/' . $identity->aid));
+    $row = array();
+    $row[] = check_plain($identity->authname);
+    $links = array();
+    $links['delete'] = array(
+      'title' => t('Delete'),
+      'href' => 'user/' . $account->uid . '/openid/delete/' . $identity->aid,
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
   }
 
   $build['openid_table'] = array(

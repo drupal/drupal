@@ -69,26 +69,27 @@ function language_admin_overview_form($form, &$form_state) {
       ),
       '#delta' => 30,
     );
-    $form['languages'][$langcode]['operations'] = array(
-      '#theme_wrappers' => array('language_admin_operations'),
-      '#weight' => 100,
-    );
+    $links = array();
     if (empty($language->locked)) {
-      $form['languages'][$langcode]['operations']['edit'] = array(
-        '#type' => 'link',
-        '#title' => t('edit'),
-        '#href' => 'admin/config/regional/language/edit/' . $langcode,
+      $links['edit'] = array(
+        'title' => t('edit'),
+        'href' => 'admin/config/regional/language/edit/' . $langcode,
       );
-      $form['languages'][$langcode]['operations']['delete'] = array(
-        '#type' => 'link',
-        '#title' => t('delete'),
-        '#href' => 'admin/config/regional/language/delete/' . $langcode,
-        '#access' => $langcode != $default->langcode,
-      );
+      if ($langcode != $default->langcode) {
+        $links['delete'] = array(
+          'title' => t('delete'),
+          'href' => 'admin/config/regional/language/delete/' . $langcode,
+        );
+      }
     }
     else {
       $form['languages'][$langcode]['default']['#attributes']['disabled'] = 'disabled';
     }
+    $form['languages'][$langcode]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
+      '#weight' => 100,
+    );
   }
 
   $form['actions'] = array('#type' => 'actions');
@@ -98,30 +99,6 @@ function language_admin_overview_form($form, &$form_state) {
   );
 
   return $form;
-}
-
-/**
- * Returns HTML for operation links in language_admin_overview_form() table.
- *
- * @todo Introduce #type '[table_]operations' or just simply #type 'links'.
- */
-function theme_language_admin_operations($variables) {
-  $links = array();
-  foreach (element_children($variables['elements']) as $key) {
-    // Children are only rendered if the current user has access.
-    if (isset($variables['elements'][$key]['#children'])) {
-      $links[$key] = $variables['elements'][$key]['#children'];
-    }
-  }
-  // If there are links, render a link list.
-  if (!empty($links)) {
-    return theme('item_list__operations', array(
-      'items' => $links,
-      'attributes' => array('class' => array('links', 'inline')),
-    ));
-  }
-  // Otherwise, ensure to produce no output.
-  return '';
 }
 
 /**
@@ -539,11 +516,17 @@ function language_negotiation_configure_form_table(&$form, $type) {
 
       $config_op = array();
       if (isset($method['config'])) {
-        $config_op = array('#type' => 'link', '#title' => t('Configure'), '#href' => $method['config']);
+        $config_op['configure'] = array(
+          'title' => t('Configure'),
+          'href' => $method['config'],
+        );
         // If there is at least one operation enabled show the operation column.
         $table_form['#show_operations'] = TRUE;
       }
-      $table_form['operation'][$method_id] = $config_op;
+      $table_form['operation'][$method_id] = array(
+       '#type' => 'operations',
+       '#links' => $config_op,
+      );
     }
   }
 
@@ -931,20 +914,26 @@ function language_negotiation_configure_browser_form($form, &$form_state) {
 function theme_language_negotiation_configure_browser_form_table($variables) {
   $form = $variables['form'];
   $rows = array();
-  $link_attributes = array(
-    'attributes' => array(
-      'class' => array('image-style-link'),
-    ),
-  );
   foreach (element_children($form, TRUE) as $key) {
     $row = array();
     $row[] = drupal_render($form[$key]['browser_langcode']);
     $row[] = drupal_render($form[$key]['drupal_langcode']);
-    $row[] = l(t('Delete'), 'admin/config/regional/language/detection/browser/delete/' . $key, $link_attributes);
-
-    $rows[] = array(
-      'data' => $row,
+    $links = array();
+    $links['delete'] = array(
+      'title' => t('Delete'),
+      'href' => "admin/config/regional/language/detection/browser/delete/$key",
+      'attributes' => array(
+        'class' => array('image-style-link'),
+      ),
     );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+
+    $rows[] = $row;
   }
 
   $header = array(
