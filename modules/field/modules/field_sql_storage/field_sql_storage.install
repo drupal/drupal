@@ -30,7 +30,7 @@ function field_sql_storage_schema() {
  * This function can be used for databases whose schema is at field module
  * version 7000 or higher.
  *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update_api
  */
 function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
   $table_name = "field_data_{$field_name}";

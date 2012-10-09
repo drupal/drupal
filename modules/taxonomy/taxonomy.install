@@ -266,7 +266,7 @@ function taxonomy_update_dependencies() {
  *
  * This function is valid for a database schema version 7002.
  *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update_api
  */
 function _update_7002_taxonomy_get_vocabularies() {
   return db_query('SELECT v.* FROM {taxonomy_vocabulary} v ORDER BY v.weight, v.name')->fetchAllAssoc('vid', PDO::FETCH_OBJ);

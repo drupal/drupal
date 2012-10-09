@@ -172,7 +172,7 @@ function field_schema() {
  * This function can be used for databases whose schema is at field module
  * version 7000 or higher.
  *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update_api
  */
 function _update_7000_field_create_field(&$field) {
   // Merge in default values.`
@@ -253,7 +253,7 @@ function _update_7000_field_create_field(&$field) {
  * @param $field_name
  *   The field name to delete.
  *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update_api
  */
 function _update_7000_field_delete_field($field_name) {
   $table_name = 'field_data_' . $field_name;
@@ -284,7 +284,7 @@ function _update_7000_field_delete_field($field_name) {
  *
  * This function is valid for a database schema version 7000.
  *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update_api
  */
 function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) {
   // Delete field instance configuration data.
@@ -322,6 +322,8 @@ function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) 
  * @return
  *   An array of fields matching $conditions, keyed by the property specified
  *   by the $key parameter.
+ *
+ * @ingroup update_api
  */
 function _update_7000_field_read_fields(array $conditions = array(), $key = 'id') {
   $fields = array();
@@ -356,7 +358,7 @@ function _update_7000_field_read_fields(array $conditions = array(), $key = 'id'
  * This function can be used for databases whose schema is at field module
  * version 7000 or higher.
  *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update_api
  */
 function _update_7000_field_create_instance($field, &$instance) {
   // Merge in defaults.
