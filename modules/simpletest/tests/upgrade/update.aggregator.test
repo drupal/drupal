@@ -1,0 +1,47 @@
+<?php
+/**
+ * @file
+ * Tests schema changes in aggregator.module.
+ */
+class AggregatorUpdatePathTestCase extends UpdatePathTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Aggregator update path',
+      'description' => 'Aggregator update path tests.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Use the normal installation and add our feed data.
+    $path = drupal_get_path('module', 'simpletest') . '/tests/upgrade';
+    $this->databaseDumpFiles = array(
+      $path . '/drupal-7.bare.standard_all.database.php.gz',
+      $path . '/drupal-7.aggregator.database.php',
+    );
+    parent::setUp();
+
+    // Our test data only relies on aggregator.module.
+    $this->uninstallModulesExcept(array('aggregator'));
+  }
+
+  /**
+   * Tests that the aggregator.module update is successful.
+   */
+  public function testAggregatorUpdate() {
+    // Get a selection of the fields affected by the schema update.
+    $query = db_select('aggregator_feed', 'af');
+    $query->join('aggregator_item', 'ai', 'af.fid = ai.fid');
+    $query
+      ->fields('af', array('url', 'link'))
+      ->fields('ai', array('link', 'guid'));
+
+    $pre_update_data = $query->execute()->fetchAll();
+    $this->assertTrue($this->performUpgrade(), 'The update was completed successfully.');
+    $post_update_data = $query->execute()->fetchAll();
+
+    $this->assertTrue($pre_update_data == $post_update_data, 'Feed data was preserved during the update.');
+  }
+
+}

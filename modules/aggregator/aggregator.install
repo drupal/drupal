@@ -130,10 +130,8 @@ function aggregator_schema() {
         'description' => 'Title of the feed.',
       ),
       'url' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
         'description' => 'URL to the feed.',
       ),
       'refresh' => array(
@@ -155,10 +153,8 @@ function aggregator_schema() {
         'description' => 'Time when this feed was queued for refresh, 0 if not queued.',
       ),
       'link' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
         'description' => 'The parent website of the feed; comes from the <link> element in the feed.',
       ),
       'description' => array(
@@ -202,12 +198,12 @@ function aggregator_schema() {
       )
     ),
     'primary key' => array('fid'),
-    'unique keys' => array(
-      'url'  => array('url'),
-      'title' => array('title'),
-    ),
     'indexes' => array(
+      'url'  => array(array('url', 255)),
       'queued' => array('queued'),
+    ),
+    'unique keys' => array(
+      'title' => array('title'),
     ),
   );
 
@@ -233,10 +229,8 @@ function aggregator_schema() {
         'description' => 'Title of the feed item.',
       ),
       'link' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
         'description' => 'Link to the feed item.',
       ),
       'author' => array(
@@ -258,9 +252,8 @@ function aggregator_schema() {
         'description' => 'Posted date of the feed item, as a Unix timestamp.',
       ),
       'guid' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
+        'type' => 'text',
+        'not null' => TRUE,
         'description' => 'Unique identifier for the feed item.',
       )
     ),
@@ -278,6 +271,11 @@ function aggregator_schema() {
 
   return $schema;
 }
+
+/**
+ * @addtogroup updates-6.x-to-7.x
+ * @{
+ */
 
 /**
  * Add hash column to aggregator_feed table.
@@ -306,3 +304,27 @@ function aggregator_update_7002() {
   db_add_index('aggregator_feed', 'queued', array('queued'));
 }
 
+/**
+ * @} End of "addtogroup updates-6.x-to-7.x"
+ */
+
+/**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
+ * Increase the length of {aggregator_feed}.url.
+ */
+function aggregator_update_7003() {
+  db_drop_unique_key('aggregator_feed', 'url');
+  db_change_field('aggregator_feed', 'url', 'url', array('type' => 'text', 'not null' => TRUE, 'description' => 'URL to the feed.'));
+  db_change_field('aggregator_feed', 'link', 'link', array('type' => 'text', 'not null' => TRUE, 'description' => 'The parent website of the feed; comes from the <link> element in the feed.'));
+  db_change_field('aggregator_item', 'link', 'link', array('type' => 'text', 'not null' => TRUE, 'description' => 'Link to the feed item.'));
+  db_change_field('aggregator_item', 'guid', 'guid', array('type' => 'text', 'not null' => TRUE, 'description' => 'Unique identifier for the feed item.'));
+  db_add_index('aggregator_feed', 'url', array(array('url', 255)));
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-extra"
+ */
