@@ -509,9 +509,18 @@ function hook_node_revision_delete(Drupal\node\Node $node) {
 /**
  * Respond to creation of a new node.
  *
- * This hook is invoked from node_save() after the node is inserted into the
- * node table in the database, after the type-specific hook_insert() is invoked,
- * and after field_attach_insert() is called.
+ * This hook is invoked from node_save() after the database query that will
+ * insert the node into the node table is scheduled for execution, after the
+ * type-specific hook_insert() is invoked, and after field_attach_insert() is
+ * called.
+ *
+ * Note that when this hook is invoked, the changes have not yet been written to
+ * the database, because a database transaction is still in progress. The
+ * transaction is not finalized until the save operation is entirely completed
+ * and node_save() goes out of scope. You should not rely on data in the
+ * database at this time as it is not updated yet. You should also note that any
+ * write/update database queries executed from this hook are also not committed
+ * immediately. Check node_save() and db_transaction() for more info.
  *
  * @param Drupal\node\Node $node
  *   The node that is being created.
@@ -703,9 +712,18 @@ function hook_node_presave(Drupal\node\Node $node) {
 /**
  * Respond to updates to a node.
  *
- * This hook is invoked from node_save() after the node is updated in the node
- * table in the database, after the type-specific hook_update() is invoked, and
- * after field_attach_update() is called.
+ * This hook is invoked from node_save() after the database query that will
+ * update node in the node table is scheduled for execution, after the
+ * type-specific hook_update() is invoked, and after field_attach_update() is
+ * called.
+ *
+ * Note that when this hook is invoked, the changes have not yet been written to
+ * the database, because a database transaction is still in progress. The
+ * transaction is not finalized until the save operation is entirely completed
+ * and node_save() goes out of scope. You should not rely on data in the
+ * database at this time as it is not updated yet. You should also note that any
+ * write/update database queries executed from this hook are also not committed
+ * immediately. Check node_save() and db_transaction() for more info.
  *
  * @param Drupal\node\Node $node
  *   The node that is being updated.

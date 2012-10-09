@@ -255,6 +255,14 @@ function hook_user_presave($account) {
 /**
  * Respond to creation of a new user account.
  *
+ * Note that when this hook is invoked, the changes have not yet been written to
+ * the database, because a database transaction is still in progress. The
+ * transaction is not finalized until the save operation is entirely completed
+ * and user_save() goes out of scope. You should not rely on data in the
+ * database at this time as it is not updated yet. You should also note that any
+ * write/update database queries executed from this hook are also not committed
+ * immediately. Check user_save() and db_transaction() for more info.
+ *
  * @param $account
  *   The user account object.
  *
@@ -272,6 +280,14 @@ function hook_user_insert($account) {
 
 /**
  * Respond to updates to a user account.
+ *
+ * Note that when this hook is invoked, the changes have not yet been written to
+ * the database, because a database transaction is still in progress. The
+ * transaction is not finalized until the save operation is entirely completed
+ * and user_save() goes out of scope. You should not rely on data in the
+ * database at this time as it is not updated yet. You should also note that any
+ * write/update database queries executed from this hook are also not committed
+ * immediately. Check user_save() and db_transaction() for more info.
  *
  * @param $account
  *   The user account object.
