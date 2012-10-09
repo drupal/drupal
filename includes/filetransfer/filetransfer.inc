@@ -381,7 +381,7 @@ interface FileTransferChmodInterface {
    * @param string $path
    *   Path to change permissions of.
    * @param long $mode
-   *   @see http://php.net/chmod
+   *   The new file permission mode to be passed to chmod().
    * @param boolean $recursive
    *   Pass TRUE to recursively chmod the entire directory specified in $path.
    */
