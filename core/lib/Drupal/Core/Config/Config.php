@@ -270,13 +270,14 @@ class Config {
    * Any non-scalar value that is not an array (aka objects) gets cast
    * to an array.
    *
-   * @param $value
+   * @param mixed $value
    *   A value being saved into the configuration system.
-   * @param $value
+   *
+   * @return string
    *   The value cast to a string or array.
    */
   public function castValue($value) {
-    if (is_scalar($value)) {
+    if (is_scalar($value) || $value === NULL) {
       // Handle special case of FALSE, which should be '0' instead of ''.
       if ($value === FALSE) {
         $value = '0';

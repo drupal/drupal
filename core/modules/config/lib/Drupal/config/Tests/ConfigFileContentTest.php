@@ -84,6 +84,9 @@ class ConfigFileContentTest extends WebTestBase {
     // Add a boolean true value. Should get cast to 1
     $config->set($true_key, TRUE);
 
+    // Add a null value. Should get cast to an empty string.
+    $config->set('null', NULL);
+
     // Add an array with a nested boolean false that should get cast to 0.
     $config->set($casting_array_key, $casting_array_value);
     $config->save();
@@ -118,6 +121,9 @@ class ConfigFileContentTest extends WebTestBase {
 
     // Read true value
     $this->assertEqual($config->get($true_key), '1', format_string("Boolean TRUE value returned the string '1'."));
+
+    // Read null value.
+    $this->assertIdentical($config->get('null'), '');
 
     // Read false that had been nested in an array value
     $this->assertEqual($config->get($casting_array_false_value_key), '0', format_string("Nested boolean FALSE value returned the string '0'."));
