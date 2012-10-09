@@ -11,7 +11,7 @@ use Drupal\Core\Database\Database;
  * Implements hook_install().
  */
 function views_install() {
-  db_query("UPDATE {system} SET weight = 10 WHERE name = 'views'");
+  module_set_weight('views', 10);
 }
 
 /**

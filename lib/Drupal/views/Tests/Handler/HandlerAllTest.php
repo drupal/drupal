@@ -35,10 +35,9 @@ class HandlerAllTest extends HandlerTestBase {
     'node',
     'search',
     'statistics',
-    'system',
     'taxonomy',
     'translation',
-    'user'
+    'user',
   );
 
   public static function getInfo() {
