@@ -83,7 +83,6 @@ class FieldTest extends HandlerTestBase {
       $this->assertEqual($id_field->get_value($result, 'job'), $row['job']);
       $this->assertEqual($id_field->get_value($result, 'created_test'), $row['created']);
     }
-
   }
 
   /**
@@ -356,7 +355,6 @@ class FieldTest extends HandlerTestBase {
     unset($id_field->options['alter']['target']);
   }
 
-
   /**
    * Tests general rewriting of the output.
    */
@@ -458,7 +456,7 @@ class FieldTest extends HandlerTestBase {
     $element_types = $id_field->get_elements();
     $expected_elements = array(
       '',
-      '0',
+      0,
       'div',
       'span',
       'h1',
@@ -472,7 +470,6 @@ class FieldTest extends HandlerTestBase {
       'em',
       'marquee'
     );
-    sort($expected_elements);
 
     $this->assertEqual(array_keys($element_types), $expected_elements);
   }
@@ -590,7 +587,6 @@ class FieldTest extends HandlerTestBase {
     $output = $name_field->advanced_render($row);
     $this->assertSubString($output, $views_test_data_name, 'Make sure the trimmed text can be found if trimming is disabled.');
     $this->assertSubString($output, $row->views_test_data_name, 'Make sure the untrimmed text can be found  if trimming is disabled.');
-
 
     // Tests for trimming to a maximum length.
     $name_field->options['alter']['trim'] = TRUE;
