@@ -10,7 +10,7 @@
 /**
  * No language negotiation. The default language is used.
  */
-const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
+const LANGUAGE_NEGOTIATION_SELECTED = 'language-selected';
 
 /**
  * @defgroup language_negotiation Language Negotiation API functionality
@@ -133,7 +133,7 @@ function language_types_initialize($type, $request = NULL) {
 
   // If no other language was found use the default one.
   $language = language_default();
-  $language->method_id = LANGUAGE_NEGOTIATION_DEFAULT;
+  $language->method_id = LANGUAGE_NEGOTIATION_SELECTED;
   return $language;
 }
 
@@ -263,7 +263,7 @@ function language_types_set() {
  */
 function language_negotiation_method_get_first($type) {
   $negotiation = variable_get("language_negotiation_$type", array());
-  return empty($negotiation) ? LANGUAGE_NEGOTIATION_DEFAULT : key($negotiation);
+  return empty($negotiation) ? LANGUAGE_NEGOTIATION_SELECTED : key($negotiation);
 }
 
 /**
@@ -404,14 +404,19 @@ function language_negotiation_info() {
   if (!isset($negotiation_info)) {
     // Collect all the module-defined language negotiation methods.
     $negotiation_info = module_invoke_all('language_negotiation_info');
-
+    $languages = language_list();
+    $selected_language = $languages[language_from_selected($languages)];
+    $description = 'Language based on a selected language. ';
+    $description .= ($selected_language->langcode == language_default()->langcode) ? "(Site's default language (@language_name))" : '(@language_name)';
     // Add the default language negotiation method.
-    $negotiation_info[LANGUAGE_NEGOTIATION_DEFAULT] = array(
-      'callbacks' => array('language' => 'language_from_default'),
-      'weight' => 10,
-      'name' => t('Default language'),
-      'description' => t('Use the default site language (@language_name).', array('@language_name' => language_default()->name)),
-      'config' => 'admin/config/regional/language',
+    $negotiation_info[LANGUAGE_NEGOTIATION_SELECTED] = array(
+      'callbacks' => array(
+        'negotiation' => 'language_from_selected',
+      ),
+      'weight' => 12,
+      'name' => t('Selected language'),
+      'description' => t($description, array('@language_name' => $selected_language->name)),
+      'config' => 'admin/config/regional/language/detection/selected',
     );
 
      // Let other modules alter the list of language negotiation methods.
@@ -468,14 +473,22 @@ function language_negotiation_method_invoke($method_id, $method = NULL, $request
   return !empty($results[$method_id]) ? clone($results[$method_id]) : $results[$method_id];
 }
 
-/**
- * Returns the default language code.
- *
- * @return
- *   The default language code.
- */
-function language_from_default() {
-  return language_default()->langcode;
+ /**
+  * Identifies language from configuration.
+  *
+  * @param $languages
+  *   An array of valid language objects.
+  *
+  * @return
+  *   A valid language code on success, FALSE otherwise.
+  */
+function language_from_selected($languages) {
+  $langcode = (string) config('language.negotiation')->get('selected_langcode');
+  // Replace the site's default langcode by its real value.
+  if ($langcode == 'site_default') {
+    $langcode = language_default()->langcode;
+  }
+  return isset($languages[$langcode]) ? $langcode : language_default()->langcode;
 }
 
 /**

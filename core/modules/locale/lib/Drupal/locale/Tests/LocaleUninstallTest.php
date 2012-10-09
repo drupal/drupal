@@ -118,11 +118,11 @@ class LocaleUninstallTest extends WebTestBase {
     // Check language negotiation.
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
     $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), t('Language types reset'));
-    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_SELECTED;
     $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
-    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_SELECTED;
     $this->assertTrue($language_negotiation, t('Content language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
-    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_URL) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_URL) == LANGUAGE_NEGOTIATION_SELECTED;
     $this->assertTrue($language_negotiation, t('URL language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
 
     // Check language negotiation method settings.

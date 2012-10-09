@@ -519,6 +519,7 @@ function language_negotiation_configure_form_table(&$form, $type) {
         '#title_display' => 'invisible',
         '#default_value' => $weight,
         '#attributes' => array('class' => array("language-method-weight-$type")),
+        '#delta' => 20,
       );
 
       $table_form['title'][$method_id] = array('#markup' => $method_name);
@@ -529,7 +530,7 @@ function language_negotiation_configure_form_table(&$form, $type) {
         '#title_display' => 'invisible',
         '#default_value' => $enabled,
       );
-      if ($method_id === LANGUAGE_NEGOTIATION_DEFAULT) {
+      if ($method_id === LANGUAGE_NEGOTIATION_SELECTED) {
         $table_form['enabled'][$method_id]['#default_value'] = TRUE;
         $table_form['enabled'][$method_id]['#attributes'] = array('disabled' => 'disabled');
       }
@@ -624,7 +625,7 @@ function language_negotiation_configure_form_submit($form, &$form_state) {
   foreach ($configurable_types as $type) {
     $method_weights = array();
     $enabled_methods = $form_state['values'][$type]['enabled'];
-    $enabled_methods[LANGUAGE_NEGOTIATION_DEFAULT] = TRUE;
+    $enabled_methods[LANGUAGE_NEGOTIATION_SELECTED] = TRUE;
     $method_weights_input = $form_state['values'][$type]['weight'];
 
     foreach ($method_weights_input as $method_id => $weight) {
@@ -812,6 +813,27 @@ function language_negotiation_configure_session_form($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/language/detection';
 
   return system_settings_form($form);
+}
+
+/**
+ * Builds the selected language negotiation method configuration form.
+ */
+function language_negotiation_configure_selected_form($form, &$form_state) {
+  $form['selected_langcode'] = array(
+    '#type' => 'language_select',
+    '#title' => t('Language'),
+    '#languages' => LANGUAGE_CONFIGURABLE | LANGUAGE_SITE_DEFAULT,
+    '#default_value' => config('language.negotiation')->get('selected_langcode'),
+  );
+
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Form submission handler for language_negotiation_configure_selected_form().
+ */
+function language_negotiation_configure_selected_form_submit($form, &$form_state) {
+  config('language.negotiation')->set('selected_langcode', $form_state['values']['selected_langcode'])->save();
 }
 
 /**

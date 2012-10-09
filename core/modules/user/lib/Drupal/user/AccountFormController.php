@@ -210,7 +210,7 @@ abstract class AccountFormController extends EntityFormController {
 
     // Is default the interface language?
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
+    $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_SELECTED;
     $form['language'] = array(
       '#type' => language_multilingual() ? 'fieldset' : 'container',
       '#title' => t('Language settings'),

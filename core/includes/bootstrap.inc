@@ -246,6 +246,11 @@ const LANGUAGE_LOCKED = 2;
 const LANGUAGE_ALL = 3;
 
 /**
+ * The language state used when referring to the site's default language.
+ */
+const LANGUAGE_SITE_DEFAULT = 4;
+
+/**
  * The type of language used to define the content language.
  */
 const LANGUAGE_TYPE_CONTENT = 'language_content';
@@ -2799,6 +2804,15 @@ function language_list($flags = LANGUAGE_CONFIGURABLE) {
   // default we remove the locked languages, but the caller may request for
   // those languages to be added as well.
   $filtered_languages = array();
+
+  // Add the site's default language if flagged as allowed value.
+  if ($flags & LANGUAGE_SITE_DEFAULT) {
+    $default = isset($default) ? $default : language_default();
+    // Rename the default language.
+    $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
+    $filtered_languages['site_default'] = $default;
+  }
+
   foreach ($languages as $langcode => $language) {
     if (($language->locked && !($flags & LANGUAGE_LOCKED)) || (!$language->locked && !($flags & LANGUAGE_CONFIGURABLE))) {
       continue;

@@ -106,12 +106,18 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
       'language-session' => '-6',
       'language-user' => '-4',
       'language-browser' => '-2',
-      'language-default' => '10',
+      'language-selected' => '10',
     );
     // Check that locale_language_providers_weight_language is correctly
     // renamed.
     $current_weights = update_variable_get('language_negotiation_methods_weight_language_interface', array());
     $this->assertTrue(serialize($expected_weights) == serialize($current_weights), t('Language negotiation method weights upgraded.'));
+    $this->assertTrue(isset($current_weights['language-selected']), 'Language-selected is present.');
+    $this->assertFalse(isset($current_weights['language-default']), 'Language-default is not present.');
+
+    // Check that negotiation callback was added to language_negotiation_language_interface.
+    $language_negotiation_language_interface = update_variable_get('language_negotiation_language_interface', NULL);
+    $this->assertTrue(isset($language_negotiation_language_interface[LANGUAGE_NEGOTIATION_SELECTED]['callbacks']['negotiation']), 'Negotiation callback was added to language_negotiation_language_interface.');
 
     // Look up migrated plural string.
     $source_string = db_query('SELECT * FROM {locales_source} WHERE lid = 22')->fetchObject();

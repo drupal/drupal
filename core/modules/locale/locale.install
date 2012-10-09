@@ -732,6 +732,28 @@ function locale_update_8011() {
 }
 
 /**
+ * Renames language_default language negotiation method to language_selected.
+ */
+function locale_update_8013() {
+  $weight = update_variable_get('language_negotiation_methods_weight_language_interface', NULL);
+  if ($weight !== NULL) {
+    $weight[LANGUAGE_NEGOTIATION_SELECTED] = $weight['language-default'];
+    unset($weight['language-default']);
+    update_variable_set('language_negotiation_methods_weight_language_interface', $weight);
+  }
+
+  $negotiation_interface = update_variable_get('language_negotiation_language_interface', NULL);
+  if ($negotiation_interface !== NULL) {
+    if (isset($negotiation_interface['language-default'])) {
+      $negotiation_interface[LANGUAGE_NEGOTIATION_SELECTED] = $negotiation_interface['language-default'];
+      $negotiation_interface[LANGUAGE_NEGOTIATION_SELECTED]['callbacks']['negotiation'] = 'language_from_selected';
+      unset($negotiation_interface['language-default']);
+      update_variable_set('language_negotiation_language_interface', $negotiation_interface);
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
