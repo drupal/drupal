@@ -92,30 +92,4 @@ class ConfigCRUDTest extends WebTestBase {
     $this->assertIdentical($renamed_config->isNew(), FALSE);
   }
 
-  /**
-   * Tests Drupal\Core\Config\Config::sortByKey().
-   */
-  function testDataKeySort() {
-    $config = config('config_test.keysort');
-    $config->set('new', 'Value to be replaced');
-    $config->set('static', 'static');
-    $config->save();
-    // Clone this Config, so this test does not rely on any particular
-    // architecture.
-    $config = clone $config;
-
-    // Load the configuration data into a new object.
-    $new_config = config('config_test.keysort');
-    // Clear the 'new' key that came first.
-    $new_config->clear('new');
-    // Add a new 'new' key and save.
-    $new_config->set('new', 'Value to be replaced');
-    $new_config->save();
-
-    // Verify that the data of both objects is in the identical order.
-    // assertIdentical() is the required essence of this test; it performs a
-    // strict comparison, which means that keys and values must be identical and
-    // their order must be identical.
-    $this->assertIdentical($new_config->get(), $config->get());
-  }
 }

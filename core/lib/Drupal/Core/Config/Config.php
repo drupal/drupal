@@ -346,7 +346,6 @@ class Config {
    *   The configuration object.
    */
   public function save() {
-    $this->sortByKey($this->data);
     $this->storage->write($this->name, $this->data);
     $this->isNew = FALSE;
     $this->notify('save');
@@ -367,26 +366,6 @@ class Config {
       $this->name = $new_name;
     }
     return $this;
-  }
-
-  /**
-   * Sorts all keys in configuration data.
-   *
-   * Ensures that re-inserted keys appear in the same location as before, in
-   * order to ensure an identical order regardless of storage controller.
-   * A consistent order is important for any storage that allows any kind of
-   * diff operation.
-   *
-   * @param array $data
-   *   An associative array to sort recursively by key name.
-   */
-  public function sortByKey(array &$data) {
-    ksort($data);
-    foreach ($data as &$value) {
-      if (is_array($value)) {
-        $this->sortByKey($value);
-      }
-    }
   }
 
   /**

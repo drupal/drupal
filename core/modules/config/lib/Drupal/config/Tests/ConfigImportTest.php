@@ -128,10 +128,10 @@ class ConfigImportTest extends WebTestBase {
     $staging->write($name, $original_name_data);
     $original_dynamic_data = array(
       'id' => 'new',
-      'label' => 'New',
-      'langcode' => 'und',
-      'style' => '',
       'uuid' => '30df59bd-7b03-4cf7-bb35-d42fc49f0651',
+      'label' => 'New',
+      'style' => '',
+      'langcode' => 'und',
     );
     $staging->write($dynamic_name, $original_dynamic_data);
     $this->assertIdentical($staging->exists($name), TRUE, $name . ' found.');
