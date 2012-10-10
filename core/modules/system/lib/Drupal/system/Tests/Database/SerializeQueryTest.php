@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Query serialization tests.
+ * Tests query serialization.
  */
 class SerializeQueryTest extends DatabaseTestBase {
   public static function getInfo() {
@@ -20,7 +20,7 @@ class SerializeQueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that a query can be serialized and unserialized.
+   * Confirms that a query can be serialized and unserialized.
    */
   function testSerializeQuery() {
     $query = db_select('test');

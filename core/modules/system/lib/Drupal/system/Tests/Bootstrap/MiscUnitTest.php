@@ -23,7 +23,7 @@ class MiscUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test miscellaneous functions in bootstrap.inc.
+   * Tests miscellaneous functions in bootstrap.inc.
    */
   function testMisc() {
     // Test drupal_array_merge_deep().

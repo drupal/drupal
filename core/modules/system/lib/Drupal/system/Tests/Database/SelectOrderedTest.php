@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 use PDO;
 
 /**
- * Test select with order by clauses.
+ * Tests SELECT with ORDER BY clauses.
  */
 class SelectOrderedTest extends DatabaseTestBase {
 
@@ -23,7 +23,7 @@ class SelectOrderedTest extends DatabaseTestBase {
   }
 
   /**
-   * Test basic order by.
+   * Tests basic ORDER BY.
    */
   function testSimpleSelectOrdered() {
     $query = db_select('test');
@@ -44,7 +44,7 @@ class SelectOrderedTest extends DatabaseTestBase {
   }
 
   /**
-   * Test multiple order by.
+   * Tests multiple ORDER BY.
    */
   function testSimpleSelectMultiOrdered() {
     $query = db_select('test');
@@ -75,7 +75,7 @@ class SelectOrderedTest extends DatabaseTestBase {
   }
 
   /**
-   * Test order by descending.
+   * Tests ORDER BY descending.
    */
   function testSimpleSelectOrderedDesc() {
     $query = db_select('test');

@@ -23,9 +23,7 @@ class TimerUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test timer_read() to ensure it properly accumulates time when the timer
-   * started and stopped multiple times.
-   * @return
+   * Tests timer_read() time accumulation accuracy across multiple restarts.
    */
   function testTimer() {
     timer_start('test');

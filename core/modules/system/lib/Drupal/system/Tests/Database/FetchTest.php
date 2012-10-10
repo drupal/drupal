@@ -11,7 +11,7 @@ use Drupal\Core\Database\StatementInterface;
 use PDO;
 
 /**
- * Test fetch actions, part 1.
+ * Tests fetch actions.
  *
  * We get timeout errors if we try to run too many tests at once.
  */
@@ -26,7 +26,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can fetch a record properly in default object mode.
+   * Confirms that we can fetch a record properly in default object mode.
    */
   function testQueryFetchDefault() {
     $records = array();
@@ -42,7 +42,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can fetch a record to an object explicitly.
+   * Confirms that we can fetch a record to an object explicitly.
    */
   function testQueryFetchObject() {
     $records = array();
@@ -57,7 +57,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can fetch a record to an array associative explicitly.
+   * Confirms that we can fetch a record to an associative array explicitly.
    */
   function testQueryFetchArray() {
     $records = array();
@@ -73,7 +73,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can fetch a record into a new instance of a custom class.
+   * Confirms that we can fetch a record into a new instance of a custom class.
    *
    * @see Drupal\system\Tests\Database\FakeRecord
    */
@@ -90,7 +90,9 @@ class FetchTest extends DatabaseTestBase {
     $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
-  // Confirm that we can fetch a record into an indexed array explicitly.
+  /**
+   * Confirms that we can fetch a record into an indexed array explicitly.
+   */
   function testQueryFetchNum() {
     $records = array();
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_NUM));
@@ -105,7 +107,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can fetch a record into a doubly-keyed array explicitly.
+   * Confirms that we can fetch a record into a doubly-keyed array explicitly.
    */
   function testQueryFetchBoth() {
     $records = array();
@@ -122,7 +124,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can fetch an entire column of a result set at once.
+   * Confirms that we can fetch an entire column of a result set at once.
    */
   function testQueryFetchCol() {
     $records = array();

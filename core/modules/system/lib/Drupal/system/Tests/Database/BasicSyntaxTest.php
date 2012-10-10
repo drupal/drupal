@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test how the current database driver interprets the SQL syntax.
+ * Tests how the current database driver interprets the SQL syntax.
  *
  * In order to ensure consistent SQL handling throughout Drupal
  * across multiple kinds of database systems, we test that the
@@ -24,7 +24,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   }
 
   /**
-   * Test for string concatenation.
+   * Tests string concatenation.
    */
   function testBasicConcat() {
     $result = db_query('SELECT CONCAT(:a1, CONCAT(:a2, CONCAT(:a3, CONCAT(:a4, :a5))))', array(
@@ -38,7 +38,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   }
 
   /**
-   * Test for string concatenation with field values.
+   * Tests string concatenation with field values.
    */
   function testFieldConcat() {
     $result = db_query('SELECT CONCAT(:a1, CONCAT(name, CONCAT(:a2, CONCAT(age, :a3)))) FROM {test} WHERE age = :age', array(
@@ -51,7 +51,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   }
 
   /**
-   * Test escaping of LIKE wildcards.
+   * Tests escaping of LIKE wildcards.
    */
   function testLikeEscape() {
     db_insert('test')
@@ -77,7 +77,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   }
 
   /**
-   * Test LIKE query containing a backslash.
+   * Tests a LIKE query containing a backslash.
    */
   function testLikeBackslash() {
     db_insert('test')

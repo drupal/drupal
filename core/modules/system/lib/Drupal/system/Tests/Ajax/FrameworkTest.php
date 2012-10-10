@@ -20,7 +20,7 @@ class FrameworkTest extends AjaxTestBase {
   }
 
   /**
-   * Test that ajax_render() returns JavaScript settings generated during the page request.
+   * Ensures ajax_render() returns JavaScript settings from the page request.
    *
    * @todo Add tests to ensure that ajax_render() returns commands for new CSS
    *   and JavaScript files to be loaded by the page. See
@@ -45,7 +45,7 @@ class FrameworkTest extends AjaxTestBase {
   }
 
   /**
-   * Test behavior of ajax_render_error().
+   * Tests behavior of ajax_render_error().
    */
   function testAJAXRenderError() {
     // Verify default error message.
@@ -69,7 +69,7 @@ class FrameworkTest extends AjaxTestBase {
   }
 
   /**
-   * Test that new JavaScript and CSS files added during an AJAX request are returned.
+   * Tests that new JavaScript and CSS files are returned on an AJAX request.
    */
   function testLazyLoad() {
     $expected = array(

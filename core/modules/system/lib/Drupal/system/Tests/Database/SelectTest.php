@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test the SELECT builder.
+ * Tests the SELECT builder.
  */
 class SelectTest extends DatabaseTestBase {
 
@@ -21,7 +21,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test rudimentary SELECT statements.
+   * Tests rudimentary SELECT statements.
    */
   function testSimpleSelect() {
     $query = db_select('test');
@@ -38,7 +38,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test rudimentary SELECT statement with a COMMENT.
+   * Tests rudimentary SELECT statement with a COMMENT.
    */
   function testSimpleComment() {
     $query = db_select('test')->comment('Testing query comments');
@@ -59,7 +59,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test query COMMENT system against vulnerabilities.
+   * Tests query COMMENT system against vulnerabilities.
    */
   function testVulnerableComment() {
     $query = db_select('test')->comment('Testing query comments */ SELECT nid FROM {node}; --');
@@ -80,7 +80,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test basic conditionals on SELECT statements.
+   * Tests basic conditionals on SELECT statements.
    */
   function testSimpleSelectConditional() {
     $query = db_select('test');
@@ -100,7 +100,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test SELECT statements with expressions.
+   * Tests SELECT statements with expressions.
    */
   function testSimpleSelectExpression() {
     $query = db_select('test');
@@ -120,7 +120,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test SELECT statements with multiple expressions.
+   * Tests SELECT statements with multiple expressions.
    */
   function testSimpleSelectExpressionMultiple() {
     $query = db_select('test');
@@ -142,7 +142,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test adding multiple fields to a select statement at the same time.
+   * Tests adding multiple fields to a SELECT statement at the same time.
    */
   function testSimpleSelectMultipleFields() {
     $record = db_select('test')
@@ -165,7 +165,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test adding all fields from a given table to a select statement.
+   * Tests adding all fields from a given table to a SELECT statement.
    */
   function testSimpleSelectAllFields() {
     $record = db_select('test')
@@ -188,7 +188,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that a comparison with NULL is always FALSE.
+   * Tests that a comparison with NULL is always FALSE.
    */
   function testNullCondition() {
     $this->ensureSampleDataNull();
@@ -202,7 +202,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can find a record with a NULL value.
+   * Tests that we can find a record with a NULL value.
    */
   function testIsNullCondition() {
     $this->ensureSampleDataNull();
@@ -217,7 +217,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can find a record without a NULL value.
+   * Tests that we can find a record without a NULL value.
    */
   function testIsNotNullCondition() {
     $this->ensureSampleDataNull();
@@ -234,8 +234,10 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can UNION multiple Select queries together. This is
-   * semantically equal to UNION DISTINCT, so we don't explicity test that.
+   * Tests that we can UNION multiple Select queries together.
+   *
+   * This is semantically equal to UNION DISTINCT, so we don't explicity test
+   * that.
    */
   function testUnion() {
     $query_1 = db_select('test', 't')
@@ -258,7 +260,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can UNION ALL multiple Select queries together.
+   * Tests that we can UNION ALL multiple SELECT queries together.
    */
   function testUnionAll() {
     $query_1 = db_select('test', 't')
@@ -304,7 +306,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that random ordering of queries works.
+   * Tests that random ordering of queries works.
    *
    * We take the approach of testing the Drupal layer only, rather than trying
    * to test that the database's random number generator actually produces
@@ -366,7 +368,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that aliases are renamed when duplicates.
+   * Tests that aliases are renamed when duplicates.
    */
   function testSelectDuplicateAlias() {
     $query = db_select('test', 't');

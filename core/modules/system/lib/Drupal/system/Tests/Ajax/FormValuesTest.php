@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Ajax;
 
 /**
- * Test that $form_state['values'] is properly delivered to $ajax['callback'].
+ * Tests that $form_state['values'] is properly delivered to $ajax['callback'].
  */
 class FormValuesTest extends AjaxTestBase {
   public static function getInfo() {
@@ -27,7 +27,7 @@ class FormValuesTest extends AjaxTestBase {
   }
 
   /**
-   * Create a simple form, then POST to system/ajax to change to it.
+   * Submits forms with select and checkbox elements via AJAX.
    */
   function testSimpleAjaxFormValue() {
     // Verify form values of a select element.

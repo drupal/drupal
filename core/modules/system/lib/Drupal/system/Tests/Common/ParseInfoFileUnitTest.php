@@ -22,7 +22,7 @@ class ParseInfoFileUnitTest extends UnitTestBase {
   }
 
   /**
-   * Parse an example .info file an verify the results.
+   * Parses an example .info file and verifies the results.
    */
   function testParseInfoFile() {
     $info_values = drupal_parse_info_file(drupal_get_path('module', 'system') . '/tests/common_test_info.txt');

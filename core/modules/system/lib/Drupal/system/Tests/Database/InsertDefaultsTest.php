@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Query\NoFieldsException;
 
 /**
- * Insert tests for "database default" values.
+ * Tests insertion for database default values.
  */
 class InsertDefaultsTest extends DatabaseTestBase {
 
@@ -23,7 +23,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can run a query that is "default values for everything".
+   * Tests that we can run a query that uses default values for everything.
    */
   function testDefaultInsert() {
     $query = db_insert('test')->useDefaults(array('job'));
@@ -36,7 +36,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that no action will be preformed if no fields are specified.
+   * Tests that no action will be preformed if no fields are specified.
    */
   function testDefaultEmptyInsert() {
     $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -54,7 +54,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can insert fields with values and defaults in the same query.
+   * Tests that we can insert fields with values and defaults in the same query.
    */
   function testDefaultInsertWithFields() {
     $query = db_insert('test')

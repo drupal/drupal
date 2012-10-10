@@ -39,7 +39,7 @@ class PageCacheTest extends WebTestBase {
   }
 
   /**
-   * Test support for requests containing If-Modified-Since and If-None-Match headers.
+   * Tests support of requests with If-Modified-Since and If-None-Match headers.
    */
   function testConditionalRequests() {
     $config = config('system.performance');
@@ -83,7 +83,7 @@ class PageCacheTest extends WebTestBase {
   }
 
   /**
-   * Test cache headers.
+   * Tests cache headers.
    */
   function testPageCache() {
     $config = config('system.performance');
@@ -125,7 +125,7 @@ class PageCacheTest extends WebTestBase {
   }
 
   /**
-   * Test page compression.
+   * Tests page compression.
    *
    * The test should pass even if zlib.output_compression is enabled in php.ini,
    * .htaccess or similar, or if compression is done outside PHP, e.g. by the

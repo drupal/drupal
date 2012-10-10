@@ -30,7 +30,7 @@ class GotoTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_goto().
+   * Tests drupal_goto().
    */
   function testDrupalGoto() {
     $this->drupalGet('common-test/drupal_goto/redirect');
@@ -56,7 +56,7 @@ class GotoTest extends WebTestBase {
   }
 
   /**
-   * Test hook_drupal_goto_alter().
+   * Tests hook_drupal_goto_alter().
    */
   function testDrupalGotoAlter() {
     $this->drupalGet('common-test/drupal_goto/redirect_fail');
@@ -66,7 +66,7 @@ class GotoTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_get_destination().
+   * Tests drupal_get_destination().
    */
   function testDrupalGetDestination() {
     $query = $this->randomName(10);

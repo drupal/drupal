@@ -22,7 +22,7 @@ class ValidUrlUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test valid absolute URLs.
+   * Tests valid absolute URLs.
    */
   function testValidAbsolute() {
     $url_schemes = array('http', 'https', 'ftp');
@@ -57,7 +57,7 @@ class ValidUrlUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test invalid absolute URLs.
+   * Tests invalid absolute URLs.
    */
   function testInvalidAbsolute() {
     $url_schemes = array('http', 'https', 'ftp');
@@ -77,7 +77,7 @@ class ValidUrlUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test valid relative URLs.
+   * Tests valid relative URLs.
    */
   function testValidRelative() {
     $valid_relative_urls = array(
@@ -98,7 +98,7 @@ class ValidUrlUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test invalid relative URLs.
+   * Tests invalid relative URLs.
    */
   function testInvalidRelative() {
     $invalid_relative_urls = array(

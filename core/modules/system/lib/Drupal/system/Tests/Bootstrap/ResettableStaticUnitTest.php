@@ -23,7 +23,9 @@ class ResettableStaticUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test that a variable reference returned by drupal_static() gets reset when
+   * Tests drupal_static() function.
+   *
+   * Tests that a variable reference returned by drupal_static() gets reset when
    * drupal_static_reset() is called.
    */
   function testDrupalStatic() {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Helper module for the testCronExceptions in addition to common_test module.

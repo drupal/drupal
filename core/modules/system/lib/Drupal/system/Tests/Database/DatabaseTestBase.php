@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Base test class for databases.
+ * Tests for databases.
  *
  * Because all database tests share the same test data, we can centralize that
  * here.
@@ -39,7 +39,7 @@ abstract class DatabaseTestBase extends WebTestBase {
   }
 
   /**
-   * Set up several tables needed by a certain test.
+   * Sets up several tables needed by a certain test.
    *
    * @param $schema
    *   An array of table definitions to install.
@@ -59,7 +59,7 @@ abstract class DatabaseTestBase extends WebTestBase {
   }
 
   /**
-   * Set up tables for NULL handling.
+   * Sets up tables for NULL handling.
    */
   function ensureSampleDataNull() {
     $schema['test_null'] = drupal_get_schema('test_null');
@@ -83,7 +83,7 @@ abstract class DatabaseTestBase extends WebTestBase {
   }
 
   /**
-   * Setup our sample data.
+   * Sets up our sample data.
    *
    * These are added using db_query(), since we're not trying to test the
    * INSERT operations here, just populate.

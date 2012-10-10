@@ -22,7 +22,7 @@ abstract class AjaxTestBase extends WebTestBase {
   public static $modules = array('ajax_test', 'ajax_forms_test');
 
   /**
-   * Assert that a command with the required properties exists within the array of Ajax commands returned by the server.
+   * Asserts the array of Ajax commands contains the searched command.
    *
    * The Ajax framework, via the ajax_render() function, returns an array of
    * commands. This array sometimes includes commands automatically provided by

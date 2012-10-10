@@ -40,7 +40,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
   }
 
   /**
-   * Test that simpletest collects errors from the tested site.
+   * Tests that simpletest collects errors from the tested site.
    */
   function testErrorCollect() {
     $this->collectedErrors = array();
@@ -91,7 +91,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
   }
 
   /**
-   * Assert that a collected error matches what we are expecting.
+   * Asserts that a collected error matches what we are expecting.
    */
   function assertError($error, $group, $function, $file, $message = NULL) {
     $this->assertEqual($error['group'], $group, format_string("Group was %group", array('%group' => $group)));

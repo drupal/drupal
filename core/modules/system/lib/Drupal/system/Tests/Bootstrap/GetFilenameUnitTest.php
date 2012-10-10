@@ -23,7 +23,7 @@ class GetFilenameUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test that drupal_get_filename() works correctly when the file is not found in the database.
+   * Tests that drupal_get_filename() works when the file is not in database.
    */
   function testDrupalGetFilename() {
     // Reset the static cache so we can test the "db is not active" code of

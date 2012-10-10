@@ -30,7 +30,7 @@ class VariableTest extends WebTestBase {
   }
 
   /**
-   * testVariable
+   * Tests variables then deletes them.
    */
   function testVariable() {
     // Setting and retrieving values.

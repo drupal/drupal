@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Select alter tests.
+ * Tests alter queries.
  *
  * @see database_test_query_alter()
  */
@@ -23,7 +23,7 @@ class AlterTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can do basic alters.
+   * Tests that we can do basic alters.
    */
   function testSimpleAlter() {
     $query = db_select('test');
@@ -42,7 +42,7 @@ class AlterTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can alter the joins on a query.
+   * Tests that we can alter the joins on a query.
    */
   function testAlterWithJoin() {
     $query = db_select('test_task');
@@ -66,7 +66,7 @@ class AlterTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can alter a query's conditionals.
+   * Tests that we can alter a query's conditionals.
    */
   function testAlterChangeConditional() {
     $query = db_select('test_task');
@@ -91,7 +91,7 @@ class AlterTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can alter the fields of a query.
+   * Tests that we can alter the fields of a query.
    */
   function testAlterChangeFields() {
     $query = db_select('test');
@@ -106,7 +106,7 @@ class AlterTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can alter expressions in the query.
+   * Tests that we can alter expressions in the query.
    */
   function testAlterExpression() {
     $query = db_select('test');
@@ -124,7 +124,9 @@ class AlterTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can remove a range() value from a query. This also tests hook_query_TAG_alter().
+   * Tests that we can remove a range() value from a query.
+   *
+   * This also tests hook_query_TAG_alter().
    */
   function testAlterRemoveRange() {
     $query = db_select('test');
@@ -139,7 +141,7 @@ class AlterTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can do basic alters on subqueries.
+   * Tests that we can do basic alters on subqueries.
    */
   function testSimpleAlterSubquery() {
     // Create a sub-query with an alter tag.

@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test more complex select statements.
+ * Tests more complex select statements.
  */
 class SelectComplexTest extends DatabaseTestBase {
 
@@ -28,7 +28,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test simple JOIN statements.
+   * Tests simple JOIN statements.
    */
   function testDefaultJoin() {
     $query = db_select('test_task', 't');
@@ -53,7 +53,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test LEFT OUTER joins.
+   * Tests LEFT OUTER joins.
    */
   function testLeftOuterJoin() {
     $query = db_select('test', 'p');
@@ -78,7 +78,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test GROUP BY clauses.
+   * Tests GROUP BY clauses.
    */
   function testGroupBy() {
     $query = db_select('test_task', 't');
@@ -114,7 +114,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test GROUP BY and HAVING clauses together.
+   * Tests GROUP BY and HAVING clauses together.
    */
   function testGroupByAndHaving() {
     $query = db_select('test_task', 't');
@@ -148,7 +148,9 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test range queries. The SQL clause varies with the database.
+   * Tests range queries.
+   *
+   * The SQL clause varies with the database.
    */
   function testRange() {
     $query = db_select('test');
@@ -166,7 +168,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test distinct queries.
+   * Tests distinct queries.
    */
   function testDistinct() {
     $query = db_select('test_task');
@@ -183,7 +185,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can generate a count query from a built query.
+   * Tests that we can generate a count query from a built query.
    */
   function testCountQuery() {
     $query = db_select('test');
@@ -214,8 +216,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that countQuery properly removes 'all_fields' statements and
-   * ordering clauses.
+   * Tests that countQuery removes 'all_fields' statements and ordering clauses.
    */
   function testCountQueryRemovals() {
     $query = db_select('test');
@@ -243,7 +244,7 @@ class SelectComplexTest extends DatabaseTestBase {
 
 
   /**
-   * Test that countQuery properly removes fields and expressions.
+   * Tests that countQuery properly removes fields and expressions.
    */
   function testCountQueryFieldRemovals() {
     // countQuery should remove all fields and expressions, so this can be
@@ -261,7 +262,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can generate a count query from a query with distinct.
+   * Tests that we can generate a count query from a query with distinct.
    */
   function testCountQueryDistinct() {
     $query = db_select('test_task');
@@ -274,7 +275,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can generate a count query from a query with GROUP BY.
+   * Tests that we can generate a count query from a query with GROUP BY.
    */
   function testCountQueryGroupBy() {
     $query = db_select('test_task');
@@ -299,7 +300,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can properly nest conditional clauses.
+   * Confirms that we can properly nest conditional clauses.
    */
   function testNestedConditions() {
     // This query should translate to:
@@ -316,7 +317,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm we can join on a single table twice with a dynamic alias.
+   * Confirms we can join on a single table twice with a dynamic alias.
    */
   function testJoinTwice() {
     $query = db_select('test')->fields('test');
@@ -330,7 +331,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can join on a query.
+   * Tests that we can join on a query.
    */
   function testJoinSubquery() {
     $acct = $this->drupalCreateUser();

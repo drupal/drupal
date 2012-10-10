@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test case sensitivity handling.
+ * Tests case sensitivity handling.
  */
 class CaseSensitivityTest extends DatabaseTestBase {
   public static function getInfo() {
@@ -20,7 +20,7 @@ class CaseSensitivityTest extends DatabaseTestBase {
   }
 
   /**
-   * Test BINARY collation in MySQL.
+   * Tests BINARY collation in MySQL.
    */
   function testCaseSensitiveInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();

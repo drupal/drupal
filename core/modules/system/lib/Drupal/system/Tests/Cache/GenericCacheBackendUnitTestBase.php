@@ -128,8 +128,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::get() and
-   * Drupal\Core\Cache\CacheBackendInterface::set().
+   * Tests the get and set methods of Drupal\Core\Cache\CacheBackendInterface.
    */
   public function testSetGet() {
     $backend = $this->getCacheBackend();
@@ -150,7 +149,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::delete().
+   * Tests Drupal\Core\Cache\CacheBackendInterface::delete().
    */
   public function testDelete() {
     $backend = $this->getCacheBackend();
@@ -174,7 +173,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test data type perservation.
+   * Tests data type preservation.
    */
   public function testValueTypeIsKept() {
     $backend = $this->getCacheBackend();
@@ -202,7 +201,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::getMultiple().
+   * Tests Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
   public function testGetMultiple() {
     $backend = $this->getCacheBackend();
@@ -281,7 +280,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::isEmpty().
+   * Tests Drupal\Core\Cache\CacheBackendInterface::isEmpty().
    */
   public function testIsEmpty() {
     $backend = $this->getCacheBackend();
@@ -296,7 +295,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
+   * Tests Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
   public function testDeleteMultiple() {
     $backend = $this->getCacheBackend();
@@ -354,7 +353,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Check whether or not a cache entry exists.
+   * Checks whether or not a cache entry exists.
    *
    * @param $cid
    *   The cache id.
@@ -370,7 +369,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
+   * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
    */
   function testClearTags() {
     $backend = $this->getCacheBackend();

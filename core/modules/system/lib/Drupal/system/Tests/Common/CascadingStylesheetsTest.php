@@ -36,14 +36,14 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   /**
-   * Check default stylesheets as empty.
+   * Checks that default stylesheets are empty.
    */
   function testDefault() {
     $this->assertEqual(array(), drupal_add_css(), 'Default CSS is empty.');
   }
 
   /**
-   * Test that stylesheets in module .info files are loaded.
+   * Tests that stylesheets in module .info files are loaded.
    */
   function testModuleInfo() {
     $this->drupalGet('');
@@ -172,7 +172,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   /**
-   * Test CSS ordering.
+   * Tests CSS ordering.
    */
   function testRenderOrder() {
     // A module CSS file.
@@ -203,7 +203,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   /**
-   * Test CSS override.
+   * Tests CSS override.
    */
   function testRenderOverride() {
     $system = drupal_get_path('module', 'system');
@@ -244,8 +244,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   /**
-   * Tests that the query string remains intact when adding CSS files that have
-   * query string parameters.
+   * Tests that CSS query string remains intact when added to file.
    */
   function testAddCssFileWithQueryString() {
     $this->drupalGet('common-test/query-string');

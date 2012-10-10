@@ -30,8 +30,7 @@ class ConfigurationTest extends WebTestBase {
   }
 
   /**
-   * Test the configuration of advanced actions through the administration
-   * interface.
+   * Tests configuration of advanced actions through administration interface.
    */
   function testActionConfiguration() {
     // Create a user with permission to view the actions administration pages.

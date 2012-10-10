@@ -21,7 +21,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that a tablesort query returns the correct results.
+   * Confirms that a tablesort query returns the correct results.
    *
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
@@ -49,8 +49,10 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that if a tablesort's orderByHeader is called before another orderBy, that the header happens first.
+   * Confirms precedence of tablesorts headers.
    *
+   * If a tablesort's orderByHeader is called before another orderBy, then its
+   * header happens first.
    */
   function testTableSortQueryFirst() {
     $sorts = array(
@@ -75,7 +77,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that if a sort is not set in a tableselect form there is no error thrown when using the default.
+   * Confirms that no error is thrown if a sort is not set in a default tableselect.
    */
   function testTableSortDefaultSort() {
     $this->drupalGet('database_test/tablesort_default_sort');

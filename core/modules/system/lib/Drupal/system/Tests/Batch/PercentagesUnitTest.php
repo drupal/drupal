@@ -81,7 +81,7 @@ class PercentagesUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test the _batch_api_percentage() function.
+   * Tests the _batch_api_percentage() function.
    */
   function testBatchPercentages() {
     foreach ($this->testCases as $expected_result => $arguments) {

@@ -30,7 +30,7 @@ class HookBootExitTest extends WebTestBase {
   }
 
   /**
-   * Test calling of hook_boot() and hook_exit().
+   * Tests calling of hook_boot() and hook_exit().
    */
   function testHookBootExit() {
     // Test with cache disabled. Boot and exit should always fire.

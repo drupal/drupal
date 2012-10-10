@@ -21,7 +21,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that a pager query returns the correct results.
+   * Confirms that a pager query returns the correct results.
    *
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
@@ -55,7 +55,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that a pager query returns the correct results.
+   * Confirms that a pager query returns the correct results.
    *
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
@@ -89,7 +89,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that a pager query with inner pager query returns valid results.
+   * Confirms that a pager query results with an inner pager query are valid.
    *
    * This is a regression test for #467984.
    */
@@ -111,7 +111,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that a paging query with a having expression returns valid results.
+   * Confirms that a paging query results with a having expression are valid.
    *
    * This is a regression test for #467984.
    */
@@ -132,7 +132,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that every pager gets a valid non-overlaping element ID.
+   * Confirms that every pager gets a valid, non-overlaping element ID.
    */
   function testElementNumbers() {
     $_GET['page'] = '3, 2, 1, 0';

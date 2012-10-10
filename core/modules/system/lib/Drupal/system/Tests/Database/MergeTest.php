@@ -11,7 +11,7 @@ use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\InvalidMergeQueryException;
 
 /**
- * Test the MERGE query builder.
+ * Tests the MERGE query builder.
  */
 class MergeTest extends DatabaseTestBase {
 
@@ -24,7 +24,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can merge-insert a record successfully.
+   * Confirms that we can merge-insert a record successfully.
    */
   function testMergeInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -49,7 +49,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can merge-update a record successfully.
+   * Confirms that we can merge-update a record successfully.
    */
   function testMergeUpdate() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -74,7 +74,10 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can merge-update a record successfully, with different insert and update.
+   * Confirms that we can merge-update a record successfully.
+   *
+   * This test varies from the previous test because it manually defines which
+   * fields are inserted, and which fields are updated.
    */
   function testMergeUpdateExcept() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -95,7 +98,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can merge-update a record successfully, with alternate replacement.
+   * Confirms that we can merge-update a record successfully, with alternate replacement.
    */
   function testMergeUpdateExplicit() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -121,7 +124,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can merge-update a record successfully, with expressions.
+   * Confirms that we can merge-update a record successfully, with expressions.
    */
   function testMergeUpdateExpression() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -150,7 +153,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can merge-insert without any update fields.
+   * Tests that we can merge-insert without any update fields.
    */
   function testMergeInsertWithoutUpdate() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -169,7 +172,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can merge-update without any update fields.
+   * Confirms that we can merge-update without any update fields.
    */
   function testMergeUpdateWithoutUpdate() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -201,7 +204,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that an invalid merge query throws an exception like it is supposed to.
+   * Tests that an invalid merge query throws an exception.
    */
   function testInvalidMerge() {
     try {

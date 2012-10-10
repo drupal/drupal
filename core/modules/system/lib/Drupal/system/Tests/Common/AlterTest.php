@@ -30,6 +30,9 @@ class AlterTest extends WebTestBase {
     );
   }
 
+  /**
+   * Tests if the theme has been altered.
+   */
   function testDrupalAlter() {
     // This test depends on Bartik, so make sure that it is always the current
     // active theme.

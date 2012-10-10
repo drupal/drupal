@@ -22,7 +22,7 @@ class RegionContentTest extends WebTestBase {
   }
 
   /**
-   * Test setting and retrieving content for theme regions.
+   * Tests setting and retrieving content for theme regions.
    */
   function testRegions() {
     global $theme_key;

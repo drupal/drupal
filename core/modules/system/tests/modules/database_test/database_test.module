@@ -77,7 +77,7 @@ function database_test_menu() {
 }
 
 /**
- * Run a db_query_temporary and output the table name and its number of rows.
+ * Runs db_query_temporary() and outputs the table name and its number of rows.
  *
  * We need to test that the table created is temporary, so we run it here, in a
  * separate menu callback request; After this request is done, the temporary
@@ -92,7 +92,7 @@ function database_test_db_query_temporary() {
 }
 
 /**
- * Run a pager query and return the results.
+ * Runs a pager query and returns the results.
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
@@ -117,7 +117,7 @@ function database_test_even_pager_query($limit) {
 }
 
 /**
- * Run a pager query and return the results.
+ * Runs a pager query and returns the results.
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
@@ -142,7 +142,7 @@ function database_test_odd_pager_query($limit) {
 }
 
 /**
- * Run a tablesort query and return the results.
+ * Runs a tablesort query and returns the results.
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
@@ -172,7 +172,7 @@ function database_test_tablesort() {
 }
 
 /**
- * Run a tablesort query with a second order_by after and return the results.
+ * Runs a tablesort query with a second order_by after and returns the results.
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
@@ -203,7 +203,7 @@ function database_test_tablesort_first() {
 }
 
 /**
- * Output a form without setting a header sort.
+ * Outputs a form without setting a header sort.
  */
 function database_test_theme_tablesort($form, &$form_state) {
   $header = array(

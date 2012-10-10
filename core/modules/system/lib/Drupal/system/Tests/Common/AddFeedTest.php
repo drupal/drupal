@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Basic tests for drupal_add_feed().
+ * Tests drupal_add_feed().
  */
 class AddFeedTest extends WebTestBase {
   public static function getInfo() {
@@ -22,7 +22,7 @@ class AddFeedTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_add_feed() with paths, URLs, and titles.
+   * Tests drupal_add_feed() with paths, URLs, and titles.
    */
   function testBasicFeedAddNoTitle() {
     $path = $this->randomName(12);
@@ -81,7 +81,7 @@ class AddFeedTest extends WebTestBase {
   }
 
   /**
-   * Create a pattern representing the RSS feed in the page.
+   * Creates a pattern representing the RSS feed in the page.
    */
   function urlToRSSLinkPattern($url, $title = '') {
     // Escape any regular expression characters in the URL ('?' is the worst).

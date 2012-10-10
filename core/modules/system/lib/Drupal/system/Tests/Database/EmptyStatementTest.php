@@ -24,7 +24,7 @@ class EmptyStatementTest extends WebTestBase {
   }
 
   /**
-   * Test that the empty result set behaves as empty.
+   * Tests that the empty result set behaves as empty.
    */
   function testEmpty() {
     $result = new StatementEmpty();
@@ -34,7 +34,7 @@ class EmptyStatementTest extends WebTestBase {
   }
 
   /**
-   * Test that the empty result set iterates safely.
+   * Tests that the empty result set iterates safely.
    */
   function testEmptyIteration() {
     $result = new StatementEmpty();
@@ -48,7 +48,7 @@ class EmptyStatementTest extends WebTestBase {
   }
 
   /**
-   * Test that the empty result set mass-fetches in an expected way.
+   * Tests that the empty result set mass-fetches in an expected way.
    */
   function testEmptyFetchAll() {
     $result = new StatementEmpty();

@@ -20,7 +20,7 @@ class CommandsTest extends AjaxTestBase {
   }
 
   /**
-   * Test the various Ajax Commands.
+   * Tests the various Ajax Commands.
    */
   function testAjaxCommands() {
     $form_path = 'ajax_forms_test_ajax_commands_form';

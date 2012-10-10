@@ -19,7 +19,7 @@ abstract class CacheTestBase extends WebTestBase {
   protected $default_value = 'CacheTest';
 
   /**
-   * Check whether or not a cache entry exists.
+   * Checks whether or not a cache entry exists.
    *
    * @param $cid
    *   The cache id.
@@ -89,7 +89,8 @@ abstract class CacheTestBase extends WebTestBase {
   }
 
   /**
-   * Perform the general wipe.
+   * Performs a general wipe of the bin.
+   *
    * @param $bin
    *   The bin to perform the wipe on.
    */

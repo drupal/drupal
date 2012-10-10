@@ -21,7 +21,7 @@ class InsertLobTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can insert a single blob field successfully.
+   * Tests that we can insert a single blob field successfully.
    */
   function testInsertOneBlob() {
     $data = "This is\000a test.";
@@ -34,7 +34,7 @@ class InsertLobTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can insert multiple blob fields in the same query.
+   * Tests that we can insert multiple blob fields in the same query.
    */
   function testInsertMultipleBlob() {
     $id = db_insert('test_two_blobs')

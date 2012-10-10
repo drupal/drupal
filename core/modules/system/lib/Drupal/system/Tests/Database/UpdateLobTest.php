@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test update queries involving LOB values.
+ * Tests UPDATE queries involving LOB values.
  */
 class UpdateLobTest extends DatabaseTestBase {
 
@@ -21,7 +21,7 @@ class UpdateLobTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can update a blob column.
+   * Confirms that we can update a blob column.
    */
   function testUpdateOneBlob() {
     $data = "This is\000a test.";
@@ -41,7 +41,7 @@ class UpdateLobTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can update two blob columns in the same table.
+   * Confirms that we can update two blob columns in the same table.
    */
   function testUpdateMultipleBlob() {
     $id = db_insert('test_two_blobs')

@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Ajax;
 
 /**
- * Miscellaneous Ajax tests using ajax_test module.
+ * Tests using ajax_test module.
  */
 class ElementValidationTest extends AjaxTestBase {
   public static function getInfo() {
@@ -20,7 +20,7 @@ class ElementValidationTest extends AjaxTestBase {
   }
 
   /**
-   * Try to post an Ajax change to a form that has a validated element.
+   * Tries to post an Ajax change to a form that has a validated element.
    *
    * The drivertext field is Ajax-enabled. An additional field is not, but
    * is set to be a required field. In this test the required field is not

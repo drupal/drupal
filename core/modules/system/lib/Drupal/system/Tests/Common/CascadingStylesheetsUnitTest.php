@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * CSS Unit Tests.
+ * Tests CSS functions.
  */
 class CascadingStylesheetsUnitTest extends UnitTestBase {
   public static function getInfo() {
@@ -22,8 +22,9 @@ class CascadingStylesheetsUnitTest extends UnitTestBase {
   }
 
   /**
-   * Tests basic CSS loading with and without optimization via drupal_load_stylesheet().
+   * Tests CSS loading via drupal_load_stylesheet().
    *
+   * This test loads CSS files with and without CSS optimization.
    * Known tests:
    * - Retain white-space in selectors. (http://drupal.org/node/472820)
    * - Proper URLs in imported files. (http://drupal.org/node/265719)

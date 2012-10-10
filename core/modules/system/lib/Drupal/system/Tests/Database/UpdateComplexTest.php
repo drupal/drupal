@@ -21,7 +21,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test updates with OR conditionals.
+   * Tests updates with OR conditionals.
    */
   function testOrConditionUpdate() {
     $update = db_update('test')
@@ -38,7 +38,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test WHERE IN clauses.
+   * Tests WHERE IN clauses.
    */
   function testInConditionUpdate() {
     $num_updated = db_update('test')
@@ -52,7 +52,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test WHERE NOT IN clauses.
+   * Tests WHERE NOT IN clauses.
    */
   function testNotInConditionUpdate() {
     // The o is lowercase in the 'NoT IN' operator, to make sure the operators
@@ -68,7 +68,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test BETWEEN conditional clauses.
+   * Tests BETWEEN conditional clauses.
    */
   function testBetweenConditionUpdate() {
     $num_updated = db_update('test')
@@ -82,7 +82,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test LIKE conditionals.
+   * Tests LIKE conditionals.
    */
   function testLikeConditionUpdate() {
     $num_updated = db_update('test')
@@ -96,7 +96,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test update with expression values.
+   * Tests UPDATE with expression values.
    */
   function testUpdateExpression() {
     $before_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
@@ -119,7 +119,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test update with only expression values.
+   * Tests UPDATE with only expression values.
    */
   function testUpdateOnlyExpression() {
     $before_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();

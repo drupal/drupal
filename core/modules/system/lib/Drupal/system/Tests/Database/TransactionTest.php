@@ -13,7 +13,7 @@ use Drupal\Core\Database\TransactionNoActiveException;
 use Exception;
 
 /**
- * Test transaction support, particularly nesting.
+ * Tests transaction support, particularly nesting.
  *
  * We test nesting by having two transaction layers, an outer and inner. The
  * outer layer encapsulates the inner layer. Our transaction nesting abstraction
@@ -43,12 +43,14 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Helper method for transaction unit test. This "outer layer" transaction
-   * starts and then encapsulates the "inner layer" transaction. This nesting
-   * is used to evaluate whether the the database transaction API properly
-   * supports nesting. By "properly supports," we mean the outer transaction
-   * continues to exist regardless of what functions are called and whether
-   * those functions start their own transactions.
+   * Encapsulates a transaction's "inner layer" with an "outer layer".
+   *
+   * This "outer layer" transaction starts and then encapsulates the "inner
+   * layer" transaction. This nesting is used to evaluate whether the the
+   * database transaction API properly supports nesting. By "properly supports,"
+   * we mean the outer transaction continues to exist regardless of what
+   * functions are called and whether those functions start their own
+   * transactions.
    *
    * In contrast, a typical database would commit the outer transaction, start
    * a new transaction for the inner layer, commit the inner layer transaction,
@@ -93,8 +95,10 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Helper method for transaction unit tests. This "inner layer" transaction
-   * is either used alone or nested inside of the "outer layer" transaction.
+   * Creates an "inner layer" transaction.
+   *
+   * This "inner layer" transaction is either used alone or nested inside of the
+   * "outer layer" transaction.
    *
    * @param $suffix
    *   Suffix to add to field values to differentiate tests.
@@ -151,9 +155,10 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test transaction rollback on a database that supports transactions.
+   * Tests transaction rollback on a database that supports transactions.
    *
-   * If the active connection does not support transactions, this test does nothing.
+   * If the active connection does not support transactions, this test does
+   * nothing.
    */
   function testTransactionRollBackSupported() {
     // This test won't work right if transactions are not supported.
@@ -177,7 +182,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test transaction rollback on a database that does not support transactions.
+   * Tests transaction rollback on a database that doesn't support transactions.
    *
    * If the active driver supports transactions, this test does nothing.
    */
@@ -203,7 +208,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test committed transaction.
+   * Tests a committed transaction.
    *
    * The behavior of this test should be identical for connections that support
    * transactions and those that do not.
@@ -225,7 +230,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test the compatibility of transactions with DDL statements.
+   * Tests the compatibility of transactions with DDL statements.
    */
   function testTransactionWithDdlStatement() {
     // First, test that a commit works normally, even with DDL statements.
@@ -316,7 +321,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Insert a single row into the testing table.
+   * Inserts a single row into the testing table.
    */
   protected function insertRow($name) {
     db_insert('test')
@@ -327,7 +332,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Execute a DDL statement.
+   * Executes a DDL statement.
    */
   protected function executeDDLStatement() {
     static $count = 0;
@@ -345,7 +350,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Start over for a new test.
+   * Starts over for a new test.
    */
   protected function cleanUp() {
     db_truncate('test')
@@ -353,7 +358,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Assert that a given row is present in the test table.
+   * Asserts that a given row is present in the test table.
    *
    * @param $name
    *   The name of the row.
@@ -369,7 +374,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Assert that a given row is absent from the test table.
+   * Asserts that a given row is absent from the test table.
    *
    * @param $name
    *   The name of the row.
@@ -385,7 +390,7 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test transaction stacking and commit / rollback.
+   * Tests transaction stacking, commit, and rollback.
    */
   function testTransactionStacking() {
     // This test won't work right if transactions are not supported.

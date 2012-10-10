@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 use Exception;
 
 /**
- * Test invalid data handling.
+ * Tests invalid data handling.
  */
 class InvalidDataTest extends DatabaseTestBase {
   public static function getInfo() {
@@ -22,7 +22,7 @@ class InvalidDataTest extends DatabaseTestBase {
   }
 
   /**
-   * Traditional SQL database systems abort inserts when invalid data is encountered.
+   * Tests aborting of traditional SQL database systems with invalid data.
    */
   function testInsertDuplicateData() {
     // Try to insert multiple records where at least one has bad data.

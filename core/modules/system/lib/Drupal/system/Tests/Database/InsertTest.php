@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test the insert builder.
+ * Tests the insert builder.
  */
 class InsertTest extends DatabaseTestBase {
 
@@ -21,7 +21,7 @@ class InsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Test the very basic insert functionality.
+   * Tests very basic insert functionality.
    */
   function testSimpleInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -40,7 +40,7 @@ class InsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can insert multiple records in one query object.
+   * Tests that we can insert multiple records in one query object.
    */
   function testMultiInsert() {
     $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -73,7 +73,7 @@ class InsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that an insert object can be reused with new data after it executes.
+   * Tests that an insert object can be reused with new data after it executes.
    */
   function testRepeatedInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -108,7 +108,7 @@ class InsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can specify fields without values and specify values later.
+   * Tests that we can specify fields without values and specify values later.
    */
   function testInsertFieldOnlyDefinintion() {
     // This is useful for importers, when we want to create a query and define
@@ -142,7 +142,7 @@ class InsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that the INSERT INTO ... SELECT ... syntax works.
+   * Tests that the INSERT INTO ... SELECT ... syntax works.
    */
   function testInsertSelect() {
     $query = db_select('test_people', 'tp');

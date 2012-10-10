@@ -23,7 +23,7 @@ class XssUnitTest extends UnitTestBase {
   }
 
   /**
-   * Check that invalid multi-byte sequences are rejected.
+   * Checks that invalid multi-byte sequences are rejected.
    */
   function testInvalidMultiByte() {
      // Ignore PHP 5.3+ invalid multibyte sequence warning.
@@ -41,7 +41,7 @@ class XssUnitTest extends UnitTestBase {
   }
 
   /**
-   * Check that special characters are escaped.
+   * Checks that special characters are escaped.
    */
   function testEscaping() {
      $text = check_plain("<script>");
@@ -51,7 +51,7 @@ class XssUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test t() and format_string() replacement functionality.
+   * Tests t() and format_string() replacement functionality.
    */
   function testFormatStringAndT() {
     foreach (array('format_string', 't') as $function) {
@@ -67,7 +67,7 @@ class XssUnitTest extends UnitTestBase {
   }
 
   /**
-   * Check that harmful protocols are stripped.
+   * Checks that harmful protocols are stripped.
    */
   function testBadProtocolStripping() {
     // Ensure that check_url() strips out harmful protocols, and encodes for

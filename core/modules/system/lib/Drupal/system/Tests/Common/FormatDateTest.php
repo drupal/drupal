@@ -48,7 +48,7 @@ class FormatDateTest extends WebTestBase {
   }
 
   /**
-   * Test admin-defined formats in format_date().
+   * Tests admin-defined formats in format_date().
    */
   function testAdminDefinedFormatDate() {
     // Create an admin user.

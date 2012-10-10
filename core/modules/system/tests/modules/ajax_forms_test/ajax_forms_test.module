@@ -37,9 +37,8 @@ function ajax_forms_test_menu() {
   return $items;
 }
 
-
 /**
- * A basic form used to test form_state['values'] during callback.
+ * Tests form_state['values'] during callback.
  */
 function ajax_forms_test_simple_form($form, &$form_state) {
   $form = array();
@@ -71,7 +70,7 @@ function ajax_forms_test_simple_form($form, &$form_state) {
 }
 
 /**
- * Ajax callback triggered by select.
+ * Ajax form callback: Selects color.
  */
 function ajax_forms_test_simple_form_select_callback($form, $form_state) {
   $commands = array();
@@ -81,7 +80,7 @@ function ajax_forms_test_simple_form_select_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback triggered by checkbox.
+ * Ajax form callback: Selects checkbox value.
  */
 function ajax_forms_test_simple_form_checkbox_callback($form, $form_state) {
   $commands = array();
@@ -90,9 +89,8 @@ function ajax_forms_test_simple_form_checkbox_callback($form, $form_state) {
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
-
 /**
- * Form to display the Ajax Commands.
+ * Form constructor for the Ajax Command display form.
  */
 function ajax_forms_test_ajax_commands_form($form, &$form_state) {
   $form = array();
@@ -272,7 +270,7 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
 }
 
 /**
- * Ajax callback for 'after'.
+ * Ajax form callback: Selects 'after'.
  */
 function ajax_forms_test_advanced_commands_after_callback($form, $form_state) {
   $selector = '#after_div';
@@ -283,7 +281,7 @@ function ajax_forms_test_advanced_commands_after_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'alert'.
+ * Ajax form callback: Selects 'alert'.
  */
 function ajax_forms_test_advanced_commands_alert_callback($form, $form_state) {
   $commands = array();
@@ -292,7 +290,7 @@ function ajax_forms_test_advanced_commands_alert_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'append'.
+ * Ajax form callback: Selects 'append'.
  */
 function ajax_forms_test_advanced_commands_append_callback($form, $form_state) {
   $selector = '#append_div';
@@ -302,7 +300,7 @@ function ajax_forms_test_advanced_commands_append_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'before'.
+ * Ajax form callback: Selects 'before'.
  */
 function ajax_forms_test_advanced_commands_before_callback($form, $form_state) {
   $selector = '#before_div';
@@ -313,14 +311,15 @@ function ajax_forms_test_advanced_commands_before_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'changed'.
+ * Ajax form callback: Selects 'changed'.
  */
 function ajax_forms_test_advanced_commands_changed_callback($form, $form_state) {
   $commands[] = ajax_command_changed('#changed_div');
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
 /**
- * Ajax callback for 'changed' with asterisk marking inner div.
+ * Ajax form callback: Selects 'changed' with asterisk marking inner div.
  */
 function ajax_forms_test_advanced_commands_changed_asterisk_callback($form, $form_state) {
   $commands = array();
@@ -329,7 +328,7 @@ function ajax_forms_test_advanced_commands_changed_asterisk_callback($form, $for
 }
 
 /**
- * Ajax callback for 'css'.
+ * Ajax form callback: Selects 'css'.
  */
 function ajax_forms_test_advanced_commands_css_callback($form, $form_state) {
   $selector = '#css_div';
@@ -341,7 +340,7 @@ function ajax_forms_test_advanced_commands_css_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'data'.
+ * Ajax form callback: Selects 'data'.
  */
 function ajax_forms_test_advanced_commands_data_callback($form, $form_state) {
   $selector = '#data_div';
@@ -352,7 +351,7 @@ function ajax_forms_test_advanced_commands_data_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'invoke'.
+ * Ajax form callback: Selects 'invoke'.
  */
 function ajax_forms_test_advanced_commands_invoke_callback($form, $form_state) {
   $commands = array();
@@ -361,7 +360,7 @@ function ajax_forms_test_advanced_commands_invoke_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'html'.
+ * Ajax form callback: Selects 'html'.
  */
 function ajax_forms_test_advanced_commands_html_callback($form, $form_state) {
   $commands = array();
@@ -370,7 +369,7 @@ function ajax_forms_test_advanced_commands_html_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'insert'.
+ * Ajax form callback: Selects 'insert'.
  */
 function ajax_forms_test_advanced_commands_insert_callback($form, $form_state) {
   $commands = array();
@@ -379,7 +378,7 @@ function ajax_forms_test_advanced_commands_insert_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'prepend'.
+ * Ajax form callback: Selects 'prepend'.
  */
 function ajax_forms_test_advanced_commands_prepend_callback($form, $form_state) {
   $commands = array();
@@ -388,7 +387,7 @@ function ajax_forms_test_advanced_commands_prepend_callback($form, $form_state) 
 }
 
 /**
- * Ajax callback for 'remove'.
+ * Ajax form callback: Selects 'remove'.
  */
 function ajax_forms_test_advanced_commands_remove_callback($form, $form_state) {
   $commands = array();
@@ -397,7 +396,7 @@ function ajax_forms_test_advanced_commands_remove_callback($form, $form_state) {
 }
 
 /**
- * Ajax callback for 'restripe'.
+ * Ajax form callback: Selects 'restripe'.
  */
 function ajax_forms_test_advanced_commands_restripe_callback($form, $form_state) {
   $commands = array();
@@ -406,7 +405,7 @@ function ajax_forms_test_advanced_commands_restripe_callback($form, $form_state)
 }
 
 /**
- * Ajax callback for 'settings'.
+ * Ajax form callback: Selects 'settings'.
  */
 function ajax_forms_test_advanced_commands_settings_callback($form, $form_state) {
   $commands = array();
@@ -425,6 +424,8 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, $form_state) 
 }
 
 /**
+ * Form constructor for AJAX validation form.
+ *
  * This form and its related submit and callback functions demonstrate
  * not validating another form element when a single Ajax element is triggered.
  *
@@ -433,6 +434,8 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, $form_state) 
  *
  * The correct behavior is that the Ajax-enabled drivertext element should
  * be able to trigger without causing validation of the "required_field".
+ *
+ * @see ajax_forms_test_validation_form_submit()
  */
 function ajax_forms_test_validation_form($form, &$form_state) {
 
@@ -462,15 +465,18 @@ function ajax_forms_test_validation_form($form, &$form_state) {
 
   return $form;
 }
+
 /**
- * Submit handler for the validation form.
+ * Form submission handler for ajax_forms_test_validation_form().
+ *
+ * @see ajax_forms_test_validation_form()
  */
 function ajax_forms_test_validation_form_submit($form, $form_state) {
   drupal_set_message(t("Validation form submitted"));
 }
 
 /**
- * Ajax callback for the 'drivertext' element of the validation form.
+ * Ajax form callback: Selects the 'drivertext' element of the validation form.
  */
 function ajax_forms_test_validation_form_callback($form, $form_state) {
   drupal_set_message("ajax_forms_test_validation_form_callback invoked");
@@ -509,7 +515,7 @@ function ajax_forms_test_lazy_load_form_submit($form, &$form_state) {
 }
 
 /**
- * AJAX callback for the ajax_forms_test_lazy_load_form() form.
+ * AJAX form callback: Selects for the ajax_forms_test_lazy_load_form() form.
  *
  * This function returns nothing, because all we're interested in testing is
  * ajax_render() adding commands for JavaScript and CSS added during the page

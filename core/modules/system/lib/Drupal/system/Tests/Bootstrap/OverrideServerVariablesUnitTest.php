@@ -22,7 +22,7 @@ class OverrideServerVariablesUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test providing a direct URL to to drupal_override_server_variables().
+   * Tests providing a direct URL to to drupal_override_server_variables().
    */
   function testDrupalOverrideServerVariablesProvidedURL() {
     $tests = array(

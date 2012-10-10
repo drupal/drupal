@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Range query tests.
+ * Tests range queries.
  */
 class RangeQueryTest extends DatabaseTestBase {
 
@@ -28,7 +28,7 @@ class RangeQueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that range query work and return correct result.
+   * Confirms that range queries work and return the correct result.
    */
   function testRangeQuery() {
     // Test if return correct number of rows.

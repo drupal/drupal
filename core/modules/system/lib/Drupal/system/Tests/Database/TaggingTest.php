@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Select tagging tests.
+ * Tests SELECT query tagging.
  *
  * Tags are a way to flag queries for alter hooks so they know
  * what type of query it is, such as "node_access".
@@ -24,7 +24,7 @@ class TaggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that a query has a "tag" added to it.
+   * Confirms that a query has a tag added to it.
    */
   function testHasTag() {
     $query = db_select('test');
@@ -38,7 +38,7 @@ class TaggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test query tagging "has all of these tags" functionality.
+   * Tests query tagging "has all of these tags" functionality.
    */
   function testHasAllTags() {
     $query = db_select('test');
@@ -53,7 +53,7 @@ class TaggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test query tagging "has at least one of these tags" functionality.
+   * Tests query tagging "has at least one of these tags" functionality.
    */
   function testHasAnyTag() {
     $query = db_select('test');
@@ -67,7 +67,7 @@ class TaggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can attach meta data to a query object.
+   * Tests that we can attach metadata to a query object.
    *
    * This is how we pass additional context to alter hooks.
    */

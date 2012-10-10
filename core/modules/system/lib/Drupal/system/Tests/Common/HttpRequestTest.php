@@ -30,6 +30,9 @@ class HttpRequestTest extends WebTestBase {
     );
   }
 
+  /**
+   * Checks HTTP requests.
+   */
   function testDrupalHTTPRequest() {
     global $is_https;
 
@@ -73,6 +76,9 @@ class HttpRequestTest extends WebTestBase {
     }
   }
 
+  /**
+   * Tests HTTP basic authorization.
+   */
   function testDrupalHTTPRequestBasicAuth() {
     $username = $this->randomName();
     $password = $this->randomName();
@@ -86,6 +92,9 @@ class HttpRequestTest extends WebTestBase {
     $this->assertRaw($password, '$_SERVER["PHP_AUTH_PW"] is passed correctly.');
   }
 
+  /**
+   * Tests HTTP redirect requests.
+   */
   function testDrupalHTTPRequestRedirect() {
     $redirect_301 = drupal_http_request(url('system-test/redirect/301', array('absolute' => TRUE)), array('max_redirects' => 1));
     $this->assertEqual($redirect_301->redirect_code, 301, 'drupal_http_request follows the 301 redirect.');

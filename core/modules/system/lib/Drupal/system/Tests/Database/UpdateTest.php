@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Update builder tests.
+ * Updates builder tests.
  */
 class UpdateTest extends DatabaseTestBase {
 
@@ -21,7 +21,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can update a single record successfully.
+   * Confirms that we can update a single record successfully.
    */
   function testSimpleUpdate() {
     $num_updated = db_update('test')
@@ -35,7 +35,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm updating to NULL.
+   * Confirms updating to NULL.
    */
   function testSimpleNullUpdate() {
     $this->ensureSampleDataNull();
@@ -50,7 +50,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can update a multiple records successfully.
+   * Confirms that we can update multiple records successfully.
    */
   function testMultiUpdate() {
     $num_updated = db_update('test')
@@ -64,7 +64,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can update a multiple records with a non-equality condition.
+   * Confirms that we can update multiple records with a non-equality condition.
    */
   function testMultiGTUpdate() {
     $num_updated = db_update('test')
@@ -78,7 +78,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can update a multiple records with a where call.
+   * Confirms that we can update multiple records with a where call.
    */
   function testWhereUpdate() {
     $num_updated = db_update('test')
@@ -92,7 +92,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can stack condition and where calls.
+   * Confirms that we can stack condition and where calls.
    */
   function testWhereAndConditionUpdate() {
     $update = db_update('test')
@@ -107,7 +107,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Test updating with expressions.
+   * Tests updating with expressions.
    */
   function testExpressionUpdate() {
     // Set age = 1 for a single row for this test to work.

@@ -29,7 +29,7 @@ class AutocompleteTagsUnitTest extends UnitTestBase {
   }
 
   /**
-   * Explode a series of tags.
+   * Explodes a series of tags.
    */
   function testDrupalExplodeTags() {
     $string = implode(', ', array_keys($this->validTags));
@@ -38,7 +38,7 @@ class AutocompleteTagsUnitTest extends UnitTestBase {
   }
 
   /**
-   * Implode a series of tags.
+   * Implodes a series of tags.
    */
   function testDrupalImplodeTags() {
     $tags = array_values($this->validTags);

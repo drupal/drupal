@@ -25,7 +25,7 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Confirm that invalid text given as $path is filtered.
+   * Confirms that invalid URLs are filtered.
    */
   function testLXSS() {
     $text = $this->randomName();
@@ -58,7 +58,7 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_get_query_parameters().
+   * Tests drupal_get_query_parameters().
    */
   function testDrupalGetQueryParameters() {
     $original = array(
@@ -94,7 +94,7 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_http_build_query().
+   * Tests drupal_http_build_query().
    */
   function testDrupalHttpBuildQuery() {
     $this->assertEqual(drupal_http_build_query(array('a' => ' &#//+%20@۞')), 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.');
@@ -104,7 +104,7 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_parse_url().
+   * Tests drupal_parse_url().
    */
   function testDrupalParseUrl() {
     // Relative, absolute, and external URLs, without/with explicit script path,
@@ -142,8 +142,10 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Test url() with/without query, with/without fragment, absolute on/off and
-   * assert all that works when clean URLs are on and off.
+   * Tests url() functionality.
+   *
+   * Tests url() with/without query, with/without fragment, absolute on/off and
+   * asserts all that works when clean URLs are on and off.
    */
   function testUrl() {
     global $base_url, $script_path;
@@ -184,7 +186,7 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Test external URL handling.
+   * Tests external URL handling.
    */
   function testExternalUrls() {
     $test_url = 'http://drupal.org/';

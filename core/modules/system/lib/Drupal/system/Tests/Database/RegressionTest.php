@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Regression tests.
+ * Tests for database regressions.
  */
 class RegressionTest extends DatabaseTestBase {
 
@@ -28,10 +28,7 @@ class RegressionTest extends DatabaseTestBase {
   }
 
   /**
-   * Regression test for #310447.
-   *
-   * Tries to insert non-ascii UTF-8 data in a database column and checks
-   * if its stored properly.
+   * Ensures that non-ASCII UTF-8 data is stored in the database properly.
    */
   function testRegression_310447() {
     // That's a 255 character UTF-8 string.
@@ -48,7 +45,7 @@ class RegressionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test the db_table_exists() function.
+   * Tests the db_table_exists() function.
    */
   function testDBTableExists() {
     $this->assertIdentical(TRUE, db_table_exists('node'), 'Returns true for existent table.');
@@ -56,7 +53,7 @@ class RegressionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test the db_field_exists() function.
+   * Tests the db_field_exists() function.
    */
   function testDBFieldExists() {
     $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), 'Returns true for existent column.');
@@ -64,7 +61,7 @@ class RegressionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test the db_index_exists() function.
+   * Tests the db_index_exists() function.
    */
   function testDBIndexExists() {
     $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), 'Returns true for existent index.');

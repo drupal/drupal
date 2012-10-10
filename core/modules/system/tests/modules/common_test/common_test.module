@@ -62,28 +62,32 @@ function common_test_menu() {
 }
 
 /**
- * Redirect using drupal_goto().
+ * Redirects using drupal_goto().
  */
 function common_test_drupal_goto_redirect() {
   drupal_goto('common-test/drupal_goto');
 }
 
 /**
- * Redirect using drupal_goto().
+ * Redirects using drupal_goto().
  */
 function common_test_drupal_goto_redirect_advanced() {
   drupal_goto('common-test/drupal_goto', array('query' => array('foo' => '123')), 301);
 }
 
 /**
- * Landing page for drupal_goto().
+ * Page callback: Provides a landing page for drupal_goto().
+ *
+ * @see common_test_menu()
  */
 function common_test_drupal_goto_land() {
   print "drupal_goto";
 }
 
 /**
- * Fail landing page for drupal_goto().
+ * Page callback: Provides a failure landing page for drupal_goto().
+ *
+ * @see common_test_menu()
  */
 function common_test_drupal_goto_land_fail() {
   print "drupal_goto_fail";
@@ -99,7 +103,7 @@ function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) 
 }
 
 /**
- * Print destination query parameter.
+ * Prints a destination query parameter.
  */
 function common_test_destination() {
   $destination = drupal_get_destination();
@@ -107,7 +111,7 @@ function common_test_destination() {
 }
 
 /**
- * Render an element with an invalid render array key.
+ * Renders an element with an invalid render array key.
  */
 function common_test_drupal_render_invalid_keys() {
   define('SIMPLETEST_COLLECT_ERRORS', FALSE);
@@ -227,7 +231,7 @@ function common_test_theme() {
 }
 
 /**
- * Theme function for testing drupal_render() theming.
+ * Provides a theme function for drupal_render().
  */
 function theme_common_test_foo($variables) {
   return $variables['foo'] . $variables['bar'];

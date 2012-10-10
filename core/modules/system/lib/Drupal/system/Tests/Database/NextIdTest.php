@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Check the sequences API.
+ * Checks the sequences API.
  */
 class NextIdTest extends WebTestBase {
   public static function getInfo() {
@@ -22,7 +22,7 @@ class NextIdTest extends WebTestBase {
   }
 
   /**
-   * Test that the sequences API work.
+   * Tests that the sequences API works.
    */
   function testDbNextId() {
     $first = db_next_id();

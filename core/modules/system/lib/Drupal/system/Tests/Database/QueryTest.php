@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Drupal-specific SQL syntax tests.
+ * Tests Drupal-specific SQL syntax tests.
  */
 class QueryTest extends DatabaseTestBase {
   public static function getInfo() {
@@ -20,7 +20,7 @@ class QueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can specify an array of values in the query by simply passing in an array.
+   * Tests that we can pass an array of values directly in the query.
    */
   function testArraySubstitution() {
     $names = db_query('SELECT name FROM {test} WHERE age IN (:ages) ORDER BY age', array(':ages' => array(25, 26, 27)))->fetchAll();

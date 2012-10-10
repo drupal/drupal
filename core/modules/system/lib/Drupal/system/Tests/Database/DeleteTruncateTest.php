@@ -29,7 +29,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can use a subselect in a delete successfully.
+   * Confirms that we can use a subselect in a delete successfully.
    */
   function testSubselectDelete() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
@@ -50,7 +50,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can delete a single record successfully.
+   * Confirms that we can delete a single record successfully.
    */
   function testSimpleDelete() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -65,7 +65,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can truncate a whole table successfully.
+   * Confirms that we can truncate a whole table successfully.
    */
   function testTruncate() {
     $num_records_before = db_query("SELECT COUNT(*) FROM {test}")->fetchField();

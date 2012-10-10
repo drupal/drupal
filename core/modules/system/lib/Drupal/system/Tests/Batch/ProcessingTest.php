@@ -30,7 +30,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Test batches triggered outside of form submission.
+   * Tests batches triggered outside of form submission.
    */
   function testBatchNoForm() {
     // Displaying the page triggers batch 1.
@@ -41,7 +41,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Test batches defined in a form submit handler.
+   * Tests batches defined in a form submit handler.
    */
   function testBatchForm() {
     // Batch 0: no operation.
@@ -80,7 +80,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Test batches defined in a multistep form.
+   * Tests batches defined in a multistep form.
    */
   function testBatchFormMultistep() {
     $this->drupalGet('batch-test/multistep');
@@ -100,7 +100,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Test batches defined in different submit handlers on the same form.
+   * Tests batches defined in different submit handlers on the same form.
    */
   function testBatchFormMultipleBatches() {
     // Batches 1, 2 and 3 are triggered in sequence by different submit
@@ -117,7 +117,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Test batches defined in a programmatically submitted form.
+   * Tests batches defined in a programmatically submitted form.
    *
    * Same as above, but the form is submitted through drupal_form_execute().
    */
@@ -135,7 +135,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Test that drupal_form_submit() can run within a batch operation.
+   * Tests that drupal_form_submit() can run within a batch operation.
    */
   function testDrupalFormSubmitInBatch() {
     // Displaying the page triggers a batch that programmatically submits a
@@ -146,8 +146,9 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Test batches that return $context['finished'] > 1 do in fact complete.
-   * See http://drupal.org/node/600836
+   * Tests batches that return $context['finished'] > 1 do in fact complete.
+   *
+   * @see http://drupal.org/node/600836
    */
   function testBatchLargePercentage() {
     // Displaying the page triggers batch 5.
@@ -159,7 +160,7 @@ class ProcessingTest extends WebTestBase {
 
 
   /**
-   * Will trigger a pass if the texts were found in order in the raw content.
+   * Triggers a pass if the texts were found in order in the raw content.
    *
    * @param $texts
    *   Array of raw strings to look for .
@@ -174,7 +175,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Helper function: return expected execution stacks for the test batches.
+   * Returns expected execution stacks for the test batches.
    */
   function _resultStack($id, $value = 0) {
     $stack = array();
@@ -241,7 +242,7 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Helper function: return expected result messages for the test batches.
+   * Returns expected result messages for the test batches.
    */
   function _resultMessages($id) {
     $messages = array();

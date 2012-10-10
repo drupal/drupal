@@ -22,7 +22,7 @@ class JavaScriptTest extends WebTestBase {
   public static $modules = array('language', 'simpletest', 'common_test', 'path');
 
   /**
-   * Store configured value for JavaScript preprocessing.
+   * Stores configured value for JavaScript preprocessing.
    */
   protected $preprocess_js = NULL;
 
@@ -57,14 +57,14 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test default JavaScript is empty.
+   * Tests that default JavaScript is empty.
    */
   function testDefault() {
     $this->assertEqual(array(), drupal_add_js(), 'Default JavaScript is empty.');
   }
 
   /**
-   * Test adding a JavaScript file.
+   * Tests adding a JavaScript file.
    */
   function testAddFile() {
     $javascript = drupal_add_js('core/misc/collapse.js');
@@ -72,7 +72,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test adding settings.
+   * Tests adding settings.
    */
   function testAddSetting() {
     // Add a file in order to test default settings.
@@ -133,7 +133,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_get_js() for JavaScript settings.
+   * Tests drupal_get_js() for JavaScript settings.
    */
   function testHeaderSetting() {
     drupal_add_library('system', 'drupalSettings');
@@ -179,7 +179,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test to see if resetting the JavaScript empties the cache.
+   * Tests to see if resetting the JavaScript empties the cache.
    */
   function testReset() {
     drupal_add_library('system', 'drupal');
@@ -189,7 +189,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test adding inline scripts.
+   * Tests adding inline scripts.
    */
   function testAddInline() {
     drupal_add_library('system', 'drupal');
@@ -201,7 +201,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test rendering an external JavaScript file.
+   * Tests rendering an external JavaScript file.
    */
   function testRenderExternal() {
     drupal_add_library('system', 'drupal');
@@ -213,7 +213,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_get_js() with a footer scope.
+   * Tests drupal_get_js() with a footer scope.
    */
   function testFooterHTML() {
     drupal_add_library('system', 'drupal');
@@ -224,7 +224,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test drupal_add_js() sets preproccess to false when cache is set to false.
+   * Tests drupal_add_js() sets preproccess to FALSE when cache is also FALSE.
    */
   function testNoCache() {
     drupal_add_library('system', 'drupal');
@@ -233,7 +233,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test adding a JavaScript file with a different group.
+   * Tests adding a JavaScript file with a different group.
    */
   function testDifferentGroup() {
     drupal_add_library('system', 'drupal');
@@ -242,7 +242,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test adding a JavaScript file with a different weight.
+   * Tests adding a JavaScript file with a different weight.
    */
   function testDifferentWeight() {
     $javascript = drupal_add_js('core/misc/collapse.js', array('weight' => 2));
@@ -250,7 +250,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test adding JavaScript within conditional comments.
+   * Tests adding JavaScript within conditional comments.
    *
    * @see drupal_pre_render_conditional_comments()
    */
@@ -270,7 +270,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test JavaScript versioning.
+   * Tests JavaScript versioning.
    */
   function testVersionQueryString() {
     drupal_add_library('system', 'drupal');
@@ -281,7 +281,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test JavaScript grouping and aggregation.
+   * Tests JavaScript grouping and aggregation.
    */
   function testAggregation() {
     $default_query_string = variable_get('css_js_query_string', '0');
@@ -369,7 +369,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test JavaScript ordering.
+   * Tests JavaScript ordering.
    */
   function testRenderOrder() {
     // Add a bunch of JavaScript in strange ordering.
@@ -411,7 +411,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test rendering the JavaScript with a file's weight above jQuery's.
+   * Tests rendering the JavaScript with a file's weight above jQuery's.
    */
   function testRenderDifferentWeight() {
     // JavaScript files are sorted first by group, then by the 'every_page'
@@ -424,7 +424,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Test altering a JavaScript's weight via hook_js_alter().
+   * Tests altering a JavaScript's weight via hook_js_alter().
    *
    * @see simpletest_js_alter()
    */
@@ -523,8 +523,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Tests that the query string remains intact when adding JavaScript files
-   *  that have query string parameters.
+   * Tests JavaScript files that have querystrings attached get added right.
    */
   function testAddJsFileWithQueryString() {
     $this->drupalGet('common-test/query-string');

@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Database;
 
 /**
- * Test connection management.
+ * Tests connection management.
  */
 class ConnectionTest extends DatabaseTestBase {
 
@@ -23,7 +23,7 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that connections return appropriate connection objects.
+   * Tests that connections return appropriate connection objects.
    */
   function testConnectionRouting() {
     // Clone the master credentials to a slave connection.
@@ -57,7 +57,7 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that connections return appropriate connection objects.
+   * Tests that connections return appropriate connection objects.
    */
   function testConnectionRoutingOverride() {
     // Clone the master credentials to a slave connection.

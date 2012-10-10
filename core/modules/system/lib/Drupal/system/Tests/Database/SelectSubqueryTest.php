@@ -21,7 +21,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can use a subquery in a FROM clause.
+   * Tests that we can use a subquery in a FROM clause.
    */
   function testFromSubquerySelect() {
     // Create a subquery, which is just a normal query object.
@@ -55,7 +55,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can use a subquery in a FROM clause with a limit.
+   * Tests that we can use a subquery in a FROM clause with a LIMIT.
    */
   function testFromSubquerySelectWithLimit() {
     // Create a subquery, which is just a normal query object.
@@ -81,7 +81,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can use a subquery in a WHERE clause.
+   * Tests that we can use a subquery in a WHERE clause.
    */
   function testConditionSubquerySelect() {
     // Create a subquery, which is just a normal query object.
@@ -104,7 +104,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can use a subquery in a JOIN clause.
+   * Tests that we can use a subquery in a JOIN clause.
    */
   function testJoinSubquerySelect() {
     // Create a subquery, which is just a normal query object.
@@ -128,7 +128,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test EXISTS subquery conditionals on SELECT statements.
+   * Tests EXISTS subquery conditionals on SELECT statements.
    *
    * We essentially select all rows from the {test} table that have matching
    * rows in the {test_people} table based on the shared name column.
@@ -158,7 +158,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test NOT EXISTS subquery conditionals on SELECT statements.
+   * Tests NOT EXISTS subquery conditionals on SELECT statements.
    *
    * We essentially select all rows from the {test} table that don't have
    * matching rows in the {test_people} table based on the shared name column.

@@ -48,7 +48,7 @@ class SizeUnitTest extends UnitTestBase {
   }
 
   /**
-   * Check that format_size() returns the expected string.
+   * Checks that format_size() returns the expected string.
    */
   function testCommonFormatSize() {
     foreach (array($this->exact_test_cases, $this->rounded_test_cases) as $test_cases) {
@@ -63,7 +63,7 @@ class SizeUnitTest extends UnitTestBase {
   }
 
   /**
-   * Check that parse_size() returns the proper byte sizes.
+   * Checks that parse_size() returns the proper byte sizes.
    */
   function testCommonParseSize() {
     foreach ($this->exact_test_cases as $string => $size) {
@@ -96,7 +96,7 @@ class SizeUnitTest extends UnitTestBase {
   }
 
   /**
-   * Cross-test parse_size() and format_size().
+   * Cross-tests parse_size() and format_size().
    */
   function testCommonParseSizeFormatSize() {
     foreach ($this->exact_test_cases as $size) {

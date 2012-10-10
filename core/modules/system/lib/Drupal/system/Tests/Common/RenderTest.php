@@ -30,7 +30,7 @@ class RenderTest extends WebTestBase {
   }
 
   /**
-   * Test sorting by weight.
+   * Tests sorting by weight.
    */
   function testDrupalRenderSorting() {
     $first = $this->randomName();
@@ -81,7 +81,7 @@ class RenderTest extends WebTestBase {
   }
 
   /**
-   * Test #attached functionality in children elements.
+   * Tests #attached functionality in children elements.
    */
   function testDrupalRenderChildrenAttached() {
     // The cache system is turned off for POST requests.
@@ -131,7 +131,7 @@ class RenderTest extends WebTestBase {
   }
 
   /**
-   * Test passing arguments to the theme function.
+   * Tests passing arguments to the theme function.
    */
   function testDrupalRenderThemeArguments() {
     $element = array(
@@ -144,12 +144,12 @@ class RenderTest extends WebTestBase {
       '#foo' => $this->randomName(),
       '#bar' => $this->randomName(),
     );
-    // Test that passing arguments to the theme function works.
+    // Tests that passing arguments to the theme function works.
     $this->assertEqual(drupal_render($element), $element['#foo'] . $element['#bar'], 'Passing arguments to theme functions works');
   }
 
   /**
-   * Test rendering form elements without passing through form_builder().
+   * Tests rendering form elements without passing through form_builder().
    */
   function testDrupalRenderFormElements() {
     // Define a series of form elements.
@@ -268,7 +268,7 @@ class RenderTest extends WebTestBase {
   }
 
   /**
-   * Test rendering elements with invalid keys.
+   * Tests rendering elements with invalid keys.
    */
   function testDrupalRenderInvalidKeys() {
     $error = array(
@@ -284,6 +284,9 @@ class RenderTest extends WebTestBase {
     $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));
   }
 
+  /**
+   * Tests that elements are rendered properly.
+   */
   protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {
     $original_element = $element;
     $this->drupalSetContent(drupal_render($element));

@@ -31,7 +31,7 @@ class WriteRecordTest extends WebTestBase {
   }
 
   /**
-   * Test the drupal_write_record() API function.
+   * Tests the drupal_write_record() API function.
    */
   function testDrupalWriteRecord() {
     // Insert a record with no columns populated.

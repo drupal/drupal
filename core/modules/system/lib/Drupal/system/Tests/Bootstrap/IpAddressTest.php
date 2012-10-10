@@ -48,7 +48,7 @@ class IpAddressTest extends WebTestBase {
   }
 
   /**
-   * test IP Address and hostname
+   * Tests IP address and hostname.
    */
   function testIPAddressHost() {
     // Test the normal IP address.

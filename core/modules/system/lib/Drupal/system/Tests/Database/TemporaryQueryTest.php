@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Temporary query tests.
+ * Tests temporary queries.
  */
 class TemporaryQueryTest extends DatabaseTestBase {
 
@@ -28,14 +28,14 @@ class TemporaryQueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Return the number of rows of a table.
+   * Returns the number of rows of a table.
    */
   function countTableRows($table_name) {
     return db_select($table_name)->countQuery()->execute()->fetchField();
   }
 
   /**
-   * Confirm that temporary tables work and are limited to one request.
+   * Confirms that temporary tables work and are limited to one request.
    */
   function testTemporaryQuery() {
     $this->drupalGet('database_test/db_query_temporary');

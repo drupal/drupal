@@ -10,7 +10,7 @@ namespace Drupal\action\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test actions executing in a potential loop, and make sure they abort properly.
+ * Tests aborting of actions executing in a potential loop.
  */
 class LoopTest extends WebTestBase {
 
@@ -32,7 +32,7 @@ class LoopTest extends WebTestBase {
   }
 
   /**
-   * Set up a loop with 3 - 12 recursions, and see if it aborts properly.
+   * Sets up a loop with 3 - 12 recursions, and sees if it aborts properly.
    */
   function testActionLoop() {
     $user = $this->drupalCreateUser(array('administer actions'));
@@ -55,7 +55,9 @@ class LoopTest extends WebTestBase {
   }
 
   /**
-   * Create an infinite loop by causing a watchdog message to be set,
+   * Loops watchdog messages up to actions_max_stack times.
+   *
+   * Creates an infinite loop by causing a watchdog message to be set,
    * which causes the actions to be triggered again, up to action_max_stack
    * times.
    */

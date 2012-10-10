@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Database;
 
 /**
- * Query logging tests.
+ * Tests query logging.
  */
 class LoggingTest extends DatabaseTestBase {
 
@@ -23,7 +23,7 @@ class LoggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can log the existence of a query.
+   * Tests that we can log the existence of a query.
    */
   function testEnableLogging() {
     $log = Database::startLog('testing');
@@ -44,7 +44,7 @@ class LoggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can run two logs in parallel.
+   * Tests that we can run two logs in parallel.
    */
   function testEnableMultiLogging() {
     Database::startLog('testing1');
@@ -63,7 +63,7 @@ class LoggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can log queries against multiple targets on the same connection.
+   * Tests logging queries against multiple targets on the same connection.
    */
   function testEnableTargetLogging() {
     // Clone the master credentials to a slave connection and to another fake
@@ -85,7 +85,7 @@ class LoggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that logs to separate targets collapse to the same connection properly.
+   * Tests that logs to separate targets utilize the same connection properly.
    *
    * This test is identical to the one above, except that it doesn't create
    * a fake target so the query should fall back to running on the default
@@ -111,7 +111,7 @@ class LoggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can log queries separately on different connections.
+   * Tests that we can log queries separately on different connections.
    */
   function testEnableMultiConnectionLogging() {
     // Clone the master credentials to a fake connection.

@@ -7,9 +7,8 @@
 
 namespace Drupal\system\Tests\Database;
 
-
 /**
- * Dummy class for fetching into a class.
+ * Fetches into a class.
  *
  * PDO supports using a new instance of an arbitrary class for records
  * rather than just a stdClass or array. This class is for testing that

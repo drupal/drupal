@@ -28,7 +28,7 @@ class ClearTest extends CacheTestBase {
   }
 
   /**
-   * Test drupal_flush_all_caches().
+   * Tests drupal_flush_all_caches().
    */
   function testFlushAllCaches() {
     // Create cache entries for each flushed cache bin.
