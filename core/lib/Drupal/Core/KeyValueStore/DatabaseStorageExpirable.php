@@ -26,6 +26,19 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   protected $connection;
 
   /**
+   * Flag indicating whether garbage collection should be performed.
+   *
+   * When this flag is TRUE, garbage collection happens at the end of the
+   * request when the object is destructed. The flag is set during set and
+   * delete operations for expirable data, when a write to the table is already
+   * being performed. This eliminates the need for an external system to remove
+   * stale data.
+   *
+   * @var bool
+   */
+  protected $needsGarbageCollection = FALSE;
+
+  /**
    * Overrides Drupal\Core\KeyValueStore\StorageBase::__construct().
    *
    * @param string $collection
@@ -42,6 +55,15 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     parent::__construct($collection, $options);
     $this->connection = isset($options['connection']) ? $options['connection'] : Database::getConnection();
     $this->table = isset($options['table']) ? $options['table'] : 'key_value_expire';
+  }
+
+  /**
+   * Performs garbage collection as needed when destructing the storage object.
+   */
+  public function __destruct() {
+    if ($this->needsGarbageCollection) {
+      $this->garbageCollection();
+    }
   }
 
   /**
@@ -75,6 +97,9 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreExpireInterface::setWithExpire().
    */
   function setWithExpire($key, $value, $expire) {
+    // We are already writing to the table, so perform garbage collection at
+    // the end of this request.
+    $this->needsGarbageCollection = TRUE;
     $this->connection->merge($this->table)
       ->key(array(
         'name' => $key,
@@ -91,6 +116,9 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface::setWithExpireIfNotExists().
    */
   function setWithExpireIfNotExists($key, $value, $expire) {
+    // We are already writing to the table, so perform garbage collection at
+    // the end of this request.
+    $this->needsGarbageCollection = TRUE;
     $result = $this->connection->merge($this->table)
       ->insertFields(array(
         'collection' => $this->collection,
@@ -117,14 +145,16 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteMultiple().
    */
   public function deleteMultiple(array $keys) {
-    $this->garbageCollection();
+    // We are already writing to the table, so perform garbage collection at
+    // the end of this request.
+    $this->needsGarbageCollection = TRUE;
     parent::deleteMultiple($keys);
   }
 
   /**
    * Deletes expired items.
    */
-  public function garbageCollection() {
+  protected function garbageCollection() {
     $this->connection->delete($this->table)
       ->condition('expire', REQUEST_TIME, '<')
       ->execute();
