@@ -424,42 +424,38 @@ function hook_views_form_substitutions() {
 }
 
 /**
- * Allows altering a view at the very beginning of views processing, before
- * anything is done.
+ * Alter a view at the very beginning of Views processing.
  *
- * Adding output to the view can be accomplished by placing text on
- * $view->attachment_before and $view->attachment_after.
- * @param $view
+ * Output can be added to the view by setting $view->attachment_before
+ * and $view->attachment_after.
+ *
+ * @param ViewExecutable $view
  *   The view object about to be processed.
- * @param $display_id
+ * @param string $display_id
  *   The machine name of the active display.
- * @param $args
+ * @param array $args
  *   An array of arguments passed into the view.
  */
-function hook_views_pre_view(&$view, &$display_id, &$args) {
+function hook_views_pre_view(ViewExecutable &$view, &$display_id, array &$args) {
   // Change the display if the acting user has 'administer site configuration'
   // permission, to display something radically different.
-  // (Note that this is not necessarily the best way to solve that task. Feel
-  // free to contribute another example!)
-  if (
-    $view->name == 'my_special_view' &&
-    user_access('administer site configuration') &&
-    $display_id == 'public_display'
-  ) {
+  // @todo Note that this is not necessarily the best way to solve that task.
+  //   Add a better example.
+  if ($view->name == 'my_special_view' && user_access('administer site configuration') && $display_id == 'public_display') {
     $display_id = 'private_display';
   }
 }
 
 /**
- * This hook is called right before the build process, but after displays
- * are attached and the display performs its pre_execute phase.
+ * Act on the view before the query is built, but after displays are attached.
  *
- * Adding output to the view can be accomplished by placing text on
- * $view->attachment_before and $view->attachment_after.
- * @param $view
+ * Output can be added to the view by setting $view->attachment_before
+ * and $view->attachment_after.
+ *
+ * @param ViewExecutable $view
  *   The view object about to be processed.
  */
-function hook_views_pre_build(&$view) {
+function hook_views_pre_build(ViewExecutable &$view) {
   // Because of some unexplicable business logic, we should remove all
   // attachments from all views on Mondays.
   // (This alter could be done later in the execution process as well.)
@@ -470,15 +466,15 @@ function hook_views_pre_build(&$view) {
 }
 
 /**
- * This hook is called right after the build process. The query is now fully
- * built, but it has not yet been run through db_rewrite_sql.
+ * Act on the view immediately after the query is built.
  *
- * Adding output to the view can be accomplished by placing text on
- * $view->attachment_before and $view->attachment_after.
- * @param $view
+ * Output can be added to the view by setting $view->attachment_before
+ * and $view->attachment_after.
+ *
+ * @param ViewExecutable $view
  *   The view object about to be processed.
  */
-function hook_views_post_build(&$view) {
+function hook_views_post_build(ViewExecutable &$view) {
   // If the exposed field 'type' is set, hide the column containing the content
   // type. (Note that this is a solution for a particular view, and makes
   // assumptions about both exposed filter settings and the fields in the view.
@@ -493,15 +489,15 @@ function hook_views_post_build(&$view) {
 }
 
 /**
- * This hook is called right before the execute process. The query is now fully
- * built, but it has not yet been run through db_rewrite_sql.
+ * Act on the view after the query is built and just before it is executed.
  *
- * Adding output to the view can be accomplished by placing text on
- * $view->attachment_before and $view->attachment_after.
- * @param $view
+ * Output can be added to the view by setting $view->attachment_before
+ * and $view->attachment_after.
+ *
+ * @param ViewExecutable $view
  *   The view object about to be processed.
  */
-function hook_views_pre_execute(&$view) {
+function hook_views_pre_execute(ViewExecutable &$view) {
   // Whenever a view queries more than two tables, show a message that notifies
   // view administrators that the query might be heavy.
   // (This action could be performed later in the execution process, but not
@@ -512,17 +508,18 @@ function hook_views_pre_execute(&$view) {
 }
 
 /**
- * This hook is called right after the execute process. The query has
- * been executed, but the pre_render() phase has not yet happened for
- * handlers.
+ * Act on the view immediately after the query has been executed.
  *
- * Adding output to the view can be accomplished by placing text on
- * $view->attachment_before and $view->attachment_after. Altering the
- * content can be achieved by editing the items of $view->result.
- * @param $view
+ * At this point the query has been executed, but the pre_render() phase has
+ * not yet happened for handlers.
+ *
+ * Output can be added to the view by setting $view->attachment_before
+ * and $view->attachment_after.
+ *
+ * @param ViewExecutable $view
  *   The view object about to be processed.
  */
-function hook_views_post_execute(&$view) {
+function hook_views_post_execute(ViewExecutable &$view) {
   // If there are more than 100 results, show a message that encourages the user
   // to change the filter settings.
   // (This action could be performed later in the execution process, but not
@@ -533,19 +530,19 @@ function hook_views_post_execute(&$view) {
 }
 
 /**
- * This hook is called right before the render process. The query has been
- * executed, and the pre_render() phase has already happened for handlers, so
- * all data should be available.
+ * Act on the view immediately before rendering it.
  *
- * Adding output to the view can be accomplished by placing text on
- * $view->attachment_before and $view->attachment_after. Altering the content
- * can be achieved by editing the items of $view->result.
+ * At this point the query has been executed, and the pre_render() phase has
+ * already happened for handlers, so all data should be available. This hook
+ * can be utilized by themes.
  *
- * This hook can be utilized by themes.
- * @param $view
+ * Output can be added to the view by setting $view->attachment_before
+ * and $view->attachment_after.
+ *
+ * @param ViewExecutable $view
  *   The view object about to be processed.
  */
-function hook_views_pre_render(&$view) {
+function hook_views_pre_render(ViewExecutable &$view) {
   // Scramble the order of the rows shown on this result page.
   // Note that this could be done earlier, but not later in the view execution
   // process.
@@ -553,39 +550,39 @@ function hook_views_pre_render(&$view) {
 }
 
 /**
- * Post process any rendered data.
+ * Post-process any rendered data.
  *
  * This can be valuable to be able to cache a view and still have some level of
  * dynamic output. In an ideal world, the actual output will include HTML
- * comment based tokens, and then the post process can replace those tokens.
+ * comment-based tokens, and then the post process can replace those tokens.
+ * This hook can be utilized by themes.
  *
  * Example usage. If it is known that the view is a node view and that the
  * primary field will be a nid, you can do something like this:
- *
- * <!--post-FIELD-NID-->
- *
- * And then in the post render, create an array with the text that should
+ * @code
+ *   <!--post-FIELD-NID-->
+ * @encode
+ * And then in the post-render, create an array with the text that should
  * go there:
- *
- * strtr($output, array('<!--post-FIELD-1-->' => 'output for FIELD of nid 1');
- *
+ * @code
+ *   strtr($output, array('<!--post-FIELD-1-->' => 'output for FIELD of nid 1');
+ * @encode
  * All of the cached result data will be available in $view->result, as well,
  * so all ids used in the query should be discoverable.
  *
- * This hook can be utilized by themes.
- * @param $view
+ * @param ViewExecutable $view
  *   The view object about to be processed.
- * @param $output
+ * @param string $output
  *   A flat string with the rendered output of the view.
- * @param $cache
+ * @param CacheBackendInterface $cache
  *   The cache settings.
  */
-function hook_views_post_render(&$view, &$output, &$cache) {
-  // When using full pager, disable any time-based caching if there are less
-  // then 10 results.
-  if ($view->pager instanceof Drupal\views\Plugin\views\pager\Full && $cache->options['type'] == 'time' && count($view->result) < 10) {
-    $cache['options']['results_lifespan'] = 0;
-    $cache['options']['output_lifespan'] = 0;
+function hook_views_post_render(ViewExecutable &$view, &$output, CacheBackendInterface &$cache) {
+  // When using full pager, disable any time-based caching if there are fewer
+  // than 10 results.
+  if ($view->pager instanceof Drupal\views\Plugin\views\pager\Full && $cache instanceof Drupal\views\Plugin\views\cache\Time && count($view->result) < 10) {
+    $cache->options['results_lifespan'] = 0;
+    $cache->options['output_lifespan'] = 0;
   }
 }
 
