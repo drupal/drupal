@@ -973,7 +973,7 @@ function views_ui_edit_details_form_submit($form, &$form_state) {
     // Only save values onto the view if they're actual view properties
     // (as opposed to 'op' or 'form_build_id').
     if (isset($form['details'][$key])) {
-      $view->$key = $value;
+      $view->storage->$key = $value;
     }
   }
   $form_state['#page_title'] = views_ui_edit_page_title($view);
