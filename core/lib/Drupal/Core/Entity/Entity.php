@@ -302,7 +302,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   public function createDuplicate() {
     $duplicate = clone $this;
     $entity_info = $this->entityInfo();
-    $this->{$entity_info['entity keys']['id']} = NULL;
+    $duplicate->{$entity_info['entity keys']['id']} = NULL;
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if (!empty($entity_info['entity keys']['uuid'])) {
