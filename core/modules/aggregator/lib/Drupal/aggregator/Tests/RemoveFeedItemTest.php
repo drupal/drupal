@@ -36,9 +36,9 @@ class RemoveFeedItemTest extends AggregatorTestBase {
       // Update and remove items two times in a row to make sure that removal
       // resets all 'modified' information (modified, etag, hash) and allows for
       // immediate update.
-      $this->updateAndRemove($feed, 2);
-      $this->updateAndRemove($feed, 2);
-      $this->updateAndRemove($feed, 2);
+      $this->updateAndRemove($feed, 4);
+      $this->updateAndRemove($feed, 4);
+      $this->updateAndRemove($feed, 4);
       // Delete feed.
       $this->deleteFeed($feed);
     }
