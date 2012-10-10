@@ -434,12 +434,13 @@ function menu_set_item($path, $router_item) {
  *   Internal use only.
  *
  * @return
- *   The router item, an associate array corresponding to one row in the
- *   menu_router table. The value of key map holds the loaded objects. The
- *   value of key access is TRUE if the current user can access this page.
- *   The values for key title, page_arguments, access_arguments, and
- *   theme_arguments will be filled in based on the database values and the
- *   objects loaded.
+ *   The router item or, if an error occurs in _menu_translate(), FALSE. A
+ *   router item is an associative array corresponding to one row in the
+ *   menu_router table. The value corresponding to the key 'map' holds the
+ *   loaded objects. The value corresponding to the key 'access' is TRUE if the
+ *   current user can access this page. The values corresponding to the keys
+ *   'title', 'page_arguments', 'access_arguments', and 'theme_arguments' will
+ *   be filled in based on the database values and the objects loaded.
  */
 function menu_get_item($path = NULL, $router_item = NULL) {
   $router_items = &drupal_static(__FUNCTION__);
@@ -718,7 +719,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
  *   $item['load_functions']. $item['access'] becomes TRUE if the item is
  *   accessible, FALSE otherwise. $item['href'] is set according to the map.
  *   If an error occurs during calling the load_functions (like trying to load
- *   a non existing node) then this function return FALSE.
+ *   a non-existent node) then this function returns FALSE.
  */
 function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   if ($to_arg && !empty($router_item['to_arg_functions'])) {
