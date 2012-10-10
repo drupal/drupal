@@ -104,8 +104,8 @@ abstract class ModuleTestBase extends WebTestBase {
     // Verify that the config directory is not empty.
     $this->assertTrue($names);
 
-    // Look up each default configuration object name in the active store, and
-    // if it exists, remove it from the stack.
+    // Look up each default configuration object name in the active
+    // configuration, and if it exists, remove it from the stack.
     foreach ($names as $key => $name) {
       if (config($name)->get()) {
         unset($names[$key]);

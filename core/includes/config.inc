@@ -28,7 +28,7 @@ function config_install_default_config($type, $name) {
     // Upon installation, only new config objects need to be created.
     // config_sync_get_changes() would potentially perform a diff of hundreds or
     // even thousands of config objects that happen to be contained in the
-    // active store. We leverage the NullStorage to avoid that needless
+    // active configuration. We leverage the NullStorage to avoid that needless
     // computation of differences.
     $config_changes = config_sync_get_changes($source_storage, $null_storage);
     if (empty($config_changes)) {
@@ -128,14 +128,14 @@ function config_sync_changes(array $config_changes, StorageInterface $source_sto
 }
 
 /**
- * Imports configuration into the active store.
+ * Imports configuration into the active configuration.
  *
  * @return bool|null
  *   TRUE if configuration was imported successfully, FALSE in case of a
  *   synchronization error, or NULL if there are no changes to synchronize.
  */
 function config_import() {
-  // Retrieve a list of differences between staging and the active store.
+  // Retrieve a list of differences between staging and the active configuration.
   $source_storage = drupal_container()->get('config.storage.staging');
   $target_storage = drupal_container()->get('config.storage');
 
@@ -213,10 +213,10 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
 }
 
 /**
- * Exports configuration from the active store to staging.
+ * Exports the active configuration to staging.
  */
 function config_export() {
-  // Retrieve a list of differences between the active store and staging.
+  // Retrieve a list of differences between the active configuration and staging.
   $source_storage = drupal_container()->get('config.storage');
   $target_storage = drupal_container()->get('config.storage.staging');
 

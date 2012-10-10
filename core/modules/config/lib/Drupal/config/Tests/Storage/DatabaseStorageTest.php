@@ -25,7 +25,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
     parent::setUp();
 
     $schema['config'] = array(
-      'description' => 'Default active store for the configuration system.',
+      'description' => 'Database storage for the configuration system.',
       'fields' => array(
         'name' => array(
           'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',

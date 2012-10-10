@@ -10,7 +10,7 @@ namespace Drupal\config\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests importing configuration from files into active store.
+ * Tests importing configuration from files into active configuration.
  */
 class ConfigImportTest extends WebTestBase {
 
@@ -24,7 +24,7 @@ class ConfigImportTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Import configuration',
-      'description' => 'Tests importing configuration from files into active store.',
+      'description' => 'Tests importing configuration from files into active configuration.',
       'group' => 'Configuration',
     );
   }
@@ -187,7 +187,7 @@ class ConfigImportTest extends WebTestBase {
     $original_dynamic_data['label'] = 'Updated';
     $staging->write($dynamic_name, $original_dynamic_data);
 
-    // Verify the active store still returns the default values.
+    // Verify the active configuration still returns the default values.
     $config = config($name);
     $this->assertIdentical($config->get('foo'), 'bar');
     $config = config($dynamic_name);

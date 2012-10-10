@@ -36,7 +36,7 @@ class ConfigCRUDTest extends WebTestBase {
     $config->save();
     $this->assertIdentical($config->isNew(), FALSE);
 
-    // Verify the active store contains the saved value.
+    // Verify the active configuration contains the saved value.
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, array('value' => 'initial'));
 
@@ -45,7 +45,7 @@ class ConfigCRUDTest extends WebTestBase {
     $config->save();
     $this->assertIdentical($config->isNew(), FALSE);
 
-    // Verify the active store contains the updated value.
+    // Verify the active configuration contains the updated value.
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, array('value' => 'instance-update'));
 
@@ -61,7 +61,7 @@ class ConfigCRUDTest extends WebTestBase {
     $this->assertIdentical($config->get(), array());
     $this->assertIdentical($config->isNew(), TRUE);
 
-    // Verify the active store contains no value.
+    // Verify the active configuration contains no value.
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, FALSE);
 
@@ -75,7 +75,7 @@ class ConfigCRUDTest extends WebTestBase {
     $config->save();
     $this->assertIdentical($config->isNew(), FALSE);
 
-    // Verify the active store contains the updated value.
+    // Verify the active configuration contains the updated value.
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, array('value' => 're-created'));
 
