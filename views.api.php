@@ -390,16 +390,16 @@ function hook_views_data_alter(array &$data) {
 }
 
 /**
- * Performs replacements in the query before being performed.
+ * Replace special strings in the query before it is executed.
  *
- * @param $view
+ * @param ViewExecutable $view
  *   The View being executed.
- * @return
- *   An array with keys being the strings to replace, and the values the strings
- *   to replace them with. The strings to replace are ofted surrounded with
- *   '***', as illustrated in the example implementation.
+ * @return array
+ *   An associative array where each key is a string to be replaced, and the
+ *   corresponding value is its replacement. The strings to replace are often
+ *   surrounded with '***', as illustrated in the example implementation.
  */
-function hook_views_query_substitutions($view) {
+function hook_views_query_substitutions(ViewExecutable $view) {
   // Example from views_views_query_substitutions().
   return array(
     '***CURRENT_VERSION***' => VERSION,
@@ -410,12 +410,11 @@ function hook_views_query_substitutions($view) {
 }
 
 /**
- * This hook is called to get a list of placeholders and their substitutions,
- * used when preprocessing a View with form elements.
+ * Replace special strings when processing a view with form elements.
  *
- * @return
- *   An array with keys being the strings to replace, and the values the strings
- *   to replace them with.
+ * @return array
+ *   An associative array where each key is a string to be replaced, and the
+ *   corresponding value is its replacement.
  */
 function hook_views_form_substitutions() {
   return array(
