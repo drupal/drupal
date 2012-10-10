@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
  *   id = "text_custom"
  * )
  */
-class TextCustom extends AreaPluginBase {
+class TextCustom extends Text {
 
   protected function defineOptions() {
     $options = parent::defineOptions();

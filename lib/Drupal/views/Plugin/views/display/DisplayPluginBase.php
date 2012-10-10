@@ -2442,7 +2442,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render the header of the view.
    */
   public function renderHeader() {
-    $empty = !empty($this->view->result);
+    $empty = empty($this->view->result);
     return $this->renderArea('header', $empty);
   }
 
@@ -2450,12 +2450,12 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render the footer of the view.
    */
   public function renderFooter() {
-    $empty = !empty($this->view->result);
+    $empty = empty($this->view->result);
     return $this->renderArea('footer', $empty);
   }
 
   public function renderEmpty() {
-    return $this->renderArea('empty');
+    return $this->renderArea('empty', TRUE);
   }
 
   /**

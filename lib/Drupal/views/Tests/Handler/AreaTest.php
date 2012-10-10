@@ -93,8 +93,13 @@ class AreaTest extends HandlerTestBase {
     $header_string = $this->randomString();
     $footer_string = $this->randomString();
     $empty_string = $this->randomString();
+
     $view->header['test_example']->options['string'] = $header_string;
+    $view->header['test_example']->options['empty'] = TRUE;
+
     $view->footer['test_example']->options['string'] = $footer_string;
+    $view->footer['test_example']->options['empty'] = TRUE;
+
     $view->empty['test_example']->options['string'] = $empty_string;
 
     // Check whether the strings exists in the output.

@@ -34,7 +34,8 @@ abstract class AreaPluginBase extends HandlerBase {
   public function init(ViewExecutable $view, &$options) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     parent::init($view, $options);
-    if ($this->definition['plugin_type'] == 'empty') {
+
+    if (isset($this->handler_type) && ($this->handler_type == 'empty')) {
       $this->options['empty'] = TRUE;
     }
   }

@@ -35,7 +35,9 @@ class TestExample extends AreaPluginBase {
    * Overrides Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
   public function render($empty = FALSE) {
-    return $this->options['string'];
+    if (!$empty || !empty($this->options['empty'])) {
+      return $this->options['string'];
+    }
   }
 
 }
