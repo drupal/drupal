@@ -185,11 +185,11 @@ function drupal_set_installed_schema_version($module, $version) {
 }
 
 /**
- * Loads the install profile, extracting its defined distribution name.
+ * Loads the installation profile, extracting its defined distribution name.
  *
  * @return
  *   The distribution name defined in the profile's .info file. Defaults to
- *   "Drupal" if none is explicitly provided by the install profile.
+ *   "Drupal" if none is explicitly provided by the installation profile.
  *
  * @see install_profile_info()
  */
@@ -660,7 +660,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 }
 
 /**
- * Verifies an install profile for installation.
+ * Verifies an installation profile for installation.
  *
  * @param $install_state
  *   An array of information about the current installation state.
@@ -688,8 +688,8 @@ function drupal_verify_profile($install_state) {
     $present_modules[] = $present_module->name;
   }
 
-  // The install profile is also a module, which needs to be installed after all the other dependencies
-  // have been installed.
+  // The installation profile is also a module, which needs to be installed
+  // after all the other dependencies have been installed.
   $present_modules[] = drupal_get_profile();
 
   // Verify that all of the profile's required modules are present.
@@ -1148,12 +1148,12 @@ function st($string, array $args = array(), array $options = array()) {
 }
 
 /**
- * Checks an install profile's requirements.
+ * Checks an installation profile's requirements.
  *
  * @param $profile
- *   Name of install profile to check.
+ *   Name of installation profile to check.
  * @return
- *   Array of the install profile's requirements.
+ *   Array of the installation profile's requirements.
  */
 function drupal_check_profile($profile) {
   include_once DRUPAL_ROOT . '/includes/file.inc';
@@ -1230,11 +1230,11 @@ function drupal_check_module($module) {
 }
 
 /**
- * Retrieves information about an install profile from its .info file.
+ * Retrieves information about an installation profile from its .info file.
  *
  * The information stored in a profile .info file is similar to that stored in
  * a normal Drupal module .info file. For example:
- * - name: The real name of the install profile for display purposes.
+ * - name: The real name of the installation profile for display purposes.
  * - description: A brief description of the profile.
  * - dependencies: An array of shortnames of other modules that this install
  *   profile requires.

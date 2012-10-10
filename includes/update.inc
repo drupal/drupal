@@ -785,12 +785,12 @@ function update_fix_d7_requirements() {
 /**
  * Register the currently installed profile in the system table.
  *
- * Install profiles are now treated as modules by Drupal, and have an upgrade
- * path based on their schema version in the system table.
+ * Installation profiles are now treated as modules by Drupal, and have an
+ * upgrade path based on their schema version in the system table.
  *
- * The install profile will be set to schema_version 0, as it has already been
- * installed. Any other hook_update_N functions provided by the install profile
- * will be run by update.php.
+ * The installation profile will be set to schema_version 0, as it has already
+ * been installed. Any other hook_update_N functions provided by the
+ * installation profile will be run by update.php.
  */
 function update_fix_d7_install_profile() {
   $profile = drupal_get_profile();
@@ -828,10 +828,10 @@ function update_fix_d7_install_profile() {
       'owner' => '',
     );
 
-    // Install profile hooks are always executed last by the module system
+    // Installation profile hooks are always executed last by the module system
     $values['weight'] = 1000;
 
-    // Initializing the system table entry for the install profile
+    // Initializing the system table entry for the installation profile
     db_insert('system')
       ->fields(array_keys($values))
       ->values($values)
@@ -840,7 +840,8 @@ function update_fix_d7_install_profile() {
     // Reset the cached schema version.
     drupal_get_installed_schema_version($profile, TRUE);
 
-    // Load the updates again to make sure the install profile updates are loaded
+    // Load the updates again to make sure the installation profile updates
+    // are loaded.
     drupal_load_updates();
   }
 }

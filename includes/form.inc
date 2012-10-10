@@ -728,7 +728,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // the form builder callbacks can be loaded when the form is being rebuilt
   // from cache on a different path (such as 'system/ajax'). See
   // form_get_cache().
-  // $menu_get_item() is not available at installation time.
+  // $menu_get_item() is not available during installation.
   if (!isset($form_state['build_info']['files']['menu']) && !defined('MAINTENANCE_MODE')) {
     $item = menu_get_item();
     if (!empty($item['include_file'])) {
@@ -4406,7 +4406,7 @@ function batch_set($batch_definition) {
     }
 
     // Base and default properties for the batch set.
-    // Use get_t() to allow batches at install time.
+    // Use get_t() to allow batches during installation.
     $t = get_t();
     $init = array(
       'sandbox' => array(),

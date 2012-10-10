@@ -523,7 +523,7 @@ function install_tasks($install_state) {
   $needs_translations = count($install_state['locales']) > 1 && !empty($install_state['parameters']['locale']) && $install_state['parameters']['locale'] != 'en';
 
   // Start with the core installation tasks that run before handing control
-  // to the install profile.
+  // to the installation profile.
   $tasks = array(
     'install_select_profile' => array(
       'display_name' => st('Choose profile'),
@@ -775,7 +775,7 @@ function install_system_module(&$install_state) {
   // variable_set() can be used now that system.module is installed.
   $modules = $install_state['profile_info']['dependencies'];
 
-  // The install profile is also a module, which needs to be installed
+  // The installation profile is also a module, which needs to be installed
   // after all the dependencies have been installed.
   $modules[] = drupal_get_profile();
 
@@ -1441,7 +1441,7 @@ function install_configure_form($form, &$form_state, &$install_state) {
   // Add JavaScript time zone detection.
   drupal_add_js('misc/timezone.js');
   // We add these strings as settings because JavaScript translation does not
-  // work on install time.
+  // work during installation.
   drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
   drupal_add_js('jQuery(function () { Drupal.cleanURLsInstallCheck(); });', 'inline');
   // Add JS to show / hide the 'Email administrator about site updates' elements
@@ -1500,13 +1500,13 @@ function install_finished(&$install_state) {
 
   // Flush all caches to ensure that any full bootstraps during the installer
   // do not leave stale cached data, and that any content types or other items
-  // registered by the install profile are registered correctly.
+  // registered by the installation profile are registered correctly.
   drupal_flush_all_caches();
 
   // Remember the profile which was used.
   variable_set('install_profile', drupal_get_profile());
 
-  // Install profiles are always loaded last
+  // Installation profiles are always loaded last
   db_update('system')
     ->fields(array('weight' => 1000))
     ->condition('type', 'module')
