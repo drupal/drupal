@@ -37,7 +37,7 @@ class HookDiscovery implements DiscoveryInterface {
    */
   public function getDefinition($plugin_id) {
     $plugins = $this->getDefinitions();
-    return isset($plugins[$plugin_id]) ? $plugins[$plugin_id] : array();
+    return isset($plugins[$plugin_id]) ? $plugins[$plugin_id] : NULL;
   }
 
   /**

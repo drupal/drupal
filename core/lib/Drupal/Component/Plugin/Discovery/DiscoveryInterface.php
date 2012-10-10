@@ -19,8 +19,8 @@ interface DiscoveryInterface {
    * @param string $plugin_id
    *   A plugin id.
    *
-   * @return array
-   *   A plugin definition.
+   * @return array|null
+   *   A plugin definition, or NULL if no definition was found for $plugin_id.
    */
   public function getDefinition($plugin_id);
 
@@ -28,7 +28,8 @@ interface DiscoveryInterface {
    * Gets the definition of all plugins for this type.
    *
    * @return array
-   *   An array of plugin definitions.
+   *   An array of plugin definitions (empty array if no definitions were
+   *   found).
    */
   public function getDefinitions();
 
