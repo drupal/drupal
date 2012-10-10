@@ -205,7 +205,7 @@ function menu_test_menu() {
   );
 
   // Breadcrumbs tests.
-  // @see MenuBreadcrumbTestCase
+  // @see BreadcrumbTest
   $base = array(
     'page callback' => 'menu_test_callback',
     'access callback' => TRUE,
