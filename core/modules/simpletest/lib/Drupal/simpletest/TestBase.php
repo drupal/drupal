@@ -129,6 +129,13 @@ abstract class TestBase {
   protected $originalPrefix;
 
   /**
+   * URL to the verbose output file directory.
+   *
+   * @var string
+   */
+  protected $verboseDirectoryUrl;
+
+  /**
    * Constructor for Test.
    *
    * @param $test_id
@@ -544,7 +551,7 @@ abstract class TestBase {
     $message = '<hr />ID #' . $this->verboseId . ' (<a href="' . $this->verboseClassName . '-' . ($this->verboseId - 1) . '.html">Previous</a> | <a href="' . $this->verboseClassName . '-' . ($this->verboseId + 1) . '.html">Next</a>)<hr />' . $message;
     $verbose_filename = $this->verboseDirectory . '/' . $this->verboseClassName . '-' . $this->verboseId . '.html';
     if (file_put_contents($verbose_filename, $message, FILE_APPEND)) {
-      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . $this->verboseClassName . '-' . $this->verboseId . '.html');
+      $url = $this->verboseDirectoryUrl . '/' . $this->verboseClassName . '-' . $this->verboseId . '.html';
       // Not using l() to avoid invoking the theme system, so that unit tests
       // can use verbose() as well.
       $url = '<a href="' . $url . '" target="_blank">' . t('Verbose message') . '</a>';
@@ -573,6 +580,7 @@ abstract class TestBase {
       // Initialize verbose debugging.
       $this->verbose = TRUE;
       $this->verboseDirectory = variable_get('file_public_path', conf_path() . '/files') . '/simpletest/verbose';
+      $this->verboseDirectoryUrl = file_create_url($this->verboseDirectory);
       if (file_prepare_directory($this->verboseDirectory, FILE_CREATE_DIRECTORY) && !file_exists($this->verboseDirectory . '/.htaccess')) {
         file_put_contents($this->verboseDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
       }
