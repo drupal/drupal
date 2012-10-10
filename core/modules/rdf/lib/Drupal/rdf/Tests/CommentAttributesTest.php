@@ -46,7 +46,7 @@ class CommentAttributesTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
 
     // Creates the nodes on which the test comments will be posted.
     $this->drupalLogin($this->web_user);

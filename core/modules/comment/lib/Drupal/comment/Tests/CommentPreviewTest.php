@@ -30,7 +30,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
     $this->drupalLogout();
 
     // Login as web user and add a signature and a user picture.
@@ -76,7 +76,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
 
     $edit = array();
     $edit['subject'] = $this->randomName(8);

@@ -175,7 +175,7 @@ abstract class CommentTestBase extends WebTestBase {
         $mode_text = 'required';
         break;
     }
-    $this->setCommentSettings('comment_preview', $mode, 'Comment preview ' . $mode_text . '.');
+    $this->setCommentSettings('comment_preview', $mode, format_string('Comment preview @mode_text.', array('@mode_text' => $mode_text)));
   }
 
   /**
@@ -199,7 +199,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   - 2: Contact information required.
    */
   function setCommentAnonymous($level) {
-    $this->setCommentSettings('comment_anonymous', $level, 'Anonymous commenting set to level ' . $level . '.');
+    $this->setCommentSettings('comment_anonymous', $level, format_string('Anonymous commenting set to level @level.', array('@level' => $level)));
   }
 
   /**
@@ -209,7 +209,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Comments per page value.
    */
   function setCommentsPerPage($number) {
-    $this->setCommentSettings('comment_default_per_page', $number, 'Number of comments per page set to ' . $number . '.');
+    $this->setCommentSettings('comment_default_per_page', $number, format_string('Number of comments per page set to @number.', array('@number' => $number)));
   }
 
   /**
@@ -225,7 +225,7 @@ abstract class CommentTestBase extends WebTestBase {
   function setCommentSettings($name, $value, $message) {
     variable_set($name . '_article', $value);
     // Display status message.
-    $this->assertTrue(TRUE, $message);
+    $this->pass($message);
   }
 
   /**
