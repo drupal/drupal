@@ -1288,57 +1288,11 @@ function views_include_handlers($reset = FALSE) {
  *   An instance of a handler object. May be views_handler_broken.
  */
 function views_get_handler($table, $field, $type, $override = NULL) {
-  static $recursion_protection = array();
+  // Get the plugin manager for this type.
+  $manager = drupal_container()->get("plugin.manager.views.$type");
 
   $data = views_fetch_data($table, FALSE);
-  $handler = NULL;
-
-  // Support conversion on table level.
-  if (isset($data['moved to'])) {
-    $moved = array($data['moved to'], $field);
-  }
-  // Support conversion on datafield level.
-  if (isset($data[$field]['moved to'])) {
-    $moved = $data[$field]['moved to'];
-  }
-  // Support conversion on handler level.
-  if (isset($data[$field][$type]['moved to'])) {
-    $moved = $data[$field][$type]['moved to'];
-  }
-
-  if (isset($data[$field][$type]) || !empty($moved)) {
-    if (!empty($moved)) {
-      list($moved_table, $moved_field) = $moved;
-      if (!empty($recursion_protection[$moved_table][$moved_field])) {
-        // recursion detected!
-        return NULL;
-      }
-
-      $recursion_protection[$moved_table][$moved_field] = TRUE;
-      $handler = views_get_handler($moved_table, $moved_field, $type, $override);
-      $recursion_protection = array();
-      if ($handler) {
-        // store these values so we know what we were originally called.
-        $handler->original_table = $table;
-        $handler->original_field = $field;
-        if (empty($handler->actualTable)) {
-          $handler->actualTable = $moved_table;
-          $handler->actualField = $moved_field;
-        }
-      }
-      return $handler;
-    }
-
-    // @fixme: temporary.
-    // Set up a default handler, if both handler and id is not specified.
-    if (empty($data[$field][$type]['handler']) && empty($data[$field][$type]['id'])) {
-      $data[$field][$type]['id'] = 'standard';
-    }
-
-    if ($override) {
-      $data[$field][$type]['override handler'] = $override;
-    }
-
+  if (isset($data[$field][$type])) {
     $definition = $data[$field][$type];
     foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table') as $key) {
       if (!isset($definition[$key])) {
@@ -1354,8 +1308,7 @@ function views_get_handler($table, $field, $type, $override = NULL) {
     }
 
     // @todo This is crazy. Find a way to remove the override functionality.
-    $manager = drupal_container()->get("plugin.manager.views.$type");
-    $plugin_id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
+    $plugin_id = $override ?: $definition['id'];
     // Try to use the overridden handler.
     try {
       return $manager->createInstance($plugin_id, $definition);
@@ -1373,7 +1326,7 @@ function views_get_handler($table, $field, $type, $override = NULL) {
 
   // Finally, use the 'broken' handler.
   debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $type)));
-  return views_get_plugin($type, 'broken');
+  return $manager->createInstance('broken');
 }
 
 /**
@@ -1715,26 +1668,8 @@ function views_view_is_disabled($view) {
 function views_get_view($name) {
   $view = entity_load('view', $name);
   if ($view) {
-    $view->update();
-    $view = $view->getExecutable();
-    // @figure out whether it makes sense to clone this here.
-    return $view->cloneView();
+    return $view->getExecutable();
   }
-}
-
-/**
- * Find the real location of a table.
- *
- * If a table has moved, find the new name of the table so that we can
- * change its name directly in options where necessary.
- */
-function views_move_table($table) {
-  $data = views_fetch_data($table, FALSE);
-  if (isset($data['moved to'])) {
-    $table = $data['moved to'];
-  }
-
-  return $table;
 }
 
 // ------------------------------------------------------------------

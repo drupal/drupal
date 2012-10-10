@@ -223,19 +223,6 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Perform automatic updates when loading or importing a view.
-   *
-   * Over time, some things about Views or Drupal data has changed.
-   * this attempts to do some automatic updates that must happen
-   * to ensure older views will at least try to work.
-   */
-  public function update() {
-    // When views are converted automatically the base_table should be renamed
-    // to have a working query.
-    $this->base_table = views_move_table($this->base_table);
-  }
-
-  /**
    * Adds a new display handler to the view, automatically creating an ID.
    *
    * @param string $plugin_id

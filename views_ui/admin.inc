@@ -2600,10 +2600,6 @@ function views_fetch_fields($base, $type, $grouping = FALSE) {
                 $skip_bases[$field][$key][$base_name] = TRUE;
               }
             }
-            // Don't show old fields. The real field will be added right.
-            if (isset($info[$key]['moved to'])) {
-              continue;
-            }
             foreach (array('title', 'group', 'help', 'base', 'aliases') as $string) {
               // First, try the lowest possible level
               if (!empty($info[$key][$string])) {

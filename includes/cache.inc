@@ -44,17 +44,6 @@ function _views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
       }
     }
     if (isset($cache[$table])) {
-      if (isset($cache[$table]['moved to']) && $move) {
-        $moved_table = $cache[$table]['moved to'];
-        if (!empty($recursion_protection[$table])) {
-          // recursion detected!
-          return NULL;
-        }
-        $recursion_protection[$table] = TRUE;
-        $data = _views_fetch_data($moved_table);
-        $recursion_protection = array();
-        return $data;
-      }
       return $cache[$table];
     }
   }

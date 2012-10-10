@@ -135,7 +135,6 @@ function user_views_data() {
   );
 
   // language
-  $data['users']['language']['moved to'] = array('users', 'langcode');
   $data['users']['langcode'] = array(
     'title' => t('Language'), // The item it appears as on the UI,
     'help' => t('Language of the user'),

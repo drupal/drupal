@@ -27,19 +27,6 @@ class ModuleTest extends ViewTestBase {
     drupal_theme_rebuild();
   }
 
-  public function viewsData() {
-    $data = parent::viewsData();
-    $data['views_test_data_previous'] = array();
-    $data['views_test_data_previous']['id']['field']['moved to'] = array('views_test_data', 'id');
-    $data['views_test_data_previous']['id']['filter']['moved to'] = array('views_test_data', 'id');
-    $data['views_test_data']['age_previous']['field']['moved to'] = array('views_test_data', 'age');
-    $data['views_test_data']['age_previous']['sort']['moved to'] = array('views_test_data', 'age');
-    $data['views_test_data_previous']['name_previous']['field']['moved to'] = array('views_test_data', 'name');
-    $data['views_test_data_previous']['name_previous']['argument']['moved to'] = array('views_test_data', 'name');
-
-    return $data;
-  }
-
   public function test_views_trim_text() {
     // Test unicode, @see http://drupal.org/node/513396#comment-2839416
     $text = array(
@@ -115,29 +102,9 @@ class ModuleTest extends ViewTestBase {
       }
     }
 
-    // Test the automatic conversion feature.
-
-    // Test the automatic table renaming.
-    $handler = views_get_handler('views_test_data_previous', 'id', 'field');
-    $this->assertInstanceHandler($handler, 'views_test_data', 'id', 'field');
-    $handler = views_get_handler('views_test_data_previous', 'id', 'filter');
-    $this->assertInstanceHandler($handler, 'views_test_data', 'id', 'filter');
-
-    // Test the automatic field renaming.
-    $handler = views_get_handler('views_test_data', 'age_previous', 'field');
-    $this->assertInstanceHandler($handler, 'views_test_data', 'age', 'field');
-    $handler = views_get_handler('views_test_data', 'age_previous', 'sort');
-    $this->assertInstanceHandler($handler, 'views_test_data', 'age', 'sort');
-
-    // Test the automatic table and field renaming.
-    $handler = views_get_handler('views_test_data_previous', 'name_previous', 'field');
-    $this->assertInstanceHandler($handler, 'views_test_data', 'name', 'field');
-    $handler = views_get_handler('views_test_data_previous', 'name_previous', 'argument');
-    $this->assertInstanceHandler($handler, 'views_test_data', 'name', 'argument');
-
     // Test the override handler feature.
-    $handler = views_get_handler('views_test_data', 'job', 'filter', 'string');
-    $this->assertEqual('Drupal\\views\\Plugin\\views\\filter\\String', get_class($handler));
+    $handler = views_get_handler('views_test_data', 'job', 'filter', 'standard');
+    $this->assertEqual('Drupal\\views\\Plugin\\views\\filter\\Standard', get_class($handler));
   }
 
   /**

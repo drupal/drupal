@@ -157,7 +157,6 @@ function comment_views_data() {
 
   // Langcode field
   if (module_exists('language')) {
-    $data['comment']['language']['moved to'] = array('comment', 'langcode');
     $data['comment']['langcode'] = array(
       'title' => t('Language'),
       'help' => t('The language the comment is in.'),

@@ -215,7 +215,6 @@ function node_views_data() {
 
   // Language field
   if (module_exists('language')) {
-    $data['node']['language']['moved to'] = array('node', 'langcode');
     $data['node']['langcode'] = array(
       'title' => t('Language'),
       'help' => t('The language the content is in.'),
@@ -464,6 +463,7 @@ function node_views_data() {
     'help' => t('The revision NID of the content revision.'),
     // Information for displaying the nid.
     'field' => array(
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     // Information for accepting a nid as an argument.
@@ -495,6 +495,7 @@ function node_views_data() {
     'help' => t('The revision ID of the content revision.'),
     // Information for displaying the vid
     'field' => array(
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     // Information for accepting a vid as an argument
