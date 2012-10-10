@@ -141,8 +141,9 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
   // $stack tracks the number of recursive calls.
   static $stack;
   $stack++;
-  if ($stack > variable_get('action_max_stack', 35)) {
-    watchdog('action', 'Stack overflow: too many calls to actions_do(). Aborting to prevent infinite recursion.', array(), WATCHDOG_ERROR);
+  $recursion_limit = config('action.settings')->get('recursion_limit');
+  if ($stack > $recursion_limit) {
+    watchdog('action', 'Stack overflow: recursion limit for actions_do() has been reached. Stack is limited by %limit calls.', array('%limit' => $recursion_limit), WATCHDOG_ERROR);
     return;
   }
   $actions = array();

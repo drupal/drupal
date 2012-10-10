@@ -48,7 +48,9 @@ class LoopTest extends WebTestBase {
     // recursion level should be kept low enough to prevent the xdebug
     // infinite recursion protection mechanism from aborting the request.
     // See http://drupal.org/node/587634.
-    variable_set('action_max_stack', 7);
+    config('action.settings')
+      ->set('recursion_limit', 7)
+      ->save();
     $this->triggerActions();
   }
 
@@ -61,10 +63,11 @@ class LoopTest extends WebTestBase {
     $this->drupalGet('<front>', array('query' => array('trigger_action_on_watchdog' => $this->aid)));
     $expected = array();
     $expected[] = 'Triggering action loop';
-    for ($i = 1; $i <= variable_get('action_max_stack', 35); $i++) {
+    $recursion_limit = config('action.settings')->get('recursion_limit');
+    for ($i = 1; $i <= $recursion_limit; $i++) {
       $expected[] = "Test log #$i";
     }
-    $expected[] = 'Stack overflow: too many calls to actions_do(). Aborting to prevent infinite recursion.';
+    $expected[] = 'Stack overflow: recursion limit for actions_do() has been reached. Stack is limited by %limit calls.';
 
     $result = db_query("SELECT message FROM {watchdog} WHERE type = 'action_loop_test' OR type = 'action' ORDER BY wid");
     $loop_started = FALSE;
