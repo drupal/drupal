@@ -15,9 +15,9 @@ use Drupal\simpletest\WebTestBase;
 class NextIdTest extends WebTestBase {
   public static function getInfo() {
     return array(
-      'name' => t('Sequences API'),
-      'description' => t('Test the secondary sequences API.'),
-      'group' => t('Database'),
+      'name' => 'Sequences API',
+      'description' => 'Test the secondary sequences API.',
+      'group' => 'Database',
     );
   }
 

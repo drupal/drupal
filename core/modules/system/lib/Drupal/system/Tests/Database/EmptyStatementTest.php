@@ -17,9 +17,9 @@ use Drupal\simpletest\WebTestBase;
 class EmptyStatementTest extends WebTestBase {
   public static function getInfo() {
     return array(
-      'name' => t('Empty statement'),
-      'description' => t('Test the empty pseudo-statement class.'),
-      'group' => t('Database'),
+      'name' => 'Empty statement',
+      'description' => 'Test the empty pseudo-statement class.',
+      'group' => 'Database',
     );
   }
 
