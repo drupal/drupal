@@ -79,7 +79,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $this->drupalGet('admin/structure/block');
     $this->assertText('View: ' . $view['human_name']);
     $edit = array();
-    $edit["blocks[views_{$view['name']}-block][region]"] = 'sidebar_first';
+    $edit["blocks[views_{$view['name']}-block_1][region]"] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->drupalGet('user');
     $content = $this->drupalGetContent();

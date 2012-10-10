@@ -124,7 +124,7 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/block');
     $this->assertText('View: ' . $view3['human_name']);
     $edit = array();
-    $edit["blocks[views_{$view3['name']}-block][region]"] = 'sidebar_first';
+    $edit["blocks[views_{$view3['name']}-block_1][region]"] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Visit a random page (not the one that displays the view itself) and look

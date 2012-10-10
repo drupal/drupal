@@ -77,8 +77,8 @@ display:
         type: default
       row:
         type: node
-  page:
-    id: page
+  page_1:
+    id: page_1
     display_title: Page
     display_plugin: page
     position: '2'
@@ -87,8 +87,8 @@ display:
         type: views_query
         options: {  }
       path: taxonomy/term/%
-  feed:
-    id: feed
+  feed_1:
+    id: feed_1
     display_title: Feed
     display_plugin: feed
     position: '3'

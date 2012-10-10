@@ -135,8 +135,8 @@ display:
               separator: ''
           override: 1
           order: desc
-  page:
-    id: page
+  page_1:
+    id: page_1
     display_title: Page
     display_plugin: page
     position: '2'

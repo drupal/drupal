@@ -628,7 +628,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // Display: Page
     if (isset($display_options['page'])) {
-      $display = $view->newDisplay('page', 'Page', 'page');
+      $display = $view->newDisplay('page', 'Page', 'page_1');
       // The page display is usually the main one (from the user's point of
       // view). Its options should therefore become the overall view defaults,
       // so that new displays which are added later automatically inherit them.
@@ -636,14 +636,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
       // Display: Feed (attached to the page).
       if (isset($display_options['feed'])) {
-        $display = $view->newDisplay('feed', 'Feed', 'feed');
+        $display = $view->newDisplay('feed', 'Feed', 'feed_1');
         $this->set_override_options($display_options['feed'], $display, $default_display);
       }
     }
 
     // Display: Block.
     if (isset($display_options['block'])) {
-      $display = $view->newDisplay('block', 'Block', 'block');
+      $display = $view->newDisplay('block', 'Block', 'block_1');
       // When there is no page, the block display options should become the
       // overall view defaults.
       if (!isset($display_options['page'])) {
@@ -946,7 +946,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $display_options['title'] = $form_state['values']['page']['title'];
     $display_options['displays'] = array(
       'default' => 'default',
-      'page' => 'page',
+      'page_1' => 'page_1',
     );
     return $display_options;
   }

@@ -49,21 +49,21 @@ class DisplayTest extends UITestBase {
     $this->drupalGet($path_prefix . '/default');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'delete Page', 'Make sure there is no delete button on the default display.');
 
-    $this->drupalGet($path_prefix . '/page');
+    $this->drupalGet($path_prefix . '/page_1');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'delete Page', 'Make sure there is a delete button on the page display.');
 
     // Delete the page, so we can test the undo process.
-    $this->drupalPost($path_prefix . '/page', array(), 'delete Page');
+    $this->drupalPost($path_prefix . '/page_1', array(), 'delete Page');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
     $this->assertTrue($this->xpath('//div[contains(@class, views-display-deleted-link)]'). 'Make sure the display link is marked as to be deleted.');
 
     // Undo the deleting of the display.
-    $this->drupalPost($path_prefix . '/page', array(), 'undo delete of Page');
+    $this->drupalPost($path_prefix . '/page_1', array(), 'undo delete of Page');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there is no undo button on the page display after reverting.');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'delete Page', 'Make sure there is a delete button on the page display after the reverting.');
 
     // Now delete again and save the view.
-    $this->drupalPost($path_prefix . '/page', array(), 'delete Page');
+    $this->drupalPost($path_prefix . '/page_1', array(), 'delete Page');
     $this->drupalPost(NULL, array(), t('Save'));
 
     $this->assertNoLinkByHref($path_prefix . '/page', 'Make sure there is no display tab for the deleted display.');
@@ -85,7 +85,6 @@ class DisplayTest extends UITestBase {
 
     // Add a new display.
     $this->drupalPost(NULL, array(), 'Add Page');
-    // @todo Revising this after http://drupal.org/node/1793700 got in.
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
 
     $this->assertNoLink('Master*', 0, 'Make sure the master display is not marked as changed.');
@@ -106,21 +105,21 @@ class DisplayTest extends UITestBase {
     $this->drupalPost($path_prefix, $edit, t('Save'));
     $this->clickLink(t('reorder displays'));
     $this->assertTrue($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
-    $this->assertTrue($this->xpath('//tr[@id="display-row-page"]'), 'Make sure the page display appears on the reorder listing');
-    $this->assertTrue($this->xpath('//tr[@id="display-row-block"]'), 'Make sure the block display appears on the reorder listing');
+    $this->assertTrue($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
+    $this->assertTrue($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
 
     // Put the block display in front of the page display.
     $edit = array(
-      'page[weight]' => 2,
-      'block[weight]' => 1
+      'page_1[weight]' => 2,
+      'block_1[weight]' => 1
     );
     $this->drupalPost(NULL, $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view($view['name']);
     $this->assertEqual($view->storage->display['default']['position'], 0, 'Make sure the master display comes first.');
-    $this->assertEqual($view->storage->display['block']['position'], 1, 'Make sure the block display comes before the page display.');
-    $this->assertEqual($view->storage->display['page']['position'], 2, 'Make sure the page display comes after the block display.');
+    $this->assertEqual($view->storage->display['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
+    $this->assertEqual($view->storage->display['page_1']['position'], 2, 'Make sure the page display comes after the block display.');
   }
 
   /**
@@ -141,7 +140,6 @@ class DisplayTest extends UITestBase {
 
     $this->drupalGet($path_prefix);
     $this->drupalPost(NULL, array(), 'clone Page');
-    // @todo Revising this after http://drupal.org/node/1793700 got in.
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after cloning the new display appears in the UI');
   }
 

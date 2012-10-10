@@ -64,8 +64,8 @@ display:
         type: default
       row:
         type: node
-  page:
-    id: page
+  page_1:
+    id: page_1
     display_title: Page
     display_plugin: page
     position: '2'
@@ -74,8 +74,8 @@ display:
         type: views_query
         options: {  }
       path: archive
-  block:
-    id: block
+  block_1:
+    id: block_1
     display_title: Block
     display_plugin: block
     position: '3'

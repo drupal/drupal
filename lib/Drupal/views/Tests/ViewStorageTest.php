@@ -109,7 +109,7 @@ class ViewStorageTest extends ViewTestBase {
     }
 
     // Check the displays have been loaded correctly from config display data.
-    $expected_displays = array('default', 'page', 'block');
+    $expected_displays = array('default', 'page_1', 'block_1');
     $this->assertEqual(array_keys($view->display), $expected_displays, 'The correct display names are present.');
 
     // Check each ViewDisplay object and confirm that it has the correct key and
@@ -305,14 +305,14 @@ class ViewStorageTest extends ViewTestBase {
    */
   protected function displayMethodTests() {
     $config['display'] = array(
-      'page' => array(
+      'page_1' => array(
         'display_options' => array('path' => 'test'),
         'display_plugin' => 'page',
         'id' => 'page_2',
-        'display_title' => 'Page 2',
+        'display_title' => 'Page 1',
         'position' => 1
       ),
-      'feed' => array(
+      'feed_1' => array(
         'display_options' => array('path' => 'test.xml'),
         'display_plugin' => 'feed',
         'id' => 'feed',

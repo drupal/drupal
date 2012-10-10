@@ -65,8 +65,8 @@ display:
         type: html_list
       row:
         type: fields
-  page:
-    id: page
+  page_1:
+    id: page_1
     display_title: Page
     display_plugin: page
     position: '2'
@@ -115,8 +115,8 @@ display:
             title: title
             timestamp: timestamp
             separator: '&nbsp;'
-  block:
-    id: block
+  block_1:
+    id: block_1
     display_title: Block
     display_plugin: block
     position: '3'

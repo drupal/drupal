@@ -332,8 +332,8 @@ function views_ui_add_form_save_submit($form, &$form_state) {
   $view->save();
 
   $form_state['redirect'] = 'admin/structure/views';
-  if (!empty($view->displayHandlers['page'])) {
-    $display = $view->displayHandlers['page'];
+  if (!empty($view->displayHandlers['page_1'])) {
+    $display = $view->displayHandlers['page_1'];
     if ($display->hasPath()) {
       $one_path = $display->getOption('path');
       if (strpos($one_path, '%') === FALSE) {

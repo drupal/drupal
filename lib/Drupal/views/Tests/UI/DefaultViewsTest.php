@@ -49,15 +49,15 @@ class DefaultViewsTest extends UITestBase {
     // displayed.
     $new_title = $this->randomName(16);
     $edit = array('title' => $new_title);
-    $this->drupalPost('admin/structure/views/nojs/display/frontpage/page/title', $edit, t('Apply'));
-    $this->drupalPost('admin/structure/views/view/frontpage/edit/page', array(), t('Save'));
+    $this->drupalPost('admin/structure/views/nojs/display/frontpage/page_1/title', $edit, t('Apply'));
+    $this->drupalPost('admin/structure/views/view/frontpage/edit/page_1', array(), t('Save'));
     $this->drupalGet('frontpage');
     $this->assertResponse(200);
     $this->assertText($new_title);
 
     // Save another view in the UI.
-    $this->drupalPost('admin/structure/views/nojs/display/archive/page/title', array(), t('Apply'));
-    $this->drupalPost('admin/structure/views/view/archive/page', array(), t('Save'));
+    $this->drupalPost('admin/structure/views/nojs/display/archive/page_1/title', array(), t('Apply'));
+    $this->drupalPost('admin/structure/views/view/archive/page_1', array(), t('Save'));
 
     // Check there is an enable link. i.e. The view has not been enabled after
     // editing.

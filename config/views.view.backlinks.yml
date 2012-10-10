@@ -72,8 +72,8 @@ display:
           type: ol
       row:
         type: fields
-  page:
-    id: page
+  page_1:
+    id: page_1
     display_title: Page
     display_plugin: page
     position: '2'
@@ -86,7 +86,7 @@ display:
         type: tab
         title: 'What links here'
         weight: '0'
-  block:
+  block_1:
     id: block
     display_title: 'What links here'
     display_plugin: block

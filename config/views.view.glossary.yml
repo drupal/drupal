@@ -92,8 +92,8 @@ display:
               separator: ''
           override: 1
           sticky: 0
-  page:
-    id: page
+  page_1:
+    id: page_1
     display_title: Page
     display_plugin: page
     position: '2'
@@ -106,8 +106,8 @@ display:
         type: normal
         title: Glossary
         weight: '0'
-  attachment:
-    id: attachment
+  attachment_1:
+    id: attachment_1
     display_title: Attachment
     display_plugin: attachment
     position: '3'
@@ -146,5 +146,5 @@ display:
           transform_dash: 0
       displays:
         default: default
-        page: page
+        page: page_1
       inherit_arguments: 0
