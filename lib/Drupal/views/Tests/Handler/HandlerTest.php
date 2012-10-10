@@ -173,6 +173,34 @@ class HandlerTest extends ViewTestBase {
     $this->assertEqual('and', $handler->operator);
   }
 
+   /**
+   * Tests the order of handlers is the same before and after saving.
+   */
+  public function testHandlerWeights() {
+    $handler_types = array('fields', 'filters', 'sorts');
+
+    $view = views_get_view('test_view_handler_weight');
+    $view->initDisplay();
+
+    // Store the order of handlers before saving the view.
+    $original_order = array();
+    foreach ($handler_types as $type) {
+      $original_order[$type] = array_keys($view->display_handler->getOption($type));
+    }
+
+    // Save the view and see if our filters are in the same order.
+    $view->save();
+    $view = views_get_view('test_view_handler_weight');
+    $view->initDisplay();
+
+    foreach ($handler_types as $type) {
+      $loaded_order = array_keys($view->display_handler->getOption($type));
+      $this->assertIdentical($original_order[$type], $loaded_order);
+    }
+
+  }
+
+
   /**
    * Check to see if a value is the same as the value on a certain handler.
    *
