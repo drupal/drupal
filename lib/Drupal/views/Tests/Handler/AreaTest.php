@@ -104,4 +104,30 @@ class AreaTest extends HandlerTestBase {
     $this->assertTrue(strpos($output, $empty_string) !== FALSE);
   }
 
+  /**
+   * Tests overriding the view title using the area title handler.
+   */
+  public function testTitleArea() {
+    $view = views_get_view('frontpage');
+    $view->initDisplay('page_1');
+
+    // Add the title area handler to the empty area.
+    $view->displayHandlers['page_1']->overrideOption('empty', array(
+      'title' => array(
+        'id' => 'title',
+        'table' => 'views',
+        'field' => 'title',
+        'admin_label' => '',
+        'label' => '',
+        'empty' => '0',
+        'title' => 'Overridden title',
+      ),
+    ));
+
+    $view->storage->enable();
+
+    $this->drupalGet('frontpage');
+    $this->assertText('Overridden title', 'Overridden title found.');
+  }
+
 }
