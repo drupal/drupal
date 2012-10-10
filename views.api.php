@@ -283,8 +283,7 @@
 /**
  * @defgroup views_hooks Views hooks
  * @{
- * Hooks that can be implemented by other modules in order to implement the
- * Views API.
+ * Hooks that allow other modules to implement the Views API.
  */
 
 /**
