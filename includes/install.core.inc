@@ -847,6 +847,7 @@ function install_verify_pdo() {
  *
  * @see install_settings_form_validate()
  * @see install_settings_form_submit()
+ * @ingroup forms
  */
 function install_settings_form($form, &$form_state, &$install_state) {
   global $databases;
@@ -1070,6 +1071,8 @@ function _install_select_profile($profiles) {
  *   Array of metadata about state of form processing.
  * @param $profile_files
  *   Array of .profile files, as returned from file_scan_directory().
+ *
+ * @ingroup forms
  */
 function install_select_profile_form($form, &$form_state, $profile_files) {
   $profiles = array();
@@ -1246,7 +1249,9 @@ function install_select_locale(&$install_state) {
 }
 
 /**
- * Form API array definition for language selection.
+ * Form constructor for the language selection form.
+ *
+ * @ingroup forms
  */
 function install_select_locale_form($form, &$form_state, $locales, $profilename) {
   include_once DRUPAL_ROOT . '/includes/iso.inc';
@@ -1419,6 +1424,7 @@ function install_import_locales(&$install_state) {
  *
  * @see install_configure_form_validate()
  * @see install_configure_form_submit()
+ * @ingroup forms
  */
 function install_configure_form($form, &$form_state, &$install_state) {
   drupal_set_title(st('Configure site'));
@@ -1671,11 +1677,15 @@ function install_check_requirements($install_state) {
 }
 
 /**
- * Returns a Form API array definition for site configuration.
+ * Form constructor for a site configuration form.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
  *
  * @see install_configure_form()
  * @see install_configure_form_validate()
  * @see install_configure_form_submit()
+ * @ingroup forms
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
