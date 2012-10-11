@@ -399,6 +399,19 @@ function update_prepare_d8_language() {
       // array.
       variable_set('language_default', (array) $language_default);
     }
+
+    // Add column to track customized string status to locales_target.
+    // When updating in a non-English language, the locale translation system is
+    // triggered, which attempts to query string translations already.
+    if (db_table_exists('locales_target') && !db_field_exists('locales_target', 'customized')) {
+      $spec = array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0, // LOCALE_NOT_CUSTOMIZED
+        'description' => 'Boolean indicating whether the translation is custom to this site.',
+      );
+      db_add_field('locales_target', 'customized', $spec);
+    }
   }
 }
 

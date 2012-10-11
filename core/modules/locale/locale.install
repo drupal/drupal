@@ -513,19 +513,6 @@ function locale_update_8005() {
 }
 
 /**
- * Add column to track customized string status to locales_target.
- */
-function locale_update_8006() {
-  $spec = array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0, // LOCALE_NOT_CUSTOMIZED
-    'description' => 'Boolean indicating whether the translation is custom to this site.',
-  );
-  db_add_field('locales_target', 'customized', $spec);
-}
-
-/**
  * Convert language_negotiation_* variables to use the new callbacks.
  *
  * @ingroup config_upgrade
