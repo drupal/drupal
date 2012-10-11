@@ -119,7 +119,7 @@ class CoreBundle extends Bundle
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
       ->addTag('kernel.event_subscriber');
     $container->register('config_global_override_subscriber', '\Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
-    $container->register('exception_listener', 'Symfony\Component\HttpKernel\EventListener\ExceptionListener')
+    $container->register('exception_listener', 'Drupal\Core\EventSubscriber\ExceptionListener')
       ->addTag('kernel.event_subscriber')
       ->addArgument(new Reference('service_container'))
       ->setFactoryClass('Drupal\Core\ExceptionController')
