@@ -1,3 +1,9 @@
+/**
+ * @file
+ * Javascript behaviors for the Book module.
+ */
+
+
 (function ($) {
 
 Drupal.behaviors.bookFieldsetSummaries = {
