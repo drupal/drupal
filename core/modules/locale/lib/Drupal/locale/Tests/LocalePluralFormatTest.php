@@ -74,7 +74,7 @@ class LocalePluralFormatTest extends WebTestBase {
         1 => '@count hours',
       ),
       'fr' => array(
-        0 => '1 heure',
+        0 => '@count heure',
         1 => '@count heures',
       ),
       'hr' => array(
@@ -153,7 +153,7 @@ class LocalePluralFormatTest extends WebTestBase {
     // Ensure our imported translations exist in the file.
     $this->assertRaw("msgid \"Monday\"\nmsgstr \"lundi\"", t('French translations present in exported file.'));
     // Check for plural export specifically.
-    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"1 heure\"\nmsgstr[1] \"@count heures\"", t('Plural translations exported properly.'));
+    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count heure\"\nmsgstr[1] \"@count heures\"", 'Plural translations exported properly.');
 
     // Get the Croatian translations.
     $this->drupalPost('admin/config/regional/translate/export', array(
@@ -196,13 +196,13 @@ class LocalePluralFormatTest extends WebTestBase {
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // Plural values for the langcode fr.
-    $this->assertText('1 heure');
+    $this->assertText('@count heure');
     $this->assertText('@count heures');
     $this->assertNoText('2. plural form');
 
     // Edit langcode fr translations and see if that took effect.
     $edit = array(
-      'strings[10][translations][0]' => '1 heure edited',
+      'strings[10][translations][0]' => '@count heure edited',
     );
     $this->drupalPost($path, $edit, t('Save translations'));
 
@@ -245,7 +245,7 @@ class LocalePluralFormatTest extends WebTestBase {
       'langcode' => 'fr',
     ), t('Export'));
     // Check for plural export specifically.
-    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"1 heure edited\"\nmsgstr[1] \"@count heures\"", t('Edited French plural translations for hours exported properly.'));
+    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count heure edited\"\nmsgstr[1] \"@count heures\"", 'Edited French plural translations for hours exported properly.');
     $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"1 jour\"\nmsgstr[1] \"@count jours\"", t('Added French plural translations for days exported properly.'));
 
     // Get the Croatian translations.
@@ -288,7 +288,7 @@ msgstr ""
 
 msgid "1 hour"
 msgid_plural "@count hours"
-msgstr[0] "1 heure"
+msgstr[0] "@count heure"
 msgstr[1] "@count heures"
 
 msgid "Monday"
