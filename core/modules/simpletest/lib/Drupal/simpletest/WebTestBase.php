@@ -684,6 +684,7 @@ abstract class WebTestBase extends TestBase {
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     install_drupal($settings);
+    $this->rebuildContainer();
 
     // Restore the original Simpletest batch.
     $batch = &batch_get();
@@ -716,23 +717,8 @@ abstract class WebTestBase extends TestBase {
     if ($modules) {
       $success = module_enable($modules, TRUE);
       $this->assertTrue($success, t('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
+      $this->rebuildContainer();
     }
-
-    // Create a new DrupalKernel for testing purposes, now that all required
-    // modules have been enabled. This also stores a new dependency injection
-    // container in drupal_container(). Drupal\simpletest\TestBase::tearDown()
-    // restores the original container.
-    // @see Drupal\Core\DrupalKernel::initializeContainer()
-    $this->kernel = new DrupalKernel('testing', FALSE);
-    // Booting the kernel is necessary to initialize the new DIC. While
-    // normally the kernel gets booted on demand in
-    // Symfony\Component\HttpKernel\handle(), this kernel needs manual booting
-    // as it is not used to handle a request.
-    $this->kernel->boot();
-    // The DrupalKernel does not update the container in drupal_container(), but
-    // replaces it with a new object. We therefore need to replace the minimal
-    // boostrap container that has been set up by TestBase::prepareEnvironment().
-    $this->container = drupal_container();
 
     // Reset/rebuild all data structures after enabling the modules.
     $this->resetAll();
