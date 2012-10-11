@@ -441,7 +441,44 @@ function locale_translate_edit_form_submit($form, &$form_state) {
 }
 
 /**
- * Default theme function for translatione edit form.
+ * Page callback: Checks for translation updates and displays the translations status.
+ *
+ * Manually checks the translation status without the use of cron.
+ *
+ * @see locale_menu()
+ */
+function locale_translation_manual_status() {
+  module_load_include('compare.inc', 'locale');
+
+  locale_translation_flush_projects();
+  $projects = locale_translation_get_projects();
+  locale_translation_check_projects($projects);
+
+  // Execute a batch if required.
+  if (batch_get()) {
+    batch_process('admin/reports/translations');
+  }
+  drupal_goto('admin/reports/translations');
+}
+
+/**
+ * Page callback: Display the current translation status.
+ *
+ * @see locale_menu()
+ */
+function locale_translation_status() {
+  $languages = locale_translatable_language_list();
+  if (!$languages) {
+    drupal_set_message(t('No translatable languages available. <a href="@add_lanuage">Add language</a> first.', array('@add_lanuage' => url('admin/config/regional/language'))), 'warning');
+  }
+
+  // @todo Calculate and display the translation status here. See the follow-up
+  // issue for translation interface: http://drupal.org/node/1804702
+  return 'TODO: Show the translation status here';
+}
+
+/**
+ * Default theme function for translation edit form.
  */
 function theme_locale_translate_edit_form_strings($variables) {
   $output = '';

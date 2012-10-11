@@ -7,4 +7,4 @@ hidden = TRUE
 
 ; Definitions for interface translations.
 interface translation project = locale_test
-interface translation server pattern = core/modules/locale/test/modules/locale_test/%project-%version.%language.po
+interface translation server pattern = core/modules/locale/test/test.%language.po

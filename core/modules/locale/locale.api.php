@@ -28,7 +28,18 @@
  * the module's folder.
  * @code
  * interface translation project = example_module
- * interface translation server pattern = sites/example.com/modules/custom/example_module/%project-%version.%language.po
+ * interface translation server pattern = modules/custom/example_module/%project-%version.%language.po
+ * @endcode
+ *
+ * Streamwrappers can be used in the server pattern definition. The interface
+ * translations directory (Configuration > Media > File system) can be addressed
+ * using the "translations://" streamwrapper. But also other streamwrappers can
+ * be used.
+ * @code
+ * interface translation server pattern = translations://%project-%version.%language.po
+ * @endcode
+ * @code
+ * interface translation server pattern = public://translations/%project-%version.%language.po
  * @endcode
  *
  * Multiple custom modules or themes sharing the same po file should have
@@ -97,7 +108,7 @@
  * @param array $projects
  *   Project data as returned by update_get_projects().
  *
- * @see locale_project_list().
+ * @see locale_translation_project_list().
  */
 function hook_locale_translation_projects_alter(&$projects) {
   // The translations are located at a custom translation sever.

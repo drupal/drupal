@@ -10,5 +10,6 @@
  */
 function locale_test_uninstall() {
   // Clear variables.
-  variable_del('locale_translation_test_system_info_alter');
+  state()->delete('locale_translation_test_system_info_alter');
+  state()->delete('locale_translation_test_projects');
 }

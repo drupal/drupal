@@ -69,6 +69,40 @@ const LOCALE_NOT_CUSTOMIZED = 0;
 const LOCALE_CUSTOMIZED = 1;
 
 /**
+ * Translation update mode: Use local files only.
+ *
+ * When checking for available translation updates, only local files will be
+ * used. Any remote translation file will be ignored. Also custom modules and
+ * themes which have set a "server pattern" to use a remote translation server
+ * will be ignored.
+ */
+const LOCALE_TRANSLATION_USE_SOURCE_LOCAL = 'local';
+
+/**
+ * Translation update mode: Use both remote and local files.
+ *
+ * When checking for available translation updates, both local and remote files
+ * will be checked.
+ */
+const LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL = 'remote_and_local';
+
+/**
+ * Default location of gettext file on the translation server.
+ *
+ * @see locale_translation_default_translation_server().
+ */
+const LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN = 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po';
+
+/**
+ * Default file name of translation files stored in the local file system.
+ *
+ * The file name containing placeholders which are also used by the server
+ * pattern. See locale_translation_build_server_pattern() for supported
+ * placeholders.
+ */
+const LOCALE_TRANSLATION_DEFAULT_FILENAME = '%project-%version.%language.po';
+
+/**
  * Implements hook_help().
  */
 function locale_help($path, $arg) {
@@ -141,6 +175,20 @@ function locale_menu() {
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,
     'file' => 'locale.bulk.inc',
+  );
+  $items['admin/reports/translations'] = array(
+    'title' => 'Available translation updates',
+    'description' => 'Get a status report about available interface translations for your installed modules and themes.',
+    'page callback' => 'locale_translation_status',
+    'access arguments' => array('translate interface'),
+    'file' => 'locale.pages.inc',
+  );
+  $items['admin/reports/translations/check'] = array(
+    'title' => 'Manual translation update check',
+    'page callback' => 'locale_translation_manual_status',
+    'access arguments' => array('translate interface'),
+    'type' => MENU_CALLBACK,
+    'file' => 'locale.pages.inc',
   );
 
   return $items;
@@ -227,7 +275,20 @@ function locale_language_delete($language) {
   cache()->delete('locale:' . $language->langcode);
 }
 
-// Locale core functionality
+/**
+ * Returns list of translatable languages.
+ *
+ * @return array
+ *   Array of installed languages keyed by language name. English is omitted
+ *   unless it is marked as translatable.
+ */
+function locale_translatable_language_list() {
+  $languages = language_list();
+  if (!locale_translate_english()) {
+    unset($languages['en']);
+  }
+  return $languages;
+}
 
 /**
  * Provides interface translation services.
@@ -644,6 +705,20 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
   if ($form['file_default_scheme']) {
     $form['file_default_scheme']['#weight'] = 20;
   }
+  $form['#submit'][] = 'locale_system_file_system_settings_submit';
+}
+
+/**
+ * Submit handler for the file system settings form.
+ *
+ * Clears the translation status when the Interface translations directory
+ * changes. Without a translations directory local po files in the directory
+ * should be ignored. The old translation status is no longer valid.
+ */
+function locale_system_file_system_settings_submit(&$form, $form_state) {
+  if ($form['locale_translate_file_directory']['#default_value'] != $form_state['values']['locale_translate_file_directory']) {
+    locale_translation_clear_status();
+  }
 }
 
 /**
@@ -667,6 +742,14 @@ function locale_preprocess_node(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Clear the translation status cache.
+ */
+function locale_translation_clear_status() {
+  state()->delete('locale_translation_status');
+  state()->delete('locale_translation_status_last_update');
 }
 
 /**
@@ -819,10 +902,7 @@ function _locale_invalidate_js($langcode = NULL) {
 
   if (empty($langcode)) {
     // Invalidate all languages.
-    $languages = language_list();
-    if (!locale_translate_english()) {
-      unset($languages['en']);
-    }
+    $languages = locale_translatable_language_list();
     foreach ($languages as $lcode => $data) {
       $parsed['refresh:' . $lcode] = 'waiting';
     }
