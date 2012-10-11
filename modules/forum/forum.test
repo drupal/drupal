@@ -197,6 +197,14 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
     $this->assertResponse(200);
+
+    // Make sure constructing a forum node programmatically produces no notices.
+    $node = new stdClass;
+    $node->type = 'forum';
+    $node->title = 'Test forum notices';
+    $node->uid = 1;
+    $node->taxonomy_forums[LANGUAGE_NONE][0]['tid'] = $this->root_forum['tid'];
+    node_save($node);
   }
 
   /**
