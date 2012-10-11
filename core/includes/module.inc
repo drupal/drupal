@@ -867,7 +867,14 @@ function module_implements_reset() {
 }
 
 /**
- * Retrieves a list of what hooks are explicitly declared.
+ * Retrieves a list of hooks that are declared through hook_hook_info().
+ *
+ * @return
+ *   An associative array whose keys are hook names and whose values are an
+ *   associative array containing a group name. The structure of the array
+ *   is the same as the return value of hook_hook_info().
+ *
+ * @see hook_hook_info()
  */
 function module_hook_info() {
   // When this function is indirectly invoked from bootstrap_invoke_all() prior
