@@ -1565,8 +1565,7 @@ function format_string($string, array $args = array()) {
 /**
  * Encodes special characters in a plain-text string for display as HTML.
  *
- * Also validates strings as UTF-8 to prevent cross site scripting attacks on
- * Internet Explorer 6.
+ * Also validates strings as UTF-8.
  *
  * @param $text
  *   The text to be checked or processed.
