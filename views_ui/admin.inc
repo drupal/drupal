@@ -624,15 +624,20 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   if (!empty($destination)) {
     // Find out the first display which has a changed path and redirect to this url.
     $old_view = views_get_view($form_state['view']->storage->name);
+    $old_view->initDisplay();
     foreach ($old_view->displayHandlers as $id => $display) {
       // Only check for displays with a path.
-      if (!isset($display->display['display_options']['path'])) {
+      $old_path = $display->getOption('path');
+      if (empty($old_path)) {
         continue;
       }
-      $old_path = $display->display['display_options']['path'];
-      if (($display->display['display_plugin'] == 'page') && ($old_path == $destination) && ($old_path != $form_state['view']->display[$id]->display['display_options']['path'])) {
-        $destination = $form_state['view']->displayHandlers[$id]->display['display_options']['path'];
+
+      if (($display->getPluginId() == 'page') && ($old_path == $destination) && ($old_path != $form_state['view']->displayHandlers[$id]->getOption('path'))) {
+        $destination = $form_state['view']->displayHandlers[$id]->getOption('path');
         $query->remove('destination');
+        // @todo For whatever reason drupal_goto is still using $_GET.
+        // @see http://drupal.org/node/1668866
+        unset($_GET['destination']);
       }
     }
     $form_state['redirect'] = $destination;
