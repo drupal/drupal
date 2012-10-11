@@ -1422,8 +1422,8 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // Call any element-specific validators. These must act on the element
     // #value data.
     elseif (isset($elements['#element_validate'])) {
-      foreach ($elements['#element_validate'] as $function) {
-        $function($elements, $form_state, $form_state['complete_form']);
+      foreach ($elements['#element_validate'] as $callback) {
+        call_user_func_array($callback, array(&$elements, &$form_state, &$form_state['complete_form']));
       }
     }
 
