@@ -105,13 +105,13 @@ class MemoryBackend implements CacheBackendInterface {
     );
   }
 
-  /*
+  /**
    * Calculates a checksum so data can be invalidated using tags.
    */
-  function checksum($tags) {
-    $checksum = "";
+  public function checksum($tags) {
+    $checksum = '';
 
-    foreach($tags as $tag) {
+    foreach ($tags as $tag) {
       // Has the tag already been invalidated.
       if (isset($this->invalidatedTags[$tag])) {
         $checksum = $checksum . $tag . ':' . $this->invalidatedTags[$tag];
@@ -201,8 +201,7 @@ class MemoryBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
    */
   public function invalidateTags(array $tags) {
-    $flat_tags = $this->flattenTags($tags);
-    foreach($flat_tags as $tag) {
+    foreach ($this->flattenTags($tags) as $tag) {
       if (isset($this->invalidatedTags[$tag])) {
         $this->invalidatedTags[$tag] = $this->invalidatedTags[$tag] + 1;
       }

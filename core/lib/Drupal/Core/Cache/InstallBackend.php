@@ -36,26 +36,26 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::get().
    */
-  function get($cid) {
+  public function get($cid) {
     return FALSE;
   }
 
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::getMultiple().
    */
-  function getMultiple(&$cids) {
+  public function getMultiple(&$cids) {
     return array();
   }
 
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::set().
    */
-  function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {}
+  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {}
 
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::delete().
    */
-  function delete($cid) {
+  public function delete($cid) {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
         parent::delete($cid);
@@ -67,7 +67,7 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::deleteMultiple().
    */
-  function deleteMultiple(array $cids) {
+  public function deleteMultiple(array $cids) {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
         parent::deleteMultiple($cids);
@@ -79,7 +79,7 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::invalidateTags().
    */
-  function invalidateTags(array $tags) {
+  public function invalidateTags(array $tags) {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
         parent::invalidateTags($tags);
@@ -91,7 +91,7 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::flush().
    */
-  function flush() {
+  public function flush() {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
         parent::flush();
@@ -103,7 +103,7 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::expire().
    */
-  function expire() {
+  public function expire() {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
         parent::expire();
@@ -115,7 +115,7 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::garbageCollection().
    */
-  function garbageCollection() {
+  public function garbageCollection() {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
         parent::garbageCollection();
@@ -127,7 +127,7 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::isEmpty().
    */
-  function isEmpty() {
+  public function isEmpty() {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
         return parent::isEmpty();

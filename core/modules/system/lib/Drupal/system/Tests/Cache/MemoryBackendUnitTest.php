@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Cache\ArrayBackendUnitTest.
+ * Definition of Drupal\system\Tests\Cache\MemoryBackendUnitTest.
  */
 
 namespace Drupal\system\Tests\Cache;

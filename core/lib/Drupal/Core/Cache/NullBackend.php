@@ -23,51 +23,51 @@ class NullBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::__construct().
    */
-  function __construct($bin) {}
+  public function __construct($bin) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::get().
    */
-  function get($cid) {
+  public function get($cid) {
     return FALSE;
   }
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
-  function getMultiple(&$cids) {
+  public function getMultiple(&$cids) {
     return array();
   }
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {}
+  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
-  function delete($cid) {}
+  public function delete($cid) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
-  function deleteMultiple(array $cids) {}
+  public function deleteMultiple(array $cids) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
    */
-  function flush() {}
+  public function flush() {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::expire().
    */
-  function expire() {}
+  public function expire() {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
    */
-  function garbageCollection() {}
+  public function garbageCollection() {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
@@ -77,7 +77,7 @@ class NullBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
    */
-  function isEmpty() {
+  public function isEmpty() {
     return TRUE;
   }
 }

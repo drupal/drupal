@@ -38,8 +38,8 @@ namespace Drupal\Core\Cache;
  * To access your custom cache bin, specify the name of the bin when storing
  * or retrieving cached data:
  * @code
- *  cache_set($cid, $data, 'custom_bin', $expire);
- *  cache_get($cid, 'custom_bin');
+ *  cache('custom_bin')->set($cid, $data, $expire);
+ *  cache('custom_bin')->get($cid);
  * @endcode
  *
  * @see cache()
@@ -60,7 +60,7 @@ interface CacheBackendInterface {
    * @param $bin
    *   The cache bin for which the object is created.
    */
-  function __construct($bin);
+  public function __construct($bin);
 
   /**
    * Returns data from the persistent cache.
@@ -74,7 +74,7 @@ interface CacheBackendInterface {
    * @return
    *   The cache or FALSE on failure.
    */
-  function get($cid);
+  public function get($cid);
 
   /**
    * Returns data from the persistent cache when given an array of cache IDs.
@@ -87,7 +87,7 @@ interface CacheBackendInterface {
    * @return
    *   An array of the items successfully returned from cache indexed by cid.
    */
-  function getMultiple(&$cids);
+  public function getMultiple(&$cids);
 
   /**
    * Stores data in the persistent cache.
@@ -111,7 +111,7 @@ interface CacheBackendInterface {
    *   a node, both the node ID and the author's user ID might be passed in as
    *   tags. For example array('node' => array(123), 'user' => array(92)).
    */
-  function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array());
+  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array());
 
   /**
    * Deletes an item from the cache.
@@ -119,7 +119,7 @@ interface CacheBackendInterface {
    * @param $cid
    *    The cache ID to delete.
    */
-  function delete($cid);
+  public function delete($cid);
 
   /**
    * Deletes multiple items from the cache.
@@ -127,17 +127,17 @@ interface CacheBackendInterface {
    * @param $cids
    *   An array of $cids to delete.
    */
-  function deleteMultiple(Array $cids);
+  public function deleteMultiple(Array $cids);
 
   /**
    * Flushes all cache items in a bin.
    */
-  function flush();
+  public function flush();
 
   /**
    * Expires temporary items from the cache.
    */
-  function expire();
+  public function expire();
 
   /**
    * Invalidates each tag in the $tags array.
@@ -148,12 +148,12 @@ interface CacheBackendInterface {
    *
    * @see CacheBackendInterface::set()
    */
-  function invalidateTags(array $tags);
+  public function invalidateTags(array $tags);
 
   /**
    * Performs garbage collection on a cache bin.
    */
-  function garbageCollection();
+  public function garbageCollection();
 
   /**
    * Checks if a cache bin is empty.
@@ -164,5 +164,5 @@ interface CacheBackendInterface {
    * @return
    *   TRUE if the cache bin specified is empty.
    */
-  function isEmpty();
+  public function isEmpty();
 }

@@ -31,7 +31,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::__construct().
    */
-  function __construct($bin) {
+  public function __construct($bin) {
     // All cache tables should be prefixed with 'cache_', except for the
     // default 'cache' bin.
     if ($bin != 'cache') {
@@ -43,7 +43,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::get().
    */
-  function get($cid) {
+  public function get($cid) {
     $cids = array($cid);
     $cache = $this->getMultiple($cids);
     return reset($cache);
@@ -52,7 +52,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
-  function getMultiple(&$cids) {
+  public function getMultiple(&$cids) {
     try {
       // When serving cached pages, the overhead of using ::select() was found
       // to add around 30% overhead to the request. Since $this->bin is a
@@ -93,8 +93,6 @@ class DatabaseBackend implements CacheBackendInterface {
    *   valid item to load.
    */
   protected function prepareItem($cache) {
-    global $user;
-
     if (!isset($cache->data)) {
       return FALSE;
     }
@@ -118,7 +116,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
     $fields = array(
       'serialized' => 0,
       'created' => REQUEST_TIME,
@@ -149,7 +147,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
-  function delete($cid) {
+  public function delete($cid) {
     Database::getConnection()->delete($this->bin)
       ->condition('cid', $cid)
       ->execute();
@@ -158,7 +156,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
-  function deleteMultiple(array $cids) {
+  public function deleteMultiple(array $cids) {
     // Delete in chunks when a large array is passed.
     do {
       Database::getConnection()->delete($this->bin)
@@ -171,14 +169,14 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
    */
-  function flush() {
+  public function flush() {
     Database::getConnection()->truncate($this->bin)->execute();
   }
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::expire().
    */
-  function expire() {
+  public function expire() {
     Database::getConnection()->delete($this->bin)
       ->condition('expire', CacheBackendInterface::CACHE_PERMANENT, '<>')
       ->condition('expire', REQUEST_TIME, '<')
@@ -188,7 +186,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
    */
-  function garbageCollection() {
+  public function garbageCollection() {
     $this->expire();
   }
 
@@ -196,9 +194,9 @@ class DatabaseBackend implements CacheBackendInterface {
    * Compares two checksums of tags. Used to determine whether to serve a cached
    * item or treat it as invalidated.
    *
-   * @param integer @checksum
+   * @param integer $checksum
    *   The initial checksum to compare against.
-   * @param array @tags
+   * @param array $tags
    *   An array of tags to calculate a checksum for.
    *
    * @return boolean
@@ -214,7 +212,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * @param array $tags
    *   Associative array of tags to flatten.
    *
-   * @return
+   * @return array
    *   Numeric array of flattened tag identifiers.
    */
   protected function flattenTags(array $tags) {
@@ -288,7 +286,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
    */
-  function isEmpty() {
+  public function isEmpty() {
     $this->garbageCollection();
     $query = Database::getConnection()->select($this->bin);
     $query->addExpression('1');
