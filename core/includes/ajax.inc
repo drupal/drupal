@@ -376,8 +376,8 @@ function ajax_form_callback() {
   if (!empty($form_state['triggering_element'])) {
     $callback = $form_state['triggering_element']['#ajax']['callback'];
   }
-  if (!empty($callback) && function_exists($callback)) {
-    return $callback($form, $form_state);
+  if (!empty($callback) && is_callable($callback)) {
+    return call_user_func_array($callback, array(&$form, &$form_state));
   }
 }
 

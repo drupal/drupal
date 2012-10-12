@@ -5,6 +5,8 @@
  * Simpletest mock module for Ajax forms testing.
  */
 
+use Drupal\ajax_forms_test\Callbacks;
+
 /**
  * Implements hook_menu().
  */
@@ -41,6 +43,8 @@ function ajax_forms_test_menu() {
  * Tests form_state['values'] during callback.
  */
 function ajax_forms_test_simple_form($form, &$form_state) {
+  $object = new Callbacks();
+
   $form = array();
   $form['select'] = array(
     '#type' => 'select',
@@ -49,7 +53,7 @@ function ajax_forms_test_simple_form($form, &$form_state) {
       'green' => 'green',
       'blue' => 'blue'),
     '#ajax' => array(
-      'callback' => 'ajax_forms_test_simple_form_select_callback',
+      'callback' => array($object, 'selectCallback'),
     ),
     '#suffix' => '<div id="ajax_selected_color">No color yet selected</div>',
   );
@@ -58,7 +62,7 @@ function ajax_forms_test_simple_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Test checkbox'),
     '#ajax' => array(
-       'callback' => 'ajax_forms_test_simple_form_checkbox_callback',
+       'callback' => array($object, 'checkboxCallback'),
     ),
     '#suffix' => '<div id="ajax_checkbox_value">No action yet</div>',
   );
@@ -67,26 +71,6 @@ function ajax_forms_test_simple_form($form, &$form_state) {
     '#value' => t('submit'),
   );
   return $form;
-}
-
-/**
- * Ajax form callback: Selects color.
- */
-function ajax_forms_test_simple_form_select_callback($form, $form_state) {
-  $commands = array();
-  $commands[] = ajax_command_html('#ajax_selected_color', $form_state['values']['select']);
-  $commands[] = ajax_command_data('#ajax_selected_color', 'form_state_value_select', $form_state['values']['select']);
-  return array('#type' => 'ajax', '#commands' => $commands);
-}
-
-/**
- * Ajax form callback: Selects checkbox value.
- */
-function ajax_forms_test_simple_form_checkbox_callback($form, $form_state) {
-  $commands = array();
-  $commands[] = ajax_command_html('#ajax_checkbox_value', (int) $form_state['values']['checkbox']);
-  $commands[] = ajax_command_data('#ajax_checkbox_value', 'form_state_value_select', (int) $form_state['values']['checkbox']);
-  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
