@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -161,11 +162,9 @@ class GroupwiseMax extends RelationshipPluginBase {
    * We use this to obtain our subquery SQL.
    */
   function get_temporary_view() {
-    $view = new View(array(), 'view');
-    $view->vid = 'new'; // @todo: what's this?
-    $view->base_table = $this->definition['base'];
+    $view = entity_create('view', array('base_table' => $this->definition['base']));
     $view->addDisplay('default');
-    return $view;
+    return $view->getExecutable();
   }
 
   /**
@@ -173,7 +172,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    */
   public function submitOptionsForm(&$form, &$form_state) {
     $cid = 'views_relationship_groupwise_max:' . $this->view->storage->name . ':' . $this->view->current_display . ':' . $this->options['id'];
-    cache('views_data')->delete($cid);
+    cache('views_results')->delete($cid);
   }
 
   /**
@@ -224,15 +223,18 @@ class GroupwiseMax extends RelationshipPluginBase {
     $base_field = $views_data['table']['base']['field'];
     $temp_view->addItem('default', 'field', $this->definition['base'], $this->definition['field']);
 
+    $relationship_id = NULL;
+    // Add the used relationship for the subjoin, if defined.
+    if (isset($this->definition['relationship'])) {
+      list($relationship_table, $relationship_field) = explode(':', $this->definition['relationship']);
+      $relationship_id = $temp_view->addItem('default', 'relationship', $relationship_table, $relationship_field);
+    }
+    $temp_item_options = array('relationship' => $relationship_id);
+
     // Add the correct argument for our relationship's base
     // ie the 'how to get back to base' argument.
     // The relationship definition tells us which one to use.
-    $temp_view->addItem(
-      'default',
-      'argument',
-      $this->definition['argument table'], // eg 'term_node',
-      $this->definition['argument field'] //  eg 'tid'
-    );
+    $temp_view->addItem('default', 'argument', $this->definition['argument table'], $this->definition['argument field'], $temp_item_options);
 
     // Build the view. The creates the query object and produces the query
     // string but does not run any queries.
@@ -361,13 +363,13 @@ class GroupwiseMax extends RelationshipPluginBase {
     else {
       // Get the stored subquery SQL string.
       $cid = 'views_relationship_groupwise_max:' . $this->view->storage->name . ':' . $this->view->current_display . ':' . $this->options['id'];
-      $cache = cache('views_data')->get($cid);
+      $cache = cache('views_results')->get($cid);
       if (isset($cache->data)) {
         $def['left_query'] = $cache->data;
       }
       else {
         $def['left_query'] = $this->left_query($this->options);
-        cache('views_data')->set($cid, $def['left_query']);
+        cache('views_results')->set($cid, $def['left_query']);
       }
     }
 

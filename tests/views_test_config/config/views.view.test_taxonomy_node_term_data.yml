@@ -54,6 +54,12 @@ display:
           table: node
           vocabularies:
             tags: '0'
+      sorts:
+        nid:
+          field: nid
+          id: nid
+          order: DESC
+          table: nid
       style:
         type: default
       row:

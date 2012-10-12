@@ -76,9 +76,10 @@ function user_views_data() {
       'relationship field' => 'uid',
       'outer field' => 'users.uid',
       'argument table' => 'users',
-      'argument field' =>  'uid',
-      'base'   => 'node',
-      'field'  => 'nid',
+      'argument field' => 'uid',
+      'base' => 'node',
+      'field' => 'nid',
+      'relationship' => 'node:uid'
     ),
   );
 

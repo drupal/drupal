@@ -169,6 +169,7 @@ function taxonomy_views_data() {
       'argument field' =>  'tid',
       'base'   => 'node',
       'field'  => 'nid',
+      'relationship' => 'node:term_node_tid'
     ),
   );
 
