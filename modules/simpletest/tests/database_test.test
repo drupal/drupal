@@ -3749,9 +3749,9 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
 class DatabaseNextIdCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Sequences API'),
-      'description' => t('Test the secondary sequences API.'),
-      'group' => t('Database'),
+      'name' => 'Sequences API',
+      'description' => 'Test the secondary sequences API.',
+      'group' => 'Database',
     );
   }
 
@@ -3776,9 +3776,9 @@ class DatabaseNextIdCase extends DrupalWebTestCase {
 class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Empty statement'),
-      'description' => t('Test the empty pseudo-statement class.'),
-      'group' => t('Database'),
+      'name' => 'Empty statement',
+      'description' => 'Test the empty pseudo-statement class.',
+      'group' => 'Database',
     );
   }
 
