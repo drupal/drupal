@@ -129,8 +129,6 @@ function template_preprocess_views_view(&$vars) {
             'view_display_id' => $view->current_display,
             'view_args' => check_plain(implode('/', $view->args)),
             'view_path' => check_plain(current_path()),
-            // Pass through URL to ensure we get e.g. language prefixes.
-//            'view_base_path' => isset($view->display['page']) ? substr(url($view->display['page']['display_options']['path']), strlen($base_path)) : '',
             'view_base_path' => $view->getPath(),
             'view_dom_id' => $vars['dom_id'],
             // To fit multiple views on a page, the programmer may have
