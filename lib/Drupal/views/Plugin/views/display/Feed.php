@@ -151,8 +151,8 @@ class Feed extends Page {
     }
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
-      if (!empty($this->view->display[$display])) {
-        $attach_to = check_plain($this->view->display[$display]['display_title']);
+      if (!empty($this->view->storage->display[$display])) {
+        $attach_to = check_plain($this->view->storage->display[$display]['display_title']);
       }
     }
 

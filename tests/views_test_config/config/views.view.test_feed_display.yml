@@ -66,9 +66,7 @@ display:
     position: '0'
   feed:
     display_options:
-      displays:
-        default: default
-        page: page
+      displays: {}
       pager:
         type: some
       path: test-feed-display.xml
