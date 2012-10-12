@@ -176,6 +176,23 @@ class ModuleTest extends ViewTestBase {
   }
 
   /**
+   * Tests view enable and disable procedural wrapper functions.
+   */
+  function testStatusFunctions() {
+    $view = views_get_view('test_view_status')->storage;
+
+    $this->assertFalse($view->isEnabled(), 'The view status is disabled.');
+
+    views_enable_view($view);
+    $this->assertTrue($view->isEnabled(), 'A view has been enabled.');
+    $this->assertEqual($view->isEnabled(), views_view_is_enabled($view), 'views_view_is_enabled is correct.');
+
+    views_disable_view($view);
+    $this->assertFalse($view->isEnabled(), 'A view has been disabled.');
+    $this->assertEqual(!$view->isEnabled(), views_view_is_disabled($view), 'views_view_is_disabled is correct.');
+  }
+
+  /**
    * Helper to return an expected views option array.
    *
    * @param array $views

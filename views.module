@@ -12,6 +12,7 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\views\ViewStorage;
 
 /**
  * Views API version string.
@@ -1633,27 +1634,47 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
 /**
  * Returns whether the view is enabled.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param Drupal\views\ViewStorage $view
  *   The view object to check.
  *
  * @return bool
  *   Returns TRUE if a view is enabled, FALSE otherwise.
  */
-function views_view_is_enabled($view) {
+function views_view_is_enabled(ViewStorage $view) {
   return $view->isEnabled();
 }
 
 /**
  * Returns whether the view is disabled.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param Drupal\views\ViewStorage $view
  *   The view object to check.
  *
  * @return bool
  *   Returns TRUE if a view is disabled, FALSE otherwise.
  */
-function views_view_is_disabled($view) {
+function views_view_is_disabled(ViewStorage $view) {
   return !$view->isEnabled();
+}
+
+/**
+ * Enables a view.
+ *
+ * @param Drupal\views\ViewStorage $view
+ *   The ViewStorage object to disable.
+ */
+function views_enable_view(ViewStorage $view) {
+  $view->enable();
+}
+
+/**
+ * Disables a view.
+ *
+ * @param Drupal\views\ViewStorage $view
+ *   The ViewStorage object to disable.
+ */
+function views_disable_view(ViewStorage $view) {
+  $view->disable();
 }
 
 /**
