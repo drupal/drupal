@@ -26,5 +26,16 @@
       <link>http://example.com/example-turns-two</link>
       <description>Second example feed item description.</description>
     </item>
+    <item>
+      <title>Long link feed item title.</title>
+      <link>http://example.com/tomorrow/and/tomorrow/and/tomorrow/creeps/in/this/petty/pace/from/day/to/day/to/the/last/syllable/of/recorded/time/and/all/our/yesterdays/have/lighted/fools/the/way/to/dusty/death/out/out/brief/candle/life/is/but/a/walking/shadow/a/poor/player/that/struts/and/frets/his/hour/upon/the/stage/and/is/heard/no/more/it/is/a/tale/told/by/an/idiot/full/of/sound/and/fury/signifying/nothing</link>
+      <description>Long link feed item description.</description>
+    </item>
+    <item>
+      <title>Long author feed item title.</title>
+      <link>http://example.com/long/author</link>
+      <author>I wanted to get out and walk eastward toward the park through the soft twilight, but each time I tried to go I became entangled in some wild, strident argument which pulled me back, as if with ropes, into my chair. Yet high over the city our line of yellow windows must have contributed their share of human secrecy to the casual watcher in the darkening streets, and I was him too, looking up and wondering. I was within and without, simultaneously enchanted and repelled by the inexhaustible variety of life.</author>
+      <description>Long author feed item description.</description>
+    </item>
   </channel>
 </rss>
