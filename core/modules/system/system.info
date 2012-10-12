@@ -5,6 +5,3 @@ version = VERSION
 core = 8.x
 required = TRUE
 configure = admin/config/system
-
-; Tests in tests directory.
-files[] = tests/registry.test
