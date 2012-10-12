@@ -51,36 +51,6 @@ class AccessTest extends PluginTestBase {
   }
 
   /**
-   * Tests perm access plugin.
-   */
-  function testAccessPerm() {
-    $view = $this->createViewFromConfig('test_access_perm');
-
-    $access_plugin = $view->display_handler->getPlugin('access');
-
-    $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
-    $this->assertFalse($view->display_handler->access($this->web_user));
-    $this->assertTrue($view->display_handler->access($this->normal_user));
-  }
-
-  /**
-   * Tests role access plugin.
-   */
-  function testAccessRole() {
-    $view = $this->createViewFromConfig('test_access_role');
-
-    $view->displayHandlers['default']->options['access']['options']['role'] = array(
-      $this->normal_role => $this->normal_role,
-    );
-
-    $access_plugin = $view->display_handler->getPlugin('access');
-
-    $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
-    $this->assertFalse($view->display_handler->access($this->web_user));
-    $this->assertTrue($view->display_handler->access($this->normal_user));
-  }
-
-  /**
    * @todo Test abstract access plugin.
    */
 

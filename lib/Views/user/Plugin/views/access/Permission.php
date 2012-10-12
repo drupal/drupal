@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\access\Permission.
+ * Definition of Views\user\Plugin\views\access\Permission.
  */
 
-namespace Drupal\views\Plugin\views\access;
+namespace Views\user\Plugin\views\access;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Drupal\Core\Annotation\Translation;
 
 /**
