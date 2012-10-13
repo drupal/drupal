@@ -436,7 +436,7 @@ function install_run_tasks(&$install_state) {
       $install_state['tasks_performed'][] = $task_name;
       $install_state['installation_finished'] = empty($tasks_to_perform);
       if ($install_state['database_tables_exist'] && ($task['run'] == INSTALL_TASK_RUN_IF_NOT_COMPLETED || $install_state['installation_finished'])) {
-        variable_set('install_task', $install_state['installation_finished'] ? 'done' : $task_name);
+        state()->set('system.install_task', $install_state['installation_finished'] ? 'done' : $task_name);
       }
     }
     // Stop when there are no tasks left. In the case of an interactive
@@ -509,7 +509,7 @@ function install_run_task($task, &$install_state) {
   elseif ($task['type'] == 'batch') {
     // Start a new batch based on the task function, if one is not running
     // already.
-    $current_batch = variable_get('install_current_batch');
+    $current_batch = state()->get('system.install_current_batch');
     if (!$install_state['interactive'] || !$current_batch) {
       $batch = $function($install_state);
       if (empty($batch)) {
@@ -522,7 +522,7 @@ function install_run_task($task, &$install_state) {
       // task is currently running. Otherwise, we need to make sure the batch
       // will complete in one page request.
       if ($install_state['interactive']) {
-        variable_set('install_current_batch', $function);
+        state()->set('system.install_current_batch', $function);
       }
       else {
         $batch =& batch_get();
@@ -551,7 +551,7 @@ function install_run_task($task, &$install_state) {
       // longer requesting a batch ID.
       if ($output === FALSE) {
         // Return nothing so the next task will run in the same request.
-        variable_del('install_current_batch');
+        state()->delete('system.install_current_batch');
         return;
       }
       else {
@@ -918,16 +918,8 @@ function install_base_system(&$install_state) {
  *   is already installed.
  */
 function install_verify_completed_task() {
-  try {
-    if ($result = db_query("SELECT value FROM {variable} WHERE name = :name", array('name' => 'install_task'))) {
-      $task = unserialize($result->fetchField());
-    }
-  }
-  // Do not trigger an error if the database query fails, since the database
-  // might not be set up yet.
-  catch (Exception $e) {
-  }
-  if (isset($task)) {
+  $task = state()->get('system.install_task');
+  if ($task) {
     if ($task == 'done') {
       throw new Exception(install_already_done_error());
     }
@@ -2006,5 +1998,5 @@ function install_configure_form_submit($form, &$form_state) {
   user_login_finalize();
 
   // Record when this install ran.
-  variable_set('install_time', $_SERVER['REQUEST_TIME']);
+  state()->set('system.install_time', $_SERVER['REQUEST_TIME']);
 }

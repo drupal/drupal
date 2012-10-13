@@ -274,7 +274,7 @@ function system_requirements($phase) {
     // Determine when cron last ran.
     $cron_last = variable_get('cron_last');
     if (!is_numeric($cron_last)) {
-      $cron_last = variable_get('install_time', 0);
+      $cron_last = state()->get('system.install_time') ?: 0;
     }
 
     // Determine severity based on time since cron last ran.
@@ -2129,6 +2129,20 @@ function system_update_8024(&$sandbox) {
  */
 function system_update_8025() {
   db_drop_table('system');
+}
+
+/**
+ * Convert install_task and install_time variables to state api values.
+ */
+function system_update_8026() {
+  $variables = array('system.install_task', 'system.install_time');
+
+  foreach ($variables as $variable) {
+    if ($value = update_variable_get($variable, FALSE)) {
+      state()->set($variable, $value);
+    }
+    update_variable_del($variable);
+  }
 }
 
 /**
