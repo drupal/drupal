@@ -74,7 +74,7 @@ class LocaleStringTest extends WebTestBase {
     $this->assertEqual($source->version, 'none', 'String originally created without version.');
     $this->storage->checkVersion($source, VERSION);
     $string = $this->storage->findString(array('lid' => $source->lid));
-    $this->assertEqual($source->version, VERSION, 'Checked and updated string version to Drupal version.');
+    $this->assertEqual($string->version, VERSION, 'Checked and updated string version to Drupal version.');
 
     // Create translation and find it by lid and source.
     $langcode = 'es';
@@ -99,7 +99,7 @@ class LocaleStringTest extends WebTestBase {
     $lid = $source->lid;
     $translations = $this->createAllTranslations($source);
     $search = $this->storage->getTranslations(array('lid' => $source->lid));
-    $this->assertEqual(count($search), 3 , 'Created and retrieved all translations for our source string.');
+    $this->assertEqual(count($search), 3, 'Created and retrieved all translations for our source string.');
 
     $source->delete();
     $string = $this->storage->findString(array('lid' => $lid));
@@ -123,11 +123,11 @@ class LocaleStringTest extends WebTestBase {
     $source3 = $this->buildSourceString()->save();
     // Load all source strings.
     $strings = $this->storage->getStrings(array());
-    $this->assertEqual(count($strings), 3  , 'Found 3 source strings in the database.');
+    $this->assertEqual(count($strings), 3, 'Found 3 source strings in the database.');
     // Load all source strings matching a given string
     $filter_options['filters'] = array('source' => $prefix);
     $strings = $this->storage->getStrings(array(), $filter_options);
-    $this->assertEqual(count($strings), 2  , 'Found 2 strings using some string filter.');
+    $this->assertEqual(count($strings), 2, 'Found 2 strings using some string filter.');
 
     // Not customized translations.
     $translate1 = $this->createAllTranslations($source1);
@@ -144,24 +144,24 @@ class LocaleStringTest extends WebTestBase {
 
     // Load all translations. For next queries we'll be loading only translated strings.    $only_translated = array('untranslated' => FALSE);
     $translations = $this->storage->getTranslations(array('translated' => TRUE));
-    $this->assertEqual(count($translations), 2 * $language_count  , 'Created and retrieved all translations for source strings.');
+    $this->assertEqual(count($translations), 2 * $language_count, 'Created and retrieved all translations for source strings.');
 
     // Load all customized translations.
     $translations = $this->storage->getTranslations(array('customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE));
-    $this->assertEqual(count($translations), $language_count  , 'Retrieved all customized translations for source strings.');
+    $this->assertEqual(count($translations), $language_count, 'Retrieved all customized translations for source strings.');
 
     // Load all Spanish customized translations
     $translations = $this->storage->getTranslations(array('language' => 'es', 'customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE));
-    $this->assertEqual(count($translations), 1  , 'Found only Spanish and customized translations.');
+    $this->assertEqual(count($translations), 1, 'Found only Spanish and customized translations.');
 
     // Load all source strings without translation (1).
     $translations = $this->storage->getStrings(array('translated' => FALSE));
-    $this->assertEqual(count($translations), 1  , 'Found 1 source string without translations.');
+    $this->assertEqual(count($translations), 1, 'Found 1 source string without translations.');
 
     // Load Spanish translations using string filter.
     $filter_options['filters'] = array('source' => $prefix);
     $translations = $this->storage->getTranslations(array('language' => 'es'), $filter_options);
-    $this->assertEqual(count($strings), 2  , 'Found 2 translations using some string filter.');
+    $this->assertEqual(count($strings), 2, 'Found 2 translations using some string filter.');
 
   }
 

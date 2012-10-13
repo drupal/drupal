@@ -55,13 +55,9 @@ class LocaleLookup extends CacheArray {
    */
   protected function resolveCacheMiss($offset) {
     $translation = $this->stringStorage->findTranslation(array(
-      // These are the search conditions.
       'language' => $this->langcode,
       'source' => $offset,
       'context' => $this->context
-    ), array(
-      // Search options. We just need this limited set of fields.
-      'fields' => array('lid', 'version', 'translation'),
     ));
 
     if ($translation) {

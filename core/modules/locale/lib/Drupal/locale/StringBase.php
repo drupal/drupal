@@ -9,6 +9,9 @@ namespace Drupal\locale;
 
 /**
  * Defines the locale string base class.
+ *
+ * This is the base class to be used for locale string objects and contains
+ * the common properties and methods for source and translation strings.
  */
 abstract class StringBase implements StringInterface {
   /**
@@ -109,6 +112,13 @@ abstract class StringBase implements StringInterface {
   }
 
   /**
+   * Implements Drupal\locale\StringInterface::getStorage().
+   */
+  public function getStorage() {
+    return isset($this->storage) ? $this->storage : NULL;
+  }
+
+  /**
    * Implements Drupal\locale\StringInterface::setStorage().
    */
   public function setStorage($storage) {
@@ -145,7 +155,14 @@ abstract class StringBase implements StringInterface {
    * Implements Drupal\locale\LocaleString::save().
    */
   public function save() {
-    $this->getStorage()->save($this);
+    if ($storage = $this->getStorage()) {
+      $storage->save($this);
+    }
+    else {
+      throw new StringStorageException(format_string('The string cannot be saved because its not bound to a storage: @string', array(
+        '@string' => $string->getString()
+      )));
+    }
     return $this;
   }
 
@@ -154,26 +171,16 @@ abstract class StringBase implements StringInterface {
    */
   public function delete() {
     if (!$this->isNew()) {
-      $this->getStorage()->delete($this);
+      if ($storage = $this->getStorage()) {
+        $storage->delete($this);
+      }
+      else {
+        throw new StringStorageException(format_string('The string cannot be deleted because its not bound to a storage: @string', array(
+          '@string' => $string->getString()
+        )));
+      }
     }
     return $this;
-  }
-
-  /**
-   * Gets the storage to which this string is bound.
-   *
-   * @throws Drupal\locale\StringStorageException
-   *   In case the string doesn't have an storage set, an exception is thrown.
-   */
-  protected function getStorage() {
-    if (isset($this->storage)) {
-      return $this->storage;
-    }
-    else {
-      throw new StringStorageException(format_string('The string cannot be saved nor deleted because its not bound to an storage: @string', array(
-          '@string' => $string->getString()
-      )));
-    }
   }
 
 }

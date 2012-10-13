@@ -935,7 +935,6 @@ function _locale_rebuild_js($langcode = NULL) {
   // Construct the array for JavaScript translations.
   // Only add strings with a translation to the translations array.
   $options['filters']['location'] = '.js';
-  $options['fields'] = array('lid', 'context', 'source', 'translation');
   $conditions['language'] = $language->langcode;
   $translations = array();
   foreach (locale_storage()->getTranslations($conditions, $options) as $data) {

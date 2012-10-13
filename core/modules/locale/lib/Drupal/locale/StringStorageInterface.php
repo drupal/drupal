@@ -28,7 +28,6 @@ interface StringStorageInterface {
    *   any of the following optional keys:
    *   - 'filters': Array of string filters indexed by field name.
    *   - 'pager limit': Use pager and set this limit value.
-   *   - 'fields', Array with the exact fields to load. Defaults to all.
    *
    * @return array
    *   Array of Drupal\locale\StringInterface objects matching the conditions.
@@ -61,14 +60,11 @@ interface StringStorageInterface {
    * @param array $conditions
    *   (optional) Array with conditions that will be used to filter the strings
    *   returned and may include all of the conditions defined by getStrings().
-   * @param array $options
-   *   (optional) An associative array of additional options. It may contain
-   *   any of the options defined by getStrings().
    *
    * @return Drupal\locale\SourceString|null
    *   Minimal TranslationString object if found, NULL otherwise.
    */
-  public function findString(array $conditions, array $options = array());
+  public function findString(array $conditions);
 
   /**
    * Loads a string translation object, fast query.
@@ -76,14 +72,11 @@ interface StringStorageInterface {
    * @param array $conditions
    *   (optional) Array with conditions that will be used to filter the strings
    *   returned and may include all of the conditions defined by getStrings().
-   * @param array $options
-   *   (optional) An associative array of additional options. It may contain
-   *   any of the options defined by getStrings().
    *
    * @return Drupal\locale\TranslationString|null
    *   Minimal TranslationString object if found, NULL otherwise.
    */
-  public function findTranslation(array $conditions, array $options = array());
+  public function findTranslation(array $conditions);
 
   /**
    * Checks whether the string version matches a given version, fix it if not.

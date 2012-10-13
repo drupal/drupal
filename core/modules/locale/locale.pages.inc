@@ -406,6 +406,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   foreach ($form_state['values']['strings'] as $lid => $translations) {
     // Get target string, that may be NULL if there's no translation.
     $target = locale_storage()->findTranslation(array('language' => $langcode, 'lid' => $lid));
+
     // No translation when all strings are empty.
     $has_translation = FALSE;
     foreach ($translations['translations'] as $string) {

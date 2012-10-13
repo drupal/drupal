@@ -91,6 +91,14 @@ interface StringInterface {
   public function setPlurals($plurals);
 
   /**
+   * Gets the string storage.
+   *
+   * @return Drupal\locale\StringStorageInterface
+   *   The storage used for this string.
+   */
+  public function getStorage();
+
+  /**
    * Sets the string storage.
    *
    * @param Drupal\locale\StringStorageInterface $storage

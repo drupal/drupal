@@ -49,7 +49,6 @@ class StringDatabaseStorage implements StringStorageInterface {
    * Implements Drupal\locale\StringStorageInterface::getStrings().
    */
   public function getStrings(array $conditions = array(), array $options = array()) {
-    $options += array('source' => TRUE);
     return $this->dbStringLoad($conditions, $options, 'Drupal\locale\SourceString');
   }
 
@@ -57,16 +56,14 @@ class StringDatabaseStorage implements StringStorageInterface {
    * Implements Drupal\locale\StringStorageInterface::getTranslations().
    */
   public function getTranslations(array $conditions = array(), array $options = array()) {
-    $options += array('source' => TRUE, 'translation' => TRUE);
-    return $this->dbStringLoad($conditions, $options, 'Drupal\locale\TranslationString');
+    return $this->dbStringLoad($conditions, array('translation' => TRUE) + $options, 'Drupal\locale\TranslationString');
   }
 
   /**
    * Implements Drupal\locale\StringStorageInterface::findString().
    */
-  public function findString(array $conditions, array $options = array()) {
-    $options += array('source' => TRUE);
-    $string = $this->dbStringSelect($conditions, $options)
+  public function findString(array $conditions) {
+    $string = $this->dbStringSelect($conditions)
     ->execute()
     ->fetchObject('Drupal\locale\SourceString');
     if ($string) {
@@ -78,9 +75,8 @@ class StringDatabaseStorage implements StringStorageInterface {
   /**
    * Implements Drupal\locale\StringStorageInterface::findTranslation().
    */
-  public function findTranslation(array $conditions, array $options = array()) {
-    $options += array('source' => TRUE, 'translation' => TRUE);
-    $string = $this->dbStringSelect($conditions, $options)
+  public function findTranslation(array $conditions) {
+    $string = $this->dbStringSelect($conditions, array('translation' => TRUE))
     ->execute()
     ->fetchObject('Drupal\locale\TranslationString');
     if ($string) {
@@ -324,34 +320,16 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   An associative array of additional options. It may contain any of the
    *   options used by Drupal\locale\StringStorageInterface::getStrings() and
    *   these additional ones:
-   *   - 'source', TRUE for selecting all source fields.
-   *   - 'translation', TRUE for selecting all translation fields.
-   *   - 'fields', Optional array of exact fields to get. Overrides the
-   *     previous 'source' and 'translation' options. Defaults to none.
+   *   - 'translation', Whether to include translation fields too. Defaults to
+   *     FALSE.
    * @return SelectQuery
    *   Query object with all the tables, fields and conditions.
    */
   protected function dbStringSelect(array $conditions, array $options = array()) {
-    // Check the fields we are going to select and to which table they belong.
-    $fields = array();
-    if (isset($options['fields'])) {
-      foreach ($options['fields'] as $field) {
-        $fields[$this->dbFieldTable($field)][] = $field;
-      }
-    }
-    else {
-      if (!empty($options['source'])) {
-        $fields['s'] = array();
-      }
-      if (!empty($options['translation'])) {
-        // If we've got translation fields, we leave out the lid field to avoid clashes.
-        $fields['t'] = isset($fields['s']) ? array('language', 'translation', 'customized') : array();
-      }
-    }
-
-    // Start building the query with source table and fields and check whether
-    // we need to join the target table too.
-    $query = $this->connection->select('locales_source', 's');
+    // Start building the query with source table and check whether we need to
+    // join the target table too.
+    $query = $this->connection->select('locales_source', 's', $this->options)
+      ->fields('s');
 
     // Figure out how to join and translate some options into conditions.
     if (isset($conditions['translated'])) {
@@ -368,7 +346,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       unset($conditions['translated']);
     }
     else {
-      $join = isset($fields['t']) ? 'leftJoin' : FALSE;
+      $join = !empty($options['translation']) ? 'leftJoin' : FALSE;
     }
 
     if ($join) {
@@ -383,11 +361,12 @@ class StringDatabaseStorage implements StringStorageInterface {
         // Since we don't have a language, join with locale id only.
         $query->$join('locales_target', 't', "t.lid = s.lid");
       }
+      if (!empty($options['translation'])) {
+        // We cannot just add all fields because 'lid' may get null values.
+        $query->fields('t', array('language', 'translation', 'customized'));
+      }
     }
-    // Add fields for both tables, it may be a query without fields.
-    foreach ($fields as $table_alias => $table_fields) {
-      $query->fields($table_alias, $table_fields);
-    }
+
     // Add conditions for both tables.
     foreach ($conditions as $field => $value) {
       $table_alias = $this->dbFieldTable($field);
@@ -447,8 +426,8 @@ class StringDatabaseStorage implements StringStorageInterface {
     if (($table = $this->dbStringTable($string)) && ($fields = $this->dbStringValues($string, $table))) {
       $this->dbStringDefaults($string, $table);
       return $this->connection->insert($table, $this->options)
-      ->fields($fields)
-      ->execute();
+        ->fields($fields)
+        ->execute();
     }
     else {
       throw new StringStorageException(format_string('The string cannot be saved: @string', array(
