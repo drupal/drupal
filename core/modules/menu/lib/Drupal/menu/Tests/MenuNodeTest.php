@@ -71,7 +71,7 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($node_title);
     // Assert that there is no link for the node.
-    $this->drupalGet('');
+    $this->drupalGet('user');
     $this->assertNoLink($node_title);
 
     // Edit the node, enable the menu link setting, but skip the link title.
@@ -80,7 +80,7 @@ class MenuNodeTest extends WebTestBase {
     );
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     // Assert that there is no link for the node.
-    $this->drupalGet('');
+    $this->drupalGet('user');
     $this->assertNoLink($node_title);
 
     // Edit the node and create a menu link.
@@ -91,7 +91,7 @@ class MenuNodeTest extends WebTestBase {
     );
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     // Assert that the link exists.
-    $this->drupalGet('');
+    $this->drupalGet('user');
     $this->assertLink($node_title);
 
     $this->drupalGet('node/' . $node->nid . '/edit');
@@ -103,7 +103,7 @@ class MenuNodeTest extends WebTestBase {
     );
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     // Assert that there is no link for the node.
-    $this->drupalGet('');
+    $this->drupalGet('user');
     $this->assertNoLink($node_title);
 
     // Add a menu link to the Management menu.
