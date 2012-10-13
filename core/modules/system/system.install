@@ -2146,6 +2146,15 @@ function system_update_8026() {
 }
 
 /**
+ * Cleans up javascript_parsed variable.
+ *
+ * @ingroup system_upgrade
+ */
+function system_update_8027() {
+  update_variable_del('javascript_parsed');
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

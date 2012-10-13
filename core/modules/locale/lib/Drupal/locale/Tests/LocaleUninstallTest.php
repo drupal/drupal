@@ -130,7 +130,7 @@ class LocaleUninstallTest extends WebTestBase {
     $this->assertFalse(variable_get('language_negotiation_session_param', FALSE), t('Visit language negotiation method settings cleared.'));
 
     // Check JavaScript parsed.
-    $javascript_parsed_count = count(variable_get('javascript_parsed', array()));
+    $javascript_parsed_count = count(state()->get('system.javascript_parsed') ?: array());
     $this->assertEqual($javascript_parsed_count, 0, t('JavaScript parsed count: %count', array('%count' => $javascript_parsed_count)));
 
     // Check JavaScript translations directory.

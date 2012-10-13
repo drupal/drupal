@@ -4774,7 +4774,7 @@ function drupal_build_js_cache($files) {
  * Deletes old cached JavaScript files and variables.
  */
 function drupal_clear_js_cache() {
-  variable_del('javascript_parsed');
+  state()->delete('system.javascript_parsed');
   variable_del('drupal_js_cache_files');
   file_scan_directory('public://js', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }

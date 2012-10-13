@@ -473,7 +473,7 @@ function locale_js_alter(&$javascript) {
   $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   $dir = 'public://' . variable_get('locale_js_directory', 'languages');
-  $parsed = variable_get('javascript_parsed', array());
+  $parsed = state()->get('system.javascript_parsed') ?: array();
   $files = $new_files = FALSE;
 
   foreach ($javascript as $item) {
@@ -506,12 +506,12 @@ function locale_js_alter(&$javascript) {
       unset($parsed['refresh:' . $language_interface->langcode]);
     }
     // Store any changes after refresh was attempted.
-    variable_set('javascript_parsed', $parsed);
+    state()->set('system.javascript_parsed', $parsed);
   }
   // If no refresh was attempted, but we have new source files, we need
   // to store them too. This occurs if current page is in English.
   elseif ($new_files) {
-    variable_set('javascript_parsed', $parsed);
+    state()->set('system.javascript_parsed', $parsed);
   }
 
   // Add the translation JavaScript file to the page.
@@ -895,10 +895,10 @@ function _locale_parse_js_file($filepath) {
  *   The language code for which the file needs to be refreshed.
  *
  * @return
- *   New content of the 'javascript_parsed' variable.
+ *   New content of the 'system.javascript_parsed' variable.
  */
 function _locale_invalidate_js($langcode = NULL) {
-  $parsed = variable_get('javascript_parsed', array());
+  $parsed = state()->get('system.javascript_parsed') ?: array();
 
   if (empty($langcode)) {
     // Invalidate all languages.
@@ -912,7 +912,7 @@ function _locale_invalidate_js($langcode = NULL) {
     $parsed['refresh:' . $langcode] = 'waiting';
   }
 
-  variable_set('javascript_parsed', $parsed);
+  state()->set('system.javascript_parsed', $parsed);
   return $parsed;
 }
 
