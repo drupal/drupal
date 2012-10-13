@@ -281,16 +281,9 @@ abstract class UpgradePathTestBase extends WebTestBase {
     if ($new = $this->checkForMetaRefresh()) {
       $out = $new;
     }
-    // @todo TestBase::verbose() cannot be called here yet, since Simpletest
-    //   verbose output parameters are not prepared before test execution and
-    //   instead determined at runtime; i.e., file_create_url() calls into
-    //   system_list(), before update.php has upgraded the system list.
-    // @see http://drupal.org/node/1611430
-    /*
     $this->verbose('GET request to: ' . $path .
       '<hr />Ending URL: ' . $this->getUrl() .
       '<hr />' . $out);
-    */
     return $out;
   }
 
