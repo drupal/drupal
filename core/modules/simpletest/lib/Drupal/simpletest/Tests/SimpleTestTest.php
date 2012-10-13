@@ -17,7 +17,7 @@ class SimpleTestTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('simpletest');
+  public static $modules = array('simpletest', 'test_page_test');
 
   /**
    * The results array that has been parsed by getTestResults().
@@ -29,13 +29,6 @@ class SimpleTestTest extends WebTestBase {
    * incrementing.
    */
   protected $test_ids = array();
-
-  /**
-   * The administrative user account to use during testing.
-   *
-   * @var Drupal\user\User
-   */
-  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -49,8 +42,7 @@ class SimpleTestTest extends WebTestBase {
     if (!$this->inCURL()) {
       parent::setUp();
       // Create and log in an admin user.
-      $this->admin_user = $this->drupalCreateUser(array('administer unit tests'));
-      $this->drupalLogin($this->admin_user);
+      $this->drupalLogin($this->drupalCreateUser(array('administer unit tests')));
     }
     else {
       self::$modules = array('non_existent_module');
@@ -64,11 +56,10 @@ class SimpleTestTest extends WebTestBase {
   function testInternalBrowser() {
     global $conf;
     if (!$this->inCURL()) {
-      // Retrieve the user page and check its title and headers.
-      $this->drupalGet('user');
+      // Retrieve the test page and check its title and headers.
+      $this->drupalGet('test-page');
       $this->assertTrue($this->drupalGetHeader('Date'), t('An HTTP header was received.'));
-      $this->assertTitle(t('@user | @site-name', array(
-        '@user' => $this->admin_user->name,
+      $this->assertTitle(t('Test page | @site-name', array(
         '@site-name' => config('system.site')->get('name'),
       )));
       $this->assertNoTitle('Foo');

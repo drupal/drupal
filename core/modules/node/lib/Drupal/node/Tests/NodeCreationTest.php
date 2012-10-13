@@ -19,7 +19,7 @@ class NodeCreationTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_test_exception', 'dblog');
+  public static $modules = array('node_test_exception', 'dblog', 'test_page_test');
 
   public static function getInfo() {
     return array(
@@ -100,10 +100,11 @@ class NodeCreationTest extends NodeTestBase {
    * Create an unpublished node and confirm correct redirect behavior.
    */
   function testUnpublishedNodeCreation() {
+    // Set the front page to the test page.
+    config('system.site')->set('page.front', 'test-page')->save();
+
     // Set "Basic page" content type to be unpublished by default.
     variable_set('node_options_page', array());
-    // Set the front page to the default "node" page.
-    config('system.site')->set('page.front', 'node')->save();
 
     // Create a node.
     $edit = array();
@@ -112,6 +113,11 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the user was redirected to the home page.
-    $this->assertText(t('Welcome to Drupal'), 'The user is redirected to the home page.');
+    $this->assertUrl('');
+    $this->assertText(t('Test page text'));
+
+    // Confirm that the node was created.
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])));
   }
+
 }

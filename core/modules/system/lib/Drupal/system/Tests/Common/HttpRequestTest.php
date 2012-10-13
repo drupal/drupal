@@ -20,7 +20,7 @@ class HttpRequestTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('system_test', 'language');
+  public static $modules = array('system_test', 'language', 'test_page_test');
 
   public static function getInfo() {
     return array(
@@ -45,11 +45,11 @@ class HttpRequestTest extends WebTestBase {
     $this->assertEqual($unable_to_parse->code, -1001, 'Returned with "-1001" error code.');
     $this->assertEqual($unable_to_parse->error, 'unable to parse URL', 'Returned with "unable to parse URL" error message.');
 
-    // Fetch the user login page.
-    $result = drupal_http_request(url('user/login', array('absolute' => TRUE)));
+    // Fetch the test page.
+    $result = drupal_http_request(url('test-page', array('absolute' => TRUE)));
     $this->assertEqual($result->code, 200, 'Fetched page successfully.');
     $this->drupalSetContent($result->data);
-    $this->assertTitle(t('Log in | @site-name', array('@site-name' => config('system.site')->get('name'))));
+    $this->assertTitle(t('Test page | @site-name', array('@site-name' => config('system.site')->get('name'))));
 
     // Test that code and status message is returned.
     $result = drupal_http_request(url('pagedoesnotexist', array('absolute' => TRUE)));
