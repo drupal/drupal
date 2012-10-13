@@ -3,7 +3,7 @@
         "name": "twig/twig",
         "version": "v1.8.3",
         "version_normalized": "1.8.3.0",
-        "time": "2012-06-18 19:48:16",
+        "time": "2012-06-18 18:48:16",
         "source": {
             "type": "git",
             "url": "git://github.com/fabpot/Twig.git",
@@ -58,7 +58,7 @@
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/ClassLoader",
-        "time": "2012-08-27 15:51:49",
+        "time": "2012-08-27 14:51:49",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/ClassLoader",
@@ -113,7 +113,7 @@
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/DependencyInjection",
-        "time": "2012-08-28 07:54:42",
+        "time": "2012-08-28 06:54:42",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/DependencyInjection",
@@ -172,7 +172,7 @@
         "name": "doctrine/common",
         "version": "2.3.0-RC2",
         "version_normalized": "2.3.0.0-RC2",
-        "time": "2012-08-29 14:06:32",
+        "time": "2012-08-29 13:06:32",
         "source": {
             "type": "git",
             "url": "https://github.com/doctrine/common",
@@ -249,7 +249,7 @@
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/HttpFoundation",
-        "time": "2012-08-22 13:48:41",
+        "time": "2012-08-22 12:48:41",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/HttpFoundation",
@@ -302,7 +302,7 @@
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/EventDispatcher",
-        "time": "2012-08-22 13:48:41",
+        "time": "2012-08-22 12:48:41",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/EventDispatcher",
@@ -361,7 +361,7 @@
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/HttpKernel",
-        "time": "2012-08-28 08:00:18",
+        "time": "2012-08-28 07:00:18",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/HttpKernel",
@@ -433,7 +433,7 @@
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/Routing",
-        "time": "2012-08-28 07:54:42",
+        "time": "2012-08-28 06:54:42",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Routing",
@@ -496,7 +496,7 @@
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/Yaml",
-        "time": "2012-08-22 13:48:41",
+        "time": "2012-08-22 12:48:41",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Yaml",
@@ -540,6 +540,116 @@
         "autoload": {
             "psr-0": {
                 "Symfony\\Component\\Yaml": ""
+            }
+        }
+    },
+    {
+        "name": "symfony/process",
+        "version": "v2.1.0-RC2",
+        "version_normalized": "2.1.0.0-RC2",
+        "target-dir": "Symfony/Component/Process",
+        "time": "2012-08-26 06:13:51",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Process",
+            "reference": "v2.1.0-RC2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/symfony/Process/zipball/v2.1.0-RC2",
+            "reference": "v2.1.0-RC2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Process Component",
+        "homepage": "http://symfony.com",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Process": ""
+            }
+        }
+    },
+    {
+        "name": "kriswallsmith/assetic",
+        "version": "v1.1.0-alpha1",
+        "version_normalized": "1.1.0.0-alpha1",
+        "time": "2012-08-28 05:33:44",
+        "source": {
+            "type": "git",
+            "url": "http://github.com/kriswallsmith/assetic.git",
+            "reference": "v1.1.0-alpha1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/kriswallsmith/assetic/zipball/v1.1.0-alpha1",
+            "reference": "v1.1.0-alpha1",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.1",
+            "symfony/process": "2.1.*"
+        },
+        "require-dev": {
+            "twig/twig": ">=1.6.0,<2.0",
+            "leafo/lessphp": "*",
+            "leafo/scssphp": "*",
+            "ptachoire/cssembed": "*"
+        },
+        "suggest": {
+            "twig/twig": "Assetic provides the integration with the Twig templating engine",
+            "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
+            "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
+            "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris"
+        },
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kris Wallsmith",
+                "email": "kris.wallsmith@gmail.com",
+                "homepage": "http://kriswallsmith.net/"
+            }
+        ],
+        "description": "Asset Management for PHP",
+        "homepage": "https://github.com/kriswallsmith/assetic",
+        "keywords": [
+            "assets",
+            "compression",
+            "minification"
+        ],
+        "autoload": {
+            "psr-0": {
+                "Assetic": "src/"
             }
         }
     }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Assetic Test Suite">
+            <directory suffix="Test.php">./tests/Assetic/Test/</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <!-- <server name="CLOSURE_JAR" value="/path/to/google-closure/compiler.jar" /> -->
+        <!-- <server name="COFFEE_BIN" value="/path/to/coffee" /> -->
+        <!-- <server name="NODE_BIN" value="/path/to/node" /> -->
+        <!-- <server name="NODE_PATH" value="/path/to/node/lib" /> -->
+        <server name="LESSPHP" value="vendor/lessphp/lessc.inc.php" />
+        <!-- <server name="SASS_BIN" value="/path/to/sass" /> -->
+        <!-- <server name="COMPASS_BIN" value="/path/to/compass" /> -->
+        <!-- <server name="RUBY_BIN" value="/path/to/ruby" /> -->
+        <!-- <server name="SPROCKETS_LIB" value="/path/to/sprockets/lib" /> -->
+        <!-- <server name="TWIG_LIB" value="vendor/twig/lib" /> -->
+        <!-- <server name="YUI_COMPRESSOR_JAR" value="/path/to/yuicompressor-2.4.2.jar" /> -->
+        <!-- <server name="OPTIPNG_BIN" value="/path/to/optipng" /> -->
+        <!-- <server name="JPEGOPTIM_BIN" value="/path/to/jpegoptim" /> -->
+        <!-- <server name="JPEGTRAN_BIN" value="/path/to/jpegtran" /> -->
+        <!-- <server name="PNGOUT_BIN" value="/path/to/pngout" /> -->
+        <server name="CSSMIN" value="vendor/cssmin/source/CssMin.php" />
+        <server name="JSMIN" value="vendor/minify/min/lib/JSMin.php" />
+        <server name="JSMINPLUS" value="vendor/minify/min/lib/JSMinPlus.php" />
+        <!-- <server name="CSSEMBED_JAR" value="/path/to/cssembed.jar" /> -->
+        <server name="PACKAGER" value="vendor/packager/packager.php" />
+        <server name="PACKER" value="vendor/packer/class.JavaScriptPacker.php" />
+    </php>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src/Assetic/</directory>
+        </whitelist>
+    </filter>
+</phpunit>

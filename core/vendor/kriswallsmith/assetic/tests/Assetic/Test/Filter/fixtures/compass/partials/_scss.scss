@@ -1,0 +1,6 @@
+@import "compass/utilities";
+
+@mixin mixin-test($fontSize: 1em)
+{
+    font-size: $fontSize;
+}

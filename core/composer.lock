@@ -26,6 +26,10 @@
             "version": "v2.1.0-RC2"
         },
         {
+            "package": "symfony/process",
+            "version": "v2.1.0-RC2"
+        },
+        {
             "package": "symfony/routing",
             "version": "v2.1.0-RC2"
         },
@@ -36,13 +40,17 @@
         {
             "package": "twig/twig",
             "version": "v1.8.3"
+        },
+        {
+            "package": "kriswallsmith/assetic",
+            "version": "v1.1.0-alpha1"
         }
     ],
     "packages-dev": null,
     "aliases": [
 
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "alpha",
     "stability-flags": [
 
     ]

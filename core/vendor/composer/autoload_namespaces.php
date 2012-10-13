@@ -9,6 +9,7 @@ return array(
     'Twig_' => $vendorDir . '/twig/twig/lib/',
     'Symfony\\Component\\Yaml' => $vendorDir . '/symfony/yaml/',
     'Symfony\\Component\\Routing' => $vendorDir . '/symfony/routing/',
+    'Symfony\\Component\\Process' => $vendorDir . '/symfony/process/',
     'Symfony\\Component\\HttpKernel' => $vendorDir . '/symfony/http-kernel/',
     'Symfony\\Component\\HttpFoundation' => $vendorDir . '/symfony/http-foundation/',
     'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher/',
@@ -16,4 +17,5 @@ return array(
     'Symfony\\Component\\ClassLoader' => $vendorDir . '/symfony/class-loader/',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs',
     'Doctrine\\Common' => $vendorDir . '/doctrine/common/lib/',
+    'Assetic' => $vendorDir . '/kriswallsmith/assetic/src/',
 );

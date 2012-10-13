@@ -11,7 +11,8 @@
     "symfony/routing": "2.1.*",
     "symfony/yaml": "2.1.*",
     "twig/twig": "1.8.*",
-    "doctrine/common": "2.3.*"
+    "doctrine/common": "2.3.*",
+    "kriswallsmith/assetic": "1.1.*"
   },
-  "minimum-stability": "beta"
+  "minimum-stability": "alpha"
 }
