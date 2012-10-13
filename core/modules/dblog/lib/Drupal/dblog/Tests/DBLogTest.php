@@ -20,9 +20,7 @@ class DBLogTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('dblog', 'poll');
-
-  protected $profile = 'standard';
+  public static $modules = array('dblog', 'node', 'poll', 'help');
 
   protected $big_user;
   protected $any_user;
@@ -189,6 +187,8 @@ class DBLogTest extends WebTestBase {
   private function verifyEvents() {
     // Invoke events.
     $this->doUser();
+    $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
     $this->doNode('article');
     $this->doNode('page');
     $this->doNode('poll');
