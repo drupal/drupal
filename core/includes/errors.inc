@@ -213,7 +213,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
   if (drupal_is_cli()) {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
-      print html_entity_decode(strip_tags(t('%type: !message in %function (line %line of %file).', $error))). "\n";
+      // Should not translate the string to avoid errors producing more errors.
+      print html_entity_decode(strip_tags(format_string('%type: !message in %function (line %line of %file).', $error))). "\n";
       exit;
     }
   }
@@ -222,7 +223,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($fatal) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.
-        print t('%type: !message in %function (line %line of %file).', $error);
+        // Should not translate the string to avoid errors producing more errors.
+        print format_string('%type: !message in %function (line %line of %file).', $error);
       }
       exit;
     }
@@ -247,7 +249,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
       if (substr($error['%file'], 0, $root_length) == DRUPAL_ROOT) {
         $error['%file'] = substr($error['%file'], $root_length + 1);
       }
-      $message = t('%type: !message in %function (line %line of %file).', $error);
+      // Should not translate the string to avoid errors producing more errors.
+      $message = format_string('%type: !message in %function (line %line of %file).', $error);
 
       // Check if verbose error reporting is on.
       $error_level = config('system.logging')->get('error_level');
@@ -265,10 +268,12 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
 
     if ($fatal) {
-      drupal_set_title(t('Error'));
+      // Should not translate the string to avoid errors producing more errors.
+      drupal_set_title('Error');
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
-      $output = theme('maintenance_page', array('content' => t('The website encountered an unexpected error. Please try again later.')));
+      // Should not translate the string to avoid errors producing more errors.
+      $output = theme('maintenance_page', array('content' => 'The website encountered an unexpected error. Please try again later.'));
 
       $response = new Response($output, 500);
       if ($fatal) {
