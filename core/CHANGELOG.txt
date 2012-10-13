@@ -21,8 +21,11 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * EventDispatcher - Object-oriented lightweight event handling system.
     * HttpFoundation - Abstraction objects for HTTP requests and responses.
     * HttpKernel - Core system for managing incoming HTTP request and responses.
-    * Routing - Framework for mapping incoming requests to controller information.
+    * Process - Allows for executing commands in a sub-process.
+    * Routing - Framework for mapping incoming requests to controller
+      information.
     * Yaml - Parser for YAML files.
+- Included the Assetic asset management framework for PHP.
 - Support added for making HTTP requests through a proxy server.
 - Removed modules from core.
     * The following modules have been removed from core, because contributed
