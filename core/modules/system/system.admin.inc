@@ -1415,7 +1415,7 @@ function system_site_information_settings($form, &$form_state) {
     '#title' => t('Default front page'),
     '#default_value' => ($site_config->get('page.front') != 'user' ? drupal_get_path_alias($site_config->get('page.front')) : ''),
     '#size' => 40,
-    '#description' => t('Optionally, specify a relative URL to display as the front page.  Leave blank to display the default content feed.'),
+    '#description' => t('Optionally, specify a relative URL to display as the front page. Leave blank to display the default front page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
   );
   $form['error_page'] = array(
