@@ -736,6 +736,70 @@ ul.action-links a {
   line-height: 30px;
 }
 
+/**
+ * Improve form element usability on narrow devices.
+ */
+@media screen and (max-width: 600px) {
+  #page {
+    margin: 0 10px;
+  }
+  input.form-autocomplete,
+  input.form-text,
+  input.form-tel,
+  input.form-email,
+  input.form-url,
+  input.form-search,
+  input.form-number,
+  input.form-color,
+  input.form-file,
+  textarea.form-textarea,
+  .form-select {
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 100%;
+  }
+  input.form-autocomplete,
+  input.form-text,
+  input.form-tel,
+  input.form-email,
+  input.form-url,
+  input.form-search,
+  input.form-number,
+  input.form-color,
+  input.form-file,
+  textarea.form-textarea {
+    font-size: 1.2em;
+    line-height: 1.2em;
+  }
+  .form-actions input,
+  .form-wrapper input[type="submit"] {
+    float: none;
+    margin-right: 0;
+    margin-top: 10px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    width: 100%;
+  }
+  .exposed-filters .filters,
+  .exposed-filters .form-item label,
+  .exposed-filters .form-select {
+    float: none;
+    margin-bottom: 2px;
+    width: 100%;
+  }
+  fieldset .fieldset-legend {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+  #dblog-filter-form .form-actions {
+    float: none;
+    padding: 0;
+  }
+}
+
 /* Exceptions */
 #diff-inline-form select,
 div.filter-options select {
