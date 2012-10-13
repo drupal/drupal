@@ -30,6 +30,13 @@ class SimpleTestTest extends WebTestBase {
    */
   protected $test_ids = array();
 
+  /**
+   * The administrative user account to use during testing.
+   *
+   * @var Drupal\user\User
+   */
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'SimpleTest functionality',
@@ -41,9 +48,9 @@ class SimpleTestTest extends WebTestBase {
   function setUp() {
     if (!$this->inCURL()) {
       parent::setUp();
-      // Create and login user
-      $admin_user = $this->drupalCreateUser(array('administer unit tests'));
-      $this->drupalLogin($admin_user);
+      // Create and log in an admin user.
+      $this->admin_user = $this->drupalCreateUser(array('administer unit tests'));
+      $this->drupalLogin($this->admin_user);
     }
     else {
       self::$modules = array('non_existent_module');
@@ -57,10 +64,15 @@ class SimpleTestTest extends WebTestBase {
   function testInternalBrowser() {
     global $conf;
     if (!$this->inCURL()) {
-      $this->drupalGet('node');
+      // Retrieve the user page and check its title and headers.
+      $this->drupalGet('user');
       $this->assertTrue($this->drupalGetHeader('Date'), t('An HTTP header was received.'));
-      $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => config('system.site')->get('name'))), t('Site title matches.'));
-      $this->assertNoTitle('Foo', t('Site title does not match.'));
+      $this->assertTitle(t('@user | @site-name', array(
+        '@user' => $this->admin_user->name,
+        '@site-name' => config('system.site')->get('name'),
+      )));
+      $this->assertNoTitle('Foo');
+
       // Make sure that we are locked out of the installer when prefixing
       // using the user-agent header. This is an important security check.
       global $base_url;
