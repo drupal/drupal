@@ -2,168 +2,85 @@
 
 /**
  * @file
- * Describe hooks provided by the Views module.
+ * Describes hooks and plugins provided by the Views module.
  */
 
 /**
- * @defgroup views_handlers About Views handlers
- * @{
- * In Views, a handler is an object that is part of the view and is part of the
- * query building flow.
+ * @defgroup views_plugins Views plugins
  *
- * Handlers are objects; much of the time, the base handlers will work, but
- * often you'll need to override the handler to achieve something meaningful.
- * One typical handler override will be views_handler_filter_operator_in which
- * allows you to have a filter select from a list of options; you'll need to
- * override this to provide your list.
- *
- * Handlers have two distinct code flows; the UI flow and the view building
- * flow.
- *
- * For the query flow:
- * - handler->construct()
- *   - Create the initial handler; at this time it is not yet attached to a
- *     view. It is here that you can set basic defaults if needed, but there
- *     will be no knowledge of the environment yet.
- * - handler->setDefinition()
- *   - Set the data from hook_views_data() relevant to the handler.
- * - handler->init()
- *   - Attach the handler to a view, and usually provides the options from the
- *     display.
- * - handler->preQuery()
- *   - Run prior to the query() stage to do early processing.
- * - handler->query()
- *   - Do the bulk of the work this handler needs to do to add itself to the
- *     query.
- *
- * Fields, being the only handlers concerned with output, also have an extended
- * piece of the flow:
- *
- * - handler->pre_render(&$values)
- *   - Called prior to the actual rendering, this allows handlers to query for
- *     extra data; the entire resultset is available here, and this is where
- *     items that have "multiple values" per record can do their extra query for
- *     all of the records available. There are several examples of this at work
- *     in the code, see for example views_handler_field_user_roles.
- * - handler->render()
- *   - This does the actual work of rendering the field.
- *
- * Most handlers are just extensions of existing classes with a few tweaks that
- * are specific to the field in question. For example,
- * views_handler_filter_in_operator provides a simple mechanism to set a
- * multiple-value list for setting filter values. Below,
- * views_handler_filter_node_type overrides the list options, but inherits
- * everything else.
- *
- * @code
- * class views_handler_filter_node_type extends views_handler_filter_in_operator {
- *   function get_value_options() {
- *     if (!isset($this->value_options)) {
- *       $this->value_title = t('Node type');
- *       $types = node_get_types();
- *       foreach ($types as $type => $info) {
- *         $options[$type] = $info-&gt;name;
- *       }
- *       $this->value_options = $options;
- *     }
- *   }
- * }
- * @endcode
- *
- * Handlers are stored in their own files and loaded on demand. Like all other
- * module files, they must first be registered through the module's info file.
- * For example:
- *
- * @code
- * name = Example module
- * description = "Gives an example of a module."
- * core = 8.x
- * files[] = example.module
- * files[] = example.install
- *
- * ; Views handlers
- * files[] = includes/views/handlers/example_handler_argument_string.inc
- * @endcode
- *
- * The best place to learn more about handlers and how they work is to explore
- * @link views_handlers Views' handlers @endlink and use existing handlers as a
- * guide and a model. Understanding how views_handler and its child classes work
- * is handy but you can do a lot just following these models. You can also
- * explore the views module directory, particularly node.views.inc.
- *
- * Please note that while all handler names in views are prefixed with views_,
- * you should use your own module's name to prefix your handler names in order
- * to ensure namespace safety. Note that the basic pattern for handler naming
- * goes like this:
- *
- * [module]_handler_[type]_[tablename]_[fieldname].
- *
- * Sometimes table and fieldname are not appropriate, but something that
- * resembles what the table/field would be can be used.
- *
- * See also:
- * - @link views_field_handlers Views field handlers @endlink
- * - @link views_sort_handlers Views sort handlers @endlink
- * - @link views_filter_handlers Views filter handlers @endlink
- * - @link views_argument_handlers Views argument handlers @endlink
- * - @link views_relationship_handlers Views relationship handlers @endlink
- * - @link views_area_handlers Views area handlers @endlink
- * @}
- */
-
-/**
- * @defgroup views_plugins About Views plugins
- *
- * In Views, a plugin is a bit like a handler, but plugins are not directly
- * responsible for building the query. Instead, they are objects that are used
- * to display the view or make other modifications.
- *
- * There are 10 types of plugins in Views:
- * - Display: Display plugins are responsible for controlling *where* a view
- *   lives; that is, how they are being exposed to other parts of Drupal. Page
- *   and block are the most common displays, as well as the ubiquitous 'master'
- *   (or 'default') display.
- * - Style: Style plugins control how a view is displayed. For the most part
- *   they are object wrappers around theme templates. Styles could for example
- *   be HTML lists or tables.
- * - Row style: Row styles handle each individual record from the main view
- *   table. The two included by default render the entire entity (nodes only),
- *   or selected fields.
- * - Argument default: Argument default plugins allow pluggable ways of
- *   providing default values for contextual filters (previously 'arguments').
- *   This is useful for blocks and other display types lacking a natural
- *   argument input. Examples are plugins to extract node and user IDs from the
- *   URL.
- * - Argument validator: Validator plugins can ensure arguments are valid, and
- *   even do transformations on the arguments. They can also provide replacement
- *   patterns for the view title. For example, the 'content' validator
- *   verifies verifies that the argument value corresponds to a node, loads
- *   that node and provides the node title as a replacement pattern.
- * - Access: Access plugins are responsible for controlling access to the view.
- *   Views includes plugins for checking user roles and individual permissions.
- * - Query: Query plugins generate and execute a query, so they can be seen as
- *   a data backend. The default implementation is using SQL. There are
- *   contributed modules reading data from other sources, see for example the
- *   Views XML Backend module.
- * - Cache: Cache plugins control the storage and loading of caches. Currently
- *   they can do both result and render caching, but maybe one day cache the
- *   generated query.
- * - Pager plugins: Pager plugins take care of everything regarding pagers.
- *   From getting and setting the total amount of items to render the pager and
- *   setting the global pager arrays.
- * - Exposed form plugins: Exposed form plugins are responsible for building,
- *   rendering and controlling exposed forms. They can expose new parts of the
- *   view to the user and more.
- * - Localization plugins: Localization plugins take care how the view options
- *   are translated. There are example implementations for t(), 'no
- *   translation' and i18n.
- * - Display extenders: Display extender plugins allow scaling of views options
- *   horizontally. This means that you can add options and do stuff on all
- *   views displays. One theoretical example is metatags for views.
- *
+ * Views plugins are objects that are used to build and render the view.
  * Plugins are registered by extending one of the Views base plugin classes
  * and defining settings in the plugin annotation.
  *
+ * Views has the following types of plugins:
+ * - Access: Access plugins are responsible for controlling access to the
+ *   view. Views includes plugins for checking user roles and individual
+ *   permissions. Access plugins extend
+ *   Drupal\views\Plugin\views\access\AccessPluginBase.
+ * - Argument default: Argument default plugins allow pluggable ways of
+ *   providing default values for contextual filters. This is useful for
+ *   blocks and other display types lacking a natural argument input.
+ *   Examples are plugins to extract node and user IDs from the URL. Argument
+ *   default plugins extend
+ *   Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase.
+ * - Argument validator: Validator plugins can ensure arguments are valid,
+ *   and even do transformations on the arguments. They can also provide
+ *   replacement patterns for the view title. For example, the 'content'
+ *   validator verifies verifies that the argument value corresponds to a
+ *   node, loads that node and provides the node title as a replacement
+ *   pattern. Argument validator plugins extend
+ *   Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
+ * - Cache: Cache plugins control the storage and loading of caches.
+ *   Currently they can do both result and render caching. It might also be
+ *   possible to cache the generated query. Cache plugins extend
+ *   Drupal\views\Plugin\views\cache\CachePluginBase.
+ * - Display: Display plugins are responsible for controlling where a View is
+ *   rendered; that is, how it is exposed to other parts of Drupal. 'Page'
+ *   and 'block' are the most commonly used display plugins. Each View also
+ *   has a 'master' (or 'default') display that includes information shared
+ *   between all its displays. (See
+ *   Drupal\views\Plugin\views\display\DefaultDisplay.) Display plugins extend
+ *   Drupal\views\Plugin\views\display\DisplayPluginBase.
+ * - Display extender: Display extender plugins allow additional options or
+ *   configurations to added to views across all display types. For example,
+ *   if you wanted to allow site users to add certain metadata to the rendered
+ *   output of every view display regardless of display type, you could provide
+ *   this option as a display extender. Display extender plugins extend
+ *   Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
+ * - Exposed form: Exposed form plugins are responsible for building,
+ *   rendering, and controlling exposed forms. Exposed form plugins extend
+ *   Drupal\views\Plugin\views\display\DisplayPluginBase.
+ * - Handlers: Handler plugins help build the view query object that the query
+ *   plugin then executes to retrieve the data from the storage backend (see
+ *   below). There are several types of handlers:
+ *   - Area handlers: Extend Drupal\views\Plugin\views\area\AreaHandlerBase
+ *   - Argument handlers: Extend
+ *     Drupal\views\Plugin\views\argument\ArgumentHandlerBase
+ *   - Field handlers: Extend Drupal\views\Plugin\views\field\FieldHandlerBase
+ *   - Filter handlers: Extend
+ *     Drupal\views\Plugin\views\filter\FilterHandlerBase
+ *   - Relationship handlers:
+ *     Extend Drupal\views\Plugin\views\relationship\RelationshipHandlerBase
+ *   - Sort handlers: Extend Drupal\views\Plugin\views\sort:SortHandlerBase
+ * - Pager: Pager plugins take care of everything regarding pagers, including
+ *   getting setting the total number of items to render the pager and
+ *   setting the global pager arrays. Pager plugins extend
+ *   Drupal\views\Plugin\views\pager\PagerPluginBase.
+ * - Query: Query plugins generate and execute a built query object against a
+ *   particular storage backend, converting the Views query object into an
+ *   actual query. The only default implementation is SQL. (Note that most
+ *   handler plugins currently rely on the SQL query plugin.) Query plugins
+ *   extend Drupal\views\Plugin\views\query\QueryPluginBase.
+ * - Row style: Row styles handle rendering each individual record from the
+ *   main view table. The two default implementations render the entire entity
+ *   (nodes only), or selected fields. Row style plugins extend
+ *   Drupal\views\Plugin\views\row\RowPluginBase).
+ * - Style: Style plugins control how a view is displayed. For the most part
+ *   they are object wrappers around theme templates. Examples of styles
+ *   include HTML lists, tables, etc. Style plugins extend
+ *   Drupal\views\Plugin\views\style\StylePluginBase.
+ *
+ * @todo Add an explanation for each type of handler.
  * @todo Document how to use annotations and what goes in them.
  * @todo Add @ingroup to all the base plugins for this group.
  * @todo Add a separate @ingroup for all plugins?
@@ -171,6 +88,7 @@
  * @todo Add examples.
  *
  * @see Drupal\views\Plugin\views\PluginBase
+ * @see Drupal\views\Plugin\views\HandlerBase
  */
 
 /**
