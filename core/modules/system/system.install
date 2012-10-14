@@ -2158,7 +2158,8 @@ function system_update_8027() {
  * Remove the 'menu_masks' configuration variable.
  */
 function system_update_8028() {
-  // No upgrade path needed since the menu router will be rebuilt during d7 to d8 upgrade.
+  // No upgrade path needed since the menu router will be rebuilt during the
+  // Drupal 7 to Drupal 8 upgrade.
   update_variable_del('menu_masks');
 }
 
