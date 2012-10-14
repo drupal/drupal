@@ -28,8 +28,8 @@ class RevisionRelationships extends ViewTestBase {
     $node = $this->drupalCreateNode();
     // Create revision of the node.
     $node_revision = clone $node;
-    $node_revision->revision = 1;
-    $node->save();
+    $node_revision->setNewRevision();
+    $node_revision->save();
     $column_map = array(
       'vid' => 'vid',
       'node_revision_nid' => 'node_revision_nid',
