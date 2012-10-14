@@ -56,21 +56,21 @@ function menu_test_menu() {
   // Hidden link for menu_link_maintain tests
   $items['menu_test_maintain/%'] = array(
     'title' => 'Menu maintain test',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
    );
   // Hierarchical tests.
   $items['menu-test/hierarchy/parent'] = array(
     'title' => 'Parent menu router',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
   );
   $items['menu-test/hierarchy/parent/child'] = array(
     'title' => 'Child menu router',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
   );
   $items['menu-test/hierarchy/parent/child2/child'] = array(
     'title' => 'Unattached subchild router',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
   );
   // Theme callback tests.
   $items['menu-test/theme-callback/%'] = array(
@@ -106,19 +106,19 @@ function menu_test_menu() {
   // change, we need to simulate our own in here.
   $items['menu-test'] = array(
     'title' => 'Menu test root',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
   );
   $items['menu-test/hidden'] = array(
     'title' => 'Hidden test root',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
   );
 
   // Hidden tests; one dynamic argument.
   $items['menu-test/hidden/menu'] = array(
     'title' => 'Menus',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
   );
   $items['menu-test/hidden/menu/list'] = array(
@@ -128,20 +128,20 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/menu/add'] = array(
     'title' => 'Add menu',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/menu/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
   );
   $items['menu-test/hidden/menu/manage/%menu'] = array(
     'title' => 'Customize menu',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
   );
   $items['menu-test/hidden/menu/manage/%menu/list'] = array(
@@ -152,27 +152,27 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/menu/manage/%menu/add'] = array(
     'title' => 'Add link',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/menu/manage/%menu/edit'] = array(
     'title' => 'Edit menu',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   $items['menu-test/hidden/menu/manage/%menu/delete'] = array(
     'title' => 'Delete menu',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
   );
 
   // Hidden tests; two dynamic arguments.
   $items['menu-test/hidden/block'] = array(
     'title' => 'Blocks',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
   );
   $items['menu-test/hidden/block/list'] = array(
@@ -182,13 +182,13 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/block/add'] = array(
     'title' => 'Add block',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/block/manage/%/%'] = array(
     'title' => 'Configure block',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
   );
   $items['menu-test/hidden/block/manage/%/%/configure'] = array(
@@ -198,7 +198,7 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/block/manage/%/%/delete'] = array(
     'title' => 'Delete block',
-    'page callback' => 'node_page_default',
+    'page callback' => 'test_page_test_page',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,

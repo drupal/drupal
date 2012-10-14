@@ -20,7 +20,7 @@ class RouterTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'menu_test');
+  public static $modules = array('block', 'menu_test', 'test_page_test');
 
   public static function getInfo() {
     return array(
@@ -62,7 +62,7 @@ class RouterTest extends WebTestBase {
    * Test title callback set to FALSE.
    */
   function testTitleCallbackFalse() {
-    $this->drupalGet('node');
+    $this->drupalGet('test-page');
     $this->assertText('A title with @placeholder', 'Raw text found on the page');
     $this->assertNoText(t('A title with @placeholder', array('@placeholder' => 'some other text')), 'Text with placeholder substitutions not found.');
   }
@@ -160,7 +160,7 @@ class RouterTest extends WebTestBase {
     config('system.maintenance')->set('enabled', 1)->save();
 
     $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')));
-    $this->drupalGet('node');
+    $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
     $this->assertText('This is menu_login_callback().', 'Maintenance mode can be bypassed through hook_menu_site_status_alter().');
@@ -431,16 +431,16 @@ class RouterTest extends WebTestBase {
    * Test menu_set_item().
    */
   function testMenuSetItem() {
-    $item = menu_get_item('node');
+    $item = menu_get_item('test-page');
 
-    $this->assertEqual($item['path'], 'node', "Path from menu_get_item('node') is equal to 'node'", 'menu');
+    $this->assertEqual($item['path'], 'test-page', "Path from menu_get_item('test-page') is equal to 'test-page'", 'menu');
 
     // Modify the path for the item then save it.
-    $item['path'] = 'node_test';
-    $item['href'] = 'node_test';
+    $item['path'] = 'test-page-test';
+    $item['href'] = 'test-page-test';
 
-    menu_set_item('node', $item);
-    $compare_item = menu_get_item('node');
+    menu_set_item('test-page', $item);
+    $compare_item = menu_get_item('test-page');
     $this->assertEqual($compare_item, $item, 'Modified menu item is equal to newly retrieved menu item.', 'menu');
   }
 
@@ -466,7 +466,7 @@ class RouterTest extends WebTestBase {
     // Create a menu link with options.
     $menu_link = array(
       'link_title' => 'Menu link options test',
-      'link_path' => 'node',
+      'link_path' => 'test-page',
       'module' => 'menu_test',
       'options' => array(
         'attributes' => array(
@@ -480,7 +480,7 @@ class RouterTest extends WebTestBase {
     menu_link_save($menu_link);
 
     // Load front page.
-    $this->drupalGet('node');
+    $this->drupalGet('test-page');
     $this->assertRaw('title="Test title attribute"', 'Title attribute of a menu link renders.');
     $this->assertRaw('testparam=testvalue', 'Query parameter added to menu link.');
   }
