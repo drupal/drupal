@@ -16,7 +16,7 @@ class BlockTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'test_page_test');
 
   protected $regions;
   protected $admin_user;
@@ -31,6 +31,9 @@ class BlockTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+
+    // Use the test page as the front page.
+    config('system.site')->set('page.front', 'test-page')->save();
 
     // Create Full HTML text format.
     $full_html_format = array(
@@ -152,7 +155,7 @@ class BlockTest extends WebTestBase {
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the custom block is being displayed using configured text format.
-    $this->drupalGet('node');
+    $this->drupalGet('');
     $this->assertRaw('<h1>Full HTML</h1>', 'Custom block successfully being displayed using Full HTML.');
 
     // Confirm that a user without access to Full HTML can not see the body field,
@@ -165,7 +168,7 @@ class BlockTest extends WebTestBase {
     $this->assertNoText(t('Ensure that each block description is unique.'));
 
     // Confirm that the custom block is still being displayed using configured text format.
-    $this->drupalGet('node');
+    $this->drupalGet('');
     $this->assertRaw('<h1>Full HTML</h1>', 'Custom block successfully being displayed using Full HTML.');
   }
 
@@ -173,10 +176,6 @@ class BlockTest extends WebTestBase {
    * Test block visibility.
    */
   function testBlockVisibility() {
-    // Enable Node module and change the front page path to 'node'.
-    module_enable(array('node'));
-    config('system.site')->set('page.front', 'node')->save();
-
     $block = array();
 
     // Create a random title for the block
@@ -253,16 +252,16 @@ class BlockTest extends WebTestBase {
     $edit['visibility'] = BLOCK_VISIBILITY_LISTED;
     $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
 
-    $this->drupalGet('');
+    $this->drupalGet('user');
     $this->assertNoText($title, 'Block was not displayed according to block visibility rules.');
 
-    $this->drupalGet('user');
+    $this->drupalGet('USER');
     $this->assertNoText($title, 'Block was not displayed according to block visibility rules regardless of path case.');
 
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($title, 'Block was not displayed to anonymous users.');
+    $this->assertNoText($title, 'Block was not displayed to anonymous users on the front page.');
   }
 
   /**
@@ -299,7 +298,7 @@ class BlockTest extends WebTestBase {
     $edit['block[' . $block['module'] . '][' . $block['delta'] . ']'] = FALSE;
     $this->drupalPost('user/' . $this->admin_user->uid . '/edit', $edit, t('Save'));
 
-    $this->drupalGet('');
+    $this->drupalGet('user');
     $this->assertNoText($block['title'], 'Block was not displayed according to per user block visibility setting.');
 
     // Set the block to be customizable per user, hidden by default.
@@ -312,7 +311,7 @@ class BlockTest extends WebTestBase {
     $edit['block[' . $block['module'] . '][' . $block['delta'] . ']'] = TRUE;
     $this->drupalPost('user/' . $this->admin_user->uid . '/edit', $edit, t('Save'));
 
-    $this->drupalGet('');
+    $this->drupalGet('user');
     $this->assertText($block['title'], 'Block was displayed according to per user block visibility setting.');
   }
 
@@ -365,7 +364,19 @@ class BlockTest extends WebTestBase {
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
   }
 
-  function moveBlockToRegion($block, $region) {
+  /**
+   * Moves a block to a given region via the UI and confirms the result.
+   *
+   * @param array $block
+   *   An array of information about the block, including the following keys:
+   *   - module: The module providing the block.
+   *   - title: The title of the block.
+   *   - delta: The block's delta key.
+   * @param string $region
+   *   The machine name of the theme region to move the block to, for example
+   *   'header' or 'sidebar_first'.
+   */
+  function moveBlockToRegion(array $block, $region) {
     // Set the created block to a specific region.
     $edit = array();
     $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $region;
@@ -375,7 +386,7 @@ class BlockTest extends WebTestBase {
     $this->assertText(t('The block settings have been updated.'), format_string('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
 
     // Confirm that the block is being displayed.
-    $this->drupalGet('node');
+    $this->drupalGet('');
     $this->assertText(t($block['title']), 'Block successfully being displayed on the page.');
 
     // Confirm that the custom block was found at the proper region.
