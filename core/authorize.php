@@ -12,7 +12,7 @@
  * a multistep process. This script actually performs the selected operations
  * without loading all of Drupal, to be able to more gracefully recover from
  * errors. Access to the script is controlled by a global killswitch in
- * settings.php ('allow_authorize_operations') and via the 'administer software
+ * settings.php ('allow_operations') and via the 'administer software
  * updates' permission.
  *
  * There are helper functions for setting up an operation to run via this
@@ -58,7 +58,7 @@ function authorize_access_denied_page() {
  *   TRUE if the current user can run authorize.php, and FALSE if not.
  */
 function authorize_access_allowed() {
-  return variable_get('allow_authorize_operations', TRUE) && user_access('administer software updates');
+  return config('system.authorize')->get('allow_operations') && user_access('administer software updates');
 }
 
 // *** Real work of the script begins here. ***

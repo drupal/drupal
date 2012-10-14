@@ -40,7 +40,7 @@ function authorize_filetransfer_form($form, &$form_state) {
   if (isset($form_state['values']['connection_settings']['authorize_filetransfer_default'])) {
     $authorize_filetransfer_default = $form_state['values']['connection_settings']['authorize_filetransfer_default'];
   }
-  elseif ($authorize_filetransfer_default = variable_get('authorize_filetransfer_default', NULL));
+  elseif ($authorize_filetransfer_default = config('system.authorize')->get('filetransfer_default'));
   else {
     $authorize_filetransfer_default = key($available_backends);
   }
@@ -139,7 +139,8 @@ function authorize_filetransfer_form($form, &$form_state) {
  * @see hook_filetransfer_backends()
  */
 function _authorize_filetransfer_connection_settings($backend) {
-  $defaults = variable_get('authorize_filetransfer_connection_settings_' . $backend, array());
+  $auth_connection_config = config('system.authorize')->get('filetransfer_connection_settings_' . $backend);
+  $defaults = $auth_connection_config ? $auth_connection_config : array();
   $form = array();
 
   // Create an instance of the file transfer class to get its settings form.
@@ -254,9 +255,9 @@ function authorize_filetransfer_form_submit($form, &$form_state) {
           }
         }
         // Set this one as the default authorize method.
-        variable_set('authorize_filetransfer_default', $filetransfer_backend);
+        config('system.authorize')->set('filetransfer_default', $filetransfer_backend);
         // Save the connection settings minus the password.
-        variable_set('authorize_filetransfer_connection_settings_' . $filetransfer_backend, $connection_settings);
+        config('system.authorize')->set('filetransfer_connection_settings_' . $filetransfer_backend, $connection_settings);
 
         $filetransfer = authorize_get_filetransfer($filetransfer_backend, $form_state['values']['connection_settings'][$filetransfer_backend]);
 

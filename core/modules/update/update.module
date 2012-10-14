@@ -251,7 +251,7 @@ function update_menu() {
  * @see update_menu()
  */
 function update_manager_access() {
-  return variable_get('allow_authorize_operations', TRUE) && user_access('administer software updates');
+  return config('system.authorize')->get('allow_operations') && user_access('administer software updates');
 }
 
 /**

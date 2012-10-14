@@ -2175,6 +2175,18 @@ function system_update_8029() {
   update_variable_del('path_alias_whitelist');
 }
 
+ /**
+ * Moves authorize system settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8030() {
+  update_variables_to_config('system.authorize', array(
+    'allow_authorize_operations' => 'allow_operations',
+    'authorize_filetransfer_default' => 'filetransfer_default',
+  ));
+}
+
 /**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
