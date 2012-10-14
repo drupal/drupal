@@ -145,10 +145,26 @@ abstract class Connection extends PDO {
     // Call PDO::__construct and PDO::setAttribute.
     parent::__construct($dsn, $username, $password, $driver_options);
 
-    // Set a specific PDOStatement class if the driver requires that.
+    // Set a Statement class, unless the driver opted out.
     if (!empty($this->statementClass)) {
       $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
+  }
+
+  /**
+   * Destroys this Connection object.
+   *
+   * PHP does not destruct an object if it is still referenced in other
+   * variables. In case of PDO database connection objects, PHP only closes the
+   * connection when the PDO object is destructed, so any references to this
+   * object may cause the number of maximum allowed connections to be exceeded.
+   */
+  public function destroy() {
+    // Destroy all references to this connection by setting them to NULL.
+    // The Statement class attribute only accepts a new value that presents a
+    // proper callable, so we reset it to PDOStatement.
+    $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
+    $this->schema = NULL;
   }
 
   /**

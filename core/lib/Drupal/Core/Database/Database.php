@@ -338,8 +338,8 @@ abstract class Database {
    */
   final public static function removeConnection($key) {
     if (isset(self::$databaseInfo[$key])) {
+      self::closeConnection(NULL, $key);
       unset(self::$databaseInfo[$key]);
-      unset(self::$connections[$key]);
       return TRUE;
     }
     else {
@@ -402,11 +402,24 @@ abstract class Database {
     if (!isset($key)) {
       $key = self::$activeKey;
     }
-    // To close the connection, we need to unset the static variable.
+    // To close a connection, it needs to be set to NULL and removed from the
+    // static variable. In all cases, closeConnection() might be called for a
+    // connection that was not opened yet, in which case the key is not defined
+    // yet and we just ensure that the connection key is undefined.
     if (isset($target)) {
+      if (isset(self::$connections[$key][$target])) {
+        self::$connections[$key][$target]->destroy();
+        self::$connections[$key][$target] = NULL;
+      }
       unset(self::$connections[$key][$target]);
     }
     else {
+      if (isset(self::$connections[$key])) {
+        foreach (self::$connections[$key] as $target => $connection) {
+          self::$connections[$key][$target]->destroy();
+          self::$connections[$key][$target] = NULL;
+        }
+      }
       unset(self::$connections[$key]);
     }
   }

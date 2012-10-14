@@ -50,8 +50,8 @@ class Transaction {
    */
   protected $name;
 
-  public function __construct(Connection &$connection, $name = NULL) {
-    $this->connection = &$connection;
+  public function __construct(Connection $connection, $name = NULL) {
+    $this->connection = $connection;
     // If there is no transaction depth, then no transaction has started. Name
     // the transaction 'drupal_transaction'.
     if (!$depth = $connection->transactionDepth()) {
