@@ -960,7 +960,20 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
   // Field rows.
   foreach ($instances as $name => $instance) {
     $field = field_info_field($instance['field_name']);
-    $display = $instance['display'][$view_mode];
+
+    // Provide default settings if needed.
+    if (isset($instance['display'][$view_mode])) {
+      $display = $instance['display'][$view_mode];
+    }
+    else {
+      $display = array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      );
+    }
+
     $table[$name] = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
       '#row_type' => 'field',
@@ -1025,23 +1038,12 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     // Check the currently selected formatter, and merge persisted values for
     // formatter settings.
     if (isset($form_state['values']['fields'][$name]['type'])) {
-      $formatter_type = $form_state['values']['fields'][$name]['type'];
-    }
-    else {
-      $formatter_type = $display['type'];
+      $display['type'] = $form_state['values']['fields'][$name]['type'];
     }
     if (isset($form_state['formatter_settings'][$name])) {
-      $settings = $form_state['formatter_settings'][$name];
+      $display['settings'] = $form_state['formatter_settings'][$name];
     }
-    else {
-      $settings = $display['settings'];
-    }
-    $settings += field_info_formatter_settings($formatter_type);
-
-    $instance['display'][$view_mode]['type'] = $formatter_type;
-    $formatter = field_info_formatter_types($formatter_type);
-    $instance['display'][$view_mode]['module'] = $formatter['module'];
-    $instance['display'][$view_mode]['settings'] = $settings;
+    $formatter = $instance->getFormatter($display);
 
     // Base button element for the various formatter settings actions.
     $base_button = array(
@@ -1059,86 +1061,89 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       // settings form and submit buttons.
       $table[$name]['format']['settings_edit_form'] = array();
 
-      $settings_form = array();
-      $function = $formatter['module'] . '_field_formatter_settings_form';
-      if (function_exists($function)) {
-        $settings_form = $function($field, $instance, $view_mode, $form, $form_state);
-      }
+      if ($formatter) {
+        $formatter_type_info = $formatter->getDefinition();
 
-      // Allow other modules to alter the formatter settings form.
-      $context = array(
-        'module' => $formatter['module'],
-        'formatter' => $formatter,
-        'field' => $field,
-        'instance' => $instance,
-        'view_mode' => $view_mode,
-        'form' => $form,
-      );
-      drupal_alter('field_formatter_settings_form', $settings_form, $form_state, $context);
-
-      if ($settings_form) {
-        $table[$name]['format']['#cell_attributes'] = array('colspan' => 3);
-        $table[$name]['format']['settings_edit_form'] = array(
-          '#type' => 'container',
-          '#attributes' => array('class' => array('field-formatter-settings-edit-form')),
-          '#parents' => array('fields', $name, 'settings_edit_form'),
-          'label' => array(
-            '#markup' => t('Format settings:') . ' <span class="formatter-name">' . $formatter['label'] . '</span>',
-          ),
-          'settings' => $settings_form,
-          'actions' => array(
-            '#type' => 'actions',
-            'save_settings' => $base_button + array(
-              '#type' => 'submit',
-              '#name' => $name . '_formatter_settings_update',
-              '#value' => t('Update'),
-              '#op' => 'update',
-            ),
-            'cancel_settings' => $base_button + array(
-              '#type' => 'submit',
-              '#name' => $name . '_formatter_settings_cancel',
-              '#value' => t('Cancel'),
-              '#op' => 'cancel',
-              // Do not check errors for the 'Cancel' button, but make sure we
-              // get the value of the 'formatter type' select.
-              '#limit_validation_errors' => array(array('fields', $name, 'type')),
-            ),
-          ),
+        // Generate the settings form and allow other modules to alter it.
+        $settings_form = $formatter->settingsForm($form, $form_state);
+        $context = array(
+          'formatter' => $formatter,
+          'field' => $field,
+          'instance' => $instance,
+          'view_mode' => $view_mode,
+          'form' => $form,
         );
-        $table[$name]['#attributes']['class'][] = 'field-formatter-settings-editing';
+        drupal_alter('field_formatter_settings_form', $settings_form, $form_state, $context);
+
+        if ($settings_form) {
+          $table[$name]['format']['#cell_attributes'] = array('colspan' => 3);
+          $table[$name]['format']['settings_edit_form'] = array(
+            '#type' => 'container',
+            '#attributes' => array('class' => array('field-formatter-settings-edit-form')),
+            '#parents' => array('fields', $name, 'settings_edit_form'),
+            'label' => array(
+              '#markup' => t('Format settings:') . ' <span class="formatter-name">' . $formatter_type_info['label'] . '</span>',
+            ),
+            'settings' => $settings_form,
+            'actions' => array(
+              '#type' => 'actions',
+              'save_settings' => $base_button + array(
+                '#type' => 'submit',
+                '#name' => $name . '_formatter_settings_update',
+                '#value' => t('Update'),
+                '#op' => 'update',
+              ),
+              'cancel_settings' => $base_button + array(
+                '#type' => 'submit',
+                '#name' => $name . '_formatter_settings_cancel',
+                '#value' => t('Cancel'),
+                '#op' => 'cancel',
+                // Do not check errors for the 'Cancel' button, but make sure we
+                // get the value of the 'formatter type' select.
+                '#limit_validation_errors' => array(array('fields', $name, 'type')),
+              ),
+            ),
+          );
+          $table[$name]['#attributes']['class'][] = 'field-formatter-settings-editing';
+        }
       }
     }
     else {
-      // Display a summary of the current formatter settings.
-      $summary = module_invoke($formatter['module'], 'field_formatter_settings_summary', $field, $instance, $view_mode);
-
-      // Allow other modules to alter the summary.
-      $context = array(
-        'field' => $field,
-        'instance' => $instance,
-        'view_mode' => $view_mode,
-      );
-      drupal_alter('field_formatter_settings_summary', $summary, $context);
-
       $table[$name]['settings_summary'] = array();
       $table[$name]['settings_edit'] = array();
-      if ($summary) {
-        $table[$name]['settings_summary'] = array(
-          '#markup' => '<div class="field-formatter-summary">' . $summary . '</div>',
-          '#cell_attributes' => array('class' => array('field-formatter-summary-cell')),
+
+      if ($formatter) {
+        // Display a summary of the current formatter settings, and (if the
+        // summary is not empty) a button to edit them.
+        $summary = $formatter->settingsSummary();
+
+        // Allow other modules to alter the summary.
+        $context = array(
+          'formatter' => $formatter,
+          'field' => $field,
+          'instance' => $instance,
+          'view_mode' => $view_mode,
         );
-        $table[$name]['settings_edit'] = $base_button + array(
-          '#type' => 'image_button',
-          '#name' => $name . '_formatter_settings_edit',
-          '#src' => 'core/misc/configure-dark.png',
-          '#attributes' => array('class' => array('field-formatter-settings-edit'), 'alt' => t('Edit')),
-          '#op' => 'edit',
-          // Do not check errors for the 'Edit' button, but make sure we get
-          // the value of the 'formatter type' select.
-          '#limit_validation_errors' => array(array('fields', $name, 'type')),
-          '#prefix' => '<div class="field-formatter-settings-edit-wrapper">',
-          '#suffix' => '</div>',
-        );
+        drupal_alter('field_formatter_settings_summary', $summary, $context);
+
+        if ($summary) {
+          $table[$name]['settings_summary'] = array(
+            '#markup' => '<div class="field-formatter-summary">' . $summary . '</div>',
+            '#cell_attributes' => array('class' => array('field-formatter-summary-cell')),
+          );
+          $table[$name]['settings_edit'] = $base_button + array(
+            '#type' => 'image_button',
+            '#name' => $name . '_formatter_settings_edit',
+            '#src' => 'core/misc/configure-dark.png',
+            '#attributes' => array('class' => array('field-formatter-settings-edit'), 'alt' => t('Edit')),
+            '#op' => 'edit',
+            // Do not check errors for the 'Edit' button, but make sure we get
+            // the value of the 'formatter type' select.
+            '#limit_validation_errors' => array(array('fields', $name, 'type')),
+            '#prefix' => '<div class="field-formatter-settings-edit-wrapper">',
+            '#suffix' => '</div>',
+          );
+        }
       }
     }
   }
@@ -1264,7 +1269,6 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
 
   return $form;
 }
-
 
 /**
  * Form submission handler for buttons in field_ui_display_overview_form().
@@ -1540,7 +1544,7 @@ function field_ui_formatter_options($field_type = NULL) {
     $field_types = field_info_field_types();
     $options = array();
     foreach (field_info_formatter_types() as $name => $formatter) {
-      foreach ($formatter['field types'] as $formatter_field_type) {
+      foreach ($formatter['field_types'] as $formatter_field_type) {
         // Check that the field type exists.
         if (isset($field_types[$formatter_field_type])) {
           $options[$formatter_field_type][$name] = $formatter['label'];

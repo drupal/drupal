@@ -27,6 +27,13 @@ class FieldInstance implements \ArrayAccess {
   protected $widget;
 
   /**
+   * The formatter objects used for this instance, keyed by view mode.
+   *
+   * @var array
+   */
+  protected $formatters;
+
+  /**
    * Constructs a FieldInstance object.
    *
    * @param array $definition
@@ -68,6 +75,88 @@ class FieldInstance implements \ArrayAccess {
   }
 
   /**
+   * Returns a Formatter plugin for the instance.
+   *
+   * @param mixed $display_properties
+   *   Can be either:
+   *   - The name of a view mode.
+   *   - An array of display properties, as found in the 'display' entry of
+   *     $instance definitions.
+   *
+   * @return Drupal\field\Plugin\Type\Formatter\FormatterInterface|null
+   *   The Formatter plugin to be used for the instance, or NULL if the field
+   *   is hidden.
+   */
+  public function getFormatter($display_properties) {
+    if (is_string($display_properties)) {
+      // A view mode was provided. Switch to 'default' if the view mode is not
+      // configured to use dedicated settings.
+      $view_mode = $display_properties;
+      $view_mode_settings = field_view_mode_settings($this->definition['entity_type'], $this->definition['bundle']);
+      $actual_mode = (!empty($view_mode_settings[$view_mode]['custom_settings']) ? $view_mode : 'default');
+
+      if (isset($this->formatters[$actual_mode])) {
+        return $this->formatters[$actual_mode];
+      }
+
+      // Switch to 'hidden' if the instance has no properties for the view
+      // mode.
+      if (isset($this->definition['display'][$actual_mode])) {
+        $display_properties = $this->definition['display'][$actual_mode];
+      }
+      else {
+        $display_properties = array(
+          'type' => 'hidden',
+          'settings' => array(),
+          'label' => 'above',
+          'weight' => 0,
+        );
+      }
+
+      // Let modules alter the widget properties.
+      $context = array(
+        'entity_type' => $this->definition['entity_type'],
+        'bundle' => $this->definition['bundle'],
+        'field' => field_info_field($this->definition['field_name']),
+        'instance' => $this,
+        'view_mode' => $view_mode,
+      );
+      drupal_alter(array('field_display', 'field_display_' . $this->definition['entity_type']), $display_properties, $context);
+    }
+    else {
+      // Arbitrary display settings. Make sure defaults are present.
+      $display_properties += array(
+        'settings' => array(),
+        'label' => 'above',
+        'weight' => 0,
+      );
+      $view_mode = '_custom_display';
+    }
+
+    if (!empty($display_properties['type']) && $display_properties['type'] != 'hidden') {
+      $options = array(
+        'instance' => $this,
+        'type' => $display_properties['type'],
+        'settings' => $display_properties['settings'],
+        'label' => $display_properties['label'],
+        'weight' => $display_properties['weight'],
+        'view_mode' => $view_mode,
+      );
+      $formatter = field_get_plugin_manager('formatter')->getInstance($options);
+    }
+    else {
+      $formatter = NULL;
+    }
+
+    // Persist the object if we were not passed custom display settings.
+    if (isset($actual_mode)) {
+      $this->formatters[$actual_mode] = $formatter;
+    }
+
+    return $formatter;
+  }
+
+  /**
    * Implements ArrayAccess::offsetExists().
    */
   public function offsetExists($offset) {
@@ -91,10 +180,13 @@ class FieldInstance implements \ArrayAccess {
     }
     $this->definition[$offset] = $value;
 
-    // If the widget properties changed, the widget plugin needs to be
-    // re-instanciated.
+    // If the widget or formatter properties changed, the corrsponding plugins
+    // need to be re-instanciated.
     if ($offset == 'widget') {
       unset($this->widget);
+    }
+    if ($offset == 'display') {
+      unset($this->formatters);
     }
   }
 
@@ -104,10 +196,13 @@ class FieldInstance implements \ArrayAccess {
   public function offsetUnset($offset) {
     unset($this->definition[$offset]);
 
-    // If the widget properties changed, the widget plugin needs to be
-    // re-instanciated.
+    // If the widget or formatter properties changed, the corrsponding plugins
+    // need to be re-instanciated.
     if ($offset == 'widget') {
       unset($this->widget);
+    }
+    if ($offset == 'display') {
+      unset($this->formatters);
     }
   }
 

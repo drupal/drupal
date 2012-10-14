@@ -11,14 +11,19 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Plugin\Discovery\HookDiscovery;
 
 /**
- * Custom decorator to add legacy widgets.
+ * Custom decorator to add legacy plugins.
  *
- * Legacy widgets are discovered through the old hook_field_widget_info() hook,
- * and handled by the Drupal\field\Plugin\field\widget\LegacyWidget class.
- *
- * @todo Remove once all core widgets have been converted.
+ * Legacy plugins are discovered through
+ * Drupal\Core\Plugin\Discovery\HookDiscovery, and handled by a legacy class.
  */
-class LegacyDiscoveryDecorator implements DiscoveryInterface {
+abstract class LegacyDiscoveryDecorator implements DiscoveryInterface {
+
+  /**
+   * The name of the hook for Drupal\Core\Plugin\Discovery\HookDiscovery.
+   *
+   * @var string
+   */
+  protected $hook;
 
   /**
    * The decorated discovery object.
@@ -52,28 +57,32 @@ class LegacyDiscoveryDecorator implements DiscoveryInterface {
   public function getDefinitions() {
     $definitions = $this->decorated->getDefinitions();
 
-    $legacy_discovery = new HookDiscovery('field_widget_info');
+    $legacy_discovery = new HookDiscovery($this->hook);
     if ($legacy_definitions = $legacy_discovery->getDefinitions()) {
-      foreach ($legacy_definitions as $plugin_id => &$definition) {
-        $definition['class'] = '\Drupal\field\Plugin\field\widget\LegacyWidget';
+      foreach ($legacy_definitions as $plugin_id => $definition) {
+        $this->processDefinition($definition);
 
-        // Transform properties for which the format has changed.
-        if (isset($definition['field types'])) {
-          $definition['field_types'] = $definition['field types'];
-          unset($definition['field types']);
-        }
-        if (isset($definition['behaviors']['multiple values'])) {
-          $definition['multiple_values'] = $definition['behaviors']['multiple values'];
-          unset($definition['behaviors']['multiple values']);
-        }
         if (isset($definition['behaviors']['default value'])) {
           $definition['default_value'] = $definition['behaviors']['default value'];
           unset($definition['behaviors']['default value']);
         }
+
         $definitions[$plugin_id] = $definition;
       }
     }
     return $definitions;
   }
+
+  /**
+   * Massages a legacy plugin definition.
+   *
+   * @var array $definition
+   *   A plugin definition, as discovered by
+   *   Drupal\Core\Plugin\Discovery\HookDiscovery.
+   *
+   * @return array
+   *   The massaged plugin definition.
+   */
+  abstract public function processDefinition(array &$definition);
 
 }

@@ -107,24 +107,25 @@ const FIELD_STORAGE_INSERT = 'insert';
  */
 
 /**
- * Invoke a method on all the fields of a given entity.
+ * Invokes a method on all the fields of a given entity.
  *
  * @todo Remove _field_invoke() and friends when field types and formatters are
  * turned into plugins.
  *
  * @param string $method
  *   The name of the method to invoke.
- * @param Closure $target
- *   A closure that receives an $instance object and returns the object on
+ * @param callable $target_function
+ *   A function that receives an $instance object and returns the object on
  *   which the method should be invoked.
  * @param Drupal\Core\Entity\EntityInterface $entity
  *   The fully formed $entity_type entity.
  * @param mixed $a
- *   A parameter for the invoked method. Defaults to NULL.
+ *   (optional) A parameter for the invoked method. Defaults to NULL.
  * @param mixed $b
- *   A parameter for the invoked method. Defaults to NULL.
+ *   (optional) A parameter for the invoked method. Defaults to NULL.
  * @param array $options
- *   An associative array of additional options, with the following keys:
+ *   (optional) An associative array of additional options, with the following
+ *   keys:
  *   - field_name: The name of the field whose operation should be invoked. By
  *     default, the operation is invoked on all the fields in the entity's
  *     bundle. NOTE: This option is not compatible with the 'deleted' option;
@@ -138,8 +139,11 @@ const FIELD_STORAGE_INSERT = 'insert';
  *   - langcode: A language code or an array of language codes keyed by field
  *     name. It will be used to narrow down to a single value the available
  *     languages to act on.
+ *
+ * @return array
+ *   An array of returned values.
  */
-function field_invoke_method($method, \Closure $target_closure, EntityInterface $entity, &$a = NULL, &$b = NULL, array $options = array()) {
+function field_invoke_method($method, $target_function, EntityInterface $entity, &$a = NULL, &$b = NULL, array $options = array()) {
   // Merge default options.
   $default_options = array(
     'deleted' => FALSE,
@@ -155,9 +159,9 @@ function field_invoke_method($method, \Closure $target_closure, EntityInterface 
   $return = array();
   foreach ($instances as $instance) {
 
-    // Let the closure determine the target object on which the method should be
+    // Let the function determine the target object on which the method should be
     // called.
-    $target = $target_closure($instance);
+    $target = call_user_func($target_function, $instance);
 
     if (method_exists($target, $method)) {
       $field = field_info_field_by_id($instance['field_id']);
@@ -187,6 +191,136 @@ function field_invoke_method($method, \Closure $target_closure, EntityInterface 
         // fields with an empty array (those are not equivalent on update).
         if ($items !== array() || isset($entity->{$field_name}[$langcode])) {
           $entity->{$field_name}[$langcode] = $items;
+        }
+      }
+    }
+  }
+
+  return $return;
+}
+
+/**
+ * Invokes a method across fields on multiple entities.
+ *
+ * @param string $method
+ *   The name of the method to invoke.
+ * @param callable $target_function
+ *   A function that receives an $instance object and returns the object on
+ *   which the method should be invoked.
+ * @param array $entities
+ *   An array of entities, keyed by entity ID.
+ * @param mixed $a
+ *   (optional) A parameter for the invoked method. Defaults to NULL.
+ * @param mixed $b
+ *   (optional) A parameter for the invoked method. Defaults to NULL.
+ * @param $options
+ *   (optional) An associative array of additional options, with the following
+ *   keys:
+ *   - field_name: The name of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's
+ *     bundle. NOTE: This option is not compatible with the 'deleted' option;
+ *     the 'field_id' option should be used instead.
+ *   - field_id: The ID of the field whose operation should be invoked. By
+ *     default, the operation is invoked on all the fields in the entity's'
+ *     bundles.
+ *   - deleted: If TRUE, the function will operate on deleted fields as well
+ *     as non-deleted fields. If unset or FALSE, only non-deleted fields are
+ *     operated on.
+ *   - langcode: A language code or an array of language codes keyed by field
+ *     name. It will be used to narrow down to a single value the available
+ *     languages to act on.
+ *
+ * @return array
+ *   An array of returned values keyed by entity ID.
+ *
+ * @see field_invoke_method()
+ */
+function field_invoke_method_multiple($method, $target_function, array $entities, &$a = NULL, &$b = NULL, array $options = array()) {
+  // Merge default options.
+  $default_options = array(
+    'deleted' => FALSE,
+    'langcode' => NULL,
+  );
+  $options += $default_options;
+
+  $instances = array();
+  $grouped_entities = array();
+  $grouped_items = array();
+  $grouped_targets = array();
+  $return = array();
+
+  // Go through the entities and collect the instances on which the method
+  // should be called.
+  foreach ($entities as $entity) {
+    $id = $entity->id();
+    $entity_type = $entity->entityType();
+
+    // Determine the list of instances to iterate on.
+    $entity_instances = _field_invoke_get_instances($entity_type, $entity->bundle(), $options);
+
+    foreach ($entity_instances as $instance) {
+      $instance_id = $instance['id'];
+      $field_name = $instance['field_name'];
+
+      // Let the closure determine the target object on which the method should
+      // be called.
+      if (empty($grouped_targets[$instance_id])) {
+        $grouped_targets[$instance_id] = call_user_func($target_function, $instance);
+      }
+
+      if (method_exists($grouped_targets[$instance_id], $method)) {
+        // Add the instance to the list of instances to invoke the hook on.
+        if (!isset($instances[$instance_id])) {
+          $instances[$instance_id] = $instance;
+        }
+
+        // Unless a language code suggestion is provided we iterate on all the
+        // available language codes.
+        $field = field_info_field_by_id($instance['field_id']);
+        $available_langcodes = field_available_languages($entity_type, $field);
+        $langcode = !empty($options['langcode'][$id]) ? $options['langcode'][$id] : $options['langcode'];
+        $langcodes = _field_language_suggestion($available_langcodes, $langcode, $field_name);
+        foreach ($langcodes as $langcode) {
+          // Group the entities and items corresponding to the current field.
+          $grouped_entities[$instance_id][$langcode][$id] = $entities[$id];
+          $grouped_items[$instance_id][$langcode][$id] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+        }
+      }
+    }
+    // Initialize the return value for each entity.
+    $return[$id] = array();
+  }
+
+  // For each instance, invoke the method and collect results.
+  foreach ($instances as $instance_id => $instance) {
+    $field_name = $instance['field_name'];
+
+    // Iterate over all the field translations.
+    foreach ($grouped_items[$instance_id] as $langcode => &$items) {
+      $entities = $grouped_entities[$instance_id][$langcode];
+      $results = $grouped_targets[$instance_id]->$method($entities, $langcode, $items, $a, $b);
+
+      if (isset($results)) {
+        // Collect results by entity.
+        // For hooks with array results, we merge results together.
+        // For hooks with scalar results, we collect results in an array.
+        foreach ($results as $id => $result) {
+          if (is_array($result)) {
+            $return[$id] = array_merge($return[$id], $result);
+          }
+          else {
+            $return[$id][] = $result;
+          }
+        }
+      }
+    }
+
+    // Populate field values back in the entities, but avoid replacing missing
+    // fields with an empty array (those are not equivalent on update).
+    foreach ($grouped_entities[$instance_id] as $langcode => $entities) {
+      foreach ($entities as $id => $entity) {
+        if ($grouped_items[$instance_id][$langcode][$id] !== array() || isset($entity->{$field_name}[$langcode])) {
+          $entity->{$field_name}[$langcode] = $grouped_items[$instance_id][$langcode][$id];
         }
       }
     }
@@ -563,16 +697,36 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
 }
 
 /**
- * Defines a 'target closure' for field_invoke_method().
+ * Defines a 'target function' for field_invoke_method().
  *
  * Used to invoke methods on an instance's widget.
  *
- * @return Closure
- *   A 'target closure' for field_invoke_method().
+ * @return callable $target_function
+ *   A 'target function' for field_invoke_method().
  */
 function _field_invoke_widget_target() {
   return function ($instance) {
     return $instance->getWidget();
+  };
+}
+
+/**
+ * Defines a 'target function' for field_invoke_method().
+ *
+ * Used to invoke methods on an instance's formatter.
+ *
+ * @param mixed $display
+ *   Can be either:
+ *   - The name of a view mode.
+ *   - An array of display properties, as found in
+ *     $instance['display'][$view_mode].
+ *
+ * @return callable $target_function
+ *   A 'target function' for field_invoke_method().
+ */
+function _field_invoke_formatter_target($display) {
+  return function ($instance) use ($display) {
+    return $instance->getFormatter($display);
   };
 }
 
@@ -1223,9 +1377,7 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcod
   // First let the field types do their preparation.
   _field_invoke_multiple('prepare_view', $entity_type, $prepare, $null, $null, $options);
   // Then let the formatters do their own specific massaging.
-  // field_default_prepare_view() takes care of dispatching to the correct
-  // formatters according to the display settings for the view mode.
-  _field_invoke_multiple_default('prepare_view', $entity_type, $prepare, $view_mode, $null, $options);
+  field_invoke_method_multiple('prepareView', _field_invoke_formatter_target($view_mode), $prepare, $view_mode, $null, $options);
 }
 
 /**
@@ -1281,7 +1433,7 @@ function field_attach_view($entity_type, EntityInterface $entity, $view_mode, $l
 
   // Invoke field_default_view().
   $null = NULL;
-  $output = _field_invoke_default('view', $entity_type, $entity, $view_mode, $null, $options);
+  $output = field_invoke_method('view', _field_invoke_formatter_target($view_mode), $entity, $view_mode, $null, $options);
 
   // Add custom weight handling.
   $output['#pre_render'][] = '_field_extra_fields_pre_render';

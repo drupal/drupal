@@ -91,43 +91,6 @@ function hook_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Specify the form elements for a formatter's settings.
- *
- * @param $field
- *   The field structure being configured.
- * @param $instance
- *   The instance structure being configured.
- * @param $view_mode
- *   The view mode being configured.
- * @param $form
- *   The (entire) configuration form array, which will usually have no use here.
- * @param $form_state
- *   The form state of the (entire) configuration form.
- *
- * @return
- *   The form elements for the formatter settings.
- */
-function hook_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
-  $display = $instance['display'][$view_mode];
-  $settings = $display['settings'];
-
-  $element = array();
-
-  if ($display['type'] == 'text_trimmed' || $display['type'] == 'text_summary_or_trimmed') {
-    $element['trim_length'] = array(
-      '#title' => t('Length'),
-      '#type' => 'number',
-      '#default_value' => $settings['trim_length'],
-      '#min' => 1,
-      '#required' => TRUE,
-    );
-  }
-
-  return $element;
-
-}
-
-/**
  * Alter the formatter settings form.
  *
  * @param $element
@@ -136,21 +99,19 @@ function hook_field_formatter_settings_form($field, $instance, $view_mode, $form
  *   The form state of the (entire) configuration form.
  * @param $context
  *   An associative array with the following elements:
- *   - 'module': The module that contains the definition of this formatter.
- *   - 'formatter': The formatter type description array.
- *   - 'field': The field structure being configured.
- *   - 'instance': The instance structure being configured.
- *   - 'view_mode': The view mode being configured.
- *   - 'form': The (entire) configuration form array.
+ *   - formatter: The formatter object.
+ *   - field: The field structure being configured.
+ *   - instance: The instance structure being configured.
+ *   - view_mode: The view mode being configured.
+ *   - form: The (entire) configuration form array.
  */
 function hook_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
-  // Add a mysetting checkbox to the settings form for foo_field fields.
+  // Add a 'mysetting' checkbox to the settings form for 'foo_field' fields.
   if ($context['field']['type'] == 'foo_field') {
-    $display = $context['instance']['display'][$context['view_mode']];
     $element['mysetting'] = array(
       '#type' => 'checkbox',
       '#title' => t('My setting'),
-      '#default_value' => $display['settings']['mysetting'],
+      '#default_value' => $context['formatter']->getSetting('mysetting'),
     );
   }
 }
@@ -162,49 +123,19 @@ function hook_field_formatter_settings_form_alter(&$element, &$form_state, $cont
  *   The summary as returned by hook_field_formatter_settings_summary().
  * @param $context
  *   An associative array with the following elements:
- *   - 'field': The field structure being configured.
- *   - 'instance': The instance structure being configured.
- *   - 'view_mode': The view mode being configured.
+ *   - formatter: The formatter object.
+ *   - field: The field structure being configured.
+ *   - instance: The instance structure being configured.
+ *   - view_mode: The view mode being configured.
  */
 function hook_field_formatter_settings_summary_alter(&$summary, $context) {
   // Append a message to the summary when an instance of foo_field has
   // mysetting set to TRUE for the current view mode.
   if ($context['field']['type'] == 'foo_field') {
-    $display = $context['instance']['display'][$context['view_mode']];
-    if ($display['settings']['mysetting']) {
+    if ($context['formatter']->getSetting('mysetting')) {
       $summary .= '<br />' . t('My setting enabled.');
     }
   }
-}
-
-/**
- * Return a short summary for the current formatter settings of an instance.
- *
- * If an empty result is returned, the formatter is assumed to have no
- * configurable settings, and no UI will be provided to display a settings
- * form.
- *
- * @param $field
- *   The field structure.
- * @param $instance
- *   The instance structure.
- * @param $view_mode
- *   The view mode for which a settings summary is requested.
- *
- * @return
- *   A string containing a short summary of the formatter settings.
- */
-function hook_field_formatter_settings_summary($field, $instance, $view_mode) {
-  $display = $instance['display'][$view_mode];
-  $settings = $display['settings'];
-
-  $summary = '';
-
-  if ($display['type'] == 'text_trimmed' || $display['type'] == 'text_summary_or_trimmed') {
-    $summary = t('Length: @chars chars', array('@chars' => $settings['trim_length']));
-  }
-
-  return $summary;
 }
 
 /**

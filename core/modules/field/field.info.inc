@@ -73,22 +73,10 @@ function field_info_cache_clear() {
  *     instance_settings, default_widget, default_formatter, and behaviors
  *     from hook_field_info(), as well as module, giving the module that exposes
  *     the field type.
- *   - 'widget types': Array of hook_field_widget_info() results, keyed by
- *     widget_type. Each element has the following components: label, field
- *     types, settings, weight, and behaviors from hook_field_widget_info(),
- *     as well as module, giving the module that exposes the widget type.
- *   - 'formatter types': Array of hook_field_formatter_info() results, keyed by
- *     formatter_type. Each element has the following components: label, field
- *     types, and behaviors from hook_field_formatter_info(), as well as
- *     module, giving the module that exposes the formatter type.
  *   - 'storage types': Array of hook_field_storage_info() results, keyed by
  *     storage type names. Each element has the following components: label,
  *     description, and settings from hook_field_storage_info(), as well as
  *     module, giving the module that exposes the storage type.
- *   - 'fieldable types': Array of hook_entity_info() results, keyed by
- *     entity_type. Each element has the following components: name, id key,
- *     revision key, bundle key, cacheable, and bundles from hook_entity_info(),
- *     as well as module, giving the module that exposes the entity type.
  *
  * @see _field_info_collate_types_reset()
  */
@@ -114,7 +102,6 @@ function _field_info_collate_types() {
     else {
       $info = array(
         'field types' => array(),
-        'formatter types' => array(),
         'storage types' => array(),
       );
 
@@ -132,20 +119,6 @@ function _field_info_collate_types() {
         }
       }
       drupal_alter('field_info', $info['field types']);
-
-      // Populate formatter types.
-      foreach (module_implements('field_formatter_info') as $module) {
-        $formatter_types = (array) module_invoke($module, 'field_formatter_info');
-        foreach ($formatter_types as $name => $formatter_info) {
-          // Provide defaults.
-          $formatter_info += array(
-            'settings' => array(),
-          );
-          $info['formatter types'][$name] = $formatter_info;
-          $info['formatter types'][$name]['module'] = $module;
-        }
-      }
-      drupal_alter('field_formatter_info', $info['formatter types']);
 
       // Populate storage types.
       foreach (module_implements('field_storage_info') as $module) {
@@ -259,25 +232,21 @@ function field_info_widget_types($widget_type = NULL) {
 /**
  * Returns information about field formatters from hook_field_formatter_info().
  *
- * @param $formatter_type
+ * @param string $formatter_type
  *   (optional) A formatter type name. If omitted, all formatter types will be
  *   returned.
  *
- * @return
- *   Either a single formatter type description, as provided by
- *   hook_field_formatter_info(), or an array of all existing formatter types,
- *   keyed by formatter type name.
+ * @return array
+ *   Either a single formatter type description, as provided by class
+ *   annotations, or an array of all existing formatter types, keyed by
+ *   formatter type name.
  */
 function field_info_formatter_types($formatter_type = NULL) {
-  $info = _field_info_collate_types();
-  $formatter_types = $info['formatter types'];
   if ($formatter_type) {
-    if (isset($formatter_types[$formatter_type])) {
-      return $formatter_types[$formatter_type];
-    }
+    return field_get_plugin_manager('formatter')->getDefinition($formatter_type);
   }
   else {
-    return $formatter_types;
+    return field_get_plugin_manager('formatter')->getDefinitions();
   }
 }
 

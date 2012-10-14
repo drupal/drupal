@@ -285,11 +285,10 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
  * Implements hook_field_formatter_settings_form_alter().
  */
 function field_test_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
-  $settings = $context['instance']['display'][$context['view_mode']]['settings'];
   $element['field_test_formatter_settings_form_alter'] = array(
     '#type' => 'textfield',
     '#title' => t('Formatter settings form alter'),
-    '#default_value' => isset($settings['field_test_formatter_settings_form_alter']) ? $settings['field_test_formatter_settings_form_alter'] : '',
+    '#default_value' => $context['formatter']->getSetting('field_test_formatter_settings_form_alter'),
   );
 }
 

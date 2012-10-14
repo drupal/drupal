@@ -561,6 +561,7 @@ function field_get_plugin_manager($plugin_type) {
 
   $classes = array(
     'widget' => 'Drupal\field\Plugin\Type\Widget\WidgetPluginManager',
+    'formatter' => 'Drupal\field\Plugin\Type\Formatter\FormatterPluginManager',
   );
 
   if (isset($classes[$plugin_type])) {
@@ -751,39 +752,6 @@ function field_view_mode_settings($entity_type, $bundle) {
   }
 
   return $cache[$entity_type][$bundle];
-}
-
-/**
- * Returns the display settings to use for an instance in a given view mode.
- *
- * @param $instance
- *   The field instance being displayed.
- * @param $view_mode
- *   The view mode.
- * @param $entity
- *   The entity being displayed.
- *
- * @return
- *   The display settings to be used when displaying the field values.
- */
-function field_get_display($instance, $view_mode, $entity) {
-  // Check whether the view mode uses custom display settings or the 'default'
-  // mode.
-  $view_mode_settings = field_view_mode_settings($instance['entity_type'], $instance['bundle']);
-  $actual_mode = (!empty($view_mode_settings[$view_mode]['custom_settings']) ? $view_mode : 'default');
-  $display = $instance['display'][$actual_mode];
-
-  // Let modules alter the display settings.
-  $context = array(
-    'entity_type' => $instance['entity_type'],
-    'field' => field_info_field($instance['field_name']),
-    'instance' => $instance,
-    'entity' => $entity,
-    'view_mode' => $view_mode,
-  );
-  drupal_alter(array('field_display', 'field_display_' . $instance['entity_type']), $display, $context);
-
-  return $display;
 }
 
 /**
@@ -998,46 +966,48 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
 function field_view_field($entity_type, $entity, $field_name, $display = array(), $langcode = NULL) {
   $output = array();
 
-  if ($field = field_info_field($field_name)) {
-    if (is_array($display)) {
-      // When using custom display settings, fill in default values.
-      $cache = _field_info_field_cache();
-      $display = $cache->prepareInstanceDisplay($display, $field["type"]);
+  if ($instance = field_info_instance($entity_type, $field_name, $entity->bundle())) {
+    if (is_array($display) && empty($display['type'])) {
+      $field = field_info_field($instance['field_name']);
+      $field_type_info = field_info_field_types($field['type']);
+      $display['type'] = $field_type_info['default_formatter'];
     }
+    if ($formatter = $instance->getFormatter($display)) {
+      $display_langcode = field_language($entity_type, $entity, $field_name, $langcode);
+      $items = $entity->{$field_name}[$display_langcode];
 
-    // Hook invocations are done through the _field_invoke() functions in
-    // 'single field' mode, to reuse the language fallback logic.
-    // Determine the actual language code to display for the field, given the
-    // language codes available in the field data.
-    $display_langcode = field_language($entity_type, $entity, $field_name, $langcode);
-    $options = array('field_name' => $field_name, 'langcode' => $display_langcode);
-    $null = NULL;
+      // Invoke prepare_view steps if needed.
+      if (empty($entity->_field_view_prepared)) {
+        $id = $entity->id();
 
-    // Invoke prepare_view steps if needed.
-    if (empty($entity->_field_view_prepared)) {
-      $id = $entity->id();
+        // First let the field types do their preparation.
+        // @todo invoke hook_field_prepare_view() directly ?
+        $options = array('field_name' => $field_name, 'langcode' => $display_langcode);
+        $null = NULL;
+        _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
 
-      // First let the field types do their preparation.
-      _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
-      // Then let the formatters do their own specific massaging.
-      _field_invoke_multiple_default('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
-    }
+        // Then let the formatters do their own specific massaging.
+        $items_multi = array($id => $entity->{$field_name}[$display_langcode]);
+        $formatter->prepareView(array($id => $entity), $display_langcode, $items_multi);
+        $items = $items_multi[$id];
+      }
 
-    // Build the renderable array.
-    $result = _field_invoke_default('view', $entity_type, $entity, $display, $null, $options);
+      // Build the renderable array.
+      $result = $formatter->view($entity, $display_langcode, $items);
 
-    // Invoke hook_field_attach_view_alter() to let other modules alter the
-    // renderable array, as in a full field_attach_view() execution.
-    $context = array(
-      'entity_type' => $entity_type,
-      'entity' => $entity,
-      'view_mode' => '_custom',
-      'display' => $display,
-    );
-    drupal_alter('field_attach_view', $result, $context);
+      // Invoke hook_field_attach_view_alter() to let other modules alter the
+      // renderable array, as in a full field_attach_view() execution.
+      $context = array(
+        'entity_type' => $entity_type,
+        'entity' => $entity,
+        'view_mode' => '_custom',
+        'display' => $display,
+      );
+      drupal_alter('field_attach_view', $result, $context);
 
-    if (isset($result[$field_name])) {
-      $output = $result[$field_name];
+      if (isset($result[$field_name])) {
+        $output = $result[$field_name];
+      }
     }
   }
 

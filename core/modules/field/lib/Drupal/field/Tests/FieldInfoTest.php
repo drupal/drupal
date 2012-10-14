@@ -43,15 +43,6 @@ class FieldInfoTest extends FieldTestBase {
       $this->assertEqual($info[$t_key]['module'], 'field_test',  t("Field type field_test module appears"));
     }
 
-    $formatter_info = field_test_field_formatter_info();
-    $info = field_info_formatter_types();
-    foreach ($formatter_info as $f_key => $formatter) {
-      foreach ($formatter as $key => $val) {
-        $this->assertEqual($info[$f_key][$key], $val, t("Formatter type $f_key key $key is $val"));
-      }
-      $this->assertEqual($info[$f_key]['module'], 'field_test',  t("Formatter type field_test module appears"));
-    }
-
     $storage_info = field_test_field_storage_info();
     $info = field_info_storage_types();
     foreach ($storage_info as $s_key => $storage) {
@@ -205,10 +196,10 @@ class FieldInfoTest extends FieldTestBase {
     $this->assertIdentical($widget->getSettings(), $widget_type['settings'] , 'All expected widget settings are present.');
 
     // Check that display settings are set for the 'default' mode.
-    $display = $instance['display']['default'];
-    $this->assertIdentical($display['type'], $field_type['default_formatter'], t("Formatter is set for the 'default' view mode"));
-    $formatter_type = field_info_formatter_types($display['type']);
-    $this->assertIdentical($display['settings'], $formatter_type['settings'] , t("Formatter settings are set for the 'default' view mode"));
+    $formatter = $instance->getFormatter('default');
+    $this->assertIdentical($formatter->getPluginId(), $field_type['default_formatter'], "Formatter is set for the 'default' view mode");
+    $formatter_type = $formatter->getDefinition();
+    $this->assertIdentical($formatter->getSettings(), $formatter_type['settings'] , "Formatter settings are set for the 'default' view mode");
 
   }
 
@@ -329,9 +320,9 @@ class FieldInfoTest extends FieldTestBase {
       $this->assertIdentical(field_info_widget_settings($type), $info['settings'], "field_info_widget_settings returns {$type}'s widget settings");
     }
 
-    $info = field_test_field_formatter_info();
-    foreach ($info as $type => $data) {
-      $this->assertIdentical(field_info_formatter_settings($type), $data['settings'], "field_info_formatter_settings returns {$type}'s formatter settings");
+    foreach (array('field_test_default', 'field_test_multiple', 'field_test_with_prepare_view') as $type) {
+      $info = field_info_formatter_types($type);
+      $this->assertIdentical(field_info_formatter_settings($type), $info['settings'], "field_info_formatter_settings returns {$type}'s formatter settings");
     }
   }
 }

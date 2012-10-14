@@ -806,8 +806,8 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
  *   The instance's widget properties.
  * @param array $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g., 'node' or 'user'.
- *   - bundle: The bundle: e.g., 'page' or 'article'.
+ *   - entity_type: The entity type, e.g., 'node' or 'user'.
+ *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
  *
@@ -836,8 +836,14 @@ function hook_field_widget_properties_alter(array &$widget_properties, array $co
  * which the field is attached is displayed. Fields of a given
  * @link field_types field type @endlink may be displayed using more than one
  * formatter. In this case, the Field UI module allows the site builder to
- * choose which formatter to use. Field formatters are defined by implementing
- * hook_field_formatter_info().
+ * choose which formatter to use.
+ *
+ * Formatters are Plugins managed by the
+ * Drupal\field\Plugin\Type\Formatter\FormatterPluginManager class. A formatter
+ * is implemented by providing a class that implements
+ * Drupal\field\Plugin\Type\Formatter\FormatterInterface (in most cases, by
+ * subclassing Drupal\field\Plugin\Type\Formatter\FormatterBase), and provides
+ * the proper annotation block.
  *
  * @see field
  * @see field_types
@@ -845,69 +851,13 @@ function hook_field_widget_properties_alter(array &$widget_properties, array $co
  */
 
 /**
- * Expose Field API formatter types.
- *
- * Formatters handle the display of field values. Formatter hooks are typically
- * called by the Field Attach API field_attach_prepare_view() and
- * field_attach_view() functions.
- *
- * @return
- *   An array describing the formatter types implemented by the module. The keys
- *   are formatter type names. To avoid name clashes, formatter type names
- *   should be prefixed with the name of the module that exposes them. The
- *   values are arrays describing the formatter type, with the following
- *   key/value pairs:
- *   - label: The human-readable name of the formatter type.
- *   - description: A short description of the formatter type.
- *   - field types: An array of field types the formatter supports.
- *   - settings: An array whose keys are the names of the settings available to
- *     the formatter type, and whose values are the default values for those
- *     settings.
- *
- * @see hook_field_formatter_info_alter()
- * @see hook_field_formatter_view()
- * @see hook_field_formatter_prepare_view()
- */
-function hook_field_formatter_info() {
-  return array(
-    'text_default' => array(
-      'label' => t('Default'),
-      'field types' => array('text', 'text_long', 'text_with_summary'),
-    ),
-    'text_plain' => array(
-      'label' => t('Plain text'),
-      'field types' => array('text', 'text_long', 'text_with_summary'),
-    ),
-
-    // The text_trimmed formatter displays the trimmed version of the
-    // full element of the field. It is intended to be used with text
-    // and text_long fields. It also works with text_with_summary
-    // fields though the text_summary_or_trimmed formatter makes more
-    // sense for that field type.
-    'text_trimmed' => array(
-      'label' => t('Trimmed'),
-      'field types' => array('text', 'text_long', 'text_with_summary'),
-    ),
-
-    // The 'summary or trimmed' field formatter for text_with_summary
-    // fields displays returns the summary element of the field or, if
-    // the summary is empty, the trimmed version of the full element
-    // of the field.
-    'text_summary_or_trimmed' => array(
-      'label' => t('Summary or trimmed'),
-      'field types' => array('text_with_summary'),
-    ),
-  );
-}
-
-/**
  * Perform alterations on Field API formatter types.
  *
- * @param $info
- *   An array of information on formatter types exposed by
- *   hook_field_formatter_info() implementations.
+ * @param array $info
+ *   An array of informations on existing formatter types, as collected by the
+ *   annotation discovery mechanism.
  */
-function hook_field_formatter_info_alter(&$info) {
+function hook_field_formatter_info_alter(array &$info) {
   // Add a setting to a formatter type.
   $info['text_default']['settings'] += array(
     'mymodule_additional_setting' => 'default value',
@@ -915,149 +865,6 @@ function hook_field_formatter_info_alter(&$info) {
 
   // Let a new field type re-use an existing formatter.
   $info['text_default']['field types'][] = 'my_field_type';
-}
-
-/**
- * Allow formatters to load information for field values being displayed.
- *
- * This should be used when a formatter needs to load additional information
- * from the database in order to render a field, for example a reference field
- * that displays properties of the referenced entities such as name or type.
- *
- * This hook is called after the field type's own hook_field_prepare_view().
- *
- * Unlike most other field hooks, this hook operates on multiple entities. The
- * $entities, $instances and $items parameters are arrays keyed by entity ID.
- * For performance reasons, information for all available entities should be
- * loaded in a single query where possible.
- *
- * Changes or additions to field values are done by alterings the $items
- * parameter by reference.
- *
- * @param $entity_type
- *   The type of $entity.
- * @param $entities
- *   Array of entities being displayed, keyed by entity ID.
- * @param $field
- *   The field structure for the operation.
- * @param $instances
- *   Array of instance structures for $field for each entity, keyed by entity
- *   ID.
- * @param $langcode
- *   The language the field values are to be shown in. If no language is
- *   provided the current language is used.
- * @param $items
- *   Array of field values for the entities, keyed by entity ID.
- * @param $displays
- *   Array of display settings to use for each entity, keyed by entity ID.
- */
-function hook_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
-  $tids = array();
-
-  // Collect every possible term attached to any of the fieldable entities.
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => $item) {
-      // Force the array key to prevent duplicates.
-      $tids[$item['tid']] = $item['tid'];
-    }
-  }
-
-  if ($tids) {
-    $terms = taxonomy_term_load_multiple($tids);
-
-    // Iterate through the fieldable entities again to attach the loaded term
-    // data.
-    foreach ($entities as $id => $entity) {
-      $rekey = FALSE;
-
-      foreach ($items[$id] as $delta => $item) {
-        // Check whether the taxonomy term field instance value could be loaded.
-        if (isset($terms[$item['tid']])) {
-          // Replace the instance value with the term data.
-          $items[$id][$delta]['taxonomy_term'] = $terms[$item['tid']];
-        }
-        // Otherwise, unset the instance value, since the term does not exist.
-        else {
-          unset($items[$id][$delta]);
-          $rekey = TRUE;
-        }
-      }
-
-      if ($rekey) {
-        // Rekey the items array.
-        $items[$id] = array_values($items[$id]);
-      }
-    }
-  }
-}
-
-/**
- * Build a renderable array for a field value.
- *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
- *   The entity being displayed.
- * @param $field
- *   The field structure.
- * @param $instance
- *   The field instance.
- * @param $langcode
- *   The language associated with $items.
- * @param $items
- *   Array of values for this field.
- * @param $display
- *   The display settings to use, as found in the 'display' entry of instance
- *   definitions. The array notably contains the following keys and values:
- *   - type: The name of the formatter to use.
- *   - settings: The array of formatter settings.
- *
- * @return
- *   A renderable array for $items, as an array of child elements keyed by
- *   numeric indexes starting from 0.
- */
-function hook_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-  $settings = $display['settings'];
-
-  switch ($display['type']) {
-    case 'sample_field_formatter_simple':
-      // Common case: each value is displayed individually in a sub-element
-      // keyed by delta. The field.tpl.php template specifies the markup
-      // wrapping each value.
-      foreach ($items as $delta => $item) {
-        $element[$delta] = array('#markup' => $settings['some_setting'] . $item['value']);
-      }
-      break;
-
-    case 'sample_field_formatter_themeable':
-      // More elaborate formatters can defer to a theme function for easier
-      // customization.
-      foreach ($items as $delta => $item) {
-        $element[$delta] = array(
-          '#theme' => 'mymodule_theme_sample_field_formatter_themeable',
-          '#data' => $item['value'],
-          '#some_setting' => $settings['some_setting'],
-        );
-      }
-      break;
-
-    case 'sample_field_formatter_combined':
-      // Some formatters might need to display all values within a single piece
-      // of markup.
-      $rows = array();
-      foreach ($items as $delta => $item) {
-        $rows[] = array($delta, $item['value']);
-      }
-      $element[0] = array(
-        '#theme' => 'table',
-        '#header' => array(t('Delta'), t('Value')),
-        '#rows' => $rows,
-      );
-      break;
-  }
-
-  return $element;
 }
 
 /**
@@ -2145,27 +1952,27 @@ function hook_field_info_max_weight($entity_type, $bundle, $context) {
  * hook involves reading from the database, it is highly recommended to
  * statically cache the information.
  *
- * @param $display
+ * @param array $display_properties
  *   The display settings that will be used to display the field values, as
  *   found in the 'display' key of $instance definitions.
- * @param $context
+ * @param array $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g., 'node' or 'user'.
+ *   - entity_type: The entity type, e.g., 'node' or 'user'.
+ *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - field: The field being rendered.
  *   - instance: The instance being rendered.
- *   - entity: The entity being rendered.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
  *
  * @see hook_field_display_ENTITY_TYPE_alter()
  */
-function hook_field_display_alter(&$display, $context) {
+function hook_field_display_alter(array &$display_properties, array $context) {
   // Leave field labels out of the search index.
   // Note: The check against $context['entity_type'] == 'node' could be avoided
   // by using hook_field_display_node_alter() instead of
   // hook_field_display_alter(), resulting in less function calls when
   // rendering non-node entities.
   if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
-    $display['label'] = 'hidden';
+    $display_properties['label'] = 'hidden';
   }
 }
 
@@ -2180,23 +1987,23 @@ function hook_field_display_alter(&$display, $context) {
  * hook involves reading from the database, it is highly recommended to
  * statically cache the information.
  *
- * @param $display
+ * @param array $display_properties
  *   The display settings that will be used to display the field values, as
  *   found in the 'display' key of $instance definitions.
- * @param $context
+ * @param array $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g., 'node' or 'user'.
+ *   - entity_type: The entity type, e.g., 'node' or 'user'.
+ *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - field: The field being rendered.
  *   - instance: The instance being rendered.
- *   - entity: The entity being rendered.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
  *
  * @see hook_field_display_alter()
  */
-function hook_field_display_ENTITY_TYPE_alter(&$display, $context) {
+function hook_field_display_ENTITY_TYPE_alter(array &$display_properties, array $context) {
   // Leave field labels out of the search index.
   if ($context['view_mode'] == 'search_index') {
-    $display['label'] = 'hidden';
+    $display_properties['label'] = 'hidden';
   }
 }
 
@@ -2238,8 +2045,8 @@ function hook_field_extra_fields_display_alter(&$displays, $context) {
  *   The instance's widget properties.
  * @param array $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g., 'node' or 'user'.
- *   - bundle: The bundle: e.g., 'page' or 'article'.
+ *   - entity_type: The entity type, e.g., 'node' or 'user'.
+ *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
  *
