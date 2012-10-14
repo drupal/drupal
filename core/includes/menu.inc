@@ -319,10 +319,10 @@ function menu_get_ancestors($parts) {
   $ancestors = array();
   $length =  $number_parts - 1;
   $end = (1 << $number_parts) - 1;
-  $masks = variable_get('menu_masks');
-  // If the optimized menu_masks array is not available use brute force to get
+  $masks = state()->get('menu.masks');
+  // If the optimized menu.masks array is not available use brute force to get
   // the correct $ancestors and $placeholders returned. Do not use this as the
-  // default value of the menu_masks variable to avoid building such a big
+  // default value of the menu.masks variable to avoid building such a big
   // array.
   if (!$masks) {
     $masks = range(511, 1);
@@ -453,7 +453,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
   if (!isset($router_items[$path])) {
     // Rebuild if we know it's needed, or if the menu masks are missing which
     // occurs rarely, likely due to a race condition of multiple rebuilds.
-    if (state()->get('menu_rebuild_needed') || !variable_get('menu_masks', array())) {
+    if (state()->get('menu_rebuild_needed') || !state()->get('menu.masks')) {
       menu_router_rebuild();
     }
     $original_map = arg(NULL, $path);
@@ -3784,7 +3784,7 @@ function _menu_router_save($menu, $masks) {
   // Insert any remaining records.
   $insert->execute();
   // Store the masks.
-  variable_set('menu_masks', $masks);
+  state()->set('menu.masks', $masks);
 
   return $menu;
 }

@@ -423,7 +423,7 @@ class RouterTest extends WebTestBase {
    * Test menu_get_item() with empty ancestors.
    */
   function testMenuGetItemNoAncestors() {
-    variable_set('menu_masks', array());
+    state()->set('menu.masks', array());
     $this->drupalGet('');
   }
 

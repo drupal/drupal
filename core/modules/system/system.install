@@ -2155,6 +2155,14 @@ function system_update_8027() {
 }
 
 /**
+ * Remove the 'menu_masks' configuration variable.
+ */
+function system_update_8028() {
+  // No upgrade path needed since the menu router will be rebuilt during d7 to d8 upgrade.
+  update_variable_del('menu_masks');
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
