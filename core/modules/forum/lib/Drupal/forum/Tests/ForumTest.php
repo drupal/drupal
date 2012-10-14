@@ -132,7 +132,7 @@ class ForumTest extends WebTestBase {
 
     // Do the admin tests.
     $this->doAdminTests($this->admin_user);
-    // Generate topics to populate the active forum block.
+
     $this->generateForumTopics($this->forum);
 
     // Login an unprivileged user to view the forum topics and generate an
@@ -142,7 +142,6 @@ class ForumTest extends WebTestBase {
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->assertText(t('You are not allowed to post new content in the forum'), "Authenticated user without permission to post forum content is shown message in local tasks to that effect.");
 
-    $this->viewForumTopics($this->nids);
 
     // Log in, and do basic tests for a user with permission to edit any forum
     // content.
@@ -249,20 +248,6 @@ class ForumTest extends WebTestBase {
   private function doAdminTests($user) {
     // Login the user.
     $this->drupalLogin($user);
-
-    // Enable the active forum block.
-    $edit = array();
-    $edit['blocks[forum_active][region]'] = 'sidebar_second';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), 'Active forum topics forum block was enabled');
-
-    // Enable the new forum block.
-    $edit = array();
-    $edit['blocks[forum_new][region]'] = 'sidebar_second';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), '[New forum topics] Forum block was enabled');
 
     // Retrieve forum menu id.
     $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'forum' AND menu_name = 'navigation' AND module = 'system' ORDER BY mlid ASC", 0, 1)->fetchField();
@@ -530,11 +515,6 @@ class ForumTest extends WebTestBase {
       $this->assertText(t('Forum'), 'Forum help node was displayed');
     }
 
-    // Verify the forum blocks were displayed.
-    $this->drupalGet('');
-    $this->assertResponse(200);
-    $this->assertText(t('New forum topics'), '[New forum topics] Forum block was displayed');
-
     // View forum container page.
     $this->verifyForumView($this->container);
     // View forum page.
@@ -613,7 +593,7 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Generates forum topics to test the display of an active forum block.
+   * Generates forum topics.
    *
    * @param array $forum
    *   The forum array (a row from taxonomy_term_data table).
@@ -623,26 +603,6 @@ class ForumTest extends WebTestBase {
     for ($i = 0; $i < 5; $i++) {
       $node = $this->createForumTopic($this->forum, FALSE);
       $this->nids[] = $node->nid;
-    }
-  }
-
-  /**
-   * Views forum topics to test the display of an active forum block.
-   *
-   * @todo The logic here is completely incorrect, since the active forum topics
-   *   block is determined by comments on the node, not by views.
-   * @todo DIE
-   *
-   * @param $nids
-   *   An array of forum node IDs.
-   */
-  private function viewForumTopics($nids) {
-    for ($i = 0; $i < 2; $i++) {
-      foreach ($nids as $nid) {
-        $this->drupalGet('node/' . $nid);
-        $this->drupalGet('node/' . $nid);
-        $this->drupalGet('node/' . $nid);
-      }
     }
   }
 }
