@@ -37,6 +37,11 @@ class Comment extends Entity implements ContentEntityInterface {
   public $pid;
 
   /**
+   * The ID of the node to which the comment is attached.
+   */
+  public $nid;
+
+  /**
    * The comment language code.
    *
    * @var string

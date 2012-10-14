@@ -27,8 +27,11 @@ class NodeBuildContentTest extends NodeTestBase {
     $node = $this->drupalCreateNode();
 
     // Set a property in the content array so we can test for its existence later on.
-    $node->content['test_content_property'] = array('#value' => $this->randomString());
-    $content = node_build_content($node);
+    $node->content['test_content_property'] = array(
+      '#value' => $this->randomString(),
+    );
+    $nodes = array($node);
+    $content = entity_render_controller('node')->buildContent($nodes);
 
     // If the property doesn't exist it means the node->content was rebuilt.
     $this->assertFalse(isset($content['test_content_property']), 'Node content was emptied prior to being built.');

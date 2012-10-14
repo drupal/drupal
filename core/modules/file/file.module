@@ -100,6 +100,12 @@ function file_entity_info() {
         'label' => 'filename',
         'uuid' => 'uuid',
       ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('File default'),
+          'custom settings' => FALSE,
+        ),
+      ),
       'static cache' => FALSE,
     ),
   );

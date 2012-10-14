@@ -119,6 +119,7 @@ function comment_entity_info() {
         'uuid' => 'uuid',
       ),
       'bundles' => array(),
+      'render controller class' => 'Drupal\comment\CommentRenderController',
       'view modes' => array(
         'full' => array(
           'label' => t('Full comment'),
@@ -768,7 +769,7 @@ function comment_node_page_additions(Node $node) {
     if ($cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
-      $build = comment_view_multiple($comments, $node);
+      $build = comment_view_multiple($comments);
       $build['pager']['#theme'] = 'pager';
       $additions['comments'] = $build;
     }
@@ -968,8 +969,6 @@ function comment_prepare_thread(&$comments) {
  *
  * @param Drupal\comment\Comment $comment
  *   The comment object.
- * @param Drupal\node\Node $node
- *   The node the comment is attached to.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param $langcode
@@ -979,105 +978,8 @@ function comment_prepare_thread(&$comments) {
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
-  if (!isset($langcode)) {
-    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
-  }
-
-  // Populate $comment->content with a render() array.
-  comment_build_content($comment, $node, $view_mode, $langcode);
-
-  $build = $comment->content;
-  // We don't need duplicate rendering info in comment->content.
-  unset($comment->content);
-
-  $build += array(
-    '#theme' => 'comment__node_' . $node->type,
-    '#comment' => $comment,
-    '#node' => $node,
-    '#view_mode' => $view_mode,
-    '#language' => $langcode,
-  );
-
-  if (empty($comment->in_preview)) {
-    $prefix = '';
-    $is_threaded = isset($comment->divs) && variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED) == COMMENT_MODE_THREADED;
-
-    // Add 'new' anchor if needed.
-    if (!empty($comment->first_new)) {
-      $prefix .= "<a id=\"new\"></a>\n";
-    }
-
-    // Add indentation div or close open divs as needed.
-    if ($is_threaded) {
-      $prefix .= $comment->divs <= 0 ? str_repeat('</div>', abs($comment->divs)) : "\n" . '<div class="indented">';
-    }
-
-    // Add anchor for each comment.
-    $prefix .= "<a id=\"comment-$comment->cid\"></a>\n";
-    $build['#prefix'] = $prefix;
-
-    // Close all open divs.
-    if ($is_threaded && !empty($comment->divs_final)) {
-      $build['#suffix'] = str_repeat('</div>', $comment->divs_final);
-    }
-  }
-
-  // Allow modules to modify the structured comment.
-  drupal_alter(array('comment_view', 'entity_view'), $build, $comment);
-
-  return $build;
-}
-
-/**
- * Builds a structured array representing the comment's content.
- *
- * The content built for the comment (field values, comments, file attachments
- * or other comment components) will vary depending on the $view_mode parameter.
- *
- * @param Drupal\comment\Comment $comment
- *   A comment object.
- * @param Drupal\node\Node $node
- *   The node the comment is attached to.
- * @param $view_mode
- *   View mode, e.g. 'full', 'teaser'...
- * @param $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- */
-function comment_build_content(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
-  if (!isset($langcode)) {
-    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
-  }
-
-  // Remove previously built content, if exists.
-  $comment->content = array();
-
-  // Allow modules to change the view mode.
-  $context = array('langcode' => $langcode);
-  drupal_alter('entity_view_mode', $view_mode, $comment, $context);
-
-  // Build fields content.
-  field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode, $langcode);
-  entity_prepare_view('comment', array($comment->cid => $comment), $langcode);
-  $comment->content += field_attach_view('comment', $comment, $view_mode, $langcode);
-
-  $comment->content['links'] = array(
-    '#theme' => 'links__comment',
-    '#pre_render' => array('drupal_pre_render_links'),
-    '#attributes' => array('class' => array('links', 'inline')),
-  );
-  if (empty($comment->in_preview)) {
-    $comment->content['links']['comment'] = array(
-      '#theme' => 'links__comment__comment',
-      '#links' => comment_links($comment, $node),
-      '#attributes' => array('class' => array('links', 'inline')),
-    );
-  }
-
-  // Allow modules to make their own additions to the comment.
-  module_invoke_all('comment_view', $comment, $view_mode, $langcode);
-  module_invoke_all('entity_view', $comment, $view_mode, $langcode);
+function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
+  return entity_view($comment, $view_mode, $langcode);
 }
 
 /**
@@ -1146,12 +1048,8 @@ function comment_links(Comment $comment, Node $node) {
  *
  * @param $comments
  *   An array of comments as returned by comment_load_multiple().
- * @param Drupal\node\Node $node
- *   The node the comments are attached to.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
- * @param $weight
- *   An integer representing the weight of the first comment in the list.
  * @param $langcode
  *   A string indicating the language field values are to be shown in. If no
  *   language is provided the current content language is used.
@@ -1161,19 +1059,8 @@ function comment_links(Comment $comment, Node $node) {
  *
  * @see drupal_render()
  */
-function comment_view_multiple($comments, Node $node, $view_mode = 'full', $weight = 0, $langcode = NULL) {
-  field_attach_prepare_view('comment', $comments, $view_mode, $langcode);
-  entity_prepare_view('comment', $comments, $langcode);
-
-  $build = array(
-    '#sorted' => TRUE,
-  );
-  foreach ($comments as $comment) {
-    $build[$comment->cid] = comment_view($comment, $node, $view_mode, $langcode);
-    $build[$comment->cid]['#weight'] = $weight;
-    $weight++;
-  }
-  return $build;
+function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL) {
+  return entity_view_multiple($comments, $view_mode, $langcode);
 }
 
 /**
@@ -1411,7 +1298,7 @@ function comment_node_update_index(Node $node, $langcode) {
     if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
-      $build = comment_view_multiple($comments, $node, $langcode);
+      $build = comment_view_multiple($comments, $langcode);
       return drupal_render($build);
     }
   }
@@ -1639,7 +1526,7 @@ function comment_get_display_ordinal($cid, $node_type) {
   else {
     // For threaded comments, the c.thread column is used for ordering. We can
     // use the sorting code for comparison, but must remove the trailing slash.
-    // See comment_view_multiple().
+    // See CommentRenderController.
     $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
   }
 
@@ -1687,7 +1574,6 @@ function comment_edit_page(Comment $comment) {
 function comment_preview(Comment $comment) {
   global $user;
   $preview_build = array();
-  $node = node_load($comment->nid);
 
   if (!form_get_errors()) {
     $comment_body = field_get_items('comment', $comment, 'comment_body');
@@ -1714,7 +1600,7 @@ function comment_preview(Comment $comment) {
     $comment->created = !empty($comment->created) ? $comment->created : REQUEST_TIME;
     $comment->changed = REQUEST_TIME;
     $comment->in_preview = TRUE;
-    $comment_build = comment_view($comment, $node);
+    $comment_build = comment_view($comment);
     $comment_build['#weight'] = -100;
 
     $preview_build['comment_preview'] = $comment_build;
@@ -1724,11 +1610,11 @@ function comment_preview(Comment $comment) {
     $build = array();
     $comment = comment_load($comment->pid);
     if ($comment && $comment->status == COMMENT_PUBLISHED) {
-      $build = comment_view($comment, $node);
+      $build = comment_view($comment);
     }
   }
   else {
-    $build = node_view($node);
+    $build = node_view(node_load($comment->nid));
   }
 
   $preview_build['comment_output_below'] = $build;

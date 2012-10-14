@@ -27,6 +27,8 @@
  *     The class has to implement the
  *     Drupal\Core\Entity\EntityStorageControllerInterface interface. Leave blank
  *     to use the Drupal\Core\Entity\DatabaseStorageController implementation.
+ *   - render controller class: The name of the class that is used to render
+ *     the entities. Deafaults to Drupal\Core\Entity\EntityRenderController.
  *   - form controller class: An associative array where the keys are the names
  *     of the different form operations (such as creation, editing or deletion)
  *     and the values are the names of the controller classes. To facilitate

@@ -121,7 +121,9 @@ class SearchMultilingualEntityTest extends SearchTestBase {
       $body_language_variant = end($node->body);
       $search_result = node_search_execute($body_language_variant[0]['value']);
       // See whether we get the same node as a result.
-      $this->assertEqual($search_result[0]['node']->nid, $node->nid, 'The search has resulted the correct node.');
+      $sts = $this->assertTrue(!empty($search_result[0]['node']->nid)
+        && $search_result[0]['node']->nid == $node->nid,
+        'The search has resulted the correct node.');
     }
   }
 }

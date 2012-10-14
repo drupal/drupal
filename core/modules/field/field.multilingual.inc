@@ -304,7 +304,6 @@ function field_language($entity_type, $entity, $field_name = NULL, $langcode = N
   $id = $entity->id();
   $bundle = $entity->bundle();
   $langcode = field_valid_language($langcode, FALSE);
-
   if (!isset($display_langcodes[$entity_type][$id][$langcode])) {
     $display_langcode = array();
 

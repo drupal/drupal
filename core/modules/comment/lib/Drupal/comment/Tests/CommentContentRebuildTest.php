@@ -39,7 +39,7 @@ class CommentContentRebuildTest extends CommentTestBase {
 
     // Add the property to the content array and then see if it still exists on build.
     $comment_loaded->content['test_property'] = array('#value' => $this->randomString());
-    $built_content = comment_view($comment_loaded, $this->node);
+    $built_content = comment_view($comment_loaded);
 
     // This means that the content was rebuilt as the added test property no longer exists.
     $this->assertFalse(isset($built_content['test_property']), 'Comment content was emptied before being built.');

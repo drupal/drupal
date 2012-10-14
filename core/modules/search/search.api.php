@@ -362,7 +362,7 @@ function hook_update_index() {
     variable_set('node_cron_last', $node->changed);
 
     // Render the node.
-    node_build_content($node, 'search_index');
+    $build = node_view($node, 'search_index');
     $node->rendered = drupal_render($node->content);
 
     $text = '<h1>' . check_plain($node->label()) . '</h1>' . $node->rendered;

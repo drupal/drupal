@@ -68,7 +68,7 @@ function comment_reply(Node $node, $pid = NULL) {
           $comment->node_type = 'comment_node_' . $node->type;
           field_attach_load('comment', array($comment->cid => $comment));
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-          $build['comment_parent'] = comment_view($comment, $node);
+          $build['comment_parent'] = comment_view($comment);
         }
         else {
           drupal_set_message(t('The comment you are replying to does not exist.'), 'error');

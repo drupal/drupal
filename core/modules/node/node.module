@@ -217,6 +217,7 @@ function node_entity_info() {
         'bundle' => 'type',
       ),
       'bundles' => array(),
+      'render controller class' => 'Drupal\node\NodeRenderController',
       'view modes' => array(
         'full' => array(
           'label' => t('Full content'),
@@ -1161,145 +1162,6 @@ function node_revision_delete($revision_id) {
 }
 
 /**
- * Generates an array for rendering the given node.
- *
- * @param Drupal\node\Node $node
- *   A node entity.
- * @param $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
- * @param $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- *
- * @return
- *   An array as expected by drupal_render().
- */
-function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
-  if (!isset($langcode)) {
-    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
-  }
-
-  // Populate $node->content with a render() array.
-  node_build_content($node, $view_mode, $langcode);
-
-  $build = $node->content;
-  // We don't need duplicate rendering info in node->content.
-  unset($node->content);
-
-  $build += array(
-    '#theme' => 'node',
-    '#node' => $node,
-    '#view_mode' => $view_mode,
-    '#langcode' => $langcode,
-  );
-
-  // Add contextual links for this node, except when the node is already being
-  // displayed on its own page. Modules may alter this behavior (for example,
-  // to restrict contextual links to certain view modes) by implementing
-  // hook_node_view_alter().
-  if (!empty($node->nid) && !($view_mode == 'full' && node_is_page($node))) {
-    $build['#contextual_links']['node'] = array('node', array($node->nid));
-  }
-
-  // Allow modules to modify the structured node.
-  drupal_alter(array('node_view', 'entity_view'), $build, $node);
-
-  return $build;
-}
-
-/**
- * Builds a structured array representing the node's content.
- *
- * The content built for the node (field values, comments, file attachments or
- * other node components) will vary depending on the $view_mode parameter.
- *
- * Drupal core defines the following view modes for nodes, with the following
- * default use cases:
- *   - full (default): node is being displayed on its own page (node/123)
- *   - teaser: node is being displayed on the default home page listing, or on
- *     taxonomy listing pages.
- *   - rss: node displayed in an RSS feed.
- *   If search.module is enabled:
- *   - search_index: node is being indexed for search.
- *   - search_result: node is being displayed as a search result.
- *   If book.module is enabled:
- *   - print: node is being displayed in print-friendly mode.
- * Contributed modules might define additional view modes, or use existing
- * view modes in additional contexts.
- *
- * @param Drupal\node\Node $node
- *   A node entity.
- * @param $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
- * @param $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- */
-function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
-  if (!isset($langcode)) {
-    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
-  }
-
-  // Remove previously built content, if exists.
-  $node->content = array();
-
-  // Allow modules to change the view mode.
-  $context = array('langcode' => $langcode);
-  drupal_alter('entity_view_mode', $view_mode, $node, $context);
-
-  // The 'view' hook can be implemented to overwrite the default function
-  // to display nodes.
-  if (node_hook($node->type, 'view')) {
-    $node = node_invoke($node, 'view', $view_mode, $langcode);
-  }
-
-  // Build fields content.
-  // In case of a multiple view, node_view_multiple() already ran the
-  // 'prepare_view' step. An internal flag prevents the operation from running
-  // twice.
-  field_attach_prepare_view('node', array($node->nid => $node), $view_mode, $langcode);
-  entity_prepare_view('node', array($node->nid => $node), $langcode);
-  $node->content += field_attach_view('node', $node, $view_mode, $langcode);
-
-  // Always display a read more link on teasers because we have no way
-  // to know when a teaser view is different than a full view.
-  $links = array();
-  $node->content['links'] = array(
-    '#theme' => 'links__node',
-    '#pre_render' => array('drupal_pre_render_links'),
-    '#attributes' => array('class' => array('links', 'inline')),
-  );
-  if ($view_mode == 'teaser') {
-    $node_title_stripped = strip_tags($node->label());
-    $links['node-readmore'] = array(
-      'title' => t('Read more<span class="element-invisible"> about @title</span>', array('@title' => $node_title_stripped)),
-      'href' => 'node/' . $node->nid,
-      'html' => TRUE,
-      'attributes' => array('rel' => 'tag', 'title' => $node_title_stripped),
-    );
-  }
-  $node->content['links']['node'] = array(
-    '#theme' => 'links__node__node',
-    '#links' => $links,
-    '#attributes' => array('class' => array('links', 'inline')),
-  );
-
-  // Add Language field text element to node render array.
-  $node->content['language'] = array(
-    '#type' => 'item',
-    '#title' => t('Language'),
-    '#markup' => language_name($langcode),
-    '#weight' => 0,
-    '#prefix' => '<div id="field-language-display">',
-    '#suffix' => '</div>'
-  );
-
-  // Allow modules to make their own additions to the node.
-  module_invoke_all('node_view', $node, $view_mode, $langcode);
-  module_invoke_all('entity_view', $node, $view_mode, $langcode);
-}
-
-/**
  * Page callback: Generates an array which displays a node detail page.
  *
  * @param Drupal\node\Node $node
@@ -1319,7 +1181,7 @@ function node_show(Node $node, $message = FALSE) {
   }
 
   // For markup consistency with other pages, use node_view_multiple() rather than node_view().
-  $nodes = node_view_multiple(array($node->nid => $node), 'full');
+  $nodes = array('nodes' => node_view_multiple(array($node->nid => $node), 'full'));
 
   // Update the history table, stating that this user viewed this node.
   node_tag_new($node);
@@ -2537,6 +2399,24 @@ function node_feed($nids = FALSE, $channel = array()) {
   return new Response($output, 200, array('Content-Type' =>  'application/rss+xml; charset=utf-8'));
 }
 
+ /**
+  * Generates an array for rendering the given node.
+  *
+ * @param Drupal\node\Node $node
+ *   A node entity.
+ * @param $view_mode
+ *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
+ * @param $langcode
+ *   (optional) A language code to use for rendering. Defaults to the global
+ *   content language of the current request.
+ *
+ * @return
+ *   An array as expected by drupal_render().
+ */
+function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
+  return entity_view($node, $view_mode, $langcode);
+}
+
 /**
  * Constructs a drupal_render() style array from an array of loaded nodes.
  *
@@ -2544,8 +2424,6 @@ function node_feed($nids = FALSE, $channel = array()) {
  *   An array of nodes as returned by node_load_multiple().
  * @param $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'teaser.'
- * @param $weight
- *   (optional) Integer representing the weight of the first node in the list.
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
@@ -2553,17 +2431,8 @@ function node_feed($nids = FALSE, $channel = array()) {
  * @return
  *   An array in the format expected by drupal_render().
  */
-function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcode = NULL) {
-  field_attach_prepare_view('node', $nodes, $view_mode, $langcode);
-  entity_prepare_view('node', $nodes, $langcode);
-  $build = array();
-  foreach ($nodes as $node) {
-    $build['nodes'][$node->nid] = node_view($node, $view_mode, $langcode);
-    $build['nodes'][$node->nid]['#weight'] = $weight;
-    $weight++;
-  }
-  $build['nodes']['#sorted'] = TRUE;
-  return $build;
+function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
+  return entity_view_multiple($nodes, $view_mode, $langcode);
 }
 
 /**
@@ -2590,7 +2459,7 @@ function node_page_default() {
 
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
-    $build = node_view_multiple($nodes);
+    $build['nodes'] = node_view_multiple($nodes);
 
     // 'rss.xml' is a path, not a file, registered in node_menu().
     drupal_add_feed('rss.xml', $site_config->get('name') . ' ' . t('RSS'));
