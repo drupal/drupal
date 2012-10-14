@@ -20,7 +20,7 @@ class UsageTest extends FileManagedTestBase {
   }
 
   /**
-   * Tests file_usage_list().
+   * Tests file_usage()->listUsage().
    */
   function testGetUsage() {
     $file = $this->createFile();
@@ -43,7 +43,7 @@ class UsageTest extends FileManagedTestBase {
       ))
       ->execute();
 
-    $usage = file_usage_list($file);
+    $usage = file_usage()->listUsage($file);
 
     $this->assertEqual(count($usage['testing']), 2, t('Returned the correct number of items.'));
     $this->assertTrue(isset($usage['testing']['foo'][1]), t('Returned the correct id.'));
@@ -53,15 +53,15 @@ class UsageTest extends FileManagedTestBase {
   }
 
   /**
-   * Tests file_usage_add().
+   * Tests file_usage()->add().
    */
   function testAddUsage() {
     $file = $this->createFile();
-    file_usage_add($file, 'testing', 'foo', 1);
+    file_usage()->add($file, 'testing', 'foo', 1);
     // Add the file twice to ensure that the count is incremented rather than
     // creating additional records.
-    file_usage_add($file, 'testing', 'bar', 2);
-    file_usage_add($file, 'testing', 'bar', 2);
+    file_usage()->add($file, 'testing', 'bar', 2);
+    file_usage()->add($file, 'testing', 'bar', 2);
 
     $usage = db_select('file_usage', 'f')
       ->fields('f')
@@ -78,7 +78,7 @@ class UsageTest extends FileManagedTestBase {
   }
 
   /**
-   * Tests file_usage_delete().
+   * Tests file_usage()->delete().
    */
   function testRemoveUsage() {
     $file = $this->createFile();
@@ -93,7 +93,7 @@ class UsageTest extends FileManagedTestBase {
       ->execute();
 
     // Normal decrement.
-    file_usage_delete($file, 'testing', 'bar', 2);
+    file_usage()->delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
       ->condition('f.fid', $file->fid)
@@ -102,7 +102,7 @@ class UsageTest extends FileManagedTestBase {
     $this->assertEqual(2, $count, t('The count was decremented correctly.'));
 
     // Multiple decrement and removal.
-    file_usage_delete($file, 'testing', 'bar', 2, 2);
+    file_usage()->delete($file, 'testing', 'bar', 2, 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
       ->condition('f.fid', $file->fid)
@@ -111,7 +111,7 @@ class UsageTest extends FileManagedTestBase {
     $this->assertIdentical(FALSE, $count, t('The count was removed entirely when empty.'));
 
     // Non-existent decrement.
-    file_usage_delete($file, 'testing', 'bar', 2);
+    file_usage()->delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
       ->condition('f.fid', $file->fid)

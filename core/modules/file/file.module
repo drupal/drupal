@@ -9,6 +9,8 @@ use Drupal\Core\Entity\EntityFieldQuery;
 use Drupal\file\File;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\file\FileUsage\DatabaseFileUsageBackend;
+use Drupal\file\FileUsage\FileUsageInterface;
 
 // Load all Field module hooks for File.
 require_once DRUPAL_ROOT . '/core/modules/file/file.field.inc';
@@ -146,132 +148,12 @@ function file_load($fid) {
 }
 
 /**
- * Determines where a file is used.
+ * Returns the file usage service.
  *
- * @param Drupal\file\File $file
- *   A file entity.
- *
- * @return
- *   A nested array with usage data. The first level is keyed by module name,
- *   the second by object type and the third by the object id. The value
- *   of the third level contains the usage count.
- *
- * @see file_usage_add()
- * @see file_usage_delete()
+ * @return Drupal\file\FileUsage\FileUsageInterface.
  */
-function file_usage_list(File $file) {
-  $result = db_select('file_usage', 'f')
-    ->fields('f', array('module', 'type', 'id', 'count'))
-    ->condition('fid', $file->fid)
-    ->condition('count', 0, '>')
-    ->execute();
-  $references = array();
-  foreach ($result as $usage) {
-    $references[$usage->module][$usage->type][$usage->id] = $usage->count;
-  }
-  return $references;
-}
-
-/**
- * Records that a module is using a file.
- *
- * Examples:
- * - A module that associates files with nodes, so $type would be
- *   'node' and $id would be the node's nid. Files for all revisions are stored
- *   within a single nid.
- * - The User module associates an image with a user, so $type would be 'user'
- *   and the $id would be the user's uid.
- *
- * @param Drupal\file\File $file
- *   A file entity.
- * @param $module
- *   The name of the module using the file.
- * @param $type
- *   The type of the object that contains the referenced file.
- * @param $id
- *   The unique, numeric ID of the object containing the referenced file.
- * @param $count
- *   (optional) The number of references to add to the object. Defaults to 1.
- *
- * @see file_usage_list()
- * @see file_usage_delete()
- */
-function file_usage_add(File $file, $module, $type, $id, $count = 1) {
-  db_merge('file_usage')
-    ->key(array(
-      'fid' => $file->fid,
-      'module' => $module,
-      'type' => $type,
-      'id' => $id,
-    ))
-    ->fields(array('count' => $count))
-    ->expression('count', 'count + :count', array(':count' => $count))
-    ->execute();
-
-  // Make sure that a used file is permament.
-  if ($file->status != FILE_STATUS_PERMANENT) {
-    $file->status = FILE_STATUS_PERMANENT;
-    $file->save();
-  }
-}
-
-/**
- * Removes a record to indicate that a module is no longer using a file.
- *
- * @param Drupal\file\File $file
- *   A file entity.
- * @param $module
- *   The name of the module using the file.
- * @param $type
- *   (optional) The type of the object that contains the referenced file. May
- *   be omitted if all module references to a file are being deleted.
- * @param $id
- *   (optional) The unique, numeric ID of the object containing the referenced
- *   file. May be omitted if all module references to a file are being deleted.
- * @param $count
- *   (optional) The number of references to delete from the object. Defaults to
- *   1. 0 may be specified to delete all references to the file within a
- *   specific object.
- *
- * @see file_usage_add()
- * @see file_usage_list()
- */
-function file_usage_delete(File $file, $module, $type = NULL, $id = NULL, $count = 1) {
-  // Delete rows that have a exact or less value to prevent empty rows.
-  $query = db_delete('file_usage')
-    ->condition('module', $module)
-    ->condition('fid', $file->fid);
-  if ($type && $id) {
-    $query
-      ->condition('type', $type)
-      ->condition('id', $id);
-  }
-  if ($count) {
-    $query->condition('count', $count, '<=');
-  }
-  $result = $query->execute();
-
-  // If the row has more than the specified count decrement it by that number.
-  if (!$result && $count > 0) {
-    $query = db_update('file_usage')
-      ->condition('module', $module)
-      ->condition('fid', $file->fid);
-    if ($type && $id) {
-      $query
-        ->condition('type', $type)
-        ->condition('id', $id);
-    }
-    $query->expression('count', 'count - :count', array(':count' => $count));
-    $query->execute();
-  }
-
-  // If there are no more remaining usages of this file, mark it as temporary,
-  // which result in a delete through system_cron().
-  $usage = file_usage_list($file);
-  if (empty($usage)) {
-    $file->status = 0;
-    $file->save();
-  }
+function file_usage() {
+  return drupal_container()->get('file.usage');
 }
 
 /**
@@ -422,7 +304,7 @@ function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
     module_invoke_all('file_move', $file, $source);
 
     // Delete the original if it's not in use elsewhere.
-    if ($delete_source && !file_usage_list($source)) {
+    if ($delete_source && !file_usage()->listUsage($source)) {
       $source->delete();
     }
 
@@ -882,7 +764,7 @@ function file_cron() {
   ));
   foreach ($result as $row) {
     if ($file = file_load($row->fid)) {
-      $references = file_usage_list($file);
+      $references = file_usage()->listUsage($file);
       if (empty($references)) {
         if (file_exists($file->uri)) {
           $file->delete();
@@ -1235,7 +1117,7 @@ function file_managed_file_validate(&$element, &$form_state) {
   if ($clicked_button != 'remove_button' && !empty($element['fid']['#value'])) {
     if ($file = file_load($element['fid']['#value'])) {
       if ($file->status == FILE_STATUS_PERMANENT) {
-        $references = file_usage_list($file);
+        $references = file_usage()->listUsage($file);
         if (empty($references)) {
           form_error($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
         }

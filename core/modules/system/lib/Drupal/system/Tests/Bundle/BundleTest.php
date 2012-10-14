@@ -33,6 +33,7 @@ class BundleTest extends WebTestBase {
    * Test that services provided by module bundles get registered to the DIC.
    */
   function testBundleRegistration() {
+    $this->assertTrue(drupal_container()->getDefinition('file.usage')->getClass() == 'Drupal\\bundle_test\\TestFileUsage', 'Class has been changed');
     $this->assertTrue(drupal_container()->has('bundle_test_class'), 'The bundle_test_class service has been registered to the DIC');
     // The event subscriber method in the test class calls drupal_set_message with
     // a message saying it has fired. This will fire on every page request so it

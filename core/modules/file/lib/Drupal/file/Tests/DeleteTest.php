@@ -38,11 +38,11 @@ class DeleteTest extends FileManagedTestBase {
    */
   function testInUse() {
     $file = $this->createFile();
-    file_usage_add($file, 'testing', 'test', 1);
-    file_usage_add($file, 'testing', 'test', 1);
+    file_usage()->add($file, 'testing', 'test', 1);
+    file_usage()->add($file, 'testing', 'test', 1);
 
-    file_usage_delete($file, 'testing', 'test', 1);
-    $usage = file_usage_list($file);
+    file_usage()->delete($file, 'testing', 'test', 1);
+    $usage = file_usage()->listUsage($file);
     $this->assertEqual($usage['testing']['test'], array(1 => 1), t('Test file is still in use.'));
     $this->assertTrue(file_exists($file->uri), t('File still exists on the disk.'));
     $this->assertTrue(file_load($file->fid), t('File still exists in the database.'));
@@ -50,8 +50,8 @@ class DeleteTest extends FileManagedTestBase {
     // Clear out the call to hook_file_load().
     file_test_reset();
 
-    file_usage_delete($file, 'testing', 'test', 1);
-    $usage = file_usage_list($file);
+    file_usage()->delete($file, 'testing', 'test', 1);
+    $usage = file_usage()->listUsage($file);
     $this->assertFileHooksCalled(array('load', 'update'));
     $this->assertTrue(empty($usage), t('File usage data was removed.'));
     $this->assertTrue(file_exists($file->uri), 'File still exists on the disk.');

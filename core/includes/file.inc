@@ -921,7 +921,7 @@ function file_create_filename($basename, $directory) {
  *   The file id.
  *
  * @see file_unmanaged_delete()
- * @see file_usage_list()
+ * @see file_usage()->listUsage()
  */
 function file_delete($fid) {
   return file_delete_multiple(array($fid));
@@ -938,7 +938,7 @@ function file_delete($fid) {
  *   The file id.
  *
  * @see file_unmanaged_delete()
- * @see file_usage_list()
+ * @see file_usage()->listUsage()
  */
 function file_delete_multiple(array $fids) {
   entity_delete_multiple('file', $fids);
@@ -1052,7 +1052,7 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  * Saves a file upload to a new location.
  *
  * The file will be added to the {file_managed} table as a temporary file.
- * Temporary files are periodically cleaned. Use file_usage_add() to register
+ * Temporary files are periodically cleaned. Use file_usage()->add() to register
  * the usage of the file which will automatically mark it as permanent.
  *
  * @param $source
