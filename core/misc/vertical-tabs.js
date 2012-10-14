@@ -15,6 +15,11 @@
  */
 Drupal.behaviors.verticalTabs = {
   attach: function (context) {
+
+    if (!Drupal.checkWidthBreakpoint()) {
+      return;
+    }
+
     $(context).find('.vertical-tabs-panes').once('vertical-tabs', function () {
       var $this = $(this);
       var focusID = $this.find(':hidden.vertical-tabs-active-tab').val();
