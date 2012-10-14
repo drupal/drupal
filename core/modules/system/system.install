@@ -2164,6 +2164,18 @@ function system_update_8028() {
 }
 
 /**
+ * Convert path_alias_whitelist variable to state API.
+ *
+ * @ingroup state_upgrade
+ */
+function system_update_8029() {
+  if ($value = update_variable_get('path_alias_whitelist', FALSE)) {
+    state()->set('system.path_alias_whitelist', $value);
+  }
+  update_variable_del('path_alias_whitelist');
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
