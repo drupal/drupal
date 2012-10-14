@@ -43,6 +43,13 @@ class Entity implements IteratorAggregate, EntityInterface {
   protected $enforceIsNew;
 
   /**
+   * Boolean indicating whether a new revision should be created on save.
+   *
+   * @var bool
+   */
+  protected $newRevision = FALSE;
+
+  /**
    * Indicates whether this is the default revision.
    *
    * @var bool
@@ -82,10 +89,25 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
+   * Implements EntityInterface::isNewRevision().
+   */
+  public function isNewRevision() {
+    $info = $this->entityInfo();
+    return $this->newRevision || (!empty($info['entity keys']['revision']) && !$this->getRevisionId());
+  }
+
+  /**
    * Implements EntityInterface::enforceIsNew().
    */
   public function enforceIsNew($value = TRUE) {
     $this->enforceIsNew = $value;
+  }
+
+  /**
+   * Implements EntityInterface::setNewRevision().
+   */
+  public function setNewRevision($value = TRUE) {
+    $this->newRevision = $value;
   }
 
   /**

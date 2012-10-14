@@ -48,13 +48,15 @@ class BulkDeleteTest extends FieldTestBase {
   protected function convertToPartialEntities($entities, $field_name) {
     $partial_entities = array();
     foreach ($entities as $id => $entity) {
-      // Re-create the entity with only the required keys, remove label as that
-      // is not present when using _field_create_entity_from_ids().
-      $partial_entities[$id] = field_test_create_entity($entity->ftid, $entity->ftvid, $entity->fttype, $entity->ftlabel);
-      // Remove the label and set enforceIsNew to NULL to make sure that the
-      // entity classes match the actual arguments.
-      unset($partial_entities[$id]->ftlabel);
-      $partial_entities[$id]->enforceIsNew(NULL);
+      // Re-create the entity to match what is expected
+      // _field_create_entity_from_ids().
+      $ids = (object) array(
+        'entity_id' => $entity->ftid,
+        'revision_id' => $entity->ftvid,
+        'bundle' => $entity->fttype,
+        'entity_type' => 'test_entity',
+      );
+      $partial_entities[$id] = _field_create_entity_from_ids($ids);
       $partial_entities[$id]->$field_name = $entity->$field_name;
     }
     return $partial_entities;

@@ -122,6 +122,13 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::deleteRevision().
+   */
+  public function deleteRevision($revision_id) {
+    return NULL;
+  }
+
+  /**
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadByProperties().
    */
   public function loadByProperties(array $values = array()) {

@@ -36,6 +36,13 @@ class TestEntity extends Entity {
   public $fttype;
 
   /**
+   * Label property
+   *
+   * @var string
+   */
+  public $ftlabel;
+
+  /**
    * Overrides Drupal\Core\Entity\Entity::id().
    */
   public function id() {

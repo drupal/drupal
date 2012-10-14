@@ -162,7 +162,7 @@ function book_admin_edit_submit($form, &$form_state) {
         $langcode = LANGUAGE_NOT_SPECIFIED;
         $node->title = $values['title'];
         $node->book['link_title'] = $values['title'];
-        $node->revision = 1;
+        $node->setNewRevision();
         $node->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
 
         $node->save();

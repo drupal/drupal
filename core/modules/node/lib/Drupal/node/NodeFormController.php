@@ -44,7 +44,7 @@ class NodeFormController extends EntityFormController {
       $node->log = NULL;
     }
     // Always use the default revision setting.
-    $node->revision = in_array('revision', $node_options);
+    $node->setNewRevision(in_array('revision', $node_options));
 
     node_invoke($node, 'prepare');
     module_invoke_all('node_prepare', $node);
@@ -117,8 +117,8 @@ class NodeFormController extends EntityFormController {
       '#type' => 'fieldset',
       '#title' => t('Revision information'),
       '#collapsible' => TRUE,
-      // Collapsed by default when "Create new revision" is unchecked
-      '#collapsed' => !$node->revision,
+      // Collapsed by default when "Create new revision" is unchecked.
+      '#collapsed' => !$node->isNewRevision(),
       '#group' => 'additional_settings',
       '#attributes' => array(
         'class' => array('node-form-revision-information'),
@@ -127,20 +127,20 @@ class NodeFormController extends EntityFormController {
         'js' => array(drupal_get_path('module', 'node') . '/node.js'),
       ),
       '#weight' => 20,
-      '#access' => $node->revision || user_access('administer nodes'),
+      '#access' => $node->isNewRevision() || user_access('administer nodes'),
     );
 
     $form['revision_information']['revision'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
-      '#default_value' => $node->revision,
+      '#default_value' => $node->isNewRevision(),
       '#access' => user_access('administer nodes'),
     );
 
     // Check the revision log checkbox when the log textarea is filled in.
     // This must not happen if "Create new revision" is enabled by default,
     // since the state would auto-disable the checkbox otherwise.
-    if (!$node->revision) {
+    if (!$node->isNewRevision()) {
       $form['revision_information']['revision']['#states'] = array(
         'checked' => array(
           'textarea[name="log"]' => array('empty' => FALSE),
@@ -320,6 +320,11 @@ class NodeFormController extends EntityFormController {
 
     // Build the node object from the submitted values.
     $node = parent::submit($form, $form_state);
+
+    // Save as a new revision if requested to do so.
+    if (!empty($form_state['values']['revision'])) {
+      $node->setNewRevision();
+    }
 
     node_submit($node);
     foreach (module_implements('node_submit') as $module) {

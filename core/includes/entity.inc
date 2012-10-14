@@ -150,6 +150,18 @@ function entity_revision_load($entity_type, $revision_id) {
 }
 
 /**
+ * Deletes a node revision.
+ *
+ * @param string $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param $revision_id
+ *   The revision ID to delete.
+ */
+function entity_revision_delete($entity_type, $revision_id) {
+  entity_get_controller($entity_type)->deleteRevision($revision_id);
+}
+
+/**
  * Loads an entity by UUID.
  *
  * Note that some entity types may not support UUIDs.

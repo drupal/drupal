@@ -16,36 +16,12 @@ use Drupal\Core\Entity\EntityInterface;
 class TestEntityController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSaveRevision().
    */
-  public function preSave(EntityInterface $entity) {
-    // Prepare for a new revision.
-    if (!$entity->isNew() && !empty($entity->revision)) {
-      $entity->old_ftvid = $entity->ftvid;
-      $entity->ftvid = NULL;
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
-   */
-  public function postSave(EntityInterface $entity, $update) {
-    // Only the test_entity entity type has revisions.
-    if ($entity->entityType() == 'test_entity') {
-      $update_entity = TRUE;
-      if (!$update || !empty($entity->revision)) {
-        drupal_write_record('test_entity_revision', $entity);
-      }
-      else {
-        drupal_write_record('test_entity_revision', $entity, 'ftvid');
-        $update_entity = FALSE;
-      }
-      if ($update_entity) {
-        db_update('test_entity')
-          ->fields(array('ftvid' => $entity->ftvid))
-          ->condition('ftid', $entity->ftid)
-          ->execute();
-      }
+  public function preSaveRevision(array &$record, EntityInterface $entity) {
+    // Allow for predefined revision ids.
+    if (!empty($record['use_provided_revision_id'])) {
+      $record['ftvid'] = $record['use_provided_revision_id'];
     }
   }
 

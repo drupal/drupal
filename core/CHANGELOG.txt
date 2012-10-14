@@ -7,6 +7,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * Drupal now understands the concept of a "default" revision, tracked
       independently from the latest revision, allowing for the creation of
       drafts while the current revision stays published.
+    * All entity types, not just nodes, now have support for revisions.
 - Replaced the core routing system with one built on the Symfony2 framework.
 - Configuration:
     * Added a centralized file-based configuration system.

@@ -237,6 +237,8 @@ function field_test_create_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $l
   }
   if (isset($vid)) {
     $entity->ftvid = $vid;
+    // Flag to make sure that the provided vid is used for a new revision.
+    $entity->use_provided_revision_id = $vid;
   }
   $entity->fttype = $bundle;
 
@@ -244,6 +246,7 @@ function field_test_create_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $l
   $entity->ftlabel = $label;
   // Make sure the entity will saved even if a primary key is provided.
   $entity->enforceIsNew();
+  $entity->setNewRevision();
   return $entity;
 }
 
@@ -292,7 +295,6 @@ function field_test_entity_edit(TestEntity $entity) {
   drupal_set_title(t('test_entity @ftid revision @ftvid', array('@ftid' => $entity->ftid, '@ftvid' => $entity->ftvid)), PASS_THROUGH);
   return entity_get_form($entity);
 }
-
 
 /**
  * Form combining two separate entities.

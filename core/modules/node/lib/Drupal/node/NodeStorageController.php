@@ -9,8 +9,6 @@ namespace Drupal\node;
 
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageException;
-use Exception;
 
 /**
  * Controller class for nodes.
@@ -32,135 +30,6 @@ class NodeStorageController extends DatabaseStorageController {
     }
 
     return $node;
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::delete().
-   */
-  public function delete($ids) {
-    $entities = $ids ? $this->load($ids) : FALSE;
-    if (!$entities) {
-      // If no IDs or invalid IDs were passed, do nothing.
-      return;
-    }
-    $transaction = db_transaction();
-
-    try {
-      $this->preDelete($entities);
-      foreach ($entities as $id => $entity) {
-        $this->invokeHook('predelete', $entity);
-      }
-      $ids = array_keys($entities);
-
-      db_delete($this->entityInfo['base table'])
-        ->condition($this->idKey, $ids, 'IN')
-        ->execute();
-
-      if ($this->revisionKey) {
-        db_delete($this->revisionTable)
-          ->condition($this->idKey, $ids, 'IN')
-          ->execute();
-      }
-
-      // Reset the cache as soon as the changes have been applied.
-      $this->resetCache($ids);
-
-      $this->postDelete($entities);
-      foreach ($entities as $id => $entity) {
-        $this->invokeHook('delete', $entity);
-      }
-      // Ignore slave server temporarily.
-      db_ignore_slave();
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception($this->entityType, $e);
-      throw new EntityStorageException($e->getMessage, $e->getCode, $e);
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::save().
-   */
-  public function save(EntityInterface $entity) {
-    $transaction = db_transaction();
-    try {
-      // Load the stored entity, if any.
-      if (!$entity->isNew() && !isset($entity->original)) {
-        $entity->original = entity_load_unchanged($this->entityType, $entity->id());
-      }
-
-      $this->preSave($entity);
-      $this->invokeHook('presave', $entity);
-
-      if ($entity->isNew()) {
-        $op = 'insert';
-        $return = drupal_write_record($this->entityInfo['base table'], $entity);
-        $entity->enforceIsNew(FALSE);
-      }
-      else {
-        $op = 'update';
-        // Update the base node table, but only if this revision is marked as
-        // the default.
-        if ($entity->isDefaultRevision()) {
-          $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
-        }
-        else {
-          // @todo, should a different value be returned when saving an entity
-          // with $isDefaultRevision = FALSE?
-          $return = FALSE;
-        }
-      }
-
-      if ($this->revisionKey) {
-        $this->saveRevision($entity);
-      }
-
-      // Reset general caches, but keep caches specific to certain entities.
-      $this->resetCache($op == 'update' ? array($entity->{$this->idKey}): array());
-
-      $this->postSave($entity, $op == 'update');
-      $this->invokeHook($op, $entity);
-
-      // Ignore slave server temporarily.
-      db_ignore_slave();
-      unset($entity->original);
-
-      return $return;
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception($this->entityType, $e);
-      throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
-    }
-  }
-
-  /**
-   * Saves a node revision.
-   *
-   * @param Drupal\Core\Entity\EntityInterface $node
-   *   The node entity.
-   */
-  protected function saveRevision(EntityInterface $entity) {
-    $record = clone $entity;
-    $record->uid = $entity->revision_uid;
-    $record->timestamp = $entity->revision_timestamp;
-
-    if (empty($entity->{$this->revisionKey}) || !empty($entity->revision)) {
-      drupal_write_record($this->revisionTable, $record);
-      // Only update the base node table if this revision is the default.
-      if ($entity->isDefaultRevision()) {
-        db_update($this->entityInfo['base table'])
-          ->fields(array($this->revisionKey => $record->{$this->revisionKey}))
-          ->condition($this->idKey, $entity->{$this->idKey})
-          ->execute();
-      }
-    }
-    else {
-      drupal_write_record($this->revisionTable, $record, $this->revisionKey);
-    }
-    // Make sure to update the new revision key for the entity.
-    $entity->{$this->revisionKey} = $record->{$this->revisionKey};
   }
 
   /**
@@ -218,39 +87,6 @@ class NodeStorageController extends DatabaseStorageController {
     }
 
     parent::invokeHook($hook, $node);
-
-    if ($hook == 'presave') {
-      if ($node->isNew() || !empty($node->revision)) {
-        // When inserting either a new node or a new node revision, $node->log
-        // must be set because {node_revision}.log is a text column and therefore
-        // cannot have a default value. However, it might not be set at this
-        // point (for example, if the user submitting a node form does not have
-        // permission to create revisions), so we ensure that it is at least an
-        // empty string in that case.
-        // @todo: Make the {node_revision}.log column nullable so that we can
-        // remove this check.
-        if (!isset($node->log)) {
-          $node->log = '';
-        }
-      }
-      elseif (!isset($node->log) || $node->log === '') {
-        // If we are updating an existing node without adding a new revision, we
-        // need to make sure $node->log is unset whenever it is empty. As long as
-        // $node->log is unset, drupal_write_record() will not attempt to update
-        // the existing database column when re-saving the revision; therefore,
-        // this code allows us to avoid clobbering an existing log entry with an
-        // empty one.
-        unset($node->log);
-      }
-
-      // When saving a new node revision, unset any existing $node->vid so as to
-      // ensure that a new revision will actually be created, then store the old
-      // revision ID in a separate property for use by node hook implementations.
-      if (!$node->isNew() && !empty($node->revision) && $node->vid) {
-        $node->old_vid = $node->vid;
-        $node->vid = NULL;
-      }
-    }
   }
 
   /**
@@ -259,13 +95,38 @@ class NodeStorageController extends DatabaseStorageController {
   protected function preSave(EntityInterface $node) {
     // Before saving the node, set changed and revision times.
     $node->changed = REQUEST_TIME;
+  }
 
-    if ($this->revisionKey && !empty($node->revision)) {
-      $node->revision_timestamp = REQUEST_TIME;
-
-      if (!isset($node->revision_uid)) {
-        $node->revision_uid = $GLOBALS['user']->uid;
+  /**
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSaveRevision().
+   */
+  protected function preSaveRevision(array &$record, EntityInterface $entity) {
+    if ($entity->isNewRevision()) {
+      // When inserting either a new node or a new node revision, $node->log
+      // must be set because {node_revision}.log is a text column and therefore
+      // cannot have a default value. However, it might not be set at this
+      // point (for example, if the user submitting a node form does not have
+      // permission to create revisions), so we ensure that it is at least an
+      // empty string in that case.
+      // @todo: Make the {node_revision}.log column nullable so that we can
+      // remove this check.
+      if (!isset($record['log'])) {
+        $record['log'] = '';
       }
+    }
+    elseif (!isset($record['log']) || $record['log'] === '') {
+      // If we are updating an existing node without adding a new revision, we
+      // need to make sure $node->log is unset whenever it is empty. As long as
+      // $node->log is unset, drupal_write_record() will not attempt to update
+      // the existing database column when re-saving the revision; therefore,
+      // this code allows us to avoid clobbering an existing log entry with an
+      // empty one.
+      unset($record['log']);
+    }
+
+    if ($entity->isNewRevision()) {
+      $record['timestamp'] = REQUEST_TIME;
+      $record['uid'] = isset($record['revision_uid']) ? $record['revision_uid'] : $GLOBALS['user']->uid;
     }
   }
 

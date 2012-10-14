@@ -231,7 +231,7 @@ function file_field_insert($entity_type, $entity, $field, $instance, $langcode, 
 function file_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
   // On new revisions, all files are considered to be a new usage and no
   // deletion of previous file usages are necessary.
-  if (!empty($entity->revision)) {
+  if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
     foreach ($items as $item) {
       file_usage_add(file_load($item['fid']), 'file', $entity_type, $entity->id());
     }

@@ -206,7 +206,6 @@ abstract class WebTestBase extends TestBase {
       'status'    => 1,
       'sticky'    => 0,
       'type'      => 'page',
-      'revisions' => NULL,
       'langcode'  => LANGUAGE_NOT_SPECIFIED,
     );
 
@@ -235,6 +234,9 @@ abstract class WebTestBase extends TestBase {
     $settings['body'][$settings['langcode']][0] += $body;
 
     $node = entity_create('node', $settings);
+    if (!empty($settings['revision'])) {
+      $node->setNewRevision();
+    }
     $node->save();
 
     // Small hack to link revisions to our test user.

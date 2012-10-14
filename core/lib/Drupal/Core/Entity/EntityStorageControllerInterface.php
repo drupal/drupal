@@ -60,6 +60,16 @@ interface EntityStorageControllerInterface {
   public function loadRevision($revision_id);
 
   /**
+   * Delete a specific entity revision.
+   *
+   * A revision can only be deleted if it's not the currently active one.
+   *
+   * @param int $revision_id
+   *   The revision id.
+   */
+  public function deleteRevision($revision_id);
+
+  /**
    * Load entities by their property values.
    *
    * @param array $values

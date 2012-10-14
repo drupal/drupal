@@ -64,6 +64,26 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
   public function isNew();
 
   /**
+   * Returns whether a new revision should be created on save.
+   *
+   * @return bool
+   *   TRUE if a new revision should be created.
+   *
+   * @see Drupal\Core\Entity\EntityInterface::setNewRevision()
+   */
+  public function isNewRevision();
+
+  /**
+   * Enforces an entity to be saved as a new revision.
+   *
+   * @param bool $value
+   *   (optional) Whether a new revision should be saved.
+   *
+   * @see Drupal\Core\Entity\EntityInterface::isNewRevision()
+   */
+  public function setNewRevision($value = TRUE);
+
+  /**
    * Enforces an entity to be new.
    *
    * Allows migrations to create entities with pre-defined IDs by forcing the

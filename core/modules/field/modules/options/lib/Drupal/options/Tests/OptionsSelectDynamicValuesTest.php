@@ -24,8 +24,8 @@ class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTest {
    */
   function testSelectListDynamic() {
     // Create an entity.
-    $this->entity->is_new = TRUE;
-    field_test_entity_save($this->entity);
+    $this->entity->save();
+
     // Create a web user.
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
     $this->drupalLogin($web_user);

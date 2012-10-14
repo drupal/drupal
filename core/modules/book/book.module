@@ -927,7 +927,7 @@ function book_page_alter(&$page) {
 function book_node_presave(Node $node) {
   // Always save a revision for non-administrators.
   if (!empty($node->book['bid']) && !user_access('administer nodes')) {
-    $node->revision = 1;
+    $node->setNewRevision();
   }
   // Make sure a new node gets a new menu link.
   if (empty($node->nid)) {

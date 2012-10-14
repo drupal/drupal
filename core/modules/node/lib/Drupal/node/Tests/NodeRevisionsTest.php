@@ -121,7 +121,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $new_body = $this->randomName();
     $new_node_revision->body[LANGUAGE_NOT_SPECIFIED][0]['value'] = $new_body;
     // Save this as a non-default revision.
-    $new_node_revision->revision = TRUE;
+    $new_node_revision->setNewRevision();
     $new_node_revision->isDefaultRevision = FALSE;
     node_save($new_node_revision);
 
@@ -160,7 +160,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node = clone $node;
     $node->title = $new_title;
     $node->log = '';
-    $node->revision = FALSE;
+    $node->setNewRevision(FALSE);
 
     $node->save();
     $this->drupalGet('node/' . $node->nid);
@@ -177,7 +177,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $node = clone $node;
     $node->title = $new_title;
-    $node->revision = TRUE;
+    $node->setNewRevision();
     $node->log = NULL;
 
     $node->save();

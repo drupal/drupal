@@ -346,7 +346,9 @@ function forum_node_presave(Node $node) {
  */
 function forum_node_update(Node $node) {
   if (_forum_node_check_node_type($node)) {
-    if (empty($node->revision) && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->nid))->fetchField()) {
+    // If this is not a new revision and does exist, update the forum record,
+    // otherwise insert a new one.
+    if ($node->getRevisionId() == $node->original->getRevisionId() && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->nid))->fetchField()) {
       if (!empty($node->forum_tid)) {
         db_update('forum')
           ->fields(array('tid' => $node->forum_tid))
