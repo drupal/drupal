@@ -22,7 +22,6 @@ function poll_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------
   // Fields
 
   // poll active status

@@ -725,9 +725,14 @@ function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
 
 }
 
-// --------------------------------------------------------------------------
-// Various subforms for editing the pieces of a view.
 
+/**
+ * Returns information about subforms for editing the pieces of a view.
+ *
+ * @param string|null $key
+ *   The form for which to retrieve data. If NULL, the list of all forms is
+ *   returned.
+ */
 function views_ui_ajax_forms($key = NULL) {
   $forms = array(
     'display' => array(
@@ -2488,9 +2493,6 @@ function views_ui_autocomplete_tag($string = '') {
 
   return new JsonResponse($matches);
 }
-
-// ------------------------------------------------------------------
-// Get information from the Views data
 
 function _views_weight_sort($a, $b) {
   if ($a['weight'] != $b['weight']) {

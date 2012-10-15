@@ -385,7 +385,6 @@ function comment_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // node_comment_statistics table
 
   // define the group

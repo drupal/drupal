@@ -13,7 +13,6 @@
 function file_views_data() {
   $data = array();
 
-  // ----------------------------------------------------------------------
   // file_managed table
 
   $data['file_managed']['table']['group']  = t('File');
@@ -178,7 +177,6 @@ function file_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // file_usage table
 
   $data['file_usage']['table']['group']  = t('File Usage');

@@ -116,7 +116,6 @@ function locale_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // Locales target table
 
   // Define the base group of this table. Fields that don't

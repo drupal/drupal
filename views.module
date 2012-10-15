@@ -1116,8 +1116,6 @@ function views_check_roles($rids, $account = NULL) {
   $roles[] = $account->uid ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
   return user_access('access all views', $account) || array_intersect(array_filter($rids), $roles);
 }
-// ------------------------------------------------------------------
-// Functions to help identify views that are running or ran
 
 /**
  * Set the current 'page view' that is being displayed so that it is easy
@@ -1169,9 +1167,6 @@ function &views_set_current_view($view = NULL) {
 function &views_get_current_view() {
   return views_set_current_view();
 }
-
-// ------------------------------------------------------------------
-// Include file helpers
 
 /**
  * Include views .inc files as necessary.
@@ -1268,9 +1263,6 @@ function views_include_handlers($reset = FALSE) {
   $finished = TRUE;
 }
 
-// -----------------------------------------------------------------------
-// Views handler functions
-
 /**
  * Fetch a handler from the data cache.
  *
@@ -1337,9 +1329,6 @@ function views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
   views_include('cache');
   return _views_fetch_data($table, $move, $reset);
 }
-
-// -----------------------------------------------------------------------
-// Views plugin functions
 
 /**
  * Fetch a list of all base tables available
@@ -1445,9 +1434,6 @@ function views_get_enabled_display_extenders() {
 
   return drupal_map_assoc($enabled);
 }
-
-// -----------------------------------------------------------------------
-// Views database functions
 
 /**
  * Create an empty view to work with.
@@ -1693,9 +1679,6 @@ function views_get_view($name) {
   }
 }
 
-// ------------------------------------------------------------------
-// Views form (View with form elements)
-
 /**
  * Returns TRUE if the passed-in view contains handlers with views form
  * implementations, FALSE otherwise.
@@ -1882,9 +1865,6 @@ function views_form_views_form_submit($form, &$form_state) {
   }
 }
 
-// ------------------------------------------------------------------
-// Exposed widgets form
-
 /**
  * Form builder for the exposed widgets form.
  *
@@ -2042,9 +2022,6 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
   // Return the form output, if any
   return empty($views_exposed[$views_name][$display_name]) ? FALSE : $views_exposed[$views_name][$display_name];
 }
-
-// ------------------------------------------------------------------
-// Misc helpers
 
 /**
  * Build a list of theme function names for use most everywhere.

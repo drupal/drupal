@@ -13,7 +13,6 @@
 function statistics_views_data() {
   // Basic table information.
 
-  // ----------------------------------------------------------------
   // node_counter table
 
   $data['node_counter']['table']['group']  = t('Content statistics');
@@ -77,7 +76,6 @@ function statistics_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------
   // accesslog table
 
   $data['accesslog']['table']['group']  = t('Access log');

@@ -11,7 +11,6 @@
  * Implements hook_views_data().
  */
 function book_views_data() {
-  // ----------------------------------------------------------------------
   // book table
 
   $data['book']['table']['group']  = t('Book');
@@ -34,7 +33,6 @@ function book_views_data() {
     // and use the node: nid argument.
   );
 
-  // ----------------------------------------------------------------------
   // menu_links table -- this is aliased so we can get just book relations
 
   // Book hierarchy and weight data are now in {menu_links}.
@@ -86,7 +84,6 @@ function book_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // book_parent table -- this is an alias of the book table which
   // represents the parent book.
 

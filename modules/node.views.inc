@@ -13,7 +13,6 @@ use Drupal\views\Analyzer;
  * Implements hook_views_data().
  */
 function node_views_data() {
-  // ----------------------------------------------------------------
   // node table -- basic table information.
 
   // Define the base group of this table. Fields that don't
@@ -417,7 +416,6 @@ function node_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // Content revision table
 
   // Define the base group of this table. Fields that don't
@@ -618,7 +616,6 @@ function node_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // Node access table
 
   // Define the base group of this table. Fields that don't
@@ -643,7 +640,6 @@ function node_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // History table
 
   // We're actually defining a specific instance of the table, so let's

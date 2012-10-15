@@ -11,7 +11,6 @@
  * Implements hook_views_data().
  */
 function filter_views_data() {
-  // ----------------------------------------------------------------------
   // filter_format table
 
   // Have not defined $data['filter_formats']['table']['group'] since

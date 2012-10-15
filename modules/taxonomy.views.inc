@@ -13,7 +13,6 @@
 function taxonomy_views_data() {
   $data = array();
 
-  // ----------------------------------------------------------------------
   // taxonomy_vocabulary table
 
   $data['taxonomy_vocabulary']['table']['group']  = t('Taxonomy vocabulary');
@@ -96,7 +95,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
  // taxonomy_term_data table
 
   $data['taxonomy_term_data']['table']['group']  = t('Taxonomy term');
@@ -264,7 +262,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // taxonomy_index table
 
   $data['taxonomy_index']['table']['group']  = t('Taxonomy term');
@@ -323,7 +320,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // term_hierarchy table
 
   $data['taxonomy_term_hierarchy']['table']['group']  = t('Taxonomy term');

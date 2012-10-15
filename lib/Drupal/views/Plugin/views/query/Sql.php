@@ -148,9 +148,6 @@ class Sql extends QueryPluginBase {
     );
   }
 
-  // ----------------------------------------------------------------
-  // Utility methods to set flags and data.
-
   /**
    * Set the view to be distinct (per base field).
    *
@@ -261,9 +258,6 @@ class Sql extends QueryPluginBase {
     $value = array_filter(array_map('trim', $value));
     form_set_value($element, $value, $form_state);
   }
-
-  // ----------------------------------------------------------------
-  // Table/join adding
 
   /**
    * A relationship is an alternative endpoint to a series of table

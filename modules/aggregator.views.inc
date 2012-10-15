@@ -11,7 +11,6 @@
  * Implements hook_views_data().
  */
 function aggregator_views_data() {
-  // ----------------------------------------------------------------------
   // Main Aggregator Item base table
 
   // Define the base group of this table. Fields that don't
@@ -25,7 +24,6 @@ function aggregator_views_data() {
     'help' => t("Aggregator items are imported from external RSS and Atom news feeds."),
   );
 
-  // ----------------------------------------------------------------
   // Fields
 
   // iid
@@ -167,7 +165,6 @@ function aggregator_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // Aggregator feed table
 
   $data['aggregator_feed']['table']['group']  = t('Aggregator feed');
@@ -299,7 +296,6 @@ function aggregator_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // Aggregator category feed table
 
   $data['aggregator_category_feed']['table']['join'] = array(
@@ -309,7 +305,6 @@ function aggregator_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // Aggregator category table
 
   $data['aggregator_category']['table']['group'] = t('Aggregator category');

@@ -11,7 +11,6 @@
  * Implements hook_views_data().
  */
 function user_views_data() {
-  // ----------------------------------------------------------------
   // users table
 
   // Define the base group of this table. Fields that don't
@@ -344,7 +343,6 @@ function user_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // users_roles table
 
   $data['users_roles']['table']['group']  = t('User');
@@ -379,7 +377,6 @@ function user_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // role table
 
   $data['role']['table']['join'] = array(
@@ -419,7 +416,6 @@ function user_views_data() {
     ),
   );
 
-  // ----------------------------------------------------------------------
   // authmap table
 
   $data['authmap']['table']['group']  = t('User');
