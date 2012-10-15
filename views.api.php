@@ -504,20 +504,17 @@ function hook_views_post_render(ViewExecutable &$view, &$output, CacheBackendInt
 }
 
 /**
- * Alter the query before executing the query.
+ * Alter the query before it is executed.
  *
- * This hook should be placed in MODULENAME.views.inc and it will be
- * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
- * 'path' key returned by MODULENAME_views_api(), or the same directory as the
- * .module file, if 'path' is unspecified.
- *
- * @param $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
- * @param $query
- *   An object describing the query.
+ * @param QueryPluginBase $query
+ *   The query plugin object for the query.
+ *
  * @see hook_views_query_substitutions()
+ * @see Drupal\views\Plugin\views\query\Sql
  */
-function hook_views_query_alter(&$view, &$query) {
+function hook_views_query_alter(ViewExecutable &$view, QueryPluginBase &$query) {
   // (Example assuming a view with an exposed filter on node title.)
   // If the input for the title filter is a positive integer, filter against
   // node ID instead of node title.
@@ -543,25 +540,19 @@ function hook_views_query_alter(&$view, &$query) {
  * Alter the information box that (optionally) appears with a view preview,
  * including query and performance statistics.
  *
- * This hook should be placed in MODULENAME.views.inc and it will be
- * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
- * 'path' key returned by MODULENAME_views_api(), or the same directory as the
- * .module file, if 'path' is unspecified.
- *
- * Warning: $view is not a reference in PHP4 and cannot be modified here. But it
- * IS a reference in PHP5, and can be modified. Please be careful with it.
- *
- * @param $rows
+ * @param array $rows
  *   An associative array with two keys:
  *   - query: An array of rows suitable for theme('table'), containing
  *     information about the query and the display title and path.
  *   - statistics: An array of rows suitable for theme('table'), containing
  *     performance statistics.
- * @param $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object.
+ *
+ * @see Drupal\views_ui\ViewUI
  * @see theme_table()
  */
-function hook_views_preview_info_alter(&$rows, $view) {
+function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
   // Adds information about the tables being queried by the view to the query
   // part of the info box.
   $rows['query'][] = array(
