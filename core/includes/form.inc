@@ -251,11 +251,9 @@ function drupal_get_form($form_id) {
  *   - executed: If TRUE, the form was submitted and has been processed and
  *     executed. Defaults to FALSE.
  *   - triggering_element: (read-only) The form element that triggered
- *     submission. This is the same as the deprecated
- *     $form_state['clicked_button']. It is the element that caused submission,
- *     which may or may not be a button (in the case of Ajax forms). This key is
- *     often used to distinguish between various buttons in a submit handler,
- *     and is also used in Ajax handlers.
+ *     submission, which may or may not be a button (in the case of Ajax forms).
+ *     This key is often used to distinguish between various buttons in a submit
+ *     handler, and is also used in Ajax handlers.
  *   - has_file_element: Internal. If TRUE, there is a file element and Form API
  *     will set the appropriate 'enctype' HTML attribute on the form.
  *   - groups: Internal. An array containing references to fieldsets to render
@@ -565,7 +563,6 @@ function form_state_keys_no_cache() {
     // Internal properties defined by form processing.
     'buttons',
     'triggering_element',
-    'clicked_button',
     'complete_form',
     'groups',
     'input',
@@ -1960,9 +1957,6 @@ function form_builder($form_id, &$element, &$form_state) {
       // common for forms to have several buttons named 'op' and switch on
       // $form_state['values']['op'] during submit handler execution.
       $form_state['values'][$form_state['triggering_element']['#name']] = $form_state['triggering_element']['#value'];
-
-      // @todo Legacy support. Remove in Drupal 8.
-      $form_state['clicked_button'] = $form_state['triggering_element'];
     }
   }
   return $element;
