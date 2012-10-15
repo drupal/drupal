@@ -27,6 +27,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       information.
     * Yaml - Parser for YAML files.
 - Included the Assetic asset management framework for PHP.
+- Included Backbone.js and Underscore.js JavaScript frameworks.
 - Support added for making HTTP requests through a proxy server.
 - Removed modules from core.
     * The following modules have been removed from core, because contributed

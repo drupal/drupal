@@ -1848,6 +1848,29 @@ function system_library_info() {
     ),
   );
 
+  // Underscore
+  $libraries['underscore'] = array(
+    'title' => 'Underscore.js',
+    'website' => 'http://underscorejs.org/',
+    'version' => '1.4.0',
+    'js' => array(
+      'core/misc/underscore/underscore.js' => array('group' => JS_LIBRARY),
+    ),
+  );
+
+  // Backbone
+  $libraries['backbone'] = array(
+    'title' => 'Backbone.js',
+    'website' => 'http://backbonejs.org/',
+    'version' => '0.9.2',
+    'js' => array(
+      'core/misc/backbone/backbone.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'underscore'),
+    ),
+  );
+
   // Cookie.
   $libraries['jquery.cookie'] = array(
     'title' => 'Cookie',
