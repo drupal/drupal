@@ -518,15 +518,20 @@ $conf['404_fast_paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl
 $conf['404_fast_html'] = '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
 
 /**
- * By default, fast 404s are returned as part of the normal page request
- * process, which will properly serve valid pages that happen to match and will
- * also log actual 404s to the Drupal log. Alternatively you can choose to
- * return a 404 now by uncommenting the following line. This will reduce server
- * load, but will cause even valid pages that happen to match the pattern to
- * return 404s, rather than the actual page. It will also prevent the Drupal
- * system log entry. Ensure you understand the effects of this before enabling.
+ * By default the page request process will return a fast 404 page for missing
+ * files if they match the regular expression set in '404_fast_paths' and not
+ * '404_fast_paths_exclude' above. 404 errors will simultaneously be logged in
+ * the Drupal system log.
  *
- * To enable this functionality, remove the leading hash sign below.
+ * You can choose to return a fast 404 page earlier for missing pages (as soon
+ * as settings.php is loaded) by uncommenting the line below. This speeds up
+ * server response time when loading 404 error pages and prevents the 404 error
+ * from being logged in the Drupal system log. In order to prevent valid pages
+ * such as image styles and other generated content that may match the
+ * '404_fast_html' regular expression from returning 404 errors, it is necessary
+ * to add them to the '404_fast_paths_exclude' regular expression above. Make
+ * sure that you understand the effects of this feature before uncommenting the
+ * line below.
  */
 # drupal_fast_404();
 
