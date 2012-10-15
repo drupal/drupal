@@ -869,7 +869,31 @@ abstract class TestBase {
    */
   protected function tearDown() {
     global $user, $conf;
-    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+
+    // Reset all static variables.
+    // Unsetting static variables will potentially invoke destruct methods,
+    // which might call into functions that prime statics and caches again.
+    // In that case, all functions are still operating on the test environment,
+    // which means they may need to access its filesystem and database.
+    drupal_static_reset();
+
+    // Ensure that TestBase::changeDatabasePrefix() has run and TestBase::$setup
+    // was not tricked into TRUE, since the following code would delete the
+    // entire parent site otherwise.
+    if ($this->setupDatabasePrefix) {
+      // Remove all prefixed tables.
+      $connection_info = Database::getConnectionInfo('default');
+      $tables = db_find_tables($connection_info['default']['prefix']['default'] . '%');
+      $prefix_length = strlen($connection_info['default']['prefix']['default']);
+      foreach ($tables as $table) {
+        if (db_drop_table(substr($table, $prefix_length))) {
+          unset($tables[$table]);
+        }
+      }
+      if (!empty($tables)) {
+        $this->fail('Failed to drop all prefixed tables.');
+      }
+    }
 
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
@@ -897,22 +921,30 @@ abstract class TestBase {
     $GLOBALS['theme'] = $this->originalTheme;
 
     // Reset all static variables.
+    // All destructors of statically cached objects have been invoked above;
+    // this second reset is guranteed to reset everything to nothing.
     drupal_static_reset();
 
-    // Reset module list and module load status.
-    module_list_reset();
-    module_load_all(FALSE, TRUE);
+    // Reset static in language().
+    // Restoring drupal_container() makes language() return the proper languages
+    // already, but it contains an additional static that needs to be reset. The
+    // reset can happen before the container is restored, as it is unnecessary
+    // to reset the language_manager service.
+    language(NULL, TRUE);
 
     // Restore original in-memory configuration.
     $conf = $this->originalConf;
 
     // Restore original statics and globals.
     drupal_container($this->originalContainer);
-    $language_interface = $this->originalLanguage;
     $GLOBALS['config_directories'] = $this->originalConfigDirectories;
     if (isset($this->originalPrefix)) {
       drupal_valid_test_ua($this->originalPrefix);
     }
+
+    // Reset module list and module load status.
+    module_list_reset();
+    module_load_all(FALSE, TRUE);
 
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();

@@ -771,32 +771,10 @@ abstract class WebTestBase extends TestBase {
    * and reset the database prefix.
    */
   protected function tearDown() {
-    // Ensure that TestBase::changeDatabasePrefix() has run and TestBase::$setup
-    // was not tricked into TRUE, since the following code would delete the
-    // entire parent site otherwise.
-    if (!$this->setupDatabasePrefix) {
-      return FALSE;
-    }
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
       $this->kernel->shutdown();
     }
-    // Remove all prefixed tables.
-    $connection_info = Database::getConnectionInfo('default');
-    $tables = db_find_tables($connection_info['default']['prefix']['default'] . '%');
-    if (empty($tables)) {
-      $this->fail('Failed to find test tables to drop.');
-    }
-    $prefix_length = strlen($connection_info['default']['prefix']['default']);
-    foreach ($tables as $table) {
-      if (db_drop_table(substr($table, $prefix_length))) {
-        unset($tables[$table]);
-      }
-    }
-    if (!empty($tables)) {
-      $this->fail('Failed to drop all prefixed tables.');
-    }
-
     parent::tearDown();
 
     // Ensure that internal logged in variable and cURL options are reset.
