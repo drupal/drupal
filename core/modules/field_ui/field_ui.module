@@ -103,8 +103,8 @@ function field_ui_menu() {
 
           $items["$path/fields"] = array(
             'title' => 'Manage fields',
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_field_overview_form', $entity_type, $bundle_arg),
+            'page callback' => 'field_ui_field_overview',
+            'page arguments' => array($entity_type, $bundle_arg),
             'type' => MENU_LOCAL_TASK,
             'weight' => 1,
             'file' => 'field_ui.admin.inc',
@@ -154,8 +154,8 @@ function field_ui_menu() {
           // 'Manage display' tab.
           $items["$path/display"] = array(
             'title' => 'Manage display',
-            'page callback' => 'drupal_get_form',
-            'page arguments' => array('field_ui_display_overview_form', $entity_type, $bundle_arg, 'default'),
+            'page callback' => 'field_ui_display_overview',
+            'page arguments' => array($entity_type, $bundle_arg, 'default'),
             'type' => MENU_LOCAL_TASK,
             'weight' => 2,
             'file' => 'field_ui.admin.inc',
@@ -173,7 +173,8 @@ function field_ui_menu() {
           foreach ($view_modes as $view_mode => $view_mode_info) {
             $items["$path/display/$view_mode"] = array(
               'title' => $view_mode_info['label'],
-              'page arguments' => array('field_ui_display_overview_form', $entity_type, $bundle_arg, $view_mode),
+              'page callback' => 'field_ui_display_overview',
+              'page arguments' => array($entity_type, $bundle_arg, $view_mode),
               // The access callback needs to check both the current 'custom
               // display' setting for the view mode, and the overall access
               // rules for the bundle admin pages.

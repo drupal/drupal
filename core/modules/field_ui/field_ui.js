@@ -300,7 +300,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
    * Returns the region corresponding to the current form values of the row.
    */
   getRegion: function () {
-    return (this.$formatSelect.val() === 'hidden') ? 'hidden' : 'visible';
+    return (this.$formatSelect.val() === 'hidden') ? 'hidden' : 'content';
   },
 
   /**
@@ -326,7 +326,9 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
     // to the new region.
     var currentValue = this.$formatSelect.val();
     var value;
-    if (region === 'visible') {
+    // @TODO Check if this couldn't just be like
+    // if (region !== 'hidden') {
+    if (region === 'content') {
       if (currentValue === 'hidden') {
         // Restore the formatter back to the default formatter. Pseudo-fields do
         // not have default formatters, we just return to 'visible' for those.
