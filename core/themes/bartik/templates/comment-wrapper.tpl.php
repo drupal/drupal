@@ -28,7 +28,6 @@
  *   - COMMENT_MODE_THREADED
  *
  * @see template_preprocess_comment_wrapper()
- * @see theme_comment_wrapper()
  *
  * @ingroup themeable
  */
