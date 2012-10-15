@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Layout testing module.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function layout_test_menu() {
+  $items['layout-test'] = array(
+    'title' => 'Layout test',
+    'page callback' => 'layout_test_page',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Page callback for layout testing.
+ */
+function layout_test_page() {
+  // Hack to enable and apply the theme to this page and manually invoke its
+  // layout plugin and render it.
+  global $theme;
+  $theme = 'layout_test_theme';
+  theme_enable(array($theme));
+  $layout = layout_manager()->createInstance('static_layout:layout_test_theme__two-col');
+  return $layout->renderLayout();
+}
+
+/**
+ * Implements hook_system_theme_info().
+ */
+function layout_test_system_theme_info() {
+  $themes['layout_test_theme'] = drupal_get_path('module', 'layout_test') . '/themes/layout_test_theme/layout_test_theme.info';
+  return $themes;
+}

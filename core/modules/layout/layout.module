@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Manages page layouts for content presentation.
+ */
+
+/**
+ * Get the layout plugin manager instance.
+ *
+ * @return Drupal\layout\Plugin\Type\LayoutManager
+ *   The layout plugin manager instance.
+ */
+function layout_manager() {
+  return drupal_container()->get('plugin.manager.layout');
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * Expose all layouts as theme items, so themes can override layout markup.
+ */
+function layout_theme($existing, $type, $theme, $path) {
+  $items = array();
+  foreach (layout_manager()->getDefinitions() as $name => $layout) {
+    $items[$layout['theme']] = array(
+      'variables' => array('content' => NULL),
+      'path' => $layout['path'],
+      'template' => $layout['template'],
+    );
+  }
+  return $items;
+}

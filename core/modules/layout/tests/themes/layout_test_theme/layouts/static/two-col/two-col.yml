@@ -1,0 +1,8 @@
+title: Two column
+category: Columns: 2
+template: two-col
+stylesheets:
+  - two-col.css
+regions:
+  left: 'Left side'
+  right: 'Right side'

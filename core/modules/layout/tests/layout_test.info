@@ -1,0 +1,6 @@
+name = Layout test
+description = Helps with testing layouts.
+package = Testing
+version = VERSION
+core = 8.x
+hidden = TRUE
