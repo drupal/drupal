@@ -11,7 +11,7 @@ use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**
- * The plugin to handle full pager.
+ * The plugin to handle mini pager.
  *
  * @ingroup views_pager_plugins
  *
@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Use the mini pager output.")
  * )
  */
-class Mini extends PagerPluginBase {
+class Mini extends Full {
 
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
