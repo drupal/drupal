@@ -310,7 +310,7 @@ function hook_views_data_alter(array &$data) {
 /**
  * Replace special strings in the query before it is executed.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The View being executed.
  * @return array
  *   An associative array where each key is a string to be replaced, and the
@@ -346,12 +346,14 @@ function hook_views_form_substitutions() {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  * @param string $display_id
  *   The machine name of the active display.
  * @param array $args
  *   An array of arguments passed into the view.
+ *
+ * @see Drupal\views\ViewExecutable
  */
 function hook_views_pre_view(ViewExecutable &$view, &$display_id, array &$args) {
   // Change the display if the acting user has 'administer site configuration'
@@ -369,8 +371,10 @@ function hook_views_pre_view(ViewExecutable &$view, &$display_id, array &$args) 
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
+ *
+ * @see Drupal\views\ViewExecutable
  */
 function hook_views_pre_build(ViewExecutable &$view) {
   // Because of some unexplicable business logic, we should remove all
@@ -388,8 +392,10 @@ function hook_views_pre_build(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
+ *
+ * @see Drupal\views\ViewExecutable
  */
 function hook_views_post_build(ViewExecutable &$view) {
   // If the exposed field 'type' is set, hide the column containing the content
@@ -411,8 +417,10 @@ function hook_views_post_build(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
+ *
+ * @see Drupal\views\ViewExecutable
  */
 function hook_views_pre_execute(ViewExecutable &$view) {
   // Whenever a view queries more than two tables, show a message that notifies
@@ -433,8 +441,10 @@ function hook_views_pre_execute(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
+ *
+ * @see Drupal\views\ViewExecutable
  */
 function hook_views_post_execute(ViewExecutable &$view) {
   // If there are more than 100 results, show a message that encourages the user
@@ -456,8 +466,10 @@ function hook_views_post_execute(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
+ *
+ * @see Drupal\views\ViewExecutable
  */
 function hook_views_pre_render(ViewExecutable &$view) {
   // Scramble the order of the rows shown on this result page.
@@ -487,12 +499,14 @@ function hook_views_pre_render(ViewExecutable &$view) {
  * All of the cached result data will be available in $view->result, as well,
  * so all ids used in the query should be discoverable.
  *
- * @param ViewExecutable $view
+ * @param Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  * @param string $output
  *   A flat string with the rendered output of the view.
  * @param CacheBackendInterface $cache
  *   The cache settings.
+ *
+ * @see Drupal\views\ViewExecutable
  */
 function hook_views_post_render(ViewExecutable &$view, &$output, CacheBackendInterface &$cache) {
   // When using full pager, disable any time-based caching if there are fewer
