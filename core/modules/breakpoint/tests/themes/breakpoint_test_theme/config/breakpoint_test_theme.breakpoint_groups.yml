@@ -1,0 +1,6 @@
+test:
+  label: Test Theme
+  breakpoints:
+    - mobile
+    - narrow
+    - wide
