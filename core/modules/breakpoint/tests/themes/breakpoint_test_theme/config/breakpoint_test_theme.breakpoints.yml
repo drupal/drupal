@@ -1,4 +1,0 @@
-mobile: '(min-width: 0px)'
-narrow: '(min-width: 560px)'
-wide: '(min-width: 851px)'
-tv: 'only screen and (min-width: 3456px)'

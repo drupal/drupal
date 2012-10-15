@@ -173,9 +173,6 @@ Block module
 Book module
 - Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 
-Breakpoint module
-- Peter Droogmans 'attiks' http://drupal.org/user/105002
-
 Color module
 - ?
 
