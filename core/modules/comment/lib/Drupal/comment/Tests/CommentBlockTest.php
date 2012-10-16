@@ -11,6 +11,28 @@ namespace Drupal\comment\Tests;
  * Tests the Comment module blocks.
  */
 class CommentBlockTest extends CommentTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
+  function setUp() {
+    parent::setUp();
+    // Update admin user to have the 'administer blocks' permission.
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer content types',
+      'administer comments',
+      'skip comment approval',
+      'post comments',
+      'access comments',
+      'access content',
+      'administer blocks',
+     ));
+  }
+
   public static function getInfo() {
     return array(
       'name' => 'Comment blocks',

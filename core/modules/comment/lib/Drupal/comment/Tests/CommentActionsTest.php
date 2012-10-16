@@ -11,6 +11,14 @@ namespace Drupal\comment\Tests;
  * Tests actions provided by the Comment module.
  */
 class CommentActionsTest extends CommentTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('dblog');
+
   public static function getInfo() {
     return array(
       'name' => 'Comment actions',

@@ -12,9 +12,8 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests comments with node access.
  *
- * See http://drupal.org/node/886752 -- verify there is no PostgreSQL error when
- * viewing a node with threaded comments (a comment and a reply), if a node
- * access module is in use.
+ * Verifies there is no PostgreSQL error when viewing a node with threaded
+ * comments (a comment and a reply), if a node access module is in use.
  */
 class CommentNodeAccessTest extends CommentTestBase {
 
@@ -39,7 +38,14 @@ class CommentNodeAccessTest extends CommentTestBase {
     node_access_rebuild();
 
     // Re-create user.
-    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments', 'node test view'));
+    $this->web_user = $this->drupalCreateUser(array(
+      'access comments',
+      'post comments',
+      'create article content',
+      'edit own comments',
+      'node test view',
+      'skip comment approval',
+    ));
   }
 
   /**

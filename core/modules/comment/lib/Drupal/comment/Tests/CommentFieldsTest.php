@@ -11,6 +11,14 @@ namespace Drupal\comment\Tests;
  * Tests fields on comments.
  */
 class CommentFieldsTest extends CommentTestBase {
+
+  /**
+   * Enable the field UI.
+   *
+   * @var array
+   */
+  public static $modules = array('field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Comment fields',

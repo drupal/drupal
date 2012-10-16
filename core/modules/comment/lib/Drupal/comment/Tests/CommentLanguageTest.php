@@ -25,6 +25,11 @@ class CommentLanguageTest extends WebTestBase {
    */
   public static $modules = array('language', 'language_test', 'comment_test');
 
+  /**
+   * Use the standard profile.
+   *
+   * @todo Remove this dependency if possible.
+   */
   protected $profile = 'standard';
 
   public static function getInfo() {

@@ -15,6 +15,15 @@ use Drupal\comment\Tests\CommentTestBase;
 class CommentAttributesTest extends CommentTestBase {
 
   /**
+   * Use the standard profile.
+   *
+   * @var string
+   *
+   * @todo Remove this dependency if possible.
+   */
+  protected $profile = 'standard';
+
+  /**
    * Modules to enable.
    *
    * @var array

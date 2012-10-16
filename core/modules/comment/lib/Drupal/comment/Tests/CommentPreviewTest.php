@@ -11,6 +11,14 @@ namespace Drupal\comment\Tests;
  * Tests previewing comments.
  */
 class CommentPreviewTest extends CommentTestBase {
+
+  /**
+   * Use the standard profile.
+   *
+   * @var string
+   */
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Comment preview',

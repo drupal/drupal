@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentTestBase.
+ * Contains Drupal\comment\Tests\CommentTestBase.
  */
 
 namespace Drupal\comment\Tests;
@@ -10,6 +10,9 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Comment;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Provides setup and helper methods for comment tests.
+ */
 abstract class CommentTestBase extends WebTestBase {
 
   /**
@@ -17,20 +20,60 @@ abstract class CommentTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'search');
+  public static $modules = array('comment', 'node');
 
-  protected $profile = 'standard';
-
+  /**
+   * An administrative user with permission to configure comment settings.
+   *
+   * @var Drupal\user\User
+   */
   protected $admin_user;
+
+  /**
+   * A normal user with permission to post comments.
+   *
+   * @var Drupal\user\User
+   */
   protected $web_user;
+
+  /**
+   * A test node to which comments will be posted.
+   *
+   * @var Drupal\node\Node
+   */
   protected $node;
 
   function setUp() {
     parent::setUp();
 
-    // Create users and test node.
-    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks'));
-    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
+    // Create an article content type only if it does not yet exist, so that
+    // child classes may specify the standard profile.
+    $types = node_type_get_types();
+    if (empty($types['article'])) {
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
+    }
+
+    // Create two test users.
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer content types',
+      'administer comments',
+      'skip comment approval',
+      'post comments',
+      'access comments',
+      'access content',
+     ));
+    $this->web_user = $this->drupalCreateUser(array(
+      'access comments',
+      'post comments',
+      'create article content',
+      'edit own comments',
+      'post comments',
+      'skip comment approval',
+      'access comments',
+      'access content',
+    ));
+
+    // Create a test node authored by the web user.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
   }
 
@@ -122,7 +165,6 @@ abstract class CommentTestBase extends WebTestBase {
     if ($comment) {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
       $regex .= '<a id="comment-' . $comment->id . '"(.*?)'; // Comment anchor.
-      $regex .= '<div(.*?)'; // Begin in comment div.
       $regex .= $comment->subject . '(.*?)'; // Match subject.
       $regex .= $comment->comment . '(.*?)'; // Match comment.
       $regex .= '/s';
@@ -278,4 +320,5 @@ abstract class CommentTestBase extends WebTestBase {
 
     return $match[2];
   }
+
 }

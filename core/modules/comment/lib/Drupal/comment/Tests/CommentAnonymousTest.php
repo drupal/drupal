@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentAnonymousTest.
+ * Contains Drupal\comment\Tests\CommentAnonymousTest.
  */
 
 namespace Drupal\comment\Tests;
@@ -11,6 +11,16 @@ namespace Drupal\comment\Tests;
  * Tests anonymous commenting.
  */
 class CommentAnonymousTest extends CommentTestBase {
+
+  /**
+   * Use the standard profile.
+   *
+   * @var string
+   *
+   * @todo Remove this dependency if possible.
+   */
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Anonymous comments',
