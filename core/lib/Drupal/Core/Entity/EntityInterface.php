@@ -20,17 +20,6 @@ use Drupal\Core\TypedData\TranslatableInterface;
 interface EntityInterface extends ComplexDataInterface, AccessibleInterface, TranslatableInterface {
 
   /**
-   * Constructs a new entity object.
-   *
-   * @param $values
-   *   An array of values to set, keyed by property name. If the entity type
-   *   has bundles, the bundle key has to be specified.
-   * @param $entity_type
-   *   The type of the entity to create.
-   */
-  public function __construct(array $values, $entity_type);
-
-  /**
    * Returns the entity identifier (the entity's machine name or numeric ID).
    *
    * @return
