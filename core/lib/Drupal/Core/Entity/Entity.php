@@ -91,8 +91,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    * Implements EntityInterface::isNew().
    */
   public function isNew() {
-    $id = $this->id();
-    return !empty($this->enforceIsNew) || !isset($id);
+    return !empty($this->enforceIsNew) || !$this->id();
   }
 
   /**
