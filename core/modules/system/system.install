@@ -166,7 +166,7 @@ function system_requirements($phase) {
       // version. (See install_verify_pdo() for details.)
       if (!defined('PDO::ATTR_DEFAULT_FETCH_MODE')) {
         $database_ok = FALSE;
-        $pdo_message = $t('Your web server seems to have the wrong version of PDO installed. Drupal 7 requires the PDO extension from PHP core. This system has the older PECL version. See the <a href="@link">system requirements</a> page for more information.', array(
+        $pdo_message = $t('Your web server seems to have the wrong version of PDO installed. Drupal requires the PDO extension from PHP core. This system has the older PECL version. See the <a href="@link">system requirements</a> page for more information.', array(
           '@link' => 'http://drupal.org/requirements/pdo#pecl',
         ));
       }
