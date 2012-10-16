@@ -1183,6 +1183,33 @@ function update_variables_to_config($config_name, array $variable_map) {
 }
 
 /**
+ * Updates 7.x variables to state records.
+ *
+ * Provides a generalized method to migrate variables from 7.x to 8.x's
+ * state() system.
+ *
+ * @param array $variable_map
+ *   An associative array that maps old variables names to new state record
+ *   names; e.g.:
+ *   @code
+ *     array('old_variable' => 'extension.new_name')
+ *   @endcode
+ *   This would migrate the value contained in variable name 'old_variable' into
+ *   the state item 'extension.new_name'.
+ *   Non-existing variables and variables with NULL values are omitted.
+ */
+function update_variables_to_state(array $variable_map) {
+  foreach ($variable_map as $variable_name => $state_name) {
+    if (NULL !== $value = update_variable_get($variable_name)) {
+      state()->set($state_name, $value);
+    }
+  }
+
+  // Delete the migrated variables.
+  db_delete('variable')->condition('name', array_keys($variable_map), 'IN')->execute();
+}
+
+/**
  * Helper function to update entities with uuid.
  *
  * @param array $sandbox

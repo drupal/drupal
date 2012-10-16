@@ -2132,17 +2132,15 @@ function system_update_8025() {
 }
 
 /**
- * Convert install_task and install_time variables to state api values.
+ * Migrates install_task and install_time variables to State API.
+ *
+ * @ingroup config_upgrade
  */
 function system_update_8026() {
-  $variables = array('system.install_task', 'system.install_time');
-
-  foreach ($variables as $variable) {
-    if ($value = update_variable_get($variable, FALSE)) {
-      state()->set($variable, $value);
-    }
-    update_variable_del($variable);
-  }
+  update_variables_to_state(array(
+    'install_task' => 'system.install_task',
+    'install_time' => 'system.install_time',
+  ));
 }
 
 /**
