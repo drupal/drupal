@@ -78,13 +78,16 @@ class ConfigEntityTest extends WebTestBase {
     // Rename the configuration entity's ID/machine name.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id);
     $edit = array(
-      'id' => strtolower($this->randomName()),
+      'id' => '0',
       'label' => $label3,
     );
     $this->drupalPost('admin/structure/config_test/manage/' . $id, $edit, 'Save');
     $this->assertResponse(200);
     $this->assertNoText($label1);
     $this->assertText($label3);
+    $this->drupalPost('admin/structure/config_test/manage/0/delete', array(), 'Delete');
+    $this->assertResponse(200);
+    $this->assertNoText($label3);
   }
 
 }
