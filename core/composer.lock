@@ -34,6 +34,10 @@
             "version": "v2.1.0-RC2"
         },
         {
+            "package": "symfony/serializer",
+            "version": "v2.1.2"
+        },
+        {
             "package": "symfony/yaml",
             "version": "v2.1.0-RC2"
         },
