@@ -1549,7 +1549,7 @@ function views_ui_add_item_form($form, &$form_state) {
 
   // Figure out all the base tables allowed based upon what the relationships provide.
   $base_tables = $view->getBaseTables();
-  $options = views_fetch_fields(array_keys($base_tables), $type, $display->useGroupBy());
+  $options = views_fetch_fields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state['type']);
 
   if (!empty($options)) {
     $form['options']['controls'] = array(
@@ -2558,11 +2558,14 @@ function _views_sort_types($a, $b) {
  *   The handler type, for example field or filter.
  * @param bool $grouping
  *   Should the result grouping by its 'group' label.
+ * @param string $sub_type
+ *   An optional sub type. E.g. Allows making an area plugin available for
+ *   header only, instead of header, footer, and empty regions.
  *
  * @return array
  *   A keyed array of in the form of 'base_table' => 'Description'.
  */
-function views_fetch_fields($base, $type, $grouping = FALSE) {
+function views_fetch_fields($base, $type, $grouping = FALSE, $sub_type = NULL) {
   static $fields = array();
   if (empty($fields)) {
     $data = views_fetch_data();
@@ -2595,6 +2598,9 @@ function views_fetch_fields($base, $type, $grouping = FALSE) {
         foreach (array('field', 'sort', 'filter', 'argument', 'relationship', 'area') as $key) {
           if (!empty($info[$key])) {
             if ($grouping && !empty($info[$key]['no group by'])) {
+              continue;
+            }
+            if ($sub_type && isset($info[$key]['sub_type']) && (!in_array($sub_type, (array) $info[$key]['sub_type']))) {
               continue;
             }
             if (!empty($info[$key]['skip base'])) {

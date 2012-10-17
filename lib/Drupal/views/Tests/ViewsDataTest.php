@@ -61,6 +61,11 @@ class ViewsDataTest extends ViewTestBase {
     unset($data['views_test_data']['age']['filter']);
     unset($data['views_test_data']['job']['sort']);
     $data['views_test_data']['created']['area']['id'] = 'text';
+    $data['views_test_data']['age']['area']['id'] = 'text';
+    $data['views_test_data']['age']['area']['sub_type'] = 'header';
+    $data['views_test_data']['job']['area']['id'] = 'text';
+    $data['views_test_data']['job']['area']['sub_type'] = array('header', 'footer');
+
 
     return $data;
   }
@@ -99,6 +104,17 @@ class ViewsDataTest extends ViewTestBase {
       ),
       'area' => array(
         'created',
+        'job',
+        'age'
+      ),
+      'header' => array(
+        'created',
+        'job',
+        'age'
+      ),
+      'footer' => array(
+        'created',
+        'job',
       ),
     );
 
@@ -109,6 +125,16 @@ class ViewsDataTest extends ViewTestBase {
         $item = "views_test_data.$item";
       });
       $this->assertEqual($expected_keys, array_keys($fields), format_string('Handlers of type @handler_type are listed as expected.', array('@handler_type' => $handler_type)));
+    }
+
+    // Check for subtype filtering, so header and footer.
+    foreach (array('header', 'footer') as $sub_type) {
+      $fields = views_fetch_fields('views_test_data', 'area', FALSE, $sub_type);
+
+      $expected_keys = array_walk($expected[$sub_type], function(&$item) {
+        $item = "views_test_data.$item";
+      });
+      $this->assertEqual($expected_keys, array_keys($fields), format_string('Sub_type @sub_type is filtered as expected.', array('@sub_type' => $sub_type)));
     }
   }
 
