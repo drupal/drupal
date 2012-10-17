@@ -295,12 +295,11 @@ function install_begin_request(&$install_state) {
   else {
     $task = NULL;
 
-    // Since previous versions of Drupal stored database connection information
-    // in the 'db_url' variable, we should never let an installation proceed if
-    // this variable is defined and the settings file was not verified above
-    // (otherwise we risk installing over an existing site whose settings file
-    // has not yet been updated).
-    if (!empty($GLOBALS['db_url'])) {
+    // Do not install over a configured settings.php. Check the 'db_url'
+    // variable in addition to 'databases', since previous versions of Drupal
+    // used that (and we do not want to allow installations on an existing site
+    // whose settings file has not yet been updated).
+    if (!empty($GLOBALS['databases']) || !empty($GLOBALS['db_url'])) {
       throw new Exception(install_already_done_error());
     }
   }

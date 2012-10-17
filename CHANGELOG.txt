@@ -1,6 +1,8 @@
 
-Drupal 7.16, xxxx-xx-xx (development version)
+Drupal 7.16, 2012-10-17
 -----------------------
+- Fixed security issues (Arbitrary PHP code execution and information
+  disclosure). See SA-CORE-2012-003.
 
 Drupal 7.15, 2012-08-01
 -----------------------
