@@ -2084,6 +2084,7 @@ function theme_mark($variables) {
  *     - children: A list of nested child items to render that behave
  *       identically to 'items', but any non-numeric string keys are treated as
  *       HTML attributes for the child list that wraps 'children'.
+ *     - type: The type of list to return (e.g. "ul", "ol").
  *     Any other key/value pairs are used as HTML attributes for the list item
  *     in 'data'.
  *   - title: The title of the list.
@@ -2111,7 +2112,7 @@ function theme_item_list($variables) {
         if (isset($item['data'])) {
           $value .= $item['data'];
         }
-        $attributes = array_diff_key($item, array('data' => 0, 'children' => 0));
+        $attributes = array_diff_key($item, array('data' => 0, 'children' => 0, 'type' => 0));
 
         // Append nested child list, if any.
         if (isset($item['children'])) {
@@ -2127,7 +2128,7 @@ function theme_item_list($variables) {
           }
           $value .= theme('item_list', array(
             'items' => $item['children'],
-            'type' => $type,
+            'type' => (isset($item['type']) ? $item['type'] : $type),
             'attributes' => $child_list_attributes,
           ));
         }

@@ -58,16 +58,17 @@ class FunctionsTest extends WebTestBase {
         ),
         // Any other keys are treated as item attributes.
         'id' => 'bee',
+        'type' => 'ol',
       ),
       array(
         'data' => 'e',
         'id' => 'E',
       ),
     );
-    $inner = '<div class="item-list"><ul id="childlist">';
+    $inner = '<div class="item-list"><ol id="childlist">';
     $inner .= '<li class="odd first">c</li>';
     $inner .= '<li class="dee even last">d</li>';
-    $inner .= '</ul></div>';
+    $inner .= '</ol></div>';
 
     $expected = '<div class="item-list">';
     $expected .= '<h3>Some title</h3>';
