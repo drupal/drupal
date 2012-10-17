@@ -31,7 +31,7 @@ class Uuid {
   }
 
   /**
-   * Generates an universally unique identifier.
+   * Generates a universally unique identifier.
    *
    * @see Drupal\Component\Uuid\UuidInterface::generate()
    */

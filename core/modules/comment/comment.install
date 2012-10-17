@@ -366,7 +366,7 @@ function comment_update_8002() {
 }
 
 /**
- * Generate an UUID for all comments.
+ * Generate a UUID for all comments.
  */
 function comment_update_8003(&$sandbox) {
   if (!isset($sandbox['progress'])) {

@@ -8,7 +8,7 @@
 namespace Drupal\Component\Uuid;
 
 /**
- * Generates an UUID v4 using PHP code.
+ * Generates a UUID v4 using PHP code.
  *
  * Loosely based on Ruby's UUIDTools generate_random logic.
  *
