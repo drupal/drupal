@@ -16,69 +16,69 @@
  * - Access: Access plugins are responsible for controlling access to the
  *   view. Views includes plugins for checking user roles and individual
  *   permissions. Access plugins extend
- *   Drupal\views\Plugin\views\access\AccessPluginBase.
+ *   \Drupal\views\Plugin\views\access\AccessPluginBase.
  * - Argument default: Argument default plugins allow pluggable ways of
  *   providing default values for contextual filters. This is useful for
  *   blocks and other display types lacking a natural argument input.
  *   Examples are plugins to extract node and user IDs from the URL. Argument
  *   default plugins extend
- *   Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase.
+ *   \Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase.
  * - Argument validator: Validator plugins can ensure arguments are valid,
  *   and even do transformations on the arguments. They can also provide
  *   replacement patterns for the view title. For example, the 'content'
  *   validator verifies verifies that the argument value corresponds to a
  *   node, loads that node and provides the node title as a replacement
  *   pattern. Argument validator plugins extend
- *   Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
+ *   \Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
  * - Cache: Cache plugins control the storage and loading of caches.
  *   Currently they can do both result and render caching. It might also be
  *   possible to cache the generated query. Cache plugins extend
- *   Drupal\views\Plugin\views\cache\CachePluginBase.
+ *   \Drupal\views\Plugin\views\cache\CachePluginBase.
  * - Display: Display plugins are responsible for controlling where a View is
  *   rendered; that is, how it is exposed to other parts of Drupal. 'Page'
  *   and 'block' are the most commonly used display plugins. Each View also
  *   has a 'master' (or 'default') display that includes information shared
  *   between all its displays. (See
- *   Drupal\views\Plugin\views\display\DefaultDisplay.) Display plugins extend
- *   Drupal\views\Plugin\views\display\DisplayPluginBase.
+ *   \Drupal\views\Plugin\views\display\DefaultDisplay.) Display plugins extend
+ *   \Drupal\views\Plugin\views\display\DisplayPluginBase.
  * - Display extender: Display extender plugins allow additional options or
  *   configurations to added to views across all display types. For example,
  *   if you wanted to allow site users to add certain metadata to the rendered
  *   output of every view display regardless of display type, you could provide
  *   this option as a display extender. Display extender plugins extend
- *   Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
+ *   \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
  * - Exposed form: Exposed form plugins are responsible for building,
  *   rendering, and controlling exposed forms. Exposed form plugins extend
- *   Drupal\views\Plugin\views\display\DisplayPluginBase.
+ *   \Drupal\views\Plugin\views\display\DisplayPluginBase.
  * - Handlers: Handler plugins help build the view query object that the query
  *   plugin then executes to retrieve the data from the storage backend (see
  *   below). There are several types of handlers:
- *   - Area handlers: Extend Drupal\views\Plugin\views\area\AreaHandlerBase
+ *   - Area handlers: Extend \Drupal\views\Plugin\views\area\AreaHandlerBase
  *   - Argument handlers: Extend
- *     Drupal\views\Plugin\views\argument\ArgumentHandlerBase
- *   - Field handlers: Extend Drupal\views\Plugin\views\field\FieldHandlerBase
+ *     \Drupal\views\Plugin\views\argument\ArgumentHandlerBase
+ *   - Field handlers: Extend \Drupal\views\Plugin\views\field\FieldHandlerBase
  *   - Filter handlers: Extend
- *     Drupal\views\Plugin\views\filter\FilterHandlerBase
+ *     \Drupal\views\Plugin\views\filter\FilterHandlerBase
  *   - Relationship handlers:
- *     Extend Drupal\views\Plugin\views\relationship\RelationshipHandlerBase
- *   - Sort handlers: Extend Drupal\views\Plugin\views\sort:SortHandlerBase
+ *     Extend \Drupal\views\Plugin\views\relationship\RelationshipHandlerBase
+ *   - Sort handlers: Extend \Drupal\views\Plugin\views\sort:SortHandlerBase
  * - Pager: Pager plugins take care of everything regarding pagers, including
  *   getting setting the total number of items to render the pager and
  *   setting the global pager arrays. Pager plugins extend
- *   Drupal\views\Plugin\views\pager\PagerPluginBase.
+ *   \Drupal\views\Plugin\views\pager\PagerPluginBase.
  * - Query: Query plugins generate and execute a built query object against a
  *   particular storage backend, converting the Views query object into an
  *   actual query. The only default implementation is SQL. (Note that most
  *   handler plugins currently rely on the SQL query plugin.) Query plugins
- *   extend Drupal\views\Plugin\views\query\QueryPluginBase.
+ *   extend \Drupal\views\Plugin\views\query\QueryPluginBase.
  * - Row style: Row styles handle rendering each individual record from the
  *   main view table. The two default implementations render the entire entity
  *   (nodes only), or selected fields. Row style plugins extend
- *   Drupal\views\Plugin\views\row\RowPluginBase).
+ *   \Drupal\views\Plugin\views\row\RowPluginBase).
  * - Style: Style plugins control how a view is displayed. For the most part
  *   they are object wrappers around theme templates. Examples of styles
  *   include HTML lists, tables, etc. Style plugins extend
- *   Drupal\views\Plugin\views\style\StylePluginBase.
+ *   \Drupal\views\Plugin\views\style\StylePluginBase.
  *
  * @todo Add an explanation for each type of handler.
  * @todo Document how to use annotations and what goes in them.
@@ -87,8 +87,8 @@
  * @todo Document specific options on the appropriate plugin base classes.
  * @todo Add examples.
  *
- * @see Drupal\views\Plugin\views\PluginBase
- * @see Drupal\views\Plugin\views\HandlerBase
+ * @see \Drupal\views\Plugin\views\PluginBase
+ * @see \Drupal\views\Plugin\views\HandlerBase
  */
 
 /**
@@ -310,7 +310,7 @@ function hook_views_data_alter(array &$data) {
 /**
  * Replace special strings in the query before it is executed.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The View being executed.
  * @return array
  *   An associative array where each key is a string to be replaced, and the
@@ -346,14 +346,14 @@ function hook_views_form_substitutions() {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  * @param string $display_id
  *   The machine name of the active display.
  * @param array $args
  *   An array of arguments passed into the view.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 function hook_views_pre_view(ViewExecutable &$view, &$display_id, array &$args) {
   // Change the display if the acting user has 'administer site configuration'
@@ -371,10 +371,10 @@ function hook_views_pre_view(ViewExecutable &$view, &$display_id, array &$args) 
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 function hook_views_pre_build(ViewExecutable &$view) {
   // Because of some unexplicable business logic, we should remove all
@@ -392,10 +392,10 @@ function hook_views_pre_build(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 function hook_views_post_build(ViewExecutable &$view) {
   // If the exposed field 'type' is set, hide the column containing the content
@@ -417,10 +417,10 @@ function hook_views_post_build(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 function hook_views_pre_execute(ViewExecutable &$view) {
   // Whenever a view queries more than two tables, show a message that notifies
@@ -441,10 +441,10 @@ function hook_views_pre_execute(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 function hook_views_post_execute(ViewExecutable &$view) {
   // If there are more than 100 results, show a message that encourages the user
@@ -466,10 +466,10 @@ function hook_views_post_execute(ViewExecutable &$view) {
  * Output can be added to the view by setting $view->attachment_before
  * and $view->attachment_after.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 function hook_views_pre_render(ViewExecutable &$view) {
   // Scramble the order of the rows shown on this result page.
@@ -499,14 +499,14 @@ function hook_views_pre_render(ViewExecutable &$view) {
  * All of the cached result data will be available in $view->result, as well,
  * so all ids used in the query should be discoverable.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  * @param string $output
  *   A flat string with the rendered output of the view.
  * @param CacheBackendInterface $cache
  *   The cache settings.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 function hook_views_post_render(ViewExecutable &$view, &$output, CacheBackendInterface &$cache) {
   // When using full pager, disable any time-based caching if there are fewer
@@ -520,13 +520,13 @@ function hook_views_post_render(ViewExecutable &$view, &$output, CacheBackendInt
 /**
  * Alter the query before it is executed.
  *
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object about to be processed.
  * @param QueryPluginBase $query
  *   The query plugin object for the query.
  *
  * @see hook_views_query_substitutions()
- * @see Drupal\views\Plugin\views\query\Sql
+ * @see \Drupal\views\Plugin\views\query\Sql
  */
 function hook_views_query_alter(ViewExecutable &$view, QueryPluginBase &$query) {
   // (Example assuming a view with an exposed filter on node title.)
@@ -560,10 +560,10 @@ function hook_views_query_alter(ViewExecutable &$view, QueryPluginBase &$query) 
  *     information about the query and the display title and path.
  *   - statistics: An array of rows suitable for theme('table'), containing
  *     performance statistics.
- * @param Drupal\views\ViewExecutable $view
+ * @param \Drupal\views\ViewExecutable $view
  *   The view object.
  *
- * @see Drupal\views_ui\ViewUI
+ * @see \Drupal\views_ui\ViewUI
  * @see theme_table()
  */
 function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
