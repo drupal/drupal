@@ -5,7 +5,7 @@
  * Bartik's theme implementation to display a node.
  *
  * Available variables:
- * - $title: the (sanitized) title of the node.
+ * - $label: the (sanitized) title of the node.
  * - $content: An array of node items. Use render($content) to print them all,
  *   or print a subset such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
@@ -83,7 +83,7 @@
   <?php print render($title_prefix); ?>
   <?php if (!$page): ?>
     <h2<?php print $title_attributes; ?>>
-      <a href="<?php print $node_url; ?>"><?php print $title; ?></a>
+      <a href="<?php print $node_url; ?>"><?php print $label; ?></a>
     </h2>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
