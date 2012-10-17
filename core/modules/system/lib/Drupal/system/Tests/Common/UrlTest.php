@@ -53,6 +53,17 @@ class UrlTest extends WebTestBase {
     $this->assertTrue($this->hasClass($link, 'active'), format_string('Class @class is present on link to the current page', array('@class' => 'active')));
   }
 
+  /**
+   * Checks for class existence in link.
+   *
+   * @param $link
+   *   URL to search.
+   * @param $class
+   *   Element class to search for.
+   *
+   * @return bool
+   *   TRUE if the class is found, FALSE otherwise.
+   */
   private function hasClass($link, $class) {
     return preg_match('|class="([^\"\s]+\s+)*' . $class . '|', $link);
   }

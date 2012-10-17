@@ -204,6 +204,9 @@ class SelectComplexTest extends DatabaseTestBase {
     $this->assertEqual($record->$age_field, 27, 'Correct data retrieved.');
   }
 
+  /**
+   * Tests having queries.
+   */
   function testHavingCountQuery() {
     $query = db_select('test')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')

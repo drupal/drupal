@@ -27,7 +27,7 @@ class FormValuesTest extends AjaxTestBase {
   }
 
   /**
-   * Submits forms with select and checkbox elements via AJAX.
+   * Submits forms with select and checkbox elements via Ajax.
    */
   function testSimpleAjaxFormValue() {
     // Verify form values of a select element.

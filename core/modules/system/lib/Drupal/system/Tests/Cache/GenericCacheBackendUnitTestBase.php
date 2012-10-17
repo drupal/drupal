@@ -13,8 +13,10 @@ use Drupal\simpletest\UnitTestBase;
 use stdClass;
 
 /**
+ * Tests any cache backend.
+ *
  * Full generic unit test suite for any cache backend. In order to use it for a
- * cache backend implementation extend this class and override the
+ * cache backend implementation, extend this class and override the
  * createBackendInstace() method to return an object.
  *
  * @see DatabaseBackendUnitTestCase
@@ -44,7 +46,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   protected $defaultValue;
 
   /**
-   * Get testing bin.
+   * Gets the testing bin.
    *
    * Override this method if you want to work on a different bin than the
    * default one.
@@ -60,7 +62,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Create a cache backend to test.
+   * Creates a cache backend to test.
    *
    * Override this method to test a CacheBackend.
    *
@@ -73,21 +75,22 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   protected abstract function createCacheBackend($bin);
 
   /**
-   * Allow specific implementation to change the environement before test run.
+   * Allows specific implementation to change the environment before a test run.
    */
   public function setUpCacheBackend() {
   }
 
   /**
-   * Allow specific implementation to alter the environement after test run but
-   * before the real tear down, which will changes things such as the database
-   * prefix.
+   * Allows alteration of environment after a test run but before tear down.
+   *
+   * Used before the real tear down because the tear down will change things
+   * such as the database prefix.
    */
   public function tearDownCacheBackend() {
   }
 
   /**
-   * Get backend to test, this will get a shared instance set in the object.
+   * Gets a backend to test; this will get a shared instance set in the object.
    *
    * @return Drupal\Core\Cache\CacheBackendInterface
    *   Cache backend to test.
@@ -335,7 +338,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::flush().
+   * Tests Drupal\Core\Cache\CacheBackendInterface::flush().
    */
   public function testFlush() {
     $backend = $this->getCacheBackend();

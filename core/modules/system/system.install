@@ -2109,7 +2109,7 @@ function system_update_8023() {
 }
 
 /**
- * Generate an UUID for all files.
+ * Generate a UUID for all files.
  */
 function system_update_8024(&$sandbox) {
   if (!isset($sandbox['progress'])) {

@@ -128,7 +128,7 @@ class InsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that inserts return the proper auto-increment ID.
+   * Tests that inserts return the proper auto-increment ID.
    */
   function testInsertLastInsertID() {
     $id = db_insert('test')

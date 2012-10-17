@@ -582,7 +582,7 @@ function user_update_8008() {
 }
 
 /**
- * Generate an UUID for all users.
+ * Generate a UUID for all users.
  */
 function user_update_8009(&$sandbox) {
   if (!isset($sandbox['progress'])) {

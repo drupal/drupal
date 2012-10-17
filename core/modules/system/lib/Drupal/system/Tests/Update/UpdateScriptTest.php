@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Update;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the update system functionality.
+ * Tests the update system functionality.
  */
 class UpdateScriptTest extends WebTestBase {
 

@@ -74,7 +74,7 @@ class FormatDateTest extends WebTestBase {
   }
 
   /**
-   * Tests for the format_date() function.
+   * Tests the format_date() function.
    */
   function testFormatDate() {
     global $user;

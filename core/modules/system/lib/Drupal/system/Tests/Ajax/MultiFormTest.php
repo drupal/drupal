@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Ajax;
 
 /**
- * Tests that Ajax-enabled forms work when multiple instances of the same form are on a page.
+ * Tests Ajax-enabled forms functionality with multiple instances of the form.
  */
 class MultiFormTest extends AjaxTestBase {
 
@@ -53,7 +53,7 @@ class MultiFormTest extends AjaxTestBase {
   }
 
   /**
-   * Tests that pages with the 'page_node_form' included twice works correctly.
+   * Tests that pages with the 'page_node_form' included twice work correctly.
    */
   function testMultiForm() {
     // HTML IDs for elements within the field are potentially modified with

@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Batch;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the Batch API Progress page.
+ * Tests the Batch API Progress page.
  */
 class PageTest extends WebTestBase {
 

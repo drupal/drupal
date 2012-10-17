@@ -41,7 +41,7 @@ abstract class CacheTestBase extends WebTestBase {
   }
 
   /**
-   * Assert or a cache entry exists.
+   * Asserts that a cache entry exists.
    *
    * @param $message
    *   Message to display.
@@ -67,7 +67,7 @@ abstract class CacheTestBase extends WebTestBase {
   }
 
   /**
-   * Assert or a cache entry has been removed.
+   * Asserts that a cache entry has been removed.
    *
    * @param $message
    *   Message to display.

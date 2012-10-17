@@ -91,7 +91,9 @@ class AddFeedTest extends WebTestBase {
   }
 
   /**
-   * Check that special characters are correctly escaped. Test for issue #1211668.
+   * Checks that special characters are correctly escaped.
+   *
+   * @see http://drupal.org/node/1211668
    */
   function testFeedIconEscaping() {
     $variables = array();

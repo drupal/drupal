@@ -22,6 +22,12 @@ class MemoryBackendUnitTest extends GenericCacheBackendUnitTestBase {
     );
   }
 
+  /**
+   * Creates a new instance of MemoryBackend.
+   *
+   * @return
+   *   A new MemoryBackend object.
+   */
   protected function createCacheBackend($bin) {
     return new MemoryBackend($bin);
   }

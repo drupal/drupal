@@ -662,7 +662,7 @@ function node_update_8005() {
 }
 
 /**
- * Generate an UUID for all nodes.
+ * Generate a UUID for all nodes.
  */
 function node_update_8006(&$sandbox) {
   if (!isset($sandbox['progress'])) {

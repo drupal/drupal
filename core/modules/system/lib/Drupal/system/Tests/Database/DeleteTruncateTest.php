@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Delete/Truncate tests.
+ * Tests delete and truncate queries.
  *
  * The DELETE tests are not as extensive, as all of the interesting code for
  * DELETE queries is in the conditional which is identical to the UPDATE and

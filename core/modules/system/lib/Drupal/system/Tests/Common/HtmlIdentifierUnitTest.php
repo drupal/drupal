@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Test for cleaning HTML identifiers.
+ * Tests cleaning HTML identifiers.
  */
 class HtmlIdentifierUnitTest extends UnitTestBase {
   public static function getInfo() {

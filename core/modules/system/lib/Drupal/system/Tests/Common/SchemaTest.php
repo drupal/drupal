@@ -13,9 +13,10 @@ use Drupal\simpletest\WebTestBase;
 use Exception;
 
 /**
- * Unit tests for the Schema API.
+ * Tests the Schema API.
  */
 class SchemaTest extends WebTestBase {
+
   /**
    * A global counter for table and field creation.
    */
@@ -30,7 +31,7 @@ class SchemaTest extends WebTestBase {
   }
 
   /**
-   *
+   * Tests database interactions.
    */
   function testSchema() {
     // Try creating a table.
@@ -144,6 +145,15 @@ class SchemaTest extends WebTestBase {
     $this->assertTrue(db_table_exists('test_timestamp'), 'Table with database specific datatype was created.');
   }
 
+  /**
+   * Tests inserting data into an existing table.
+   *
+   * @param $table
+   *   The database table to insert data into.
+   *
+   * @return
+   *   TRUE if the insert succeeded, FALSE otherwise.
+   */
   function tryInsert($table = 'test_table') {
     try {
        db_insert($table)
@@ -209,11 +219,12 @@ class SchemaTest extends WebTestBase {
    * Tries to insert a negative value into columns defined as unsigned.
    *
    * @param $table_name
-   *   The table to insert
+   *   The table to insert.
    * @param $column_name
-   *   The column to insert
+   *   The column to insert.
+   *
    * @return
-   *   TRUE if the insert succeeded, FALSE otherwise
+   *   TRUE if the insert succeeded, FALSE otherwise.
    */
   function tryUnsignedInsert($table_name, $column_name) {
     try {
@@ -228,7 +239,7 @@ class SchemaTest extends WebTestBase {
   }
 
   /**
-   * Test adding columns to an existing table.
+   * Tests adding columns to an existing table.
    */
   function testSchemaAddField() {
     // Test varchar types.
@@ -300,7 +311,7 @@ class SchemaTest extends WebTestBase {
   }
 
   /**
-   * Assert that a given field can be added and removed from a table.
+   * Asserts that a given field can be added and removed from a table.
    *
    * The addition test covers both defining a field of a given specification
    * when initially creating at table and extending an existing table.
@@ -357,7 +368,7 @@ class SchemaTest extends WebTestBase {
   }
 
   /**
-   * Assert that a newly added field has the correct characteristics.
+   * Asserts that a newly added field has the correct characteristics.
    */
   protected function assertFieldCharacteristics($table_name, $field_name, $field_spec) {
     // Check that the initial value has been registered.

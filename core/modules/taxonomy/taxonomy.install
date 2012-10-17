@@ -335,7 +335,7 @@ function taxonomy_update_8002() {
 }
 
 /**
- * Generate an UUID for all terms.
+ * Generate a UUID for all terms.
  */
 function taxonomy_update_8003(&$sandbox) {
   if (!isset($sandbox['progress'])) {

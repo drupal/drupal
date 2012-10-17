@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test case for subselects in a dynamic SELECT query.
+ * Tests for subselects in a dynamic SELECT query.
  */
 class SelectSubqueryTest extends DatabaseTestBase {
 

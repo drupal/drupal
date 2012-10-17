@@ -69,7 +69,7 @@ class FrameworkTest extends AjaxTestBase {
   }
 
   /**
-   * Tests that new JavaScript and CSS files are returned on an AJAX request.
+   * Tests that new JavaScript and CSS files are returned on an Ajax request.
    */
   function testLazyLoad() {
     $expected = array(
@@ -103,7 +103,7 @@ class FrameworkTest extends AjaxTestBase {
     $this->assertTrue(!isset($original_settings[$expected['css']]), format_string('Page originally lacks the %css file, as expected.', array('%css' => $expected['css'])));
     $this->assertTrue(!isset($original_settings[$expected['js']]), format_string('Page originally lacks the %js file, as expected.', array('%js' => $expected['js'])));
 
-    // Submit the AJAX request without triggering files getting added.
+    // Submit the Ajax request without triggering files getting added.
     $commands = $this->drupalPostAJAX(NULL, array('add_files' => FALSE), array('op' => t('Submit')));
     $new_settings = $this->drupalGetSettings();
 
@@ -124,7 +124,7 @@ class FrameworkTest extends AjaxTestBase {
     $this->assertFalse($found_settings_command, format_string('Page state still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
     $this->assertFalse($found_markup_command, format_string('Page still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
 
-    // Submit the AJAX request and trigger adding files.
+    // Submit the Ajax request and trigger adding files.
     $commands = $this->drupalPostAJAX(NULL, array('add_files' => TRUE), array('op' => t('Submit')));
     $new_settings = $this->drupalGetSettings();
     $new_css = $new_settings['ajaxPageState']['css'];
@@ -134,12 +134,12 @@ class FrameworkTest extends AjaxTestBase {
     $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], format_string('Page now has the %setting.', array('%setting' => $expected['setting_name'])));
 
     // Verify the expected CSS file was added, both to Drupal.settings, and as
-    // an AJAX command for inclusion into the HTML.
+    // an Ajax command for inclusion into the HTML.
     $this->assertEqual($new_css, $original_css + array($expected['css'] => 1), format_string('Page state now has the %css file.', array('%css' => $expected['css'])));
     $this->assertCommand($commands, array('data' => $expected_css_html), format_string('Page now has the %css file.', array('%css' => $expected['css'])));
 
     // Verify the expected JS file was added, both to Drupal.settings, and as
-    // an AJAX command for inclusion into the HTML. By testing for an exact HTML
+    // an Ajax command for inclusion into the HTML. By testing for an exact HTML
     // string containing the SCRIPT tag, we also ensure that unexpected
     // JavaScript code, such as a jQuery.extend() that would potentially clobber
     // rather than properly merge settings, didn't accidentally get added.
