@@ -632,7 +632,7 @@ abstract class WebTestBase extends TestBase {
 
     // Set installer parameters.
     // @see install.php, install.core.inc
-    $connection_info = Database::getConnectionInfo('default');
+    $connection_info = Database::getConnectionInfo();
     $this->root_user = (object) array(
       'name' => 'admin',
       'mail' => 'admin@example.com',
@@ -645,15 +645,7 @@ abstract class WebTestBase extends TestBase {
         'langcode' => 'en',
       ),
       'forms' => array(
-        'install_settings_form' => array(
-          'driver' => $connection_info['default']['driver'],
-          'username' => $connection_info['default']['username'],
-          'host' => $connection_info['default']['host'],
-          'port' => $connection_info['default']['port'],
-          'password' => $connection_info['default']['password'],
-          'database' => $connection_info['default']['database'],
-          'prefix' => $connection_info['default']['prefix'],
-        ),
+        'install_settings_form' => $connection_info['default'],
         'install_configure_form' => array(
           'site_name' => 'Drupal',
           'site_mail' => 'simpletest@example.com',
