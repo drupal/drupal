@@ -49,4 +49,67 @@ class ViewsDataTest extends ViewTestBase {
     $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
   }
 
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::viewsData().
+   */
+  protected function viewsData() {
+    $data = parent::viewsData();
+
+    // Tweak the views data to have a base for testing views_fetch_fields().
+    unset($data['views_test_data']['id']['field']);
+    unset($data['views_test_data']['name']['argument']);
+    unset($data['views_test_data']['age']['filter']);
+    unset($data['views_test_data']['job']['sort']);
+    $data['views_test_data']['created']['area']['id'] = 'text';
+
+    return $data;
+  }
+
+
+  /**
+   * Tests the views_fetch_fields function().
+   */
+  public function testViewsFetchFields() {
+    module_load_include('inc', 'views_ui', 'admin');
+
+    $expected = array(
+      'field' => array(
+        'name',
+        'age',
+        'job',
+        'created',
+      ),
+      'argument' => array(
+        'id',
+        'age',
+        'job',
+        'created',
+      ),
+      'filter' => array(
+        'id',
+        'name',
+        'job',
+        'created',
+      ),
+      'sort' => array(
+        'id',
+        'name',
+        'age',
+        'created',
+      ),
+      'area' => array(
+        'created',
+      ),
+    );
+
+    $handler_types = array('field', 'argument', 'filter', 'sort', 'area');
+    foreach ($handler_types as $handler_type) {
+      $fields = views_fetch_fields('views_test_data', $handler_type);
+      $expected_keys = array_walk($expected[$handler_type], function(&$item) {
+        $item = "views_test_data.$item";
+      });
+      $this->assertEqual($expected_keys, array_keys($fields), format_string('Handlers of type @handler_type are listed as expected.', array('@handler_type' => $handler_type)));
+    }
+  }
+
 }
