@@ -180,6 +180,15 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
 
     // Verify user was redirected away from user/login to an accessible page.
     $this->assertResponse(200);
+
+    $this->drupalLogout();
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    // Tell the test module to add a doctype. This should fail.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE, 'query' => array('doctype' => 1)));
+    // Test logging in via the login block on the front page.
+    $edit = array('openid_identifier' => $identity);
+    $this->drupalPost('', $edit, t('Log in'));
+    $this->assertRaw(t('Sorry, that is not a valid OpenID. Ensure you have spelled your ID correctly.'), 'XML with DOCTYPE was rejected.');
   }
 
   /**
