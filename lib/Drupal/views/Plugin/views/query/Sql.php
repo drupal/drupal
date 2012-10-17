@@ -1715,7 +1715,7 @@ class Sql extends QueryPluginBase {
         ),
       ),
       'stddev_pop' => array(
-        'title' => t('Standard derivation'),
+        'title' => t('Standard deviation'),
         'method' => 'aggregation_method_simple',
         'handler' => array(
           'argument' => 'groupby_numeric',
