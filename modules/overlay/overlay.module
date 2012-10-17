@@ -302,7 +302,10 @@ function overlay_page_alter(&$page) {
 }
 
 /**
- * Menu callback; dismisses the overlay accessibility message for this user.
+ * Page callback: Dismisses the overlay accessibility message for this user.
+ *
+ * @return
+ *   A render array for a page containing a list of content.
  */
 function overlay_user_dismiss_message() {
   global $user;
@@ -327,10 +330,12 @@ function overlay_user_dismiss_message() {
  * If the current user can access the overlay and has not previously indicated
  * that this message should be dismissed, this function returns a message
  * containing a link to disable the overlay. Nothing is returned for anonymous
- * users, because the links control per-user settings. Therefore, because some
- * screen readers are unable to properly read overlay contents, site builders
- * are discouraged from granting the "access overlay" permission to the
- * anonymous role. See http://drupal.org/node/890284.
+ * users, because the links control per-user settings. Because some screen
+ * readers are unable to properly read overlay contents, site builders are
+ * discouraged from granting the "access overlay" permission to the anonymous
+ * role.
+ *
+ * @see http://drupal.org/node/890284
  */
 function overlay_disable_message() {
   global $user;
@@ -385,7 +390,13 @@ function overlay_disable_message() {
 /**
  * Returns the HTML for the message about how to disable the overlay.
  *
- * @see overlay_disable_message()
+ * @param $variables
+ *   An associative array with an 'element' element, which itself is an
+ *   associative array containing:
+ *   - profile_link: The link to this user's account.
+ *   - dismiss_message_link: The link to dismiss the overlay.
+ *
+ * @ingroup themeable
  */
 function theme_overlay_disable_message($variables) {
   $element = $variables['element'];
@@ -473,8 +484,12 @@ function overlay_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Preprocesses template variables for overlay.tpl.php
+ * Implements template_preprocess_HOOK() for overlay.tpl.php
  *
+ * If the current page request is inside the overlay, add appropriate classes
+ * to the <body> element, and simplify the page title.
+ *
+ * @see template_process_overlay()
  * @see overlay.tpl.php
  */
 function template_preprocess_overlay(&$variables) {
@@ -485,20 +500,21 @@ function template_preprocess_overlay(&$variables) {
 }
 
 /**
- * Processes variables for overlay.tpl.php
+ * Implements template_process_HOOK() for overlay.tpl.php
+ *
+ * Places the rendered HTML for the page body into a top level variable.
  *
  * @see template_preprocess_overlay()
  * @see overlay.tpl.php
  */
 function template_process_overlay(&$variables) {
-  // Place the rendered HTML for the page body into a top level variable.
   $variables['page'] = $variables['page']['#children'];
 }
 
 /**
  * Implements hook_preprocess_page().
  *
- * Hide tabs inside the overlay.
+ * If the current page request is inside the overlay, hide the tabs.
  *
  * @see overlay_get_mode()
  */
@@ -509,7 +525,7 @@ function overlay_preprocess_page(&$variables) {
 }
 
 /**
- * Callback to request that the overlay display an empty page.
+ * Stores and returns whether an empty page override is needed.
  *
  * This is used to prevent a page request which closes the overlay (for
  * example, a form submission) from being fully re-rendered before the overlay
@@ -550,7 +566,7 @@ function overlay_page_delivery_callback_alter(&$callback) {
 }
 
 /**
- * Delivery callback to display an empty page.
+ * Prints an empty page.
  *
  * This function is used to print out a bare minimum empty page which still has
  * the scripts and styles necessary in order to trigger the overlay to close.
@@ -562,7 +578,7 @@ function overlay_deliver_empty_page() {
 }
 
 /**
- * Get the current overlay mode.
+ * Gets the current overlay mode.
  *
  * @see overlay_set_mode()
  */
@@ -688,12 +704,13 @@ function overlay_overlay_child_initialize() {
 }
 
 /**
- * Callback to request that the overlay close as soon as the page is displayed.
+ * Requests that the overlay overlay closes when the page is displayed.
  *
  * @param $redirect
  *   (optional) The path that should open in the parent window after the
  *   overlay closes. If not set, no redirect will be performed on the parent
  *   window.
+ *
  * @param $redirect_options
  *   (optional) An associative array of options to use when generating the
  *   redirect URL.
@@ -757,7 +774,7 @@ function overlay_supplemental_regions() {
 }
 
 /**
- * Helper function for returning a list of page regions related to the overlay.
+ * Returns a list of page regions related to the overlay.
  *
  * @param $type
  *   The type of regions to return. This can either be 'overlay_regions' or
@@ -923,7 +940,7 @@ function overlay_store_rendered_content($id = NULL, $content = NULL) {
 }
 
 /**
- * Request that the parent window refresh a particular page region.
+ * Requests that the parent window refreshes a particular page region.
  *
  * @param $region
  *   The name of the page region to refresh. The parent window will trigger a
@@ -938,7 +955,7 @@ function overlay_request_refresh($region) {
 }
 
 /**
- * Request that the entire parent window be reloaded when the overlay closes.
+ * Requests that the entire parent window is reloaded when the overlay closes.
  *
  * @see overlay_trigger_refresh()
  */
@@ -947,7 +964,7 @@ function overlay_request_page_refresh() {
 }
 
 /**
- * Check if the parent window needs to be refreshed on this page load.
+ * Checks if the parent window needs to be refreshed on this page load.
  *
  * If the previous page load requested that any page regions be refreshed, or
  * if it requested that the entire page be refreshed when the overlay closes,
