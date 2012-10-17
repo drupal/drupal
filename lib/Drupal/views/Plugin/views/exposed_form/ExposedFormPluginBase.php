@@ -16,8 +16,6 @@ use Drupal\views\Plugin\views\PluginBase;
  * Plugins that handle the validation/submission and rendering of exposed forms.
  *
  * If needed, it is possible to use them to add additional form elements.
- *
- * @see hook_views_plugins()
  */
 
 /**

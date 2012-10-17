@@ -17,8 +17,6 @@ use Drupal\views\ViewExecutable;
  *
  * The pager takes care about altering the query for its needs, altering some
  * global information of pagers and finally rendering itself.
- *
- * @see hook_views_plugins()
  */
 
 /**

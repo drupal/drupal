@@ -858,10 +858,9 @@ function views_add_block_contextual_links(&$block, ViewExecutable $view, $displa
  * defined any contextual links that are intended to be displayed in the
  * requested location; if so, it attaches them. The contextual links intended
  * for a particular location are defined by the 'contextual links' and
- * 'contextual_links_locations' properties in hook_views_plugins() and
- * hook_views_plugins_alter(); as a result, these hook implementations have
- * full control over where and how contextual links are rendered for each
- * display.
+ * 'contextual_links_locations' properties in the plugin annotation; as a
+ * result, these hook implementations have full control over where and how
+ * contextual links are rendered for each display.
  *
  * In addition to attaching the contextual links to the passed-in array (via
  * the standard #contextual_links property), this function also attaches
@@ -897,16 +896,14 @@ function views_add_block_contextual_links(&$block, ViewExecutable $view, $displa
  *     view.
  *   If you are rendering a view and its contextual links in another location,
  *   you can pass in a different value for this parameter. However, you will
- *   also need to use hook_views_plugins() or hook_views_plugins_alter() to
- *   declare, via the 'contextual_links_locations' array key, which view
- *   displays support having their contextual links rendered in the location
- *   you have defined.
+ *   also need to set 'contextual_links_locations' in your plugin annotation to
+ *   indicate which view displays support having their contextual links
+ *   rendered in the location you have defined.
  * @param $view
  *   The view whose contextual links will be added.
  * @param $display_id
  *   The ID of the display within $view whose contextual links will be added.
  *
- * @see hook_views_plugins()
  * @see views_block_view()
  * @see views_page_alter()
  * @see template_preprocess_views_view()

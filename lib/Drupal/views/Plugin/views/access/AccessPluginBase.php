@@ -17,8 +17,6 @@ use Drupal\views\ViewExecutable;
  *
  * Therefore it primarily has to implement the access and the get_access_callback
  * method.
- *
- * @see hook_views_plugins()
  */
 
 /**

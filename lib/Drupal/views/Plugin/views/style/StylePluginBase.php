@@ -23,8 +23,6 @@ use Drupal\views\ViewExecutable;
  * Many style plugins can have an optional 'row' plugin, that displays
  * a single record. Not all style plugins can utilize this, so it is
  * up to the plugin to set this up and call through to the row plugin.
- *
- * @see hook_views_plugins()
  */
 
 /**

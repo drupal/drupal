@@ -19,8 +19,6 @@ use Drupal\views\Plugin\views\PluginBase;
  * handle creating Views from a Drupal block hook. They can also
  * handle creating Views from an external module source, such as
  * a Panels pane, or an insert view, or a CCK field type.
- *
- * @see hook_views_plugins()
  */
 
 /**

@@ -14,8 +14,6 @@ use Drupal\views\Plugin\views\PluginBase;
  * @defgroup views_argument_default_plugins Views argument default plugins
  * @{
  * Allow specialized methods of filling in arguments when they aren't provided.
- *
- * @see hook_views_plugins()
  */
 
 /**

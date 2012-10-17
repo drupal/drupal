@@ -17,8 +17,6 @@ use Drupal\views\ViewExecutable;
  *
  * They are tightly coupled to style plugins, in that a style plugin is what
  * calls the row plugin.
- *
- * @see hook_views_plugins()
  */
 
 /**

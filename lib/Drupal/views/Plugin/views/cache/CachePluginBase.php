@@ -19,8 +19,6 @@ use Drupal\Core\Database\Query\Select;
  *
  * Cache plugins can handle both caching of just the database result and
  * the rendered output of the view.
- *
- * @see hook_views_plugins()
  */
 
 /**

@@ -14,8 +14,6 @@ use Drupal\views\Plugin\views\PluginBase;
  * @defgroup views_argument_validate_plugins Views argument validate plugins
  * @{
  * Allow specialized methods of validating arguments.
- *
- * @see hook_views_plugins()
  */
 
 /**
