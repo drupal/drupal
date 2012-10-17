@@ -361,7 +361,7 @@ function field_ui_inactive_instances($entity_type, $bundle_name = NULL) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * Adds a button 'Save and add fields' to the 'Create content type' form.
+ * Adds a button 'Save and manage fields' to the 'Create content type' form.
  *
  * @see node_type_form()
  * @see field_ui_form_node_type_form_submit()
@@ -371,7 +371,7 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
   if (empty($form['#node_type']->type)) {
     $form['actions']['save_continue'] = array(
       '#type' => 'submit',
-      '#value' => t('Save and add fields'),
+      '#value' => t('Save and manage fields'),
       '#weight' => 45,
     );
     $form['#submit'][] = 'field_ui_form_node_type_form_submit';
@@ -379,7 +379,7 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
 }
 
 /**
- * Form submission handler for the 'Save and add fields' button.
+ * Form submission handler for the 'Save and manage fields' button.
  *
  * @see field_ui_form_node_type_form_alter()
  */

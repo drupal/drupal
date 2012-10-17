@@ -132,7 +132,7 @@ class NumberFieldTest extends WebTestBase {
     $name = $this->randomName();
     $type = drupal_strtolower($name);
     $edit = array('name' => $name, 'type' => $type);
-    $this->drupalPost(NULL, $edit, t('Save and add fields'));
+    $this->drupalPost(NULL, $edit, t('Save and manage fields'));
 
     // Add an integer field to the newly-created type.
     $label = $this->randomName();
