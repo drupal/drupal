@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the theme interface functionality.
+ * Tests the theme interface functionality.
  */
 class ThemeTest extends WebTestBase {
 

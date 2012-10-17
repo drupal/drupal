@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Update;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the update dependency ordering system.
+ * Tests the update dependency ordering system.
  */
 class DependencyOrderingTest extends WebTestBase {
 

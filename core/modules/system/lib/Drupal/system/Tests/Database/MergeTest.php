@@ -98,7 +98,7 @@ class MergeTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirms that we can merge-update a record successfully, with alternate replacement.
+   * Confirms that we can merge-update a record, with alternate replacement.
    */
   function testMergeUpdateExplicit() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();

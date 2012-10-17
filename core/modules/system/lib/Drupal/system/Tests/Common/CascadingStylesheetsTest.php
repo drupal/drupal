@@ -82,7 +82,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   /**
-   * Makes sure that reseting the CSS empties the cache.
+   * Makes sure that resetting the CSS empties the cache.
    */
   function testReset() {
     drupal_static_reset('drupal_add_css');

@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Batch;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the Batch API.
+ * Tests the Batch API.
  */
 class ProcessingTest extends WebTestBase {
 
@@ -166,6 +166,7 @@ class ProcessingTest extends WebTestBase {
    *   Array of raw strings to look for .
    * @param $message
    *   Message to display.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */

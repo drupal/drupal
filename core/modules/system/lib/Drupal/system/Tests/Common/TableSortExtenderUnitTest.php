@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Test unicode handling features implemented in unicode.inc.
+ * Tests unicode handling features implemented in unicode.inc.
  */
 class TableSortExtenderUnitTest extends UnitTestBase {
 
@@ -44,7 +44,7 @@ class TableSortExtenderUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test tablesort_init().
+   * Tests tablesort_init().
    */
   function testTableSortInit() {
 

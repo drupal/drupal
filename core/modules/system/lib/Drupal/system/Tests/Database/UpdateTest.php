@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Updates builder tests.
+ * Tests the update query builder.
  */
 class UpdateTest extends DatabaseTestBase {
 

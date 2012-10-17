@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Update;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the invocation of hook_update_dependencies().
+ * Tests the invocation of hook_update_dependencies().
  */
 class DependencyHookInvocationTest extends WebTestBase {
 

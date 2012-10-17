@@ -22,14 +22,26 @@ class DatabaseBackendUnitTest extends GenericCacheBackendUnitTestBase {
     );
   }
 
+  /**
+   * Creates a new instance of DatabaseBackend.
+   *
+   * @return
+   *   A new DatabaseBackend object.
+   */
   protected function createCacheBackend($bin) {
     return new DatabaseBackend($bin);
   }
 
+  /**
+   * Installs system schema.
+   */
   public function setUpCacheBackend() {
     drupal_install_schema('system');
   }
 
+  /**
+   * Uninstalls system schema.
+   */
   public function tearDownCacheBackend() {
     drupal_uninstall_schema('system');
   }

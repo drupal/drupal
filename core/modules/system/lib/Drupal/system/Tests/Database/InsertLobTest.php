@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Insert tests using LOB fields, which are weird on some databases.
+ * Tests inserts using LOB fields, which are weird on some databases.
  */
 class InsertLobTest extends DatabaseTestBase {
 

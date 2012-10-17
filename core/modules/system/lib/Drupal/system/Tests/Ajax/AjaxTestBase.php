@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Ajax;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Base test system for AJAX tests.
+ * Provides a base class for Ajax tests.
  */
 abstract class AjaxTestBase extends WebTestBase {
 

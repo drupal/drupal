@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Utility\ThemeRegistry;
 
 /**
- * Tests for the ThemeRegistry class.
+ * Tests the ThemeRegistry class.
  */
 class RegistryTest extends WebTestBase {
 

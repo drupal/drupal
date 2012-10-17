@@ -61,7 +61,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
   }
 
   /**
-   * Error handler that collects errors in an array.
+   * Stores errors into an array.
    *
    * This test class is trying to verify that simpletest correctly sees errors
    * and warnings. However, it can't generate errors and warnings that

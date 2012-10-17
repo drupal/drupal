@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests the tablesort query extender
+ * Tests the tablesort query extender.
  */
 class SelectTableSortDefaultTest extends DatabaseTestBase {
 
@@ -77,7 +77,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirms that no error is thrown if a sort is not set in a default tableselect.
+   * Confirms that no error is thrown if no sort is set in a tableselect.
    */
   function testTableSortDefaultSort() {
     $this->drupalGet('database_test/tablesort_default_sort');

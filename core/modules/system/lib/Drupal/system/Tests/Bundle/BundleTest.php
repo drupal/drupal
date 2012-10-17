@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Bundle;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test bundle registration to the DIC.
+ * Tests bundle registration to the DIC.
  */
 class BundleTest extends WebTestBase {
 
@@ -30,7 +30,7 @@ class BundleTest extends WebTestBase {
   }
 
   /**
-   * Test that services provided by module bundles get registered to the DIC.
+   * Tests that services provided by module bundles get registered to the DIC.
    */
   function testBundleRegistration() {
     $this->assertTrue(drupal_container()->getDefinition('file.usage')->getClass() == 'Drupal\\bundle_test\\TestFileUsage', 'Class has been changed');

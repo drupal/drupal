@@ -368,7 +368,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests that aliases are renamed when duplicates.
+   * Tests that aliases are renamed when they are duplicates.
    */
   function testSelectDuplicateAlias() {
     $query = db_select('test', 't');
