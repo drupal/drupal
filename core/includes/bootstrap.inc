@@ -1780,7 +1780,7 @@ function watchdog($type, $message, array $variables = array(), $severity = WATCH
  *   - 'error'
  * @param bool $repeat
  *   (optional) If this is FALSE and the message is already set, then the
- *   message won't be repeated. Defaults to TRUE.
+ *   message won't be repeated. Defaults to FALSE.
  *
  * @return array|null
  *   A multidimensional array with keys corresponding to the set message types.
@@ -1790,7 +1790,7 @@ function watchdog($type, $message, array $variables = array(), $severity = WATCH
  * @see drupal_get_messages()
  * @see theme_status_messages()
  */
-function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
+function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
   if ($message) {
     if (!isset($_SESSION['messages'][$type])) {
       $_SESSION['messages'][$type] = array();

@@ -264,7 +264,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         // Generate a backtrace containing only scalar argument values.
         $message .= '<pre class="backtrace">' . format_backtrace($backtrace) . '</pre>';
       }
-      drupal_set_message($message, $class);
+      drupal_set_message($message, $class, TRUE);
     }
 
     if ($fatal) {
