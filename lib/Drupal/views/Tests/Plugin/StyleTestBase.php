@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use DOMDocument;
-
 /**
  * Tests some general style plugin related functionality.
  */
@@ -31,7 +29,7 @@ abstract class StyleTestBase extends PluginTestBase {
    * Stores a view output in the elements.
    */
   function storeViewPreview($output) {
-    $htmlDom = new DOMDocument();
+    $htmlDom = new \DOMDocument();
     @$htmlDom->loadHTML($output);
     if ($htmlDom) {
       // It's much easier to work with simplexml than DOM, luckily enough

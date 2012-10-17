@@ -12,7 +12,6 @@ namespace Drupal\views\Tests\Handler;
  *
  * @see Drupal\views\Plugin\views\field\FieldPluginBase
  */
-use DOMDocument;
 
 class FieldTest extends HandlerTestBase {
 
@@ -170,7 +169,7 @@ class FieldTest extends HandlerTestBase {
    *   An array containing simplexml objects.
    */
   protected function parseContent($content) {
-    $htmlDom = new DOMDocument();
+    $htmlDom = new \DOMDocument();
     @$htmlDom->loadHTML('<?xml encoding="UTF-8">' . $content);
     $elements = simplexml_import_dom($htmlDom);
 

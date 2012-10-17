@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use ReflectionClass;
-
 /**
  * Checks general plugin data and instances for all plugin types.
  */
@@ -93,7 +91,7 @@ class PluginInstanceTest extends ViewTestBase {
       foreach ($plugins as $definition) {
         // Get a reflection class for this plugin.
         // We only want to test true plugins, i.e. They extend PluginBase.
-        $reflection = new ReflectionClass($definition['class']);
+        $reflection = new \ReflectionClass($definition['class']);
         if ($reflection->isSubclassOf('Drupal\views\Plugin\views\PluginBase')) {
           // Create a plugin instance and check what it is. This is not just
           // good to check they can be created but for throwing any notices for

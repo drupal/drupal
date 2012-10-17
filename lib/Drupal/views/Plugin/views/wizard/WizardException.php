@@ -7,11 +7,9 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
-use Exception;
-
 /**
  * A custom exception class for our errors.
  */
-class WizardException extends Exception {
+class WizardException extends \Exception {
 
 }

@@ -11,8 +11,6 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
-use DateTimeZone;
-use DateTime;
 
 abstract class HandlerBase extends PluginBase {
 
@@ -714,8 +712,8 @@ abstract class HandlerBase extends PluginBase {
     $db_type = Database::getConnection()->databaseType();
     $offset = $this->getTimezone();
     if (isset($offset) && !is_numeric($offset)) {
-      $dtz = new DateTimeZone($offset);
-      $dt = new DateTime('now', $dtz);
+      $dtz = new \DateTimeZone($offset);
+      $dt = new \DateTime('now', $dtz);
       $offset_seconds = $dtz->getOffset($dt);
     }
 

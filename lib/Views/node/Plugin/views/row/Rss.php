@@ -10,7 +10,6 @@ namespace Views\node\Plugin\views\row;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\row\RowPluginBase;
-use stdClass;
 
 /**
  * Plugin which performs a node_view on the resulting object
@@ -165,7 +164,7 @@ class Rss extends RowPluginBase {
       $item_text .= drupal_render($build);
     }
 
-    $item = new stdClass();
+    $item = new \stdClass();
     $item->description = $item_text;
     $item->title = $node->label();
     $item->link = $node->link;
