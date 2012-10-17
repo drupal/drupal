@@ -32,7 +32,6 @@
  *   into a string within the variable $classes.
  *
  * @see template_preprocess_comment_wrapper()
- * @see theme_comment_wrapper()
  *
  * @ingroup themeable
  */
