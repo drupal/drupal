@@ -372,14 +372,14 @@ class FieldSqlStorageTest extends WebTestBase {
     field_attach_insert('test_entity', $entity);
 
     // Add an index
-    $field = array('field_name' => $field_name, 'indexes' => array('value' => array('value')));
+    $field = array('field_name' => $field_name, 'indexes' => array('value' => array(array('value', 255))));
     field_update_field($field);
     foreach ($tables as $table) {
       $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), t("Index on value created in $table"));
     }
 
     // Add a different index, removing the existing custom one.
-    $field = array('field_name' => $field_name, 'indexes' => array('value_format' => array('value', 'format')));
+    $field = array('field_name' => $field_name, 'indexes' => array('value_format' => array(array('value', 127), array('format', 127))));
     field_update_field($field);
     foreach ($tables as $table) {
       $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value_format"), t("Index on value_format created in $table"));
