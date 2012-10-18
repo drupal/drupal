@@ -1836,6 +1836,9 @@ function hook_permission() {
  *     registers the 'node' theme hook, 'theme_node' will be assigned to its
  *     function. If the chameleon theme registers the node hook, it will be
  *     assigned 'chameleon_node' as its function.
+ *   - base hook: A string declaring the base theme hook if this theme
+ *     implementation is actually implementing a suggestion for another theme
+ *     hook.
  *   - pattern: A regular expression pattern to be used to allow this theme
  *     implementation to have a dynamic name. The convention is to use __ to
  *     differentiate the dynamic portion of the theme. For example, to allow
