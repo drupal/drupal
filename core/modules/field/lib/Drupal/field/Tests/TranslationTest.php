@@ -83,11 +83,11 @@ class TranslationTest extends FieldTestBase {
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
     foreach ($available_langcodes as $delta => $langcode) {
       if ($langcode != 'xx' && $langcode != 'en') {
-        $this->assertTrue(in_array($langcode, $langcodes), t('%language is an enabled language.', array('%language' => $langcode)));
+        $this->assertTrue(in_array($langcode, $langcodes), format_string('%language is an enabled language.', array('%language' => $langcode)));
       }
     }
-    $this->assertTrue(in_array('xx', $available_langcodes), t('%language was made available.', array('%language' => 'xx')));
-    $this->assertFalse(in_array('en', $available_langcodes), t('%language was made unavailable.', array('%language' => 'en')));
+    $this->assertTrue(in_array('xx', $available_langcodes), format_string('%language was made available.', array('%language' => 'xx')));
+    $this->assertFalse(in_array('en', $available_langcodes), format_string('%language was made unavailable.', array('%language' => 'en')));
 
     // Test field_available_languages() behavior for untranslatable fields.
     $this->field['translatable'] = FALSE;
@@ -128,7 +128,7 @@ class TranslationTest extends FieldTestBase {
       $hash = hash('sha256', serialize(array($entity_type, $entity, $this->field_name, $langcode, $values[$langcode])));
       // Check whether the parameters passed to _field_invoke() were correctly
       // forwarded to the callback function.
-      $this->assertEqual($hash, $result, t('The result for %language is correctly stored.', array('%language' => $langcode)));
+      $this->assertEqual($hash, $result, format_string('The result for %language is correctly stored.', array('%language' => $langcode)));
     }
 
     $this->assertEqual(count($results), count($available_langcodes), 'No unavailable language has been processed.');
@@ -192,17 +192,17 @@ class TranslationTest extends FieldTestBase {
           $hash = hash('sha256', serialize(array($entity_type, $entities[$id], $this->field_name, $langcode, $values[$id][$langcode])));
           // Check whether the parameters passed to _field_invoke_multiple()
           // were correctly forwarded to the callback function.
-          $this->assertEqual($hash, $result, t('The result for entity %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));
+          $this->assertEqual($hash, $result, format_string('The result for entity %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));
         }
       }
-      $this->assertEqual(count($results), count($available_langcodes), t('No unavailable language has been processed for entity %id.', array('%id' => $id)));
+      $this->assertEqual(count($results), count($available_langcodes), format_string('No unavailable language has been processed for entity %id.', array('%id' => $id)));
     }
 
     $null = NULL;
     $grouped_results = _field_invoke_multiple('test_op_multiple', $entity_type, $entities, $null, $null, $options);
     foreach ($grouped_results as $id => $results) {
       foreach ($results as $langcode => $result) {
-        $this->assertTrue(isset($options['langcode'][$id]), t('The result language code %langcode for entity %id was correctly suggested (display language: %display_langcode).', array('%id' => $id, '%langcode' => $langcode, '%display_langcode' => $display_langcode)));
+        $this->assertTrue(isset($options['langcode'][$id]), format_string('The result language code %langcode for entity %id was correctly suggested (display language: %display_langcode).', array('%id' => $id, '%langcode' => $langcode, '%display_langcode' => $display_langcode)));
       }
     }
   }
@@ -240,7 +240,7 @@ class TranslationTest extends FieldTestBase {
       foreach ($items as $delta => $item) {
         $result = $result && $item['value'] == $entity->{$this->field_name}[$langcode][$delta]['value'];
       }
-      $this->assertTrue($result, t('%language translation correctly handled.', array('%language' => $langcode)));
+      $this->assertTrue($result, format_string('%language translation correctly handled.', array('%language' => $langcode)));
     }
   }
 
@@ -308,7 +308,7 @@ class TranslationTest extends FieldTestBase {
     $display_langcodes = field_language($entity_type, $entity, NULL, $requested_langcode);
     foreach ($instances as $instance) {
       $field_name = $instance['field_name'];
-      $this->assertTrue($display_langcodes[$field_name] == $locked_languages[$field_name], t('The display language for field %field_name is %language.', array('%field_name' => $field_name, '%language' => $locked_languages[$field_name])));
+      $this->assertTrue($display_langcodes[$field_name] == $locked_languages[$field_name], format_string('The display language for field %field_name is %language.', array('%field_name' => $field_name, '%language' => $locked_languages[$field_name])));
     }
 
     // Test multiple-fields display languages for translatable entities.
@@ -321,13 +321,13 @@ class TranslationTest extends FieldTestBase {
       // As the requested language was not assinged to any field, if the
       // returned language is defined for the current field, core fallback rules
       // were successfully applied.
-      $this->assertTrue(isset($entity->{$field_name}[$langcode]) && $langcode != $requested_langcode, t('The display language for the field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
+      $this->assertTrue(isset($entity->{$field_name}[$langcode]) && $langcode != $requested_langcode, format_string('The display language for the field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
     }
 
     // Test single-field display language.
     drupal_static_reset('field_language');
     $langcode = field_language($entity_type, $entity, $this->field_name, $requested_langcode);
-    $this->assertTrue(isset($entity->{$this->field_name}[$langcode]) && $langcode != $requested_langcode, t('The display language for the (single) field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
+    $this->assertTrue(isset($entity->{$this->field_name}[$langcode]) && $langcode != $requested_langcode, format_string('The display language for the (single) field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
 
     // Test field_language() basic behavior without language fallback.
     variable_set('field_test_language_fallback', FALSE);
@@ -378,7 +378,7 @@ class TranslationTest extends FieldTestBase {
     $entity = field_test_entity_test_load($eid, $evid);
     foreach ($available_langcodes as $langcode => $value) {
       $passed = isset($entity->{$field_name}[$langcode]) && $entity->{$field_name}[$langcode][0]['value'] == $value + 1;
-      $this->assertTrue($passed, t('The @language translation for revision @revision was correctly stored', array('@language' => $langcode, '@revision' => $entity->ftvid)));
+      $this->assertTrue($passed, format_string('The @language translation for revision @revision was correctly stored', array('@language' => $langcode, '@revision' => $entity->ftvid)));
     }
   }
 }

@@ -143,7 +143,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
         break;
       }
     }
-    $this->assertTrue($result, t('Variable $@field_name correctly populated.', array('@field_name' => $this->field_name)));
+    $this->assertTrue($result, format_string('Variable $@field_name correctly populated.', array('@field_name' => $this->field_name)));
   }
 
   /**

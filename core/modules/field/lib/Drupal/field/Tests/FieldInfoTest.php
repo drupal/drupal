@@ -38,24 +38,24 @@ class FieldInfoTest extends FieldTestBase {
     $info = field_info_field_types();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
-        $this->assertEqual($info[$t_key][$key], $val, t("Field type $t_key key $key is $val"));
+        $this->assertEqual($info[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$t_key]['module'], 'field_test',  t("Field type field_test module appears"));
+      $this->assertEqual($info[$t_key]['module'], 'field_test',  'Field type field_test module appears.');
     }
 
     $storage_info = field_test_field_storage_info();
     $info = field_info_storage_types();
     foreach ($storage_info as $s_key => $storage) {
       foreach ($storage as $key => $val) {
-        $this->assertEqual($info[$s_key][$key], $val, t("Storage type $s_key key $key is $val"));
+        $this->assertEqual($info[$s_key][$key], $val, format_string('Storage type %s_key key %key is %value', array('%s_key' => $s_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$s_key]['module'], 'field_test',  t("Storage type field_test module appears"));
+      $this->assertEqual($info[$s_key]['module'], 'field_test',  'Storage type field_test module appears.');
     }
 
     // Verify that no unexpected instances exist.
     $instances = field_info_instances('test_entity');
     $expected = array();
-    $this->assertIdentical($instances, $expected, "field_info_instances('test_entity') returns " . var_export($expected, TRUE) . '.');
+    $this->assertIdentical($instances, $expected, format_string("field_info_instances('test_entity') returns %expected.", array('%expected' => var_export($expected, TRUE))));
     $instances = field_info_instances('test_entity', 'test_bundle');
     $this->assertIdentical($instances, array(), "field_info_instances('test_entity', 'test_bundle') returns an empty array.");
 
@@ -73,7 +73,7 @@ class FieldInfoTest extends FieldTestBase {
     $this->assertEqual($fields[$field['field_name']]['module'], 'field_test', 'info fields contains field module');
     $settings = array('test_field_setting' => 'dummy test string');
     foreach ($settings as $key => $val) {
-      $this->assertEqual($fields[$field['field_name']]['settings'][$key], $val, t("Field setting $key has correct default value $val"));
+      $this->assertEqual($fields[$field['field_name']]['settings'][$key], $val, format_string('Field setting %key has correct default value %value', array('%key' => $key, '%value' => $val)));
     }
     $this->assertEqual($fields[$field['field_name']]['cardinality'], 1, 'info fields contains cardinality 1');
     $this->assertEqual($fields[$field['field_name']]['active'], 1, 'info fields contains active 1');
@@ -112,7 +112,7 @@ class FieldInfoTest extends FieldTestBase {
     // Test with an entity type that has no bundles.
     $instances = field_info_instances('user');
     $expected = array();
-    $this->assertIdentical($instances, $expected, "field_info_instances('user') returns " . var_export($expected, TRUE) . '.');
+    $this->assertIdentical($instances, $expected, format_string("field_info_instances('user') returns %expected.", array('%expected' => var_export($expected, TRUE))));
     $instances = field_info_instances('user', 'user');
     $this->assertIdentical($instances, array(), "field_info_instances('user', 'user') returns an empty array.");
   }
@@ -311,18 +311,18 @@ class FieldInfoTest extends FieldTestBase {
       $info[$name]['instance_settings']['user_register_form'] = FALSE;
     }
     foreach ($info as $type => $data) {
-      $this->assertIdentical(field_info_field_settings($type), $data['settings'], "field_info_field_settings returns {$type}'s field settings");
-      $this->assertIdentical(field_info_instance_settings($type), $data['instance_settings'], "field_info_field_settings returns {$type}'s field instance settings");
+      $this->assertIdentical(field_info_field_settings($type), $data['settings'], format_string("field_info_field_settings returns %type's field settings", array('%type' => $type)));
+      $this->assertIdentical(field_info_instance_settings($type), $data['instance_settings'], format_string("field_info_field_settings returns %type's field instance settings", array('%type' => $type)));
     }
 
     foreach (array('test_field_widget', 'test_field_widget_multiple') as $type) {
       $info = field_info_widget_types($type);
-      $this->assertIdentical(field_info_widget_settings($type), $info['settings'], "field_info_widget_settings returns {$type}'s widget settings");
+      $this->assertIdentical(field_info_widget_settings($type), $info['settings'], format_string("field_info_widget_settings returns %type's widget settings", array('%type' => $type)));
     }
 
     foreach (array('field_test_default', 'field_test_multiple', 'field_test_with_prepare_view') as $type) {
       $info = field_info_formatter_types($type);
-      $this->assertIdentical(field_info_formatter_settings($type), $info['settings'], "field_info_formatter_settings returns {$type}'s formatter settings");
+      $this->assertIdentical(field_info_formatter_settings($type), $info['settings'], format_string("field_info_formatter_settings returns %type's formatter settings", array('%type' => $type)));
     }
   }
 }

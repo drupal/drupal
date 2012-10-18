@@ -65,9 +65,9 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], 'Current revision: expected number of values');
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
       // The field value loaded matches the one inserted or updated.
-      $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'] , $values[$current_revision][$delta]['value'], t('Current revision: expected value %delta was found.', array('%delta' => $delta)));
+      $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'] , $values[$current_revision][$delta]['value'], format_string('Current revision: expected value %delta was found.', array('%delta' => $delta)));
       // The value added in hook_field_load() is found.
-      $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['additional_key'], 'additional_value', t('Current revision: extra information for value %delta was found', array('%delta' => $delta)));
+      $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['additional_key'], 'additional_value', format_string('Current revision: extra information for value %delta was found', array('%delta' => $delta)));
     }
 
     // Confirm each revision loads the correct data.
@@ -75,12 +75,12 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
       $entity = field_test_create_entity(0, $revision_id, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $entity));
       // Number of values per field loaded equals the field cardinality.
-      $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], t('Revision %revision_id: expected number of values.', array('%revision_id' => $revision_id)));
+      $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], format_string('Revision %revision_id: expected number of values.', array('%revision_id' => $revision_id)));
       for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
         // The field value loaded matches the one inserted or updated.
-        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'], $values[$revision_id][$delta]['value'], t('Revision %revision_id: expected value %delta was found.', array('%revision_id' => $revision_id, '%delta' => $delta)));
+        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'], $values[$revision_id][$delta]['value'], format_string('Revision %revision_id: expected value %delta was found.', array('%revision_id' => $revision_id, '%delta' => $delta)));
         // The value added in hook_field_load() is found.
-        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['additional_key'], 'additional_value', t('Revision %revision_id: extra information for value %delta was found', array('%revision_id' => $revision_id, '%delta' => $delta)));
+        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['additional_key'], 'additional_value', format_string('Revision %revision_id: extra information for value %delta was found', array('%revision_id' => $revision_id, '%delta' => $delta)));
       }
     }
   }
@@ -146,19 +146,19 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
       $instances = field_info_instances($entity_type, $bundles[$index]);
       foreach ($instances as $field_name => $instance) {
         // The field value loaded matches the one inserted.
-        $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], $values[$index][$field_name], t('Entity %index: expected value was found.', array('%index' => $index)));
+        $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], $values[$index][$field_name], format_string('Entity %index: expected value was found.', array('%index' => $index)));
         // The value added in hook_field_load() is found.
-        $this->assertEqual($entity->{$field_name}[$langcode][0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => $index)));
+        $this->assertEqual($entity->{$field_name}[$langcode][0]['additional_key'], 'additional_value', format_string('Entity %index: extra information was found', array('%index' => $index)));
       }
     }
 
     // Check that the single-field load option works.
     $entity = field_test_create_entity(1, 1, $bundles[1]);
     field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $field_ids[1]));
-    $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['value'], $values[1][$field_names[1]], t('Entity %index: expected value was found.', array('%index' => 1)));
-    $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => 1)));
-    $this->assert(!isset($entity->{$field_names[2]}), t('Entity %index: field %field_name is not loaded.', array('%index' => 2, '%field_name' => $field_names[2])));
-    $this->assert(!isset($entity->{$field_names[3]}), t('Entity %index: field %field_name is not loaded.', array('%index' => 3, '%field_name' => $field_names[3])));
+    $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['value'], $values[1][$field_names[1]], format_string('Entity %index: expected value was found.', array('%index' => 1)));
+    $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['additional_key'], 'additional_value', format_string('Entity %index: extra information was found', array('%index' => 1)));
+    $this->assert(!isset($entity->{$field_names[2]}), format_string('Entity %index: field %field_name is not loaded.', array('%index' => 2, '%field_name' => $field_names[2])));
+    $this->assert(!isset($entity->{$field_names[3]}), format_string('Entity %index: field %field_name is not loaded.', array('%index' => 3, '%field_name' => $field_names[3])));
   }
 
   /**
@@ -208,7 +208,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
     foreach ($fields as $field) {
-      $this->assertEqual($values[$field['field_name']], $entity->{$field['field_name']}[$langcode], t('%storage storage: expected values were found.', array('%storage' => $field['storage']['type'])));
+      $this->assertEqual($values[$field['field_name']], $entity->{$field['field_name']}[$langcode], format_string('%storage storage: expected values were found.', array('%storage' => $field['storage']['type'])));
     }
   }
 
@@ -249,8 +249,8 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     // Test current and revision storage details together because the columns
     // are the same.
     foreach ((array) $field['columns'] as $column_name => $attributes) {
-      $this->assertEqual($details[FIELD_LOAD_CURRENT]['moon'][$column_name], $column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => 'moon[FIELD_LOAD_CURRENT]')));
-      $this->assertEqual($details[FIELD_LOAD_REVISION]['mars'][$column_name], $column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => 'mars[FIELD_LOAD_REVISION]')));
+      $this->assertEqual($details[FIELD_LOAD_CURRENT]['moon'][$column_name], $column_name, format_string('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => 'moon[FIELD_LOAD_CURRENT]')));
+      $this->assertEqual($details[FIELD_LOAD_REVISION]['mars'][$column_name], $column_name, format_string('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => 'mars[FIELD_LOAD_REVISION]')));
     }
   }
 

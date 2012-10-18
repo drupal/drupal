@@ -461,7 +461,7 @@ class CrudTest extends FieldTestBase {
     // while some modules remain disabled.
     while ($modules) {
       $field = field_read_field($field_name);
-      $this->assertTrue(empty($field), t('%modules disabled. The field is marked inactive.', array('%modules' => implode(', ', $modules))));
+      $this->assertTrue(empty($field), format_string('%modules disabled. The field is marked inactive.', array('%modules' => implode(', ', $modules))));
 
       $module = array_shift($modules);
       module_enable(array($module), FALSE);

@@ -79,7 +79,7 @@ class DisplayApiTest extends FieldTestBase {
     $setting = $settings['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // Check that explicit display settings are used.
@@ -117,7 +117,7 @@ class DisplayApiTest extends FieldTestBase {
     $this->assertNoText($this->label, 'Label was not displayed.');
     $this->assertNoText('field_test_field_attach_view_alter', 'Alter not fired.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // View mode: check that display settings specified in the instance are
@@ -127,7 +127,7 @@ class DisplayApiTest extends FieldTestBase {
     $setting = $this->instance['display']['teaser']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // Unknown view mode: check that display settings for 'default' view mode
@@ -137,7 +137,7 @@ class DisplayApiTest extends FieldTestBase {
     $setting = $this->instance['display']['default']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
   }
 
@@ -152,7 +152,7 @@ class DisplayApiTest extends FieldTestBase {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item);
       $this->drupalSetContent(drupal_render($output));
-      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // Check that explicit display settings are used.
@@ -168,7 +168,7 @@ class DisplayApiTest extends FieldTestBase {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, $display);
       $this->drupalSetContent(drupal_render($output));
-      $this->assertText($setting . '|0:' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|0:' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // Check that prepare_view steps are invoked.
@@ -184,7 +184,7 @@ class DisplayApiTest extends FieldTestBase {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, $display);
       $this->drupalSetContent(drupal_render($output));
-      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // View mode: check that display settings specified in the instance are
@@ -194,7 +194,7 @@ class DisplayApiTest extends FieldTestBase {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'teaser');
       $this->drupalSetContent(drupal_render($output));
-      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // Unknown view mode: check that display settings for 'default' view mode
@@ -204,7 +204,7 @@ class DisplayApiTest extends FieldTestBase {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'unknown_view_mode');
       $this->drupalSetContent(drupal_render($output));
-      $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
   }
 }
