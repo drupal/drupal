@@ -6,65 +6,6 @@
  */
 
 /**
- * Implements hook_schema().
- */
-function contact_schema() {
-  $schema['contact'] = array(
-    'description' => 'Contact form category settings.',
-    'fields' => array(
-      'cid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique category ID.',
-      ),
-      'category' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Category name.',
-        'translatable' => TRUE,
-      ),
-      'recipients' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'Comma-separated list of recipient e-mail addresses.',
-      ),
-      'reply' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'Text of the auto-reply message.',
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => "The category's weight.",
-      ),
-      'selected' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'Flag to indicate whether or not category is selected by default. (1 = Yes, 0 = No)',
-      ),
-    ),
-    'primary key' => array('cid'),
-    'unique keys' => array(
-      'category' => array('category'),
-    ),
-    'indexes' => array(
-      'list' => array('weight', 'category'),
-    ),
-  );
-
-  return $schema;
-}
-
-/**
  * Implements hook_install().
  */
 function contact_install() {
@@ -72,16 +13,13 @@ function contact_install() {
   if (empty($site_mail)) {
     $site_mail = ini_get('sendmail_from');
   }
-  // Insert a default contact category.
-  db_insert('contact')
-    ->fields(array(
-      'category' => 'Website feedback',
-      'recipients' => $site_mail,
-      'selected' => 1,
-      'reply' => '',
-    ))
-    ->execute();
+  config('contact.category.feedback')->set('recipients', array($site_mail))->save();
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
 
 /**
  * Moves contact setting from variable to config.
@@ -95,3 +33,42 @@ function contact_update_8000() {
     'contact_threshold_window' => 'flood.interval',
   ));
 }
+
+/**
+ * Migrate contact categories into configuration.
+ *
+ * @ingroup config_upgrade
+ */
+function contact_update_8001() {
+  $result = db_query('SELECT * FROM {contact}');
+  foreach ($result as $category) {
+    // Take over the category's serial ID as new machine name.
+    $category->id = $category->cid;
+    // Save default category setting.
+    if ($category->selected) {
+      config('contact.settings')
+        ->set('default_category', $category->id)
+        ->save();
+    }
+    // Save the config object.
+    config('contact.category.' . $category->id)
+      ->set('id', $category->id)
+      ->set('label', $category->category)
+      ->set('recipients', explode(',', $category->recipients))
+      ->set('reply', $category->reply)
+      ->set('weight', $category->weight)
+      ->save();
+  }
+}
+
+/**
+ * Drop the {contact} table.
+ */
+function contact_update_8002() {
+  db_drop_table('contact');
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */

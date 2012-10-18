@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Form constructor for the site-wide contact form.
  *
  * @see contact_menu()
- * @see contact_site_form_validate()
  * @see contact_site_form_submit()
  * @ingroup forms
  */
@@ -29,14 +28,7 @@ function contact_site_form($form, &$form_state) {
   }
 
   // Get an array of the categories and the current default category.
-  $categories = db_select('contact', 'c')
-    ->addTag('translatable')
-    ->fields('c', array('cid', 'category'))
-    ->orderBy('weight')
-    ->orderBy('category')
-    ->execute()
-    ->fetchAllKeyed();
-  $default_category = db_query("SELECT cid FROM {contact} WHERE selected = 1")->fetchField();
+  $categories = entity_load_multiple('contact_category');
 
   // If there are no categories, do not display the form.
   if (!$categories) {
@@ -48,15 +40,18 @@ function contact_site_form($form, &$form_state) {
     }
   }
 
+  // Prepare array for select options.
+  uasort($categories, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
+  $options = array();
+  foreach ($categories as $category) {
+    $options[$category->id()] = $category->label();
+  }
+
   // If there is more than one category available and no default category has
   // been selected, prepend a default placeholder value.
+  $default_category = $config->get('default_category');
   if (!$default_category) {
-    if (count($categories) > 1) {
-      $categories = array(0 => t('- Please choose -')) + $categories;
-    }
-    else {
-      $default_category = key($categories);
-    }
+    $default_category = !empty($categories) ? key($categories) : NULL;
   }
 
   if (!$user->uid) {
@@ -102,11 +97,12 @@ function contact_site_form($form, &$form_state) {
     '#maxlength' => 255,
     '#required' => TRUE,
   );
-  $form['cid'] = array(
+  $form['category'] = array(
     '#type' => 'select',
     '#title' => t('Category'),
     '#default_value' => $default_category,
-    '#options' => $categories,
+    '#options' => $options,
+    '#empty_value' => 0,
     '#required' => TRUE,
     '#access' => count($categories) > 1,
   );
@@ -132,17 +128,6 @@ function contact_site_form($form, &$form_state) {
 }
 
 /**
- * Form validation handler for contact_site_form().
- *
- * @see contact_site_form_submit()
- */
-function contact_site_form_validate($form, &$form_state) {
-  if (!$form_state['values']['cid']) {
-    form_set_error('cid', t('You must select a valid category.'));
-  }
-}
-
-/**
  * Form submission handler for contact_site_form().
  *
  * @see contact_site_form_validate()
@@ -155,7 +140,7 @@ function contact_site_form_submit($form, &$form_state) {
   $values['sender'] = $user;
   $values['sender']->name = $values['name'];
   $values['sender']->mail = $values['mail'];
-  $values['category'] = contact_load($values['cid']);
+  $values['category'] = entity_load('contact_category', $values['category']);
 
   if (!$user->uid) {
     $values['sender']->name .= ' (' . t('not verified') . ')';
@@ -164,7 +149,7 @@ function contact_site_form_submit($form, &$form_state) {
   }
 
   // Get the to and from e-mail addresses.
-  $to = $values['category']['recipients'];
+  $to = implode(', ', $values['category']->recipients);
   $from = $values['sender']->mail;
 
   // Send the e-mail to the recipients using the site default language.
@@ -176,12 +161,12 @@ function contact_site_form_submit($form, &$form_state) {
   }
 
   // Send an auto-reply if necessary using the current language.
-  if ($values['category']['reply']) {
+  if ($values['category']->reply) {
     drupal_mail('contact', 'page_autoreply', $from, $language_interface->langcode, $values, $to);
   }
 
   flood_register_event('contact', config('contact.settings')->get('flood.interval'));
-  watchdog('mail', '%sender-name (@sender-from) sent an e-mail regarding %category.', array('%sender-name' => $values['name'], '@sender-from' => $from, '%category' => $values['category']['category']));
+  watchdog('mail', '%sender-name (@sender-from) sent an e-mail regarding %category.', array('%sender-name' => $values['name'], '@sender-from' => $from, '%category' => $values['category']->label()));
 
   // Jump to home page rather than back to contact page to avoid
   // contradictory messages if flood control has been activated.

@@ -5,6 +5,8 @@
  * Enables the use of personal and site-wide contact forms.
  */
 
+use Drupal\contact\Category;
+
 /**
  * Implements hook_help().
  */
@@ -64,22 +66,20 @@ function contact_menu() {
   );
   $items['admin/structure/contact/add'] = array(
     'title' => 'Add category',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('contact_category_edit_form'),
+    'page callback' => 'contact_category_add',
     'access arguments' => array('administer contact forms'),
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
     'file' => 'contact.admin.inc',
   );
-  $items['admin/structure/contact/edit/%contact'] = array(
+  $items['admin/structure/contact/manage/%contact_category/edit'] = array(
     'title' => 'Edit contact category',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('contact_category_edit_form', 4),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(4),
     'access arguments' => array('administer contact forms'),
-    'file' => 'contact.admin.inc',
   );
-  $items['admin/structure/contact/delete/%contact'] = array(
-    'title' => 'Delete contact',
+  $items['admin/structure/contact/manage/%contact_category/delete'] = array(
+    'title' => 'Delete contact category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_category_delete_form', 4),
     'access arguments' => array('administer contact forms'),
@@ -147,21 +147,104 @@ function _contact_personal_tab_access($account) {
 }
 
 /**
+ * Implements MODULE_config_import_create().
+ */
+function contact_config_import_create($name, $new_config, $old_config) {
+  if (strpos($name, 'contact.category.') !== 0) {
+    return FALSE;
+  }
+
+  $category = entity_create('contact_category', $new_config->get());
+  $category->save();
+  return TRUE;
+}
+
+/**
+ * Implements MODULE_config_import_change().
+ */
+function contact_config_import_change($name, $new_config, $old_config) {
+  if (strpos($name, 'contact.category.') !== 0) {
+    return FALSE;
+  }
+
+  list(, , $id) = explode('.', $name);
+  $category = entity_load('contact_category', $id);
+
+  $category->original = clone $category;
+  foreach ($old_config->get() as $property => $value) {
+    $category->original->$property = $value;
+  }
+
+  foreach ($new_config->get() as $property => $value) {
+    $category->$property = $value;
+  }
+
+  $category->save();
+  return TRUE;
+}
+
+/**
+ * Implements MODULE_config_import_delete().
+ */
+function contact_config_import_delete($name, $new_config, $old_config) {
+  if (strpos($name, 'contact.category.') !== 0) {
+    return FALSE;
+  }
+
+  list(, , $id) = explode('.', $name);
+  entity_delete_multiple('contact_category', array($id));
+  return TRUE;
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function contact_entity_info() {
+  $types['contact_category'] = array(
+    'label' => 'Category',
+    'entity class' => 'Drupal\contact\Category',
+    'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
+    'list controller class' => 'Drupal\contact\CategoryListController',
+    'form controller class' => array(
+      'default' => 'Drupal\contact\CategoryFormController',
+    ),
+    'uri callback' => 'contact_category_uri',
+    'config prefix' => 'contact.category',
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => 'label',
+      'uuid' => 'uuid',
+    ),
+  );
+  return $types;
+}
+
+/**
  * Loads a contact category.
  *
- * @param $cid
- *   The contact category ID.
+ * @param $id
+ *   The ID of the contact category to load.
  *
- * @return
- *   An array with the contact category's data.
+ * @return Drupal\contact\Category|false
+ *   A Category object or FALSE if the requested $id does not exist.
  */
-function contact_load($cid) {
-  return db_select('contact', 'c')
-    ->addTag('translatable')
-    ->fields('c')
-    ->condition('cid', $cid)
-    ->execute()
-    ->fetchAssoc();
+function contact_category_load($id) {
+  return entity_load('contact_category', $id);
+}
+
+/**
+ * Entity URI callback.
+ *
+ * @param Drupal\category\Category $category
+ *   A contact category entity.
+ *
+ * @return array
+ *   An array with 'path' as the key and the path to the category as the value.
+ */
+function contact_category_uri(Category $category) {
+  return array(
+    'path' => 'admin/structure/contact/manage/' . $category->id(),
+  );
 }
 
 /**
@@ -172,7 +255,7 @@ function contact_mail($key, &$message, $params) {
   $variables = array(
     '!site-name' => config('system.site')->get('name'),
     '!subject' => $params['subject'],
-    '!category' => isset($params['category']['category']) ? $params['category']['category'] : '',
+    '!category' => isset($params['category']) ? $params['category']->label() : '',
     '!form-url' => url(current_path(), array('absolute' => TRUE, 'language' => $language)),
     '!sender-name' => user_format_name($params['sender']),
     '!sender-url' => $params['sender']->uid ? url('user/' . $params['sender']->uid, array('absolute' => TRUE, 'language' => $language)) : $params['sender']->mail,
@@ -188,7 +271,7 @@ function contact_mail($key, &$message, $params) {
 
     case 'page_autoreply':
       $message['subject'] .= t('[!category] !subject', $variables, array('langcode' => $language->langcode));
-      $message['body'][] = $params['category']['reply'];
+      $message['body'][] = $params['category']->reply;
       break;
 
     case 'user_mail':

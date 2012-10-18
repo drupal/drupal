@@ -66,32 +66,32 @@ class ContactSitewideTest extends WebTestBase {
     // Test invalid recipients.
     $invalid_recipients = array('invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
-      $this->addCategory($this->randomName(16), $invalid_recipient, '', FALSE);
+      $this->addCategory($this->randomName(16), $this->randomName(16), $invalid_recipient, '', FALSE);
       $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), format_string('Caught invalid recipient (@invalid_recipient)', array('@invalid_recipient' => $invalid_recipient)));
     }
 
     // Test validation of empty category and recipients fields.
-    $this->addCategory($category = '', '', '', TRUE);
-    $this->assertText(t('Category field is required.'), 'Caught empty category field');
+    $this->addCategory('', '', '', '', TRUE);
+    $this->assertText(t('Label field is required.'), 'Caught empty category label field');
+    $this->assertText(t('Machine-readable name field is required.'), 'Caught empty category name field');
     $this->assertText(t('Recipients field is required.'), 'Caught empty recipients field.');
 
     // Create first valid category.
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
-    $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), 'Category successfully saved.');
+    $this->addCategory($id = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
+    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)), 'Category successfully added.');
 
     // Make sure the newly created category is included in the list of categories.
-    $this->assertNoUniqueText($category, 'New category included in categories list.');
+    $this->assertNoUniqueText($label, 'New category included in categories list.');
 
     // Test update contact form category.
-    $categories = $this->getCategories();
-    $category_id = $this->updateCategory($categories, $category = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
-    $category_array = db_query("SELECT category, recipients, reply, selected FROM {contact} WHERE cid = :cid", array(':cid' => $category_id))->fetchAssoc();
-    $this->assertEqual($category_array['category'], $category);
-    $this->assertEqual($category_array['recipients'], $recipients_str);
-    $this->assertEqual($category_array['reply'], $reply);
-    $this->assertFalse($category_array['selected']);
-    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), 'Category successfully saved.');
+    $this->updateCategory($id, $label = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
+    $config = config('contact.category.' . $id)->get();
+    $this->assertEqual($config['label'], $label);
+    $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
+    $this->assertEqual($config['reply'], $reply);
+    $this->assertNotEqual($id, config('contact.settings')->get('default_category'));
+    $this->assertRaw(t('Category %label has been updated.', array('%label' => $label)), 'Category successfully updated.');
 
     // Ensure that the contact form is shown without a category selection input.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
@@ -102,16 +102,16 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add more categories.
-    $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
-    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), 'Category successfully saved.');
+    $this->addCategory(drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
+    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)), 'Category successfully added.');
 
-    $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
-    $this->assertRaw(t('Category %category has been saved.', array('%category' => $category)), 'Category successfully saved.');
+    $this->addCategory($name = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
+    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)), 'Category successfully added.');
 
     // Try adding a category that already exists.
-    $this->addCategory($category, '', '', FALSE);
-    $this->assertNoRaw(t('Category %category has been saved.', array('%category' => $category)), 'Category not saved.');
-    $this->assertRaw(t('A contact form with category %category already exists.', array('%category' => $category)), 'Duplicate category error found.');
+    $this->addCategory($name, $label, '', '', FALSE);
+    $this->assertNoRaw(t('Category %label has been saved.', array('%label' => $label)), 'Category not saved.');
+    $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'), 'Duplicate category error found.');
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();
@@ -130,35 +130,38 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertResponse(200, 'Access granted to anonymous user with permission.');
 
     // Submit contact form with invalid values.
-    $this->submitContact('', $recipients[0], $this->randomName(16), $categories[0], $this->randomName(64));
+    $categories = entity_load_multiple('contact_category');
+    $id = key($categories);
+
+    $this->submitContact('', $recipients[0], $this->randomName(16), $id, $this->randomName(64));
     $this->assertText(t('Your name field is required.'), 'Name required.');
 
-    $this->submitContact($this->randomName(16), '', $this->randomName(16), $categories[0], $this->randomName(64));
+    $this->submitContact($this->randomName(16), '', $this->randomName(16), $id, $this->randomName(64));
     $this->assertText(t('Your e-mail address field is required.'), 'E-mail required.');
 
-    $this->submitContact($this->randomName(16), $invalid_recipients[0], $this->randomName(16), $categories[0], $this->randomName(64));
+    $this->submitContact($this->randomName(16), $invalid_recipients[0], $this->randomName(16), $id, $this->randomName(64));
     $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'invalid')), 'Valid e-mail required.');
 
-    $this->submitContact($this->randomName(16), $recipients[0], '', $categories[0], $this->randomName(64));
+    $this->submitContact($this->randomName(16), $recipients[0], '', $id, $this->randomName(64));
     $this->assertText(t('Subject field is required.'), 'Subject required.');
 
-    $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $categories[0], '');
+    $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $id, '');
     $this->assertText(t('Message field is required.'), 'Message required.');
 
     // Test contact form with no default category selected.
-    db_update('contact')
-      ->fields(array('selected' => 0))
-      ->execute();
+    config('contact.settings')
+      ->set('default_category', '')
+      ->save();
     $this->drupalGet('contact');
-    $this->assertRaw(t('- Please choose -'), 'Without selected categories the visitor is asked to chose a category.');
+    $this->assertRaw(t('- Select -'), 'Without selected categories the visitor is asked to chose a category.');
 
     // Submit contact form with invalid category id (cid 0).
     $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), 0, '');
-    $this->assertText(t('You must select a valid category.'), 'Valid category required.');
+    $this->assertText(t('Category field is required.'), 'Valid category required.');
 
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
-      $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $categories[0], $this->randomName(64));
+      $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $id, $this->randomName(64));
       $this->assertText(t('Your message has been sent.'), 'Message sent.');
     }
     // Submit contact form one over limit.
@@ -182,9 +185,9 @@ class ContactSitewideTest extends WebTestBase {
     // Set up three categories, 2 with an auto-reply and one without.
     $foo_autoreply = $this->randomName(40);
     $bar_autoreply = $this->randomName(40);
-    $this->addCategory('foo', 'foo@example.com', $foo_autoreply, FALSE);
-    $this->addCategory('bar', 'bar@example.com', $bar_autoreply, FALSE);
-    $this->addCategory('no_autoreply', 'bar@example.com', '', FALSE);
+    $this->addCategory('foo', 'foo', 'foo@example.com', $foo_autoreply, FALSE);
+    $this->addCategory('bar', 'bar', 'bar@example.com', $bar_autoreply, FALSE);
+    $this->addCategory('no_autoreply', 'no_autoreply', 'bar@example.com', '', FALSE);
 
     // Log the current user out in order to test the name and e-mail fields.
     $this->drupalLogout();
@@ -193,34 +196,36 @@ class ContactSitewideTest extends WebTestBase {
     // Test the auto-reply for category 'foo'.
     $email = $this->randomName(32) . '@example.com';
     $subject = $this->randomName(64);
-    $this->submitContact($this->randomName(16), $email, $subject, 2, $this->randomString(128));
+    $this->submitContact($this->randomName(16), $email, $subject, 'foo', $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one e-mail going to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'foo@example.com'));
-    $this->assertEqual(count($captured_emails), 1, t('Auto-reply e-mail was sent to the sender for category "foo".'), 'Contact');
-    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($foo_autoreply), t('Auto-reply e-mail body is correct for category "foo".'), 'Contact');
+    $this->assertEqual(count($captured_emails), 1);
+    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($foo_autoreply));
 
     // Test the auto-reply for category 'bar'.
     $email = $this->randomName(32) . '@example.com';
-    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 3, $this->randomString(128));
+    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
     // Auto-reply for category 'bar' should result in one auto-reply e-mail to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'bar@example.com'));
-    $this->assertEqual(count($captured_emails), 1, t('Auto-reply e-mail was sent to the sender for category "bar".'), 'Contact');
-    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($bar_autoreply), t('Auto-reply e-mail body is correct for category "bar".'), 'Contact');
+    $this->assertEqual(count($captured_emails), 1);
+    $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($bar_autoreply));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomName(32) . '@example.com';
-    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 4, $this->randomString(128));
+    $this->submitContact($this->randomName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'no_autoreply@example.com'));
-    $this->assertEqual(count($captured_emails), 0, t('No auto-reply e-mail was sent to the sender for category "no-autoreply".'), 'Contact');
+    $this->assertEqual(count($captured_emails), 0);
   }
 
   /**
    * Adds a category.
    *
-   * @param string $category
-   *   The category name.
+   * @param string $id
+   *   The category machine name.
+   * @param string $label
+   *   The category label.
    * @param string $recipients
    *   The list of recipient e-mail addresses.
    * @param string $reply
@@ -229,9 +234,10 @@ class ContactSitewideTest extends WebTestBase {
    * @param boolean $selected
    *   Boolean indicating whether the category should be selected by default.
    */
-  function addCategory($category, $recipients, $reply, $selected) {
+  function addCategory($id, $label, $recipients, $reply, $selected) {
     $edit = array();
-    $edit['category'] = $category;
+    $edit['label'] = $label;
+    $edit['id'] = $id;
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
@@ -241,8 +247,10 @@ class ContactSitewideTest extends WebTestBase {
   /**
    * Updates a category.
    *
-   * @param string $category
-   *   The category name.
+   * @param string $id
+   *   The category machine name.
+   * @param string $label
+   *   The category label.
    * @param string $recipients
    *   The list of recipient e-mail addresses.
    * @param string $reply
@@ -251,15 +259,13 @@ class ContactSitewideTest extends WebTestBase {
    * @param boolean $selected
    *   Boolean indicating whether the category should be selected by default.
    */
-  function updateCategory($categories, $category, $recipients, $reply, $selected) {
-    $category_id = $categories[array_rand($categories)];
+  function updateCategory($id, $label, $recipients, $reply, $selected) {
     $edit = array();
-    $edit['category'] = $category;
+    $edit['label'] = $label;
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
-    $this->drupalPost('admin/structure/contact/edit/' . $category_id, $edit, t('Save'));
-    return ($category_id);
+    $this->drupalPost("admin/structure/contact/manage/$id/edit", $edit, t('Save'));
   }
 
   /**
@@ -271,17 +277,17 @@ class ContactSitewideTest extends WebTestBase {
    *   The e-mail address of the sender.
    * @param string $subject
    *   The subject of the message.
-   * @param integer $cid
+   * @param string $id
    *   The category ID of the message.
    * @param string $message
    *   The message body.
    */
-  function submitContact($name, $mail, $subject, $cid, $message) {
+  function submitContact($name, $mail, $subject, $id, $message) {
     $edit = array();
     $edit['name'] = $name;
     $edit['mail'] = $mail;
     $edit['subject'] = $subject;
-    $edit['cid'] = $cid;
+    $edit['category'] = $id;
     $edit['message'] = $message;
     $this->drupalPost('contact', $edit, t('Send message'));
   }
@@ -290,22 +296,12 @@ class ContactSitewideTest extends WebTestBase {
    * Deletes all categories.
    */
   function deleteCategories() {
-    $categories = $this->getCategories();
-    foreach ($categories as $category) {
-      $category_name = db_query("SELECT category FROM {contact} WHERE cid = :cid", array(':cid' => $category))->fetchField();
-      $this->drupalPost('admin/structure/contact/delete/' . $category, array(), t('Delete'));
-      $this->assertRaw(t('Category %category has been deleted.', array('%category' => $category_name)), 'Category deleted successfully.');
+    $categories = entity_load_multiple('contact_category');
+    foreach ($categories as $id => $category) {
+      $this->drupalPost("admin/structure/contact/manage/$id/delete", array(), t('Delete'));
+      $this->assertRaw(t('Category %label has been deleted.', array('%label' => $category->label())), 'Category deleted successfully.');
+      $this->assertFalse(entity_load('contact_category', $id), format_string('Category %category not found', array('%category' => $category->label())));
     }
   }
 
-  /**
-   * Gets a list of all category IDs.
-   *
-   * @return array
-   *   A list of the category IDs.
-   */
-  function getCategories() {
-    $categories = db_query('SELECT cid FROM {contact}')->fetchCol();
-    return $categories;
-  }
 }
