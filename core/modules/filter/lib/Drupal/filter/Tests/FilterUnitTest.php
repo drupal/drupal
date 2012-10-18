@@ -93,7 +93,7 @@ class FilterUnitTest extends UnitTestBase {
     $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
     $source = $this->randomName($limit);
     $result = _filter_autop($source);
-    $success = $this->assertEqual($result, '<p>' . $source . "</p>\n", t('Line break filter can process very long strings.'));
+    $success = $this->assertEqual($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
     if (!$success) {
       $this->verbose("\n" . $source . "\n<hr />\n" . $result);
     }
@@ -114,172 +114,172 @@ class FilterUnitTest extends UnitTestBase {
   function testFilterXSS() {
     // Tag stripping, different ways to work around removal of HTML tags.
     $f = filter_xss('<script>alert(0)</script>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping -- simple script without special characters.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping -- simple script without special characters.');
 
     $f = filter_xss('<script src="http://www.example.com" />');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping -- empty script with source.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping -- empty script with source.');
 
     $f = filter_xss('<ScRipt sRc=http://www.example.com/>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- varying case.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- varying case.');
 
     $f = filter_xss("<script\nsrc\n=\nhttp://www.example.com/\n>");
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- multiline tag.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- multiline tag.');
 
     $f = filter_xss('<script/a src=http://www.example.com/a.js></script>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- non whitespace character after tag name.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- non whitespace character after tag name.');
 
     $f = filter_xss('<script/src=http://www.example.com/a.js></script>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no space between tag and attribute.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no space between tag and attribute.');
 
     // Null between < and tag name works at least with IE6.
     $f = filter_xss("<\0scr\0ipt>alert(0)</script>");
-    $this->assertNoNormalized($f, 'ipt', t('HTML tag stripping evasion -- breaking HTML with nulls.'));
+    $this->assertNoNormalized($f, 'ipt', 'HTML tag stripping evasion -- breaking HTML with nulls.');
 
     $f = filter_xss("<scrscriptipt src=http://www.example.com/a.js>");
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- filter just removing "script".'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- filter just removing "script".');
 
     $f = filter_xss('<<script>alert(0);//<</script>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- double opening brackets.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- double opening brackets.');
 
     $f = filter_xss('<script src=http://www.example.com/a.js?<b>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no closing tag.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no closing tag.');
 
     // DRUPAL-SA-2008-047: This doesn't seem exploitable, but the filter should
     // work consistently.
     $f = filter_xss('<script>>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- double closing tag.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- double closing tag.');
 
     $f = filter_xss('<script src=//www.example.com/.a>');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no scheme or ending slash.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no scheme or ending slash.');
 
     $f = filter_xss('<script src=http://www.example.com/.a');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no closing bracket.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no closing bracket.');
 
     $f = filter_xss('<script src=http://www.example.com/ <');
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- opening instead of closing bracket.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- opening instead of closing bracket.');
 
     $f = filter_xss('<nosuchtag attribute="newScriptInjectionVector">');
-    $this->assertNoNormalized($f, 'nosuchtag', t('HTML tag stripping evasion -- unknown tag.'));
+    $this->assertNoNormalized($f, 'nosuchtag', 'HTML tag stripping evasion -- unknown tag.');
 
     $f = filter_xss('<?xml:namespace ns="urn:schemas-microsoft-com:time">');
-    $this->assertTrue(stripos($f, '<?xml') === FALSE, t('HTML tag stripping evasion -- starting with a question sign (processing instructions).'));
+    $this->assertTrue(stripos($f, '<?xml') === FALSE, 'HTML tag stripping evasion -- starting with a question sign (processing instructions).');
 
     $f = filter_xss('<t:set attributeName="innerHTML" to="&lt;script defer&gt;alert(0)&lt;/script&gt;">');
-    $this->assertNoNormalized($f, 't:set', t('HTML tag stripping evasion -- colon in the tag name (namespaces\' tricks).'));
+    $this->assertNoNormalized($f, 't:set', 'HTML tag stripping evasion -- colon in the tag name (namespaces\' tricks).');
 
     $f = filter_xss('<img """><script>alert(0)</script>', array('img'));
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- a malformed image tag.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- a malformed image tag.');
 
     $f = filter_xss('<blockquote><script>alert(0)</script></blockquote>', array('blockquote'));
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- script in a blockqoute.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- script in a blockqoute.');
 
     $f = filter_xss("<!--[if true]><script>alert(0)</script><![endif]-->");
-    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- script within a comment.'));
+    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- script within a comment.');
 
     // Dangerous attributes removal.
     $f = filter_xss('<p onmouseover="http://www.example.com/">', array('p'));
-    $this->assertNoNormalized($f, 'onmouseover', t('HTML filter attributes removal -- events, no evasion.'));
+    $this->assertNoNormalized($f, 'onmouseover', 'HTML filter attributes removal -- events, no evasion.');
 
     $f = filter_xss('<li style="list-style-image: url(javascript:alert(0))">', array('li'));
-    $this->assertNoNormalized($f, 'style', t('HTML filter attributes removal -- style, no evasion.'));
+    $this->assertNoNormalized($f, 'style', 'HTML filter attributes removal -- style, no evasion.');
 
     $f = filter_xss('<img onerror   =alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'onerror', t('HTML filter attributes removal evasion -- spaces before equals sign.'));
+    $this->assertNoNormalized($f, 'onerror', 'HTML filter attributes removal evasion -- spaces before equals sign.');
 
     $f = filter_xss('<img onabort!#$%&()*~+-_.,:;?@[/|\]^`=alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'onabort', t('HTML filter attributes removal evasion -- non alphanumeric characters before equals sign.'));
+    $this->assertNoNormalized($f, 'onabort', 'HTML filter attributes removal evasion -- non alphanumeric characters before equals sign.');
 
     $f = filter_xss('<img oNmediAError=alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'onmediaerror', t('HTML filter attributes removal evasion -- varying case.'));
+    $this->assertNoNormalized($f, 'onmediaerror', 'HTML filter attributes removal evasion -- varying case.');
 
     // Works at least with IE6.
     $f = filter_xss("<img o\0nfocus\0=alert(0)>", array('img'));
-    $this->assertNoNormalized($f, 'focus', t('HTML filter attributes removal evasion -- breaking with nulls.'));
+    $this->assertNoNormalized($f, 'focus', 'HTML filter attributes removal evasion -- breaking with nulls.');
 
     // Only whitelisted scheme names allowed in attributes.
     $f = filter_xss('<img src="javascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- no evasion.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- no evasion.');
 
     $f = filter_xss('<img src=javascript:alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- no quotes.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- no quotes.');
 
     // A bit like CVE-2006-0070.
     $f = filter_xss('<img src="javascript:confirm(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- no alert ;)'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- no alert ;)');
 
     $f = filter_xss('<img src=`javascript:alert(0)`>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- grave accents.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- grave accents.');
 
     $f = filter_xss('<img dynsrc="javascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- rare attribute.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- rare attribute.');
 
     $f = filter_xss('<table background="javascript:alert(0)">', array('table'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- another tag.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- another tag.');
 
     $f = filter_xss('<base href="javascript:alert(0);//">', array('base'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- one more attribute and tag.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- one more attribute and tag.');
 
     $f = filter_xss('<img src="jaVaSCriPt:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- varying case.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- varying case.');
 
     $f = filter_xss('<img src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#48;&#41;>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- UTF-8 decimal encoding.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- UTF-8 decimal encoding.');
 
     $f = filter_xss('<img src=&#00000106&#0000097&#00000118&#0000097&#00000115&#0000099&#00000114&#00000105&#00000112&#00000116&#0000058&#0000097&#00000108&#00000101&#00000114&#00000116&#0000040&#0000048&#0000041>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- long UTF-8 encoding.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- long UTF-8 encoding.');
 
     $f = filter_xss('<img src=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x30&#x29>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- UTF-8 hex encoding.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- UTF-8 hex encoding.');
 
     $f = filter_xss("<img src=\"jav\tascript:alert(0)\">", array('img'));
-    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an embedded tab.'));
+    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an embedded tab.');
 
     $f = filter_xss('<img src="jav&#x09;ascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded tab.'));
+    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an encoded, embedded tab.');
 
     $f = filter_xss('<img src="jav&#x000000A;ascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded newline.'));
+    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an encoded, embedded newline.');
 
     // With &#xD; this test would fail, but the entity gets turned into
     // &amp;#xD;, so it's OK.
     $f = filter_xss('<img src="jav&#x0D;ascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded carriage return.'));
+    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an encoded, embedded carriage return.');
 
     $f = filter_xss("<img src=\"\n\n\nj\na\nva\ns\ncript:alert(0)\">", array('img'));
-    $this->assertNoNormalized($f, 'cript', t('HTML scheme clearing evasion -- broken into many lines.'));
+    $this->assertNoNormalized($f, 'cript', 'HTML scheme clearing evasion -- broken into many lines.');
 
     $f = filter_xss("<img src=\"jav\0a\0\0cript:alert(0)\">", array('img'));
-    $this->assertNoNormalized($f, 'cript', t('HTML scheme clearing evasion -- embedded nulls.'));
+    $this->assertNoNormalized($f, 'cript', 'HTML scheme clearing evasion -- embedded nulls.');
 
     $f = filter_xss('<img src=" &#14;  javascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- spaces and metacharacters before scheme.'));
+    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- spaces and metacharacters before scheme.');
 
     $f = filter_xss('<img src="vbscript:msgbox(0)">', array('img'));
-    $this->assertNoNormalized($f, 'vbscript', t('HTML scheme clearing evasion -- another scheme.'));
+    $this->assertNoNormalized($f, 'vbscript', 'HTML scheme clearing evasion -- another scheme.');
 
     $f = filter_xss('<img src="nosuchscheme:notice(0)">', array('img'));
-    $this->assertNoNormalized($f, 'nosuchscheme', t('HTML scheme clearing evasion -- unknown scheme.'));
+    $this->assertNoNormalized($f, 'nosuchscheme', 'HTML scheme clearing evasion -- unknown scheme.');
 
     // Netscape 4.x javascript entities.
     $f = filter_xss('<br size="&{alert(0)}">', array('br'));
-    $this->assertNoNormalized($f, 'alert', t('Netscape 4.x javascript entities.'));
+    $this->assertNoNormalized($f, 'alert', 'Netscape 4.x javascript entities.');
 
     // DRUPAL-SA-2008-006: Invalid UTF-8, these only work as reflected XSS with
     // Internet Explorer 6.
     $f = filter_xss("<p arg=\"\xe0\">\" style=\"background-image: url(javascript:alert(0));\"\xe0<p>", array('p'));
-    $this->assertNoNormalized($f, 'style', t('HTML filter -- invalid UTF-8.'));
+    $this->assertNoNormalized($f, 'style', 'HTML filter -- invalid UTF-8.');
 
     $f = filter_xss("\xc0aaa");
-    $this->assertEqual($f, '', t('HTML filter -- overlong UTF-8 sequences.'));
+    $this->assertEqual($f, '', 'HTML filter -- overlong UTF-8 sequences.');
 
     $f = filter_xss("Who&#039;s Online");
-    $this->assertNormalized($f, "who's online", t('HTML filter -- html entity number'));
+    $this->assertNormalized($f, "who's online", 'HTML filter -- html entity number');
 
     $f = filter_xss("Who&amp;#039;s Online");
-    $this->assertNormalized($f, "who&#039;s online", t('HTML filter -- encoded html entity number'));
+    $this->assertNormalized($f, "who&#039;s online", 'HTML filter -- encoded html entity number');
 
     $f = filter_xss("Who&amp;amp;#039; Online");
-    $this->assertNormalized($f, "who&amp;#039; online", t('HTML filter -- double encoded html entity number'));
+    $this->assertNormalized($f, "who&amp;#039; online", 'HTML filter -- double encoded html entity number');
   }
 
   /**
@@ -308,34 +308,34 @@ class FilterUnitTest extends UnitTestBase {
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
     $f = _filter_html('<script />', $filter);
-    $this->assertNoNormalized($f, 'script', t('HTML filter should always remove script tags.'));
+    $this->assertNoNormalized($f, 'script', 'HTML filter should always remove script tags.');
 
     $f = _filter_html('<iframe />', $filter);
-    $this->assertNoNormalized($f, 'iframe', t('HTML filter should always remove iframe tags.'));
+    $this->assertNoNormalized($f, 'iframe', 'HTML filter should always remove iframe tags.');
 
     $f = _filter_html('<object />', $filter);
-    $this->assertNoNormalized($f, 'object', t('HTML filter should always remove object tags.'));
+    $this->assertNoNormalized($f, 'object', 'HTML filter should always remove object tags.');
 
     $f = _filter_html('<style />', $filter);
-    $this->assertNoNormalized($f, 'style', t('HTML filter should always remove style tags.'));
+    $this->assertNoNormalized($f, 'style', 'HTML filter should always remove style tags.');
 
     // Some tags make CSRF attacks easier, let the user take the risk herself.
     $f = _filter_html('<img />', $filter);
-    $this->assertNoNormalized($f, 'img', t('HTML filter should remove img tags on default.'));
+    $this->assertNoNormalized($f, 'img', 'HTML filter should remove img tags on default.');
 
     $f = _filter_html('<input />', $filter);
-    $this->assertNoNormalized($f, 'img', t('HTML filter should remove input tags on default.'));
+    $this->assertNoNormalized($f, 'img', 'HTML filter should remove input tags on default.');
 
     // Filtering content of some attributes is infeasible, these shouldn't be
     // allowed too.
     $f = _filter_html('<p style="display: none;" />', $filter);
-    $this->assertNoNormalized($f, 'style', t('HTML filter should remove style attribute on default.'));
+    $this->assertNoNormalized($f, 'style', 'HTML filter should remove style attribute on default.');
 
     $f = _filter_html('<p onerror="alert(0);" />', $filter);
-    $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove on* attributes on default.'));
+    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove on* attributes on default.');
 
     $f = _filter_html('<code onerror>&nbsp;</code>', $filter);
-    $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove empty on* attributes on default.'));
+    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove empty on* attributes on default.');
   }
 
   /**
@@ -353,20 +353,20 @@ class FilterUnitTest extends UnitTestBase {
     // Test if the rel="nofollow" attribute is added, even if we try to prevent
     // it.
     $f = _filter_html('<a href="http://www.example.com/">text</a>', $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent -- no evasion.'));
+    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent -- no evasion.');
 
     $f = _filter_html('<A href="http://www.example.com/">text</a>', $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- capital A.'));
+    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- capital A.');
 
     $f = _filter_html("<a/href=\"http://www.example.com/\">text</a>", $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- non whitespace character after tag name.'));
+    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- non whitespace character after tag name.');
 
     $f = _filter_html("<\0a\0 href=\"http://www.example.com/\">text</a>", $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- some nulls.'));
+    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- some nulls.');
 
     $f = _filter_html('<a href="http://www.example.com/" rel="follow">text</a>', $filter);
-    $this->assertNoNormalized($f, 'rel="follow"', t('Spam deterrent evasion -- with rel set - rel="follow" removed.'));
-    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- with rel set - rel="nofollow" added.'));
+    $this->assertNoNormalized($f, 'rel="follow"', 'Spam deterrent evasion -- with rel set - rel="follow" removed.');
+    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- with rel set - rel="nofollow" added.');
   }
 
   /**
@@ -375,13 +375,13 @@ class FilterUnitTest extends UnitTestBase {
   function testFilterXSSAdmin() {
     // DRUPAL-SA-2008-044
     $f = filter_xss_admin('<object />');
-    $this->assertNoNormalized($f, 'object', t('Admin HTML filter -- should not allow object tag.'));
+    $this->assertNoNormalized($f, 'object', 'Admin HTML filter -- should not allow object tag.');
 
     $f = filter_xss_admin('<script />');
-    $this->assertNoNormalized($f, 'script', t('Admin HTML filter -- should not allow script tag.'));
+    $this->assertNoNormalized($f, 'script', 'Admin HTML filter -- should not allow script tag.');
 
     $f = filter_xss_admin('<style /><iframe /><frame /><frameset /><meta /><link /><embed /><applet /><param /><layer />');
-    $this->assertEqual($f, '', t('Admin HTML filter -- should never allow some tags.'));
+    $this->assertEqual($f, '', 'Admin HTML filter -- should never allow some tags.');
   }
 
   /**
@@ -710,13 +710,13 @@ www.example.com with a newline in comments -->
       foreach ($tasks as $value => $is_expected) {
         // Not using assertIdentical, since combination with strpos() is hard to grok.
         if ($is_expected) {
-          $success = $this->assertTrue(strpos($result, $value) !== FALSE, t('@source: @value found.', array(
+          $success = $this->assertTrue(strpos($result, $value) !== FALSE, format_string('@source: @value found.', array(
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
           )));
         }
         else {
-          $success = $this->assertTrue(strpos($result, $value) === FALSE, t('@source: @value not found.', array(
+          $success = $this->assertTrue(strpos($result, $value) === FALSE, format_string('@source: @value not found.', array(
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
           )));
@@ -771,114 +771,114 @@ www.example.com with a newline in comments -->
   function testHtmlCorrectorFilter() {
     // Tag closing.
     $f = _filter_htmlcorrector('<p>text');
-    $this->assertEqual($f, '<p>text</p>', t('HTML corrector -- tag closing at the end of input.'));
+    $this->assertEqual($f, '<p>text</p>', 'HTML corrector -- tag closing at the end of input.');
 
     $f = _filter_htmlcorrector('<p>text<p><p>text');
-    $this->assertEqual($f, '<p>text</p><p></p><p>text</p>', t('HTML corrector -- tag closing.'));
+    $this->assertEqual($f, '<p>text</p><p></p><p>text</p>', 'HTML corrector -- tag closing.');
 
     $f = _filter_htmlcorrector("<ul><li>e1<li>e2");
-    $this->assertEqual($f, "<ul><li>e1</li><li>e2</li></ul>", t('HTML corrector -- unclosed list tags.'));
+    $this->assertEqual($f, "<ul><li>e1</li><li>e2</li></ul>", 'HTML corrector -- unclosed list tags.');
 
     $f = _filter_htmlcorrector('<div id="d">content');
-    $this->assertEqual($f, '<div id="d">content</div>', t('HTML corrector -- unclosed tag with attribute.'));
+    $this->assertEqual($f, '<div id="d">content</div>', 'HTML corrector -- unclosed tag with attribute.');
 
     // XHTML slash for empty elements.
     $f = _filter_htmlcorrector('<hr><br>');
-    $this->assertEqual($f, '<hr /><br />', t('HTML corrector -- XHTML closing slash.'));
+    $this->assertEqual($f, '<hr /><br />', 'HTML corrector -- XHTML closing slash.');
 
     $f = _filter_htmlcorrector('<P>test</P>');
-    $this->assertEqual($f, '<p>test</p>', t('HTML corrector -- Convert uppercased tags to proper lowercased ones.'));
+    $this->assertEqual($f, '<p>test</p>', 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
 
     $f = _filter_htmlcorrector('<P>test</p>');
-    $this->assertEqual($f, '<p>test</p>', t('HTML corrector -- Convert uppercased tags to proper lowercased ones.'));
+    $this->assertEqual($f, '<p>test</p>', 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
 
     $f = _filter_htmlcorrector('test<hr />');
-    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through.'));
+    $this->assertEqual($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through.');
 
     $f = _filter_htmlcorrector('test<hr/>');
-    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through, but ensure there is a single space before the closing slash.'));
+    $this->assertEqual($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through, but ensure there is a single space before the closing slash.');
 
     $f = _filter_htmlcorrector('test<hr    />');
-    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through, but ensure there are not too many spaces before the closing slash.'));
+    $this->assertEqual($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through, but ensure there are not too many spaces before the closing slash.');
 
     $f = _filter_htmlcorrector('<span class="test" />');
-    $this->assertEqual($f, '<span class="test"></span>', t('HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.'));
+    $this->assertEqual($f, '<span class="test"></span>', 'HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.');
 
     $f = _filter_htmlcorrector('test1<br class="test">test2');
-    $this->assertEqual($f, 'test1<br class="test" />test2', t('HTML corrector -- Automatically close single tags.'));
+    $this->assertEqual($f, 'test1<br class="test" />test2', 'HTML corrector -- Automatically close single tags.');
 
     $f = _filter_htmlcorrector('line1<hr>line2');
-    $this->assertEqual($f, 'line1<hr />line2', t('HTML corrector -- Automatically close single tags.'));
+    $this->assertEqual($f, 'line1<hr />line2', 'HTML corrector -- Automatically close single tags.');
 
     $f = _filter_htmlcorrector('line1<HR>line2');
-    $this->assertEqual($f, 'line1<hr />line2', t('HTML corrector -- Automatically close single tags.'));
+    $this->assertEqual($f, 'line1<hr />line2', 'HTML corrector -- Automatically close single tags.');
 
     $f = _filter_htmlcorrector('<img src="http://example.com/test.jpg">test</img>');
-    $this->assertEqual($f, '<img src="http://example.com/test.jpg" />test', t('HTML corrector -- Automatically close single tags.'));
+    $this->assertEqual($f, '<img src="http://example.com/test.jpg" />test', 'HTML corrector -- Automatically close single tags.');
 
     $f = _filter_htmlcorrector('<br></br>');
-    $this->assertEqual($f, '<br />', t("HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY."));
+    $this->assertEqual($f, '<br />', "HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY.");
 
     $f = _filter_htmlcorrector('<div></div>');
-    $this->assertEqual($f, '<div></div>', t("HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY."));
+    $this->assertEqual($f, '<div></div>', "HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY.");
 
     $f = _filter_htmlcorrector('<p>line1<br/><hr/>line2</p>');
-    $this->assertEqual($f, '<p>line1<br /></p><hr />line2', t('HTML corrector -- Move non-inline elements outside of inline containers.'));
+    $this->assertEqual($f, '<p>line1<br /></p><hr />line2', 'HTML corrector -- Move non-inline elements outside of inline containers.');
 
     $f = _filter_htmlcorrector('<p>line1<div>line2</div></p>');
-    $this->assertEqual($f, '<p>line1</p><div>line2</div>', t('HTML corrector -- Move non-inline elements outside of inline containers.'));
+    $this->assertEqual($f, '<p>line1</p><div>line2</div>', 'HTML corrector -- Move non-inline elements outside of inline containers.');
 
     $f = _filter_htmlcorrector('<p>test<p>test</p>\n');
-    $this->assertEqual($f, '<p>test</p><p>test</p>\n', t('HTML corrector -- Auto-close improperly nested tags.'));
+    $this->assertEqual($f, '<p>test</p><p>test</p>\n', 'HTML corrector -- Auto-close improperly nested tags.');
 
     $f = _filter_htmlcorrector('<p>Line1<br><STRONG>bold stuff</b>');
-    $this->assertEqual($f, '<p>Line1<br /><strong>bold stuff</strong></p>', t('HTML corrector -- Properly close unclosed tags, and remove useless closing tags.'));
+    $this->assertEqual($f, '<p>Line1<br /><strong>bold stuff</strong></p>', 'HTML corrector -- Properly close unclosed tags, and remove useless closing tags.');
 
     $f = _filter_htmlcorrector('test <!-- this is a comment -->');
-    $this->assertEqual($f, 'test <!-- this is a comment -->', t('HTML corrector -- Do not touch HTML comments.'));
+    $this->assertEqual($f, 'test <!-- this is a comment -->', 'HTML corrector -- Do not touch HTML comments.');
 
     $f = _filter_htmlcorrector('test <!--this is a comment-->');
-    $this->assertEqual($f, 'test <!--this is a comment-->', t('HTML corrector -- Do not touch HTML comments.'));
+    $this->assertEqual($f, 'test <!--this is a comment-->', 'HTML corrector -- Do not touch HTML comments.');
 
     $f = _filter_htmlcorrector('test <!-- comment <p>another
     <strong>multiple</strong> line
     comment</p> -->');
     $this->assertEqual($f, 'test <!-- comment <p>another
     <strong>multiple</strong> line
-    comment</p> -->', t('HTML corrector -- Do not touch HTML comments.'));
+    comment</p> -->', 'HTML corrector -- Do not touch HTML comments.');
 
     $f = _filter_htmlcorrector('test <!-- comment <p>another comment</p> -->');
-    $this->assertEqual($f, 'test <!-- comment <p>another comment</p> -->', t('HTML corrector -- Do not touch HTML comments.'));
+    $this->assertEqual($f, 'test <!-- comment <p>another comment</p> -->', 'HTML corrector -- Do not touch HTML comments.');
 
     $f = _filter_htmlcorrector('test <!--break-->');
-    $this->assertEqual($f, 'test <!--break-->', t('HTML corrector -- Do not touch HTML comments.'));
+    $this->assertEqual($f, 'test <!--break-->', 'HTML corrector -- Do not touch HTML comments.');
 
     $f = _filter_htmlcorrector('<p>test\n</p>\n');
-    $this->assertEqual($f, '<p>test\n</p>\n', t('HTML corrector -- New-lines are accepted and kept as-is.'));
+    $this->assertEqual($f, '<p>test\n</p>\n', 'HTML corrector -- New-lines are accepted and kept as-is.');
 
     $f = _filter_htmlcorrector('<p>دروبال');
-    $this->assertEqual($f, '<p>دروبال</p>', t('HTML corrector -- Encoding is correctly kept.'));
+    $this->assertEqual($f, '<p>دروبال</p>', 'HTML corrector -- Encoding is correctly kept.');
 
     $f = _filter_htmlcorrector('<script>alert("test")</script>');
     $this->assertEqual($f, '<script>
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
-</script>', t('HTML corrector -- CDATA added to script element'));
+</script>', 'HTML corrector -- CDATA added to script element');
 
     $f = _filter_htmlcorrector('<p><script>alert("test")</script></p>');
     $this->assertEqual($f, '<p><script>
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
-</script></p>', t('HTML corrector -- CDATA added to a nested script element'));
+</script></p>', 'HTML corrector -- CDATA added to a nested script element');
 
     $f = _filter_htmlcorrector('<p><style> /* Styling */ body {color:red}</style></p>');
     $this->assertEqual($f, '<p><style>
 <!--/*--><![CDATA[/* ><!--*/
  /* Styling */ body {color:red}
 /*--><!]]>*/
-</style></p>', t('HTML corrector -- CDATA added to a style element.'));
+</style></p>', 'HTML corrector -- CDATA added to a style element.');
 
     $filtered_data = _filter_htmlcorrector('<p><style>
 /*<![CDATA[*/
@@ -896,7 +896,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '/*<![CDATA[*/'))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '/*<![CDATA[*/'))
     );
 
     $filtered_data = _filter_htmlcorrector('<p><style>
@@ -915,7 +915,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'))
     );
 
     $filtered_data = _filter_htmlcorrector('<p><script>
@@ -932,7 +932,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--//--><![CDATA[// ><!--'))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--//--><![CDATA[// ><!--'))
     );
 
     $filtered_data = _filter_htmlcorrector('<p><script>
@@ -949,7 +949,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '// <![CDATA['))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '// <![CDATA['))
     );
 
   }

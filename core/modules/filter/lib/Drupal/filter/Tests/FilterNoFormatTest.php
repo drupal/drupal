@@ -34,6 +34,6 @@ class FilterNoFormatTest extends WebTestBase {
 
     // Make sure that when this text is run through check_markup() with no text
     // format, it is filtered as though it is in the fallback format.
-    $this->assertEqual(check_markup($text), check_markup($text, filter_fallback_format()), t('Text with no format is filtered the same as text in the fallback format.'));
+    $this->assertEqual(check_markup($text), check_markup($text, filter_fallback_format()), 'Text with no format is filtered the same as text in the fallback format.');
   }
 }

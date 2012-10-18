@@ -49,8 +49,8 @@ class FilterHooksTest extends WebTestBase {
     $edit['name'] = $name;
     $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 1;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
-    $this->assertRaw(t('Added text format %format.', array('%format' => $name)), t('New format created.'));
-    $this->assertText('hook_filter_format_insert invoked.', t('hook_filter_format_insert was invoked.'));
+    $this->assertRaw(t('Added text format %format.', array('%format' => $name)), 'New format created.');
+    $this->assertText('hook_filter_format_insert invoked.', 'hook_filter_format_insert was invoked.');
 
     $format_id = $edit['format'];
 
@@ -58,8 +58,8 @@ class FilterHooksTest extends WebTestBase {
     $edit = array();
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $format_id, $edit, t('Save configuration'));
-    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)), t('Format successfully updated.'));
-    $this->assertText('hook_filter_format_update invoked.', t('hook_filter_format_update() was invoked.'));
+    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)), 'Format successfully updated.');
+    $this->assertText('hook_filter_format_update invoked.', 'hook_filter_format_update() was invoked.');
 
     // Add a new custom block.
     $custom_block = array();
@@ -69,15 +69,15 @@ class FilterHooksTest extends WebTestBase {
     // Use the format created.
     $custom_block['body[format]'] = $format_id;
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
-    $this->assertText(t('The block has been created.'), t('New block successfully created.'));
+    $this->assertText(t('The block has been created.'), 'New block successfully created.');
 
     // Verify the new block is in the database.
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-    $this->assertNotNull($bid, t('New block found in database'));
+    $this->assertNotNull($bid, 'New block found in database');
 
     // Disable the text format.
     $this->drupalPost('admin/config/content/formats/' . $format_id . '/disable', array(), t('Disable'));
-    $this->assertRaw(t('Disabled text format %format.', array('%format' => $name)), t('Format successfully disabled.'));
-    $this->assertText('hook_filter_format_disable invoked.', t('hook_filter_format_disable() was invoked.'));
+    $this->assertRaw(t('Disabled text format %format.', array('%format' => $name)), 'Format successfully disabled.');
+    $this->assertText('hook_filter_format_disable invoked.', 'hook_filter_format_disable() was invoked.');
   }
 }
