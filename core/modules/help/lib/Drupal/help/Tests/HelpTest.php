@@ -27,12 +27,12 @@ class HelpTest extends WebTestBase {
   /**
    * The admin user that will be created.
    */
-  protected $big_user;
+  protected $adminUser;
 
   /**
    * The anonymous user that will be created.
    */
-  protected $any_user;
+  protected $anyUser;
 
   public static function getInfo() {
     return array(
@@ -42,30 +42,30 @@ class HelpTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->getModuleList();
 
     // Create users.
-    $this->big_user = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer permissions'));
-    $this->any_user = $this->drupalCreateUser(array());
+    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer permissions'));
+    $this->anyUser = $this->drupalCreateUser(array());
   }
 
   /**
    * Logs in users, creates dblog events, and tests dblog functionality.
    */
-  function testHelp() {
+  public function testHelp() {
     // Login the admin user.
-    $this->drupalLogin($this->big_user);
+    $this->drupalLogin($this->adminUser);
     $this->verifyHelp();
 
     // Login the regular user.
-    $this->drupalLogin($this->any_user);
+    $this->drupalLogin($this->anyUser);
     $this->verifyHelp(403);
 
     // Check for css on admin/help.
-    $this->drupalLogin($this->big_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help');
     $this->assertRaw(drupal_get_path('module', 'help') . '/help.css', 'The help.css file is present in the HTML.');
 
@@ -95,7 +95,7 @@ class HelpTest extends WebTestBase {
       if ($response == 200) {
         $this->assertTitle($name . ' | Drupal', format_string('%module title was displayed', array('%module' => $module)));
         $this->assertRaw('<h1 class="page-title">' . t($name) . '</h1>', format_string('%module heading was displayed', array('%module' => $module)));
-       }
+      }
     }
   }
 

@@ -26,7 +26,7 @@ class NoHelpTest extends WebTestBase {
   /**
    * The user who will be created.
    */
-  protected $big_user;
+  protected $adminUser;
 
   public static function getInfo() {
     return array(
@@ -36,16 +36,16 @@ class NoHelpTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
-    $this->big_user = $this->drupalCreateUser(array('access administration pages'));
+    $this->adminUser = $this->drupalCreateUser(array('access administration pages'));
   }
 
   /**
    * Ensures modules not implementing help do not appear on admin/help.
    */
-  function testMainPageNoHelp() {
-    $this->drupalLogin($this->big_user);
+  public function testMainPageNoHelp() {
+    $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/help');
     $this->assertNoText('Hook menu tests', 'Making sure the test module menu_test does not display a help link in admin/help');
