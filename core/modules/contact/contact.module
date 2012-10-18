@@ -112,6 +112,10 @@ function contact_menu() {
  * @param $account
  *   The user object of the user whose contact form is being requested.
  *
+ * @return
+ *   A Boolean TRUE if the user has permission to access a personal contact
+ *   form.
+ *
  * @see contact_menu()
  */
 function _contact_personal_tab_access($account) {

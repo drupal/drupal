@@ -10,6 +10,9 @@ use Drupal\contact\Category;
 /**
  * Page callback: Lists contact categories.
  *
+ * @return array
+ *   A build array in the format expected by drupal_render().
+ *
  * @see contact_menu()
  */
 function contact_category_list() {
@@ -17,7 +20,12 @@ function contact_category_list() {
 }
 
 /**
- * Page callback: provides the category creation form.
+ * Page callback: Form constructor for the category creation form.
+ *
+ * @return string
+ *   A processed form for the contact category.
+ *
+ * @see contact_menu()
  */
 function contact_category_add() {
   $category = entity_create('contact_category', array());
@@ -25,13 +33,15 @@ function contact_category_add() {
 }
 
 /**
- * Form constructor for the contact category deletion form.
+ * Page callback: Form constructor for the contact category deletion form.
  *
  * @param Drupal\contact\Category $category
  *   The contact category to be deleted.
  *
  * @see contact_menu()
  * @see contact_category_delete_form_submit()
+ *
+ * @ingroup forms
  */
 function contact_category_delete_form($form, &$form_state, Category $category) {
   $form_state['contact_category'] = $category;

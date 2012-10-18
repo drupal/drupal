@@ -9,7 +9,10 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Form constructor for the site-wide contact form.
+ * Page callback: Form constructor for the site-wide contact form.
+ *
+ * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+ * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
  *
  * @see contact_menu()
  * @see contact_site_form_submit()
@@ -129,8 +132,6 @@ function contact_site_form($form, &$form_state) {
 
 /**
  * Form submission handler for contact_site_form().
- *
- * @see contact_site_form_validate()
  */
 function contact_site_form_submit($form, &$form_state) {
   global $user;
@@ -175,10 +176,14 @@ function contact_site_form_submit($form, &$form_state) {
 }
 
 /**
- * Form constructor for the personal contact form.
+ * Page callback: Form constructor for the personal contact form.
+ *
+ * @param $recipient
+ *   The account for which a personal contact form should be generated.
+ *
+ * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
  *
  * @see contact_menu()
- * @see contact_personal_form_validate()
  * @see contact_personal_form_submit()
  * @ingroup forms
  */
@@ -270,8 +275,6 @@ function contact_personal_form($form, &$form_state, $recipient) {
 
 /**
  * Form submission handler for contact_personal_form().
- *
- * @see contact_personal_form_validate()
  */
 function contact_personal_form_submit($form, &$form_state) {
   global $user;

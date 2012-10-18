@@ -232,7 +232,7 @@ class ContactSitewideTest extends WebTestBase {
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
    * @param boolean $selected
-   *   Boolean indicating whether the category should be selected by default.
+   *   A Boolean indicating whether the category should be selected by default.
    */
   function addCategory($id, $label, $recipients, $reply, $selected) {
     $edit = array();
@@ -257,7 +257,7 @@ class ContactSitewideTest extends WebTestBase {
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
    * @param boolean $selected
-   *   Boolean indicating whether the category should be selected by default.
+   *   A Boolean indicating whether the category should be selected by default.
    */
   function updateCategory($id, $label, $recipients, $reply, $selected) {
     $edit = array();

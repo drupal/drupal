@@ -21,8 +21,25 @@ class ContactPersonalTest extends WebTestBase {
    */
   public static $modules = array('contact');
 
+  /**
+   * A user with some administrative permissions.
+   *
+   * @var object
+   */
   private $admin_user;
+
+  /**
+   * A user with 'access user contact forms' permission.
+   *
+   * @var object
+   */
   private $web_user;
+
+  /**
+   * A user without any permissions.
+   *
+   * @var object
+   */
   private $contact_user;
 
   public static function getInfo() {
@@ -162,7 +179,8 @@ class ContactPersonalTest extends WebTestBase {
    * @param $account
    *   A user object of the user being contacted.
    * @param $message
-   *   An optional array with the form fields being used.
+   *   (optional) An array with the form fields being used. Defaults to an empty
+   *   array.
    */
   protected function submitPersonalContact($account, array $message = array()) {
     $message += array(
