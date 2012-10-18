@@ -51,7 +51,7 @@ class TextTranslationTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set "Article" content type to use multilingual support with translation.
-    $edit = array('language_configuration[language_hidden]' => FALSE, 'node_type_language_translation_enabled' => TRUE);
+    $edit = array('node_type_language_hidden' => FALSE, 'node_type_language_translation_enabled' => TRUE);
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), 'Article content type has been updated.');
   }

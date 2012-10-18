@@ -98,13 +98,12 @@ class NodeFormController extends EntityFormController {
       $form['title']['#weight'] = -5;
     }
 
-    $language_configuration = module_invoke('language', 'get_default_configuration', 'node', $node->type);
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $node->langcode,
       '#languages' => LANGUAGE_ALL,
-      '#access' => isset($language_configuration['language_hidden']) && !$language_configuration['language_hidden'],
+      '#access' => !variable_get('node_type_language_hidden_' . $node->type, TRUE),
     );
 
     $form['additional_settings'] = array(

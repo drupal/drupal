@@ -33,23 +33,21 @@ class TermLanguageTest extends TaxonomyTestBase {
 
     // Create a vocabulary to which the terms will be assigned.
     $this->vocabulary = $this->createVocabulary();
-
-    // Add some custom languages.
-    foreach (array('aa', 'bb', 'cc') as $language_code) {
-      $language = new Language(array(
-        'langcode' => $language_code,
-        'name' => $this->randomName(),
-      ));
-      language_save($language);
-    }
   }
 
   function testTermLanguage() {
-    // Configure the vocabulary to not hide the language selector.
-    $edit = array(
-      'default_language[language_hidden]' => FALSE,
-    );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/edit', $edit, t('Save'));
+    // Add first some custom languages.
+    $language = new Language(array(
+      'langcode' => 'aa',
+      'name' => $this->randomName(),
+    ));
+    language_save($language);
+
+    $language = new Language(array(
+      'langcode' => 'bb',
+      'name' => $this->randomName(),
+    ));
+    language_save($language);
 
     // Add a term.
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/add');
@@ -76,44 +74,5 @@ class TermLanguageTest extends TaxonomyTestBase {
     // Check again that on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->tid . '/edit');
     $this->assertOptionSelected('edit-langcode', $edit['langcode'], t('The term language was correctly selected.'));
-  }
-
-  function testDefaultTermLanguage() {
-    // Configure the vocabulary to not hide the language selector, and make the
-    // default language of the terms fixed.
-    $edit = array(
-      'default_language[langcode]' => 'bb',
-      'default_language[language_hidden]' => FALSE,
-    );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/edit', $edit, t('Save'));
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/add');
-    $this->assertOptionSelected('edit-langcode', 'bb');
-
-    // Make the default language of the terms to be the current interface.
-    $edit = array(
-      'default_language[langcode]' => 'current_interface',
-      'default_language[language_hidden]' => FALSE,
-    );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/edit', $edit, t('Save'));
-    $this->drupalGet('aa/admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/add');
-    $this->assertOptionSelected('edit-langcode', 'aa');
-    $this->drupalGet('bb/admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/add');
-    $this->assertOptionSelected('edit-langcode', 'bb');
-
-    // Change the default language of the site and check if the default terms
-    // language is still correctly selected.
-    $old_default = language_default();
-    $old_default->default = FALSE;
-    language_save($old_default);
-    $new_default = language_load('cc');
-    $new_default->default = TRUE;
-    language_save($new_default);
-    $edit = array(
-      'default_language[langcode]' => 'site_default',
-      'default_language[language_hidden]' => FALSE,
-    );
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/edit', $edit, t('Save'));
-    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/add');
-    $this->assertOptionSelected('edit-langcode', 'cc');
   }
 }

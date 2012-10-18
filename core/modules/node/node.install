@@ -472,10 +472,11 @@ function node_uninstall() {
         ->condition('name', 'node_options_' . $type)
         ->condition('name', 'node_submitted_' . $type)
         ->condition('name', 'node_permissions_' . $type)
+        ->condition('name', 'node_type_language_default_' . $type)
+        ->condition('name', 'node_type_language_hidden_' . $type)
         ->condition('name', 'node_type_language_translation_enabled_' . $type)
       )
       ->execute();
-    config('language.settings')->clear('node. ' . $type . '.language.default_configuration')->save();
   }
 
   // Delete node search ranking variables.
@@ -674,21 +675,6 @@ function node_update_8006(&$sandbox) {
   update_add_uuids($sandbox, 'node', 'nid', $nids);
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
-}
-
-/**
- * Move the language default values to config.
- */
-function node_update_8007() {
-  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
-  foreach ($types as $type) {
-    $language_default = update_variable_get('node_type_language_default_' . $type, NULL);
-    $language_hidden = update_variable_get('node_type_language_hidden_' . $type, NULL);
-    if (isset($language_default) || isset($language_hidden)) {
-      $values = array('langcode' => $language_default, 'language_hidden' => $language_hidden);
-      config('language.settings')->set('node.' . $type . '.language.default_configuration', $values)->save();
-    }
-  }
 }
 
 /**

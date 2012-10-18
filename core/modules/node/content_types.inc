@@ -206,6 +206,19 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#description' => t('Users with the <em>Administer content</em> permission will be able to override these options.'),
   );
   if (module_exists('language')) {
+    $lang_options = array();
+
+    $languages = language_list(LANGUAGE_ALL);
+    foreach ($languages as $langcode => $language) {
+      $lang_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
+    }
+
+    $lang_options += array(
+      'site_default' => t("Site's default language"),
+      'current_interface' => t('Current interface language'),
+      'authors_default' => t("Author's preferred language"),
+    );
+
     $form['language'] = array(
       '#type' => 'fieldset',
       '#title' => t('Language settings'),
@@ -213,17 +226,18 @@ function node_type_form($form, &$form_state, $type = NULL) {
       '#collapsed' => TRUE,
       '#group' => 'additional_settings',
     );
-
-    $language_configuration = language_get_default_configuration('node', $type->type);
-    $form['language']['language_configuration'] = array(
-      '#type' => 'language_configuration',
-      '#entity_information' => array(
-        'entity_type' => 'node',
-        'bundle' => $type->type,
-      ),
-      '#default_value' => $language_configuration,
+    $form['language']['node_type_language_default'] = array(
+      '#type' => 'select',
+      '#title' => t('Default language'),
+      '#options' => $lang_options,
+      '#default_value' => variable_get('node_type_language_default_' . $type->type, 'site_default'),
+      '#description' => t('Explanation of the language options is found on the <a href="@languages_list_page">languages list page</a>.', array('@languages_list_page' => url('admin/config/regional/language'))),
     );
-    $form['#submit'][] = 'language_configuration_element_submit';
+    $form['language']['node_type_language_hidden'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide language selector'),
+      '#default_value' => variable_get('node_type_language_hidden_' . $type->type, TRUE),
+    );
   }
   $form['display'] = array(
     '#type' => 'fieldset',
@@ -279,7 +293,6 @@ function node_type_form($form, &$form_state, $type = NULL) {
       );
     }
   }
-  $form['#submit'][] = 'node_type_form_submit';
 
   return $form;
 }

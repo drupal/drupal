@@ -31,7 +31,7 @@ class PathLanguageTest extends PathTestBase {
     parent::setUp();
 
     // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'translate all content', 'access administration pages', 'administer content types'));
+    $this->web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'translate all content', 'access administration pages'));
     $this->drupalLogin($this->web_user);
 
     // Enable French language.
@@ -50,11 +50,7 @@ class PathLanguageTest extends PathTestBase {
    */
   function testAliasTranslation() {
     // Set 'page' content type to enable translation.
-    $edit = array(
-      'language_configuration[language_hidden]' => FALSE,
-    );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
+    variable_set('node_type_language_hidden_page', FALSE);
     variable_set('node_type_language_translation_enabled_page', TRUE);
 
     $english_node = $this->drupalCreateNode(array('type' => 'page'));

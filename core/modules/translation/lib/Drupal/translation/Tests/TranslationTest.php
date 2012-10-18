@@ -51,7 +51,7 @@ class TranslationTest extends WebTestBase {
     // Set "Basic page" content type to use multilingual support with
     // translation.
     $this->drupalGet('admin/structure/types/manage/page');
-    $edit = array('language_configuration[language_hidden]' => FALSE, 'node_type_language_translation_enabled' => TRUE);
+    $edit = array('node_type_language_hidden' => FALSE, 'node_type_language_translation_enabled' => TRUE);
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
 
@@ -230,7 +230,7 @@ class TranslationTest extends WebTestBase {
     // Disable translation support to check that the language switcher is left
     // untouched only for new nodes.
     $this->drupalLogin($this->admin_user);
-    $edit = array('language_configuration[language_hidden]' => TRUE, 'node_type_language_translation_enabled' => FALSE);
+    $edit = array('node_type_language_hidden' => TRUE, 'node_type_language_translation_enabled' => FALSE);
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->drupalLogin($this->translator);
 

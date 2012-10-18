@@ -63,7 +63,7 @@ class LocaleUninstallTest extends WebTestBase {
     $this->assertEqual(language(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => language(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Enable multilingual workflow option for articles.
-    language_save_default_configuration('node', 'article', array('langcode' => 'site_default', 'language_hidden' => FALSE));
+    variable_set('node_type_language_hidden_article',FALSE);
     // Change JavaScript translations directory.
     variable_set('locale_js_directory', 'js_translations');
     // Build the JavaScript translation file for French.
