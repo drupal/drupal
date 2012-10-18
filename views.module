@@ -433,11 +433,11 @@ function views_preprocess_node(&$vars) {
  */
 function views_preprocess_comment(&$vars) {
   // The 'view' attribute of the node is added in template_preprocess_views_view_row_comment()
-  if (!empty($vars['node']->view) && !empty($vars['node']->view->storage->name)) {
-    $vars['view'] = &$vars['node']->view;
-    $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['node']->view->storage->name;
+  if (!empty($vars['comment']->view) && !empty($vars['comment']->view->storage->name)) {
+    $vars['view'] = &$vars['comment']->view;
+    $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->name;
     if (!empty($vars['node']->view->current_display)) {
-      $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['node']->view->storage->name . '__' . $vars['node']->view->current_display;
+      $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->name . '__' . $vars['comment']->view->current_display;
     }
   }
 }

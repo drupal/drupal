@@ -578,29 +578,3 @@ function comment_views_data_alter(&$data) {
   );
 
 }
-
-/**
- * Template helper for theme_views_view_row_comment
- */
-function template_preprocess_views_view_row_comment(&$vars) {
-  $options = $vars['options'];
-  $view = &$vars['view'];
-  $plugin = &$view->style_plugin->row_plugin;
-  $comment = $plugin->comments[$vars['row']->{$vars['field_alias']}];
-  $node = $plugin->nodes[$comment->nid];
-  // Put the view on the node so we can retrieve it in the preprocess.
-  $node->view = &$view;
-
-  $build = comment_view_multiple(array($comment->id() => $comment), $node, $plugin->options['view_mode']);
-  // If we're displaying the comments without links, remove them from the
-  // renderable array. There is no way to avoid building them in the first
-  // place (see comment_build_content()).
-  if (empty($options['links'])) {
-    foreach ($build as $cid => &$comment_build) {
-      if (isset($comment_build['links'])) {
-        unset($comment_build['links']);
-      }
-    }
-  }
-  $vars['comment'] = drupal_render($build);
-}

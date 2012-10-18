@@ -7,7 +7,7 @@
 
 namespace Views\comment\Plugin\views\row;
 
-use Drupal\views\Plugin\views\row\RowPluginBase;
+use Views\system\Plugin\views\row\Entity;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -21,45 +21,27 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Display the comment with standard comment view."),
  *   theme = "views_view_row_comment",
  *   base = {"comment"},
+ *   entity_type = "comment",
  *   type = "normal"
  * )
  */
-class View extends RowPluginBase {
-
-  var $base_field = 'cid';
-  var $base_table = 'comment';
+class View extends Entity {
 
   /**
-   * Stores all comments which are preloaded.
+   * Overrides Views\system\Plugin\views\row\Entity::defineOptions().
    */
-  var $comments = array();
-
-  /**
-   * Stores all nodes of all comments which are preloaded.
-   */
-  var $nodes = array();
-
-  public function summaryTitle() {
-    return t('Settings');
-  }
-
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['links'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['view_mode'] = array('default' => 'full');
+    $options['links'] = array('default' => TRUE);
+    $options['view_mode']['default'] = 'full';
     return $options;
   }
 
+  /**
+   * Overrides Views\system\Plugin\views\row\Entity::buildOptionsForm().
+   */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-
-    $options = $this->options_form_summary_options();
-    $form['view_mode'] = array(
-      '#type' => 'select',
-      '#options' => $options,
-      '#title' => t('View mode'),
-      '#default_value' => $this->options['view_mode'],
-     );
 
     $form['links'] = array(
       '#type' => 'checkbox',
@@ -69,46 +51,15 @@ class View extends RowPluginBase {
   }
 
   /**
-   * Return the main options, which are shown in the summary title.
+   * Overrides Views\system\Plugin\views\row\Entity::render().
    */
-  function options_form_summary_options() {
-    $entity_info = entity_get_info('comment');
-    $options = array();
-    if (!empty($entity_info['view modes'])) {
-      foreach ($entity_info['view modes'] as $mode => $settings) {
-        $options[$mode] = $settings['label'];
-      }
+  function render($row) {
+    $entity_id = $row->{$this->field_alias};
+    $build = $this->build[$entity_id];
+    if (!$this->options['links']) {
+      unset($build['links']);
     }
-    if (empty($options)) {
-      $options = array(
-        'full' => t('Full content')
-      );
-    }
-
-    return $options;
-  }
-
-  function pre_render($result) {
-    $cids = array();
-
-    foreach ($result as $row) {
-      $cids[] = $row->cid;
-    }
-
-    // Load all comments.
-    $cresult = comment_load_multiple($cids);
-    $nids = array();
-    foreach ($cresult as $comment) {
-      $comment->depth = count(explode('.', $comment->thread)) - 1;
-      $this->comments[$comment->id()] = $comment;
-      $nids[] = $comment->nid;
-    }
-
-    // Load all nodes of the comments.
-    $nodes = node_load_multiple(array_unique($nids));
-    foreach ($nodes as $node) {
-      $this->nodes[$node->nid] = $node;
-    }
+    return drupal_render($build);
   }
 
 }
