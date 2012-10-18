@@ -77,7 +77,7 @@ class HelpTest extends WebTestBase {
 
     // Make sure links are properly added for modules implementing hook_help().
     foreach ($this->getModuleList() as $module => $name) {
-      $this->assertLink($name, 0, t('Link properly added to @name (admin/help/@module)', array('@module' => $module, '@name' => $name)));
+      $this->assertLink($name, 0, format_string('Link properly added to @name (admin/help/@module)', array('@module' => $module, '@name' => $name)));
     }
   }
 
