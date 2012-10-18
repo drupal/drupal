@@ -169,7 +169,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       $this->drupalGet($path);
       foreach ($modules as $module) {
         $title = $module_info[$module]['title'];
-        $this->assertText($title, $title . ' search tab is shown');
+        $this->assertText($title, format_string('%title search tab is shown', array('%title' => $title)));
       }
     }
   }

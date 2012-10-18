@@ -68,7 +68,7 @@ class SearchSimplifyTest extends SearchTestBase {
     for ($i = 0; $i < 32; $i++) {
       $string .= chr($i);
     }
-    $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
+    $this->assertIdentical(' ', search_simplify($string), 'Search simplify works for ASCII control characters.');
   }
 
   /**

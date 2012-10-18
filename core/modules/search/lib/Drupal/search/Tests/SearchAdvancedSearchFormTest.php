@@ -42,30 +42,30 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
    * Test using the advanced search form to limit search to nodes of type "Basic page".
    */
   function testNodeType() {
-    $this->assertTrue($this->node->type == 'page', t('Node type is Basic page.'));
+    $this->assertTrue($this->node->type == 'page', 'Node type is Basic page.');
 
     // Assert that the dummy title doesn't equal the real title.
     $dummy_title = 'Lorem ipsum';
-    $this->assertNotEqual($dummy_title, $this->node->label(), t("Dummy title doesn't equal node title"));
+    $this->assertNotEqual($dummy_title, $this->node->label(), "Dummy title doesn't equal node title.");
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node/' . $dummy_title);
-    $this->assertNoText($this->node->label(), t('Basic page node is not found with dummy title.'));
+    $this->assertNoText($this->node->label(), 'Basic page node is not found with dummy title.');
 
     // Search for the title of the node with a GET query.
     $this->drupalGet('search/node/' . $this->node->label());
-    $this->assertText($this->node->label(), t('Basic page node is found with GET query.'));
+    $this->assertText($this->node->label(), 'Basic page node is found with GET query.');
 
     // Search for the title of the node with a POST query.
     $edit = array('or' => $this->node->label());
     $this->drupalPost('search/node', $edit, t('Advanced search'));
-    $this->assertText($this->node->label(), t('Basic page node is found with POST query.'));
+    $this->assertText($this->node->label(), 'Basic page node is found with POST query.');
 
     // Advanced search type option.
     $this->drupalPost('search/node', array_merge($edit, array('type[page]' => 'page')), t('Advanced search'));
-    $this->assertText($this->node->label(), t('Basic page node is found with POST query and type:page.'));
+    $this->assertText($this->node->label(), 'Basic page node is found with POST query and type:page.');
 
     $this->drupalPost('search/node', array_merge($edit, array('type[article]' => 'article')), t('Advanced search'));
-    $this->assertText('bike shed', t('Article node is not found with POST query and type:article.'));
+    $this->assertText('bike shed', 'Article node is not found with POST query and type:article.');
   }
 }

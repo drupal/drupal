@@ -42,7 +42,7 @@ class SearchPageTextTest extends SearchTestBase {
     $edit = array();
     $edit['keys'] = 'bike shed ' . $this->randomName();
     $this->drupalPost('search/node', $edit, t('Search'));
-    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), t('Help text is displayed when search returns no results.'));
+    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');
 

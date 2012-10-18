@@ -90,7 +90,7 @@ class SearchNumbersTest extends SearchTestBase {
       $this->drupalPost('search/node',
         array('keys' => $number),
         t('Search'));
-      $this->assertText($node->label(), $type . ': node title shown (search found the node) in search for number ' . $number);
+      $this->assertText($node->label(), format_string('%type: node title shown (search found the node) in search for number %number.', array('%type' => $type, '%number' => $number)));
     }
   }
 }

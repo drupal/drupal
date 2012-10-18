@@ -70,7 +70,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
       $this->drupalPost('search/node',
         array('keys' => 'foo'),
         t('Search'));
-      $this->assertNoText($node->label(), $i . ': node title not shown in dummy search');
+      $this->assertNoText($node->label(), format_string('%number: node title not shown in dummy search', array('%number' => $i)));
 
       // Now verify that we can find node i by searching for any of the
       // numbers.
@@ -83,7 +83,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
         $this->drupalPost('search/node',
           array('keys' => $number),
           t('Search'));
-        $this->assertText($node->label(), $i . ': node title shown (search found the node) in search for number ' . $number);
+        $this->assertText($node->label(), format_string('%i: node title shown (search found the node) in search for number %number', array('%i' => $i, '%number' => $number)));
       }
     }
 

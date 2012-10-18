@@ -90,20 +90,20 @@ class SearchCommentTest extends SearchTestBase {
     );
     $this->drupalPost('', $edit, t('Search'));
     $node2 = node_load($node->nid, TRUE);
-    $this->assertText($node2->label(), t('Node found in search results.'));
-    $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));
+    $this->assertText($node2->label(), 'Node found in search results.');
+    $this->assertText($edit_comment['subject'], 'Comment subject found in search results.');
 
     // Search for the comment body.
     $edit = array(
       'search_block_form' => "'" . $comment_body . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node2->label(), t('Node found in search results.'));
+    $this->assertText($node2->label(), 'Node found in search results.');
 
     // Verify that comment is rendered using proper format.
-    $this->assertText($comment_body, t('Comment body text found in search results.'));
-    $this->assertNoRaw(t('n/a'), t('HTML in comment body is not hidden.'));
-    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]']), t('HTML in comment body is not escaped.'));
+    $this->assertText($comment_body, 'Comment body text found in search results.');
+    $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
+    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]']), 'HTML in comment body is not escaped.');
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
@@ -116,7 +116,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Search for $title.
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertNoText($comment_body, t('Comment body text not found in search results.'));
+    $this->assertNoText($comment_body, 'Comment body text not found in search results.');
   }
 
   /**
@@ -231,7 +231,7 @@ class SearchCommentTest extends SearchTestBase {
     // Verify that if you view the node on its own page, 'add new comment'
     // is there.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText(t('Add new comment'), t('Add new comment appears on node page'));
+    $this->assertText(t('Add new comment'), 'Add new comment appears on node page');
 
     // Run cron to index this page.
     $this->drupalLogout();
@@ -240,12 +240,12 @@ class SearchCommentTest extends SearchTestBase {
     // Search for 'comment'. Should be no results.
     $this->drupalLogin($user);
     $this->drupalPost('search/node', array('keys' => 'comment'), t('Search'));
-    $this->assertText(t('Your search yielded no results'), t('No results searching for the word comment'));
+    $this->assertText(t('Your search yielded no results'), 'No results searching for the word comment');
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
     $this->drupalPost('search/node', array('keys' => 'short'), t('Search'));
-    $this->assertText($node->label(), t('Search for keyword worked'));
-    $this->assertNoText(t('Add new comment'), t('Add new comment does not appear on search results page'));
+    $this->assertText($node->label(), 'Search for keyword worked');
+    $this->assertNoText(t('Add new comment'), 'Add new comment does not appear on search results page');
   }
 }

@@ -35,13 +35,13 @@ class SearchBlockTest extends SearchTestBase {
   function testSearchFormBlock() {
     // Set block title to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/search/form/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Set the block to a region to confirm block is available.
     $edit = array();
     $edit['blocks[search_form][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
   }
 
   /**
@@ -75,7 +75,7 @@ class SearchBlockTest extends SearchTestBase {
     $this->assertEqual(
       $this->getUrl(),
       url('search/node/' . $terms['search_block_form'], array('absolute' => TRUE)),
-      t('Redirected to correct url.')
+      'Redirected to correct url.'
     );
 
     // Test an empty search via the block form, from the front page.
@@ -87,7 +87,7 @@ class SearchBlockTest extends SearchTestBase {
     $this->assertEqual(
       $this->getUrl(),
       url('search/node/', array('absolute' => TRUE)),
-      t('Redirected to correct url.')
+      'Redirected to correct url.'
     );
   }
 }
