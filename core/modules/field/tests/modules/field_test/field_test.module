@@ -28,6 +28,10 @@ function field_test_permission() {
       'title' => t('Access field_test content'),
       'description' => t('View published field_test content.'),
     ),
+    'view test_view_field content' => array(
+      'title' => t('View test field content'),
+      'description' => t('View published test_view_field content.'),
+    ),
     'administer field_test content' => array(
       'title' => t('Administer field_test content'),
       'description' => t('Manage field_test content'),

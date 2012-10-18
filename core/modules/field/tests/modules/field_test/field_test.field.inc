@@ -188,5 +188,12 @@ function field_test_field_access($op, $field, $entity_type, $entity, $account) {
   if ($field['field_name'] == "field_no_{$op}_access") {
     return FALSE;
   }
+
+  // Only grant view access to test_view_field fields when the user has
+  // 'view test_view_field content' permission.
+  if ($field['field_name'] == 'test_view_field' && $op == 'view' && !user_access('view test_view_field content')) {
+    return FALSE;
+  }
+
   return TRUE;
 }

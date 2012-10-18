@@ -105,7 +105,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
         '#theme' => 'field',
         '#weight' => $this->weight,
         '#title' => $instance['label'],
-        '#access' => field_access($field, 'view', $entity_type, $entity),
+        '#access' => field_access('view', $field, $entity_type, $entity),
         '#label_display' => $this->label,
         '#view_mode' => $this->viewMode,
         '#language' => $langcode,
