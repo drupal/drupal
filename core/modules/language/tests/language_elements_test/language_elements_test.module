@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Mock module for language form elements test.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function language_elements_test_menu() {
+  $items['language-tests/language_configuration_element'] = array(
+    'title' => 'Language configuration form element',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_elements_configuration_element'),
+  );
+  $items['language-tests/language_configuration_element_test'] = array(
+    'title' => 'Language configuration form element',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_elements_configuration_element_test'),
+  );
+  return $items;
+}
+
+/**
+ * A form containing a language configuration element.
+ */
+function language_elements_configuration_element() {
+  $conf = language_get_default_configuration('some_custom_type', 'some_bundle');
+
+  $form['lang_configuration'] = array(
+    '#type' => 'language_configuration',
+    '#entity_information' => array(
+      'entity_type' => 'some_custom_type',
+      'bundle' => 'some_bundle',
+    ),
+    '#default_value' => $conf,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save',
+  );
+  $form['#submit'][] = 'language_configuration_element_submit';
+  return $form;
+}
+
+/**
+ * A form containing a language select element.
+ */
+function language_elements_configuration_element_test() {
+  $form['langcode'] = array(
+    '#type' => 'language_select',
+    '#default_value' => language_get_default_langcode('custom_type', 'some_bundle'),
+  );
+  return $form;
+}

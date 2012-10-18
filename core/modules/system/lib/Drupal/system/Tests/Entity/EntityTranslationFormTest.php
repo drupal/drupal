@@ -86,7 +86,7 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Enable language selector.
     $this->drupalGet('admin/structure/types/manage/page');
-    $edit = array('node_type_language_hidden' => FALSE, 'node_type_language_default' => LANGUAGE_NOT_SPECIFIED);
+    $edit = array('language_configuration[language_hidden]' => FALSE, 'language_configuration[langcode]' => LANGUAGE_NOT_SPECIFIED);
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 

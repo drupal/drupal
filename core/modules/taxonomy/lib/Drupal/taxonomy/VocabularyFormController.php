@@ -44,12 +44,31 @@ class VocabularyFormController extends EntityFormController {
       '#title' => t('Description'),
       '#default_value' => $vocabulary->description,
     );
+
+    // $form['langcode'] is not wrapped in an if (module_exists('language'))
+    // check because the language_select form element works also without the
+    // language module being installed.
+    // http://drupal.org/node/1749954 documents the new element.
     $form['langcode'] = array(
       '#type' => 'language_select',
-      '#title' => t('Language'),
+      '#title' => t('Vocabulary language'),
       '#languages' => LANGUAGE_ALL,
       '#default_value' => $vocabulary->langcode,
     );
+    if (module_exists('language')) {
+      $form['default_terms_language'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Terms language'),
+      );
+      $form['default_terms_language']['default_language'] = array(
+        '#type' => 'language_configuration',
+        '#entity_information' => array(
+          'entity_type' => 'vocabulary',
+          'bundle' => $vocabulary->machine_name,
+        ),
+        '#default_value' => language_get_default_configuration('vocabulary', $vocabulary->machine_name),
+      );
+    }
     // Set the hierarchy to "multiple parents" by default. This simplifies the
     // vocabulary form and standardizes the term form.
     $form['hierarchy'] = array(
@@ -72,6 +91,12 @@ class VocabularyFormController extends EntityFormController {
     if (empty($form_state['confirm_delete'])) {
       $actions = parent::actions($form, $form_state);
       array_unshift($actions['delete']['#submit'], array($this, 'submit'));
+      // Add the language configuration submit handler. This is needed because
+      // the submit button has custom submit handlers.
+      if (module_exists('language')) {
+        array_unshift($actions['submit']['#submit'],'language_configuration_element_submit');
+        array_unshift($actions['submit']['#submit'], array($this, 'languageConfigurationSubmit'));
+      }
       return $actions;
     }
     else {
@@ -97,6 +122,22 @@ class VocabularyFormController extends EntityFormController {
         form_set_error('machine_name', t('The machine-readable name cannot be "add" or "list".'));
       }
     }
+  }
+
+  /**
+   * Submit handler to update the bundle for the default language configuration.
+   */
+  public function languageConfigurationSubmit(array &$form, array &$form_state) {
+    $vocabulary = $this->getEntity($form_state);
+    // Delete the old language settings for the vocabulary, if the machine name
+    // is changed.
+    if ($vocabulary && isset($vocabulary->machine_name) && $vocabulary->machine_name != $form_state['values']['machine_name']) {
+      language_clear_default_configuration('vocabulary', $vocabulary->machine_name);
+    }
+    // Since the machine name is not known yet, and it can be changed anytime,
+    // we have to also update the bundle property for the default language
+    // configuration in order to have the correct bundle value.
+    $form_state['language']['default_language']['bundle'] = $form_state['values']['machine_name'];
   }
 
   /**

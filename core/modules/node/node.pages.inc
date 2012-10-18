@@ -103,11 +103,12 @@ function node_add($node_type) {
   global $user;
 
   $type = $node_type->type;
+  $langcode = module_invoke('language', 'get_default_langcode', 'node', $type);
   $node = entity_create('node', array(
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => $type,
-    'langcode' => node_type_get_default_langcode($type)
+    'langcode' => $langcode ? $langcode : language_default()->langcode,
   ));
   drupal_set_title(t('Create @name', array('@name' => $node_type->name)), PASS_THROUGH);
   $output = entity_get_form($node);
