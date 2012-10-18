@@ -245,19 +245,9 @@ abstract class UpgradePathTestBase extends WebTestBase {
     module_implements_reset();
     module_load_all(FALSE, TRUE);
 
-    // Rebuild caches.
-    // @todo Remove the try/catch when UpgradePathTestBase::setup() is fixed to
-    //   boot DrupalKernel (as WebTestBase::setup() does).
-    drupal_static_reset();
-    try {
-      drupal_flush_all_caches();
-    }
-    catch (InvalidArgumentException $e) {
-    }
-
-    // Reload global $conf array and permissions.
-    $this->refreshVariables();
-    $this->checkPermissions(array(), TRUE);
+    // Rebuild the container and all caches.
+    $this->rebuildContainer();
+    $this->resetAll();
 
     return TRUE;
   }
