@@ -1578,12 +1578,6 @@ function user_set_authmaps($account, $authmaps) {
  * @ingroup forms
  */
 function user_login($form, &$form_state) {
-  global $user;
-
-  // If we are already logged on, go to the user page instead.
-  if ($user->uid) {
-    drupal_goto('user/' . $user->uid);
-  }
 
   // Display login form:
   $form['name'] = array('#type' => 'textfield',
