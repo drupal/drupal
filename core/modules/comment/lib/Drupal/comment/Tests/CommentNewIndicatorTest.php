@@ -12,15 +12,6 @@ namespace Drupal\comment\Tests;
  */
 class CommentNewIndicatorTest extends CommentTestBase {
 
-  /**
-   * Use the standard profile.
-   *
-   * @var string
-   *
-   * @todo Remove this dependency.
-   */
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => "Comment 'new' indicator",
@@ -41,8 +32,6 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $this->assertNoLink(t('@count comments', array('@count' => 0)));
     $this->assertNoLink(t('@count new comments', array('@count' => 0)));
     $this->assertLink(t('Read more'));
-    $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
-    $this->assertTrue(count($count) == 1, 'One child found');
 
     // Create a new comment. This helper function may be run with different
     // comment settings so use comment_save() to avoid complex setup.
@@ -75,8 +64,6 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $this->assertLink(t('Read more'));
     $this->assertNoLink(t('1 new comment'));
     $this->assertNoLink(t('@count new comments', array('@count' => 0)));
-    $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
-    $this->assertTrue(count($count) == 2, print_r($count, TRUE));
   }
 
 }

@@ -69,7 +69,6 @@ abstract class CommentTestBase extends WebTestBase {
       'edit own comments',
       'post comments',
       'skip comment approval',
-      'access comments',
       'access content',
     ));
 

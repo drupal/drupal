@@ -12,15 +12,6 @@ namespace Drupal\comment\Tests;
  */
 class CommentLinksTest extends CommentTestBase {
 
-  /**
-   * Use the standard profile.
-   *
-   * @var string
-   *
-   * @todo Remove this dependency.
-   */
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Comment links',
@@ -220,7 +211,7 @@ class CommentLinksTest extends CommentTestBase {
 
     $nid = $this->node->nid;
 
-    foreach (array('', "node/$nid") as $path) {
+    foreach (array('node', "node/$nid") as $path) {
       $this->drupalGet($path);
 
       // User is allowed to view comments.

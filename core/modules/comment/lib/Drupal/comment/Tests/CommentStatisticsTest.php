@@ -12,21 +12,27 @@ namespace Drupal\comment\Tests;
  */
 class CommentStatisticsTest extends CommentTestBase {
 
-  /**
-   * Use the standard profile.
-   *
-   * @var string
-   *
-   * @todo Remove this dependency.
-   */
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Comment statistics',
       'description' => 'Test comment statistics on nodes.',
       'group' => 'Comment',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create a second user to post comments.
+    $this->web_user2 = $this->drupalCreateUser(array(
+      'post comments',
+      'create article content',
+      'edit own comments',
+      'post comments',
+      'skip comment approval',
+      'access comments',
+      'access content',
+    ));
   }
 
   /**
@@ -41,9 +47,6 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->setCommentSubject(FALSE);
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
     $this->drupalLogout();
-
-    // Creates a second user to post comments.
-    $this->web_user2 = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
 
     // Checks the initial values of node comment statistics with no comment.
     $node = node_load($this->node->nid);

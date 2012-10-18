@@ -12,22 +12,22 @@ namespace Drupal\comment\Tests;
  */
 class CommentCSSTest extends CommentTestBase {
 
-  /**
-   * Use the standard profile.
-   *
-   * @var string
-   *
-   * @todo Are these dependent on a particular theme? Remove this dependency
-   *   if possible.
-   */
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Comment CSS',
       'description' => 'Tests CSS classes on comments.',
       'group' => 'Comment',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Allow anonymous users to see comments.
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments',
+      'access content'
+    ));
   }
 
   /**

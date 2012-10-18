@@ -12,15 +12,6 @@ namespace Drupal\comment\Tests;
  */
 class CommentAnonymousTest extends CommentTestBase {
 
-  /**
-   * Use the standard profile.
-   *
-   * @var string
-   *
-   * @todo Remove this dependency if possible.
-   */
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Anonymous comments',
@@ -32,6 +23,18 @@ class CommentAnonymousTest extends CommentTestBase {
   function setUp() {
     parent::setUp();
     config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
+
+    // Enable anonymous and authenticated user comments.
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array(
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ));
   }
 
   /**
@@ -39,12 +42,6 @@ class CommentAnonymousTest extends CommentTestBase {
    */
   function testAnonymous() {
     $this->drupalLogin($this->admin_user);
-    // Enabled anonymous user comments.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
-      'access comments' => TRUE,
-      'post comments' => TRUE,
-      'skip comment approval' => TRUE,
-    ));
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
 
