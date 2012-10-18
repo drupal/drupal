@@ -158,13 +158,13 @@ class RdfaMarkupTest extends WebTestBase {
     $file_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, ".txt")]', array(
       ':node-uri' => 'node/' . $nid,
     ));
-    $this->assertTrue(!empty($file_rel), t('Attribute \'rel\' set on file field. Attribute \'resource\' is also set.'));
+    $this->assertTrue(!empty($file_rel), "Attribute 'rel' set on file field. Attribute 'resource' is also set.");
     $image_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, :image)]//img[contains(@typeof, "foaf:Image")]', array(
       ':node-uri' => 'node/' . $nid,
       ':image' => $image_filename,
     ));
 
-    $this->assertTrue(!empty($image_rel), t('Attribute \'rel\' set on image field. Attribute \'resource\' is also set.'));
+    $this->assertTrue(!empty($image_rel), "Attribute 'rel' set on image field. Attribute 'resource' is also set.");
 
     // Edits the node to add tags.
     $tag1 = $this->randomName(8);
@@ -178,11 +178,11 @@ class RdfaMarkupTest extends WebTestBase {
       ':node-url' => url('node/' . $node->nid),
       ':term-name' => $tag1,
     ));
-    $this->assertTrue(!empty($term_rdfa_meta), t('Property dc:subject is present for the tag1 field item.'));
+    $this->assertTrue(!empty($term_rdfa_meta), 'Property dc:subject is present for the tag1 field item.');
     $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and text()=:term-name]', array(
       ':node-url' => url('node/' . $node->nid),
       ':term-name' => $tag2,
     ));
-    $this->assertTrue(!empty($term_rdfa_meta), t('Property dc:subject is present for the tag2 field item.'));
+    $this->assertTrue(!empty($term_rdfa_meta), 'Property dc:subject is present for the tag2 field item.');
   }
 }

@@ -76,15 +76,15 @@ class CommentAttributesTest extends CommentTestBase {
     // Tests number of comments in teaser view.
     $this->drupalGet('node');
     $comment_count_teaser = $this->xpath('//div[contains(@typeof, "sioc:Item")]//li[contains(@class, "comment-comments")]/a[contains(@property, "sioc:num_replies") and contains(@content, "2") and @datatype="xsd:integer"]');
-    $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on teaser view.'));
+    $this->assertTrue(!empty($comment_count_teaser), 'RDFa markup for the number of comments found on teaser view.');
     $comment_count_link = $this->xpath('//div[@about=:url]//a[contains(@property, "sioc:num_replies") and @rel=""]', array(':url' => url("node/{$this->node1->nid}")));
-    $this->assertTrue(!empty($comment_count_link), t('Empty rel attribute found in comment count link.'));
+    $this->assertTrue(!empty($comment_count_link), 'Empty rel attribute found in comment count link.');
 
     // Tests number of comments in full node view.
     $this->drupalGet('node/' . $this->node1->nid);
     $node_url = url('node/' . $this->node1->nid);
     $comment_count_teaser = $this->xpath('/html/head/meta[@about=:node-url and @property="sioc:num_replies" and @content="2" and @datatype="xsd:integer"]', array(':node-url' => $node_url));
-    $this->assertTrue(!empty($comment_count_teaser), t('RDFa markup for the number of comments found on full node view.'));
+    $this->assertTrue(!empty($comment_count_teaser), 'RDFa markup for the number of comments found on full node view.');
   }
 
   /**
@@ -124,10 +124,10 @@ class CommentAttributesTest extends CommentTestBase {
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
-    $this->assertTrue(!empty($comment_homepage), t('RDFa markup for the homepage of anonymous user found.'));
+    $this->assertTrue(!empty($comment_homepage), 'RDFa markup for the homepage of anonymous user found.');
     // There should be no about attribute on anonymous comments.
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[@about]');
-    $this->assertTrue(empty($comment_homepage), t('No about attribute is present on anonymous user comment.'));
+    $this->assertTrue(empty($comment_homepage), 'No about attribute is present on anonymous user comment.');
 
     // Tests comment #2 as logged in user.
     $this->drupalLogin($this->web_user);
@@ -135,10 +135,10 @@ class CommentAttributesTest extends CommentTestBase {
     $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
     // Tests the RDFa markup for the homepage (specific to anonymous comments).
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name" and @href="http://example.org/" and contains(@rel, "foaf:page")]');
-    $this->assertTrue(!empty($comment_homepage), t("RDFa markup for the homepage of anonymous user found."));
+    $this->assertTrue(!empty($comment_homepage), "RDFa markup for the homepage of anonymous user found.");
     // There should be no about attribute on anonymous comments.
     $comment_homepage = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/a[@about]');
-    $this->assertTrue(empty($comment_homepage), t("No about attribute is present on anonymous user comment."));
+    $this->assertTrue(empty($comment_homepage), "No about attribute is present on anonymous user comment.");
   }
 
   /**
@@ -151,9 +151,9 @@ class CommentAttributesTest extends CommentTestBase {
 
     // Tests the reply_of relationship of a first level comment.
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=1]//span[@rel='sioc:reply_of' and @resource=:node]", array(':node' => url("node/{$this->node1->nid}")));
-    $this->assertEqual(1, count($result), t('RDFa markup referring to the node is present.'));
+    $this->assertEqual(1, count($result), 'RDFa markup referring to the node is present.');
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=1]//span[@rel='sioc:reply_of' and @resource=:comment]", array(':comment' => url('comment/1#comment-1')));
-    $this->assertFalse($result, t('No RDFa markup referring to the comment itself is present.'));
+    $this->assertFalse($result, 'No RDFa markup referring to the comment itself is present.');
 
     // Posts a reply to the first comment.
     $this->drupalGet('comment/reply/' . $this->node1->nid . '/' . $comments[0]->id);
@@ -161,9 +161,9 @@ class CommentAttributesTest extends CommentTestBase {
 
     // Tests the reply_of relationship of a second level comment.
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=2]//span[@rel='sioc:reply_of' and @resource=:node]", array(':node' => url("node/{$this->node1->nid}")));
-    $this->assertEqual(1, count($result), t('RDFa markup referring to the node is present.'));
+    $this->assertEqual(1, count($result), 'RDFa markup referring to the node is present.');
     $result = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=2]//span[@rel='sioc:reply_of' and @resource=:comment]", array(':comment' => url('comment/1', array('fragment' => 'comment-1'))));
-    $this->assertEqual(1, count($result), t('RDFa markup referring to the parent comment is present.'));
+    $this->assertEqual(1, count($result), 'RDFa markup referring to the parent comment is present.');
     $comments = $this->xpath("(id('comments')//div[contains(@class,'comment ')])[position()=2]");
   }
 
@@ -179,16 +179,16 @@ class CommentAttributesTest extends CommentTestBase {
    */
   function _testBasicCommentRdfaMarkup($comment, $account = array()) {
     $comment_container = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]');
-    $this->assertTrue(!empty($comment_container), t("Comment RDF type for comment found."));
+    $this->assertTrue(!empty($comment_container), 'Comment RDF type for comment found.');
     $comment_title = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//h3[@property="dc:title"]');
-    $this->assertEqual((string)$comment_title[0]->a, $comment->subject, t("RDFa markup for the comment title found."));
+    $this->assertEqual((string) $comment_title[0]->a, $comment->subject, 'RDFa markup for the comment title found.');
     $comment_date = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//*[contains(@property, "dc:date") and contains(@property, "dc:created")]');
-    $this->assertTrue(!empty($comment_date), t("RDFa markup for the date of the comment found."));
+    $this->assertTrue(!empty($comment_date), 'RDFa markup for the date of the comment found.');
     // The author tag can be either a or span
     $comment_author = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//span[@rel="sioc:has_creator"]/*[contains(@class, "username") and @typeof="sioc:UserAccount" and @property="foaf:name"]');
     $name = empty($account["name"]) ? $this->web_user->name : $account["name"] . " (not verified)";
-    $this->assertEqual((string)$comment_author[0], $name, t("RDFa markup for the comment author found."));
+    $this->assertEqual((string) $comment_author[0], $name, 'RDFa markup for the comment author found.');
     $comment_body = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//div[@class="content"]//div[contains(@class, "comment-body")]//div[@property="content:encoded"]');
-    $this->assertEqual((string)$comment_body[0]->p, $comment->comment, t("RDFa markup for the comment body found."));
+    $this->assertEqual((string) $comment_body[0]->p, $comment->comment, 'RDFa markup for the comment body found.');
   }
 }

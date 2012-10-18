@@ -35,16 +35,16 @@ class MappingHookTest extends WebTestBase {
   function testMapping() {
     // Test that the mapping is returned correctly by the hook.
     $mapping = rdf_mapping_load('test_entity', 'test_bundle');
-    $this->assertIdentical($mapping['rdftype'], array('sioc:Post'), t('Mapping for rdftype is sioc:Post.'));
-    $this->assertIdentical($mapping['title'], array('predicates' => array('dc:title')), t('Mapping for title is dc:title.'));
+    $this->assertIdentical($mapping['rdftype'], array('sioc:Post'), 'Mapping for rdftype is sioc:Post.');
+    $this->assertIdentical($mapping['title'], array('predicates' => array('dc:title')), 'Mapping for title is dc:title.');
     $this->assertIdentical($mapping['created'], array(
       'predicates' => array('dc:created'),
       'datatype' => 'xsd:dateTime',
       'callback' => 'date_iso8601',
-    ), t('Mapping for created is dc:created with datatype xsd:dateTime and callback date_iso8601.'));
-    $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator'), 'type' => 'rel'), t('Mapping for uid is sioc:has_creator and dc:creator, and type is rel.'));
+    ), 'Mapping for created is dc:created with datatype xsd:dateTime and callback date_iso8601.');
+    $this->assertIdentical($mapping['uid'], array('predicates' => array('sioc:has_creator', 'dc:creator'), 'type' => 'rel'), 'Mapping for uid is sioc:has_creator and dc:creator, and type is rel.');
 
     $mapping = rdf_mapping_load('test_entity', 'test_bundle_no_mapping');
-    $this->assertEqual($mapping, array(), t('Empty array returned when an entity type, bundle pair has no mapping.'));
+    $this->assertEqual($mapping, array(), 'Empty array returned when an entity type, bundle pair has no mapping.');
   }
 }

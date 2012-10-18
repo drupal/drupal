@@ -45,8 +45,8 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     // from the node default bundle definition.
     $node_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
     $node_meta = $this->xpath("//div[(@about='$url')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
-    $this->assertTrue(!empty($node_title), t('Property dc:title is present in meta tag.'));
-    $this->assertTrue(!empty($node_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
+    $this->assertTrue(!empty($node_title), 'Property dc:title is present in meta tag.');
+    $this->assertTrue(!empty($node_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
 
   /**
@@ -65,8 +65,8 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     // Ensure the mapping defined in rdf_module.test is used.
     $test_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
     $test_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'foo:mapping_install1') and contains(@typeof, 'bar:mapping_install2')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
-    $this->assertTrue(!empty($test_bundle_title), t('Property dc:title is present in meta tag.'));
-    $this->assertTrue(!empty($test_bundle_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
+    $this->assertTrue(!empty($test_bundle_title), 'Property dc:title is present in meta tag.');
+    $this->assertTrue(!empty($test_bundle_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
 
   /**
@@ -86,8 +86,8 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     // from the node default bundle definition.
     $random_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
     $random_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'sioc:Item') and contains(@typeof, 'foaf:Document')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
-    $this->assertTrue(!empty($random_bundle_title), t('Property dc:title is present in meta tag.'));
-    $this->assertTrue(!empty($random_bundle_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
+    $this->assertTrue(!empty($random_bundle_title), 'Property dc:title is present in meta tag.');
+    $this->assertTrue(!empty($random_bundle_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
 
   /**
@@ -112,19 +112,19 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     $user2_profile_about = $this->xpath('//article[@class="profile" and @typeof="sioc:UserAccount" and @about=:account-uri]', array(
       ':account-uri' => $account_uri,
     ));
-    $this->assertTrue(!empty($user2_profile_about), t('RDFa markup found on user profile page'));
+    $this->assertTrue(!empty($user2_profile_about), 'RDFa markup found on user profile page');
 
     $user_account_holder = $this->xpath('//meta[contains(@typeof, "foaf:Person") and @about=:person-uri and @resource=:account-uri and contains(@rel, "foaf:account")]', array(
       ':person-uri' => $person_uri,
       ':account-uri' => $account_uri,
     ));
-    $this->assertTrue(!empty($user_account_holder), t('URI created for account holder and username set on sioc:UserAccount.'));
+    $this->assertTrue(!empty($user_account_holder), 'URI created for account holder and username set on sioc:UserAccount.');
 
     $user_username = $this->xpath('//meta[@about=:account-uri and contains(@property, "foaf:name") and @content=:username]', array(
       ':account-uri' => $account_uri,
       ':username' => $username,
     ));
-    $this->assertTrue(!empty($user_username), t('foaf:name set on username.'));
+    $this->assertTrue(!empty($user_username), 'foaf:name set on username.');
 
     // User 2 creates node.
     $this->drupalLogin($user2);
@@ -136,7 +136,7 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and contains(@lang, "")]', array(
       ':account-uri' => $account_uri,
     ));
-    $this->assertTrue(!empty($author_about), t('RDFa markup found on author information on post. The lang attribute on username is set to empty string.'));
+    $this->assertTrue(!empty($author_about), 'RDFa markup found on author information on post. The lang attribute on username is set to empty string.');
   }
 
   /**
@@ -154,6 +154,6 @@ class MappingDefinitionTest extends TaxonomyTestBase {
       ':term-url' => $term_url,
       ':term-label' => $term_label,
     ));
-    $this->assertTrue(!empty($term_rdfa_meta), t('RDFa markup found on term page.'));
+    $this->assertTrue(!empty($term_rdfa_meta), 'RDFa markup found on term page.');
   }
 }

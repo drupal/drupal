@@ -39,21 +39,21 @@ class GetNamespacesTest extends WebTestBase {
     $element = $this->xpath('//html[contains(@prefix, :prefix_binding)]', array(
       ':prefix_binding' => 'rdfs: http://www.w3.org/2000/01/rdf-schema#',
     ));
-    $this->assertTrue(!empty($element), t('A prefix declared once is displayed.'));
+    $this->assertTrue(!empty($element), 'A prefix declared once is displayed.');
 
     $element = $this->xpath('//html[contains(@prefix, :prefix_binding)]', array(
       ':prefix_binding' => 'foaf: http://xmlns.com/foaf/0.1/',
     ));
-    $this->assertTrue(!empty($element), t('The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.'));
+    $this->assertTrue(!empty($element), 'The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.');
 
     $element = $this->xpath('//html[contains(@prefix, :prefix_binding)]', array(
       ':prefix_binding' => 'foaf1: http://xmlns.com/foaf/0.1/',
     ));
-    $this->assertTrue(!empty($element), t('Two prefixes can be assigned the same namespace.'));
+    $this->assertTrue(!empty($element), 'Two prefixes can be assigned the same namespace.');
 
     $element = $this->xpath('//html[contains(@prefix, :prefix_binding)]', array(
       ':prefix_binding' => 'dc: ',
     ));
-    $this->assertTrue(empty($element), t('A prefix with conflicting namespaces is discarded.'));
+    $this->assertTrue(empty($element), 'A prefix with conflicting namespaces is discarded.');
   }
 }

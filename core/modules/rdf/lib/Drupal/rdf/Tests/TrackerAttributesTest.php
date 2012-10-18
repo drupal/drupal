@@ -83,35 +83,35 @@ class TrackerAttributesTest extends WebTestBase {
     // success of the following tests, but making it explicit will make
     // debugging easier in case of failure.
     $tracker_about = $this->xpath('//tr[@about=:url]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_about), t('About attribute found on table row for @user content.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_about), format_string('About attribute found on table row for @user content.', array('@user'=> $user)));
 
     // Tests whether the title has the correct property attribute.
     $tracker_title = $this->xpath('//tr[@about=:url]/td[@property="dc:title" and @datatype=""]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_title), t('Title property attribute found on @user content.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_title), format_string('Title property attribute found on @user content.', array('@user'=> $user)));
 
     // Tests whether the relationship between the content and user has been set.
     $tracker_user = $this->xpath('//tr[@about=:url]//td[contains(@rel, "sioc:has_creator")]//*[contains(@typeof, "sioc:UserAccount") and contains(@property, "foaf:name")]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_user), t('Typeof and name property attributes found on @user.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_user), format_string('Typeof and name property attributes found on @user.', array('@user'=> $user)));
     // There should be an about attribute on logged in users and no about
     // attribute for anonymous users.
     $tracker_user = $this->xpath('//tr[@about=:url]//td[@rel="sioc:has_creator"]/*[@about]', array(':url' => $url));
     if ($node->uid == 0) {
-      $this->assertTrue(empty($tracker_user), t('No about attribute is present on @user.', array('@user'=> $user)));
+      $this->assertTrue(empty($tracker_user), format_string('No about attribute is present on @user.', array('@user'=> $user)));
     }
     elseif ($node->uid > 0) {
-      $this->assertTrue(!empty($tracker_user), t('About attribute is present on @user.', array('@user'=> $user)));
+      $this->assertTrue(!empty($tracker_user), format_string('About attribute is present on @user.', array('@user'=> $user)));
     }
 
     // Tests whether the property has been set for number of comments.
     $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "0") and @datatype="xsd:integer"]', array(':url' => $url));
-    $this->assertTrue($tracker_replies, t('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
+    $this->assertTrue($tracker_replies, format_string('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
     // date has been added to the tracker output before comments have been
     // posted, meaning the latest activity reflects changes to the node itself.
     $isoDate = date('c', $node->changed);
     $tracker_activity = $this->xpath('//tr[@about=:url]//td[contains(@property, "dc:modified") and contains(@property, "sioc:last_activity_date") and contains(@datatype, "xsd:dateTime") and @content=:date]', array(':url' => $url, ':date' => $isoDate));
-    $this->assertTrue(!empty($tracker_activity), t('Latest activity date and changed properties found when there are no comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_activity), format_string('Latest activity date and changed properties found when there are no comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
 
     // Tests that the appropriate RDFa markup to annotate the latest activity
     // date has been added to the tracker output after a comment is posted.
@@ -124,7 +124,7 @@ class TrackerAttributesTest extends WebTestBase {
 
     // Tests whether the property has been set for number of comments.
     $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "1") and @datatype="xsd:integer"]', array(':url' => $url));
-    $this->assertTrue($tracker_replies, t('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
+    $this->assertTrue($tracker_replies, format_string('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
     // Need to query database directly to obtain last_activity_date because
     // it cannot be accessed via node_load().
@@ -134,6 +134,6 @@ class TrackerAttributesTest extends WebTestBase {
     }
     $isoDate = date('c', $expected_last_activity_date);
     $tracker_activity = $this->xpath('//tr[@about=:url]//td[@property="sioc:last_activity_date" and @datatype="xsd:dateTime" and @content=:date]', array(':url' => $url, ':date' => $isoDate));
-    $this->assertTrue(!empty($tracker_activity), t('Latest activity date found when there are comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
+    $this->assertTrue(!empty($tracker_activity), format_string('Latest activity date found when there are comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
   }
 }
