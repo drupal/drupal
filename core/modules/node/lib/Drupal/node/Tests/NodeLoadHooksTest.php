@@ -42,15 +42,15 @@ class NodeLoadHooksTest extends NodeTestBase {
     // reflect the expected values.
     $nodes = entity_load_multiple_by_properties('node', array('status' => NODE_PUBLISHED));
     $loaded_node = end($nodes);
-    $this->assertEqual($loaded_node->node_test_loaded_nids, array($node1->nid, $node2->nid), t('hook_node_load() received the correct list of node IDs the first time it was called.'));
-    $this->assertEqual($loaded_node->node_test_loaded_types, array('article'), t('hook_node_load() received the correct list of node types the first time it was called.'));
+    $this->assertEqual($loaded_node->node_test_loaded_nids, array($node1->nid, $node2->nid), 'hook_node_load() received the correct list of node IDs the first time it was called.');
+    $this->assertEqual($loaded_node->node_test_loaded_types, array('article'), 'hook_node_load() received the correct list of node types the first time it was called.');
 
     // Now, as part of the same page request, load a set of nodes that contain
     // both articles and pages, and make sure the parameters passed to
     // node_test_node_load() are correctly updated.
     $nodes = entity_load_multiple_by_properties('node', array('status' => NODE_NOT_PUBLISHED));
     $loaded_node = end($nodes);
-    $this->assertEqual($loaded_node->node_test_loaded_nids, array($node3->nid, $node4->nid), t('hook_node_load() received the correct list of node IDs the second time it was called.'));
-    $this->assertEqual($loaded_node->node_test_loaded_types, array('article', 'page'), t('hook_node_load() received the correct list of node types the second time it was called.'));
+    $this->assertEqual($loaded_node->node_test_loaded_nids, array($node3->nid, $node4->nid), 'hook_node_load() received the correct list of node IDs the second time it was called.');
+    $this->assertEqual($loaded_node->node_test_loaded_types, array('article', 'page'), 'hook_node_load() received the correct list of node types the second time it was called.');
   }
 }

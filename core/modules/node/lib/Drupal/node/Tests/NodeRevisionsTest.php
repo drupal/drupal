@@ -84,7 +84,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
                         array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
-                              '%revision-date' => format_date($nodes[1]->revision_timestamp))), t('Revision reverted.'));
+                              '%revision-date' => format_date($nodes[1]->revision_timestamp))), 'Revision reverted.');
     $reverted_node = node_load($node->nid);
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), 'Node reverted correctly.');
 
@@ -96,7 +96,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
                         array('%revision-date' => format_date($nodes[1]->revision_timestamp),
-                              '@type' => 'Basic page', '%title' => $nodes[1]->label())), t('Revision deleted.'));
+                              '@type' => 'Basic page', '%title' => $nodes[1]->label())), 'Revision deleted.');
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', array(':nid' => $node->nid, ':vid' => $nodes[1]->vid))->fetchField() == 0, 'Revision not found.');
 
     // Set the revision timestamp to an older date to make sure that the

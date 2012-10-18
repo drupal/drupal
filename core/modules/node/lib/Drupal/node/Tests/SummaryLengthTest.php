@@ -36,7 +36,7 @@ class SummaryLengthTest extends NodeTestBase {
     $this->drupalGet("node");
     // The node teaser when it has 600 characters in length
     $expected = 'What is a Drupalism?';
-    $this->assertRaw($expected, t('Check that the summary is 600 characters in length'), 'Node');
+    $this->assertRaw($expected, 'Check that the summary is 600 characters in length', 'Node');
 
     // Change the teaser length for "Basic page" content type.
     $instance = field_info_instance('node', 'body', $node->type);
@@ -45,6 +45,6 @@ class SummaryLengthTest extends NodeTestBase {
 
     // Attempt to access the front page again and check if the summary is now only 200 characters in length.
     $this->drupalGet("node");
-    $this->assertNoRaw($expected, t('Check that the summary is not longer than 200 characters'), 'Node');
+    $this->assertNoRaw($expected, 'Check that the summary is not longer than 200 characters', 'Node');
   }
 }

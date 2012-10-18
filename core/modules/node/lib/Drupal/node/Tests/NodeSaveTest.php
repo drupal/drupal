@@ -59,7 +59,7 @@ class NodeSaveTest extends NodeTestBase {
     $node = node_submit(entity_create('node', $node));
 
     // Verify that node_submit did not overwrite the user ID.
-    $this->assertEqual($node->uid, $this->web_user->uid, t('Function node_submit() preserves user ID'));
+    $this->assertEqual($node->uid, $this->web_user->uid, 'Function node_submit() preserves user ID');
 
     $node->save();
     // Test the import.
@@ -115,7 +115,7 @@ class NodeSaveTest extends NodeTestBase {
     entity_create('node', $edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertEqual($node->created, 280299600, 'Creating a node uses user-set "created" timestamp.');
-    $this->assertNotEqual($node->changed, 979534800, t('Creating a node doesn\'t use user-set "changed" timestamp.'));
+    $this->assertNotEqual($node->changed, 979534800, 'Creating a node does not use user-set "changed" timestamp.');
 
     // Update the timestamps.
     $node->created = 979534800;
@@ -124,7 +124,7 @@ class NodeSaveTest extends NodeTestBase {
     $node->save();
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
     $this->assertEqual($node->created, 979534800, 'Updating a node uses user-set "created" timestamp.');
-    $this->assertNotEqual($node->changed, 280299600, t('Updating a node doesn\'t use user-set "changed" timestamp.'));
+    $this->assertNotEqual($node->changed, 280299600, 'Updating a node does not use user-set "changed" timestamp.');
   }
 
   /**

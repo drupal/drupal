@@ -138,33 +138,33 @@ class NodeTypeTest extends NodeTestBase {
     node_types_rebuild();
     $types = node_type_get_types();
     foreach (array('book', 'poll', 'article', 'page') as $type) {
-      $this->assertTrue(isset($types[$type]), t('%type is found in node types.', array('%type' => $type)));
-      $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), t('%type type is enabled.', array('%type' => $type)));
+      $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
+      $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), format_string('%type type is enabled.', array('%type' => $type)));
     }
 
     // Disable poll module and the respective type should be marked as disabled.
     module_disable(array('poll'), FALSE);
     node_types_rebuild();
     $types = node_type_get_types();
-    $this->assertTrue(!empty($types['poll']->disabled), t("Poll module's node type disabled."));
+    $this->assertTrue(!empty($types['poll']->disabled), "Poll module's node type disabled.");
 
     // Disable book module and the respective type should still be active, since
     // it is not provided by hook_node_info().
     module_disable(array('book'), FALSE);
     node_types_rebuild();
     $types = node_type_get_types();
-    $this->assertTrue(isset($types['book']) && empty($types['book']->disabled), t("Book module's node type still active."));
-    $this->assertTrue(!empty($types['poll']->disabled), t("Poll module's node type still disabled."));
-    $this->assertTrue(isset($types['article']) && empty($types['article']->disabled), t("Article node type still active."));
-    $this->assertTrue(isset($types['page']) && empty($types['page']->disabled), t("Basic page node type still active."));
+    $this->assertTrue(isset($types['book']) && empty($types['book']->disabled), "Book module's node type still active.");
+    $this->assertTrue(!empty($types['poll']->disabled), "Poll module's node type still disabled.");
+    $this->assertTrue(isset($types['article']) && empty($types['article']->disabled), 'Article node type still active.');
+    $this->assertTrue(isset($types['page']) && empty($types['page']->disabled), 'Basic page node type still active.');
 
     // Re-enable the modules and verify that the types are active again.
     module_enable(array('book', 'poll'), FALSE);
     node_types_rebuild();
     $types = node_type_get_types();
     foreach (array('book', 'poll', 'article', 'page') as $type) {
-      $this->assertTrue(isset($types[$type]), t('%type is found in node types.', array('%type' => $type)));
-      $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), t('%type type is enabled.', array('%type' => $type)));
+      $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
+      $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), format_string('%type type is enabled.', array('%type' => $type)));
     }
   }
 
@@ -187,10 +187,7 @@ class NodeTypeTest extends NodeTestBase {
     // Attempt to delete the content type, which should not be allowed.
     $this->drupalGet('admin/structure/types/manage/' . $type->name . '/delete');
     $this->assertRaw(
-      t(
-        '%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.',
-        array('%type' => $type->name)
-      ),
+      t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', array('%type' => $type->name)),
       'The content type will not be deleted until all nodes of that type are removed.'
     );
     $this->assertNoText(t('This action cannot be undone.'), 'The node type deletion confirmation form is not available.');
@@ -200,10 +197,7 @@ class NodeTypeTest extends NodeTestBase {
     // Attempt to delete the content type, which should now be allowed.
     $this->drupalGet('admin/structure/types/manage/' . $type->name . '/delete');
     $this->assertRaw(
-      t(
-        'Are you sure you want to delete the content type %type?',
-        array('%type' => $type->name)
-      ),
+      t('Are you sure you want to delete the content type %type?', array('%type' => $type->name)),
       'The content type is available for deletion.'
     );
     $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
