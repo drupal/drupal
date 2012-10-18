@@ -120,7 +120,6 @@ function taxonomy_vocabulary_add() {
   $vocabulary = entity_create('taxonomy_vocabulary', array(
     // Default the new vocabulary to the site's default language. This is the
     // most likely default value until we have better flexible settings.
-    // @todo See http://drupal.org/node/258785 and followups.
     'langcode' => language_default()->langcode,
   ));
   return entity_get_form($vocabulary);
@@ -534,6 +533,9 @@ function theme_taxonomy_overview_terms($variables) {
  */
 function taxonomy_term_add($vocabulary) {
   $term = entity_create('taxonomy_term', array('vid' => $vocabulary->vid, 'vocabulary_machine_name' => $vocabulary->machine_name));
+  if (module_exists('language')) {
+    $term->langcode = language_get_default_langcode('vocabulary', $vocabulary->machine_name);
+  }
   return entity_get_form($term);
 }
 

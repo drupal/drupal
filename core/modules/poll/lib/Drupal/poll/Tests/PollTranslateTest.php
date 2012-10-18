@@ -54,7 +54,7 @@ class PollTranslateTest extends PollTestBase {
 
     // Set "Poll" content type to use multilingual support with translation.
     $this->drupalGet('admin/structure/types/manage/poll');
-    $edit = array('node_type_language_hidden' => FALSE, 'node_type_language_translation_enabled' => TRUE);
+    $edit = array('language_configuration[language_hidden]' => FALSE, 'node_type_language_translation_enabled' => TRUE);
     $this->drupalPost('admin/structure/types/manage/poll', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Poll')), 'Poll content type has been updated.');
 

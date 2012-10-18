@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\language\Tests\LanguageConfigurationElementTest.
+ */
+
+namespace Drupal\language\Tests;
+
+use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
+
+/**
+ * Functional tests for language configuration's effect on negotiation setup.
+ */
+class LanguageConfigurationElementTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'language_elements_test');
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Language configuration form element tests',
+      'description' => 'Tests the features of the language configuration element field.',
+      'group' => 'Language',
+    );
+  }
+
+  /**
+   * Tests the language settings have been saved.
+   */
+  public function testLanguageConfigurationElement() {
+    $this->drupalGet('language-tests/language_configuration_element');
+    $edit['lang_configuration[langcode]'] = 'current_interface';
+    $edit['lang_configuration[language_hidden]'] = TRUE;
+    $this->drupalPost(NULL, $edit, 'Save');
+    $lang_conf = language_get_default_configuration('some_custom_type', 'some_bundle');
+
+    // Check that the settings have been saved.
+    $this->assertEqual($lang_conf['langcode'], 'current_interface');
+    $this->assertTrue($lang_conf['language_hidden']);
+    $this->drupalGet('language-tests/language_configuration_element');
+    $this->assertOptionSelected('edit-lang-configuration-langcode', 'current_interface');
+    $this->assertFieldChecked('edit-lang-configuration-language-hidden');
+
+    // Reload the page and save again.
+    $this->drupalGet('language-tests/language_configuration_element');
+    $edit['lang_configuration[langcode]'] = 'authors_default';
+    $edit['lang_configuration[language_hidden]'] = FALSE;
+    $this->drupalPost(NULL, $edit, 'Save');
+    $lang_conf = language_get_default_configuration('some_custom_type', 'some_bundle');
+
+    // Check that the settings have been saved.
+    $this->assertEqual($lang_conf['langcode'], 'authors_default');
+    $this->assertFalse($lang_conf['language_hidden']);
+    $this->drupalGet('language-tests/language_configuration_element');
+    $this->assertOptionSelected('edit-lang-configuration-langcode', 'authors_default');
+    $this->assertNoFieldChecked('edit-lang-configuration-language-hidden');
+  }
+
+  /**
+   * Tests that the language_get_default_langcode() returns the correct values.
+   */
+  public function testDefaultLangcode() {
+    // Add some custom languages.
+    foreach (array('aa', 'bb', 'cc') as $language_code) {
+      $language = new Language(array(
+        'langcode' => $language_code,
+        'name' => $this->randomName(),
+      ));
+      language_save($language);
+    }
+
+    // Fixed language.
+    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'bb', 'language_hidden' => FALSE));
+    $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
+    $this->assertEqual($langcode, 'bb');
+
+    // Current interface.
+    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'current_interface', 'language_hidden' => FALSE));
+    $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
+    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
+    $this->assertEqual($langcode, $language_interface->langcode);
+
+    // Site's default.
+    $old_default = language_default();
+    $old_default->default = FALSE;
+    language_save($old_default);
+    $new_default = language_load('cc');
+    $new_default->default = TRUE;
+    language_save($new_default);
+    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'site_default', 'language_hidden' => FALSE));
+    $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
+    $this->assertEqual($langcode, 'cc');
+
+    // Check the default value of a language field when authors preferred option
+    // is selected.
+    // Create first an user and assign a preferred langcode to him.
+    $some_user = $this->drupalCreateUser();
+    $some_user->preferred_langcode = 'bb';
+    $some_user->save();
+    $this->drupalLogin($some_user);
+    language_save_default_configuration('custom_type', 'some_bundle', array('langcode' => 'authors_default', 'language_hidden' => FALSE));
+    $this->drupalGet('language-tests/language_configuration_element_test');
+    $this->assertOptionSelected('edit-langcode', 'bb');
+  }
+
+  /**
+   * Tests that the configuration is updated when the node type is changed.
+   */
+  public function testNodeTypeUpdate() {
+    // Create the article content type first if the profile used is not the
+    // standard one.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+    $admin_user = $this->drupalCreateUser(array('administer content types'));
+    $this->drupalLogin($admin_user);
+    $edit = array(
+      'language_configuration[langcode]' => 'current_interface',
+      'language_configuration[language_hidden]' => FALSE,
+    );
+    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    // Check the language default configuration for the articles.
+    $configuration = language_get_default_configuration('node', 'article');
+    $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_hidden' => 0), 'The default language configuration has been saved on the Article content type.');
+    // Rename the article content type.
+    $edit = array(
+      'type' => 'article_2'
+    );
+    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    // Check that we still have the settings for the new node type.
+    $configuration = language_get_default_configuration('node', 'article_2');
+    $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_hidden' => 0), 'The default language configuration has been kept on the new Article content type.');
+  }
+}
