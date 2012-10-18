@@ -1695,9 +1695,14 @@ abstract class WebTestBase extends TestBase {
    * @param $index
    *   Link position counting from zero.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The gorup this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -1715,9 +1720,14 @@ abstract class WebTestBase extends TestBase {
    * @param $index
    *   Link position counting from zero.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -1735,9 +1745,14 @@ abstract class WebTestBase extends TestBase {
    * @param $index
    *   Link position counting from zero.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
@@ -1754,9 +1769,14 @@ abstract class WebTestBase extends TestBase {
    * @param $href
    *   The full or partial value of the 'href' attribute of the anchor tag.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
@@ -2016,9 +2036,14 @@ abstract class WebTestBase extends TestBase {
    * @param $options
    *   (optional) Any additional options to pass for $path to url().
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
@@ -2040,9 +2065,14 @@ abstract class WebTestBase extends TestBase {
    * @param $raw
    *   Raw (HTML) string to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2060,9 +2090,14 @@ abstract class WebTestBase extends TestBase {
    * @param $raw
    *   Raw (HTML) string to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2081,9 +2116,14 @@ abstract class WebTestBase extends TestBase {
    * @param $text
    *   Plain text to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2099,9 +2139,14 @@ abstract class WebTestBase extends TestBase {
    * @param $text
    *   Plain text to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2117,9 +2162,14 @@ abstract class WebTestBase extends TestBase {
    * @param $text
    *   Plain text to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @param $not_exists
    *   TRUE if this text should not exist, FALSE if it should.
    * @return
@@ -2145,9 +2195,14 @@ abstract class WebTestBase extends TestBase {
    * @param $text
    *   Plain text to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2165,9 +2220,14 @@ abstract class WebTestBase extends TestBase {
    * @param $text
    *   Plain text to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2183,9 +2243,14 @@ abstract class WebTestBase extends TestBase {
    * @param $text
    *   Plain text to look for.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @param $be_unique
    *   TRUE if this text should be found only once, FALSE if it should be found more than once.
    * @return
@@ -2213,9 +2278,14 @@ abstract class WebTestBase extends TestBase {
    * @param $pattern
    *   Perl regex to look for including the regex delimiters.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2232,9 +2302,14 @@ abstract class WebTestBase extends TestBase {
    * @param $pattern
    *   Perl regex to look for including the regex delimiters.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2251,9 +2326,14 @@ abstract class WebTestBase extends TestBase {
    * @param $title
    *   The string the title should be.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2274,9 +2354,14 @@ abstract class WebTestBase extends TestBase {
    * @param $title
    *   The string the title should not be.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2301,7 +2386,9 @@ abstract class WebTestBase extends TestBase {
    * @param $expected
    *   The expected themed output string.
    * @param $message
-   *   (optional) An assertion message.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
@@ -2328,9 +2415,14 @@ abstract class WebTestBase extends TestBase {
    * @param $value
    *   (optional) Value of the field to assert.
    * @param $message
-   *   (optional) Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   (optional) The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
@@ -2401,9 +2493,14 @@ abstract class WebTestBase extends TestBase {
    * @param $value
    *   (optional) Value of the field to assert.
    * @param $message
-   *   (optional) Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   (optional) The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
@@ -2434,9 +2531,14 @@ abstract class WebTestBase extends TestBase {
    * @param $value
    *   Value of the field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2465,9 +2567,14 @@ abstract class WebTestBase extends TestBase {
    * @param $value
    *   Value of the field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2483,9 +2590,14 @@ abstract class WebTestBase extends TestBase {
    * @param $value
    *   Value of the field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2501,9 +2613,14 @@ abstract class WebTestBase extends TestBase {
    * @param $value
    *   Value of the field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2517,7 +2634,9 @@ abstract class WebTestBase extends TestBase {
    * @param $id
    *   Id of field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2532,7 +2651,9 @@ abstract class WebTestBase extends TestBase {
    * @param $id
    *   Id of field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2549,7 +2670,9 @@ abstract class WebTestBase extends TestBase {
    * @param $option
    *   Option to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2566,7 +2689,9 @@ abstract class WebTestBase extends TestBase {
    * @param $option
    *   Option to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2584,7 +2709,9 @@ abstract class WebTestBase extends TestBase {
    * @param $option
    *   Option to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @return
    *   TRUE on pass, FALSE on fail.
    *
@@ -2603,7 +2730,9 @@ abstract class WebTestBase extends TestBase {
    * @param $option
    *   Option to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2618,9 +2747,14 @@ abstract class WebTestBase extends TestBase {
    * @param $field
    *   Name or id of field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2634,9 +2768,14 @@ abstract class WebTestBase extends TestBase {
    * @param $field
    *   Name or id of field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2648,9 +2787,14 @@ abstract class WebTestBase extends TestBase {
    * Asserts that each HTML ID is used for just a single element.
    *
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @param $ids_to_skip
    *   An optional array of ids to skip when checking for duplicates. It is
    *   always a bug to have duplicate HTML IDs, so this parameter is to enable
@@ -2696,7 +2840,9 @@ abstract class WebTestBase extends TestBase {
    *   Response code. For example 200 is a successful page request. For a list
    *   of all codes see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @return
    *   Assertion result.
    */
@@ -2713,7 +2859,9 @@ abstract class WebTestBase extends TestBase {
    *   Response code. For example 200 is a successful page request. For a list
    *   of all codes see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    *
    * @return
    *   Assertion result.
@@ -2734,7 +2882,9 @@ abstract class WebTestBase extends TestBase {
    * @param $value
    *   Value of the field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    *
    * @return
    *   TRUE on pass, FALSE on fail.

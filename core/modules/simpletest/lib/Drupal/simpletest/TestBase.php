@@ -163,9 +163,14 @@ abstract class TestBase {
    *   Can be 'pass', 'fail', 'exception'.
    *   TRUE is a synonym for 'pass', FALSE for 'fail'.
    * @param $message
-   *   The message string.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   Which group this assert belongs to.
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @param $caller
    *   By default, the assert comes from a function whose name starts with
    *   'test'. Instead, you can specify where this assert originates from
@@ -323,9 +328,14 @@ abstract class TestBase {
    * @param $value
    *   The value on which the assertion is to be done.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -339,9 +349,14 @@ abstract class TestBase {
    * @param $value
    *   The value on which the assertion is to be done.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -355,9 +370,14 @@ abstract class TestBase {
    * @param $value
    *   The value on which the assertion is to be done.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -371,9 +391,14 @@ abstract class TestBase {
    * @param $value
    *   The value on which the assertion is to be done.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -389,9 +414,14 @@ abstract class TestBase {
    * @param $second
    *   The second value to check.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -407,9 +437,14 @@ abstract class TestBase {
    * @param $second
    *   The second value to check.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -425,9 +460,14 @@ abstract class TestBase {
    * @param $second
    *   The second value to check.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -443,9 +483,14 @@ abstract class TestBase {
    * @param $second
    *   The second value to check.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -461,9 +506,14 @@ abstract class TestBase {
    * @param object $object2
    *   The second object to check.
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
@@ -486,9 +536,14 @@ abstract class TestBase {
    * Fire an assertion that is always positive.
    *
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   TRUE.
    */
@@ -500,9 +555,14 @@ abstract class TestBase {
    * Fire an assertion that is always negative.
    *
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @return
    *   FALSE.
    */
@@ -514,9 +574,14 @@ abstract class TestBase {
    * Fire an error assertion.
    *
    * @param $message
-   *   The message to display along with the assertion.
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    * @param $caller
    *   The caller of the error.
    * @return
