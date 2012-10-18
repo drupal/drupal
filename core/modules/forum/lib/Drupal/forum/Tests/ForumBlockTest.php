@@ -19,7 +19,7 @@ class ForumBlockTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'comment', 'forum', 'node', 'block', 'menu', 'help');
+  public static $modules = array('forum', 'block');
 
   /**
    * A user with various administrative privileges.
