@@ -57,7 +57,7 @@ class SaveTest extends WebTestBase {
     // Test to see if the original alias is available to modules during
     // hook_path_update().
     $results = variable_get('path_test_results', array());
-    $this->assertIdentical($results['hook_path_update']['original']['alias'], $path_original['alias'], t('Old path alias available to modules during hook_path_update.'));
-    $this->assertIdentical($results['hook_path_update']['original']['source'], $path_original['source'], t('Old path alias available to modules during hook_path_update.'));
+    $this->assertIdentical($results['hook_path_update']['original']['alias'], $path_original['alias'], 'Old path alias available to modules during hook_path_update.');
+    $this->assertIdentical($results['hook_path_update']['original']['source'], $path_original['source'], 'Old path alias available to modules during hook_path_update.');
   }
 }

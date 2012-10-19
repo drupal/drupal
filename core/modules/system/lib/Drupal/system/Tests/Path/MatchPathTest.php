@@ -45,7 +45,7 @@ class MatchPathTest extends WebTestBase {
     foreach ($tests as $patterns => $cases) {
       foreach ($cases as $path => $expected_result) {
         $actual_result = drupal_match_path($path, $patterns);
-        $this->assertIdentical($actual_result, $expected_result, t('Tried matching the path <code>@path</code> to the pattern <pre>@patterns</pre> - expected @expected, got @actual.', array('@path' => $path, '@patterns' => $patterns, '@expected' => var_export($expected_result, TRUE), '@actual' => var_export($actual_result, TRUE))));
+        $this->assertIdentical($actual_result, $expected_result, format_string('Tried matching the path <code>@path</code> to the pattern <pre>@patterns</pre> - expected @expected, got @actual.', array('@path' => $path, '@patterns' => $patterns, '@expected' => var_export($expected_result, TRUE), '@actual' => var_export($actual_result, TRUE))));
       }
     }
   }

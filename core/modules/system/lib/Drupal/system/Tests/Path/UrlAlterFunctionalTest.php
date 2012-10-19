@@ -83,8 +83,8 @@ class UrlAlterFunctionalTest extends WebTestBase {
    */
   function testCurrentUrlRequestedPath() {
     $this->drupalGet('url-alter-test/bar');
-    $this->assertRaw('request_path=url-alter-test/bar', t('request_path() returns the requested path.'));
-    $this->assertRaw('current_path=url-alter-test/foo', t('current_path() returns the internal path.'));
+    $this->assertRaw('request_path=url-alter-test/bar', 'request_path() returns the requested path.');
+    $this->assertRaw('current_path=url-alter-test/foo', 'current_path() returns the internal path.');
   }
 
   /**
@@ -92,7 +92,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
    */
   function testGetQInitialized() {
     $this->drupalGet('');
-    $this->assertText("current_path() is non-empty with an empty request path.", "current_path() is initialized with an empty request path.");
+    $this->assertText("current_path() is non-empty with an empty request path.", 'current_path() is initialized with an empty request path.');
   }
 
   /**
@@ -110,7 +110,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $result = url($original);
     $base_path = base_path() . $GLOBALS['script_path'];
     $result = substr($result, strlen($base_path));
-    $this->assertIdentical($result, $final, t('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 
   /**
@@ -127,6 +127,6 @@ class UrlAlterFunctionalTest extends WebTestBase {
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
     $result = drupal_get_normal_path($original);
-    $this->assertIdentical($result, $final, t('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 }
