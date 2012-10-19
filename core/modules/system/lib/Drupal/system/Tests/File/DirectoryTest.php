@@ -25,16 +25,16 @@ class DirectoryTest extends FileTestBase {
   function testFileCheckDirectoryHandling() {
     // A directory to operate on.
     $directory = file_default_scheme() . '://' . $this->randomName() . '/' . $this->randomName();
-    $this->assertFalse(is_dir($directory), t('Directory does not exist prior to testing.'));
+    $this->assertFalse(is_dir($directory), 'Directory does not exist prior to testing.');
 
     // Non-existent directory.
-    $this->assertFalse(file_prepare_directory($directory, 0), t('Error reported for non-existing directory.'), 'File');
+    $this->assertFalse(file_prepare_directory($directory, 0), 'Error reported for non-existing directory.', 'File');
 
     // Make a directory.
-    $this->assertTrue(file_prepare_directory($directory, FILE_CREATE_DIRECTORY), t('No error reported when creating a new directory.'), 'File');
+    $this->assertTrue(file_prepare_directory($directory, FILE_CREATE_DIRECTORY), 'No error reported when creating a new directory.', 'File');
 
     // Make sure directory actually exists.
-    $this->assertTrue(is_dir($directory), t('Directory actually exists.'), 'File');
+    $this->assertTrue(is_dir($directory), 'Directory actually exists.', 'File');
 
     if (substr(PHP_OS, 0, 3) != 'WIN') {
       // PHP on Windows doesn't support any kind of useful read-only mode for
@@ -44,10 +44,10 @@ class DirectoryTest extends FileTestBase {
 
       // Make directory read only.
       @drupal_chmod($directory, 0444);
-      $this->assertFalse(file_prepare_directory($directory, 0), t('Error reported for a non-writeable directory.'), 'File');
+      $this->assertFalse(file_prepare_directory($directory, 0), 'Error reported for a non-writeable directory.', 'File');
 
       // Test directory permission modification.
-      $this->assertTrue(file_prepare_directory($directory, FILE_MODIFY_PERMISSIONS), t('No error reported when making directory writeable.'), 'File');
+      $this->assertTrue(file_prepare_directory($directory, FILE_MODIFY_PERMISSIONS), 'No error reported when making directory writeable.', 'File');
     }
 
     // Test that the directory has the correct permissions.
@@ -55,12 +55,12 @@ class DirectoryTest extends FileTestBase {
 
     // Remove .htaccess file to then test that it gets re-created.
     @drupal_unlink(file_default_scheme() . '://.htaccess');
-    $this->assertFalse(is_file(file_default_scheme() . '://.htaccess'), t('Successfully removed the .htaccess file in the files directory.'), 'File');
+    $this->assertFalse(is_file(file_default_scheme() . '://.htaccess'), 'Successfully removed the .htaccess file in the files directory.', 'File');
     file_ensure_htaccess();
-    $this->assertTrue(is_file(file_default_scheme() . '://.htaccess'), t('Successfully re-created the .htaccess file in the files directory.'), 'File');
+    $this->assertTrue(is_file(file_default_scheme() . '://.htaccess'), 'Successfully re-created the .htaccess file in the files directory.', 'File');
     // Verify contents of .htaccess file.
     $file = file_get_contents(file_default_scheme() . '://.htaccess');
-    $this->assertEqual($file, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks", t('The .htaccess file contains the proper content.'), 'File');
+    $this->assertEqual($file, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks", 'The .htaccess file contains the proper content.', 'File');
   }
 
   /**
@@ -74,14 +74,14 @@ class DirectoryTest extends FileTestBase {
     $directory = 'core/misc';
     $original = $directory . '/' . $basename;
     $path = file_create_filename($basename, $directory);
-    $this->assertEqual($path, $original, t('New filepath %new equals %original.', array('%new' => $path, '%original' => $original)), 'File');
+    $this->assertEqual($path, $original, format_string('New filepath %new equals %original.', array('%new' => $path, '%original' => $original)), 'File');
 
     // Then we test against a file that already exists within that directory.
     $basename = 'druplicon.png';
     $original = $directory . '/' . $basename;
     $expected = $directory . '/druplicon_0.png';
     $path = file_create_filename($basename, $directory);
-    $this->assertEqual($path, $expected, t('Creating a new filepath from %original equals %new (expected %expected).', array('%new' => $path, '%original' => $original, '%expected' => $expected)), 'File');
+    $this->assertEqual($path, $expected, format_string('Creating a new filepath from %original equals %new (expected %expected).', array('%new' => $path, '%original' => $original, '%expected' => $expected)), 'File');
 
     // @TODO: Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
   }
@@ -102,19 +102,19 @@ class DirectoryTest extends FileTestBase {
     // First test for non-existent file.
     $destination = 'core/misc/xyz.txt';
     $path = file_destination($destination, FILE_EXISTS_REPLACE);
-    $this->assertEqual($path, $destination, t('Non-existing filepath destination is correct with FILE_EXISTS_REPLACE.'), 'File');
+    $this->assertEqual($path, $destination, 'Non-existing filepath destination is correct with FILE_EXISTS_REPLACE.', 'File');
     $path = file_destination($destination, FILE_EXISTS_RENAME);
-    $this->assertEqual($path, $destination, t('Non-existing filepath destination is correct with FILE_EXISTS_RENAME.'), 'File');
+    $this->assertEqual($path, $destination, 'Non-existing filepath destination is correct with FILE_EXISTS_RENAME.', 'File');
     $path = file_destination($destination, FILE_EXISTS_ERROR);
-    $this->assertEqual($path, $destination, t('Non-existing filepath destination is correct with FILE_EXISTS_ERROR.'), 'File');
+    $this->assertEqual($path, $destination, 'Non-existing filepath destination is correct with FILE_EXISTS_ERROR.', 'File');
 
     $destination = 'core/misc/druplicon.png';
     $path = file_destination($destination, FILE_EXISTS_REPLACE);
-    $this->assertEqual($path, $destination, t('Existing filepath destination remains the same with FILE_EXISTS_REPLACE.'), 'File');
+    $this->assertEqual($path, $destination, 'Existing filepath destination remains the same with FILE_EXISTS_REPLACE.', 'File');
     $path = file_destination($destination, FILE_EXISTS_RENAME);
-    $this->assertNotEqual($path, $destination, t('A new filepath destination is created when filepath destination already exists with FILE_EXISTS_RENAME.'), 'File');
+    $this->assertNotEqual($path, $destination, 'A new filepath destination is created when filepath destination already exists with FILE_EXISTS_RENAME.', 'File');
     $path = file_destination($destination, FILE_EXISTS_ERROR);
-    $this->assertEqual($path, FALSE, t('An error is returned when filepath destination already exists with FILE_EXISTS_ERROR.'), 'File');
+    $this->assertEqual($path, FALSE, 'An error is returned when filepath destination already exists with FILE_EXISTS_ERROR.', 'File');
   }
 
   /**
@@ -124,7 +124,7 @@ class DirectoryTest extends FileTestBase {
     // Start with an empty variable to ensure we have a clean slate.
     variable_set('file_temporary_path', '');
     $tmp_directory = file_directory_temp();
-    $this->assertEqual(empty($tmp_directory), FALSE, t('file_directory_temp() returned a non-empty value.'));
+    $this->assertEqual(empty($tmp_directory), FALSE, 'file_directory_temp() returned a non-empty value.');
     $setting = variable_get('file_temporary_path', '');
     $this->assertEqual($setting, $tmp_directory, "The 'file_temporary_path' variable has the same value that file_directory_temp() returned.");
   }

@@ -39,7 +39,7 @@ class UnmanagedCopyTest extends FileTestBase {
     $desired_filepath = 'public://' . $this->randomName();
     $this->assertTrue(file_put_contents($desired_filepath, ' '), 'Created a file so a rename will have to happen.');
     $newer_filepath = file_unmanaged_copy($uri, $desired_filepath, FILE_EXISTS_RENAME);
-    $this->assertTrue($newer_filepath, t('Copy was successful.'));
+    $this->assertTrue($newer_filepath, 'Copy was successful.');
     $this->assertNotEqual($newer_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($uri), 'Original file remains.');
     $this->assertTrue(file_exists($newer_filepath), 'New file exists.');
@@ -83,7 +83,7 @@ class UnmanagedCopyTest extends FileTestBase {
     // Copy the file into same directory without renaming fails.
     $new_filepath = file_unmanaged_copy($uri, drupal_dirname($uri), FILE_EXISTS_ERROR);
     $this->assertFalse($new_filepath, 'Copying onto itself fails.');
-    $this->assertTrue(file_exists($uri), t('File exists after copying onto itself.'));
+    $this->assertTrue(file_exists($uri), 'File exists after copying onto itself.');
 
     // Copy the file into same directory with renaming works.
     $new_filepath = file_unmanaged_copy($uri, drupal_dirname($uri), FILE_EXISTS_RENAME);
