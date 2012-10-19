@@ -55,9 +55,9 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->assertNoText(t('Up to date'));
     $this->assertText(t('Update available'));
     $this->assertNoText(t('Security update required!'));
-    $this->assertRaw(l('7.1', 'http://example.com/drupal-7-1-release'), t('Link to release appears.'));
-    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), t('Link to download appears.'));
-    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-1-release'), t('Link to release notes appears.'));
+    $this->assertRaw(l('7.1', 'http://example.com/drupal-7-1-release'), 'Link to release appears.');
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), 'Link to download appears.');
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-1-release'), 'Link to release notes appears.');
   }
 
   /**
@@ -70,9 +70,9 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->assertNoText(t('Up to date'));
     $this->assertNoText(t('Update available'));
     $this->assertText(t('Security update required!'));
-    $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), t('Link to release appears.'));
-    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), t('Link to download appears.'));
-    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), t('Link to release notes appears.'));
+    $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), 'Link to release appears.');
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), 'Link to download appears.');
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), 'Link to release notes appears.');
   }
 
   /**

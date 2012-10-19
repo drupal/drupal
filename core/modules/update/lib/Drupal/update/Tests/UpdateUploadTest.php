@@ -68,9 +68,9 @@ class UpdateUploadTest extends UpdateTestBase {
   function testFileNameExtensionMerging() {
     $this->drupalGet('admin/modules/install');
     // Make sure the bogus extension supported by update_test.module is there.
-    $this->assertPattern('/file extensions are supported:.*update-test-extension/', t("Found 'update-test-extension' extension"));
+    $this->assertPattern('/file extensions are supported:.*update-test-extension/', "Found 'update-test-extension' extension.");
     // Make sure it didn't clobber the first option from core.
-    $this->assertPattern('/file extensions are supported:.*tar/', t("Found 'tar' extension"));
+    $this->assertPattern('/file extensions are supported:.*tar/', "Found 'tar' extension.");
   }
 
   /**

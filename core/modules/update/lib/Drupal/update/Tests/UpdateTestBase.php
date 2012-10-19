@@ -55,7 +55,7 @@ abstract class UpdateTestBase extends WebTestBase {
    */
   protected function standardTests() {
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
-    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), t('Link to the Drupal project appears.'));
+    $this->assertRaw(l(t('Drupal'), 'http://example.com/project/drupal'), 'Link to the Drupal project appears.');
     $this->assertNoText(t('No available releases found'));
   }
 }
