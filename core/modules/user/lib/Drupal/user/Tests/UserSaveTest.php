@@ -44,9 +44,9 @@ class UserSaveTest extends WebTestBase {
 
     // Test if created user exists.
     $user_by_uid = user_load($test_uid);
-    $this->assertTrue($user_by_uid, t('Loading user by uid.'));
+    $this->assertTrue($user_by_uid, 'Loading user by uid.');
 
     $user_by_name = user_load_by_name($test_name);
-    $this->assertTrue($user_by_name, t('Loading user by name.'));
+    $this->assertTrue($user_by_name, 'Loading user by name.');
   }
 }

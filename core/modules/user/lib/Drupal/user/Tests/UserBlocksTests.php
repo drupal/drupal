@@ -61,23 +61,23 @@ class UserBlocksTests extends WebTestBase {
     $edit['name'] = $user->name;
     $edit['pass'] = $user->pass_raw;
     $this->drupalPost('admin/people/permissions', $edit, t('Log in'));
-    $this->assertNoText(t('User login'), t('Logged in.'));
+    $this->assertNoText(t('User login'), 'Logged in.');
 
     // Check that we are still on the same page.
-    $this->assertEqual(url('admin/people/permissions', array('absolute' => TRUE)), $this->getUrl(), t('Still on the same page after login for access denied page'));
+    $this->assertEqual(url('admin/people/permissions', array('absolute' => TRUE)), $this->getUrl(), 'Still on the same page after login for access denied page');
 
     // Now, log out and repeat with a non-403 page.
     $this->drupalLogout();
     $this->drupalPost('filter/tips', $edit, t('Log in'));
-    $this->assertNoText(t('User login'), t('Logged in.'));
-    $this->assertPattern('!<title.*?' . t('Compose tips') . '.*?</title>!', t('Still on the same page after login for allowed page'));
+    $this->assertNoText(t('User login'), 'Logged in.');
+    $this->assertPattern('!<title.*?' . t('Compose tips') . '.*?</title>!', 'Still on the same page after login for allowed page');
 
     // Check that the user login block is not vulnerable to information
     // disclosure to third party sites.
     $this->drupalLogout();
     $this->drupalPost('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
     // Check that we remain on the site after login.
-    $this->assertEqual(url('user/' . $user->uid, array('absolute' => TRUE)), $this->getUrl(), t('Redirected to user profile page after login from the frontpage'));
+    $this->assertEqual(url('user/' . $user->uid, array('absolute' => TRUE)), $this->getUrl(), 'Redirected to user profile page after login from the frontpage');
   }
 
   /**
@@ -88,12 +88,12 @@ class UserBlocksTests extends WebTestBase {
     $user1 = $this->drupalCreateUser(array());
     $user2 = $this->drupalCreateUser(array());
     $user3 = $this->drupalCreateUser(array());
-    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions}")->fetchField(), 0, t('Sessions table is empty.'));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions}")->fetchField(), 0, 'Sessions table is empty.');
 
     // Insert a user with two sessions.
     $this->insertSession(array('uid' => $user1->uid));
     $this->insertSession(array('uid' => $user1->uid));
-    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid", array(':uid' => $user1->uid))->fetchField(), 2, t('Duplicate user session has been inserted.'));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid", array(':uid' => $user1->uid))->fetchField(), 2, 'Duplicate user session has been inserted.');
 
     // Insert a user with only one session.
     $this->insertSession(array('uid' => $user2->uid, 'timestamp' => REQUEST_TIME + 1));
@@ -109,11 +109,11 @@ class UserBlocksTests extends WebTestBase {
     $block = user_block_view('online');
     $block['content'] = render($block['content']);
     $this->drupalSetContent($block['content']);
-    $this->assertRaw(t('2 users'), t('Correct number of online users (2 users).'));
-    $this->assertText($user1->name, t('Active user 1 found in online list.'));
-    $this->assertText($user2->name, t('Active user 2 found in online list.'));
-    $this->assertNoText($user3->name, t("Inactive user not found in online list."));
-    $this->assertTrue(strpos($this->drupalGetContent(), $user1->name) > strpos($this->drupalGetContent(), $user2->name), t('Online users are ordered correctly.'));
+    $this->assertRaw(t('2 users'), 'Correct number of online users (2 users).');
+    $this->assertText($user1->name, 'Active user 1 found in online list.');
+    $this->assertText($user2->name, 'Active user 2 found in online list.');
+    $this->assertNoText($user3->name, 'Inactive user not found in online list.');
+    $this->assertTrue(strpos($this->drupalGetContent(), $user1->name) > strpos($this->drupalGetContent(), $user2->name), 'Online users are ordered correctly.');
   }
 
   /**
@@ -129,6 +129,6 @@ class UserBlocksTests extends WebTestBase {
     db_insert('sessions')
       ->fields($fields)
       ->execute();
-    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid AND sid = :sid AND timestamp = :timestamp", array(':uid' => $fields['uid'], ':sid' => $fields['sid'], ':timestamp' => $fields['timestamp']))->fetchField(), 1, t('Session record inserted.'));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid AND sid = :sid AND timestamp = :timestamp", array(':uid' => $fields['uid'], ':sid' => $fields['sid'], ':timestamp' => $fields['timestamp']))->fetchField(), 1, 'Session record inserted.');
   }
 }

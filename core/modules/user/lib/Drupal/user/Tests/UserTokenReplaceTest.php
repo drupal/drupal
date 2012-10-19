@@ -72,11 +72,11 @@ class UserTokenReplaceTest extends WebTestBase {
     $tests['[current-user:name]'] = check_plain(user_format_name($global_account));
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('user' => $account), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Sanitized user token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -86,7 +86,7 @@ class UserTokenReplaceTest extends WebTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('user' => $account), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, t('Unsanitized user token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Unsanitized user token %token replaced.', array('%token' => $input)));
     }
 
     // Generate login and cancel link.

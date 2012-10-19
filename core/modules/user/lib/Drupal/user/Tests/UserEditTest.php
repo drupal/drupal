@@ -47,12 +47,12 @@ class UserEditTest extends WebTestBase {
     $edit['pass[pass1]'] = '';
     $edit['pass[pass2]'] = $this->randomName();
     $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
-    $this->assertText(t("The specified passwords do not match."), t('Typing mismatched passwords displays an error message.'));
+    $this->assertText(t("The specified passwords do not match."), 'Typing mismatched passwords displays an error message.');
 
     $edit['pass[pass1]'] = $this->randomName();
     $edit['pass[pass2]'] = '';
     $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
-    $this->assertText(t("The specified passwords do not match."), t('Typing mismatched passwords displays an error message.'));
+    $this->assertText(t("The specified passwords do not match."), 'Typing mismatched passwords displays an error message.');
 
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.

@@ -61,7 +61,7 @@ class UserPictureTest extends WebTestBase {
     // Try to upload a file that is not an image for the user picture.
     $not_an_image = current($this->drupalGetTestFiles('html'));
     $this->saveUserPicture($not_an_image);
-    $this->assertRaw(t('Only JPEG, PNG and GIF images are allowed.'), t('Non-image files are not accepted.'));
+    $this->assertRaw(t('Only JPEG, PNG and GIF images are allowed.'), 'Non-image files are not accepted.');
   }
 
   /**
@@ -87,13 +87,13 @@ class UserPictureTest extends WebTestBase {
       // Check that the image was resized and is being displayed on the
       // user's profile page.
       $text = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $test_dim));
-      $this->assertRaw($text, t('Image was resized.'));
+      $this->assertRaw($text, 'Image was resized.');
       $alt = t("@user's picture", array('@user' => user_format_name($this->user)));
       $style = variable_get('user_picture_style', '');
-      $this->assertRaw(image_style_url($style, $pic_path), t("Image is displayed in user's edit page"));
+      $this->assertRaw(image_style_url($style, $pic_path), "Image is displayed in user's edit page");
 
       // Check if file is located in proper directory.
-      $this->assertTrue(is_file($pic_path), t("File is located in proper directory"));
+      $this->assertTrue(is_file($pic_path), 'File is located in proper directory.');
     }
   }
 
@@ -124,12 +124,12 @@ class UserPictureTest extends WebTestBase {
 
       // Test that the upload failed and that the correct reason was cited.
       $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->filename));
-      $this->assertRaw($text, t('Upload failed.'));
+      $this->assertRaw($text, 'Upload failed.');
       $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->uri)), '%maxsize' => format_size($test_size * 1024)));
-      $this->assertRaw($text, t('File size cited as reason for failure.'));
+      $this->assertRaw($text, 'File size cited as reason for failure.');
 
       // Check if file is not uploaded.
-      $this->assertFalse(is_file($pic_path), t('File was not uploaded.'));
+      $this->assertFalse(is_file($pic_path), 'File was not uploaded.');
     }
   }
 
@@ -156,12 +156,12 @@ class UserPictureTest extends WebTestBase {
 
       // Test that the upload failed and that the correct reason was cited.
       $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->filename));
-      $this->assertRaw($text, t('Upload failed.'));
+      $this->assertRaw($text, 'Upload failed.');
       $text = t('The image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => $test_dim));
-      $this->assertRaw($text, t('Checking response on invalid image (dimensions).'));
+      $this->assertRaw($text, 'Checking response on invalid image (dimensions).');
 
       // Check if file is not uploaded.
-      $this->assertFalse(is_file($pic_path), t('File was not uploaded.'));
+      $this->assertFalse(is_file($pic_path), 'File was not uploaded.');
     }
   }
 
@@ -189,12 +189,12 @@ class UserPictureTest extends WebTestBase {
 
       // Test that the upload failed and that the correct reason was cited.
       $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->filename));
-      $this->assertRaw($text, t('Upload failed.'));
+      $this->assertRaw($text, 'Upload failed.');
       $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->uri)), '%maxsize' => format_size($test_size * 1024)));
-      $this->assertRaw($text, t('File size cited as reason for failure.'));
+      $this->assertRaw($text, 'File size cited as reason for failure.');
 
       // Check if file is not uploaded.
-      $this->assertFalse(is_file($pic_path), t('File was not uploaded.'));
+      $this->assertFalse(is_file($pic_path), 'File was not uploaded.');
     }
   }
 
@@ -220,17 +220,17 @@ class UserPictureTest extends WebTestBase {
 
       // Check if image is displayed in user's profile page.
       $this->drupalGet('user');
-      $this->assertRaw(file_uri_target($pic_path), t("Image is displayed in user's profile page"));
+      $this->assertRaw(file_uri_target($pic_path), "Image is displayed in user's profile page.");
 
       // Check if file is located in proper directory.
-      $this->assertTrue(is_file($pic_path), t('File is located in proper directory'));
+      $this->assertTrue(is_file($pic_path), 'File is located in proper directory.');
 
       // Set new picture dimensions.
       $test_dim = ($info['width'] + 5) . 'x' . ($info['height'] + 5);
       variable_set('user_picture_dimensions', $test_dim);
 
       $pic_path2 = $this->saveUserPicture($image);
-      $this->assertNotEqual($pic_path, $pic_path2, t('Filename of second picture is different.'));
+      $this->assertNotEqual($pic_path, $pic_path2, 'Filename of second picture is different.');
     }
   }
 
@@ -250,8 +250,8 @@ class UserPictureTest extends WebTestBase {
 
     // Get the user picture image via xpath.
     $elements = $this->xpath('//div[@class="user-picture"]/img');
-    $this->assertEqual(count($elements), 1, t("There is exactly one user picture on the user's profile page"));
-    $this->assertEqual($pic_path, (string) $elements[0]['src'], t("User picture source is correct: " . $pic_path . " " . print_r($elements, TRUE)));
+    $this->assertEqual(count($elements), 1, "There is exactly one user picture on the user's profile page.");
+    $this->assertEqual($pic_path, (string) $elements[0]['src'], format_string("User picture source is correct: %path %elements.", array('%path' => $pic_path, '%elements' => print_r($elements, TRUE))));
   }
 
   /**

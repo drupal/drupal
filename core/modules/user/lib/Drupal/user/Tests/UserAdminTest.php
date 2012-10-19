@@ -39,14 +39,14 @@ class UserAdminTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/people');
-    $this->assertText($user_a->name, t('Found user A on admin users page'));
-    $this->assertText($user_b->name, t('Found user B on admin users page'));
-    $this->assertText($user_c->name, t('Found user C on admin users page'));
-    $this->assertText($admin_user->name, t('Found Admin user on admin users page'));
+    $this->assertText($user_a->name, 'Found user A on admin users page');
+    $this->assertText($user_b->name, 'Found user B on admin users page');
+    $this->assertText($user_c->name, 'Found user C on admin users page');
+    $this->assertText($admin_user->name, 'Found Admin user on admin users page');
 
     // Test for existence of edit link in table.
     $link = l(t('edit'), "user/$user_a->uid/edit", array('query' => array('destination' => 'admin/people')));
-    $this->assertRaw($link, t('Found user A edit link on admin users page'));
+    $this->assertRaw($link, 'Found user A edit link on admin users page');
 
     // Filter the users by permission 'administer taxonomy'.
     $edit = array();
@@ -54,9 +54,9 @@ class UserAdminTest extends WebTestBase {
     $this->drupalPost('admin/people', $edit, t('Filter'));
 
     // Check if the correct users show up.
-    $this->assertNoText($user_a->name, t('User A not on filtered by perm admin users page'));
-    $this->assertText($user_b->name, t('Found user B on filtered by perm admin users page'));
-    $this->assertText($user_c->name, t('Found user C on filtered by perm admin users page'));
+    $this->assertNoText($user_a->name, 'User A not on filtered by perm admin users page');
+    $this->assertText($user_b->name, 'Found user B on filtered by perm admin users page');
+    $this->assertText($user_c->name, 'Found user C on filtered by perm admin users page');
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->roles;
@@ -65,9 +65,9 @@ class UserAdminTest extends WebTestBase {
     $this->drupalPost('admin/people', $edit, t('Refine'));
 
     // Check if the correct users show up when filtered by role.
-    $this->assertNoText($user_a->name, t('User A not on filtered by role on admin users page'));
-    $this->assertNoText($user_b->name, t('User B not on filtered by role on admin users page'));
-    $this->assertText($user_c->name, t('User C on filtered by role on admin users page'));
+    $this->assertNoText($user_a->name, 'User A not on filtered by role on admin users page');
+    $this->assertNoText($user_b->name, 'User B not on filtered by role on admin users page');
+    $this->assertText($user_c->name, 'User C on filtered by role on admin users page');
 
     // Test blocking of a user.
     $account = user_load($user_c->uid);

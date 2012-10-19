@@ -60,18 +60,18 @@ class UserLanguageTest extends WebTestBase {
     $path = 'user/' . $web_user->uid . '/edit';
     $this->drupalGet($path);
     // Ensure language settings fieldset is available.
-    $this->assertText(t('Language'), t('Language selector available.'));
+    $this->assertText(t('Language'), 'Language selector available.');
     // Ensure custom language is present.
-    $this->assertText($name, t('Language present on form.'));
+    $this->assertText($name, 'Language present on form.');
     // Switch to our custom language.
     $edit = array(
       'preferred_langcode' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Save'));
     // Ensure form was submitted successfully.
-    $this->assertText(t('The changes have been saved.'), t('Changes were saved.'));
+    $this->assertText(t('The changes have been saved.'), 'Changes were saved.');
     // Check if language was changed.
-    $this->assertOptionSelected('edit-preferred-langcode', $langcode, t('Default language successfully updated.'));
+    $this->assertOptionSelected('edit-preferred-langcode', $langcode, 'Default language successfully updated.');
 
     $this->drupalLogout();
   }

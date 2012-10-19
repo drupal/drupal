@@ -40,12 +40,12 @@ class UserEntityCallbacksTest extends WebTestBase {
    * Test label callback.
    */
   function testLabelCallback() {
-    $this->assertEqual($this->account->label(), $this->account->name, t('The username should be used as label'));
+    $this->assertEqual($this->account->label(), $this->account->name, 'The username should be used as label');
 
     // Setup a random anonymous name to be sure the name is used.
     $name = $this->randomName();
     config('user.settings')->set('anonymous', $name)->save();
-    $this->assertEqual($this->anonymous->label(), $name, t('The variable anonymous should be used for name of uid 0'));
+    $this->assertEqual($this->anonymous->label(), $name, 'The variable anonymous should be used for name of uid 0');
   }
 
   /**
@@ -53,6 +53,6 @@ class UserEntityCallbacksTest extends WebTestBase {
    */
   function testUriCallback() {
     $uri = $this->account->uri();
-    $this->assertEqual('user/' . $this->account->uid, $uri['path'], t('Correct user URI.'));
+    $this->assertEqual('user/' . $this->account->uid, $uri['path'], 'Correct user URI.');
   }
 }

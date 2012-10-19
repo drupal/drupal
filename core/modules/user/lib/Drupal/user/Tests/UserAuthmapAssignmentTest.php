@@ -15,9 +15,9 @@ use Drupal\simpletest\WebTestBase;
 class UserAuthmapAssignmentTest extends WebTestBase {
   public static function getInfo() {
     return array(
-      'name' => t('Authmap assignment'),
-      'description' => t('Tests that users can be assigned and unassigned authmaps.'),
-      'group' => t('User')
+      'name' => 'Authmap assignment',
+      'description' => 'Tests that users can be assigned and unassigned authmaps.',
+      'group' => 'User'
     );
   }
 
@@ -44,7 +44,7 @@ class UserAuthmapAssignmentTest extends WebTestBase {
       ),
     );
     foreach ($expected_authmaps as $authname => $expected_output) {
-      $this->assertIdentical(user_get_authmaps($authname), $expected_output, t('Authmap for authname %authname was set correctly.', array('%authname' => $authname)));
+      $this->assertIdentical(user_get_authmaps($authname), $expected_output, format_string('Authmap for authname %authname was set correctly.', array('%authname' => $authname)));
     }
 
     // Remove authmap for module poll, add authmap for module blog.
@@ -57,13 +57,13 @@ class UserAuthmapAssignmentTest extends WebTestBase {
     // Assert that external username one does not have authmaps.
     $remove_username = 'external username one';
     unset($expected_authmaps[$remove_username]);
-    $this->assertFalse(user_get_authmaps($remove_username), t('Authmap for %authname was removed.', array('%authname' => $remove_username)));
+    $this->assertFalse(user_get_authmaps($remove_username), format_string('Authmap for %authname was removed.', array('%authname' => $remove_username)));
 
     // Assert that a new authmap was created for external username three, and
     // existing authmaps for external username two were unchanged.
     $expected_authmaps['external username three'] = array('blog' => 'external username three');
     foreach ($expected_authmaps as $authname => $expected_output) {
-      $this->assertIdentical(user_get_authmaps($authname), $expected_output, t('Authmap for authname %authname was set correctly.', array('%authname' => $authname)));
+      $this->assertIdentical(user_get_authmaps($authname), $expected_output, format_string('Authmap for authname %authname was set correctly.', array('%authname' => $authname)));
     }
   }
 }

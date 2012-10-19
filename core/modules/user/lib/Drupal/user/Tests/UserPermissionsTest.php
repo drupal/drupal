@@ -41,24 +41,24 @@ class UserPermissionsTest extends WebTestBase {
     $account = $this->admin_user;
 
     // Add a permission.
-    $this->assertFalse(user_access('administer nodes', $account), t('User does not have "administer nodes" permission.'));
+    $this->assertFalse(user_access('administer nodes', $account), 'User does not have "administer nodes" permission.');
     $edit = array();
     $edit[$rid . '[administer nodes]'] = TRUE;
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
-    $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
+    $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
     drupal_static_reset('user_access');
     drupal_static_reset('user_role_permissions');
-    $this->assertTrue(user_access('administer nodes', $account), t('User now has "administer nodes" permission.'));
+    $this->assertTrue(user_access('administer nodes', $account), 'User now has "administer nodes" permission.');
 
     // Remove a permission.
-    $this->assertTrue(user_access('access user profiles', $account), t('User has "access user profiles" permission.'));
+    $this->assertTrue(user_access('access user profiles', $account), 'User has "access user profiles" permission.');
     $edit = array();
     $edit[$rid . '[access user profiles]'] = FALSE;
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
-    $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
+    $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
     drupal_static_reset('user_access');
     drupal_static_reset('user_role_permissions');
-    $this->assertFalse(user_access('access user profiles', $account), t('User no longer has "access user profiles" permission.'));
+    $this->assertFalse(user_access('access user profiles', $account), 'User no longer has "access user profiles" permission.');
   }
 
   /**
@@ -80,7 +80,7 @@ class UserPermissionsTest extends WebTestBase {
     // Aggregator depends on file module, enable that as well.
     $edit['modules[Core][file][enable]'] = TRUE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertTrue(user_access('administer news feeds', $this->admin_user), t('The permission was automatically assigned to the administrator role'));
+    $this->assertTrue(user_access('administer news feeds', $this->admin_user), 'The permission was automatically assigned to the administrator role');
   }
 
   /**
@@ -91,9 +91,9 @@ class UserPermissionsTest extends WebTestBase {
     $account = $this->admin_user;
 
     // Verify current permissions.
-    $this->assertFalse(user_access('administer nodes', $account), t('User does not have "administer nodes" permission.'));
-    $this->assertTrue(user_access('access user profiles', $account), t('User has "access user profiles" permission.'));
-    $this->assertTrue(user_access('administer site configuration', $account), t('User has "administer site configuration" permission.'));
+    $this->assertFalse(user_access('administer nodes', $account), 'User does not have "administer nodes" permission.');
+    $this->assertTrue(user_access('access user profiles', $account), 'User has "access user profiles" permission.');
+    $this->assertTrue(user_access('administer site configuration', $account), 'User has "administer site configuration" permission.');
 
     // Change permissions.
     $permissions = array(
@@ -103,8 +103,8 @@ class UserPermissionsTest extends WebTestBase {
     user_role_change_permissions($rid, $permissions);
 
     // Verify proper permission changes.
-    $this->assertTrue(user_access('administer nodes', $account), t('User now has "administer nodes" permission.'));
-    $this->assertFalse(user_access('access user profiles', $account), t('User no longer has "access user profiles" permission.'));
-    $this->assertTrue(user_access('administer site configuration', $account), t('User still has "administer site configuration" permission.'));
+    $this->assertTrue(user_access('administer nodes', $account), 'User now has "administer nodes" permission.');
+    $this->assertFalse(user_access('access user profiles', $account), 'User no longer has "access user profiles" permission.');
+    $this->assertTrue(user_access('administer site configuration', $account), 'User still has "administer site configuration" permission.');
   }
 }
