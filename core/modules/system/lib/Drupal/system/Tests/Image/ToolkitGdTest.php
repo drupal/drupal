@@ -212,7 +212,7 @@ class ToolkitGdTest extends WebTestBase {
 
         // All images should be converted to truecolor when loaded.
         $image_truecolor = imageistruecolor($image->resource);
-        $this->assertTrue($image_truecolor, t('Image %file after load is a truecolor image.', array('%file' => $file)));
+        $this->assertTrue($image_truecolor, format_string('Image %file after load is a truecolor image.', array('%file' => $file)));
 
         if ($image->info['extension'] == 'gif') {
           if ($op == 'desaturate') {
@@ -248,8 +248,8 @@ class ToolkitGdTest extends WebTestBase {
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
         image_save($image, $directory . '/' . $op . '.' . $image->info['extension']);
 
-        $this->assertTrue($correct_dimensions_real, t('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
-        $this->assertTrue($correct_dimensions_object, t('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
+        $this->assertTrue($correct_dimensions_real, format_string('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
+        $this->assertTrue($correct_dimensions_object, format_string('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
 
         // JPEG colors will always be messed up due to compression.
         if ($image->info['extension'] != 'jpg') {
@@ -276,7 +276,7 @@ class ToolkitGdTest extends WebTestBase {
             }
             $color = $this->getPixelColor($image, $x, $y);
             $correct_colors = $this->colorsAreEqual($color, $corner);
-            $this->assertTrue($correct_colors, t('Image %file object after %action action has the correct color placement at corner %corner.', array('%file' => $file, '%action' => $op, '%corner' => $key)));
+            $this->assertTrue($correct_colors, format_string('Image %file object after %action action has the correct color placement at corner %corner.', array('%file' => $file, '%action' => $op, '%corner' => $key)));
           }
         }
       }

@@ -72,7 +72,7 @@ class GraphUnitTest extends UnitTestBase {
     $this->assertReversePaths($graph, $expected_reverse_paths);
 
     // Assert that DFS didn't created "missing" vertexes automatically.
-    $this->assertFALSE(isset($graph[6]), t('Vertex 6 has not been created'));
+    $this->assertFALSE(isset($graph[6]), 'Vertex 6 has not been created');
 
     $expected_components = array(
       array(1, 2, 3, 4, 5, 7),
@@ -119,7 +119,7 @@ class GraphUnitTest extends UnitTestBase {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
       $result = isset($graph[$vertex]['paths']) ? $graph[$vertex]['paths'] : array();
-      $this->assertEqual($expected, $result, t('Expected paths for vertex @vertex: @expected-paths, got @paths', array('@vertex' => $vertex, '@expected-paths' => $this->displayArray($expected, TRUE), '@paths' => $this->displayArray($result, TRUE))));
+      $this->assertEqual($expected, $result, format_string('Expected paths for vertex @vertex: @expected-paths, got @paths', array('@vertex' => $vertex, '@expected-paths' => $this->displayArray($expected, TRUE), '@paths' => $this->displayArray($result, TRUE))));
     }
   }
 
@@ -137,7 +137,7 @@ class GraphUnitTest extends UnitTestBase {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
       $result = isset($graph[$vertex]['reverse_paths']) ? $graph[$vertex]['reverse_paths'] : array();
-      $this->assertEqual($expected, $result, t('Expected reverse paths for vertex @vertex: @expected-paths, got @paths', array('@vertex' => $vertex, '@expected-paths' => $this->displayArray($expected, TRUE), '@paths' => $this->displayArray($result, TRUE))));
+      $this->assertEqual($expected, $result, format_string('Expected reverse paths for vertex @vertex: @expected-paths, got @paths', array('@vertex' => $vertex, '@expected-paths' => $this->displayArray($expected, TRUE), '@paths' => $this->displayArray($result, TRUE))));
     }
   }
 
@@ -157,9 +157,9 @@ class GraphUnitTest extends UnitTestBase {
         $result_components[] = $graph[$vertex]['component'];
         unset($unassigned_vertices[$vertex]);
       }
-      $this->assertEqual(1, count(array_unique($result_components)), t('Expected one unique component for vertices @vertices, got @components', array('@vertices' => $this->displayArray($component), '@components' => $this->displayArray($result_components))));
+      $this->assertEqual(1, count(array_unique($result_components)), format_string('Expected one unique component for vertices @vertices, got @components', array('@vertices' => $this->displayArray($component), '@components' => $this->displayArray($result_components))));
     }
-    $this->assertEqual(array(), $unassigned_vertices, t('Vertices not assigned to a component: @vertices', array('@vertices' => $this->displayArray($unassigned_vertices, TRUE))));
+    $this->assertEqual(array(), $unassigned_vertices, format_string('Vertices not assigned to a component: @vertices', array('@vertices' => $this->displayArray($unassigned_vertices, TRUE))));
   }
 
   /**
@@ -174,7 +174,7 @@ class GraphUnitTest extends UnitTestBase {
     foreach ($expected_orders as $order) {
       $previous_vertex = array_shift($order);
       foreach ($order as $vertex) {
-        $this->assertTrue($graph[$previous_vertex]['weight'] < $graph[$vertex]['weight'], t('Weights of @previous-vertex and @vertex are correct relative to each other', array('@previous-vertex' => $previous_vertex, '@vertex' => $vertex)));
+        $this->assertTrue($graph[$previous_vertex]['weight'] < $graph[$vertex]['weight'], format_string('Weights of @previous-vertex and @vertex are correct relative to each other', array('@previous-vertex' => $previous_vertex, '@vertex' => $vertex)));
       }
     }
   }

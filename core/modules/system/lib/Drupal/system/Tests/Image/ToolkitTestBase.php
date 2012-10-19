@@ -62,19 +62,19 @@ abstract class ToolkitTestBase extends WebTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, t('Expected operations %expected to be called but %uncalled was not called.', array('%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled))));
+      $this->assertTrue(FALSE, format_string('Expected operations %expected to be called but %uncalled was not called.', array('%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled))));
     }
     else {
-      $this->assertTrue(TRUE, t('All the expected operations were called: %expected', array('%expected' => implode(', ', $expected))));
+      $this->assertTrue(TRUE, format_string('All the expected operations were called: %expected', array('%expected' => implode(', ', $expected))));
     }
 
     // Determine if there were any unexpected calls.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected)) {
-      $this->assertTrue(FALSE, t('Unexpected operations were called: %unexpected.', array('%unexpected' => implode(', ', $unexpected))));
+      $this->assertTrue(FALSE, format_string('Unexpected operations were called: %unexpected.', array('%unexpected' => implode(', ', $unexpected))));
     }
     else {
-      $this->assertTrue(TRUE, t('No unexpected operations were called.'));
+      $this->assertTrue(TRUE, 'No unexpected operations were called.');
     }
   }
 }
