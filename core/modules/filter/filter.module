@@ -4,8 +4,29 @@
  * @file
  * Framework for handling the filtering of content.
  */
+
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
+
+/**
+ * Non-HTML markup language filters that generate HTML.
+ */
+const FILTER_TYPE_MARKUP_LANGUAGE = 0;
+
+/**
+ * HTML tag and attribute restricting filters.
+ */
+const FILTER_TYPE_HTML_RESTRICTOR = 1;
+
+/**
+ * Reversible transformation filters.
+ */
+const FILTER_TYPE_TRANSFORM_REVERSIBLE = 2;
+
+/**
+ * Irreversible transformation filters.
+ */
+const FILTER_TYPE_TRANSFORM_IRREVERSIBLE = 3;
 
 /**
  * Implements hook_cache_flush().
@@ -550,6 +571,39 @@ function filter_default_format($account = NULL) {
 }
 
 /**
+ * Retrieves all filter types that are used in a given text format.
+ *
+ * @param string $format_id
+ *   A text format ID.
+ *
+ * @return array
+ *   All filter types used by filters of a given text format.
+ *
+ * @throws Exception
+ */
+function filter_get_filter_types_by_format($format_id) {
+  $filter_types = array();
+
+  $filters = filter_list_format($format_id);
+
+  // Ignore filters that are disabled.
+  $filters = array_filter($filters, function($filter) {
+    return $filter->status;
+  });
+
+  $filters_info = filter_get_filters();
+  foreach ($filters as $filter) {
+    if (!isset($filters_info[$filter->name]['type'])) {
+      throw new Exception(t('Filter %filter has no type specified.', array ('%filter' => $filter->name)));
+    }
+
+    $filter_types[] = $filters_info[$filter->name]['type'];
+  }
+
+  return array_unique($filter_types);
+}
+
+/**
  * Returns the ID of the fallback text format that all users have access to.
  *
  * The fallback text format is a regular text format in every respect, except
@@ -759,13 +813,18 @@ function filter_list_format($format_id) {
  *   Boolean whether to cache the filtered output in the {cache_filter} table.
  *   The caller may set this to FALSE when the output is already cached
  *   elsewhere to avoid duplicate cache lookups and storage.
+ * @param array $filter_types_to_skip
+ *   (optional) An array of filter types to skip, or an empty array (default)
+ *   to skip no filter types. All of the format's filters will be applied,
+ *   except for filters of the types that are marked to be skipped.
+ *   FILTER_TYPE_HTML_RESTRICTOR is the only type that cannot be skipped.
  *
  * @return
  *   The filtered text.
  *
  * @ingroup sanitization
  */
-function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) {
+function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, $filter_types_to_skip = array()) {
   if (!isset($format_id)) {
     $format_id = filter_fallback_format();
   }
@@ -773,6 +832,16 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
   if (!$format = filter_format_load($format_id)) {
     watchdog('filter', 'Missing text format: %format.', array('%format' => $format_id), WATCHDOG_ALERT);
     return '';
+  }
+
+  // Prevent FILTER_TYPE_HTML_RESTRICTOR from being skipped.
+  if (in_array(FILTER_TYPE_HTML_RESTRICTOR, $filter_types_to_skip)) {
+    $filter_types_to_skip = array_diff($filter_types_to_skip, array(FILTER_TYPE_HTML_RESTRICTOR));
+  }
+
+  // When certain filters should be skipped, don't perform caching.
+  if ($filter_types_to_skip) {
+    $cache = FALSE;
   }
 
   // Check for a cached version of this piece of text.
@@ -795,6 +864,10 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 
   // Give filters the chance to escape HTML-like data such as code or formulas.
   foreach ($filters as $name => $filter) {
+    // If necessary, skip filters of a certain type.
+    if (in_array($filter_info[$name]['type'], $filter_types_to_skip)) {
+      continue;
+    }
     if ($filter->status && isset($filter_info[$name]['prepare callback'])) {
       $function = $filter_info[$name]['prepare callback'];
       $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
@@ -803,6 +876,10 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 
   // Perform filtering.
   foreach ($filters as $name => $filter) {
+    // If necessary, skip filters of a certain type.
+    if (in_array($filter_info[$name]['type'], $filter_types_to_skip)) {
+      continue;
+    }
     if ($filter->status && isset($filter_info[$name]['process callback'])) {
       $function = $filter_info[$name]['process callback'];
       $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
@@ -1225,6 +1302,7 @@ function theme_filter_guidelines($variables) {
 function filter_filter_info() {
   $filters['filter_html'] = array(
     'title' => t('Limit allowed HTML tags'),
+    'type' => FILTER_TYPE_HTML_RESTRICTOR,
     'process callback' => '_filter_html',
     'settings callback' => '_filter_html_settings',
     'default settings' => array(
@@ -1237,11 +1315,13 @@ function filter_filter_info() {
   );
   $filters['filter_autop'] = array(
     'title' => t('Convert line breaks into HTML (i.e. <code>&lt;br&gt;</code> and <code>&lt;p&gt;</code>)'),
+    'type' => FILTER_TYPE_MARKUP_LANGUAGE,
     'process callback' => '_filter_autop',
     'tips callback' => '_filter_autop_tips',
   );
   $filters['filter_url'] = array(
     'title' => t('Convert URLs into links'),
+    'type' => FILTER_TYPE_MARKUP_LANGUAGE,
     'process callback' => '_filter_url',
     'settings callback' => '_filter_url_settings',
     'default settings' => array(
@@ -1251,6 +1331,7 @@ function filter_filter_info() {
   );
   $filters['filter_html_image_secure'] = array(
     'title' => t('Restrict images to this site'),
+    'type' => FILTER_TYPE_HTML_RESTRICTOR,
     'description' => t('Disallows usage of &lt;img&gt; tag sources that are not hosted on this site by replacing them with a placeholder image.'),
     'process callback' => '_filter_html_image_secure_process',
     'tips callback' => '_filter_html_image_secure_tips',
@@ -1259,11 +1340,13 @@ function filter_filter_info() {
   );
   $filters['filter_htmlcorrector'] = array(
     'title' =>  t('Correct faulty and chopped off HTML'),
+    'type' => FILTER_TYPE_HTML_RESTRICTOR,
     'process callback' => '_filter_htmlcorrector',
     'weight' => 10,
   );
   $filters['filter_html_escape'] = array(
     'title' => t('Display any HTML as plain text'),
+    'type' => FILTER_TYPE_HTML_RESTRICTOR,
     'process callback' => '_filter_html_escape',
     'tips callback' => '_filter_html_escape_tips',
     'weight' => -10,

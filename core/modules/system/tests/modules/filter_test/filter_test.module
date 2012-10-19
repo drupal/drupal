@@ -32,11 +32,13 @@ function filter_test_filter_format_disable($format) {
 function filter_test_filter_info() {
   $filters['filter_test_uncacheable'] = array(
     'title' => 'Uncacheable filter',
+    'type' => FILTER_TYPE_TRANSFORM_IRREVERSIBLE,
     'description' => 'Does nothing, but makes a text format uncacheable.',
     'cache' => FALSE,
   );
   $filters['filter_test_replace'] = array(
     'title' => 'Testing filter',
+    'type' => FILTER_TYPE_TRANSFORM_IRREVERSIBLE,
     'description' => 'Replaces all content with filter and text format information.',
     'process callback' => 'filter_test_replace',
   );

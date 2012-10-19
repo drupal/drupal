@@ -138,6 +138,7 @@ else {
 function php_filter_info() {
   $filters['php_code'] = array(
     'title' => t('PHP evaluator'),
+    'type' => FILTER_TYPE_MARKUP_LANGUAGE,
     'description' => t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!'),
     'process callback' => 'php_eval',
     'tips callback' => '_php_filter_tips',
