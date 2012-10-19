@@ -86,6 +86,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'label' => $name,
       'bundle' => $type_name,
       'required' => !empty($instance_settings['required']),
+      'description' => !empty($instance_settings['description']) ? $instance_settings['description'] : '',
       'settings' => array(),
       'widget' => array(
         'type' => 'image_image',

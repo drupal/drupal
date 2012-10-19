@@ -38,7 +38,7 @@ class FormTest extends FieldTestBase {
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'label' => $this->randomName() . '_label',
-      'description' => $this->randomName() . '_description',
+      'description' => '[site:name]_description',
       'weight' => mt_rand(0, 127),
       'settings' => array(
         'test_instance_setting' => $this->randomName(),
@@ -63,6 +63,10 @@ class FormTest extends FieldTestBase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
+
+    // Create token value expected for description.
+    $token_description = check_plain(variable_get('site_name', 'Drupal')) . '_description';
+    $this->assertText($token_description, 'Token replacement for description is displayed');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
     $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
     // TODO : check that the widget is populated with default value ?
