@@ -1289,8 +1289,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
   function render_trim_text($alter, $value) {
     if (!empty($alter['strip_tags'])) {
       // NOTE: It's possible that some external fields might override the
-      // element type so if someone from, say, CCK runs into a bug here,
-      // this may be why =)
+      // element type.
       $this->definition['element type'] = 'span';
     }
     return views_trim_text($alter, $value);

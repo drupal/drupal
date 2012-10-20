@@ -275,7 +275,6 @@ function field_views_field_default_views_data($field) {
 
     if (count($field['columns']) == 1 || $column == 'value') {
       $title = t('@label (!name)', array('@label' => $label, '!name' => $field['field_name']));
-      // CCK used the first 10 characters of $label. Probably doesn't matter.
       $title_short = $label;
     }
     else {
@@ -311,7 +310,6 @@ function field_views_field_default_views_data($field) {
           if ($group_name != $groups[$entity_name] || $label != $label_name) {
             if (count($field['columns']) == 1 || $column == 'value') {
               $alias_title = t('@label (!name)', array('@label' => $label_name, '!name' => $field['field_name']));
-              // CCK used the first 10 characters of $label. Probably doesn't matter.
             }
             else {
               $alias_title = t('@label (!name:!column)', array('@label' => $label_name, '!name' => $field['field_name'], '!column' => $column));
