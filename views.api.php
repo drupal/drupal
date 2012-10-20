@@ -288,14 +288,9 @@
  */
 
 /**
- * Describes data tables (or the equivalent) to Views.
+ * Describe data tables (or the equivalent) to Views.
  *
- * This hook should be placed in MODULENAME.views.inc and it will be
- * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
- * 'path' key returned by MODULENAME_views_api(), or the same directory as the
- * .module file, if 'path' is unspecified.
- *
- * @return
+ * @return array
  *   An associative array describing the data structure. Primary key is the
  *   name used internally by Views for the table(s) – usually the actual table
  *   name. The values for the key entries are described in detail below.
@@ -454,22 +449,15 @@ function hook_views_data() {
 }
 
 /**
- * Alter table structure.
+ * Alter the table structure defined by hook_views_data().
  *
- * You can add/edit/remove existing tables defined by hook_views_data().
- *
- * This hook should be placed in MODULENAME.views.inc and it will be
- * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
- * 'path' key returned by MODULENAME_views_api(), or the same directory as the
- * .module file, if 'path' is unspecified.
- *
- * @param $data
+ * @param array $data
  *   An array of all Views data, passed by reference. See hook_views_data() for
  *   structure.
  *
  * @see hook_views_data()
  */
-function hook_views_data_alter(&$data) {
+function hook_views_data_alter(array &$data) {
   // This example alters the title of the node:nid field in the Views UI.
   $data['node']['nid']['title'] = t('Node-Nid');
 
