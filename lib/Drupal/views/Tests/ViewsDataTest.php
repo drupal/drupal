@@ -44,7 +44,7 @@ class ViewsDataTest extends ViewTestBase {
     $this->assertTrue(isset($data[$table_name]), 'Make sure the views_test_data info appears in the total views data.');
     $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
 
-    $data = views_fetch_data(NULL, TRUE, TRUE);
+    $data = views_fetch_data(NULL, TRUE);
     $this->assertTrue(isset($data[$table_name]), 'Make sure the views_fetch_data appears in the total views data with reset = TRUE.');
     $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
   }

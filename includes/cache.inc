@@ -8,21 +8,20 @@
 /**
  * Fetch Views' data from the cache.
  *
- * @param string|null $table
- *   If null return views data for all tables, else
- * @param bool $move
- *   Under certain circumstances it makes sense to not get the moved table, but the old one.
- *   One example is views_get_handler.
+ * $param string|null $table
+ *   (optional) The name of the table for which to fetch Views' data. If
+ *   NULL, data for all tables will be retrieved
  * @param bool $reset
- *   If $reset is TRUE, rebuild the internal cache.
+ *   (optional) Whether to rebuild the cache. Defaults to FALSE.
  *
  * @return array
- *   An array of views data. If $table is NULL if will contains one info array
- *  for each table, else just one info array.
+ *   An associative array of views data for the given table. If $table is
+ *   NULL, the array will be keyed by table name, with each key corresponding
+ *   to the data array for that table.
  *
- * @see hook_views_data
+ * @see hook_views_data()
  */
-function _views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
+function _views_fetch_data($table = NULL, $reset = FALSE) {
   $cache = &drupal_static(__FUNCTION__ . '_cache');
   $recursion_protection = &drupal_static(__FUNCTION__ . '_recursion_protected');
   $fully_loaded = &drupal_static(__FUNCTION__ . '_fully_loaded');

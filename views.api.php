@@ -290,6 +290,9 @@
 /**
  * Describe data tables (or the equivalent) to Views.
  *
+ * The data described with this hook is fetched and retrieved by
+ * views_fetch_data().
+ *
  * @return array
  *   An associative array describing the data structure. Primary key is the
  *   name used internally by Views for the table(s) – usually the actual table

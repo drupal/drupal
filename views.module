@@ -1284,7 +1284,7 @@ function views_get_handler($table, $field, $type, $override = NULL) {
   // Get the plugin manager for this type.
   $manager = drupal_container()->get("plugin.manager.views.$type");
 
-  $data = views_fetch_data($table, FALSE);
+  $data = views_fetch_data($table);
   if (isset($data[$field][$type])) {
     $definition = $data[$field][$type];
     foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table') as $key) {
@@ -1324,10 +1324,23 @@ function views_get_handler($table, $field, $type, $override = NULL) {
 
 /**
  * Fetch Views' data from the cache
+ *
+ * $param string|null $table
+ *   (optional) The name of the table for which to fetch Views' data. If
+ *   NULL, data for all tables will be retrieved
+ * @param bool $reset
+ *   (optional) Whether to rebuild the cache. Defaults to FALSE.
+ *
+ * @return array
+ *   An associative array of views data for the given table. If $table is
+ *   NULL, the array will be keyed by table name, with each key corresponding
+ *   to the data array for that table.
+ *
+ * @see hook_views_data()
  */
-function views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
+function views_fetch_data($table = NULL, $reset = FALSE) {
   views_include('cache');
-  return _views_fetch_data($table, $move, $reset);
+  return _views_fetch_data($table, $reset);
 }
 
 /**
