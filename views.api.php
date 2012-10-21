@@ -551,8 +551,11 @@ function hook_views_query_alter(ViewExecutable &$view, QueryPluginBase &$query) 
 }
 
 /**
- * Alter the information box that (optionally) appears with a view preview,
- * including query and performance statistics.
+ * Alter the view preview information.
+ *
+ * The view preview information is optionally displayed when a view is
+ * previewed in the administrative UI. It includes query and performance
+ * statistics.
  *
  * @param array $rows
  *   An associative array with two keys:
@@ -576,19 +579,19 @@ function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
 }
 
 /**
- * This hooks allows to alter the links at the top of the view edit form. Some
- * modules might want to add links there.
+ * Alter the links displayed at the top of the view edit form.
  *
- * @param $links
- *   An array of links which will be displayed at the top of the view edit form.
- *   Each entry should be on a form suitable for theme('link').
- * @param view $view
- *   The full view object which is currently edited.
- * @param $display_id
- *   The current display id which is edited. For example that's 'default' or
- *   'page_1'.
+ * @param array $links
+ *   A renderable array of links which will be displayed at the top of the
+ *   view edit form. Each entry will be in a form suitable for theme('link').
+ * @param \Drupal\views\ViewExecutable $view
+ *   The view object being edited.
+ * @param string $display_id
+ *   The ID of the display being edited, e.g. 'default' or 'page_1'.
+ *
+ * @see \Drupal\views_ui\ViewUI::renderDisplayTop()
  */
-function hook_views_ui_display_top_links_alter(&$links, $view, $display_id) {
+function hook_views_ui_display_top_links_alter(array &$links, ViewExecutable $view, $display_id) {
   // Put the export link first in the list.
   if (isset($links['export'])) {
     $links = array('export' => $links['export']) + $links;
@@ -596,15 +599,16 @@ function hook_views_ui_display_top_links_alter(&$links, $view, $display_id) {
 }
 
 /**
- * This hook allows to alter the commands which are used on a views ajax
- * request.
+ * Alter the commands used on a Views AJAX request.
  *
- * @param $commands
- *   An array of ajax commands
- * @param $view view
+ * @param array $commands
+ *   An array of ajax commands.
+ * @param \Drupal\views\ViewExecutable $view
  *   The view which is requested.
+ *
+ * @see views_ajax()
  */
-function hook_views_ajax_data_alter(&$commands, $view) {
+function hook_views_ajax_data_alter(array &$commands, ViewExecutable $view) {
   // Replace Views' method for scrolling to the top of the element with your
   // custom scrolling method.
   foreach ($commands as &$command) {
@@ -615,9 +619,9 @@ function hook_views_ajax_data_alter(&$commands, $view) {
 }
 
 /**
- * Allow modules to respond to the Views cache being invalidated.
+ * Allow modules to respond to the invalidation of the Views cache.
  *
- * This hook should fire whenever a view is enabled, disabled, created,
+ * This hook will fire whenever a view is enabled, disabled, created,
  * updated, or deleted.
  *
  * @see views_invalidate_cache()
