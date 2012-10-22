@@ -273,7 +273,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
       // Should not translate the string to avoid errors producing more errors.
-      $output = theme('maintenance_page', array('content' => 'The website encountered an unexpected error. Please try again later.'));
+      $output = theme('maintenance_page', array('content' => 'The website has encountered an error. Please try again later.'));
 
       $response = new Response($output, 500);
       if ($fatal) {
