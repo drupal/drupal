@@ -35,6 +35,30 @@ function views_token_info() {
     'description' => t('The URL of the view.'),
     'type' => 'url',
   );
+  $info['tokens']['view']['base-table'] = array(
+    'name' => t('Base table'),
+    'description' => t('The base table used for this view.'),
+  );
+  $info['tokens']['view']['base-field'] = array(
+    'name' => t('Base field'),
+    'description' => t('The base field used for this view.'),
+  );
+  $info['tokens']['view']['total-rows'] = array(
+    'name' => t('Total rows'),
+    'description' => t('The total amount of results returned from the view. The current display will be used.'),
+  );
+  $info['tokens']['view']['items-per-page'] = array(
+    'name' => t('Items per page'),
+    'description' => t('The number of items per page.'),
+  );
+  $info['tokens']['view']['current-page'] = array(
+    'name' => t('Current page'),
+    'description' => t('The current page of results the view is on.'),
+  );
+  $info['tokens']['view']['page-count'] = array(
+    'name' => t('Page count'),
+    'description' => t('The total page count.'),
+  );
 
   return $info;
 }
@@ -78,6 +102,26 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
           if ($path = $view->getUrl()) {
             $replacements[$original] = url($path, $url_options);
           }
+          break;
+        case 'base-table':
+          $replacements[$original] = $view->storage->base_table;
+          break;
+        case 'base-field':
+          $replacements[$original] = $view->storage->base_field;
+          break;
+        case 'total-rows':
+          $replacements[$original] = count($view->result);
+          break;
+        case 'items-per-page':
+          $replacements[$original] = (int) $view->getItemsPerPage();
+          break;
+        case 'current-page':
+          $replacements[$original] = (int) $view->getCurrentPage() + 1;
+          break;
+        case 'page-count':
+          // If there are no items per page, set this to 1 for the division.
+          $per_page = $view->getItemsPerPage() ?: 1;
+          $replacements[$original] = (int) ceil(count($view->result) / $per_page);
           break;
       }
     }

@@ -32,6 +32,7 @@ class TokenReplaceTest extends ViewTestBase {
   function testTokenReplacement() {
     $view = views_get_view('test_tokens');
     $view->setDisplay('page_1');
+    $this->executeView($view);
 
     $expected = array(
       '[view:name]' => 'Test tokens',
@@ -39,6 +40,12 @@ class TokenReplaceTest extends ViewTestBase {
       '[view:machine-name]' => 'test_tokens',
       '[view:title]' => 'Test token page',
       '[view:url]' => url('test_tokens', array('absolute' => TRUE)),
+      '[view:total-rows]' => (string) $view->total_rows,
+      '[view:base-table]' => 'views_test_data',
+      '[view:base-field]' => 'id',
+      '[view:items-per-page]' => '10',
+      '[view:current-page]' => '1',
+      '[view:page-count]' => '1',
     );
 
     foreach ($expected as $token => $expected_output) {

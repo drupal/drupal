@@ -31,9 +31,9 @@ display:
           relationship: none
           table: views_test_data
       pager:
+        type: full
         options:
-          offset: '0'
-        type: none
+          items_per_page: 10
       pager_options: {  }
     display_plugin: default
     display_title: Master
