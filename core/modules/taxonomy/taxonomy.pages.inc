@@ -78,7 +78,7 @@ function taxonomy_term_feed(Term $term) {
   $channel['description'] = check_markup($term->description, $term->format, '', TRUE);
   $nids = taxonomy_select_nodes($term->tid, FALSE, config('system.rss')->get('items.limit'));
 
-  node_feed($nids, $channel);
+  return node_feed($nids, $channel);
 }
 
 /**
