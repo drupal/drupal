@@ -1,0 +1,21 @@
+/**
+ * The .bartik.css file is intended to contain styles that override declarations
+ * in the Bartik theme.
+ */
+
+ /* @group Lists */
+
+.views-display-top .secondary .action-list {
+  padding-left: inherit;
+  padding-right: 0;
+}
+
+/* @end */
+
+/* @group Collapsible */
+
+.views-display-columns fieldset .fieldset-legend {
+  padding: 0 2px 4px 0;
+}
+
+/* @end */

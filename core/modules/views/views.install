@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Views.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_install().
+ */
+function views_install() {
+  module_set_weight('views', 10);
+}
+
+/**
+ * Implements hook_schema().
+ */
+function views_schema() {
+  $schema['cache_views_info'] = drupal_get_schema_unprocessed('system', 'cache');
+
+  $schema['cache_views_results'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_views_results']['description'] = 'Cache table for views to store pre-rendered queries, results, and display output.';
+  $schema['cache_views_results']['fields']['serialized']['default'] = 1;
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function views_update_last_removed() {
+  return 7301;
+}
+
+/**
+ * Convert settings to the config system.
+ */
+function views_update_8000() {
+  update_variables_to_config('views.settings', array(
+    'views_ui_show_listing_filters' => 'ui.show.listing_filters',
+    'views_ui_show_master_display' => 'ui.show.master_display',
+    'views_ui_show_advanced_column' => 'ui.show.advanced_column',
+    'views_ui_display_embed' => 'ui.show.display_embed',
+    'views_ui_custom_theme' => 'ui.custom_theme',
+    'views_exposed_filter_any_label' => 'exposed_filter_any_label',
+    'views_ui_always_live_preview' => 'ui.always_live_preview',
+    'views_ui_always_live_preview_button' => 'ui.always_live_preview_button',
+    'views_ui_show_preview_information' => 'ui.show.preview_information',
+    'views_ui_show_sql_query_where' => 'ui.show.sql_query.where',
+    'views_ui_show_sql_query' => 'ui.show_sql.query.enabled',
+    'views_ui_show_performance_statistics' => 'ui.show.performance_statistics',
+    'views_show_additional_queries' => 'ui.show.additional_queries',
+    'views_skip_cache' => 'skip_cache',
+    'views_sql_signature' => 'sql_signature',
+    'views_no_javascript' => 'no_javascript',
+    'views_devel_output' => 'debug.output',
+    'views_devel_region' => 'debug.region',
+    'views_display_extenders' => 'display_extenders',
+  ));
+}
+
+/**
+ * Rename the {cache_views} and {cache_views_data} tables.
+ */
+function views_update_8001() {
+  db_rename_table('cache_views', 'cache_views_info');
+  db_rename_table('cache_views_data', 'cache_views_results');
+}
+
+/**
+ * Remove the {views_view} and {views_display} table.
+ */
+function views_update_8002() {
+  db_drop_table('views_view');
+  db_drop_table('views_display');
+}

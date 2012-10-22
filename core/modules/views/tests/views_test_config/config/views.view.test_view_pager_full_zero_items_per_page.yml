@@ -1,0 +1,47 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          alter:
+            alter_text: '0'
+            ellipsis: '1'
+            html: '0'
+            make_link: '0'
+            strip_tags: '0'
+            trim: '0'
+            word_boundary: '1'
+          empty_zero: '0'
+          field: title
+          hide_empty: '0'
+          id: title
+          link_to_node: '0'
+          table: node
+      pager:
+        options:
+          id: '0'
+          items_per_page: '0'
+          offset: '0'
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: ''
+name: test_view_pager_full_zero_items_per_page
+tag: ''

@@ -1,0 +1,45 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      query:
+        type: views_query
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+        name_1:
+          id: name_1
+          table: views_test_data
+          field: name
+        name_2:
+          id: name_2
+          table: views_test_data
+          field: name
+        job:
+          id: job
+          table: views_test_data
+          field: job
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Defaults
+    id: default
+    position: '0'
+name: test_field_tokens
+tag: ''

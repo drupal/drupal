@@ -1,0 +1,284 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\views\Plugin\views\join\JoinPluginBase.
+ */
+
+namespace Drupal\views\Plugin\views\join;
+use Drupal\Component\Plugin\PluginBase;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+
+/**
+ * @defgroup views_join_handlers Views join handlers
+ * @{
+ * Handlers to tell Views how to join tables together.
+ *
+ * Here is an example how to join from table one to example two so it produces
+ * the following sql:
+ * @code
+ * INNER JOIN {two} ON one.field_a = two.field_b
+ * @code.
+ * The required php code for this kind of functionality is the following:
+ * @code
+ * $configuration = array(
+ *   'table' => 'two',
+ *   'field' => 'field_b',
+ *   'left_table' => 'one',
+ *   'left_field' => 'field_a',
+ *   'operator' => '='
+ * );
+ * $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $configuration);
+ *
+ * Here is how you do complex joins:
+ *
+ * @code
+ * class JoinComplex extends JoinPluginBase {
+ *   public function buildJoin($select_query, $table, $view_query) {
+ *     // Add an additional hardcoded condition to the query.
+ *     $this->extra = 'foo.bar = baz.boing';
+ *     parent::buildJoin($select_query, $table, $view_query);
+ *   }
+ * }
+ * @endcode
+ */
+
+/**
+ * Represents a join and creates the SQL necessary to implement the join.
+ *
+ * @todo It might make sense to create an interface for joins.
+ *
+ * Extensions of this class can be used to create more interesting joins.
+ */
+class JoinPluginBase extends PluginBase {
+
+  /**
+   * The table to join (right table).
+   *
+   * @var string
+   */
+  public $table;
+
+  /**
+   * The field to join on (right field).
+   *
+   * @var string
+   */
+  public $field;
+
+  /**
+   * The table we join to.
+   *
+   * @var string
+   */
+  public $leftTable;
+
+  /**
+   * The field we join to.
+   *
+   * @var string
+   */
+  public $leftField;
+
+  /**
+   * An array of extra conditions on the join.
+   *
+   * Each condition is either a string that's directly added, or an array of
+   * items:
+   *   - table(optional): If not set, current table; if NULL, no table. If you
+   *     specify a table in cached configuration, Views will try to load from an
+   *     existing alias. If you use realtime joins, it works better.
+   *   - field(optional): Field or formula. In formulas we can reference the
+   *     right table by using %alias.
+   *   - operator(optional): The operator used, Defaults to "=".
+   *   - value: Must be set. If an array, operator will be defaulted to IN.
+   *   - numeric: If true, the value will not be surrounded in quotes.
+   *
+   * @see SelectQueryInterface::addJoin()
+   *
+   * @var array
+   */
+  public $extra;
+
+  /**
+   * The join type, so for example LEFT (default) or INNER.
+   *
+   * @var string
+   */
+  public $type;
+
+  /**
+   * The configuration array passed by initJoin.
+   *
+   * @var array
+   *
+   * @see Drupal\views\Plugin\views\join\JoinPluginBase::initJoin()
+   */
+  public $configuration = array();
+
+  /**
+   * How all the extras will be combined. Either AND or OR.
+   *
+   * @var string
+   */
+  public $extraOperator;
+
+  /**
+   * Defines whether a join has been adjusted.
+   *
+   * Views updates the join object to set the table alias instead of the table
+   * name. Once views has changed the alias it sets the adjusted value so it
+   * does not have to be updated anymore. If you create your own join object
+   * you should set the adjusted in the definition array to TRUE if you already
+   * know the table alias.
+   *
+   * @var bool
+   *
+   * @see Drupal\views\Plugin\HandlerBase::getTableJoin()
+   * @see Drupal\views\Plugin\views\query\Sql::adjust_join()
+   * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase::query()
+   */
+  public $adjusted;
+
+  /**
+   * Constructs a Drupal\views\Plugin\views\join\JoinPluginBase object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+    // Merge in some default values.
+    $configuration += array(
+      'type' => 'LEFT',
+      'extra_operator' => 'AND'
+    );
+    $this->configuration = $configuration;
+
+    if (!empty($configuration['table'])) {
+      $this->table = $configuration['table'];
+    }
+
+    $this->leftTable = $configuration['left_table'];
+    $this->leftField = $configuration['left_field'];
+    $this->field = $configuration['field'];
+
+    if (!empty($configuration['extra'])) {
+      $this->extra = $configuration['extra'];
+    }
+
+    if (isset($configuration['adjusted'])) {
+      $this->extra = $configuration['adjusted'];
+    }
+
+    $this->extraOperator = strtoupper($configuration['extra_operator']);
+    $this->type = $configuration['type'];
+  }
+
+  /**
+   * Build the SQL for the join this object represents.
+   *
+   * When possible, try to use table alias instead of table names.
+   *
+   * @param $select_query
+   *   An implementation of SelectQueryInterface.
+   * @param $table
+   *   The base table to join.
+   * @param $view_query
+   *   The source query, implementation of views_plugin_query.
+   */
+  public function buildJoin($select_query, $table, $view_query) {
+    if (empty($this->configuration['table formula'])) {
+      $right_table = $this->table;
+    }
+    else {
+      $right_table = $this->configuration['table formula'];
+    }
+
+    if ($this->leftTable) {
+      $left = $view_query->get_table_info($this->leftTable);
+      $left_field = "$left[alias].$this->leftField";
+    }
+    else {
+      // This can be used if left_field is a formula or something. It should be used only *very* rarely.
+      $left_field = $this->leftField;
+    }
+
+    $condition = "$left_field = $table[alias].$this->field";
+    $arguments = array();
+
+    // Tack on the extra.
+    if (isset($this->extra)) {
+      if (is_array($this->extra)) {
+        $extras = array();
+        foreach ($this->extra as $info) {
+          $extra = '';
+          // Figure out the table name. Remember, only use aliases provided
+          // if at all possible.
+          $join_table = '';
+          if (!array_key_exists('table', $info)) {
+            $join_table = $table['alias'] . '.';
+          }
+          elseif (isset($info['table'])) {
+            // If we're aware of a table alias for this table, use the table
+            // alias instead of the table name.
+            if (isset($left) && $left['table'] == $info['table']) {
+              $join_table = $left['alias'] . '.';
+            }
+            else {
+              $join_table = $info['table'] . '.';
+            }
+          }
+
+          // Convert a single-valued array of values to the single-value case,
+          // and transform from IN() notation to = notation
+          if (is_array($info['value']) && count($info['value']) == 1) {
+            if (empty($info['operator'])) {
+              $operator = '=';
+            }
+            else {
+              $operator = $info['operator'] == 'NOT IN' ? '!=' : '=';
+            }
+            $info['value'] = array_shift($info['value']);
+          }
+
+          if (is_array($info['value'])) {
+            // With an array of values, we need multiple placeholders and the
+            // 'IN' operator is implicit.
+            foreach ($info['value'] as $value) {
+              $placeholder_i = ':views_join_condition_' . $select_query->nextPlaceholder();
+              $arguments[$placeholder_i] = $value;
+            }
+
+            $operator = !empty($info['operator']) ? $info['operator'] : 'IN';
+            $placeholder = '( ' . implode(', ', array_keys($arguments)) . ' )';
+          }
+          else {
+            // With a single value, the '=' operator is implicit.
+            $operator = !empty($info['operator']) ? $info['operator'] : '=';
+            $placeholder = ':views_join_condition_' . $select_query->nextPlaceholder();
+            $arguments[$placeholder] = $info['value'];
+          }
+
+          $extras[] = "$join_table$info[field] $operator $placeholder";
+        }
+
+        if ($extras) {
+          if (count($extras) == 1) {
+            $condition .= ' AND ' . array_shift($extras);
+          }
+          else {
+            $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
+          }
+        }
+      }
+      elseif ($this->extra && is_string($this->extra)) {
+        $condition .= " AND ($this->extra)";
+      }
+    }
+
+    $select_query->addJoin($this->type, $right_table, $table['alias'], $condition, $arguments);
+  }
+
+}
+
+/**
+ * @}
+ */

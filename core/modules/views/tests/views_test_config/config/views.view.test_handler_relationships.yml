@@ -1,0 +1,30 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      fields:
+        title:
+          id: title
+          table: node
+          field: title
+      relationships:
+        cid:
+          id: cid
+          table: node
+          field: cid
+        nid:
+          id: nid
+          table: comment
+          field: nid
+          relationship: cid
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: ''
+name: test_handler_relationships
+tag: ''

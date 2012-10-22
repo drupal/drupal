@@ -1,0 +1,66 @@
+api_version: '3.0'
+base_field: tid
+base_table: taxonomy_term_data
+core: 8.0-dev
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        name:
+          field: name
+          id: name
+          table: taxonomy_term_data
+        nid:
+          field: nid
+          id: nid
+          relationship: tid_representative
+          table: node
+      pager:
+        options:
+          items_per_page: '10'
+        type: full
+      query:
+        type: views_query
+      relationships:
+        tid_representative:
+          admin_label: ''
+          field: tid_representative
+          group_type: group
+          id: tid_representative
+          label: 'Representative node'
+          relationship: none
+          required: '0'
+          subquery_namespace: ''
+          subquery_order: DESC
+          subquery_regenerate: '1'
+          subquery_sort: node.nid
+          subquery_view: ''
+          table: taxonomy_term_data
+      row:
+        type: fields
+      sorts:
+        tid:
+          field: tid
+          id: tid
+          order: DESC
+          table: taxonomy_term_data
+      style:
+        type: default
+      title: test_groupwise
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: {  }
+human_name: test_groupwise
+langcode: und
+module: views
+name: test_groupwise_term
+tag: default

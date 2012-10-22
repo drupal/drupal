@@ -1,0 +1,48 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      arguments:
+        uid_touch:
+          default_argument_skip_url: '0'
+          default_argument_type: fixed
+          field: uid_touch
+          id: uid_touch
+          summary:
+            format: default_summary
+            number_of_records: '0'
+          summary_options:
+            items_per_page: '25'
+          table: node
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        nid:
+          field: nid
+          id: nid
+          table: node
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: '0'
+        type: views_query
+      style:
+        type: default
+      row:
+        type: node
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: test_comment_user_uid
+name: test_comment_user_uid
+tag: default

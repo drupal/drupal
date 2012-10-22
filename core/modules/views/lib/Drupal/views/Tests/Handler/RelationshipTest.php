@@ -1,0 +1,181 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\views\Tests\Handler\RelationshipTest.
+ */
+
+namespace Drupal\views\Tests\Handler;
+
+/**
+ * Tests the base relationship handler.
+ *
+ * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase
+ */
+class RelationshipTest extends HandlerTestBase {
+
+  /**
+   * Maps between the key in the expected result and the query result.
+   *
+   * @var array
+   */
+  protected $columnMap = array(
+    'views_test_data_name' => 'name',
+    'users_views_test_data_uid' => 'uid',
+  );
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Relationship: Standard',
+      'description' => 'Tests the base relationship handler.',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
+  }
+
+
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::schemaDefinition().
+   *
+   * Adds a uid column to test the relationships.
+   *
+   * @return array
+   */
+  protected function schemaDefinition() {
+    $schema = parent::schemaDefinition();
+
+    $schema['views_test_data']['fields']['uid'] = array(
+      'description' => "The {users}.uid of the author of the beatle entry.",
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0
+    );
+
+    return $schema;
+  }
+
+
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::viewsData().
+   *
+   * Adds a relationship for the uid column.
+   *
+   * @return array
+   */
+  protected function viewsData() {
+    $data = parent::viewsData();
+    $data['views_test_data']['uid'] = array(
+      'title' => t('UID'),
+      'help' => t('The test data UID'),
+      'relationship' => array(
+        'id' => 'standard',
+        'base' => 'users',
+        'base field' => 'uid'
+      )
+    );
+
+    return $data;
+  }
+
+  /**
+   * Tests the query result of a view with a relationship.
+   */
+  public function testRelationshipQuery() {
+    // Set the first entry to have the admin as author.
+    db_query("UPDATE {views_test_data} SET uid = 1 WHERE id = 1");
+    db_query("UPDATE {views_test_data} SET uid = 2 WHERE id <> 1");
+
+    $view = $this->getBasicView();
+
+    $view->displayHandlers['default']->overrideOption('relationships', array(
+      'uid' => array(
+        'id' => 'uid',
+        'table' => 'views_test_data',
+        'field' => 'uid',
+      ),
+    ));
+
+    $view->displayHandlers['default']->overrideOption('filters', array(
+      'uid' => array(
+        'id' => 'uid',
+        'table' => 'users',
+        'field' => 'uid',
+        'relationship' => 'uid',
+      ),
+    ));
+
+    $fields = $view->displayHandlers['default']->getOption('fields');
+    $view->displayHandlers['default']->overrideOption('fields', $fields + array(
+      'uid' => array(
+        'id' => 'uid',
+        'table' => 'users',
+        'field' => 'uid',
+        'relationship' => 'uid',
+      ),
+    ));
+
+    $view->initHandlers();
+
+    // Check for all beatles created by admin.
+    $view->filter['uid']->value = array(1);
+    $this->executeView($view);
+
+    $expected_result = array(
+      array(
+        'name' => 'John',
+        'uid' => 1
+      )
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+    $view->destroy();
+
+    // Check for all beatles created by another user, which so doesn't exist.
+    $view->initHandlers();
+    $view->filter['uid']->value = array(3);
+    $this->executeView($view);
+    $expected_result = array();
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+    $view->destroy();
+
+    // Set the relationship to required, so only results authored by the admin
+    // should return.
+    $view->initHandlers();
+    $view->relationship['uid']->options['required'] = TRUE;
+    $this->executeView($view);
+
+    $expected_result = array(
+      array(
+        'name' => 'John',
+        'uid' => 1
+      )
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+    $view->destroy();
+
+    // Set the relationship to optional should cause to return all beatles.
+    $view->initHandlers();
+    $view->relationship['uid']->options['required'] = FALSE;
+    $this->executeView($view);
+
+    $expected_result = $this->dataSet();
+    // Alter the expected result to contain the right uids.
+    foreach ($expected_result as $key => &$row) {
+      // Only John has an existing author.
+      if ($row['name'] == 'John') {
+        $row['uid'] = 1;
+      }
+      else {
+        // The LEFT join should set an empty {users}.uid field.
+        $row['uid'] = NULL;
+      }
+    }
+
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
+  }
+}

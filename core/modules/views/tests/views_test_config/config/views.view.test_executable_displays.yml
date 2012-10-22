@@ -1,0 +1,24 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page:
+    display_plugin: page
+    display_title: Page
+    id: page
+    position: '1'
+  page_2:
+    display_plugin: page
+    display_title: Page 2
+    id: page_2
+    position: '2'
+human_name: ''
+name: test_executable_displays
+tag: ''

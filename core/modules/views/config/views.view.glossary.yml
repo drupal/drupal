@@ -1,0 +1,150 @@
+disabled: true
+api_version: '3.0'
+module: node
+name: glossary
+description: 'A list of all content, by letter.'
+tag: default
+base_table: node
+human_name: Glossary
+core: '8'
+display:
+  default:
+    id: default
+    display_title: Master
+    display_plugin: default
+    position: '1'
+    display_options:
+      query:
+        type: views_query
+        options:
+          query_comment: false
+      use_ajax: true
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+        options:
+          items_per_page: 36
+      fields:
+        title:
+          id: title
+          table: node
+          field: title
+          link_to_node: 1
+        name:
+          id: name
+          table: users
+          field: name
+          label: Author
+          link_to_user: 1
+          relationship: uid
+        changed:
+          id: changed
+          table: node
+          field: changed
+          label: 'Last update'
+          date_format: large
+      arguments:
+        title:
+          id: title
+          table: node
+          field: title
+          default_action: default
+          exception:
+            title_enable: 1
+          default_argument_type: fixed
+          default_argument_options:
+            argument: a
+          summary:
+            format: default_summary
+          specify_validation: 1
+          glossary: 1
+          limit: '1'
+          case: upper
+          path_case: lower
+          transform_dash: 0
+      relationships:
+        uid:
+          id: uid
+          table: node
+          field: uid
+      style:
+        type: table
+        options:
+          columns:
+            title: title
+            name: name
+            changed: changed
+          default: title
+          info:
+            title:
+              sortable: 1
+              separator: ''
+            name:
+              sortable: 1
+              separator: ''
+            changed:
+              sortable: 1
+              separator: ''
+          override: 1
+          sticky: 0
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: '2'
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+      path: glossary
+      menu:
+        type: normal
+        title: Glossary
+        weight: '0'
+  attachment_1:
+    id: attachment_1
+    display_title: Attachment
+    display_plugin: attachment
+    position: '3'
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+      pager:
+        type: none
+        options:
+          offset: '0'
+      defaults:
+        arguments: false
+      arguments:
+        title:
+          id: title
+          table: node
+          field: title
+          default_action: summary
+          exception:
+            title_enable: 1
+          default_argument_type: fixed
+          default_argument_options:
+            argument: a
+          summary:
+            format: unformatted_summary
+          summary_options:
+            items_per_page: '25'
+            inline: 1
+            separator: ' | '
+          specify_validation: 1
+          glossary: 1
+          limit: '1'
+          case: upper
+          path_case: lower
+          transform_dash: 0
+      displays:
+        default: default
+        page: page_1
+      inherit_arguments: 0

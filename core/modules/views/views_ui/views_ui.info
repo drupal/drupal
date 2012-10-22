@@ -1,0 +1,7 @@
+name = Views UI
+description = Administrative interface for Views.
+package = Core
+version = VERSION
+core = 8.x
+configure = admin/structure/views
+dependencies[] = views

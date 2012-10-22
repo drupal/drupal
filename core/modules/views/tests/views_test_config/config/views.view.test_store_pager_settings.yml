@@ -1,0 +1,27 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: none
+      style:
+        type: default
+      row:
+        type: node
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: ''
+name: test_store_pager_settings
+tag: ''

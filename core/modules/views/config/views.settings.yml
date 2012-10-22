@@ -1,0 +1,35 @@
+debug:
+  output: '0'
+  region: 'footer'
+display_extenders: { }
+no_javascript: '0'
+skip_cache: '0'
+sql_signature: '0'
+ui:
+  show:
+    additional_queries: '0'
+    advanced_column: '0'
+    listing_filters: '0'
+    master_display: '0'
+    performance_statistics: '0'
+    preview_information: '1'
+    sql_query:
+      enabled: '0'
+      where: 'above'
+    display_embed: '0'
+  custom_theme: '_default'
+  always_live_preview: '1'
+  always_live_preview_button: '1'
+  exposed_filter_any_label: 'new_any'
+field_rewrite_elements:
+  div: DIV
+  span: SPAN
+  h1: H1
+  h2: H2
+  h3: H3
+  h4: H4
+  h5: H5
+  h6: H6
+  p: P
+  strong: STRONG
+  em: EM

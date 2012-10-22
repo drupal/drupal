@@ -1,0 +1,57 @@
+base_table: views_test_data
+name: test_tokens
+description: 'Test view to token replacement tests.'
+tag: ''
+human_name: 'Test tokens'
+core: 8.x
+api_version: '3.0'
+display:
+  default:
+    display_options:
+      title: 'Test token default'
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+      pager:
+        type: full
+        options:
+          items_per_page: 10
+      pager_options: {  }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: '1'
+    display_options:
+      defaults:
+        title: '0'
+      title: 'Test token page'
+      query:
+        type: views_query
+        options: {  }
+      path: test_tokens
+base_field: id
+disabled: '0'
+module: views

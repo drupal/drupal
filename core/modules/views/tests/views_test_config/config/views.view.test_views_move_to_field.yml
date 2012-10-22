@@ -1,0 +1,20 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      fields:
+        old_field_1:
+          field: old_field_1
+          id: old_field_1
+          table: views_test_data
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: ''
+name: test_views_move_to_field
+tag: ''

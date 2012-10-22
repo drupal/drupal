@@ -1,0 +1,91 @@
+api_version: '3.0'
+base_table: node
+core: 8.0-dev
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          alter:
+            absolute: '0'
+            alter_text: '0'
+            ellipsis: '0'
+            html: '0'
+            make_link: '0'
+            strip_tags: '0'
+            trim: '0'
+            word_boundary: '0'
+          empty_zero: '0'
+          field: title
+          hide_empty: '0'
+          id: title
+          label: ''
+          link_to_node: '1'
+          table: node
+      filters:
+        status:
+          expose:
+            operator: '0'
+          field: status
+          group: '1'
+          id: status
+          table: node
+          value: '1'
+      pager:
+        options:
+          items_per_page: '10'
+        type: full
+      query:
+        type: views_query
+      row:
+        options:
+          build_mode: teaser
+          comments: '0'
+          links: '1'
+        type: node
+      sorts:
+        created:
+          field: created
+          id: created
+          order: DESC
+          table: node
+      style:
+        type: default
+      title: test_feed_display
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  feed:
+    display_options:
+      displays: {}
+      pager:
+        type: some
+      path: test-feed-display.xml
+      row:
+        type: node_rss
+      style:
+        type: rss
+    display_plugin: feed
+    display_title: Feed
+    id: feed
+    position: '0'
+  page:
+    display_options:
+      path: test-feed-display
+    display_plugin: page
+    display_title: Page
+    id: page
+    position: '0'
+human_name: test_feed_display
+module: views
+name: test_feed_display
+tag: default

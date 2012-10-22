@@ -1,0 +1,52 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+        name:
+          id: name
+          table: views_test_data
+          field: name
+        created:
+          id: created
+          table: views_test_data
+          field: created
+      display_options:
+        access:
+          type: none
+        cache:
+          type: none
+      style:
+        type: table
+        options:
+          info:
+            id:
+              sortable: 1
+              default_sort_order: asc
+            name:
+              sortable: 1
+              default_sort_order: desc
+            created:
+              sortable: 0
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: test_click_sort
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '0'
+human_name: {  }
+name: test_click_sort
+tag: ''

@@ -1,0 +1,63 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+        age:
+          field: age
+          id: standard
+          order: ASC
+          relationship: none
+          table: views_test_data
+      filters:
+        name:
+          field: name
+          id: string
+          table: views_test_data
+        age:
+          field: age
+          id: numeric
+          table: views_test_data
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: ''
+name: test_view_handler_weight
+tag: ''

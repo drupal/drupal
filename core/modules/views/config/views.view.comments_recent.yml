@@ -1,0 +1,126 @@
+disabled: true
+api_version: '3.0'
+module: comment
+name: comments_recent
+description: 'Contains a block and a page to list recent comments; the block will automatically link to the page, which displays the comment body as well as a link to the node.'
+tag: default
+base_table: comment
+human_name: 'Recent comments'
+core: '8'
+display:
+  default:
+    id: default
+    display_title: Master
+    display_plugin: default
+    position: '1'
+    display_options:
+      query:
+        type: views_query
+        options:
+          query_comment: false
+      title: 'Recent comments'
+      use_more: true
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: some
+        options:
+          items_per_page: 5
+      relationships:
+        nid:
+          id: nid
+          table: comment
+          field: nid
+      fields:
+        subject:
+          id: subject
+          table: comment
+          field: subject
+          label: ''
+          link_to_comment: 1
+        timestamp:
+          id: timestamp
+          table: comment
+          field: changed
+          label: ''
+          date_format: 'time ago'
+      sorts:
+        timestamp:
+          id: timestamp
+          table: comment
+          field: changed
+          order: DESC
+      filters:
+        status_extra:
+          id: status_extra
+          table: node
+          field: status_extra
+          relationship: nid
+          group: 0
+      style:
+        type: html_list
+      row:
+        type: fields
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: '2'
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+      defaults:
+        style_plugin: false
+        style_options: false
+        row_plugin: false
+        row_options: false
+        fields: false
+      fields:
+        title:
+          id: title
+          table: node
+          field: title
+          relationship: nid
+          label: 'Reply to'
+          link_to_node: 1
+        timestamp:
+          id: timestamp
+          table: comment
+          field: changed
+          label: ''
+          date_format: 'time ago'
+        subject:
+          id: subject
+          table: comment
+          field: subject
+          label: ''
+          link_to_comment: 1
+        comment:
+          id: comment
+          table: field_data_comment_body
+          field: comment_body
+          label: ''
+      path: comments/recent
+      style:
+        type: html_list
+      row:
+        type: fields
+        options:
+          inline:
+            title: title
+            timestamp: timestamp
+            separator: '&nbsp;'
+  block_1:
+    id: block_1
+    display_title: Block
+    display_plugin: block
+    position: '3'
+    display_options:
+      query:
+        type: views_query
+        options: {  }

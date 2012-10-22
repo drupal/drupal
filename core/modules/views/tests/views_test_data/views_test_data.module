@@ -1,0 +1,194 @@
+<?php
+
+/**
+ * @file
+ * Helper module for Views tests.
+ */
+
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_permission().
+ */
+function views_test_data_permission() {
+  return array(
+    'views_test_data test permission' => array(
+      'title' => t('Test permission'),
+      'description' => t('views_test_data test permission'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function views_test_data_views_api() {
+  return array(
+    'api' => 3.0,
+    'template path' => drupal_get_path('module', 'views_test_data') . '/templates',
+  );
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function views_test_data_views_data() {
+  return variable_get('views_test_data_views_data', array());
+}
+
+function views_test_data_test_static_access_callback($access) {
+  return $access;
+}
+
+function views_test_data_test_dynamic_access_callback($access, $argument1, $argument2) {
+  return $access && $argument1 == variable_get('test_dynamic_access_argument1', NULL) && $argument2 == variable_get('test_dynamic_access_argument2', NULL);
+}
+
+/**+
+ * Access callback for the generic handler test.
+ *
+ * @return bool
+ *   Returns views_test_data.tests->handler_access_callback config. so the user
+ *   has access to the handler.
+ *
+ * @see Drupal\views\Tests\Handler\HandlerTest
+ */
+function views_test_data_handler_test_access_callback() {
+  return config('views_test_data.tests')->get('handler_access_callback');
+}
+
+/**
+ * Access callback with an argument for the generic handler test.
+ *
+ * @param bool $argument
+ *   A parameter to test that an argument got passed.
+ *
+ * @return bool
+ *   Returns views_test_data.tests->handler_access_callback_argument, so the
+ *   use has access to the handler.
+ *
+ * @see Drupal\views\Tests\Handler\HandlerTest
+ */
+function views_test_data_handler_test_access_callback_argument($argument = FALSE) {
+  // Check the argument to be sure that access arguments are passed into the
+  // callback.
+  if ($argument) {
+    return config('views_test_data.tests')->get('handler_access_callback_argument');
+  }
+  else {
+    return FALSE;
+  }
+}
+
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function views_test_data_views_pre_render(ViewExecutable $view) {
+  if ($view->storage->name == 'test_cache_header_storage') {
+    drupal_add_js(drupal_get_path('module', 'views_test_data') . '/views_cache.test.js');
+    drupal_add_css(drupal_get_path('module', 'views_test_data') . '/views_cache.test.css');
+    $view->build_info['pre_render_called'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_views_post_build().
+ */
+function views_test_data_views_post_build(ViewExecutable $view) {
+  if ($view->storage->name == 'test_page_display') {
+    if ($view->current_display == 'page_1') {
+      $view->build_info['denied'] = TRUE;
+    }
+    elseif ($view->current_display == 'page_2') {
+      $view->build_info['fail'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_views_view_mapping_test().
+ */
+function template_preprocess_views_view_mapping_test(&$variables) {
+  $variables['element'] = array();
+
+  foreach ($variables['rows'] as $delta => $row) {
+    $fields = array();
+    foreach ($variables['options']['mapping'] as $type => $field_names) {
+      if (!is_array($field_names)) {
+        $field_names = array($field_names);
+      }
+      foreach ($field_names as $field_name) {
+        if ($value = $variables['view']->style_plugin->get_field($delta, $field_name)) {
+          $fields[$type . '-' . $field_name] = $type . ':' . $value;
+        }
+      }
+    }
+
+    // If there are no fields in this row, skip to the next one.
+    if (empty($fields)) {
+      continue;
+    }
+
+    // Build a container for the row.
+    $variables['element'][$delta] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'views-row-mapping-test',
+        ),
+      ),
+    );
+
+    // Add each field to the row.
+    foreach ($fields as $key => $render) {
+      $variables['element'][$delta][$key] = array(
+        '#children' => $render,
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array(
+            $key,
+          ),
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Returns HTML for the Mapping Test style.
+ */
+function theme_views_view_mapping_test($variables) {
+  return drupal_render($variables['element']);
+}
+
+/**
+ * Implements hook_menu().
+ */
+function views_test_data_menu() {
+  $items = array();
+
+  $items['views_test_data_element_form'] = array(
+    'title' => 'Views test data element form',
+    'description' => 'Views test data element form callback',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_test_data_element_form'),
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}
+
+/**
+ * Simple form page callback to test the view element.
+ */
+function views_test_data_element_form() {
+  $form['view'] = array(
+    '#type' => 'view',
+    '#name' => 'test_view',
+    '#display_id' => 'default',
+    '#arguments' => array(25),
+  );
+
+  return $form;
+}

@@ -1,0 +1,40 @@
+api_version: '3.0'
+base_table: views_test_data
+core: 8
+disabled: false
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        title:
+          alter:
+            ellipsis: '0'
+            word_boundary: '0'
+          field: name
+          id: name
+          label: ''
+          table: views_test_data
+      filters:
+        type:
+          field: name
+          id: test_filter
+          table: views_test_data
+      query:
+        type: views_query
+      use_more_always: '0'
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: 'Test filters'
+name: test_filter

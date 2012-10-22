@@ -1,0 +1,73 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      arguments:
+        tid:
+          default_argument_type: fixed
+          field: tid
+          id: tid
+          relationship: term_node_tid
+          summary:
+            format: default_summary
+            number_of_records: '0'
+          summary_options:
+            items_per_page: '25'
+          table: taxonomy_term_data
+        tid_1:
+          default_argument_type: fixed
+          field: tid
+          id: tid_1
+          relationship: term_node_tid_1
+          summary:
+            format: default_summary
+            number_of_records: '0'
+          summary_options:
+            items_per_page: '25'
+          table: taxonomy_term_data
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      query:
+        type: views_query
+      relationships:
+        term_node_tid:
+          field: term_node_tid
+          id: term_node_tid
+          label: 'Term #1'
+          table: node
+          vocabularies:
+            tags: '0'
+        term_node_tid_1:
+          field: term_node_tid
+          id: term_node_tid_1
+          label: 'Term #2'
+          table: node
+          vocabularies:
+            tags: '0'
+      sorts:
+        nid:
+          field: nid
+          id: nid
+          order: DESC
+          table: nid
+      style:
+        type: default
+      row:
+        type: node
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: test_taxonomy_node_term_data
+name: test_taxonomy_node_term_data
+tag: ''

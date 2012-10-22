@@ -1,0 +1,34 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: test_static
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: test_access_static
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '0'
+human_name: ''
+name: test_access_static
+tag: ''

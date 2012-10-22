@@ -1,0 +1,50 @@
+api_version: '3.0'
+base_table: node
+core: 8.0-dev
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        nid:
+          id: nid
+          table: node
+          field: nid
+      filter_groups:
+        groups:
+          1: AND
+        operator: AND
+      filters:
+        uid_revision:
+          admin_label: ''
+          field: uid_revision
+          id: uid_revision
+          is_grouped: '0'
+          operator: in
+          relationship: none
+          table: node
+          value:
+            - '1'
+      sorts: {  }
+      pager:
+        type: full
+      query:
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: test_filter_node_uid_revision
+name: test_filter_node_uid_revision
+tag: default
