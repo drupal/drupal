@@ -479,7 +479,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
     // simpletest_clean_temporary_directories() cannot be used here, since it
     // would also delete file directories of other tests that are potentially
     // running concurrently.
-    file_unmanaged_delete_recursive($test_directory);
+    file_unmanaged_delete_recursive($test_directory, array('Drupal\simpletest\TestBase', 'filePreDeleteCallback'));
     $messages[] = "- Removed test files directory.";
   }
 

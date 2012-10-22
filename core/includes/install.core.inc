@@ -1495,11 +1495,9 @@ function install_bootstrap_full(&$install_state) {
   // Clear the module list that was overriden earlier in the process.
   // This will allow all freshly installed modules to be loaded.
   module_list_reset();
-  // @todo The constructor parameters for the Kernel class are for environment,
-  // e.g. 'prod', 'dev', and a boolean indicating whether it is in debug mode.
-  // Drupal does not currently make use of either of these, though that may
-  // change with http://drupal.org/node/1537198.
-  $kernel = new DrupalKernel('prod', FALSE);
+
+  // Instantiate the kernel.
+  $kernel = new DrupalKernel('prod', FALSE, NULL);
   $kernel->boot();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 }

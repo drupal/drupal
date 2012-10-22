@@ -8,6 +8,8 @@
 namespace Drupal\Core;
 
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterNestedMatchersPass;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -26,6 +28,7 @@ use Drupal\Core\Database\Database;
  */
 class CoreBundle extends Bundle
 {
+
   public function build(ContainerBuilder $container) {
 
     // The 'request' scope and service enable services to depend on the Request
@@ -61,41 +64,34 @@ class CoreBundle extends Bundle
       ->addArgument(new Reference('database'))
       ->addArgument(new Reference('lock'));
 
-    $container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
+    $container->register('router.dumper', 'Drupal\Core\Routing\MatcherDumper')
       ->addArgument(new Reference('database'));
     $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
       ->addArgument(new Reference('router.dumper'));
 
-    // @todo Replace below lines with the commented out block below it when it's
-    //   performant to do so: http://drupal.org/node/1706064.
-    $dispatcher = $container->get('dispatcher');
-    $matcher = new \Drupal\Core\Routing\ChainMatcher();
-    $matcher->add(new \Drupal\Core\LegacyUrlMatcher());
+    $container->register('matcher', 'Drupal\Core\Routing\ChainMatcher');
+    $container->register('legacy_url_matcher', 'Drupal\Core\LegacyUrlMatcher')
+      ->addTag('chained_matcher');
+    $container->register('nested_matcher', 'Drupal\Core\Routing\NestedMatcher')
+      ->addTag('chained_matcher', array('priority' => 5));
 
-    $nested = new \Drupal\Core\Routing\NestedMatcher();
-    $nested->setInitialMatcher(new \Drupal\Core\Routing\PathMatcher(Database::getConnection()));
-    $nested->addPartialMatcher(new \Drupal\Core\Routing\HttpMethodMatcher());
-    $nested->setFinalMatcher(new \Drupal\Core\Routing\FirstEntryFinalMatcher());
-    $matcher->add($nested, 5);
+    // The following services are tagged as 'nested_matcher' services and are
+    // processed in the RegisterNestedMatchersPass compiler pass. Each one
+    // needs to be set on the matcher using a different method, so we use a
+    // tag attribute, 'method', which can be retrieved and passed to the
+    // addMethodCall() method that gets called on the matcher service in the
+    // compiler pass.
+    $container->register('path_matcher', 'Drupal\Core\Routing\PathMatcher')
+      ->addArgument(new Reference('database'))
+      ->addTag('nested_matcher', array('method' => 'setInitialMatcher'));
+    $container->register('http_method_matcher', 'Drupal\Core\Routing\HttpMethodMatcher')
+      ->addTag('nested_matcher', array('method' => 'addPartialMatcher'));
+    $container->register('first_entry_final_matcher', 'Drupal\Core\Routing\FirstEntryFinalMatcher')
+      ->addTag('nested_matcher', array('method' => 'setFinalMatcher'));
 
-    $content_negotation = new \Drupal\Core\ContentNegotiation();
-    $dispatcher->addSubscriber(new \Symfony\Component\HttpKernel\EventListener\RouterListener($matcher));
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ViewSubscriber($content_negotation));
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\AccessSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\MaintenanceModeSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\PathSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\LegacyRequestSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\LegacyControllerSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\FinishResponseSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RequestCloseSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber());
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RouteProcessorSubscriber());
-    $container->set('content_negotiation', $content_negotation);
-    $dispatcher->addSubscriber(\Drupal\Core\ExceptionController::getExceptionListener($container));
-
-    /*
-    $container->register('matcher', 'Drupal\Core\LegacyUrlMatcher');
-    $container->register('router_listener', 'Drupal\Core\EventSubscriber\RouterListener')
+    $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('router_listener', 'Symfony\Component\HttpKernel\EventListener\RouterListener')
       ->addArgument(new Reference('matcher'))
       ->addTag('kernel.event_subscriber');
     $container->register('content_negotiation', 'Drupal\Core\ContentNegotiation');
@@ -118,15 +114,18 @@ class CoreBundle extends Bundle
       ->addTag('kernel.event_subscriber');
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
       ->addTag('kernel.event_subscriber');
-    $container->register('config_global_override_subscriber', '\Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
+    $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
+      ->addTag('kernel.event_subscriber');
     $container->register('exception_listener', 'Drupal\Core\EventSubscriber\ExceptionListener')
       ->addTag('kernel.event_subscriber')
       ->addArgument(new Reference('service_container'))
       ->setFactoryClass('Drupal\Core\ExceptionController')
       ->setFactoryMethod('getExceptionListener');
 
+    $container->addCompilerPass(new RegisterMatchersPass());
+    $container->addCompilerPass(new RegisterNestedMatchersPass());
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
-    */
   }
+
 }

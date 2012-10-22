@@ -3901,7 +3901,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     // this is an AJAX request.
     // @todo Clean up container call.
     $container = drupal_container();
-    if ($container->has('request') && $container->has('content_negotiation')) {
+    if ($container->has('content_negotiation') && $container->isScopeActive('request')) {
       $type = $container->get('content_negotiation')->getContentType($container->get('request'));
     }
     if (!empty($items['settings']) || (!empty($type) && $type == 'ajax')) {
@@ -6852,6 +6852,9 @@ function drupal_flush_all_caches() {
   // to be based on up to date information.
   drupal_container()->get('router.builder')->rebuild();
   menu_router_rebuild();
+
+  // Wipe the DIC cache.
+  drupal_php_storage('service_container')->deleteAll();
 
   // Re-initialize the maintenance theme, if the current request attempted to
   // use it. Unlike regular usages of this function, the installer and update

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,6 +16,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Response subscriber to handle finished responses.
  */
 class FinishResponseSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The LanguageManager object for retrieving the correct language code.
+   *
+   * @var LanguageManager
+   */
+  protected $languageManager;
+
+  /**
+   * Constructs a FinishResponseSubscriber object.
+   *
+   * @param LanguageManager $language_manager
+   *  The LanguageManager object for retrieving the correct language code.
+   */
+  public function __construct(LanguageManager $language_manager) {
+    $this->languageManager = $language_manager;
+  }
 
   /**
    * Sets extra headers on successful responses.
@@ -30,10 +48,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response->headers->set('X-UA-Compatible', 'IE=edge,chrome=1', false);
 
     // Set the Content-language header.
-    // @todo Receive the LanguageManager object as a constructor argument when
-    //   the dependency injection container allows for it performantly:
-    //   http://drupal.org/node/1706064.
-    $response->headers->set('Content-language', language(LANGUAGE_TYPE_INTERFACE)->langcode);
+    $response->headers->set('Content-language', $this->languageManager->getLanguage(LANGUAGE_TYPE_INTERFACE)->langcode);
 
     // Because pages are highly dynamic, set the last-modified time to now
     // since the page is in fact being regenerated right now.

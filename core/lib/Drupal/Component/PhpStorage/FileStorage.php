@@ -71,4 +71,27 @@ class FileStorage implements PhpStorageInterface {
   protected function getFullPath($name) {
     return $this->directory . '/' . $name;
   }
+
+  /**
+   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::writeable().
+   */
+  function writeable() {
+    return TRUE;
+  }
+
+  /**
+   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::deleteAll().
+   */
+  function deleteAll() {
+    return file_unmanaged_delete_recursive($this->directory, array(__CLASS__, 'filePreDeleteCallback'));
+  }
+
+  /**
+   * Ensures files and directories are deletable.
+   */
+  public static function filePreDeleteCallback($path) {
+    if (file_exists($path)) {
+      chmod($path, 0700);
+    }
+  }
 }

@@ -894,7 +894,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // Verify that we have an keyvalue service before using it. This is required
     // because this function is called during installation.
     // @todo Inject database connection into KeyValueStore\DatabaseStorage.
-    if (drupal_container()->hasDefinition('keyvalue') && function_exists('db_query')) {
+    if (drupal_container()->has('keyvalue') && function_exists('db_query')) {
       try {
         $file_list = state()->get('system.' . $type . '.files');
         if ($file_list && isset($file_list[$name]) && file_exists(DRUPAL_ROOT . '/' . $file_list[$name])) {
@@ -2442,7 +2442,7 @@ function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
       ->addArgument(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
     // @todo Replace this with a cache.factory service plus 'config' argument.
     $container
-      ->register('cache.config')
+      ->register('cache.config', 'Drupal\Core\Cache\CacheBackendInterface')
       ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
       ->setFactoryMethod('get')
       ->addArgument('config');
