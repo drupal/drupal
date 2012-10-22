@@ -289,6 +289,17 @@ User module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - David Strauss 'David Strauss' http://drupal.org/user/93254
 
+Views module
+- Daniel Wehner 'dawehner' http://drupal.org/user/99340
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
+- Damian Lee 'damiankloip' http://drupal.org/user/1037976
+- Jess Myrbo 'xjm' http://drupal.org/user/65776
+
+Views UI module
+- Daniel Wehner 'dawehner' http://drupal.org/user/99340
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
+- Damian Lee 'damiankloip' http://drupal.org/user/1037976
+
 
 Theme maintainers
 -----------------
