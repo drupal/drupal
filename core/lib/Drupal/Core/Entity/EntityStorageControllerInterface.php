@@ -21,14 +21,6 @@ namespace Drupal\Core\Entity;
 interface EntityStorageControllerInterface {
 
   /**
-   * Constructs a new Drupal\Core\Entity\EntityStorageControllerInterface object.
-   *
-   * @param $entityType
-   *   The entity type for which the instance is created.
-   */
-  public function __construct($entityType);
-
-  /**
    * Resets the internal, static entity cache.
    *
    * @param $ids

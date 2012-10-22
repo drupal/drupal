@@ -13,18 +13,6 @@ namespace Drupal\Component\Archiver;
 interface ArchiverInterface {
 
   /**
-   * Constructs a new archiver instance.
-   *
-   * @param string $file_path
-   *   The full system path of the archive to manipulate. Only local files
-   *   are supported. If the file does not yet exist, it will be created if
-   *   appropriate.
-   *
-   * @throws Drupal\Component\Archiver\ArchiverException
-   */
-  public function __construct($file_path);
-
-  /**
    * Adds the specified file or directory to the archive.
    *
    * @param string $file_path

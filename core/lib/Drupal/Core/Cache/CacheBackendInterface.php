@@ -55,14 +55,6 @@ interface CacheBackendInterface {
   const CACHE_PERMANENT = 0;
 
   /**
-   * Constructs a new cache backend.
-   *
-   * @param $bin
-   *   The cache bin for which the object is created.
-   */
-  public function __construct($bin);
-
-  /**
    * Returns data from the persistent cache.
    *
    * Data may be stored as either plain text or as serialized data. cache_get()

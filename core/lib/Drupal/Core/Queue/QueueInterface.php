@@ -14,13 +14,6 @@ namespace Drupal\Core\Queue;
  * in messages and to execute them at least once.
  */
 interface QueueInterface {
-  /**
-   * Initializes a new queue object.
-   *
-   * @param $name
-   *   An arbitrary string. The name of the queue to work with.
-   */
-  public function __construct($name);
 
   /**
    * Adds a queue item and store it directly to the queue.

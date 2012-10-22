@@ -15,16 +15,6 @@ use Drupal\user;
 interface TypedDataInterface {
 
   /**
-   * Creates a typed data object given its definition.
-   *
-   * @param array $definition
-   *   The data definition.
-   *
-   * @see Drupal\Core\TypedData\TypedDataManager::create()
-   */
-  public function __construct(array $definition);
-
-  /**
    * Gets the data type.
    *
    * @return string

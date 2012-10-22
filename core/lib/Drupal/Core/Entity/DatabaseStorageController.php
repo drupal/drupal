@@ -104,10 +104,12 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    */
   protected $cache;
 
+
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::__construct().
+   * Constructs a DatabaseStorageController object.
    *
-   * Sets basic variables.
+   * @param string $entityType
+   *   The entity type for which the instance is created.
    */
   public function __construct($entityType) {
     $this->entityType = $entityType;

@@ -25,7 +25,12 @@ abstract class TypedData implements TypedDataInterface {
   protected $definition;
 
   /**
-   * Implements TypedDataInterface::__construct().
+   * Constructs a TypedData object given its definition.
+   *
+   * @param array $definition
+   *   The data definition.
+   *
+   * @see Drupal\Core\TypedData\TypedDataManager::create()
    */
   public function __construct(array $definition) {
     $this->definition = $definition;

@@ -23,7 +23,10 @@ class EntityFormController implements EntityFormControllerInterface {
   protected $operation;
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::__construct().
+   * Constructs an EntityFormController object.
+   *
+   * @param string $operation
+   *   The name of the current operation.
    */
   public function __construct($operation) {
     $this->operation = $operation;

@@ -19,7 +19,10 @@ class System implements ReliableQueueInterface {
   protected $name;
 
   /**
-   * Implements Drupal\Core\Queue\QueueInterface::__construct().
+   * Constructs a System object.
+   *
+   * @param string $name
+   *   An arbitrary string. The name of the queue to work with.
    */
   public function __construct($name) {
     $this->name = $name;

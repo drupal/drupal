@@ -13,14 +13,6 @@ namespace Drupal\Core\Entity;
 interface EntityFormControllerInterface {
 
   /**
-   * Constructs the object.
-   *
-   * @param string $operation
-   *   The name of the current operation.
-   */
-  public function __construct($operation);
-
-  /**
    * Builds an entity form.
    *
    * This is the entity form builder which is invoked via drupal_build_form()
