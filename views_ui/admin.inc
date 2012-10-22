@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\views\Plugin\views\wizard\WizardException;
@@ -2483,8 +2484,8 @@ function views_ui_autocomplete_tag($string = '') {
   // get matches from default views:
   $views = views_get_all_views();
   foreach ($views as $view) {
-    if (!empty($view->storage->tag) && strpos($view->storage->tag, $string) === 0) {
-      $matches[$view->storage->tag] = $view->storage->tag;
+    if (!empty($view->tag) && strpos($view->tag, $string) === 0) {
+      $matches[$view->tag] = $view->tag;
       if (count($matches) >= 10) {
         break;
       }
