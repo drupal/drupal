@@ -513,7 +513,6 @@ function menu_edit_menu($form, &$form_state, $type, $menu = array()) {
     '#machine_name' => array(
       'exists' => 'menu_edit_menu_name_exists',
       'source' => array('title'),
-      'label' => t('URL path'),
       'replace_pattern' => '[^a-z0-9-]+',
       'replace' => '-',
     ),
