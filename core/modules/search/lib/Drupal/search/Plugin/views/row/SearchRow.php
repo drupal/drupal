@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Plugin\views\row\View.
+ * Definition of Drupal\search\Plugin\views\row\SearchRow.
  */
 
 namespace Drupal\search\Plugin\views\row;
@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   no_uid = TRUE
  * )
  */
-class View extends RowPluginBase {
+class SearchRow extends RowPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();

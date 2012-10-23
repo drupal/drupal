@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\row\View.
+ * Definition of Drupal\node\Plugin\views\row\NodeRow.
  */
 
 namespace Drupal\node\Plugin\views\row;
@@ -10,7 +10,7 @@ namespace Drupal\node\Plugin\views\row;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\system\Plugin\views\row\Entity;
+use Drupal\system\Plugin\views\row\EntityRow;
 
 /**
  * Plugin which performs a node_view on the resulting object.
@@ -29,7 +29,7 @@ use Drupal\system\Plugin\views\row\Entity;
  *   type = "normal"
  * )
  */
-class View extends Entity {
+class NodeRow extends EntityRow {
 
   /**
    * Overrides Drupal\system\Plugin\views\row\Entity::defineOptions().

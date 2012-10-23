@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\user\Plugin\views\row\View
+ * Definition of Drupal\user\Plugin\views\row\UserRow.
  */
 
 namespace Drupal\user\Plugin\views\row;
 
-use Drupal\system\Plugin\views\row\Entity;
+use Drupal\system\Plugin\views\row\EntityRow;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -26,7 +26,7 @@ use Drupal\Core\Annotation\Translation;
  *   type = "normal"
  * )
  */
-class View extends Entity {
+class UserRow extends EntityRow {
 
   /**
    * Overrides Drupal\system\Plugin\views\row\Entity::defineOptions().

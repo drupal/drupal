@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Plugin\views\row\Entity.
+ * Definition of Drupal\system\Plugin\views\row\EntityRow.
  */
 
 namespace Drupal\system\Plugin\views\row;
@@ -13,8 +13,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Generic entity row plugin to provide a common base for all entity types.
  */
-class Entity extends RowPluginBase {
-  protected $entityInfo1;
+class EntityRow extends RowPluginBase {
 
   /**
    * The table the entity is using for storage.
