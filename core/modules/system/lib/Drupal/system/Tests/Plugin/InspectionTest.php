@@ -27,14 +27,20 @@ class InspectionTest extends PluginTestBase {
     foreach (array('user_login') as $id) {
       $plugin = $this->testPluginManager->createInstance($id);
       $this->assertIdentical($plugin->getPluginId(), $id);
-      $this->assertIdentical($plugin->getDefinition(), $this->testPluginExpectedDefinitions[$id]);
+      $this->assertIdentical($this->testPluginManager->getDefinition($id), $this->testPluginExpectedDefinitions[$id]);
     }
     // Skip the 'menu' derived blocks, because MockMenuBlock does not implement
     // PluginInspectionInterface. The others do by extending PluginBase.
     foreach (array('user_login', 'layout') as $id) {
       $plugin = $this->mockBlockManager->createInstance($id);
       $this->assertIdentical($plugin->getPluginId(), $id);
-      $this->assertIdentical($plugin->getDefinition(), $this->mockBlockExpectedDefinitions[$id]);
+      $this->assertIdentical($this->mockBlockManager->getDefinition($id), $this->mockBlockExpectedDefinitions[$id]);
+    }
+    // Test a plugin manager that provides defaults.
+    foreach (array('test_block1', 'test_block2') as $id) {
+      $plugin = $this->defaultsTestPluginManager->createInstance($id);
+      $this->assertIdentical($plugin->getPluginId(), $id);
+      $this->assertIdentical($this->defaultsTestPluginManager->getDefinition($id), $this->defaultsTestPluginExpectedDefinitions[$id]);
     }
   }
 

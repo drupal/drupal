@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Plugin;
 use Drupal\simpletest\UnitTestBase;
 use Drupal\plugin_test\Plugin\TestPluginManager;
 use Drupal\plugin_test\Plugin\MockBlockManager;
+use Drupal\plugin_test\Plugin\DefaultsTestPluginManager;
 
 /**
  * Base class for Plugin API unit tests.
@@ -19,6 +20,8 @@ abstract class PluginTestBase extends UnitTestBase {
   protected $testPluginExpectedDefinitions;
   protected $mockBlockManager;
   protected $mockBlockExpectedDefinitions;
+  protected $defaultsTestPluginManager;
+  protected $defaultsTestPluginExpectedDefinitions;
 
   public function setUp() {
     parent::setUp();
@@ -33,6 +36,7 @@ abstract class PluginTestBase extends UnitTestBase {
     //   as derivatives and ReflectionFactory.
     $this->testPluginManager = new TestPluginManager();
     $this->mockBlockManager = new MockBlockManager();
+    $this->defaultsTestPluginManager = new DefaultsTestPluginManager();
 
     // The expected plugin definitions within each manager. Several tests assert
     // that these plugins and their definitions are found and returned by the
@@ -67,5 +71,22 @@ abstract class PluginTestBase extends UnitTestBase {
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       ),
     );
+    $this->defaultsTestPluginExpectedDefinitions = array(
+      'test_block1' => array(
+        'metadata' => array(
+          'default' => TRUE,
+          'custom' => TRUE,
+        ),
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockTestBlock',
+      ),
+      'test_block2' => array(
+        'metadata' => array(
+          'default' => FALSE,
+          'custom' => TRUE,
+        ),
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockTestBlock',
+      ),
+    );
   }
+
 }

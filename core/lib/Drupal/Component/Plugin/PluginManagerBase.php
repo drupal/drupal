@@ -7,6 +7,8 @@
 
 namespace Drupal\Component\Plugin;
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Base class for plugin managers.
  */
@@ -87,6 +89,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * method.
    */
   protected function processDefinition(&$definition, $plugin_id) {
-    $definition += $this->defaults;
+    $definition = NestedArray::mergeDeep($this->defaults, $definition);
   }
+
 }
