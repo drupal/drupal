@@ -2679,7 +2679,7 @@ function form_process_select($element) {
 function theme_select($variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id', 'name', 'size'));
-  _form_set_class($element, array('form-select'));
+  _form_set_attributes($element, array('form-select'));
 
   return '<select' . new Attribute($element['#attributes']) . '>' . form_select_options($element) . '</select>';
 }
@@ -2793,7 +2793,7 @@ function form_get_options($element, $key) {
 function theme_fieldset($variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id'));
-  _form_set_class($element, array('form-wrapper'));
+  _form_set_attributes($element, array('form-wrapper'));
 
   $output = '<fieldset' . new Attribute($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
@@ -2836,7 +2836,7 @@ function theme_radio($variables) {
   if (isset($element['#return_value']) && $element['#value'] !== FALSE && $element['#value'] == $element['#return_value']) {
     $element['#attributes']['checked'] = 'checked';
   }
-  _form_set_class($element, array('form-radio'));
+  _form_set_attributes($element, array('form-radio'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />';
 }
@@ -3104,7 +3104,7 @@ function theme_checkbox($variables) {
   if (!empty($element['#checked'])) {
     $element['#attributes']['checked'] = 'checked';
   }
-  _form_set_class($element, array('form-checkbox'));
+  _form_set_attributes($element, array('form-checkbox'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />';
 }
@@ -4004,7 +4004,7 @@ function theme_textfield($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'text';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-text'));
+  _form_set_attributes($element, array('form-text'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
@@ -4024,7 +4024,7 @@ function theme_email($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'email';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-email'));
+  _form_set_attributes($element, array('form-email'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
@@ -4058,7 +4058,7 @@ function theme_tel($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'tel';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-tel'));
+  _form_set_attributes($element, array('form-tel'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
@@ -4079,7 +4079,7 @@ function theme_number($variables) {
 
   $element['#attributes']['type'] = 'number';
   element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder'));
-  _form_set_class($element, array('form-number'));
+  _form_set_attributes($element, array('form-number'));
 
   $output = '<input' . new Attribute($element['#attributes']) . ' />';
 
@@ -4102,7 +4102,7 @@ function theme_range($variables) {
 
   $element['#attributes']['type'] = 'range';
   element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
-  _form_set_class($element, array('form-range'));
+  _form_set_attributes($element, array('form-range'));
 
   $output = '<input' . new Attribute($element['#attributes']) . ' />';
 
@@ -4194,7 +4194,7 @@ function theme_url($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'url';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-url'));
+  _form_set_attributes($element, array('form-url'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
@@ -4214,7 +4214,7 @@ function theme_search($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'search';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-search'));
+  _form_set_attributes($element, array('form-search'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
@@ -4269,7 +4269,7 @@ function theme_color($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'color';
   element_set_attributes($element, array('id', 'name', 'value'));
-  _form_set_class($element, array('form-color'));
+  _form_set_attributes($element, array('form-color'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
@@ -4311,7 +4311,7 @@ function theme_form($variables) {
 function theme_textarea($variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id', 'name', 'rows', 'cols', 'placeholder'));
-  _form_set_class($element, array('form-textarea'));
+  _form_set_attributes($element, array('form-textarea'));
 
   $wrapper_attributes = array(
     'class' => array('form-textarea-wrapper'),
@@ -4343,7 +4343,7 @@ function theme_password($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'password';
   element_set_attributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
-  _form_set_class($element, array('form-text'));
+  _form_set_attributes($element, array('form-text'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />';
 }
@@ -4393,7 +4393,7 @@ function theme_file($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'file';
   element_set_attributes($element, array('id', 'name', 'size'));
-  _form_set_class($element, array('form-file'));
+  _form_set_attributes($element, array('form-file'));
 
   return '<input' . new Attribute($element['#attributes']) . ' />';
 }
@@ -4597,7 +4597,7 @@ function theme_form_element_label($variables) {
  * @param $name
  *   Array of new class names to be added.
  */
-function _form_set_class(&$element, $class = array()) {
+function _form_set_attributes(&$element, $class = array()) {
   if (!empty($class)) {
     if (!isset($element['#attributes']['class'])) {
       $element['#attributes']['class'] = array();
@@ -4609,8 +4609,6 @@ function _form_set_class(&$element, $class = array()) {
   // form_builder().
   if (!empty($element['#required'])) {
     $element['#attributes']['class'][] = 'required';
-    // @todo Rename the _form_set_class() function to reflect that we're setting
-    //   non-class attributes too.
     $element['#attributes']['required'] = 'required';
     $element['#attributes']['aria-required'] = 'true';
   }
