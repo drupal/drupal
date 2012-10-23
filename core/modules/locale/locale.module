@@ -771,8 +771,37 @@ function locale_string_is_safe($string) {
 }
 
 /**
+ * Refresh related information after string translations have been updated.
+ *
+ * The information that will be refreshed includes:
+ * - JavaScript translations.
+ * - Locale cache.
+ *
+ * @param array $langcodes
+ *   Language codes for updated translations.
+ * @param array $lids
+ *   List of string identifiers that have been updated / created.
+ */
+function _locale_refresh_translations($langcodes, $lids) {
+  if ($lids && $langcodes) {
+    // Update javascript translations if any of the strings has a javascript location.
+    if ($strings = locale_storage()->getStrings(array('lid' => $lids, 'type' => 'javascript'))) {
+      array_map('_locale_invalidate_js', $langcodes);
+    }
+  }
+  // Clear locale cache.
+  cache()->invalidateTags(array('locale' => TRUE));
+}
+
+/**
  * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
  * Drupal.formatPlural() and inserts them into the database.
+ *
+ * @param string $filepath
+ *   File name to parse.
+ *
+ * @return array
+ *   Array of string objects to update indexed by context and source.
  */
 function _locale_parse_js_file($filepath) {
   // The file path might contain a query string, so make sure we only use the
@@ -858,28 +887,17 @@ function _locale_parse_js_file($filepath) {
     $context = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['context'], 1, -1)));
 
     $source = locale_storage()->findString(array('source' => $string, 'context' => $context));
-    if ($source) {
-      // We already have this source string and now have to add the location
-      // to the location column, if this file is not yet present in there.
-      $locations = preg_split('~\s*;\s*~', $source->location);
 
-      if (!in_array($filepath, $locations)) {
-        $locations[] = $filepath;
-        $locations = implode('; ', $locations);
-
-        // Save the new locations string to the database.
-        $source->setValues(array('location' => $locations))
-          ->save();
-      }
-    }
-    else {
+    if (!$source) {
       // We don't have the source string yet, thus we insert it into the database.
-      locale_storage()->createString(array(
-        'location'  => $filepath,
+      $source = locale_storage()->createString(array(
         'source'    => $string,
         'context'   => $context,
-      ))->save();
+      ));
     }
+    // Besides adding the location this will tag it for current version.
+    $source->addLocation('javascript', $filepath);
+    $source->save();
   }
 }
 
@@ -934,10 +952,13 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // Only add strings with a translation to the translations array.
-  $options['filters']['location'] = '.js';
-  $conditions['language'] = $language->langcode;
+  $conditions = array(
+    'type' => 'javascript',
+    'language' =>  $language->langcode,
+    'translated' => TRUE,
+  );
   $translations = array();
-  foreach (locale_storage()->getTranslations($conditions, $options) as $data) {
+  foreach (locale_storage()->getTranslations($conditions) as $data) {
     $translations[$data->context][$data->source] = $data->translation;
   }
 

@@ -61,7 +61,6 @@ class LocaleLookup extends CacheArray {
     ));
 
     if ($translation) {
-      $this->stringStorage->checkVersion($translation, VERSION);
       $value = !empty($translation->translation) ? $translation->translation : TRUE;
     }
     else {
@@ -70,9 +69,8 @@ class LocaleLookup extends CacheArray {
       $this->stringStorage->createString(array(
         'source' => $offset,
         'context' => $this->context,
-        'location' => request_uri(),
         'version' => VERSION
-      ))->save();
+      ))->addLocation('path', request_uri())->save();
       $value = TRUE;
     }
     $this->storage[$offset] = $value;

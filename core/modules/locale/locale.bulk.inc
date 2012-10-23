@@ -492,17 +492,20 @@ function locale_translate_batch_import($filepath, $options, &$context) {
         $file->timestamp = filemtime($file->uri);
         locale_translate_update_file_history($file);
         $context['results']['files'][$filepath] = $filepath;
+        $context['results']['languages'][$filepath] = $file->langcode;
       }
       // Add the values from the report to the stats for this file.
       if (!isset($context['results']['stats']) || !isset($context['results']['stats'][$filepath])) {
         $context['results']['stats'][$filepath] = array();
       }
       foreach ($report as $key => $value) {
-        if (is_numeric($report[$key])) {
-          if (!isset($context['results']['stats'][$filepath][$key])) {
-            $context['results']['stats'][$filepath][$key] = 0;
-          }
-          $context['results']['stats'][$filepath][$key] += $report[$key];
+        if (is_numeric($value)) {
+          $context['results']['stats'][$filepath] += array($key => 0);
+          $context['results']['stats'][$filepath][$key] += $value;
+        }
+        elseif (is_array($value)) {
+          $context['results']['stats'][$filepath] += array($key => array());
+          $context['results']['stats'][$filepath][$key] = array_merge($context['results']['stats'][$filepath][$key], $value);
         }
       }
     }
@@ -519,6 +522,7 @@ function locale_translate_batch_import($filepath, $options, &$context) {
 function locale_translate_batch_finished($success, $results) {
   if ($success) {
     $additions = $updates = $deletes = $skips = 0;
+    $strings = $langcodes = array();
     drupal_set_message(format_plural(count($results['files']), 'One translation file imported.', '@count translation files imported.'));
     $skipped_files = array();
     // If there are no results and/or no stats (eg. coping with an empty .po
@@ -532,7 +536,11 @@ function locale_translate_batch_finished($success, $results) {
         if ($report['skips'] > 0) {
           $skipped_files[] = $filepath;
         }
+        $strings = array_merge($strings, $report['strings']);
       }
+      // Get list of unique string identifiers and language codes updated.
+      $strings = array_unique($strings);
+      $langcodes = array_unique(array_values($results['languages']));
     }
     drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
     watchdog('locale', 'The translation was succesfully imported. %number new strings added, %update updated and %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
@@ -547,9 +555,10 @@ function locale_translate_batch_finished($success, $results) {
       watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
     }
 
-    // Clear cache and force refresh of JavaScript translations.
-    _locale_invalidate_js();
-    cache()->invalidateTags(array('locale' => TRUE));
+    if ($strings) {
+      // Clear cache and force refresh of JavaScript translations.
+      _locale_refresh_translations($langcodes, $strings);
+    }
   }
 }
 

@@ -52,12 +52,6 @@ function locale_schema() {
         'not null' => TRUE,
         'description' => 'Unique identifier of this string.',
       ),
-      'location' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'description' => 'Drupal path in case of online discovered translations or file path in case of imported strings.',
-      ),
       'source' => array(
         'type' => 'text',
         'mysql_type' => 'blob',
@@ -76,7 +70,7 @@ function locale_schema() {
         'length' => 20,
         'not null' => TRUE,
         'default' => 'none',
-        'description' => 'Version of Drupal, where the string was last used (for locales optimization).',
+        'description' => 'Version of Drupal where the string was last used (for locales optimization).',
       ),
     ),
     'primary key' => array('lid'),
@@ -123,6 +117,54 @@ function locale_schema() {
     ),
     'indexes' => array(
       'lid'      => array('lid'),
+    ),
+  );
+
+  $schema['locales_location'] = array(
+    'description' => 'Location information for source strings.',
+    'fields' => array(
+      'lid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this location.',
+      ),
+      'sid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this string.',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The location type (file, config, path, etc).',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Type dependent location information (file name, path, etc).',
+      ),
+      'version' => array(
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'none',
+        'description' => 'Version of Drupal where the location was found.',
+      ),
+    ),
+    'primary key' => array('lid'),
+    'foreign keys' => array(
+      'locales_source' => array(
+        'table' => 'locales_source',
+        'columns' => array('sid' => 'lid'),
+      ),
+    ),
+    'indexes' => array(
+       'string_id' => array('sid'),
+       'string_type' => array('sid', 'type'),
     ),
   );
 
@@ -738,6 +780,13 @@ function locale_update_8013() {
       update_variable_set('language_negotiation_language_interface', $negotiation_interface);
     }
   }
+}
+
+/**
+ * Drop old 'location' field.
+ */
+function locale_update_8014() {
+  db_drop_field('locales_source', 'location');
 }
 
 /**

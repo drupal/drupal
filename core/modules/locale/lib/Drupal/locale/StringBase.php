@@ -22,11 +22,11 @@ abstract class StringBase implements StringInterface {
   public $lid;
 
   /**
-   * The string location.
+   * The string locations indexed by type.
    *
    * @var string
    */
-  public $location;
+  public $locations;
 
   /**
    * The source string.
@@ -149,6 +149,35 @@ abstract class StringBase implements StringInterface {
       }
     }
     return $values;
+  }
+
+  /**
+   * Implements Drupal\locale\StringInterface::getLocation().
+   */
+  public function getLocations($check_only = FALSE) {
+    if (!isset($this->locations) && !$check_only) {
+      $this->locations = array();
+      foreach ($this->getStorage()->getLocations(array('sid' => $this->getId())) as $location) {
+        $this->locations[$location->type][$location->name] = $location->lid;
+      }
+    }
+    return isset($this->locations) ? $this->locations : array();
+  }
+
+  /**
+   * Implements Drupal\locale\StringInterface::addLocation().
+   */
+  public function addLocation($type, $name) {
+    $this->locations[$type][$name] = TRUE;
+    return $this;
+  }
+
+  /**
+   * Implements Drupal\locale\StringInterface::hasLocation().
+   */
+  public function hasLocation($type, $name) {
+    $locations = $this->getLocations();
+    return isset($locations[$type]) ? !empty($locations[$type][$name]) : FALSE;
   }
 
   /**

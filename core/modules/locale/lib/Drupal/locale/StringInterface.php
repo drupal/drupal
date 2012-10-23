@@ -158,6 +158,54 @@ interface StringInterface {
   public function getValues(array $fields);
 
   /**
+   * Gets location information for this string.
+   *
+   * Locations are arbitrary pairs of type and name strings, used to store
+   * information about the origins of the string, like the file name it
+   * was found on, the path on which it was discovered, etc...
+   *
+   * A string can have any number of locations since the same string may be
+   * found on different places of Drupal code and configuration.
+   *
+   * @param bool $check_only
+   *   (optional) Set to TRUE to get only new locations added during the
+   *   current page request and not loading all existing locations.
+   *
+   * @return array
+   *   Location ids indexed by type and name.
+   */
+  public function getLocations($check_only = FALSE);
+
+  /**
+   * Adds a location for this string.
+   *
+   * @param string $type
+   *   Location type that may be any arbitrary string. Types used in Drupal
+   *   core are: 'javascript', 'path', 'code', 'configuration'.
+   * @param string $name
+   *   Location name. Drupal path in case of online discovered translations,
+   *   file path in case of imported strings, configuration name for strings
+   *   that come from configuration, etc...
+   *
+   * @return Drupal\locale\LocaleString
+   *   The called object.
+   */
+  public function addLocation($type, $name);
+
+  /**
+   * Checks whether the string has a given location.
+   *
+   * @param string $type.
+   *   Location type.
+   * @param string $name.
+   *   Location name.
+   *
+   * @return bool
+   *   TRUE if the string has a location with this type and name.
+   */
+  public function hasLocation($type, $name);
+
+  /**
    * Saves string object to storage.
    *
    * @return Drupal\locale\LocaleString

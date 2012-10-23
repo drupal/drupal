@@ -80,9 +80,22 @@ class StringDatabaseStorage implements StringStorageInterface {
     ->execute()
     ->fetchObject('Drupal\locale\TranslationString');
     if ($string) {
+      $this->checkVersion($string, VERSION);
       $string->setStorage($this);
     }
     return $string;
+  }
+
+  /**
+   * Implements Drupal\locale\StringStorageInterface::getLocations().
+   */
+  function getLocations(array $conditions = array()) {
+    $query = $this->connection->select('locales_location', 'l', $this->options)
+      ->fields('l');
+    foreach ($conditions as $field => $value) {
+      $query->condition('l.' . $field, $value);
+    }
+    return $query->execute()->fetchAll();
   }
 
   /**
@@ -100,19 +113,6 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::checkVersion().
-   */
-  public function checkVersion($string, $version) {
-    if ($string->getId() && $string->getVersion() != $version) {
-      $string->setVersion($version);
-      $this->connection->update('locales_source', $this->options)
-        ->condition('lid', $string->getId())
-        ->fields(array('version' => $version))
-        ->execute();
-    }
-  }
-
-  /**
    * Implements Drupal\locale\StringStorageInterface::save().
    */
   public function save($string) {
@@ -127,7 +127,60 @@ class StringDatabaseStorage implements StringStorageInterface {
     else {
       $this->dbStringUpdate($string);
     }
+    // Update locations if they come with the string.
+    $this->updateLocation($string);
     return $this;
+  }
+
+  /**
+   * Update locations for string.
+   *
+   * @param Drupal\locale\StringInterface $string
+   *   The string object.
+   */
+  protected function updateLocation($string) {
+    if ($locations = $string->getLocations(TRUE)) {
+      $created = FALSE;
+      foreach ($locations as $type => $location) {
+        foreach ($location as $name => $lid) {
+          if (!$lid) {
+            $this->dbDelete('locales_location', array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
+              ->execute();
+          }
+          elseif ($lid === TRUE) {
+            // This is a new location to add, take care not to duplicate.
+            $this->connection->merge('locales_location', $this->options)
+              ->key(array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
+              ->fields(array('version' => VERSION))
+              ->execute();
+            $created = TRUE;
+          }
+          // Loaded locations have 'lid' integer value, nor FALSE, nor TRUE.
+        }
+      }
+      if ($created) {
+        // As we've set a new location, check string version too.
+        $this->checkVersion($string, VERSION);
+      }
+    }
+  }
+
+  /**
+   * Checks whether the string version matches a given version, fix it if not.
+   *
+   * @param Drupal\locale\StringInterface $string
+   *   The string object.
+   * @param string $version
+   *   Drupal version to check against.
+   */
+  protected function checkVersion($string, $version) {
+    if ($string->getId() && $string->getVersion() != $version) {
+      $string->setVersion($version);
+      $this->connection->update('locales_source', $this->options)
+      ->condition('lid', $string->getId())
+      ->fields(array('version' => $version))
+      ->execute();
+    }
   }
 
   /**
@@ -138,6 +191,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       $this->dbDelete('locales_target', $keys)->execute();
       if ($string->isSource()) {
         $this->dbDelete('locales_source', $keys)->execute();
+        $this->dbDelete('locales_location', $keys)->execute();
         $string->setId(NULL);
       }
     }
@@ -157,6 +211,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     if ($lids) {
       $this->dbDelete('locales_target', array('lid' => $lids))->execute();
       $this->dbDelete('locales_source',  array('lid' => $lids))->execute();
+      $this->dbDelete('locales_location',  array('sid' => $lids))->execute();
     }
   }
 
@@ -191,11 +246,19 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   Field name to find the table alias for.
    *
    * @return string
-   *   Either 's' or 't' depending on whether the field belongs to source or
-   *   target table.
+   *   Either 's', 't' or 'l' depending on whether the field belongs to source,
+   *   target or location table table.
    */
   protected function dbFieldTable($field) {
-    return in_array($field, array('language', 'translation', 'customized')) ? 't' : 's';
+    if (in_array($field, array('language', 'translation', 'customized'))) {
+      return 't';
+    }
+    elseif (in_array($field, array('type', 'name'))) {
+      return 'l';
+    }
+    else {
+      return 's';
+    }
   }
 
   /**
@@ -365,6 +428,20 @@ class StringDatabaseStorage implements StringStorageInterface {
         // We cannot just add all fields because 'lid' may get null values.
         $query->fields('t', array('language', 'translation', 'customized'));
       }
+    }
+
+    // If we have conditions for location's type or name, then we need the
+    // location table, for which we add a subquery.
+    if (isset($conditions['type']) || isset($conditions['name'])) {
+      $subquery = $this->connection->select('locales_location', 'l', $this->options)
+        ->fields('l', array('sid'));
+      foreach (array('type', 'name') as $field) {
+        if (isset($conditions[$field])) {
+          $subquery->condition('l.' . $field, $conditions[$field]);
+          unset($conditions[$field]);
+        }
+      }
+      $query->condition('s.lid', $subquery, 'IN');
     }
 
     // Add conditions for both tables.

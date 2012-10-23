@@ -324,11 +324,6 @@ function locale_translate_edit_form($form, &$form_state) {
           '#value' => check_plain($string->context),
         );
       }
-      $form['strings'][$string->lid]['location'] = array(
-        '#type' => 'value',
-        '#value' => $string->location,
-      );
-
       // Approximate the number of rows to use in the default textarea.
       $rows = min(ceil(str_word_count($source_array[0]) / 12), 10);
       if (empty($form['strings'][$string->lid]['plural']['#value'])) {
@@ -403,10 +398,16 @@ function locale_translate_edit_form_validate($form, &$form_state) {
  */
 function locale_translate_edit_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
-  foreach ($form_state['values']['strings'] as $lid => $translations) {
-    // Get target string, that may be NULL if there's no translation.
-    $target = locale_storage()->findTranslation(array('language' => $langcode, 'lid' => $lid));
+  $updated = array();
 
+  // Preload all translations for strings in the form.
+  $lids = array_keys($form_state['values']['strings']);
+  $strings = array();
+  foreach (locale_storage()->getTranslations(array('lid' => $lids, 'language' => $langcode, 'translated' => TRUE)) as $string) {
+    $strings[$string->lid] = $string;
+  }
+
+  foreach ($form_state['values']['strings'] as $lid => $translations) {
     // No translation when all strings are empty.
     $has_translation = FALSE;
     foreach ($translations['translations'] as $string) {
@@ -417,14 +418,16 @@ function locale_translate_edit_form_submit($form, &$form_state) {
     }
     if ($has_translation) {
       // Only update or insert if we have a value to use.
-      $target = $target && !$target->isNew() ? $target : locale_storage()->createTranslation(array('lid' => $lid, 'language' => $langcode));
+      $target = isset($strings[$lid]) ? $strings[$lid] : locale_storage()->createTranslation(array('lid' => $lid, 'language' => $langcode));
       $target->setPlurals($translations['translations'])
         ->setCustomized()
         ->save();
+      $updated[] = $target->getId();
     }
-    elseif ($target) {
+    elseif (isset($strings[$lid])) {
       // Empty translation entered: remove existing entry from database.
-      $target->delete();
+      $strings[$lid]->delete();
+      $updated[] = $lid;
     }
   }
 
@@ -435,10 +438,11 @@ function locale_translate_edit_form_submit($form, &$form_state) {
     $form_state['redirect'] = array('admin/config/regional/translate', array('query' => array('page' => $_GET['page'])));
   }
 
-  // Force JavaScript translation file recreation for this language.
-  _locale_invalidate_js($langcode);
-  // Clear locale cache.
-  cache()->invalidateTags(array('locale' => TRUE));
+  if ($updated) {
+    // Clear cache and force refresh of JavaScript translations.
+    _locale_refresh_translations(array($langcode), $updated);
+  }
+
 }
 
 /**

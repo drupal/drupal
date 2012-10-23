@@ -412,6 +412,60 @@ function update_prepare_d8_language() {
       );
       db_add_field('locales_target', 'customized', $spec);
     }
+    // Add locales_location table to track string locations.
+    // When updating in a non-English language, this table is used for
+    // refreshing JavaScript translations.
+    if (db_table_exists('locales_source') && !db_table_exists('locales_location')) {
+      $table = array(
+        'description' => 'Location information for source strings.',
+        'fields' => array(
+          'lid' => array(
+            'type' => 'serial',
+            'not null' => TRUE,
+            'description' => 'Unique identifier of this location.',
+          ),
+          'sid' => array(
+            'type' => 'int',
+            'not null' => TRUE,
+            'description' => 'Unique identifier of this string.',
+          ),
+          'type' => array(
+            'type' => 'varchar',
+            'length' => 50,
+            'not null' => TRUE,
+            'default' => '',
+            'description' => 'The location type (file, config, path, etc).',
+          ),
+          'name' => array(
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => TRUE,
+            'default' => '',
+            'description' => 'Type dependent location information (file name, path, etc).',
+          ),
+          'version' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+            'default' => 'none',
+            'description' => 'Version of Drupal where the location was found.',
+          ),
+        ),
+        'primary key' => array('lid'),
+        'foreign keys' => array(
+          'locales_source' => array(
+            'table' => 'locales_source',
+            'columns' => array('sid' => 'lid'),
+          ),
+        ),
+        'indexes' => array(
+          'string_id' => array('sid'),
+          'string_type' => array('sid', 'type'),
+        ),
+      );
+
+      db_create_table('locales_location', $table);
+    }
   }
 }
 

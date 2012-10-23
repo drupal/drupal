@@ -102,6 +102,7 @@ class PoDatabaseWriter implements PoWriterInterface {
       'updates' => 0,
       'deletes' => 0,
       'skips' => 0,
+      'strings' => array(),
     );
     $this->_report = $report;
   }
@@ -226,13 +227,13 @@ class PoDatabaseWriter implements PoWriterInterface {
     $source = $item->getSource();
     $translation = $item->getTranslation();
 
-
     // Look up the source string and any existing translation.
-    $string = locale_storage()->findTranslation(array(
+    $strings = locale_storage()->getTranslations(array(
       'language' => $this->_langcode,
       'source' => $source,
       'context' => $context
     ));
+    $string = reset($strings);
 
     if (!empty($translation)) {
       // Skip this string unless it passes a check for dangerous code.
@@ -258,6 +259,7 @@ class PoDatabaseWriter implements PoWriterInterface {
           $string->save();
           $this->_report['updates']++;
         }
+        $this->_report['strings'][] = $string->getId();
         return $string->lid;
       }
       else {
@@ -272,6 +274,7 @@ class PoDatabaseWriter implements PoWriterInterface {
         ))->save();
 
         $this->_report['additions']++;
+        $this->_report['strings'][] = $string->getId();
         return $string->lid;
       }
     }
@@ -279,6 +282,7 @@ class PoDatabaseWriter implements PoWriterInterface {
       // Empty translation, remove existing if instructed.
       $string->delete();
       $this->_report['deletes']++;
+      $this->_report['strings'][] = $string->lid;
       return $string->lid;
     }
   }

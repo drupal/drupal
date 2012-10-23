@@ -37,12 +37,9 @@ class LocaleJavascriptTranslation extends WebTestBase {
     _locale_parse_js_file($filename);
 
     // Get all of the source strings that were found.
-    $source_strings = db_select('locales_source', 's')
-      ->fields('s', array('source', 'context'))
-      ->condition('s.location', $filename)
-      ->execute()
-      ->fetchAllKeyed();
-
+    foreach (locale_storage()->getStrings(array('type' => 'javascript', 'name' => $filename)) as $string) {
+      $source_strings[$string->source] = $string->context;
+    }
     // List of all strings that should be in the file.
     $test_strings = array(
       "Standard Call t" => '',

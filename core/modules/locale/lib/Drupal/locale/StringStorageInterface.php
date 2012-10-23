@@ -50,6 +50,24 @@ interface StringStorageInterface {
    *   Array of Drupal\locale\StringInterface objects matching the conditions.
   */
   public function getTranslations(array $conditions = array(), array $options = array());
+
+  /**
+   * Loads string location information.
+   *
+   * @see Drupal\locale\StringStorageInterface::getStrings()
+   *
+   * @param array $conditions
+   *   (optional) Array with conditions to filter the locations that may be any
+   *   of the follwing elements:
+   *   - 'sid', The tring identifier.
+   *   - 'type', The location type.
+   *   - 'name', The location name.
+   *
+   * @return array
+   *   Array of location objects matching the conditions.
+   */
+  public function getLocations(array $conditions = array());
+
   /**
    * Loads a string source object, fast query.
    *
@@ -69,6 +87,10 @@ interface StringStorageInterface {
   /**
    * Loads a string translation object, fast query.
    *
+   * This function must only be used when actually translating strings as it
+   * will have the effect of updating the string version. For other purposes
+   * the getTranslations() method should be used instead.
+   *
    * @param array $conditions
    *   (optional) Array with conditions that will be used to filter the strings
    *   returned and may include all of the conditions defined by getStrings().
@@ -77,16 +99,6 @@ interface StringStorageInterface {
    *   Minimal TranslationString object if found, NULL otherwise.
    */
   public function findTranslation(array $conditions);
-
-  /**
-   * Checks whether the string version matches a given version, fix it if not.
-   *
-   * @param Drupal\locale\StringInterface $string
-   *   The string object.
-   * @param string $version
-   *   Drupal version to check against.
-   */
-  public function checkVersion($string, $version);
 
   /**
    * Save string object to storage.
