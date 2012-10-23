@@ -186,25 +186,55 @@ abstract class WebTestBase extends TestBase {
   /**
    * Creates a node based on default settings.
    *
-   * @param $settings
-   *   An associative array of settings to change from the defaults, keys are
-   *   node properties, for example 'title' => 'Hello, world!'.
-   * @return
-   *   Created node entity.
+   * @param array $settings
+   *   (optional) An associative array of settings for the node, as used in
+   *   entity_create(). Override the defaults by specifying the key and value
+   *   in the array, for example:
+   *   @code
+   *     $this->drupalCreateNode(array(
+   *       'title' => t('Hello, world!'),
+   *       'type' => 'article',
+   *     ));
+   *   @endcode
+   *   The following defaults are provided:
+   *   - body: Random string using the default filter format:
+   *     @code
+   *       $settings['body'][LANGUAGE_NOT_SPECIFIED][0] = array(
+   *         'value' => $this->randomName(32),
+   *         'format' => filter_default_format(),
+   *       );
+   *     @endcode
+   *   - title: Random string.
+   *   - comment: COMMENT_NODE_OPEN.
+   *   - changed: REQUEST_TIME.
+   *   - promote: NODE_NOT_PROMOTED.
+   *   - log: Empty string.
+   *   - status: NODE_PUBLISHED.
+   *   - sticky: NODE_NOT_STICKY.
+   *   - type: 'page'.
+   *   - langcode: LANGCODE_NOT_SPECIFIED. (If a 'langcode' key is provided in
+   *     the array, this language code will also be used for a randomly
+   *     generated body field for that language, and the body for
+   *     LANGUAGE_NOT_SPECIFIED will remain empty.)
+   *   - uid: The currently logged in user, or the user running test.
+   *   - revision: 1. (Backwards-compatible binary flag indicating whether a
+   *     new revision should be created; use 1 to specify a new revision.)
+   *
+   * @return Drupal\node\Node
+   *   The created node entity.
    */
-  protected function drupalCreateNode($settings = array()) {
+  protected function drupalCreateNode(array $settings = array()) {
     // Populate defaults array.
     $settings += array(
       'body'      => array(LANGUAGE_NOT_SPECIFIED => array(array())),
       'title'     => $this->randomName(8),
-      'comment'   => 2,
+      'comment'   => COMMENT_NODE_OPEN,
       'changed'   => REQUEST_TIME,
-      'moderate'  => 0,
-      'promote'   => 0,
+      'promote'   => NODE_NOT_PROMOTED,
       'revision'  => 1,
       'log'       => '',
-      'status'    => 1,
-      'sticky'    => 0,
+      'status'    => NODE_PUBLISHED,
+      'sticky'    => NODE_NOT_STICKY,
       'type'      => 'page',
       'langcode'  => LANGUAGE_NOT_SPECIFIED,
     );
