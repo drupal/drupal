@@ -34,14 +34,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $file_path = file_unmanaged_copy($file->uri);
     }
 
-    return image_style_url($style['name'], $file_path) ? $file_path : FALSE;
+    return image_style_url($style->id(), $file_path) ? $file_path : FALSE;
   }
 
   /**
    * Count the number of images currently create for a style.
    */
   function getImageCount($style) {
-    return count(file_scan_directory('public://styles/' . $style['name'], '/.*/'));
+    return count(file_scan_directory('public://styles/' . $style->id(), '/.*/'));
   }
 
   /**
@@ -121,10 +121,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Edit effect form.
 
     // Revisit each form to make sure the effect was saved.
-    drupal_static_reset('image_styles');
-    $style = image_style_load($style_name);
+    $style = entity_load('image_style', $style_name);
 
-    foreach ($style['effects'] as $ieid => $effect) {
+    foreach ($style->effects as $ieid => $effect) {
       $this->drupalGet($style_path . '/effects/' . $ieid);
       foreach ($effect_edits[$effect['name']] as $field => $value) {
         $this->assertFieldByName($field, $value, format_string('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect['name'], '%value' => $value)));
@@ -136,7 +135,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Confirm the order of effects is maintained according to the order we
     // added the fields.
     $effect_edits_order = array_keys($effect_edits);
-    $effects_order = array_values($style['effects']);
+    $effects_order = array_values($style->effects);
     $order_correct = TRUE;
     foreach ($effects_order as $index => $effect) {
       if ($effect_edits_order[$index] != $effect['name']) {
@@ -154,14 +153,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $style_name,
       'label' => $style_label,
     );
-    foreach ($style['effects'] as $ieid => $effect) {
+    foreach ($style->effects as $ieid => $effect) {
       $edit['effects[' . $ieid . '][weight]'] = $weight;
       $weight--;
     }
 
     // Create an image to make sure it gets flushed after saving.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style['label'], '%file' => $image_path)));
+    $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style->label(), '%file' => $image_path)));
 
     $this->drupalPost($style_path, $edit, t('Update style'));
 
@@ -170,20 +169,19 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Check that the URL was updated.
     $this->drupalGet($style_path);
-    $this->assertResponse(200, format_string('Image style %original renamed to %new', array('%original' => $style['label'], '%new' => $style_name)));
+    $this->assertResponse(200, format_string('Image style %original renamed to %new', array('%original' => $style->label(), '%new' => $style_name)));
 
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
     // the old image directory has been deleted.
-    $this->assertEqual($this->getImageCount($style), 0, format_string('Image style %style was flushed after renaming the style and updating the order of effects.', array('%style' => $style['label'])));
+    $this->assertEqual($this->getImageCount($style), 0, format_string('Image style %style was flushed after renaming the style and updating the order of effects.', array('%style' => $style->label())));
 
     // Load the style by the new name with the new weights.
-    drupal_static_reset('image_styles');
-    $style = image_style_load($style_name);
+    $style = entity_load('image_style', $style_name);
 
     // Confirm the new style order was saved.
     $effect_edits_order = array_reverse($effect_edits_order);
-    $effects_order = array_values($style['effects']);
+    $effects_order = array_values($style->effects);
     $order_correct = TRUE;
     foreach ($effects_order as $index => $effect) {
       if ($effect_edits_order[$index] != $effect['name']) {
@@ -196,10 +194,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after deleting an effect.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style['label'], '%file' => $image_path)));
+    $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style->label(), '%file' => $image_path)));
 
     // Test effect deletion form.
-    $effect = array_pop($style['effects']);
+    $effect = array_pop($style->effects);
     $this->drupalPost($style_path . '/effects/' . $effect['ieid'] . '/delete', array(), t('Delete'));
     $this->assertRaw(t('The image effect %name has been deleted.', array('%name' => $effect['label'])));
 
@@ -210,10 +208,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Confirm the style directory has been removed.
     $directory = file_default_scheme() . '://styles/' . $style_name;
-    $this->assertFalse(is_dir($directory), format_string('Image style %style directory removed on style deletion.', array('%style' => $style['label'])));
+    $this->assertFalse(is_dir($directory), format_string('Image style %style directory removed on style deletion.', array('%style' => $style->label())));
 
-    drupal_static_reset('image_styles');
-    $this->assertFalse(image_style_load($style_name), format_string('Image style %style successfully deleted.', array('%style' => $style['label'])));
+    $this->assertFalse(entity_load('image_style', $style_name), format_string('Image style %style successfully deleted.', array('%style' => $style->label())));
 
   }
 
@@ -224,7 +221,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create a new style.
     $style_name = strtolower($this->randomName(10));
     $style_label = $this->randomString();
-    image_style_save(array('name' => $style_name, 'label' => $style_label));
+    $style = entity_create('image_style', array('name' => $style_name, 'label' => $style_label));
+    $style->save();
     $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
 
     // Create an image field that uses the new style.

@@ -2920,8 +2920,8 @@ function user_image_style_delete($style) {
  */
 function user_image_style_save($style) {
   // If a style is renamed, update the variables that use it.
-  if (isset($style['old_name']) && $style['old_name'] == variable_get('user_picture_style', '')) {
-    variable_set('user_picture_style', $style['name']);
+  if ($style->id() != $style->getOriginalID()) {
+    variable_set('user_picture_style', $style->id());
   }
 }
 

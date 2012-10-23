@@ -31,8 +31,9 @@ class FileMoveTest extends ToolkitTestBase {
     $file = entity_create('file', (array) current($this->drupalGetTestFiles('image')));
 
     // Create derivative image.
-    $style = image_style_load(key(image_styles()));
-    $derivative_uri = image_style_path($style['name'], $file->uri);
+    $styles = entity_load_multiple('image_style');
+    $style = image_style_load(key($styles));
+    $derivative_uri = image_style_path($style->id(), $file->uri);
     image_style_create_derivative($style, $file->uri, $derivative_uri);
 
     // Check if derivative image exists.

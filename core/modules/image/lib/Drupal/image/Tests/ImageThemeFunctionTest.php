@@ -39,7 +39,8 @@ class ImageThemeFunctionTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
 
     // Create a style.
-    image_style_save(array('name' => 'test', 'label' => 'Test'));
+    $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
+    $style->save();
     $url = image_style_url('test', $original_uri);
 
     // Test using theme_image_formatter() without an image title, alt text, or
@@ -81,7 +82,8 @@ class ImageThemeFunctionTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
 
     // Create a style.
-    image_style_save(array('name' => 'image_test', 'label' => 'Test'));
+    $style = entity_create('image_style', array('name' => 'image_test', 'label' => 'Test'));
+    $style->save();
     $url = image_style_url('image_test', $original_uri);
 
     $path = $this->randomName();

@@ -66,43 +66,6 @@ function hook_image_effect_info_alter(&$effects) {
 }
 
 /**
- * Respond to image style updating.
- *
- * This hook enables modules to update settings that might be affected by
- * changes to an image. For example, updating a module specific variable to
- * reflect a change in the image style's name.
- *
- * @param $style
- *   The image style array that is being updated.
- */
-function hook_image_style_save($style) {
-  // If a module defines an image style and that style is renamed by the user
-  // the module should update any references to that style.
-  if (isset($style['old_name']) && $style['old_name'] == variable_get('mymodule_image_style', '')) {
-    variable_set('mymodule_image_style', $style['name']);
-  }
-}
-
-/**
- * Respond to image style deletion.
- *
- * This hook enables modules to update settings when a image style is being
- * deleted. If a style is deleted, a replacement name may be specified in
- * $style['name'] and the style being deleted will be specified in
- * $style['old_name'].
- *
- * @param $style
- *   The image style array that being deleted.
- */
-function hook_image_style_delete($style) {
-  // Administrators can choose an optional replacement style when deleting.
-  // Update the modules style variable accordingly.
-  if (isset($style['old_name']) && $style['old_name'] == variable_get('mymodule_image_style', '')) {
-    variable_set('mymodule_image_style', $style['name']);
-  }
-}
-
-/**
  * Respond to image style flushing.
  *
  * This hook enables modules to take effect when a style is being flushed (all
@@ -111,40 +74,12 @@ function hook_image_style_delete($style) {
  * be cleared using this hook. This hook is called whenever a style is updated,
  * deleted, or any effect associated with the style is update or deleted.
  *
- * @param $style
+ * @param Drupal\image\ImageStyle $style
  *   The image style array that is being flushed.
  */
 function hook_image_style_flush($style) {
   // Empty cached data that contains information about the style.
   cache('mymodule')->flush();
-}
-
-/**
- * Modify any image styles provided by other modules or the user.
- *
- * This hook allows modules to modify, add, or remove image styles. This may
- * be useful to modify default styles provided by other modules or enforce
- * that a specific effect is always enabled on a style. Note that modifications
- * to these styles may negatively affect the user experience, such as if an
- * effect is added to a style through this hook, the user may attempt to remove
- * the effect but it will be immediately be re-added.
- *
- * The best use of this hook is usually to modify default styles, which are not
- * editable by the user until they are overridden, so such interface
- * contradictions will not occur. This hook can target default (or user) styles
- * by checking the $style['storage'] property.
- */
-function hook_image_styles_alter(&$styles) {
-  // Check that we only affect a default style.
-  if ($styles['thumbnail']['storage'] == IMAGE_STORAGE_DEFAULT) {
-    // Add an additional effect to the thumbnail style.
-    $styles['thumbnail']['effects'][] = array(
-      'name' => 'image_desaturate',
-      'data' => array(),
-      'weight' => 1,
-      'effect callback' => 'image_desaturate_effect',
-    );
-  }
 }
 
  /**

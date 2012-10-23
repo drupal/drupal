@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\file\File;
+use Drupal\image\ImageStyle;
 
 /**
  * Image style constant for user presets in the database.
@@ -328,7 +329,7 @@ function image_file_predelete(File $file) {
  * Implements hook_image_style_save().
  */
 function image_image_style_save($style) {
-  if (isset($style['old_name']) && $style['old_name'] != $style['name']) {
+  if ($style->id() != $style->getOriginalID()) {
     $instances = field_read_instances();
     // Loop through all fields searching for image fields.
     foreach ($instances as $instance) {
@@ -336,15 +337,15 @@ function image_image_style_save($style) {
         $instance_changed = FALSE;
         foreach ($instance['display'] as $view_mode => $display) {
           // Check if the formatter involves an image style.
-          if ($display['type'] == 'image' && $display['settings']['image_style'] == $style['old_name']) {
+          if ($display['type'] == 'image' && $display['settings']['image_style'] == $style->getOriginalID()) {
             // Update display information for any instance using the image
             // style that was just deleted.
-            $instance['display'][$view_mode]['settings']['image_style'] = $style['name'];
+            $instance['display'][$view_mode]['settings']['image_style'] = $style->id();
             $instance_changed = TRUE;
           }
         }
-        if ($instance['widget']['settings']['preview_image_style'] == $style['old_name']) {
-          $instance['widget']['settings']['preview_image_style'] = $style['name'];
+        if ($instance['widget']['settings']['preview_image_style'] == $style->getOriginalID()) {
+          $instance['widget']['settings']['preview_image_style'] = $style->id();
           $instance_changed = TRUE;
         }
         if ($instance_changed) {
@@ -360,6 +361,8 @@ function image_image_style_save($style) {
  */
 function image_image_style_delete($style) {
   image_image_style_save($style);
+  // Flush cached media for the style.
+  image_style_flush($style);
 }
 
 /**
@@ -488,9 +491,9 @@ function image_field_update_instance($instance, $prior_instance) {
  *   The Drupal file path to the original image.
  */
 function image_path_flush($path) {
-  $styles = image_styles();
+  $styles = entity_load_multiple('image_style');
   foreach ($styles as $style) {
-    $image_path = image_style_path($style['name'], $path);
+    $image_path = image_style_path($style->id(), $path);
     if (file_exists($image_path)) {
       file_unmanaged_delete($image_path);
     }
@@ -498,7 +501,7 @@ function image_path_flush($path) {
 }
 
 /**
- * Implements MODULE_config_import_create().
+ * Implements hook_config_import_create().
  */
 function image_config_import_create($name, $new_config, $old_config) {
   // Only image styles require custom handling. Any other module settings can be
@@ -506,12 +509,13 @@ function image_config_import_create($name, $new_config, $old_config) {
   if (strpos($name, 'image.style.') !== 0) {
     return FALSE;
   }
-  $style = $new_config->get();
-  return image_style_save($style);
+  $style = entity_create('image_style', $new_config->get());
+  $style->save();
+  return TRUE;
 }
 
 /**
- * Implements MODULE_config_import_change().
+ * Implements hook_config_import_change().
  */
 function image_config_import_change($name, $new_config, $old_config) {
   // Only image styles require custom handling. Any other module settings can be
@@ -519,8 +523,21 @@ function image_config_import_change($name, $new_config, $old_config) {
   if (strpos($name, 'image.style.') !== 0) {
     return FALSE;
   }
-  $style = $new_config->get();
-  return image_style_save($style);
+
+  list(, , $id) = explode('.', $name);
+  $style = entity_load('image_style', $id);
+
+  $style->original = clone $style;
+  foreach ($old_config->get() as $property => $value) {
+    $style->original->$property = $value;
+  }
+
+  foreach ($new_config->get() as $property => $value) {
+    $style->$property = $value;
+  }
+
+  $style->save();
+  return TRUE;
 }
 
 /**
@@ -537,157 +554,68 @@ function image_config_import_delete($name, $new_config, $old_config) {
   //   But that is impossible currently, since the config system only knows
   //   about deleted and added changes. Introduce an 'old_ID' key within
   //   config objects as a standard?
-  $style = $old_config->get();
+  list(, , $id) = explode('.', $name);
+  $style = entity_load('image_style', $id);
   return image_style_delete($style);
 }
 
 /**
- * Get an array of all styles and their settings.
+ * Loads an ImageStyle object.
  *
- * @return
- *   An array of styles keyed by the image style ID (isid).
- * @see image_style_load()
- */
-function image_styles() {
-  // @todo Configuration must not be statically cached nor cache-system cached.
-  //   However, there's a drupal_alter() involved here.
-
-//  $styles = &drupal_static(__FUNCTION__);
-//
-//  // Grab from cache or build the array.
-//  if (!isset($styles)) {
-//    if ($cache = cache()->get('image_styles')) {
-//      $styles = $cache->data;
-//    }
-//    else {
-      $styles = array();
-
-      // Select the styles we have configured.
-      $configured_styles = config_get_storage_names_with_prefix('image.style');
-      foreach ($configured_styles as $config_name) {
-        // @todo Allow to retrieve the name without prefix only.
-        $style = image_style_load(str_replace('image.style.', '', $config_name));
-        $styles[$style['name']] = $style;
-      }
-      drupal_alter('image_styles', $styles);
-//      cache()->set('image_styles', $styles);
-//    }
-//  }
-
-  return $styles;
-}
-
-/**
- * Load a style by style name or ID. May be used as a loader for menu items.
- *
- * @param $name
- *   The name of the style.
- * @return
- *   An image style array containing the following keys:
- *   - "name": The unique image style name.
- *   - "effects": An array of image effects within this image style.
- *   If the image style name is not valid, an empty array is returned.
- * @see image_effect_load()
+ * @param string $name
+ *   The ID of the ImageStyle object to load.
  */
 function image_style_load($name) {
-  $config = config('image.style.' . $name);
-  if ($config->isNew()) {
-    return FALSE;
-  }
-  $style = $config->get();
-
-  if (!empty($style['effects'])) {
-    foreach ($style['effects'] as $ieid => $effect) {
-      $definition = image_effect_definition_load($effect['name']);
-      $effect = array_merge($definition, $effect);
-      $style['effects'][$ieid] = $effect;
-    }
-    // Sort effects by weight.
-    uasort($style['effects'], 'drupal_sort_weight');
-  }
-
-  return $style;
+  return entity_load('image_style', $name);
 }
 
 /**
- * Save an image style.
- *
- * @param array $style
- *   An image style array containing:
- *   - name: An unique name for the style.
- *   - effects: An optional array of effects.
- *
- * @return array
- *   An image style array containing:
- *   - name: An unique name for the style.
- *   - effects: An array of effects.
- *   - is_new: Is set to TRUE if this is a new style, and FALSE if it is an
- *     existing style.
+ * Implements hook_image_style_load.
  */
-function image_style_save($style) {
-  $config = config('image.style.' . $style['name']);
-  $is_new = $config->isNew();
-
-  $config
-    ->set('name', $style['name'])
-    ->set('label', $style['label']);
-  if (isset($style['effects'])) {
-    $config->set('effects', $style['effects']);
+function image_image_style_load($styles) {
+  foreach ($styles as $style) {
+    if (!empty($style->effects)) {
+      foreach ($style->effects as $ieid => $effect) {
+        $definition = image_effect_definition_load($effect['name']);
+        $effect = array_merge($definition, $effect);
+        $style->effects[$ieid] = $effect;
+      }
+      // Sort effects by weight.
+      uasort($style->effects, 'drupal_sort_weight');
+    }
   }
-  else {
-    $config->set('effects', array());
-  }
-  $config->save();
+}
 
-  // Let other modules update as necessary on save.
-  $style['is_new'] = $is_new;
-  module_invoke_all('image_style_save', $style);
-
-  // Clear all caches and flush.
+/**
+ * Implements hook_image_style_update().
+ */
+function image_image_style_update($style) {
+  // Flush cached media for the style.
   image_style_flush($style);
-
-  return $style;
 }
 
 /**
  * Delete an image style.
  *
- * @param $style
+ * @param Drupal\image\ImageStyle $style
  *   An image style array.
  * @param $replacement_style_name
  *   (optional) When deleting a style, specify a replacement style name so
  *   that existing settings (if any) may be converted to a new style.
+ *
  * @return
  *   TRUE on success.
  */
 function image_style_delete($style, $replacement_style_name = '') {
-  image_style_flush($style);
-
-  $config = config('image.style.' . $style['name']);
-  $config->delete();
+  $style->delete();
 
   // Let other modules update as necessary on save.
-  $style['old_name'] = $style['name'];
-  $style['name'] = $replacement_style_name;
+  if ($replacement_style_name) {
+    $style->set('name', $replacement_style_name);
+  }
   module_invoke_all('image_style_delete', $style);
 
   return TRUE;
-}
-
-/**
- * Load all the effects for an image style.
- *
- * @param $style
- *   An image style array.
- * @return
- *   An array of image effects associated with specified image style in the
- *   format array('isid' => array()), or an empty array if the specified style
- *   has no effects.
- *
- * @todo Remove this function; it's entirely obsolete.
- */
-function image_style_effects($style) {
-  return $style['effects'];
 }
 
 /**
@@ -699,13 +627,13 @@ function image_style_effects($style) {
  *   Array of image styles both key and value are set to style name.
  */
 function image_style_options($include_empty = TRUE) {
-  $styles = image_styles();
+  $styles = entity_load_multiple('image_style');
   $options = array();
   if ($include_empty && !empty($styles)) {
     $options[''] = t('<none>');
   }
   foreach ($styles as $name => $style) {
-    $options[$name] = $style['label'];
+    $options[$name] = $style->label();
   }
 
   if (empty($options)) {
@@ -734,7 +662,7 @@ function image_style_deliver($style, $scheme) {
   $target = implode('/', $args);
 
   $image_uri = $scheme . '://' . $target;
-  $derivative_uri = image_style_path($style['name'], $image_uri);
+  $derivative_uri = image_style_path($style->id(), $image_uri);
 
   // If using the private scheme, let other modules provide headers and
   // control access to the file.
@@ -763,7 +691,7 @@ function image_style_deliver($style, $scheme) {
 
   // Don't start generating the image if the derivative already exists or if
   // generation is in progress in another thread.
-  $lock_name = 'image_style_deliver:' . $style['name'] . ':' . drupal_hash_base64($image_uri);
+  $lock_name = 'image_style_deliver:' . $style->id() . ':' . drupal_hash_base64($image_uri);
   if (!file_exists($derivative_uri)) {
     $lock_acquired = lock()->acquire($lock_name);
     if (!$lock_acquired) {
@@ -803,7 +731,7 @@ function image_style_deliver($style, $scheme) {
  * Creates a new image derivative based on an image style.
  *
  * Generates an image derivative by creating the destination folder (if it does
- * not already exist), applying all image effects defined in $style['effects'],
+ * not already exist), applying all image effects defined in $style->effects,
  * and saving a cached version of the resulting image.
  *
  * @param $style
@@ -833,8 +761,8 @@ function image_style_create_derivative($style, $source, $destination) {
     return FALSE;
   }
 
-  if (!empty($style['effects'])) {
-    foreach ($style['effects'] as $effect) {
+  if (!empty($style->effects)) {
+    foreach ($style->effects as $effect) {
       image_effect_apply($image, $effect);
     }
   }
@@ -862,14 +790,10 @@ function image_style_create_derivative($style, $source, $destination) {
  */
 function image_style_transform_dimensions($style_name, array &$dimensions) {
   module_load_include('inc', 'image', 'image.effects');
-  $style = image_style_load($style_name);
+  $style = entity_load('image_style', $style_name);
 
-  if (!is_array($style)) {
-    return;
-  }
-
-  if (!empty($style['effects'])) {
-    foreach ($style['effects'] as $effect) {
+  if (!empty($style->effects)) {
+    foreach ($style->effects as $effect) {
       if (isset($effect['dimensions passthrough'])) {
         continue;
       }
@@ -891,7 +815,7 @@ function image_style_transform_dimensions($style_name, array &$dimensions) {
  *   An image style array.
  */
 function image_style_flush($style) {
-  $style_directory = drupal_realpath(file_default_scheme() . '://styles/' . $style['name']);
+  $style_directory = drupal_realpath(file_default_scheme() . '://styles/' . $style->id());
   if (is_dir($style_directory)) {
     file_unmanaged_delete_recursive($style_directory);
   }
@@ -1018,7 +942,7 @@ function image_effect_definitions() {
  * containing any user-settings. The definition defines various functions to
  * call when configuring or executing an image effect. This loader is mostly for
  * internal use within image.module. Use image_effect_load() or
- * image_style_load() to get image effects that contain configuration.
+ * entity_load() to get image effects that contain configuration.
  *
  * @param $effect
  *   The name of the effect definition to load.
@@ -1092,12 +1016,11 @@ function image_effects() {
  *   Besides these keys, the entirety of the image definition is merged into
  *   the image effect array. Returns FALSE if the specified effect cannot be
  *   found.
- * @see image_style_load()
  * @see image_effect_definition_load()
  */
 function image_effect_load($ieid, $style_name) {
-  if (($style = image_style_load($style_name)) && isset($style['effects'][$ieid])) {
-    $effect = $style['effects'][$ieid];
+  if (($style = entity_load('image_style', $style_name)) && isset($style->effects[$ieid])) {
+    $effect = $style->effects[$ieid];
     $definition = image_effect_definition_load($effect['name']);
     $effect = array_merge($definition, $effect);
     // @todo The effect's key name within the style is unknown. It *should* be
@@ -1116,7 +1039,7 @@ function image_effect_load($ieid, $style_name) {
 /**
  * Save an image effect.
  *
- * @param string $style_name
+ * @param ImageStyle $style
  *   The image style this effect belongs to.
  * @param array $effect
  *   An image effect array. Passed by reference.
@@ -1124,38 +1047,31 @@ function image_effect_load($ieid, $style_name) {
  * @return array
  *   The saved image effect array. The 'ieid' key will be set for the effect.
  */
-function image_effect_save($style_name, &$effect) {
-  $config = config('image.style.' . $style_name);
-
+function image_effect_save($style, &$effect) {
   // Generate a unique image effect ID for a new effect.
   if (empty($effect['ieid'])) {
     $uuid = new Uuid();
     $effect['ieid'] = $uuid->generate();
   }
-  $config->set('effects.' . $effect['ieid'], $effect);
-  $config->save();
+  $style->effects[$effect['ieid']] = $effect;
+  $style->save();
 
   // Flush all derivatives that exist for this style, so they are regenerated
   // with the new or updated effect.
-  $style = image_style_load($style_name);
   image_style_flush($style);
-
-  return $effect;
 }
 
 /**
  * Delete an image effect.
  *
- * @param $style_name
+ * @param ImageStyle $style
  *   The image style this effect belongs to.
  * @param $effect
  *   An image effect array.
  */
-function image_effect_delete($style_name, $effect) {
-  $config = config('image.style.' . $style_name);
-  $config->clear('effects.' . $effect['ieid']);
-  $config->save();
-  $style = image_style_load($style_name);
+function image_effect_delete($style, $effect) {
+  unset($style->effects['ieid']);
+  $style->save();
   image_style_flush($style);
 }
 
@@ -1245,4 +1161,33 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
  */
 function _image_effect_definitions_sort($a, $b) {
   return strcasecmp($a['name'], $b['name']);
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function image_entity_info() {
+  return array(
+    'image_style' => array(
+      'label' => t('Image style'),
+      'entity class' => 'Drupal\image\ImageStyle',
+      'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
+      'uri callback' => 'image_style_uri',
+      'config prefix' => 'image.style',
+      'entity keys' => array(
+        'id' => 'name',
+        'label' => 'label',
+        'uuid' => 'uuid',
+      ),
+    ),
+  );
+}
+
+/**
+ * URI callbacks for image styles.
+ */
+function image_style_uri(ImageStyle $image_style) {
+  return array(
+    'path' => 'admin/config/media/image-styles/manage/' . $image_style->id(),
+  );
 }
