@@ -1994,7 +1994,7 @@ function system_update_8021() {
   }
 }
 
-/*
+/**
  * Create the new routing table.
  */
 function system_update_8022() {
