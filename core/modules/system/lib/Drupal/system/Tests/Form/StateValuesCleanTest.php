@@ -42,21 +42,21 @@ class StateValuesCleanTest extends WebTestBase {
     );
 
     // Verify that all internal Form API elements were removed.
-    $this->assertFalse(isset($values['form_id']), t('%element was removed.', array('%element' => 'form_id')));
-    $this->assertFalse(isset($values['form_token']), t('%element was removed.', array('%element' => 'form_token')));
-    $this->assertFalse(isset($values['form_build_id']), t('%element was removed.', array('%element' => 'form_build_id')));
-    $this->assertFalse(isset($values['op']), t('%element was removed.', array('%element' => 'op')));
+    $this->assertFalse(isset($values['form_id']), format_string('%element was removed.', array('%element' => 'form_id')));
+    $this->assertFalse(isset($values['form_token']), format_string('%element was removed.', array('%element' => 'form_token')));
+    $this->assertFalse(isset($values['form_build_id']), format_string('%element was removed.', array('%element' => 'form_build_id')));
+    $this->assertFalse(isset($values['op']), format_string('%element was removed.', array('%element' => 'op')));
 
     // Verify that all buttons were removed.
-    $this->assertFalse(isset($values['foo']), t('%element was removed.', array('%element' => 'foo')));
-    $this->assertFalse(isset($values['bar']), t('%element was removed.', array('%element' => 'bar')));
-    $this->assertFalse(isset($values['baz']['foo']), t('%element was removed.', array('%element' => 'foo')));
-    $this->assertFalse(isset($values['baz']['baz']), t('%element was removed.', array('%element' => 'baz')));
+    $this->assertFalse(isset($values['foo']), format_string('%element was removed.', array('%element' => 'foo')));
+    $this->assertFalse(isset($values['bar']), format_string('%element was removed.', array('%element' => 'bar')));
+    $this->assertFalse(isset($values['baz']['foo']), format_string('%element was removed.', array('%element' => 'foo')));
+    $this->assertFalse(isset($values['baz']['baz']), format_string('%element was removed.', array('%element' => 'baz')));
 
     // Verify that nested form value still exists.
-    $this->assertTrue(isset($values['baz']['beer']), t('Nested form value still exists.'));
+    $this->assertTrue(isset($values['baz']['beer']), 'Nested form value still exists.');
 
     // Verify that actual form values equal resulting form values.
-    $this->assertEqual($values, $result, t('Expected form values equal actual form values.'));
+    $this->assertEqual($values, $result, 'Expected form values equal actual form values.');
   }
 }

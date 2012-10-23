@@ -43,6 +43,6 @@ class AlterTest extends WebTestBase {
       'system_form_form_test_alter_form_alter() executed.',
     );
     $content = preg_replace('/\s+/', ' ', filter_xss($this->content, array()));
-    $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, t('Form alter hooks executed in the expected order.'));
+    $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, 'Form alter hooks executed in the expected order.');
   }
 }

@@ -40,8 +40,8 @@ class ValidationTest extends WebTestBase {
       'name' => 'element_validate',
     );
     $this->drupalPost(NULL, $edit, 'Save');
-    $this->assertFieldByName('name', '#value changed by #element_validate', t('Form element #value was altered.'));
-    $this->assertText('Name value: value changed by form_set_value() in #element_validate', t('Form element value in $form_state was altered.'));
+    $this->assertFieldByName('name', '#value changed by #element_validate', 'Form element #value was altered.');
+    $this->assertText('Name value: value changed by form_set_value() in #element_validate', 'Form element value in $form_state was altered.');
 
     // Verify that #validate handlers can alter the form and submitted
     // form values.
@@ -49,8 +49,8 @@ class ValidationTest extends WebTestBase {
       'name' => 'validate',
     );
     $this->drupalPost(NULL, $edit, 'Save');
-    $this->assertFieldByName('name', '#value changed by #validate', t('Form element #value was altered.'));
-    $this->assertText('Name value: value changed by form_set_value() in #validate', t('Form element value in $form_state was altered.'));
+    $this->assertFieldByName('name', '#value changed by #validate', 'Form element #value was altered.');
+    $this->assertText('Name value: value changed by form_set_value() in #validate', 'Form element value in $form_state was altered.');
 
     // Verify that #element_validate handlers can make form elements
     // inaccessible, but values persist.
@@ -58,13 +58,13 @@ class ValidationTest extends WebTestBase {
       'name' => 'element_validate_access',
     );
     $this->drupalPost(NULL, $edit, 'Save');
-    $this->assertNoFieldByName('name', t('Form element was hidden.'));
-    $this->assertText('Name value: element_validate_access', t('Value for inaccessible form element exists.'));
+    $this->assertNoFieldByName('name', 'Form element was hidden.');
+    $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
 
     // Verify that value for inaccessible form element persists.
     $this->drupalPost(NULL, array(), 'Save');
-    $this->assertNoFieldByName('name', t('Form element was hidden.'));
-    $this->assertText('Name value: element_validate_access', t('Value for inaccessible form element exists.'));
+    $this->assertNoFieldByName('name', 'Form element was hidden.');
+    $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
   }
 
   /**
@@ -88,14 +88,14 @@ class ValidationTest extends WebTestBase {
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
       ));
-      $this->assertTrue(!empty($element), t('The @type button has the proper formnovalidate attribute.', array('@type' => $type)));
+      $this->assertTrue(!empty($element), format_string('The @type button has the proper formnovalidate attribute.', array('@type' => $type)));
     }
     // The button with full server-side validation should not have the
     // 'formnovalidate' attribute.
     $element = $this->xpath('//input[@id=:id and not(@formnovalidate)]', array(
       ':id' => 'edit-full',
     ));
-    $this->assertTrue(!empty($element), t('The button with full server-side validation does not have the formnovalidate attribute.'));
+    $this->assertTrue(!empty($element), 'The button with full server-side validation does not have the formnovalidate attribute.');
 
     // Submit the form by pressing the 'Partial validate' button (uses
     // #limit_validation_errors) and ensure that the title field is not

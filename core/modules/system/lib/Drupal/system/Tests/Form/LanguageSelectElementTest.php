@@ -54,7 +54,7 @@ class LanguageSelectElementTest extends WebTestBase {
                  'edit-languages-locked' => LANGUAGE_LOCKED,
                  'edit-languages-config-and-locked' => LANGUAGE_CONFIGURABLE | LANGUAGE_LOCKED);
     foreach ($ids as $id => $flags) {
-      $this->assertField($id, t('The @id field was found on the page.', array('@id' => $id)));
+      $this->assertField($id, format_string('The @id field was found on the page.', array('@id' => $id)));
       $options = array();
       foreach (language_list($flags) as $langcode => $language) {
         $options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
@@ -63,7 +63,7 @@ class LanguageSelectElementTest extends WebTestBase {
     }
 
     // Test that the #options were not altered by #languages.
-    $this->assertField('edit-language-custom-options', t('The @id field was found on the page.', array('@id' => 'edit-language-custom-options')));
+    $this->assertField('edit-language-custom-options', format_string('The @id field was found on the page.', array('@id' => 'edit-language-custom-options')));
     $this->_testLanguageSelectElementOptions('edit-language-custom-options', array('opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option'));
   }
 
@@ -80,7 +80,7 @@ class LanguageSelectElementTest extends WebTestBase {
     // Check that the language fields were rendered on the page.
     $ids = array('edit-languages-all', 'edit-languages-configurable', 'edit-languages-locked', 'edit-languages-config-and-locked');
     foreach ($ids as $id) {
-      $this->assertNoField($id, t('The @id field was not found on the page.', array('@id' => $id)));
+      $this->assertNoField($id, format_string('The @id field was not found on the page.', array('@id' => $id)));
     }
 
     // Check that the submitted values were the default values of the language
@@ -115,6 +115,6 @@ class LanguageSelectElementTest extends WebTestBase {
       $this->assertEqual((string) $option, $option_title);
       next($options);
     }
-    $this->assertEqual($count, count($options), t('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', array('@languages' => count($options), '@number' => $count)));
+    $this->assertEqual($count, count($options), format_string('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', array('@languages' => count($options), '@number' => $count)));
   }
 }

@@ -58,7 +58,7 @@ class CheckboxTest extends WebTestBase {
           $checked = ($default_value === '1foobar');
         }
         $checked_in_html = strpos($form, 'checked') !== FALSE;
-        $message = t('#default_value is %default_value #return_value is %return_value.', array('%default_value' => var_export($default_value, TRUE), '%return_value' => var_export($return_value, TRUE)));
+        $message = format_string('#default_value is %default_value #return_value is %return_value.', array('%default_value' => var_export($default_value, TRUE), '%return_value' => var_export($return_value, TRUE)));
         $this->assertIdentical($checked, $checked_in_html, $message);
       }
     }
@@ -66,12 +66,12 @@ class CheckboxTest extends WebTestBase {
     // Ensure that $form_state['values'] is populated correctly for a checkboxes
     // group that includes a 0-indexed array of options.
     $results = json_decode($this->drupalPost('form-test/checkboxes-zero', array(), 'Save'));
-    $this->assertIdentical($results->checkbox_off, array(0, 0, 0), t('All three in checkbox_off are zeroes: off.'));
-    $this->assertIdentical($results->checkbox_zero_default, array('0', 0, 0), t('The first choice is on in checkbox_zero_default'));
-    $this->assertIdentical($results->checkbox_string_zero_default, array('0', 0, 0), t('The first choice is on in checkbox_string_zero_default'));
+    $this->assertIdentical($results->checkbox_off, array(0, 0, 0), 'All three in checkbox_off are zeroes: off.');
+    $this->assertIdentical($results->checkbox_zero_default, array('0', 0, 0), 'The first choice is on in checkbox_zero_default');
+    $this->assertIdentical($results->checkbox_string_zero_default, array('0', 0, 0), 'The first choice is on in checkbox_string_zero_default');
     $edit = array('checkbox_off[0]' => '0');
     $results = json_decode($this->drupalPost('form-test/checkboxes-zero', $edit, 'Save'));
-    $this->assertIdentical($results->checkbox_off, array('0', 0, 0), t('The first choice is on in checkbox_off but the rest is not'));
+    $this->assertIdentical($results->checkbox_off, array('0', 0, 0), 'The first choice is on in checkbox_off but the rest is not');
 
     // Ensure that each checkbox is rendered correctly for a checkboxes group
     // that includes a 0-indexed array of options.
@@ -80,7 +80,7 @@ class CheckboxTest extends WebTestBase {
     foreach ($checkboxes as $checkbox) {
       $checked = isset($checkbox['checked']);
       $name = (string) $checkbox['name'];
-      $this->assertIdentical($checked, $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', t('Checkbox %name correctly checked', array('%name' => $name)));
+      $this->assertIdentical($checked, $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', format_string('Checkbox %name correctly checked', array('%name' => $name)));
     }
     $edit = array('checkbox_off[0]' => '0');
     $this->drupalPost('form-test/checkboxes-zero/0', $edit, 'Save');
@@ -88,7 +88,7 @@ class CheckboxTest extends WebTestBase {
     foreach ($checkboxes as $checkbox) {
       $checked = isset($checkbox['checked']);
       $name = (string) $checkbox['name'];
-      $this->assertIdentical($checked, $name == 'checkbox_off[0]' || $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', t('Checkbox %name correctly checked', array('%name' => $name)));
+      $this->assertIdentical($checked, $name == 'checkbox_off[0]' || $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', format_string('Checkbox %name correctly checked', array('%name' => $name)));
     }
   }
 }

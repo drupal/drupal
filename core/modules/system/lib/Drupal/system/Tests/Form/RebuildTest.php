@@ -52,14 +52,14 @@ class RebuildTest extends WebTestBase {
     $this->drupalPost('form-test/form-rebuild-preserve-values', $edit, 'Add more');
 
     // Verify that initial elements retained their submitted values.
-    $this->assertFieldChecked('edit-checkbox-1-default-off', t('A submitted checked checkbox retained its checked state during a rebuild.'));
-    $this->assertNoFieldChecked('edit-checkbox-1-default-on', t('A submitted unchecked checkbox retained its unchecked state during a rebuild.'));
-    $this->assertFieldById('edit-text-1', 'foo', t('A textfield retained its submitted value during a rebuild.'));
+    $this->assertFieldChecked('edit-checkbox-1-default-off', 'A submitted checked checkbox retained its checked state during a rebuild.');
+    $this->assertNoFieldChecked('edit-checkbox-1-default-on', 'A submitted unchecked checkbox retained its unchecked state during a rebuild.');
+    $this->assertFieldById('edit-text-1', 'foo', 'A textfield retained its submitted value during a rebuild.');
 
     // Verify that newly added elements were initialized with their default values.
-    $this->assertFieldChecked('edit-checkbox-2-default-on', t('A newly added checkbox was initialized with a default checked state.'));
-    $this->assertNoFieldChecked('edit-checkbox-2-default-off', t('A newly added checkbox was initialized with a default unchecked state.'));
-    $this->assertFieldById('edit-text-2', 'DEFAULT 2', t('A newly added textfield was initialized with its default value.'));
+    $this->assertFieldChecked('edit-checkbox-2-default-on', 'A newly added checkbox was initialized with a default checked state.');
+    $this->assertNoFieldChecked('edit-checkbox-2-default-off', 'A newly added checkbox was initialized with a default unchecked state.');
+    $this->assertFieldById('edit-text-2', 'DEFAULT 2', 'A newly added textfield was initialized with its default value.');
   }
 
   /**
@@ -93,7 +93,7 @@ class RebuildTest extends WebTestBase {
     // field items in the field for which we just added an item.
     $this->drupalGet('node/add/page');
     $this->drupalPostAJAX(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), 'system/ajax', array(), array(), 'page-node-form');
-    $this->assert(count($this->xpath('//div[contains(@class, "field-name-field-ajax-test")]//input[@type="text"]')) == 2, t('AJAX submission succeeded.'));
+    $this->assert(count($this->xpath('//div[contains(@class, "field-name-field-ajax-test")]//input[@type="text"]')) == 2, 'AJAX submission succeeded.');
 
     // Submit the form with the non-Ajax "Save" button, leaving the title field
     // blank to trigger a validation error, and ensure that a validation error
@@ -101,14 +101,14 @@ class RebuildTest extends WebTestBase {
     // re-rendered without being re-built, which is what happens when there's
     // a validation error.
     $this->drupalPost(NULL, array(), t('Save'));
-    $this->assertText('Title field is required.', t('Non-AJAX submission correctly triggered a validation error.'));
+    $this->assertText('Title field is required.', 'Non-AJAX submission correctly triggered a validation error.');
 
     // Ensure that the form contains two items in the multi-valued field, so we
     // know we're testing a form that was correctly retrieved from cache.
-    $this->assert(count($this->xpath('//form[contains(@id, "page-node-form")]//div[contains(@class, "form-item-field-ajax-test")]//input[@type="text"]')) == 2, t('Form retained its state from cache.'));
+    $this->assert(count($this->xpath('//form[contains(@id, "page-node-form")]//div[contains(@class, "form-item-field-ajax-test")]//input[@type="text"]')) == 2, 'Form retained its state from cache.');
 
     // Ensure that the form's action is correct.
     $forms = $this->xpath('//form[contains(@class, "node-page-form")]');
-    $this->assert(count($forms) == 1 && $forms[0]['action'] == url('node/add/page'), t('Re-rendered form contains the correct action value.'));
+    $this->assert(count($forms) == 1 && $forms[0]['action'] == url('node/add/page'), 'Re-rendered form contains the correct action value.');
   }
 }

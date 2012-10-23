@@ -41,7 +41,7 @@ class ElementTest extends WebTestBase {
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
       ));
-      $this->assertTrue(!empty($element), t('Placeholder text placed in @type.', array('@type' => $type)));
+      $this->assertTrue(!empty($element), format_string('Placeholder text placed in @type.', array('@type' => $type)));
     }
 
     // Test to make sure textarea has the proper placeholder text.
@@ -49,7 +49,7 @@ class ElementTest extends WebTestBase {
       ':id' => 'edit-textarea',
       ':expected' => $expected,
     ));
-    $this->assertTrue(!empty($element), t('Placeholder text placed in textarea.'));
+    $this->assertTrue(!empty($element), 'Placeholder text placed in textarea.');
   }
 
   /**
@@ -87,7 +87,7 @@ class ElementTest extends WebTestBase {
         ':id' => 'edit-' . $type . '-foo',
         ':class' => 'description',
       ));
-      $this->assertTrue(count($elements), t('Custom %type option description found.', array(
+      $this->assertTrue(count($elements), format_string('Custom %type option description found.', array(
         '%type' => $type,
       )));
     }

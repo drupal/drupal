@@ -268,7 +268,7 @@ class FormTest extends WebTestBase {
     // First, try to submit without the required checkbox.
     $edit = array();
     $this->drupalPost('form-test/checkbox', $edit, t('Submit'));
-    $this->assertRaw(t('!name field is required.', array('!name' => 'required_checkbox')), t('A required checkbox is actually mandatory'));
+    $this->assertRaw(t('!name field is required.', array('!name' => 'required_checkbox')), 'A required checkbox is actually mandatory');
 
     // Now try to submit the form correctly.
     $values = drupal_json_decode($this->drupalPost(NULL, array('required_checkbox' => 1), t('Submit')));
@@ -281,7 +281,7 @@ class FormTest extends WebTestBase {
       'zero_checkbox_off' => '',
     );
     foreach ($expected_values as $widget => $expected_value) {
-      $this->assertEqual($values[$widget], $expected_value, t('Checkbox %widget returns expected value (expected: %expected, got: %value)', array(
+      $this->assertEqual($values[$widget], $expected_value, format_string('Checkbox %widget returns expected value (expected: %expected, got: %value)', array(
         '%widget' => var_export($widget, TRUE),
         '%expected' => var_export($expected_value, TRUE),
         '%value' => var_export($values[$widget], TRUE),
@@ -345,7 +345,7 @@ class FormTest extends WebTestBase {
       'multiple_no_default_required' => array('three' => 'three'),
     );
     foreach ($expected as $key => $value) {
-      $this->assertIdentical($values[$key], $value, t('@name: @actual is equal to @expected.', array(
+      $this->assertIdentical($values[$key], $value, format_string('@name: @actual is equal to @expected.', array(
         '@name' => $key,
         '@actual' => var_export($values[$key], TRUE),
         '@expected' => var_export($value, TRUE),
@@ -539,7 +539,7 @@ class FormTest extends WebTestBase {
           // Checkboxes values are not filtered out.
           $values[$key] = array_filter($values[$key]);
         }
-        $this->assertIdentical($expected_value, $values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE))));
+        $this->assertIdentical($expected_value, $values[$key], format_string('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE))));
       }
 
       // Recurse children.
@@ -590,7 +590,7 @@ class FormTest extends WebTestBase {
         ':div-class' => $class,
         ':value' => isset($item['#value']) ? $item['#value'] : '',
       ));
-      $this->assertTrue(isset($element[0]), t('Disabled form element class found for #type %type.', array('%type' => $item['#type'])));
+      $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', array('%type' => $item['#type'])));
     }
 
     // Verify special element #type text-format.
@@ -598,12 +598,12 @@ class FormTest extends WebTestBase {
       ':name' => 'text_format[value]',
       ':div-class' => 'form-disabled',
     ));
-    $this->assertTrue(isset($element[0]), t('Disabled form element class found for #type %type.', array('%type' => 'text_format[value]')));
+    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', array('%type' => 'text_format[value]')));
     $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', array(
       ':name' => 'text_format[format]',
       ':div-class' => 'form-disabled',
     ));
-    $this->assertTrue(isset($element[0]), t('Disabled form element class found for #type %type.', array('%type' => 'text_format[format]')));
+    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', array('%type' => 'text_format[format]')));
   }
 
   /**
@@ -616,7 +616,7 @@ class FormTest extends WebTestBase {
     $checkbox = $this->xpath('//input[@name="checkboxes[two]"]');
     $checkbox[0]['value'] = 'FORGERY';
     $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
-    $this->assertText('An illegal choice has been detected.', t('Input forgery was detected.'));
+    $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }
 
   /**
@@ -631,7 +631,7 @@ class FormTest extends WebTestBase {
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
       ));
-      $this->assertTrue(!empty($element), t('The @type has the proper required attribute.', array('@type' => $type)));
+      $this->assertTrue(!empty($element), format_string('The @type has the proper required attribute.', array('@type' => $type)));
     }
 
     // Test to make sure textarea has the proper required attribute.
@@ -639,6 +639,6 @@ class FormTest extends WebTestBase {
       ':id' => 'edit-textarea',
       ':expected' => $expected,
     ));
-    $this->assertTrue(!empty($element), t('The textarea has the proper required attribute.'));
+    $this->assertTrue(!empty($element), 'The textarea has the proper required attribute.');
   }
 }

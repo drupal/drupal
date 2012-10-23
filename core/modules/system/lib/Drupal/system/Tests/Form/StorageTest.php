@@ -65,7 +65,7 @@ class StorageTest extends WebTestBase {
 
     $this->drupalPost(NULL, $edit, 'Save');
     $this->assertText('Form constructions: 4');
-    $this->assertText('Title: new', t('The form storage has stored the values.'));
+    $this->assertText('Title: new', 'The form storage has stored the values.');
   }
 
   /**
@@ -89,7 +89,7 @@ class StorageTest extends WebTestBase {
 
     $this->drupalPost(NULL, $edit, 'Save');
     $this->assertText('Form constructions: 3');
-    $this->assertText('Title: new', t('The form storage has stored the values.'));
+    $this->assertText('Title: new', 'The form storage has stored the values.');
   }
 
   /**
@@ -97,7 +97,7 @@ class StorageTest extends WebTestBase {
    */
   function testValidation() {
     $this->drupalPost('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue submit');
-    $this->assertPattern('/value_is_set/', t('The input values have been kept.'));
+    $this->assertPattern('/value_is_set/', 'The input values have been kept.');
   }
 
   /**

@@ -36,14 +36,14 @@ class ElementsTableSelectTest extends WebTestBase {
 
     $this->drupalGet('form_test/tableselect/multiple-true');
 
-    $this->assertNoText(t('Empty text.'), t('Empty text should not be displayed.'));
+    $this->assertNoText(t('Empty text.'), 'Empty text should not be displayed.');
 
     // Test for the presence of the Select all rows tableheader.
-    $this->assertFieldByXPath('//th[@class="select-all"]', NULL, t('Presence of the "Select all" checkbox.'));
+    $this->assertFieldByXPath('//th[@class="select-all"]', NULL, 'Presence of the "Select all" checkbox.');
 
     $rows = array('row1', 'row2', 'row3');
     foreach ($rows as $row) {
-      $this->assertFieldByXPath('//input[@type="checkbox"]', $row, t('Checkbox for value @row.', array('@row' => $row)));
+      $this->assertFieldByXPath('//input[@type="checkbox"]', $row, format_string('Checkbox for value @row.', array('@row' => $row)));
     }
   }
 
@@ -53,14 +53,14 @@ class ElementsTableSelectTest extends WebTestBase {
   function testMultipleFalse() {
     $this->drupalGet('form_test/tableselect/multiple-false');
 
-    $this->assertNoText(t('Empty text.'), t('Empty text should not be displayed.'));
+    $this->assertNoText(t('Empty text.'), 'Empty text should not be displayed.');
 
     // Test for the absence of the Select all rows tableheader.
-    $this->assertNoFieldByXPath('//th[@class="select-all"]', '', t('Absence of the "Select all" checkbox.'));
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', '', 'Absence of the "Select all" checkbox.');
 
     $rows = array('row1', 'row2', 'row3');
     foreach ($rows as $row) {
-      $this->assertFieldByXPath('//input[@type="radio"]', $row, t('Radio button for value @row.', array('@row' => $row)));
+      $this->assertFieldByXPath('//input[@type="radio"]', $row, format_string('Radio button for value @row.', array('@row' => $row)));
     }
   }
 
@@ -94,7 +94,7 @@ class ElementsTableSelectTest extends WebTestBase {
    */
   function testEmptyText() {
     $this->drupalGet('form_test/tableselect/empty-text');
-    $this->assertText(t('Empty text.'), t('Empty text should be displayed.'));
+    $this->assertText(t('Empty text.'), 'Empty text should be displayed.');
   }
 
   /**
@@ -107,18 +107,18 @@ class ElementsTableSelectTest extends WebTestBase {
     $edit['tableselect[row1]'] = TRUE;
     $this->drupalPost('form_test/tableselect/multiple-true', $edit, 'Submit');
 
-    $this->assertText(t('Submitted: row1 = row1'), t('Checked checkbox row1'));
-    $this->assertText(t('Submitted: row2 = 0'), t('Unchecked checkbox row2.'));
-    $this->assertText(t('Submitted: row3 = 0'), t('Unchecked checkbox row3.'));
+    $this->assertText(t('Submitted: row1 = row1'), 'Checked checkbox row1');
+    $this->assertText(t('Submitted: row2 = 0'), 'Unchecked checkbox row2.');
+    $this->assertText(t('Submitted: row3 = 0'), 'Unchecked checkbox row3.');
 
     // Test a submission with multiple checkboxes checked.
     $edit['tableselect[row1]'] = TRUE;
     $edit['tableselect[row3]'] = TRUE;
     $this->drupalPost('form_test/tableselect/multiple-true', $edit, 'Submit');
 
-    $this->assertText(t('Submitted: row1 = row1'), t('Checked checkbox row1.'));
-    $this->assertText(t('Submitted: row2 = 0'), t('Unchecked checkbox row2.'));
-    $this->assertText(t('Submitted: row3 = row3'), t('Checked checkbox row3.'));
+    $this->assertText(t('Submitted: row1 = row1'), 'Checked checkbox row1.');
+    $this->assertText(t('Submitted: row2 = 0'), 'Unchecked checkbox row2.');
+    $this->assertText(t('Submitted: row3 = row3'), 'Checked checkbox row3.');
 
   }
 
@@ -128,7 +128,7 @@ class ElementsTableSelectTest extends WebTestBase {
   function testMultipleFalseSubmit() {
     $edit['tableselect'] = 'row1';
     $this->drupalPost('form_test/tableselect/multiple-false', $edit, 'Submit');
-    $this->assertText(t('Submitted: row1'), t('Selected radio button'));
+    $this->assertText(t('Submitted: row1'), 'Selected radio button');
   }
 
   /**
@@ -137,18 +137,18 @@ class ElementsTableSelectTest extends WebTestBase {
   function testAdvancedSelect() {
     // When #multiple = TRUE a Select all checkbox should be displayed by default.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-default');
-    $this->assertFieldByXPath('//th[@class="select-all"]', NULL, t('Display a "Select all" checkbox by default when #multiple is TRUE.'));
+    $this->assertFieldByXPath('//th[@class="select-all"]', NULL, 'Display a "Select all" checkbox by default when #multiple is TRUE.');
 
     // When #js_select is set to FALSE, a "Select all" checkbox should not be displayed.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-no-advanced-select');
-    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, t('Do not display a "Select all" checkbox when #js_select is FALSE.'));
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, 'Do not display a "Select all" checkbox when #js_select is FALSE.');
 
     // A "Select all" checkbox never makes sense when #multiple = FALSE, regardless of the value of #js_select.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-default');
-    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, t('Do not display a "Select all" checkbox when #multiple is FALSE.'));
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, 'Do not display a "Select all" checkbox when #multiple is FALSE.');
 
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-advanced-select');
-    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, t('Do not display a "Select all" checkbox when #multiple is FALSE, even when #js_select is TRUE.'));
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, 'Do not display a "Select all" checkbox when #multiple is FALSE, even when #js_select is TRUE.');
   }
 
 
@@ -167,11 +167,11 @@ class ElementsTableSelectTest extends WebTestBase {
 
     // Test with a valid value.
     list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => array('row1' => 'row1')));
-    $this->assertFalse(isset($errors['tableselect']), t('Option checker allows valid values for checkboxes.'));
+    $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for checkboxes.');
 
     // Test with an invalid value.
     list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => array('non_existing_value' => 'non_existing_value')));
-    $this->assertTrue(isset($errors['tableselect']), t('Option checker disallows invalid values for checkboxes.'));
+    $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for checkboxes.');
 
   }
 
@@ -192,11 +192,11 @@ class ElementsTableSelectTest extends WebTestBase {
 
     // Test with a valid value.
     list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'row1'));
-    $this->assertFalse(isset($errors['tableselect']), t('Option checker allows valid values for radio buttons.'));
+    $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for radio buttons.');
 
     // Test with an invalid value.
     list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'non_existing_value'));
-    $this->assertTrue(isset($errors['tableselect']), t('Option checker disallows invalid values for radio buttons.'));
+    $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for radio buttons.');
   }
 
 

@@ -34,7 +34,7 @@ class WrapperTest extends WebTestBase {
    */
   function testWrapperCallback() {
     $this->drupalGet('form_test/wrapper-callback');
-    $this->assertText('Form wrapper callback element output.', t('The form contains form wrapper elements.'));
-    $this->assertText('Form builder element output.', t('The form contains form builder elements.'));
+    $this->assertText('Form wrapper callback element output.', 'The form contains form wrapper elements.');
+    $this->assertText('Form builder element output.', 'The form contains form builder elements.');
   }
 }

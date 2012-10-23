@@ -46,7 +46,7 @@ class ElementsVerticalTabsTest extends WebTestBase {
     $this->drupalGet('form_test/vertical-tabs');
     $position1 = strpos($this->content, 'core/misc/vertical-tabs.js');
     $position2 = strpos($this->content, 'core/misc/collapse.js');
-    $this->assertTrue($position1 !== FALSE && $position2 !== FALSE && $position1 < $position2, t('vertical-tabs.js is included before collapse.js'));
+    $this->assertTrue($position1 !== FALSE && $position2 !== FALSE && $position1 < $position2, 'vertical-tabs.js is included before collapse.js');
   }
 
   /**
