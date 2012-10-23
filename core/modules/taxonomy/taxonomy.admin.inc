@@ -534,7 +534,7 @@ function theme_taxonomy_overview_terms($variables) {
 function taxonomy_term_add($vocabulary) {
   $term = entity_create('taxonomy_term', array('vid' => $vocabulary->vid, 'vocabulary_machine_name' => $vocabulary->machine_name));
   if (module_exists('language')) {
-    $term->langcode = language_get_default_langcode('vocabulary', $vocabulary->machine_name);
+    $term->langcode = language_get_default_langcode('taxonomy_term', $vocabulary->machine_name);
   }
   return entity_get_form($term);
 }

@@ -41,7 +41,7 @@ class TermFormController extends EntityFormController {
       '#format' => $term->format,
       '#weight' => 0,
     );
-    $language_configuration = module_invoke('language', 'get_default_configuration', 'vocabulary', $vocabulary->machine_name);
+    $language_configuration = module_invoke('language', 'get_default_configuration', 'taxonomy_term', $vocabulary->machine_name);
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),

@@ -95,7 +95,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->assertResponse(200, 'The vocabulary has been created.');
 
     // Check that the language settings were saved.
-    $language_settings = language_get_default_configuration('vocabulary', $edit['machine_name']);
+    $language_settings = language_get_default_configuration('taxonomy_term', $edit['machine_name']);
     $this->assertEqual($language_settings['langcode'], 'bb');
     $this->assertEqual($language_settings['language_hidden'], FALSE);
 
@@ -111,7 +111,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->drupalPost('admin/structure/taxonomy/' . $machine_name . '/edit', $edit, t('Save'));
 
     // And check again the settings and also the interface.
-    $language_settings = language_get_default_configuration('vocabulary', $machine_name);
+    $language_settings = language_get_default_configuration('taxonomy_term', $machine_name);
     $this->assertEqual($language_settings['langcode'], 'aa');
     $this->assertEqual($language_settings['language_hidden'], TRUE);
 
@@ -133,7 +133,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $old_settings = config('language.settings')->get(language_get_default_configuration_settings_key('vocabulary', $machine_name));
     $this->assertNull($old_settings, 'The old vocabulary settings were deleted.');
     // Check that we have the new settings.
-    $new_settings = language_get_default_configuration('vocabulary', $new_machine_name);
+    $new_settings = language_get_default_configuration('taxonomy_term', $new_machine_name);
     $this->assertEqual($new_settings['langcode'], 'authors_default');
     $this->assertEqual($new_settings['language_hidden'], TRUE);
   }
