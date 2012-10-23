@@ -328,7 +328,7 @@ class Table extends StylePluginBase {
       $form['info'][$field]['responsive'] = array(
         '#type' => 'select',
         '#default_value' => isset($this->options['info'][$field]['responsive']) ? $this->options['info'][$field]['responsive'] : '',
-        '#options' => array('' => t('None'), RESPONSIVE_PRIORITY_MEDIUM => t('Medium'), RESPONSIVE_PRIORITY_LOW => t('Low')),
+        '#options' => array('' => t('High'), RESPONSIVE_PRIORITY_MEDIUM => t('Medium'), RESPONSIVE_PRIORITY_LOW => t('Low')),
         '#states' => array(
           'visible' => array(
             $column_selector => array('value' => $field),
