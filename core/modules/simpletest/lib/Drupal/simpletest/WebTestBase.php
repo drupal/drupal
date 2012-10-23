@@ -261,6 +261,9 @@ abstract class WebTestBase extends TestBase {
       'value' => $this->randomName(32),
       'format' => filter_default_format(),
     );
+    if (empty($settings['body'][$settings['langcode']])) {
+      $settings['body'][$settings['langcode']][0] = array();
+    }
     $settings['body'][$settings['langcode']][0] += $body;
 
     $node = entity_create('node', $settings);

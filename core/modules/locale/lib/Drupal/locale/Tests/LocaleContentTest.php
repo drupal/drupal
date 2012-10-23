@@ -21,8 +21,6 @@ class LocaleContentTest extends WebTestBase {
    */
   public static $modules = array('locale');
 
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Content language settings',
@@ -65,10 +63,13 @@ class LocaleContentTest extends WebTestBase {
   function testContentTypeLanguageConfiguration() {
     global $base_url;
 
+    $type1 = $this->drupalCreateContentType();
+    $type2 = $this->drupalCreateContentType();
+
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
     // User to create a node.
-    $web_user = $this->drupalCreateUser(array('create article content', 'create page content', 'edit any page content'));
+    $web_user = $this->drupalCreateUser(array("create {$type1->type} content", "create {$type2->type} content", "edit any {$type2->type} content"));
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -84,34 +85,34 @@ class LocaleContentTest extends WebTestBase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
 
-    // Set "Basic page" content type to use multilingual support.
-    $this->drupalGet('admin/structure/types/manage/page');
-    $this->assertText(t('Language settings'), t('Multilingual support fieldset present on content type configuration form.'));
+    // Set the content type to use multilingual support.
+    $this->drupalGet("admin/structure/types/manage/{$type2->type}");
+    $this->assertText(t('Language settings'), 'Multilingual support fieldset present on content type configuration form.');
     $edit = array(
       'language_configuration[language_hidden]' => FALSE,
     );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
+    $this->drupalPost("admin/structure/types/manage/{$type2->type}", $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type2->name)));
     $this->drupalLogout();
 
-    // Verify language selection is not present on add article form.
+    // Verify language selection is not present on the node add form.
     $this->drupalLogin($web_user);
-    $this->drupalGet('node/add/article');
+    $this->drupalGet("node/add/{$type1->type}");
     // Verify language select list is not present.
-    $this->assertNoFieldByName('language', NULL, t('Language select not present on add article form.'));
+    $this->assertNoFieldByName('language', NULL, 'Language select not present on the node add form.');
 
-    // Verify language selection appears on add "Basic page" form.
-    $this->drupalGet('node/add/page');
+    // Verify language selection appears on the node add form.
+    $this->drupalGet("node/add/{$type2->type}");
     // Verify language select list is present.
-    $this->assertFieldByName('langcode', NULL, t('Language select present on add Basic page form.'));
+    $this->assertFieldByName('langcode', NULL, 'Language select present on the node add form.');
     // Ensure language appears.
-    $this->assertText($name, t('Language present.'));
+    $this->assertText($name, 'Language present.');
 
-    // Create "Basic page" content.
+    // Create a node.
     $node_title = $this->randomName();
     $node_body =  $this->randomName();
     $edit = array(
-      'type' => 'page',
+      'type' => $type2->type,
       'title' => $node_title,
       'body' => array($langcode => array(array('value' => $node_body))),
       'langcode' => $langcode,
@@ -126,7 +127,7 @@ class LocaleContentTest extends WebTestBase {
       'langcode' => 'en',
     );
     $this->drupalPost($path, $edit, t('Save'));
-    $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)), t('Basic page content updated.'));
+    $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)));
 
     $this->drupalLogout();
   }
@@ -135,10 +136,12 @@ class LocaleContentTest extends WebTestBase {
    * Test if a dir and lang tags exist in node's attributes.
    */
   function testContentTypeDirLang() {
+    $type = $this->drupalCreateContentType();
+
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
     // User to create a node.
-    $web_user = $this->drupalCreateUser(array('create article content', 'edit own article content'));
+    $web_user = $this->drupalCreateUser(array("create {$type->type} content", "edit own {$type->type} content"));
 
     // Login as admin.
     $this->drupalLogin($admin_user);
@@ -153,62 +156,51 @@ class LocaleContentTest extends WebTestBase {
     $edit['predefined_langcode'] = 'es';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
-    // Set "Article" content type to use multilingual support.
-    $this->drupalGet('admin/structure/types/manage/article');
+    // Set the content type to use multilingual support.
+    $this->drupalGet("admin/structure/types/manage/{$type->type}");
     $edit = array(
       'language_configuration[language_hidden]' => FALSE,
     );
-    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));
+    $this->drupalPost("admin/structure/types/manage/{$type->type}", $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type->name)));
     $this->drupalLogout();
 
-    // Login as web user to add new article.
+    // Login as web user to add new node.
     $this->drupalLogin($web_user);
 
     // Create three nodes: English, Arabic and Spanish.
-    $node_en = $this->createNodeArticle('en');
-    $node_ar = $this->createNodeArticle('ar');
-    $node_es = $this->createNodeArticle('es');
+    $nodes = array();
+    foreach (array('en', 'es', 'ar') as $langcode) {
+      $nodes[$langcode] = $this->drupalCreateNode(array(
+        'langcode' => $langcode,
+        'type' => $type->type,
+        'promote' => NODE_PROMOTED,
+      ));
+    }
 
     $this->drupalGet('node');
 
     // Check if English node does not have lang tag.
-    $pattern = '|id="node-' . $node_en->nid . '"[^<>]*lang="en"|';
-    $this->assertNoPattern($pattern, t('The lang tag has not been assigned to the English node.'));
+    $pattern = '|id="node-' . $nodes['en']->nid . '"[^<>]*lang="en"|';
+    $this->assertNoPattern($pattern, 'The lang tag has not been assigned to the English node.');
 
     // Check if English node does not have dir tag.
-    $pattern = '|id="node-' . $node_en->nid . '"[^<>]*dir="ltr"|';
-    $this->assertNoPattern($pattern, t('The dir tag has not been assigned to the English node.'));
+    $pattern = '|id="node-' . $nodes['en']->nid . '"[^<>]*dir="ltr"|';
+    $this->assertNoPattern($pattern, 'The dir tag has not been assigned to the English node.');
 
     // Check if Arabic node has lang="ar" & dir="rtl" tags.
-    $pattern = '|id="node-' . $node_ar->nid . '"[^<>]*lang="ar" dir="rtl"|';
-    $this->assertPattern($pattern, t('The lang and dir tags have been assigned correctly to the Arabic node.'));
+    $pattern = '|id="node-' . $nodes['ar']->nid . '"[^<>]*lang="ar" dir="rtl"|';
+    $this->assertPattern($pattern, 'The lang and dir tags have been assigned correctly to the Arabic node.');
 
     // Check if Spanish node has lang="es" tag.
-    $pattern = '|id="node-' . $node_es->nid . '"[^<>]*lang="es"|';
-    $this->assertPattern($pattern, t('The lang tag has been assigned correctly to the Spanish node.'));
+    $pattern = '|id="node-' . $nodes['es']->nid . '"[^<>]*lang="es"|';
+    $this->assertPattern($pattern, 'The lang tag has been assigned correctly to the Spanish node.');
 
     // Check if Spanish node does not have dir="ltr" tag.
-    $pattern = '|id="node-' . $node_es->nid . '"[^<>]*lang="es" dir="ltr"|';
-    $this->assertNoPattern($pattern, t('The dir tag has not been assigned to the Spanish node.'));
+    $pattern = '|id="node-' . $nodes['es']->nid . '"[^<>]*lang="es" dir="ltr"|';
+    $this->assertNoPattern($pattern, 'The dir tag has not been assigned to the Spanish node.');
 
     $this->drupalLogout();
   }
 
-  /**
-   * Create node in a specific language.
-   */
-  protected function createNodeArticle($langcode) {
-    $this->drupalGet('node/add/article');
-    $node_title = $this->randomName();
-    $node_body =  $this->randomName();
-    $edit = array(
-      'type' => 'article',
-      'title' => $node_title,
-      'body' => array($langcode => array(array('value' => $node_body))),
-      'langcode' => $langcode,
-      'promote' => 1,
-    );
-    return $this->drupalCreateNode($edit);
-  }
 }
