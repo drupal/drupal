@@ -4,35 +4,41 @@
 
 Drupal.behaviors.openid = {
   attach: function (context) {
-    var $login = $('#user-login-form');
-    var $openid = $('#openid-login-form');
-
-    var cookie = $.cookie('Drupal.visitor.openid_identifier');
-    if (cookie || location.hash === '#openid-login') {
-      $openid.show()
-        .find('[name="openid_identifier"]').once('openid')
-        .val(cookie);
-      $login.hide();
-    }
-
-    // Switch between the default login form and the OpenID login form.
-    $('#block-user-login').once('openid').on('click', '.openid-link, .user-link', function (e) {
-      $openid.toggle();
-      $login.toggle();
-
-      var $showForm = $(this).hasClass('openid-link') ? $openid : $login;
-      $showForm.find('input:first').focus();
+    function clearStatus ($form) {
+      $form.find('input:first').focus();
       // Clear input fields and reset any validation errors.
-      $showForm[0].reset();
+      $form[0].reset();
 
       // Reset error state.
-      $('#messages').find('div.error').hide();
-      $('#block-user-login').find('input').removeClass('error');
+      $form.find('.error').removeClass('error');
 
       // Forget saved identifier.
       $.cookie('Drupal.visitor.openid_identifier', null);
-    });
+    }
+
+    if ($('#block-user-login').length) {
+      var $login_form = $('#user-login-form');
+      var $openid_form = $('#openid-login-form');
+
+      // Change link text and triggers loginchange event.
+      $('#block-user-login .openid-link').toggle(
+        function() {
+          $(this).html(Drupal.t('Cancel OpenID login'));
+          $login_form.hide();
+          $openid_form.show();
+          clearStatus($login_form);
+          // Move focus to OpenID input.
+          $('#edit-openid-identifier').focus();
+        },
+        function() {
+          $(this).html(Drupal.t('Log in using OpenID'));
+          $login_form.show();
+          $openid_form.hide();
+          clearStatus($openid_form);
+        }
+      );
+    }
+
   }
 };
-
-})(jQuery);
+})(jQuery, Drupal);

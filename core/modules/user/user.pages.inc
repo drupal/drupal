@@ -423,6 +423,6 @@ function user_page() {
     return new RedirectResponse(url('user/' . $user->uid, array('absolute' => TRUE)));
   }
   else {
-    return drupal_get_form('user_login');
+    return drupal_get_form('user_login_form');
   }
 }

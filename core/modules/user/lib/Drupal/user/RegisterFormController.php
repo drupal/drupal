@@ -124,7 +124,7 @@ class RegisterFormController extends AccountFormController {
     elseif (!$admin && !config('user.settings')->get('verify_mail') && $account->status) {
       _user_mail_notify('register_no_approval_required', $account);
       $form_state['uid'] = $account->uid;
-      user_login_submit(array(), $form_state);
+      user_login_form_submit(array(), $form_state);
       drupal_set_message(t('Registration successful. You are now logged in.'));
       $form_state['redirect'] = '';
     }

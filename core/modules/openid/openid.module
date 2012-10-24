@@ -140,30 +140,22 @@ function openid_block_view_user_login_alter(&$block) {
   }
 
   $block['content']['openid_login_form'] = drupal_get_form('openid_login_form');
-  $block['content']['openid_login_form']['#attributes']['class'][] = 'user-login-block';
   $block['content']['openid_login_form']['openid_identifier']['#size'] = $block['content']['user_login_form']['name']['#size'];
 
-  // Add links between the forms.
-  $block['content']['user_login_form']['openid_link'] = array(
-    '#type' => 'link',
-    '#title' => t('Log in using OpenID'),
-    '#href' => '#openid-login',
-    '#options' => array('external' => TRUE),
-    '#attributes' => array('class' => array('openid-link')),
-    '#attached' => array('css' => array(
-      drupal_get_path('module', 'openid') . '/openid.css'),
-    ),
-    '#weight' => 5,
-  );
-  $block['content']['openid_login_form']['user_link'] = array(
-    '#type' => 'link',
-    '#title' => t('Cancel OpenID login'),
-    '#href' => '#nogo',
-    '#options' => array('external' => TRUE),
-    '#attributes' => array('class' => array('user-link')),
-    '#weight' => 5,
-  );
-  $block['content']['openid_login_form']['links'] = $block['content']['user_login_form']['links'];
+  // Put an OpenID link as a first element.
+  $block['content']['user_links']['#items'] = array(
+    l(t('Log in using OpenID'), 'user/login/openid', array(
+      'attributes' => array(
+        'title' => t('Log in using OpenID.'),
+        'class' => array('openid-link'),
+        'role' => 'button',
+        'tabindex' => 0,
+      ),
+    ))
+  ) + $block['content']['user_links']['#items'];
+
+  // Move links under the openid form.
+  $block['content']['user_links']['#weight'] = 10;
 }
 
 /**
@@ -737,7 +729,7 @@ function openid_authentication($response) {
       if (!form_get_errors()) {
         // Load global $user and perform final login tasks.
         $form_state['uid'] = $account->uid;
-        user_login_submit(array(), $form_state);
+        user_login_form_submit(array(), $form_state);
       }
     }
     else {
@@ -1112,6 +1104,7 @@ function openid_library_info() {
       drupal_get_path('module', 'openid') . '/openid.css' => array(),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'jquery.cookie'),
       array('system', 'jquery.once'),

@@ -46,7 +46,7 @@ class SessionHttpsTest extends WebTestBase {
     // Test HTTPS session handling by altering the form action to submit the
     // login form through https.php, which creates a mock HTTPS request.
     $this->drupalGet('user');
-    $form = $this->xpath('//form[@id="user-login"]');
+    $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user');
     $edit = array('name' => $user->name, 'pass' => $user->pass_raw);
     $this->drupalPost(NULL, $edit, t('Log in'));
@@ -54,7 +54,7 @@ class SessionHttpsTest extends WebTestBase {
     // Test a second concurrent session.
     $this->curlClose();
     $this->drupalGet('user');
-    $form = $this->xpath('//form[@id="user-login"]');
+    $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user');
     $this->drupalPost(NULL, $edit, t('Log in'));
 
@@ -89,7 +89,7 @@ class SessionHttpsTest extends WebTestBase {
     // test environments.
     $this->curlClose();
     $this->drupalGet('user');
-    $form = $this->xpath('//form[@id="user-login"]');
+    $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpUrl('user');
     $edit = array('name' => $user->name, 'pass' => $user->pass_raw);
     $this->drupalPost(NULL, $edit, t('Log in'));
@@ -136,7 +136,7 @@ class SessionHttpsTest extends WebTestBase {
 
     // Check that user login form action is secure.
     $this->drupalGet('user');
-    $form = $this->xpath('//form[@id="user-login"]');
+    $form = $this->xpath('//form[@id="user-login-form"]');
     $this->assertEqual(substr($form[0]['action'], 0, 6), 'https:', 'Login form action is secure');
     $form[0]['action'] = $this->httpsUrl('user');
 
@@ -193,7 +193,7 @@ class SessionHttpsTest extends WebTestBase {
 
     // Mock a login to the secure site using the secure session cookie.
     $this->drupalGet('user');
-    $form = $this->xpath('//form[@id="user-login"]');
+    $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user');
     $this->drupalPost(NULL, $edit, t('Log in'));
 

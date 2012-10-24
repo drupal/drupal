@@ -731,41 +731,6 @@ function user_validate_current_pass(&$form, &$form_state) {
   }
 }
 
-function user_login_block($form) {
-  $form['#action'] = url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
-  $form['#id'] = 'user-login-form';
-  $form['#validate'] = user_login_default_validators();
-  $form['#submit'][] = 'user_login_submit';
-  $form['name'] = array('#type' => 'textfield',
-    '#title' => t('Username'),
-    '#maxlength' => USERNAME_MAX_LENGTH,
-    '#size' => 15,
-    '#required' => TRUE,
-  );
-  $form['pass'] = array('#type' => 'password',
-    '#title' => t('Password'),
-    '#maxlength' => 60,
-    '#size' => 15,
-    '#required' => TRUE,
-  );
-  $items = array();
-  if (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-    $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
-  }
-  $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
-  $form['links'] = array(
-    '#theme' => 'item_list',
-    '#items' => $items,
-    '#weight' => 10,
-  );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit',
-    '#value' => t('Log in'),
-    '#weight' => 20,
-  );
-  return $form;
-}
-
 /**
  * Implements hook_block_info().
  */
@@ -841,9 +806,39 @@ function user_block_view($delta = '') {
     case 'login':
       // For usability's sake, avoid showing two login forms on one page.
       if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
-
+        // Customize the login form.
+        $form = drupal_get_form('user_login_form');
+        unset($form['name']['#attributes']['autofocus']);
+        unset($form['name']['#description']);
+        unset($form['pass']['#description']);
+        $form['name']['#size'] = 15;
+        $form['pass']['#size'] = 15;
+        $form['#action'] = url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
+        // Build action links.
+        $items = array();
+        if (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+          $items['create_account'] = l(t('Create new account'), 'user/register', array(
+            'attributes' => array(
+              'title' => t('Create a new user account.'),
+              'class' => array('create-account-link'),
+            ),
+          ));
+        }
+        $items['request_password'] = l(t('Request new password'), 'user/password', array(
+          'attributes' => array(
+            'title' => t('Request new password via e-mail.'),
+            'class' => array('request-password-link'),
+          ),
+        ));
+        // Build a block as renderable array.
         $block['subject'] = t('User login');
-        $block['content']['user_login_form'] = drupal_get_form('user_login_block');
+        $block['content'] = array(
+          'user_login_form' => $form,
+          'user_links' => array(
+            '#theme' => 'item_list',
+            '#items' => $items,
+          )
+        );
       }
       return $block;
 
@@ -1577,28 +1572,32 @@ function user_set_authmaps($account, $authmaps) {
  *
  * @ingroup forms
  */
-function user_login($form, &$form_state) {
-
+function user_login_form($form, &$form_state) {
   // Display login form:
-  $form['name'] = array('#type' => 'textfield',
+  $form['name'] = array(
+    '#type' => 'textfield',
     '#title' => t('Username'),
     '#size' => 60,
     '#maxlength' => USERNAME_MAX_LENGTH,
+    '#description' => t('Enter your @s username.', array('@s' => config('system.site')->get('name'))),
     '#required' => TRUE,
     '#attributes' => array(
       'autofocus' => 'autofocus',
     ),
   );
 
-  $form['name']['#description'] = t('Enter your @s username.', array('@s' => config('system.site')->get('name')));
-  $form['pass'] = array('#type' => 'password',
+  $form['pass'] = array(
+    '#type' => 'password',
     '#title' => t('Password'),
+    '#size' => 60,
     '#description' => t('Enter the password that accompanies your username.'),
     '#required' => TRUE,
   );
-  $form['#validate'] = user_login_default_validators();
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
+
+  $form['#validate'] = user_login_default_validators();
 
   return $form;
 }
@@ -1781,7 +1780,7 @@ function user_login_finalize(&$edit = array()) {
  * tasks. The user is then redirected to the My Account page. Setting the
  * destination in the query string overrides the redirect.
  */
-function user_login_submit($form, &$form_state) {
+function user_login_form_submit($form, &$form_state) {
   global $user;
   $user = user_load($form_state['uid']);
   $form_state['redirect'] = 'user/' . $user->uid;
@@ -1816,7 +1815,7 @@ function user_external_login_register($name, $module) {
 
   // Log user in.
   $form_state['uid'] = $account->uid;
-  user_login_submit(array(), $form_state);
+  user_login_form_submit(array(), $form_state);
 }
 
 /**

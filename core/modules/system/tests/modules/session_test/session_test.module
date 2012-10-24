@@ -164,7 +164,7 @@ function session_test_user_login($edit = array(), $user = NULL) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function session_test_form_user_login_alter(&$form) {
+function session_test_form_user_login_form_alter(&$form) {
   $form['#https'] = TRUE;
 }
 
