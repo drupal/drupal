@@ -156,4 +156,20 @@ class NodeSaveTest extends NodeTestBase {
     $node = node_load($node->nid);
     $this->assertEqual($node->label(), 'updated_presave', 'Static cache has been cleared.');
   }
+
+  /**
+   * Tests saving a node on node insert.
+   *
+   * This test ensures that a node has been fully saved when hook_node_insert()
+   * is invoked, so that the node can be saved again in a hook implementation
+   * without errors.
+   *
+   * @see node_test_node_insert()
+   */
+  function testNodeSaveOnInsert() {
+    // node_test_node_insert() tiggers a save on insert if the title equals
+    // 'new'.
+    $node = $this->drupalCreateNode(array('title' => 'new'));
+    $this->assertEqual($node->title, 'Node ' . $node->nid, 'Node saved on node insert.');
+  }
 }
