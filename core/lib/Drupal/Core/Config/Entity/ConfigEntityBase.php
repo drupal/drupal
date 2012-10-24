@@ -51,7 +51,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * since each configuration entity is unique.
    */
   final public function isNew() {
-    return $this->id() === NULL;
+    return !$this->id();
   }
 
   /**
