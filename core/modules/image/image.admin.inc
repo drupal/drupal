@@ -59,7 +59,6 @@ function image_style_form($form, &$form_state, $style) {
     '#default_value' => $style->id(),
     '#machine_name' => array(
       'exists' => 'image_style_load',
-      'source' => array('label'),
     ),
     '#required' => TRUE,
   );
@@ -246,7 +245,6 @@ function image_style_add_form($form, &$form_state) {
     '#type' => 'machine_name',
     '#machine_name' => array(
       'exists' => 'image_style_load',
-      'source' => array('label'),
     ),
     '#default_value' => '',
     '#required' => TRUE,

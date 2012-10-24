@@ -37,6 +37,7 @@ class VocabularyFormController extends EntityFormController {
       '#maxlength' => 255,
       '#machine_name' => array(
         'exists' => 'taxonomy_vocabulary_machine_name_load',
+        'source' => array('name'),
       ),
     );
     $form['description'] = array(

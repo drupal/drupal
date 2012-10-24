@@ -132,6 +132,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#disabled' => $type->locked,
     '#machine_name' => array(
       'exists' => 'node_type_load',
+      'source' => array('name'),
     ),
     '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page, in which underscores will be converted into hyphens.', array(
       '%node-add' => t('Add new content'),

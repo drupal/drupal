@@ -36,7 +36,6 @@ class CategoryFormController extends EntityFormController {
       '#default_value' => $category->id(),
       '#machine_name' => array(
         'exists' => 'contact_category_load',
-        'source' => array('label'),
       ),
       '#disabled' => !$category->isNew(),
     );

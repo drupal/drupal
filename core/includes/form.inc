@@ -3537,7 +3537,7 @@ function form_process_tableselect($element) {
  *       value differs from the element's #default_value.
  *     - source: (optional) The #array_parents of the form element containing
  *       the human-readable name (i.e., as contained in the $form structure) to
- *       use as source for the machine name. Defaults to array('name').
+ *       use as source for the machine name. Defaults to array('label').
  *     - label: (optional) A text to display as label for the machine name value
  *       after the human-readable name form element. Defaults to "Machine name".
  *     - replace_pattern: (optional) A regular expression (without delimiters)
@@ -3570,8 +3570,7 @@ function form_process_machine_name($element, &$form_state) {
   // 'source' only) would leave all other properties undefined, if the defaults
   // were defined in hook_element_info(). Therefore, we apply the defaults here.
   $element['#machine_name'] += array(
-    // @todo Use 'label' by default.
-    'source' => array('name'),
+    'source' => array('label'),
     'target' => '#' . $element['#id'],
     'label' => t('Machine name'),
     'replace_pattern' => '[^a-z0-9_]+',

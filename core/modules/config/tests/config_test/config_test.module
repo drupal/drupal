@@ -214,8 +214,6 @@ function config_test_form($form, &$form_state, ConfigTest $config_test = NULL) {
     '#required' => TRUE,
     '#machine_name' => array(
       'exists' => 'config_test_load',
-      // @todo Update form_process_machine_name() to use 'label' by default.
-      'source' => array('label'),
     ),
   );
   $form['style'] = array(

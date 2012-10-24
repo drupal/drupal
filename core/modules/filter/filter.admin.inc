@@ -181,6 +181,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#maxlength' => 255,
     '#machine_name' => array(
       'exists' => 'filter_format_exists',
+      'source' => array('name'),
     ),
     '#disabled' => !empty($format->format),
   );
