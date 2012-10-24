@@ -42,6 +42,8 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   public function getDefinitions() {
     $definitions = array();
     $reader = new AnnotationReader();
+    // Prevent @endlink from being parsed as an annotation.
+    $reader->addGlobalIgnoredName('endlink');
 
     // Register the namespace of classes that can be used for annotations.
     AnnotationRegistry::registerAutoloadNamespace('Drupal\Core\Annotation', array(DRUPAL_ROOT . '/core/lib'));
