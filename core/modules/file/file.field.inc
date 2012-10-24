@@ -327,6 +327,10 @@ function file_field_formatter_info() {
       'label' => t('URL to file'),
       'field types' => array('file'),
     ),
+    'file_rss_enclosure' => array(
+      'label' => t('RSS enclosure'),
+      'field types' => array('file'),
+    ),
   );
 }
 
@@ -922,6 +926,24 @@ function file_field_formatter_view($entity_type, $entity, $field, $instance, $la
           '#theme' => 'file_formatter_table',
           '#items' => $items,
         );
+      }
+      break;
+
+    case 'file_rss_enclosure':
+      // Add the first file as an enclosure to the RSS item. RSS allows only one
+      // enclosure per item. See: http://en.wikipedia.org/wiki/RSS_enclosure
+      foreach ($items as $item) {
+        if ($item['display']) {
+          $entity->rss_elements[] = array(
+            'key' => 'enclosure',
+            'attributes' => array(
+              'url' => file_create_url($item['uri']),
+              'length' => $item['filesize'],
+              'type' => $item['filemime'],
+            ),
+          );
+          break;
+        }
       }
       break;
   }
