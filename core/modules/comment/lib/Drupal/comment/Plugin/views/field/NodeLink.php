@@ -43,14 +43,9 @@ class NodeLink extends FieldPluginBase {
 
   function render($values) {
     $node = $this->get_entity($values);
-
-    // Call comment.module's hook_link: comment_link($type, $node = NULL, $teaser = FALSE)
-    // Call node by reference so that something is changed here
     comment_node_view($node, $this->options['teaser'] ? 'teaser' : 'full');
-    // question: should we run these through:    drupal_alter('link', $links, $node);
-    // might this have unexpected consequences if these hooks expect items in $node that we don't have?
 
-    // Only render the links, if they are defined.
+    // Only render the links if they are defined.
     return !empty($node->content['links']['comment']) ? drupal_render($node->content['links']['comment']) : '';
   }
 
