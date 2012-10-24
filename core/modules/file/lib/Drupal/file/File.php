@@ -7,12 +7,13 @@
 
 namespace Drupal\file;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the file entity class.
  */
-class File extends Entity {
+class File extends Entity implements ContentEntityInterface {
 
   /**
    * The file ID.
