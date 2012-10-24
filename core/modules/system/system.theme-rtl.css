@@ -56,18 +56,12 @@ th {
  */
 
 ul.menu {
-  text-align:right;
+  margin-left: 0;
+  margin-right: 1em;
+  text-align: right;
 }
-ul.menu li {
-  margin: 0 0.5em 0 0;
-}
-ul li.collapsed {
+.menu .collapsed {
   list-style-image: url(../../misc/menu-collapsed-rtl.png);
-}
-li.expanded,
-li.collapsed,
-li.leaf {
-  padding: 0.2em 0 0 0.5em;
 }
 
 /**
