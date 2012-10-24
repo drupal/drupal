@@ -93,8 +93,11 @@ class FieldInfoTest extends FieldTestBase {
           'test_setting' => 999)));
     field_create_instance($instance);
 
+    $info = entity_get_info('test_entity');
     $instances = field_info_instances('test_entity', $instance['bundle']);
-    $this->assertEqual(count($instances), 1, 'One instance shows up in info when attached to a bundle.');
+    $this->assertEqual(count($instances), 1, format_string('One instance shows up in info when attached to a bundle on a @label.', array(
+      '@label' => $info['label']
+    )));
     $this->assertTrue($instance < $instances[$instance['field_name']], 'Instance appears in info correctly');
 
     // Test a valid entity type but an invalid bundle.

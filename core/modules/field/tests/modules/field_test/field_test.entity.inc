@@ -26,7 +26,7 @@ function field_test_entity_info() {
 
   return array(
     'test_entity' => array(
-      'name' => t('Test Entity'),
+      'label' => t('Test Entity'),
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
       'form controller class' => array(
@@ -46,7 +46,7 @@ function field_test_entity_info() {
     ),
     // This entity type doesn't get form handling for now...
     'test_cacheable_entity' => array(
-      'name' => t('Test Entity, cacheable'),
+      'label' => t('Test Entity, cacheable'),
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
@@ -62,7 +62,7 @@ function field_test_entity_info() {
     'test_entity_bundle_key' => array(
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
-      'name' => t('Test Entity with a bundle key.'),
+      'label' => t('Test Entity with a bundle key.'),
       'base table' => 'test_entity_bundle_key',
       'fieldable' => TRUE,
       'field cache' => FALSE,
@@ -75,7 +75,7 @@ function field_test_entity_info() {
     ),
     // In this case, the bundle key is not stored in the database.
     'test_entity_bundle' => array(
-      'name' => t('Test Entity with a specified bundle.'),
+      'label' => t('Test Entity with a specified bundle.'),
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
       'base table' => 'test_entity_bundle',
@@ -90,7 +90,7 @@ function field_test_entity_info() {
     ),
     // @see EntityPropertiesTestCase::testEntityLabel()
     'test_entity_no_label' => array(
-      'name' => t('Test entity without label'),
+      'label' => t('Test entity without label'),
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
@@ -106,7 +106,7 @@ function field_test_entity_info() {
       'view modes' => $test_entity_modes,
     ),
     'test_entity_label' => array(
-      'name' => t('Test entity label'),
+      'label' => t('Test entity label'),
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
@@ -123,7 +123,7 @@ function field_test_entity_info() {
       'view modes' => $test_entity_modes,
     ),
     'test_entity_label_callback' => array(
-      'name' => t('Test entity label callback'),
+      'label' => t('Test entity label callback'),
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
