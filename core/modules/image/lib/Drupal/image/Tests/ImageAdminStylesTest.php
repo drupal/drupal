@@ -118,16 +118,29 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       }
     }
 
-    // Edit effect form.
-
-    // Revisit each form to make sure the effect was saved.
+    // Load the saved image style.
     $style = entity_load('image_style', $style_name);
 
+    // Confirm that all effects on the image style have settings on the effect
+    // edit form that match what was saved.
+    $ieids = array();
     foreach ($style->effects as $ieid => $effect) {
+      // Store the ieid for later use.
+      $ieids[$effect['name']] = $ieid;
       $this->drupalGet($style_path . '/effects/' . $ieid);
       foreach ($effect_edits[$effect['name']] as $field => $value) {
         $this->assertFieldByName($field, $value, format_string('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect['name'], '%value' => $value)));
       }
+    }
+
+    // Assert that every effect was saved.
+    foreach (array_keys($effect_edits) as $effect_name) {
+      $this->assertTrue(isset($ieids[$effect_name]), format_string(
+        'A %effect_name effect was saved with ID %ieid',
+        array(
+          '%effect_name' => $effect_name,
+          '%ieid' => $ieids[$effect_name],
+        )));
     }
 
     // Image style overview form (ordering and renaming).
@@ -196,10 +209,22 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $image_path = $this->createSampleImage($style);
     $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style->label(), '%file' => $image_path)));
 
-    // Test effect deletion form.
-    $effect = array_pop($style->effects);
-    $this->drupalPost($style_path . '/effects/' . $effect['ieid'] . '/delete', array(), t('Delete'));
-    $this->assertRaw(t('The image effect %name has been deleted.', array('%name' => $effect['label'])));
+    // Delete the 'image_crop' effect from the style.
+    $this->drupalPost($style_path . '/effects/' . $ieids['image_crop'] . '/delete', array(), t('Delete'));
+    // Confirm that the form submission was successful.
+    $this->assertResponse(200);
+    $this->assertRaw(t('The image effect %name has been deleted.', array('%name' => $style->effects[$ieids['image_crop']]['label'])));
+    // Confirm that there is no longer a link to the effect.
+    $this->assertNoLinkByHref($style_path . '/effects/' . $ieids['image_crop'] . '/delete');
+    // Refresh the image style information and verify that the effect was
+    // actually deleted.
+    $style = entity_load_unchanged('image_style', $style->id());
+    $this->assertFalse(isset($style->effects[$ieids['image_crop']]), format_string(
+      'Effect with ID %ieid no longer found on image style %style',
+      array(
+        '%ieid' => $ieids['image_crop'],
+        '%style' => $style->label,
+      )));
 
     // Style deletion form.
 

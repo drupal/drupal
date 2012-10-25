@@ -1070,7 +1070,7 @@ function image_effect_save($style, &$effect) {
  *   An image effect array.
  */
 function image_effect_delete($style, $effect) {
-  unset($style->effects['ieid']);
+  unset($style->effects[$effect['ieid']]);
   $style->save();
   image_style_flush($style);
 }
