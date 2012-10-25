@@ -615,7 +615,7 @@ function hook_route_info() {
  *
  * This hook enables modules to register paths in order to define how URL
  * requests are handled. Paths may be registered for URL handling only, or they
- * can register a link to be placed in a menu (usually the Navigation menu). A
+ * can register a link to be placed in a menu (usually the Tools menu). A
  * path and its associated information is commonly called a "menu router item".
  * This hook is rarely called (for example, when modules are enabled), and
  * its results are cached in the database.
@@ -867,7 +867,7 @@ function hook_route_info() {
  *     the menu; higher-weighted items sink. Defaults to 0. Menu items with the
  *     same weight are ordered alphabetically.
  *   - "menu_name": Optional. Set this to a custom menu if you don't want your
- *     item to be placed in Navigation.
+ *     item to be placed in the default Tools menu.
  *   - "context": (optional) Defines the context a tab may appear in. By
  *     default, all tabs are only displayed as local tasks when being rendered
  *     in a page context. All tabs that should be accessible as contextual links

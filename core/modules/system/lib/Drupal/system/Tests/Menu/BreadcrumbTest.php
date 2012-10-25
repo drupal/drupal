@@ -36,9 +36,9 @@ class BreadcrumbTest extends MenuTestBase {
     $this->admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->admin_user);
 
-    // This test puts menu links in the Navigation menu and then tests for
-    // their presence on the page, so we need to ensure that the Navigation
-    // block will be displayed in all active themes.
+    // This test puts menu links in the Tools menu and then tests for their
+    // presence on the page, so we need to ensure that the Tools block will be
+    // displayed in all active themes.
     db_update('block')
       ->fields(array(
         // Use a region that is valid for all themes.
@@ -46,7 +46,7 @@ class BreadcrumbTest extends MenuTestBase {
         'status' => 1,
       ))
       ->condition('module', 'system')
-      ->condition('delta', 'navigation')
+      ->condition('delta', 'tools')
       ->execute();
   }
 
@@ -110,13 +110,13 @@ class BreadcrumbTest extends MenuTestBase {
     $trail += array(
       'admin/structure/menu' => t('Menus'),
     );
-    $this->assertBreadcrumb('admin/structure/menu/manage/navigation', $trail);
+    $this->assertBreadcrumb('admin/structure/menu/manage/tools', $trail);
     $trail += array(
-      'admin/structure/menu/manage/navigation' => t('Navigation'),
+      'admin/structure/menu/manage/tools' => t('Tools'),
     );
     $this->assertBreadcrumb("admin/structure/menu/item/6/edit", $trail);
-    $this->assertBreadcrumb('admin/structure/menu/manage/navigation/edit', $trail);
-    $this->assertBreadcrumb('admin/structure/menu/manage/navigation/add', $trail);
+    $this->assertBreadcrumb('admin/structure/menu/manage/tools/edit', $trail);
+    $this->assertBreadcrumb('admin/structure/menu/manage/tools/add', $trail);
 
     // Verify Node administration breadcrumbs.
     $trail = $admin + array(
@@ -187,14 +187,14 @@ class BreadcrumbTest extends MenuTestBase {
     $this->assertBreadcrumb('node', $trail);
 
     // Verify node breadcrumbs (in menu).
-    // Do this separately for Main menu and Navigation menu, since only the
+    // Do this separately for Main menu and Tools menu, since only the
     // latter is a preferred menu by default.
     // @todo Also test all themes? Manually testing led to the suspicion that
     //   breadcrumbs may differ, possibly due to template.php overrides.
-    $menus = array('main-menu', 'navigation');
+    $menus = array('main', 'tools');
     // Alter node type menu settings.
     variable_set("menu_options_$type", $menus);
-    variable_set("menu_parent_$type", 'navigation:0');
+    variable_set("menu_parent_$type", 'tools:0');
 
     foreach ($menus as $menu) {
       // Create a parent node in the current menu.
@@ -256,15 +256,15 @@ class BreadcrumbTest extends MenuTestBase {
       $trail = array();
       $this->assertBreadcrumb('node', $trail);
 
-      if ($menu == 'navigation') {
+      if ($menu == 'tools') {
         $parent = $node2;
         $child = $node3;
       }
     }
 
-    // Create a Navigation menu link for 'node', move the last parent node menu
+    // Create a Tools menu link for 'node', move the last parent node menu
     // link below it, and verify a full breadcrumb for the last child node.
-    $menu = 'navigation';
+    $menu = 'tools';
     $edit = array(
       'link_title' => 'Root',
       'link_path' => 'node',
@@ -293,7 +293,7 @@ class BreadcrumbTest extends MenuTestBase {
     $this->assertBreadcrumb("node/{$child->nid}", $trail, $child->title, $tree);
 
     // Add a taxonomy term/tag to last node, and add a link for that term to the
-    // Navigation menu.
+    // Tools menu.
     $tags = array(
       'Drupal' => array(),
       'Breadcrumbs' => array(),
@@ -354,7 +354,7 @@ class BreadcrumbTest extends MenuTestBase {
       // ('taxonomy/term/%') should never be translated and appear in any menu
       // other than the breadcrumb trail.
       $elements = $this->xpath('//div[@id=:menu]/descendant::a[@href=:href]', array(
-        ':menu' => 'block-system-navigation',
+        ':menu' => 'block-system-tools',
         ':href' => url($link['link_path']),
       ));
       $this->assertTrue(count($elements) == 1, "Link to {$link['link_path']} appears only once.");
@@ -420,7 +420,7 @@ class BreadcrumbTest extends MenuTestBase {
     );
     $this->assertBreadcrumb('user/' . $this->web_user->uid . '/edit', $trail, $this->web_user->name, $tree);
 
-    // Add a Navigation menu links for 'user' and $this->admin_user.
+    // Add a Tools menu links for 'user' and $this->admin_user.
     // Although it may be faster to manage these links via low-level API
     // functions, there's a lot that can go wrong in doing so.
     $this->drupalLogin($this->admin_user);

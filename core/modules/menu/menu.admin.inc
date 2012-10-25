@@ -377,7 +377,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
   $options = menu_parent_options(menu_get_menus(), $item);
   $default = $item['menu_name'] . ':' . $item['plid'];
   if (!isset($options[$default])) {
-    $default = 'navigation:0';
+    $default = 'tools:0';
   }
   $form['parent'] = array(
     '#type' => 'select',

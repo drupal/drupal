@@ -376,7 +376,7 @@ function menu_parent_options($menus, $item, $type = '') {
   }
   else {
     // If a node type is set, use all available menus for this type.
-    $type_menus = variable_get('menu_options_' . $type, array('main-menu' => 'main-menu'));
+    $type_menus = variable_get('menu_options_' . $type, array('main' => 'main'));
     foreach ($type_menus as $menu) {
       $available_menus[$menu] = $menu;
     }
@@ -569,12 +569,12 @@ function menu_node_predelete(Node $node) {
 function menu_node_prepare(Node $node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
-    $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main-menu:0'), ':');
+    $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main:0'), ':');
     $item = array();
     if (isset($node->nid)) {
       $mlid = FALSE;
       // Give priority to the default menu
-      $type_menus = variable_get('menu_options_' . $node->type, array('main-menu' => 'main-menu'));
+      $type_menus = variable_get('menu_options_' . $node->type, array('main' => 'main'));
       if (in_array($menu_name, $type_menus)) {
         $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", 0, 1, array(
           ':path' => 'node/' . $node->nid,
@@ -690,7 +690,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
     '#description' => t('Shown when hovering over the menu link.'),
   );
 
-  $default = ($link['mlid'] ? $link['menu_name'] . ':' . $link['plid'] : variable_get('menu_parent_' . $type, 'main-menu:0'));
+  $default = ($link['mlid'] ? $link['menu_name'] . ':' . $link['plid'] : variable_get('menu_parent_' . $type, 'main:0'));
   // If the current parent menu item is not present in options, use the first
   // available option as default value.
   // @todo User should not be allowed to access menu link settings in such a
@@ -762,7 +762,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   $form['menu']['menu_options'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Available menus'),
-    '#default_value' => variable_get('menu_options_' . $type->type, array('main-menu')),
+    '#default_value' => variable_get('menu_options_' . $type->type, array('main')),
     '#options' => $menu_options,
     '#description' => t('The menus available to place links in for this content type.'),
   );
@@ -774,7 +774,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   $form['menu']['menu_parent'] = array(
     '#type' => 'select',
     '#title' => t('Default parent item'),
-    '#default_value' => variable_get('menu_parent_' . $type->type, 'main-menu:0'),
+    '#default_value' => variable_get('menu_parent_' . $type->type, 'main:0'),
     '#options' => $options,
     '#description' => t('Choose the menu item to be the default parent for a new link in the content authoring form.'),
     '#attributes' => array('class' => array('menu-title-select')),

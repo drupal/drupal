@@ -319,10 +319,10 @@ class BlockTest extends WebTestBase {
    * Test configuring and moving a module-define block to specific regions.
    */
   function testBlock() {
-    // Select the Navigation block to be configured and moved.
+    // Select the Administration menu block to be configured and moved.
     $block = array();
     $block['module'] = 'system';
-    $block['delta'] = 'management';
+    $block['delta'] = 'admin';
     $block['title'] = $this->randomName(8);
 
     // Set block title to confirm that interface works and override any custom titles.
@@ -354,13 +354,13 @@ class BlockTest extends WebTestBase {
     $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-block-' . $bid));
     $this->assertNoFieldByXPath($xpath, FALSE, 'Custom block found in no regions.');
 
-    // For convenience of developers, put the navigation block back.
+    // For convenience of developers, put the Administration menu block back.
     $edit = array();
     $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), 'Block successfully move to first sidebar region.');
 
-    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', array('title' => 'Navigation'), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', array('title' => 'Tools'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
   }
 

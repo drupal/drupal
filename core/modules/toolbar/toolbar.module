@@ -278,9 +278,9 @@ function toolbar_view() {
  */
 function toolbar_get_menu_tree() {
   $tree = array();
-  $admin_link = db_query('SELECT * FROM {menu_links} WHERE menu_name = :menu_name AND module = :module AND link_path = :path', array(':menu_name' => 'management', ':module' => 'system', ':path' => 'admin'))->fetchAssoc();
+  $admin_link = db_query('SELECT * FROM {menu_links} WHERE menu_name = :menu_name AND module = :module AND link_path = :path', array(':menu_name' => 'admin', ':module' => 'system', ':path' => 'admin'))->fetchAssoc();
   if ($admin_link) {
-    $tree = menu_build_tree('management', array(
+    $tree = menu_build_tree('admin', array(
       'expanded' => array($admin_link['mlid']),
       'min_depth' => $admin_link['depth'] + 1,
       'max_depth' => $admin_link['depth'] + 1,

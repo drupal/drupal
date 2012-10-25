@@ -1751,10 +1751,10 @@ function menu_set_custom_theme() {
  */
 function menu_list_system_menus() {
   return array(
-    'navigation' => 'Navigation',
-    'management' => 'Management',
-    'user-menu' => 'User menu',
-    'main-menu' => 'Main menu',
+    'tools' => 'Tools',
+    'admin' => 'Administration',
+    'account' => 'User account menu',
+    'main' => 'Main navigation',
   );
 }
 
@@ -1765,7 +1765,7 @@ function menu_main_menu() {
   $config = config('menu.settings');
   $menu_enabled = module_exists('menu');
   // When menu module is not enabled, we need a hardcoded default value.
-  $main_links_source = $menu_enabled ? $config->get('main_links') : 'main-menu';
+  $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
   return menu_navigation_links($main_links_source);
 }
 
@@ -1776,8 +1776,8 @@ function menu_secondary_menu() {
   $config = config('menu.settings');
   $menu_enabled = module_exists('menu');
   // When menu module is not enabled, we need a hardcoded default value.
-  $main_links_source = $menu_enabled ? $config->get('main_links') : 'main-menu';
-  $secondary_links_source = $menu_enabled ? $config->get('secondary_links') : 'user-menu';
+  $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
+  $secondary_links_source = $menu_enabled ? $config->get('secondary_links') : 'account';
 
   // If the secondary menu source is set as the primary menu, we display the
   // second level of the primary menu.
@@ -2109,7 +2109,7 @@ function menu_local_tasks($level = 0) {
  * @param $args
  *   A list of dynamic path arguments to append to $parent_path to form the
  *   fully-qualified menu router path, for example array(123) for a certain
- *   node or array('system', 'navigation') for a certain block.
+ *   node or array('system', 'tools') for a certain block.
  *
  * @return
  *   A list of menu router items that are local tasks for the passed-in path.
@@ -2267,7 +2267,7 @@ function theme_menu_local_tasks(&$variables) {
  *   'menu_default_active_menus' variable may be used to assert a menu order
  *   different from the order of creation, or to prevent a particular menu from
  *   being used at all in the active trail.
- *   E.g., $conf['menu_default_active_menus'] = array('navigation', 'main-menu')
+ *   E.g., $conf['menu_default_active_menus'] = array('tools', 'main')
  */
 function menu_set_active_menu_names($menu_names = NULL) {
   $active = &drupal_static(__FUNCTION__);
@@ -2615,7 +2615,7 @@ function menu_link_load($mlid) {
 /**
  * Clears the cached cached data for a single named menu.
  */
-function menu_cache_clear($menu_name = 'navigation') {
+function menu_cache_clear($menu_name = 'tools') {
   cache('menu')->invalidateTags(array('menu' => $menu_name));
   // Also clear the menu system static caches.
   menu_reset_static_cache();
@@ -2749,7 +2749,7 @@ function _menu_link_build($item) {
   // the menu links generated automatically from entries in {menu_router}.
   $item['module'] = 'system';
   $item += array(
-    'menu_name' => 'navigation',
+    'menu_name' => 'tools',
     'link_title' => $item['title'],
     'link_path' => $item['path'],
     'hidden' => 0,
@@ -2996,7 +2996,7 @@ function _menu_delete_item($item, $force = FALSE) {
  *     normalized first by calling drupal_get_normal_path() on it.
  *   - link_title: (required) Title to appear in menu for the link.
  *   - menu_name: (optional) The machine name of the menu for the link.
- *     Defaults to 'navigation'.
+ *     Defaults to 'tools'.
  *   - weight: (optional) Integer to determine position in menu. Default is 0.
  *   - expanded: (optional) Boolean that determines if the item is expanded.
  *   - options: (optional) An array of options, see l() for more.
@@ -3023,7 +3023,7 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
   $item['external'] = (url_is_external($item['link_path'])  || $item['link_path'] == '<front>') ? 1 : 0;
   // Load defaults.
   $item += array(
-    'menu_name' => 'navigation',
+    'menu_name' => 'tools',
     'weight' => 0,
     'link_title' => '',
     'hidden' => 0,

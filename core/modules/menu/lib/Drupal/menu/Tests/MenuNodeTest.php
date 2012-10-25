@@ -49,15 +49,14 @@ class MenuNodeTest extends WebTestBase {
    * Test creating, editing, deleting menu links via node form widget.
    */
   function testMenuNodeFormWidget() {
-    // Enable Navigation menu as available menu.
+    // Enable Tools menu as available menu.
     $edit = array(
-      'menu_options[navigation]' => 1,
+      'menu_options[tools]' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    // Change default parent item to Navigation menu, so we can assert more
-    // easily.
+    // Change default parent item to Tools menu, so we can assert more easily.
     $edit = array(
-      'menu_parent' => 'navigation:0',
+      'menu_parent' => 'tools:0',
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
 
@@ -106,24 +105,25 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalGet('test-page');
     $this->assertNoLink($node_title);
 
-    // Add a menu link to the Management menu.
+    // Add a menu link to the Administration menu.
     $item = array(
       'link_path' => 'node/' . $node->nid,
       'link_title' => $this->randomName(16),
-      'menu_name' => 'management',
+      'menu_name' => 'admin',
     );
     menu_link_save($item);
 
-    // Assert that disabled Management menu is not shown on the node/$nid/edit page.
+    // Assert that disabled Administration menu is not shown on the
+    // node/$nid/edit page.
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertText('Provide a menu link', 'Link in not allowed menu not shown in node edit form');
-    // Assert that the link is still in the management menu after save.
+    // Assert that the link is still in the Administration menu after save.
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $link = menu_link_load($item['mlid']);
     $this->assertTrue($link, 'Link in not allowed menu still exists after saving node');
 
-    // Move the menu link back to the Navigation menu.
-    $item['menu_name'] = 'navigation';
+    // Move the menu link back to the Tools menu.
+    $item['menu_name'] = 'tools';
     menu_link_save($item);
     // Create a second node.
     $child_node = $this->drupalCreateNode(array('type' => 'article'));
@@ -137,9 +137,9 @@ class MenuNodeTest extends WebTestBase {
     // Edit the first node.
     $this->drupalGet('node/'. $node->nid .'/edit');
     // Assert that it is not possible to set the parent of the first node to itself or the second node.
-    $this->assertNoOption('edit-menu-parent', 'navigation:'. $item['mlid']);
-    $this->assertNoOption('edit-menu-parent', 'navigation:'. $child_item['mlid']);
-    // Assert that unallowed Management menu is not available in options.
-    $this->assertNoOption('edit-menu-parent', 'management:0');
+    $this->assertNoOption('edit-menu-parent', 'tools:'. $item['mlid']);
+    $this->assertNoOption('edit-menu-parent', 'tools:'. $child_item['mlid']);
+    // Assert that unallowed Administration menu is not available in options.
+    $this->assertNoOption('edit-menu-parent', 'admin:0');
   }
 }

@@ -33,7 +33,7 @@ class MenuTest extends WizardTestBase {
     $view['page[title]'] = $this->randomName(16);
     $view['page[path]'] = $this->randomName(16);
     $view['page[link]'] = 1;
-    $view['page[link_properties][menu_name]'] = 'main-menu';
+    $view['page[link_properties][menu_name]'] = 'main';
     $view['page[link_properties][title]'] = $this->randomName(16);
     $this->drupalPost('admin/structure/views/add', $view, t('Save & exit'));
     $this->assertResponse(200);
@@ -46,7 +46,7 @@ class MenuTest extends WizardTestBase {
     $this->assertLinkByHref(url($view['page[path]']));
 
     // Make sure the link is associated with the main menu.
-    $links = menu_load_links('main-menu');
+    $links = menu_load_links('main');
     $found = FALSE;
     foreach ($links as $link) {
       if ($link['link_path'] == $view['page[path]']) {

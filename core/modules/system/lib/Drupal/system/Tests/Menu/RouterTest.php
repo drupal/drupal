@@ -45,7 +45,7 @@ class RouterTest extends WebTestBase {
     db_merge('block')
       ->key(array(
         'module' => 'system',
-        'delta' => 'navigation',
+        'delta' => 'tools',
         'theme' => 'bartik',
       ))
       ->fields(array(
@@ -265,7 +265,7 @@ class RouterTest extends WebTestBase {
 
     // Move second link to the main-menu, to test caching later on.
     db_update('menu_links')
-      ->fields(array('menu_name' => 'main-menu'))
+      ->fields(array('menu_name' => 'main'))
       ->condition('link_title', 'Menu link #1-main')
       ->condition('customized', 0)
       ->condition('module', 'menu_test')

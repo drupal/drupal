@@ -110,7 +110,7 @@ function standard_install() {
     ),
     array(
       'module' => 'system',
-      'delta' => 'navigation',
+      'delta' => 'tools',
       'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
@@ -397,7 +397,7 @@ function standard_install() {
   $item = array(
     'link_title' => st('Home'),
     'link_path' => '<front>',
-    'menu_name' => 'main-menu',
+    'menu_name' => 'main',
   );
   menu_link_save($item);
 

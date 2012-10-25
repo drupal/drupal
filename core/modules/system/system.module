@@ -608,7 +608,7 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
     'page callback' => 'system_admin_menu_block_page',
     'weight' => 9,
-    'menu_name' => 'management',
+    'menu_name' => 'admin',
     'file' => 'system.admin.inc',
   );
   $items['admin/compact'] = array(

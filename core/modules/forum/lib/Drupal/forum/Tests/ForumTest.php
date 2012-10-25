@@ -250,11 +250,11 @@ class ForumTest extends WebTestBase {
     $this->drupalLogin($user);
 
     // Retrieve forum menu id.
-    $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'forum' AND menu_name = 'navigation' AND module = 'system' ORDER BY mlid ASC", 0, 1)->fetchField();
+    $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'forum' AND menu_name = 'tools' AND module = 'system' ORDER BY mlid ASC", 0, 1)->fetchField();
 
-    // Add forum to navigation menu.
+    // Add forum to the Tools menu.
     $edit = array();
-    $this->drupalPost('admin/structure/menu/manage/navigation', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/menu/manage/tools', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
     // Edit forum taxonomy.

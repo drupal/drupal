@@ -28,7 +28,7 @@ class MenuTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Menu link creation/deletion',
-      'description' => 'Add a custom menu, add menu links to the custom menu and Navigation menu, check their data, and delete them using the menu module UI.',
+      'description' => 'Add a custom menu, add menu links to the custom menu and Tools menu, check their data, and delete them using the menu module UI.',
       'group' => 'Menu'
     );
   }
@@ -90,8 +90,7 @@ class MenuTest extends WebTestBase {
   }
 
   /**
-   * Test standard menu functionality using navigation menu.
-   *
+   * Tests standard menu functionality using the Tools menu.
    */
   function doStandardMenuTests() {
     $this->doMenuTests();
@@ -99,8 +98,7 @@ class MenuTest extends WebTestBase {
   }
 
   /**
-   * Test custom menu functionality using navigation menu.
-   *
+   * Tests custom menu functionality using the Tools menu.
    */
   function doCustomMenuTests() {
     $this->menu = $this->addCustomMenu();
@@ -207,10 +205,9 @@ class MenuTest extends WebTestBase {
   }
 
   /**
-   * Test menu functionality using navigation menu.
-   *
+   * Tests menu functionality using the Tools menu.
    */
-  function doMenuTests($menu_name = 'navigation') {
+  function doMenuTests($menu_name = 'tools') {
     // Add nodes to use as links for menu links.
     $node1 = $this->drupalCreateNode(array('type' => 'article'));
     $node2 = $this->drupalCreateNode(array('type' => 'article'));
@@ -307,7 +304,7 @@ class MenuTest extends WebTestBase {
    * @param string $weight Menu weight
    * @return array Menu link created.
    */
-  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'navigation', $expanded = TRUE, $weight = '0') {
+  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'tools', $expanded = TRUE, $weight = '0') {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
@@ -341,7 +338,7 @@ class MenuTest extends WebTestBase {
    *
    * @param string $menu_name Menu name.
    */
-  function addInvalidMenuLink($menu_name = 'navigation') {
+  function addInvalidMenuLink($menu_name = 'tools') {
     foreach (array('-&-', 'admin/people/permissions', '#') as $link_path) {
       $edit = array(
         'link_path' => $link_path,
@@ -571,11 +568,11 @@ class MenuTest extends WebTestBase {
       $this->assertText(t('Menus'), 'Menu build overview node was displayed');
     }
 
-    // View navigation menu customization node.
-    $this->drupalGet('admin/structure/menu/manage/navigation');
+    // View tools menu customization node.
+    $this->drupalGet('admin/structure/menu/manage/tools');
         $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Navigation'), 'Navigation menu node was displayed');
+      $this->assertText(t('Tools'), 'Tools menu node was displayed');
     }
 
     // View menu edit node.

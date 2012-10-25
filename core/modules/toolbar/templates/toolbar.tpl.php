@@ -10,7 +10,7 @@
  *    It includes the 'class' information, which includes:
  *   - toolbar: The current template type, i.e., "theming hook".
  * - $toolbar['toolbar_user']: User account / logout links.
- * - $toolbar['toolbar_menu']: Top level management menu links.
+ * - $toolbar['toolbar_menu']: Top level Administration menu links.
  * - $toolbar['toolbar_drawer']: A place for extended toolbar content.
  *
  * @see template_preprocess()

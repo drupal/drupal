@@ -1033,7 +1033,7 @@ function system_schema() {
     'description' => 'Contains the individual links within a menu.',
     'fields' => array(
      'menu_name' => array(
-        'description' => "The menu name. All links with the same menu name (such as 'navigation') are part of the same menu.",
+        'description' => "The menu name. All links with the same menu name (such as 'tools') are part of the same menu.",
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
@@ -2185,6 +2185,24 @@ function system_update_8030() {
     'allow_authorize_operations' => 'allow_operations',
     'authorize_filetransfer_default' => 'filetransfer_default',
   ));
+}
+
+/**
+ * Rename default menu names.
+ */
+function system_update_8031() {
+  $map = array(
+    'navigation' => 'tools',
+    'management' => 'admin',
+    'user-menu' => 'account',
+    'main-menu' => 'main',
+  );
+  foreach ($map as $old => $new) {
+    db_update('menu_links')
+      ->condition('menu_name', $old)
+      ->fields(array('menu_name' => $new))
+      ->execute();
+  }
 }
 
 /**

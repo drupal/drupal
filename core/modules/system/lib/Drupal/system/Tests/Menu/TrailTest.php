@@ -33,9 +33,9 @@ class TrailTest extends MenuTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
 
-    // This test puts menu links in the Navigation menu and then tests for
-    // their presence on the page, so we need to ensure that the Navigation
-    // block will be displayed in all active themes.
+    // This test puts menu links in the Tools menu and then tests for their
+    // presence on the page, so we need to ensure that the Tools block will be
+    // displayed in all active themes.
     db_update('block')
       ->fields(array(
         // Use a region that is valid for all themes.
@@ -43,11 +43,11 @@ class TrailTest extends MenuTestBase {
         'status' => 1,
       ))
       ->condition('module', 'system')
-      ->condition('delta', 'navigation')
+      ->condition('delta', 'tools')
       ->execute();
 
-    // This test puts menu links in the Management menu and then tests for
-    // their presence on the page, so we need to ensure that the Management
+    // This test puts menu links in the Administration menu and then tests for
+    // their presence on the page, so we need to ensure that the Administration
     // block will be displayed in all active themes.
     db_update('block')
       ->fields(array(
@@ -56,7 +56,7 @@ class TrailTest extends MenuTestBase {
         'status' => 1,
       ))
       ->condition('module', 'system')
-      ->condition('delta', 'management')
+      ->condition('delta', 'admin')
       ->execute();
   }
 
@@ -75,7 +75,7 @@ class TrailTest extends MenuTestBase {
     // the menu_test_menu_trail_callback() callback (used by all paths in these
     // tests) issues an overriding call to menu_trail_set_path().
     $test_menu_path = array(
-      'menu_name' => 'management',
+      'menu_name' => 'admin',
       'path' => 'admin/config/system/site-information',
     );
 
@@ -87,12 +87,12 @@ class TrailTest extends MenuTestBase {
       'menu-test/menu-trail' => t('Menu trail - Case 1'),
     );
 
-    // Test the tree generation for the Navigation menu.
+    // Test the tree generation for the Tools menu.
     variable_del('menu_test_menu_tree_set_path');
     $this->assertBreadcrumb('menu-test/menu-trail', $breadcrumb, t('Menu trail - Case 1'), $tree);
 
-    // Override the active trail for the Management tree; it should not affect
-    // the Navigation tree.
+    // Override the active trail for the Administration tree; it should not
+    // affect the Tools tree.
     variable_set('menu_test_menu_tree_set_path', $test_menu_path);
     $this->assertBreadcrumb('menu-test/menu-trail', $breadcrumb, t('Menu trail - Case 1'), $tree);
 
@@ -113,12 +113,12 @@ class TrailTest extends MenuTestBase {
       'admin/config/system/site-information' => t('Site information'),
     );
 
-    // Test the tree generation for the Management menu.
+    // Test the tree generation for the Administration menu.
     variable_del('menu_test_menu_tree_set_path');
     $this->assertBreadcrumb('admin/config/development/menu-trail', $breadcrumb, t('Menu trail - Case 2'), $tree);
 
-    // Override the active trail for the Management tree; it should affect the
-    // breadcrumbs and Management tree.
+    // Override the active trail for the Administration tree; it should affect
+    // the breadcrumbs and Administration tree.
     variable_set('menu_test_menu_tree_set_path', $test_menu_path);
     $this->assertBreadcrumb('admin/config/development/menu-trail', $override_breadcrumb, t('Menu trail - Case 2'), $override_tree);
   }
