@@ -36,29 +36,29 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
    */
   public function testLanguageUpgrade() {
     db_update('users')->fields(array('language' => 'ca'))->condition('uid', '1')->execute();
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Ensure Catalan was properly upgraded to be the new default language.
-    $this->assertTrue(language_default()->langcode == 'ca', t('Catalan is the default language'));
+    $this->assertTrue(language_default()->langcode == 'ca', 'Catalan is the default language');
     $languages = language_list(LANGUAGE_ALL);
     foreach ($languages as $language) {
-      $this->assertTrue($language->default == ($language->langcode == 'ca'), t('@language default property properly set', array('@language' => $language->name)));
+      $this->assertTrue($language->default == ($language->langcode == 'ca'), format_string('@language default property properly set', array('@language' => $language->name)));
     }
 
     // Check that both comments display on the node.
     $this->drupalGet('node/50');
-    $this->assertText('Node title 50', t('Node 50 displayed after update.'));
-    $this->assertText('First test comment', t('Comment 1 displayed after update.'));
-    $this->assertText('Reply to first test comment', t('Comment 2 displayed after update.'));
+    $this->assertText('Node title 50', 'Node 50 displayed after update.');
+    $this->assertText('First test comment', 'Comment 1 displayed after update.');
+    $this->assertText('Reply to first test comment', 'Comment 2 displayed after update.');
 
     // Directly check the comment language property on the first comment.
     $comment = db_query('SELECT * FROM {comment} WHERE cid = :cid', array(':cid' => 1))->fetchObject();
-    $this->assertTrue($comment->langcode == 'und', t('Comment 1 language code found.'));
+    $this->assertTrue($comment->langcode == 'und', 'Comment 1 language code found.');
 
     // Ensure that the language switcher has been correctly upgraded. We need to
     // assert the expected HTML id because the block might appear even if the
     // language negotiation settings are not properly upgraded.
-    $this->assertTrue($this->xpath('//div[@id="block-language-language-interface"]'), t('The language switcher block is being correctly showed.'));
+    $this->assertTrue($this->xpath('//div[@id="block-language-language-interface"]'), 'The language switcher block is being correctly showed.');
 
     // Test that the 'language' property was properly renamed to 'langcode'.
     $language_none_nid = 50;
@@ -111,7 +111,7 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     // Check that locale_language_providers_weight_language is correctly
     // renamed.
     $current_weights = update_variable_get('language_negotiation_methods_weight_language_interface', array());
-    $this->assertTrue(serialize($expected_weights) == serialize($current_weights), t('Language negotiation method weights upgraded.'));
+    $this->assertTrue(serialize($expected_weights) == serialize($current_weights), 'Language negotiation method weights upgraded.');
     $this->assertTrue(isset($current_weights['language-selected']), 'Language-selected is present.');
     $this->assertFalse(isset($current_weights['language-default']), 'Language-default is not present.');
 
@@ -145,11 +145,11 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     db_update('languages')->fields(array('domain' => 'http://' . $language_domain . ':8888'))->condition('language', 'ca')->execute();
     $this->variable_set('locale_language_negotiation_url_part', 1);
 
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     language_negotiation_include();
     $domains = language_negotiation_url_domains();
-    $this->assertTrue($domains['ca'] == $language_domain, t('Language domain for Catalan properly upgraded.'));
+    $this->assertTrue($domains['ca'] == $language_domain, 'Language domain for Catalan properly upgraded.');
   }
 
   /**
@@ -159,11 +159,11 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     // Remove all plural translations from the database.
     db_delete('locales_target')->condition('plural', 0, '<>')->execute();
 
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check if locale_update_8005() is succesfully completed by checking
     // whether index 'plural' has been removed.
-    $this->assertFalse(db_index_exists('locales_target', 'plural'), t('Translations without plurals upgraded.'));
+    $this->assertFalse(db_index_exists('locales_target', 'plural'), 'Translations without plurals upgraded.');
   }
 
   /**
@@ -176,13 +176,13 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
       'module' => 'translation',
     ))->execute();
 
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check that translate content role doesn't exist on database.
     $old_permission_exists = db_query('SELECT * FROM {role_permission} WHERE permission LIKE ?', array('translate content'))->fetchObject();
-    $this->assertFalse($old_permission_exists, t('No translate content role left on database.'));
+    $this->assertFalse($old_permission_exists, 'No translate content role left on database.');
     // Check that translate content has been renamed to translate all content.
     $new_permission_exists = db_query('SELECT * FROM {role_permission} WHERE permission LIKE ?', array('translate all content'))->fetchObject();
-    $this->assertTrue($new_permission_exists, t('Rename role translate content to translate all content was completed successfully.'));
+    $this->assertTrue($new_permission_exists, 'Rename role translate content to translate all content was completed successfully.');
   }
 }

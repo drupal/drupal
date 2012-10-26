@@ -44,22 +44,22 @@ class ThemeTest extends WebTestBase {
     config('system.site')->set('page.front', 'nobody-home')->save();
     $args = array('node', '1', 'edit');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), t('Found expected node edit page suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), 'Found expected node edit page suggestions');
     // Check attack vectors.
     $args = array('node', '\\1');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\ from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\ from suggestions');
     $args = array('node', '1/');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid / from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid / from suggestions');
     $args = array('node', "1\0");
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\0 from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\0 from suggestions');
     // Define path with hyphens to be used to generate suggestions.
     $args = array('node', '1', 'hyphen-path');
     $result = array('page__node', 'page__node__%', 'page__node__1', 'page__node__hyphen_path');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, $result, t('Found expected page suggestions for paths containing hyphens.'));
+    $this->assertEqual($suggestions, $result, 'Found expected page suggestions for paths containing hyphens.');
   }
 
   /**
@@ -90,7 +90,7 @@ class ThemeTest extends WebTestBase {
     $suggestions = theme_get_suggestions(array('node'), 'page');
     // Set it back to not annoy the batch runner.
     _current_path($original_path);
-    $this->assertTrue(in_array('page__front', $suggestions), t('Front page template was suggested.'));
+    $this->assertTrue(in_array('page__front', $suggestions), 'Front page template was suggested.');
   }
 
   /**
@@ -98,7 +98,7 @@ class ThemeTest extends WebTestBase {
    */
   function testAlter() {
     $this->drupalGet('theme-test/alter');
-    $this->assertText('The altered data is test_theme_theme_test_alter_alter was invoked.', t('The theme was able to implement an alter hook during page building before anything was rendered.'));
+    $this->assertText('The altered data is test_theme_theme_test_alter_alter was invoked.', 'The theme was able to implement an alter hook during page building before anything was rendered.');
   }
 
   /**
@@ -115,7 +115,7 @@ class ThemeTest extends WebTestBase {
     $config->set('preprocess.css', 0);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
-    $this->assertNoText('system.base.css', t('The theme\'s .info file is able to override a module CSS file from being added to the page.'));
+    $this->assertNoText('system.base.css', 'The theme\'s .info file is able to override a module CSS file from being added to the page.');
 
     // Also test with aggregation enabled, simply ensuring no PHP errors are
     // triggered during drupal_build_css_cache() when a source file doesn't
@@ -134,7 +134,7 @@ class ThemeTest extends WebTestBase {
   function testTemplateOverride() {
     variable_set('theme_default', 'test_theme');
     $this->drupalGet('theme-test/template-test');
-    $this->assertText('Success: Template overridden.', t('Template overridden by defined \'template\' filename.'));
+    $this->assertText('Success: Template overridden.', 'Template overridden by defined \'template\' filename.');
   }
 
   /**
@@ -143,19 +143,19 @@ class ThemeTest extends WebTestBase {
   function testListThemes() {
     $themes = list_themes();
     // Check if drupal_theme_access() retrieves enabled themes properly from list_themes().
-    $this->assertTrue(drupal_theme_access('test_theme'), t('Enabled theme detected'));
+    $this->assertTrue(drupal_theme_access('test_theme'), 'Enabled theme detected');
     // Check if list_themes() returns disabled themes.
-    $this->assertTrue(array_key_exists('test_basetheme', $themes), t('Disabled theme detected'));
+    $this->assertTrue(array_key_exists('test_basetheme', $themes), 'Disabled theme detected');
     // Check for base theme and subtheme lists.
     $base_theme_list = array('test_basetheme' => 'Theme test base theme');
     $sub_theme_list = array('test_subtheme' => 'Theme test subtheme');
-    $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, t('Base theme\'s object includes list of subthemes.'));
-    $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, t('Subtheme\'s object includes list of base themes.'));
+    $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, 'Base theme\'s object includes list of subthemes.');
+    $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, 'Subtheme\'s object includes list of base themes.');
     // Check for theme engine in subtheme.
-    $this->assertIdentical($themes['test_subtheme']->engine, 'phptemplate', t('Subtheme\'s object includes the theme engine.'));
+    $this->assertIdentical($themes['test_subtheme']->engine, 'phptemplate', 'Subtheme\'s object includes the theme engine.');
     // Check for theme engine prefix.
-    $this->assertIdentical($themes['test_basetheme']->prefix, 'phptemplate', t('Base theme\'s object includes the theme engine prefix.'));
-    $this->assertIdentical($themes['test_subtheme']->prefix, 'phptemplate', t('Subtheme\'s object includes the theme engine prefix.'));
+    $this->assertIdentical($themes['test_basetheme']->prefix, 'phptemplate', 'Base theme\'s object includes the theme engine prefix.');
+    $this->assertIdentical($themes['test_subtheme']->prefix, 'phptemplate', 'Subtheme\'s object includes the theme engine prefix.');
   }
 
   /**
@@ -163,9 +163,9 @@ class ThemeTest extends WebTestBase {
    */
   function testThemeGetSetting() {
     $GLOBALS['theme_key'] = 'test_theme';
-    $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', t('theme_get_setting() uses the default theme automatically.'));
-    $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), t('Base theme\'s default settings values can be overridden by subtheme.'));
-    $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', t('Base theme\'s default settings values are inherited by subtheme.'));
+    $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', 'theme_get_setting() uses the default theme automatically.');
+    $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), 'Base theme\'s default settings values can be overridden by subtheme.');
+    $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', 'Base theme\'s default settings values are inherited by subtheme.');
   }
 
   /**

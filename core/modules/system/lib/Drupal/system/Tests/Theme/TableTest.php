@@ -29,8 +29,8 @@ class TableTest extends WebTestBase {
     $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
     $this->content = theme('table', array('header' => $header, 'rows' => $rows));
     $js = drupal_add_js();
-    $this->assertTrue(isset($js['core/misc/tableheader.js']), t('tableheader.js was included when $sticky = TRUE.'));
-    $this->assertRaw('sticky-enabled',  t('Table has a class of sticky-enabled when $sticky = TRUE.'));
+    $this->assertTrue(isset($js['core/misc/tableheader.js']), 'tableheader.js was included when $sticky = TRUE.');
+    $this->assertRaw('sticky-enabled',  'Table has a class of sticky-enabled when $sticky = TRUE.');
     drupal_static_reset('drupal_add_js');
   }
 
@@ -45,8 +45,8 @@ class TableTest extends WebTestBase {
     $colgroups = array();
     $this->content = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => $attributes, 'caption' => $caption, 'colgroups' => $colgroups, 'sticky' => FALSE));
     $js = drupal_add_js();
-    $this->assertFalse(isset($js['core/misc/tableheader.js']), t('tableheader.js was not included because $sticky = FALSE.'));
-    $this->assertNoRaw('sticky-enabled',  t('Table does not have a class of sticky-enabled because $sticky = FALSE.'));
+    $this->assertFalse(isset($js['core/misc/tableheader.js']), 'tableheader.js was not included because $sticky = FALSE.');
+    $this->assertNoRaw('sticky-enabled',  'Table does not have a class of sticky-enabled because $sticky = FALSE.');
     drupal_static_reset('drupal_add_js');
   }
 
@@ -63,7 +63,7 @@ class TableTest extends WebTestBase {
       ),
     );
     $this->content = theme('table', array('header' => $header, 'rows' => array(), 'empty' => t('No strings available.')));
-    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', t('Correct colspan was set on empty message.'));
-    $this->assertRaw('<thead><tr><th>Header 1</th>', t('Table header was printed.'));
+    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', 'Correct colspan was set on empty message.');
+    $this->assertRaw('<thead><tr><th>Header 1</th>', 'Table header was printed.');
   }
 }

@@ -47,7 +47,7 @@ class DependencyOrderingTest extends WebTestBase {
       'update_test_1_update_8002',
     );
     $actual_updates = array_keys(update_resolve_dependencies($starting_updates));
-    $this->assertEqual($expected_updates, $actual_updates, t('Updates within a single module run in the correct order.'));
+    $this->assertEqual($expected_updates, $actual_updates, 'Updates within a single module run in the correct order.');
   }
 
   /**
@@ -61,8 +61,8 @@ class DependencyOrderingTest extends WebTestBase {
     $update_order = array_keys(update_resolve_dependencies($starting_updates));
     // Make sure that each dependency is satisfied.
     $first_dependency_satisfied = array_search('update_test_2_update_8000', $update_order) < array_search('update_test_3_update_8000', $update_order);
-    $this->assertTrue($first_dependency_satisfied, t('The dependency of the second module on the first module is respected by the update function order.'));
+    $this->assertTrue($first_dependency_satisfied, 'The dependency of the second module on the first module is respected by the update function order.');
     $second_dependency_satisfied = array_search('update_test_3_update_8000', $update_order) < array_search('update_test_2_update_8001', $update_order);
-    $this->assertTrue($second_dependency_satisfied, t('The dependency of the first module on the second module is respected by the update function order.'));
+    $this->assertTrue($second_dependency_satisfied, 'The dependency of the first module on the second module is respected by the update function order.');
   }
 }

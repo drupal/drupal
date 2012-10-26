@@ -203,7 +203,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // The test should pass if there are no pending updates.
     $content = $this->drupalGetContent();
     if (strpos($content, t('No pending updates.')) !== FALSE) {
-      $this->pass(t('No pending updates and therefore no upgrade process to test.'));
+      $this->pass('No pending updates and therefore no upgrade process to test.');
       $this->pendingUpdates = FALSE;
       return TRUE;
     }
@@ -231,7 +231,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Check if there still are pending updates.
     $this->getUpdatePhp();
     $this->drupalPost(NULL, array(), t('Continue'));
-    if (!$this->assertText(t('No pending updates.'), t('No pending updates at the end of the update process.'))) {
+    if (!$this->assertText(t('No pending updates.'), 'No pending updates at the end of the update process.')) {
       throw new Exception('update.php still shows pending updates after execution.');
     }
 

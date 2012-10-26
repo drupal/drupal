@@ -36,7 +36,7 @@ class FilledMinimalUpgradePathTest extends UpgradePathTestBase {
    * Tests a successful point release update.
    */
   public function testFilledMinimalUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Hit the frontpage.
     $this->drupalGet('');
@@ -45,7 +45,7 @@ class FilledMinimalUpgradePathTest extends UpgradePathTestBase {
     // Verify that we are still logged in.
     $this->drupalGet('user');
     $this->clickLink(t('Edit'));
-    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), 'We are still logged in as admin at the end of the upgrade.');
 
     // Logout and verify that we can login back in with our initial password.
     $this->drupalLogout();
@@ -65,7 +65,7 @@ class FilledMinimalUpgradePathTest extends UpgradePathTestBase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('drupal', t('The site name is correctly displayed.'));
+    $this->assertText('drupal', 'The site name is correctly displayed.');
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -79,6 +79,6 @@ class FilledMinimalUpgradePathTest extends UpgradePathTestBase {
 
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
-    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+    $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
   }
 }

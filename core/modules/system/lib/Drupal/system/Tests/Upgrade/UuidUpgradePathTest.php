@@ -37,7 +37,7 @@ class UuidUpgradePathTest extends UpgradePathTestBase {
    * Tests a successful point release update.
    */
   public function testUuidUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Confirm that all {node} entries has uuid.
     $result = db_query('SELECT COUNT(*) FROM {comment} WHERE uuid IS NULL')->fetchField();

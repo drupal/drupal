@@ -80,7 +80,7 @@ class UpdateScriptTest extends WebTestBase {
     // go through the update process uninterrupted.
     $this->drupalGet($this->update_url, array('external' => TRUE));
     $this->drupalPost(NULL, array(), t('Continue'));
-    $this->assertText(t('No pending updates.'), t('End of update process was reached.'));
+    $this->assertText(t('No pending updates.'), 'End of update process was reached.');
     // Confirm that all caches were cleared.
     $this->assertText(t('hook_cache_flush() invoked for update_script_test.module.'), 'Caches were cleared when there were no requirements warnings or errors.');
 
@@ -97,8 +97,8 @@ class UpdateScriptTest extends WebTestBase {
     $this->clickLink('try again');
     $this->assertNoText('This is a requirements warning provided by the update_script_test module.');
     $this->drupalPost(NULL, array(), t('Continue'));
-    $this->drupalPost(NULL, array(), t('Apply pending updates'));
-    $this->assertText(t('The update_script_test_update_8000() update was executed successfully.'), t('End of update process was reached.'));
+    $this->drupalPost(NULL, array(), 'Apply pending updates');
+    $this->assertText(t('The update_script_test_update_8000() update was executed successfully.'), 'End of update process was reached.');
     // Confirm that all caches were cleared.
     $this->assertText(t('hook_cache_flush() invoked for update_script_test.module.'), 'Caches were cleared after resolving a requirements warning and applying updates.');
 
@@ -108,7 +108,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->clickLink('try again');
     $this->assertNoText('This is a requirements warning provided by the update_script_test module.');
     $this->drupalPost(NULL, array(), t('Continue'));
-    $this->assertText(t('No pending updates.'), t('End of update process was reached.'));
+    $this->assertText(t('No pending updates.'), 'End of update process was reached.');
     // Confirm that all caches were cleared.
     $this->assertText(t('hook_cache_flush() invoked for update_script_test.module.'), 'Caches were cleared after applying updates and re-running the script.');
 
@@ -133,7 +133,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->drupalLogin($this->update_user);
     $this->drupalGet($this->update_url, array('external' => TRUE));
     $final_theme_data = config('system.theme')->get('enabled');
-    $this->assertEqual($original_theme_data, $final_theme_data, t('Visiting update.php does not alter the information about themes stored in the database.'));
+    $this->assertEqual($original_theme_data, $final_theme_data, 'Visiting update.php does not alter the information about themes stored in the database.');
   }
 
   /**

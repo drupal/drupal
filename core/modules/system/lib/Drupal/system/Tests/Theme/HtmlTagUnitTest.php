@@ -27,10 +27,10 @@ class HtmlTagUnitTest extends UnitTestBase {
   function testThemeHtmlTag() {
     // Test auto-closure meta tag generation
     $tag['element'] = array('#tag' => 'meta', '#attributes' => array('name' => 'description', 'content' => 'Drupal test'));
-    $this->assertEqual('<meta name="description" content="Drupal test" />'."\n", theme_html_tag($tag), t('Test auto-closure meta tag generation.'));
+    $this->assertEqual('<meta name="description" content="Drupal test" />'."\n", theme_html_tag($tag), 'Test auto-closure meta tag generation.');
 
     // Test title tag generation
     $tag['element'] = array('#tag' => 'title', '#value' => 'title test');
-    $this->assertEqual('<title>title test</title>'."\n", theme_html_tag($tag), t('Test title tag generation.'));
+    $this->assertEqual('<title>title test</title>'."\n", theme_html_tag($tag), 'Test title tag generation.');
   }
 }

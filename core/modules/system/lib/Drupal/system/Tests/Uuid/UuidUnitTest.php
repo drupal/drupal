@@ -62,16 +62,16 @@ class UuidUnitTest extends UnitTestBase {
     $uuid_min = '00000000-0000-0000-0000-000000000000';
     $uuid_max = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
 
-    $this->assertTrue($this->uuid->isValid($uuid_fqdn), t('FQDN namespace UUID (@uuid) is valid', array('@uuid' => $uuid_fqdn)));
-    $this->assertTrue($this->uuid->isValid($uuid_min), t('Minimum UUID value (@uuid) is valid', array('@uuid' => $uuid_min)));
-    $this->assertTrue($this->uuid->isValid($uuid_max), t('Maximum UUID value (@uuid) is valid', array('@uuid' => $uuid_max)));
+    $this->assertTrue($this->uuid->isValid($uuid_fqdn), format_string('FQDN namespace UUID (@uuid) is valid', array('@uuid' => $uuid_fqdn)));
+    $this->assertTrue($this->uuid->isValid($uuid_min), format_string('Minimum UUID value (@uuid) is valid', array('@uuid' => $uuid_min)));
+    $this->assertTrue($this->uuid->isValid($uuid_max), format_string('Maximum UUID value (@uuid) is valid', array('@uuid' => $uuid_max)));
 
     // These are invalid UUIDs.
     $invalid_format = '0ab26e6b-f074-4e44-9da-601205fa0e976';
     $invalid_length = '0ab26e6b-f074-4e44-9daf-1205fa0e9761f';
 
-    $this->assertFalse($this->uuid->isValid($invalid_format), t('@uuid is not a valid UUID', array('@uuid' => $invalid_format)));
-    $this->assertFalse($this->uuid->isValid($invalid_length), t('@uuid is not a valid UUID', array('@uuid' => $invalid_length)));
+    $this->assertFalse($this->uuid->isValid($invalid_format), format_string('@uuid is not a valid UUID', array('@uuid' => $invalid_format)));
+    $this->assertFalse($this->uuid->isValid($invalid_length), format_string('@uuid is not a valid UUID', array('@uuid' => $invalid_length)));
 
   }
 }

@@ -207,14 +207,14 @@ class FunctionsTest extends WebTestBase {
     $html = drupal_render($render_array);
     $dom = new DOMDocument();
     $dom->loadHTML($html);
-    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered HTML.'));
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual($list_elements->length, 3, t('Three "li" tags found in the rendered HTML.'));
-    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', t('First expected link found.'));
-    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', t('Second expected link found.'));
-    $this->assertEqual($list_elements->item(2)->nodeValue, 'Second child link', t('Third expected link found.'));
-    $this->assertIdentical(strpos($html, 'Parent link copy'), FALSE, t('"Parent link copy" link not found.'));
-    $this->assertIdentical(strpos($html, 'Third child link'), FALSE, t('"Third child link" link not found.'));
+    $this->assertEqual($list_elements->length, 3, 'Three "li" tags found in the rendered HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', 'Second expected link found.');
+    $this->assertEqual($list_elements->item(2)->nodeValue, 'Second child link', 'Third expected link found.');
+    $this->assertIdentical(strpos($html, 'Parent link copy'), FALSE, '"Parent link copy" link not found.');
+    $this->assertIdentical(strpos($html, 'Third child link'), FALSE, '"Third child link" link not found.');
 
     // Now render 'first_child', followed by the rest of the links, and make
     // sure we get two separate <ul>'s with the appropriate links contained
@@ -225,20 +225,20 @@ class FunctionsTest extends WebTestBase {
     // First check the child HTML.
     $dom = new DOMDocument();
     $dom->loadHTML($child_html);
-    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered child HTML.'));
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered child HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual($list_elements->length, 2, t('Two "li" tags found in the rendered child HTML.'));
-    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link copy', t('First expected link found.'));
-    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', t('Second expected link found.'));
+    $this->assertEqual($list_elements->length, 2, 'Two "li" tags found in the rendered child HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link copy', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', 'Second expected link found.');
     // Then check the parent HTML.
     $dom = new DOMDocument();
     $dom->loadHTML($parent_html);
-    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered parent HTML.'));
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered parent HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual($list_elements->length, 2, t('Two "li" tags found in the rendered parent HTML.'));
-    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', t('First expected link found.'));
-    $this->assertEqual($list_elements->item(1)->nodeValue, 'Second child link', t('Second expected link found.'));
-    $this->assertIdentical(strpos($parent_html, 'First child link'), FALSE, t('"First child link" link not found.'));
-    $this->assertIdentical(strpos($parent_html, 'Third child link'), FALSE, t('"Third child link" link not found.'));
+    $this->assertEqual($list_elements->length, 2, 'Two "li" tags found in the rendered parent HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'Second child link', 'Second expected link found.');
+    $this->assertIdentical(strpos($parent_html, 'First child link'), FALSE, '"First child link" link not found.');
+    $this->assertIdentical(strpos($parent_html, 'Third child link'), FALSE, '"Third child link" link not found.');
   }
 }
