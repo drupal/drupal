@@ -452,10 +452,12 @@ $container->register('database', 'Drupal\Core\Database\Connection')
   ->setFactoryClass('Drupal\Core\Database\Database')
   ->setFactoryMethod('getConnection')
   ->addArgument('default');
+$container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
 $container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
   ->addArgument(new Reference('database'));
 $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
-  ->addArgument(new Reference('router.dumper'));
+  ->addArgument(new Reference('router.dumper'))
+  ->addArgument(new Reference('lock'));
 
 // Turn error reporting back on. From now on, only fatal errors (which are
 // not passed through the error handler) will cause a message to be printed.

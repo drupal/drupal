@@ -7,8 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Component\Routing\RouteCompilerInterface;
-use Symfony\Component\Routing\Route;
+use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface;
 
 /**
@@ -27,19 +26,37 @@ class RouteBuilder {
   protected $dumper;
 
   /**
+   * The used lock backend instance.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface $lock
+   */
+  protected $lock;
+
+  /**
    * Construcs the RouteBuilder using the passed MatcherDumperInterface.
    *
-   * @param Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface $dumper
+   * @param \Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface $dumper
    *   The matcher dumper used to store the route information.
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+   *   The lock backend.
    */
-  public function __construct(MatcherDumperInterface $dumper) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock) {
     $this->dumper = $dumper;
+    $this->lock = $lock;
   }
 
   /**
    * Rebuilds the route info and dumps to dumper.
    */
   public function rebuild() {
+    if (!$this->lock->acquire('router_rebuild')) {
+      // Wait for another request that is already doing this work.
+      // We choose to block here since otherwise the routes might not be
+      // available, resulting in a 404.
+      $this->lock->wait('router_rebuild');
+      return;
+    }
+
     // We need to manually call each module so that we can know which module
     // a given item came from.
 
@@ -49,6 +66,7 @@ class RouteBuilder {
       $this->dumper->addRoutes($routes);
       $this->dumper->dump(array('route_set' => $module));
     }
+    $this->lock->release('router_rebuild');
   }
 
 }
