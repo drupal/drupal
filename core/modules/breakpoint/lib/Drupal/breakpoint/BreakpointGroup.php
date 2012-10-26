@@ -30,7 +30,7 @@ class BreakpointGroup extends ConfigEntityBase {
    */
   public $uuid;
 
- /**
+  /**
    * The breakpoint group machine name.
    *
    * @var string

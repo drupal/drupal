@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Enable, install, update and uninstall functions for the breakpoint module.
+ */
+
+/**
+ * Implements hook_enable().
+ *
+ * Import breakpoints from all enabled themes.
+ *
+ * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
+ */
+function breakpoint_enable() {
+  // Import breakpoints from themes.
+  $themes = list_themes();
+  _breakpoint_theme_enabled(array_keys($themes));
+
+  // Import breakpoints from modules.
+  $modules = module_list();
+  _breakpoint_modules_enabled(array_keys($modules));
+}

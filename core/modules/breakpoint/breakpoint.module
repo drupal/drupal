@@ -33,23 +33,6 @@ function breakpoint_help($path, $arg) {
 }
 
 /**
- * Implements hook_enable().
- *
- * Import breakpoints from all enabled themes.
- *
- * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
- */
-function breakpoint_enable() {
-  // Import breakpoints from themes.
-  $themes = list_themes();
-  _breakpoint_theme_enabled(array_keys($themes));
-
-  // Import breakpoints from modules.
-  $modules = module_list();
-  _breakpoint_modules_enabled(array_keys($modules));
-}
-
-/**
  * Implements hook_themes_enabled().
  *
  * @param array $theme_list
@@ -86,7 +69,7 @@ function breakpoint_themes_disabled($theme_list) {
  * @see _breakpoint_modules_enabled()
  *
  * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
-*/
+ */
 function breakpoint_modules_enabled($modules) {
   _breakpoint_modules_enabled($modules);
 }
@@ -145,7 +128,7 @@ function _breakpoint_modules_enabled($modules) {
  *   Machine readable name of the breakpoint group.
  * @param string $label
  *   Human readable name of the breakpoint group.
- * @param string $sourceType
+ * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  * @param array $media_queries
  *   An array of breakpoints in the form $breakpoint['name'] = 'media query'.
@@ -170,7 +153,7 @@ function _breakpoint_import_media_queries($group_name, $label, $source_type, $me
  *
  * @param string $source
  *   The theme or module name
- * @param string $sourceType
+ * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  */
 function _breakpoint_import_breakpoint_groups($source, $source_type) {
@@ -201,7 +184,7 @@ function _breakpoint_import_breakpoint_groups($source, $source_type) {
  *
  * @param array $list
  *   A list of modules or themes that are disabled.
- * @param string $sourceType
+ * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  */
 function _breakpoint_delete_breakpoints($list, $source_type) {
@@ -251,7 +234,7 @@ function _breakpoint_delete_breakpoints($list, $source_type) {
  *
  * @param array $group_id
  *   Machine readable name of the breakpoint group.
- * @param string $sourceType
+ * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  */
 function _breakpoint_delete_breakpoint_groups($group_id, $source_type) {
@@ -397,7 +380,7 @@ function breakpoint_select_options() {
   $options = array();
   $breakpoints = entity_load_multiple('breakpoint');
   foreach ($breakpoints as $breakpoint) {
-    $options[$breakpoint->id()] = $breakpoint->label() . ' (' . $breakpoint->source . ' - ' . $breakpoint->sourceType .   ') [' . $breakpoint->mediaQuery . ']';
+    $options[$breakpoint->id()] = $breakpoint->label() . ' (' . $breakpoint->source . ' - ' . $breakpoint->sourceType . ') [' . $breakpoint->mediaQuery . ']';
   }
   asort($options);
   return $options;
@@ -412,7 +395,7 @@ function breakpoint_select_options() {
  *   Human readable name of the breakpoint group.
  * @param string $source
  *   Machine readable name of the defining theme or module.
- * @param string $sourceType
+ * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  *
  * @return Drupal\breakpoint\BreakpointGroup

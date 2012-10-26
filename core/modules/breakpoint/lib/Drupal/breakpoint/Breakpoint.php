@@ -222,8 +222,8 @@ class Breakpoint extends ConfigEntityBase {
             elseif (isset($matches[3]) && !isset($matches[4])) {
               $value = trim($matches[3]);
               if (!array_key_exists($matches[1], $media_features)) {
-                // We need to allow vendor prefixed media fetures and make sure we
-                // are future proof, so only check allowed characters.
+                // We need to allow vendor prefixed media features and make sure
+                // we are future proof, so only check allowed characters.
                 if (!preg_match('/^[a-zA-Z0-9\:\-\\ ]+$/i', trim($matches[1]))) {
                   throw new InvalidBreakpointMediaQueryException('Invalid media query detected.');
                 }
