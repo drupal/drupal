@@ -2206,6 +2206,15 @@ function system_update_8031() {
 }
 
 /**
+ * Removes the drupal_js_cache_files variable.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8032() {
+  update_variable_del('drupal_js_cache_files');
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
