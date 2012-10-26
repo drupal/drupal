@@ -5099,12 +5099,15 @@ function drupal_cron_cleanup() {
  * @code
  * drupal_system_listing("/\.module$/", "modules", 'name', 0);
  * @endcode
- * this function will search the site-wide modules directory (i.e., /modules/),
- * your installation profile's directory (i.e.,
- * /profiles/your_site_profile/modules/), the all-sites directory (i.e.,
- * /modules/), and your site-specific directory (i.e.,
- * /sites/your_site_dir/modules/), in that order, and return information about
- * all of the files ending in .module in those directories.
+ * the function will search the following directories in this order:
+ * - /core/modules.
+ * - /core/profiles/testing/modules (only if a test is being run).
+ * - /core/profiles/active_profile/modules or /profiles/active_profile/modules.
+ * - /modules (standard directory for your contrib/custom modules).
+ * - /sites/all/modules (legacy contrib/custom modules directory, see above).
+ * - /sites/your_site_dir/modules (for multisite installations).
+ * and return information about all of the files ending in .module in those
+ * directories.
  *
  * The information is returned in an associative array, which can be keyed on
  * the file name ($key = 'filename'), the file name without the extension ($key
