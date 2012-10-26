@@ -22,7 +22,18 @@ class DBLogTest extends WebTestBase {
    */
   public static $modules = array('dblog', 'node', 'poll', 'help');
 
+  /**
+   * A user with some relevent administrative permissions.
+   *
+   * @var object
+   */
   protected $big_user;
+
+  /**
+   * A user without any permissions.
+   *
+   * @var object
+   */
   protected $any_user;
 
   public static function getInfo() {
@@ -108,9 +119,9 @@ class DBLogTest extends WebTestBase {
    * @param int $count
    *   Number of watchdog entries to generate.
    * @param string $type
-   *   The type of watchdog entry.
+   *   (optional) The type of watchdog entry. Defaults to 'custom'.
    * @param int $severity
-   *   The severity of the watchdog entry.
+   *   (optional) The severity of the watchdog entry. Defaults to WATCHDOG_NOTICE.
    */
   private function generateLogEntries($count, $type = 'custom', $severity = WATCHDOG_NOTICE) {
     global $base_root;
@@ -140,7 +151,7 @@ class DBLogTest extends WebTestBase {
    * Confirms that database log reports are displayed at the correct paths.
    *
    * @param int $response
-   *   HTTP response code.
+   *   (optional) HTTP response code. Defaults to 200.
    */
   private function verifyReports($response = 200) {
     $quote = '&#039;';

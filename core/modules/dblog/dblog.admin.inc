@@ -8,11 +8,13 @@
 /**
  * Page callback: Displays a listing of database log messages.
  *
- * Messages are truncated at 56 chars. Full-length messages can be viewed on
- * the message details page.
+ * Messages are truncated at 56 chars. Full-length messages can be viewed on the
+ * message details page.
  *
- * @see dblog_menu()
+ * @see dblog_clear_log_form()
  * @see dblog_event()
+ * @see dblog_filter_form()
+ * @see dblog_menu()
  */
 function dblog_overview() {
   $filter = dblog_build_filter_query();
@@ -92,6 +94,9 @@ function dblog_overview() {
  * @param string $type
  *   Type of database log events to display (e.g., 'search').
  *
+ * @return array
+ *   A build array in the format expected by drupal_render().
+ *
  * @see dblog_menu()
  */
 function dblog_top($type) {
@@ -139,6 +144,10 @@ function dblog_top($type) {
  *
  * @param int $id
  *   Unique ID of the database log message.
+ *
+ * @return array|string
+ *   If the ID is located in the Database Logging table, a build array in the
+ *   format expected by drupal_render(); otherwise, an empty string.
  *
  * @see dblog_menu()
  */
@@ -301,6 +310,8 @@ function theme_dblog_message($variables) {
  *
  * @see dblog_filter_form_validate()
  * @see dblog_filter_form_submit()
+ * @see dblog_overview()
+ *
  * @ingroup forms
  */
 function dblog_filter_form($form) {

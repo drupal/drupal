@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\Core\Database\Database;
-
 /**
  * @file
  * System monitoring and logging for administrators.
@@ -12,6 +10,8 @@ use Drupal\Core\Database\Database;
  *
  * @see watchdog()
  */
+
+use Drupal\Core\Database\Database;
 
 /**
  * Implements hook_help().
