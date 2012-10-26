@@ -84,7 +84,7 @@ class UnicodeUnitTest extends UnitTestBase {
     }
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_strtolower($input), $output, t('%input is lowercased as %output', array('%input' => $input, '%output' => $output)));
+      $this->assertEqual(drupal_strtolower($input), $output, format_string('%input is lowercased as %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -98,7 +98,7 @@ class UnicodeUnitTest extends UnitTestBase {
     }
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_strtoupper($input), $output, t('%input is uppercased as %output', array('%input' => $input, '%output' => $output)));
+      $this->assertEqual(drupal_strtoupper($input), $output, format_string('%input is uppercased as %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -114,7 +114,7 @@ class UnicodeUnitTest extends UnitTestBase {
     }
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_ucfirst($input), $output, t('%input is ucfirst-ed as %output', array('%input' => $input, '%output' => $output)));
+      $this->assertEqual(drupal_ucfirst($input), $output, format_string('%input is ucfirst-ed as %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -125,7 +125,7 @@ class UnicodeUnitTest extends UnitTestBase {
     );
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_strlen($input), $output, t('%input length is %output', array('%input' => $input, '%output' => $output)));
+      $this->assertEqual(drupal_strlen($input), $output, format_string('%input length is %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -185,7 +185,7 @@ class UnicodeUnitTest extends UnitTestBase {
     foreach ($testcase as $test) {
       list($input, $start, $length, $output) = $test;
       $result = drupal_substr($input, $start, $length);
-      $this->assertEqual($result, $output, t('%input substring at offset %offset for %length characters is %output (got %result)', array('%input' => $input, '%offset' => $start, '%length' => $length, '%output' => $output, '%result' => $result)));
+      $this->assertEqual($result, $output, format_string('%input substring at offset %offset for %length characters is %output (got %result)', array('%input' => $input, '%offset' => $start, '%length' => $length, '%output' => $output, '%result' => $result)));
     }
   }
 
@@ -217,7 +217,7 @@ class UnicodeUnitTest extends UnitTestBase {
       '&euro;' => '€',
     );
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(decode_entities($input), $output, t('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
+      $this->assertEqual(decode_entities($input), $output, format_string('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
     }
   }
 
@@ -306,7 +306,7 @@ class UnicodeUnitTest extends UnitTestBase {
     foreach ($cases as $case) {
       list($input, $max_length, $expected) = $case;
       $output = truncate_utf8($input, $max_length, $wordsafe, $ellipsis);
-      $this->assertEqual($output, $expected, t('%input truncate to %length characters with %wordsafe, %ellipsis is %expected (got %output)', array('%input' => $input, '%length' => $max_length, '%output' => $output, '%expected' => $expected, '%wordsafe' => ($wordsafe ? 'word-safe' : 'not word-safe'), '%ellipsis' => ($ellipsis ? 'ellipsis' : 'not ellipsis'))));
+      $this->assertEqual($output, $expected, format_string('%input truncate to %length characters with %wordsafe, %ellipsis is %expected (got %output)', array('%input' => $input, '%length' => $max_length, '%output' => $output, '%expected' => $expected, '%wordsafe' => ($wordsafe ? 'word-safe' : 'not word-safe'), '%ellipsis' => ($ellipsis ? 'ellipsis' : 'not ellipsis'))));
     }
   }
 }

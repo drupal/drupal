@@ -115,17 +115,17 @@ class AdminTest extends WebTestBase {
    */
   function testCompactMode() {
     $this->drupalGet('admin/compact/on');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode turns on.'));
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode turns on.');
     $this->drupalGet('admin/compact/on');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode remains on after a repeat call.'));
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode remains on after a repeat call.');
     $this->drupalGet('');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode persists on new requests.'));
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode persists on new requests.');
 
     $this->drupalGet('admin/compact/off');
-    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', t('Compact mode turns off.'));
+    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', 'Compact mode turns off.');
     $this->drupalGet('admin/compact/off');
-    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', t('Compact mode remains off after a repeat call.'));
+    $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', 'Compact mode remains off after a repeat call.');
     $this->drupalGet('');
-    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], t('Compact mode persists on new requests.'));
+    $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode persists on new requests.');
   }
 }

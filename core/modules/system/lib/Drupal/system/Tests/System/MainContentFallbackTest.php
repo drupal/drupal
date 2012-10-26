@@ -55,42 +55,42 @@ class MainContentFallbackTest extends WebTestBase {
     // Disable the block module.
     $edit['modules[Core][block][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     system_list_reset();
-    $this->assertFalse(module_exists('block'), t('Block module disabled.'));
+    $this->assertFalse(module_exists('block'), 'Block module disabled.');
 
     // At this point, no region is filled and fallback should be triggered.
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertField('site_name', t('Admin interface still available.'));
+    $this->assertField('site_name', 'Admin interface still available.');
 
     // Fallback should not trigger when another module is handling content.
     $this->drupalGet('system-test/main-content-handling');
-    $this->assertRaw('id="system-test-content"', t('Content handled by another module'));
-    $this->assertText(t('Content to test main content fallback'), t('Main content still displayed.'));
+    $this->assertRaw('id="system-test-content"', 'Content handled by another module');
+    $this->assertText(t('Content to test main content fallback'), 'Main content still displayed.');
 
     // Fallback should trigger when another module
     // indicates that it is not handling the content.
     $this->drupalGet('system-test/main-content-fallback');
-    $this->assertText(t('Content to test main content fallback'), t('Main content fallback properly triggers.'));
+    $this->assertText(t('Content to test main content fallback'), 'Main content fallback properly triggers.');
 
     // Fallback should not trigger when another module is handling content.
     // Note that this test ensures that no duplicate
     // content gets created by the fallback.
     $this->drupalGet('system-test/main-content-duplication');
-    $this->assertNoText(t('Content to test main content fallback'), t('Main content not duplicated.'));
+    $this->assertNoText(t('Content to test main content fallback'), 'Main content not duplicated.');
 
     // Request a user* page and see if it is displayed.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('user/' . $this->web_user->uid . '/edit');
-    $this->assertField('mail', t('User interface still available.'));
+    $this->assertField('mail', 'User interface still available.');
 
     // Enable the block module again.
     $this->drupalLogin($this->admin_user);
     $edit = array();
     $edit['modules[Core][block][enable]'] = 'block';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     system_list_reset();
-    $this->assertTrue(module_exists('block'), t('Block module re-enabled.'));
+    $this->assertTrue(module_exists('block'), 'Block module re-enabled.');
   }
 }

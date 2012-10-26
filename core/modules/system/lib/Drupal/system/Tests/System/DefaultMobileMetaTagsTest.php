@@ -34,7 +34,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
   public function testDefaultMetaTagsExist() {
     $this->drupalGet('');
     foreach ($this->default_metatags as $name => $metatag) {
-      $this->assertRaw($metatag, 'Default Mobile meta tag "' . $name . '" displayed properly.', t('System'));
+      $this->assertRaw($metatag, format_string('Default Mobile meta tag "@name" displayed properly.', array('@name' => $name)), t('System'));
     }
   }
 
@@ -45,7 +45,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
     module_enable(array('system_module_test'));
     $this->drupalGet('');
     foreach ($this->default_metatags as $name => $metatag) {
-      $this->assertNoRaw($metatag, 'Default Mobile meta tag "' . $name . '" removed properly.', t('System'));
+      $this->assertNoRaw($metatag, format_string('Default Mobile meta tag "@name" removed properly.', array('@name' => $name)), t('System'));
     }
   }
 }

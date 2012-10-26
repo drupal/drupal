@@ -56,7 +56,7 @@ class ErrorHandlerTest extends WebTestBase {
     // Set error reporting to display verbose notices.
     config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
     $this->drupalGet('error-test/generate-warnings');
-    $this->assertResponse(200, t('Received expected HTTP status code.'));
+    $this->assertResponse(200, 'Received expected HTTP status code.');
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
@@ -65,7 +65,7 @@ class ErrorHandlerTest extends WebTestBase {
     // Set error reporting to collect notices.
     $config->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
     $this->drupalGet('error-test/generate-warnings');
-    $this->assertResponse(200, t('Received expected HTTP status code.'));
+    $this->assertResponse(200, 'Received expected HTTP status code.');
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
@@ -74,7 +74,7 @@ class ErrorHandlerTest extends WebTestBase {
     // Set error reporting to not collect notices.
     $config->set('error_level', ERROR_REPORTING_DISPLAY_SOME)->save();
     $this->drupalGet('error-test/generate-warnings');
-    $this->assertResponse(200, t('Received expected HTTP status code.'));
+    $this->assertResponse(200, 'Received expected HTTP status code.');
     $this->assertNoErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
@@ -83,7 +83,7 @@ class ErrorHandlerTest extends WebTestBase {
     // Set error reporting to not show any errors.
     $config->set('error_level', ERROR_REPORTING_HIDE)->save();
     $this->drupalGet('error-test/generate-warnings');
-    $this->assertResponse(200, t('Received expected HTTP status code.'));
+    $this->assertResponse(200, 'Received expected HTTP status code.');
     $this->assertNoErrorMessage($error_notice);
     $this->assertNoErrorMessage($error_warning);
     $this->assertNoErrorMessage($error_user_notice);
@@ -110,17 +110,17 @@ class ErrorHandlerTest extends WebTestBase {
     );
 
     $this->drupalGet('error-test/trigger-exception');
-    $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), t('Received expected HTTP status line.'));
+    $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), 'Received expected HTTP status line.');
     $this->assertErrorMessage($error_exception);
 
     $this->drupalGet('error-test/trigger-pdo-exception');
-    $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), t('Received expected HTTP status line.'));
+    $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), 'Received expected HTTP status line.');
     // We cannot use assertErrorMessage() since the extact error reported
     // varies from database to database. Check that the SQL string is displayed.
-    $this->assertText($error_pdo_exception['%type'], t('Found %type in error page.', $error_pdo_exception));
-    $this->assertText($error_pdo_exception['!message'], t('Found !message in error page.', $error_pdo_exception));
-    $error_details = t('in %function (line ', $error_pdo_exception);
-    $this->assertRaw($error_details, t("Found '!message' in error page.", array('!message' => $error_details)));
+    $this->assertText($error_pdo_exception['%type'], format_string('Found %type in error page.', $error_pdo_exception));
+    $this->assertText($error_pdo_exception['!message'], format_string('Found !message in error page.', $error_pdo_exception));
+    $error_details = format_string('in %function (line ', $error_pdo_exception);
+    $this->assertRaw($error_details, format_string("Found '!message' in error page.", array('!message' => $error_details)));
   }
 
   /**
@@ -128,7 +128,7 @@ class ErrorHandlerTest extends WebTestBase {
    */
   function assertErrorMessage(array $error) {
     $message = t('%type: !message in %function (line ', $error);
-    $this->assertRaw($message, t('Found error message: !message.', array('!message' => $message)));
+    $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));
   }
 
   /**
@@ -136,6 +136,6 @@ class ErrorHandlerTest extends WebTestBase {
    */
   function assertNoErrorMessage(array $error) {
     $message = t('%type: !message in %function (line ', $error);
-    $this->assertNoRaw($message, t('Did not find error message: !message.', array('!message' => $message)));
+    $this->assertNoRaw($message, format_string('Did not find error message: !message.', array('!message' => $message)));
   }
 }

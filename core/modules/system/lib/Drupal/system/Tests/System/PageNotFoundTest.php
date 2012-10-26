@@ -33,7 +33,7 @@ class PageNotFoundTest extends WebTestBase {
   function testPageNotFound() {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet($this->randomName(10));
-    $this->assertText(t('Page not found'), t('Found the default 404 page'));
+    $this->assertText(t('Page not found'), 'Found the default 404 page');
 
     // Use a custom 404 page.
     $edit = array(
@@ -42,6 +42,6 @@ class PageNotFoundTest extends WebTestBase {
     $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
 
     $this->drupalGet($this->randomName(10));
-    $this->assertText($this->admin_user->name, t('Found the custom 404 page'));
+    $this->assertText($this->admin_user->name, 'Found the custom 404 page');
   }
 }

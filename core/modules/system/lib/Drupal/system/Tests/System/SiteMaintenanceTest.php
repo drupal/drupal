@@ -59,7 +59,7 @@ class SiteMaintenanceTest extends WebTestBase {
     $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')));
 
     $this->drupalGet('');
-    $this->assertRaw($admin_message, t('Found the site maintenance mode message.'));
+    $this->assertRaw($admin_message, 'Found the site maintenance mode message.');
 
     // Logout and verify that offline message is displayed.
     $this->drupalLogout();
@@ -89,7 +89,7 @@ class SiteMaintenanceTest extends WebTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/config/development/maintenance');
-    $this->assertNoRaw($admin_message, t('Site maintenance mode message not displayed.'));
+    $this->assertNoRaw($admin_message, 'Site maintenance mode message not displayed.');
 
     $offline_message = 'Sorry, not online.';
     $edit = array(
@@ -100,11 +100,11 @@ class SiteMaintenanceTest extends WebTestBase {
     // Logout and verify that custom site offline message is displayed.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertRaw($offline_message, t('Found the site offline message.'));
+    $this->assertRaw($offline_message, 'Found the site offline message.');
 
     // Verify that custom site offline message is not displayed on user/password.
     $this->drupalGet('user/password');
-    $this->assertText(t('Username or e-mail address'), t('Anonymous users can access user/password'));
+    $this->assertText(t('Username or e-mail address'), 'Anonymous users can access user/password');
 
     // Submit password reset form.
     $edit = array(

@@ -62,10 +62,10 @@ class TokenReplaceTest extends WebTestBase {
     // token, [node:title].
     $raw_tokens = array('title' => '[node:title]');
     $generated = token_generate('node', $raw_tokens, array('node' => $node));
-    $this->assertEqual($generated['[node:title]'], check_plain($node->title), t('Token sanitized.'));
+    $this->assertEqual($generated['[node:title]'], check_plain($node->title), 'Token sanitized.');
 
     $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
-    $this->assertEqual($generated['[node:title]'], $node->title, t('Unsanitized token generated properly.'));
+    $this->assertEqual($generated['[node:title]'], $node->title, 'Unsanitized token generated properly.');
 
     // Test token replacement when the string contains no tokens.
     $this->assertEqual(token_replace('No tokens here.'), 'No tokens here.');
@@ -96,7 +96,7 @@ class TokenReplaceTest extends WebTestBase {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
       $output = token_replace($input, array(), array('langcode' => $language_interface->langcode));
-      $this->assertTrue($output == $expected, t('Token recognized in string %string', array('%string' => $input)));
+      $this->assertTrue($output == $expected, format_string('Token recognized in string %string', array('%string' => $input)));
     }
   }
 
@@ -126,11 +126,11 @@ class TokenReplaceTest extends WebTestBase {
     $tests['[site:login-url]'] = url('user', $url_options);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array(), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Sanitized system site information token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -139,7 +139,7 @@ class TokenReplaceTest extends WebTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array(), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, t('Unsanitized system site information token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
   }
 
@@ -162,11 +162,11 @@ class TokenReplaceTest extends WebTestBase {
     $tests['[date:raw]'] = filter_xss($date);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('date' => $date), array('langcode' => $language_interface->langcode));
-      $this->assertEqual($output, $expected, t('Date token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Date token %token replaced.', array('%token' => $input)));
     }
   }
 }

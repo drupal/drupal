@@ -69,7 +69,7 @@ abstract class SystemConfigFormBase extends WebTestBase {
       '%values' => print_r($values, TRUE),
       '%errors' => $valid_form ? t('None') : implode(' ', $errors),
     );
-    $this->assertTrue($valid_form, t('Input values: %values<br/>Validation handler errors: %errors', $args));
+    $this->assertTrue($valid_form, format_string('Input values: %values<br/>Validation handler errors: %errors', $args));
 
     foreach ($this->values as $form_key => $data) {
       $this->assertEqual($data['#value'], config($data['#config_name'])->get($data['#config_key']));

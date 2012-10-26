@@ -68,14 +68,14 @@ array_space[a b] = Value';
 
     $parsed = drupal_parse_info_format($config);
 
-    $this->assertEqual($parsed['simple'], $expected['simple'], t('Set a simple value.'));
-    $this->assertEqual($parsed['quoted'], $expected['quoted'], t('Set a simple value in quotes.'));
-    $this->assertEqual($parsed['multiline'], $expected['multiline'], t('Set a multiline value.'));
-    $this->assertEqual($parsed['array'], $expected['array'], t('Set a simple array.'));
-    $this->assertEqual($parsed['array_assoc'], $expected['array_assoc'], t('Set an associative array.'));
-    $this->assertEqual($parsed['array_deep'], $expected['array_deep'], t('Set a nested array.'));
-    $this->assertEqual($parsed['array_deep_assoc'], $expected['array_deep_assoc'], t('Set a nested associative array.'));
-    $this->assertEqual($parsed['array_space'], $expected['array_space'], t('Set an array with a whitespace in the key.'));
-    $this->assertEqual($parsed, $expected, t('Entire parsed .info string and expected array are identical.'));
+    $this->assertEqual($parsed['simple'], $expected['simple'], 'Set a simple value.');
+    $this->assertEqual($parsed['quoted'], $expected['quoted'], 'Set a simple value in quotes.');
+    $this->assertEqual($parsed['multiline'], $expected['multiline'], 'Set a multiline value.');
+    $this->assertEqual($parsed['array'], $expected['array'], 'Set a simple array.');
+    $this->assertEqual($parsed['array_assoc'], $expected['array_assoc'], 'Set an associative array.');
+    $this->assertEqual($parsed['array_deep'], $expected['array_deep'], 'Set a nested array.');
+    $this->assertEqual($parsed['array_deep_assoc'], $expected['array_deep_assoc'], 'Set a nested associative array.');
+    $this->assertEqual($parsed['array_space'], $expected['array_space'], 'Set an array with a whitespace in the key.');
+    $this->assertEqual($parsed, $expected, 'Entire parsed .info string and expected array are identical.');
   }
 }

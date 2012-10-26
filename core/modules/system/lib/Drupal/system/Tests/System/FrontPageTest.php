@@ -48,11 +48,11 @@ class FrontPageTest extends WebTestBase {
    */
   function testDrupalIsFrontPage() {
     $this->drupalGet('');
-    $this->assertText(t('On front page.'), t('Path is the front page.'));
+    $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet('node');
-    $this->assertText(t('On front page.'), t('Path is the front page.'));
+    $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet($this->node_path);
-    $this->assertNoText(t('On front page.'), t('Path is not the front page.'));
+    $this->assertNoText(t('On front page.'), 'Path is not the front page.');
 
     // Change the front page to an invalid path.
     $edit = array('site_frontpage' => 'kittens');
@@ -62,13 +62,13 @@ class FrontPageTest extends WebTestBase {
     // Change the front page to a valid path.
     $edit['site_frontpage'] = $this->node_path;
     $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('The front page path has been saved.'));
+    $this->assertText(t('The configuration options have been saved.'), 'The front page path has been saved.');
 
     $this->drupalGet('');
-    $this->assertText(t('On front page.'), t('Path is the front page.'));
+    $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet('node');
-    $this->assertNoText(t('On front page.'), t('Path is not the front page.'));
+    $this->assertNoText(t('On front page.'), 'Path is not the front page.');
     $this->drupalGet($this->node_path);
-    $this->assertText(t('On front page.'), t('Path is the front page.'));
+    $this->assertText(t('On front page.'), 'Path is the front page.');
   }
 }

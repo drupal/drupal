@@ -182,16 +182,16 @@ class ThemeTest extends WebTestBase {
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven', t('Administration theme used on an administration page.'));
+    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
 
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertRaw('core/themes/stark', t('Site default theme used on node page.'));
+    $this->assertRaw('core/themes/stark', 'Site default theme used on node page.');
 
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/seven', t('Administration theme used on the add content page.'));
+    $this->assertRaw('core/themes/seven', 'Administration theme used on the add content page.');
 
     $this->drupalGet('node/' . $this->node->nid . '/edit');
-    $this->assertRaw('core/themes/seven', t('Administration theme used on the edit content page.'));
+    $this->assertRaw('core/themes/seven', 'Administration theme used on the edit content page.');
 
     // Disable the admin theme on the node admin pages.
     $edit = array(
@@ -200,10 +200,10 @@ class ThemeTest extends WebTestBase {
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven', t('Administration theme used on an administration page.'));
+    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
 
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/stark', t('Site default theme used on the add content page.'));
+    $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
 
     // Reset to the default theme settings.
     variable_set('theme_default', 'bartik');
@@ -214,10 +214,10 @@ class ThemeTest extends WebTestBase {
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
-    $this->assertRaw('core/themes/bartik', t('Site default theme used on administration page.'));
+    $this->assertRaw('core/themes/bartik', 'Site default theme used on administration page.');
 
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/bartik', t('Site default theme used on the add content page.'));
+    $this->assertRaw('core/themes/bartik', 'Site default theme used on the add content page.');
   }
 
   /**
@@ -232,12 +232,12 @@ class ThemeTest extends WebTestBase {
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Bartik(' . t('active tab') . ')', t('Default local task on blocks admin page is the default theme.'));
+    $this->assertText('Bartik(' . t('active tab') . ')', 'Default local task on blocks admin page is the default theme.');
     // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set default'), 0);
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Stark(' . t('active tab') . ')', t('Default local task on blocks admin page has changed.'));
+    $this->assertText('Stark(' . t('active tab') . ')', 'Default local task on blocks admin page has changed.');
   }
 
   /**

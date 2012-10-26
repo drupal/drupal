@@ -63,11 +63,11 @@ class PageTitleFilteringTest extends WebTestBase {
     // drupal_set_title's $filter is CHECK_PLAIN by default, so the title should be
     // returned with check_plain().
     drupal_set_title($title, CHECK_PLAIN);
-    $this->assertTrue(strpos(drupal_get_title(), '<em>') === FALSE, t('Tags in title converted to entities when $output is CHECK_PLAIN.'));
+    $this->assertTrue(strpos(drupal_get_title(), '<em>') === FALSE, 'Tags in title converted to entities when $output is CHECK_PLAIN.');
     // drupal_set_title's $filter is passed as PASS_THROUGH, so the title should be
     // returned with HTML.
     drupal_set_title($title, PASS_THROUGH);
-    $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, t('Tags in title are not converted to entities when $output is PASS_THROUGH.'));
+    $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, 'Tags in title are not converted to entities when $output is PASS_THROUGH.');
     // Generate node content.
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array(

@@ -63,14 +63,14 @@ class CronRunTest extends WebTestBase {
       ->set('threshold.autorun', $cron_safe_threshold)
       ->save();
     $this->drupalGet('');
-    $this->assertTrue($cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is not passed.'));
+    $this->assertTrue($cron_last == variable_get('cron_last', NULL), 'Cron does not run when the cron threshold is not passed.');
 
     // Test if cron runs when the cron threshold was passed.
     $cron_last = time() - 200;
     variable_set('cron_last', $cron_last);
     $this->drupalGet('');
     sleep(1);
-    $this->assertTrue($cron_last < variable_get('cron_last', NULL), t('Cron runs when the cron threshold is passed.'));
+    $this->assertTrue($cron_last < variable_get('cron_last', NULL), 'Cron runs when the cron threshold is passed.');
 
     // Disable the cron threshold through the interface.
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
@@ -83,7 +83,7 @@ class CronRunTest extends WebTestBase {
     $cron_last = time() - 200;
     variable_set('cron_last', $cron_last);
     $this->drupalGet('');
-    $this->assertTrue($cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is disabled.'));
+    $this->assertTrue($cron_last == variable_get('cron_last', NULL), 'Cron does not run when the cron threshold is disabled.');
   }
 
   /**
@@ -96,6 +96,6 @@ class CronRunTest extends WebTestBase {
     // The common_test_cron_helper module sets the 'common_test_cron' variable.
     $this->cronRun();
     $result = variable_get('common_test_cron');
-    $this->assertEqual($result, 'success', t('Cron correctly handles exceptions thrown during hook_cron() invocations.'));
+    $this->assertEqual($result, 'success', 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
   }
 }
