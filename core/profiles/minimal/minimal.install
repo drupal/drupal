@@ -28,7 +28,7 @@ function minimal_install() {
     ),
     array(
       'module' => 'system',
-      'delta' => 'tools',
+      'delta' => 'menu-tools',
       'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
@@ -38,7 +38,7 @@ function minimal_install() {
     ),
     array(
       'module' => 'system',
-      'delta' => 'management',
+      'delta' => 'menu-admin',
       'theme' => $default_theme,
       'status' => 1,
       'weight' => 1,

@@ -46,7 +46,7 @@ class BreadcrumbTest extends MenuTestBase {
         'status' => 1,
       ))
       ->condition('module', 'system')
-      ->condition('delta', 'tools')
+      ->condition('delta', 'menu-tools')
       ->execute();
   }
 
@@ -354,7 +354,7 @@ class BreadcrumbTest extends MenuTestBase {
       // ('taxonomy/term/%') should never be translated and appear in any menu
       // other than the breadcrumb trail.
       $elements = $this->xpath('//div[@id=:menu]/descendant::a[@href=:href]', array(
-        ':menu' => 'block-system-tools',
+        ':menu' => 'block-system-menu-tools',
         ':href' => url($link['link_path']),
       ));
       $this->assertTrue(count($elements) == 1, "Link to {$link['link_path']} appears only once.");

@@ -45,7 +45,7 @@ class RouterTest extends WebTestBase {
     db_merge('block')
       ->key(array(
         'module' => 'system',
-        'delta' => 'tools',
+        'delta' => 'menu-tools',
         'theme' => 'bartik',
       ))
       ->fields(array(

@@ -110,7 +110,7 @@ function standard_install() {
     ),
     array(
       'module' => 'system',
-      'delta' => 'tools',
+      'delta' => 'menu-tools',
       'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,

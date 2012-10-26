@@ -43,6 +43,16 @@ class FilledStandardUpgradePathTest extends UpgradePathTestBase {
     $this->drupalGet('');
     $this->assertResponse(200);
 
+    // Verify that the former Navigation system menu block appears as Tools.
+    $this->assertText(t('Tools'));
+
+    // Verify that the Account menu still appears as secondary links source.
+    $this->assertText(t('My account'));
+    $this->assertText(t('Log out'));
+
+    // Verify the the Main menu still appears as primary links source.
+    $this->assertLink(t('Home'));
+
     // Verify that we are still logged in.
     $this->drupalGet('user');
     $this->clickLink(t('Edit'));

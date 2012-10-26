@@ -324,6 +324,36 @@ function block_update_8003() {
 }
 
 /**
+ * Rename default menu names.
+ */
+function block_update_8004() {
+  // System menu's new block deltas are prefixed with 'menu-'.
+  $map = array(
+    'navigation' => 'menu-tools',
+    'management' => 'menu-admin',
+    'user-menu' => 'menu-account',
+    'main-menu' => 'menu-main',
+  );
+  foreach ($map as $old => $new) {
+    db_update('block')
+      ->condition('module', 'system')
+      ->condition('delta', $old)
+      ->fields(array('delta' => $new))
+      ->execute();
+    db_update('block_language')
+      ->condition('module', 'system')
+      ->condition('delta', $old)
+      ->fields(array('delta' => $new))
+      ->execute();
+    db_update('block_role')
+      ->condition('module', 'system')
+      ->condition('delta', $old)
+      ->fields(array('delta' => $new))
+      ->execute();
+  }
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

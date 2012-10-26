@@ -43,7 +43,7 @@ class TrailTest extends MenuTestBase {
         'status' => 1,
       ))
       ->condition('module', 'system')
-      ->condition('delta', 'tools')
+      ->condition('delta', 'menu-tools')
       ->execute();
 
     // This test puts menu links in the Administration menu and then tests for
@@ -56,7 +56,7 @@ class TrailTest extends MenuTestBase {
         'status' => 1,
       ))
       ->condition('module', 'system')
-      ->condition('delta', 'admin')
+      ->condition('delta', 'menu-admin')
       ->execute();
   }
 

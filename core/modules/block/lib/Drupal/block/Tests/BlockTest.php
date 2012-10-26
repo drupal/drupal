@@ -322,7 +322,7 @@ class BlockTest extends WebTestBase {
     // Select the Administration menu block to be configured and moved.
     $block = array();
     $block['module'] = 'system';
-    $block['delta'] = 'admin';
+    $block['delta'] = 'menu-admin';
     $block['title'] = $this->randomName(8);
 
     // Set block title to confirm that interface works and override any custom titles.

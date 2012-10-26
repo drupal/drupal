@@ -2515,11 +2515,13 @@ function system_block_info() {
     'status' => 1,
   );
   // System-defined menu blocks.
+  // The block deltas need to be prefixed with 'menu-', since the 'main' menu
+  // would otherwise clash with the 'main' page content block defined above.
   foreach (menu_list_system_menus() as $menu_name => $title) {
-    $blocks[$menu_name]['info'] = t($title);
+    $blocks['menu-' . $menu_name]['info'] = t($title);
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.
-    $blocks[$menu_name]['cache'] = DRUPAL_NO_CACHE;
+    $blocks['menu-' . $menu_name]['cache'] = DRUPAL_NO_CACHE;
   }
   return $blocks;
 }
@@ -2546,6 +2548,8 @@ function system_block_view($delta = '') {
       $block['content'] = menu_get_active_help();
       return $block;
     default:
+      // Strip off 'menu-' prefix from block delta.
+      $delta = substr($delta, 5);
       // All system menu blocks.
       $system_menus = menu_list_system_menus();
       if (isset($system_menus[$delta])) {

@@ -128,7 +128,7 @@ function contextual_preprocess(&$variables, $hook) {
  *   menu_contextual_links(). For example:
  *   @code
  *     array('#contextual_links' => array(
- *       'block' => array('admin/structure/block/manage', array('system', 'tools')),
+ *       'block' => array('admin/structure/block/manage', array('system', 'menu-tools')),
  *       'menu' => array('admin/structure/menu/manage', array('tools')),
  *     ))
  *   @endcode

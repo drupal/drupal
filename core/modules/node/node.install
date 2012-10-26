@@ -692,6 +692,26 @@ function node_update_8007() {
 }
 
 /**
+ * Rename default menu names.
+ */
+function node_update_8008() {
+  // System menu's new block deltas are prefixed with 'menu-'.
+  $map = array(
+    'navigation' => 'menu-tools',
+    'management' => 'menu-admin',
+    'user-menu' => 'menu-account',
+    'main-menu' => 'menu-main',
+  );
+  foreach ($map as $old => $new) {
+    db_update('block_node_type')
+      ->condition('module', 'system')
+      ->condition('delta', $old)
+      ->fields(array('delta' => $new))
+      ->execute();
+  }
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x"
  * The next series of updates should start at 9000.
  */
