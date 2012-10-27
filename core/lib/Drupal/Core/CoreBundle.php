@@ -91,34 +91,34 @@ class CoreBundle extends Bundle
       ->addTag('nested_matcher', array('method' => 'setFinalMatcher'));
 
     $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('router_listener', 'Symfony\Component\HttpKernel\EventListener\RouterListener')
       ->addArgument(new Reference('matcher'))
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('content_negotiation', 'Drupal\Core\ContentNegotiation');
     $container->register('view_subscriber', 'Drupal\Core\EventSubscriber\ViewSubscriber')
       ->addArgument(new Reference('content_negotiation'))
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('access_subscriber', 'Drupal\Core\EventSubscriber\AccessSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('maintenance_mode_subscriber', 'Drupal\Core\EventSubscriber\MaintenanceModeSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('path_subscriber', 'Drupal\Core\EventSubscriber\PathSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('legacy_request_subscriber', 'Drupal\Core\EventSubscriber\LegacyRequestSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('legacy_controller_subscriber', 'Drupal\Core\EventSubscriber\LegacyControllerSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('finish_response_subscriber', 'Drupal\Core\EventSubscriber\FinishResponseSubscriber')
       ->addArgument(new Reference('language_manager'))
       ->setScope('request')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
-      ->addTag('kernel.event_subscriber');
+      ->addTag('event_subscriber');
     $container->register('exception_listener', 'Drupal\Core\EventSubscriber\ExceptionListener')
-      ->addTag('kernel.event_subscriber')
+      ->addTag('event_subscriber')
       ->addArgument(new Reference('service_container'))
       ->setFactoryClass('Drupal\Core\ExceptionController')
       ->setFactoryMethod('getExceptionListener');
