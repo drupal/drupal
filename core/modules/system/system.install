@@ -1913,19 +1913,6 @@ function system_update_8017() {
 }
 
 /**
- * Revert {file_managed}.filename changed to a binary column.
- */
-function system_update_8018() {
-  db_change_field('file_managed', 'filename', 'filename', array(
-    'description' => 'Name of the file with no path components. This may differ from the basename of the URI if the file is renamed to avoid overwriting an existing file.',
-    'type' => 'varchar',
-    'length' => 255,
-    'not null' => TRUE,
-    'default' => '',
-  ));
-}
-
-/**
  * Remove the registry tables.
  */
 function system_update_8019() {
