@@ -24,15 +24,16 @@ img {
 }
 table {
   border-collapse: collapse;
+  width: 100%;
 }
 th {
-  border-bottom: 3px solid #ccc;
   padding-right: 1em; /* LTR */
   text-align: left; /* LTR */
 }
-tr.even,
-tr.odd {
-  background-color: #eee;
+thead > tr {
+  border-bottom: 1px solid #000;
+}
+tr {
   border-bottom: 1px solid #ccc;
   padding: 0.1em 0.6em;
 }
