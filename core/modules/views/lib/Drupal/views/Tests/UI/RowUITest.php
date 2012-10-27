@@ -27,10 +27,10 @@ class RowUITest extends UITestBase {
    */
   public function testRowUI() {
     $view = $this->getView();
-    $view_edit_url = "admin/structure/views/view/{$view->storage->name}/edit";
+    $view_edit_url = "admin/structure/views/view/{$view->storage->get('name')}/edit";
 
-    $row_plugin_url = "admin/structure/views/nojs/display/{$view->storage->name}/default/row";
-    $row_options_url = "admin/structure/views/nojs/display/{$view->storage->name}/default/row_options";
+    $row_plugin_url = "admin/structure/views/nojs/display/{$view->storage->get('name')}/default/row";
+    $row_options_url = "admin/structure/views/nojs/display/{$view->storage->get('name')}/default/row_options";
 
     $this->drupalGet($row_plugin_url);
     $this->assertFieldByName('row', 'fields', 'The default row plugin selected in the UI should be fields.');
@@ -51,7 +51,7 @@ class RowUITest extends UITestBase {
     $this->drupalPost($view_edit_url, array(), t('Save'));
     $this->assertLink(t('Test row plugin'), 0, 'Make sure the test row plugin is shown in the UI');
 
-    $view = views_get_view($view->storage->name);
+    $view = views_get_view($view->storage->get('name'));
     $view->initDisplay();
     $row = $view->display_handler->getOption('row');
     $this->assertEqual($row['type'], 'test_row', 'Make sure that the test_row got saved as used row plugin.');

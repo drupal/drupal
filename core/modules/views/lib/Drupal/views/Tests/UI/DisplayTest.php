@@ -117,9 +117,10 @@ class DisplayTest extends UITestBase {
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view($view['name']);
-    $this->assertEqual($view->storage->display['default']['position'], 0, 'Make sure the master display comes first.');
-    $this->assertEqual($view->storage->display['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
-    $this->assertEqual($view->storage->display['page_1']['position'], 2, 'Make sure the page display comes after the block display.');
+    $displays = $view->storage->get('display');
+    $this->assertEqual($displays['default']['position'], 0, 'Make sure the master display comes first.');
+    $this->assertEqual($displays['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
+    $this->assertEqual($displays['page_1']['position'], 2, 'Make sure the page display comes after the block display.');
   }
 
   /**

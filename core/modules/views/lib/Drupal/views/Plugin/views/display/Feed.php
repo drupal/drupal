@@ -50,7 +50,7 @@ class Feed extends Page {
     // Set the default row style. Ideally this would be part of the option
     // definition, but in this case it's dependent on the view's base table,
     // which we don't know until init().
-    $row_plugins = views_fetch_plugin_names('row', $this->getStyleType(), array($view->storage->base_table));
+    $row_plugins = views_fetch_plugin_names('row', $this->getStyleType(), array($view->storage->get('base_table')));
     $default_row_plugin = key($row_plugins);
     if (empty($this->options['row']['type'])) {
       $this->options['row']['type'] = $default_row_plugin;
@@ -151,8 +151,9 @@ class Feed extends Page {
     }
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
-      if (!empty($this->view->storage->display[$display])) {
-        $attach_to = check_plain($this->view->storage->display[$display]['display_title']);
+      $displays = $this->view->storage->get('display');
+      if (!empty($displays[$display])) {
+        $attach_to = check_plain($displays[$display]['display_title']);
       }
     }
 
@@ -194,7 +195,7 @@ class Feed extends Page {
       case 'displays':
         $form['#title'] .= t('Attach to');
         $displays = array();
-        foreach ($this->view->storage->display as $display_id => $display) {
+        foreach ($this->view->storage->get('display') as $display_id => $display) {
           // @todo The display plugin should have display_title and id as well.
           if (!empty($this->view->displayHandlers[$display_id]) && $this->view->displayHandlers[$display_id]->acceptAttachments()) {
             $displays[$display_id] = $display['display_title'];

@@ -124,7 +124,7 @@ class DefaultViewsTest extends WebTestBase {
     foreach ($views as $name => $view_storage) {
       $view = new ViewExecutable($view_storage);
       $view->initDisplay();
-      foreach ($view->storage->display as $display_id => $display) {
+      foreach ($view->storage->get('display') as $display_id => $display) {
         $view->setDisplay($display_id);
 
         // Add any args if needed.
@@ -132,7 +132,7 @@ class DefaultViewsTest extends WebTestBase {
           $view->preExecute($this->viewArgMap[$name]);
         }
 
-        $this->assert(TRUE, format_string('View @view will be executed.', array('@view' => $view->storage->name)));
+        $this->assert(TRUE, format_string('View @view will be executed.', array('@view' => $view->storage->get('name'))));
         $view->execute();
 
         $tokens = array('@name' => $name, '@display_id' => $display_id);

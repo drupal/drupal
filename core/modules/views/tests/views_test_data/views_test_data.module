@@ -75,7 +75,7 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
  * Implements hook_views_pre_render().
  */
 function views_test_data_views_pre_render(ViewExecutable $view) {
-  if ($view->storage->name == 'test_cache_header_storage') {
+  if ($view->storage->get('name') == 'test_cache_header_storage') {
     drupal_add_js(drupal_get_path('module', 'views_test_data') . '/views_cache.test.js');
     drupal_add_css(drupal_get_path('module', 'views_test_data') . '/views_cache.test.css');
     $view->build_info['pre_render_called'] = TRUE;
@@ -86,7 +86,7 @@ function views_test_data_views_pre_render(ViewExecutable $view) {
  * Implements hook_views_post_build().
  */
 function views_test_data_views_post_build(ViewExecutable $view) {
-  if ($view->storage->name == 'test_page_display') {
+  if ($view->storage->get('name') == 'test_page_display') {
     if ($view->current_display == 'page_1') {
       $view->build_info['denied'] = TRUE;
     }

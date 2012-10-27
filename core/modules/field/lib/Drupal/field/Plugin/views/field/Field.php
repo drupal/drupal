@@ -115,7 +115,7 @@ class Field extends FieldPluginBase {
   function get_base_table() {
     if (!isset($this->base_table)) {
       // This base_table is coming from the entity not the field.
-      $this->base_table = $this->view->storage->base_table;
+      $this->base_table = $this->view->storage->get('base_table');
 
       // If the current field is under a relationship you can't be sure that the
       // base table of the view is the base table of the current field.

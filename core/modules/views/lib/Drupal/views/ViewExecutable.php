@@ -558,8 +558,8 @@ class ViewExecutable {
       // remember settings.
       $display_id = ($this->display_handler->isDefaulted('filters')) ? 'default' : $this->current_display;
 
-      if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->storage->name][$display_id])) {
-        $this->exposed_input = $_SESSION['views'][$this->storage->name][$display_id];
+      if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->storage->get('name')][$display_id])) {
+        $this->exposed_input = $_SESSION['views'][$this->storage->get('name')][$display_id];
       }
     }
 
@@ -575,11 +575,12 @@ class ViewExecutable {
     }
 
     // Instantiate all displays
-    foreach (array_keys($this->storage->display) as $id) {
-      $this->displayHandlers[$id] = views_get_plugin('display', $this->storage->display[$id]['display_plugin']);
+    foreach ($this->storage->get('display') as $id => $display) {
+      $this->displayHandlers[$id] = views_get_plugin('display', $display['display_plugin']);
       if (!empty($this->displayHandlers[$id])) {
         // Initialize the new display handler with data.
-        $this->displayHandlers[$id]->init($this, $this->storage->display[$id]);
+        // @todo Refactor display to not need the handler data by reference.
+        $this->displayHandlers[$id]->init($this, $this->storage->getDisplay($id));
         // If this is NOT the default display handler, let it know which is
         // since it may well utilize some data from the default.
         // This assumes that the 'default' handler is always first. It always
@@ -650,7 +651,7 @@ class ViewExecutable {
     if (empty($this->displayHandlers[$display_id])) {
       $display_id = 'default';
       if (empty($this->displayHandlers[$display_id])) {
-        debug('set_display() called with invalid display ID @display.', array('@display' => $display_id));
+        debug(format_string('set_display() called with invalid display ID @display.', array('@display' => $display_id)));
         return FALSE;
       }
     }
@@ -753,7 +754,7 @@ class ViewExecutable {
    */
   public function getBaseTables() {
     $base_tables = array(
-      $this->storage->base_table => TRUE,
+      $this->storage->get('base_table') => TRUE,
       '#global' => TRUE,
     );
 
@@ -937,8 +938,8 @@ class ViewExecutable {
     }
 
     // Create and initialize the query object.
-    $views_data = views_fetch_data($this->storage->base_table);
-    $this->storage->base_field = !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '';
+    $views_data = views_fetch_data($this->storage->get('base_table'));
+    $this->storage->set('base_field', !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '');
     if (!empty($views_data['table']['base']['database'])) {
       $this->base_database = $views_data['table']['base']['database'];
     }
@@ -954,7 +955,7 @@ class ViewExecutable {
       return FALSE;
     }
 
-    $this->query->init($this->storage->base_table, $this->storage->base_field, $query_options['options']);
+    $this->query->init($this->storage->get('base_table'), $this->storage->get('base_field'), $query_options['options']);
     return TRUE;
   }
 
@@ -1434,7 +1435,7 @@ class ViewExecutable {
     }
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
-    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : md5($this->storage->name . REQUEST_TIME . rand());
+    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : md5($this->storage->get('name') . REQUEST_TIME . rand());
 
     // Allow the display handler to set up for execution
     $this->display_handler->preExecute();
@@ -2210,7 +2211,8 @@ class ViewExecutable {
    */
   public function &newDisplay($id) {
     // Create a handler.
-    $this->displayHandlers[$id] = views_get_plugin('display', $this->storage->display[$id]['display_plugin']);
+    $display = $this->storage->get('display');
+    $this->displayHandlers[$id] = views_get_plugin('display', $display[$id]['display_plugin']);
     if (empty($this->displayHandlers[$id])) {
       // provide a 'default' handler as an emergency. This won't work well but
       // it will keep things from crashing.
@@ -2219,13 +2221,14 @@ class ViewExecutable {
 
     if (!empty($this->displayHandlers[$id])) {
       // Initialize the new display handler with data.
-      $this->displayHandlers[$id]->init($this, $this->storage->display[$id]);
+      $this->displayHandlers[$id]->init($this, $display[$id]);
       // If this is NOT the default display handler, let it know which is
       if ($id != 'default') {
         // @todo is the '&' still required in php5?
         $this->displayHandlers[$id]->default_display = &$this->displayHandlers['default'];
       }
     }
+    $this->storage->set('display', $display);
 
     return $this->displayHandlers[$id];
   }

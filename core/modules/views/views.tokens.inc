@@ -86,11 +86,11 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
           break;
 
         case 'description':
-          $replacements[$original] = $sanitize ? check_plain($view->storage->description) : $view->storage->description;
+          $replacements[$original] = $sanitize ? check_plain($view->storage->get('description')) : $view->storage->get('description');
           break;
 
         case 'machine-name':
-          $replacements[$original] = $view->storage->name;
+          $replacements[$original] = $view->storage->get('name');
           break;
 
         case 'title':
@@ -104,10 +104,10 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
           }
           break;
         case 'base-table':
-          $replacements[$original] = $view->storage->base_table;
+          $replacements[$original] = $view->storage->get('base_table');
           break;
         case 'base-field':
-          $replacements[$original] = $view->storage->base_field;
+          $replacements[$original] = $view->storage->get('base_field');
           break;
         case 'total-rows':
           $replacements[$original] = count($view->result);

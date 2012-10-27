@@ -38,8 +38,8 @@ class ViewListController extends EntityListController {
     return array(
       'data' => array(
         'view_name' => theme('views_ui_view_info', array('view' => $view)),
-        'description' => $view->description,
-        'tag' => $view->tag,
+        'description' => $view->get('description'),
+        'tag' => $view->get('tag'),
         'path' => implode(', ', $view->getPaths()),
         'operations' => array(
           'data' => $this->buildOperations($view),

@@ -28,7 +28,7 @@ class StorageTest extends UITestBase {
   public function testDetails() {
     $view = $this->getBasicView();
 
-    $path = "admin/structure/views/nojs/edit-details/{$view->storage->name}";
+    $path = "admin/structure/views/nojs/edit-details/{$view->storage->get('name')}";
     $edit = array(
       'human_name' => $this->randomName(),
       'tag' => $this->randomName(),
@@ -37,7 +37,7 @@ class StorageTest extends UITestBase {
 
     $this->drupalPost($path, $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
-    $view = views_get_view($view->storage->name);
+    $view = views_get_view($view->storage->get('name'));
 
     foreach (array('human_name', 'tag', 'description') as $property) {
       $this->assertEqual($view->storage->{$property}, $edit[$property], format_string('Make sure the property @property got probably saved.', array('@property' => $property)));

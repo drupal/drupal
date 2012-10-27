@@ -27,7 +27,7 @@ class RedirectTest extends UITestBase {
     $view = $this->getBasicView();
 
     $random_destination = $this->randomName();
-    $edit_path = "admin/structure/views/view/{$view->storage->name}/edit";
+    $edit_path = "admin/structure/views/view/{$view->storage->get('name')}/edit";
 
     $this->drupalPost($edit_path, array(), t('Save') , array('query' => array('destination' => $random_destination)));
     $this->assertUrl($random_destination, array(), 'Make sure the user got redirected to the expected page defined in the destination.');
@@ -39,8 +39,8 @@ class RedirectTest extends UITestBase {
     $random_destination = $this->randomName();
     $new_path = $this->randomName();
 
-    $edit_path = "admin/structure/views/view/{$view->storage->name}/edit";
-    $path_edit_path = "admin/structure/views/nojs/display/{$view->storage->name}/page_1/path";
+    $edit_path = "admin/structure/views/view/{$view->storage->get('name')}/edit";
+    $path_edit_path = "admin/structure/views/nojs/display/{$view->storage->get('name')}/page_1/path";
 
     $this->drupalPost($path_edit_path, array('path' => $new_path), t('Apply'));
     $this->drupalPost($edit_path, array(), t('Save'), array('query' => array('destination' => 'test-redirect-view')));

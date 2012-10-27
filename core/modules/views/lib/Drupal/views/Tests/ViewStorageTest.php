@@ -464,7 +464,7 @@ class ViewStorageTest extends ViewTestBase {
     }
 
     // Check the displays are the same.
-    foreach ($view->storage->display as $id => $display) {
+    foreach ($view->storage->get('display') as $id => $display) {
       // assertIdentical will not work here.
       $this->assertEqual($display, $copy->display[$id], format_string('The @display display has been copied correctly.', array('@display' => $id)));
     }

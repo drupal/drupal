@@ -53,8 +53,9 @@ class DisplayTest extends PluginTestBase {
 
     // Add a new 'display_test' display and test it's there.
     $view->storage->addDisplay('display_test');
+    $displays = $view->storage->get('display');
 
-    $this->assertTrue(isset($view->storage->display['display_test_1']), 'Added display has been assigned to "display_test_1"');
+    $this->assertTrue(isset($displays['display_test_1']), 'Added display has been assigned to "display_test_1"');
 
     // Check the the display options are like expected.
     $options = array(
@@ -64,7 +65,7 @@ class DisplayTest extends PluginTestBase {
       'display_title' => 'Display test',
       'position' => NULL,
     );
-    $this->assertEqual($view->storage->display['display_test_1'], $options);
+    $this->assertEqual($displays['display_test_1'], $options);
 
     $view->setDisplay('display_test_1');
 

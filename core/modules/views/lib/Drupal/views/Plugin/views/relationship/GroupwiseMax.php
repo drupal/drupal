@@ -132,10 +132,10 @@ class GroupwiseMax extends RelationshipPluginBase {
         // TODO: check the field is the correct sort?
         // or let users hang themselves at this stage and check later?
         if ($view->type == 'Default') {
-          $views[t('Default Views')][$view->storage->name] = $view->storage->name;
+          $views[t('Default Views')][$view->storage->get('name')] = $view->storage->get('name');
         }
         else {
-          $views[t('Existing Views')][$view->storage->name] = $view->storage->name;
+          $views[t('Existing Views')][$view->storage->get('name')] = $view->storage->get('name');
         }
       }
     }
@@ -171,7 +171,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    * When the form is submitted, take sure to clear the subquery string cache.
    */
   public function submitOptionsForm(&$form, &$form_state) {
-    $cid = 'views_relationship_groupwise_max:' . $this->view->storage->name . ':' . $this->view->current_display . ':' . $this->options['id'];
+    $cid = 'views_relationship_groupwise_max:' . $this->view->storage->get('name') . ':' . $this->view->current_display . ':' . $this->options['id'];
     cache('views_results')->delete($cid);
   }
 
@@ -362,7 +362,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     }
     else {
       // Get the stored subquery SQL string.
-      $cid = 'views_relationship_groupwise_max:' . $this->view->storage->name . ':' . $this->view->current_display . ':' . $this->options['id'];
+      $cid = 'views_relationship_groupwise_max:' . $this->view->storage->get('name') . ':' . $this->view->current_display . ':' . $this->options['id'];
       $cache = cache('views_results')->get($cid);
       if (isset($cache->data)) {
         $def['left_query'] = $cache->data;

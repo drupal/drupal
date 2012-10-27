@@ -369,7 +369,7 @@ function views_ui_add_form_store_edit_submit($form, &$form_state) {
     $destination = drupal_get_destination();
     $query->remove('destination');
   }
-  $form_state['redirect'] = array('admin/structure/views/view/' . $view->storage->name, array('query' => $destination));
+  $form_state['redirect'] = array('admin/structure/views/view/' . $view->storage->get('name'), array('query' => $destination));
 }
 
 /**
@@ -435,19 +435,19 @@ function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
   $form = array();
 
   if (empty($view->locked)) {
-    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->storage->name));
+    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->storage->get('name')));
     return $form;
   }
 
   $cancel = drupal_container()->get('request')->query->get('cancel');
   if (empty($cancel)) {
-    $cancel = 'admin/structure/views/view/' . $view->storage->name . '/edit';
+    $cancel = 'admin/structure/views/view/' . $view->storage->get('name') . '/edit';
   }
 
   $account = user_load($view->locked->owner);
   $form = confirm_form($form,
                   t('Are you sure you want to break the lock on view %name?',
-                  array('%name' => $view->storage->name)),
+                  array('%name' => $view->storage->get('name'))),
                   $cancel,
                   t('By breaking this lock, any unsaved changes made by !user will be lost!', array('!user' => theme('username', array('account' => $account)))),
                   t('Break lock'),
@@ -598,10 +598,11 @@ function views_ui_edit_view_form_validate($form, &$form_state) {
  */
 function views_ui_edit_view_form_submit($form, &$form_state) {
   // Go through and remove displayed scheduled for removal.
-  foreach ($form_state['view']->storage->display as $id => $display) {
+  $displays = $form_state['view']->storage->get('display');
+  foreach ($displays as $id => $display) {
     if (!empty($display['deleted'])) {
       unset($form_state['view']->displayHandlers[$id]);
-      unset($form_state['view']->storage->display[$id]);
+      unset($displays[$id]);
     }
   }
   // Rename display ids if needed.
@@ -611,12 +612,13 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
       $form_state['view']->displayHandlers[$new_id] = $form_state['view']->displayHandlers[$id];
       $form_state['view']->displayHandlers[$new_id]->display['id'] = $new_id;
 
-      $form_state['view']->storage->display[$new_id] = $form_state['view']->storage->display[$id];
-      unset($form_state['view']->storage->display[$id]);
+      $displays[$new_id] = $displays[$id];
+      unset($displays[$id]);
       // Redirect the user to the renamed display to be sure that the page itself exists and doesn't throw errors.
-      $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->storage->name . '/edit/' . $new_id;
+      $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->storage->get('name') . '/edit/' . $new_id;
     }
   }
+  $form_state['view']->storage->set('display', $displays);
 
   // Direct the user to the right url, if the path of the display has changed.
   $query = drupal_container()->get('request')->query;
@@ -624,7 +626,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   $destination = $query->get('destination');
   if (!empty($destination)) {
     // Find out the first display which has a changed path and redirect to this url.
-    $old_view = views_get_view($form_state['view']->storage->name);
+    $old_view = views_get_view($form_state['view']->storage->get('name'));
     $old_view->initDisplay();
     foreach ($old_view->displayHandlers as $id => $display) {
       // Only check for displays with a path.
@@ -648,7 +650,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   drupal_set_message(t('The view %name has been saved.', array('%name' => $form_state['view']->storage->getHumanName())));
 
   // Remove this view from cache so we can edit it properly.
-  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->name);
+  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->get('name'));
 }
 
 /**
@@ -656,7 +658,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
  */
 function views_ui_edit_view_form_cancel($form, &$form_state) {
   // Remove this view from cache so edits will be lost.
-  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->name);
+  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->get('name'));
   if (empty($form['view']->vid)) {
     // I seem to have to drupal_goto here because I can't get fapi to
     // honor the redirect target. Not sure what I screwed up here.
@@ -797,7 +799,7 @@ function views_ui_ajax_forms($key = NULL) {
 function views_ui_build_form_url($form_state) {
   $form = views_ui_ajax_forms($form_state['form_key']);
   $ajax = empty($form_state['ajax']) ? 'nojs' : 'ajax';
-  $name = $form_state['view']->storage->name;
+  $name = $form_state['view']->storage->get('name');
   $url = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";
   foreach ($form['args'] as $arg) {
     $url .= '/' . $form_state[$arg];
@@ -878,7 +880,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
     }
     elseif (!$js) {
       // if nothing on the stack, non-js forms just go back to the main view editor.
-      return drupal_goto("admin/structure/views/view/{$view->storage->name}/edit");
+      return drupal_goto("admin/structure/views/view/{$view->storage->get('name')}/edit");
     }
     else {
       $output = array();
@@ -927,7 +929,7 @@ function views_ui_analyze_view_form($form, &$form_state) {
  * Submit handler for views_ui_analyze_view_form
  */
 function views_ui_analyze_view_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->storage->name . '/edit';
+  $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->storage->get('name') . '/edit';
 }
 
 /**
@@ -953,14 +955,14 @@ function views_ui_edit_details_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('View tag'),
     '#description' => t('Optionally, enter a comma delimited list of tags for this view to use in filtering and sorting views on the administrative page.'),
-    '#default_value' => $view->storage->tag,
+    '#default_value' => $view->storage->get('tag'),
     '#autocomplete_path' => 'admin/views/ajax/autocomplete/tag',
   );
   $form['details']['description'] = array(
     '#type' => 'textfield',
     '#title' => t('View description'),
     '#description' => t('This description will appear on the Views administrative UI to tell you what the view is about.'),
-    '#default_value' => $view->storage->description,
+    '#default_value' => $view->storage->get('description'),
   );
 
   $view->getStandardButtons($form, $form_state, 'views_ui_edit_details_form');
@@ -1702,7 +1704,7 @@ function views_ui_config_item_form($form, &$form_state) {
       if (!empty($relationship_options)) {
         // Make sure the existing relationship is even valid. If not, force
         // it to none.
-        $base_fields = views_fetch_fields($view->storage->base_table, $form_state['type'], $view->display_handler->useGroupBy());
+        $base_fields = views_fetch_fields($view->storage->get('base_table'), $form_state['type'], $view->display_handler->useGroupBy());
         if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
           $relationship_options = array_merge(array('none' => t('Do not use a relationship')), $relationship_options);
         }
@@ -2593,7 +2595,7 @@ function views_ui_field_list() {
               && $data = $data[$item['field']][$type]) {
               // The final check that we have a fieldapi field now.
               if (isset($data['field_name'])) {
-                $fields[$data['field_name']][$view->storage->name] = $view->storage->name;
+                $fields[$data['field_name']][$view->storage->get('name')] = $view->storage->get('name');
               }
             }
           }

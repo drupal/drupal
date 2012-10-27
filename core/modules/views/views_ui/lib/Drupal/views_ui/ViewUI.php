@@ -105,7 +105,8 @@ class ViewUI extends ViewExecutable {
    * @todo Remove this function once editing the display title is possible.
    */
   public function getDisplayLabel($display_id, $check_changed = TRUE) {
-    $title = $display_id == 'default' ? t('Master') : $this->storage->display[$display_id]['display_title'];
+    $display = $this->storage->get('display');
+    $title = $display_id == 'default' ? t('Master') : $display[$display_id]['display_title'];
     $title = views_ui_truncate($title, 25);
 
     if ($check_changed && !empty($this->changed_display[$display_id])) {
@@ -395,21 +396,21 @@ class ViewUI extends ViewExecutable {
       '#links' => array(
         'edit-details' => array(
           'title' => t('edit view name/description'),
-          'href' => "admin/structure/views/nojs/edit-details/{$this->storage->name}",
+          'href' => "admin/structure/views/nojs/edit-details/{$this->storage->get('name')}",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'analyze' => array(
           'title' => t('analyze view'),
-          'href' => "admin/structure/views/nojs/analyze/{$this->storage->name}/$display_id",
+          'href' => "admin/structure/views/nojs/analyze/{$this->storage->get('name')}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'clone' => array(
           'title' => t('clone view'),
-          'href' => "admin/structure/views/view/{$this->storage->name}/clone",
+          'href' => "admin/structure/views/view/{$this->storage->get('name')}/clone",
         ),
         'reorder' => array(
           'title' => t('reorder displays'),
-          'href' => "admin/structure/views/nojs/reorder-displays/{$this->storage->name}/$display_id",
+          'href' => "admin/structure/views/nojs/reorder-displays/{$this->storage->get('name')}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
       ),
@@ -422,14 +423,14 @@ class ViewUI extends ViewExecutable {
       if ($this->type == t('Overridden')) {
         $element['extra_actions']['#links']['revert'] = array(
           'title' => t('revert view'),
-          'href' => "admin/structure/views/view/{$this->storage->name}/revert",
-          'query' => array('destination' => "admin/structure/views/view/{$this->storage->name}"),
+          'href' => "admin/structure/views/view/{$this->storage->get('name')}/revert",
+          'query' => array('destination' => "admin/structure/views/view/{$this->storage->get('name')}"),
         );
       }
       else {
         $element['extra_actions']['#links']['delete'] = array(
           'title' => t('delete view'),
-          'href' => "admin/structure/views/view/{$this->storage->name}/delete",
+          'href' => "admin/structure/views/view/{$this->storage->get('name')}/delete",
         );
       }
     }
@@ -445,7 +446,7 @@ class ViewUI extends ViewExecutable {
     }
 
     // Buttons for adding a new display.
-    foreach (views_fetch_plugin_names('display', NULL, array($this->storage->base_table)) as $type => $label) {
+    foreach (views_fetch_plugin_names('display', NULL, array($this->storage->get('base_table'))) as $type => $label) {
       $element['add_display'][$type] = array(
         '#type' => 'submit',
         '#value' => t('Add !display', array('!display' => $label)),
@@ -481,13 +482,15 @@ class ViewUI extends ViewExecutable {
     $tabs = array();
 
     // Create a tab for each display.
-    uasort($this->storage->display, array('static', 'sortPosition'));
-    foreach ($this->storage->display as $id => $display) {
+    $displays = $this->storage->get('display');
+    uasort($displays, array('static', 'sortPosition'));
+    $this->storage->set('display', $displays);
+    foreach ($displays as $id => $display) {
       $tabs[$id] = array(
         '#theme' => 'menu_local_task',
         '#link' => array(
           'title' => $this->getDisplayLabel($id),
-          'href' => 'admin/structure/views/view/' . $this->storage->name . '/edit/' . $id,
+          'href' => 'admin/structure/views/view/' . $this->storage->get('name') . '/edit/' . $id,
           'localized_options' => array(),
         ),
       );
@@ -506,7 +509,7 @@ class ViewUI extends ViewExecutable {
 
     // Mark the display tab as red to show validation errors.
     $this->validate();
-    foreach ($this->storage->display as $id => $display) {
+    foreach ($this->storage->get('display') as $id => $display) {
       if (!empty($this->display_errors[$id])) {
         // Always show the tab.
         $tabs[$id]['#access'] = TRUE;
@@ -617,7 +620,7 @@ class ViewUI extends ViewExecutable {
       views_ui_cache_set($this);
     }
 
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit';
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name') . '/edit';
   }
 
   /**
@@ -778,7 +781,7 @@ class ViewUI extends ViewExecutable {
     views_ui_cache_set($this);
 
     // Redirect to the new display's edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit/' . $display_id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name') . '/edit/' . $display_id;
   }
 
   /**
@@ -788,10 +791,11 @@ class ViewUI extends ViewExecutable {
     $display_id = $form_state['display_id'];
 
     // Create the new display.
-    $display = $this->storage->display[$display_id];
-    $new_display_id = $this->storage->addDisplay($display['display_plugin']);
-    $this->storage->display[$new_display_id] = $display;
-    $this->storage->display[$new_display_id]['id'] = $new_display_id;
+    $displays = $this->storage->get('display');
+    $new_display_id = $this->storage->addDisplay($displays[$display_id]['display_plugin']);
+    $displays[$new_display_id] = $displays[$display_id];
+    $displays[$new_display_id]['id'] = $new_display_id;
+    $this->storage->set('display', $displays);
 
     // By setting the current display the changed marker will appear on the new
     // display.
@@ -799,7 +803,7 @@ class ViewUI extends ViewExecutable {
     views_ui_cache_set($this);
 
     // Redirect to the new display's edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit/' . $new_display_id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name') . '/edit/' . $new_display_id;
   }
 
   /**
@@ -809,12 +813,14 @@ class ViewUI extends ViewExecutable {
     $display_id = $form_state['display_id'];
 
     // Mark the display for deletion.
-    $this->storage->display[$display_id]['deleted'] = TRUE;
+    $displays = $this->storage->get('display');
+    $displays[$display_id]['deleted'] = TRUE;
+    $this->storage->set('display', $displays);
     views_ui_cache_set($this);
 
     // Redirect to the top-level edit page. The first remaining display will
     // become the active display.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name');
   }
 
   /**
@@ -859,7 +865,7 @@ class ViewUI extends ViewExecutable {
     views_ui_cache_set($this);
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit/' . $id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name') . '/edit/' . $id;
   }
 
   /**
@@ -873,7 +879,7 @@ class ViewUI extends ViewExecutable {
     views_ui_cache_set($this);
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit/' . $id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name') . '/edit/' . $id;
   }
 
   /**
@@ -882,13 +888,15 @@ class ViewUI extends ViewExecutable {
   public function submitDisplayUndoDelete($form, &$form_state) {
     // Create the new display
     $id = $form_state['display_id'];
-    $this->storage->display[$id]['deleted'] = FALSE;
+    $displays = $this->storage->get('display');
+    $displays[$id]['deleted'] = FALSE;
+    $this->storage->set('display', $displays);
 
     // Store in cache
     views_ui_cache_set($this);
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit/' . $id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name') . '/edit/' . $id;
   }
 
   /**
@@ -909,7 +917,7 @@ class ViewUI extends ViewExecutable {
     // to get the right one.
     switch ($type) {
       case 'filter':
-        $rearrange_url = "admin/structure/views/nojs/rearrange-$type/{$this->storage->name}/{$display['id']}/$type";
+        $rearrange_url = "admin/structure/views/nojs/rearrange-$type/{$this->storage->get('name')}/{$display['id']}/$type";
         $rearrange_text = t('And/Or, Rearrange');
         // TODO: Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';
@@ -928,7 +936,7 @@ class ViewUI extends ViewExecutable {
         }
 
       default:
-        $rearrange_url = "admin/structure/views/nojs/rearrange/{$this->storage->name}/{$display['id']}/$type";
+        $rearrange_url = "admin/structure/views/nojs/rearrange/{$this->storage->get('name')}/{$display['id']}/$type";
         $rearrange_text = t('Rearrange');
         $class = 'icon compact rearrange';
     }
@@ -938,7 +946,7 @@ class ViewUI extends ViewExecutable {
     $count_handlers = count($this->displayHandlers[$display['id']]->getHandlers($type));
     $actions['add'] = array(
       'title' => t('Add'),
-      'href' => "admin/structure/views/nojs/add-item/{$this->storage->name}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/add-item/{$this->storage->get('name')}/{$display['id']}/$type",
       'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'title' => t('Add'), 'id' => 'views-add-' . $type),
       'html' => TRUE,
     );
@@ -1003,7 +1011,7 @@ class ViewUI extends ViewExecutable {
       if (empty($handler)) {
         $build['fields'][$id]['#class'][] = 'broken';
         $field_name = t('Broken/missing handler: @table > @field', array('@table' => $field['table'], '@field' => $field['field']));
-        $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/config-item/{$this->storage->name}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
+        $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/config-item/{$this->storage->get('name')}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
         continue;
       }
 
@@ -1018,15 +1026,15 @@ class ViewUI extends ViewExecutable {
       if (!empty($field['exclude'])) {
         $link_attributes['class'][] = 'views-field-excluded';
       }
-      $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$this->storage->name}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
+      $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$this->storage->get('name')}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
 
       if ($this->displayHandlers[$display['id']]->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$this->storage->name}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$this->storage->get('name')}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/{$this->storage->name}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/{$this->storage->get('name')}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => TRUE));
       }
 
       if ($grouping) {
@@ -1119,8 +1127,8 @@ class ViewUI extends ViewExecutable {
    * Submit handler to break_lock a view.
    */
   public function submitBreakLock(&$form, &$form_state) {
-    drupal_container()->get('user.tempstore')->get('views')->delete($this->storage->name);
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->name . '/edit';
+    drupal_container()->get('user.tempstore')->get('views')->delete($this->storage->get('name'));
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->storage->get('name') . '/edit';
     drupal_set_message(t('The lock has been broken and you may now edit this view.'));
   }
 
@@ -1294,7 +1302,7 @@ class ViewUI extends ViewExecutable {
       $form['locked'] = array(
         '#theme_wrappers' => array('container'),
         '#attributes' => array('class' => array('view-locked', 'messages', 'warning')),
-        '#markup' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($this->locked->owner))), '!age' => format_interval(REQUEST_TIME - $this->locked->updated), '!break' => url('admin/structure/views/view/' . $this->storage->name . '/break-lock'))),
+        '#markup' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($this->locked->owner))), '!age' => format_interval(REQUEST_TIME - $this->locked->updated), '!break' => url('admin/structure/views/view/' . $this->storage->get('name') . '/break-lock'))),
       );
     }
     else {
@@ -1383,7 +1391,8 @@ class ViewUI extends ViewExecutable {
       $form['displays']['settings']['settings_content']['tab_content']['#attributes'] = array('class' => array('views-display-tab'));
       $form['displays']['settings']['settings_content']['tab_content']['#id'] = 'views-tab-' . $display_id;
       // Mark deleted displays as such.
-      if (!empty($this->storage->display[$display_id]['deleted'])) {
+      $display = $this->storage->get('display');
+      if (!empty($display[$display_id]['deleted'])) {
         $form['displays']['settings']['settings_content']['tab_content']['#attributes']['class'][] = 'views-display-deleted';
       }
       // Mark disabled displays as such.
@@ -1456,7 +1465,7 @@ class ViewUI extends ViewExecutable {
       '#suffix' => '</div>',
       '#id' => 'preview-submit',
       '#ajax' => array(
-        'path' => 'admin/structure/views/view/' . $this->storage->name . '/preview/' . $display_id . '/ajax',
+        'path' => 'admin/structure/views/view/' . $this->storage->get('name') . '/preview/' . $display_id . '/ajax',
         'wrapper' => 'views-preview-wrapper',
         'event' => 'click',
         'progress' => array('type' => 'throbber'),
@@ -1468,7 +1477,7 @@ class ViewUI extends ViewExecutable {
       //   we may need to split Preview into a separate form.
       '#process' => array_merge(array(array($this, 'processDefaultButton')), element_info_property('submit', '#process', array())),
     );
-    $form['#action'] = url('admin/structure/views/view/' . $this->storage->name .'/preview/' . $display_id);
+    $form['#action'] = url('admin/structure/views/view/' . $this->storage->get('name') .'/preview/' . $display_id);
 
     return $form;
   }
@@ -1483,10 +1492,12 @@ class ViewUI extends ViewExecutable {
 
     $form['#tree'] = TRUE;
 
-    $count = count($this->storage->display);
+    $count = count($this->storage->get('display'));
 
-    uasort($this->storage->display, array('static', 'sortPosition'));
-    foreach ($this->storage->display as $display) {
+    $displays = $this->storage->get('display');
+    uasort($displays, array('static', 'sortPosition'));
+    $this->storage->set('display', $displays);
+    foreach ($displays as $display) {
       $form[$display['id']] = array(
         'title'  => array('#markup' => $display['display_title']),
         'weight' => array(
@@ -1529,7 +1540,7 @@ class ViewUI extends ViewExecutable {
       'limit' => 0,
     );
 
-    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $this->storage->name . '/' . $display_id);
+    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $this->storage->get('name') . '/' . $display_id);
 
     $this->getStandardButtons($form, $form_state, 'views_ui_reorder_displays_form');
     $form['buttons']['submit']['#submit'] = array(array($this, 'submitDisplaysReorderForm'));
@@ -1560,27 +1571,28 @@ class ViewUI extends ViewExecutable {
     }
 
     // Setting up position and removing deleted displays
-    $displays = $this->storage->display;
+    $displays = $this->storage->get('display');
     foreach ($displays as $display_id => $display) {
       // Don't touch the default !!!
       if ($display_id === 'default') {
-        $this->storage->display[$display_id]['position'] = 0;
+        $displays[$display_id]['position'] = 0;
         continue;
       }
       if (isset($order[$display_id])) {
-        $this->storage->display[$display_id]['position'] = $order[$display_id];
+        $displays[$display_id]['position'] = $order[$display_id];
       }
       else {
-        $this->storage->display[$display_id]['deleted'] = TRUE;
+        $displays[$display_id]['deleted'] = TRUE;
       }
     }
 
     // Sorting back the display array as the position is not enough
-    uasort($this->storage->display, array('static', 'sortPosition'));
+    uasort($displays, array('static', 'sortPosition'));
+    $this->storage->set('display', $displays);
 
     // Store in cache
     views_ui_cache_set($this);
-    $form_state['redirect'] = array('admin/structure/views/view/' . $this->storage->name . '/edit', array('fragment' => 'views-tab-default'));
+    $form_state['redirect'] = array('admin/structure/views/view/' . $this->storage->get('name') . '/edit', array('fragment' => 'views-tab-default'));
   }
 
   /**
@@ -1747,7 +1759,7 @@ class ViewUI extends ViewExecutable {
       }
 
       // Make view links come back to preview.
-      $this->override_path = 'admin/structure/views/nojs/preview/' . $this->storage->name . '/' . $display_id;
+      $this->override_path = 'admin/structure/views/nojs/preview/' . $this->storage->get('name') . '/' . $display_id;
 
       // Also override the current path so we get the pager.
       $original_path = current_path();
@@ -1929,7 +1941,7 @@ class ViewUI extends ViewExecutable {
     $form = views_ui_ajax_forms($key);
     // Automatically remove the single-form cache if it exists and
     // does not match the key.
-    $identifier = implode('-', array($key, $this->storage->name, $display_id));
+    $identifier = implode('-', array($key, $this->storage->get('name'), $display_id));
 
     foreach ($form['args'] as $id) {
       $arg = (!empty($args)) ? array_shift($args) : NULL;

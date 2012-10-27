@@ -52,7 +52,7 @@ class Block extends DisplayPluginBase {
    * stuff with it.
    */
   public function executeHookBlockList($delta = 0, $edit = array()) {
-    $delta = $this->view->storage->name . '-' . $this->display['id'];
+    $delta = $this->view->storage->get('name') . '-' . $this->display['id'];
     $desc = $this->getOption('block_description');
 
     if (empty($desc)) {
@@ -193,14 +193,14 @@ class Block extends DisplayPluginBase {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'display_id':
-        $this->updateBlockBid($form_state['view']->storage->name, $this->display['id'], $this->display['new_id']);
+        $this->updateBlockBid($form_state['view']->storage->get('name'), $this->display['id'], $this->display['new_id']);
         break;
       case 'block_description':
         $this->setOption('block_description', $form_state['values']['block_description']);
         break;
       case 'block_caching':
         $this->setOption('block_caching', $form_state['values']['block_caching']);
-        $this->saveBlockCache($form_state['view']->storage->name . '-'. $form_state['display_id'], $form_state['values']['block_caching']);
+        $this->saveBlockCache($form_state['view']->storage->get('name') . '-'. $form_state['display_id'], $form_state['values']['block_caching']);
         break;
     }
   }

@@ -22,19 +22,19 @@ function _views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
   $themes = array();
 
   if ($display) {
-    $themes[] = $hook . '__' . $view->storage->name . '__' . $display['id'];
+    $themes[] = $hook . '__' . $view->storage->get('name') . '__' . $display['id'];
     $themes[] = $hook . '__' . $display['id'];
     // Add theme suggestions for each single tag.
-    foreach (drupal_explode_tags($view->storage->tag) as $tag) {
+    foreach (drupal_explode_tags($view->storage->get('tag')) as $tag) {
       $themes[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($tag));
     }
 
     if ($display['id'] != $display['display_plugin']) {
-      $themes[] = $hook . '__' . $view->storage->name . '__' . $display['display_plugin'];
+      $themes[] = $hook . '__' . $view->storage->get('name') . '__' . $display['display_plugin'];
       $themes[] = $hook . '__' . $display['display_plugin'];
     }
   }
-  $themes[] = $hook . '__' . $view->storage->name;
+  $themes[] = $hook . '__' . $view->storage->get('name');
   $themes[] = $hook;
   return $themes;
 }
@@ -49,8 +49,8 @@ function template_preprocess_views_view(&$vars) {
 
   $vars['rows']       = (!empty($view->result) || $view->style_plugin->even_empty()) ? $view->style_plugin->render($view->result) : '';
 
-  $vars['css_name']   = drupal_clean_css_identifier($view->storage->name);
-  $vars['name']       = $view->storage->name;
+  $vars['css_name']   = drupal_clean_css_identifier($view->storage->get('name'));
+  $vars['name']       = $view->storage->get('name');
   $vars['display_id'] = $view->current_display;
 
   // Basic classes
@@ -125,7 +125,7 @@ function template_preprocess_views_view(&$vars) {
         'ajax_path' => url('views/ajax'),
         'ajaxViews' => array(
           'views_dom_id:' . $vars['dom_id'] => array(
-            'view_name' => $view->storage->name,
+            'view_name' => $view->storage->get('name'),
             'view_display_id' => $view->current_display,
             'view_args' => check_plain(implode('/', $view->args)),
             'view_path' => check_plain(current_path()),

@@ -754,7 +754,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     // Query plugins allow specifying a specific query class per base table.
     if ($type == 'query') {
-      $views_data = views_fetch_data($this->view->storage->base_table);
+      $views_data = views_fetch_data($this->view->storage->get('base_table'));
       $name = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
     }
 
@@ -764,7 +764,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
       // Initialize the plugin. Query has a unique method signature.
       if ($type == 'query') {
-        $plugin->init($this->view->storage->base_table, $this->view->storage->base_field, $options['options']);
+        $plugin->init($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), $options['options']);
       }
       else {
         $plugin->init($this->view, $this, $options['options']);
@@ -939,7 +939,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $title = $text;
     }
 
-    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->name . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
+    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->get('name') . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
   }
 
   /**
@@ -1433,7 +1433,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $access = $this->getOption('access');
         $form['access']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('access', NULL, array($this->view->storage->base_table)),
+          '#options' => views_fetch_plugin_names('access', NULL, array($this->view->storage->get('base_table'))),
           '#default_value' => $access['type'],
         );
 
@@ -1468,7 +1468,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $cache = $this->getOption('cache');
         $form['cache']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('cache', NULL, array($this->view->storage->base_table)),
+          '#options' => views_fetch_plugin_names('cache', NULL, array($this->view->storage->get('base_table'))),
           '#default_value' => $cache['type'],
         );
 
@@ -1529,7 +1529,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // Doesn't make sense to show a field setting here if we aren't querying
         // an entity base table. Also, we make sure that there's at least one
         // entity type with a translation handler attached.
-        if (in_array($this->view->storage->base_table, $entity_tables) && $has_translation_handlers) {
+        if (in_array($this->view->storage->get('base_table'), $entity_tables) && $has_translation_handlers) {
           $languages = array(
             '***CURRENT_LANGUAGE***' => t("Current user's language"),
             '***DEFAULT_LANGUAGE***' => t("Default site language"),
@@ -1559,7 +1559,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $style_plugin = $this->getPlugin('style');
         $form['style'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->storage->base_table)),
+          '#options' => views_fetch_plugin_names('style', $this->getStyleType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $style_plugin->definition['id'],
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
@@ -1601,7 +1601,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $row_plugin_instance = $this->getPlugin('row');
         $form['row'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->storage->base_table)),
+          '#options' => views_fetch_plugin_names('row', $this->getStyleType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $row_plugin_instance->definition['id'],
         );
 
@@ -1616,7 +1616,7 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'link_display':
         $form['#title'] .= t('Which display to use for path');
-        foreach ($this->view->storage->display as $display_id => $display) {
+        foreach ($this->view->storage->get('display') as $display_id => $display) {
           if ($this->view->displayHandlers[$display_id]->hasPath()) {
             $options[$display_id] = $display['display_title'];
           }
@@ -1955,7 +1955,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $exposed_form = $this->getOption('exposed_form');
         $form['exposed_form']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('exposed_form', NULL, array($this->view->storage->base_table)),
+          '#options' => views_fetch_plugin_names('exposed_form', NULL, array($this->view->storage->get('base_table'))),
           '#default_value' => $exposed_form['type'],
         );
 
@@ -1989,7 +1989,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $pager = $this->getOption('pager');
         $form['pager']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->storage->base_table)),
+          '#options' => views_fetch_plugin_names('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->storage->get('base_table'))),
           '#default_value' => $pager['type'],
         );
 
@@ -2646,8 +2646,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $blocks = array();
 
     if ($this->usesExposedFormInBlock()) {
-      $delta = '-exp-' . $this->view->storage->name . '-' . $this->display['id'];
-      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->storage->name, '@display_id' => $this->display['id']));
+      $delta = '-exp-' . $this->view->storage->get('name') . '-' . $this->display['id'];
+      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->storage->get('name'), '@display_id' => $this->display['id']));
 
       $blocks[$delta] = array(
         'info' => $desc,

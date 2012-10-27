@@ -291,8 +291,8 @@ function views_ui_edit_page_title(ViewUI $view) {
   module_load_include('inc', 'views_ui', 'admin');
   $bases = views_fetch_base_tables();
   $name = $view->storage->getHumanName();
-  if (isset($bases[$view->storage->base_table])) {
-    $name .= ' (' . $bases[$view->storage->base_table]['title'] . ')';
+  if (isset($bases[$view->storage->get('base_table')])) {
+    $name .= ' (' . $bases[$view->storage->get('base_table')]['title'] . ')';
   }
 
   return $name;
@@ -327,14 +327,14 @@ function views_ui_cache_load($name) {
   else {
     // Keep disabled/enabled status real.
     if ($original_view) {
-      $view->storage->disabled = $original_view->storage->disabled;
+      $view->storage->set('disabled', $original_view->storage->get('disabled'));
     }
   }
 
   if (empty($view)) {
     return FALSE;
   }
-  $view->locked = $views_temp_store->getMetadata($view->storage->name);
+  $view->locked = $views_temp_store->getMetadata($view->storage->get('name'));
 
   return $view;
 }
@@ -362,7 +362,7 @@ function views_ui_cache_set(ViewUI $view) {
   unset($view->default_display);
   $view->query = NULL;
   $view->displayHandlers = array();
-  drupal_container()->get('user.tempstore')->get('views')->set($view->storage->name, $view);
+  drupal_container()->get('user.tempstore')->get('views')->set($view->storage->get('name'), $view);
 }
 
 /**
@@ -414,13 +414,13 @@ function views_ui_view_preview_section_handler_links(ViewUI $view, $type, $title
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
-      'href' => "admin/structure/views/nojs/config-item/{$view->storage->name}/{$display['id']}/$type/$id",
+      'href' => "admin/structure/views/nojs/config-item/{$view->storage->get('name')}/{$display['id']}/$type/$id",
       'attributes' => array('class' => array('views-ajax-link')),
     );
   }
   $links[$type . '-add'] = array(
     'title' => t('Add new'),
-    'href' => "admin/structure/views/nojs/add-item/{$view->storage->name}/{$display['id']}/$type",
+    'href' => "admin/structure/views/nojs/add-item/{$view->storage->get('name')}/{$display['id']}/$type",
     'attributes' => array('class' => array('views-ajax-link')),
   );
 
@@ -435,7 +435,7 @@ function views_ui_view_preview_section_display_category_links(ViewUI $view, $typ
   $links = array(
     $type . '-edit' => array(
       'title' => t('Edit @section', array('@section' => $title)),
-      'href' => "admin/structure/views/nojs/display/{$view->storage->name}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/display/{$view->storage->get('name')}/{$display['id']}/$type",
       'attributes' => array('class' => array('views-ajax-link')),
     ),
   );
