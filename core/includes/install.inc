@@ -254,13 +254,14 @@ function drupal_install_config_directories() {
   // Add a randomized config directory name to settings.php, unless it was
   // manually defined in the existing already.
   if (empty($config_directories)) {
+    $config_directories_hash = drupal_hash_base64(drupal_random_bytes(55));
     $settings['config_directories'] = array(
       'value' => array(
         CONFIG_ACTIVE_DIRECTORY => array(
-          'path' => 'config/active_' . drupal_hash_base64(drupal_random_bytes(55)),
+          'path' => 'config_' . $config_directories_hash . '/active',
         ),
         CONFIG_STAGING_DIRECTORY => array(
-          'path' => 'config/staging_' . drupal_hash_base64(drupal_random_bytes(55)),
+          'path' => 'config_' . $config_directories_hash . '/staging',
         ),
       ),
       'required' => TRUE,
