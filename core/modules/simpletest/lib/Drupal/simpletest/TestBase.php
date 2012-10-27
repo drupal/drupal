@@ -963,8 +963,8 @@ abstract class TestBase {
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
     simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
-
-    $emailCount = count(variable_get('drupal_test_email_collector', array()));
+    $captured_emails = state()->get('system.test_email_collector') ?: array();
+    $emailCount = count($captured_emails);
     if ($emailCount) {
       $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');
       $this->pass($message, t('E-mail'));

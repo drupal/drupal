@@ -21,9 +21,9 @@ class VariableLog extends PhpMail implements MailInterface {
    * Accepts an e-mail message and store it in a variable.
    */
   public function mail(array $message) {
-    $captured_emails = variable_get('drupal_test_email_collector', array());
+    $captured_emails = state()->get('system.test_email_collector') ?: array();
     $captured_emails[] = $message;
-    variable_set('drupal_test_email_collector', $captured_emails);
+    state()->set('system.test_email_collector', $captured_emails);
 
     return TRUE;
   }
