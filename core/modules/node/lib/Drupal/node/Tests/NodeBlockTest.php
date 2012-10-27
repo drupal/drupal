@@ -32,7 +32,7 @@ class NodeBlockTest extends NodeTestBase {
     $this->drupalLogin($admin_user);
   }
 
-  function testSearchFormBlock() {
+  function testSyndicateBlock() {
     // Set block title to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/node/syndicate/configure', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
