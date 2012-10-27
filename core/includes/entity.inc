@@ -151,7 +151,7 @@ function entity_revision_load($entity_type, $revision_id) {
 }
 
 /**
- * Deletes a node revision.
+ * Deletes an entity revision.
  *
  * @param string $entity_type
  *   The entity type to load, e.g. node or user.
