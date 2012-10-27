@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Loads all enabled modules.
@@ -501,6 +502,12 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       system_list_reset();
       module_implements_reset();
       _system_update_bootstrap_status();
+      // Update the kernel to include it.
+      // @todo The if statement is here because install_begin_request() creates
+      //   a container without a kernel. It probably shouldn't.
+      if ($kernel = drupal_container()->get('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
+        $kernel->updateModules(module_list());
+      }
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);
       // Update the theme registry to include it.
@@ -632,6 +639,8 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);
     _system_update_bootstrap_status();
+    // Update the kernel to exclude the disabled modules.
+    drupal_container()->get('kernel')->updateModules(module_list());
     // Update the theme registry to remove the newly-disabled module.
     drupal_theme_rebuild();
   }

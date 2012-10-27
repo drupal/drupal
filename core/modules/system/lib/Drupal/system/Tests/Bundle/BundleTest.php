@@ -41,4 +41,18 @@ class BundleTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText(t('The bundle_test event subscriber fired!'), 'The bundle_test event subscriber fired');
   }
+
+  /**
+   * Tests that the DIC keeps up with module enable/disable in the same request.
+   */
+  function testBundleRegistrationDynamic() {
+    // Disable the module and ensure the bundle's service is not registered.
+    module_disable(array('bundle_test'));
+    $this->assertFalse(drupal_container()->has('bundle_test_class'), 'The bundle_test_class service does not exist in the DIC.');
+
+    // Enable the module and ensure the bundle's service is registered.
+    module_enable(array('bundle_test'));
+    $this->assertTrue(drupal_container()->has('bundle_test_class'), 'The bundle_test_class service exists in the DIC.');
+  }
+
 }

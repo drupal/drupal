@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
  * own bundle, i.e. a subclass of Symfony\Component\HttpKernel\Bundle, to
  * register services to the container.
  */
-class DrupalKernel extends Kernel {
+class DrupalKernel extends Kernel implements DrupalKernelInterface {
 
   /**
    * Holds the list of enabled modules.
@@ -110,6 +110,20 @@ class DrupalKernel extends Kernel {
     return $bundles;
   }
 
+  /**
+   * Implements Drupal\Core\DrupalKernelInterface::updateModules().
+   */
+  public function updateModules($module_list) {
+    $this->moduleList = $module_list;
+    // If we haven't yet booted, we don't need to do anything: the new module
+    // list will take effect when boot() is called. If we have already booted,
+    // then reboot in order to refresh the bundle list and container.
+    if ($this->booted) {
+      drupal_container(NULL, TRUE);
+      $this->booted = FALSE;
+      $this->boot();
+    }
+  }
 
   /**
    * Initializes the service container.
@@ -222,4 +236,5 @@ class DrupalKernel extends Kernel {
    */
   public function registerContainerConfiguration(LoaderInterface $loader) {
   }
+
 }
