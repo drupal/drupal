@@ -744,10 +744,6 @@ function views_ui_ajax_forms($key = NULL) {
       'form_id' => 'views_ui_remove_display_form',
       'args' => array(),
     ),
-    'config-type' => array(
-      'form_id' => 'views_ui_config_type_form',
-      'args' => array('type'),
-    ),
     'rearrange' => array(
       'form_id' => 'views_ui_rearrange_form',
       'args' => array('type'),
@@ -775,10 +771,6 @@ function views_ui_ajax_forms($key = NULL) {
     ),
     'config-item-group' => array(
       'form_id' => 'views_ui_config_item_group_form',
-      'args' => array('type', 'id'),
-    ),
-    'config-style' => array(
-      'form_id' => 'views_ui_config_style_form',
       'args' => array('type', 'id'),
     ),
     'edit-details' => array(
@@ -1062,53 +1054,6 @@ function views_ui_edit_display_form_override($form, &$form_state) {
   views_ui_cache_set($form_state['view']);
   $form_state['rerender'] = TRUE;
   $form_state['rebuild'] = TRUE;
-}
-
-/**
- * Form to config items in the views UI.
- */
-function views_ui_config_type_form($form, &$form_state) {
-  $view = &$form_state['view'];
-  $display_id = $form_state['display_id'];
-  $type = $form_state['type'];
-
-  $types = ViewUI::viewsHandlerTypes();
-  if (!$view->setDisplay($display_id)) {
-    views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
-  }
-  $display = &$view->displayHandlers[$display_id];
-  $form['#title'] = t('Configure @type', array('@type' => $types[$type]['ltitle']));
-  $form['#section'] = $display_id . 'config-item';
-
-  if ($display->defaultableSections($types[$type]['plural'])) {
-    $form_state['section'] = $types[$type]['plural'];
-    views_ui_standard_display_dropdown($form, $form_state, $form_state['section']);
-  }
-
-  if (!empty($types[$type]['options']) && function_exists($types[$type]['options'])) {
-    $options = $type . '_options';
-    $form[$options] = array('#tree' => TRUE);
-    $types[$type]['options']($form, $form_state);
-  }
-
-  $name = NULL;
-  if (isset($form_state['update_name'])) {
-    $name = $form_state['update_name'];
-  }
-
-  $view->getStandardButtons($form, $form_state, 'views_ui_config_type_form', $name);
-  return $form;
-}
-
-/**
- * Submit handler for type configuration form
- */
-function views_ui_config_type_form_submit($form, &$form_state) {
-  $types = ViewUI::viewsHandlerTypes();
-  $display = &$form_state['view']->display[$form_state['display_id']];
-
-  // Store in cache
-  views_ui_cache_set($form_state['view']);
 }
 
 /**
@@ -2104,76 +2049,6 @@ function views_ui_config_item_extra_form_submit($form, &$form_state) {
   foreach ($form_state['values']['options'] as $key => $value) {
     $item[$key] = $value;
   }
-
-  // Store the item back on the view
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
-
-  // Write to cache
-  views_ui_cache_set($form_state['view']);
-}
-
-/**
- * Form to config_style items in the views UI.
- */
-function views_ui_config_style_form($form, &$form_state) {
-  $view = &$form_state['view'];
-  $display_id = $form_state['display_id'];
-  $type = $form_state['type'];
-  $id = $form_state['id'];
-
-  $form = array(
-    'options' => array(
-      '#tree' => TRUE,
-      '#theme_wrappers' => array('container'),
-      '#attributes' => array('class' => array('scroll')),
-    ),
-  );
-  if (!$view->setDisplay($display_id)) {
-    views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
-  }
-  $item = $view->getItem($display_id, $type, $id);
-
-  if ($item) {
-    $handler = views_get_handler($item['table'], $item['field'], $type);
-    if (empty($handler)) {
-      $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
-    }
-    else {
-      $handler->init($view, $item);
-      $types = ViewUI::viewsHandlerTypes();
-
-      $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
-
-      $form['#section'] = $display_id . '-' . $type . '-style-options';
-
-      $plugin = views_get_plugin('style', $handler->options['style']['type']);
-      if ($plugin) {
-        $form['style_options'] = array(
-          '#tree' => TRUE,
-        );
-        $plugin->init($view, $view->display[$display_id], $handler->options['style']['options']);
-
-        $plugin->buildOptionsForm($form['style_options'], $form_state);
-      }
-
-      $form_state['handler'] = &$handler;
-    }
-
-    $view->getStandardButtons($form, $form_state, 'views_ui_config_style_form');
-  }
-  return $form;
-}
-
-/**
- * Submit handler for configing new item(s) to a view.
- */
-function views_ui_config_style_form_submit($form, &$form_state) {
-  // Run it through the handler's submit function.
-  $form_state['handler']->submitOptionsForm($form['style_options'], $form_state);
-  $item = $form_state['handler']->options;
-
-  // Store the data we're given.
-  $item['style_options'] = $form_state['values']['style_options'];
 
   // Store the item back on the view
   $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);

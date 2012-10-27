@@ -969,11 +969,6 @@ class ViewUI extends ViewExecutable {
       }
     }
 
-    // If there's an options form for the bucket, link to it.
-    if (!empty($types[$type]['options'])) {
-      $build['#title'] = l($build['#title'], "admin/structure/views/nojs/config-type/{$this->storage->name}/{$display['id']}/$type", array('attributes' => array('class' => array('views-ajax-link'), 'id' => 'views-title-' . $type)));
-    }
-
     static $relationships = NULL;
     if (!isset($relationships)) {
       // Get relationship labels
