@@ -1657,6 +1657,30 @@ function template_preprocess_comment(&$variables) {
   $variables['permalink'] = l(t('Permalink'), $uri['path'], $uri['options']);
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 
+  if ($comment->pid > 0) {
+    // Fetch and store the parent comment information for use in templates.
+    $comment_parent = comment_load($comment->pid);
+    $variables['parent_comment'] = $comment_parent;
+    $variables['parent_author'] = theme('username', array('account' => $comment_parent));
+    $variables['parent_created'] = format_date($comment_parent->created);
+    $variables['parent_changed'] = format_date($comment_parent->changed);
+    $uri_parent = $comment_parent->uri();
+    $uri_parent['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
+    $variables['parent_title'] = l($comment_parent->subject, $uri_parent['path'], $uri_parent['options']);
+    $variables['parent_permalink'] = l(t('Parent permalink'), $uri_parent['path'], $uri_parent['options']);
+    $variables['parent'] = t('In reply to !parent_title by !parent_username',
+        array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
+  }
+  else {
+    $variables['parent_comment'] = '';
+    $variables['parent_author'] = '';
+    $variables['parent_created'] = '';
+    $variables['parent_changed'] = '';
+    $variables['parent_title'] = '';
+    $variables['parent_permalink'] = '';
+    $variables['parent'] = '';
+  }
+
   // Preprocess fields.
   field_attach_preprocess('comment', $comment, $variables['elements'], $variables);
 
