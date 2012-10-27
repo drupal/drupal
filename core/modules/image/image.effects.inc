@@ -77,7 +77,7 @@ function image_image_effect_info() {
  *
  * @see image_resize()
  */
-function image_resize_effect($image, $data) {
+function image_resize_effect(&$image, $data) {
   if (!image_resize($image, $data['width'], $data['height'])) {
     watchdog('image', 'Image resize failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
@@ -121,7 +121,7 @@ function image_resize_dimensions(array &$dimensions, array $data) {
  *
  * @see image_scale()
  */
-function image_scale_effect($image, $data) {
+function image_scale_effect(&$image, $data) {
   // Set sane default values.
   $data += array(
     'width' => NULL,
@@ -174,7 +174,7 @@ function image_scale_dimensions(array &$dimensions, array $data) {
  *   TRUE on success. FALSE on failure to crop image.
  * @see image_crop()
  */
-function image_crop_effect($image, $data) {
+function image_crop_effect(&$image, $data) {
   // Set sane default values.
   $data += array(
     'anchor' => 'center-center',
@@ -204,7 +204,7 @@ function image_crop_effect($image, $data) {
  *   TRUE on success. FALSE on failure to scale and crop image.
  * @see image_scale_and_crop()
  */
-function image_scale_and_crop_effect($image, $data) {
+function image_scale_and_crop_effect(&$image, $data) {
   if (!image_scale_and_crop($image, $data['width'], $data['height'])) {
     watchdog('image', 'Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
@@ -223,7 +223,7 @@ function image_scale_and_crop_effect($image, $data) {
  *   TRUE on success. FALSE on failure to desaturate image.
  * @see image_desaturate()
  */
-function image_desaturate_effect($image, $data) {
+function image_desaturate_effect(&$image, $data) {
   if (!image_desaturate($image)) {
     watchdog('image', 'Image desaturate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
@@ -250,7 +250,7 @@ function image_desaturate_effect($image, $data) {
  *   TRUE on success. FALSE on failure to rotate image.
  * @see image_rotate().
  */
-function image_rotate_effect($image, $data) {
+function image_rotate_effect(&$image, $data) {
   // Set sane default values.
   $data += array(
     'degrees' => 0,
