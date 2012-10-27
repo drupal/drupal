@@ -37,10 +37,6 @@ function language_uninstall() {
 
   // Clear variables.
   variable_del('language_types');
-  variable_del('language_negotiation_url_part');
-  variable_del('language_negotiation_url_prefixes');
-  variable_del('language_negotiation_url_domains');
-  variable_del('language_negotiation_session_param');
   variable_del('language_content_type_default');
   variable_del('language_content_type_negotiation');
 

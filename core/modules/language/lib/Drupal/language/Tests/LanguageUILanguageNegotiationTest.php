@@ -377,7 +377,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       language_negotiation_set(LANGUAGE_TYPE_INTERFACE, $method_weights);
     }
     if (!empty($test['language_negotiation_url_part'])) {
-      variable_set('language_negotiation_url_part', $test['language_negotiation_url_part']);
+      config('language.negotiation')
+        ->set('url.source', $test['language_negotiation_url_part'])
+        ->save();
     }
     if (!empty($test['language_test_domain'])) {
       variable_set('language_test_domain', $test['language_test_domain']);
@@ -456,7 +458,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // Change the domain for the Italian language.
     $edit = array(
-      'language_negotiation_url_part' => 1,
+      'language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
       'domain[it]' => 'it.example.com',
     );
     $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));

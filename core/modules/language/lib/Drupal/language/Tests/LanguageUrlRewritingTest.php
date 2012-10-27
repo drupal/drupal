@@ -101,13 +101,15 @@ class LanguageUrlRewritingTest extends WebTestBase {
   function testDomainNameNegotiationPort() {
     $language_domain = 'example.fr';
     $edit = array(
-      'language_negotiation_url_part' => 1,
+      'language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
       'domain[fr]' => $language_domain
     );
     $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Enable domain configuration.
-    variable_set('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_DOMAIN);
+    config('language.negotiation')
+      ->set('url.source', LANGUAGE_NEGOTIATION_URL_DOMAIN)
+      ->save();
 
     // Reset static caching.
     drupal_static_reset('language_list');

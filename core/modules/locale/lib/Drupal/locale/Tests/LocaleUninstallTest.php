@@ -93,8 +93,10 @@ class LocaleUninstallTest extends WebTestBase {
     variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, language_language_negotiation_info());
 
     // Change language negotiation settings.
-    variable_set('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX);
-    variable_set('language_negotiation_session_param', TRUE);
+    config('language.negotiation')
+      ->set('url.source', LANGUAGE_NEGOTIATION_URL_PREFIX)
+      ->set('session.parameter', TRUE)
+      ->save();
 
     // Uninstall Locale.
     module_disable($locale_module);
@@ -126,8 +128,8 @@ class LocaleUninstallTest extends WebTestBase {
     $this->assertTrue($language_negotiation, t('URL language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
 
     // Check language negotiation method settings.
-    $this->assertFalse(variable_get('language_negotiation_url_part', FALSE), t('URL language negotiation method indicator settings cleared.'));
-    $this->assertFalse(variable_get('language_negotiation_session_param', FALSE), t('Visit language negotiation method settings cleared.'));
+    $this->assertFalse(config('language.negotiation')->get('url.source'), t('URL language negotiation method indicator settings cleared.'));
+    $this->assertFalse(config('language.negotiation')->get('session.parameter'), t('Visit language negotiation method settings cleared.'));
 
     // Check JavaScript parsed.
     $javascript_parsed_count = count(state()->get('system.javascript_parsed') ?: array());

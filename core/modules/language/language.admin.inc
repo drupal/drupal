@@ -631,6 +631,9 @@ function language_negotiation_configure_form_submit($form, &$form_state) {
 
 /**
  * Builds the URL language negotiation method configuration form.
+ *
+ * @see language_negotiation_configure_url_form_validate()
+ * @see language_negotiation_configure_url_form_submit()
  */
 function language_negotiation_configure_url_form($form, &$form_state) {
   global $base_url;
@@ -643,7 +646,7 @@ function language_negotiation_configure_url_form($form, &$form_state) {
       LANGUAGE_NEGOTIATION_URL_PREFIX => t('Path prefix'),
       LANGUAGE_NEGOTIATION_URL_DOMAIN => t('Domain'),
     ),
-    '#default_value' => variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX),
+    '#default_value' => config('language.negotiation')->get('url.source'),
   );
 
   $form['prefix'] = array(
@@ -695,12 +698,7 @@ function language_negotiation_configure_url_form($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/config/regional/language/detection';
 
-  $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
-  return $form;
+  return system_config_form($form, $form_state);
 }
 
 /**
@@ -769,33 +767,44 @@ function language_negotiation_configure_url_form_validate($form, &$form_state) {
 }
 
 /**
- * Saves the URL language negotiation method settings.
+ * Form submission handler for language_negotiation_configure_url_form().
  */
 function language_negotiation_configure_url_form_submit($form, &$form_state) {
   // Save selected format (prefix or domain).
-  variable_set('language_negotiation_url_part', $form_state['values']['language_negotiation_url_part']);
+  config('language.negotiation')
+    ->set('url.source', $form_state['values']['language_negotiation_url_part'])
+    ->save();
 
   // Save new domain and prefix values.
   language_negotiation_url_prefixes_save($form_state['values']['prefix']);
   language_negotiation_url_domains_save($form_state['values']['domain']);
-
-  drupal_set_message(t('Configuration saved.'));
 }
 
 /**
  * Builds the session language negotiation method configuration form.
+ *
+ * @see language_negotiation_configure_session_form_submit()
  */
 function language_negotiation_configure_session_form($form, &$form_state) {
   $form['language_negotiation_session_param'] = array(
     '#title' => t('Request/session parameter'),
     '#type' => 'textfield',
-    '#default_value' => variable_get('language_negotiation_session_param', 'language'),
+    '#default_value' => config('language.negotiation')->get('session.parameter'),
     '#description' => t('Name of the request/session parameter used to determine the desired language.'),
   );
 
   $form_state['redirect'] = 'admin/config/regional/language/detection';
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Form submission handler for language_negotiation_configure_session_form().
+ */
+function language_negotiation_configure_session_form_submit($form, &$form_state) {
+  config('language.negotiation')
+    ->set('session.parameter', $form_state['values']['language_negotiation_session_param'])
+    ->save();
 }
 
 /**

@@ -43,12 +43,12 @@ const LANGUAGE_NEGOTIATION_SESSION = 'language-session';
 /**
  * URL language negotiation: use the path prefix as URL language indicator.
  */
-const LANGUAGE_NEGOTIATION_URL_PREFIX = 0;
+const LANGUAGE_NEGOTIATION_URL_PREFIX = 'path_prefix';
 
 /**
  * URL language negotiation: use the domain as URL language indicator.
  */
-const LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
+const LANGUAGE_NEGOTIATION_URL_DOMAIN = 'domain';
 
 /**
  * Identifies the language from the current interface language.
@@ -231,7 +231,7 @@ function language_from_user_admin($languages) {
  *   A valid language code on success, FALSE otherwise.
  */
 function language_from_session($languages) {
-  $param = variable_get('language_negotiation_session_param', 'language');
+  $param = config('language.negotiation')->get('session.parameter');
 
   // Request parameter: we need to update the session parameter only if we have
   // an authenticated user.
@@ -270,7 +270,7 @@ function language_from_url($languages, $request) {
     return $language_url;
   }
 
-  switch (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX)) {
+  switch (config('language.negotiation')->get('url.source')) {
     case LANGUAGE_NEGOTIATION_URL_PREFIX:
 
       $current_path = $request->attributes->get('system_path');
@@ -353,7 +353,7 @@ function language_from_url($languages, $request) {
  */
 function language_url_fallback($language = NULL, $request = NULL, $language_type = LANGUAGE_TYPE_INTERFACE) {
   $default = language_default();
-  $prefix = (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX) == LANGUAGE_NEGOTIATION_URL_PREFIX);
+  $prefix = (config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX);
 
   // If the default language is not configured to convey language information,
   // a missing URL language information indicates that URL language should be
@@ -394,7 +394,7 @@ function language_switcher_url($type, $path) {
  * Return the session language switcher block.
  */
 function language_switcher_session($type, $path) {
-  $param = variable_get('language_negotiation_session_param', 'language');
+  $param = config('language.negotiation')->get('session.parameter');
   $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : language($type)->langcode;
 
   $languages = language_list();
@@ -448,7 +448,7 @@ function language_url_rewrite_url(&$path, &$options) {
   }
 
   if (isset($options['language'])) {
-    switch (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX)) {
+    switch (config('language.negotiation')->get('url.source')) {
       case LANGUAGE_NEGOTIATION_URL_DOMAIN:
         $domains = language_negotiation_url_domains();
         if (is_object($options['language']) && !empty($domains[$options['language']->langcode])) {
@@ -504,7 +504,7 @@ function language_url_rewrite_url(&$path, &$options) {
  * Reads language prefixes and uses the langcode if no prefix is set.
  */
 function language_negotiation_url_prefixes() {
-  return variable_get('language_negotiation_url_prefixes', array());
+  return config('language.negotiation')->get('url.prefixes');
 }
 
 /**
@@ -529,21 +529,25 @@ function language_negotiation_url_prefixes_update() {
  * Saves language prefix settings.
  */
 function language_negotiation_url_prefixes_save(array $prefixes) {
-  variable_set('language_negotiation_url_prefixes', $prefixes);
+  config('language.negotiation')
+    ->set('url.prefixes', $prefixes)
+    ->save();
 }
 
 /**
  * Reads language domains.
  */
 function language_negotiation_url_domains() {
-  return variable_get('language_negotiation_url_domains', array());
+  return config('language.negotiation')->get('url.domains');
 }
 
 /**
  * Saves the language domain settings.
  */
 function language_negotiation_url_domains_save(array $domains) {
-  variable_set('language_negotiation_url_domains', $domains);
+  config('language.negotiation')
+    ->set('url.domains', $domains)
+    ->save();
 }
 
 /**
@@ -558,7 +562,7 @@ function language_url_rewrite_session(&$path, &$options) {
     global $user;
     if (!$user->uid) {
       $languages = language_list();
-      $query_param = check_plain(variable_get('language_negotiation_session_param', 'language'));
+      $query_param = check_plain(config('language.negotiation')->get('session.parameter'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
       $query_rewrite = isset($languages[$query_value]) && language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_SESSION);
     }

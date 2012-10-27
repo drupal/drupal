@@ -649,6 +649,12 @@ function locale_update_8008() {
       update_variable_del($deprecated_variable_name);
     }
   }
+  update_variables_to_config('language.negotiation', array(
+    'locale_language_negotiation_session_param' => 'session.parameter',
+    'language_negotiation_url_part' => 'url.source',
+    'language_negotiation_url_prefixes' => 'url.prefixes',
+    'language_negotiation_url_domains' => 'url.domains',
+  ));
 }
 
 /**

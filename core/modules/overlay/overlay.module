@@ -696,7 +696,7 @@ function overlay_overlay_parent_initialize() {
   $path_prefixes = array();
   if (module_exists('language')) {
     language_negotiation_include();
-    if (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX) == LANGUAGE_NEGOTIATION_URL_PREFIX) {
+    if (config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX) {
       // Skip the empty string indicating the default language. We always accept
       // paths without a prefix.
       $path_prefixes = language_negotiation_url_prefixes();
