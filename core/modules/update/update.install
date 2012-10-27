@@ -162,3 +162,16 @@ function update_update_8000() {
     'update_notification_threshold' => 'notification.threshold',
   ));
 }
+
+/**
+ * Convert update_last_check, last_email_notification variables to state API.
+ *
+ * @ingroup config_upgrade
+ */
+function update_update_8001() {
+  $variable_map = array(
+    'update_last_check' => 'update.last_check',
+    'update_last_email_notification' => 'update.last_email_notification'
+  );
+  update_variables_to_state($variable_map);
+}

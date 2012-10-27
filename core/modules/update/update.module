@@ -285,7 +285,8 @@ function update_cron() {
   $update_config = config('update.settings');
   $frequency = $update_config->get('check.interval_days');
   $interval = 60 * 60 * 24 * $frequency;
-  if ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval) {
+  $last_check = state()->get('update.last_check') ?: 0;
+  if ((REQUEST_TIME - $last_check) > $interval) {
     // If the configured update interval has elapsed, we want to invalidate
     // the cached data for all projects, attempt to re-fetch, and trigger any
     // configured notifications about the new status.
@@ -297,7 +298,8 @@ function update_cron() {
     // missing data, and if so, try to fetch the data.
     update_get_available(TRUE);
   }
-  if ((REQUEST_TIME - variable_get('update_last_email_notification', 0)) > $interval) {
+  $last_email_notice = state()->get('update.last_email_notification') ?: 0;
+  if ((REQUEST_TIME - $last_email_notice) > $interval) {
     // If configured time between notifications elapsed, send email about
     // updates possibly available.
     module_load_include('inc', 'update', 'update.fetch');

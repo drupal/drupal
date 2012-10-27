@@ -186,7 +186,7 @@ function _update_process_fetch_task($project) {
   _update_cache_set('fetch_failures', $fail, $now + (60 * 5));
 
   // Whether this worked or not, we did just (try to) check for updates.
-  variable_set('update_last_check', $now);
+  state()->set('update.last_check', $now);
 
   // Now that we processed the fetch task for this project, clear out the
   // record in {cache_update} for this task so we're willing to fetch again.
@@ -378,7 +378,7 @@ function _update_cron_notify() {
         // Track when the last mail was successfully sent to avoid sending
         // too many e-mails.
         if ($message['result']) {
-          variable_set('update_last_email_notification', REQUEST_TIME);
+          state()->set('update.last_email_notification', REQUEST_TIME);
         }
       }
     }
