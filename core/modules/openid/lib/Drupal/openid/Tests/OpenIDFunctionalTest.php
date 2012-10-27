@@ -88,7 +88,9 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $this->addIdentity(url('openid-test/yadis/http-equiv', array('absolute' => TRUE)), 2);
 
     // Identifier is an XRI. Resolve using our own dummy proxy resolver.
-    variable_set('xri_proxy_resolver', url('openid-test/yadis/xrds/xri', array('absolute' => TRUE)) . '/');
+    config('openid.settings')
+      ->set('xri_proxy_resolver', url('openid-test/yadis/xrds/xri', array('absolute' => TRUE)) . '/')
+      ->save();
     $this->addIdentity('@example*résumé;%25', 2, 'http://example.com/xrds', 'http://example.com/user');
 
     // Make sure that unverified CanonicalID are not trusted.

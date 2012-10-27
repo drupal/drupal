@@ -122,3 +122,14 @@ function openid_requirements($phase) {
 function openid_update_last_removed() {
   return 6000;
 }
+
+/**
+ * Moves xri_proxy_resolver settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function openid_update_8001() {
+  update_variables_to_config('openid.settings', array(
+    'xri_proxy_resolver' => 'xri_proxy_resolver',
+  ));
+}

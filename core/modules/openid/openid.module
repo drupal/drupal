@@ -526,7 +526,7 @@ function _openid_xri_discovery($claimed_id) {
   if (_openid_is_xri($claimed_id)) {
     // Resolve XRI using a proxy resolver (Extensible Resource Identifier (XRI)
     // Resolution Version 2.0, section 11.2 and 14.3).
-    $xrds_url = variable_get('xri_proxy_resolver', 'http://xri.net/') . rawurlencode($claimed_id) . '?_xrd_r=application/xrds+xml';
+    $xrds_url = config('openid.settings')->get('xri_proxy_resolver') . rawurlencode($claimed_id) . '?_xrd_r=application/xrds+xml';
     $discovery = _openid_xrds_discovery($xrds_url);
     if (!empty($discovery['services']) && is_array($discovery['services'])) {
       foreach ($discovery['services'] as $i => &$service) {
