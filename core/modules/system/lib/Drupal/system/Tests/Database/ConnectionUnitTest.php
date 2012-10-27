@@ -36,10 +36,21 @@ class ConnectionUnitTest extends UnitTestBase {
     $this->originalTarget = 'default';
     $this->target = 'DatabaseConnectionUnitTest';
 
+    // Determine whether the database driver is MySQL. If it is not, the test
+    // methods will not be executed.
+    // @todo Make this test driver-agnostic, or find a proper way to skip it.
+    // @see http://drupal.org/node/1273478
+    $connection_info = Database::getConnectionInfo('default');
+    $this->skipTest = (bool) $connection_info['default']['driver'] != 'mysql';
+    if ($this->skipTest) {
+      // Insert an assertion to prevent Simpletest from interpreting the test
+      // as failure.
+      $this->pass('This test is only compatible with MySQL.');
+    }
+
     // Create an additional connection to monitor the connections being opened
     // and closed in this test.
     // @see TestBase::changeDatabasePrefix()
-    $connection_info = Database::getConnectionInfo('default');
     Database::addConnectionInfo('default', 'monitor', $connection_info['default']);
     global $databases;
     $databases['default']['monitor'] = $connection_info['default'];
@@ -97,6 +108,9 @@ class ConnectionUnitTest extends UnitTestBase {
    * @todo getConnectionID() executes a query.
    */
   function testOpenClose() {
+    if ($this->skipTest) {
+      return;
+    }
     // Add and open a new connection.
     $this->addConnection();
     $id = $this->getConnectionID();
@@ -118,6 +132,9 @@ class ConnectionUnitTest extends UnitTestBase {
    * Tests Database::closeConnection() with a query.
    */
   function testOpenQueryClose() {
+    if ($this->skipTest) {
+      return;
+    }
     // Add and open a new connection.
     $this->addConnection();
     $id = $this->getConnectionID();
@@ -142,6 +159,9 @@ class ConnectionUnitTest extends UnitTestBase {
    * Tests Database::closeConnection() with a query and custom prefetch method.
    */
   function testOpenQueryPrefetchClose() {
+    if ($this->skipTest) {
+      return;
+    }
     // Add and open a new connection.
     $this->addConnection();
     $id = $this->getConnectionID();
@@ -166,6 +186,9 @@ class ConnectionUnitTest extends UnitTestBase {
    * Tests Database::closeConnection() with a select query.
    */
   function testOpenSelectQueryClose() {
+    if ($this->skipTest) {
+      return;
+    }
     // Add and open a new connection.
     $this->addConnection();
     $id = $this->getConnectionID();
