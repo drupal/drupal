@@ -41,11 +41,21 @@ class ContentNegotiation {
       return 'ajax';
     }
 
+    // Check all formats, it HTML is found return it.
+    $first_found_format = FALSE;
     foreach ($request->getAcceptableContentTypes() as $mime_type) {
       $format = $request->getFormat($mime_type);
-      if (!is_null($format)) {
+      if ($format === 'html') {
         return $format;
       }
+      if (!is_null($format) && !$first_found_format) {
+        $first_found_format = $format;
+      }
+    }
+
+    // No HTML found, return first found.
+    if ($first_found_format) {
+      return $first_found_format;
     }
 
     // Do HTML last so that it always wins.
