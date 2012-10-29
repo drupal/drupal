@@ -18,21 +18,26 @@ use Drupal\Core\Annotation\Plugin;
  *   id = "text_custom"
  * )
  */
-class TextCustom extends Text {
+class TextCustom extends AreaPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    unset($options['format']);
+    $options['content'] = array('default' => '', 'translatable' => TRUE);
+    $options['tokenize'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    // Alter the form element, to be a regular text area.
-    $form['content']['#type'] = 'textarea';
-    unset($form['content']['#format']);
-    unset($form['content']['#wysiwyg']);
+    $form['content'] = array(
+      '#type' => 'textarea',
+      '#default_value' => $this->options['content'],
+      '#rows' => 6,
+    );
+
+    // Add tokenization form elements.
+    $this->tokenForm($form, $form_state);
   }
 
   // Empty, so we don't inherit submitOptionsForm from the parent.
@@ -41,7 +46,7 @@ class TextCustom extends Text {
 
   function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      return $this->render_textarea_custom($this->options['content']);
+      return $this->render_textarea($this->options['content']);
     }
 
     return '';
@@ -50,7 +55,7 @@ class TextCustom extends Text {
   /**
    * Render a text area with filter_xss_admin.
    */
-  function render_textarea_custom($value) {
+  function render_textarea($value) {
     if ($value) {
       if ($this->options['tokenize']) {
         $value = $this->view->style_plugin->tokenize_value($value, 0);

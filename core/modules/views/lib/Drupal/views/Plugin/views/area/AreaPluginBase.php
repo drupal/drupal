@@ -81,13 +81,65 @@ abstract class AreaPluginBase extends HandlerBase {
       '#description' => t('The label for this area that will be displayed only administratively.'),
     );
 
-
     if ($form_state['type'] != 'empty') {
       $form['empty'] = array(
         '#type' => 'checkbox',
         '#title' => t('Display even if view has no result'),
         '#default_value' => isset($this->options['empty']) ? $this->options['empty'] : 0,
       );
+    }
+  }
+
+  /**
+   * Form helper function to add tokenization form elements.
+   */
+  public function tokenForm(&$form, &$form_state) {
+    $form['tokenize'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Use replacement tokens from the first row'),
+      '#default_value' => $this->options['tokenize'],
+    );
+
+    // Get a list of the available fields and arguments for token replacement.
+    $options = array();
+    foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
+      $options[t('Fields')]["[$field]"] = $handler->adminLabel();
+    }
+
+    $count = 0; // This lets us prepare the key as we want it printed.
+    foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
+      $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->adminLabel()));
+      $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
+    }
+
+    if (!empty($options)) {
+      $form['tokens'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Replacement patterns'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#id' => 'edit-options-token-help',
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[tokenize]"]' => array('checked' => TRUE),
+          ),
+        ),
+      );
+      $form['tokens']['help'] = array(
+        '#markup' => '<p>' . t('The following tokens are available. If you would like to have the characters \'[\' and \']\' please use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.') . '</p>',
+      );
+      foreach (array_keys($options) as $type) {
+        if (!empty($options[$type])) {
+          $items = array();
+          foreach ($options[$type] as $key => $value) {
+            $items[] = $key . ' == ' . $value;
+          }
+          $form['tokens']['tokens'] = array(
+            '#theme' => 'item_list',
+            '#items' => $items,
+          );
+        }
+      }
     }
   }
 

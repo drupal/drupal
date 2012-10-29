@@ -26,7 +26,6 @@ class Title extends AreaPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['title'] = array('default' => '', 'translatable' => TRUE);
-
     return $options;
   }
 
@@ -42,7 +41,6 @@ class Title extends AreaPluginBase {
       '#default_value' => $this->options['title'],
       '#description' => t('Override the title of this view when it is empty.'),
     );
-
   }
 
   /**
@@ -50,7 +48,7 @@ class Title extends AreaPluginBase {
    */
   function render($empty = FALSE) {
     if (!empty($this->options['title'])) {
-      $this->view->setTitle(filter_xss_admin($this->options['title']), PASS_THROUGH);
+      $this->view->setTitle($this->sanitizeValue($this->options['title'], 'xss_admin'), PASS_THROUGH);
     }
 
     return '';
