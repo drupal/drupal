@@ -12,3 +12,4 @@ notify:
   register_pending_approval: '1'
 register: visitors
 signatures: '0'
+cancel_method: user_cancel_block

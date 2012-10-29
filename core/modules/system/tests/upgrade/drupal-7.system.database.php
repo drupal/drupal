@@ -91,6 +91,10 @@ db_insert('variable')->fields(array(
     'name' => 'site_slogan',
     'value' => 's:31:"CMI makes Drupal 8 drush cex -y";',
   ))
+->values(array(
+  'name' => 'user_cancel_method',
+  'value' => 's:20:"user_cancel_reassign"',
+))
 ->execute();
 
 db_update('variable')

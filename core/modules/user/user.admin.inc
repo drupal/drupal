@@ -332,6 +332,7 @@ function user_admin_settings($form, &$form_state) {
   $form['registration_cancellation']['user_cancel_method'] = array(
     '#type' => 'item',
     '#title' => t('When cancelling a user account'),
+    '#default_value' => $config->get('cancel_method'),
     '#description' => t('Users with the %select-cancel-method or %administer-users <a href="@permissions-url">permissions</a> can override this default method.', array('%select-cancel-method' => t('Select method for cancelling account'), '%administer-users' => t('Administer users'), '@permissions-url' => url('admin/people/permissions'))),
   );
   $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
@@ -665,6 +666,7 @@ function user_admin_settings_submit($form, &$form_state) {
     ->set('register', $form_state['values']['user_register'])
     ->set('verify_mail', $form_state['values']['user_email_verification'])
     ->set('signatures', $form_state['values']['user_signatures'])
+    ->set('cancel_method', $form_state['values']['user_cancel_method'])
     ->set('notify.status_activated', $form_state['values']['user_mail_status_activated_notify'])
     ->set('notify.status_blocked', $form_state['values']['user_mail_status_blocked_notify'])
     ->set('notify.status_canceled', $form_state['values']['user_mail_status_canceled_notify'])

@@ -138,7 +138,7 @@ class StatisticsAdminTest extends WebTestBase {
   function testDeleteUser() {
     config('statistics.settings')->set('access_log.enabled', 1)->save();
 
-    variable_set('user_cancel_method', 'user_cancel_delete');
+    config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
     $this->drupalLogout($this->privileged_user);
     $account = $this->drupalCreateUser(array('access content', 'cancel account'));
     $this->drupalLogin($account);

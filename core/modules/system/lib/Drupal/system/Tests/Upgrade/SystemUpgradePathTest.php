@@ -28,9 +28,9 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
   }
 
   /**
-   * Tests upgrade of system variables.
+   * Tests upgrade of variables to config.
    */
-  public function testSystemVariableUpgrade() {
+  public function testVariableUpgrade() {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Verify that variables were properly upgraded.
@@ -73,6 +73,10 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'page.403' => '403',
       'page.404' => '404',
       'page.front' => 'node',
+    );
+
+    $expected_config['user.settings'] = array(
+      'cancel_method' => 'user_cancel_reassign',
     );
 
     foreach ($expected_config as $file => $values) {
