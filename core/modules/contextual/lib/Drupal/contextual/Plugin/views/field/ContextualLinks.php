@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\ContextualLinks.
+ * Definition of Drupal\contextual\Plugin\views\field\ContextualLinks.
  */
 
-namespace Drupal\views\Plugin\views\field;
+namespace Drupal\contextual\Plugin\views\field;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * Provides a handler that adds contextual links.
@@ -15,7 +16,8 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_field_handlers
  *
  * @Plugin(
- *   id = "contextual_links"
+ *   id = "contextual_links",
+ *   module = "contextual"
  * )
  */
 class ContextualLinks extends FieldPluginBase {

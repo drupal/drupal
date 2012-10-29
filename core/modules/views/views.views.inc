@@ -90,16 +90,6 @@ function views_views_data() {
     ),
   );
 
-  if (module_exists('contextual')) {
-    $data['views']['contextual_links'] = array(
-      'title' => t('Contextual Links'),
-      'help' => t('Display fields in a contextual links menu.'),
-      'field' => array(
-        'id' => 'contextual_links',
-      ),
-    );
-  }
-
   $data['views']['combine'] = array(
    'title' => t('Combine fields filter'),
     'help' => t('Combine two fields together and search by them.'),
