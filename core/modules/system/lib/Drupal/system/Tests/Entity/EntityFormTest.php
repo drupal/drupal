@@ -41,7 +41,7 @@ class EntityFormTest extends WebTestBase {
   function testFormCRUD() {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $name1 = $this->randomName(8);
-    $name2 = $this->randomName(8);
+    $name2 = $this->randomName(10);
 
     $edit = array(
       'name' => $name1,

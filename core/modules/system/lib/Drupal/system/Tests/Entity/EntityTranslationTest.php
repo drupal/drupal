@@ -171,6 +171,15 @@ class EntityTranslationTest extends WebTestBase {
     $entity->getTranslation($this->langcodes[1], FALSE)->set($field_name, array(0 => array('value' => 'default value2')));
     // Get the value.
     $this->assertEqual($entity->get($field_name)->value, 'default value2', 'Untranslated value set into a translation in non-strict mode.');
+
+    // Test setting the user_id to 0 using setValue method.
+    $entity = entity_create('entity_test', array(
+      'name' => 'test',
+      'user_id' => $GLOBALS['user']->uid,
+    ));
+    $translation = $entity->getTranslation($this->langcodes[1], FALSE);
+    $translation->user_id->setValue(0);
+    $this->assertIdentical($entity->get('user_id')->value, 0);
   }
 
   /**

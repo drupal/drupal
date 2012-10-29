@@ -68,13 +68,16 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    *   An array of values of the field items.
    */
   public function setValue($values) {
+    // Support passing in only the value of the first item.
+    if (!is_array($values) || (!empty($values) && !is_numeric(current(array_keys($values))))) {
+      $values = array(0 => $values);
+    }
+
+    if (!is_array($values)) {
+      throw new InvalidArgumentException("An entity field requires a numerically indexed array of items as value.");
+    }
+
     if (!empty($values)) {
-
-      // Support passing in only the value of the first item.
-      if (!is_array($values) || !is_numeric(current(array_keys($values)))) {
-        $values = array(0 => $values);
-      }
-
       if (!is_array($values)) {
         throw new InvalidArgumentException("An entity field requires a numerically indexed array of items as value.");
       }
