@@ -1482,9 +1482,6 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       else {
         $tokens["[$field]"] = '';
       }
-      if (!empty($item)) {
-        $this->add_self_tokens($tokens, $item);
-      }
 
       // We only use fields up to (and including) this one.
       if ($field == $this->options['id']) {
@@ -1495,6 +1492,9 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     // Store the tokens for the row so we can reference them later if necessary.
     $this->view->style_plugin->render_tokens[$this->view->row_index] = $tokens;
     $this->last_tokens = $tokens;
+    if (!empty($item)) {
+      $this->add_self_tokens($tokens, $item);
+    }
 
     return $tokens;
   }
