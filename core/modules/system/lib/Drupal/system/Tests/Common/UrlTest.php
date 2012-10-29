@@ -16,6 +16,9 @@ use Drupal\simpletest\WebTestBase;
  * inheriting from a web test case rather than a unit test case.
  */
 class UrlTest extends WebTestBase {
+
+  public static $modules = array('common_test');
+
   public static function getInfo() {
     return array(
       'name' => 'URL generation tests',
@@ -35,12 +38,28 @@ class UrlTest extends WebTestBase {
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered', array('@path' => $path)));
   }
 
-  /*
+  /**
    * Tests for active class in l() function.
    */
   function testLActiveClass() {
-    $link = l($this->randomName(), current_path());
-    $this->assertTrue($this->hasClass($link, 'active'), format_string('Class @class is present on link to the current page', array('@class' => 'active')));
+    $path = 'common-test/l-active-class';
+    $options = array();
+
+    $this->drupalGet($path, $options);
+    $links = $this->xpath('//a[@href = :href and contains(@class, :class)]', array(':href' => url($path, $options), ':class' => 'active'));
+    $this->assertTrue(isset($links[0]), 'A link to the current page is marked active.');
+
+    $options = array('query' => array('foo' => 'bar'));
+    $links = $this->xpath('//a[@href = :href and not(contains(@class, :class))]', array(':href' => url($path, $options), ':class' => 'active'));
+    $this->assertTrue(isset($links[0]), 'A link to the current page with a query string when the current page has no query string is not marked active.');
+
+    $this->drupalGet($path, $options);
+    $links = $this->xpath('//a[@href = :href and contains(@class, :class)]', array(':href' => url($path, $options), ':class' => 'active'));
+    $this->assertTrue(isset($links[0]), 'A link to the current page with a query string that matches the current query string is marked active.');
+
+    $options = array();
+    $links = $this->xpath('//a[@href = :href and not(contains(@class, :class))]', array(':href' => url($path, $options), ':class' => 'active'));
+    $this->assertTrue(isset($links[0]), 'A link to the current page without a query string when the current page has a query string is not marked active.');
   }
 
   /**
@@ -50,7 +69,6 @@ class UrlTest extends WebTestBase {
     $class = $this->randomName();
     $link = l($this->randomName(), current_path(), array('attributes' => array('class' => array($class))));
     $this->assertTrue($this->hasClass($link, $class), format_string('Custom class @class is present on link when requested', array('@class' => $class)));
-    $this->assertTrue($this->hasClass($link, 'active'), format_string('Class @class is present on link to the current page', array('@class' => 'active')));
   }
 
   /**

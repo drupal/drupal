@@ -377,13 +377,7 @@ function theme_pager_link($variables) {
     }
   }
 
-  // @todo l() cannot be used here, since it adds an 'active' class based on the
-  //   path only (which is always the current path for pager links). Apparently,
-  //   none of the pager links is active at any time - but it should still be
-  //   possible to use l() here.
-  // @see http://drupal.org/node/1410574
-  $attributes['href'] = url(current_path(), array('query' => $query));
-  return '<a' . new Attribute($attributes) . '>' . check_plain($text) . '</a>';
+  return l($text, current_path(), array('query' => $query, 'attributes' => $attributes));
 }
 
 /**

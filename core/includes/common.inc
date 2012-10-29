@@ -2320,12 +2320,20 @@ function l($text, $path, array $options = array()) {
   // Merge in defaults.
   $options += array(
     'attributes' => array(),
+    'query' => array(),
     'html' => FALSE,
   );
 
   // Append active class.
-  if (($path == current_path() || ($path == '<front>' && drupal_is_front_page())) &&
-      (empty($options['language']) || $options['language']->langcode == language(LANGUAGE_TYPE_URL)->langcode)) {
+  // The link is only active, if its path corresponds to the current path, the
+  // language of the linked path is equal to the current language, and if the
+  // query parameters of the link equal those of the current request, since the
+  // same request with different query parameters may yield a different page
+  // (e.g., pagers).
+  $is_active = ($path == current_path() || ($path == '<front>' && drupal_is_front_page()));
+  $is_active = $is_active && (empty($options['language']) || $options['language']->langcode == language(LANGUAGE_TYPE_URL)->langcode);
+  $is_active = $is_active && (drupal_container()->get('request')->query->all() == $options['query']);
+  if ($is_active) {
     $options['attributes']['class'][] = 'active';
   }
 

@@ -399,6 +399,8 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 // @todo These two lines were copied from index.php which has its own todo about
 // a change required here. Revisit this when that change has been made.
 $request = Request::createFromGlobals();
+drupal_container()
+  ->set('request', $request);
 
 // There can be conflicting 'op' parameters because both update and batch use
 // this parameter name. We need the 'op' coming from a POST request to trump
