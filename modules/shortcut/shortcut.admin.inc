@@ -471,7 +471,7 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
     );
   }
   else {
-    $shortcut_link['link_path'] = drupal_get_path_alias($shortcut_link['link_path']);
+    $shortcut_link['link_path'] = ($shortcut_link['link_path'] == '<front>') ? '' : drupal_get_path_alias($shortcut_link['link_path']);
   }
 
   $form['shortcut_link']['#tree'] = TRUE;
@@ -520,7 +520,11 @@ function shortcut_link_edit_validate($form, &$form_state) {
  */
 function shortcut_link_edit_submit($form, &$form_state) {
   // Normalize the path in case it is an alias.
-  $form_state['values']['shortcut_link']['link_path'] = drupal_get_normal_path($form_state['values']['shortcut_link']['link_path']);
+  $shortcut_path = drupal_get_normal_path($form_state['values']['shortcut_link']['link_path']);
+  if (empty($shortcut_path)) {
+    $shortcut_path = '<front>';
+  }
+  $form_state['values']['shortcut_link']['link_path'] = $shortcut_path;
 
   $shortcut_link = array_merge($form_state['values']['original_shortcut_link'], $form_state['values']['shortcut_link']);
 
@@ -577,6 +581,9 @@ function shortcut_admin_add_link($shortcut_link, &$shortcut_set, $limit = NULL) 
 
   // Normalize the path in case it is an alias.
   $shortcut_link['link_path'] = drupal_get_normal_path($shortcut_link['link_path']);
+  if (empty($shortcut_link['link_path'])) {
+    $shortcut_link['link_path'] = '<front>';
+  }
 
   // Add the link to the end of the list.
   $shortcut_set->links[] = $shortcut_link;
