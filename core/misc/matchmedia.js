@@ -72,8 +72,12 @@ window.matchMedia = window.matchMedia || (function (doc, window) {
     addListener: function (callback) {
       var handler = (function (mql, debounced) {
         return function () {
+          // Only execute the callback if the state has changed.
+          var oldstate = mql.matches;
           mql.check();
-          debounced.call(mql, mql);
+          if (oldstate != mql.matches) {
+            debounced.call(mql, mql);
+          }
         };
       }(this, debounce(callback, 250)));
       this.listeners.push({
