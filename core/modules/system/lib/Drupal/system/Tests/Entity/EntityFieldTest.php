@@ -210,6 +210,16 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertEqual(count(iterator_to_array($entity->name->getIterator())), count($entity->name), 'Count matches iterator count.');
     $this->assertTrue($entity->name->getValue() === array(0 => NULL), 'Name field value contains a NULL value.');
 
+    // Test removing all list items by assigning an empty array.
+    $entity->name = array();
+    $this->assertIdentical(count($entity->name), 0, 'Name field contains no items.');
+    $this->assertIdentical($entity->name->getValue(), array(), 'Name field value is an empty array.');
+
+    // Test removing all list items by setting it to NULL.
+    $entity->name = NULL;
+    $this->assertIdentical(count($entity->name), 0, 'Name field contains no items.');
+    $this->assertIdentical($entity->name->getValue(), array(), 'Name field value is an empty array.');
+
     // Test get and set field values.
     $entity->name = 'foo';
     $this->assertEqual($entity->name[0]->getPropertyValues(), array('value' => 'foo'), 'Field value has been retrieved via getPropertyValue()');
@@ -226,6 +236,15 @@ class EntityFieldTest extends WebTestBase  {
     $entity = entity_create('entity_test', array(
       'name' => $name_item,
       'user_id' => $user_item,
+      'field_test_text' => $text_item,
+    ));
+    $this->assertNotNull($entity->user_id->value, 'User id is not NULL');
+    $this->assertIdentical($entity->user_id->value, 0, 'User id has been set to 0');
+
+    // Test setting the ID with the value only.
+    $entity = entity_create('entity_test', array(
+      'name' => $name_item,
+      'user_id' => 0,
       'field_test_text' => $text_item,
     ));
     $this->assertNotNull($entity->user_id->value, 'User id is not NULL');
