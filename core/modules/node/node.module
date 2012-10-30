@@ -3938,6 +3938,17 @@ function node_library_info() {
       array('system', 'drupal.form'),
     ),
   );
+  $libraries['drupal.node.preview'] = array(
+    'title' => 'Node preview',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'node') . '/node.preview.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
   $libraries['drupal.content_types'] = array(
     'title' => 'Content types',
     'version' => VERSION,

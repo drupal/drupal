@@ -182,6 +182,7 @@ function theme_node_preview($variables) {
   $preview_trimmed_version = FALSE;
 
   $elements = node_view(clone $node, 'teaser');
+  $elements['#attached']['library'][] = array('node', 'drupal.node.preview');
   $trimmed = drupal_render($elements);
   $elements = node_view($node, 'full');
   $full = drupal_render($elements);
