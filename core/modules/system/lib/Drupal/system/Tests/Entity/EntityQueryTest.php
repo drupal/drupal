@@ -68,10 +68,10 @@ class EntityQueryTest extends WebTestBase {
     $bundles = array();
     for ($i = 0; $i < 2; $i++) {
       // For the sake of tablesort, make sure the second bundle is higher than
-      // the first one.
+      // the first one. Beware: MySQL is not case sensitive.
       do {
         $bundle = $this->randomName();
-      } while ($bundles && $bundles[0] >= $bundle);
+      } while ($bundles && strtolower($bundles[0]) >= strtolower($bundle));
       field_test_create_bundle($bundle);
       foreach ($fields as $field) {
         $instance = array(
