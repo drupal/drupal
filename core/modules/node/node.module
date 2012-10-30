@@ -1007,7 +1007,7 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  *   An array of node entities indexed by nid.
  *
  * @see entity_load_multiple()
- * @see Drupal\Core\Entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {
   return entity_load_multiple('node', $nids, $reset);
@@ -3081,34 +3081,6 @@ function node_access_view_all_nodes($account = NULL) {
  * 'update' and 'delete').
  */
 function node_query_node_access_alter(AlterableInterface $query) {
-  _node_query_node_access_alter($query, 'node');
-}
-
-/**
- * Implements hook_query_TAG_alter().
- *
- * This function implements the same functionality as
- * node_query_node_access_alter() for the SQL field storage engine. Node access
- * conditions are added for field values belonging to nodes only.
- */
-function node_query_entity_field_access_alter(AlterableInterface $query) {
-  _node_query_node_access_alter($query, 'entity');
-}
-
-/**
- * Helper for node access functions.
- *
- * @param $query
- *   The query to add conditions to.
- * @param $type
- *   Either 'node' or 'entity' depending on what sort of query it is. See
- *   node_query_node_access_alter() and node_query_entity_field_access_alter()
- *   for more.
- *
- * @see node_query_node_access_alter()
- * @see node_query_entity_field_access_alter()
- */
-function _node_query_node_access_alter($query, $type) {
   global $user;
 
   // Read meta-data from query, if provided.
@@ -3157,27 +3129,6 @@ function _node_query_node_access_alter($query, $type) {
   // the node_access table.
 
   $grants = node_access_grants($op, $account);
-  if ($type == 'entity') {
-    // The original query looked something like:
-    // @code
-    //  SELECT nid FROM sometable s
-    //  INNER JOIN node_access na ON na.nid = s.nid
-    //  WHERE ($node_access_conditions)
-    // @endcode
-    //
-    // Our query will look like:
-    // @code
-    //  SELECT entity_type, entity_id
-    //  FROM field_data_something s
-    //  LEFT JOIN node_access na ON s.entity_id = na.nid
-    //  WHERE (entity_type = 'node' AND $node_access_conditions) OR (entity_type <> 'node')
-    // @endcode
-    //
-    // So instead of directly adding to the query object, we need to collect
-    // all of the node access conditions in a separate db_and() object and
-    // then add it to the query at the end.
-    $node_conditions = db_and();
-  }
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
     if (!($table instanceof SelectInterface) && $table == $base_table) {
@@ -3204,37 +3155,11 @@ function _node_query_node_access_alter($query, $type) {
       $subquery->condition('na.grant_' . $op, 1, '>=');
       $field = 'nid';
       // Now handle entities.
-      if ($type == 'entity') {
-        // Set a common alias for entities.
-        $base_alias = $nalias;
-        $field = 'entity_id';
-      }
       $subquery->where("$nalias.$field = na.nid");
 
-      // For an entity query, attach the subquery to entity conditions.
-      if ($type == 'entity') {
-        $node_conditions->exists($subquery);
-      }
-      // Otherwise attach it to the node query itself.
-      else {
-        $query->exists($subquery);
-      }
+      $query->exists($subquery);
     }
   }
-
-  if ($type == 'entity' && count($subquery->conditions())) {
-    // All the node access conditions are only for field values belonging to
-    // nodes.
-    $node_conditions->condition("$base_alias.entity_type", 'node');
-    $or = db_or();
-    $or->condition($node_conditions);
-    // If the field value belongs to a non-node entity type then this function
-    // does not do anything with it.
-    $or->condition("$base_alias.entity_type", 'node', '<>');
-    // Add the compiled set of rules to the query.
-    $query->condition($or);
-  }
-
 }
 
 /**

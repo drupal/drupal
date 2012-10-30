@@ -6,7 +6,6 @@
  */
 
 use Drupal\field\FieldException;
-use Drupal\Core\Entity\EntityFieldQuery;
 
 /**
  * @defgroup field_crud Field CRUD API
@@ -137,6 +136,9 @@ function field_create_field($field) {
   $schema += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
   // 'columns' are hardcoded in the field type.
   $field['columns'] = $schema['columns'];
+  if (array_intersect(array_keys($field['columns']), field_reserved_columns())) {
+    throw new FieldException(t('Illegal field type columns.'));
+  }
   // 'foreign keys' are hardcoded in the field type.
   $field['foreign keys'] = $schema['foreign keys'];
   // 'indexes' can be both hardcoded in the field type, and specified in the
@@ -873,31 +875,37 @@ function field_purge_batch($batch_size) {
   // Retrieve all deleted field instances. We cannot use field_info_instances()
   // because that function does not return deleted instances.
   $instances = field_read_instances(array('deleted' => 1), array('include_deleted' => 1));
-
+  $factory = drupal_container()->get('entity.query');
+  $info = entity_get_info();
   foreach ($instances as $instance) {
+    $entity_type = $instance['entity_type'];
+    $ids = (object) array(
+      'entity_type' => $entity_type,
+      'bundle' => $instance['bundle'],
+    );
     // field_purge_data() will need the field array.
     $field = field_info_field_by_id($instance['field_id']);
     // Retrieve some entities.
-    $query = new EntityFieldQuery();
-    $results = $query
-      ->fieldCondition($field)
-      ->entityCondition('bundle', $instance['bundle'])
-      ->deleted(TRUE)
+    $results = $factory->get($entity_type)
+      ->condition('id:' . $field['id'] . '.deleted', 1)
+      ->condition($info[$entity_type]['entity keys']['bundle'], $ids->bundle)
       ->range(0, $batch_size)
       ->execute();
 
     if ($results) {
-      foreach ($results as $entity_type => $ids_array) {
-        $entities = array();
-        foreach ($ids_array as $ids) {
-          $entities[$ids->entity_id] = _field_create_entity_from_ids($ids);
-        }
-
-        field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
-        foreach ($entities as $entity) {
-          // Purge the data for the entity.
-          field_purge_data($entity_type, $entity, $field, $instance);
-        }
+      $entities = array();
+      foreach ($results as $revision_id => $entity_id) {
+        // This might not be the revision id if the entity type does not support
+        // revisions but _field_create_entity_from_ids() checks that and
+        // disregards this value so there is no harm setting it.
+        $ids->revision_id = $revision_id;
+        $ids->entity_id = $entity_id;
+        $entities[$entity_id] = _field_create_entity_from_ids($ids);
+      }
+      field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
+      foreach ($entities as $entity) {
+        // Purge the data for the entity.
+        field_purge_data($entity_type, $entity, $field, $instance);
       }
     }
     else {

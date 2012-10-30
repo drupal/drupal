@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 
 /**
@@ -57,9 +58,9 @@ class TermStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::buildPropertyQuery().
    */
-  protected function buildPropertyQuery(\Drupal\Core\Entity\EntityFieldQuery $entity_query, array $values) {
+  protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     if (isset($values['name'])) {
-      $entity_query->propertyCondition('name', $values['name'], 'LIKE');
+      $entity_query->condition('name', $values['name'], 'LIKE');
       unset($values['name']);
     }
     parent::buildPropertyQuery($entity_query, $values);

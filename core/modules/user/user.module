@@ -290,7 +290,7 @@ function user_external_load($authname) {
  * @see user_load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
- * @see Drupal\Core\Entity\EntityFieldQuery
+ * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function user_load_multiple(array $uids = NULL, $reset = FALSE) {
   return entity_load_multiple('user', $uids, $reset);

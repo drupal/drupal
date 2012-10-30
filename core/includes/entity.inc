@@ -5,10 +5,7 @@
  * Entity API for handling entities like nodes or users.
  */
 
-use \InvalidArgumentException;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\EntityFieldQuery;
-use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -123,7 +120,7 @@ function entity_info_cache_clear() {
  * @see entity_load_multiple()
  * @see Drupal\Core\Entity\EntityStorageControllerInterface
  * @see Drupal\Core\Entity\DatabaseStorageController
- * @see Drupal\Core\Entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load($entity_type, $id, $reset = FALSE) {
   $entities = entity_load_multiple($entity_type, array($id), $reset);
@@ -227,7 +224,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * @see hook_entity_info()
  * @see Drupal\Core\Entity\EntityStorageControllerInterface
  * @see Drupal\Core\Entity\DatabaseStorageController
- * @see Drupal\Core\Entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
   if ($reset) {
@@ -575,4 +572,18 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL) {
  */
 function entity_view_multiple(array $entities, $view_mode, $langcode = NULL) {
   return entity_render_controller(reset($entities)->entityType())->viewMultiple($entities, $view_mode, $langcode);
+}
+
+/**
+ * Returns the entity query object for this entity type.
+ *
+ * @param $entity_type
+ *   The entity type, e.g. node, for which the query object should be
+ *   returned.
+ * @param $conjunction
+ *   AND if all conditions in the query need to apply, OR if any of them is
+ *   enough. Optional, defaults to AND.
+ */
+function entity_query($entity_type, $conjunction = 'AND') {
+  return drupal_container()->get('entity.query')->get($entity_type, $conjunction);
 }

@@ -7,16 +7,16 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Entity\EntityFieldQuery;
+use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
- * Tests the functionality of EntityFieldQuery for taxonomy entities.
+ * Tests the functionality of EntityQueryInterface for taxonomy entities.
  */
 class EfqTest extends TaxonomyTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Taxonomy EntityFieldQuery',
-      'description' => 'Verifies operation of a taxonomy-based EntityFieldQuery.',
+      'name' => 'Taxonomy entity query',
+      'description' => 'Verifies operation of a taxonomy-based Entity Query.',
       'group' => 'Taxonomy',
     );
   }
@@ -29,7 +29,7 @@ class EfqTest extends TaxonomyTestBase {
   }
 
   /**
-   * Tests that a basic taxonomy EntityFieldQuery works.
+   * Tests that a basic taxonomy entity query works.
    */
   function testTaxonomyEfq() {
     $terms = array();
@@ -37,16 +37,17 @@ class EfqTest extends TaxonomyTestBase {
       $term = $this->createTerm($this->vocabulary);
       $terms[$term->tid] = $term;
     }
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'taxonomy_term');
-    $result = $query->execute();
-    $result = $result['taxonomy_term'];
-    asort($result);
-    $this->assertEqual(array_keys($terms), array_keys($result), 'Taxonomy terms were retrieved by EntityFieldQuery.');
-
-    $first_result = reset($result);
-    $term = _field_create_entity_from_ids($first_result);
-    $this->assertEqual($term->tid, $first_result->entity_id, 'Taxonomy term can be created based on the IDs');
+    $result = entity_query('taxonomy_term')->execute();
+    sort($result);
+    $this->assertEqual(array_keys($terms), $result, 'Taxonomy terms were retrieved by entity query.');
+    $tid = reset($result);
+    $ids = (object) array(
+      'entity_type' => 'taxonomy_term',
+      'entity_id' => $tid,
+      'bundle' => $this->vocabulary->machine_name,
+    );
+    $term = _field_create_entity_from_ids($ids);
+    $this->assertEqual($term->tid, $tid, 'Taxonomy term can be created based on the IDs');
 
     // Create a second vocabulary and five more terms.
     $vocabulary2 = $this->createVocabulary();
@@ -56,12 +57,18 @@ class EfqTest extends TaxonomyTestBase {
       $terms2[$term->tid] = $term;
     }
 
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'taxonomy_term');
-    $query->entityCondition('bundle', $vocabulary2->machine_name);
-    $result = $query->execute();
-    $result = $result['taxonomy_term'];
-    asort($result);
-    $this->assertEqual(array_keys($terms2), array_keys($result), format_string('Taxonomy terms from the %name vocabulary were retrieved by EntityFieldQuery.', array('%name' => $vocabulary2->name)));
+    $result = entity_query('taxonomy_term')
+      ->condition('vid', $vocabulary2->vid)
+      ->execute();
+    sort($result);
+    $this->assertEqual(array_keys($terms2), $result, format_string('Taxonomy terms from the %name vocabulary were retrieved by entity query.', array('%name' => $vocabulary2->name)));
+    $tid = reset($result);
+    $ids = (object) array(
+      'entity_type' => 'taxonomy_term',
+      'entity_id' => $tid,
+      'bundle' => $vocabulary2->machine_name,
+    );
+    $term = _field_create_entity_from_ids($ids);
+    $this->assertEqual($term->tid, $tid, 'Taxonomy term can be created based on the IDs');
   }
 }

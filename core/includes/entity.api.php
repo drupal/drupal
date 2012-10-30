@@ -347,20 +347,9 @@ function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
- * Alter or execute an Drupal\Core\Entity\EntityFieldQuery.
+ * Alter or execute an Drupal\Core\Entity\Query\EntityQueryInterface.
  *
- * @param Drupal\Core\Entity\EntityFieldQuery $query
- *   An EntityFieldQuery. One of the most important properties to be changed is
- *   EntityFieldQuery::executeCallback. If this is set to an existing function,
- *   this function will get the query as its single argument and its result
- *   will be the returned as the result of EntityFieldQuery::execute(). This can
- *   be used to change the behavior of EntityFieldQuery entirely. For example,
- *   the default implementation can only deal with one field storage engine, but
- *   it is possible to write a module that can query across field storage
- *   engines. Also, the default implementation presumes entities are stored in
- *   SQL, but the execute callback could instead query any other entity storage,
- *   local or remote.
- *
+ * @param \Drupal\Core\Entity\Query\QueryInterface $query
  *   Note the $query->altered attribute which is TRUE in case the query has
  *   already been altered once. This happens with cloned queries.
  *   If there is a pager, then such a cloned query will be executed to count
@@ -368,8 +357,8 @@ function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
  *   ($query->pager && $query->count), allowing the driver to return 0 from
  *   the count query and disable the pager.
  */
-function hook_entity_query_alter(Drupal\Core\Entity\EntityFieldQuery $query) {
-  $query->executeCallback = 'my_module_query_callback';
+function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query) {
+  // @todo: code example.
 }
 
 /**

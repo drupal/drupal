@@ -64,6 +64,10 @@ class CoreBundle extends Bundle
       ->addArgument(new Reference('database'))
       ->addArgument(new Reference('lock'));
 
+    // Add the entity query factory.
+    $container->register('entity.query', 'Drupal\Core\Entity\Query\QueryFactory')
+      ->addArgument(new Reference('service_container'));
+
     $container->register('router.dumper', 'Drupal\Core\Routing\MatcherDumper')
       ->addArgument(new Reference('database'));
     $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')

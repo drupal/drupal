@@ -7,8 +7,6 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Entity\EntityFieldQuery;
-
 /**
  * Unit test class for field bulk delete and batch purge functionality.
  */
@@ -115,7 +113,7 @@ class BulkDeleteTest extends FieldTestBase {
 
     // For each bundle, create an instance of each field, and 10
     // entities with values for each field.
-    $id = 0;
+    $id = 1;
     $this->entity_type = 'test_entity';
     foreach ($this->bundles as $bundle) {
       foreach ($this->fields as $field) {
@@ -135,13 +133,14 @@ class BulkDeleteTest extends FieldTestBase {
         foreach ($this->fields as $field) {
           $entity->{$field['field_name']}[LANGUAGE_NOT_SPECIFIED] = $this->_generateTestFieldValues($field['cardinality']);
         }
-
-        $this->entities[$id] = $entity;
-        // Also keep track of the entities per bundle.
-        $this->entities_by_bundles[$bundle][$id] = $entity;
-        field_attach_insert($this->entity_type, $entity);
+        $entity->save();
         $id++;
       }
+    }
+    $this->entities = entity_load_multiple($this->entity_type, range(1, $id));
+    foreach ($this->entities as $entity) {
+      // Also keep track of the entities per bundle.
+      $this->entities_by_bundles[$entity->fttype][$entity->ftid] = $entity;
     }
   }
 
@@ -157,14 +156,14 @@ class BulkDeleteTest extends FieldTestBase {
   function testDeleteFieldInstance() {
     $bundle = reset($this->bundles);
     $field = reset($this->fields);
+    $field_name = $field['field_name'];
+    $factory = drupal_container()->get('entity.query');
 
     // There are 10 entities of this bundle.
-    $query = new EntityFieldQuery();
-    $found = $query
-      ->fieldCondition($field)
-      ->entityCondition('bundle', $bundle)
+    $found = $factory->get('test_entity')
+      ->condition('fttype', $bundle)
       ->execute();
-    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of entities found before deleting');
+    $this->assertEqual(count($found), 10, 'Correct number of entities found before deleting');
 
     // Delete the instance.
     $instance = field_info_instance($this->entity_type, $field['field_name'], $bundle);
@@ -176,27 +175,30 @@ class BulkDeleteTest extends FieldTestBase {
     $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
 
     // There are 0 entities of this bundle with non-deleted data.
-    $query = new EntityFieldQuery();
-    $found = $query
-      ->fieldCondition($field)
-      ->entityCondition('bundle', $bundle)
+    $found = $factory->get('test_entity')
+      ->condition('fttype', $bundle)
+      ->condition("$field_name.deleted", 0)
       ->execute();
-    $this->assertTrue(!isset($found['test_entity']), 'No entities found after deleting');
+    $this->assertFalse($found, 'No entities found after deleting');
 
     // There are 10 entities of this bundle when deleted fields are allowed, and
     // their values are correct.
-    $query = new EntityFieldQuery();
-    $found = $query
-      ->fieldCondition($field)
-      ->entityCondition('bundle', $bundle)
-      ->deleted(TRUE)
+    $found = $factory->get('test_entity')
+      ->condition('fttype', $bundle)
+      ->condition("$field_name.deleted", 1)
+      ->sort('ftid')
       ->execute();
+    $ids = (object) array(
+      'entity_type' => 'test_entity',
+      'bundle' => $bundle,
+    );
     $entities = array();
-    foreach ($found[$this->entity_type] as $ids) {
-      $entities[$ids->entity_id] = _field_create_entity_from_ids($ids);
+    foreach ($found as $entity_id) {
+      $ids->entity_id = $entity_id;
+      $entities[$entity_id] = _field_create_entity_from_ids($ids);
     }
     field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
-    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of entities found after deleting');
+    $this->assertEqual(count($found), 10, 'Correct number of entities found after deleting');
     foreach ($entities as $id => $entity) {
       $this->assertEqual($this->entities[$id]->{$field['field_name']}, $entity->{$field['field_name']}, "Entity $id with deleted data loaded correctly");
     }
@@ -227,13 +229,11 @@ class BulkDeleteTest extends FieldTestBase {
       field_purge_batch($batch_size);
 
       // There are $count deleted entities left.
-      $query = new EntityFieldQuery();
-      $found = $query
-        ->fieldCondition($field)
-        ->entityCondition('bundle', $bundle)
-        ->deleted(TRUE)
+      $found = entity_query('test_entity')
+        ->condition('fttype', $bundle)
+        ->condition($field['field_name'] . '.deleted', 1)
         ->execute();
-      $this->assertEqual($count ? count($found['test_entity']) : count($found), $count, 'Correct number of entities found after purging 2');
+      $this->assertEqual(count($found), $count, 'Correct number of entities found after purging 2');
     }
 
     // Check hooks invocations.

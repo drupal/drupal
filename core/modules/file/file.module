@@ -5,7 +5,6 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\Core\Entity\EntityFieldQuery;
 use Drupal\file\File;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -124,7 +123,7 @@ function file_entity_info() {
  * @see hook_file_load()
  * @see file_load()
  * @see entity_load()
- * @see Drupal\Core\Entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function file_load_multiple(array $fids = NULL) {
   return entity_load_multiple('file', $fids);
@@ -668,7 +667,7 @@ function file_file_download($uri, $field_type = 'file') {
   // an image preview on a node/add form) in which case, allow download by the
   // file's owner.
   if (empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid)) {
-      return;
+    return;
   }
 
   // Default to allow access.
@@ -680,34 +679,13 @@ function file_file_download($uri, $field_type = 'file') {
   // and no reference denied access, access is granted as well. If at least one
   // reference denied access, access is denied.
   foreach ($references as $field_name => $field_references) {
-    foreach ($field_references as $entity_type => $type_references) {
-      foreach ($type_references as $id => $reference) {
-        // Try to load $entity and $field.
-        $entity = entity_load($entity_type, $id);
+    foreach ($field_references as $entity_type => $entities) {
+      foreach ($entities as $entity) {
         $field = field_info_field($field_name);
-
-        // Load the field item that references the file.
-        $match = FALSE;
-        if ($entity) {
-          // Load all fields items for that entity.
-          $field_items = field_get_items($entity_type, $entity, $field_name);
-
-          // Try to find the field item that references the given file.
-          foreach ($field_items as $item) {
-            if ($file->fid == $item['fid']) {
-              $match = TRUE;
-              break;
-            }
-          }
-        }
-
-        // Check that $entity and $field were loaded successfully, a field
-        // item that references the file exists and check if access to that
-        // field is not disallowed. If any of these checks fail, stop checking
-        // access for this reference.
-        if (empty($entity) || empty($field) || !$match || !field_access('view', $field, $entity_type, $entity)) {
+        // Check if access to this field is not disallowed.
+        if (!field_access('view', $field, $entity_type, $entity)) {
           $denied = TRUE;
-          break;
+          continue;
         }
 
         // Invoke hook and collect grants/denies for download access.
@@ -1555,27 +1533,83 @@ function file_icon_map(File $file) {
  *   FIELD_LOAD_CURRENT to retrieve references only in the current revisions.
  * @param $field_type
  *   (optional) The name of a field type. If given, limits the reference check
- *   to fields of the given type.
+ *   to fields of the given type. If both $field and $field_type is given but
+ *   $field is not the same type as $field_type, an empty array will be
+ *   returned.
  *
  * @return
- *   An integer value.
+ *   A multidimensional array. The keys are field_name, entity_type,
+ *   entity_id and the value is an entity referencing this file.
  */
 function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file') {
-  $references = drupal_static(__FUNCTION__, array());
-  $fields = isset($field) ? array($field['field_name'] => $field) : field_info_fields();
+  $references = &drupal_static(__FUNCTION__, array());
+  $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', array());
 
-  foreach ($fields as $field_name => $file_field) {
-    if ((empty($field_type) || $file_field['type'] == $field_type) && !isset($references[$field_name])) {
-      // Get each time this file is used within a field.
-      $query = new EntityFieldQuery();
-      $query
-        ->fieldCondition($file_field, 'fid', $file->fid)
-        ->age($age);
-      $references[$field_name] = $query->execute();
+  // Fill the static cache, disregard $field and $field_type for now.
+  if (!isset($references[$file->fid][$age])) {
+    $references[$file->fid][$age] = array();
+    $usage_list = file_usage()->listUsage($file);
+    $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : array();
+    foreach ($file_usage_list as $entity_type => $entity_ids) {
+      $entity_info = entity_get_info($entity_type);
+      // The usage table contains usage of every revision. If we are looking
+      // for every revision or the entity does not support revisions then
+      // every usage is already a match.
+      $match_entity_type = $age == FIELD_LOAD_REVISION || !isset($entity_info['entity keys']['revision']);
+      $entities = entity_load_multiple($entity_type, $entity_ids);
+      foreach ($entities as $entity) {
+        $bundle = $entity->bundle();
+        // We need to find file fields for this entity type and bundle.
+        if (!isset($file_fields[$entity_type][$bundle])) {
+          $file_fields[$entity_type][$bundle] = array();
+          // This contains the possible field names.
+          $instances = field_info_instances($entity_type, $bundle);
+          foreach ($instances as $field_name => $instance) {
+            $current_field = field_info_field($field_name);
+            // If this is the first time this field type is seen, check
+            // whether it references files.
+            if (!isset($field_columns[$current_field['type']])) {
+              $field_columns[$current_field['type']] = file_field_find_file_reference_column($current_field);
+            }
+            // If the field type does reference files then record it.
+            if ($field_columns[$current_field['type']]) {
+              $file_fields[$entity_type][$bundle][$field_name] = $field_columns[$current_field['type']];
+            }
+          }
+        }
+        foreach ($file_fields[$entity_type][$bundle] as $field_name => $field_column) {
+          $match = $match_entity_type;
+          // If we didn't match yet then iterate over the field items to find
+          // the referenced file. This will fail if the usage checked is in a
+          // non-current revision because field items are from the current
+          // revision.
+          if (!$match && ($field_items = field_get_items($entity_type, $entity, $field_name))) {
+            foreach ($field_items as $item) {
+              if ($file->fid == $item[$field_column]) {
+                $match = TRUE;
+                break;
+              }
+            }
+          }
+          if ($match) {
+            $references[$file->fid][$age][$field_name][$entity_type][$entity->id()] = $entity;
+          }
+        }
+      }
     }
   }
-
-  return isset($field) ? $references[$field['field_name']] : array_filter($references);
+  $return = $references[$file->fid][$age];
+  // Filter the static cache down to the requested entries. The usual static
+  // cache is very small so this will be very fast.
+  if ($field || $field_type) {
+    foreach ($return as $field_name => $data) {
+      $current_field = field_info_field($field_name);
+      if (($field_type && $current_field['type'] != $field_type) || ($field && $field['id'] != $current_field['id'])) {
+        unset($return[$field_name]);
+      }
+    }
+  }
+  return $return;
 }
 
 /**

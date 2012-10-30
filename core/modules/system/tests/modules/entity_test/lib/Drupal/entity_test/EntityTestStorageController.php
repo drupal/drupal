@@ -8,10 +8,9 @@
 namespace Drupal\entity_test;
 
 use PDO;
-
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
-use Drupal\Core\Entity\EntityFieldQuery;
 
 /**
  * Defines the controller class for the test entity.
@@ -24,7 +23,7 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::buildPropertyQuery().
    */
-  protected function buildPropertyQuery(EntityFieldQuery $entity_query, array $values) {
+  protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     // @todo We should not be using a condition to specify whether conditions
     // apply to the default language or not. We need to move this to a
     // separate parameter during the following API refactoring.

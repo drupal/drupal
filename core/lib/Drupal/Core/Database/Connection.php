@@ -631,7 +631,7 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   An appropriate SelectQuery object for this database connection. Note that
    *   it may be a driver-specific subclass of SelectQuery, depending on the
    *   driver.

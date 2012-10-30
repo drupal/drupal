@@ -309,7 +309,7 @@ class FieldSqlStorageTest extends WebTestBase {
     $instance = field_create_instance($instance);
     $entity = field_test_create_entity(0, 0, $instance['bundle']);
     $entity->decimal52[LANGUAGE_NOT_SPECIFIED][0]['value'] = '1.235';
-    field_attach_insert('test_entity', $entity);
+    $entity->save();
 
     // Attempt to update the field in a way that would work without data.
     $field['settings']['scale'] = 3;
@@ -367,9 +367,9 @@ class FieldSqlStorageTest extends WebTestBase {
     }
 
     // Add data so the table cannot be dropped.
-    $entity = field_test_create_entity(0, 0, $instance['bundle']);
+    $entity = field_test_create_entity(1, 1, $instance['bundle']);
     $entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'] = 'field data';
-    field_attach_insert('test_entity', $entity);
+    $entity->save();
 
     // Add an index
     $field = array('field_name' => $field_name, 'indexes' => array('value' => array(array('value', 255))));
@@ -387,8 +387,8 @@ class FieldSqlStorageTest extends WebTestBase {
     }
 
     // Verify that the tables were not dropped.
-    $entity = field_test_create_entity(0, 0, $instance['bundle']);
-    field_attach_load('test_entity', array(0 => $entity));
+    $entity = field_test_create_entity(1, 1, $instance['bundle']);
+    field_attach_load('test_entity', array(1 => $entity));
     $this->assertEqual($entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
   }
 

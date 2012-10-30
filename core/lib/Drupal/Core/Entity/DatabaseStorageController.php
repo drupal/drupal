@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use PDO;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Exception;
 use Drupal\Component\Uuid\Uuid;
 
@@ -266,30 +267,24 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    */
   public function loadByProperties(array $values = array()) {
     // Build a query to fetch the entity IDs.
-    $entity_query = new EntityFieldQuery();
-    $entity_query->entityCondition('entity_type', $this->entityType);
+    $entity_query = entity_query($this->entityType);
     $this->buildPropertyQuery($entity_query, $values);
     $result = $entity_query->execute();
-
-    if (empty($result[$this->entityType])) {
-      return array();
-    }
-    // Load and return the found entities.
-    return $this->load(array_keys($result[$this->entityType]));
+    return $result ? $this->load($result) : array();
   }
 
   /**
    * Builds an entity query.
    *
-   * @param Drupal\Core\Entity\EntityFieldQuery $entity_query
-   *   EntityFieldQuery instance.
+   * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
+   *   EntityQuery instance.
    * @param array $values
    *   An associative array of properties of the entity, where the keys are the
    *   property names and the values are the values those properties must have.
    */
-  protected function buildPropertyQuery(EntityFieldQuery $entity_query, array $values) {
+  protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     foreach ($values as $name => $value) {
-      $entity_query->propertyCondition($name, $value);
+      $entity_query->condition($name, $value);
     }
   }
 
@@ -355,6 +350,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     if ($ids) {
       $query->condition("base.{$this->idKey}", $ids, 'IN');
     }
+
     return $query;
   }
 
@@ -700,5 +696,12 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    */
   public function baseFieldDefinitions() {
     return array();
+  }
+
+  /**
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServiceName().
+   */
+  public function getQueryServiceName() {
+    return 'entity.query.field_sql_storage';
   }
 }

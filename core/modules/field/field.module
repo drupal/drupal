@@ -4,8 +4,8 @@
  * Attach custom data fields to Drupal entities.
  */
 
-use Drupal\Core\Entity\EntityFieldQuery;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Entity\Query\QueryFactory;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -1045,16 +1045,27 @@ function field_get_items($entity_type, $entity, $field_name, $langcode = NULL) {
  *   TRUE if the field has data for any entity; FALSE otherwise.
  */
 function field_has_data($field) {
-  $query = new EntityFieldQuery();
-  return (bool) $query
-    ->fieldCondition($field)
-    ->range(0, 1)
-    ->count()
-    // Neutralize the 'entity_field_access' query tag added by
-    // field_sql_storage_field_storage_query(). The result cannot depend on the
-    // access grants of the current user.
-    ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-    ->execute();
+  $field = field_info_field_by_id($field['id']);
+  $columns = array_keys($field['columns']);
+  $factory = drupal_container()->get('entity.query');
+  foreach ($field['bundles'] as $entity_type => $bundle) {
+    $query = $factory->get($entity_type);
+    $group = $query->orConditionGroup();
+    foreach ($columns as $column) {
+      $group->exists($field['field_name'] . '.' . $column);
+    }
+    $result = $query
+      ->condition($group)
+      ->count()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
+    if ($result) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
 }
 
 /**
@@ -1287,14 +1298,11 @@ function theme_field($variables) {
 /**
  * Assembles a partial entity structure with initial IDs.
  *
- * This can be used to create an entity based on the the ids object returned by
- * EntityFieldQuery.
- *
  * @param stdClass $ids
  *   An object with the properties entity_type (required), entity_id (required),
  *   revision_id (optional) and bundle (optional).
  *
- * @return
+ * @return \Drupal\Core\Entity\EntityInterface
  *   An entity, initialized with the provided IDs.
  */
 function _field_create_entity_from_ids($ids) {
@@ -1308,4 +1316,13 @@ function _field_create_entity_from_ids($ids) {
     $id_properties[$info['entity keys']['bundle']] = $ids->bundle;
   }
   return entity_create($ids->entity_type, $id_properties);
- }
+}
+
+/**
+ * A list of columns that can not be used as field type columns.
+ *
+ * @return array
+ */
+function field_reserved_columns() {
+  return array('deleted');
+}

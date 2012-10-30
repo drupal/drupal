@@ -6,7 +6,7 @@
  */
 
 use Drupal\field\FieldUpdateForbiddenException;
-use Drupal\Core\Entity\EntityFieldQuery;
+use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
  * Implements hook_help().
@@ -384,12 +384,19 @@ function options_field_update_forbid($field, $prior_field, $has_data) {
  */
 function _options_values_in_use($field, $values) {
   if ($values) {
-    $query = new EntityFieldQuery();
-    $found = $query
-      ->fieldCondition($field['field_name'], 'value', $values)
-      ->range(0, 1)
-      ->execute();
-    return !empty($found);
+    $field = field_info_field_by_id($field['id']);
+    $factory = drupal_container()->get('entity.query');
+    foreach ($field['bundles'] as $entity_type => $bundle) {
+      $result = $factory->get($entity_type)
+        ->condition($field['field_name'] . '.value', $values)
+        ->count()
+        ->accessCheck(FALSE)
+        ->range(0, 1)
+        ->execute();
+      if ($result) {
+        return TRUE;
+      }
+    }
   }
 
   return FALSE;

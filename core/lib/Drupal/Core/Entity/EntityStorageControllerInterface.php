@@ -71,7 +71,7 @@ interface EntityStorageControllerInterface {
    * @return array
    *   An array of entity objects indexed by their ids.
    */
-  public function loadByProperties(array $values);
+  public function loadByProperties(array $values = array());
 
   /**
    * Constructs a new entity object, without permanently saving it.
@@ -134,7 +134,7 @@ interface EntityStorageControllerInterface {
    *   An array of field definitions of entity fields, keyed by field
    *   name. In addition to the typed data definition keys as described at
    *   typed_data()->create() the follow keys are supported:
-   *   - queryable: Whether the field is queryable via EntityFieldQuery.
+   *   - queryable: Whether the field is queryable via QueryInterface.
    *     Defaults to TRUE if 'computed' is FALSE or not set, to FALSE otherwise.
    *   - translatable: Whether the field is translatable. Defaults to FALSE.
    *   - configurable: A boolean indicating whether the field is configurable
@@ -144,4 +144,12 @@ interface EntityStorageControllerInterface {
    * @see typed_data()
    */
   public function getFieldDefinitions(array $constraints);
+
+  /**
+   * Gets the name of the service for the query for this entity storage.
+   *
+   * @return string
+   */
+  public function getQueryServicename();
+
 }

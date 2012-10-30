@@ -73,7 +73,7 @@ function field_test_field_load($entity_type, $entities, $field, $instances, $lan
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act for instances with the
     // test_hook_field_load setting explicitly set to TRUE.
-    if ($instances[$id]['settings']['test_hook_field_load']) {
+    if (!empty($instances[$id]['settings']['test_hook_field_load'])) {
       foreach ($item as $delta => $value) {
         // Don't add anything on empty values.
         if ($value) {

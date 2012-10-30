@@ -1432,7 +1432,7 @@ function comment_delete_multiple($cids) {
  *   An array of comment objects, indexed by comment ID.
  *
  * @see entity_load()
- * @see Drupal\Core\Entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\Query\QueryInterface
  */
 function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
   return entity_load_multiple('comment', $cids, $reset);

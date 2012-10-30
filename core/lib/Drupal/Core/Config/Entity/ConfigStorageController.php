@@ -393,4 +393,11 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     // Invoke the respective entity-level hook.
     module_invoke_all('entity_' . $hook, $entity, $this->entityType);
   }
+
+  /**
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServicename().
+   */
+  public function getQueryServicename() {
+    throw new \LogicException('Querying configuration entities is not supported.');
+  }
 }

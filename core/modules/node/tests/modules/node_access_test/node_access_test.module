@@ -7,8 +7,6 @@
  * a special 'node test view' permission.
  */
 
-use Drupal\Core\Entity\EntityFieldQuery;
-
 use Drupal\node\Node;
 
 /**
@@ -152,12 +150,13 @@ function node_access_test_page() {
 function node_access_entity_test_page() {
   $output = '';
   try {
-    $query = new EntityFieldQuery;
-    $result = $query->fieldCondition('body', 'value', 'A', 'STARTS_WITH')->execute();
-    if (!empty($result['node'])) {
-      $output .= '<p>Yes, ' . count($result['node']) . ' nodes</p>';
+    $result = entity_query('node')
+      ->condition('body.value', 'A', 'STARTS_WITH')
+      ->execute();
+    if (!empty($result)) {
+      $output .= '<p>Yes, ' . count($result) . ' nodes</p>';
       $output .= '<ul>';
-      foreach ($result['node'] as $nid => $v) {
+      foreach ($result as $nid) {
         $output .= '<li>' . $nid . '</li>';
       }
       $output .= '</ul>';

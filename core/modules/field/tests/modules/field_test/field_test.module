@@ -13,8 +13,6 @@
  * test helper functions
  */
 
-use Drupal\Core\Entity\EntityFieldQuery;
-
 require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.entity.inc';
 require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.field.inc';
 require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.storage.inc';
@@ -185,27 +183,6 @@ function field_test_memorize($key = NULL, $value = NULL) {
 function field_test_field_create_field($field) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
-}
-
-/**
- * Implements hook_entity_query_alter().
- */
-function field_test_entity_query_alter(&$query) {
-  if (!empty($query->alterMyExecuteCallbackPlease)) {
-    $query->executeCallback = 'field_test_dummy_field_storage_query';
-  }
-}
-
-/**
- * Pseudo-implements hook_field_storage_query().
- */
-function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
-  // Return dummy values that will be checked by the test.
-  return array(
-    'user' => array(
-      1 => (object) array('entity_id' => 1, 'revision_id' => NULL, 'bundle' => NULL),
-    ),
-  );
 }
 
 /**
