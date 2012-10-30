@@ -87,10 +87,9 @@ function update_check_incompatibility($name, $type = 'module') {
  * irreversible changes to the database are made here.
  */
 function update_prepare_d8_bootstrap() {
-  // Allow the database system to work even if the registry has not been
-  // created yet.
   include_once DRUPAL_ROOT . '/core/includes/install.inc';
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+  // Bootstrap to configuration.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
   // Check whether settings.php needs to be rewritten.
   $settings_exist = !empty($GLOBALS['config_directories']);
@@ -115,6 +114,27 @@ function update_prepare_d8_bootstrap() {
     }
     update_extra_requirements($requirements);
   }
+
+  if (!$settings_exist || !is_dir(config_get_config_directory('active')) || !is_dir(config_get_config_directory('staging'))) {
+    // @todo Race-condition: drupal_install_config_directories() calls into
+    //   install_ensure_config_directory(), which calls into
+    //   file_prepare_directory(), whichs calls into file_get_stream_wrappers(),
+    //   which attempts to invoke hooks with a non-existing module/hook system.
+
+    include_once DRUPAL_ROOT . '/core/includes/module.inc';
+    include_once DRUPAL_ROOT . '/core/includes/cache.inc';
+    $module_list['system']['filename'] = 'core/modules/system/system.module';
+    module_list(NULL, $module_list);
+    require_once DRUPAL_ROOT . '/' . $module_list['system']['filename'];
+    // Ensure the configuration directories exist and are writable, or create
+    // them. If the directories have not been specified in settings.php and
+    // created manually already, and either directory cannot be created by the
+    // web server, an exception will be thrown, halting the update.
+    drupal_install_config_directories();
+  }
+
+  // Bootstrap the database.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
   // If the site has not updated to Drupal 8 yet, check to make sure that it is
   // running an up-to-date version of Drupal 7 before proceeding. Note this has
@@ -193,20 +213,6 @@ function update_prepare_d8_bootstrap() {
         variable_set('language_default', (array) $language_default);
       }
 
-      // @todo Race-condition: drupal_install_config_directories() calls into
-      //   install_ensure_config_directory(), which calls into
-      //   file_prepare_directory(), whichs calls into file_get_stream_wrappers(),
-      //   which attempts to invoke hooks with a non-existing module/hook system.
-      include_once DRUPAL_ROOT . '/core/includes/module.inc';
-      $module_list['system']['filename'] = 'core/modules/system/system.module';
-      module_list(NULL, $module_list);
-      require_once DRUPAL_ROOT . '/' . $module_list['system']['filename'];
-      // Ensure the configuration directories exist and are writable, or create
-      // them. If the directories have not been specified in settings.php and
-      // created manually already, and either directory cannot be created by the
-      // web server, an exception will be thrown, halting the update.
-      drupal_install_config_directories();
-
       $module_config = config('system.module');
       $disabled_modules = config('system.module.disabled');
       $theme_config = config('system.theme');
@@ -218,6 +224,10 @@ function update_prepare_d8_bootstrap() {
       // requirements check.
       require_once DRUPAL_ROOT . '/core/modules/system/system.module';
 
+      // Make sure that the bootstrap cache is cleared as that might contain
+      // incompatible data structures.
+      cache('bootstrap')->flush();
+
       // Retrieve all installed extensions from the {system} table.
       // Uninstalled extensions are ignored and not converted.
       $result = db_query('SELECT name, status, weight, schema_version, type FROM {system} WHERE type = :theme OR (type = :module AND schema_version <> :schema_uninstalled)', array(
@@ -225,6 +235,11 @@ function update_prepare_d8_bootstrap() {
         ':module' => 'module',
         ':schema_uninstalled' => SCHEMA_UNINSTALLED,
       ));
+
+      // Populate a fixed module list (again, why did it get lost?) to avoid
+      // errors due to the drupal_alter() in _system_rebuild_module_data().
+      $module_list['system']['filename'] = 'core/modules/system/system.module';
+      module_list(NULL, $module_list);
       $module_data = _system_rebuild_module_data();
 
       // Migrate each extension into configuration, varying by the extension's
