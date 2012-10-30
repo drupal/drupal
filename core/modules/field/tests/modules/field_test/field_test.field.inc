@@ -48,6 +48,13 @@ function field_test_field_info() {
 }
 
 /**
+ * Implements hook_field_widget_info_alter().
+ */
+function field_test_field_widget_info_alter(&$info) {
+  $info['test_field_widget_multiple']['field_types'][] = 'test_field';
+}
+
+/**
  * Implements hook_field_update_forbid().
  */
 function field_test_field_update_forbid($field, $prior_field, $has_data) {

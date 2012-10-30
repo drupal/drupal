@@ -9,6 +9,7 @@ namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\field\Plugin\Type\Widget\WidgetLegacyDiscoveryDecorator;
 
@@ -44,7 +45,7 @@ class WidgetPluginManager extends PluginManagerBase {
    * Constructs a WidgetPluginManager object.
    */
   public function __construct() {
-    $this->baseDiscovery = new WidgetLegacyDiscoveryDecorator(new AnnotatedClassDiscovery('field', 'widget'));
+    $this->baseDiscovery = new AlterDecorator(new WidgetLegacyDiscoveryDecorator(new AnnotatedClassDiscovery('field', 'widget')), 'field_widget_info');
     $this->discovery = new CacheDecorator($this->baseDiscovery, $this->cache_id, $this->cache_bin);
 
     $this->factory = new WidgetFactory($this);

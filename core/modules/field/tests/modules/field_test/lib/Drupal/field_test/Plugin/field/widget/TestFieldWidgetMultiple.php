@@ -14,13 +14,14 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
 /**
  * Plugin implementation of the 'test_field_widget_multiple' widget.
  *
+ * The 'field_types' entry is left empty, and is populated through hook_field_widget_info_alter().
+ *
+ * @see field_test_field_widget_info_alter()
+ *
  * @Plugin(
  *   id = "test_field_widget_multiple",
  *   module = "field_test",
  *   label = @Translation("Test widget - multiple"),
- *   field_types = {
- *      "test_field"
- *   },
  *   settings = {
  *     "test_widget_setting_multiple" = "dummy test string"
  *   },

@@ -328,4 +328,16 @@ class FieldInfoTest extends FieldTestBase {
       $this->assertIdentical(field_info_formatter_settings($type), $info['settings'], format_string("field_info_formatter_settings returns %type's formatter settings", array('%type' => $type)));
     }
   }
+
+  /**
+   * Test that the widget definition functions work.
+   */
+  function testWidgetDefinition() {
+
+    $widget_definition = field_info_widget_types('test_field_widget_multiple');
+
+    // Test if hook_field_widget_info_alter is beïng called.
+    $this->assertTrue(in_array('test_field', $widget_definition['field_types']), "The 'test_field_widget_multiple' widget is enabled for the 'test_field' field type in field_test_field_widget_info_alter().");
+
+  }
 }
