@@ -91,6 +91,29 @@ class SettingsTest extends UITestBase {
     views_invalidate_cache();
     $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
     $this->assertNoFieldById('edit-displays-top-add-display-embed');
+
+    // Configure to hide/show the sql at the preview.
+    $edit = array(
+      'ui_show_sql_query_enabled' => FALSE,
+    );
+    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
+
+    $this->drupalPost(NULL, array(), t('Update preview'));
+    $xpath = $this->xpath('//div[@class="views-query-info"]/pre');
+    $this->assertEqual(count($xpath), 0, 'The views sql is hidden.');
+
+    $edit = array(
+      'ui_show_sql_query_enabled' => TRUE,
+    );
+    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
+
+    $this->drupalPost(NULL, array(), t('Update preview'));
+    $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
+    $this->assertEqual(count($xpath), 1, 'The views sql is shown.');
+    $this->assertFalse(strpos($xpath[0], 'db_condition_placeholder') !== FALSE, 'No placeholders are shown in the views sql.');
+    $this->assertTrue(strpos($xpath[0], "node.status = '1'") !== FALSE, 'The placeholders in the views sql is replace by the actual value.');
   }
 
 }

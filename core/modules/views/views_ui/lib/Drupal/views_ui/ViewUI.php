@@ -8,6 +8,8 @@
 namespace Drupal\views_ui;
 
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Database\Database;
+use Drupal\views\Plugin\views\query\Sql;
 
 /**
  * Stores UI related temporary settings.
@@ -1791,7 +1793,7 @@ class ViewUI extends ViewExecutable {
             // Only the sql default class has a method getArguments.
             $quoted = array();
 
-            if (get_class($this->query) == 'views_plugin_query_default') {
+            if ($this->query instanceof Sql) {
               $quoted = $query->getArguments();
               $connection = Database::getConnection();
               foreach ($quoted as $key => $val) {
