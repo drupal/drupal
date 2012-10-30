@@ -145,7 +145,7 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertLink('Edit');
     $this->clickLink('Edit');
     $this->assertResponse(200);
-    $this->assertTitle('Edit test configuration | Drupal');
+    $this->assertTitle('Edit Antelope | Drupal');
     $edit = array('label' => 'Albatross', 'id' => 'albatross');
     $this->drupalPost(NULL, $edit, t('Save'));
 

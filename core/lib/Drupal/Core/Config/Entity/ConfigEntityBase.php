@@ -32,8 +32,10 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     parent::__construct($values, $entity_type);
 
     // Backup the original ID, if any.
-    if ($original_id = $this->id()) {
-      $this->originalID = $original_id;
+    // Configuration entity IDs are strings, and '0' is a valid ID.
+    $original_id = $this->id();
+    if ($original_id !== NULL && $original_id !== '') {
+      $this->setOriginalID($original_id);
     }
   }
 
@@ -45,23 +47,22 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
-   * Overrides Entity::isNew().
-   *
-   * EntityInterface::enforceIsNew() is not supported by configuration entities,
-   * since each configuration entity is unique.
+   * Implements ConfigEntityInterface::setOriginalID().
    */
-  final public function isNew() {
-    return !$this->id();
+  public function setOriginalID($id) {
+    $this->originalID = $id;
   }
 
   /**
-   * Overrides Entity::bundle().
+   * Overrides Entity::isNew().
    *
-   * EntityInterface::bundle() is not supported by configuration entities, since
-   * a configuration entity is a bundle.
+   * EntityInterface::enforceIsNew() is only supported for newly created
+   * configuration entities but has no effect after saving, since each
+   * configuration entity is unique.
    */
-  final public function bundle() {
-    return $this->entityType;
+  final public function isNew() {
+    // Configuration entity IDs are strings, and '0' is a valid ID.
+    return !empty($this->enforceIsNew) || $this->id() === NULL || $this->id() === '';
   }
 
   /**
@@ -84,6 +85,16 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function set($property_name, $value, $langcode = NULL) {
     // @todo: Add support for translatable properties being not fields.
     $this->{$property_name} = $value;
+  }
+
+  /**
+   * Overrides Entity::createDuplicate().
+   */
+  public function createDuplicate() {
+    $duplicate = parent::createDuplicate();
+    // Prevent the new duplicate from being misinterpreted as a rename.
+    $duplicate->setOriginalID(NULL);
+    return $duplicate;
   }
 
   /**

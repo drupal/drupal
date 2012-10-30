@@ -9,6 +9,7 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
@@ -222,6 +223,9 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     $class = isset($this->entityInfo['entity class']) ? $this->entityInfo['entity class'] : 'Drupal\Core\Entity\Entity';
 
     $entity = new $class($values, $this->entityType);
+    // Mark this entity as new, so isNew() returns TRUE. This does not check
+    // whether a configuration entity with the same ID (if any) already exists.
+    $entity->enforceIsNew();
 
     // Assign a new UUID if there is none yet.
     if (!isset($entity->{$this->uuidKey})) {
@@ -260,22 +264,31 @@ class ConfigStorageController implements EntityStorageControllerInterface {
 
   /**
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::save().
+   *
+   * @throws EntityMalformedException
+   *   When attempting to save a configuration entity that has no ID.
    */
   public function save(EntityInterface $entity) {
     $prefix = $this->entityInfo['config prefix'] . '.';
 
-    // Load the stored entity, if any.
-    if ($entity->getOriginalID()) {
-      $id = $entity->getOriginalID();
+    // Configuration entity IDs are strings, and '0' is a valid ID.
+    $id = $entity->id();
+    if ($id === NULL || $id === '') {
+      throw new EntityMalformedException('The entity does not have an ID.');
     }
-    else {
-      $id = $entity->id();
+
+    // Load the stored entity, if any.
+    // At this point, the original ID can only be NULL or a valid ID.
+    if ($entity->getOriginalID() !== NULL) {
+      $id = $entity->getOriginalID();
     }
     $config = config($prefix . $id);
     $config->setName($prefix . $entity->id());
 
     if (!$config->isNew() && !isset($entity->original)) {
-      $entity->original = entity_load_unchanged($this->entityType, $id);
+      $this->resetCache(array($id));
+      $result = $this->load(array($id));
+      $entity->original = reset($result);
     }
 
     $this->preSave($entity);
@@ -291,6 +304,9 @@ class ConfigStorageController implements EntityStorageControllerInterface {
       $config->save();
       $this->postSave($entity, TRUE);
       $this->invokeHook('update', $entity);
+
+      // Immediately update the original ID.
+      $entity->setOriginalID($entity->id());
     }
     else {
       $return = SAVED_NEW;

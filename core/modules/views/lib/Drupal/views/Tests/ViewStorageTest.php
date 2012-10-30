@@ -85,8 +85,6 @@ class ViewStorageTest extends ViewTestBase {
     // CRUD tests.
     $this->loadTests();
     $this->createTests();
-    $this->saveTests();
-    $this->deleteTests();
     $this->displayTests();
     $this->statusTests();
 
@@ -182,59 +180,6 @@ class ViewStorageTest extends ViewTestBase {
     $created->save();
     $created_loaded = $this->loadView('glossary_new');
     $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');
-  }
-
-  /**
-   * Tests saving configuration entities.
-   */
-  protected function saveTests() {
-    $view = $this->loadView('archive');
-
-    // Save the newly created view, but modify the name.
-    $view->set('name', 'archive_copy');
-    $view->set('tag', 'changed');
-    $view->save();
-
-    // Load the newly saved config.
-    $config = config('views.view.archive_copy');
-    $this->assertFalse($config->isNew(), 'New config has been loaded.');
-
-    $this->assertEqual($view->tag, $config->get('tag'), 'A changed value has been saved.');
-
-    // Change a value and save.
-    $view->tag = 'changed';
-    $view->save();
-
-    // Check values have been written to config.
-    $config = config('views.view.archive_copy')->get();
-    $this->assertEqual($view->tag, $config['tag'], 'View property saved to config.');
-
-    // Check whether load, save and load produce the same kind of view.
-    $values = config('views.view.archive')->get();
-    $created = $this->controller->create($values);
-
-    $created->save();
-    $created_loaded = $this->loadView($created->id());
-    $values_loaded = config('views.view.archive')->get();
-
-    $this->assertTrue(isset($created_loaded->display['default']['display_options']), 'Make sure that the display options exist.');
-    $this->assertEqual($created_loaded->display['default']['display_plugin'], 'default', 'Make sure the right display plugin is set.');
-
-    $this->assertEqual($values, $values_loaded, 'The loaded config is the same as the original loaded one.');
-
-  }
-
-  /**
-   * Tests deleting configuration entities.
-   */
-  protected function deleteTests() {
-    $view = $this->loadView('tracker');
-
-    // Delete the config.
-    $view->delete();
-    $config = config('views.view.tracker');
-
-    $this->assertTrue($config->isNew(), 'Deleted config is now new.');
   }
 
   /**
