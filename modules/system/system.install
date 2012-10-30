@@ -2729,6 +2729,26 @@ function system_update_7061(&$sandbox) {
   }
 
   if (!isset($sandbox['progress'])) {
+    // Delete stale rows from {upload} where the fid is not in the {files} table.
+    db_delete('upload')
+      ->notExists(
+        db_select('files', 'f')
+        ->fields('f', array('fid'))
+        ->where('f.fid = {upload}.fid')
+      )
+      ->execute();
+
+    // Delete stale rows from {upload} where the vid is not in the
+    // {node_revision} table. The table has already been renamed in
+    // node_update_7001().
+    db_delete('upload')
+      ->notExists(
+        db_select('node_revision', 'nr')
+        ->fields('nr', array('vid'))
+        ->where('nr.vid = {upload}.vid')
+      )
+      ->execute();
+
     // Retrieve a list of node revisions that have uploaded files attached.
     // DISTINCT queries are expensive, especially when paged, so we store the
     // data in its own table for the duration of the update.
