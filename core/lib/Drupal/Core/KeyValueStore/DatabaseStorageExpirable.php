@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\KeyValueStore;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Merge;
-use Drupal\Core\Database\Database;
 
 /**
  * Defines a default key/value store implementation for expiring items.
@@ -51,10 +51,8 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    *   - table: (optional) The name of the SQL table to use. Defaults to
    *     key_value_expire.
    */
-  public function __construct($collection, array $options = array()) {
-    parent::__construct($collection, $options);
-    $this->connection = isset($options['connection']) ? $options['connection'] : Database::getConnection();
-    $this->table = isset($options['table']) ? $options['table'] : 'key_value_expire';
+  public function __construct($collection, Connection $connection, $table = 'key_value_expire') {
+    parent::__construct($collection, $connection, $table);
   }
 
   /**

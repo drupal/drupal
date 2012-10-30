@@ -65,7 +65,7 @@ class TempStoreFactory {
     }
 
     // Store the data for this collection in the database.
-    $storage = new DatabaseStorageExpirable($collection, array('connection' => $this->connection));
+    $storage = new DatabaseStorageExpirable($collection, $this->connection);
     return new TempStore($storage, $this->lockBackend, $owner);
   }
 

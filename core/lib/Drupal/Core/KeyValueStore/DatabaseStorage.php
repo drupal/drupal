@@ -8,18 +8,22 @@
 namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Connection;
 
 /**
  * Defines a default key/value store implementation.
  *
  * This is Drupal's default key/value store implementation. It uses the database
  * to store key/value data.
- *
- * @todo This class still calls db_* functions directly because it's needed
- *   very early, pre-Container.  Once the early bootstrap dependencies are
- *   sorted out, consider using an injected database connection instead.
  */
 class DatabaseStorage extends StorageBase {
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
 
   /**
    * The name of the SQL table to use.
@@ -36,8 +40,9 @@ class DatabaseStorage extends StorageBase {
    * @param string $table
    *   The name of the SQL table to use, defaults to key_value.
    */
-  public function __construct($collection, $table = 'key_value') {
+  public function __construct($collection, Connection $connection, $table = 'key_value') {
     parent::__construct($collection);
+    $this->connection = $connection;
     $this->table = $table;
   }
 
@@ -47,7 +52,7 @@ class DatabaseStorage extends StorageBase {
   public function getMultiple(array $keys) {
     $values = array();
     try {
-      $result = db_query('SELECT name, value FROM {' . db_escape_table($this->table) . '} WHERE name IN (:keys) AND collection = :collection', array(':keys' => $keys, ':collection' => $this->collection))->fetchAllAssoc('name');
+      $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN (:keys) AND collection = :collection', array(':keys' => $keys, ':collection' => $this->collection))->fetchAllAssoc('name');
       foreach ($keys as $key) {
         if (isset($result[$key])) {
           $values[$key] = unserialize($result[$key]->value);
@@ -66,7 +71,7 @@ class DatabaseStorage extends StorageBase {
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getAll().
    */
   public function getAll() {
-    $result = db_query('SELECT name, value FROM {' . db_escape_table($this->table) . '} WHERE collection = :collection', array(':collection' => $this->collection));
+    $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection', array(':collection' => $this->collection));
     $values = array();
 
     foreach ($result as $item) {
@@ -81,7 +86,7 @@ class DatabaseStorage extends StorageBase {
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::set().
    */
   public function set($key, $value) {
-    db_merge($this->table)
+    $this->connection->merge($this->table)
       ->key(array(
         'name' => $key,
         'collection' => $this->collection,
@@ -94,7 +99,7 @@ class DatabaseStorage extends StorageBase {
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::setIfNotExists().
    */
   public function setIfNotExists($key, $value) {
-    $result = db_merge($this->table)
+    $result = $this->connection->merge($this->table)
       ->insertFields(array(
         'collection' => $this->collection,
         'name' => $key,
@@ -112,7 +117,7 @@ class DatabaseStorage extends StorageBase {
   public function deleteMultiple(array $keys) {
     // Delete in chunks when a large array is passed.
     do {
-      db_delete($this->table)
+      $this->connection->delete($this->table)
         ->condition('name', array_splice($keys, 0, 1000))
         ->condition('collection', $this->collection)
         ->execute();

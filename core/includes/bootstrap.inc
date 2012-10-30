@@ -2465,9 +2465,18 @@ function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
       ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
       ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
 
+    // Register the service for the default database connection.
+    $container->register('database', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('default');
     // Register the KeyValueStore factory.
     $container
-      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory');
+      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
+      ->addArgument(new Reference('service_container'));
+    $container
+      ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
+      ->addArgument(new Reference('database'));
   }
   return $container;
 }

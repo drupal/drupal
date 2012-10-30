@@ -13,11 +13,11 @@ namespace Drupal\system\Tests\KeyValueStore;
 class MemoryStorageTest extends StorageTestBase {
 
   /**
-   * The name of the class to test.
+   * Holds the original default key/value service name.
    *
-   * The tests themselves are in StorageTestBase and use this class.
+   * @var String
    */
-  protected $storageClass = 'Drupal\Core\KeyValueStore\MemoryStorage';
+  protected $originalKeyValue = NULL;
 
   public static function getInfo() {
     return array(
@@ -25,6 +25,28 @@ class MemoryStorageTest extends StorageTestBase {
       'description' => 'Tests the key-value memory storage.',
       'group' => 'Key-value store',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+    $this->container
+      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
+    global $conf;
+    if (isset($conf['keyvalue_default'])) {
+      $this->originalKeyValue = $conf['keyvalue_default'];
+    }
+    $conf['keyvalue_default'] = 'keyvalue.memory';
+  }
+
+  protected function tearDown() {
+    global $conf;
+    if (isset($this->originalKeyValue)) {
+      $conf['keyvalue_default'] = $this->originalKeyValue;
+    }
+    else {
+      unset($conf['keyvalue_default']);
+    }
+    parent::tearDown();
   }
 
 }

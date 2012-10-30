@@ -7,17 +7,12 @@
 
 namespace Drupal\system\Tests\KeyValueStore;
 
+use Symfony\Component\DependencyInjection\Reference;
+
 /**
  * Tests the key-value database storage.
  */
 class DatabaseStorageExpirableTest extends StorageTestBase {
-
-  /**
-   * The name of the class to test.
-   *
-   * The tests themselves are in StorageTestBase and use this class.
-   */
-  protected $storageClass = 'Drupal\Core\KeyValueStore\DatabaseStorageExpirable';
 
   public static function getInfo() {
     return array(
@@ -29,12 +24,27 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
 
   protected function setUp() {
     parent::setUp();
+    $this->factory = 'keyvalue.expirable';
     module_load_install('system');
     $schema = system_schema();
     db_create_table('key_value_expire', $schema['key_value_expire']);
+    $this->container
+      ->register('database', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('default');
+    $this->container
+      ->register('keyvalue.expirable.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory')
+      ->addArgument(new Reference('database'));
+    global $conf;
+    $conf['keyvalue_expirable_default'] = 'keyvalue.expirable.database';
   }
 
   protected function tearDown() {
+    // The DatabaseExpirableStorage class has a destructor which deletes rows
+    // from the key_value_expire table. We need to make sure the destructor
+    // runs before the table is deleted.
+    $this->container->set('keyvalue.expirable', NULL);
     db_drop_table('key_value_expire');
     parent::tearDown();
   }

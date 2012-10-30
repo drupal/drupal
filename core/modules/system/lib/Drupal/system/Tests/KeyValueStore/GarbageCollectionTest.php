@@ -7,8 +7,9 @@
 
 namespace Drupal\system\Tests\KeyValueStore;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
+use Drupal\simpletest\UnitTestBase;
 
 /**
  * Tests garbage collection for DatabaseStorageExpirable.
@@ -40,7 +41,7 @@ class GarbageCollectionTest extends UnitTestBase {
    */
   public function testGarbageCollection() {
     $collection = $this->randomName();
-    $store = new DatabaseStorageExpirable($collection);
+    $store = new DatabaseStorageExpirable($collection, Database::getConnection());
 
     // Insert some items and confirm that they're set.
     for ($i = 0; $i <= 3; $i++) {

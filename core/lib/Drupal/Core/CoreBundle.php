@@ -49,10 +49,6 @@ class CoreBundle extends Bundle
     $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
       ->addArgument(new Reference('request'))
       ->setScope('request');
-    $container->register('database', 'Drupal\Core\Database\Connection')
-      ->setFactoryClass('Drupal\Core\Database\Database')
-      ->setFactoryMethod('getConnection')
-      ->addArgument('default');
     $container->register('database.slave', 'Drupal\Core\Database\Connection')
       ->setFactoryClass('Drupal\Core\Database\Database')
       ->setFactoryMethod('getConnection')

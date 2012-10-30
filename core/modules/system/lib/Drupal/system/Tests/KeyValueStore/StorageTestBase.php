@@ -8,18 +8,13 @@
 namespace Drupal\system\Tests\KeyValueStore;
 
 use Drupal\simpletest\UnitTestBase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Base class for testing key-value storages.
  */
 abstract class StorageTestBase extends UnitTestBase {
-
-  /**
-   * The fully qualified class name of the key-value storage to test.
-   *
-   * @var string
-   */
-  protected $storageClass;
 
   /**
    * An array of random stdClass objects.
@@ -35,9 +30,34 @@ abstract class StorageTestBase extends UnitTestBase {
    */
   protected $collections = array();
 
+  /**
+   * Whether we are using an expirable key/value store.
+   *
+   * @var boolean
+   */
+  protected $factory = 'keyvalue';
+
+  /**
+   * A container for the services needed in these tests.
+   *
+   * @var ContainerBuilder
+   */
+  protected $container;
+
   protected function setUp() {
     parent::setUp();
 
+    $this->container = new ContainerBuilder();
+    $this->container
+      ->register('service_container', 'Symfony\Component\DependencyInjection\ContainerBuilder')
+      ->setSynthetic(TRUE);
+    $this->container->set('service_container', $this->container);
+    $this->container
+      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
+      ->addArgument(new Reference('service_container'));
+    $this->container
+      ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
+      ->addArgument(new Reference('service_container'));
     // Define two data collections,
     $this->collections = array(0 => 'zero', 1 => 'one');
 
@@ -52,7 +72,6 @@ abstract class StorageTestBase extends UnitTestBase {
    */
   public function testCRUD() {
     $stores = $this->createStorage();
-
     // Verify that each store returns its own collection name.
     $this->assertIdentical($stores[0]->getCollectionName(), $this->collections[0]);
     $this->assertIdentical($stores[1]->getCollectionName(), $this->collections[1]);
@@ -120,12 +139,14 @@ abstract class StorageTestBase extends UnitTestBase {
     $this->assertFalse($stores[0]->getMultiple(array('foo', 'bar')));
     // Verify that the item in the other collection still exists.
     $this->assertIdenticalObject($this->objects[5], $stores[1]->get('foo'));
+
   }
 
   /**
    * Tests expected behavior for non-existing keys.
    */
   public function testNonExistingKeys() {
+
     $stores = $this->createStorage();
 
     // Verify that a non-existing key returns NULL as value.
@@ -187,7 +208,7 @@ abstract class StorageTestBase extends UnitTestBase {
   protected function createStorage() {
     $stores = array();
     foreach ($this->collections as $i => $collection) {
-      $stores[$i] = new $this->storageClass($collection);
+      $stores[$i] = $this->container->get($this->factory)->get($collection);
     }
 
     return $stores;
