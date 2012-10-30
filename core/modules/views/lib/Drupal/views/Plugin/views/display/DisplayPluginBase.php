@@ -1519,7 +1519,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $entity_tables = array();
         $has_translation_handlers = FALSE;
         foreach ($entities as $type => $entity_info) {
-          $entity_tables[] = $entity_info['base table'];
+          $entity_tables[] = $entity_info['base_table'];
 
           if (!empty($entity_info['translation'])) {
             $has_translation_handlers = TRUE;

@@ -29,7 +29,7 @@
  * calling field_is_translatable(), which checks the $field['translatable']
  * property returned by field_info_field(), and whether there is at least one
  * translation handler available for the field. A translation handler is a
- * module registering itself via hook_entity_info() to handle field
+ * module registering itself via hook_entity_info_alter() to handle field
  * translations.
  *
 

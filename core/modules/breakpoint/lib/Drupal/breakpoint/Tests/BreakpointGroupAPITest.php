@@ -7,8 +7,8 @@
 namespace Drupal\breakpoint\Tests;
 
 use Drupal\breakpoint\Tests\BreakpointsTestBase;
-use Drupal\breakpoint\BreakpointGroup;
-use Drupal\breakpoint\Breakpoint;
+use Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup;
+use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
 use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;

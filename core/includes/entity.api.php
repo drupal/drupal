@@ -11,232 +11,27 @@
  */
 
 /**
- * Inform the base system and the Field API about one or more entity types.
- *
- * Inform the system about one or more entity types (i.e., object types that
- * can be loaded via entity_load() and, optionally, to which fields can be
- * attached).
- *
- * @return
- *   An array whose keys are entity type names and whose values identify
- *   properties of those types that the system needs to know about:
- *   - label: The human-readable name of the type.
- *   - entity class: The name of the entity class, defaults to
- *     Drupal\Core\Entity\Entity. The entity class must implement EntityInterface.
- *   - controller class: The name of the class that is used to load the objects.
- *     The class has to implement the
- *     Drupal\Core\Entity\EntityStorageControllerInterface interface. Leave blank
- *     to use the Drupal\Core\Entity\DatabaseStorageController implementation.
- *   - render controller class: The name of the class that is used to render
- *     the entities. Deafaults to Drupal\Core\Entity\EntityRenderController.
- *   - form controller class: An associative array where the keys are the names
- *     of the different form operations (such as creation, editing or deletion)
- *     and the values are the names of the controller classes. To facilitate
- *     supporting the case where an entity form varies only slightly between
- *     different operations, the name of the operation is passed also to the
- *     constructor of the form controller class. This way, one class can be used
- *     for multiple entity forms.
- *   - list controller class: The name of the class that is used to provide
- *     listings of the entity. The class must implement
- *     Drupal\Core\Entity\EntityListControllerInterface. Defaults to
- *     Drupal\Core\Entity\EntityListController.
- *   - base table: (used by Drupal\Core\Entity\DatabaseStorageController) The
- *     name of the entity type's base table.
- *   - static cache: (used by Drupal\Core\Entity\DatabaseStorageController)
- *     FALSE to disable static caching of entities during a page request.
- *     Defaults to TRUE.
- *   - field cache: (used by Field API loading and saving of field data) FALSE
- *     to disable Field API's persistent cache of field data. Only recommended
- *     if a higher level persistent cache is available for the entity type.
- *     Defaults to TRUE.
- *   - uri callback: A function taking an entity as argument and returning the
- *     URI elements of the entity, e.g. 'path' and 'options'. The actual entity
- *     URI can be constructed by passing these elements to url().
- *   - label callback: (optional) A function taking an entity and optional langcode
- *     argument, and returning the label of the entity. If langcode is omitted, the
- *     entity's default language is used.
- *
- *     The entity label is the main string associated with an entity; for
- *     example, the title of a node or the subject of a comment. If there is an
- *     entity object property that defines the label, use the 'label' element
- *     of the 'entity keys' return value component to provide this information
- *     (see below). If more complex logic is needed to determine the label of
- *     an entity, you can instead specify a callback function here, which will
- *     be called to determine the entity label. See also the
- *     Drupal\Core\Entity\Entity::label() method, which implements this logic.
- *   - fieldable: Set to TRUE if you want your entity type to be fieldable.
- *   - translation: An associative array of modules registered as field
- *     translation handlers. Array keys are the module names, array values
- *     can be any data structure the module uses to provide field translation.
- *     Any empty value disallows the module to appear as a translation handler.
- *   - entity keys: An array describing how the Field API can extract the
- *     information it needs from the objects of the type. Elements:
- *     - id: The name of the property that contains the primary id of the
- *       entity. Every entity object passed to the Field API must have this
- *       property and its value must be numeric.
- *     - revision: The name of the property that contains the revision id of
- *       the entity. The Field API assumes that all revision ids are unique
- *       across all entities of a type. This entry can be omitted if the
- *       entities of this type are not versionable.
- *     - bundle: The name of the property that contains the bundle name for the
- *       entity. The bundle name defines which set of fields are attached to
- *       the entity (e.g. what nodes call "content type"). This entry can be
- *       omitted if this entity type exposes a single bundle (all entities have
- *       the same collection of fields). The name of this single bundle will be
- *       the same as the entity type.
- *     - label: The name of the property that contains the entity label. For
- *       example, if the entity's label is located in $entity->subject, then
- *       'subject' should be specified here. If complex logic is required to
- *       build the label, a 'label callback' should be defined instead (see
- *       the 'label callback' section above for details).
- *     - uuid (optional): The name of the property that contains the universally
- *       unique identifier of the entity, which is used to distinctly identify
- *       an entity across different systems.
- *   - bundle keys: An array describing how the Field API can extract the
- *     information it needs from the bundle objects for this type (e.g
- *     $vocabulary objects for terms; not applicable for nodes). This entry can
- *     be omitted if this type's bundles do not exist as standalone objects.
- *     Elements:
- *     - bundle: The name of the property that contains the name of the bundle
- *       object.
- *   - bundles: An array describing all bundles for this object type. Keys are
- *     bundles machine names, as found in the objects' 'bundle' property
- *     (defined in the 'entity keys' entry above). Elements:
- *     - label: The human-readable name of the bundle.
- *     - uri callback: Same as the 'uri callback' key documented above for the
- *       entity type, but for the bundle only. When determining the URI of an
- *       entity, if a 'uri callback' is defined for both the entity type and
- *       the bundle, the one for the bundle is used.
- *     - admin: An array of information that allows Field UI pages to attach
- *       themselves to the existing administration pages for the bundle.
- *       Elements:
- *       - path: the path of the bundle's main administration page, as defined
- *         in hook_menu(). If the path includes a placeholder for the bundle,
- *         the 'bundle argument', 'bundle helper' and 'real path' keys below
- *         are required.
- *       - bundle argument: The position of the placeholder in 'path', if any.
- *       - real path: The actual path (no placeholder) of the bundle's main
- *         administration page. This will be used to generate links.
- *       - access callback: As in hook_menu(). 'user_access' will be assumed if
- *         no value is provided.
- *       - access arguments: As in hook_menu().
- *   - view modes: An array describing the view modes for the entity type. View
- *     modes let entities be displayed differently depending on the context.
- *     For instance, a node can be displayed differently on its own page
- *     ('full' mode), on the home page or taxonomy listings ('teaser' mode), or
- *     in an RSS feed ('rss' mode). Modules taking part in the display of the
- *     entity (notably the Field API) can adjust their behavior depending on
- *     the requested view mode. An additional 'default' view mode is available
- *     for all entity types. This view mode is not intended for actual entity
- *     display, but holds default display settings. For each available view
- *     mode, administrators can configure whether it should use its own set of
- *     field display settings, or just replicate the settings of the 'default'
- *     view mode, thus reducing the amount of display configurations to keep
- *     track of. Keys of the array are view mode names. Each view mode is
- *     described by an array with the following key/value pairs:
- *     - label: The human-readable name of the view mode
- *     - custom settings: A boolean specifying whether the view mode should by
- *       default use its own custom field display settings. If FALSE, entities
- *       displayed in this view mode will reuse the 'default' display settings
- *       by default (e.g. right after the module exposing the view mode is
- *       enabled), but administrators can later use the Field UI to apply custom
- *       display settings specific to the view mode.
- *
- * @see entity_load()
- * @see entity_load_multiple()
- * @see hook_entity_info_alter()
- */
-function hook_entity_info() {
-  $return = array(
-    'node' => array(
-      'label' => t('Node'),
-      'entity class' => 'Drupal\node\Node',
-      'controller class' => 'Drupal\node\NodeStorageController',
-      'form controller class' => array(
-        'default' => 'Drupal\node\NodeFormController',
-      ),
-      'base table' => 'node',
-      'revision table' => 'node_revision',
-      'uri callback' => 'node_uri',
-      'fieldable' => TRUE,
-      'translation' => array(
-        'locale' => TRUE,
-      ),
-      'entity keys' => array(
-        'id' => 'nid',
-        'revision' => 'vid',
-        'bundle' => 'type',
-        'uuid' => 'uuid',
-      ),
-      'bundle keys' => array(
-        'bundle' => 'type',
-      ),
-      'bundles' => array(),
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full content'),
-          'custom settings' => FALSE,
-        ),
-        'teaser' => array(
-          'label' => t('Teaser'),
-          'custom settings' => TRUE,
-        ),
-        'rss' => array(
-          'label' => t('RSS'),
-          'custom settings' => FALSE,
-        ),
-      ),
-    ),
-  );
-
-  // Search integration is provided by node.module, so search-related
-  // view modes for nodes are defined here and not in search.module.
-  if (module_exists('search')) {
-    $return['node']['view modes'] += array(
-      'search_index' => array(
-        'label' => t('Search index'),
-        'custom settings' => FALSE,
-      ),
-      'search_result' => array(
-        'label' => t('Search result'),
-        'custom settings' => FALSE,
-      ),
-    );
-  }
-
-  // Bundles must provide a human readable name so we can create help and error
-  // messages, and the path to attach Field admin pages to.
-  foreach (node_type_get_names() as $type => $name) {
-    $return['node']['bundles'][$type] = array(
-      'label' => $name,
-      'admin' => array(
-        'path' => 'admin/structure/types/manage/%node_type',
-        'real path' => 'admin/structure/types/manage/' . $type,
-        'bundle argument' => 4,
-        'access arguments' => array('administer content types'),
-      ),
-    );
-  }
-
-  return $return;
-}
-
-/**
- * Alter the entity info.
+ * Alter the entity type definition.
  *
  * Modules may implement this hook to alter the information that defines an
- * entity. All properties that are available in hook_entity_info() can be
- * altered here.
+ * entity. All properties that are available in
+ * \Drupal\Core\Entity\EntityManager can be altered here.
  *
- * @param $entity_info
- *   The entity info array, keyed by entity name.
+ * @param array $entity_info
+ *   An associative array of all entity type definitions, keyed by the entity
+ *   type name.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\Entity
+ * @see \Drupal\Core\Entity\EntityManager
+ * @see entity_get_info()
+ *
+ * @todo Allow a module to add its bundles and view modes before other modules
+ *   alter the definition.
  */
 function hook_entity_info_alter(&$entity_info) {
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageControllerInterface interface.
-  $entity_info['node']['controller class'] = 'Drupal\mymodule\MyCustomNodeStorageController';
+  $entity_info['node']['controller_class'] = 'Drupal\mymodule\MyCustomNodeStorageController';
 }
 
 /**

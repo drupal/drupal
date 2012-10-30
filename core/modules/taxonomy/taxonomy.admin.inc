@@ -5,8 +5,8 @@
  * Administrative page callbacks for the taxonomy module.
  */
 
-use Drupal\taxonomy\Term;
-use Drupal\taxonomy\Vocabulary;
+use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
 
 /**
  * Form builder to list and manage vocabularies.
@@ -131,7 +131,7 @@ function taxonomy_vocabulary_add() {
  * Display a tree of all the terms in a vocabulary, with options to edit
  * each one. The form is made drag and drop by the theme function.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity to list terms for.
  *
  * @ingroup forms

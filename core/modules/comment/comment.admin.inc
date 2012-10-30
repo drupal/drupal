@@ -5,7 +5,7 @@
  * Admin page callbacks for the Comment module.
  */
 
-use Drupal\comment\Comment;
+use Drupal\comment\Plugin\Core\Entity\Comment;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

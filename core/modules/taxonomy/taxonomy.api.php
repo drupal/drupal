@@ -34,10 +34,10 @@ function hook_taxonomy_vocabulary_load(array $vocabularies) {
  * Modules implementing this hook can act on the vocabulary object before it is
  * inserted or updated.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   $vocabulary->foo = 'bar';
 }
 
@@ -47,10 +47,10 @@ function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Vocabulary $vocabulary
  * Modules implementing this hook can act on the vocabulary object when saved
  * to the database.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   if ($vocabulary->synonyms) {
     variable_set('taxonomy_' . $vocabulary->vid . '_synonyms', TRUE);
   }
@@ -61,10 +61,10 @@ function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Vocabulary $vocabulary)
  *
  * Modules implementing this hook can act on the vocabulary object when updated.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   $status = $vocabulary->synonyms ? TRUE : FALSE;
   if ($vocabulary->synonyms) {
     variable_set('taxonomy_' . $vocabulary->vid . '_synonyms', $status);
@@ -78,13 +78,13 @@ function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Vocabulary $vocabulary)
  * field_attach_delete_bundle() is called and before the vocabulary is actually
  * removed from the database.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that is about to be deleted.
  *
  * @see hook_taxonomy_vocabulary_delete()
  * @see taxonomy_vocabulary_delete()
  */
-function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
     variable_del('taxonomy_' . $vocabulary->vid . '_synonyms');
   }
@@ -97,13 +97,13 @@ function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Vocabulary $vocabula
  * field_attach_delete_bundle() has been called and after the vocabulary has
  * been removed from the database.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that has been deleted.
  *
  * @see hook_taxonomy_vocabulary_predelete()
  * @see taxonomy_vocabulary_delete()
  */
-function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
     variable_del('taxonomy_' . $vocabulary->vid . '_synonyms');
   }

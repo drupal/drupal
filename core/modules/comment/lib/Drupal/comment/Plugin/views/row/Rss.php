@@ -81,8 +81,8 @@ class Rss extends RowPluginBase {
   function options_form_summary_options() {
     $entity_info = entity_get_info('node');
     $options = array();
-    if (!empty($entity_info['view modes'])) {
-      foreach ($entity_info['view modes'] as $mode => $settings) {
+    if (!empty($entity_info['view_modes'])) {
+      foreach ($entity_info['view_modes'] as $mode => $settings) {
         $options[$mode] = $settings['label'];
       }
     }

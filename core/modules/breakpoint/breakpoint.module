@@ -5,8 +5,8 @@
  * Manage breakpoints and breakpoint groups for responsive designs.
  */
 
-use Drupal\breakpoint\Breakpoint;
-use Drupal\breakpoint\BreakpointGroup;
+use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
+use Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup;
 
 /**
  * Implements hook_help().
@@ -193,7 +193,7 @@ function _breakpoint_delete_breakpoints($list, $source_type) {
 
   // Remove the breakpoint.breakpoint part of the breakpoint identifier.
   foreach ($ids as &$id) {
-    $id = drupal_substr($id, drupal_strlen($entity_info['config prefix']) + 1);
+    $id = drupal_substr($id, drupal_strlen($entity_info['config_prefix']) + 1);
   }
   $breakpoint_groups = entity_load_multiple('breakpoint_group', $ids);
 
@@ -208,7 +208,7 @@ function _breakpoint_delete_breakpoints($list, $source_type) {
 
       // Remove the breakpoint.breakpoint part of the breakpoint identifier.
       foreach ($breakpoint_ids as &$breakpoint_id) {
-        $breakpoint_id = drupal_substr($breakpoint_id, drupal_strlen($entity_info['config prefix']) + 1);
+        $breakpoint_id = drupal_substr($breakpoint_id, drupal_strlen($entity_info['config_prefix']) + 1);
       }
       $breakpoints = entity_load_multiple('breakpoint', $breakpoint_ids);
 
@@ -290,45 +290,12 @@ function breakpoint_get_module_media_queries($module) {
 }
 
 /**
- * Implements hook_entity_info().
- */
-function breakpoint_entity_info() {
-  // Breakpoint.
-  $types['breakpoint'] = array(
-    'label' => 'Breakpoint',
-    'entity class' => 'Drupal\breakpoint\Breakpoint',
-    'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
-    'config prefix' => 'breakpoint.breakpoint',
-    'entity keys' => array(
-      'id' => 'id',
-      'label' => 'label',
-      'uuid' => 'uuid',
-    ),
-  );
-
-  // Breakpoint group.
-  $types['breakpoint_group'] = array(
-    'label' => 'Breakpoint group',
-    'entity class' => 'Drupal\breakpoint\BreakpointGroup',
-    'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
-    'config prefix' => 'breakpoint.breakpoint_group',
-    'entity keys' => array(
-      'id' => 'id',
-      'label' => 'label',
-      'uuid' => 'uuid',
-    ),
-  );
-
-  return $types;
-}
-
-/**
  * Load one breakpoint group by its identifier.
  *
  * @param string $id
  *   The id of the breakpoint group to load.
  *
- * @return Drupal\breakpoint\BreakpointGroup|false
+ * @return Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup|false
  *   The breakpoint group, or FALSE if there is no entity with the given id.
  *
  * @todo Remove this in a follow-up issue.
@@ -344,7 +311,7 @@ function breakpoint_group_load($id) {
  * @param int $id
  *   The id of the breakpoint to load.
  *
- * @return Drupal\breakpoint\Breakpoint
+ * @return Drupal\breakpoint\Plugin\Core\Entity\Breakpoint
  *   The entity object, or FALSE if there is no entity with the given id.
  *
  * @todo Remove this in a follow-up issue.
@@ -398,7 +365,7 @@ function breakpoint_select_options() {
  * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  *
- * @return Drupal\breakpoint\BreakpointGroup
+ * @return Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup
  *
  * @see _breakpoint_import_media_queries()
  * @see _breakpoint_import_breakpoint_groups()

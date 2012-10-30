@@ -58,8 +58,8 @@ class EntityRow extends RowPluginBase {
     $this->entityType = $this->definition['entity_type'];
 
     $this->entityInfo = entity_get_info($this->entityType);
-    $this->base_table = $this->entityInfo['base table'];
-    $this->base_field = $this->entityInfo['entity keys']['id'];
+    $this->base_table = $this->entityInfo['base_table'];
+    $this->base_field = $this->entityInfo['entity_keys']['id'];
   }
 
   /**
@@ -93,8 +93,8 @@ class EntityRow extends RowPluginBase {
    */
   protected function buildViewModeOptions() {
     $options = array();
-    if (!empty($this->entityInfo['view modes'])) {
-      foreach ($this->entityInfo['view modes'] as $mode => $settings) {
+    if (!empty($this->entityInfo['view_modes'])) {
+      foreach ($this->entityInfo['view_modes'] as $mode => $settings) {
         $options[$mode] = $settings['label'];
       }
     }

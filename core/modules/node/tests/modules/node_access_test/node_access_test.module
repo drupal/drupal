@@ -7,7 +7,7 @@
  * a special 'node test view' permission.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Implements hook_node_grants().

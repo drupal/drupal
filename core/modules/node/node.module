@@ -15,8 +15,8 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\node\Node;
-use Drupal\file\File;
+use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -191,67 +191,24 @@ function node_cron() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_info_alter().
  */
-function node_entity_info() {
-  $return = array(
-    'node' => array(
-      'label' => t('Node'),
-      'entity class' => 'Drupal\node\Node',
-      'controller class' => 'Drupal\node\NodeStorageController',
-      'form controller class' => array(
-        'default' => 'Drupal\node\NodeFormController',
-      ),
-      'base table' => 'node',
-      'revision table' => 'node_revision',
-      'uri callback' => 'node_uri',
-      'fieldable' => TRUE,
-      'entity keys' => array(
-        'id' => 'nid',
-        'revision' => 'vid',
-        'bundle' => 'type',
-        'label' => 'title',
-        'uuid' => 'uuid',
-      ),
-      'bundle keys' => array(
-        'bundle' => 'type',
-      ),
-      'bundles' => array(),
-      'render controller class' => 'Drupal\node\NodeRenderController',
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full content'),
-          'custom settings' => FALSE,
-        ),
-        'teaser' => array(
-          'label' => t('Teaser'),
-          'custom settings' => TRUE,
-        ),
-        'rss' => array(
-          'label' => t('RSS'),
-          'custom settings' => FALSE,
-        ),
-      ),
-    ),
-  );
-
+function node_entity_info_alter(&$info) {
   // Add a translation handler for fields if the language module is enabled.
   if (module_exists('language')) {
-    $return['node']['translation']['node'] = TRUE;
+    $info['node']['translation']['node'] = TRUE;
   }
 
   // Search integration is provided by node.module, so search-related
   // view modes for nodes are defined here and not in search.module.
   if (module_exists('search')) {
-    $return['node']['view modes'] += array(
-      'search_index' => array(
-        'label' => t('Search index'),
-        'custom settings' => FALSE,
-      ),
-      'search_result' => array(
-        'label' => t('Search result'),
-        'custom settings' => FALSE,
-      ),
+    $info['node']['view_modes']['search_index'] = array(
+      'label' => t('Search index'),
+      'custom_settings' => FALSE,
+    );
+    $info['node']['view_modes']['search_result'] = array(
+      'label' => t('Search result'),
+      'custom_settings' => FALSE,
     );
   }
 
@@ -259,7 +216,7 @@ function node_entity_info() {
   // messages, and the path to attach Field admin pages to.
   node_type_cache_reset();
   foreach (node_type_get_names() as $type => $name) {
-    $return['node']['bundles'][$type] = array(
+    $info['node']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
         'path' => 'admin/structure/types/manage/%node_type',
@@ -269,8 +226,6 @@ function node_entity_info() {
       ),
     );
   }
-
-  return $return;
 }
 
 /**

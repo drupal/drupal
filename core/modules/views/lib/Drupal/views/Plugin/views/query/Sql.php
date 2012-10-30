@@ -1327,7 +1327,7 @@ class Sql extends QueryPluginBase {
 
       foreach ($entity_tables as $table_alias => $table) {
         $info = entity_get_info($table['entity_type']);
-        $base_field = empty($table['revision']) ? $info['entity keys']['id'] : $info['entity keys']['revision'];
+        $base_field = empty($table['revision']) ? $info['entity_keys']['id'] : $info['entity_keys']['revision'];
         $this->add_field($table_alias, $base_field, '', $params);
       }
     }
@@ -1598,7 +1598,7 @@ class Sql extends QueryPluginBase {
     foreach ($entity_tables as $table_alias => $table) {
       $entity_type = $table['entity_type'];
       $info = entity_get_info($entity_type);
-      $id_key = empty($table['revision']) ? $info['entity keys']['id'] : $info['entity keys']['revision'];
+      $id_key = empty($table['revision']) ? $info['entity_keys']['id'] : $info['entity_keys']['revision'];
       $id_alias = $this->get_field_alias($table_alias, $id_key);
 
       foreach ($results as $index => $result) {

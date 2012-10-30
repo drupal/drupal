@@ -740,11 +740,11 @@ function field_view_mode_settings($entity_type, $bundle) {
     $bundle_settings = field_bundle_settings($entity_type, $bundle);
     $settings = $bundle_settings['view_modes'];
     // Include view modes for which nothing has been stored yet, but whose
-    // definition in hook_entity_info() specify they should use custom settings
-    // by default.
+    // definition in hook_entity_info_alter() specify they should use custom
+    // settings by default.
     $entity_info = entity_get_info($entity_type);
-    foreach ($entity_info['view modes'] as $view_mode => $view_mode_info) {
-      if (!isset($settings[$view_mode]['custom_settings']) && $view_mode_info['custom settings']) {
+    foreach ($entity_info['view_modes'] as $view_mode => $view_mode_info) {
+      if (!isset($settings[$view_mode]['custom_settings']) && $view_mode_info['custom_settings']) {
         $settings[$view_mode]['custom_settings'] = TRUE;
       }
     }
@@ -1123,8 +1123,8 @@ function field_extract_bundle($entity_type, $bundle) {
   }
 
   $info = entity_get_info($entity_type);
-  if (is_object($bundle) && isset($info['bundle keys']['bundle']) && isset($bundle->{$info['bundle keys']['bundle']})) {
-    return $bundle->{$info['bundle keys']['bundle']};
+  if (is_object($bundle) && isset($info['bundle_keys']['bundle']) && isset($bundle->{$info['bundle_keys']['bundle']})) {
+    return $bundle->{$info['bundle_keys']['bundle']};
   }
 }
 
@@ -1308,12 +1308,12 @@ function theme_field($variables) {
 function _field_create_entity_from_ids($ids) {
   $id_properties = array();
   $info = entity_get_info($ids->entity_type);
-  $id_properties[$info['entity keys']['id']] = $ids->entity_id;
-  if (!empty($info['entity keys']['revision']) && isset($ids->revision_id)) {
-    $id_properties[$info['entity keys']['revision']] = $ids->revision_id;
+  $id_properties[$info['entity_keys']['id']] = $ids->entity_id;
+  if (!empty($info['entity_keys']['revision']) && isset($ids->revision_id)) {
+    $id_properties[$info['entity_keys']['revision']] = $ids->revision_id;
   }
-  if (!empty($info['entity keys']['bundle']) && isset($ids->bundle)) {
-    $id_properties[$info['entity keys']['bundle']] = $ids->bundle;
+  if (!empty($info['entity_keys']['bundle']) && isset($ids->bundle)) {
+    $id_properties[$info['entity_keys']['bundle']] = $ids->bundle;
   }
   return entity_create($ids->entity_type, $id_properties);
 }

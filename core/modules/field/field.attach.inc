@@ -60,19 +60,23 @@ const FIELD_STORAGE_INSERT = 'insert';
  * of the fieldable entity, such as 'node' or 'user', and $entity is the entity
  * itself.
  *
- * hook_entity_info() is the central place for entity types to define if and how
+ * An entity plugin's annotation is how entity types define if and how
  * Field API should operate on their entity objects. Notably, the 'fieldable'
  * property needs to be set to TRUE.
  *
  * The Field Attach API uses the concept of bundles: the set of fields for a
  * given entity is defined on a per-bundle basis. The collection of bundles for
- * an entity type is defined its hook_entity_info() implementation. For
- * instance, node_entity_info() exposes each node type as its own bundle. This
- * means that the set of fields of a node is determined by the node type. The
- * Field API reads the bundle name for a given entity from a particular property
- * of the entity object, and hook_entity_info() defines which property to use.
- * For instance, node_entity_info() specifies:
- * @code $info['entity keys']['bundle'] = 'type'@endcode
+ * an entity type is added to the entity definition with
+ * hook_entity_info_alter(). For instance, node_entity_info_alter() exposes
+ * each node type as its own bundle. This means that the set of fields of a
+ * node is determined by the node type.
+ *
+ * The Field API reads the bundle name for a given entity from a particular
+ * property of the entity object, and hook_entity_info_alter() defines which
+ * property to use. For instance, node_entity_info_alter() specifies:
+ * @code
+ *   $info['entity_keys']['bundle'] = 'type'
+ * @endcode
  * This indicates that for a particular node object, the bundle name can be
  * found in $node->type. This property can be omitted if the entity type only
  * exposes a single bundle (all entities of this type have the same collection
@@ -903,7 +907,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
   $info = entity_get_info($entity_type);
   // Only the most current revision of non-deleted fields for cacheable entity
   // types can be cached.
-  $cache_read = $load_current && $info['field cache'] && empty($options['deleted']);
+  $cache_read = $load_current && $info['field_cache'] && empty($options['deleted']);
   // In addition, do not write to the cache when loading a single field.
   $cache_write = $cache_read && !isset($options['field_id']);
 
@@ -1271,7 +1275,7 @@ function field_attach_update($entity_type, EntityInterface $entity) {
   module_invoke_all('field_attach_update', $entity_type, $entity);
 
   $entity_info = entity_get_info($entity_type);
-  if ($entity_info['field cache']) {
+  if ($entity_info['field_cache']) {
     cache('field')->delete("field:$entity_type:" . $entity->id());
   }
 }
@@ -1306,7 +1310,7 @@ function field_attach_delete($entity_type, $entity) {
   module_invoke_all('field_attach_delete', $entity_type, $entity);
 
   $entity_info = entity_get_info($entity_type);
-  if ($entity_info['field cache']) {
+  if ($entity_info['field_cache']) {
     cache('field')->delete("field:$entity_type:" . $entity->id());
   }
 }

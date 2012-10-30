@@ -65,7 +65,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     $this->entityType = $entityType;
     $this->entityInfo = entity_get_info($entityType);
     $this->hookLoadArguments = array();
-    $this->idKey = $this->entityInfo['entity keys']['id'];
+    $this->idKey = $this->entityInfo['entity_keys']['id'];
   }
 
   /**
@@ -158,8 +158,8 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    *   A SelectQuery object for loading the entity.
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
-    $config_class = $this->entityInfo['entity class'];
-    $prefix = $this->entityInfo['config prefix'] . '.';
+    $config_class = $this->entityInfo['class'];
+    $prefix = $this->entityInfo['config_prefix'] . '.';
 
     // Load all of the configuration entities.
     if ($ids === NULL) {
@@ -220,7 +220,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::create().
    */
   public function create(array $values) {
-    $class = isset($this->entityInfo['entity class']) ? $this->entityInfo['entity class'] : 'Drupal\Core\Entity\Entity';
+    $class = $this->entityInfo['class'];
 
     $entity = new $class($values, $this->entityType);
     // Mark this entity as new, so isNew() returns TRUE. This does not check
@@ -252,7 +252,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     }
 
     foreach ($entities as $id => $entity) {
-      $config = config($this->entityInfo['config prefix'] . '.' . $entity->id());
+      $config = config($this->entityInfo['config_prefix'] . '.' . $entity->id());
       $config->delete();
     }
 
@@ -269,7 +269,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    *   When attempting to save a configuration entity that has no ID.
    */
   public function save(EntityInterface $entity) {
-    $prefix = $this->entityInfo['config prefix'] . '.';
+    $prefix = $this->entityInfo['config_prefix'] . '.';
 
     // Configuration entity IDs are strings, and '0' is a valid ID.
     $id = $entity->id();

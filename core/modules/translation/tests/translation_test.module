@@ -5,7 +5,7 @@
  * Mock module for content translation tests.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Implements hook_node_insert().

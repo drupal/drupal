@@ -5,8 +5,8 @@
  * Provides discussion forums.
  */
 
-use Drupal\node\Node;
-use Drupal\taxonomy\Term;
+use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\taxonomy\Plugin\Core\Entity\Term;
 
 /**
  * Implements hook_help().
@@ -220,8 +220,8 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 function forum_entity_info_alter(&$info) {
   // Take over URI construction for taxonomy terms that are forums.
   if ($vid = config('forum.settings')->get('vocabulary')) {
-    // Within hook_entity_info(), we can't invoke entity_load() as that would
-    // cause infinite recursion, so we call taxonomy_vocabulary_get_names()
+    // Within hook_entity_info_alter(), we can't invoke entity_load() as that
+    // would cause infinite recursion, so we call taxonomy_vocabulary_get_names()
     // instead of taxonomy_vocabulary_load(). All we need is the machine name
     // of $vid, so retrieving and iterating all the vocabulary names is somewhat
     // inefficient, but entity info is cached across page requests, and an
@@ -229,7 +229,7 @@ function forum_entity_info_alter(&$info) {
     // and is done as part of taxonomy_entity_info() anyway.
     foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
       if ($vid == $vocabulary->vid) {
-        $info['taxonomy_term']['bundles'][$machine_name]['uri callback'] = 'forum_uri';
+        $info['taxonomy_term']['bundles'][$machine_name]['uri_callback'] = 'forum_uri';
       }
     }
   }

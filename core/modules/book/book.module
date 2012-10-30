@@ -5,7 +5,7 @@
  * Allows users to create and organize related content in an outline.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -253,11 +253,9 @@ function book_admin_paths() {
  */
 function book_entity_info_alter(&$info) {
   // Add the 'Print' view mode for nodes.
-  $info['node']['view modes'] += array(
-    'print' => array(
-      'label' => t('Print'),
-      'custom settings' => FALSE,
-    ),
+  $info['node']['view_modes']['print'] = array(
+    'label' => t('Print'),
+    'custom_settings' => FALSE,
   );
 }
 

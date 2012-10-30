@@ -5,9 +5,9 @@
  * Enables users to rename URLs.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
-use Drupal\taxonomy\Term;
+use Drupal\taxonomy\Plugin\Core\Entity\Term;
 
 /**
  * Implements hook_help().

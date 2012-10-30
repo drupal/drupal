@@ -2,17 +2,32 @@
 
 /**
  * @file
- * Definition of Drupal\breakpoint\BreakpointGroup.
+ * Definition of Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup.
  */
 
-namespace Drupal\breakpoint;
+namespace Drupal\breakpoint\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the BreakpointGroup entity.
+ *
+ * @Plugin(
+ *   id = "breakpoint_group",
+ *   label = @Translation("Breakpoint group"),
+ *   module = "breakpoint",
+ *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   config_prefix = "breakpoint.breakpoint_group",
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "label" = "label",
+ *     "uuid" = "uuid"
+ *   }
+ * )
  */
 class BreakpointGroup extends ConfigEntityBase {
 
@@ -50,7 +65,7 @@ class BreakpointGroup extends ConfigEntityBase {
    * @var array
    *   Array containing all breakpoints of this group.
    *
-   * @see Drupal\breakpoints\Breakpoint
+   * @see Drupal\breakpoint\Plugin\Core\Entity\Breakpoint
    */
   public $breakpoints = array();
 
@@ -71,7 +86,7 @@ class BreakpointGroup extends ConfigEntityBase {
    *     Breakpoint::SOURCE_TYPE_MODULE
    *     Breakpoint::SOURCE_TYPE_USER_DEFINED
    *
-   * @see Drupal\breakpoint\Breakpoint
+   * @see Drupal\breakpoint\Plugin\Core\Entity\Breakpoint
    */
   public $sourceType = Breakpoint::SOURCE_TYPE_USER_DEFINED;
 

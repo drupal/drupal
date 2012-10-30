@@ -2,15 +2,52 @@
 
 /**
  * @file
- * Definition of Drupal\user\User.
+ * Definition of Drupal\user\Plugin\Core\Entity\User.
  */
 
-namespace Drupal\user;
+namespace Drupal\user\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\Entity;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the user entity class.
+ *
+ * @Plugin(
+ *   id = "user",
+ *   label = @Translation("User"),
+ *   module = "user",
+ *   controller_class = "Drupal\user\UserStorageController",
+ *   render_controller_class = "Drupal\user\UserRenderController",
+ *   form_controller_class = {
+ *     "profile" = "Drupal\user\ProfileFormController",
+ *     "register" = "Drupal\user\RegisterFormController"
+ *   },
+ *   base_table = "users",
+ *   uri_callback = "user_uri",
+ *   label_callback = "user_label",
+ *   fieldable = TRUE,
+ *   entity_keys = {
+ *     "id" = "uid",
+ *     "uuid" = "uuid"
+ *   },
+ *   bundles = {
+ *     "user" = {
+ *       "label" = "User",
+ *       "admin" = {
+ *         "path" = "admin/config/people/accounts",
+ *         "access arguments" = {"administer users"}
+ *       }
+ *     }
+ *   },
+ *   view_modes = {
+ *     "full" = {
+ *       "label" = "User account",
+ *       "custom_settings" = FALSE
+ *     }
+ *   }
+ * )
  */
 class User extends Entity {
 

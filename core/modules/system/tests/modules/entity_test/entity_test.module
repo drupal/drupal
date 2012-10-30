@@ -6,29 +6,13 @@
  */
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_info_alter().
  */
-function entity_test_entity_info() {
-  $items['entity_test'] = array(
-    'label' => t('Test entity'),
-    'entity class' => 'Drupal\entity_test\EntityTest',
-    'controller class' => 'Drupal\entity_test\EntityTestStorageController',
-    'form controller class' => array(
-      'default' => 'Drupal\entity_test\EntityTestFormController',
-    ),
-    'base table' => 'entity_test',
-    'data table' => 'entity_test_property_data',
-    'fieldable' => TRUE,
-    'entity keys' => array(
-      'id' => 'id',
-      'uuid' => 'uuid',
-    ),
-  );
+function entity_test_entity_info_alter(&$info) {
   // Optionally specify a translation handler for testing translations.
   if (variable_get('entity_test_translation')) {
-    $items['entity_test']['translation']['entity_test'] = TRUE;
+    $info['entity_test']['translation']['entity_test'] = TRUE;
   }
-  return $items;
 }
 
 /**
@@ -98,7 +82,7 @@ function entity_test_edit($entity) {
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return Drupal\entity_test\EntityTest
+ * @return Drupal\entity_test\Plugin\Core\Entity\EntityTest
  *   The loaded entity object, or FALSE if the entity cannot be loaded.
  */
 function entity_test_load($id, $reset = FALSE) {

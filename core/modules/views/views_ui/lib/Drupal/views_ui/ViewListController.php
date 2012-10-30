@@ -83,7 +83,7 @@ class ViewListController extends EntityListController {
    */
   public function getOperations(EntityInterface $view) {
     $uri = $view->uri();
-    $path = $uri['path'] . '/view/' . $view->id();
+    $path = $uri['path'];
 
     $definition['edit'] = array(
       'title' => t('Edit'),

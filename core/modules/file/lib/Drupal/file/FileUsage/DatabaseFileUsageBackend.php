@@ -9,7 +9,7 @@ namespace Drupal\file\FileUsage;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\file\File;
+use Drupal\file\Plugin\Core\Entity\File;
 
 /**
  * Defines the database file usage backend. This is the default Drupal backend.

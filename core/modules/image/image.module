@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Component\Uuid\Uuid;
-use Drupal\file\File;
-use Drupal\image\ImageStyle;
+use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\image\Plugin\Core\Entity\ImageStyle;
 
 /**
  * Image style constant for user presets in the database.
@@ -597,7 +597,7 @@ function image_image_style_update($style) {
 /**
  * Delete an image style.
  *
- * @param Drupal\image\ImageStyle $style
+ * @param Drupal\image\Plugin\Core\Entity\ImageStyle $style
  *   An image style array.
  * @param $replacement_style_name
  *   (optional) When deleting a style, specify a replacement style name so
@@ -1161,26 +1161,6 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
  */
 function _image_effect_definitions_sort($a, $b) {
   return strcasecmp($a['name'], $b['name']);
-}
-
-/**
- * Implements hook_entity_info().
- */
-function image_entity_info() {
-  return array(
-    'image_style' => array(
-      'label' => t('Image style'),
-      'entity class' => 'Drupal\image\ImageStyle',
-      'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
-      'uri callback' => 'image_style_uri',
-      'config prefix' => 'image.style',
-      'entity keys' => array(
-        'id' => 'name',
-        'label' => 'label',
-        'uuid' => 'uuid',
-      ),
-    ),
-  );
 }
 
 /**

@@ -5,7 +5,7 @@
  * Enables the use of personal and site-wide contact forms.
  */
 
-use Drupal\contact\Category;
+use Drupal\contact\Plugin\Core\Entity\Category;
 
 /**
  * Implements hook_help().
@@ -202,35 +202,12 @@ function contact_config_import_delete($name, $new_config, $old_config) {
 }
 
 /**
- * Implements hook_entity_info().
- */
-function contact_entity_info() {
-  $types['contact_category'] = array(
-    'label' => 'Category',
-    'entity class' => 'Drupal\contact\Category',
-    'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
-    'list controller class' => 'Drupal\contact\CategoryListController',
-    'form controller class' => array(
-      'default' => 'Drupal\contact\CategoryFormController',
-    ),
-    'uri callback' => 'contact_category_uri',
-    'config prefix' => 'contact.category',
-    'entity keys' => array(
-      'id' => 'id',
-      'label' => 'label',
-      'uuid' => 'uuid',
-    ),
-  );
-  return $types;
-}
-
-/**
  * Loads a contact category.
  *
  * @param $id
  *   The ID of the contact category to load.
  *
- * @return Drupal\contact\Category|false
+ * @return Drupal\contact\Plugin\Core\Entity\Category|false
  *   A Category object or FALSE if the requested $id does not exist.
  */
 function contact_category_load($id) {

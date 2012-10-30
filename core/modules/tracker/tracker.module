@@ -5,7 +5,7 @@
  * Tracks recent content posted by a user or users.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Implements hook_help().

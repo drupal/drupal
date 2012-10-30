@@ -6,141 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field_test\TestEntity;
-
-/**
- * Implements hook_entity_info().
- */
-function field_test_entity_info() {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
-  $test_entity_modes = array(
-    'full' => array(
-      'label' => t('Full object'),
-      'custom settings' => TRUE,
-    ),
-    'teaser' => array(
-      'label' => t('Teaser'),
-      'custom settings' => TRUE,
-    ),
-  );
-
-  return array(
-    'test_entity' => array(
-      'label' => t('Test Entity'),
-      'entity class' => 'Drupal\field_test\TestEntity',
-      'controller class' => 'Drupal\field_test\TestEntityController',
-      'form controller class' => array(
-        'default' => 'Drupal\field_test\TestEntityFormController',
-      ),
-      'fieldable' => TRUE,
-      'field cache' => FALSE,
-      'base table' => 'test_entity',
-      'revision table' => 'test_entity_revision',
-      'entity keys' => array(
-        'id' => 'ftid',
-        'revision' => 'ftvid',
-        'bundle' => 'fttype',
-      ),
-      'bundles' => $bundles,
-      'view modes' => $test_entity_modes,
-    ),
-    // This entity type doesn't get form handling for now...
-    'test_cacheable_entity' => array(
-      'label' => t('Test Entity, cacheable'),
-      'entity class' => 'Drupal\field_test\TestEntity',
-      'controller class' => 'Drupal\field_test\TestEntityController',
-      'fieldable' => TRUE,
-      'field cache' => TRUE,
-      'entity keys' => array(
-        'id' => 'ftid',
-        'revision' => 'ftvid',
-        'bundle' => 'fttype',
-      ),
-      'bundles' => $bundles,
-      'view modes' => $test_entity_modes,
-    ),
-    'test_entity_bundle_key' => array(
-      'entity class' => 'Drupal\field_test\TestEntity',
-      'controller class' => 'Drupal\field_test\TestEntityController',
-      'label' => t('Test Entity with a bundle key.'),
-      'base table' => 'test_entity_bundle_key',
-      'fieldable' => TRUE,
-      'field cache' => FALSE,
-      'entity keys' => array(
-        'id' => 'ftid',
-        'bundle' => 'fttype',
-      ),
-      'bundles' => array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2')) + $bundles,
-      'view modes' => $test_entity_modes,
-    ),
-    // In this case, the bundle key is not stored in the database.
-    'test_entity_bundle' => array(
-      'label' => t('Test Entity with a specified bundle.'),
-      'entity class' => 'Drupal\field_test\TestEntity',
-      'controller class' => 'Drupal\field_test\TestEntityController',
-      'base table' => 'test_entity_bundle',
-      'fieldable' => TRUE,
-      'field cache' => FALSE,
-      'entity keys' => array(
-        'id' => 'ftid',
-        'bundle' => 'fttype',
-      ),
-      'bundles' => array('test_entity_2' => array('label' => 'Test entity 2')) + $bundles,
-      'view modes' => $test_entity_modes,
-    ),
-    // @see EntityPropertiesTestCase::testEntityLabel()
-    'test_entity_no_label' => array(
-      'label' => t('Test entity without label'),
-      'entity class' => 'Drupal\field_test\TestEntity',
-      'controller class' => 'Drupal\field_test\TestEntityController',
-      'fieldable' => TRUE,
-      'field cache' => FALSE,
-      'base table' => 'test_entity',
-      'revision table' => 'test_entity_revision',
-      'entity keys' => array(
-        'id' => 'ftid',
-        'revision' => 'ftvid',
-        'bundle' => 'fttype',
-      ),
-      'bundles' => $bundles,
-      'view modes' => $test_entity_modes,
-    ),
-    'test_entity_label' => array(
-      'label' => t('Test entity label'),
-      'entity class' => 'Drupal\field_test\TestEntity',
-      'controller class' => 'Drupal\field_test\TestEntityController',
-      'fieldable' => TRUE,
-      'field cache' => FALSE,
-      'base table' => 'test_entity',
-      'revision table' => 'test_entity_revision',
-      'entity keys' => array(
-        'id' => 'ftid',
-        'revision' => 'ftvid',
-        'bundle' => 'fttype',
-        'label' => 'ftlabel',
-      ),
-      'bundles' => $bundles,
-      'view modes' => $test_entity_modes,
-    ),
-    'test_entity_label_callback' => array(
-      'label' => t('Test entity label callback'),
-      'entity class' => 'Drupal\field_test\TestEntity',
-      'controller class' => 'Drupal\field_test\TestEntityController',
-      'fieldable' => TRUE,
-      'field cache' => FALSE,
-      'base table' => 'test_entity',
-      'revision table' => 'test_entity_revision',
-      'label callback' => 'field_test_entity_label_callback',
-      'entity keys' => array(
-        'id' => 'ftid',
-        'revision' => 'ftvid',
-        'bundle' => 'fttype',
-      ),
-      'bundles' => $bundles,
-      'view modes' => $test_entity_modes,
-    ),
-  );
-}
+use Drupal\field_test\Plugin\Core\Entity\TestEntity;
 
 /**
  * Implements hook_entity_info_alter().
@@ -153,6 +19,25 @@ function field_test_entity_info_alter(&$entity_info) {
   // Disable the entity type translation handler.
   foreach ($entity_info as $entity_type => $info) {
     $entity_info[$entity_type]['translation'][$entity_type] = FALSE;
+    if ($info['module'] == 'field_test') {
+      $entity_info[$entity_type]['view_modes'] = array(
+        'full' => array(
+          'label' => t('Full object'),
+          'custom_settings' => TRUE,
+        ),
+        'teaser' => array(
+          'label' => t('Teaser'),
+          'custom_settings' => TRUE,
+        ),
+      );
+      $entity_info[$entity_type]['bundles'] = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+      if ($entity_type == 'test_entity_bundle') {
+        $entity_info[$entity_type]['bundles'] += array('test_entity_2' => array('label' => 'Test entity 2'));
+      }
+      if ($entity_type == 'test_entity_bundle_key') {
+        $entity_info[$entity_type]['bundles'] += array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2'));
+      }
+    }
   }
 }
 
@@ -183,9 +68,11 @@ function field_test_create_bundle($bundle, $text = NULL) {
   $bundles += array($bundle => array('label' => $text ? $text : $bundle));
   variable_set('field_test_bundles', $bundles);
 
-  $info = field_test_entity_info();
+  $info = entity_get_info();
   foreach ($info as $type => $type_info) {
-    field_attach_create_bundle($type, $bundle);
+    if ($type_info['module'] == 'field_test') {
+      field_attach_create_bundle($type, $bundle);
+    }
   }
 }
 
@@ -203,9 +90,11 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
   unset($bundles[$bundle_old]);
   variable_set('field_test_bundles', $bundles);
 
-  $info = field_test_entity_info();
+  $info = entity_get_info();
   foreach ($info as $type => $type_info) {
-    field_attach_rename_bundle($type, $bundle_old, $bundle_new);
+    if ($type_info['module'] == 'field_test') {
+      field_attach_rename_bundle($type, $bundle_old, $bundle_new);
+    }
   }
 }
 
@@ -220,9 +109,11 @@ function field_test_delete_bundle($bundle) {
   unset($bundles[$bundle]);
   variable_set('field_test_bundles', $bundles);
 
-  $info = field_test_entity_info();
+  $info = entity_get_info();
   foreach ($info as $type => $type_info) {
-    field_attach_delete_bundle($type, $bundle);
+    if ($type_info['module'] == 'field_test') {
+      field_attach_delete_bundle($type, $bundle);
+    }
   }
 }
 

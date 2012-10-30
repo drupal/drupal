@@ -5,7 +5,7 @@
  * Logs and displays access statistics for a site.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Implements hook_help().

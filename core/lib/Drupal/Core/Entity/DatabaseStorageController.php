@@ -117,27 +117,27 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     $this->entityInfo = entity_get_info($entityType);
     $this->entityCache = array();
     $this->hookLoadArguments = array();
-    $this->idKey = $this->entityInfo['entity keys']['id'];
+    $this->idKey = $this->entityInfo['entity_keys']['id'];
 
     // Check if the entity type supports UUIDs.
-    if (!empty($this->entityInfo['entity keys']['uuid'])) {
-      $this->uuidKey = $this->entityInfo['entity keys']['uuid'];
+    if (!empty($this->entityInfo['entity_keys']['uuid'])) {
+      $this->uuidKey = $this->entityInfo['entity_keys']['uuid'];
     }
     else {
       $this->uuidKey = FALSE;
     }
 
     // Check if the entity type supports revisions.
-    if (!empty($this->entityInfo['entity keys']['revision'])) {
-      $this->revisionKey = $this->entityInfo['entity keys']['revision'];
-      $this->revisionTable = $this->entityInfo['revision table'];
+    if (!empty($this->entityInfo['entity_keys']['revision'])) {
+      $this->revisionKey = $this->entityInfo['entity_keys']['revision'];
+      $this->revisionTable = $this->entityInfo['revision_table'];
     }
     else {
       $this->revisionKey = FALSE;
     }
 
     // Check if the entity type supports static caching of loaded entities.
-    $this->cache = !empty($this->entityInfo['static cache']);
+    $this->cache = !empty($this->entityInfo['static_cache']);
   }
 
   /**
@@ -183,11 +183,11 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       // Build and execute the query.
       $query_result = $this->buildQuery($ids)->execute();
 
-      if (!empty($this->entityInfo['entity class'])) {
+      if (!empty($this->entityInfo['class'])) {
         // We provide the necessary arguments for PDO to create objects of the
         // specified entity class.
         // @see Drupal\Core\Entity\EntityInterface::__construct()
-        $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['entity class'], array(array(), $this->entityType));
+        $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['class'], array(array(), $this->entityType));
       }
       $queried_entities = $query_result->fetchAllAssoc($this->idKey);
     }
@@ -228,11 +228,11 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     // Build and execute the query.
     $query_result = $this->buildQuery(array(), $revision_id)->execute();
 
-    if (!empty($this->entityInfo['entity class'])) {
+    if (!empty($this->entityInfo['class'])) {
       // We provide the necessary arguments for PDO to create objects of the
       // specified entity class.
       // @see Drupal\Core\Entity\EntityInterface::__construct()
-      $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['entity class'], array(array(), $this->entityType));
+      $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['class'], array(array(), $this->entityType));
     }
     $queried_entities = $query_result->fetchAllAssoc($this->idKey);
 
@@ -310,7 +310,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    *   A SelectQuery object for loading the entity.
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
-    $query = db_select($this->entityInfo['base table'], 'base');
+    $query = db_select($this->entityInfo['base_table'], 'base');
 
     $query->addTag($this->entityType . '_load_multiple');
 
@@ -322,11 +322,11 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     }
 
     // Add fields from the {entity} table.
-    $entity_fields = $this->entityInfo['schema_fields_sql']['base table'];
+    $entity_fields = $this->entityInfo['schema_fields_sql']['base_table'];
 
     if ($this->revisionKey) {
       // Add all fields from the {entity_revision} table.
-      $entity_revision_fields = drupal_map_assoc($this->entityInfo['schema_fields_sql']['revision table']);
+      $entity_revision_fields = drupal_map_assoc($this->entityInfo['schema_fields_sql']['revision_table']);
       // The id field is provided by entity, so remove it.
       unset($entity_revision_fields[$this->idKey]);
 
@@ -427,7 +427,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::create().
    */
   public function create(array $values) {
-    $class = isset($this->entityInfo['entity class']) ? $this->entityInfo['entity class'] : 'Drupal\Core\Entity\Entity';
+    $class = $this->entityInfo['class'];
 
     $entity = new $class($values, $this->entityType);
 
@@ -458,7 +458,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       }
       $ids = array_keys($entities);
 
-      db_delete($this->entityInfo['base table'])
+      db_delete($this->entityInfo['base_table'])
         ->condition($this->idKey, $ids, 'IN')
         ->execute();
 
@@ -501,7 +501,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
 
       if (!$entity->isNew()) {
         if ($entity->isDefaultRevision()) {
-          $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
+          $return = drupal_write_record($this->entityInfo['base_table'], $entity, $this->idKey);
         }
         else {
           // @todo, should a different value be returned when saving an entity
@@ -516,7 +516,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
         $this->invokeHook('update', $entity);
       }
       else {
-        $return = drupal_write_record($this->entityInfo['base table'], $entity);
+        $return = drupal_write_record($this->entityInfo['base_table'], $entity);
         if ($this->revisionKey) {
           $this->saveRevision($entity);
         }
@@ -564,7 +564,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     if ($entity->isNewRevision()) {
       drupal_write_record($this->revisionTable, $record);
       if ($entity->isDefaultRevision()) {
-        db_update($this->entityInfo['base table'])
+        db_update($this->entityInfo['base_table'])
           ->fields(array($this->revisionKey => $record[$this->revisionKey]))
           ->condition($this->idKey, $entity->id())
           ->execute();

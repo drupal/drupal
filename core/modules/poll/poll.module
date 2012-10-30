@@ -5,7 +5,7 @@
  * Collects votes on different topics in the form of multiple choice questions.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Implements hook_help().

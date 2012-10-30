@@ -5,7 +5,7 @@
  * Admin page callbacks for the book module.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Page callback: Returns an administrative overview of all books.

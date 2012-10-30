@@ -9,7 +9,7 @@
  * @see node_menu()
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Page callback: Presents the node editing form.

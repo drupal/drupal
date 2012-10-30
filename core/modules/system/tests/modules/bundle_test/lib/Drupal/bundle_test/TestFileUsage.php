@@ -7,7 +7,7 @@
 
 namespace Drupal\bundle_test;
 
-use Drupal\file\File;
+use Drupal\file\Plugin\Core\Entity\File;
 
 class TestFileUsage extends FileUsageBase {
 

@@ -41,14 +41,14 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   public function __construct($entityType) {
     parent::__construct($entityType);
-    $this->bundleKey = !empty($this->entityInfo['entity keys']['bundle']) ? $this->entityInfo['entity keys']['bundle'] : FALSE;
-    $this->entityClass = $this->entityInfo['entity class'];
+    $this->bundleKey = !empty($this->entityInfo['entity_keys']['bundle']) ? $this->entityInfo['entity_keys']['bundle'] : FALSE;
+    $this->entityClass = $this->entityInfo['class'];
 
     // Work-a-round to let load() get stdClass storage records without having to
     // override it. We map storage records to entities in
     // DatabaseStorageControllerNG:: mapFromStorageRecords().
     // @todo: Remove this once this is moved in the main controller.
-    unset($this->entityInfo['entity class']);
+    unset($this->entityInfo['class']);
   }
 
   /**
@@ -181,13 +181,13 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $entity->updateOriginalValues();
 
       if (!$entity->isNew()) {
-        $return = drupal_write_record($this->entityInfo['base table'], $record, $this->idKey);
+        $return = drupal_write_record($this->entityInfo['base_table'], $record, $this->idKey);
         $this->resetCache(array($entity->id()));
         $this->postSave($entity, TRUE);
         $this->invokeHook('update', $entity);
       }
       else {
-        $return = drupal_write_record($this->entityInfo['base table'], $record);
+        $return = drupal_write_record($this->entityInfo['base_table'], $record);
         // Reset general caches, but keep caches specific to certain entities.
         $this->resetCache(array());
 
@@ -234,7 +234,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   protected function mapToStorageRecord(EntityInterface $entity) {
     $record = new \stdClass();
-    foreach ($this->entityInfo['schema_fields_sql']['base table'] as $name) {
+    foreach ($this->entityInfo['schema_fields_sql']['base_table'] as $name) {
       $record->$name = $entity->$name->value;
     }
     return $record;

@@ -7,7 +7,7 @@
  * @see Drupal\taxonomy\Tests\TaxonomyHooksTestCase::testTaxonomyTermHooks()
  */
 
-use Drupal\taxonomy\Term;
+use Drupal\taxonomy\Plugin\Core\Entity\Term;
 
 /**
  * Implements hook_taxonomy_term_load().

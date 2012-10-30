@@ -70,6 +70,8 @@ class CoreBundle extends Bundle
       ->addArgument(new Reference('router.dumper'))
       ->addArgument(new Reference('lock'));
 
+    $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
+
     $container->register('matcher', 'Drupal\Core\Routing\ChainMatcher');
     $container->register('legacy_url_matcher', 'Drupal\Core\LegacyUrlMatcher')
       ->addTag('chained_matcher');

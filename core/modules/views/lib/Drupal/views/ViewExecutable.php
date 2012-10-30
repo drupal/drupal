@@ -8,6 +8,7 @@
 namespace Drupal\views;
 
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\views\Plugin\Core\Entity\View;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
@@ -25,7 +26,7 @@ class ViewExecutable {
   /**
    * The config entity in which the view is stored.
    *
-   * @var Drupal\views\ViewStorage
+   * @var Drupal\views\Plugin\Core\Entity\View
    */
   public $storage;
 
@@ -399,10 +400,10 @@ class ViewExecutable {
   /**
    * Constructs a new ViewExecutable object.
    *
-   * @param Drupal\views\ViewStorage $storage
+   * @param Drupal\views\Plugin\Core\Entity\View $storage
    *   The view config entity the actual information is stored on.
    */
-  public function __construct(ViewStorage $storage) {
+  public function __construct(View $storage) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->setExecutable($this);

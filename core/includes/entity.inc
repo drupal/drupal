@@ -10,18 +10,21 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Gets the entity info array of an entity type.
+ * Gets the entity definition for an entity type.
  *
- * @param $entity_type
- *   The entity type, e.g. node, for which the info shall be returned, or NULL
- *   to return an array with info about all types.
+ * @param string|null $entity_type
+ *   (optional) The entity type (e.g. 'node'). Leave NULL to retrieve
+ *   information for all entity types.
  *
- * @see hook_entity_info()
+ * @return array
+ *   An array containing the entity type's definition, as retrieved with
+ *   \Drupal\Core\Entity\EntityManager. If $entity_type is NULL, an associative
+ *   array of all entity type definitions keyed by entity type is returned.
+ *
+ * @see \Drupal\Core\Entity\EntityManager
  * @see hook_entity_info_alter()
  */
 function entity_get_info($entity_type = NULL) {
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
-
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
@@ -29,61 +32,8 @@ function entity_get_info($entity_type = NULL) {
   }
   $entity_info = &$drupal_static_fast['entity_info'];
 
-  // hook_entity_info() includes translated strings, so each language is cached
-  // separately.
-  $langcode = $language_interface->langcode;
-
   if (empty($entity_info)) {
-    if ($cache = cache()->get("entity_info:$langcode")) {
-      $entity_info = $cache->data;
-    }
-    else {
-      $entity_info = module_invoke_all('entity_info');
-      // Merge in default values.
-      foreach ($entity_info as $name => $data) {
-        $entity_info[$name] += array(
-          'fieldable' => FALSE,
-          'entity class' => 'Drupal\Core\Entity\Entity',
-          'controller class' => 'Drupal\Core\Entity\DatabaseStorageController',
-          'list controller class' => 'Drupal\Core\Entity\EntityListController',
-          'render controller class' => 'Drupal\Core\Entity\EntityRenderController',
-          'form controller class' => array(
-            'default' => 'Drupal\Core\Entity\EntityFormController',
-          ),
-          'static cache' => TRUE,
-          'field cache' => TRUE,
-          'bundles' => array(),
-          'view modes' => array(),
-          'entity keys' => array(),
-          'translation' => array(),
-        );
-        $entity_info[$name]['entity keys'] += array(
-          'revision' => '',
-          'bundle' => '',
-        );
-        foreach ($entity_info[$name]['view modes'] as $view_mode => $view_mode_info) {
-          $entity_info[$name]['view modes'][$view_mode] += array(
-            'custom settings' => FALSE,
-          );
-        }
-        // If no bundle key is provided, assume a single bundle, named after
-        // the entity type.
-        if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
-          $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
-        }
-        // Prepare entity schema fields SQL info for
-        // Drupal\Core\Entity\DatabaseStorageControllerInterface::buildQuery().
-        if (isset($entity_info[$name]['base table'])) {
-          $entity_info[$name]['schema_fields_sql']['base table'] = drupal_schema_fields_sql($entity_info[$name]['base table']);
-          if (isset($entity_info[$name]['revision table'])) {
-            $entity_info[$name]['schema_fields_sql']['revision table'] = drupal_schema_fields_sql($entity_info[$name]['revision table']);
-          }
-        }
-      }
-      // Let other modules alter the entity info.
-      drupal_alter('entity_info', $entity_info);
-      cache()->set("entity_info:$langcode", $entity_info, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
-    }
+    $entity_info = drupal_container()->get('plugin.manager.entity')->getDefinitions();
   }
 
   if (empty($entity_type)) {
@@ -116,7 +66,7 @@ function entity_info_cache_clear() {
  * @return Drupal\Core\Entity\EntityInterface
  *   The entity object, or FALSE if there is no entity with the given id.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\EntityManager
  * @see entity_load_multiple()
  * @see Drupal\Core\Entity\EntityStorageControllerInterface
  * @see Drupal\Core\Entity\DatabaseStorageController
@@ -139,7 +89,7 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  *   The entity object, or FALSE if there is no entity with the given revision
  *   id.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\EntityManager
  * @see Drupal\Core\Entity\EntityStorageControllerInterface
  * @see Drupal\Core\Entity\DatabaseStorageController
  */
@@ -177,14 +127,14 @@ function entity_revision_delete($entity_type, $revision_id) {
  * @throws Drupal\Core\Entity\EntityStorageException
  *   Thrown in case the requested entity type does not support UUIDs.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\EntityManager
  */
 function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
   $entity_info = entity_get_info($entity_type);
-  if (empty($entity_info['entity keys']['uuid'])) {
+  if (empty($entity_info['entity_keys']['uuid'])) {
     throw new EntityStorageException("Entity type $entity_type does not support UUIDs.");
   }
-  $uuid_key = $entity_info['entity keys']['uuid'];
+  $uuid_key = $entity_info['entity_keys']['uuid'];
 
   $controller = entity_get_controller($entity_type);
   if ($reset) {
@@ -205,11 +155,12 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * Drupal\Core\Entity\EntityStorageControllerInterface interface. By default,
  * Drupal\Core\Entity\DatabaseStorageController is used. Entity types can
  * specify that a different class should be used by setting the
- * 'controller class' key in hook_entity_info(). These classes can either
- * implement the Drupal\Core\Entity\EntityStorageControllerInterface interface, or,
- * most commonly, extend the Drupal\Core\Entity\DatabaseStorageController
- * class. See node_entity_info() and the NodeStorageController in node.module as
- * an example.
+ * 'controller_class' key in the entity plugin annotation. These classes can
+ * either implement the Drupal\Core\Entity\EntityStorageControllerInterface
+ * interface, or, most commonly, extend the
+ * Drupal\Core\Entity\DatabaseStorageController class.
+ * See Drupal\node\Plugin\Core\Entity\Node and Drupal\node\NodeStorageController
+ * for an example.
  *
  * @param string $entity_type
  *   The entity type to load, e.g. node or user.
@@ -221,7 +172,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * @return array
  *   An array of entity objects indexed by their ids.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\EntityManager
  * @see Drupal\Core\Entity\EntityStorageControllerInterface
  * @see Drupal\Core\Entity\DatabaseStorageController
  * @see Drupal\Core\Entity\Query\QueryInterface
@@ -308,7 +259,7 @@ function entity_get_controller($entity_type) {
   $controllers = &drupal_static(__FUNCTION__, array());
   if (!isset($controllers[$entity_type])) {
     $type_info = entity_get_info($entity_type);
-    $class = $type_info['controller class'];
+    $class = $type_info['controller_class'];
     $controllers[$entity_type] = new $class($entity_type);
   }
   return $controllers[$entity_type];
@@ -345,7 +296,7 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  * used. If a non-existing non-default operation is specified an exception will
  * be thrown.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\EntityManager
  *
  * @param $entity_type
  *   The type of the entity.
@@ -361,11 +312,11 @@ function entity_form_controller($entity_type, $operation = 'default') {
   $info = entity_get_info($entity_type);
 
   // Check whether there is a form controller class for the specified operation.
-  if (!empty($info['form controller class'][$operation])) {
-    $class = $info['form controller class'][$operation];
+  if (!empty($info['form_controller_class'][$operation])) {
+    $class = $info['form_controller_class'][$operation];
   }
   // If no controller is specified default to the base implementation.
-  elseif (empty($info['form controller class']) && $operation == 'default') {
+  elseif (empty($info['form_controller_class']) && $operation == 'default') {
     $class = 'Drupal\Core\Entity\EntityFormController';
   }
   // If a non-existing operation has been specified stop.
@@ -511,12 +462,12 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
  * @return Drupal\Core\Entity\EntityListControllerInterface
  *   An entity list controller.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\EntityManager
  */
 function entity_list_controller($entity_type) {
   $storage = entity_get_controller($entity_type);
   $entity_info = entity_get_info($entity_type);
-  $class = $entity_info['list controller class'];
+  $class = $entity_info['list_controller_class'];
   return new $class($entity_type, $storage);
 }
 
@@ -529,11 +480,11 @@ function entity_list_controller($entity_type) {
  * @return Drupal\Core\Entity\EntityRenderControllerInterface
  *   An entity render controller.
  *
- * @see hook_entity_info()
+ * @see \Drupal\Core\Entity\EntityManager
  */
 function entity_render_controller($entity_type) {
   $info = entity_get_info($entity_type);
-  $class = $info['render controller class'];
+  $class = $info['render_controller_class'];
   return new $class($entity_type);
 }
 

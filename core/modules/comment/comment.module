@@ -9,8 +9,8 @@
  * book page, etc.
  */
 
-use Drupal\node\Node;
-use Drupal\file\File;
+use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -76,7 +76,7 @@ const COMMENT_NODE_CLOSED = 1;
  */
 const COMMENT_NODE_OPEN = 2;
 
-use Drupal\comment\Comment;
+use Drupal\comment\Plugin\Core\Entity\Comment;
 
 /**
  * Implements hook_help().
@@ -98,40 +98,11 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_info_alter().
  */
-function comment_entity_info() {
-  $return = array(
-    'comment' => array(
-      'label' => t('Comment'),
-      'base table' => 'comment',
-      'uri callback' => 'comment_uri',
-      'fieldable' => TRUE,
-      'controller class' => 'Drupal\comment\CommentStorageController',
-      'form controller class' => array(
-        'default' => 'Drupal\comment\CommentFormController',
-      ),
-      'entity class' => 'Drupal\comment\Comment',
-      'entity keys' => array(
-        'id' => 'cid',
-        'bundle' => 'node_type',
-        'label' => 'subject',
-        'uuid' => 'uuid',
-      ),
-      'bundles' => array(),
-      'render controller class' => 'Drupal\comment\CommentRenderController',
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full comment'),
-          'custom settings' => FALSE,
-        ),
-      ),
-      'static cache' => FALSE,
-    ),
-  );
-
+function comment_entity_info_alter(&$info) {
   foreach (node_type_get_names() as $type => $name) {
-    $return['comment']['bundles']['comment_node_' . $type] = array(
+    $info['comment']['bundles']['comment_node_' . $type] = array(
       'label' => t('@node_type comment', array('@node_type' => $name)),
       // Provide the node type/bundle name for other modules, so it does not
       // have to be extracted manually from the bundle name.
@@ -150,8 +121,6 @@ function comment_entity_info() {
       ),
     );
   }
-
-  return $return;
 }
 
 /**

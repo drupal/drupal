@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\breakpoint\Breakpoint.
+ * Definition of Drupal\breakpoint\Plugin\Core\Entity\Breakpoint.
  */
 
-namespace Drupal\breakpoint;
+namespace Drupal\breakpoint\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\breakpoint\InvalidBreakpointException;
@@ -13,9 +13,24 @@ use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
 use Drupal\breakpoint\InvalidBreakpointMediaQueryException;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the Breakpoint entity.
+ *
+ * @Plugin(
+ *   id = "breakpoint",
+ *   label = @Translation("Breakpoint"),
+ *   module = "breakpoint",
+ *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   config_prefix = "breakpoint.breakpoint",
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "label" = "label",
+ *     "uuid" = "uuid"
+ *   }
+ * )
  */
 class Breakpoint extends ConfigEntityBase {
 

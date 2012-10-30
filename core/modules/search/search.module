@@ -5,7 +5,7 @@
  * Enables site-wide keyword searching.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)

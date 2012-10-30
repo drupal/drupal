@@ -500,8 +500,8 @@ function file_field_views_data_views_data_alter(&$data, $field) {
       'field_name' => $field['field_name'],
       'field table' => _field_sql_storage_tablename($field),
       'field field' => $field['field_name'] . '_fid',
-      'base' => $entity_info['base table'],
-      'base field' => $entity_info['entity keys']['id'],
+      'base' => $entity_info['base_table'],
+      'base field' => $entity_info['entity_keys']['id'],
       'label' => t('!field_name', array('!field_name' => $field['field_name'])),
       'join_extra' => array(
         0 => array(

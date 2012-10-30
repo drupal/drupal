@@ -7,7 +7,7 @@
 namespace Drupal\breakpoint\Tests;
 
 use Drupal\breakpoint\Tests\BreakpointTestBase;
-use Drupal\breakpoint\Breakpoint;
+use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
 
 /**
  * Tests for breakpoint CRUD operations.

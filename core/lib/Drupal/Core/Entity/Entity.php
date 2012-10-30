@@ -99,7 +99,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    */
   public function isNewRevision() {
     $info = $this->entityInfo();
-    return $this->newRevision || (!empty($info['entity keys']['revision']) && !$this->getRevisionId());
+    return $this->newRevision || (!empty($info['entity_keys']['revision']) && !$this->getRevisionId());
   }
 
   /**
@@ -136,11 +136,11 @@ class Entity implements IteratorAggregate, EntityInterface {
   public function label($langcode = NULL) {
     $label = NULL;
     $entity_info = $this->entityInfo();
-    if (isset($entity_info['label callback']) && function_exists($entity_info['label callback'])) {
-      $label = $entity_info['label callback']($this->entityType, $this, $langcode);
+    if (isset($entity_info['label_callback']) && function_exists($entity_info['label_callback'])) {
+      $label = $entity_info['label_callback']($this->entityType, $this, $langcode);
     }
-    elseif (!empty($entity_info['entity keys']['label']) && isset($this->{$entity_info['entity keys']['label']})) {
-      $label = $this->{$entity_info['entity keys']['label']};
+    elseif (!empty($entity_info['entity_keys']['label']) && isset($this->{$entity_info['entity_keys']['label']})) {
+      $label = $this->{$entity_info['entity_keys']['label']};
     }
     return $label;
   }
@@ -153,11 +153,11 @@ class Entity implements IteratorAggregate, EntityInterface {
     // A bundle-specific callback takes precedence over the generic one for the
     // entity type.
     $entity_info = $this->entityInfo();
-    if (isset($entity_info['bundles'][$bundle]['uri callback'])) {
-      $uri_callback = $entity_info['bundles'][$bundle]['uri callback'];
+    if (isset($entity_info['bundles'][$bundle]['uri_callback'])) {
+      $uri_callback = $entity_info['bundles'][$bundle]['uri_callback'];
     }
-    elseif (isset($entity_info['uri callback'])) {
-      $uri_callback = $entity_info['uri callback'];
+    elseif (isset($entity_info['uri_callback'])) {
+      $uri_callback = $entity_info['uri_callback'];
     }
     else {
       return NULL;
@@ -330,12 +330,12 @@ class Entity implements IteratorAggregate, EntityInterface {
   public function createDuplicate() {
     $duplicate = clone $this;
     $entity_info = $this->entityInfo();
-    $duplicate->{$entity_info['entity keys']['id']} = NULL;
+    $duplicate->{$entity_info['entity_keys']['id']} = NULL;
 
     // Check if the entity type supports UUIDs and generate a new one if so.
-    if (!empty($entity_info['entity keys']['uuid'])) {
+    if (!empty($entity_info['entity_keys']['uuid'])) {
       $uuid = new Uuid();
-      $duplicate->{$entity_info['entity keys']['uuid']} = $uuid->generate();
+      $duplicate->{$entity_info['entity_keys']['uuid']} = $uuid->generate();
     }
     return $duplicate;
   }

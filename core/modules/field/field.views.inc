@@ -125,15 +125,15 @@ function field_views_field_default_views_data($field) {
       $group_name = $groups[$entity];
     }
 
-    $entity_tables[$entity_info['base table']] = $entity;
-    $current_tables[$entity] = $entity_info['base table'];
-    if (isset($entity_info['revision table'])) {
-      $entity_tables[$entity_info['revision table']] = $entity;
-      $revision_tables[$entity] = $entity_info['revision table'];
+    $entity_tables[$entity_info['base_table']] = $entity;
+    $current_tables[$entity] = $entity_info['base_table'];
+    if (isset($entity_info['revision_table'])) {
+      $entity_tables[$entity_info['revision_table']] = $entity;
+      $revision_tables[$entity] = $entity_info['revision_table'];
     }
 
-    $data[$current_table]['table']['join'][$entity_info['base table']] = array(
-      'left_field' => $entity_info['entity keys']['id'],
+    $data[$current_table]['table']['join'][$entity_info['base_table']] = array(
+      'left_field' => $entity_info['entity_keys']['id'],
       'field' => 'entity_id',
       'extra' => array(
         array('field' => 'entity_type', 'value' => $entity),
@@ -141,9 +141,9 @@ function field_views_field_default_views_data($field) {
       ),
     );
 
-    if (!empty($entity_info['entity keys']['revision']) && !empty($entity_info['revision table'])) {
-      $data[$revision_table]['table']['join'][$entity_info['revision table']] = array(
-        'left_field' => $entity_info['entity keys']['revision'],
+    if (!empty($entity_info['entity_keys']['revision']) && !empty($entity_info['revision_table'])) {
+      $data[$revision_table]['table']['join'][$entity_info['revision_table']] = array(
+        'left_field' => $entity_info['entity_keys']['revision'],
         'field' => 'revision_id',
         'extra' => array(
           array('field' => 'entity_type', 'value' => $entity),

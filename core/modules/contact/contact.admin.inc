@@ -5,7 +5,7 @@
  * Admin page callbacks for the Contact module.
  */
 
-use Drupal\contact\Category;
+use Drupal\contact\Plugin\Core\Entity\Category;
 
 /**
  * Page callback: Lists contact categories.
@@ -35,7 +35,7 @@ function contact_category_add() {
 /**
  * Page callback: Form constructor for the contact category deletion form.
  *
- * @param Drupal\contact\Category $category
+ * @param Drupal\contact\Plugin\Core\Entity\Category $category
  *   The contact category to be deleted.
  *
  * @see contact_menu()

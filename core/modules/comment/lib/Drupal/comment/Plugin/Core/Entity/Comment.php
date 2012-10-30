@@ -2,16 +2,45 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Comment.
+ * Definition of Drupal\comment\Plugin\Core\Entity\Comment.
  */
 
-namespace Drupal\comment;
+namespace Drupal\comment\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the comment entity class.
+ *
+ * @Plugin(
+ *   id = "comment",
+ *   label = @Translation("Comment"),
+ *   module = "comment",
+ *   controller_class = "Drupal\comment\CommentStorageController",
+ *   render_controller_class = "Drupal\comment\CommentRenderController",
+ *   form_controller_class = {
+ *     "default" = "Drupal\comment\CommentFormController"
+ *   },
+ *   base_table = "comment",
+ *   uri_callback = "comment_uri",
+ *   fieldable = TRUE,
+ *   static_cache = FALSE,
+ *   entity_keys = {
+ *     "id" = "cid",
+ *     "bundle" = "node_type",
+ *     "label" = "subject",
+ *     "uuid" = "uuid"
+ *   },
+ *   view_modes = {
+ *     "full" = {
+ *       "label" = "Full comment",
+ *       "custom_settings" = FALSE
+ *     }
+ *   }
+ * )
  */
 class Comment extends Entity implements ContentEntityInterface {
 

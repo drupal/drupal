@@ -7,7 +7,7 @@
 
 namespace Drupal\field_ui\Tests;
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Tests the functionality of the 'Manage display' screens.

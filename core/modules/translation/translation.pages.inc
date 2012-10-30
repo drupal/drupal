@@ -5,7 +5,7 @@
  * User page callbacks for the Translation module.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Page callback: Displays a list of a node's translations.

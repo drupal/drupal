@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Uuid\Uuid;
 
 /**
- * Defines the storage controller class for ViewStorage entities.
+ * Defines the storage controller class for View entities.
  */
 class ViewStorageController extends ConfigStorageController {
 

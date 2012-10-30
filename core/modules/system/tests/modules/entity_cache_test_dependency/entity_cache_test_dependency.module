@@ -6,12 +6,8 @@
  */
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_info_alter().
  */
-function entity_cache_test_dependency_entity_info() {
-  return array(
-    'entity_cache_test' => array(
-      'label' => variable_get('entity_cache_test_label', 'Entity Cache Test'),
-    ),
-  );
+function entity_cache_test_dependency_entity_info_alter(&$info) {
+  $info['entity_cache_test']['label'] = variable_get('entity_cache_test_label', 'Entity Cache Test');
 }

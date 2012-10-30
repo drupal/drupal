@@ -12,39 +12,12 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\views\ViewStorage;
+use Drupal\views\Plugin\Core\Entity\View;
 
 /**
  * Views API version string.
  */
 const VIEWS_API_VERSION = '3.0';
-
-/**
- * Implements hook_entity_info().
- */
-function views_entity_info() {
-  $return = array(
-    'view' => array(
-      'label' => t('View'),
-      'entity class' => 'Drupal\views\ViewStorage',
-      'controller class' => 'Drupal\views\ViewStorageController',
-      'list controller class' => 'Drupal\views_ui\ViewListController',
-      'list path' => 'admin/structure/views',
-      'form controller class' => array(
-        'default' => 'Drupal\node\NodeFormController',
-      ),
-      'config prefix' => 'views.view',
-      'fieldable' => FALSE,
-      'entity keys' => array(
-        'id' => 'name',
-        'label' => 'human_name',
-        'uuid' => 'uuid',
-      ),
-    ),
-  );
-
-  return $return;
-}
 
 /**
  * Implements hook_forms().
@@ -1350,7 +1323,7 @@ function views_get_enabled_display_extenders() {
 /**
  * Create an empty view to work with.
  *
- * @return Drupal\views\ViewStorage
+ * @return Drupal\views\Plugin\Core\Entity\View
  *   A fully formed, empty $view object. This object must be populated before
  *   it can be successfully saved.
  */
@@ -1361,7 +1334,7 @@ function views_new_view() {
 /**
  * Creates a view from an array of values.
  *
- * @return Drupal\views\ViewStorage
+ * @return Drupal\views\Plugin\Core\Entity\View
  *   A fully formed $view object with properties from the values passed in.
  */
 function views_create_view(array $values = array()) {
@@ -1526,46 +1499,46 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
 /**
  * Returns whether the view is enabled.
  *
- * @param Drupal\views\ViewStorage $view
+ * @param Drupal\views\Plugin\Core\Entity\View $view
  *   The view object to check.
  *
  * @return bool
  *   Returns TRUE if a view is enabled, FALSE otherwise.
  */
-function views_view_is_enabled(ViewStorage $view) {
+function views_view_is_enabled(View $view) {
   return $view->isEnabled();
 }
 
 /**
  * Returns whether the view is disabled.
  *
- * @param Drupal\views\ViewStorage $view
+ * @param Drupal\views\Plugin\Core\Entity\View $view
  *   The view object to check.
  *
  * @return bool
  *   Returns TRUE if a view is disabled, FALSE otherwise.
  */
-function views_view_is_disabled(ViewStorage $view) {
+function views_view_is_disabled(View $view) {
   return !$view->isEnabled();
 }
 
 /**
  * Enables a view.
  *
- * @param Drupal\views\ViewStorage $view
- *   The ViewStorage object to disable.
+ * @param Drupal\views\Plugin\Core\Entity\View $view
+ *   The View object to disable.
  */
-function views_enable_view(ViewStorage $view) {
+function views_enable_view(View $view) {
   $view->enable();
 }
 
 /**
  * Disables a view.
  *
- * @param Drupal\views\ViewStorage $view
- *   The ViewStorage object to disable.
+ * @param Drupal\views\Plugin\Core\Entity\View $view
+ *   The View object to disable.
  */
-function views_disable_view(ViewStorage $view) {
+function views_disable_view(View $view) {
   $view->disable();
 }
 

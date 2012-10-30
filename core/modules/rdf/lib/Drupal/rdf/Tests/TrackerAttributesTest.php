@@ -7,7 +7,7 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\simpletest\WebTestBase;
 
 /**

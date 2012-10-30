@@ -69,7 +69,7 @@ function hook_config_import_change($name, $new_config, $old_config) {
   // @todo Make this less ugly.
   list($entity_type) = explode('.', $name);
   $entity_info = entity_get_info($entity_type);
-  $id = substr($name, strlen($entity_info['config prefix']) + 1);
+  $id = substr($name, strlen($entity_info['config_prefix']) + 1);
   $config_test = entity_load('config_test', $id);
 
   // Store the original config, and iterate through each property to store it.
@@ -119,7 +119,7 @@ function hook_config_import_delete($name, $new_config, $old_config) {
   //   config objects as a standard?
   list($entity_type) = explode('.', $name);
   $entity_info = entity_get_info($entity_type);
-  $id = substr($name, strlen($entity_info['config prefix']) + 1);
+  $id = substr($name, strlen($entity_info['config_prefix']) + 1);
   config_test_delete($id);
   return TRUE;
 }

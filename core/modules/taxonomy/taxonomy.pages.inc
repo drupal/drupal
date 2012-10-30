@@ -5,8 +5,8 @@
  * Page callbacks for the taxonomy module.
  */
 
-use Drupal\taxonomy\Term;
-use Drupal\taxonomy\Vocabulary;
+use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

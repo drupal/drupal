@@ -2,15 +2,34 @@
 
 /**
  * @file
- * Definition of Drupal\entity_test\EntityTest.
+ * Definition of Drupal\entity_test\Plugin\Core\Entity\EntityTest.
  */
 
-namespace Drupal\entity_test;
+namespace Drupal\entity_test\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the test entity class.
+ *
+ * @Plugin(
+ *   id = "entity_test",
+ *   label = @Translation("Test entity"),
+ *   module = "entity_test",
+ *   controller_class = "Drupal\entity_test\EntityTestStorageController",
+ *   form_controller_class = {
+ *     "default" = "Drupal\entity_test\EntityTestFormController"
+ *   },
+ *   base_table = "entity_test",
+ *   data_table = "entity_test_property_data",
+ *   fieldable = TRUE,
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "uuid" = "uuid"
+ *   }
+ * )
  */
 class EntityTest extends EntityNG {
 

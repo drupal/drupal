@@ -7,7 +7,7 @@
 
 namespace Drupal\file\FileUsage;
 
-use Drupal\file\File;
+use Drupal\file\Plugin\Core\Entity\File;
 
 /**
  * File usage backend interface.

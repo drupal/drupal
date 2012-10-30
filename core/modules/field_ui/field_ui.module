@@ -169,7 +169,7 @@ function field_ui_menu() {
           // view modes, and use an access callback to determine which ones are
           // actually visible for a given bundle.
           $weight = 0;
-          $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view modes'];
+          $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view_modes'];
           foreach ($view_modes as $view_mode => $view_mode_info) {
             $items["$path/display/$view_mode"] = array(
               'title' => $view_mode_info['label'],

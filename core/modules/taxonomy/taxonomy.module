@@ -5,9 +5,9 @@
  * Enables the organization of content into categories.
  */
 
-use Drupal\node\Node;
-use Drupal\taxonomy\Term;
-use Drupal\taxonomy\Vocabulary;
+use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -106,42 +106,11 @@ function taxonomy_permission() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_info_alter().
  */
-function taxonomy_entity_info() {
-  $return = array(
-    'taxonomy_term' => array(
-      'label' => t('Taxonomy term'),
-      'entity class' => 'Drupal\taxonomy\Term',
-      'controller class' => 'Drupal\taxonomy\TermStorageController',
-      'form controller class' => array(
-        'default' => 'Drupal\taxonomy\TermFormController',
-      ),
-      'base table' => 'taxonomy_term_data',
-      'uri callback' => 'taxonomy_term_uri',
-      'fieldable' => TRUE,
-      'entity keys' => array(
-        'id' => 'tid',
-        'bundle' => 'vocabulary_machine_name',
-        'label' => 'name',
-        'uuid' => 'uuid',
-      ),
-      'bundle keys' => array(
-        'bundle' => 'machine_name',
-      ),
-      'bundles' => array(),
-      'render controller class' => 'Drupal\taxonomy\TermRenderController',
-      'view modes' => array(
-        // @todo View mode for display as a field (when attached to nodes etc).
-        'full' => array(
-          'label' => t('Taxonomy term page'),
-          'custom settings' => FALSE,
-        ),
-      ),
-    ),
-  );
+function taxonomy_entity_info_alter(&$info) {
   foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
-    $return['taxonomy_term']['bundles'][$machine_name] = array(
+    $info['taxonomy_term']['bundles'][$machine_name] = array(
       'label' => $vocabulary->name,
       'admin' => array(
         'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary_machine_name',
@@ -151,28 +120,6 @@ function taxonomy_entity_info() {
       ),
     );
   }
-  $return['taxonomy_vocabulary'] = array(
-    'label' => t('Taxonomy vocabulary'),
-    'entity class' => 'Drupal\taxonomy\Vocabulary',
-    'controller class' => 'Drupal\taxonomy\VocabularyStorageController',
-    'form controller class' => array(
-      'default' => 'Drupal\taxonomy\VocabularyFormController',
-    ),
-    'base table' => 'taxonomy_vocabulary',
-    'entity keys' => array(
-      'id' => 'vid',
-      'label' => 'name',
-    ),
-    'fieldable' => FALSE,
-    'view modes' => array(
-      'full' => array(
-        'label' => t('Taxonomy vocabulary default'),
-        'custom settings' => FALSE,
-      ),
-    ),
-  );
-
-  return $return;
 }
 
 /**
@@ -443,7 +390,7 @@ function taxonomy_term_access($op, $term) {
 /**
  * Saves a vocabulary.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity to be saved.
  */
 function taxonomy_vocabulary_save(Vocabulary $vocabulary) {
@@ -507,7 +454,7 @@ function taxonomy_taxonomy_vocabulary_update(Vocabulary $vocabulary) {
  * term has multiple parents then the vocabulary will be given a hierarchy of
  * TAXONOMY_HIERARCHY_MULTIPLE.
  *
- * @param Drupal\taxonomy\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  * @param $changed_term
  *   An array of the term structure that was updated.
@@ -972,7 +919,7 @@ function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
  * @param int $vid
  *   The vocabulary's ID.
  *
- * @return Drupal\taxonomy\Vocabulary|false
+ * @return Drupal\taxonomy\Plugin\Core\Entity\Vocabulary|false
  *   The taxonomy vocabulary entity, if exists, FALSE otherwise. Results are
  *   statically cached.
  *
@@ -988,7 +935,7 @@ function taxonomy_vocabulary_load($vid) {
  * @param $name
  *   The vocabulary's machine name.
  *
- * @return Drupal\taxonomy\Vocabulary|false
+ * @return Drupal\taxonomy\Plugin\Core\Entity\Vocabulary|false
  *   The taxonomy vocabulary entity, if exists, FALSE otherwise. Results are
  *   statically cached.
  *

@@ -11,7 +11,7 @@
  * URLs to be added to the main site navigation menu.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 

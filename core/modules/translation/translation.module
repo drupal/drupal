@@ -19,7 +19,7 @@
  *   date (0) or needs to be updated (1).
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Implements hook_help().

@@ -747,7 +747,7 @@ function views_ui_ajax_callback(ViewExecutable $view, $op) {
   // Otherwise, redirect back to the page.
   else {
     $entity_info = entity_get_info('view');
-    drupal_goto($entity_info['list path']);
+    drupal_goto('admin/structure/views');
   }
 }
 

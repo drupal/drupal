@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\comment\Comment;
+use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\simpletest\WebTestBase;
 
 /**

@@ -423,8 +423,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
    * Test field_attach_create_bundle() and field_attach_rename_bundle().
    */
   function testFieldAttachCreateRenameBundle() {
-    // Create a new bundle. This has to be initiated by the module so that its
-    // hook_entity_info() is consistent.
+    // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle);
 
@@ -445,8 +444,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_attach_load($entity_type, array(0 => $entity));
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], "Data is retrieved for the new bundle");
 
-    // Rename the bundle. This has to be initiated by the module so that its
-    // hook_entity_info() is consistent.
+    // Rename the bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_rename_bundle($this->instance['bundle'], $new_bundle);
 
@@ -464,8 +462,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
    * Test field_attach_delete_bundle().
    */
   function testFieldAttachDeleteBundle() {
-    // Create a new bundle. This has to be initiated by the module so that its
-    // hook_entity_info() is consistent.
+    // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle);
 
@@ -505,8 +502,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), 4, 'First field got loaded');
     $this->assertEqual(count($entity->{$field_name}[$langcode]), 1, 'Second field got loaded');
 
-    // Delete the bundle. This has to be initiated by the module so that its
-    // hook_entity_info() is consistent.
+    // Delete the bundle.
     field_test_delete_bundle($this->instance['bundle']);
 
     // Verify no data gets loaded

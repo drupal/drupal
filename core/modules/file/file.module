@@ -5,7 +5,7 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\file\File;
+use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\file\FileUsage\DatabaseFileUsageBackend;
@@ -86,31 +86,6 @@ function file_element_info() {
   return $types;
 }
 
-/**
- * Implements hook_entity_info().
- */
-function file_entity_info() {
-  return array(
-    'file' => array(
-      'label' => t('File'),
-      'base table' => 'file_managed',
-      'controller class' => 'Drupal\file\FileStorageController',
-      'entity class' => 'Drupal\file\File',
-      'entity keys' => array(
-        'id' => 'fid',
-        'label' => 'filename',
-        'uuid' => 'uuid',
-      ),
-      'view modes' => array(
-        'full' => array(
-          'label' => t('File default'),
-          'custom settings' => FALSE,
-        ),
-      ),
-      'static cache' => FALSE,
-    ),
-  );
-}
 /**
  * Loads file entities from the database.
  *
@@ -1555,7 +1530,7 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
       // The usage table contains usage of every revision. If we are looking
       // for every revision or the entity does not support revisions then
       // every usage is already a match.
-      $match_entity_type = $age == FIELD_LOAD_REVISION || !isset($entity_info['entity keys']['revision']);
+      $match_entity_type = $age == FIELD_LOAD_REVISION || !isset($entity_info['entity_keys']['revision']);
       $entities = entity_load_multiple($entity_type, $entity_ids);
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();

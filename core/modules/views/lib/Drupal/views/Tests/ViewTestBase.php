@@ -418,7 +418,7 @@ abstract class ViewTestBase extends WebTestBase {
   /**
    * Clones the view used in this test and sets the default display.
    *
-   * @param Drupal\views\ViewStorage $original_view
+   * @param Drupal\views\Plugin\Core\Entity\View $original_view
    *   (optional) The view to clone. If not specified, the default view for the
    *   test will be used.
    *

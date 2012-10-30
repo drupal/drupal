@@ -6,7 +6,7 @@
  * the Node module.
  */
 
-use Drupal\node\Node;
+use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
  * Implements hook_node_load().

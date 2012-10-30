@@ -5,7 +5,7 @@
  * Provides Config module hook implementations for testing purposes.
  */
 
-use Drupal\config_test\ConfigTest;
+use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
 
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
@@ -72,32 +72,9 @@ function config_test_config_import_delete($name, $new_config, $old_config) {
 }
 
 /**
- * Implements hook_entity_info().
- */
-function config_test_entity_info() {
-  $types['config_test'] = array(
-    'label' => 'Test configuration',
-    'controller class' => 'Drupal\Core\Config\Entity\ConfigStorageController',
-    'entity class' => 'Drupal\config_test\ConfigTest',
-    'list controller class' => 'Drupal\Core\Config\Entity\ConfigEntityListController',
-    'form controller class' => array(
-      'default' => 'Drupal\config_test\ConfigTestFormController',
-    ),
-    'uri callback' => 'config_test_uri',
-    'config prefix' => 'config_test.dynamic',
-    'entity keys' => array(
-      'id' => 'id',
-      'label' => 'label',
-      'uuid' => 'uuid',
-    ),
-  );
-  return $types;
-}
-
-/**
  * Entity URI callback.
  *
- * @param Drupal\config_test\ConfigTest $config_test
+ * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
  *   A ConfigTest entity.
  */
 function config_test_uri(ConfigTest $config_test) {
@@ -174,7 +151,7 @@ function config_test_add_page() {
 /**
  * Page callback: Presents the ConfigTest edit form.
  *
- * @param Drupal\config_test\ConfigTest $config_test
+ * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
  *   The ConfigTest object to edit.
  *
  * @return array
@@ -188,7 +165,7 @@ function config_test_edit_page(ConfigTest $config_test) {
 /**
  * Form constructor to delete a ConfigTest object.
  *
- * @param Drupal\config_test\ConfigTest $config_test
+ * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
  *   The ConfigTest object to delete.
  */
 function config_test_delete_form($form, &$form_state, ConfigTest $config_test) {

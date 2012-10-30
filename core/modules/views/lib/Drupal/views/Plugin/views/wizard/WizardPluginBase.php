@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
-use Drupal\views\ViewStorage;
+use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
@@ -119,7 +119,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $entities = entity_get_info();
     foreach ($entities as $entity_type => $entity_info) {
-      if (isset($entity_info['base table']) && $this->base_table == $entity_info['base table']) {
+      if (isset($entity_info['base_table']) && $this->base_table == $entity_info['base_table']) {
         $this->entity_info = $entity_info;
         $this->entity_type = $entity_type;
       }
@@ -482,7 +482,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $entity_info = $this->entity_info;
     // If the current base table support bundles and has more than one (like user).
-    if (isset($entity_info['bundle keys']) && isset($entity_info['bundles'])) {
+    if (isset($entity_info['bundle_keys']) && isset($entity_info['bundles'])) {
       // Get all bundles and their human readable names.
       $options = array('all' => t('All'));
       foreach ($entity_info['bundles'] as $type => $bundle) {
@@ -619,7 +619,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Adds the array of display options to the view, with appropriate overrides.
    */
-  protected function addDisplays(ViewStorage $view, $display_options, $form, $form_state) {
+  protected function addDisplays(View $view, $display_options, $form, $form_state) {
     // Display: Master
     $default_display = $view->newDisplay('default', 'Master', 'default');
     foreach ($display_options['default'] as $option => $value) {
@@ -742,7 +742,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
-      $bundle_key = $this->entity_info['bundle keys']['bundle'];
+      $bundle_key = $this->entity_info['bundle_keys']['bundle'];
       // Figure out the table where $bundle_key lives. It may not be the same as
       // the base table for the view; the taxonomy vocabulary machine_name, for
       // example, is stored in taxonomy_vocabulary, not taxonomy_term_data.

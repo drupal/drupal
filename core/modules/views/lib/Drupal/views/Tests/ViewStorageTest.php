@@ -8,13 +8,13 @@
 namespace Drupal\views\Tests;
 
 use Drupal\views\ViewStorageController;
-use Drupal\views\ViewStorage;
+use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Plugin\views\display\DefaultDisplay;
 use Drupal\views\Plugin\views\display\Feed;
 
 /**
- * Tests the functionality of ViewStorage and ViewStorageController.
+ * Tests the functionality of View and ViewStorageController.
  *
  * @see Drupal\views\ViewStorage
  * @see Drupal\views\ViewStorageController
@@ -63,7 +63,7 @@ class ViewStorageTest extends ViewTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Configuration entity CRUD tests',
-      'description' => 'Tests the CRUD functionality for ViewStorage.',
+      'description' => 'Tests the CRUD functionality for View.',
       'group' => 'Views',
     );
   }
@@ -101,7 +101,7 @@ class ViewStorageTest extends ViewTestBase {
 
     // Confirm that an actual view object is loaded and that it returns all of
     // expected properties.
-    $this->assertTrue($view instanceof ViewStorage, 'Single View instance loaded.');
+    $this->assertTrue($view instanceof View, 'Single View instance loaded.');
     foreach ($this->config_properties as $property) {
       $this->assertTrue(isset($view->{$property}), format_string('Property: @property loaded onto View.', array('@property' => $property)));
     }
@@ -153,7 +153,7 @@ class ViewStorageTest extends ViewTestBase {
     // Create a new View instance with empty values.
     $created = $this->controller->create(array());
 
-    $this->assertTrue($created instanceof ViewStorage, 'Created object is a View.');
+    $this->assertTrue($created instanceof View, 'Created object is a View.');
     // Check that the View contains all of the properties.
     foreach ($this->config_properties as $property) {
       $this->assertTrue(property_exists($created, $property), format_string('Property: @property created on View.', array('@property' => $property)));
@@ -163,7 +163,7 @@ class ViewStorageTest extends ViewTestBase {
     $values = config('views.view.glossary')->get();
     $created = $this->controller->create($values);
 
-    $this->assertTrue($created instanceof ViewStorage, 'Created object is a View.');
+    $this->assertTrue($created instanceof View, 'Created object is a View.');
     // Check that the View contains all of the properties.
     $properties = $this->config_properties;
     // Remove display from list.
@@ -284,7 +284,7 @@ class ViewStorageTest extends ViewTestBase {
 
     $this->assertEqual($view->getPaths(), $expected_paths, 'Make sure the paths in the ui are generated as expected.');
 
-    // Tests Drupal\views\ViewStorage::addDisplay()
+    // Tests Drupal\views\Plugin\Core\Entity\View::addDisplay()
     $view = $this->controller->create(array());
     $random_title = $this->randomName();
 
@@ -300,7 +300,7 @@ class ViewStorageTest extends ViewTestBase {
     $id = $view->addDisplay('page');
     $this->assertEqual($view->display[$id]['display_title'], 'Page 3');
 
-    // Tests Drupal\views\ViewStorage::generateDisplayId().
+    // Tests Drupal\views\Plugin\Core\Entity\View::generateDisplayId().
     // @todo Sadly this method is not public so it cannot be tested.
     // $view = $this->controller->create(array());
     // $this->assertEqual($view->generateDisplayId('default'), 'default', 'The plugin ID for default is always default.');
@@ -308,7 +308,7 @@ class ViewStorageTest extends ViewTestBase {
     // $view->addDisplay('feed', 'feed title');
     // $this->assertEqual($view->generateDisplayId('feed'), 'feed_2', 'The generated ID for the first instance of a plugin type should have an suffix of _2.');
 
-    // Tests Drupal\views\ViewStorage::newDisplay().
+    // Tests Drupal\views\Plugin\Core\Entity\View::newDisplay().
     $view = $this->controller->create(array());
     $view->newDisplay('default');
 
@@ -383,7 +383,7 @@ class ViewStorageTest extends ViewTestBase {
     $view = views_get_view('archive');
     $copy = $view->createDuplicate();
 
-    $this->assertTrue($copy instanceof ViewStorage, 'The copied object is a View.');
+    $this->assertTrue($copy instanceof View, 'The copied object is a View.');
 
     // Check that the original view and the copy have different UUIDs.
     $this->assertNotIdentical($view->storage->uuid(), $copy->uuid(), 'The copied view has a new UUID.');

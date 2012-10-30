@@ -8,7 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\config_test\ConfigTest;
+use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**

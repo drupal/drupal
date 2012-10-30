@@ -2,18 +2,37 @@
 
 /**
  * @file
- * Definition of Drupal\views\ViewStorage.
+ * Definition of Drupal\views\Plugin\Core\Entity\View.
  */
 
-namespace Drupal\views;
+namespace Drupal\views\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\views_ui\ViewUI;
+use Drupal\views\ViewStorageInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
- * Defines a ViewStorage configuration entity class.
+ * Defines a View configuration entity class.
+ *
+ * @Plugin(
+ *   id = "view",
+ *   label = @Translation("View"),
+ *   module = "views",
+ *   controller_class = "Drupal\views\ViewStorageController",
+ *   list_controller_class = "Drupal\views_ui\ViewListController",
+ *   config_prefix = "views.view",
+ *   fieldable = FALSE,
+ *   entity_keys = {
+ *     "id" = "name",
+ *     "label" = "human_name",
+ *     "uuid" = "uuid"
+ *   }
+ * )
  */
-class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
+class View extends ConfigEntityBase implements ViewStorageInterface {
 
   /**
    * The name of the base table this view will use.
@@ -171,9 +190,8 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    * Overrides Drupal\Core\Entity\EntityInterface::uri().
    */
   public function uri() {
-    $info = $this->entityInfo();
     return array(
-      'path' => $info['list path'],
+      'path' => 'admin/structure/views/view/' . $this->id(),
     );
   }
 

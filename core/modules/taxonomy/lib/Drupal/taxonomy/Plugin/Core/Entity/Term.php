@@ -2,16 +2,47 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Term.
+ * Definition of Drupal\taxonomy\Plugin\Core\Entity\Term.
  */
 
-namespace Drupal\taxonomy;
+namespace Drupal\taxonomy\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the taxonomy term entity.
+ *
+ * @Plugin(
+ *   id = "taxonomy_term",
+ *   label = @Translation("Taxonomy term"),
+ *   module = "taxonomy",
+ *   controller_class = "Drupal\taxonomy\TermStorageController",
+ *   render_controller_class = "Drupal\taxonomy\TermRenderController",
+ *   form_controller_class = {
+ *     "default" = "Drupal\taxonomy\TermFormController"
+ *   },
+ *   base_table = "taxonomy_term_data",
+ *   uri_callback = "taxonomy_term_uri",
+ *   fieldable = TRUE,
+ *   entity_keys = {
+ *     "id" = "tid",
+ *     "bundle" = "vocabulary_machine_name",
+ *     "label" = "name",
+ *     "uuid" = "uuid"
+ *   },
+ *   bundle_keys = {
+ *     "bundle" = "machine_name"
+ *   },
+ *   view_modes = {
+ *     "full" = {
+ *       "label" = "Taxonomy term page",
+ *       "custom_settings" = FALSE
+ *     }
+ *   }
+ * )
  */
 class Term extends Entity implements ContentEntityInterface {
 

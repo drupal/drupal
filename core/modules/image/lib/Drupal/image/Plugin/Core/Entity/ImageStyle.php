@@ -2,15 +2,31 @@
 
 /**
  * @file
- * Definition of Drupal\image\ImageStyle.
+ * Definition of Drupal\image\Plugin\Core\Entity\ImageStyle.
  */
 
-namespace Drupal\image;
+namespace Drupal\image\Plugin\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines an image style configuration entity.
+ *
+ * @Plugin(
+ *   id = "image_style",
+ *   label = @Translation("Image style"),
+ *   module = "image",
+ *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   uri_callback = "image_style_uri",
+ *   config_prefix = "image.style",
+ *   entity_keys = {
+ *     "id" = "name",
+ *     "label" = "label",
+ *     "uuid" = "uuid"
+ *   }
+ * )
  */
 class ImageStyle extends ConfigEntityBase {
 

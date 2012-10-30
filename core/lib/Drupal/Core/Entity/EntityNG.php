@@ -398,12 +398,12 @@ class EntityNG extends Entity {
   public function createDuplicate() {
     $duplicate = clone $this;
     $entity_info = $this->entityInfo();
-    $duplicate->{$entity_info['entity keys']['id']}->value = NULL;
+    $duplicate->{$entity_info['entity_keys']['id']}->value = NULL;
 
     // Check if the entity type supports UUIDs and generate a new one if so.
-    if (!empty($entity_info['entity keys']['uuid'])) {
+    if (!empty($entity_info['entity_keys']['uuid'])) {
       $uuid = new Uuid();
-      $duplicate->{$entity_info['entity keys']['uuid']}->value = $uuid->generate();
+      $duplicate->{$entity_info['entity_keys']['uuid']}->value = $uuid->generate();
     }
     return $duplicate;
   }
