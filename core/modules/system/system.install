@@ -1909,6 +1909,7 @@ function system_update_8017() {
     'page_compression' => 'response.gzip',
     'preprocess_css' => 'preprocess.css',
     'preprocess_js' => 'preprocess.js',
+    'stale_file_threshold' => 'preprocess.stale_file_threshold',
   ));
 }
 

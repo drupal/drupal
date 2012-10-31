@@ -3455,7 +3455,7 @@ function drupal_clear_css_cache() {
  */
 function drupal_delete_file_if_stale($uri) {
   // Default stale file threshold is 30 days.
-  if (REQUEST_TIME - filemtime($uri) > variable_get('drupal_stale_file_threshold', 2592000)) {
+  if (REQUEST_TIME - filemtime($uri) > config('system.performance')->get('preprocess.stale_file_threshold')) {
     file_unmanaged_delete($uri);
   }
 }
