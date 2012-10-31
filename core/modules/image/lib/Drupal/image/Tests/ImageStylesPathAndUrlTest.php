@@ -106,7 +106,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
     // Let the image_module_test module know about this file, so it can claim
     // ownership in hook_file_download().
-    variable_set('image_module_test_file_download', $original_uri);
+    state()->set('image.test_file_download', $original_uri);
     $this->assertNotIdentical(FALSE, $original_uri, 'Created the generated image file.');
 
     // Get the URL of a file that has not been generated and try to create it.
