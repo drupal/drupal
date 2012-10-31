@@ -4750,7 +4750,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
 function drupal_build_js_cache($files) {
   $contents = '';
   $uri = '';
-  $map = state()->get('system.drupal_js_cache_files') ?: array();
+  $map = state()->get('system.js_cache_files') ?: array();
   // Create a new array so that only the file names are used to create the hash.
   // This prevents new aggregates from being created unnecessarily.
   $js_data = array();
@@ -4795,7 +4795,7 @@ function drupal_build_js_cache($files) {
       }
     }
     $map[$key] = $uri;
-    state()->set('system.drupal_js_cache_files', $map);
+    state()->set('system.js_cache_files', $map);
   }
   return $uri;
 }
@@ -4805,7 +4805,7 @@ function drupal_build_js_cache($files) {
  */
 function drupal_clear_js_cache() {
   state()->delete('system.javascript_parsed');
-  state()->delete('system.drupal_js_cache_files');
+  state()->delete('system.js_cache_files');
   file_scan_directory('public://js', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
