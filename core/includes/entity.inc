@@ -225,13 +225,15 @@ function entity_load_unchanged($entity_type, $id) {
 /**
  * Deletes multiple entities permanently.
  *
- * @param $entity_type
+ * @param string $entity_type
  *   The type of the entity.
- * @param $ids
+ * @param array $ids
  *   An array of entity IDs of the entities to delete.
  */
-function entity_delete_multiple($entity_type, $ids) {
-  entity_get_controller($entity_type)->delete($ids);
+function entity_delete_multiple($entity_type, array $ids) {
+  $controller = entity_get_controller($entity_type);
+  $entities = $controller->load($ids);
+  $controller->delete($entities);
 }
 
 /**

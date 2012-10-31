@@ -111,7 +111,7 @@ function entity_test_load_multiple(array $ids = NULL, $reset = FALSE) {
  *   An array of test entity IDs.
  */
 function entity_test_delete_multiple(array $ids) {
-  entity_get_controller('entity_test')->delete($ids);
+  entity_delete_multiple('entity_test', $ids);
 }
 
 /**

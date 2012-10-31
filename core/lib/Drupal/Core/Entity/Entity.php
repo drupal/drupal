@@ -320,7 +320,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    */
   public function delete() {
     if (!$this->isNew()) {
-      entity_get_controller($this->entityType)->delete(array($this->id()));
+      entity_get_controller($this->entityType)->delete(array($this->id() => $this));
     }
   }
 

@@ -88,13 +88,13 @@ interface EntityStorageControllerInterface {
   /**
    * Deletes permanently saved entities.
    *
-   * @param $ids
-   *   An array of entity IDs.
+   * @param array $entities
+   *   An array of entity objects to delete.
    *
    * @throws Drupal\Core\Entity\EntityStorageException
    *   In case of failures, an exception is thrown.
    */
-  public function delete($ids);
+  public function delete(array $entities);
 
   /**
    * Saves the entity permanently.

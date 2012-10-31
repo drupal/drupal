@@ -443,8 +443,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   /**
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::delete().
    */
-  public function delete($ids) {
-    $entities = $ids ? $this->load($ids) : FALSE;
+  public function delete(array $entities) {
     if (!$entities) {
       // If no IDs or invalid IDs were passed, do nothing.
       return;

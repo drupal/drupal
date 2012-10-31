@@ -1973,7 +1973,7 @@ function user_delete($uid) {
  * @see hook_user_delete()
  */
 function user_delete_multiple(array $uids) {
-  entity_get_controller('user')->delete($uids);
+  entity_delete_multiple('user', $uids);
 }
 
 /**
