@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\display\Feed.
+ * Contains Drupal\views\Plugin\views\display\Feed.
  */
 
 namespace Drupal\views\Plugin\views\display;
@@ -16,8 +16,6 @@ use Drupal\Core\Annotation\Translation;
 /**
  * The plugin that handles a feed, such as RSS or atom.
  *
- * For the most part, feeds are page displays but with some subtle differences.
- *
  * @ingroup views_display_plugins
  *
  * @Plugin(
@@ -28,7 +26,7 @@ use Drupal\Core\Annotation\Translation;
  *   admin = @Translation("Feed")
  * )
  */
-class Feed extends Page {
+class Feed extends PathPluginBase {
 
   /**
    * Whether the display allows the use of AJAX or not.
@@ -57,46 +55,59 @@ class Feed extends Page {
     }
   }
 
-  public function usesBreadcrumb() { return FALSE; }
-  protected function getStyleType() { return 'feed'; }
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::getStyleType().
+   */
+  protected function getStyleType() {
+    return 'feed';
+  }
 
   /**
-   * Feeds do not go through the normal page theming mechanism. Instead, they
-   * go through their own little theme function and then return NULL so that
-   * Drupal believes that the page has already rendered itself...which it has.
+   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::execute().
    */
   public function execute() {
+    parent::execute();
+
     $output = $this->view->render();
+
     if (empty($output)) {
       throw new NotFoundHttpException();
     }
 
     $response = $this->view->getResponse();
+
     $response->setContent($output);
+
     return $response;
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::preview().
+   */
   public function preview() {
     if (!empty($this->view->live_preview)) {
       return '<pre>' . check_plain($this->view->render()) . '</pre>';
     }
+
     return $this->view->render();
   }
 
   /**
-   * Instead of going through the standard views_view.tpl.php, delegate this
-   * to the style handler.
+   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::render().
    */
   public function render() {
     return $this->view->style_plugin->render($this->view->result);
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\displays\DisplayPluginBase::defaultableSections().
+   */
   public function defaultableSections($section = NULL) {
+    $sections = parent::defaultableSections($section);
+
     if (in_array($section, array('style', 'row'))) {
       return FALSE;
     }
-
-    $sections = parent::defaultableSections($section);
 
     // Tell views our sitename_title option belongs in the title section.
     if ($section == 'title') {
@@ -108,6 +119,9 @@ class Feed extends Page {
     return $sections;
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::defineOptions().
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -124,11 +138,13 @@ class Feed extends Page {
     return $options;
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::optionsSummary().
+   */
   public function optionsSummary(&$categories, &$options) {
-    // It is very important to call the parent function here:
     parent::optionsSummary($categories, $options);
 
-    // Since we're childing off the 'page' type, we'll still *call* our
+    // Since we're childing off the 'path' type, we'll still *call* our
     // category 'page' but let's override it so it says feed settings.
     $categories['page'] = array(
       'title' => t('Feed settings'),
@@ -141,9 +157,6 @@ class Feed extends Page {
     if ($this->getOption('sitename_title')) {
       $options['title']['value'] = t('Using the site name');
     }
-
-    // I don't think we want to give feeds menus directly.
-    unset($options['menu']);
 
     $displays = array_filter($this->getOption('displays'));
     if (count($displays) > 1) {
@@ -169,7 +182,7 @@ class Feed extends Page {
   }
 
   /**
-   * Provide the default form for setting options.
+   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::buildOptionsForm().
    */
   public function buildOptionsForm(&$form, &$form_state) {
     // It is very important to call the parent function here.
@@ -214,11 +227,9 @@ class Feed extends Page {
   }
 
   /**
-   * Perform any necessary changes to the form values prior to storage.
-   * There is no need for this function to actually store the data.
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::submitOptionsForm().
    */
   public function submitOptionsForm(&$form, &$form_state) {
-    // It is very important to call the parent function here:
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'title':
@@ -231,7 +242,7 @@ class Feed extends Page {
   }
 
   /**
-   * Attach to another view.
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::attachTo().
    */
   public function attachTo($display_id) {
     $displays = $this->getOption('displays');
@@ -254,6 +265,9 @@ class Feed extends Page {
     }
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::usesLinkDisplay().
+   */
   public function usesLinkDisplay() {
     return TRUE;
   }

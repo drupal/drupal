@@ -58,7 +58,7 @@ class DisplayFeedTest extends PluginTestBase {
       }
     }
 
-    $this->assertEqual($options, array('default', 'feed', 'page'), 'Make sure all displays appears as expected.');
+    $this->assertEqual($options, array('default', 'page'), 'Make sure all displays appears as expected.');
 
     // Post and save this and check the output.
     $this->drupalPost('admin/structure/views/nojs/display/test_feed_display/feed/displays', array('displays[page]' => 'page'), t('Apply'));

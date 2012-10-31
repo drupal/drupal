@@ -90,7 +90,6 @@ class Block extends DisplayPluginBase {
    * This output is returned as an array.
    */
   public function optionsSummary(&$categories, &$options) {
-    // It is very important to call the parent function here:
     parent::optionsSummary($categories, $options);
 
     $categories['block'] = array(
@@ -151,7 +150,6 @@ class Block extends DisplayPluginBase {
    * Provide the default form for setting options.
    */
   public function buildOptionsForm(&$form, &$form_state) {
-    // It is very important to call the parent function here:
     parent::buildOptionsForm($form, $form_state);
 
     switch ($form_state['section']) {
@@ -189,7 +187,6 @@ class Block extends DisplayPluginBase {
    * There is no need for this function to actually store the data.
    */
   public function submitOptionsForm(&$form, &$form_state) {
-    // It is very important to call the parent function here:
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'display_id':

@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\display\DisplayPluginBase.
+ * Contains Drupal\views\Plugin\views\display\DisplayPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\PluginBase;
+use \Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_display_plugins Views display plugins
@@ -333,9 +333,12 @@ abstract class DisplayPluginBase extends PluginBase {
    * @return bool
    */
   public function acceptAttachments() {
-    if (!$this->usesAttachments()) {
+    // To be able to accept attachments this display have to be able to use
+    // attachments but at the same time, you cannot attach a display to itself.
+    if (!$this->usesAttachments() || ($this->definition['id'] == $this->view->current_display)) {
       return FALSE;
     }
+
     if (!empty($this->view->argument) && $this->getOption('hide_attachment_summary')) {
       foreach ($this->view->argument as $argument_id => $argument) {
         if ($argument->needsStylePlugin() && empty($argument->argument_validated)) {
@@ -343,6 +346,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
       }
     }
+
     return TRUE;
   }
 
@@ -745,7 +749,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * @param string $type
    *   The type of the plugin.
    *
-   * @return Drupal\views\Plugin\views\PluginBase
+   * @return \Drupal\views\Plugin\views\PluginBase
    */
   public function getPlugin($type) {
     // Look up the plugin name to use for this instance.
