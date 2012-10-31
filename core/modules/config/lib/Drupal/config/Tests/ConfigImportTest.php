@@ -7,12 +7,12 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests importing configuration from files into active configuration.
  */
-class ConfigImportTest extends WebTestBase {
+class ConfigImportTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
@@ -32,7 +32,10 @@ class ConfigImportTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    // Clear out any possibly existing hook invocation records.
+    config_install_default_config('module', 'config_test');
+    // Installing config_test's default configuration pollutes the global
+    // variable being used for recording hook invocations by this test already,
+    // so it has to be cleared out manually.
     unset($GLOBALS['hook_config_test']);
   }
 

@@ -8,12 +8,12 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\FileStorage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests reading and writing file contents.
  */
-class ConfigFileContentTest extends WebTestBase {
+class ConfigFileContentTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File content',

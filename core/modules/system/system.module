@@ -2858,8 +2858,8 @@ function system_rebuild_module_data() {
     $files = array();
     ksort($modules);
     // Add name, status, weight, and schema version.
-    $enabled_modules = config('system.module')->get('enabled');
-    $disabled_modules = config('system.module.disabled')->get();
+    $enabled_modules = (array) config('system.module')->get('enabled');
+    $disabled_modules = (array) config('system.module.disabled')->get();
     $all_modules = $enabled_modules + $disabled_modules;
     foreach ($modules as $module => $record) {
       $record->name = $module;
@@ -3031,7 +3031,7 @@ function system_rebuild_theme_data() {
   //   based on the current config. Remove this code when themes have a proper
   //   installation status.
   // @see http://drupal.org/node/1067408
-  $enabled_themes = config('system.theme')->get('enabled');
+  $enabled_themes = (array) config('system.theme')->get('enabled');
   $files = array();
   foreach ($themes as $name => $theme) {
     $theme->status = (int) isset($enabled_themes[$name]);

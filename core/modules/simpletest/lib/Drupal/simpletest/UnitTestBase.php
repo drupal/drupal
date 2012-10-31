@@ -11,7 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 
 /**
- * Test case for Drupal unit tests.
+ * Base test case class for unit tests.
  *
  * These tests can not access the database nor files. Calling any Drupal
  * function that needs the database will throw exceptions. These include
@@ -46,7 +46,6 @@ abstract class UnitTestBase extends TestBase {
     if (!$this->setupEnvironment) {
       return FALSE;
     }
-    $this->originalThemeRegistry = theme_get_registry(FALSE);
 
     // Reset all statics and variables to perform tests in a clean environment.
     $conf = array();

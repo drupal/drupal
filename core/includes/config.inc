@@ -157,8 +157,6 @@ function config_import() {
   try {
     $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
     config_sync_changes($remaining_changes, $source_storage, $target_storage);
-    // Flush all caches and reset static variables after a successful import.
-    drupal_flush_all_caches();
   }
   catch (ConfigException $e) {
     watchdog_exception('config_import', $e);

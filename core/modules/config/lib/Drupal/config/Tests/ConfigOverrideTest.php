@@ -7,12 +7,12 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests configuration overrides via $conf in settings.php.
  */
-class ConfigOverrideTest extends WebTestBase {
+class ConfigOverrideTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
@@ -27,6 +27,12 @@ class ConfigOverrideTest extends WebTestBase {
       'description' => 'Tests configuration overrides via $conf in settings.php.',
       'group' => 'Configuration',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    config_install_default_config('module', 'config_test');
   }
 
   /**

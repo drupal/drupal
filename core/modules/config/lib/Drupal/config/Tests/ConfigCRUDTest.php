@@ -7,12 +7,12 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests CRUD operations on configuration objects.
  */
-class ConfigCRUDTest extends WebTestBase {
+class ConfigCRUDTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'CRUD operations',

@@ -7,18 +7,26 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests installation of configuration objects in installation functionality.
  */
-class ConfigInstallTest extends WebTestBase {
+class ConfigInstallTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Installation functionality',
       'description' => 'Tests installation of configuration objects in installation functionality.',
       'group' => 'Configuration',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Ensure the global variable being asserted by this test does not exist;
+    // a previous test executed in this request/process might have set it.
+    unset($GLOBALS['hook_config_test']);
   }
 
   /**
@@ -35,7 +43,7 @@ class ConfigInstallTest extends WebTestBase {
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Install the test module.
-    module_enable(array('config_test'));
+    $this->enableModules(array('config_test'));
 
     // Verify that default module config exists.
     $config = config($default_config);

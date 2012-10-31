@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Tests\Storage;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Base class for testing storage controller operations.
@@ -21,7 +21,7 @@ use Drupal\simpletest\WebTestBase;
  * supply the necessary helper methods to interact with the raw/native storage
  * directly.
  */
-abstract class ConfigStorageTestBase extends WebTestBase {
+abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
 
   /**
    * Tests storage controller CRUD operations.

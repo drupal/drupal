@@ -183,7 +183,7 @@ function system_list($type) {
       // Drupal installations, which might have modules installed in different
       // locations in the file system. The ordering here must also be
       // consistent with the one used in module_implements().
-      $enabled_modules = config('system.module')->get('enabled');
+      $enabled_modules = (array) config('system.module')->get('enabled');
       $module_files = state()->get('system.module.files');
       foreach ($enabled_modules as $name => $weight) {
         // Build a list of all enabled modules.
@@ -197,7 +197,7 @@ function system_list($type) {
       }
 
       // Build a list of themes.
-      $enabled_themes = config('system.theme')->get('enabled');
+      $enabled_themes = (array) config('system.theme')->get('enabled');
       // @todo Themes include all themes, including disabled/uninstalled. This
       //   system.theme.data state will go away entirely as soon as themes have
       //   a proper installation status.

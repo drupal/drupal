@@ -856,21 +856,22 @@ abstract class TestBase {
     // a test-prefix-specific directory within the public files directory.
     // @see config_get_config_directory()
     $GLOBALS['config_directories'] = array();
+    $this->configDirectories = array();
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
     foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
-      $GLOBALS['config_directories'][$type]['path'] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
+      // Assign the relative path to the global variable.
+      $path = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
+      $GLOBALS['config_directories'][$type]['path'] = $path;
+      // Ensure the directory can be created and is writeable.
+      if (!install_ensure_config_directory($type)) {
+        return FALSE;
+      }
+      // Provide the already resolved path for tests.
+      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $path;
     }
 
     // Reset and create a new service container.
     $this->container = drupal_container(NULL, TRUE);
-
-    $this->configDirectories = array();
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    foreach ($GLOBALS['config_directories'] as $type => $directory) {
-      if (!install_ensure_config_directory($type)) {
-        return FALSE;
-      }
-      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $directory['path'];
-    }
 
     // Unset globals.
     unset($GLOBALS['theme_key']);
@@ -1028,6 +1029,7 @@ abstract class TestBase {
    */
   public function errorHandler($severity, $message, $file = NULL, $line = NULL) {
     if ($severity & error_reporting()) {
+      require_once DRUPAL_ROOT . '/core/includes/errors.inc';
       $error_map = array(
         E_STRICT => 'Run-time notice',
         E_WARNING => 'Warning',
@@ -1041,6 +1043,14 @@ abstract class TestBase {
       );
 
       $backtrace = debug_backtrace();
+
+      // Add verbose backtrace for errors, but not for debug() messages.
+      if ($severity !== E_USER_NOTICE) {
+        $verbose_backtrace = $backtrace;
+        array_shift($verbose_backtrace);
+        $message .= '<pre class="backtrace">' . format_backtrace($verbose_backtrace) . '</pre>';
+      }
+
       $this->error($message, $error_map[$severity], _drupal_get_last_caller($backtrace));
     }
     return TRUE;
@@ -1052,15 +1062,19 @@ abstract class TestBase {
    * @see set_exception_handler
    */
   protected function exceptionHandler($exception) {
+    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
     $backtrace = $exception->getTrace();
+    $verbose_backtrace = $backtrace;
     // Push on top of the backtrace the call that generated the exception.
     array_unshift($backtrace, array(
       'line' => $exception->getLine(),
       'file' => $exception->getFile(),
     ));
-    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
     // The exception message is run through check_plain() by _drupal_decode_exception().
-    $this->error(t('%type: !message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
+    $message = format_string('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', _drupal_decode_exception($exception) + array(
+      '!backtrace' => format_backtrace($verbose_backtrace),
+    ));
+    $this->error($message, 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
 
   /**
