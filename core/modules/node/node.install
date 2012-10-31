@@ -489,7 +489,6 @@ function node_uninstall() {
   variable_del('node_admin_theme');
   variable_del('node_cron_last');
   variable_del('node_recent_block_count');
-  variable_del('default_nodes_main');
 }
 
 /**
@@ -709,6 +708,15 @@ function node_update_8008() {
       ->fields(array('delta' => $new))
       ->execute();
   }
+}
+
+/**
+ * Coverts default_nodes_main variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function node_update_8009() {
+  update_variables_to_config('node.settings', array('default_nodes_main' => 'items_per_page'));
 }
 
 /**

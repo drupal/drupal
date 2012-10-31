@@ -46,7 +46,7 @@ function taxonomy_term_page(Term $term) {
   drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
 
   $build['taxonomy_terms'] = taxonomy_term_view_multiple(array($term->id() => $term));
-  if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
+  if ($nids = taxonomy_select_nodes($term->tid, TRUE, config('node.settings')->get('items_per_page'))) {
     $nodes = node_load_multiple($nids);
     $build['nodes'] = node_view_multiple($nodes);
     $build['pager'] = array(
