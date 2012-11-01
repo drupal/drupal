@@ -86,7 +86,7 @@ class ExceptionController extends ContainerAware {
    *   The request object that triggered this exception.
    */
   public function on405Html(FlattenException $exception, Request $request) {
-    $event->setResponse(new Response('Method Not Allowed', 405));
+    return new Response('Method Not Allowed', 405);
   }
 
   /**
