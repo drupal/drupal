@@ -13,28 +13,28 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-.dropbutton-wrapper {
+.js .dropbutton-wrapper {
   display: block;
   min-height: 2em;
   position: relative;
 }
-.dropbutton-widget {
-  position: absolute;
-  right: 0; /* LTR */
-}
-.dropbutton-wrapper,
-.dropbutton-widget {
+.js .dropbutton-wrapper,
+.js .dropbutton-widget {
   max-width: 100%;
 }
+.js .dropbutton-widget {
+  position: absolute;
+}
 /* UL styles are over-scoped in core, so this selector needs weight parity. */
-.dropbutton-widget .dropbutton {
+.js .dropbutton-widget .dropbutton {
   list-style-image: none;
   list-style-type: none;
   margin: 0;
+  overflow: hidden;
   padding: 0;
 }
-.dropbutton li,
-.dropbutton a {
+.js .dropbutton li,
+.js .dropbutton a {
   display: block;
 }
 
@@ -48,7 +48,7 @@
  * The arrow is created using border on a zero-width, zero-height span.
  * The arrow inherits the link color, but can be overridden with border colors.
  */
-.dropbutton-multiple .dropbutton-widget {
+.js .dropbutton-multiple .dropbutton-widget {
   padding-right: 2em; /* LTR */
 }
 .dropbutton-multiple.open,
@@ -97,6 +97,7 @@
   right: 40%; /* 0.6667em; */ /* LTR */
   top: 0.9em;
   width: 0;
+  overflow: hidden;
 }
 .dropbutton-multiple.open .dropbutton-arrow {
   border-bottom: 0.3333em solid;

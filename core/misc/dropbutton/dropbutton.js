@@ -59,7 +59,7 @@ function DropButton (dropbutton, settings) {
     var $primary = this.$actions.slice(0,1);
     // Identify the secondary actions.
     var $secondary = this.$actions.slice(1);
-    $($secondary).addClass('secondary-action');
+    $secondary.addClass('secondary-action');
     // Add toggle link.
     $primary.after(Drupal.theme('dropbuttonToggle', options));
     // Bind mouse events.
@@ -73,7 +73,12 @@ function DropButton (dropbutton, settings) {
         /**
          * Clears timeout when mouseout of the dropdown.
          */
-        'mouseenter.dropbutton': $.proxy(this.hoverIn, this)
+        'mouseenter.dropbutton': $.proxy(this.hoverIn, this),
+        /**
+         * Similar to mouseleave/mouseenter, but for keyboard navigation.
+         */
+        'focusout.dropbutton': $.proxy(this.focusOut, this),
+        'focusin.dropbutton': $.proxy(this.focusIn, this)
       });
   }
 }
@@ -125,6 +130,14 @@ $.extend(DropButton.prototype, {
 
   close: function () {
     this.toggle(false);
+  },
+
+  focusOut: function(e) {
+    this.hoverOut.call(this, e);
+  },
+
+  focusIn: function(e) {
+    this.hoverIn.call(this, e);
   }
 });
 

@@ -4,14 +4,11 @@
  * General styles for dropbuttons.
  */
 
-.dropbutton-wrapper {
-  cursor: pointer;
-}
-.dropbutton-widget {
+.js .dropbutton-widget {
   background-color: white;
   border: 1px solid #cccccc;
 }
-.dropbutton-widget:hover {
+.js .dropbutton-widget:hover {
   border-color: #b8b8b8;
 }
 .dropbutton .dropbutton-action > * {

@@ -1721,7 +1721,9 @@ function theme_links($variables) {
  *     the dropbutton menu. Properties used: #children.
  */
 function theme_dropbutton_wrapper($variables) {
-  return '<div class="dropbutton-wrapper"><div class="dropbutton-widget">' . $variables['element']['#children'] . '</div></div>';
+  if (!empty($variables['element']['#children'])) {
+    return '<div class="dropbutton-wrapper"><div class="dropbutton-widget">' . $variables['element']['#children'] . '</div></div>';
+  }
 }
 
 /**

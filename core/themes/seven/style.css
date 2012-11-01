@@ -1036,7 +1036,7 @@ div.add-or-remove-shortcuts {
 }
 
 /* Dropbutton */
-.dropbutton-widget {
+.js .dropbutton-widget {
   background-color: #fff;
   background-image: -moz-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
   background-image: -o-linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
@@ -1044,11 +1044,11 @@ div.add-or-remove-shortcuts {
   background-image: linear-gradient(-90deg, rgba(255, 255, 255, 0), #e7e7e7);
   border-radius: 5px;
 }
-.dropbutton-widget:hover {
+.js .dropbutton-widget:hover {
   background-color: #f0f0f0;
   border-color: #b8b8b8;
 }
-.dropbutton-multiple.open .dropbutton-widget:hover {
+.js .dropbutton-multiple.open .dropbutton-widget:hover {
   background-color: #fff;
 }
 .dropbutton-content li:first-child > * {
