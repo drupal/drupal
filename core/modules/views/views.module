@@ -278,7 +278,7 @@ function views_plugin_list() {
   $plugin_data = views_get_plugin_definitions();
   $plugins = array();
   foreach (views_get_enabled_views() as $view) {
-    foreach ($view->display as $display_id => $display) {
+    foreach ($view->get('display') as $display_id => $display) {
       foreach ($plugin_data as $type => $info) {
         if ($type == 'display' && isset($display['display_plugin'])) {
           $name = $display['display_plugin'];
@@ -306,7 +306,7 @@ function views_plugin_list() {
         }
 
         // Add this view to the list for this plugin.
-        $plugins[$key]['views'][$view->storage->get('name')] = $view->storage->get('name');
+        $plugins[$key]['views'][$view->get('name')] = $view->get('name');
       }
     }
   }
@@ -631,8 +631,9 @@ function views_block_info() {
       continue;
     }
 
-    $view->initDisplay();
-    foreach ($view->getExecutable()->displayHandlers as $display) {
+    $executable = $view->get('executable');
+    $executable->initDisplay();
+    foreach ($executable->displayHandlers as $display) {
 
       if (isset($display) && !empty($display->definition['uses_hook_block'])) {
         $result = $display->executeHookBlockList();
@@ -1365,20 +1366,20 @@ function views_get_applicable_views($type) {
       continue;
     }
 
-    if (empty($view->display)) {
+    $display = $view->get('display');
+    if (empty($display)) {
       // Skip this view as it is broken.
       continue;
     }
 
     // Loop on array keys because something seems to muck with $view->display
     // a bit in PHP4.
-    foreach (array_keys($view->display) as $id) {
-      $plugin = views_get_plugin_definition('display', $view->display[$id]['display_plugin']);
+    foreach (array_keys($display) as $id) {
+      $plugin = views_get_plugin_definition('display', $display[$id]['display_plugin']);
       if (!empty($plugin[$type])) {
-        $executable = $view->getExecutable();
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.
-        $v = $executable->cloneView();
+        $v = $view->get('executable')->cloneView();
         if ($v->setDisplay($id) && $v->display_handler->isEnabled()) {
           $result[] = array($v, $id);
         }
@@ -1478,7 +1479,7 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
     }
     // Return views with display ids.
     else {
-      foreach ($view->display as $display_id => $display) {
+      foreach ($view->get('display') as $display_id => $display) {
         if (!($id == $exclude_view_name && $display_id == $exclude_view_display)) {
           if ($optgroup) {
             $options[$id][$id . ':' . $display['id']] = t('@view : @display', array('@view' => $id, '@display' => $display['id']));
@@ -1554,7 +1555,7 @@ function views_disable_view(View $view) {
 function views_get_view($name) {
   $view = entity_load('view', $name);
   if ($view) {
-    return $view->getExecutable();
+    return $view->get('executable');
   }
 }
 

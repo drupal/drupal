@@ -40,7 +40,7 @@ class StorageTest extends UITestBase {
     $view = views_get_view($view->storage->get('name'));
 
     foreach (array('human_name', 'tag', 'description') as $property) {
-      $this->assertEqual($view->storage->{$property}, $edit[$property], format_string('Make sure the property @property got probably saved.', array('@property' => $property)));
+      $this->assertEqual($view->storage->get($property), $edit[$property], format_string('Make sure the property @property got probably saved.', array('@property' => $property)));
     }
   }
 

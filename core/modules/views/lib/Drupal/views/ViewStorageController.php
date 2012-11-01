@@ -31,7 +31,7 @@ class ViewStorageController extends ConfigStorageController {
 
     // Only return views for enabled modules.
     return array_filter($entities, function ($entity) {
-      if (module_exists($entity->getModule())) {
+      if (module_exists($entity->get('module'))) {
         return TRUE;
       }
       return FALSE;
@@ -78,6 +78,8 @@ class ViewStorageController extends ConfigStorageController {
           'display_plugin' => 'default',
           'id' => 'default',
           'display_title' => 'Master',
+          'position' => 0,
+          'display_options' => array(),
         ),
       )
     );
@@ -111,6 +113,31 @@ class ViewStorageController extends ConfigStorageController {
 
       $entity->set('display', $displays);
     }
+  }
+
+  /**
+   * Overrides Drupal\config\ConfigStorageController::getProperties();
+   */
+  protected function getProperties(EntityInterface $entity) {
+    $names = array(
+      'api_version',
+      'base_field',
+      'base_table',
+      'core',
+      'description',
+      'disabled',
+      'display',
+      'human_name',
+      'module',
+      'name',
+      'tag',
+      'uuid',
+    );
+    $properties = array();
+    foreach ($names as $name) {
+      $properties[$name] = $entity->get($name);
+    }
+    return $properties;
   }
 
 }

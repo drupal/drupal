@@ -406,7 +406,7 @@ class ViewExecutable {
   public function __construct(View $storage) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
-    $this->storage->setExecutable($this);
+    $this->storage->set('executable', $this);
   }
 
   /**
@@ -1821,7 +1821,9 @@ class ViewExecutable {
    */
   public function cloneView() {
     $storage = clone $this->storage;
-    return $storage->getExecutable(TRUE);
+    $executable = new ViewExecutable($storage);
+    $storage->set('executable', $executable);
+    return $executable;
   }
 
   /**

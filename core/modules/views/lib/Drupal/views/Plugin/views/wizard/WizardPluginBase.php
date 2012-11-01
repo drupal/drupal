@@ -257,7 +257,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       '#options' => $style_options,
     );
     $style_form = &$form['displays']['page']['options']['style'];
-    $style_form['style_plugin']['#default_value'] = views_ui_get_selected($form_state, array('page', 'style', 'style_plugin'), 'default', $style_form['style_plugin']);
+    $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, array('page', 'style', 'style_plugin'), 'default', $style_form['style_plugin']);
     // Changing this dropdown updates $form['displays']['page']['options'] via
     // AJAX.
     views_ui_add_ajax_trigger($style_form, 'style_plugin', array('displays', 'page', 'options'));
@@ -394,7 +394,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       '#options' => $style_options,
     );
     $style_form = &$form['displays']['block']['options']['style'];
-    $style_form['style_plugin']['#default_value'] = views_ui_get_selected($form_state, array('block', 'style', 'style_plugin'), 'default', $style_form['style_plugin']);
+    $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, array('block', 'style', 'style_plugin'), 'default', $style_form['style_plugin']);
     // Changing this dropdown updates $form['displays']['block']['options'] via
     // AJAX.
     views_ui_add_ajax_trigger($style_form, 'style_plugin', array('displays', 'block', 'options'));
@@ -413,6 +413,85 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     );
 
     return $form;
+  }
+
+  /**
+   * Gets the current value of a #select element, from within a form constructor function.
+   *
+   * This function is intended for use in highly dynamic forms (in particular the
+   * add view wizard) which are rebuilt in different ways depending on which
+   * triggering element (AJAX or otherwise) was most recently fired. For example,
+   * sometimes it is necessary to decide how to build one dynamic form element
+   * based on the value of a different dynamic form element that may not have
+   * even been present on the form the last time it was submitted. This function
+   * takes care of resolving those conflicts and gives you the proper current
+   * value of the requested #select element.
+   *
+   * By necessity, this function sometimes uses non-validated user input from
+   * $form_state['input'] in making its determination. Although it performs some
+   * minor validation of its own, it is not complete. The intention is that the
+   * return value of this function should only be used to help decide how to
+   * build the current form the next time it is reloaded, not to be saved as if
+   * it had gone through the normal, final form validation process. Do NOT use
+   * the results of this function for any other purpose besides deciding how to
+   * build the next version of the form.
+   *
+   * @param $form_state
+   *   The  standard associative array containing the current state of the form.
+   * @param $parents
+   *   An array of parent keys that point to the part of the submitted form
+   *   values that are expected to contain the element's value (in the case where
+   *   this form element was actually submitted). In a simple case (assuming
+   *   #tree is TRUE throughout the form), if the select element is located in
+   *   $form['wrapper']['select'], so that the submitted form values would
+   *   normally be found in $form_state['values']['wrapper']['select'], you would
+   *   pass array('wrapper', 'select') for this parameter.
+   * @param $default_value
+   *   The default value to return if the #select element does not currently have
+   *   a proper value set based on the submitted input.
+   * @param $element
+   *   An array representing the current version of the #select element within
+   *   the form.
+   *
+   * @return
+   *   The current value of the #select element. A common use for this is to feed
+   *   it back into $element['#default_value'] so that the form will be rendered
+   *   with the correct value selected.
+   */
+  public static function getSelected($form_state, $parents, $default_value, $element) {
+    // For now, don't trust this to work on anything but a #select element.
+    if (!isset($element['#type']) || $element['#type'] != 'select' || !isset($element['#options'])) {
+      return $default_value;
+    }
+
+    // If there is a user-submitted value for this element that matches one of
+    // the currently available options attached to it, use that. We need to check
+    // $form_state['input'] rather than $form_state['values'] here because the
+    // triggering element often has the #limit_validation_errors property set to
+    // prevent unwanted errors elsewhere on the form. This means that the
+    // $form_state['values'] array won't be complete. We could make it complete
+    // by adding each required part of the form to the #limit_validation_errors
+    // property individually as the form is being built, but this is difficult to
+    // do for a highly dynamic and extensible form. This method is much simpler.
+    if (!empty($form_state['input'])) {
+      $key_exists = NULL;
+      $submitted = drupal_array_get_nested_value($form_state['input'], $parents, $key_exists);
+      // Check that the user-submitted value is one of the allowed options before
+      // returning it. This is not a substitute for actual form validation;
+      // rather it is necessary because, for example, the same select element
+      // might have #options A, B, and C under one set of conditions but #options
+      // D, E, F under a different set of conditions. So the form submission
+      // might have occurred with option A selected, but when the form is rebuilt
+      // option A is no longer one of the choices. In that case, we don't want to
+      // use the value that was submitted anymore but rather fall back to the
+      // default value.
+      if ($key_exists && in_array($submitted, array_keys($element['#options']))) {
+        return $submitted;
+      }
+    }
+
+    // Fall back on returning the default value if nothing was returned above.
+    return $default_value;
   }
 
   /**
@@ -443,7 +522,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // if it's available (since that's the most common use case).
       $block_with_linked_titles_available = ($type == 'block' && isset($options['titles_linked']));
       $default_value = $block_with_linked_titles_available ? 'titles_linked' : key($options);
-      $style_form['row_plugin']['#default_value'] = views_ui_get_selected($form_state, array($type, 'style', 'row_plugin'), $default_value, $style_form['row_plugin']);
+      $style_form['row_plugin']['#default_value'] = static::getSelected($form_state, array($type, 'style', 'row_plugin'), $default_value, $style_form['row_plugin']);
       // Changing this dropdown updates the individual row options via AJAX.
       views_ui_add_ajax_trigger($style_form, 'row_plugin', array('displays', $type, 'options', 'style', 'row_options'));
 
@@ -493,7 +572,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         '#title' => t('of type'),
         '#options' => $options,
       );
-      $selected_bundle = views_ui_get_selected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
+      $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
       $form['displays']['show']['type']['#default_value'] = $selected_bundle;
       // Changing this dropdown updates the entire content of $form['displays']
       // via AJAX, since each bundle might have entirely different fields
@@ -1066,7 +1145,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   public function validateView(array $form, array &$form_state) {
     $view = $this->instantiate_view($form, $form_state);
-    $errors = $view->validate();
+    $errors = $view->get('executable')->validate();
     if (!is_array($errors) || empty($errors)) {
       $this->set_validated_view($form, $form_state, $view);
       return array();

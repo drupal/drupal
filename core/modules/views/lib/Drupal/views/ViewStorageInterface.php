@@ -12,7 +12,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 /**
  * Defines an interface for View storage classes.
  */
-interface ViewStorageInterface extends ConfigEntityInterface {
+interface ViewStorageInterface extends \IteratorAggregate, ConfigEntityInterface {
 
   /**
    * Sets the configuration entity status to enabled.

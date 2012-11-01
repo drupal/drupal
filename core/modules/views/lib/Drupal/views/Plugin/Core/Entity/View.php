@@ -23,6 +23,11 @@ use Drupal\Core\Annotation\Translation;
  *   module = "views",
  *   controller_class = "Drupal\views\ViewStorageController",
  *   list_controller_class = "Drupal\views_ui\ViewListController",
+ *   form_controller_class = {
+ *     "edit" = "Drupal\views_ui\ViewEditFormController",
+ *     "add" = "Drupal\views_ui\ViewAddFormController",
+ *     "preview" = "Drupal\views_ui\ViewPreviewFormController"
+ *   },
  *   config_prefix = "views.view",
  *   fieldable = FALSE,
  *   entity_keys = {
@@ -39,7 +44,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var string
    */
-  public $base_table = 'node';
+  protected $base_table = 'node';
 
   /**
    * The name of the view.
@@ -53,7 +58,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var string
    */
-  public $description = '';
+  protected $description = '';
 
   /**
    * The "tags" of a view.
@@ -63,7 +68,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var string
    */
-  public $tag = '';
+  protected $tag = '';
 
   /**
    * The human readable name of the view.
@@ -77,14 +82,14 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var int
    */
-  public $core = DRUPAL_CORE_COMPATIBILITY;
+  protected $core = DRUPAL_CORE_COMPATIBILITY;
 
   /**
    * The views API version this view was created by.
    *
    * @var string
    */
-  public $api_version = VIEWS_API_VERSION;
+  protected $api_version = VIEWS_API_VERSION;
 
   /**
    * Stores all display handlers of this view.
@@ -94,14 +99,14 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var array
    */
-  public $display;
+  protected $display;
 
   /**
    * The name of the base field to use.
    *
    * @var string
    */
-  public $base_field = 'nid';
+  protected $base_field = 'nid';
 
   /**
    * Returns whether the view's status is disabled or not.
@@ -111,7 +116,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var bool
    */
-  public $disabled = FALSE;
+  protected $disabled = FALSE;
 
   /**
    * The UUID for this entity.
@@ -132,58 +137,18 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var string
    */
-  public $module = 'views';
+  protected $module = 'views';
 
   /**
-   * Stores the executable version of this view.
-   *
-   * @param Drupal\views\ViewExecutable $executable
-   *   The executable version of this view.
+   * Overrides Drupal\Core\Entity\EntityInterface::get().
    */
-  public function setExecutable(ViewExecutable $executable) {
-    $this->executable = $executable;
-  }
-
-  /**
-   * Retrieves the executable version of this view.
-   *
-   * @param bool $reset
-   *   Get a new Drupal\views\ViewExecutable instance.
-   * @param bool $ui
-   *   If this should return Drupal\views_ui\ViewUI instead.
-   *
-   * @return Drupal\views\ViewExecutable
-   *   The executable version of this view.
-   */
-  public function getExecutable($reset = FALSE, $ui = FALSE) {
-    if (!isset($this->executable) || $reset) {
-     // @todo Remove this approach and use proper dependency injection.
-      if ($ui) {
-        $executable = new ViewUI($this);
-      }
-      else {
-        $executable = new ViewExecutable($this);
-      }
-      $this->setExecutable($executable);
+  public function get($property_name, $langcode = NULL) {
+    // Ensure that an executable View is available.
+    if ($property_name == 'executable' && !isset($this->{$property_name})) {
+      $this->set('executable', new ViewExecutable($this));
     }
-    return $this->executable;
-  }
 
-  /**
-   * Initializes the display.
-   *
-   * @todo Inspect calls to this and attempt to clean up.
-   * @see Drupal\views\ViewExecutable::initDisplay()
-   */
-  public function initDisplay() {
-    $this->getExecutable()->initDisplay();
-  }
-
-  /**
-   * Returns the name of the module implementing this view.
-   */
-  public function getModule() {
-    return $this->module;
+    return parent::get($property_name, $langcode);
   }
 
   /**
@@ -199,7 +164,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    * Overrides Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
-    return $this->name;
+    return $this->get('name');
   }
 
   /**
@@ -231,11 +196,8 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    * When a certain view doesn't have a human readable name return the machine readable name.
    */
   public function getHumanName() {
-    if (!empty($this->human_name)) {
-      $human_name = $this->human_name;
-    }
-    else {
-      $human_name = $this->name;
+    if (!$human_name = $this->get('human_name')) {
+      $human_name = $this->get('name');
     }
     return $human_name;
   }
@@ -344,7 +306,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function &newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
     $id = $this->addDisplay($plugin_id, $title, $id);
-    return $this->getExecutable()->newDisplay($id);
+    return $this->get('executable')->newDisplay($id);
   }
 
   /**

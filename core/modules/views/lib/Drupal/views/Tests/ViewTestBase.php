@@ -409,7 +409,7 @@ abstract class ViewTestBase extends WebTestBase {
     $data = config("views.view.$view_name")->get();
 
     $view = entity_create('view', $data);
-    $view = $view->getExecutable();
+    $view = $view->get('executable');
     $view->setDisplay();
 
     return $view;

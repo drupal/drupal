@@ -163,12 +163,12 @@ class ModuleTest extends ViewTestBase {
     // Test $exclude_view parameter.
     $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', 'archive')), 'View excluded from options based on name');
     $this->assertFalse(array_key_exists('archive:default', views_get_views_as_options(FALSE, 'all', 'archive:default')), 'View display excluded from options based on name');
-    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', $archive->getExecutable())), 'View excluded from options based on object');
+    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', $archive->get('executable'))), 'View excluded from options based on object');
 
     // Test the $opt_group parameter.
     $expected_opt_groups = array();
     foreach ($all_views as $id => $view) {
-      foreach ($view->display as $display_id => $display) {
+      foreach ($view->get('display') as $display_id => $display) {
           $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = t('@view : @display', array('@view' => $view->id(), '@display' => $display['id']));
       }
     }
@@ -205,7 +205,7 @@ class ModuleTest extends ViewTestBase {
   protected function formatViewOptions(array $views = array()) {
     $expected_options = array();
     foreach ($views as $id => $view) {
-      foreach ($view->display as $display_id => $display) {
+      foreach ($view->get('display') as $display_id => $display) {
         $expected_options[$view->id() . ':' . $display['id']] = t('View: @view - Display: @display',
           array('@view' => $view->name, '@display' => $display['id']));
       }

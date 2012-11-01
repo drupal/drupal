@@ -400,7 +400,7 @@ class Page extends PathPluginBase {
         $this->setOption('menu', $form_state['values']['menu']);
         // send ajax form to options page if we use it.
         if ($form_state['values']['menu']['type'] == 'default tab') {
-          $this->view->addFormToStack('display', $this->display['id'], array('tab_options'));
+          $form_state['view']->addFormToStack('display', $this->display['id'], array('tab_options'));
         }
         break;
       case 'tab_options':

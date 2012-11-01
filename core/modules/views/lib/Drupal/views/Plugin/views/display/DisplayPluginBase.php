@@ -2156,7 +2156,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $access = array('type' => $form_state['values']['access']['type']);
             $this->setOption('access', $access);
             if ($plugin->usesOptions()) {
-              $this->view->addFormToStack('display', $this->display['id'], array('access_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], array('access_options'));
             }
           }
         }
@@ -2179,7 +2179,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $cache = array('type' => $form_state['values']['cache']['type']);
             $this->setOption('cache', $cache);
             if ($plugin->usesOptions()) {
-              $this->view->addFormToStack('display', $this->display['id'], array('cache_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], array('cache_options'));
             }
           }
         }
@@ -2240,7 +2240,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              $this->view->addFormToStack('display', $this->display['id'], array('row_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], array('row_options'));
             }
           }
         }
@@ -2256,7 +2256,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $this->setOption($section, $row);
             // send ajax form to options page if we use it.
             if ($plugin->usesOptions()) {
-              $this->view->addFormToStack('display', $this->display['id'], array('style_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], array('style_options'));
             }
           }
         }
@@ -2290,7 +2290,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
             $this->setOption('exposed_form', $exposed_form);
             if ($plugin->usesOptions()) {
-              $this->view->addFormToStack('display', $this->display['id'], array('exposed_form_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], array('exposed_form_options'));
             }
           }
         }
@@ -2317,7 +2317,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->setOption('pager', $pager);
             if ($plugin->usesOptions()) {
-              $this->view->addFormToStack('display', $this->display['id'], array('pager_options'));
+              $form_state['view']->addFormToStack('display', $this->display['id'], array('pager_options'));
             }
           }
         }

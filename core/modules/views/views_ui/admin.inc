@@ -8,7 +8,9 @@
 use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\views_ui\ViewUI;
+use Drupal\views_ui\ViewFormControllerBase;
 use Drupal\views\Analyzer;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\wizard\WizardException;
 
 /**
@@ -26,88 +28,8 @@ function views_ui_preview(ViewUI $view, $display_id) {
  */
 function views_ui_add_page() {
   drupal_set_title(t('Add new view'));
-  $form_state['build_info']['args'] = array();
-  $form_state['build_info']['callback'] = array('Drupal\views_ui\ViewUI', 'buildAddForm');
-  return drupal_build_form('views_ui_add_form', $form_state);
-}
-
-/**
- * Gets the current value of a #select element, from within a form constructor function.
- *
- * This function is intended for use in highly dynamic forms (in particular the
- * add view wizard) which are rebuilt in different ways depending on which
- * triggering element (AJAX or otherwise) was most recently fired. For example,
- * sometimes it is necessary to decide how to build one dynamic form element
- * based on the value of a different dynamic form element that may not have
- * even been present on the form the last time it was submitted. This function
- * takes care of resolving those conflicts and gives you the proper current
- * value of the requested #select element.
- *
- * By necessity, this function sometimes uses non-validated user input from
- * $form_state['input'] in making its determination. Although it performs some
- * minor validation of its own, it is not complete. The intention is that the
- * return value of this function should only be used to help decide how to
- * build the current form the next time it is reloaded, not to be saved as if
- * it had gone through the normal, final form validation process. Do NOT use
- * the results of this function for any other purpose besides deciding how to
- * build the next version of the form.
- *
- * @param $form_state
- *   The  standard associative array containing the current state of the form.
- * @param $parents
- *   An array of parent keys that point to the part of the submitted form
- *   values that are expected to contain the element's value (in the case where
- *   this form element was actually submitted). In a simple case (assuming
- *   #tree is TRUE throughout the form), if the select element is located in
- *   $form['wrapper']['select'], so that the submitted form values would
- *   normally be found in $form_state['values']['wrapper']['select'], you would
- *   pass array('wrapper', 'select') for this parameter.
- * @param $default_value
- *   The default value to return if the #select element does not currently have
- *   a proper value set based on the submitted input.
- * @param $element
- *   An array representing the current version of the #select element within
- *   the form.
- *
- * @return
- *   The current value of the #select element. A common use for this is to feed
- *   it back into $element['#default_value'] so that the form will be rendered
- *   with the correct value selected.
- */
-function views_ui_get_selected($form_state, $parents, $default_value, $element) {
-  // For now, don't trust this to work on anything but a #select element.
-  if (!isset($element['#type']) || $element['#type'] != 'select' || !isset($element['#options'])) {
-    return $default_value;
-  }
-
-  // If there is a user-submitted value for this element that matches one of
-  // the currently available options attached to it, use that. We need to check
-  // $form_state['input'] rather than $form_state['values'] here because the
-  // triggering element often has the #limit_validation_errors property set to
-  // prevent unwanted errors elsewhere on the form. This means that the
-  // $form_state['values'] array won't be complete. We could make it complete
-  // by adding each required part of the form to the #limit_validation_errors
-  // property individually as the form is being built, but this is difficult to
-  // do for a highly dynamic and extensible form. This method is much simpler.
-  if (!empty($form_state['input'])) {
-    $key_exists = NULL;
-    $submitted = drupal_array_get_nested_value($form_state['input'], $parents, $key_exists);
-    // Check that the user-submitted value is one of the allowed options before
-    // returning it. This is not a substitute for actual form validation;
-    // rather it is necessary because, for example, the same select element
-    // might have #options A, B, and C under one set of conditions but #options
-    // D, E, F under a different set of conditions. So the form submission
-    // might have occurred with option A selected, but when the form is rebuilt
-    // option A is no longer one of the choices. In that case, we don't want to
-    // use the value that was submitted anymore but rather fall back to the
-    // default value.
-    if ($key_exists && in_array($submitted, array_keys($element['#options']))) {
-      return $submitted;
-    }
-  }
-
-  // Fall back on returning the default value if nothing was returned above.
-  return $default_value;
+  $view = entity_create('view', array());
+  return entity_get_form($view, 'add');
 }
 
 /**
@@ -307,79 +229,6 @@ function views_ui_nojs_submit($form, &$form_state) {
 }
 
 /**
- * Validate the add view form.
- */
-function views_ui_wizard_form_validate($form, &$form_state) {
-  $wizard = views_ui_get_wizard($form_state['values']['show']['wizard_key']);
-  $form_state['wizard'] = $wizard;
-  $form_state['wizard_instance'] = views_get_plugin('wizard', $wizard['id']);
-  $errors = $form_state['wizard_instance']->validateView($form, $form_state);
-  foreach ($errors as $name => $message) {
-    form_set_error($name, $message);
-  }
-}
-
-/**
- * Process the add view form, 'save'.
- */
-function views_ui_add_form_save_submit($form, &$form_state) {
-  try {
-    $view = $form_state['wizard_instance']->create_view($form, $form_state);
-  }
-  catch (WizardException $e) {
-    drupal_set_message($e->getMessage(), 'error');
-    $form_state['redirect'] = 'admin/structure/views';
-  }
-  $view->save();
-
-  $form_state['redirect'] = 'admin/structure/views';
-  if (!empty($view->displayHandlers['page_1'])) {
-    $display = $view->displayHandlers['page_1'];
-    if ($display->hasPath()) {
-      $one_path = $display->getOption('path');
-      if (strpos($one_path, '%') === FALSE) {
-        $form_state['redirect'] = $one_path;  // PATH TO THE VIEW IF IT HAS ONE
-        return;
-      }
-    }
-  }
-  drupal_set_message(t('Your view was saved. You may edit it from the list below.'));
-}
-
-/**
- * Process the add view form, 'continue'.
- */
-function views_ui_add_form_store_edit_submit($form, &$form_state) {
-  try {
-    $view = $form_state['wizard_instance']->create_view($form, $form_state);
-  }
-  catch (WizardException $e) {
-    drupal_set_message($e->getMessage(), 'error');
-    $form_state['redirect'] = 'admin/structure/views';
-  }
-  // Just cache it temporarily to edit it.
-  views_ui_cache_set($view);
-
-  // If there is a destination query, ensure we still redirect the user to the
-  // edit view page, and then redirect the user to the destination.
-  // @todo: Revisit this when http://drupal.org/node/1668866 is in.
-  $destination = array();
-  $query = drupal_container()->get('request')->query;
-  if ($query->has('destination')) {
-    $destination = drupal_get_destination();
-    $query->remove('destination');
-  }
-  $form_state['redirect'] = array('admin/structure/views/view/' . $view->storage->get('name'), array('query' => $destination));
-}
-
-/**
- * Cancel the add view form.
- */
-function views_ui_add_form_cancel_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/views';
-}
-
-/**
  * Form element validation handler for a taxonomy autocomplete field.
  *
  * This allows a taxonomy autocomplete field to be validated outside the
@@ -435,19 +284,19 @@ function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
   $form = array();
 
   if (empty($view->locked)) {
-    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->storage->get('name')));
+    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->get('name')));
     return $form;
   }
 
   $cancel = drupal_container()->get('request')->query->get('cancel');
   if (empty($cancel)) {
-    $cancel = 'admin/structure/views/view/' . $view->storage->get('name') . '/edit';
+    $cancel = 'admin/structure/views/view/' . $view->get('name') . '/edit';
   }
 
   $account = user_load($view->locked->owner);
   $form = confirm_form($form,
                   t('Are you sure you want to break the lock on view %name?',
-                  array('%name' => $view->storage->get('name'))),
+                  array('%name' => $view->get('name'))),
                   $cancel,
                   t('By breaking this lock, any unsaved changes made by !user will be lost!', array('!user' => theme('username', array('account' => $account)))),
                   t('Break lock'),
@@ -460,46 +309,16 @@ function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
  * Page callback for the Edit View page.
  */
 function views_ui_edit_page(ViewUI $view, $display_id = NULL) {
-  $display_id = $view->getDisplayEditPage($display_id);
-  if (!in_array($display_id, array(MENU_ACCESS_DENIED, MENU_NOT_FOUND))) {
-    $build = array();
-    $form_state['build_info']['args'] = array($display_id);
-    $form_state['build_info']['callback'] = array($view, 'buildEditForm');
-    $build['edit_form'] = drupal_build_form('views_ui_edit_form', $form_state);
-    $build['preview'] = views_ui_build_preview($view, $display_id, FALSE);
-  }
-  else {
-    $build = $display_id;
-  }
-
+  $view->displayID = $display_id;
+  $build['edit'] = entity_get_form($view, 'edit');
+  $build['preview'] = entity_get_form($view, 'preview');
   return $build;
 }
 
 function views_ui_build_preview(ViewUI $view, $display_id, $render = TRUE) {
-  $build = array(
-    '#theme_wrappers' => array('container'),
-    '#attributes' => array('id' => 'views-preview-wrapper', 'class' => 'views-admin clearfix'),
-  );
-
-  $form_state['build_info']['args'] = array($display_id);
-  $form_state['build_info']['callback'] = array($view, 'buildPreviewForm');
-  $build['controls'] = drupal_build_form('views_ui_preview_form', $form_state);
-
-  $args = array();
-  if (!empty($form_state['values']['view_args'])) {
-    $args = explode('/', $form_state['values']['view_args']);
-  }
-
-  if ($render) {
-    $clone = $view->cloneView();
-    $build['preview'] = array(
-      '#theme_wrappers' => array('container'),
-      '#attributes' => array('id' => 'views-live-preview'),
-      '#markup' => $clone->renderPreview($display_id, $args),
-    );
-  }
-
-  return $build;
+  $view->displayID = $display_id;
+  $view->renderPreview = $render;
+  return entity_get_form($view, 'preview');
 }
 
 /**
@@ -577,96 +396,6 @@ function views_ui_pre_render_move_argument_options($form) {
 }
 
 /**
- * Validate that a view is complete and whole.
- */
-function views_ui_edit_view_form_validate($form, &$form_state) {
-  // Do not validate cancel or delete or revert.
-  if (empty($form_state['clicked_button']['#value']) || $form_state['clicked_button']['#value'] != t('Save')) {
-    return;
-  }
-
-  $errors = $form_state['view']->validate();
-  if ($errors !== TRUE) {
-    foreach ($errors as $error) {
-      form_set_error('', $error);
-    }
-  }
-}
-
-/**
- * Submit handler for the edit view form.
- */
-function views_ui_edit_view_form_submit($form, &$form_state) {
-  // Go through and remove displayed scheduled for removal.
-  $displays = $form_state['view']->storage->get('display');
-  foreach ($displays as $id => $display) {
-    if (!empty($display['deleted'])) {
-      unset($form_state['view']->displayHandlers[$id]);
-      unset($displays[$id]);
-    }
-  }
-  // Rename display ids if needed.
-  foreach ($form_state['view']->displayHandlers as $id => $display) {
-    if (!empty($display->display['new_id'])) {
-      $new_id = $display->display['new_id'];
-      $form_state['view']->displayHandlers[$new_id] = $form_state['view']->displayHandlers[$id];
-      $form_state['view']->displayHandlers[$new_id]->display['id'] = $new_id;
-
-      $displays[$new_id] = $displays[$id];
-      unset($displays[$id]);
-      // Redirect the user to the renamed display to be sure that the page itself exists and doesn't throw errors.
-      $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->storage->get('name') . '/edit/' . $new_id;
-    }
-  }
-  $form_state['view']->storage->set('display', $displays);
-
-  // Direct the user to the right url, if the path of the display has changed.
-  $query = drupal_container()->get('request')->query;
-  // @todo: Revisit this when http://drupal.org/node/1668866 is in.
-  $destination = $query->get('destination');
-  if (!empty($destination)) {
-    // Find out the first display which has a changed path and redirect to this url.
-    $old_view = views_get_view($form_state['view']->storage->get('name'));
-    $old_view->initDisplay();
-    foreach ($old_view->displayHandlers as $id => $display) {
-      // Only check for displays with a path.
-      $old_path = $display->getOption('path');
-      if (empty($old_path)) {
-        continue;
-      }
-
-      if (($display->getPluginId() == 'page') && ($old_path == $destination) && ($old_path != $form_state['view']->displayHandlers[$id]->getOption('path'))) {
-        $destination = $form_state['view']->displayHandlers[$id]->getOption('path');
-        $query->remove('destination');
-        // @todo For whatever reason drupal_goto is still using $_GET.
-        // @see http://drupal.org/node/1668866
-        unset($_GET['destination']);
-      }
-    }
-    $form_state['redirect'] = $destination;
-  }
-
-  $form_state['view']->save();
-  drupal_set_message(t('The view %name has been saved.', array('%name' => $form_state['view']->storage->getHumanName())));
-
-  // Remove this view from cache so we can edit it properly.
-  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->get('name'));
-}
-
-/**
- * Submit handler for the edit view form.
- */
-function views_ui_edit_view_form_cancel($form, &$form_state) {
-  // Remove this view from cache so edits will be lost.
-  drupal_container()->get('user.tempstore')->get('views')->delete($form_state['view']->storage->get('name'));
-  if (empty($form['view']->vid)) {
-    // I seem to have to drupal_goto here because I can't get fapi to
-    // honor the redirect target. Not sure what I screwed up here.
-    drupal_goto('admin/structure/views');
-  }
-}
-
-/**
  * Add a <select> dropdown for a given section, allowing the user to
  * change whether this info is stored on the default display or on
  * the current display.
@@ -674,8 +403,9 @@ function views_ui_edit_view_form_cancel($form, &$form_state) {
 function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
   $view = &$form_state['view'];
   $display_id = $form_state['display_id'];
-  $displays = $view->displayHandlers;
-  $current_display = $view->display_handler;
+  $executable = $view->get('executable');
+  $displays = $executable->displayHandlers;
+  $current_display = $executable->display_handler;
 
   // Add the "2 of 3" progress indicator.
   // @TODO: Move this to a separate function if it's needed on any forms that
@@ -799,7 +529,7 @@ function views_ui_ajax_forms($key = NULL) {
 function views_ui_build_form_url($form_state) {
   $form = views_ui_ajax_forms($form_state['form_key']);
   $ajax = empty($form_state['ajax']) ? 'nojs' : 'ajax';
-  $name = $form_state['view']->storage->get('name');
+  $name = $form_state['view']->get('name');
   $url = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";
   foreach ($form['args'] as $arg) {
     $url .= '/' . $form_state[$arg];
@@ -880,7 +610,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
     }
     elseif (!$js) {
       // if nothing on the stack, non-js forms just go back to the main view editor.
-      return drupal_goto("admin/structure/views/view/{$view->storage->get('name')}/edit");
+      return drupal_goto("admin/structure/views/view/{$view->get('name')}/edit");
     }
     else {
       $output = array();
@@ -894,7 +624,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
     // If this form was for view-wide changes, there's no need to regenerate
     // the display section of the form.
     if ($display_id !== '') {
-      $view->rebuildCurrentTab($output, $display_id);
+      entity_form_controller('view', 'edit')->rebuildCurrentTab($view, $output, $display_id);
     }
   }
 
@@ -910,7 +640,7 @@ function views_ui_analyze_view_form($form, &$form_state) {
   $form['#title'] = t('View analysis');
   $form['#section'] = 'analyze';
 
-  $analyzer = new Analyzer($view);
+  $analyzer = new Analyzer($view->get('executable'));
   $messages = $analyzer->getMessages();
 
   $form['analysis'] = array(
@@ -929,7 +659,7 @@ function views_ui_analyze_view_form($form, &$form_state) {
  * Submit handler for views_ui_analyze_view_form
  */
 function views_ui_analyze_view_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->storage->get('name') . '/edit';
+  $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->get('name') . '/edit';
 }
 
 /**
@@ -949,20 +679,20 @@ function views_ui_edit_details_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Human-readable name'),
     '#description' => t('A descriptive human-readable name for this view. Spaces are allowed'),
-    '#default_value' => $view->storage->getHumanName(),
+    '#default_value' => $view->getHumanName(),
   );
   $form['details']['tag'] = array(
     '#type' => 'textfield',
     '#title' => t('View tag'),
     '#description' => t('Optionally, enter a comma delimited list of tags for this view to use in filtering and sorting views on the administrative page.'),
-    '#default_value' => $view->storage->get('tag'),
+    '#default_value' => $view->get('tag'),
     '#autocomplete_path' => 'admin/views/ajax/autocomplete/tag',
   );
   $form['details']['description'] = array(
     '#type' => 'textfield',
     '#title' => t('View description'),
     '#description' => t('This description will appear on the Views administrative UI to tell you what the view is about.'),
-    '#default_value' => $view->storage->get('description'),
+    '#default_value' => $view->get('description'),
   );
 
   $view->getStandardButtons($form, $form_state, 'views_ui_edit_details_form');
@@ -978,7 +708,7 @@ function views_ui_edit_details_form_submit($form, &$form_state) {
     // Only save values onto the view if they're actual view properties
     // (as opposed to 'op' or 'form_build_id').
     if (isset($form['details'][$key])) {
-      $view->storage->$key = $value;
+      $view->set($key, $value);
     }
   }
   $form_state['#page_title'] = views_ui_edit_page_title($view);
@@ -993,17 +723,18 @@ function views_ui_edit_display_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $section = $form_state['section'];
 
-  if (!$view->setDisplay($display_id)) {
+  $executable = $view->get('executable');
+  if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $display = &$view->display[$display_id];
+  $display = &$executable->display[$display_id];
 
   // Get form from the handler.
   $form['options'] = array(
     '#theme_wrappers' => array('container'),
     '#attributes' => array('class' => array('scroll')),
   );
-  $view->display_handler->buildOptionsForm($form['options'], $form_state);
+  $executable->display_handler->buildOptionsForm($form['options'], $form_state);
 
   // The handler options form sets $form['#title'], which we need on the entire
   // $form instead of just the ['options'] section.
@@ -1029,7 +760,7 @@ function views_ui_edit_display_form($form, &$form_state) {
  * Validate handler for views_ui_edit_display_form
  */
 function views_ui_edit_display_form_validate($form, &$form_state) {
-  $form_state['view']->displayHandlers[$form_state['display_id']]->validateOptionsForm($form['options'], $form_state);
+  $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']]->validateOptionsForm($form['options'], $form_state);
 
   if (form_get_errors()) {
     $form_state['rerender'] = TRUE;
@@ -1040,7 +771,7 @@ function views_ui_edit_display_form_validate($form, &$form_state) {
  * Submit handler for views_ui_edit_display_form
  */
 function views_ui_edit_display_form_submit($form, &$form_state) {
-  $form_state['view']->displayHandlers[$form_state['display_id']]->submitOptionsForm($form['options'], $form_state);
+  $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']]->submitOptionsForm($form['options'], $form_state);
 
   views_ui_cache_set($form_state['view']);
 }
@@ -1051,7 +782,7 @@ function views_ui_edit_display_form_submit($form, &$form_state) {
  * @TODO: Not currently used. Remove unless we implement an override toggle.
  */
 function views_ui_edit_display_form_override($form, &$form_state) {
-  $form_state['view']->displayHandlers[$form_state['display_id']]->optionsOverride($form['options'], $form_state);
+  $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']]->optionsOverride($form['options'], $form_state);
 
   views_ui_cache_set($form_state['view']);
   $form_state['rerender'] = TRUE;
@@ -1066,11 +797,12 @@ function views_ui_rearrange_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = ViewUI::viewsHandlerTypes();
-  if (!$view->setDisplay($display_id)) {
+  $types = ViewExecutable::viewsHandlerTypes();
+  $executable = $view->get('executable');
+  if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $display = &$view->displayHandlers[$display_id];
+  $display = &$executable->displayHandlers[$display_id];
   $form['#title'] = t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
   $form['#section'] = $display_id . 'rearrange-item';
 
@@ -1091,7 +823,7 @@ function views_ui_rearrange_form($form, &$form_state) {
   $groups = array();
   $grouping = FALSE;
   if ($type == 'filter') {
-    $group_info = $view->display_handler->getOption('filter_groups');
+    $group_info = $executable->display_handler->getOption('filter_groups');
     if (!empty($group_info['groups']) && count($group_info['groups']) > 1) {
       $grouping = TRUE;
       $groups = array(0 => array());
@@ -1149,8 +881,8 @@ function views_ui_rearrange_form($form, &$form_state) {
  * Submit handler for rearranging form.
  */
 function views_ui_rearrange_form_submit($form, &$form_state) {
-  $types = ViewUI::viewsHandlerTypes();
-  $display = &$form_state['view']->displayHandlers[$form_state['display_id']];
+  $types = ViewExecutable::viewsHandlerTypes();
+  $display = &$form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
 
   $old_fields = $display->getOption($types[$form_state['type']]['plural']);
   $new_fields = $order = array();
@@ -1185,11 +917,12 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = ViewUI::viewsHandlerTypes();
-  if (!$view->setDisplay($display_id)) {
+  $types = ViewExecutable::viewsHandlerTypes();
+  $executable = $view->get('executable');
+  if (!$executable->setDisplay($display_id)) {
     views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $display = $view->displayHandlers[$display_id];
+  $display = $executable->displayHandlers[$display_id];
   $form['#title'] = check_plain($display->display['display_title']) . ': ';
   $form['#title'] .= t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
   $form['#section'] = $display_id . 'rearrange-item';
@@ -1358,8 +1091,8 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
  * Submit handler for rearranging form
  */
 function views_ui_rearrange_filter_form_submit($form, &$form_state) {
-  $types = ViewUI::viewsHandlerTypes();
-  $display = &$form_state['view']->displayHandlers[$form_state['display_id']];
+  $types = ViewExecutable::viewsHandlerTypes();
+  $display = &$form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
   $remember_groups = array();
 
   if (!empty($form_state['view']->form_cache)) {
@@ -1476,12 +1209,13 @@ function views_ui_add_item_form($form, &$form_state) {
     ),
   );
 
-  if (!$view->setDisplay($display_id)) {
+  $executable = $view->get('executable');
+  if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $display = &$view->displayHandlers[$display_id];
+  $display = &$executable->displayHandlers[$display_id];
 
-  $types = ViewUI::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   $ltitle = $types[$type]['ltitle'];
   $section = $types[$type]['plural'];
 
@@ -1496,7 +1230,7 @@ function views_ui_add_item_form($form, &$form_state) {
   views_ui_standard_display_dropdown($form, $form_state, $section);
 
   // Figure out all the base tables allowed based upon what the relationships provide.
-  $base_tables = $view->getBaseTables();
+  $base_tables = $executable->getBaseTables();
   $options = views_fetch_fields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state['type']);
 
   if (!empty($options)) {
@@ -1611,7 +1345,7 @@ function views_ui_config_item_form_build_group($form, &$form_state) {
     $form_state['handler']->build_group_options();
   }
 
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], array($form_state['type'], $form_state['id']), TRUE, TRUE);
 
@@ -1630,7 +1364,7 @@ function views_ui_config_item_form_add_group($form, &$form_state) {
   // Add a new row.
   $item['group_info']['group_items'][] = array();
 
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   views_ui_cache_set($form_state['view']);
   $form_state['rerender'] = TRUE;
@@ -1654,29 +1388,30 @@ function views_ui_config_item_form($form, &$form_state) {
       '#attributes' => array('class' => array('scroll')),
     ),
   );
-  if (!$view->setDisplay($display_id)) {
+  $executable = $view->get('executable');
+  if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $item = $view->getItem($display_id, $type, $id);
+  $item = $executable->getItem($display_id, $type, $id);
 
   if ($item) {
-    $handler = $view->display_handler->getHandler($type, $id);
+    $handler = $executable->display_handler->getHandler($type, $id);
     if (empty($handler)) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $types = ViewUI::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
 
       // If this item can come from the default display, show a dropdown
       // that lets the user choose which display the changes should apply to.
-      if ($view->display_handler->defaultableSections($types[$type]['plural'])) {
+      if ($executable->display_handler->defaultableSections($types[$type]['plural'])) {
         $form_state['section'] = $types[$type]['plural'];
         views_ui_standard_display_dropdown($form, $form_state, $form_state['section']);
       }
 
       // A whole bunch of code to figure out what relationships are valid for
       // this item.
-      $relationships = $view->display_handler->getOption('relationships');
+      $relationships = $executable->display_handler->getOption('relationships');
       $relationship_options = array();
 
       foreach ($relationships as $relationship) {
@@ -1694,9 +1429,9 @@ function views_ui_config_item_form($form, &$form_state) {
         // If this relationship is valid for this type, add it to the list.
         $data = views_fetch_data($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
-        $base_fields = views_fetch_fields($base, $form_state['type'], $view->display_handler->useGroupBy());
+        $base_fields = views_fetch_fields($base, $form_state['type'], $executable->display_handler->useGroupBy());
         if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
-          $relationship_handler->init($view, $relationship);
+          $relationship_handler->init($executable, $relationship);
           $relationship_options[$relationship['id']] = $relationship_handler->label();
         }
       }
@@ -1704,7 +1439,7 @@ function views_ui_config_item_form($form, &$form_state) {
       if (!empty($relationship_options)) {
         // Make sure the existing relationship is even valid. If not, force
         // it to none.
-        $base_fields = views_fetch_fields($view->storage->get('base_table'), $form_state['type'], $view->display_handler->useGroupBy());
+        $base_fields = views_fetch_fields($view->get('base_table'), $form_state['type'], $executable->display_handler->useGroupBy());
         if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
           $relationship_options = array_merge(array('none' => t('Do not use a relationship')), $relationship_options);
         }
@@ -1714,7 +1449,7 @@ function views_ui_config_item_form($form, &$form_state) {
           $rel = key($relationship_options);
           // We want this relationship option to get saved even if the user
           // skips submitting the form.
-          $view->setItemOption($display_id, $type, $id, 'relationship', $rel);
+          $executable->setItemOption($display_id, $type, $id, 'relationship', $rel);
           $temp_view = $view->cloneView();
           views_ui_cache_set($temp_view);
         }
@@ -1785,7 +1520,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->submitOptionsForm($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = ViewUI::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -1795,11 +1530,12 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   }
 
   $override = NULL;
-  if ($form_state['view']->display_handler->useGroupBy() && !empty($item['group_type'])) {
-    if (empty($form_state['view']->query)) {
-      $form_state['view']->initQuery();
+  $executable = $form_state['view']->get('executable');
+  if ($executable->display_handler->useGroupBy() && !empty($item['group_type'])) {
+    if (empty($executable->query)) {
+      $executable->initQuery();
     }
-    $aggregate = $form_state['view']->query->get_aggregation_info();
+    $aggregate = $executable->query->get_aggregation_info();
     if (!empty($aggregate[$item['group_type']]['handler'][$type])) {
       $override = $aggregate[$item['group_type']]['handler'][$type];
     }
@@ -1808,7 +1544,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Create a new handler and unpack the options from the form onto it. We
   // can use that for storage.
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
-  $handler->init($form_state['view'], $item);
+  $handler->init($executable, $item);
 
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
@@ -1839,7 +1575,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->submitOptionsForm($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = ViewUI::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -1849,11 +1585,12 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   }
 
   $override = NULL;
-  if ($form_state['view']->display_handler->useGroupBy() && !empty($item['group_type'])) {
-    if (empty($form_state['view']->query)) {
-      $form_state['view']->initQuery();
+  $executable = $form_state['view']->get('executable');
+  if ($executable->display_handler->useGroupBy() && !empty($item['group_type'])) {
+    if (empty($executable->query)) {
+      $executable->initQuery();
     }
-    $aggregate = $form_state['view']->query->get_aggregation_info();
+    $aggregate = $executable->query->get_aggregation_info();
     if (!empty($aggregate[$item['group_type']]['handler'][$type])) {
       $override = $aggregate[$item['group_type']]['handler'][$type];
     }
@@ -1862,7 +1599,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // Create a new handler and unpack the options from the form onto it. We
   // can use that for storage.
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
-  $handler->init($form_state['view'], $item);
+  $handler->init($executable, $item);
 
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
@@ -1873,7 +1610,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
   // Store the item back on the view
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
+  $executable->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
 
   // Ensure any temporary options are removed.
   if (isset($form_state['view']->temporary_options[$type][$form_state['id']])) {
@@ -1900,22 +1637,23 @@ function views_ui_config_item_group_form($type, &$form_state) {
       '#attributes' => array('class' => array('scroll')),
     ),
   );
-  if (!$view->setDisplay($display_id)) {
+  $executable = $view->get('executable');
+  if (!$executable->setDisplay($display_id)) {
     views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
   }
 
-  $view->initQuery();
+  $executable->initQuery();
 
-  $item = $view->getItem($display_id, $type, $id);
+  $item = $executable->getItem($display_id, $type, $id);
 
   if ($item) {
-    $handler = $view->display_handler->getHandler($type, $id);
+    $handler = $executable->display_handler->getHandler($type, $id);
     if (empty($handler)) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
       $handler->init($view, $item);
-      $types = ViewUI::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
@@ -1937,12 +1675,12 @@ function views_ui_config_item_group_form_submit($form, &$form_state) {
   $id = $form_state['id'];
 
   $handler = views_get_handler($item['table'], $item['field'], $type);
-  $handler->init($form_state['view'], $item);
+  $handler->init($form_state['view']->get('executable'), $item);
 
   $handler->submitGroupByForm($form, $form_state);
 
   // Store the item back on the view
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -1956,10 +1694,10 @@ function views_ui_config_item_form_remove($form, &$form_state) {
   list($was_defaulted, $is_defaulted) = $form_state['view']->getOverrideValues($form, $form_state);
   // If the display selection was changed toggle the override value.
   if ($was_defaulted != $is_defaulted) {
-    $display =& $form_state['view']->displayHandlers[$form_state['display_id']];
+    $display =& $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
     $display->optionsOverride($form, $form_state);
   }
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], NULL);
+  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], NULL);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -1978,7 +1716,7 @@ function views_ui_config_item_form_expose($form, &$form_state) {
     $form_state['handler']->defaultExposeOptions();
   }
 
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], array($form_state['type'], $form_state['id']), TRUE, TRUE);
 
@@ -2004,19 +1742,20 @@ function views_ui_config_item_extra_form($form, &$form_state) {
       '#attributes' => array('class' => array('scroll')),
     ),
   );
-  if (!$view->setDisplay($display_id)) {
+  $executable = $view->get('executable');
+  if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $item = $view->getItem($display_id, $type, $id);
+  $item = $executable->getItem($display_id, $type, $id);
 
   if ($item) {
-    $handler = $view->display_handler->getHandler($type, $id);
+    $handler = $executable->display_handler->getHandler($type, $id);
     if (empty($handler)) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
       $handler->init($view, $item);
-      $types = ViewUI::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
@@ -2053,7 +1792,7 @@ function views_ui_config_item_extra_form_submit($form, &$form_state) {
   }
 
   // Store the item back on the view
-  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -2064,7 +1803,7 @@ function views_ui_config_item_extra_form_submit($form, &$form_state) {
  */
 function views_ui_admin_settings_basic($form, &$form_state) {
   $form = array();
-  $form['#attached']['css'] = ViewUI::getAdminCSS();
+  $form['#attached']['css'] = ViewFormControllerBase::getAdminCSS();
 
   $config = config('views.settings');
 
@@ -2204,7 +1943,7 @@ function views_ui_admin_settings_basic_submit(&$form, &$form_state) {
  */
 function views_ui_admin_settings_advanced() {
   $form = array();
-  $form['#attached']['css'] = ViewUI::getAdminCSS();
+  $form['#attached']['css'] = ViewFormControllerBase::getAdminCSS();
 
   $config = config('views.settings');
 
@@ -2361,8 +2100,9 @@ function views_ui_autocomplete_tag($string = '') {
   // get matches from default views:
   $views = views_get_all_views();
   foreach ($views as $view) {
-    if (!empty($view->tag) && strpos($view->tag, $string) === 0) {
-      $matches[$view->tag] = $view->tag;
+    $tag = $view->get('tag');
+    if ($tag && strpos($tag, $string) === 0) {
+      $matches[$tag] = $tag;
       if (count($matches) >= 10) {
         break;
       }
@@ -2582,20 +2322,20 @@ function views_ui_field_list() {
   // Fetch all fieldapi fields which are used in views
   // Therefore search in all views, displays and handler-types.
   $fields = array();
-  $handler_types = ViewUI::viewsHandlerTypes();
+  $handler_types = ViewExecutable::viewsHandlerTypes();
   foreach ($views as $view) {
-    $view = $view->getExecutable();
-    $view->initDisplay();
-    foreach ($view->displayHandlers as $display_id => $display) {
-      if ($view->setDisplay($display_id)) {
+    $executable = $view->get('executable');
+    $executable->initDisplay();
+    foreach ($executable->displayHandlers as $display_id => $display) {
+      if ($executable->setDisplay($display_id)) {
         foreach ($handler_types as $type => $info) {
-          foreach ($view->getItems($type, $display_id) as $item) {
+          foreach ($executable->getItems($type, $display_id) as $item) {
             $data = views_fetch_data($item['table']);
             if (isset($data[$item['field']]) && isset($data[$item['field']][$type])
               && $data = $data[$item['field']][$type]) {
               // The final check that we have a fieldapi field now.
               if (isset($data['field_name'])) {
-                $fields[$data['field_name']][$view->storage->get('name')] = $view->storage->get('name');
+                $fields[$data['field_name']][$view->get('name')] = $view->get('name');
               }
             }
           }

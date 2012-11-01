@@ -874,39 +874,6 @@ Drupal.behaviors.viewsFilterConfigSelectAll.attach = function(context) {
 };
 
 /**
- * Ensure the desired default button is used when a form is implicitly submitted via an ENTER press on textfields, radios, and checkboxes.
- *
- * @see http://www.w3.org/TR/html5/association-of-controls-and-forms.html#implicit-submission
- */
-Drupal.behaviors.viewsImplicitFormSubmission = {};
-Drupal.behaviors.viewsImplicitFormSubmission.attach = function (context, settings) {
-
-  "use strict";
-
-  var $ = jQuery;
-  $(':text, :password, :radio, :checkbox', context).once('viewsImplicitFormSubmission', function() {
-    $(this).keypress(function(event) {
-      if (event.which === 13) {
-        var formId = this.form.id;
-        if (formId && settings.viewsImplicitFormSubmission && settings.viewsImplicitFormSubmission[formId] && settings.viewsImplicitFormSubmission[formId].defaultButton) {
-          event.preventDefault();
-          var buttonId = settings.viewsImplicitFormSubmission[formId].defaultButton;
-          var $button = $('#' + buttonId, this.form);
-          if ($button.length === 1 && $button.is(':enabled')) {
-            if (Drupal.ajax && Drupal.ajax[buttonId]) {
-              $button.trigger(Drupal.ajax[buttonId].element_settings.event);
-            }
-            else {
-              $button.click();
-            }
-          }
-        }
-      }
-    });
-  });
-};
-
-/**
  * Remove icon class from elements that are themed as buttons or dropbuttons.
  */
 Drupal.behaviors.viewsRemoveIconClass = {};

@@ -59,7 +59,7 @@ class HandlerAllTest extends HandlerTestBase {
       }
 
       $view = views_new_view();
-      $view->base_table = $base_table;
+      $view->set('base_table', $base_table);
       $view = new ViewExecutable($view);
 
       // @todo The groupwise relationship is currently broken.

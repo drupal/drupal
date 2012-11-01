@@ -151,7 +151,7 @@ class ViewListController extends EntityListController {
    */
   public function render() {
     $list = parent::render();
-    $list['#attached']['css'] = ViewUI::getAdminCSS();
+    $list['#attached']['css'] = ViewFormControllerBase::getAdminCSS();
     $list['#attached']['library'][] = array('system', 'drupal.ajax');
     $list['#attributes']['id'] = 'views-entity-list';
     return $list;

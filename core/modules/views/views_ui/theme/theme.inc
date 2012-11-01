@@ -12,7 +12,7 @@ use Drupal\Core\Template\Attribute;
  */
 function theme_views_ui_container($variables) {
   $element = $variables['element'];
-  return '<div' . new Attribute($element['#attributes']) . '>' . $element['#children'] . '</div>';
+  return '<div' . new Attribute($element['#attributes']) . '>' . drupal_render_children($element) . '</div>';
 }
 
 function template_preprocess_views_ui_display_tab_setting(&$variables) {

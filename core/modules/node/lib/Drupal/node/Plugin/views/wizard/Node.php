@@ -250,7 +250,7 @@ class Node extends WizardPluginBase {
     parent::build_filters($form, $form_state);
     $entity_info = $this->entity_info;
 
-    $selected_bundle = views_ui_get_selected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
+    $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
 
     // Add the "tagged with" filter to the view.
 

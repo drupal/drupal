@@ -21,7 +21,7 @@
       <?php print $quick_links ?>
     </div>
     <?php print t('View %name, displaying items of type <strong>@base</strong>.',
-        array('%name' => $view->storage->get('name'), '@base' => $base_table)); ?>
+        array('%name' => $view->get('name'), '@base' => $base_table)); ?>
   </div>
 
   <?php print $tabs; ?>

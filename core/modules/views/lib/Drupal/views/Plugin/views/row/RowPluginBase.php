@@ -74,11 +74,11 @@ abstract class RowPluginBase extends PluginBase {
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
     if (isset($this->base_table)) {
-      $view = &$form_state['view'];
+      $executable = $form_state['view']->get('executable');
 
       // A whole bunch of code to figure out what relationships are valid for
       // this item.
-      $relationships = $view->display_handler->getOption('relationships');
+      $relationships = $executable->display_handler->getOption('relationships');
       $relationship_options = array();
 
       foreach ($relationships as $relationship) {
@@ -88,7 +88,7 @@ abstract class RowPluginBase extends PluginBase {
         $data = views_fetch_data($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
         if ($base == $this->base_table) {
-          $relationship_handler->init($view, $relationship);
+          $relationship_handler->init($executable, $relationship);
           $relationship_options[$relationship['id']] = $relationship_handler->label();
         }
       }

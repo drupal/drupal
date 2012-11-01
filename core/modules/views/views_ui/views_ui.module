@@ -290,9 +290,9 @@ function views_ui_custom_theme() {
 function views_ui_edit_page_title(ViewUI $view) {
   module_load_include('inc', 'views_ui', 'admin');
   $bases = views_fetch_base_tables();
-  $name = $view->storage->getHumanName();
-  if (isset($bases[$view->storage->get('base_table')])) {
-    $name .= ' (' . $bases[$view->storage->get('base_table')]['title'] . ')';
+  $name = $view->getHumanName();
+  if (isset($bases[$view->get('base_table')])) {
+    $name .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
   }
 
   return $name;
@@ -327,14 +327,14 @@ function views_ui_cache_load($name) {
   else {
     // Keep disabled/enabled status real.
     if ($original_view) {
-      $view->storage->set('disabled', $original_view->storage->get('disabled'));
+      $view->set('disabled', $original_view->get('disabled'));
     }
   }
 
   if (empty($view)) {
     return FALSE;
   }
-  $view->locked = $views_temp_store->getMetadata($view->storage->get('name'));
+  $view->locked = $views_temp_store->getMetadata($view->get('name'));
 
   return $view;
 }
@@ -351,18 +351,19 @@ function views_ui_cache_set(ViewUI $view) {
 
   $view->changed = TRUE; // let any future object know that this view has changed.
 
-  if (isset($view->current_display)) {
+  $executable = $view->get('executable');
+  if (isset($executable->current_display)) {
     // Add the knowledge of the changed display, too.
-    $view->changed_display[$view->current_display] = TRUE;
-    unset($view->current_display);
+    $view->changed_display[$executable->current_display] = TRUE;
+    unset($executable->current_display);
   }
 
   // Unset handlers; we don't want to write these into the cache
-  unset($view->display_handler);
-  unset($view->default_display);
-  $view->query = NULL;
-  $view->displayHandlers = array();
-  drupal_container()->get('user.tempstore')->get('views')->set($view->storage->get('name'), $view);
+  unset($executable->display_handler);
+  unset($executable->default_display);
+  $executable->query = NULL;
+  $executable->displayHandlers = array();
+  drupal_container()->get('user.tempstore')->get('views')->set($view->get('name'), $view);
 }
 
 /**
@@ -399,8 +400,8 @@ function views_ui_preprocess_views_view(&$vars) {
  *   Add a bolded title of this section.
  */
 function views_ui_view_preview_section_handler_links(ViewUI $view, $type, $title = FALSE) {
-  $display = $view->display_handler->display;
-  $handlers = $view->display_handler->getHandlers($type);
+  $display = $view->executable->display_handler->display;
+  $handlers = $view->executable->display_handler->getHandlers($type);
   $links = array();
 
   $types = ViewExecutable::viewsHandlerTypes();
@@ -414,13 +415,13 @@ function views_ui_view_preview_section_handler_links(ViewUI $view, $type, $title
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
-      'href' => "admin/structure/views/nojs/config-item/{$view->storage->get('name')}/{$display['id']}/$type/$id",
+      'href' => "admin/structure/views/nojs/config-item/{$view->get('name')}/{$display['id']}/$type/$id",
       'attributes' => array('class' => array('views-ajax-link')),
     );
   }
   $links[$type . '-add'] = array(
     'title' => t('Add new'),
-    'href' => "admin/structure/views/nojs/add-item/{$view->storage->get('name')}/{$display['id']}/$type",
+    'href' => "admin/structure/views/nojs/add-item/{$view->get('name')}/{$display['id']}/$type",
     'attributes' => array('class' => array('views-ajax-link')),
   );
 
@@ -435,7 +436,7 @@ function views_ui_view_preview_section_display_category_links(ViewUI $view, $typ
   $links = array(
     $type . '-edit' => array(
       'title' => t('Edit @section', array('@section' => $title)),
-      'href' => "admin/structure/views/nojs/display/{$view->storage->get('name')}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/display/{$view->get('name')}/{$display['id']}/$type",
       'attributes' => array('class' => array('views-ajax-link')),
     ),
   );
@@ -447,7 +448,7 @@ function views_ui_view_preview_section_display_category_links(ViewUI $view, $typ
  * Returns all contextual links for the main content part of the view.
  */
 function views_ui_view_preview_section_rows_links(ViewUI $view) {
-  $display = $view->display_handler->display;
+  $display = $view->executable->display_handler->display;
   $links = array();
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'filter', TRUE));
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'field', TRUE));
@@ -536,7 +537,7 @@ function views_ui_get_form_wizard_instance($wizard) {
  */
 function views_ui_views_plugins_display_alter(&$plugins) {
   // Attach contextual links to each display plugin. The links will point to
-  // paths underneath "admin/structure/views/view/{$view->storage->name}" (i.e., paths
+  // paths underneath "admin/structure/views/view/{$view->get('name')}" (i.e., paths
   // for editing and performing other contextual actions on the view).
   foreach ($plugins as &$display) {
     $display['contextual links']['views_ui'] = array(
