@@ -3219,13 +3219,13 @@ function _node_access_write_grants(Node $node, $grants, $realm = NULL, $delete =
  */
 function node_access_needs_rebuild($rebuild = NULL) {
   if (!isset($rebuild)) {
-    return variable_get('node_access_needs_rebuild', FALSE);
+    return state()->get('node.node_access_needs_rebuild') ?: FALSE;
   }
   elseif ($rebuild) {
-    variable_set('node_access_needs_rebuild', TRUE);
+    state()->set('node.node_access_needs_rebuild', TRUE);
   }
   else {
-    variable_del('node_access_needs_rebuild');
+    state()->delete('node.node_access_needs_rebuild');
   }
 }
 

@@ -35,6 +35,10 @@ class StateSystemUpgradePathTest extends UpgradePathTestBase {
 
     $expected_state = array();
 
+    $expected_state['node.node_access_needs_rebuild'] = array(
+      'value' => TRUE,
+      'variable_name' => 'node_access_needs_rebuild',
+    );
     $expected_state['update.last_check'] = array(
       'value' => 1304208000,
       'variable_name' => 'update_last_check',

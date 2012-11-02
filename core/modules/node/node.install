@@ -485,7 +485,7 @@ function node_uninstall() {
   variable_del('node_rank_recent');
 
   // Delete remaining general module variables.
-  variable_del('node_access_needs_rebuild');
+  state()->delete('node.node_access_needs_rebuild');
   variable_del('node_admin_theme');
   variable_del('node_cron_last');
   variable_del('node_recent_block_count');
@@ -717,6 +717,15 @@ function node_update_8008() {
  */
 function node_update_8009() {
   update_variables_to_config('node.settings', array('default_nodes_main' => 'items_per_page'));
+}
+
+/**
+ * Moves node_access_needs_rebuild from variable to state.
+ *
+ * @ingroup config_upgrade
+ */
+function node_update_8009() {
+  update_variables_to_state(array('node_access_needs_rebuild' => 'node.node_access_needs_rebuild'));
 }
 
 /**
