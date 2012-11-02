@@ -43,6 +43,20 @@
  *   modules, intended to be displayed after the main title tag that appears in
  *   the template.
  *
+ * These variables are provided to give context about the parent comment (if
+ * any):
+ * - $comment_parent: Full parent comment object (if any).
+ * - $parent_author: Equivalent to $author for the parent comment.
+ * - $parent_created: Equivalent to $created for the parent comment.
+ * - $parent_changed: Equivalent to $changed for the parent comment.
+ * - $parent_title: Equivalent to $title for the parent comment.
+ * - $parent_permalink: Equivalent to $permalink for the parent comment.
+ * - $parent: A text string of parent comment submission information created
+ *   from $parent_author and $parent_created during
+ *   template_preprocess_comment(). This information is presented to help
+ *   screen readers follow lengthy discussion threads. You can hide this from
+ *   sighted users using the class element-invisible.
+ *
  * These two variables are provided for context:
  * - $comment: Full comment object.
  * - $node: Node entity the comments are attached to.
@@ -71,6 +85,16 @@
       <p class="comment-permalink">
         <?php print $permalink; ?>
       </p>
+      <?php
+        // Indicate the semantic relationship between parent and child comments
+        // for accessibility. The list is difficult to navigate in a screen
+        // reader without this information.
+        if ($parent):
+      ?>
+      <p class="comment-parent element-invisible">
+        <?php print $parent; ?>
+      </p>
+      <?php endif; ?>
     </div>
   </div>
 
