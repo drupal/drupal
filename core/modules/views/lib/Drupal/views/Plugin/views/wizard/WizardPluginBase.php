@@ -217,7 +217,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       '#title' => t('Create a page'),
       '#type' => 'checkbox',
       '#attributes' => array('class' => array('strong')),
-      '#default_value' => TRUE,
+      '#default_value' => FALSE,
       '#id' => 'edit-page-create',
     );
 

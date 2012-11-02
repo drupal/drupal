@@ -30,7 +30,12 @@ class ViewAddFormController extends ViewFormControllerBase {
     $form['#attached']['js'][] = drupal_get_path('module', 'views_ui') . '/js/views-admin.js';
     $form['#attributes']['class'] = array('views-admin');
 
-    $form['human_name'] = array(
+    $form['name'] = array(
+      '#type' => 'fieldset',
+      '#attributes' => array('class' => array('fieldset-no-legend')),
+    );
+
+    $form['name']['human_name'] = array(
       '#type' => 'textfield',
       '#title' => t('View name'),
       '#required' => TRUE,
@@ -38,21 +43,21 @@ class ViewAddFormController extends ViewFormControllerBase {
       '#default_value' => '',
       '#maxlength' => 255,
     );
-    $form['name'] = array(
+    $form['name']['name'] = array(
       '#type' => 'machine_name',
       '#maxlength' => 128,
       '#machine_name' => array(
         'exists' => 'views_get_view',
-        'source' => array('human_name'),
+        'source' => array('name', 'human_name'),
       ),
       '#description' => t('A unique machine-readable name for this View. It must only contain lowercase letters, numbers, and underscores.'),
     );
 
-    $form['description_enable'] = array(
+    $form['name']['description_enable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Description'),
     );
-    $form['description'] = array(
+    $form['name']['description'] = array(
       '#type' => 'textfield',
       '#title' => t('Provide description'),
       '#title_display' => 'invisible',

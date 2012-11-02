@@ -40,6 +40,7 @@ class WizardTest extends WizardTestBase {
     $view['human_name'] = $this->randomName(16);
     $view['name'] = strtolower($this->randomName(16));
     $view['show[wizard_key]'] = 'comment';
+    $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomName(16);
 
     // Just triggering the saving should automatically choose a proper row
