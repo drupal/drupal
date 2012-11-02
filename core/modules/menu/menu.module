@@ -274,11 +274,13 @@ function menu_save($menu) {
     case SAVED_NEW:
       // Make sure the menu is present in the active menus variable so that its
       // items may appear in the menu active trail.
-      // @see menu_set_active_menu_names()
-      $active_menus = variable_get('menu_default_active_menus', array_keys(menu_get_menus()));
+      // See menu_set_active_menu_names().
+      $config = config('system.menu');
+
+      $active_menus = $config->get('active_menus_default') ?: array_keys(menu_get_menus());
       if (!in_array($menu['menu_name'], $active_menus)) {
         $active_menus[] = $menu['menu_name'];
-        variable_set('menu_default_active_menus', $active_menus);
+        $config->set('active_menus_default', $active_menus);
       }
 
       module_invoke_all('menu_insert', $menu);

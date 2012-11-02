@@ -1254,9 +1254,9 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
           }
           $parents = $active_trail;
 
-          $expanded = variable_get('menu_expanded', array());
+          $expanded = state()->get('menu_expanded');
           // Check whether the current menu has any links set to be expanded.
-          if (!$only_active_trail && in_array($menu_name, $expanded)) {
+          if (!$only_active_trail && $expanded && in_array($menu_name, $expanded)) {
             // Collect all the links set to be expanded, and then add all of
             // their children to the list as well.
             do {
@@ -2264,10 +2264,11 @@ function theme_menu_local_tasks(&$variables) {
  *
  * @return
  *   An array of menu machine names, in order of preference. The
- *   'menu_default_active_menus' variable may be used to assert a menu order
- *   different from the order of creation, or to prevent a particular menu from
- *   being used at all in the active trail.
- *   E.g., $conf['menu_default_active_menus'] = array('tools', 'main')
+ *   'system.menu.active_menus_default' config item may be used to assert a menu
+ *   order different from the order of creation, or to prevent a particular menu
+ *   from being used at all in the active trail.
+ *   E.g., $conf['system.menu']['active_menus_default'] = array('tools',
+ *   'main').
  */
 function menu_set_active_menu_names($menu_names = NULL) {
   $active = &drupal_static(__FUNCTION__);
@@ -2276,7 +2277,8 @@ function menu_set_active_menu_names($menu_names = NULL) {
     $active = $menu_names;
   }
   elseif (!isset($active)) {
-    $active = variable_get('menu_default_active_menus', array_keys(menu_list_system_menus()));
+    $config = config('system.menu');
+    $active = $config->get('active_menus_default') ?: array_keys(menu_list_system_menus());
   }
   return $active;
 }
@@ -3275,7 +3277,7 @@ function _menu_clear_page_cache() {
  */
 function _menu_set_expanded_menus() {
   $names = db_query("SELECT menu_name FROM {menu_links} WHERE expanded <> 0 GROUP BY menu_name")->fetchCol();
-  variable_set('menu_expanded', $names);
+  state()->set('menu_expanded', $names);
 }
 
 /**
