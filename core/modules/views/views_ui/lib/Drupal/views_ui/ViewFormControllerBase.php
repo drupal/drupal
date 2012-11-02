@@ -61,32 +61,6 @@ abstract class ViewFormControllerBase extends EntityFormController {
     $list[$module_path . '/css/views-admin.css'] = array();
     $list[$module_path . '/css/views-admin.theme.css'] = array();
 
-    // Add in any theme specific CSS files we have
-    $themes = list_themes();
-    $theme_key = $GLOBALS['theme'];
-    while ($theme_key) {
-      // Try to find the admin css file for non-core themes.
-      if (!in_array($theme_key, array('seven', 'bartik'))) {
-        $theme_path = drupal_get_path('theme', $theme_key);
-        // First search in the css directory, then in the root folder of the theme.
-        if (file_exists($theme_path . "/css/views-admin.$theme_key.css")) {
-          $list[$theme_path . "/css/views-admin.$theme_key.css"] = array(
-            'group' => CSS_THEME,
-          );
-        }
-        elseif (file_exists($theme_path . "/views-admin.$theme_key.css")) {
-          $list[$theme_path . "/views-admin.$theme_key.css"] = array(
-            'group' => CSS_THEME,
-          );
-        }
-      }
-      else {
-        $list[$module_path . "/css/views-admin.$theme_key.css"] = array(
-          'group' => CSS_THEME,
-        );
-      }
-      $theme_key = isset($themes[$theme_key]->base_theme) ? $themes[$theme_key]->base_theme : '';
-    }
     if (module_exists('contextual')) {
       $list[$module_path . '/css/views-admin.contextual.css'] = array();
     }
