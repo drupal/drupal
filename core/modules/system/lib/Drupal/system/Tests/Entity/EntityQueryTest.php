@@ -367,6 +367,37 @@ class EntityQueryTest extends WebTestBase {
     $this->assertResult(range(15, 1));
   }
 
+  /**
+   * Test entity count query.
+   */
+  protected function testCount() {
+    // Attach the existing 'figures' field to a second entity type so that we
+    // can test whether cross entity type fields produce the correct query.
+    $field_name = $this->figures;
+    $bundle = $this->randomName();
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'test_entity_bundle',
+      'bundle' => $bundle,
+    );
+    field_create_instance($instance);
+
+    $entity = entity_create('test_entity_bundle', array(
+      'ftid' => 1,
+      'fttype' => $bundle,
+    ));
+    $entity->enforceIsNew();
+    $entity->setNewRevision();
+    $entity->save();
+    // As the single entity of this type we just saved does not have a value
+    // in the color field, the result should be 0.
+    $count = $this->factory->get('test_entity_bundle')
+      ->exists("$field_name.color")
+      ->count()
+      ->execute();
+     $this->assertFalse($count);
+  }
+
   protected function assertResult() {
     $assert = array();
     $expected = func_get_args();

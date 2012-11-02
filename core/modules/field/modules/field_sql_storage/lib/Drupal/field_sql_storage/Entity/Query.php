@@ -69,6 +69,7 @@ class Query extends QueryBase {
     $entity_tables[$base_table] = drupal_get_schema($base_table);
     $sqlQuery = $this->connection->select($base_table, 'base_table', array('conjunction' => $this->conjunction));
     $sqlQuery->addMetaData('configurable_fields', $configurable_fields);
+    $sqlQuery->addMetaData('entity_type', $entity_type);
     // Determines the key of the column to join on. This is either the entity
     // id key or the revision id key, depending on whether the entity type
     // supports revisions.

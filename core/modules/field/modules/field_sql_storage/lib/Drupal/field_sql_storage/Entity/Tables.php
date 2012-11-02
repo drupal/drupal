@@ -129,7 +129,8 @@ class Tables {
       if ($field['cardinality'] != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
-      $this->fieldTables[$field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = base_table.$entity_id_field", $langcode);
+      $entity_type = $this->sqlQuery->getMetaData('entity_type');
+      $this->fieldTables[$field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = base_table.$entity_id_field AND %alias.entity_type = '$entity_type'", $langcode);
     }
     return $this->fieldTables[$field_name];
   }
