@@ -375,3 +375,7 @@ html.js span.js-only {
 }
 
 /* @end */
+
+.js .views-edit-view .dropbutton-widget {
+  position: static;
+}
