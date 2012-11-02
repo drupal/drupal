@@ -496,6 +496,7 @@ function user_update_8004() {
     'user_mail_status_blocked_notify' => 'notify.status_blocked',
     'user_mail_status_cancelled_notify' => 'notify.status_cancelled',
     'user_email_verification' => 'verify_mail',
+    'user_password_reset_timeout' => 'password_reset_timeout',
   ));
 
   // Convert the user.settings:register numeric value to text value.

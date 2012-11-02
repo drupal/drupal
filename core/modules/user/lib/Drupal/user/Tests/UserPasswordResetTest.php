@@ -41,10 +41,8 @@ class UserPasswordResetTest extends WebTestBase {
    * Attempts login using an expired password reset link.
    */
   function testUserPasswordResetExpired() {
-    // Set password reset timeout variable to 43200 seconds = 12 hours.
-    $timeout = 43200;
-    variable_set('user_password_reset_timeout', $timeout);
-
+    // Set password reset timeout to 43200 seconds = 12 hours.
+    config('user.settings')->set('password_reset_timeout', 43200)->save();
     // Create a user.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
@@ -54,7 +52,8 @@ class UserPasswordResetTest extends WebTestBase {
 
     // To attempt an expired password reset, create a password reset link as if
     // its request time was 60 seconds older than the allowed limit of timeout.
-    $bogus_timestamp = REQUEST_TIME - variable_get('user_password_reset_timeout', 86400) - 60;
+    $timeout = config('user.settings')->get('password_reset_timeout');
+    $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $this->drupalGet("user/reset/$account->uid/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
   }

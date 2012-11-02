@@ -119,9 +119,8 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
     drupal_goto();
   }
   else {
-    // Time out, in seconds, until login URL expires. Defaults to 24 hours =
-    // 86400 seconds.
-    $timeout = variable_get('user_password_reset_timeout', 86400);
+    // Time out, in seconds, until login URL expires.
+    $timeout = config('user.settings')->get('password_reset_timeout');
     $current = REQUEST_TIME;
     $account = user_load($uid);
     // Verify that the user exists and is active.
