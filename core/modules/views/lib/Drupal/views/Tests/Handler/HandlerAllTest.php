@@ -95,7 +95,12 @@ class HandlerAllTest extends HandlerTestBase {
       foreach ($object_types as $type) {
         if (isset($view->{$type})) {
           foreach ($view->{$type} as $handler) {
-            $this->assertTrue($handler instanceof HandlerBase);
+            $this->assertTrue($handler instanceof HandlerBase, format_string(
+              '@type handler of class %class is an instance of HandlerBase',
+              array(
+                '@type' => $type,
+                '%class' => get_class($handler),
+              )));
           }
         }
       }
