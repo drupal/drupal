@@ -65,3 +65,14 @@ function text_field_schema($field) {
     ),
   );
 }
+
+/**
+ * Moves teaser length from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function text_update_8000() {
+  update_variables_to_config('text.settings', array(
+    'teaser_length' => 'default_summary_length',
+  ));
+}

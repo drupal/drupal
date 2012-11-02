@@ -229,9 +229,7 @@ function _text_sanitize($instance, $langcode, $item, $column) {
 function text_summary($text, $format = NULL, $size = NULL) {
 
   if (!isset($size)) {
-    // What used to be called 'teaser' is now called 'summary', but
-    // the variable 'teaser_length' is preserved for backwards compatibility.
-    $size = variable_get('teaser_length', 600);
+    $size = config('text.settings')->get('default_summary_length');
   }
 
   // Find where the delimiter is in the body
