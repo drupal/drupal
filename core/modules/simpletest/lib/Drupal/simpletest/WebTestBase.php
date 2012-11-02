@@ -228,7 +228,6 @@ abstract class WebTestBase extends TestBase {
     $settings += array(
       'body'      => array(LANGUAGE_NOT_SPECIFIED => array(array())),
       'title'     => $this->randomName(8),
-      'comment'   => COMMENT_NODE_OPEN,
       'changed'   => REQUEST_TIME,
       'promote'   => NODE_NOT_PROMOTED,
       'revision'  => 1,
@@ -238,6 +237,13 @@ abstract class WebTestBase extends TestBase {
       'type'      => 'page',
       'langcode'  => LANGUAGE_NOT_SPECIFIED,
     );
+
+    // Add in comment settings for nodes.
+    if (module_exists('comment')) {
+      $settings += array(
+        'comment' => COMMENT_NODE_OPEN,
+      );
+    }
 
     // Use the original node's created time for existing nodes.
     if (isset($settings['created']) && !isset($settings['date'])) {
