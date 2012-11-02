@@ -669,9 +669,9 @@ function views_block_info() {
   }
 
   // Only save hashes if they have changed.
-  $old_hashes = variable_get('views_block_hashes', array());
+  $old_hashes = state()->get('views_block_hashes');
   if ($hashes != $old_hashes) {
-    variable_set('views_block_hashes', $hashes);
+    state()->set('views_block_hashes', $hashes);
   }
 
   views_cache_set('views_block_items', $items, TRUE);
@@ -686,7 +686,7 @@ function views_block_view($delta) {
   $start = microtime(TRUE);
   // if this is 32, this should be an md5 hash.
   if (strlen($delta) == 32) {
-    $hashes = variable_get('views_block_hashes', array());
+    $hashes = state()->get('views_block_hashes');
     if (!empty($hashes[$delta])) {
       $delta = $hashes[$delta];
     }
