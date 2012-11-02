@@ -57,6 +57,13 @@ function views_ui_menu() {
     'title' => 'Disable a view',
   ) + $ajax_base;
 
+  $items['admin/structure/views/view/%views_ui/delete'] = array(
+    'title' => 'Delete a view',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_confirm_delete', 4),
+    'type' => MENU_CALLBACK,
+  ) + $base;
+
   $items['admin/structure/views/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
@@ -750,6 +757,33 @@ function views_ui_ajax_callback(ViewExecutable $view, $op) {
     $entity_info = entity_get_info('view');
     drupal_goto('admin/structure/views');
   }
+}
+
+/**
+ * Form constructor for the View deletion form.
+ *
+ * @param \Drupal\views\ViewExectuable $view
+ *   The View being deleted.
+ *
+ * @see views_ui_confirm_delete_submit()
+ */
+function views_ui_confirm_delete($form, &$form_state, ViewExecutable $view) {
+  $form['view'] = array('#type' => 'value', '#value' => $view);
+  return confirm_form($form,
+    t('Are you sure you want to delete the %name view?', array('%name' => $view->storage->getHumanName())),
+    'admin/structure/views',
+    t('This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Form submission handler for views_ui_confirm_delete().
+ */
+function views_ui_confirm_delete_submit($form, &$form_state) {
+  $form_state['values']['view']->storage->delete();
+  $form_state['redirect'] = 'admin/structure/views';
 }
 
 /**

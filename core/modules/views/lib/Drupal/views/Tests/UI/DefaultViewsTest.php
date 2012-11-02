@@ -87,6 +87,15 @@ class DefaultViewsTest extends UITestBase {
     $this->clickViewsOperationLink(t('Enable'), '/frontpage/');
     $this->assertUrl('admin/structure/views');
     $this->assertLinkByHref($edit_href);
+
+    // Test deleting a view.
+    $this->drupalGet('admin/structure/views');
+    $this->clickViewsOperationLink(t('Delete'), '/frontpage/');
+    // Submit the confirmation form.
+    $this->drupalPost(NULL, array(), t('Delete'));
+    // Ensure the view is no longer listed.
+    $this->assertUrl('admin/structure/views');
+    $this->assertNoLinkByHref($edit_href);
   }
 
   /**
