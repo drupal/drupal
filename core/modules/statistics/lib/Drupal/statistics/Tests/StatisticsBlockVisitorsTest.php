@@ -50,7 +50,7 @@ class StatisticsBlockVisitorsTest extends StatisticsTestBase {
 
     // Unblock the IP address.
     $this->clickLink('unban IP address');
-    $this->assertRaw(t('Are you sure you want to delete %ip?', array('%ip' => $test_ip_address)), 'IP address deletion confirmation found.');
+    $this->assertRaw(t('Are you sure you want to unblock %ip?', array('%ip' => $test_ip_address)), 'IP address deletion confirmation found.');
     $edit = array();
     $this->drupalPost('admin/config/people/ban/delete/1', NULL, t('Delete'));
     $this->assertRaw(t('The IP address %ip was deleted.', array('%ip' => $test_ip_address)), 'IP address deleted.');

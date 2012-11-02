@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Enables banning of IP addresses.
+ * Allows to ban individual IP addresses.
  */
 
 /**
@@ -13,7 +13,7 @@ function ban_help($path, $arg) {
     case 'admin/help#ban':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from given IP addresses.') . '</p>';
+      $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from individual IP addresses.') . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Banning IP addresses') . '</dt>';
@@ -57,61 +57,6 @@ function ban_menu() {
     'file' => 'ban.admin.inc',
   );
   return $items;
-}
-
-/**
- * Implements hook_boot().
- */
-function ban_boot() {
-  ban_block_denied(ip_address());
-}
-
-/**
- * Returns whether an IP address is blocked.
- *
- * Blocked IP addresses are stored in the database by default. However, for
- * performance reasons we allow an override in variables.
- *
- * @param string $ip
- *   The IP address to check.
- *
- * @return bool
- *   TRUE if access is denied, FALSE if access is allowed.
- */
-function ban_is_denied($ip) {
-  $denied = FALSE;
-  // Because this function is called on every page request, we first check
-  // for an array of IP addresses in settings.php before querying the
-  // database.
-  $blocked_ips = variable_get('ban_ips');
-  if (isset($blocked_ips) && is_array($blocked_ips)) {
-    $denied = in_array($ip, $blocked_ips);
-  }
-  // If $conf['page_cache_without_database'] = TRUE; is set in settings.php,
-  // then the database is not available yet, so IPs recorded in the database
-  // won't be denied. However, the user asked explicitly not to use the
-  // database, and in this case it's also quite likely that the user relies
-  // on higher performance solutions like a firewall.
-  elseif (class_exists('Drupal\Core\Database\Database', FALSE) && function_exists('db_query')) {
-    $denied = (bool) db_query("SELECT 1 FROM {ban_ip} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
-  }
-  return $denied;
-}
-
-/**
- * Prints a message and exits if access from a given IP address is denied.
- *
- * @param string $ip
- *   The IP address to check.
- */
-function ban_block_denied($ip) {
-  // Check whether the given IP address has been blocked.
-  if (ban_is_denied($ip)) {
-    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
-    // t() is not yet available.
-    print 'Sorry, ' . check_plain($ip) . ' has been banned.';
-    exit();
-  }
 }
 
 /**

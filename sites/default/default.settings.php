@@ -476,25 +476,6 @@ ini_set('session.cookie_lifetime', 2000000);
 # );
 
 /**
- * IP blocking (Ban module).
- *
- * To bypass database queries for denied IP addresses, use this setting.
- * Ban module queries the {ban_ip} table by default on every page request
- * for both authenticated and anonymous users. This allows the system to
- * block IP addresses from within the administrative interface and before any
- * modules are loaded. However on high traffic websites you may want to avoid
- * this query, allowing you to bypass database access altogether for anonymous
- * users under certain caching configurations.
- *
- * If using this setting, you will need to add back any IP addresses which
- * you may have blocked via the administrative interface. Each element of this
- * array represents a blocked IP address.
- *
- * Remove the leading hash signs to enable.
- */
-# $conf['ban_ips'][] = 'a.b.c.d';
-
-/**
  * Fast 404 pages:
  *
  * Drupal can generate fully themed 404 pages. However, some of these responses
