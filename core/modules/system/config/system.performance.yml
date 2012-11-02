@@ -2,7 +2,6 @@ cache:
   page:
     enabled: '0'
     max_age: '0'
-maximum_replication_lag: '300'
 preprocess:
   css: '0'
   js: '0'
