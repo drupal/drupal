@@ -6,11 +6,14 @@
  */
 
 /**
- * Page callback; Displays banned IP addresses.
+ * Page callback: Displays banned IP addresses.
  *
  * @param string $default_ip
- *   (optional) IP address to be passed on to drupal_get_form() for
- *   use as the default value of the IP address form field.
+ *   (optional) IP address to be passed on to drupal_get_form() for use as the
+ *   default value of the IP address form field.
+ *
+ * @return array
+ *   A render array.
  */
 function ban_admin_page($default_ip = '') {
   $rows = array();
@@ -53,7 +56,6 @@ function ban_admin_page($default_ip = '') {
  *
  * @see ban_ip_form_validate()
  * @see ban_ip_form_submit()
- *
  * @ingroup forms
  */
 function ban_ip_form($form, &$form_state, $default_ip) {
@@ -119,7 +121,7 @@ function ban_ip_delete_form($form, &$form_state, array $ban_ip) {
     '#value' => $ban_ip,
   );
   return confirm_form($form,
-    t('Are you sure you want to delete %ip?', array('%ip' => $ban_ip['ip'])),
+    t('Are you sure you want to unblock %ip?', array('%ip' => $ban_ip['ip'])),
     'admin/config/people/ban',
     NULL,
     t('Delete')
