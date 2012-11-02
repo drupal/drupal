@@ -44,7 +44,7 @@ class InstallStorage extends FileStorage {
     $path = FALSE;
     foreach (array('profile', 'module', 'theme') as $type) {
       if ($path = drupal_get_path($type, $owner)) {
-        $file = $path . '/config/' . $name . '.' . self::getFileExtension();
+        $file = $path . '/config/' . $name . '.' . static::getFileExtension();
         if (file_exists($file)) {
           return $file;
         }

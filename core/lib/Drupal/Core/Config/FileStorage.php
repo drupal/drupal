@@ -53,7 +53,7 @@ class FileStorage implements StorageInterface {
    *   The path to the configuration file.
    */
   public function getFilePath($name) {
-    return $this->directory . '/' . $name . '.' . self::getFileExtension();
+    return $this->directory . '/' . $name . '.' . static::getFileExtension();
   }
 
   /**
@@ -189,7 +189,7 @@ class FileStorage implements StorageInterface {
     if (!file_exists($this->directory)) {
       throw new StorageException($this->directory . '/ not found.');
     }
-    $extension = '.' . self::getFileExtension();
+    $extension = '.' . static::getFileExtension();
     $files = glob($this->directory . '/' . $prefix . '*' . $extension);
     $clean_name = function ($value) use ($extension) {
       return basename($value, $extension);
