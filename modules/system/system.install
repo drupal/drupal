@@ -1688,6 +1688,12 @@ function system_update_dependencies() {
     'block' => 7002,
   );
 
+  // system_update_7061() queries the {node_revision} table, so it must run
+  // after node_update_7001(), which renames the {node_revisions} table.
+  $dependencies['system'][7061] = array(
+    'node' => 7001,
+  );
+
   // system_update_7067() migrates role permissions and therefore must run
   // after the {role} and {role_permission} tables are properly set up, which
   // happens in user_update_7007().
