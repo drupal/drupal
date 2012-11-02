@@ -19,7 +19,9 @@ function node_access_test_node_grants($account, $op) {
   if ($op == 'view' && user_access('node test view', $account)) {
     $grants['node_access_test'] = array(8888, 8889);
   }
-  if ($op == 'view' && $account->uid == variable_get('node_test_node_access_all_uid', 0)) {
+
+  $no_access_uid = state()->get('node_access_test.no_access_uid') ?: 0;
+  if ($op == 'view' && $account->uid == $no_access_uid) {
     $grants['node_access_all'] = array(0);
   }
   return $grants;

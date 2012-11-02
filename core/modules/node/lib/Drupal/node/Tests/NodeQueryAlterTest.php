@@ -196,7 +196,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     // $account instead of the global $user, we will log in as
     // noAccessUser2.
     $this->drupalLogin($this->noAccessUser2);
-    variable_set('node_test_node_access_all_uid', $this->noAccessUser->uid);
+    state()->set('node_access_test.no_access_uid', $this->noAccessUser->uid);
     drupal_static_reset('node_access_view_all_nodes');
     try {
       $query = db_select('node', 'mytab')
@@ -211,6 +211,6 @@ class NodeQueryAlterTest extends NodeTestBase {
     catch (Exception $e) {
       $this->fail(t('Altered query is malformed'));
     }
-    variable_del('node_test_node_access_all_uid');
+    state()->delete('node_access_test.no_access_uid');
   }
 }
