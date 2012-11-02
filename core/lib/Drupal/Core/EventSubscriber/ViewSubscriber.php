@@ -91,7 +91,7 @@ class ViewSubscriber implements EventSubscriberInterface {
     $page_callback_result = $event->getControllerResult();
 
     $response = new JsonResponse();
-    $response->setContent($page_callback_result);
+    $response->setData($page_callback_result);
 
     return $response;
   }
