@@ -1184,12 +1184,12 @@ class ViewExecutable {
 
     // Check for already-cached results.
     if (!empty($this->live_preview)) {
-      $cache = FALSE;
+      $cache = $this->display_handler->getPlugin('cache', 'none');
     }
     else {
       $cache = $this->display_handler->getPlugin('cache');
     }
-    if ($cache && $cache->cache_get('results')) {
+    if ($cache->cache_get('results')) {
       if ($this->pager->use_pager()) {
         $this->pager->total_items = $this->total_rows;
         $this->pager->update_page_info();
@@ -1201,9 +1201,7 @@ class ViewExecutable {
       // views_plugin_query::execute().
       $this->result = array_values($this->result);
       $this->_postExecute();
-      if ($cache) {
-        $cache->cache_set('results');
-      }
+      $cache->cache_set('results');
     }
 
     // Let modules modify the view just after executing it.

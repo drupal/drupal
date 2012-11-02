@@ -29,10 +29,22 @@ class None extends CachePluginBase {
     return t('None');
   }
 
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\cache\CachePluginBase::cache_get().
+   *
+   * Replace the cache get logic so it does not return a cache item at all.
+   */
   function cache_get($type) {
     return FALSE;
   }
 
-  function cache_set($type) { }
+  /**
+   * Overrides \Drupal\views\Plugin\views\cache\CachePluginBase::cache_set().
+   *
+   * Replace the cache set logic so it does set a cache item at all.
+   */
+  function cache_set($type) {
+  }
 
 }
