@@ -23,7 +23,7 @@ function views_test_data_permission() {
  * Implements hook_views_data().
  */
 function views_test_data_views_data() {
-  return variable_get('views_test_data_views_data', array());
+  return state()->get('views_test_data_views_data');
 }
 
 function views_test_data_test_static_access_callback($access) {
@@ -31,7 +31,7 @@ function views_test_data_test_static_access_callback($access) {
 }
 
 function views_test_data_test_dynamic_access_callback($access, $argument1, $argument2) {
-  return $access && $argument1 == variable_get('test_dynamic_access_argument1', NULL) && $argument2 == variable_get('test_dynamic_access_argument2', NULL);
+  return $access && $argument1 == state()->get('test_dynamic_access_argument1') && $argument2 == state()->get('test_dynamic_access_argument2');
 }
 
 /**+

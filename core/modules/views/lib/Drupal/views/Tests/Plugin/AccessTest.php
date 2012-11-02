@@ -91,8 +91,8 @@ class AccessTest extends PluginTestBase {
     $view = $this->createViewFromConfig('test_access_dynamic');
     $argument1 = $this->randomName();
     $argument2 = $this->randomName();
-    variable_set('test_dynamic_access_argument1', $argument1);
-    variable_set('test_dynamic_access_argument2', $argument2);
+    state()->set('test_dynamic_access_argument1', $argument1);
+    state()->set('test_dynamic_access_argument2', $argument2);
 
     $access_plugin = $view->display_handler->getPlugin('access');
 

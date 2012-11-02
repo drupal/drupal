@@ -9,7 +9,7 @@
  * Implements hook_schema().
  */
 function views_test_data_schema() {
-  return variable_get('views_test_data_schema', array());
+  return state()->get('views_test_data_schema');
 }
 
 /**

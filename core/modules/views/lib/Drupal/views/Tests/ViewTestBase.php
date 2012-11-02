@@ -6,7 +6,6 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\ViewExecutable;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,8 +41,8 @@ abstract class ViewTestBase extends WebTestBase {
    */
   protected function enableViewsTestModule() {
     // Define the schema and views data variable before enabling the test module.
-    variable_set('views_test_data_schema', $this->schemaDefinition());
-    variable_set('views_test_data_views_data', $this->viewsData());
+    state()->set('views_test_data_schema', $this->schemaDefinition());
+    state()->set('views_test_data_views_data', $this->viewsData());
 
     module_enable(array('views_test_data'));
     $this->resetAll();
