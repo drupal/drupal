@@ -128,7 +128,7 @@ class DisplayTest extends UITestBase {
    */
   public function testDefaultDisplay() {
     $this->drupalGet('admin/structure/views/view/test_display');
-    $elements = $this->xpath('//*[@id="views-page-display-title"]');
+    $elements = $this->xpath('//*[@id="views-page-1-display-title"]');
     $this->assertEqual(count($elements), 1, 'The page display is loaded as the default display.');
   }
 
@@ -179,6 +179,34 @@ class DisplayTest extends UITestBase {
     // Test the expected views_ui array exists on each definition.
     foreach ($definitions as $definition) {
       $this->assertIdentical($definition['contextual links']['views_ui'], $expected, 'Expected views_ui array found in plugin definition.');
+    }
+  }
+
+  /**
+   * Tests display areas.
+   */
+  public function testDisplayAreas() {
+    // Show the advanced column.
+    config('views.settings')->set('ui.show.advanced_column', TRUE)->save();
+
+    // Add a new data display to the view.
+    $view = views_get_view('test_display');
+    $view->storage->addDisplay('display_no_area_test');
+    $view->save();
+
+    $this->drupalGet('admin/structure/views/view/test_display/edit/display_no_area_test_1');
+
+    // Create a mapping of area type => class.
+    $areas = array(
+      'header' => 'header',
+      'footer' => 'footer',
+      'empty' => 'no-results-behavior',
+    );
+
+    // Assert that the expected text is found in each area category.
+    foreach ($areas as $type => $class) {
+      $element = $this->xpath('//div[contains(@class, :class)]/div', array(':class' => $class));
+      $this->assertEqual((string) $element[0], "The selected display type does not utilize $type plugins");
     }
   }
 

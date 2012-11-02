@@ -75,12 +75,12 @@ display:
     display_title: Master
     id: default
     position: '0'
-  page:
+  page_1:
     display_options:
       path: test-display
     display_plugin: page
     display_title: Page
-    id: page
+    id: page_1
     position: '1'
 human_name: ''
 name: test_display

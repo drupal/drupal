@@ -613,7 +613,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    */
   public function renderDisplayTop(ViewUI $view) {
     $display_id = $view->displayID;
-    $element['#theme'] = 'views_ui_container';
+    $element['#theme_wrappers'][] = 'views_ui_container';
     $element['#attributes']['class'] = array('views-display-top', 'clearfix');
     $element['#attributes']['id'] = array('views-display-top');
 
@@ -836,7 +836,17 @@ class ViewEditFormController extends ViewFormControllerBase {
           );
           return $build;
         }
-
+      case 'header':
+      case 'footer':
+      case 'empty':
+        if (!$view->get('executable')->displayHandlers[$display['id']]->usesAreas()) {
+          $build[$type][] = array(
+            '#markup' => t('The selected display type does not utilize @type plugins', array('@type' => $type)),
+            '#theme_wrappers' => array('views_ui_container'),
+            '#attributes' => array('class' => array('views-display-setting')),
+          );
+          return $build;
+        }
       default:
         $rearrange_url = "admin/structure/views/nojs/rearrange/{$view->get('name')}/{$display['id']}/$type";
         $rearrange_text = t('Rearrange');

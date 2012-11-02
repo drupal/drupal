@@ -89,6 +89,13 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   protected $usesAttachments = FALSE;
 
+  /**
+   * Whether the display allows area plugins.
+   *
+   * @var bool
+   */
+  protected $usesAreas = TRUE;
+
   public function init(ViewExecutable $view, &$display, $options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
@@ -357,6 +364,16 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function usesAttachments() {
     return $this->usesAttachments;
+  }
+
+  /**
+   * Returns whether the display can use areas.
+   *
+   * @return bool
+   *   TRUE if the display can use areas, or FALSE otherwise.
+   */
+  public function usesAreas() {
+    return $this->usesAreas;
   }
 
   /**
