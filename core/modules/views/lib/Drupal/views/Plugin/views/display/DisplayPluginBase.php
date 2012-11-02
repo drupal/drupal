@@ -2212,7 +2212,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         break;
       case 'query':
-        $plugin = $this->get_plugin('query');
+        $plugin = $this->getPlugin('query');
         if ($plugin) {
           $plugin->submitOptionsForm($form['query']['options'], $form_state);
           $this->setOption('query', $form_state['values'][$section]);

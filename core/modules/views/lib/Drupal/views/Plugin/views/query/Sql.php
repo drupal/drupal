@@ -246,7 +246,6 @@ class Sql extends QueryPluginBase {
       '#default_value' => implode(', ', $this->options['query_tags']),
       '#element_validate' => array('views_element_validate_tags'),
     );
-    $form_state['build_info']['files']['foo'] = drupal_get_path('module', 'views') . '/lib/Drupal/views/Plugin/Query/SqlQuery.php';
   }
 
   /**

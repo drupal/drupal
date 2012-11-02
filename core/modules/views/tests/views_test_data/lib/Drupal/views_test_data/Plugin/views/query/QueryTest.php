@@ -28,6 +28,29 @@ class QueryTest extends QueryPluginBase {
   protected $orderBy = array();
 
   /**
+   * Implements \Drupal\views\Plugin\views\query\QueryPluginBase::defineOptions().
+   */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['test_setting'] = array('default' => '');
+
+    return $options;
+  }
+
+  /**
+   * Implements \Drupal\views\Plugin\views\query\QueryPluginBase::buildOptionsForm().
+   */
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
+
+    $form['test_setting'] = array(
+      '#title' => t('Test setting'),
+      '#type' => 'textfield',
+      '#default_value' => $this->options['test_setting'],
+    );
+  }
+
+  /**
    * Sets the allItems property.
    *
    * @param array $allItems
