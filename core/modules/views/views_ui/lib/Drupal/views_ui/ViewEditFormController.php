@@ -317,9 +317,9 @@ class ViewEditFormController extends ViewFormControllerBase {
     // If the plugin doesn't exist, display an error message instead of an edit
     // page.
     if (empty($display)) {
-      $title = isset($display['display_title']) ? $display['display_title'] : t('Invalid');
+      $title = isset($display->display['display_title']) ? $display->display['display_title'] : t('Invalid');
       // @TODO: Improved UX for the case where a plugin is missing.
-      $build['#markup'] = t("Error: Display @display refers to a plugin named '@plugin', but that plugin is not available.", array('@display' => $display['id'], '@plugin' => $display['display_plugin']));
+      $build['#markup'] = t("Error: Display @display refers to a plugin named '@plugin', but that plugin is not available.", array('@display' => $display->display['id'], '@plugin' => $display->display['display_plugin']));
     }
     // Build the content of the edit page.
     else {
@@ -592,12 +592,13 @@ class ViewEditFormController extends ViewFormControllerBase {
    * Regenerate the current tab for AJAX updates.
    */
   public function rebuildCurrentTab(ViewUI $view, &$output, $display_id) {
+    $view->displayID = $display_id;
     if (!$view->get('executable')->setDisplay('default')) {
       return;
     }
 
     // Regenerate the main display area.
-    $build = static::getDisplayTab($this);
+    $build = $this->getDisplayTab($view);
     static::addMicroweights($build);
     $output[] = ajax_command_html('#views-tab-' . $display_id, drupal_render($build));
 
