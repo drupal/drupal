@@ -724,7 +724,7 @@ function node_update_8009() {
  *
  * @ingroup config_upgrade
  */
-function node_update_8009() {
+function node_update_8010() {
   update_variables_to_state(array('node_access_needs_rebuild' => 'node.node_access_needs_rebuild'));
 }
 
