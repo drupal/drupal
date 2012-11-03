@@ -233,4 +233,10 @@ abstract class QueryBase implements QueryInterface {
     return $this;
   }
 
+  /**
+   * Makes sure that the Condition object is cloned as well.
+   */
+  function __clone() {
+    $this->condition = clone $this->condition;
+  }
 }

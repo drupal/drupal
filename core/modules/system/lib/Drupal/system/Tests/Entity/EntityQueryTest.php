@@ -156,6 +156,20 @@ class EntityQueryTest extends WebTestBase {
     // 15) needs to be set.
     $this->assertResult(1, 3, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15);
 
+    // Test cloning of query conditions.
+    $query = $this->factory->get('test_entity')
+      ->condition("$figures.color", 'red')
+      ->sort('ftid');
+    $cloned_query = clone $query;
+    $cloned_query
+      ->condition("$figures.shape", 'circle');
+    // Bit 0 (1, 3, 5, 7, 9, 11, 13, 15) needs to be set.
+    $this->queryResults = $query->execute();
+    $this->assertResult(1, 3, 5, 7, 9, 11, 13, 15);
+    // No red color has a circle shape.
+    $this->queryResults = $cloned_query->execute();
+    $this->assertResult();
+
     $query = $this->factory->get('test_entity');
     $group = $query->orConditionGroup()
       ->exists($greetings, 'tr')
