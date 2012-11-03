@@ -96,6 +96,7 @@ function module_list($type = 'module_enabled', array $fixed_list = NULL, $reset 
   if (isset($fixed_list)) {
     $module_list = array();
     foreach ($fixed_list as $name => $module) {
+      drupal_classloader_register($name, dirname($module['filename']));
       drupal_get_filename('module', $name, $module['filename']);
       $module_list[$name] = $name;
     }
