@@ -97,32 +97,14 @@ class JavaScriptTest extends WebTestBase {
   }
 
   /**
-   * Tests adding external JavaScript Files with the async attribute.
+   * Tests adding JavaScript files with additional attributes.
    */
-  function testAsyncAttribute() {
+  function testAttributes() {
     $default_query_string = variable_get('css_js_query_string', '0');
 
     drupal_add_library('system', 'drupal');
-    drupal_add_js('http://example.com/script.js', array('async' => TRUE));
-    drupal_add_js('core/misc/collapse.js', array('async' => TRUE));
-    $javascript = drupal_get_js();
-
-    $expected_1 = '<script src="http://example.com/script.js?' . $default_query_string . '" async="async"></script>';
-    $expected_2 = '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" async="async"></script>';
-
-    $this->assertTrue(strpos($javascript, $expected_1) > 0, 'Rendered external JavaScript with correct async attribute.');
-    $this->assertTrue(strpos($javascript, $expected_2) > 0, 'Rendered internal JavaScript with correct async attribute.');
-  }
-
-  /**
-   * Tests adding external JavaScript Files with the defer attribute.
-   */
-  function testDeferAttribute() {
-    $default_query_string = variable_get('css_js_query_string', '0');
-
-    drupal_add_library('system', 'drupal');
-    drupal_add_js('http://example.com/script.js', array('defer' => TRUE));
-    drupal_add_js('core/misc/collapse.js', array('defer' => TRUE));
+    drupal_add_js('http://example.com/script.js', array('attributes' => array('defer' => 'defer')));
+    drupal_add_js('core/misc/collapse.js', array('attributes' => array('defer' => 'defer')));
     $javascript = drupal_get_js();
 
     $expected_1 = '<script src="http://example.com/script.js?' . $default_query_string . '" defer="defer"></script>';
@@ -130,6 +112,27 @@ class JavaScriptTest extends WebTestBase {
 
     $this->assertTrue(strpos($javascript, $expected_1) > 0, 'Rendered external JavaScript with correct defer attribute.');
     $this->assertTrue(strpos($javascript, $expected_2) > 0, 'Rendered internal JavaScript with correct defer attribute.');
+  }
+
+  /**
+   * Tests that attributes are maintained when JS aggregation is enabled.
+   */
+  function testAggregatedAttributes() {
+    // Enable aggregation.
+    config('system.performance')->set('preprocess.js', 1)->save();
+
+    $default_query_string = variable_get('css_js_query_string', '0');
+
+    drupal_add_library('system', 'drupal');
+    drupal_add_js('http://example.com/script.js', array('attributes' => array('defer' => 'defer')));
+    drupal_add_js('core/misc/collapse.js', array('attributes' => array('defer' => 'defer')));
+    $javascript = drupal_get_js();
+
+    $expected_1 = '<script src="http://example.com/script.js?' . $default_query_string . '" defer="defer"></script>';
+    $expected_2 = '<script src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '" defer="defer"></script>';
+
+    $this->assertTrue(strpos($javascript, $expected_1) > 0, 'Rendered external JavaScript with correct defer attribute with aggregation enabled.');
+    $this->assertTrue(strpos($javascript, $expected_2) > 0, 'Rendered internal JavaScript with correct defer attribute with aggregation enabled.');
   }
 
   /**

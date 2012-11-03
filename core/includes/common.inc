@@ -3759,15 +3759,15 @@ function drupal_region_class($region) {
  *       else being the same, JavaScript added by a call to drupal_add_js() that
  *       happened later in the page request gets added to the page after one for
  *       which drupal_add_js() happened earlier in the page request.
- *   - defer: If set to TRUE, the defer attribute is set on the &lt;script&gt;
- *     tag. Defaults to FALSE.
- *   - async: If set to TRUE, the async attribute is set on the &lt;script&gt;
- *     tag. Defaults to FALSE.
  *   - cache: If set to FALSE, the JavaScript file is loaded anew on every page
  *     call; in other words, it is not cached. Used only when 'type' references
  *     a JavaScript file. Defaults to TRUE.
  *   - preprocess: If TRUE and JavaScript aggregation is enabled, the script
  *     file will be aggregated. Defaults to TRUE.
+ *   - attributes: An associative array of attributes for the <script> tag. This
+ *     may be used to add 'defer', 'async', or custom attributes. Note that
+ *     setting any attributes will disable preprocessing as though the
+ *     'preprocess' option was set to FALSE.
  *   - browsers: An array containing information specifying which browsers
  *     should load the JavaScript item. See
  *     drupal_pre_render_conditional_comments() for details.
@@ -3793,8 +3793,8 @@ function drupal_add_js($data = NULL, $options = NULL) {
   }
   $options += drupal_js_defaults($data);
 
-  // Preprocess can only be set if caching is enabled.
-  $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
+  // Preprocess can only be set if caching is enabled and no attributes are set.
+  $options['preprocess'] = $options['cache'] && empty($options['attributes']) ? $options['preprocess'] : FALSE;
 
   // Tweak the weight so that files of the same weight are included in the
   // order of the calls to drupal_add_js().
@@ -3861,9 +3861,8 @@ function drupal_js_defaults($data = NULL) {
     'weight' => 0,
     'scope' => 'header',
     'cache' => TRUE,
-    'defer' => FALSE,
-    'async' => FALSE,
     'preprocess' => TRUE,
+    'attributes' => array(),
     'version' => NULL,
     'data' => $data,
     'browsers' => array(),
@@ -4090,16 +4089,9 @@ function drupal_pre_render_scripts($elements) {
             break;
         }
 
-        // The defer and async attributes must not be specified if the src
-        // attribute is not present.
-        if (!empty($element['#attributes']['src'])) {
-          // Both may be specified for legacy browser fallback purposes.
-          if (!empty($item['async'])) {
-            $element['#attributes']['async'] = 'async';
-          }
-          if (!empty($item['defer'])) {
-            $element['#attributes']['defer'] = 'defer';
-          }
+        // Attributes may only be set if this script is output independently.
+        if (!empty($element['#attributes']['src']) && !empty($item['attributes'])) {
+          $element['#attributes'] += $item['attributes'];
         }
 
         $elements[] = $element;
