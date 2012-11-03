@@ -37,7 +37,7 @@ class LayoutDerivativesTest extends WebTestBase {
 
     $definitions = $manager->getDefinitions();
     $this->assertTrue(is_array($definitions), 'Definitions found.');
-    $this->assertTrue(count($definitions) == 2, 'Two definitions available.');
+    $this->assertTrue(count($definitions) == 4, 'Four definitions available.');
     $this->assertTrue(isset($definitions['static_layout:layout_test__one-col']), 'One column layout found.');
     $this->assertTrue(isset($definitions['static_layout:layout_test_theme__two-col']), 'Two column layout found.');
 

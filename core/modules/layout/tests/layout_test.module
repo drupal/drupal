@@ -9,6 +9,7 @@
  * Implementation of hook_menu().
  */
 function layout_test_menu() {
+  $items = array();
   $items['layout-test'] = array(
     'title' => 'Layout test',
     'page callback' => 'layout_test_page',
