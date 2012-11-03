@@ -194,6 +194,8 @@ a.button {
   zoom: 1;
 }
 .tabs ul.secondary li {
+  border-left: 1px solid #ccc;
+  border-right: none;
   float: right;
 }
 .tabs ul.secondary li:first-child {

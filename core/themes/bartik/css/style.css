@@ -960,16 +960,20 @@ ul.links {
 
 /* --------------- System Tabs  --------------- */
 
-.tabs {
+div.tabs {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin-bottom: 20px;
 }
 .tabs ul.primary {
+  border-collapse: collapse;
+  height: auto;
+  line-height: normal;
   padding: 0 3px;
   margin: 0;
   overflow: hidden;
   border: none;
   background: transparent url(../images/tabs-border.png) repeat-x left bottom;
+  white-space: nowrap;
 }
 .tabs ul.primary li {
   display: block;
@@ -983,6 +987,9 @@ ul.links {
 .tabs ul.primary li a {
   color: #000;
   background-color: #ededed;
+  border-color: #bbb;
+  border-style: solid solid none solid;
+  border-width: 1px;
   height: 1.8em;
   line-height: 1.9;
   display: block;
@@ -996,14 +1003,20 @@ ul.links {
 }
 .tabs ul.primary li.active a {
   background-color: #ffffff;
+  border: 1px solid #bbb;
+  border-bottom: 1px solid #fff;
 }
 .tabs ul.secondary {
   border-bottom: none;
+  margin: 5px;
   padding: 0.5em 0;
 }
 .tabs ul.secondary li {
+  border-right: 1px solid #ccc; /* LTR */
   display: block;
   float: left; /* LTR */
+  margin: 0;
+  padding: 0 1em;
 }
 .tabs ul.secondary li:last-child {
   border-right: none; /* LTR */
@@ -1012,7 +1025,9 @@ ul.links {
   padding-left: 0; /* LTR */
 }
 .tabs ul.secondary li a {
+  display: inline;
   padding: 0.25em 0.5em;
+  text-decoration: none;
 }
 .tabs ul.secondary li a.active {
   background: #f2f2f2;

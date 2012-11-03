@@ -974,9 +974,6 @@ ol.task-list li.done {
   line-height: 1.54em;
   margin: 0;
 }
-#overlay-tabs li {
-  margin: 0 -2px;
-}
 .overlay ul.secondary {
   background: transparent none;
   margin: -1.4em 0 0.3em 0; /* LTR */
