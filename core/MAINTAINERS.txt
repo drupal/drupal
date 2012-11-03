@@ -242,6 +242,9 @@ Path module
 PHP module
 - ?
 
+Picture module
+- Peter Droogmans 'attiks' http://drupal.org/user/105002
+
 Poll module
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 
