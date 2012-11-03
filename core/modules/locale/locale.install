@@ -249,10 +249,6 @@ function locale_schema() {
     ),
     'primary key' => array('name'),
   );
-
-  $schema['cache_locale'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_locale']['description'] = 'Cache table for the locale module to store various data.';
-
   return $schema;
 }
 
@@ -713,10 +709,6 @@ function locale_update_8010() {
  * Add a cache table and locale_project table for the locale module.
  */
 function locale_update_8011() {
-  // Add a 'locale' cache table.
-  $locale_cache_schema = system_schema_cache_8007();
-  $locale_cache_schema['description'] = 'Cache table for the locale module to store various data.';
-  db_create_table('cache_locale', $locale_cache_schema);
 
   // Add locale_project table.
   db_create_table('locale_project', array(
