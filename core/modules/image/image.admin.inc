@@ -697,7 +697,7 @@ function theme_image_style_effects($variables) {
 function theme_image_style_preview($variables) {
   $style = $variables['style'];
 
-  $sample_image = variable_get('image_style_preview_image', drupal_get_path('module', 'image') . '/sample.png');
+  $sample_image = config('image.settings')->get('preview_image');
   $sample_width = 160;
   $sample_height = 160;
 
