@@ -63,7 +63,7 @@ class DisplayOverview extends OverviewBase {
     );
 
     if (empty($instances) && empty($extra_fields)) {
-      drupal_set_message(t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url($admin_path . '/fields'))), 'warning');
+      drupal_set_message(t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url($this->adminPath . '/fields'))), 'warning');
       return $form;
     }
 

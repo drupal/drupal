@@ -179,6 +179,20 @@ class ManageDisplayTest extends FieldUiTestBase {
   }
 
   /**
+   * Tests that a message is shown when there are no fields.
+   */
+  function testNoFieldsDisplayOverview() {
+    // Create a fresh content type without any fields.
+    $this->drupalCreateContentType(array('type' => 'no_fields', 'name' => 'No fields'));
+
+    // Remove the 'body' field.
+    field_delete_instance(field_info_instance('node', 'body', 'no_fields'));
+
+    $this->drupalGet('admin/structure/types/manage/no_fields/display');
+    $this->assertRaw(t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url('admin/structure/types/manage/no_fields/fields'))));
+  }
+
+  /**
    * Asserts that a string is found in the rendered node in a view mode.
    *
    * @param Node $node
