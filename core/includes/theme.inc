@@ -229,6 +229,12 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
       include_once DRUPAL_ROOT . '/' . $theme->owner;
     }
   }
+  // Load twig as secondary always available engine.
+  // @todo Make twig the default engine and remove this. This is required
+  // because (by design) the theme system doesn't allow modules to register more
+  // than one type of extension. We need a temporary backwards compatibility
+  // layer to allow us to perform core-wide .tpl.php to .twig conversion.
+  include_once DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine';
 
   if (isset($registry_callback)) {
     _theme_registry_callback($registry_callback, array($theme, $base_theme, $theme_engine));
@@ -467,6 +473,28 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         // Prepend the current theming path when none is set.
         if (!isset($info['path'])) {
           $result[$hook]['template'] = $path . '/templates/' . $info['template'];
+        }
+        if ($type == 'module') {
+          // Add two render engines for modules.
+          // @todo Remove and make twig the default engine.
+          $render_engines = array(
+            '.twig' => 'twig',
+            '.tpl.php' => 'phptemplate'
+          );
+
+          // Find the best engine for this template.
+          foreach ($render_engines as $extension => $engine) {
+            // Render the output using the template file.
+            $template_file = $result[$hook]['template'] . $extension;
+            if (isset($info['path'])) {
+              $template_file = $info['path'] . '/' . $template_file;
+            }
+            if (file_exists($template_file)) {
+              $result[$hook]['template_file'] = $template_file;
+              $result[$hook]['engine'] = $engine;
+              break;
+            }
+          }
         }
       }
 
@@ -1054,6 +1082,11 @@ function theme($hook, $variables = array()) {
           $extension = $extension_function();
         }
       }
+      elseif (isset($info['engine'])) {
+        if (function_exists($info['engine'] . '_render_template')) {
+          $render_function = $info['engine'] . '_render_template';
+        }
+      }
     }
 
     // In some cases, a template implementation may not have had
@@ -1077,6 +1110,12 @@ function theme($hook, $variables = array()) {
     if (isset($info['path'])) {
       $template_file = $info['path'] . '/' . $template_file;
     }
+
+    // Modules can override this.
+    if (isset($info['template_file'])) {
+      $template_file = $info['template_file'];
+    }
+
     $output = $render_function($template_file, $variables);
   }
 
@@ -1252,7 +1291,14 @@ function drupal_find_theme_templates($cache, $extension, $path) {
       $matches = preg_grep('/^' . $pattern . '/', $patterns);
       if ($matches) {
         foreach ($matches as $match) {
-          $file = substr($match, 0, strpos($match, '.'));
+          $file = $match;
+          // Chop off the remaining extensions if there are any. $template
+          // already has the rightmost extension removed, but there might still
+          // be more, such as with .tpl.php, which still has .tpl in $template
+          // at this point.
+          if (($pos = strpos($match, '.')) !== FALSE) {
+            $file = substr($match, 0, $pos);
+          }
           // Put the underscores back in for the hook name and register this pattern.
           $arg_name = isset($info['variables']) ? 'variables' : 'render element';
           $implementations[strtr($file, '-', '_')] = array(
@@ -2915,6 +2961,7 @@ function drupal_common_theme() {
     ),
     'datetime' => array(
       'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
+      'template' => 'datetime',
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),

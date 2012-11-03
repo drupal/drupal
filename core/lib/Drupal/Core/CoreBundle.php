@@ -59,6 +59,9 @@ class CoreBundle extends Bundle
     $container->register('user.tempstore', 'Drupal\user\TempStoreFactory')
       ->addArgument(new Reference('database'))
       ->addArgument(new Reference('lock'));
+    $container->register('twig', 'Drupal\Core\Template\TwigEnvironment')
+      ->setFactoryClass('Drupal\Core\Template\TwigFactory')
+      ->setFactoryMethod('get');
 
     // Add the entity query factory.
     $container->register('entity.query', 'Drupal\Core\Entity\Query\QueryFactory')

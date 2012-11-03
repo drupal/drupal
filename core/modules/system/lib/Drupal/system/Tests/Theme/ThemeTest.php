@@ -187,4 +187,19 @@ class ThemeTest extends WebTestBase {
   function testClassLoading() {
     new ThemeClass();
   }
+
+  /**
+   * Tests drupal_find_theme_templates().
+   */
+  public function testFindThemeTemplates() {
+    $cache = array();
+
+    // Prime the theme cache.
+    foreach (module_implements('theme') as $module) {
+      _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
+    }
+
+    $templates = drupal_find_theme_templates($cache, '.tpl.php', drupal_get_path('theme', 'test_theme'));
+    $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.tpl.php was found in test_theme.');
+  }
 }

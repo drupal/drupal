@@ -5799,6 +5799,9 @@ function drupal_render_children(&$element, $children_keys = NULL) {
  * @see hide()
  */
 function render(&$element) {
+  if (!$element && $element !== 0) {
+    return NULL;
+  }
   if (is_array($element)) {
     show($element);
     return drupal_render($element);
@@ -6878,8 +6881,9 @@ function drupal_flush_all_caches() {
   drupal_container()->get('router.builder')->rebuild();
   menu_router_rebuild();
 
-  // Wipe the DIC cache.
+  // Wipe the PHP Storage caches.
   drupal_php_storage('service_container')->deleteAll();
+  drupal_php_storage('twig')->deleteAll();
 
   // Re-initialize the maintenance theme, if the current request attempted to
   // use it. Unlike regular usages of this function, the installer and update
