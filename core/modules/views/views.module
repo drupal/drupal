@@ -79,6 +79,19 @@ function views_pre_render_view_element($element) {
 }
 
 /**
+ * Implements hook_config_import_create().
+ */
+function views_config_import_create($name, $new_config, $old_config) {
+  if (strpos($name, 'views.view.') !== 0) {
+    return FALSE;
+  }
+
+  $view = entity_create('view', $new_config->get());
+  $view->save();
+  return TRUE;
+}
+
+/**
  * Implement hook_theme(). Register views theming functions.
  */
 function views_theme($existing, $type, $theme, $path) {
