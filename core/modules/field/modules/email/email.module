@@ -27,9 +27,18 @@ function email_field_info() {
       'label' => t('E-mail'),
       'description' => t('This field stores an e-mail address in the database.'),
       'default_widget' => 'email_default',
-      'default_formatter' => 'text_plain',
+      'default_formatter' => 'email_mailto',
     ),
   );
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function email_field_info_alter(&$info) {
+  if (module_exists('text')) {
+    $info['email']['default_formatter'] = 'text_plain';
+  }
 }
 
 /**
@@ -40,59 +49,10 @@ function email_field_is_empty($item, $field) {
 }
 
 /**
- * Implements hook_field_widget_info().
- */
-function email_field_widget_info() {
-  return array(
-    'email_default' => array(
-      'label' => t('E-mail'),
-      'field types' => array('email'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_widget_form().
- */
-function email_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $element['value'] = $element + array(
-    '#type' => 'email',
-    '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
-  );
-  return $element;
-
-}
-
-/**
- * Implements hook_field_formatter_info().
- */
-function email_field_formatter_info() {
-  return array(
-    'email_mailto' => array(
-      'label' => t('Mailto link'),
-      'field types' => array('email'),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_formatter_info_alter().
  */
 function email_field_formatter_info_alter(&$info) {
-  $info['text_plain']['field types'][] = 'email';
-}
-
-/**
- * Implements hook_field_formatter_view().
- */
-function email_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-  foreach ($items as $delta => $item) {
-    $element[$delta] = array(
-      '#type' => 'link',
-      '#title' => $item['value'],
-      '#href' => 'mailto:' . $item['value'],
-    );
+  if (isset($info['text_plain'])) {
+    $info['text_plain']['field_types'][] = 'email';
   }
-  return $element;
 }
