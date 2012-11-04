@@ -705,10 +705,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
     drupal_uninstall_schema($module);
 
     // Remove all configuration belonging to the module.
-    $config_names = $storage->listAll($module . '.');
-    foreach ($config_names as $config_name) {
-      config($config_name)->delete();
-    }
+    config_uninstall_default_config('module', $module);
 
     watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
     $schema_store->delete($module);

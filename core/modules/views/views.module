@@ -2201,3 +2201,19 @@ function views_array_key_plus($array) {
   asort($array);
   return $array;
 }
+
+/**
+ * Implements hook_config_import_delete().
+ */
+function views_config_import_delete($name, $new_config, $old_config) {
+  // Only image styles require custom handling. Any other module settings can be
+  // synchronized directly.
+  if (strpos($name, 'views.view.') !== 0) {
+    return FALSE;
+  }
+
+  list(, , $id) = explode('.', $name);
+  $view = entity_load('view', $id);
+  entity_delete($view);
+  return TRUE;
+}

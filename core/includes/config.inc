@@ -11,6 +11,11 @@ use Drupal\Core\Config\StorageInterface;
  */
 
 /**
+ * Config import lock name used to prevent concurrent synchronizations.
+ */
+const CONFIG_IMPORT_LOCK = 'config_import';
+
+/**
  * Installs the default configuration of a given extension.
  *
  * @param string $type
@@ -23,19 +28,52 @@ function config_install_default_config($type, $name) {
   if (is_dir($config_dir)) {
     $source_storage = new FileStorage($config_dir);
     $target_storage = drupal_container()->get('config.storage');
-    $null_storage = new NullStorage();
 
-    // Upon installation, only new config objects need to be created.
-    // config_sync_get_changes() would potentially perform a diff of hundreds or
-    // even thousands of config objects that happen to be contained in the
-    // active configuration. We leverage the NullStorage to avoid that needless
-    // computation of differences.
-    $config_changes = config_sync_get_changes($source_storage, $null_storage);
-    if (empty($config_changes)) {
+    // If this module defines any ConfigEntity types, then create a manifest file
+    // for each of them with a listing of the objects it maintains.
+    foreach (config_get_module_config_entities($name) as $entity_type => $entity_info) {
+      $manifest_config = config('manifest.' . $entity_info['config_prefix']);
+      $manifest_data = array();
+      foreach ($source_storage->listAll($entity_info['config_prefix']) as $config_name) {
+        list(, , $id) = explode('.', $config_name);
+        $manifest_data[$id]['name'] = $config_name;
+      }
+      $manifest_config->setData($manifest_data)->save();
+    }
+
+    $config_changes = array(
+      'delete' => array(),
+      'create' => array(),
+      'change' => array(),
+    );
+    $config_changes['create'] = $source_storage->listAll();
+    if (empty($config_changes['create'])) {
       return;
     }
     $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
     config_sync_changes($remaining_changes, $source_storage, $target_storage);
+  }
+}
+
+/**
+ * Uninstalls the default configuration of a given extension.
+ *
+ * @param string $type
+ *   The extension type; e.g., 'module' or 'theme'.
+ * @param string $name
+ *   The name of the module or theme to install default configuration for.
+ */
+function config_uninstall_default_config($type, $name) {
+  $storage = drupal_container()->get('config.storage');
+  $config_names = $storage->listAll($name . '.');
+  foreach ($config_names as $config_name) {
+    config($config_name)->delete();
+  }
+
+  // If this module defines any ConfigEntity types, then delete the manifest
+  // file for each of them.
+  foreach (config_get_module_config_entities($name) as $entity_type) {
+    config('manifest.' . $entity_info['config_prefix'])->delete();
   }
 }
 
@@ -80,18 +118,45 @@ function config($name) {
  *   storage, or FALSE if there are no differences.
  */
 function config_sync_get_changes(StorageInterface $source_storage, StorageInterface $target_storage) {
-  $source_names = $source_storage->listAll();
-  $target_names = $target_storage->listAll();
+  // Config entities maintain 'manifest' files that list the objects they
+  // are currently handling. Each file is a simple indexed array of config
+  // object names. In order to generate a list of objects that have been
+  // created or deleted we need to open these files in both the source and
+  // target storage, generate an array of the objects, and compare them.
+  $source_config_data = array();
+  $target_config_data = array();
+  foreach ($source_storage->listAll('manifest') as $name) {
+    if ($source_manifest_data = $source_storage->read($name)) {
+      $source_config_data = array_merge($source_config_data, $source_manifest_data);
+    }
+
+    if ($target_manifest_data = $target_storage->read($name)) {
+      $target_config_data = array_merge($target_config_data, $target_manifest_data);
+    }
+  }
+
   $config_changes = array(
-    'create' => array_diff($source_names, $target_names),
+    'create' => array(),
     'change' => array(),
-    'delete' => array_diff($target_names, $source_names),
+    'delete' => array(),
   );
-  foreach (array_intersect($source_names, $target_names) as $name) {
-    $source_config_data = $source_storage->read($name);
-    $target_config_data = $target_storage->read($name);
-    if ($source_config_data !== $target_config_data) {
-      $config_changes['change'][] = $name;
+
+  foreach (array_diff_assoc($target_config_data, $source_config_data) as $name => $value) {
+    $config_changes['delete'][] = $value['name'];
+  }
+
+  foreach (array_diff_assoc($source_config_data, $target_config_data) as $name => $value) {
+    $config_changes['create'][] = $value['name'];
+  }
+
+  foreach (array_intersect($source_storage->listAll(), $target_storage->listAll()) as $name) {
+    // Ignore manifest files
+    if (substr($name, 0, 9) != 'manifest.') {
+      $source_config_data = $source_storage->read($name);
+      $target_config_data = $target_storage->read($name);
+      if ($source_config_data !== $target_config_data) {
+        $config_changes['change'][] = $name;
+      }
     }
   }
 
@@ -144,7 +209,7 @@ function config_import() {
     return;
   }
 
-  if (!lock()->acquire(__FUNCTION__)) {
+  if (!lock()->acquire(CONFIG_IMPORT_LOCK)) {
     // Another request is synchronizing configuration.
     // Return a negative result for UI purposes. We do not differentiate between
     // an actual synchronization error and a failed lock, because concurrent
@@ -162,7 +227,8 @@ function config_import() {
     watchdog_exception('config_import', $e);
     $success = FALSE;
   }
-  lock()->release(__FUNCTION__);
+  lock()->release(CONFIG_IMPORT_LOCK);
+
   return $success;
 }
 
@@ -211,17 +277,21 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
 }
 
 /**
- * Exports the active configuration to staging.
+ * Return a list of all config entity types provided by a module.
+ *
+ * @param string $module
+ *   The name of the module possibly providing config entities.
+ *
+ * @return array
+ *   An associative array containing the entity info for any config entities
+ *   provided by the requested module, keyed by the entity type.
  */
-function config_export() {
-  // Retrieve a list of differences between the active configuration and staging.
-  $source_storage = drupal_container()->get('config.storage');
-  $target_storage = drupal_container()->get('config.storage.staging');
-
-  $config_changes = config_sync_get_changes($source_storage, $target_storage);
-  if (empty($config_changes)) {
-    return;
-  }
-  config_sync_changes($config_changes, $source_storage, $target_storage);
-  return TRUE;
+function config_get_module_config_entities($module) {
+  // While this is a lot of work to generate, it's not worth static caching
+  // since this function is only called at install/uninstall, and only
+  // once per module.
+  $info = entity_get_info();
+  return array_filter($info, function($entity_info) use ($module) {
+    return ($entity_info['module'] == $module) && is_subclass_of($entity_info['class'], 'Drupal\Core\Config\Entity\ConfigEntityInterface');
+  });
 }

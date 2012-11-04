@@ -1,1 +1,58 @@
 <?php
+
+/**
+ * @file
+ * Allows site administrators to modify configuration.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function config_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#config':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Configuration manager module provides a user interface for importing and exporting configuration changes; i.e., for staging configuration data between multiple instances of this web site. For more information, see the online handbook entry for <a href="!url">Configuration manager module</a>', array(
+        '!url' => 'http://drupal.org/documentation/administer/config',
+      )) . '</p>';
+      return $output;
+
+    case 'admin/config/development/sync':
+      $output = '';
+      $output .= '<p>' . t('Import configuration that is placed in your staging directory. All changes, deletions, renames, and additions are listed below.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function config_permission() {
+  $permissions['synchronize configuration'] = array(
+    'title' => t('Synchronize configuration'),
+    'restrict access' => TRUE,
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function config_menu() {
+  $items['admin/config/development/sync'] = array(
+    'title' => 'Synchronize configuration',
+    'description' => 'Synchronize configuration changes.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('config_admin_import_form'),
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+  );
+  $items['admin/config/development/sync/import'] = array(
+    'title' => 'Import',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  return $items;
+}
+

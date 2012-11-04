@@ -188,3 +188,13 @@ function config_test_delete_form_submit($form, &$form_state) {
   drupal_set_message(format_string('%label configuration has been deleted.', array('%label' => $form_state['config_test']->label())));
   $form_state['redirect'] = 'admin/structure/config_test';
 }
+
+/**
+ * Implements hook_cache_flush().
+ */
+function config_test_cache_flush() {
+  // Set a global value we can check in test code.
+  $GLOBALS['hook_cache_flush'] = __FUNCTION__;
+
+  return array();
+}

@@ -253,6 +253,11 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     foreach ($entities as $id => $entity) {
       $config = config($this->entityInfo['config_prefix'] . '.' . $entity->id());
       $config->delete();
+
+      // Remove the entity from the manifest file.
+      config('manifest.' . $this->entityInfo['config_prefix'])
+        ->clear($entity->id())
+        ->save();
     }
 
     $this->postDelete($entities);
@@ -313,6 +318,16 @@ class ConfigStorageController implements EntityStorageControllerInterface {
       $entity->enforceIsNew(FALSE);
       $this->postSave($entity, FALSE);
       $this->invokeHook('insert', $entity);
+    }
+
+    // Add this entity to the manifest file if necessary.
+    $config = config('manifest.' . $this->entityInfo['config_prefix']);
+    $manifest = $config->get();
+    if (!in_array($this->entityInfo['config_prefix'] . '.' . $entity->id(), $manifest)) {
+      $manifest[$entity->id()] = array(
+        'name' => $this->entityInfo['config_prefix'] . '.' . $entity->id(),
+      );
+      $config->setData($manifest)->save();
     }
 
     unset($entity->original);

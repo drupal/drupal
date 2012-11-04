@@ -284,6 +284,21 @@ function drupal_install_config_directories() {
         '@handbook_url' => 'http://drupal.org/server-permissions',
       )));
     }
+
+    // Put a README.txt into each config directory. This is required so that
+    // they can later be added to git. Since these directories are auto-
+    // created, we have to write out the README rather than just adding it
+    // to the drupal core repo.
+    switch ($config_type) {
+      case CONFIG_ACTIVE_DIRECTORY:
+        $text = 'This directory contains the active configuration for your Drupal site. To move this configuration between environments, contents from this directory should be placed in the staging directory on the target server. To make this configuration active, see admin/config/development/sync on the target server.';
+        break;
+      case CONFIG_STAGING_DIRECTORY:
+        $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, see admin/config/development/sync.';
+        break;
+    }
+    $text .=  ' For information about deploying configuration between servers, see http://drupal.org/documentation/administer/config';
+    file_put_contents(config_get_config_directory($config_type) . '/README.txt', $text);
   }
 }
 

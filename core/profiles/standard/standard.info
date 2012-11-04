@@ -5,6 +5,7 @@ core = 8.x
 dependencies[] = node
 dependencies[] = block
 dependencies[] = color
+dependencies[] = config
 dependencies[] = comment
 dependencies[] = contextual
 dependencies[] = help
