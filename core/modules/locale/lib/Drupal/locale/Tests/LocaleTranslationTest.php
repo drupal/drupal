@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\TranslationStringTest.
+ * Definition of Drupal\locale\Tests\LocaleTranslationTest.
  */
 
 namespace Drupal\locale\Tests;
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Functional test for string translation and validation.
  */
-class TranslationStringTest extends WebTestBase {
+class LocaleTranslationTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -220,7 +220,7 @@ class TranslationStringTest extends WebTestBase {
     // {locales_source} table and translate it.
     $source = db_select('locales_source', 'l')
       ->fields('l', array('source'))
-      ->condition('l.location', '%.js%', 'LIKE')
+      ->condition('l.source', '%.js%', 'LIKE')
       ->range(0, 1)
       ->execute()
       ->fetchField();
