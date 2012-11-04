@@ -42,6 +42,21 @@ Drupal.behaviors.nodeFieldsetSummaries = {
       }
       return vals.join(', ');
     });
+
+    $context.find('fieldset.node-translation-options').drupalSetSummary(function (context) {
+      var translate;
+      var $checkbox = $context.find('.form-item-translation-translate input');
+
+      if ($checkbox.size()) {
+        translate = $checkbox.is(':checked') ? Drupal.t('Needs to be updated') : Drupal.t('Does not need to be updated');
+      }
+      else {
+        $checkbox = $context.find('.form-item-translation-retranslate input');
+        translate = $checkbox.is(':checked') ? Drupal.t('Flag other translations as outdated') : Drupal.t('Do not flag other translations as outdated');
+      }
+
+      return translate;
+    });
   }
 };
 

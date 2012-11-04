@@ -264,6 +264,8 @@ function node_admin_paths() {
       'node/*/revisions' => TRUE,
       'node/*/revisions/*/revert' => TRUE,
       'node/*/revisions/*/delete' => TRUE,
+      'node/*/translations' => TRUE,
+      'node/*/translations/*' => TRUE,
       'node/add' => TRUE,
       'node/add/*' => TRUE,
     );
@@ -2449,7 +2451,7 @@ function node_update_index() {
   $counter = 0;
   foreach (node_load_multiple($nids) as $node) {
     // Determine when the maximum number of indexable items is reached.
-    $counter += 1 + count($node->translations());
+    $counter += count($node->getTranslationLanguages());
     if ($counter > $limit) {
       break;
     }
@@ -2469,7 +2471,7 @@ function _node_index_node(Node $node) {
   // results half-life calculation.
   variable_set('node_cron_last', $node->changed);
 
-  $languages = array_merge(array(language_load($node->langcode)), $node->translations());
+  $languages = $node->getTranslationLanguages();
 
   foreach ($languages as $language) {
     // Render the node.

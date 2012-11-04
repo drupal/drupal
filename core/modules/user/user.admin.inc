@@ -307,6 +307,17 @@ function user_admin_settings($form, &$form_state) {
     '#description' => t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
   );
 
+  // @todo Remove this check once language settings are generalized.
+  if (module_exists('translation_entity')) {
+    $form['language'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Language settings'),
+      '#tree' => TRUE,
+    );
+    $form_state['translation_entity']['key'] = 'language';
+    $form['language'] += translation_entity_enable_widget('user', 'user', $form, $form_state);
+  }
+
   // User registration settings.
   $form['registration_cancellation'] = array(
     '#type' => 'fieldset',

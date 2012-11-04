@@ -24,6 +24,8 @@ use Drupal\Core\Annotation\Translation;
  *     "profile" = "Drupal\user\ProfileFormController",
  *     "register" = "Drupal\user\RegisterFormController"
  *   },
+ *   default_operation = "profile",
+ *   translation_controller_class = "Drupal\user\ProfileTranslationController",
  *   base_table = "users",
  *   uri_callback = "user_uri",
  *   label_callback = "user_label",

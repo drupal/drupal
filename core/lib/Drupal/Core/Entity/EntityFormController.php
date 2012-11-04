@@ -178,6 +178,7 @@ class EntityFormController implements EntityFormControllerInterface {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function submit(array $form, array &$form_state) {
+    $this->submitEntityLanguage($form, $form_state);
     $entity = $this->buildEntity($form, $form_state);
     $this->setEntity($entity, $form_state);
     return $entity;
@@ -212,7 +213,7 @@ class EntityFormController implements EntityFormControllerInterface {
    */
   public function getFormLangcode(array $form_state) {
     $entity = $this->getEntity($form_state);
-    $translations = $entity->translations();
+    $translations = $entity->getTranslationLanguages();
 
     if (!empty($form_state['langcode'])) {
       $langcode = $form_state['langcode'];
@@ -231,6 +232,54 @@ class EntityFormController implements EntityFormControllerInterface {
     // If the site is not multilingual or no translation for the given form
     // language is available, fall back to the entity language.
     return !empty($langcode) ? $langcode : $entity->language()->langcode;
+  }
+
+  /**
+   * Implements EntityFormControllerInterface::isDefaultFormLangcode().
+   */
+  public function isDefaultFormLangcode($form_state) {
+    return $this->getFormLangcode($form_state) == $this->getEntity($form_state)->language()->langcode;
+  }
+
+  /**
+   * Handle possible entity language changes.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param array $form_state
+   *   A reference to a keyed array containing the current state of the form.
+   */
+  protected function submitEntityLanguage(array $form, array &$form_state) {
+    // Update the form language as it might have changed.
+    if (isset($form_state['values']['langcode']) && $this->isDefaultFormLangcode($form_state)) {
+      $form_state['langcode'] = $form_state['values']['langcode'];
+    }
+
+    $entity = $this->getEntity($form_state);
+    $entity_type = $entity->entityType();
+
+    if (field_has_translation_handler($entity_type)) {
+      $form_langcode = $this->getFormLangcode($form_state);
+
+      // If we are editing the default language values, we use the submitted
+      // entity language as the new language for fields to handle any language
+      // change. Otherwise the current form language is the proper value, since
+      // in this case it is not supposed to change.
+      $current_langcode = $entity->language()->langcode == $form_langcode ? $form_state['values']['langcode'] : $form_langcode;
+
+      foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+        $field_name = $instance['field_name'];
+        $field = field_info_field($field_name);
+        $previous_langcode = $form[$field_name]['#language'];
+
+        // Handle a possible language change: new language values are inserted,
+        // previous ones are deleted.
+        if ($field['translatable'] && $previous_langcode != $current_langcode) {
+          $form_state['values'][$field_name][$current_langcode] = $form_state['values'][$field_name][$previous_langcode];
+          $form_state['values'][$field_name][$previous_langcode] = array();
+        }
+      }
+    }
   }
 
   /**

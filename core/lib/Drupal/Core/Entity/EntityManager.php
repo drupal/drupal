@@ -59,6 +59,10 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *   Drupal\Core\Entity\EntityListController.
  * - render_controller_class: The name of the class that is used to render the
  *   entities. Defaults to Drupal\Core\Entity\EntityRenderController.
+ * - translation_controller_class: (optional) The name of the translation
+ *   controller class that should be used to handle the translation process.
+ *   See Drupal\translation_entity\EntityTranslationControllerInterface for more
+ *   information.
  * - static_cache: (optional) Boolean indicating whether entities should be
  *   statically cached during a page request. Used by
  *   Drupal\Core\Entity\DatabaseStorageController. Defaults to TRUE.
@@ -140,6 +144,16 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *     by default (e.g. right after the module exposing the view mode is
  *     enabled), but administrators can later use the Field UI to apply custom
  *     display settings specific to the view mode.
+ * - menu_base_path: (optional) The base menu router path to which the entity
+ *   administration user interface responds. It can be used to generate UI
+ *   links and to attach additional router items to the entity UI in a generic
+ *   fashion.
+ * - menu_view_path: (optional) The menu router path to be used to view the
+ *   entity.
+ * - menu_edit_path: (optional) The menu router path to be used to edit the
+ *   entity.
+ * - menu_path_wildcard: (optional) A string identifying the menu loader in the
+ *   router path.
  *
  * The defaults for the plugin definition are provided in
  * \Drupal\Core\Entity\EntityManager::defaults.

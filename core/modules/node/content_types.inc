@@ -224,6 +224,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
       ),
       '#default_value' => $language_configuration,
     );
+
     $form['#submit'][] = 'language_configuration_element_submit';
   }
   $form['display'] = array(

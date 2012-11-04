@@ -357,6 +357,8 @@ function taxonomy_admin_paths() {
   $paths = array(
     'taxonomy/term/*/edit' => TRUE,
     'taxonomy/term/*/delete' => TRUE,
+    'taxonomy/term/*/translations' => TRUE,
+    'taxonomy/term/*/translations/*' => TRUE,
   );
   return $paths;
 }

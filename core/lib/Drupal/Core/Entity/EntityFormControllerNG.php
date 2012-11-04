@@ -64,14 +64,19 @@ class EntityFormControllerNG extends EntityFormController {
     // without changing existing entity properties that are not being edited by
     // this form. Copying field values must be done using field_attach_submit().
     $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $entity->bundle())) : $form_state['values'];
+    $translation = $entity->getTranslation($this->getFormLangcode($form_state), FALSE);
+    $definitions = $translation->getPropertyDefinitions();
     foreach ($values_excluding_fields as $key => $value) {
-      $entity->$key = $value;
+      if (isset($definitions[$key])) {
+        $translation->$key = $value;
+      }
     }
 
-    // Invoke all specified builders for copying form values to entity properties.
+    // Invoke all specified builders for copying form values to entity
+    // properties.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
-        $function($entity_type, $entity, $form, $form_state);
+        call_user_func_array($function, array($entity_type, $entity, &$form, &$form_state));
       }
     }
 

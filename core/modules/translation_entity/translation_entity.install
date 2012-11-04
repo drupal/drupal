@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for Entity Translation module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function translation_entity_schema() {
+  $schema['translation_entity'] = array(
+    'description' => 'Table to track entity translations',
+    'fields' => array(
+      'entity_type' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity type this translation relates to',
+      ),
+      'entity_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The entity id this translation relates to',
+      ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The target language for this translation.',
+      ),
+      'source' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The source language from which this translation was created.',
+      ),
+      'translate' => array(
+        'description' => 'A boolean indicating whether this translation needs to be updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('entity_type', 'entity_id', 'langcode'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function translation_entity_install() {
+  language_negotiation_include();
+  language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
+}
+
+/**
+ * Implements hook_enable().
+ */
+function translation_entity_enable() {
+  $t_args = array(
+    '!language_url' => url('admin/config/regional/language'),
+  );
+  $message = t('You just added content translation capabilities to your site. To exploit them be sure to <a href="!language_url">enable at least two languages</a> and enable translation for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em> and any other element whose content you wish to translate.', $t_args);
+  drupal_set_message($message, 'warning');
+}

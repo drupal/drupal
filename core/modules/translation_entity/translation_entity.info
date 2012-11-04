@@ -1,0 +1,6 @@
+name = Entity Translation
+description =  Allows entities to be translated into different languages.
+dependencies[] = language
+package = Core
+version = VERSION
+core = 8.x

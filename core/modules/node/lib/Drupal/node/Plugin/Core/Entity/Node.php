@@ -24,6 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *   form_controller_class = {
  *     "default" = "Drupal\node\NodeFormController"
  *   },
+ *   translation_controller_class = "Drupal\node\NodeTranslationController",
  *   base_table = "node",
  *   revision_table = "node_revision",
  *   uri_callback = "node_uri",

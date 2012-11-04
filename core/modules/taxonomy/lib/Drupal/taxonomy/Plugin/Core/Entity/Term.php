@@ -24,6 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *   form_controller_class = {
  *     "default" = "Drupal\taxonomy\TermFormController"
  *   },
+ *   translation_controller_class = "Drupal\taxonomy\TermTranslationController",
  *   base_table = "taxonomy_term_data",
  *   uri_callback = "taxonomy_term_uri",
  *   fieldable = TRUE,
@@ -41,7 +42,8 @@ use Drupal\Core\Annotation\Translation;
  *       "label" = "Taxonomy term page",
  *       "custom_settings" = FALSE
  *     }
- *   }
+ *   },
+ *   menu_base_path = "taxonomy/term/%taxonomy_term"
  * )
  */
 class Term extends Entity implements ContentEntityInterface {

@@ -5,6 +5,9 @@
  * Test module for the entity API providing an entity type for testing.
  */
 
+use Drupal\entity_test\Plugin\Core\Entity\EntityTest;
+
+
 /**
  * Implements hook_entity_info_alter().
  */
@@ -59,6 +62,11 @@ function entity_test_menu() {
 
 /**
  * Menu callback: displays the 'Add new entity_test' form.
+ *
+ * @return array
+ *   The processed form for a new entity_test.
+ *
+ * @see entity_test_menu()
  */
 function entity_test_add() {
   drupal_set_title(t('Create an entity_test'));
@@ -68,9 +76,17 @@ function entity_test_add() {
 
 /**
  * Menu callback: displays the 'Edit existing entity_test' form.
+ *
+ * @param array $entity
+ *   The entity to be edited.
+ *
+ * @return array
+ *   The processed form for the edited entity_test.
+ *
+ * @see entity_test_menu()
  */
-function entity_test_edit($entity) {
-  drupal_set_title(t('entity_test @id', array('@id' => $entity->id())), PASS_THROUGH);
+function entity_test_edit(EntityTest $entity) {
+  drupal_set_title($entity->label(), PASS_THROUGH);
   return entity_get_form($entity);
 }
 

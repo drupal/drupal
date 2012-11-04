@@ -1401,6 +1401,8 @@ function user_admin_paths() {
     'user/*/cancel' => TRUE,
     'user/*/edit' => TRUE,
     'user/*/edit/*' => TRUE,
+    'user/*/translations' => TRUE,
+    'user/*/translations/*' => TRUE,
   );
   return $paths;
 }

@@ -220,8 +220,6 @@ class CommentFormController extends EntityFormController {
       ),
     );
 
-    $element['#weight'] = $form['comment_body']['#weight'] + 0.01;
-
     return $element;
   }
 

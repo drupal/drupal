@@ -54,6 +54,21 @@ function entity_info_cache_clear() {
 }
 
 /**
+ * Returns the defined bundles for the given entity type.
+ *
+ * @param string $entity_type
+ *   The entity type whose bundles should be returned.
+ *
+ * @return array
+ *   An array containing the bundle names or the entity type name itself if no
+ *   bundle is defined.
+ */
+function entity_get_bundles($entity_type) {
+  $entity_info = entity_get_info($entity_type);
+  return isset($entity_info['bundles']) ? array_keys($entity_info['bundles']) : array($entity_type);
+}
+
+/**
  * Loads an entity from the database.
  *
  * @param string $entity_type
@@ -445,7 +460,7 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
   // Invoke all specified builders for copying form values to entity properties.
   if (isset($form['#entity_builders'])) {
     foreach ($form['#entity_builders'] as $function) {
-      $function($entity_type, $entity, $form, $form_state);
+      call_user_func_array($function, array($entity_type, $entity, &$form, &$form_state));
     }
   }
 

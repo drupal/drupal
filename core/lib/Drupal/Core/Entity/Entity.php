@@ -275,29 +275,12 @@ class Entity implements IteratorAggregate, EntityInterface {
   /**
    * Returns the languages the entity is translated to.
    *
-   * @todo: Remove once all entity types implement the entity field API. This
-   * is deprecated by
-   * TranslatableInterface::getTranslationLanguages().
+   * @todo: Remove once all entity types implement the entity field API.
+   *   This is deprecated by
+   *   Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages().
    */
   public function translations() {
-    $languages = array();
-    $entity_info = $this->entityInfo();
-    if ($entity_info['fieldable'] && ($default_language = $this->language())) {
-      // Go through translatable properties and determine all languages for
-      // which translated values are available.
-      foreach (field_info_instances($this->entityType, $this->bundle()) as $field_name => $instance) {
-        $field = field_info_field($field_name);
-        if (field_is_translatable($this->entityType, $field) && isset($this->$field_name)) {
-          foreach ($this->$field_name as $langcode => $value)  {
-            $languages[$langcode] = TRUE;
-          }
-        }
-      }
-      // Remove the default language from the translations.
-      unset($languages[$default_language->langcode]);
-      $languages = array_intersect_key(language_list(), $languages);
-    }
-    return $languages;
+    return $this->getTranslationLanguages(FALSE);
   }
 
   /**
@@ -306,6 +289,29 @@ class Entity implements IteratorAggregate, EntityInterface {
   public function getTranslationLanguages($include_default = TRUE) {
     // @todo: Replace by EntityNG implementation once all entity types have been
     // converted to use the entity field API.
+    $default_language = $this->language();
+    $languages = array($default_language->langcode => $default_language);
+    $entity_info = $this->entityInfo();
+
+    if ($entity_info['fieldable']) {
+      // Go through translatable properties and determine all languages for
+      // which translated values are available.
+      foreach (field_info_instances($this->entityType, $this->bundle()) as $field_name => $instance) {
+        $field = field_info_field($field_name);
+        if (field_is_translatable($this->entityType, $field) && isset($this->$field_name)) {
+          foreach (array_filter($this->$field_name) as $langcode => $value)  {
+            $languages[$langcode] = TRUE;
+          }
+        }
+      }
+      $languages = array_intersect_key(language_list(LANGUAGE_ALL), $languages);
+    }
+
+    if (empty($include_default)) {
+      unset($languages[$default_language->langcode]);
+    }
+
+    return $languages;
   }
 
   /**

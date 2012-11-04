@@ -84,6 +84,13 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
   protected function postSave(EntityInterface $entity, $update) {
     $default_langcode = $entity->language()->langcode;
 
+    // Delete and insert to handle removed values.
+    db_delete('entity_test_property_data')
+      ->condition('id', $entity->id())
+      ->execute();
+
+    $query = db_insert('entity_test_property_data');
+
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
       $translation = $entity->getTranslation($langcode);
 
@@ -95,12 +102,12 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
         'user_id' => $translation->user_id->value,
       );
 
-      db_merge('entity_test_property_data')
-        ->fields($values)
-        ->condition('id', $values['id'])
-        ->condition('langcode', $values['langcode'])
-        ->execute();
+      $query
+        ->fields(array_keys($values))
+        ->values($values);
     }
+
+    $query->execute();
   }
 
   /**

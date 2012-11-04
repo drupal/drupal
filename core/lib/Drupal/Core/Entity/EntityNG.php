@@ -269,18 +269,10 @@ class EntityNG extends Entity {
       $translations[$this->language()->langcode] = TRUE;
     }
 
-    // Now get languages based upon translation langcodes.
-    $languages = array_intersect_key(language_list(LANGUAGE_ALL), $translations);
+    // Now get languages based upon translation langcodes. Empty languages must
+    // be filtered out as they concern empty/unset properties.
+    $languages = array_intersect_key(language_list(LANGUAGE_ALL), array_filter($translations));
     return $languages;
-  }
-
-  /**
-   * Overrides Entity::translations().
-   *
-   * @todo: Remove once Entity::translations() gets removed.
-   */
-  public function translations() {
-    return $this->getTranslationLanguages(FALSE);
   }
 
   /**

@@ -22,13 +22,15 @@ use Drupal\Core\Annotation\Translation;
  *   form_controller_class = {
  *     "default" = "Drupal\entity_test\EntityTestFormController"
  *   },
+ *   translation_controller_class = "Drupal\entity_test\EntityTestTranslationController",
  *   base_table = "entity_test",
  *   data_table = "entity_test_property_data",
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid"
- *   }
+ *   },
+ *   menu_base_path = "entity-test/manage/%entity_test"
  * )
  */
 class EntityTest extends EntityNG {
@@ -74,4 +76,12 @@ class EntityTest extends EntityNG {
     unset($this->name);
     unset($this->user_id);
   }
+
+  /**
+   * Overrides Drupal\entity\Entity::label().
+   */
+  public function label($langcode = LANGUAGE_DEFAULT) {
+    return $this->getTranslation($langcode)->name->value;
+  }
+
 }

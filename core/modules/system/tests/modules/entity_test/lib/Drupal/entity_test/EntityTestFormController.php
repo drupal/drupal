@@ -43,21 +43,14 @@ class EntityTestFormController extends EntityFormControllerNG {
       '#weight' => -10,
     );
 
-    return $form;
-  }
+    $form['langcode'] = array(
+      '#title' => t('Language'),
+      '#type' => 'language_select',
+      '#default_value' => $entity->language()->langcode,
+      '#languages' => LANGUAGE_ALL,
+    );
 
-  /**
-   * Overrides Drupal\Core\Entity\EntityFormController::submit().
-   */
-  public function submit(array $form, array &$form_state) {
-    $entity = parent::submit($form, $form_state);
-    $langcode = $this->getFormLangcode($form_state);
-    // Updates multilingual properties.
-    $translation = $entity->getTranslation($langcode);
-    foreach (array('name', 'user_id') as $name) {
-      $translation->$name->setValue($form_state['values'][$name]);
-    }
-    return $entity;
+    return $form;
   }
 
   /**
