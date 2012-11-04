@@ -1642,8 +1642,6 @@ function install_configure_form($form, &$form_state, &$install_state) {
   // We add these strings as settings because JavaScript translation does not
   // work during installation.
   drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
-  // Add JS to show / hide the 'Email administrator about site updates' elements
-  drupal_add_js('jQuery(function () { Drupal.hideEmailAdministratorCheckbox() });', 'inline');
 
   // Cache a fully-built schema. This is necessary for any invocation of
   // index.php because: (1) setting cache table entries requires schema
@@ -1971,6 +1969,13 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#default_value' => array(1, 2),
     '#description' => st('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href="@drupal">Drupal.org</a>.', array('@drupal' => 'http://drupal.org')),
     '#weight' => 15,
+  );
+  $form['update_notifications']['update_status_module'][2] = array(
+    '#states' => array(
+      'visible' => array(
+        'input[name="update_status_module[1]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['actions'] = array('#type' => 'actions');

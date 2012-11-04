@@ -1965,6 +1965,7 @@ function system_library_info() {
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+      array('system', 'jquery.once'),
     ),
   );
   $libraries['drupal.system.cron'] = array(
