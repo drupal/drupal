@@ -2,14 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\picture\PictureFormController.
+ * Contains Drupal\picture\PictureFormController.
  */
 
 namespace Drupal\picture;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\picture\PictureMapping;
 
 /**
  * Form controller for the picture edit/add forms.
@@ -49,14 +48,14 @@ class PictureMappingFormController extends EntityFormController {
     );
 
     if ((bool) $picture_mapping->id() && $this->operation != 'duplicate') {
-      $description = t('Select a breakpoint group from the enabled themes.') . ' ' . t("Warning: if you change the breakpoint group you lose all you're selected mappings.");
+      $description = t('Select a breakpoint group from the enabled themes.') . ' ' . t("Warning: if you change the breakpoint group you lose all your selected mappings.");
     }
     else {
       $description = t('Select a breakpoint group from the enabled themes.');
     }
     $form['breakpointGroup'] = array(
       '#type' => 'select',
-      '#title' => t('Breakpoint Group'),
+      '#title' => t('Breakpoint group'),
       '#default_value' => !empty($picture_mapping->breakpointGroup) ? $picture_mapping->breakpointGroup->id() : '',
       '#options' => breakpoint_group_select_options(),
       '#required' => TRUE,

@@ -2,14 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\picture\PictureListController.
+ * Contains Drupal\picture\PictureListController.
  */
 
 namespace Drupal\picture;
 
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\picture\PictureMapping;
 
 /**
  * Provides a listing of Pictures.

@@ -16,19 +16,19 @@ function picture_help($path, $arg) {
   switch ($path) {
     case 'admin/help#picture':
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The picture module allows you to output responsive images using the new <a href="@link">HTML5 picture tag</a>.', array(
-        '@link' => 'http://responsiveimages.org/',
-      )) . '</p>';
+      $output .= '<p>' . t('The Picture module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Mapping image styles to breakpoints') . '</dt>';
+      $output .= '<dd>' . t('To use responsive images, you need to define what size the images should be depending on the breakpoints. The Picture module allows you to define which image style should be used for each breakpoint on the <a href="@link">picture mappings administrative page</a>.', array(
+        '@link' => url('admin/config/media/picturemapping'),
+      )) . '</dd>';
+      $output .= '<dt>' . t('Formatting an Image field') . '</dt>';
+      $output .= '<dd>' . t('Images in Image fields can be formatted using the Picture formatter, to make them responsive. They will be automatically resized depending on breakpoints.') . '</dd>';
+      $output .= '</dl>';
       break;
     case 'admin/config/media/picturemapping':
       $output .= '<p>' . t('A picture mapping associates an image style with each breakpoint defined by your theme.') . '</p>';
-      break;
-    case 'admin/config/media/picturemapping/add':
-      $output .= '<p>' . t('Create a new picture mapping by specifying a name and selecting a breakpoint group.') . '</p>';
-      break;
-    case 'admin/config/media/picturemapping/%/edit':
-      $output .= '<p>' . t('For each breakpoint you can select a corresponding image style.') . '</p>';
-      $output .= '<p>' . t("Warning: if you change the breakpoint group you lose all you're selected mappings.") . '</p>';
       break;
 
   }
@@ -308,12 +308,12 @@ function theme_picture($variables) {
     }
     $output[] = '<picture' . new Attribute($attributes) . '>';
 
-    // add source tags to the output.
+    // Add source tags to the output.
     foreach ($sources as $source) {
       $output[] = theme('picture_source', $source);
     }
 
-    // output the fallback image.
+    // Output the fallback image.
     $output[] = '<noscript>' . theme('image_style', $variables) . '</noscript>';
     $output[] = '</picture>';
     return implode("\n", $output);

@@ -106,7 +106,7 @@ class PictureFormatter extends FormatterBase {
       }
     }
     else {
-      $summary[] = t('Please select a picture mapping');
+      $summary[] = t('Select a picture mapping.');
     }
 
     return implode('<br />', $summary);
@@ -137,13 +137,12 @@ class PictureFormatter extends FormatterBase {
           // @todo add the following when breakpoint->status is added again:
           // $picture_mapping->breakpointGroup->breakpoints[$breakpoint_name]->status
           if (isset($picture_mapping->breakpointGroup->breakpoints[$breakpoint_name])) {
-          $breakpoint = $picture_mapping->breakpointGroup->breakpoints[$breakpoint_name];
+            $breakpoint = $picture_mapping->breakpointGroup->breakpoints[$breakpoint_name];
 
-          // Determine the enabled multipliers.
-          $multipliers = array_intersect_key($multipliers, $breakpoint->multipliers);
+            // Determine the enabled multipliers.
+            $multipliers = array_intersect_key($multipliers, $breakpoint->multipliers);
             foreach ($multipliers as $multiplier => $image_style) {
               // Make sure the multiplier still exists.
-              //if (!empty(array_intersect($multiplier, $breakpoint->multipliers))) {
               if (!empty($image_style)) {
                 // First mapping found is used as fallback.
                 if (empty($fallback_image_style)) {

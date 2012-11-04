@@ -13,7 +13,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the Picture entity.
- * 
+ *
  * @Plugin(
  *   id = "picture_mapping",
  *   label = @Translation("Picture mapping"),
@@ -106,7 +106,7 @@ class PictureMapping extends ConfigEntityBase {
   }
 
   /**
-   * Load breakpoint group.
+   * Loads the breakpoint group.
    */
   protected function loadBreakpointGroup() {
     if ($this->breakpointGroup) {
@@ -116,7 +116,7 @@ class PictureMapping extends ConfigEntityBase {
   }
 
   /**
-   * Load all mappings, remove non-existing ones.
+   * Loads all mappings and removes non-existing ones.
    */
   protected function loadAllMappings() {
     $loaded_mappings = $this->mappings;
@@ -145,7 +145,7 @@ class PictureMapping extends ConfigEntityBase {
   }
 
   /**
-   * Check if there's at least one mapping defined.
+   * Checks if there's at least one mapping defined.
    */
   public function hasMappings() {
     $mapping_found = FALSE;
