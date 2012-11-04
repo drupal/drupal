@@ -2,8 +2,10 @@
 Drupal 7.17, xxxx-xx-xx (development version)
 -----------------------
 - Prevented duplicate HTML IDs from appearing when two forms are displayed on
-  the same page and one of them was submitted with invalid data (minor markup
+  the same page and one of them is submitted with invalid data (minor markup
   change).
+- Added hook_entity_view_mode_alter() to allow modules to change entity view
+  modes on display.
 - Fixed the theme settings form to properly clean up submitted values in
   $form_state['values'] when the form is submitted (data structure change).
 - Updated various admin tables to use the default "empty table" text UX
@@ -21,8 +23,6 @@ Drupal 7.17, xxxx-xx-xx (development version)
   projects.
 - Fixed a regression which caused a "call to undefined function
   drupal_find_base_themes()" fatal error under rare circumstances.
-- Added hook_entity_view_mode_alter() to allow modules to change entity view
-  modes on display.
 
 Drupal 7.16, 2012-10-17
 -----------------------
