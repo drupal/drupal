@@ -88,9 +88,12 @@ class JoinTest extends PluginTestBase {
       'left_field' => 'uid',
       'table' => 'users',
       'field' => 'uid',
+      'adjusted' => TRUE,
     );
     $join = $this->manager->createInstance('standard', $configuration);
     $this->assertTrue($join instanceof JoinPluginBase, 'The correct join class got loaded.');
+    $this->assertNull($join->extra, 'The field extra was not overriden.');
+    $this->assertTrue($join->adjusted, 'The field adjusted was set correctly.');
 
     // Build the actual join values and read them back from the dbtng query
     // object.

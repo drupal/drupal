@@ -165,7 +165,7 @@ class JoinPluginBase extends PluginBase {
     }
 
     if (isset($configuration['adjusted'])) {
-      $this->extra = $configuration['adjusted'];
+      $this->adjusted = $configuration['adjusted'];
     }
 
     $this->extraOperator = strtoupper($configuration['extra_operator']);
