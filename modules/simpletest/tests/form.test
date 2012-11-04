@@ -1750,3 +1750,34 @@ class FormCheckboxTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Tests uniqueness of generated HTML IDs.
+ */
+class HTMLIdTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Unique HTML IDs',
+      'description' => 'Tests functionality of drupal_html_id().',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests that HTML IDs do not get duplicated when form validation fails.
+   */
+  function testHTMLId() {
+    $this->drupalGet('form-test/double-form');
+    $this->assertNoDuplicateIds('There are no duplicate IDs');
+
+    // Submit second form with empty title.
+    $edit = array();
+    $this->drupalPost(NULL, $edit, 'Save', array(), array(), 'form-test-html-id--2');
+    $this->assertNoDuplicateIds('There are no duplicate IDs');
+  }
+}
