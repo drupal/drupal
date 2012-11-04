@@ -851,7 +851,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     // Add the number of nodes counter
     $distinct = ($this->view->display_handler->getOption('distinct') && empty($this->query->no_distinct));
 
-    $count_alias = $this->query->add_field($this->query->base_table, $this->query->base_field, 'num_records', array('count' => TRUE, 'distinct' => $distinct));
+    $count_alias = $this->query->add_field($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), 'num_records', array('count' => TRUE, 'distinct' => $distinct));
     $this->query->add_groupby($this->name_alias);
 
     if ($count_field) {

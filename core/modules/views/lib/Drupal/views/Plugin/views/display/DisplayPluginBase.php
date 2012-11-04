@@ -776,20 +776,15 @@ abstract class DisplayPluginBase extends PluginBase {
     // Query plugins allow specifying a specific query class per base table.
     if ($type == 'query') {
       $views_data = views_fetch_data($this->view->storage->get('base_table'));
-      $name = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
+      $name = isset($views_data['table']['base']['query_id']) ? $views_data['table']['base']['query_id'] : 'views_query';
     }
 
     // Plugin instances are stored on the display for re-use.
     if (!isset($this->plugins[$type][$name])) {
       $plugin = drupal_container()->get("plugin.manager.views.$type")->createInstance($name);
 
-      // Initialize the plugin. Query has a unique method signature.
-      if ($type == 'query') {
-        $plugin->init($this->view->storage->get('base_table'), $this->view->storage->get('base_field'), $options['options']);
-      }
-      else {
-        $plugin->init($this->view, $this, $options['options']);
-      }
+      // Initialize the plugin.
+      $plugin->init($this->view, $this, $options['options']);
 
       $this->plugins[$type][$name] = $plugin;
     }

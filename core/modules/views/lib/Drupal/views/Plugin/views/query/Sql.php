@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Core\Database\Database;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
@@ -113,12 +114,12 @@ class Sql extends QueryPluginBase {
   var $no_distinct;
 
   /**
-   * Constructor; Create the basic query object and fill with default values.
+   * Overrides Drupal\views\Plugin\views\query\QueryPluginBase::init().
    */
-  public function init($base_table = 'node', $base_field = 'nid', $options) {
-    parent::init($base_table, $base_field, $options);
-    $this->base_table = $base_table;  // Predefine these above, for clarity.
-    $this->base_field = $base_field;
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array $options = array()) {
+    parent::init($view, $display, $options);
+    $base_table = $this->view->storage->get('base_table');
+    $base_field = $this->view->storage->get('base_field');
     $this->relationships[$base_table] = array(
       'link' => NULL,
       'table' => $base_table,
@@ -288,7 +289,7 @@ class Sql extends QueryPluginBase {
    */
   function add_relationship($alias, JoinPluginBase $join, $base, $link_point = NULL) {
     if (empty($link_point)) {
-      $link_point = $this->base_table;
+      $link_point = $this->view->storage->get('base_table');
     }
     elseif (!array_key_exists($link_point, $this->relationships)) {
       return FALSE;
@@ -322,7 +323,7 @@ class Sql extends QueryPluginBase {
       'base' => $base,
     );
 
-    $this->tables[$this->base_table][$alias] = array(
+    $this->tables[$this->view->storage->get('base_table')][$alias] = array(
       'count' => 1,
       'alias' => $alias,
     );
@@ -406,7 +407,7 @@ class Sql extends QueryPluginBase {
     }
 
     if (empty($relationship)) {
-      $relationship = $this->base_table;
+      $relationship = $this->view->storage->get('base_table');
     }
 
     if (!array_key_exists($relationship, $this->relationships)) {
@@ -414,7 +415,7 @@ class Sql extends QueryPluginBase {
     }
 
     if (!$alias && $join && $relationship && !empty($join->adjusted) && $table != $join->table) {
-      if ($relationship == $this->base_table) {
+      if ($relationship == $this->view->storage->get('base_table')) {
         $alias = $table;
       }
       else {
@@ -438,7 +439,7 @@ class Sql extends QueryPluginBase {
     // If this is a relationship based table, add a marker with
     // the relationship as a primary table for the alias.
     if ($table != $alias) {
-      $this->mark_table($alias, $this->base_table, $alias);
+      $this->mark_table($alias, $this->view->storage->get('base_table'), $alias);
     }
 
     // If no join is specified, pull it from the table data.
@@ -467,7 +468,7 @@ class Sql extends QueryPluginBase {
     if (empty($this->tables[$relationship][$table])) {
       if (!isset($alias)) {
         $alias = '';
-        if ($relationship != $this->base_table) {
+        if ($relationship != $this->view->storage->get('base_table')) {
           // double underscore will help prevent accidental name
           // space collisions.
           $alias = $relationship . '__';
@@ -507,14 +508,14 @@ class Sql extends QueryPluginBase {
   function ensure_table($table, $relationship = NULL, JoinPluginBase $join = NULL) {
     // ensure a relationship
     if (empty($relationship)) {
-      $relationship = $this->base_table;
+      $relationship = $this->view->storage->get('base_table');
     }
 
     // If the relationship is the primary table, this actually be a relationship
     // link back from an alias. We store all aliases along with the primary table
     // to detect this state, because eventually it'll hit a table we already
     // have and that's when we want to stop.
-    if ($relationship == $this->base_table && !empty($this->tables[$relationship][$table])) {
+    if ($relationship == $this->view->storage->get('base_table') && !empty($this->tables[$relationship][$table])) {
       return $this->tables[$relationship][$table]['alias'];
     }
 
@@ -585,7 +586,7 @@ class Sql extends QueryPluginBase {
    */
   function ensure_path($table, $relationship = NULL, $join = NULL, $traced = array(), $add = array()) {
     if (!isset($relationship)) {
-      $relationship = $this->base_table;
+      $relationship = $this->view->storage->get('base_table');
     }
 
     if (!array_key_exists($relationship, $this->relationships)) {
@@ -645,7 +646,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Adjusts the left table for our relationship.
-    if ($relationship != $this->base_table) {
+    if ($relationship != $this->view->storage->get('base_table')) {
       // If we're linking to the primary table, the relationship to use will
       // be the prior relationship. Unless it's a direct link.
 
@@ -709,8 +710,8 @@ class Sql extends QueryPluginBase {
     }
 
     // In rare cases we might *only* have aliased versions of the table.
-    if (!empty($this->tables[$this->base_table][$table])) {
-      $alias = $this->tables[$this->base_table][$table]['alias'];
+    if (!empty($this->tables[$this->view->storage->get('base_table')][$table])) {
+      $alias = $this->tables[$this->view->storage->get('base_table')][$table]['alias'];
       if (!empty($this->table_queue[$alias])) {
         return $this->table_queue[$alias];
       }
@@ -741,8 +742,8 @@ class Sql extends QueryPluginBase {
    */
   function add_field($table, $field, $alias = '', $params = array()) {
     // We check for this specifically because it gets a special alias.
-    if ($table == $this->base_table && $field == $this->base_field && empty($alias)) {
-      $alias = $this->base_field;
+    if ($table == $this->view->storage->get('base_table') && $field == $this->view->storage->get('base_field') && empty($alias)) {
+      $alias = $this->view->storage->get('base_field');
     }
 
     if ($table && empty($this->table_queue[$table])) {
@@ -1215,10 +1216,10 @@ class Sql extends QueryPluginBase {
         $query->addExpression($string, $fieldname, $placeholders);
       }
       elseif ($this->distinct && !in_array($fieldname, $this->groupby)) {
-        $query->addField(!empty($field['table']) ? $field['table'] : $this->base_table, $field['field'], $fieldname);
+        $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $fieldname);
       }
       elseif (empty($field['aggregate'])) {
-        $query->addField(!empty($field['table']) ? $field['table'] : $this->base_table, $field['field'], $fieldname);
+        $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $fieldname);
       }
 
       if ($this->get_count_optimized) {
@@ -1238,7 +1239,7 @@ class Sql extends QueryPluginBase {
   public function query($get_count = FALSE) {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
-      $base_field_alias = $this->add_field($this->base_table, $this->base_field);
+      $base_field_alias = $this->add_field($this->view->storage->get('base_table'), $this->view->storage->get('base_field'));
       $this->add_groupby($base_field_alias);
       $distinct = TRUE;
     }
@@ -1278,7 +1279,7 @@ class Sql extends QueryPluginBase {
     // Go ahead and build the query.
     // db_select doesn't support to specify the key, so use getConnection directly.
     $query = Database::getConnection($target, $key)
-      ->select($this->base_table, $this->base_table, $options)
+      ->select($this->view->storage->get('base_table'), $this->view->storage->get('base_table'), $options)
       ->addTag('views')
       ->addTag('views_' . $this->view->storage->get('name'));
 
@@ -1441,7 +1442,7 @@ class Sql extends QueryPluginBase {
     $count_query->addMetaData('view', $view);
 
     if (empty($this->options['disable_sql_rewrite'])) {
-      $base_table_data = views_fetch_data($this->base_table);
+      $base_table_data = views_fetch_data($this->view->storage->get('base_table'));
       if (isset($base_table_data['table']['base']['access query tag'])) {
         $access_tag = $base_table_data['table']['base']['access query tag'];
         $query->addTag($access_tag);
@@ -1539,10 +1540,10 @@ class Sql extends QueryPluginBase {
   function get_entity_tables() {
     // Start with the base table.
     $entity_tables = array();
-    $base_table_data = views_fetch_data($this->base_table);
+    $base_table_data = views_fetch_data($this->view->storage->get('base_table'));
     if (isset($base_table_data['table']['entity type'])) {
-      $entity_tables[$this->base_table] = array(
-        'base' => $this->base_table,
+      $entity_tables[$this->view->storage->get('base_table')] = array(
+        'base' => $this->view->storage->get('base_table'),
         'relationship_id' => 'none',
         'entity_type' => $base_table_data['table']['entity type'],
         'revision' => FALSE,

@@ -155,7 +155,7 @@ class Search extends FilterPluginBase {
       $this->search_score = $this->query->add_field('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
 
       if (empty($this->query->relationships[$this->relationship])) {
-        $base_table = $this->query->base_table;
+        $base_table = $this->view->storage->get('base_table');
       }
       else {
         $base_table = $this->query->relationships[$this->relationship]['base'];

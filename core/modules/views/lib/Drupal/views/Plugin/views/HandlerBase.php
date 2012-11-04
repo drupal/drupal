@@ -591,7 +591,7 @@ abstract class HandlerBase extends PluginBase {
     // get the join from this table that links back to the base table.
     // Determine the primary table to seek
     if (empty($this->query->relationships[$this->relationship])) {
-      $base_table = $this->query->base_table;
+      $base_table = $this->view->storage->get('base_table');
     }
     else {
       $base_table = $this->query->relationships[$this->relationship]['base'];

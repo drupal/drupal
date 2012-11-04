@@ -945,18 +945,7 @@ class ViewExecutable {
       $this->base_database = $views_data['table']['base']['database'];
     }
 
-    // Load the options.
-    $query_options = $this->display_handler->getOption('query');
-
-    // Create and initialize the query object.
-    $plugin = !empty($views_data['table']['base']['query_id']) ? $views_data['table']['base']['query_id'] : 'views_query';
-    $this->query = views_get_plugin('query', $plugin);
-
-    if (empty($this->query)) {
-      return FALSE;
-    }
-
-    $this->query->init($this->storage->get('base_table'), $this->storage->get('base_field'), $query_options['options']);
+    $this->query = $this->display_handler->getPlugin('query');
     return TRUE;
   }
 

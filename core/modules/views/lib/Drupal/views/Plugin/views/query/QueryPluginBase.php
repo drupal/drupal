@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -23,12 +24,13 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   var $pager = NULL;
 
   /**
-   * Constructor; Create the basic query object and fill with default values.
+   * Overrides Drupal\views\Plugin\views\PluginBase::init().
    */
-  public function init($base_table, $base_field, $options) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array $options = array()) {
+    $this->view = $view;
+    $this->displayHandler = $display;
+
     $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->base_table = $base_table;
-    $this->base_field = $base_field;
     $this->unpackOptions($this->options, $options);
   }
 
