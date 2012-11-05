@@ -1,6 +1,8 @@
 
 Drupal 7.17, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which prevented required form elements without a title from being
+  given an "error" class when the form fails validation.
 - Prevented duplicate HTML IDs from appearing when two forms are displayed on
   the same page and one of them is submitted with invalid data (minor markup
   change).
