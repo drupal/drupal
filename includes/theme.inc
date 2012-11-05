@@ -2069,10 +2069,12 @@ function theme_item_list($variables) {
   if (!empty($items)) {
     $output .= "<$type" . drupal_attributes($attributes) . '>';
     $num_items = count($items);
-    foreach ($items as $i => $item) {
+    $i = 0;
+    foreach ($items as $item) {
       $attributes = array();
       $children = array();
       $data = '';
+      $i++;
       if (is_array($item)) {
         foreach ($item as $key => $value) {
           if ($key == 'data') {
@@ -2093,10 +2095,10 @@ function theme_item_list($variables) {
         // Render nested list.
         $data .= theme_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
       }
-      if ($i == 0) {
+      if ($i == 1) {
         $attributes['class'][] = 'first';
       }
-      if ($i == $num_items - 1) {
+      if ($i == $num_items) {
         $attributes['class'][] = 'last';
       }
       $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";

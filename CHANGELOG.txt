@@ -1,6 +1,8 @@
 
 Drupal 7.17, xxxx-xx-xx (development version)
 -----------------------
+- Made it possible to use associative arrays for the 'items' variable in
+  theme_item_list().
 - Fixed a bug which prevented required form elements without a title from being
   given an "error" class when the form fails validation.
 - Prevented duplicate HTML IDs from appearing when two forms are displayed on
