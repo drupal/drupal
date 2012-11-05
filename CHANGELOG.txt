@@ -1,6 +1,8 @@
 
 Drupal 7.17, xxxx-xx-xx (development version)
 -----------------------
+- Changed the default value of the '404_fast_html' variable to have a DOCTYPE
+  declaration.
 - Made it possible to use associative arrays for the 'items' variable in
   theme_item_list().
 - Fixed a bug which prevented required form elements without a title from being
