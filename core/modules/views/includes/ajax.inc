@@ -279,7 +279,14 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
 }
 
 /**
- * Page callback for views user autocomplete
+ * Page callback for views user autocomplete.
+ *
+ * @param string $string
+ *   (optional) A comma-separated list of user names entered in the
+ *   autocomplete form element. Only the last user is used for autocompletion.
+ *   Defaults to '' (an empty string).
+ *
+ * @return Symfony\Component\HttpFoundation\JsonResponse
  */
 function views_ajax_autocomplete_user($string = '') {
   // The user enters a comma-separated list of user name. We only autocomplete the last name.

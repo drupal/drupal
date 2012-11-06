@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\User;
 
 /**
- * Tests views user argument argument handler.
+ * Tests views user argument validator plugin.
  */
 class ArgumentValidateTest extends UserTestBase {
 
