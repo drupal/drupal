@@ -72,13 +72,11 @@ class UpdateQuery_sqlite extends UpdateQuery {
    */
   protected function removeFieldsInCondition(&$fields, QueryConditionInterface $condition) {
     foreach ($condition->conditions() as $child_condition) {
-      if (isset($child_condition['field'])) {
-        if ($child_condition['field'] instanceof ConditionInterface) {
-          $this->removeFieldsInCondition($fields, $child_condition['field']);
-        }
-        else {
-          unset($fields[$child_condition['field']]);
-        }
+      if ($child_condition['field'] instanceof QueryConditionInterface) {
+        $this->removeFieldsInCondition($fields, $child_condition['field']);
+      }
+      else {
+        unset($fields[$child_condition['field']]);
       }
     }
   }
