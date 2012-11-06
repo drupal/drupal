@@ -1021,6 +1021,10 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
   // Allow modules to make their own additions to the comment.
   module_invoke_all('comment_view', $comment, $view_mode, $langcode);
   module_invoke_all('entity_view', $comment, 'comment', $view_mode, $langcode);
+
+  // Make sure the current view mode is stored if no module has already
+  // populated the related key.
+  $comment->content += array('#view_mode' => $view_mode);
 }
 
 /**

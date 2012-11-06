@@ -811,6 +811,14 @@ function taxonomy_term_build_content($term, $view_mode = 'full', $langcode = NUL
   // Remove previously built content, if exists.
   $term->content = array();
 
+  // Allow modules to change the view mode.
+  $context = array(
+    'entity_type' => 'taxonomy_term',
+    'entity' => $term,
+    'langcode' => $langcode,
+  );
+  drupal_alter('entity_view_mode', $view_mode, $context);
+
   // Try to add in the core taxonomy pieces like description and nodes.
   $type = 'taxonomy_term';
   $entity_ids = entity_extract_ids($type, $term);
@@ -836,6 +844,10 @@ function taxonomy_term_build_content($term, $view_mode = 'full', $langcode = NUL
   // Allow modules to make their own additions to the taxonomy term.
   module_invoke_all('taxonomy_term_view', $term, $view_mode, $langcode);
   module_invoke_all('entity_view', $term, 'taxonomy_term', $view_mode, $langcode);
+
+  // Make sure the current view mode is stored if no module has already
+  // populated the related key.
+  $term->content += array('#view_mode' => $view_mode);
 }
 
 /**
@@ -856,14 +868,6 @@ function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
-
-  // Allow modules to change the view mode.
-  $context = array(
-    'entity_type' => 'taxonomy_term',
-    'entity' => $term,
-    'langcode' => $langcode,
-  );
-  drupal_alter('entity_view_mode', $view_mode, $context);
 
   // Populate $node->content with a render() array.
   taxonomy_term_build_content($term, $view_mode, $langcode);
