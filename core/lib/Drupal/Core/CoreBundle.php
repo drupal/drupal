@@ -10,6 +10,7 @@ namespace Drupal\Core;
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterNestedMatchersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -126,10 +127,17 @@ class CoreBundle extends Bundle
       ->setFactoryClass('Drupal\Core\ExceptionController')
       ->setFactoryMethod('getExceptionListener');
 
+    // Add Serializer with arguments to be replaced in the compiler pass.
+    $container->register('serializer', 'Symfony\Component\Serializer\Serializer')
+      ->addArgument(array())
+      ->addArgument(array());
+
     $container->addCompilerPass(new RegisterMatchersPass());
     $container->addCompilerPass(new RegisterNestedMatchersPass());
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
+    // Add a compiler pass for adding Normalizers and Encoders to Serializer.
+    $container->addCompilerPass(new RegisterSerializationClassesPass());
   }
 
 }
