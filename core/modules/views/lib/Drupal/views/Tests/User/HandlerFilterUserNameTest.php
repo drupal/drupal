@@ -75,8 +75,9 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $view = views_get_view('test_user_name');
 
     // Test all of the accounts with a single entry.
+    $view->initHandlers();
     foreach ($this->accounts as $account) {
-      $view->storage->display['default']['display_options']['filters']['uid']['value'] = $account->id();
+      $view->filter['uid']->value = array($account->id());
     }
 
     $this->executeView($view);
