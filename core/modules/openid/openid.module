@@ -107,7 +107,7 @@ function openid_user_insert($account) {
  *
  * Save openid_identifier to visitor cookie.
  */
-function openid_user_login(&$edit, $account) {
+function openid_user_login($edit, $account) {
   if (isset($_SESSION['openid'])) {
     // The user has logged in via OpenID.
     user_cookie_save(array_intersect_key($_SESSION['openid']['user_login_values'], array_flip(array('openid_identifier'))));
