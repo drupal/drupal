@@ -274,7 +274,7 @@ class FieldInfo {
     // Do not check the (large) persistent cache, but read the definition.
 
     // Cache miss: read from definition.
-    if ($field = field_read_field(array('field_name' => $field_name))) {
+    if ($field = field_read_field($field_name)) {
       $field = $this->prepareField($field);
 
       // Save in the "static" cache.
