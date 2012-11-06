@@ -10,25 +10,57 @@ Drupal 7.17, xxxx-xx-xx (development version)
 - Prevented duplicate HTML IDs from appearing when two forms are displayed on
   the same page and one of them is submitted with invalid data (minor markup
   change).
+- Fixed a bug which prevented Drupal 6 to Drupal 7 upgrades on sites which had
+  stale data in the Upload module's database tables.
+- Fixed a bug in the States API which prevented certain types of form elements
+  from being disabled when requested.
+- Allowed aggregator feed items with author names longer than 255 characters to
+  have a truncated version saved to the database (rather than causing a fatal
+  error).
+- Allowed aggregator feed items to have URLs longer than 255 characters
+  (schema change which results in several columns in the Aggregator module's
+  database tables changing from VARCHAR to TEXT fields).
+- Added hook_taxonomy_term_view() and standardized the process for rendering
+  taxonomy terms to invoke hook_entity_view() and otherwise make it consistent
+  with other entities (API change).
 - Added hook_entity_view_mode_alter() to allow modules to change entity view
   modes on display.
+- Fixed a bug which made database queries running a "LIKE" query on blob fields
+  fail on PostgreSQL databases. This caused errors during the Drupal 6 to
+  Drupal 7 upgrade.
+- Changed the hook_menu() entry for Drupal's rss.xml page to prevent extra path
+  components from being accidentally passed to the page callback function (data
+  structure change).
+- Removed a non-standard "name" attribute from Drupal's default Content-Type
+  header for file downloads.
 - Fixed the theme settings form to properly clean up submitted values in
   $form_state['values'] when the form is submitted (data structure change).
-- Updated various admin tables to use the default "empty table" text UX
-  pattern.
+- Fixed an inconsistency by removing the colon from the end of the label on
+  multi-valued form fields (minor string change).
+- Added support for 'weight' in hook_field_widget_info() to allow modules to
+  control the order in which widgets are displayed in the Field UI.
+- Updated various tables in the OpenID and Book modules to use the default
+  "empty table" text pattern (string change).
 - Added proxy server support to drupal_http_request().
 - Added "lang" attributes to language links, to better support screen readers.
 - Fixed double occurrence of a "ul" HTML tag on secondary local tasks in the
   Seven theme (markup change).
-- Fixed a bug which caused shortcut set titles to be double-escaped. The fix
-  replaces the "Edit shortcuts" menu item's title callback entry in hook_menu()
-  with a new function that does not escape HTML characters (data structure
-  change).
+- Fixed bugs which caused taxonomy vocabulary and shortcut set titles to be
+  double-escaped. The fix replaces the taxonomy vocabulary overview page and
+  "Edit shortcuts" menu items' title callbacks entries in hook_menu() with new
+  functions that do not escape HTML characters (data structure change).
 - Modified the Update manager module to allow drupal.org to collect usage
   statistics for individual modules and themes, rather than only for entire
   projects.
+- Modified the node listing database query on Drupal's default front page to
+  add table aliases for better query altering (this is a data structure change
+  affecting code which implements hook_query_alter() on this query).
+- Improved the translatability of the "Field type(s) in use" message on the
+  modules page (admin-facing string change).
 - Fixed a regression which caused a "call to undefined function
   drupal_find_base_themes()" fatal error under rare circumstances.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.16, 2012-10-17
 -----------------------
