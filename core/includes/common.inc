@@ -5119,17 +5119,17 @@ function drupal_cron_cleanup() {
  * depending on what type of object you are looking for. For instance, if you
  * are looking for modules and call:
  * @code
- * drupal_system_listing("/\.module$/", "modules", 'name', 0);
+ * drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules');
  * @endcode
- * the function will search the following directories in this order:
- * - /core/modules.
- * - /core/profiles/testing/modules (only if a test is being run).
- * - /core/profiles/active_profile/modules or /profiles/active_profile/modules.
- * - /modules (standard directory for your contrib/custom modules).
- * - /sites/all/modules (legacy contrib/custom modules directory, see above).
- * - /sites/your_site_dir/modules (for multisite installations).
- * and return information about all of the files ending in .module in those
- * directories.
+ * this function will search:
+ * - the core modules directory; i.e., /core/modules
+ * - the testing profile directory; e.g., /profiles/testing/modules
+ * - your installation profile's directory; e.g., /profiles/standard/modules
+ * - the site-wide modules directory; i.e., /modules
+ * - the all-sites directory; i.e., /sites/all/modules
+ * - the site-specific directory; i.e., /sites/example.com/modules
+ * in that order, and return information about all of the files ending in
+ * .module in those directories.
  *
  * The information is returned in an associative array, which can be keyed on
  * the file name ($key = 'filename'), the file name without the extension ($key
@@ -5140,21 +5140,28 @@ function drupal_cron_cleanup() {
  * files found.
  *
  * @param string $mask
- *   The preg_match() regular expression for the files to find.
+ *   The preg_match() regular expression for the files to find. The expression
+ *   must be anchored and use DRUPAL_PHP_FUNCTION_PATTERN for the file name part
+ *   before the extension, since the results could contain matches that do not
+ *   present valid Drupal extensions otherwise.
  * @param string $directory
  *   The subdirectory name in which the files are found. For example,
- *   'core/modules' will search in sub-directories of the /core/modules
- *   directory, sub-directories of /modules/, etc.
+ *   'modules' will search all 'modules' directories and their sub-directories
+ *   as explained above.
  * @param string $key
- *   The key to be used for the associative array returned. Possible values are
- *   'uri', for the file's URI; 'filename', for the basename of the file; and
- *   'name' for the name of the file without the extension. If you choose 'name'
- *   or 'filename', only the highest-precedence file will be returned.
+ *   (optional) The key to be used for the associative array returned. Possible
+ *   values are:
+ *   - 'uri' for the file's URI.
+ *   - 'filename' for the basename of the file.
+ *   - 'name' for the name of the file without the extension.
+ *   For 'name' and 'filename' only the highest-precedence file is returned.
+ *   Defaults to 'name'.
  * @param int $min_depth
- *   Minimum depth of directories to return files from, relative to each
- *   directory searched. For instance, a minimum depth of 2 would find modules
- *   inside /core/modules/node/tests, but not modules directly in
- *   /core/modules/node.
+ *   (optional) Minimum depth of directories to return files from, relative to
+ *   each directory searched. For instance, a directory of 'modules' and a
+ *   minimum depth of 2 would find modules inside /modules/node/tests, but not
+ *   modules directly in /modules/node. Defaults to 1. The default is sufficient
+ *   and suitable for all extension types known by Drupal core.
  *
  * @return array
  *   An associative array of file objects, keyed on the chosen key. Each element
@@ -5204,7 +5211,14 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
     require_once DRUPAL_ROOT . '/core/includes/file.inc';
   }
   foreach ($searchdir as $dir) {
-    $files_to_add = file_scan_directory($dir, $mask, array('key' => $key, 'min_depth' => $min_depth));
+    $files_to_add = file_scan_directory($dir, $mask, array(
+      'key' => $key,
+      'min_depth' => $min_depth,
+      // Do not recurse into ./lib directories; they cannot contain extensions.
+      // We also skip templates, css, and js directories.
+      // @todo Find a way to skip ./config directories (but not modules/config).
+      'nomask' => '/^(CVS|lib|templates|css|js)$/',
+    ));
 
     // Duplicate files found in later search directories take precedence over
     // earlier ones, so we want them to overwrite keys in our resulting
@@ -5216,7 +5230,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
     foreach (array_intersect_key($files_to_add, $files) as $file_key => $file) {
       // If it has no info file, then we just behave liberally and accept the
       // new resource on the list for merging.
-      if (file_exists($info_file = dirname($file->uri) . '/' . $file->name . '.info')) {
+      if (file_exists($info_file = DRUPAL_ROOT . '/' . dirname($file->uri) . '/' . $file->name . '.info')) {
         // Get the .info file for the module or theme this file belongs to.
         $info = drupal_parse_info_file($info_file);
 

@@ -2776,10 +2776,10 @@ function system_get_module_info($property) {
  */
 function _system_rebuild_module_data() {
   // Find modules
-  $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0);
+  $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules');
 
   // Find installation profiles.
-  $profiles = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles', 'name', 0);
+  $profiles = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles');
 
   // Include the installation profile in modules that are loaded.
   $profile = drupal_get_profile();

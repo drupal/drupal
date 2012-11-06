@@ -385,10 +385,20 @@ function simpletest_test_get_all() {
  * Registers namespaces for disabled modules.
  */
 function simpletest_classloader_register() {
-  $all_data = system_rebuild_module_data();
-  $all_data += system_rebuild_theme_data();
-  foreach ($all_data as $name => $data) {
-    drupal_classloader_register($name, dirname($data->filename));
+  // @see drupal_get_filename()
+  $types = array(
+    'theme_engine' => array('dir' => 'themes/engines', 'extension' => 'engine'),
+    'module' => array('dir' => 'modules', 'extension' => 'module'),
+    'theme' => array('dir' => 'themes', 'extension' => 'info'),
+    'profile' => array('dir' => 'profiles', 'extension' => 'profile'),
+  );
+  foreach ($types as $type => $info) {
+    $matches = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.' . $info['extension'] . '$/', $info['dir']);
+    foreach ($matches as $name => $file) {
+      drupal_classloader_register($name, dirname($file->uri));
+      // While being there, prime drupal_get_filename().
+      drupal_get_filename($type, $name, $file->uri);
+    }
   }
 }
 

@@ -938,7 +938,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
         // extension, not just the file we are currently looking for. This
         // prevents unnecessary scans from being repeated when this function is
         // called more than once in the same page request.
-        $matches = drupal_system_listing("/^" . DRUPAL_PHP_FUNCTION_PATTERN . "\.$extension$/", $dir, 'name', 0);
+        $matches = drupal_system_listing("/^" . DRUPAL_PHP_FUNCTION_PATTERN . "\.$extension$/", $dir);
         foreach ($matches as $matched_name => $file) {
           $files[$type][$matched_name] = $file->uri;
         }

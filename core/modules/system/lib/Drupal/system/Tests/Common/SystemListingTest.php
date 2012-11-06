@@ -55,7 +55,7 @@ class SystemListingTest extends WebTestBase {
 
     // Now scan the directories and check that the files take precedence as
     // expected.
-    $files = drupal_system_listing('/\.module$/', 'modules', 'name', 1);
+    $files = drupal_system_listing('/\.module$/', 'modules');
     foreach ($expected_directories as $module => $directories) {
       $expected_directory = array_shift($directories);
       $expected_filename = "$expected_directory/$module/$module.module";

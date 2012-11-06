@@ -1432,12 +1432,17 @@ function file_download() {
 function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
   // Merge in defaults.
   $options += array(
-    'nomask' => '/(\.\.?|CVS)$/',
+    'nomask' => '/^CVS$/',
     'callback' => 0,
     'recurse' => TRUE,
     'key' => 'uri',
     'min_depth' => 0,
   );
+  // Normalize $dir only once.
+  if ($depth == 0) {
+    $dir = file_stream_wrapper_uri_normalize($dir);
+    $dir_has_slash = (substr($dir, -1) === '/');
+  }
 
   $options['key'] = in_array($options['key'], array('uri', 'filename', 'name')) ? $options['key'] : 'uri';
   $files = array();
@@ -1446,10 +1451,15 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
   if (is_dir($dir)) {
     if($handle = @opendir($dir)) {
       while (FALSE !== ($filename = readdir($handle))) {
-        if (!preg_match($options['nomask'], $filename) && $filename[0] != '.') {
-          $uri = "$dir/$filename";
-          $uri = file_stream_wrapper_uri_normalize($uri);
-          if (is_dir($uri) && $options['recurse']) {
+        // Skip this file if it matches the nomask or starts with a dot.
+        if ($filename[0] != '.' && !preg_match($options['nomask'], $filename)) {
+          if ($depth == 0 && $dir_has_slash) {
+            $uri = "$dir$filename";
+          }
+          else {
+            $uri = "$dir/$filename";
+          }
+          if ($options['recurse'] && is_dir($uri)) {
             // Give priority to files in this folder by merging them in after
             // any subdirectory files.
             $files = array_merge(file_scan_directory($uri, $mask, $options, $depth + 1), $files);

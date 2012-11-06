@@ -28,7 +28,7 @@ else {
 }
 
 // Bootstrap to perform initial validation or other operations.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 if (!module_exists('simpletest')) {
   simpletest_script_print_error("The simpletest module must be enabled before this script can run.");
   exit;

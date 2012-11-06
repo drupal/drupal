@@ -22,14 +22,24 @@ class GetFilenameUnitTest extends UnitTestBase {
     );
   }
 
+  function setUp() {
+    parent::setUp();
+
+    // Remove the keyvalue service definition, since this test wants to verify
+    // the filesystem scan fallback of drupal_get_filename().
+    $this->keyvalue_definition = $this->container->getDefinition('keyvalue');
+    $this->container->removeDefinition('keyvalue');
+  }
+
+  function tearDown() {
+    $this->container->setDefinition('keyvalue', $this->keyvalue_definition);
+    parent::tearDown();
+  }
+
   /**
    * Tests that drupal_get_filename() works when the file is not in database.
    */
   function testDrupalGetFilename() {
-    // Reset the static cache so we can test the "db is not active" code of
-    // drupal_get_filename().
-    drupal_static_reset('drupal_get_filename');
-
     // Retrieving the location of a module.
     $this->assertIdentical(drupal_get_filename('module', 'php'), 'core/modules/php/php.module', 'Retrieve module location.');
 
@@ -50,6 +60,6 @@ class GetFilenameUnitTest extends UnitTestBase {
     // Since there is already a core/scripts directory, drupal_get_filename()
     // will automatically check there for 'script' files, just as it does
     // for (e.g.) 'module' files in core/modules.
-    $this->assertIdentical(drupal_get_filename('script', 'test'), 'core/scripts/test.script', 'Retrieve test script location.');
+    $this->assertIdentical(drupal_get_filename('script', 'test'), 'core/scripts/test/test.script');
   }
 }
