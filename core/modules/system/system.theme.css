@@ -37,6 +37,9 @@ tr {
   border-bottom: 1px solid #ccc;
   padding: 0.1em 0.6em;
 }
+caption {
+  text-align: left; /* LTR */
+}
 
 /**
  * Publishing status.

@@ -134,10 +134,6 @@ a.button {
 
 /* ------------------ Reset Styles ------------------ */
 
-caption {
-  text-align: left; /* LTR */
-  font-weight: normal;
-}
 blockquote {
   background: #f7f7f7;
   border-left: 1px solid #bbb;
