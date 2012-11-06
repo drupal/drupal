@@ -95,7 +95,8 @@
   line-height: 0;
   position: absolute;
   right: 40%; /* 0.6667em; */ /* LTR */
-  top: 0.9em;
+  top: 50%;
+  margin-top: -0.1666em;
   width: 0;
   overflow: hidden;
 }
