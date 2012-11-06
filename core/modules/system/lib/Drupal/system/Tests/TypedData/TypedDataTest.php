@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\TypedData;
 
 use Drupal\simpletest\WebTestBase;
-use DateTime;
+use Drupal\Core\Datetime\DrupalDateTime;
 use DateInterval;
 
 /**
@@ -72,7 +72,7 @@ class TypedDataTest extends WebTestBase {
     $this->assertNull($wrapper->getValue(), 'Float wrapper is null-able.');
 
     // Date type.
-    $value = new DateTime('@' . REQUEST_TIME);
+    $value = new DrupalDateTime(REQUEST_TIME);
     $wrapper = $this->createTypedData(array('type' => 'date'), $value);
     $this->assertTrue($wrapper->getValue() === $value, 'Date value was fetched.');
     $new_value = REQUEST_TIME + 1;

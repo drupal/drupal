@@ -7,6 +7,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
@@ -234,7 +235,8 @@ class CommentFormController extends EntityFormController {
       $account = user_load_by_name($form_state['values']['name']);
       $form_state['values']['uid'] = $account ? $account->uid : 0;
 
-      if ($form_state['values']['date'] && strtotime($form_state['values']['date']) === FALSE) {
+      $date = new DrupalDateTime($form_state['values']['date']);
+      if ($date->hasErrors()) {
         form_set_error('date', t('You have to specify a valid date.'));
       }
       if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account) {
@@ -269,7 +271,8 @@ class CommentFormController extends EntityFormController {
     if (empty($comment->date)) {
       $comment->date = 'now';
     }
-    $comment->created = strtotime($comment->date);
+    $date = new DrupalDateTime($comment->date);
+    $comment->created = $date->getTimestamp();
     $comment->changed = REQUEST_TIME;
 
     // If the comment was posted by a registered user, assign the author's ID.

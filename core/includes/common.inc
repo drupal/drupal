@@ -5,6 +5,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
 
@@ -1997,26 +1998,12 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
       break;
   }
 
-  // Create a DateTime object from the timestamp.
-  $date_time = date_create('@' . $timestamp);
-  // Set the time zone for the DateTime object.
-  date_timezone_set($date_time, $timezones[$timezone]);
-
-  // Encode markers that should be translated. 'A' becomes '\xEF\AA\xFF'.
-  // xEF and xFF are invalid UTF-8 sequences, and we assume they are not in the
-  // input string.
-  // Paired backslashes are isolated to prevent errors in read-ahead evaluation.
-  // The read-ahead expression ensures that A matches, but not \A.
-  $format = preg_replace(array('/\\\\\\\\/', '/(?<!\\\\)([AaeDlMTF])/'), array("\xEF\\\\\\\\\xFF", "\xEF\\\\\$1\$1\xFF"), $format);
+  // Create a DrupalDateTime object from the timestamp and timezone.
+  $date_time = new DrupalDateTime($timestamp, $timezones[$timezone]);
 
   // Call date_format().
-  $format = date_format($date_time, $format);
-
-  // Pass the langcode to _format_date_callback().
-  _format_date_callback(NULL, $langcode);
-
-  // Translate the marked sequences.
-  return preg_replace_callback('/\xEF([AaeDlMTF]?)(.*?)\xFF/', '_format_date_callback', $format);
+  $settings = array('langcode' => $langcode);
+  return $date_time->format($format, $settings);
 }
 
 /**
@@ -4996,7 +4983,8 @@ function drupal_page_set_cache($body) {
       $cache->data['headers'][$header_names[$name_lower]] = $value;
       if ($name_lower == 'expires') {
         // Use the actual timestamp from an Expires header if available.
-        $cache->expire = strtotime($value);
+        $date = new DrupalDateTime($value);
+        $cache->expire = $date->getTimestamp();
       }
     }
 

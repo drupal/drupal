@@ -7,6 +7,7 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
 
@@ -288,7 +289,8 @@ class NodeFormController extends EntityFormController {
     }
 
     // Validate the "authored on" field.
-    if (!empty($node->date) && strtotime($node->date) === FALSE) {
+    $date = new DrupalDateTime($node->date);
+    if ($date->hasErrors()) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
 

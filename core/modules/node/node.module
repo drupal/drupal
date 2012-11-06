@@ -14,6 +14,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Template\Attribute;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\file\Plugin\Core\Entity\File;
@@ -1027,7 +1028,14 @@ function node_submit(Node $node) {
     $node->revision_uid = $user->uid;
   }
 
-  $node->created = !empty($node->date) ? strtotime($node->date) : REQUEST_TIME;
+  if (!empty($node->date)) {
+    $node_created = new DrupalDateTime($node->date);
+    $node->created = $node_created->getTimestamp();
+  }
+  else {
+    $node->created = REQUEST_TIME;
+  }
+
   $node->validated = TRUE;
 
   return $node;
