@@ -20,9 +20,10 @@ function translation_entity_schema() {
         'description' => 'The entity type this translation relates to',
       ),
       'entity_id' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 128,
         'not null' => TRUE,
+        'default' => '',
         'description' => 'The entity id this translation relates to',
       ),
       'langcode' => array(

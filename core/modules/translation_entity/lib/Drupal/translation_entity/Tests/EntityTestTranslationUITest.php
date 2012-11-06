@@ -22,7 +22,7 @@ class EntityTestTranslationUITest extends EntityTranslationUITest {
   public static function getInfo() {
     return array(
       'name' => 'Entity Test Translation UI',
-      'description' => 'Tests the test entity translation UI.',
+      'description' => 'Tests the test entity translation UI with the test entity.',
       'group' => 'Entity Translation UI',
     );
   }
