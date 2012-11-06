@@ -203,4 +203,35 @@ class LocaleContentTest extends WebTestBase {
     $this->drupalLogout();
   }
 
+
+  /**
+   *  Test filtering Node content by language.
+   */
+  function testNodeAdminLanguageFilter() {
+    // User to add and remove language.
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
+
+    // Log in as admin.
+    $this->drupalLogin($admin_user);
+
+    // Enable multiple languages.
+    $this->drupalPost('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));
+    $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'zh-hant'), t('Add language'));
+
+    // Create two nodes: English and Chinese.
+    $node_en = $this->drupalCreateNode(array('langcode' => 'en'));
+    $node_zh_hant = $this->drupalCreateNode(array('langcode' => 'zh-hant'));
+
+    $this->drupalGet('admin/content');
+
+    // Verify filtering by language.
+    $edit = array(
+      'langcode' => 'zh-hant',
+    );
+    $this->drupalPost(NULL, $edit, t('Filter'));
+
+    $this->assertLinkByHref('node/' . $node_zh_hant->nid . '/edit');
+    $this->assertNoLinkByHref('node/' . $node_en->nid . '/edit');
+  }
+
 }

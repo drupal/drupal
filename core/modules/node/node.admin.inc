@@ -114,7 +114,7 @@ function node_filters() {
       // Make locked languages appear special in the list.
       $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }
-    $filters['language'] = array(
+    $filters['langcode'] = array(
       'title' => t('language'),
       'options' => array(
         '[any]' => t('- Any -'),
@@ -140,7 +140,7 @@ function node_build_filter_query(SelectInterface $query) {
         // Note: no exploitable hole as $key/$value have already been checked when submitted
         list($key, $value) = explode('-', $value, 2);
       case 'type':
-      case 'language':
+      case 'langcode':
         $query->condition('n.' . $key, $value);
         break;
     }
@@ -176,7 +176,7 @@ function node_filter_form() {
       $value = module_invoke('taxonomy', 'term_load', $value);
       $value = $value->name;
     }
-    elseif ($type == 'language') {
+    elseif ($type == 'langcode') {
       $value = language_name($value);
     }
     else {
@@ -189,7 +189,7 @@ function node_filter_form() {
     else {
       $form['filters']['current'][] = array('#markup' => t('where %property is %value', $t_args));
     }
-    if (in_array($type, array('type', 'language'))) {
+    if (in_array($type, array('type', 'langcode'))) {
       // Remove the option if it is already being filtered on.
       unset($filters[$type]);
     }
