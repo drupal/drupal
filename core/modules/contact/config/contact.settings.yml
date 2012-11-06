@@ -1,3 +1,4 @@
+default_category: feedback
 flood:
   limit: '5'
   interval: '3600'

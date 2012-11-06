@@ -91,57 +91,44 @@ class CategoryFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::submit().
-   */
-  public function submit(array $form, array &$form_state) {
-    // @todo We should not be calling contact_category_delete_form() from
-    // within the form builder.
-    if ($form_state['triggering_element']['#value'] == t('Delete')) {
-      // Rebuild the form to confirm category deletion.
-      $form_state['redirect'] = 'admin/structure/contact/manage/' . $form_state['values']['id'] . '/delete';
-      return NULL;
-    }
-
-    return parent::submit($form, $form_state);
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
     $category = $this->getEntity($form_state);
-    // Property enforceIsNew is not supported by config entity. So this is only
-    // way to make sure that entity is not saved.
-    $is_new = !$category->getOriginalID();
-    $category->save();
-    $id = $category->id();
+    $status = $category->save();
 
-    if ($is_new) {
-      drupal_set_message(t('Category %label has been added.', array('%label' => $category->label())));
-      watchdog('contact', 'Category %label has been added.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), 'admin/structure/contact/manage/' . $id . '/edit'));
+    if ($status == SAVED_UPDATED) {
+      drupal_set_message(t('Category %label has been updated.', array('%label' => $category->label())));
+      watchdog('contact', 'Category %label has been updated.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), $category->uri() . '/edit'));
     }
     else {
-      drupal_set_message(t('Category %label has been updated.', array('%label' => $category->label())));
-      watchdog('contact', 'Category %label has been updated.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), 'admin/structure/contact/manage/' . $id . '/edit'));
+      drupal_set_message(t('Category %label has been added.', array('%label' => $category->label())));
+      watchdog('contact', 'Category %label has been added.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), $category->uri() . '/edit'));
     }
 
     // Update the default category.
     $contact_config = config('contact.settings');
     if ($form_state['values']['selected']) {
       $contact_config
-        ->set('default_category', $id)
+        ->set('default_category', $category->id())
         ->save();
     }
     // If it was the default category, empty out the setting.
-    elseif ($contact_config->get('default_category') == $id) {
+    elseif ($contact_config->get('default_category') == $category->id()) {
       $contact_config
-        ->clear('default_category')
+        ->set('default_category', NULL)
         ->save();
     }
 
-    // Remove the 'selected' value, which is not part of the Category.
-    unset($form_state['values']['selected']);
-
     $form_state['redirect'] = 'admin/structure/contact';
   }
+
+  /**
+   * Overrides Drupal\Core\Entity\EntityFormController::delete().
+   */
+  public function delete(array $form, array &$form_state) {
+    $category = $this->getEntity($form_state);
+    $form_state['redirect'] = 'admin/structure/contact/manage/' . $category->id() . '/delete';
+  }
+
 }

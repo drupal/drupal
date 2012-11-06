@@ -47,7 +47,7 @@ class ContactSitewideTest extends WebTestBase {
     $edit = array();
     $edit['contact_default_status'] = TRUE;
     $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Setting successfully saved.');
+    $this->assertText(t('The configuration options have been saved.'));
 
     // Delete old categories to ensure that new categories are used.
     $this->deleteCategories();
@@ -67,19 +67,19 @@ class ContactSitewideTest extends WebTestBase {
     $invalid_recipients = array('invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
       $this->addCategory($this->randomName(16), $this->randomName(16), $invalid_recipient, '', FALSE);
-      $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), format_string('Caught invalid recipient (@invalid_recipient)', array('@invalid_recipient' => $invalid_recipient)));
+      $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)));
     }
 
     // Test validation of empty category and recipients fields.
     $this->addCategory('', '', '', '', TRUE);
-    $this->assertText(t('Label field is required.'), 'Caught empty category label field');
-    $this->assertText(t('Machine-readable name field is required.'), 'Caught empty category name field');
-    $this->assertText(t('Recipients field is required.'), 'Caught empty recipients field.');
+    $this->assertText(t('Label field is required.'));
+    $this->assertText(t('Machine-readable name field is required.'));
+    $this->assertText(t('Recipients field is required.'));
 
     // Create first valid category.
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $this->addCategory($id = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)), 'Category successfully added.');
+    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     // Make sure the newly created category is included in the list of categories.
     $this->assertNoUniqueText($label, 'New category included in categories list.');
@@ -91,27 +91,27 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
     $this->assertEqual($config['reply'], $reply);
     $this->assertNotEqual($id, config('contact.settings')->get('default_category'));
-    $this->assertRaw(t('Category %label has been updated.', array('%label' => $label)), 'Category successfully updated.');
+    $this->assertRaw(t('Category %label has been updated.', array('%label' => $label)));
 
     // Ensure that the contact form is shown without a category selection input.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
-    $this->assertText(t('Your e-mail address'), 'Contact form is shown when there is one category.');
-    $this->assertNoText(t('Category'), 'When there is only one category, the category selection element is hidden.');
+    $this->assertText(t('Your e-mail address'));
+    $this->assertNoText(t('Category'));
     $this->drupalLogin($admin_user);
 
     // Add more categories.
     $this->addCategory(drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)), 'Category successfully added.');
+    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     $this->addCategory($name = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
-    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)), 'Category successfully added.');
+    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     // Try adding a category that already exists.
     $this->addCategory($name, $label, '', '', FALSE);
-    $this->assertNoRaw(t('Category %label has been saved.', array('%label' => $label)), 'Category not saved.');
-    $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'), 'Duplicate category error found.');
+    $this->assertNoRaw(t('Category %label has been saved.', array('%label' => $label)));
+    $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();
@@ -122,52 +122,52 @@ class ContactSitewideTest extends WebTestBase {
     // Check to see that anonymous user cannot see contact page without permission.
     user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalGet('contact');
-    $this->assertResponse(403, 'Access denied to anonymous user without permission.');
+    $this->assertResponse(403);
 
     // Give anonymous user permission and see that page is viewable.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalGet('contact');
-    $this->assertResponse(200, 'Access granted to anonymous user with permission.');
+    $this->assertResponse(200);
 
     // Submit contact form with invalid values.
     $categories = entity_load_multiple('contact_category');
     $id = key($categories);
 
     $this->submitContact('', $recipients[0], $this->randomName(16), $id, $this->randomName(64));
-    $this->assertText(t('Your name field is required.'), 'Name required.');
+    $this->assertText(t('Your name field is required.'));
 
     $this->submitContact($this->randomName(16), '', $this->randomName(16), $id, $this->randomName(64));
-    $this->assertText(t('Your e-mail address field is required.'), 'E-mail required.');
+    $this->assertText(t('Your e-mail address field is required.'));
 
     $this->submitContact($this->randomName(16), $invalid_recipients[0], $this->randomName(16), $id, $this->randomName(64));
-    $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'invalid')), 'Valid e-mail required.');
+    $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'invalid')));
 
     $this->submitContact($this->randomName(16), $recipients[0], '', $id, $this->randomName(64));
-    $this->assertText(t('Subject field is required.'), 'Subject required.');
+    $this->assertText(t('Subject field is required.'));
 
     $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $id, '');
-    $this->assertText(t('Message field is required.'), 'Message required.');
+    $this->assertText(t('Message field is required.'));
 
     // Test contact form with no default category selected.
     config('contact.settings')
       ->set('default_category', '')
       ->save();
     $this->drupalGet('contact');
-    $this->assertRaw(t('- Select -'), 'Without selected categories the visitor is asked to chose a category.');
+    $this->assertRaw(t('- Select -'));
 
     // Submit contact form with invalid category id (cid 0).
     $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), 0, '');
-    $this->assertText(t('Category field is required.'), 'Valid category required.');
+    $this->assertText(t('Category field is required.'));
 
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
       $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $id, $this->randomName(64));
-      $this->assertText(t('Your message has been sent.'), 'Message sent.');
+      $this->assertText(t('Your message has been sent.'));
     }
     // Submit contact form one over limit.
     $this->drupalGet('contact');
-    $this->assertResponse(403, 'Access denied to anonymous user after reaching message treshold.');
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => config('contact.settings')->get('flood.limit'), '@interval' => format_interval(600))), 'Message threshold reached.');
+    $this->assertResponse(403);
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => config('contact.settings')->get('flood.limit'), '@interval' => format_interval(600))));
 
     // Delete created categories.
     $this->drupalLogin($admin_user);
@@ -299,7 +299,7 @@ class ContactSitewideTest extends WebTestBase {
     $categories = entity_load_multiple('contact_category');
     foreach ($categories as $id => $category) {
       $this->drupalPost("admin/structure/contact/manage/$id/delete", array(), t('Delete'));
-      $this->assertRaw(t('Category %label has been deleted.', array('%label' => $category->label())), 'Category deleted successfully.');
+      $this->assertRaw(t('Category %label has been deleted.', array('%label' => $category->label())));
       $this->assertFalse(entity_load('contact_category', $id), format_string('Category %category not found', array('%category' => $category->label())));
     }
   }
