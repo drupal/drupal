@@ -487,8 +487,10 @@ function node_uninstall() {
   // Delete remaining general module variables.
   state()->delete('node.node_access_needs_rebuild');
   variable_del('node_admin_theme');
-  variable_del('node_cron_last');
   variable_del('node_recent_block_count');
+
+  // Delete any stored state.
+  state()->delete('node.cron_last');
 }
 
 /**
@@ -726,6 +728,15 @@ function node_update_8009() {
  */
 function node_update_8010() {
   update_variables_to_state(array('node_access_needs_rebuild' => 'node.node_access_needs_rebuild'));
+}
+
+/**
+ * Moves node cron last run time from variable to state.
+ *
+ * @ingroup config_upgrade
+ */
+function node_update_8011() {
+  update_variables_to_state(array('node_cron_last' =>'node.cron_last'));
 }
 
 /**

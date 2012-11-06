@@ -3702,7 +3702,7 @@ function system_run_automated_cron() {
   // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
   if (($threshold = config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
-    $cron_last = variable_get('cron_last', NULL);
+    $cron_last = state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();
     }

@@ -58,19 +58,19 @@ class CronRunTest extends WebTestBase {
     // not passed.
     $cron_last = time();
     $cron_safe_threshold = 100;
-    variable_set('cron_last', $cron_last);
+    state()->set('system.cron_last', $cron_last);
     config('system.cron')
       ->set('threshold.autorun', $cron_safe_threshold)
       ->save();
     $this->drupalGet('');
-    $this->assertTrue($cron_last == variable_get('cron_last', NULL), 'Cron does not run when the cron threshold is not passed.');
+    $this->assertTrue($cron_last == state()->get('system.cron_last'), 'Cron does not run when the cron threshold is not passed.');
 
     // Test if cron runs when the cron threshold was passed.
     $cron_last = time() - 200;
-    variable_set('cron_last', $cron_last);
+    state()->set('system.cron_last', $cron_last);
     $this->drupalGet('');
     sleep(1);
-    $this->assertTrue($cron_last < variable_get('cron_last', NULL), 'Cron runs when the cron threshold is passed.');
+    $this->assertTrue($cron_last < state()->get('system.cron_last'), 'Cron runs when the cron threshold is passed.');
 
     // Disable the cron threshold through the interface.
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
@@ -81,21 +81,21 @@ class CronRunTest extends WebTestBase {
 
     // Test if cron does not run when the cron threshold is disabled.
     $cron_last = time() - 200;
-    variable_set('cron_last', $cron_last);
+    state()->set('system.cron_last', $cron_last);
     $this->drupalGet('');
-    $this->assertTrue($cron_last == variable_get('cron_last', NULL), 'Cron does not run when the cron threshold is disabled.');
+    $this->assertTrue($cron_last == state()->get('system.cron_last'), 'Cron does not run when the cron threshold is disabled.');
   }
 
   /**
    * Make sure exceptions thrown on hook_cron() don't affect other modules.
    */
   function testCronExceptions() {
-    variable_del('common_test_cron');
+    state()->delete('common_test.cron');
     // The common_test module throws an exception. If it isn't caught, the tests
     // won't finish successfully.
     // The common_test_cron_helper module sets the 'common_test_cron' variable.
     $this->cronRun();
-    $result = variable_get('common_test_cron');
+    $result = state()->get('common_test.cron');
     $this->assertEqual($result, 'success', 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
   }
 }

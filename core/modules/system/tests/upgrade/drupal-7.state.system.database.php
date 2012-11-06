@@ -23,3 +23,11 @@ db_merge('variable')
   ->key(array('name' => 'node_access_needs_rebuild'))
   ->fields(array('value' => serialize(TRUE)))
   ->execute();
+db_merge('variable')
+  ->key(array('name' => 'node_cron_last'))
+  ->fields(array('value' => serialize(1304208001)))
+  ->execute();
+db_merge('variable')
+  ->key(array('name' => 'cron_last'))
+  ->fields(array('value' => serialize(1304208002)))
+  ->execute();

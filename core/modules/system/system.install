@@ -272,7 +272,7 @@ function system_requirements($phase) {
     $help = $t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
 
     // Determine when cron last ran.
-    $cron_last = variable_get('cron_last');
+    $cron_last = state()->get('system.cron_last');
     if (!is_numeric($cron_last)) {
       $cron_last = variable_get('install_time', 0);
     }
@@ -2197,6 +2197,15 @@ function system_update_8033() {
   update_variables_to_config('system.menu', array(
     'active_menus_default' => 'active_menus_default'
   ));
+}
+
+/**
+ * Moves cron last run time from variable to state.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8034() {
+  update_variables_to_state(array('cron_last' => 'system.cron_last'));
 }
 
 /**

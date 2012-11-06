@@ -1453,7 +1453,7 @@ function node_ranking() {
   );
 
   // Add relevance based on creation or changed date.
-  if ($node_cron_last = variable_get('node_cron_last', 0)) {
+  if ($node_cron_last = state()->get('node.cron_last')) {
     $ranking['recent'] = array(
       'title' => t('Recently posted'),
       // Exponential decay with half-life of 6 months, starting at last indexed node
@@ -2477,7 +2477,7 @@ function _node_index_node(Node $node) {
 
   // Save the changed time of the most recent indexed node, for the search
   // results half-life calculation.
-  variable_set('node_cron_last', $node->changed);
+  state()->set('node.cron_last', $node->changed);
 
   $languages = $node->getTranslationLanguages();
 

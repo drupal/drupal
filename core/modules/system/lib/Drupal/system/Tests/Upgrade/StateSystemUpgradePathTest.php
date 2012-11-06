@@ -39,6 +39,14 @@ class StateSystemUpgradePathTest extends UpgradePathTestBase {
       'value' => TRUE,
       'variable_name' => 'node_access_needs_rebuild',
     );
+    $expected_state['node.cron_last'] = array(
+      'value' => 1304208001,
+      'variable_name' => 'node_cron_last',
+    );
+    $expected_state['system.cron_last'] = array(
+      'value' => 1304208002,
+      'variable_name' => 'cron_last',
+    );
     $expected_state['update.last_check'] = array(
       'value' => 1304208000,
       'variable_name' => 'update_last_check',
