@@ -101,7 +101,11 @@ function openid_test_yadis_xrds() {
     if (arg(3) == 'xri' && (arg(4) != '@example*résumé;%25' || $_GET['_xrd_r'] != 'application/xrds xml')) {
       throw new NotFoundHttpException();
     }
-    $output = '<?xml version="1.0" encoding="UTF-8"?>
+    $output = '<?xml version="1.0" encoding="UTF-8"?>';
+    if (!empty($_GET['doctype'])) {
+      $output .= "\n<!DOCTYPE dct [ <!ELEMENT blue (#PCDATA)> ]>\n";
+    }
+    $output .= '
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)" xmlns:openid="http://openid.net/xmlns/1.0">
         <XRD>
           <Status cid="' . check_plain(variable_get('openid_test_canonical_id_status', 'verified')) . '"/>

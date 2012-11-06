@@ -133,8 +133,24 @@ function openid_redirect_form($form, &$form_state, $url, $message) {
  */
 function _openid_xrds_parse($raw_xml) {
   $services = array();
-  try {
-    $xml = @new SimpleXMLElement($raw_xml);
+
+  // Protect against malicious doctype declarations and other unexpected entity
+  // loading.
+  $load_entities = libxml_disable_entity_loader(TRUE);
+
+  // Load the XML into a DOM document.
+  $dom = new DOMDocument();
+  @$dom->loadXML($raw_xml);
+
+  // Since DOCTYPE declarations from an untrusted source could be malicious, we
+  // stop parsing here and treat the XML as invalid since XRDS documents do not
+  // require, and are not expected to have, a DOCTYPE.
+  if (isset($dom->doctype)) {
+    return array();
+  }
+
+  // Parse the DOM document for the information we need.
+  if ($xml = simplexml_import_dom($dom)) {
     foreach ($xml->children(OPENID_NS_XRD)->XRD as $xrd) {
       foreach ($xrd->children(OPENID_NS_XRD)->Service as $service_element) {
         $service = array(
@@ -160,9 +176,10 @@ function _openid_xrds_parse($raw_xml) {
       }
     }
   }
-  catch (Exception $e) {
-    // Invalid XML.
-  }
+
+  // Return the LIBXML options to the previous state before returning.
+  libxml_disable_entity_loader($load_entities);
+
   return $services;
 }
 
