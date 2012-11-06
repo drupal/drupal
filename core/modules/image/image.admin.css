@@ -24,6 +24,9 @@
   height: 2px;
   left: -1px;
   position: absolute;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 .image-style-preview .preview-image .width span {
   position: relative;
@@ -36,6 +39,9 @@
   right: -6px;
   top: -1px;
   width: 2px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 .image-style-preview .preview-image .height span {
   height: 2em;
@@ -51,8 +57,8 @@
 .image-anchor {
   width: auto;
 }
-.image-anchor tr.even,
-.image-anchor tr.odd {
+.image-anchor .even,
+.image-anchor .odd {
   background: none;
 }
 .image-anchor td {
