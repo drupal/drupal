@@ -15,3 +15,14 @@ function translation_update_8000() {
     ->condition('permission', 'translate content')
     ->execute();
 }
+
+/**
+* Moves "translation_language_type" from variable to config.
+*
+* @ingroup config_upgrade
+ */
+function translation_update_8001() {
+  update_variables_to_config('translation.settings', array(
+    'translation_language_type' => 'language_type',
+  ));
+}

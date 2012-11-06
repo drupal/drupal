@@ -259,7 +259,7 @@ function translation_node_view(Node $node, $view_mode) {
     // only for configurable language types and interface language is the only
     // configurable language type in core, we use it as default. Contributed
     // modules can change this behavior by setting the system variable below.
-    $type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
+    $type = config('translation.settings')->get('language_type');
     $custom_links = language_negotiation_get_switch_links($type, "node/$node->nid");
     $links = array();
 
@@ -537,8 +537,7 @@ function translation_path_get_translations($path) {
  * Replaces links with pointers to translated versions of the content.
  */
 function translation_language_switch_links_alter(array &$links, $type, $path) {
-  $language_type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
-
+  $language_type = config('translation.settings')->get('language_type');
   if ($type == $language_type && preg_match("!^node/(\d+)(/.+|)!", $path, $matches)) {
     $node = node_load((int) $matches[1]);
 

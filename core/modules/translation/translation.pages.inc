@@ -32,7 +32,7 @@ function translation_node_overview(Node $node) {
     $translations = array($node->langcode => $node);
   }
 
-  $type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
+  $type = config('translation.settings')->get('language_type');
   $header = array(t('Language'), t('Title'), t('Status'), t('Operations'));
 
   foreach (language_list() as $langcode => $language) {
