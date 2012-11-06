@@ -99,7 +99,7 @@ class UserBlocksTests extends WebTestBase {
     $this->insertSession(array('uid' => $user2->uid, 'timestamp' => REQUEST_TIME + 1));
 
     // Insert an inactive logged-in user who should not be seen in the block.
-    $this->insertSession(array('uid' => $user3->uid, 'timestamp' => (REQUEST_TIME - variable_get('user_block_seconds_online', 900) - 1)));
+    $this->insertSession(array('uid' => $user3->uid, 'timestamp' => (REQUEST_TIME - config('user.block')->get('seconds_online') - 1)));
 
     // Insert two anonymous user sessions.
     $this->insertSession();

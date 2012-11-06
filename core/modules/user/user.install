@@ -615,5 +615,18 @@ function user_update_8009(&$sandbox) {
 }
 
 /**
+ * Moves user_block_* settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function user_update_8010() {
+  update_variables_to_config('user.block', array(
+    'user_block_max_list_count' => 'max_list_count',
+    'user_block_seconds_online' => 'seconds_online',
+    'user_block_whois_new_count' => 'whois_new_count',
+  ));
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */

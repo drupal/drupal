@@ -694,20 +694,34 @@ function user_block_info() {
 function user_block_configure($delta = '') {
   global $user;
 
+  $config = config('user.block');
+
   switch ($delta) {
     case 'new':
       $form['user_block_whois_new_count'] = array(
         '#type' => 'select',
         '#title' => t('Number of users to display'),
-        '#default_value' => variable_get('user_block_whois_new_count', 5),
+        '#default_value' => $config->get('whois_new_count'),
         '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
       );
       return $form;
 
     case 'online':
       $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
-      $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
-      $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
+      $form['user_block_seconds_online'] = array(
+        '#type' => 'select',
+        '#title' => t('User activity'),
+        '#default_value' => $config->get('seconds_online'),
+        '#options' => $period,
+        '#description' => t('A user is considered online for this long after they have last viewed a page.')
+      );
+      $form['user_block_max_list_count'] = array(
+        '#type' => 'select',
+        '#title' => t('User list length'),
+        '#default_value' => $config->get('max_list_count'),
+        '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)),
+        '#description' => t('Maximum number of currently online users to display.')
+      );
       return $form;
   }
 }
@@ -717,15 +731,16 @@ function user_block_configure($delta = '') {
  */
 function user_block_save($delta = '', $edit = array()) {
   global $user;
+  $config = config('user.block');
 
   switch ($delta) {
     case 'new':
-      variable_set('user_block_whois_new_count', $edit['user_block_whois_new_count']);
+      $config->set('whois_new_count', $edit['user_block_whois_new_count'])->save();
       break;
 
     case 'online':
-      variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
-      variable_set('user_block_max_list_count', $edit['user_block_max_list_count']);
+      $config->set('seconds_online', $edit['user_block_seconds_online'])->save();
+      $config->set('max_list_count', $edit['user_block_max_list_count'])->save();
       break;
   }
 }
@@ -737,6 +752,7 @@ function user_block_view($delta = '') {
   global $user;
 
   $block = array();
+  $block_config = config('user.block');
 
   switch ($delta) {
     case 'login':
@@ -781,7 +797,9 @@ function user_block_view($delta = '') {
     case 'new':
       if (user_access('access content')) {
         // Retrieve a list of new users who have subsequently accessed the site successfully.
-        $items = db_query_range('SELECT uid, name FROM {users} WHERE status <> 0 AND access <> 0 ORDER BY created DESC', 0, variable_get('user_block_whois_new_count', 5))->fetchAll();
+        $from = 0;
+        $count = $block_config->get('whois_new_count');
+        $items = db_query_range('SELECT uid, name FROM {users} WHERE status <> 0 AND access <> 0 ORDER BY created DESC', $from, $count)->fetchAll();
 
         $block['subject'] = t('Who\'s new');
         $block['content'] = array(
@@ -797,7 +815,7 @@ function user_block_view($delta = '') {
     case 'online':
       if (user_access('access content')) {
         // Count users active within the defined period.
-        $interval = REQUEST_TIME - variable_get('user_block_seconds_online', 900);
+        $interval = REQUEST_TIME - $block_config->get('seconds_online');
 
         // Perform database queries to gather online user lists. We use s.timestamp
         // rather than u.access because it is much faster.
@@ -811,7 +829,7 @@ function user_block_view($delta = '') {
         );
 
         // Display a list of currently online users.
-        $max_users = variable_get('user_block_max_list_count', 10);
+        $max_users = $block_config->get('max_list_count');
         if ($authenticated_count && $max_users) {
           $items = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS max_timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= :interval AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY max_timestamp DESC', 0, $max_users, array(':interval' => $interval))->fetchAll();
 
