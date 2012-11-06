@@ -75,21 +75,9 @@ ul.inline li {
   padding-left: 1em;
   padding-right: 0;
 }
-ul.admin-list li {
-  padding: 9px 30px 0 0;
-  margin-right: 0;
+.admin-list li a {
   background: url(images/list-item-rtl.png) no-repeat right 11px;
-}
-ul.admin-list li a {
-  margin-right: -30px;
-  margin-left: 0;
-  padding: 0 30px 4px 0;
-}
-ul.admin-list.compact li a {
-  margin-right: 0;
-}
-ul.admin-list li div.description a {
-  margin-right: 0;
+  padding: 9px 39px 9px 9px;
 }
 
 /**

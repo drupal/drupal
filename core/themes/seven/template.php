@@ -48,8 +48,10 @@ function seven_node_add_list($variables) {
     $output = '<ul class="admin-list">';
     foreach ($content as $type) {
       $output .= '<li class="clearfix">';
-      $output .= '<span class="label">' . l($type->name, 'node/add/' . $type->type) . '</span>';
-      $output .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
+      $content = '<span class="label">' . check_plain($type->name) . '</span>';
+      $content .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
+      $options['html'] = TRUE;
+      $output .= l($content, 'node/add/' . $type->type, $options);
       $output .= '</li>';
     }
     $output .= '</ul>';
@@ -71,11 +73,14 @@ function seven_admin_block_content($variables) {
   if (!empty($content)) {
     $output = system_admin_compact_mode() ? '<ul class="admin-list compact">' : '<ul class="admin-list">';
     foreach ($content as $item) {
-      $output .= '<li class="leaf">';
-      $output .= l($item['title'], $item['href'], $item['localized_options']);
+      $output .= '<li>';
+      $content = '<span class="label">' . filter_xss_admin($item['title']) . '</span>';
+      $options = $item['localized_options'];
+      $options['html'] = TRUE;
       if (isset($item['description']) && !system_admin_compact_mode()) {
-        $output .= '<div class="description">' . filter_xss_admin($item['description']) . '</div>';
+        $content .= '<div class="description">' . filter_xss_admin($item['description']) . '</div>';
       }
+      $output .= l($content, $item['href'], $options);
       $output .= '</li>';
     }
     $output .= '</ul>';

@@ -98,7 +98,6 @@ acronym {
   border-bottom: dotted 1px;
 }
 ul,
-.block ul,
 .item-list ul {
   list-style-type: disc;
   list-style-image: none;
@@ -339,50 +338,40 @@ ul.inline li {
 ul.inline li {
   display: inline;
 }
-ul.admin-list li {
-  position: relative;
-  padding-left: 30px; /* LTR */
-  padding-top: 9px;
-  border-top: 1px solid #ccc;
-  margin-left: 0; /* LTR */
-  margin-bottom: 10px;
-  background: url(images/list-item.png) no-repeat 0 11px; /* LTR */
-  list-style-type: none;
-  list-style-image: none;
-}
-.admin-panel .item-list ul,
-ul.admin-list {
+.admin-list {
   margin: 0;
   padding: 0;
 }
-.admin-panel .item-list ul,
-ul.admin-list.compact {
-  margin: 8px 0;
-}
-.admin-panel .item-list li,
-ul.admin-list.compact li {
-  border: none;
-  background: none;
-  margin: 0 0 0.75em;
-  line-height: 1;
+.admin-list li {
+  position: relative;
+  border-top: 1px solid #ccc;
+  margin: 0;
+  list-style-type: none;
+  list-style-image: none;
   padding: 0;
 }
-ul.admin-list li:last-child {
-  border-bottom: none;
+.admin-list.compact li {
+  border: none;
 }
-ul.admin-list li a {
-  margin-left: -30px; /* LTR */
-  padding: 0 0 4px 30px; /* LTR */
+.admin-list li a {
+  background: url(images/list-item.png) no-repeat 9px 11px; /* LTR */
+  display: block;
+  padding: 9px 9px 9px 39px; /* LTR */
   min-height: 0;
 }
-ul.admin-list.compact li a {
-  margin-left: 0; /* LTR */
-  padding: 0;
+.admin-list.compact li a {
+  background-image:  none;
+  padding: 2px 19px;
 }
-ul.admin-list li div.description a {
-  margin-left: 0; /* LTR */
-  padding: 0;
-  min-height: inherit;
+.admin-list li a:hover,
+.admin-list li a:focus,
+.admin-list li a:active {
+  text-decoration: none;
+}
+.admin-list li a:hover .label,
+.admin-list li a:focus .label,
+.admin-list li a:active .label {
+  text-decoration: underline;
 }
 div.submitted {
   color: #898989;
