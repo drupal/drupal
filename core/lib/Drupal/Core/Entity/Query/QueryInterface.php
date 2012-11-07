@@ -7,13 +7,15 @@
 
 namespace Drupal\Core\Entity\Query;
 
+use Drupal\Core\Database\Query\AlterableInterface;
+
 /**
  * Interface for entity queries.
  *
  * Never instantiate classes implementing this interface directly. Always use
  * the QueryFactory class.
  */
-interface QueryInterface {
+interface QueryInterface extends AlterableInterface {
 
   /**
    * Gets the entity type for this query.

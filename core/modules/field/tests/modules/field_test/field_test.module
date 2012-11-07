@@ -262,6 +262,17 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
   $query->join('test_entity','te2','%alias.ftid = test_entity.ftid');
 }
 
+
+/**
+ * Implements hook_query_TAG_alter() for tag 'efq_metadata_test'.
+ *
+ * @see Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
+ */
+function field_test_query_efq_metadata_test_alter(&$query) {
+  global $efq_test_metadata;
+  $efq_test_metadata = $query->getMetadata('foo');
+}
+
 /**
  * Implements hook_field_formatter_settings_form_alter().
  */

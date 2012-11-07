@@ -453,4 +453,20 @@ class EntityQueryTest extends WebTestBase {
       $this->assertTrue($ok, format_string("$i is after all entities in bundle2"));
     }
   }
+
+  /**
+   * Test adding a tag and metadata to the Entity query object.
+   *
+   * The tags and metadata should propogate to the SQL query object.
+   */
+  function testMetaData() {
+    $query = entity_query('test_entity');
+    $query
+      ->addTag('efq_metadata_test')
+      ->addMetaData('foo', 'bar')
+      ->execute();
+
+    global $efq_test_metadata;
+    $this->assertEqual($efq_test_metadata, 'bar', 'Tag and metadata propogated to the SQL query object.');
+  }
 }

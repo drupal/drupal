@@ -239,4 +239,48 @@ abstract class QueryBase implements QueryInterface {
   function __clone() {
     $this->condition = clone $this->condition;
   }
+
+  /**
+   * Implements Drupal\Core\Database\Query\AlterableInterface::addTag().
+   */
+  public function addTag($tag) {
+    $this->alterTags[$tag] = 1;
+    return $this;
+  }
+
+  /**
+   * Implements Drupal\Core\Database\Query\AlterableInterface::hasTag().
+   */
+  public function hasTag($tag) {
+    return isset($this->alterTags[$tag]);
+  }
+
+  /**
+   * Implements Drupal\Core\Database\Query\AlterableInterface::hasAllTags().
+   */
+  public function hasAllTags() {
+    return !(boolean)array_diff(func_get_args(), array_keys($this->alterTags));
+  }
+
+  /**
+   * Implements Drupal\Core\Database\Query\AlterableInterface::hasAnyTag().
+   */
+  public function hasAnyTag() {
+    return (boolean)array_intersect(func_get_args(), array_keys($this->alterTags));
+  }
+
+  /**
+   * Implements Drupal\Core\Database\Query\AlterableInterface::addMetaData().
+   */
+  public function addMetaData($key, $object) {
+    $this->alterMetaData[$key] = $object;
+    return $this;
+  }
+
+  /**
+   * Implements Drupal\Core\Database\Query\AlterableInterface::getMetaData().
+   */
+  public function getMetaData($key) {
+    return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
+  }
 }

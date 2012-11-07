@@ -100,6 +100,20 @@ class Query extends QueryBase {
     }
     $sqlQuery->addTag('entity_query');
     $sqlQuery->addTag('entity_query_' . $this->entityType);
+
+    // Add further tags added.
+    if (isset($this->alterTags)) {
+      foreach ($this->alterTags as $tag => $value) {
+        $sqlQuery->addTag($tag);
+      }
+    }
+
+    // Add further metadata added.
+    if (isset($this->alterMetaData)) {
+      foreach ($this->alterMetaData as $key => $value) {
+        $sqlQuery->addMetaData($key, $value);
+      }
+    }
     // This now contains first the table containing entity properties and
     // last the entity base table. They might be the same.
     $sqlQuery->addMetaData('entity_tables', $entity_tables);
