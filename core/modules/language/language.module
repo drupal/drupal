@@ -485,6 +485,8 @@ function language_save($language) {
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
 
+  language_negotiation_include();
+
   // Update URL Prefixes for all languages after the new default language is
   // propagated and the language_list() cache is flushed.
   language_negotiation_url_prefixes_update();

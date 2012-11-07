@@ -30,6 +30,17 @@ class LocaleTranslationTest extends WebTestBase {
   }
 
   /**
+   *  Enable interface translation to English
+   */
+  function testEnglishTranslation() {
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalPost('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));
+    $this->assertLinkByHref('/admin/config/regional/translate/translate?langcode=en', 0, t('Enabled interface translation to English.'));
+  }
+
+  /**
    * Adds a language and tests string translation by users with the appropriate permissions.
    */
   function testStringTranslation() {
