@@ -22,9 +22,9 @@ Drupal 7.17, xxxx-xx-xx (development version)
   database tables changing from VARCHAR to TEXT fields).
 - Added hook_taxonomy_term_view() and standardized the process for rendering
   taxonomy terms to invoke hook_entity_view() and otherwise make it consistent
-  with other entities (API change).
+  with other entities (API change: http://drupal.org/node/1808870).
 - Added hook_entity_view_mode_alter() to allow modules to change entity view
-  modes on display.
+  modes on display (API addition: http://drupal.org/node/1833086).
 - Fixed a bug which made database queries running a "LIKE" query on blob fields
   fail on PostgreSQL databases. This caused errors during the Drupal 6 to
   Drupal 7 upgrade.
