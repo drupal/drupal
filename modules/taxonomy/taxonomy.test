@@ -1428,8 +1428,8 @@ class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
     // hook_entity_view() are invoked.
     $term = taxonomy_term_load($term->tid);
     $term_build = taxonomy_term_page($term);
-    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->tid]['taxonomy_test_term_view_check']), 'hook_taxonomy_term_view() was invoked when viewing the term.');
-    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->tid]['taxonomy_test_entity_view_check']), 'hook_entity_view() was invoked when viewing the term.');
+    $this->assertFalse(empty($term_build['term_heading']['term']['taxonomy_test_term_view_check']), 'hook_taxonomy_term_view() was invoked when viewing the term.');
+    $this->assertFalse(empty($term_build['term_heading']['term']['taxonomy_test_entity_view_check']), 'hook_entity_view() was invoked when viewing the term.');
 
     // Delete the term.
     taxonomy_term_delete($term->tid);

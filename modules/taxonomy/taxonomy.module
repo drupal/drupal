@@ -762,7 +762,7 @@ function taxonomy_term_show($term) {
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param $weight
- *   An integer representing the weight of the first node in the list.
+ *   An integer representing the weight of the first taxonomy term in the list.
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
@@ -819,7 +819,7 @@ function taxonomy_term_build_content($term, $view_mode = 'full', $langcode = NUL
   );
   drupal_alter('entity_view_mode', $view_mode, $context);
 
-  // Try to add in the core taxonomy pieces like description and nodes.
+  // Add the term description if the term has one and it is visible.
   $type = 'taxonomy_term';
   $entity_ids = entity_extract_ids($type, $term);
   $settings = field_view_mode_settings($type, $entity_ids[2]);
@@ -869,7 +869,7 @@ function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
-  // Populate $node->content with a render() array.
+  // Populate $term->content with a render() array.
   taxonomy_term_build_content($term, $view_mode, $langcode);
   $build = $term->content;
 
