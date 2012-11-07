@@ -185,6 +185,7 @@ function contact_site_form_submit($form, &$form_state) {
  *
  * @see contact_menu()
  * @see contact_personal_form_submit()
+ *
  * @ingroup forms
  */
 function contact_personal_form($form, &$form_state, $recipient) {
