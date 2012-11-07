@@ -54,7 +54,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *   be called to determine the entity label. See also the
  *   Drupal\Core\Entity\Entity::label() method, which implements this logic.
  * - list_controller_class: (optional) The name of the class that provides
- *   listings of the The class must implement
+ *   listings of the entities. The class must implement
  *   Drupal\Core\Entity\EntityListControllerInterface. Defaults to
  *   Drupal\Core\Entity\EntityListController.
  * - render_controller_class: The name of the class that is used to render the
