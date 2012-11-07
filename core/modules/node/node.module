@@ -1179,8 +1179,14 @@ function template_preprocess_node(&$variables) {
   $variables['label']     = check_plain($node->label());
   $variables['page']      = $variables['view_mode'] == 'full' && node_is_page($node);
 
-  // Flatten the node entity's member fields.
-  $variables = array_merge((array) $node, $variables);
+  // Make useful flags and node data available.
+  // @todo: The comment properties only exist if comment.module is enabled, but
+  //   are documented in node.tpl.php, so we make sure that they are set.
+  //   Consider removing them.
+  $properties = array('type', 'comment_count', 'uid', 'created', 'promote', 'sticky', 'status', 'comment');
+  foreach ($properties as $property) {
+    $variables[$property] = isset($node->$property) ? $node->$property : NULL;
+  }
 
   // Helpful $content variable for templates.
   $variables += array('content' => array());
@@ -1208,13 +1214,13 @@ function template_preprocess_node(&$variables) {
 
   // Gather node classes.
   $variables['attributes']['class'][] = drupal_html_class('node-' . $node->type);
-  if ($variables['promote']) {
+  if ($node->promote) {
     $variables['attributes']['class'][] = 'promoted';
   }
-  if ($variables['sticky']) {
+  if ($node->sticky) {
     $variables['attributes']['class'][] = 'sticky';
   }
-  if (!$variables['status']) {
+  if (!$node->status) {
     $variables['attributes']['class'][] = 'unpublished';
   }
   if ($variables['view_mode']) {

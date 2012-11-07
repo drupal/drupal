@@ -527,7 +527,7 @@ function rdf_preprocess_node(&$variables) {
     $element = array(
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => $variables['title'],
+        'content' => $variables['label'],
         'about' => $variables['node_url'],
       ),
     );
@@ -538,18 +538,18 @@ function rdf_preprocess_node(&$variables) {
   }
 
   // Adds RDFa markup for the date.
-  if (!empty($variables['rdf_mapping']['created'])) {
-    $date_attributes = rdf_rdfa_attributes($variables['rdf_mapping']['created'], $variables['created']);
+  if (!empty($variables['node']->rdf_mapping['created'])) {
+    $date_attributes = rdf_rdfa_attributes($variables['node']->rdf_mapping['created'], $variables['node']->created);
     $variables['rdf_template_variable_attributes']['date'] = $date_attributes;
     if ($variables['submitted']) {
       $variables['rdf_template_variable_attributes']['submitted'] = $date_attributes;
     }
   }
   // Adds RDFa markup for the relation between the node and its author.
-  if (!empty($variables['rdf_mapping']['uid'])) {
-    $variables['rdf_template_variable_attributes']['name']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
+  if (!empty($variables['node']->rdf_mapping['uid'])) {
+    $variables['rdf_template_variable_attributes']['name']['rel'] = $variables['node']->rdf_mapping['uid']['predicates'];
     if ($variables['submitted']) {
-      $variables['rdf_template_variable_attributes']['submitted']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
+      $variables['rdf_template_variable_attributes']['submitted']['rel'] = $variables['node']->rdf_mapping['uid']['predicates'];
     }
   }
 
