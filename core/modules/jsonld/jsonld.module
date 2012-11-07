@@ -12,7 +12,7 @@ function jsonld_help($path, $args) {
   switch ($path) {
     case 'admin/help#jsonld':
       $output = '';
-      $output .= '<p>' . t('The JSON-LD module serializes entities to the <a href="@jsonld_org">JSON-LD</a> data format. To request JSON-LD instead of HTML, a client should add an Accept header to the request. This module will respond with JSON-LD if the Accept header value is one of the following: application/ld_json, which returns an easy-to-use data structure which is compatible with many external schemas, and application/vnd.drupal.ld+json, which is more expressive and is appropriate for content staging.', array(
+      $output .= '<p>' . t('The JSON-LD module serializes entities to the <a href="@jsonld_org">JSON-LD</a> data format. To request JSON-LD instead of HTML, a client should add an Accept header to the request. This module will respond with JSON-LD if the Accept header value is one of the following: application/ld+json, which returns an easy-to-use data structure which is compatible with many external schemas, and application/vnd.drupal.ld+json, which is more expressive and is appropriate for content staging.', array(
         '@jsonld_org' => 'http://json-ld.org/',
       )) . '</p>';
       return $output;
