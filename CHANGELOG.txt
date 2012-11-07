@@ -1,5 +1,5 @@
 
-Drupal 7.17, xxxx-xx-xx (development version)
+Drupal 7.17, 2012-11-07
 -----------------------
 - Changed the default value of the '404_fast_html' variable to have a DOCTYPE
   declaration.
