@@ -47,7 +47,7 @@ Drupal 7.17, xxxx-xx-xx (development version)
   Seven theme (markup change).
 - Fixed bugs which caused taxonomy vocabulary and shortcut set titles to be
   double-escaped. The fix replaces the taxonomy vocabulary overview page and
-  "Edit shortcuts" menu items' title callbacks entries in hook_menu() with new
+  "Edit shortcuts" menu items' title callback entries in hook_menu() with new
   functions that do not escape HTML characters (data structure change).
 - Modified the Update manager module to allow drupal.org to collect usage
   statistics for individual modules and themes, rather than only for entire
