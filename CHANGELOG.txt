@@ -1,3 +1,5 @@
+Drupal 7.18, xxxx-xx-xx (development version)
+-----------------------
 
 Drupal 7.17, 2012-11-07
 -----------------------
