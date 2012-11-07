@@ -215,6 +215,7 @@ Drupal.ajax.prototype.keypressResponse = function (element, event) {
   // TRUE. On a text-type widget a space should always be a space.
   if (event.which === 13 || (event.which === 32 && element.type !== 'text' && element.type !== 'textarea')) {
     event.preventDefault();
+    event.stopPropagation();
     $(ajax.element_settings.element).trigger(ajax.element_settings.event);
   }
 };
@@ -229,6 +230,7 @@ Drupal.ajax.prototype.keypressResponse = function (element, event) {
  */
 Drupal.ajax.prototype.eventResponse = function (element, event) {
   event.preventDefault();
+  event.stopPropagation();
 
   // Create a synonym for this to reduce code confusion.
   var ajax = this;
