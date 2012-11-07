@@ -3673,7 +3673,8 @@ function drupal_region_class($region) {
  * actually needed.
  *
  * @param $data
- *   (optional) If given, the value depends on the $options parameter:
+ *   (optional) If given, the value depends on the $options parameter, or
+ *   $options['type'] if $options is passed as an associative array:
  *   - 'file': Path to the file relative to base_path().
  *   - 'inline': The JavaScript code that should be placed in the given scope.
  *   - 'external': The absolute path to an external JavaScript file that is not
