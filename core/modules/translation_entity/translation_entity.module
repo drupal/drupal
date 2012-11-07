@@ -500,6 +500,11 @@ function translation_entity_load_translation_data(array $entities, $entity_type)
  * Implements hook_entity_insert().
  */
 function translation_entity_entity_insert(EntityInterface $entity) {
+  // Only do something if translation support for the given entity is enabled.
+  if (!translation_entity_enabled($entity->entityType(), $entity->bundle())) {
+    return;
+  }
+
   $entity_type = $entity->entityType();
   $id = $entity->id();
   $query = db_insert('translation_entity')
@@ -519,6 +524,11 @@ function translation_entity_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_delete().
  */
 function translation_entity_entity_delete(EntityInterface $entity) {
+  // Only do something if translation support for the given entity is enabled.
+  if (!translation_entity_enabled($entity->entityType(), $entity->bundle())) {
+    return;
+  }
+
   db_delete('translation_entity')
     ->condition('entity_type', $entity->entityType())
     ->condition('entity_id', $entity->id())
@@ -529,6 +539,11 @@ function translation_entity_entity_delete(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function translation_entity_entity_update(EntityInterface $entity) {
+  // Only do something if translation support for the given entity is enabled.
+  if (!translation_entity_enabled($entity->entityType(), $entity->bundle())) {
+    return;
+  }
+
   // Delete and create to ensure no stale value remains behind.
   translation_entity_entity_delete($entity);
   translation_entity_entity_insert($entity);

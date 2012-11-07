@@ -86,4 +86,17 @@ class TermTranslationUITest extends EntityTranslationUITest {
     return array('name' => $this->name) + parent::getNewEntityValues($langcode);
   }
 
+  /**
+   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::testTranslationUI().
+   */
+  public function testTranslationUI() {
+    parent::testTranslationUI();
+
+    // Make sure that no row was inserted for taxonomy vocabularies, which do
+    // not have translations enabled.
+    $rows = db_query('SELECT * FROM {translation_entity}')->fetchAll();
+    $this->assertEqual(2, count($rows));
+    $this->assertEqual('taxonomy_term', $rows[0]->entity_type);
+    $this->assertEqual('taxonomy_term', $rows[1]->entity_type);
+  }
 }
