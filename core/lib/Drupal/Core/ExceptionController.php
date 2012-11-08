@@ -130,7 +130,6 @@ class ExceptionController extends ContainerAware {
       $response->setStatusCode(403, 'Access denied');
     }
     else {
-      $response = new Response('Access Denied', 403);
 
       // @todo Replace this block with something cleaner.
       $return = t('You are not authorized to access this page.');
@@ -139,7 +138,7 @@ class ExceptionController extends ContainerAware {
       $page = element_info('page');
       $content = drupal_render_page($page);
 
-      $response->setContent($content);
+      $response = new Response($content, 403);
     }
 
     return $response;
@@ -157,8 +156,15 @@ class ExceptionController extends ContainerAware {
     watchdog('page not found', check_plain($request->attributes->get('system_path')), array(), WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
-    // @todo Inline this rather than using a function.
-    drupal_fast_404();
+    $exclude_paths = variable_get('404_fast_paths_exclude', FALSE);
+    if ($exclude_paths && !preg_match($exclude_paths, $request->getPathInfo())) {
+      $fast_paths = variable_get('404_fast_paths', FALSE);
+      if ($fast_paths && preg_match($fast_paths, $request->getPathInfo())) {
+        $fast_404_html = variable_get('404_fast_html', '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
+        $fast_404_html = strtr($fast_404_html, array('@path' => check_plain($request->getUri())));
+        return new Response($fast_404_html, 404);
+      }
+    }
 
     $system_path = $request->attributes->get('system_path');
 
@@ -195,8 +201,6 @@ class ExceptionController extends ContainerAware {
       $response->setStatusCode(404, 'Not Found');
     }
     else {
-      $response = new Response('Not Found', 404);
-
       // @todo Replace this block with something cleaner.
       $return = t('The requested page "@path" could not be found.', array('@path' => $request->getPathInfo()));
       drupal_set_title(t('Page not found'));
@@ -204,7 +208,7 @@ class ExceptionController extends ContainerAware {
       $page = element_info('page');
       $content = drupal_render_page($page);
 
-      $response->setContent($content);
+      $response = new Response($content, 404);
     }
 
     return $response;
