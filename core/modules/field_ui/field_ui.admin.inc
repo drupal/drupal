@@ -533,7 +533,7 @@ function field_ui_existing_field_options($entity_type, $bundle) {
               'type' => $field['type'],
               'type_label' => $field_types[$field['type']]['label'],
               'field' => $field['field_name'],
-              'label' => t($instance['label']),
+              'label' => $instance['label'],
               'widget_type' => $instance['widget']['type'],
             );
           }
