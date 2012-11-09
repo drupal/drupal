@@ -27,10 +27,10 @@ class FilePrivateTest extends FileFieldTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     node_access_rebuild();
-    variable_set('node_access_test_private', TRUE);
+    state()->set('node_access_test.private', TRUE);
   }
 
   /**
