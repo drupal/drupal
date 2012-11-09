@@ -172,7 +172,7 @@ class StatisticsAdminTest extends WebTestBase {
       ->set('count_content_views', 1)
       ->set('access_log.max_lifetime', 1)
       ->save();
-    variable_set('statistics_day_timestamp', 8640000);
+    state()->set('statistics.day_timestamp', 8640000);
 
     $this->drupalGet('node/' . $this->test_node->nid);
     // Manually calling statistics.php, simulating ajax behavior.

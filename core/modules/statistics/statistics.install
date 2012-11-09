@@ -6,6 +6,15 @@
  */
 
 /**
+ * Implements hook_uninstall().
+ */
+function statistics_uninstall() {
+  // Remove states.
+  state()->delete('statistics.node_counter_scale');
+  state()->delete('statistics.day_timestamp');
+}
+
+/**
  * Implements hook_schema().
  */
 function statistics_schema() {
@@ -153,4 +162,14 @@ function statistics_update_8001() {
     ),
     array('primary key' => array('nid'))
   );
+}
+
+/**
+ * Convert variables to state.
+ */
+function statistics_update_8002() {
+  update_variables_to_state(array(
+    'node_cron_views_scale' => 'statistics.node_counter_scale',
+    'statistics_day_timestamp' => 'statistics.day_timestamp',
+  ));
 }
