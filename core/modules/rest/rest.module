@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * @file
+ * RESTful web services module.
+ */
+
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+/**
+ * Implements hook_menu().
+ *
+ * @todo for now we use this hook for our admin page until
+ * http://drupal.org/node/1801570 is sorted out.
+ */
+function rest_menu() {
+  $items['admin/config/services/rest'] = array(
+    'title' => 'RESTful web services',
+    'description' => 'Configure resources and entities that are exposed as web API.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rest_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'rest.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_route_info().
+ */
+function rest_route_info() {
+  $collection = new RouteCollection();
+
+  // This hook is called during module enabling where the manager has not been
+  // registered as service yet.
+  if (drupal_container()->has('plugin.manager.rest')) {
+    $manager = drupal_container()->get('plugin.manager.rest');
+    $resources = config('rest')->get('resources');
+    if ($resources && $enabled = array_intersect_key($manager->getDefinitions(), $resources)) {
+      foreach ($enabled as $key => $resource) {
+        $plugin = $manager->getInstance(array('id' => $key));
+
+        // @todo Switch to ->addCollection() once http://drupal.org/node/1819018 is resolved.
+        foreach ($plugin->routes() as $name => $route) {
+          $collection->add("rest.$name", $route);
+        }
+      }
+    }
+  }
+
+  return $collection;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function rest_permission() {
+  $permissions = array();
+  if (drupal_container()->has('plugin.manager.rest')) {
+    $manager = drupal_container()->get('plugin.manager.rest');
+    $resources = config('rest')->get('resources');
+    if ($resources && $enabled = array_intersect_key($manager->getDefinitions(), $resources)) {
+      foreach ($enabled as $key => $resource) {
+        $plugin = $manager->getInstance(array('id' => $key));
+        $permissions = array_merge($permissions, $plugin->permissions());
+      }
+    }
+  }
+  return $permissions;
+}
+
+/**
+ * Implements hook_help().
+ */
+function rest_help($path, $arg) {
+  switch ($path) {
+    // Main module help for the REST module
+    case 'admin/help#rest':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The REST module provides a framework for exposing Drupal\'s data structures as RESTful web services. It can be used to read and write resources remotely, such as entity types like nodes or users. For more information, see the online handbook entry for the <a href="@rest">RESTful web services module</a>.', array('@rest' => 'http://drupal.org/documentation/modules/rest')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Exposing resources') . '</dt>';
+      $output .= '<dd>' . t('Visit the <a href="@admin-rest">configuration page</a> to display a list of available resources and to enable them individually.', array('@admin-rest' => url('admin/config/services/rest'))) . '</dd>';
+      $output .= '</dl>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Granting permissions') . '</dt>';
+      $output .= '<dd>' . t('The <a href="@permission-rest">permissions page</a> allows you to determine what user roles may access a web service operation.', array('@admin-rest' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'admin/config/services/rest':
+      global $base_url;
+      return '<p>' . t('This page allows you to expose resources as RESTful web API. That enables external third parties to interact with your Drupal installation via a machine readable interface. All entity types are available for such operations while contributed modules can provide more.') . '</p>' .
+        '<p>' . t('Example: when enabled, the node resource is avialable at the path <code>/entity/node/{id}</code> and a HTTP DELETE request can be used to delete a node. Testing on the command line with cURL (deletes node 5, make sure to replace the node ID accordingly):') . '</p>' .
+        '<p><code>curl --include --request DELETE --cookie ' . session_name() . '=' . session_id() . ' ' . $base_url . base_path() . 'entity/node/5</code>' .
+        '<p>' . t('Note: Session information of the current user is shown here, make sure that you have the <a href="@permissions">permission to use the web API</a> to delete nodes.', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</p>';
+  }
+}

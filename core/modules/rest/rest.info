@@ -1,0 +1,6 @@
+name = RESTful web services
+description = Exposes entities and other resources as RESTful web API
+package = Core
+version = VERSION
+core = 8.x
+configure = admin/config/services/rest
