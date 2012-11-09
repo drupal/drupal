@@ -88,6 +88,7 @@ function update_check_incompatibility($name, $type = 'module') {
  */
 function update_prepare_d8_bootstrap() {
   include_once DRUPAL_ROOT . '/core/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/schema.inc';
   // Bootstrap to configuration.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
