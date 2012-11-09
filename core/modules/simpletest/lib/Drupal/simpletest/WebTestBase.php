@@ -1436,7 +1436,7 @@ abstract class WebTestBase extends TestBase {
    * Runs cron in the Drupal installed by Simpletest.
    */
   protected function cronRun() {
-    $this->drupalGet('cron/' . config('system.cron')->get('key'));
+    $this->drupalGet('cron/' . state()->get('system.cron_key'));
   }
 
   /**

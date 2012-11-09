@@ -1101,7 +1101,7 @@ function system_cron_page() {
  * @see system_cron_page().
  */
 function system_cron_access($key) {
-  if ($key != config('system.cron')->get('key')) {
+  if ($key != state()->get('system.cron_key')) {
     watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
     return FALSE;
   }

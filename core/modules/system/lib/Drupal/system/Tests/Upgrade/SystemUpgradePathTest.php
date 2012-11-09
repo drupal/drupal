@@ -35,7 +35,6 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
 
     // Verify that variables were properly upgraded.
     $expected_config['system.cron'] = array(
-      'key' => 'kdm95qppDDlyZrcUOx453YwQqDA4DNmxi4VQcxzFU9M',
       'threshold.autorun' => '86400',
       'threshold.requirements_warning' => '86400',
       'threshold.requirements_error' => '172800',

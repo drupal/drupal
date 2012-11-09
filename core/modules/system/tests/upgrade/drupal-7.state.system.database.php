@@ -31,3 +31,7 @@ db_merge('variable')
   ->key(array('name' => 'cron_last'))
   ->fields(array('value' => serialize(1304208002)))
   ->execute();
+db_merge('variable')
+  ->key(array('name' => 'cron_key'))
+  ->fields(array('value' => serialize('kdm95qppDDlyZrcUOx453YwQqDA4DNmxi4VQcxzFU9M')))
+  ->execute();
