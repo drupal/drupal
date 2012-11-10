@@ -1208,8 +1208,6 @@ function system_node_type($op, $info) {
  *   - A string containing a Drupal path.
  *   - An associative array with a 'path' key. Additional array values are
  *     passed as the $options parameter to l().
- *   If the 'destination' query parameter is set in the URL when viewing a
- *   confirmation form, that value will be used instead of $path.
  * @param $description
  *   Additional text to display. Defaults to t('This action cannot be undone.').
  * @param $yes
