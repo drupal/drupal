@@ -22,9 +22,9 @@ use Drupal\Core\Cache\CacheBackendInterface;
  * static caches of that same data.
  *
  * Note that array_* functions do not work with ArrayAccess. Systems using
- * DrupalCacheArray should use this only internally. If providing API functions
+ * CacheArray should use this only internally. If providing API functions
  * that return the full array, this can be cached separately or returned
- * directly. However since DrupalCacheArray holds partial content by design, it
+ * directly. However since CacheArray holds partial content by design, it
  * should be a normal PHP array or otherwise contain the full structure.
  *
  * Note also that due to limitations in PHP prior to 5.3.4, it is impossible to
@@ -102,7 +102,7 @@ abstract class CacheArray implements ArrayAccess {
   protected $storage = array();
 
   /**
-   * Constructs a DrupalCacheArray object.
+   * Constructs a CacheArray object.
    *
    * @param string $cid
    *   The cid for the array being cached.
@@ -212,7 +212,7 @@ abstract class CacheArray implements ArrayAccess {
   }
 
   /**
-   * Destructs the DrupalCacheArray object.
+   * Destructs the CacheArray object.
    */
   public function __destruct() {
     $data = array();

@@ -12,7 +12,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 /**
  * Builds the run-time theme registry.
  *
- * Extends DrupalCacheArray to allow the theme registry to be accessed as a
+ * Extends CacheArray to allow the theme registry to be accessed as a
  * complete registry, while internally caching only the parts of the registry
  * that are actually in use on the site. On cache misses the complete
  * theme registry is loaded and used to update the run-time cache.

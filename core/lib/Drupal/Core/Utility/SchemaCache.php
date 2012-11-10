@@ -10,7 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Core\Utility\CacheArray;
 
 /**
- * Extends DrupalCacheArray to allow for dynamic building of the schema cache.
+ * Extends CacheArray to allow for dynamic building of the schema cache.
  */
 class SchemaCache extends CacheArray {
 
@@ -23,7 +23,7 @@ class SchemaCache extends CacheArray {
   }
 
   /**
-   * Overrides DrupalCacheArray::resolveCacheMiss().
+   * Overrides CacheArray::resolveCacheMiss().
    */
   protected function resolveCacheMiss($offset) {
     $complete_schema = drupal_get_complete_schema();
