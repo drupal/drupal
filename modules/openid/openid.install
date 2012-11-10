@@ -95,7 +95,7 @@ function openid_schema() {
 }
 
 /**
- * @defgroup updates-6.x-extra Extra openid updates for 6.x
+ * @addtogroup updates-6.x-extra
  * @{
  */
 
@@ -139,6 +139,6 @@ function openid_update_6000() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-extra"
+ * @} End of "addtogroup updates-6.x-extra".
  * The next series of updates should start at 7000.
  */

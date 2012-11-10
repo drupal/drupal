@@ -15,7 +15,7 @@ function locale_install() {
 }
 
 /**
- * @defgroup updates-5.x-to-6.x Locale updates from 5.x to 6.x
+ * @addtogroup updates-5.x-to-6.x
  * @{
  */
 
@@ -221,11 +221,11 @@ function locale_update_6006() {
 }
 
 /**
- * @} End of "defgroup updates-5.x-to-6.x"
+ * @} End of "addtogroup updates-5.x-to-6.x".
  */
 
 /**
- * @defgroup updates-6.x-extra Locale updates for 6.x
+ * @addtogroup updates-6.x-extra
  * @{
  */
 
@@ -239,7 +239,7 @@ function locale_update_6007() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-extra"
+ * @} End of "addtogroup updates-6.x-extra".
  * The next series of updates should start at 7000.
  */
 

@@ -1174,7 +1174,7 @@ function system_update_1022() {
 }
 
 /**
- * @} End of "defgroup updates-5.x-extra"
+ * @} End of "defgroup updates-5.x-extra".
  */
 
 /**
@@ -2576,7 +2576,7 @@ function system_update_6047() {
 }
 
 /**
- * @} End of "defgroup updates-5.x-to-6.x"
+ * @} End of "defgroup updates-5.x-to-6.x".
  */
 
 /**
@@ -2713,7 +2713,7 @@ function system_update_6055() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-extra"
+ * @} End of "defgroup updates-6.x-extra".
  * The next series of updates should start at 7000.
  */
 

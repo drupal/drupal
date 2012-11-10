@@ -67,7 +67,7 @@ function comment_update_6003() {
 }
 
 /**
- * @defgroup updates-6.x-extra Extra system updates for 6.x
+ * @addtogroup updates-6.x-extra
  * @{
  */
 
@@ -91,7 +91,7 @@ function comment_update_6005() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-extra"
+ * @} End of "addtogroup updates-6.x-extra".
  * The next series of updates should start at 7000.
  */
 

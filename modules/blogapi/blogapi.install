@@ -58,7 +58,7 @@ function blogapi_schema() {
 }
 
 /**
- * @defgroup updates-5.x-to-6.x Blog API updates from 5.x to 6.x
+ * @addtogroup updates-5.x-to-6.x
  * @{
  */
 
@@ -118,7 +118,7 @@ function blogapi_update_6001() {
 }
 
 /**
- * @} End of "defgroup updates-5.x-to-6.x"
+ * @} End of "addtogroup updates-5.x-to-6.x".
  * The next series of updates should start at 7000.
  */
 
