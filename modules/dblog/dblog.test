@@ -5,8 +5,23 @@
  * Tests for dblog.module.
  */
 
+/**
+ * Tests logging messages to the database.
+ */
 class DBLogTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user with some relevent administrative permissions.
+   *
+   * @var object
+   */
   protected $big_user;
+
+  /**
+   * A user without any permissions.
+   *
+   * @var object
+   */
   protected $any_user;
 
   public static function getInfo() {
@@ -28,7 +43,11 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Login users, create dblog events, and test dblog functionality through the admin and user interfaces.
+   * Tests Database Logging module functionality through interfaces.
+   *
+   * First logs in users, then creates database log events, and finally tests
+   * Database Logging module functionality through both the admin and user
+   * interfaces.
    */
   function testDBLog() {
     // Login the admin user.
@@ -46,12 +65,13 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify setting of the dblog row limit.
+   * Verifies setting of the database log row limit.
    *
-   * @param integer $count Log row limit.
+   * @param int $row_limit
+   *   The row limit.
    */
   private function verifyRowLimit($row_limit) {
-    // Change the dblog row limit.
+    // Change the database log row limit.
     $edit = array();
     $edit['dblog_row_limit'] = $row_limit;
     $this->drupalPost('admin/config/development/logging', $edit, t('Save configuration'));
@@ -66,33 +86,35 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify cron applies the dblog row limit.
+   * Verifies that cron correctly applies the database log row limit.
    *
-   * @param integer $count Log row limit.
+   * @param int $row_limit
+   *   The row limit.
    */
   private function verifyCron($row_limit) {
     // Generate additional log entries.
     $this->generateLogEntries($row_limit + 10);
-    // Verify dblog row count exceeds row limit.
+    // Verify that the database log row count exceeds the row limit.
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count > $row_limit, t('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
 
-    // Run cron job.
+    // Run a cron job.
     $this->cronRun();
-    // Verify dblog row count equals row limit plus one because cron adds a record after it runs.
+    // Verify that the database log row count equals the row limit plus one
+    // because cron adds a record after it runs.
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count == $row_limit + 1, t('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
   }
 
   /**
-   * Generate dblog entries.
+   * Generates a number of random database log events.
    *
-   * @param integer $count
-   *   Number of log entries to generate.
-   * @param $type
-   *   The type of watchdog entry.
-   * @param $severity
-   *   The severity of the watchdog entry.
+   * @param int $count
+   *   Number of watchdog entries to generate.
+   * @param string $type
+   *   (optional) The type of watchdog entry. Defaults to 'custom'.
+   * @param int $severity
+   *   (optional) The severity of the watchdog entry. Defaults to WATCHDOG_NOTICE.
    */
   private function generateLogEntries($count, $type = 'custom', $severity = WATCHDOG_NOTICE) {
     global $base_root;
@@ -119,42 +141,43 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify the logged in user has the desired access to the various dblog nodes.
+   * Confirms that database log reports are displayed at the correct paths.
    *
-   * @param integer $response HTTP response code.
+   * @param int $response
+   *   (optional) HTTP response code. Defaults to 200.
    */
   private function verifyReports($response = 200) {
     $quote = '&#039;';
 
-    // View dblog help node.
+    // View the database log help page.
     $this->drupalGet('admin/help/dblog');
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Database logging'), t('DBLog help was displayed'));
     }
 
-    // View dblog report node.
+    // View the database log report page.
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Recent log messages'), t('DBLog report was displayed'));
     }
 
-    // View dblog page-not-found report node.
+    // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Top ' . $quote . 'page not found' . $quote . ' errors'), t('DBLog page-not-found report was displayed'));
     }
 
-    // View dblog access-denied report node.
+    // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Top ' . $quote . 'access denied' . $quote . ' errors'), t('DBLog access-denied report was displayed'));
     }
 
-    // View dblog event node.
+    // View the database log event page.
     $this->drupalGet('admin/reports/event/1');
     $this->assertResponse($response);
     if ($response == 200) {
@@ -163,7 +186,7 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify events.
+   * Generates and then verifies various types of events.
    */
   private function verifyEvents() {
     // Invoke events.
@@ -179,14 +202,14 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Generate and verify user events.
-   *
+   * Generates and then verifies some user events.
    */
   private function doUser() {
     // Set user variables.
     $name = $this->randomName();
     $pass = user_password();
-    // Add user using form to generate add user event (which is not triggered by drupalCreateUser).
+    // Add a user using the form to generate an add user event (which is not
+    // triggered by drupalCreateUser).
     $edit = array();
     $edit['name'] = $name;
     $edit['mail'] = $name . '@example.com';
@@ -195,15 +218,16 @@ class DBLogTestCase extends DrupalWebTestCase {
     $edit['status'] = 1;
     $this->drupalPost('admin/people/create', $edit, t('Create new account'));
     $this->assertResponse(200);
-    // Retrieve user object.
+    // Retrieve the user object.
     $user = user_load_by_name($name);
     $this->assertTrue($user != NULL, t('User @name was loaded', array('@name' => $name)));
-    $user->pass_raw = $pass; // Needed by drupalLogin.
+    // pass_raw property is needed by drupalLogin.
+    $user->pass_raw = $pass;
     // Login user.
     $this->drupalLogin($user);
     // Logout user.
     $this->drupalLogout();
-    // Fetch row ids in watchdog that relate to the user.
+    // Fetch the row IDs in watchdog that relate to the user.
     $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid));
     foreach ($result as $row) {
       $ids[] = $row->wid;
@@ -213,17 +237,18 @@ class DBLogTestCase extends DrupalWebTestCase {
 
     // Login the admin user.
     $this->drupalLogin($this->big_user);
-    // Delete user.
+    // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
     $this->drupalPost('user/' . $user->uid . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
 
-    // View the dblog report.
+    // View the database log report.
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(200);
 
-    // Verify events were recorded.
+    // Verify that the expected events were recorded.
     // Add user.
-    // Default display includes name and email address; if too long then email is replaced by three periods.
+    // Default display includes name and email address; if too long, the email
+    // address is replaced by three periods.
     $this->assertLogMessage(t('New user: %name (%email).', array('%name' => $name, '%email' => $user->mail)), t('DBLog event was recorded: [add user]'));
     // Login user.
     $this->assertLogMessage(t('Session opened for %name.', array('%name' => $name)), t('DBLog event was recorded: [login user]'));
@@ -232,7 +257,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Delete user.
     $message = t('Deleted user: %name %email.', array('%name' => $name, '%email' => '<' . $user->mail . '>'));
     $message_text = truncate_utf8(filter_xss($message, array()), 56, TRUE, TRUE);
-    // Verify full message on details page.
+    // Verify that the full message displays on the details page.
     $link = FALSE;
     if ($links = $this->xpath('//a[text()="' . html_entity_decode($message_text) . '"]')) {
       // Found link with the message text.
@@ -253,7 +278,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $not_found_url = $this->randomName(60);
     $this->drupalGet($not_found_url);
     $this->assertResponse(404);
-    // View dblog page-not-found report page.
+    // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse(200);
     // Check that full-length URL displayed.
@@ -261,9 +286,10 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Generate and verify node events.
+   * Generates and then verifies some node events.
    *
-   * @param string $type Content type.
+   * @param string $type
+   *   A node type (e.g., 'article', 'page' or 'poll').
    */
   private function doNode($type) {
     // Create user.
@@ -272,61 +298,65 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Login user.
     $this->drupalLogin($user);
 
-    // Create node using form to generate add content event (which is not triggered by drupalCreateNode).
+    // Create a node using the form in order to generate an add content event
+    // (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
     $langcode = LANGUAGE_NONE;
     $title = $edit["title"];
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
-    // Retrieve node object.
+    // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
-    // Edit node.
+    // Edit the node.
     $edit = $this->getContentUpdate($type);
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
-    // Delete node.
+    // Delete the node.
     $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
     $this->assertResponse(200);
-    // View node (to generate page not found event).
+    // View the node (to generate page not found event).
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(404);
-    // View the dblog report (to generate access denied event).
+    // View the database log report (to generate access denied event).
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(403);
 
     // Login the admin user.
     $this->drupalLogin($this->big_user);
-    // View the dblog report.
+    // View the database log report.
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(200);
 
-    // Verify events were recorded.
-    // Content added.
+    // Verify that node events were recorded.
+    // Was node content added?
     $this->assertLogMessage(t('@type: added %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content added]'));
-    // Content updated.
+    // Was node content updated?
     $this->assertLogMessage(t('@type: updated %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content updated]'));
-    // Content deleted.
+    // Was node content deleted?
     $this->assertLogMessage(t('@type: deleted %title.', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content deleted]'));
 
-    // View dblog access-denied report node.
+    // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
     $this->assertResponse(200);
-    // Access denied.
+    // Verify that the 'access denied' event was recorded.
     $this->assertText(t('admin/reports/dblog'), t('DBLog event was recorded: [access denied]'));
 
-    // View dblog page-not-found report node.
+    // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse(200);
-    // Page not found.
+    // Verify that the 'page not found' event was recorded.
     $this->assertText(t('node/@nid', array('@nid' => $node->nid)), t('DBLog event was recorded: [page not found]'));
   }
 
   /**
-   * Create content based on content type.
+   * Creates random content based on node content type.
    *
-   * @param string $type Content type.
-   * @return array Content.
+   * @param string $type
+   *   Node content type (e.g., 'article').
+   *
+   * @return array
+   *   Random content needed by various node types.
    */
   private function getContent($type) {
     $langcode = LANGUAGE_NONE;
@@ -350,10 +380,13 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create content update based on content type.
+   * Creates random content as an update based on node content type.
    *
-   * @param string $type Content type.
-   * @return array Content.
+   * @param string $type
+   *   Node content type (e.g., 'article').
+   *
+   * @return array
+   *   Random content needed by various node types.
    */
   private function getContentUpdate($type) {
     switch ($type) {
@@ -375,11 +408,14 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Login an admin user, create dblog event, and test clearing dblog functionality through the admin interface.
+   * Tests the addition and clearing of log events through the admin interface.
+   *
+   * Logs in the admin user, creates a database log event, and tests the
+   * functionality of clearing the database log through the admin interface.
    */
   protected function testDBLogAddAndClear() {
     global $base_root;
-    // Get a count of how many watchdog entries there are.
+    // Get a count of how many watchdog entries already exist.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
     $log = array(
       'type'        => 'custom',
@@ -396,27 +432,27 @@ class DBLogTestCase extends DrupalWebTestCase {
     );
     // Add a watchdog entry.
     dblog_watchdog($log);
-    // Make sure the table count has actually incremented.
+    // Make sure the table count has actually been incremented.
     $this->assertEqual($count + 1, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), t('dblog_watchdog() added an entry to the dblog :count', array(':count' => $count)));
     // Login the admin user.
     $this->drupalLogin($this->big_user);
-    // Now post to clear the db table.
+    // Post in order to clear the database table.
     $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
-    // Count rows in watchdog that previously related to the deleted user.
+    // Count the rows in watchdog that previously related to the deleted user.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
     $this->assertEqual($count, 0, t('DBLog contains :count records after a clear.', array(':count' => $count)));
   }
 
   /**
-   * Test the dblog filter on admin/reports/dblog.
+   * Tests the database log filter functionality at admin/reports/dblog.
    */
   protected function testFilter() {
     $this->drupalLogin($this->big_user);
 
-    // Clear log to ensure that only generated entries are found.
+    // Clear the log to ensure that only generated entries will be found.
     db_delete('watchdog')->execute();
 
-    // Generate watchdog entries.
+    // Generate 9 random watchdog entries.
     $type_names = array();
     $types = array();
     for ($i = 0; $i < 3; $i++) {
@@ -432,10 +468,10 @@ class DBLogTestCase extends DrupalWebTestCase {
       }
     }
 
-    // View the dblog.
+    // View the database log page.
     $this->drupalGet('admin/reports/dblog');
 
-    // Confirm all the entries are displayed.
+    // Confirm that all the entries are displayed.
     $count = $this->getTypeCount($types);
     foreach ($types as $key => $type) {
       $this->assertEqual($count[$key], $type['count'], 'Count matched');
@@ -461,8 +497,8 @@ class DBLogTestCase extends DrupalWebTestCase {
       $this->assertEqual(array_sum($count), $type_count, 'Count matched');
     }
 
-    // Set filter to match each of the three type attributes and confirm the
-    // number of entries displayed.
+    // Set the filter to match each of the two filter-type attributes and
+    // confirm the correct number of entries are displayed.
     foreach ($types as $key => $type) {
       $edit = array(
         'type[]' => array($type['type']),
@@ -480,10 +516,14 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get the log entry information form the page.
+   * Gets the database log event information from the browser page.
    *
-   * @return
-   *   List of entries and their information.
+   * @return array
+   *   List of log events where each event is an array with following keys:
+   *   - severity: (int) A database log severity constant.
+   *   - type: (string) The type of database log event.
+   *   - message: (string) The message for this database log event.
+   *   - user: (string) The user associated with this database log event.
    */
   protected function getLogEntries() {
     $entries = array();
@@ -502,11 +542,12 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get the count of entries per type.
+   * Gets the count of database log entries by database log event type.
    *
-   * @param $types
+   * @param array $types
    *   The type information to compare against.
-   * @return
+   *
+   * @return array
    *   The count of each type keyed by the key of the $types array.
    */
   protected function getTypeCount(array $types) {
@@ -524,11 +565,12 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get the watchdog severity constant corresponding to the CSS class.
+   * Gets the watchdog severity constant corresponding to the CSS class.
    *
-   * @param $class
+   * @param string $class
    *   CSS class attribute.
-   * @return
+   *
+   * @return int|null
    *   The watchdog severity constant or NULL if not found.
    *
    * @ingroup logging_severity_levels
@@ -557,11 +599,12 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Extract the text contained by the element.
+   * Extracts the text contained by the XHTML element.
    *
-   * @param $element
+   * @param SimpleXMLElement $element
    *   Element to extract text from.
-   * @return
+   *
+   * @return string
    *   Extracted text.
    */
   protected function asText(SimpleXMLElement $element) {
@@ -572,21 +615,22 @@ class DBLogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert messages appear on the log overview screen.
+   * Confirms that a log message appears on the database log overview screen.
    *
-   * This function should be used only for admin/reports/dblog page, because it
-   * check for the message link text truncated to 56 characters. Other dblog
-   * pages have no detail links so contains a full message text.
+   * This function should only be used for the admin/reports/dblog page, because
+   * it checks for the message link text truncated to 56 characters. Other log
+   * pages have no detail links so they contain the full message text.
    *
-   * @param $log_message
-   *   The message to check.
-   * @param $message
+   * @param string $log_message
+   *   The database log message to check.
+   * @param string $message
    *   The message to pass to simpletest.
    */
   protected function assertLogMessage($log_message, $message) {
     $message_text = truncate_utf8(filter_xss($log_message, array()), 56, TRUE, TRUE);
-    // After filter_xss() HTML entities should be converted to their characters
-    // because assertLink() uses this string in xpath() to query DOM.
+    // After filter_xss(), HTML entities should be converted to their character
+    // equivalents because assertLink() uses this string in xpath() to query the
+    // Document Object Model (DOM).
     $this->assertLink(html_entity_decode($message_text), 0, $message);
   }
 }
