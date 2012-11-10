@@ -306,7 +306,7 @@ function hook_search_page($results) {
  *   any HTML entities or HTML tags.
  *
  * @param $langcode
- *   The language code of the entitiy that has been found.
+ *   The language code of the entity that has been found.
  *
  * @return
  *   The text after preprocessing. Note that if your module decides not to alter
