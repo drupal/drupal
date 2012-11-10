@@ -22,12 +22,12 @@ class IpAddressBlockingTest extends WebTestBase {
     return array(
       'name' => 'IP address banning',
       'description' => 'Test IP address banning.',
-      'group' => 'Ban'
+      'group' => 'Ban',
     );
   }
 
   /**
-   * Test a variety of user input to confirm correct validation and saving of data.
+   * Tests various user input to confirm correct validation and saving of data.
    */
   function testIPAddressValidation() {
     // Create user.
@@ -76,7 +76,7 @@ class IpAddressBlockingTest extends WebTestBase {
 
     // Submit your own IP address. This fails, although it works when testing
     // manually.
-    // TODO: on some systems this test fails due to a bug or inconsistency in cURL.
+    // TODO: On some systems this test fails due to a bug/inconsistency in cURL.
     // $edit = array();
     // $edit['ip'] = ip_address();
     // $this->drupalPost('admin/config/people/ban', $edit, t('Save'));
