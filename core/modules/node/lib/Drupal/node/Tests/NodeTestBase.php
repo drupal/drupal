@@ -9,6 +9,9 @@ namespace Drupal\node\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Sets up page and article content types.
+ */
 abstract class NodeTestBase extends WebTestBase {
 
   /**

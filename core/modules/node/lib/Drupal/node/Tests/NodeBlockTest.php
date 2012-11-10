@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+/**
+ * Tests the availability of the syndicate block.
+ */
 class NodeBlockTest extends NodeTestBase {
 
   /**

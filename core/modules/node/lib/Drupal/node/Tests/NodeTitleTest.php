@@ -8,7 +8,7 @@
 namespace Drupal\node\Tests;
 
 /**
- * Test node title.
+ * Tests node title functionality.
  */
 class NodeTitleTest extends NodeTestBase {
 
@@ -37,7 +37,7 @@ class NodeTitleTest extends NodeTestBase {
   }
 
   /**
-   *  Create one node and test if the node title has the correct value.
+   *  Creates one node and tests if the node title has the correct value.
    */
   function testNodeTitle() {
     // Create "Basic page" content with title.

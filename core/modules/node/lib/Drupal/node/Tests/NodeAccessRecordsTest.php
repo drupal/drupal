@@ -8,7 +8,7 @@
 namespace Drupal\node\Tests;
 
 /**
- * Test case to verify hook_node_access_records functionality.
+ * Tests hook_node_access_records() functionality.
  */
 class NodeAccessRecordsTest extends NodeTestBase {
 
@@ -28,7 +28,7 @@ class NodeAccessRecordsTest extends NodeTestBase {
   }
 
   /**
-   * Create a node and test the creation of node access rules.
+   * Creates a node and tests the creation of node access rules.
    */
   function testNodeAccessRecords() {
     // Create an article node.

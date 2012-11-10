@@ -21,7 +21,7 @@ class NodeBuildContentTest extends NodeTestBase {
   }
 
  /**
-  * Test to ensure that a node's content array is rebuilt on every call to node_build_content().
+  * Ensures that content array is rebuilt on every call to node_build_content().
   */
   function testNodeRebuildContent() {
     $node = $this->drupalCreateNode();

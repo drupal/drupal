@@ -20,7 +20,7 @@ class NodeTypePersistenceTest extends NodeTestBase {
   }
 
   /**
-   * Test node type customizations persist through disable and uninstall.
+   * Tests that node type customizations persist through disable and uninstall.
    */
   function testNodeTypeCustomizationPersistence() {
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer modules'));

@@ -10,7 +10,7 @@ namespace Drupal\node\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test multistep node forms basic options.
+ * Tests basic options of multi-step node forms.
  */
 class MultiStepNodeFormBasicOptionsTest extends WebTestBase {
 
@@ -37,7 +37,7 @@ class MultiStepNodeFormBasicOptionsTest extends WebTestBase {
   }
 
   /**
-   * Change the default values of basic options to ensure they persist.
+   * Tests changing the default values of basic options to ensure they persist.
    */
   function testMultiStepNodeFormBasicOptions() {
     $edit = array(

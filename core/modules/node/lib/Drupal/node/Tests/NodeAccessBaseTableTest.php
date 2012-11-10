@@ -19,7 +19,13 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    */
   public static $modules = array('node_access_test');
 
-  // Requires tags taxonomy field.
+  /**
+   * The installation profile to use with this test.
+   *
+   * This test class requires the "tags" taxonomy field.
+   *
+   * @var string
+   */
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -30,9 +36,6 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     );
   }
 
-  /**
-   * Enable modules and create user with specific permissions.
-   */
   public function setUp() {
     parent::setUp();
 
@@ -41,7 +44,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
   }
 
   /**
-   * Test the "private" node access.
+   * Tests the "private" node access functionality.
    *
    * - Create 2 users with "access content" and "create article" permissions.
    * - Each user creates one private and one not private article.

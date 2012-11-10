@@ -8,9 +8,11 @@
 namespace Drupal\node\Tests;
 
 /**
- * Test case to verify basic node_access functionality.
+ * Tests basic node_access functionality.
+ *
+ * Note that hook_node_access_records() is covered in another test class.
+ *
  * @todo Cover hook_node_access in a separate test class.
- * hook_node_access_records is covered in another test class.
  */
 class NodeAccessTest extends NodeTestBase {
   public static function getInfo() {
@@ -22,7 +24,7 @@ class NodeAccessTest extends NodeTestBase {
   }
 
   /**
-   * Asserts node_access correctly grants or denies access.
+   * Asserts node_access() correctly grants or denies access.
    */
   function assertNodeAccess($ops, $node, $account) {
     foreach ($ops as $op => $result) {

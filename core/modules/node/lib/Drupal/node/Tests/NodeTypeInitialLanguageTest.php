@@ -35,7 +35,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   }
 
   /**
-   * Tests the node type initial language defaults, and modify them.
+   * Tests the node type initial language defaults, and modifies them.
    *
    * The default initial language must be the site's default, and the language
    * locked option must be on.
@@ -95,7 +95,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   }
 
   /**
-   * Tests Language field visibility features.
+   * Tests language field visibility features.
    */
   function testLanguageFieldVisibility() {
     $langcode = LANGUAGE_NOT_SPECIFIED;

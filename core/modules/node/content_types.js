@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Javascript for the node content editing form.
+ */
+
 (function ($) {
 
 "use strict";

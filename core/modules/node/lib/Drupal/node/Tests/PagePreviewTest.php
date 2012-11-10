@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+/**
+ * Tests the node entity preview functionality.
+ */
 class PagePreviewTest extends NodeTestBase {
   public static function getInfo() {
     return array(
@@ -24,7 +27,7 @@ class PagePreviewTest extends NodeTestBase {
   }
 
   /**
-   * Check the node preview functionality.
+   * Checks the node preview functionality.
    */
   function testPagePreview() {
     $langcode = LANGUAGE_NOT_SPECIFIED;
@@ -48,7 +51,7 @@ class PagePreviewTest extends NodeTestBase {
   }
 
   /**
-   * Check the node preview functionality, when using revisions.
+   * Checks the node preview functionality, when using revisions.
    */
   function testPagePreviewWithRevisions() {
     $langcode = LANGUAGE_NOT_SPECIFIED;

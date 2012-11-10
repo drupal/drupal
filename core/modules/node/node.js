@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Defines Javascript behaviors for the node module.
+ */
+
 (function ($) {
 
 "use strict";

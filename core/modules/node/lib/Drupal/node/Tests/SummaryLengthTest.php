@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+/**
+ * Tests the summary length functionality.
+ */
 class SummaryLengthTest extends NodeTestBase {
   public static function getInfo() {
     return array(
@@ -17,7 +20,7 @@ class SummaryLengthTest extends NodeTestBase {
   }
 
   /**
-   * Creates a node and then an anonymous and unpermissioned user attempt to edit the node.
+   * Tests the node summary length functionality.
    */
   function testSummaryLength() {
     // Create a node to view.

@@ -8,7 +8,7 @@
 namespace Drupal\node\Tests;
 
 /**
- * Test case to check node save related functionality, including import-save
+ * Tests node save related functionality, including import-save.
  */
 class NodeSaveTest extends NodeTestBase {
 
@@ -37,7 +37,8 @@ class NodeSaveTest extends NodeTestBase {
   }
 
   /**
-   * Import test, to check if custom node ids are saved properly.
+   * Checks whether custom node IDs are saved properly during an import operation.
+   *
    * Workflow:
    *  - first create a piece of content
    *  - save the content
@@ -71,8 +72,7 @@ class NodeSaveTest extends NodeTestBase {
   }
 
   /**
-   * Check that the "created" and "changed" timestamps are set correctly when
-   * saving a new node or updating an existing node.
+   * Verifies accuracy of the "created" and "changed" timestamp functionality.
    */
   function testTimestamps() {
     // Use the default timestamps.

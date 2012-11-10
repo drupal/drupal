@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+/**
+ * Tests XSS functionality with a node entity.
+ */
 class NodeTitleXSSTest extends NodeTestBase {
   public static function getInfo() {
     return array(
@@ -16,6 +19,9 @@ class NodeTitleXSSTest extends NodeTestBase {
     );
   }
 
+  /**
+   * Tests XSS functionality with a node entity.
+   */
   function testNodeTitleXSS() {
     // Prepare a user to do the stuff.
     $web_user = $this->drupalCreateUser(array('create page content', 'edit any page content'));

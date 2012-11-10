@@ -154,8 +154,8 @@ class Node extends Entity implements ContentEntityInterface {
   /**
    * The node promotion status.
    *
-   * Promoted nodes should be displayed on the front page of the site. The
-   * value is either NODE_PROMOTED or NODE_NOT_PROMOTED.
+   * Promoted nodes should be displayed on the front page of the site. The value
+   * is either NODE_PROMOTED or NODE_NOT_PROMOTED.
    *
    * @var integer
    */
@@ -184,7 +184,7 @@ class Node extends Entity implements ContentEntityInterface {
   /**
    * The node translation status.
    *
-   * If the translation page needs to be updated the value is 1, otherwise 0.
+   * If the translation page needs to be updated, the value is 1; otherwise 0.
    *
    * @var integer
    */

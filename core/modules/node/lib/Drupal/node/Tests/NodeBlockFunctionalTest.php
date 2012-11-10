@@ -36,7 +36,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   }
 
   /**
-   * Test the recent comments block.
+   * Tests the recent comments block.
    */
   function testRecentNodeBlock() {
     $this->drupalLogin($this->admin_user);

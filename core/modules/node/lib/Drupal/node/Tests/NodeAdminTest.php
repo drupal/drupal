@@ -8,9 +8,10 @@
 namespace Drupal\node\Tests;
 
 /**
- * Test node administration page functionality.
+ * Tests node administration page functionality.
  */
 class NodeAdminTest extends NodeTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Node administration',
@@ -76,6 +77,7 @@ class NodeAdminTest extends NodeTestBase {
    * Tests content overview with different user permissions.
    *
    * Taxonomy filters are tested separately.
+   *
    * @see TaxonomyNodeFilterTestCase
    */
   function testContentAdminPages() {

@@ -2,7 +2,9 @@
 
 /**
  * @file
- * Dummy module implementing node access related hooks to test API interaction
+ * A dummy module implementing node access related hooks for testing purposes.
+ *
+ * A dummy module implementing node access related hooks to test API interaction
  * with the Node module. This module restricts view permission to those with
  * a special 'node test view' permission.
  */

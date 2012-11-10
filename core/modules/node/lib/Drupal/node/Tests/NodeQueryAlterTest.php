@@ -83,10 +83,10 @@ class NodeQueryAlterTest extends NodeTestBase {
   }
 
   /**
-   * Lower-level test of 'node_access' query alter, for user with access.
+   * Tests 'node_access' query alter, for user with access.
    *
-   * Verifies that a non-standard table alias can be used, and that a
-   * user with node access can view the nodes.
+   * Verifies that a non-standard table alias can be used, and that a user with
+   * node access can view the nodes.
    */
   function testNodeQueryAlterLowLevelWithAccess() {
     // User with access should be able to view 4 nodes.
@@ -106,10 +106,10 @@ class NodeQueryAlterTest extends NodeTestBase {
   }
 
   /**
-   * Lower-level test of 'node_access' query alter, for user without access.
+   * Tests 'node_access' query alter, for user without access.
    *
-   * Verifies that a non-standard table alias can be used, and that a
-   * user without node access cannot view the nodes.
+   * Verifies that a non-standard table alias can be used, and that a user
+   * without node access cannot view the nodes.
    */
   function testNodeQueryAlterLowLevelNoAccess() {
     // User without access should be able to view 0 nodes.
@@ -129,10 +129,10 @@ class NodeQueryAlterTest extends NodeTestBase {
   }
 
   /**
-   * Lower-level test of 'node_access' query alter, for edit access.
+   * Tests 'node_access' query alter, for edit access.
    *
-   * Verifies that a non-standard table alias can be used, and that a
-   * user with view-only node access cannot edit the nodes.
+   * Verifies that a non-standard table alias can be used, and that a user with
+   * view-only node access cannot edit the nodes.
    */
   function testNodeQueryAlterLowLevelEditAccess() {
     // User with view-only access should not be able to edit nodes.
@@ -154,13 +154,13 @@ class NodeQueryAlterTest extends NodeTestBase {
   }
 
   /**
-   * Lower-level test of 'node_access' query alter override.
+   * Tests 'node_access' query alter override.
    *
    * Verifies that node_access_view_all_nodes() is called from
-   * node_query_node_access_alter().  We do this by checking that
-   * a user which normally would not have view privileges is able
-   * to view the nodes when we add a record to {node_access} paired
-   * with a corresponding privilege in hook_node_grants().
+   * node_query_node_access_alter(). We do this by checking that a user who
+   * normally would not have view privileges is able to view the nodes when we
+   * add a record to {node_access} paired with a corresponding privilege in
+   * hook_node_grants().
    */
   function testNodeQueryAlterOverride() {
     $record = array(

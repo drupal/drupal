@@ -246,7 +246,7 @@ function node_field_display_node_alter(&$display, $context) {
  *   A node entity.
  *
  * @return array
- *   An array with 'path' as the key and Node ID as its value.
+ *   An array with 'path' as the key and the path to the node as its value.
  */
 function node_uri(Node $node) {
   return array(
@@ -483,6 +483,8 @@ function node_type_get_description($node_type) {
  * node_type_save(), and obsolete ones are deleted via a call to
  * node_type_delete(). See _node_types_build() for an explanation of the new
  * and obsolete types.
+ *
+ * @see _node_types_build()
  */
 function node_types_rebuild() {
   _node_types_build(TRUE);
@@ -828,7 +830,8 @@ function node_type_cache_reset() {
  *
  * @param $info
  *   (optional) An object or array containing values to override the defaults.
- *   See hook_node_info() for details on what the array elements mean.
+ *   See hook_node_info() for details on what the array elements mean. Defaults
+ *   to an empty array.
  *
  * @return
  *   A node type object, with missing values in $info set to their defaults.
@@ -952,8 +955,8 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * Loads node entities from the database.
  *
  * This function should be used whenever you need to load more than one node
- * from the database. Nodes are loaded into memory and will not require
- * database access if loaded again during the same page request.
+ * from the database. Nodes are loaded into memory and will not require database
+ * access if loaded again during the same page request.
  *
  * @param array $nids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
@@ -1154,10 +1157,10 @@ function node_preprocess_block(&$variables) {
  * variables.
  *
  * @param $variables
- *   An array containing the following arguments:
- *   - $node
- *   - $view_mode
- *   - $page
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - node: The node object.
+ *   - view_mode: View mode; e.g., 'full', 'teaser'...
  *
  * @see node.tpl.php
  */
@@ -1640,7 +1643,7 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL, $langc
  * Access callback: Checks whether the user has permission to add a node.
  *
  * @return
- *   TRUE if the user has permission, otherwise FALSE.
+ *   TRUE if the user has add permission, otherwise FALSE.
  *
  * @see node_menu()
  */
@@ -1992,8 +1995,8 @@ function node_block_save($delta = '', $edit = array()) {
  *   (optional) The maximum number of nodes to find. Defaults to 10.
  *
  * @return
- *   An array of node entities or an empty array if there are no recent
- *   nodes visible to the current user.
+ *   An array of node entities or an empty array if there are no recent nodes
+ *   visible to the current user.
  */
 function node_get_recent($number = 10) {
   $query = db_select('node', 'n');
@@ -2340,8 +2343,8 @@ function node_feed($nids = FALSE, $channel = array()) {
  * @param $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
  * @param $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
+ *   (optional) A language code to use for rendering. Defaults to NULL which is
+ *   the global content language of the current request.
  *
  * @return
  *   An array as expected by drupal_render().
@@ -2689,8 +2692,8 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * @{
  * The node access system determines who can do what to which nodes.
  *
- * In determining access rights for a node, node_access() first checks
- * whether the user has the "bypass node access" permission. Such users have
+ * In determining access rights for a node, node_access() first checks whether
+ * the user has the "bypass node access" permission. Such users have
  * unrestricted access to all nodes. user 1 will always pass this check.
  *
  * Next, all implementations of hook_node_access() will be called. Each
@@ -2705,8 +2708,8 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * is compared against the table. If any row contains the node ID in question
  * (or 0, which stands for "all nodes"), one of the grant IDs returned, and a
  * value of TRUE for the operation in question, then access is granted. Note
- * that this table is a list of grants; any matching row is sufficient to
- * grant access to the node.
+ * that this table is a list of grants; any matching row is sufficient to grant
+ * access to the node.
  *
  * In node listings (lists of nodes generated from a select query, such as the
  * default home page at path 'node', an RSS feed, a recent content block, etc.),
@@ -2924,11 +2927,11 @@ function node_list_permissions($type) {
  *
  * By default, this will include all node types in the system. To exclude a
  * specific node from getting permissions defined for it, set the
- * node_permissions_$type variable to 0. Core does not provide an interface
- * for doing so, however, contrib modules may exclude their own nodes in
+ * node_permissions_$type variable to 0. Core does not provide an interface for
+ * doing so. However, contrib modules may exclude their own nodes in
  * hook_install(). Alternatively, contrib modules may configure all node types
- * at once, or decide to apply some other hook_node_access() implementation
- * to some or all node types.
+ * at once, or decide to apply some other hook_node_access() implementation to
+ * some or all node types.
  *
  * @return
  *   An array of node types managed by this module.
@@ -2947,12 +2950,12 @@ function node_permissions_get_configured_types() {
  * Fetches an array of permission IDs granted to the given user ID.
  *
  * The implementation here provides only the universal "all" grant. A node
- * access module should implement hook_node_grants() to provide a grant
- * list for the user.
+ * access module should implement hook_node_grants() to provide a grant list for
+ * the user.
  *
- * After the default grants have been loaded, we allow modules to alter
- * the grants array by reference. This hook allows for complex business
- * logic to be applied when integrating multiple node access modules.
+ * After the default grants have been loaded, we allow modules to alter the
+ * grants array by reference. This hook allows for complex business logic to be
+ * applied when integrating multiple node access modules.
  *
  * @param $op
  *   The operation that the user is trying to perform.
@@ -3047,11 +3050,10 @@ function node_access_view_all_nodes($account = NULL) {
 /**
  * Implements hook_query_TAG_alter().
  *
- * This is the hook_query_alter() for queries tagged with 'node_access'.
- * It adds node access checks for the user account given by the 'account'
- * meta-data (or global $user if not provided), for an operation given by
- * the 'op' meta-data (or 'view' if not provided; other possible values are
- * 'update' and 'delete').
+ * This is the hook_query_alter() for queries tagged with 'node_access'. It adds
+ * node access checks for the user account given by the 'account' meta-data (or
+ * global $user if not provided), for an operation given by the 'op' meta-data
+ * (or 'view' if not provided; other possible values are 'update' and 'delete').
  */
 function node_query_node_access_alter(AlterableInterface $query) {
   global $user;
@@ -3167,15 +3169,14 @@ function node_access_acquire_grants(Node $node, $delete = TRUE) {
  *
  * If a realm is provided, it will only delete grants from that realm, but it
  * will always delete a grant from the 'all' realm. Modules that utilize
- * node_access can use this function when doing mass updates due to widespread
+ * node_access() can use this function when doing mass updates due to widespread
  * permission changes.
  *
  * Note: Don't call this function directly from a contributed module. Call
  * node_access_acquire_grants() instead.
  *
  * @param Drupal\node\Node $node
- *   The $node being written to. All that is necessary is that it contains a
- *   nid.
+ *   The node whose grants are being written.
  * @param $grants
  *   A list of grants to write. Each grant is an array that must contain the
  *   following keys: realm, gid, grant_view, grant_update, grant_delete.
@@ -3189,6 +3190,8 @@ function node_access_acquire_grants(Node $node, $delete = TRUE) {
  *   (optional) If false, does not delete records. This is only for optimization
  *   purposes, and assumes the caller has already performed a mass delete of
  *   some form. Defaults to TRUE.
+ *
+ * @see node_access_acquire_grants()
  */
 function _node_access_write_grants(Node $node, $grants, $realm = NULL, $delete = TRUE) {
   if ($delete) {
@@ -3224,7 +3227,8 @@ function _node_access_write_grants(Node $node, $grants, $realm = NULL, $delete =
  * This can be used as an alternative to direct node_access_rebuild calls,
  * allowing administrators to decide when they want to perform the actual
  * (possibly time consuming) rebuild.
- * When unsure the current user is an administrator, node_access_rebuild
+ *
+ * When unsure if the current user is an administrator, node_access_rebuild()
  * should be used instead.
  *
  * @param $rebuild
@@ -3232,6 +3236,8 @@ function _node_access_write_grants(Node $node, $grants, $realm = NULL, $delete =
  *
  * @return
  *   The current value of the flag if no value was provided for $rebuild.
+ *
+ * @see node_access_rebuild()
  */
 function node_access_needs_rebuild($rebuild = NULL) {
   if (!isset($rebuild)) {
@@ -3319,11 +3325,11 @@ function node_access_rebuild($batch_mode = FALSE) {
 }
 
 /**
- * Batch operation for node_access_rebuild_batch.
+ * Performs batch operation for node_access_rebuild().
  *
- * This is a multistep operation : we go through all nodes by packs of 20.
- * The batch processing engine interrupts processing and sends progress
- * feedback after 1 second execution time.
+ * This is a multistep operation: we go through all nodes by packs of 20. The
+ * batch processing engine interrupts processing and sends progress feedback
+ * after 1 second execution time.
  *
  * @param array $context
  *   An array of contextual key/value information for rebuild batch process.
@@ -3357,7 +3363,7 @@ function _node_access_rebuild_batch_operation(&$context) {
 }
 
 /**
- * Post-processing for node_access_rebuild_batch.
+ * Performs post-processing for node_access_rebuild().
  *
  * @param bool $success
  *   A boolean indicating whether the re-build process has completed.
@@ -3694,6 +3700,8 @@ function node_assign_owner_action_submit($form, $form_state) {
  *
  * @return array
  *   A form array.
+ *
+ * @see node_unpublish_by_keyword_action_submit()
  */
 function node_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(

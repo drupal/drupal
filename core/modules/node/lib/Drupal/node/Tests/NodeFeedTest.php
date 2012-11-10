@@ -22,7 +22,7 @@ class NodeFeedTest extends WebTestBase {
   }
 
   /**
-   * Ensure that node_feed accepts and prints extra channel elements.
+   * Ensures that node_feed() accepts and prints extra channel elements.
    */
   function testNodeFeedExtraChannelElements() {
     $response = node_feed(array(), array('copyright' => 'Drupal is a registered trademark of Dries Buytaert.'));

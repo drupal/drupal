@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+/**
+ * Tests the node revision functionality.
+ */
 class NodeRevisionsTest extends NodeTestBase {
   protected $nodes;
   protected $logs;
@@ -58,7 +61,7 @@ class NodeRevisionsTest extends NodeTestBase {
   }
 
   /**
-   * Check node revision related operations.
+   * Checks node revision related operations.
    */
   function testRevisions() {
     $nodes = $this->nodes;

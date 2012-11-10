@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+/**
+ * Tests the functionality of node entity edit permissions.
+ */
 class PageViewTest extends NodeTestBase {
   public static function getInfo() {
     return array(
@@ -17,7 +20,7 @@ class PageViewTest extends NodeTestBase {
   }
 
   /**
-   * Creates a node and then an anonymous and unpermissioned user attempt to edit the node.
+   * Tests an anonymous and unpermissioned user attempting to edit the node.
    */
   function testPageView() {
     // Create a node to view.

@@ -8,7 +8,7 @@
 namespace Drupal\node\Tests;
 
 /**
- * Ensure that data added to nodes by other modules appears in RSS feeds.
+ * Ensures that data added to nodes by other modules appears in RSS feeds.
  *
  * Create a node, enable the node_test module to ensure that extra data is
  * added to the node->content array, then verify that the data appears on the
@@ -42,8 +42,7 @@ class NodeRSSContentTest extends NodeTestBase {
   }
 
   /**
-   * Create a new node and ensure that it includes the custom data when added
-   * to an RSS feed.
+   * Ensures that a new node includes the custom data when added to an RSS feed.
    */
   function testNodeRSSContent() {
     // Create a node.

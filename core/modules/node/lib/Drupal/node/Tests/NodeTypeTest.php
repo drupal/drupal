@@ -28,7 +28,7 @@ class NodeTypeTest extends NodeTestBase {
   }
 
   /**
-   * Ensure that node type functions (node_type_get_*) work correctly.
+   * Ensures that node type functions (node_type_get_*) work correctly.
    *
    * Load available node types and validate the returned data.
    */
@@ -47,7 +47,7 @@ class NodeTypeTest extends NodeTestBase {
   }
 
   /**
-   * Test creating a content type programmatically and via a form.
+   * Tests creating a content type programmatically and via a form.
    */
   function testNodeTypeCreation() {
     // Create a content type programmaticaly.
@@ -77,7 +77,7 @@ class NodeTypeTest extends NodeTestBase {
   }
 
   /**
-   * Test editing a node type using the UI.
+   * Tests editing a node type using the UI.
    */
   function testNodeTypeEditing() {
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types'));
@@ -130,7 +130,7 @@ class NodeTypeTest extends NodeTestBase {
   }
 
   /**
-   * Test that node_types_rebuild() correctly handles the 'disabled' flag.
+   * Tests that node_types_rebuild() correctly handles the 'disabled' flag.
    */
   function testNodeTypeStatus() {
     // Enable all core node modules, and all types should be active.

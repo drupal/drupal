@@ -8,7 +8,7 @@
 namespace Drupal\node\Tests;
 
 /**
- * Rebuild the node_access table.
+ * Verifies the rebuild functionality for the node_access table.
  */
 class NodeAccessRebuildTest extends NodeTestBase {
   public static function getInfo() {
@@ -27,6 +27,9 @@ class NodeAccessRebuildTest extends NodeTestBase {
     $this->web_user = $web_user;
   }
 
+  /**
+   * Tests rebuilding the node access permissions table.
+   */
   function testNodeAccessRebuild() {
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Rebuild permissions'));

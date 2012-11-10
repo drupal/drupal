@@ -8,9 +8,10 @@
 namespace Drupal\node\Tests;
 
 /**
- * Check that the post information displays when enabled for a content type.
+ * Checks that the post information displays when enabled for a content type.
  */
 class NodePostSettingsTest extends NodeTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Node post information display',
@@ -27,7 +28,7 @@ class NodePostSettingsTest extends NodeTestBase {
   }
 
   /**
-   * Set "Basic page" content type to display post information and confirm its presence on a new node.
+   * Confirms "Basic page" content type and post information is on a new node.
    */
   function testPagePostInfo() {
 
@@ -50,7 +51,7 @@ class NodePostSettingsTest extends NodeTestBase {
   }
 
   /**
-   * Set "Basic page" content type to not display post information and confirm its absence on a new node.
+   * Confirms absence of post information on a new node.
    */
   function testPageNotPostInfo() {
 

@@ -10,6 +10,9 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Database\Database;
 use Exception;
 
+/**
+ * Tests creating and saving a node.
+ */
 class NodeCreationTest extends NodeTestBase {
 
   /**
@@ -37,7 +40,7 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
-   * Create a "Basic page" node and verify its consistency in the database.
+   * Creates a "Basic page" node and verifies its consistency in the database.
    */
   function testNodeCreation() {
     // Create a node.
@@ -56,7 +59,7 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
-   * Create a page node and verify that a transaction rolls back the failed creation
+   * Verifies that a transaction rolls back the failed creation.
    */
   function testFailedPageCreation() {
     // Create a node.
@@ -97,7 +100,7 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
-   * Create an unpublished node and confirm correct redirect behavior.
+   * Creates an unpublished node and confirms correct redirect behavior.
    */
   function testUnpublishedNodeCreation() {
     // Set the front page to the test page.

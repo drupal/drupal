@@ -10,7 +10,7 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Test case to verify node_access functionality for multiple languages.
+ * Verifies node_access() functionality for multiple languages.
  */
 class NodeAccessLanguageTest extends NodeTestBase {
 

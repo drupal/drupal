@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests;
 
+/**
+ * Tests the node edit functionality.
+ */
 class PageEditTest extends NodeTestBase {
   protected $web_user;
   protected $admin_user;
@@ -27,7 +30,7 @@ class PageEditTest extends NodeTestBase {
   }
 
   /**
-   * Check node edit functionality.
+   * Checks node edit functionality.
    */
   function testPageEdit() {
     $this->drupalLogin($this->web_user);
@@ -94,7 +97,7 @@ class PageEditTest extends NodeTestBase {
   }
 
   /**
-   * Check changing node authored by fields.
+   * Tests changing a node's "authored by" field.
    */
   function testPageAuthoredBy() {
     $this->drupalLogin($this->admin_user);

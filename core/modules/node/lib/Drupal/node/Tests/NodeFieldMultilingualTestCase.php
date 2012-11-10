@@ -65,7 +65,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
   }
 
   /**
-   * Test if field languages are correctly set through the node form.
+   * Tests whether field languages are correctly set through the node form.
    */
   function testMultilingualNodeForm() {
     // Create "Basic page" content.
@@ -113,7 +113,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
   }
 
   /*
-   * Test multilingual field display settings.
+   * Tests multilingual field display settings.
    */
   function testMultilingualDisplaySettings() {
     // Create "Basic page" content.
