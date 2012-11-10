@@ -2402,7 +2402,7 @@ function drupal_get_bootstrap_phase() {
  * On a normal page request the container is built by the kernel and passed in
  * to this function which stores it statically. Any full bootstrap outside of
  * the context of a page request will require a container with a minimal set of
- * services. If this function is called without the $reset parameter, and no
+ * services. If this function is called without the $rebuild parameter, and no
  * container object has been statically cached, it builds this minimal container,
  * registering the services that are required.
  *
