@@ -3872,6 +3872,8 @@ function theme_vertical_tabs($variables) {
  *   array_shift($args);
  *   array_shift($args);
  *   // We store the user's original input in $keywords, including any slashes.
+ *   // Note: A prepended or trailing slash will be removed. For example, if the
+ *   // user enters '/a/few/words/' then $keywords will contain 'a/few/words'.
  *   $keywords = implode('/', $args);
  *
  *   // Your code here.
