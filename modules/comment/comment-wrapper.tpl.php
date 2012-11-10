@@ -27,7 +27,6 @@
  *   - COMMENT_CONTROLS_HIDDEN
  *
  * @see template_preprocess_comment_wrapper()
- * @see theme_comment_wrapper()
  */
 ?>
 <div id="comments">
