@@ -2444,10 +2444,7 @@ function template_preprocess(&$variables, $hook) {
     $drupal_static_fast['default_variables'] = &drupal_static(__FUNCTION__);
   }
   $default_variables = &$drupal_static_fast['default_variables'];
-  // Global $user object shouldn't change during a page request once rendering
-  // has started, but if there's an edge case where it does, re-fetch the
-  // variables appropriate for the new user.
-  if (!isset($default_variables) || ($user !== $default_variables['user'])) {
+  if (!isset($default_variables)) {
     $default_variables = _template_preprocess_default_variables();
   }
   if (!isset($default_attributes)) {
@@ -2467,25 +2464,16 @@ function template_preprocess(&$variables, $hook) {
  * Returns hook-independent variables to template_preprocess().
  */
 function _template_preprocess_default_variables() {
-  global $user;
-
   // Variables that don't depend on a database connection.
   $variables = array(
     'title_prefix' => array(),
     'title_suffix' => array(),
-    'user' => $user,
     'db_is_active' => !defined('MAINTENANCE_MODE'),
+    // User module overrides these when it is loaded.
+    'user' => drupal_anonymous_user(),
     'is_admin' => FALSE,
     'logged_in' => FALSE,
   );
-
-  // The user object has no uid property when the database does not exist during
-  // install. The user_access() check deals with issues when in maintenance mode
-  // as uid is set but the user.module has not been included.
-  if (isset($user->uid) && function_exists('user_access')) {
-    $variables['is_admin'] = user_access('access administration pages');
-    $variables['logged_in'] = ($user->uid > 0);
-  }
 
   // drupal_is_front_page() might throw an exception.
   try {
@@ -2497,6 +2485,9 @@ function _template_preprocess_default_variables() {
     $variables['is_front'] = FALSE;
     $variables['db_is_active'] = FALSE;
   }
+
+  // Give modules a chance to alter the default template variables.
+  drupal_alter('template_preprocess_default_variables', $variables);
 
   return $variables;
 }

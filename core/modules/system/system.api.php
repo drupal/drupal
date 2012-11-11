@@ -1937,6 +1937,35 @@ function hook_theme_registry_alter(&$theme_registry) {
 }
 
 /**
+ * Alter the default, hook-independent variables for all templates.
+ *
+ * Allows modules to provide additional default template variables or manipulate
+ * existing. This hook is invoked from template_preprocess() after basic default
+ * template variables have been set up and before the next template preprocess
+ * function is invoked.
+ *
+ * Note that the default template variables are statically cached within a
+ * request. When adding a template variable that depends on other context, it is
+ * your responsibility to appropriately reset the static cache in
+ * template_preprocess() when needed:
+ * @code
+ * drupal_static_reset('template_preprocess');
+ * @endcode
+ *
+ * See user_template_preprocess_default_variables_alter() for an example.
+ *
+ * @param array $variables
+ *   An associative array of default template variables, as set up by
+ *   _template_preprocess_default_variables(). Passed by reference.
+ *
+ * @see template_preprocess()
+ * @see _template_preprocess_default_variables()
+ */
+function hook_template_preprocess_default_variables_alter(&$variables) {
+  $variables['is_admin'] = user_access('access administration pages');
+}
+
+/**
  * Return the machine-readable name of the theme to use for the current page.
  *
  * This hook can be used to dynamically set the theme for the current page

@@ -331,10 +331,8 @@ function install_begin_request(&$install_state) {
   require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
   // Override the module list with a minimal set of modules.
   $module_list['system']['filename'] = 'core/modules/system/system.module';
-  $module_list['user']['filename']   = 'core/modules/user/user.module';
   module_list(NULL, $module_list);
   drupal_load('module', 'system');
-  drupal_load('module', 'user');
 
   // Load the cache infrastructure using a "fake" cache implementation that
   // does not attempt to write to the database. We need this during the initial
