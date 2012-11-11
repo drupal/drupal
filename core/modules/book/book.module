@@ -51,9 +51,6 @@ function book_theme() {
     'book_admin_table' => array(
       'render element' => 'form',
     ),
-    'book_title_link' => array(
-      'variables' => array('link' => NULL),
-    ),
     'book_all_books_block' => array(
       'render element' => 'book_menus',
       'template' => 'book-all-books-block',
@@ -320,7 +317,7 @@ function book_block_view($delta = '') {
       $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
       // There should only be one element at the top level.
       $data = array_shift($tree);
-      $block['subject'] = theme('book_title_link', array('link' => $data['link']));
+      $block['subject'] = l($data['link']['title'], $data['link']['href'], $data['link']['options']);
       $block['content'] = ($data['below']) ? menu_tree_output($data['below']) : '';
     }
   }
@@ -354,23 +351,6 @@ function book_block_configure($delta = '') {
 function book_block_save($delta = '', $edit = array()) {
   $block = array();
   config('book.settings')->set('block.navigation.mode', $edit['book_block_mode'])->save();
-}
-
-/**
- * Returns HTML for a link to a book title when used as a block title.
- *
- * @param $variables
- *   An associative array containing:
- *   - link: An array containing title, href and options for the link.
- *
- * @ingroup themeable
- */
-function theme_book_title_link($variables) {
-  $link = $variables['link'];
-
-  $link['options']['attributes']['class'] = array('book-title');
-
-  return l($link['title'], $link['href'], $link['options']);
 }
 
 /**
