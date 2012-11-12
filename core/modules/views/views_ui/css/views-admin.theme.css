@@ -235,10 +235,6 @@ input.form-radio {
   font-weight: bold;
 }
 
-tr.views-ui-list-disabled td {
-  color: #999;
-}
-
 /* @end */
 
 /* @group Messages */
@@ -413,7 +409,7 @@ td.group-title {
 }
 
 .views-display-top {
-  background-color: #F9F9F9;
+  background-color: #e1e2dc;
   border-bottom: 1px solid #CCCCCC;
   padding: 8px 8px 8px; /* LTR */
   position: relative;
@@ -476,11 +472,15 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   outline: none;
 }
 
-.views-displays .secondary a:hover,
-.views-displays .secondary .active a {
-  background-color: #666666;
+.views-displays ul.secondary li a {
+  background-color: #ffffff;
+}
+
+.views-displays ul.secondary li a:hover,
+.views-displays ul.secondary li.active a,
+.views-displays ul.secondary li.active a.active {
+  background-color: #555555;
   color: #ffffff;
-  border-bottom-width: 1px;
 }
 
 .views-displays .secondary .open > a {
@@ -708,7 +708,7 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 }
 
 .views-ui-display-tab-bucket .even {
-  background-color: #f9f9f9;
+  background-color: #f3f5ee;
 }
 
 .views-ui-display-tab-bucket .views-group-text {

@@ -1171,6 +1171,10 @@ fieldset.fieldset-no-legend {
   padding: 2px 7px 3px;
 }
 
+.views-displays ul.secondary li a {
+  color: #0074bd;
+}
+
 .views-displays ul.secondary li.active a,
 .views-displays ul.secondary li.active a.active {
   border: 1px solid transparent;
@@ -1224,11 +1228,6 @@ fieldset.fieldset-no-legend {
 
 .views-admin .icon.add {
   background-position: center 3px;
-}
-
-.views-displays .secondary a {
-  background-color: #f1f1f1;
-  color: #008BCB;
 }
 
 .views-displays .secondary a:hover > .icon.add {
