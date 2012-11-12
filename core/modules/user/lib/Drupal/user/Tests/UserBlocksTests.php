@@ -84,26 +84,17 @@ class UserBlocksTests extends WebTestBase {
    * Test the Who's Online block.
    */
   function testWhosOnlineBlock() {
-    // Generate users and make sure there are no current user sessions.
+    // Generate users.
     $user1 = $this->drupalCreateUser(array());
     $user2 = $this->drupalCreateUser(array());
     $user3 = $this->drupalCreateUser(array());
-    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions}")->fetchField(), 0, 'Sessions table is empty.');
 
-    // Insert a user with two sessions.
-    $this->insertSession(array('uid' => $user1->uid));
-    $this->insertSession(array('uid' => $user1->uid));
-    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid", array(':uid' => $user1->uid))->fetchField(), 2, 'Duplicate user session has been inserted.');
+    // Update access of two users to be within the active timespan.
+    $this->updateAccess($user1->uid);
+    $this->updateAccess($user2->uid, REQUEST_TIME + 1);
 
-    // Insert a user with only one session.
-    $this->insertSession(array('uid' => $user2->uid, 'timestamp' => REQUEST_TIME + 1));
-
-    // Insert an inactive logged-in user who should not be seen in the block.
-    $this->insertSession(array('uid' => $user3->uid, 'timestamp' => (REQUEST_TIME - config('user.block')->get('seconds_online') - 1)));
-
-    // Insert two anonymous user sessions.
-    $this->insertSession();
-    $this->insertSession();
+    // Insert an inactive user who should not be seen in the block.
+    $this->updateAccess($user3->uid, REQUEST_TIME - config('user.block')->get('seconds_online') - 1);
 
     // Test block output.
     $block = user_block_view('online');
@@ -117,18 +108,12 @@ class UserBlocksTests extends WebTestBase {
   }
 
   /**
-   * Insert a user session into the {sessions} table. This function is used
-   * since we cannot log in more than one user at the same time in tests.
+   * Updates the access column for a user.
    */
-  private function insertSession(array $fields = array()) {
-    $fields += array(
-      'uid' => 0,
-      'sid' => drupal_hash_base64(uniqid(mt_rand(), TRUE)),
-      'timestamp' => REQUEST_TIME,
-    );
-    db_insert('sessions')
-      ->fields($fields)
+  private function updateAccess($uid, $access = REQUEST_TIME) {
+    db_update('users')
+      ->condition('uid', $uid)
+      ->fields(array('access' => $access))
       ->execute();
-    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid AND sid = :sid AND timestamp = :timestamp", array(':uid' => $fields['uid'], ':sid' => $fields['sid'], ':timestamp' => $fields['timestamp']))->fetchField(), 1, 'Session record inserted.');
   }
 }
