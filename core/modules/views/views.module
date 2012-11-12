@@ -1112,6 +1112,9 @@ function views_hook_info() {
   $hooks['views_data'] = array(
     'group' => 'views',
   );
+  $hooks['views_query_substitutions'] = array(
+    'group' => 'views',
+  );
 
   return $hooks;
 }
