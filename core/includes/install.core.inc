@@ -903,7 +903,7 @@ function install_base_system(&$install_state) {
   // after all the dependencies have been installed.
   $modules[] = drupal_get_profile();
 
-  variable_set('install_profile_modules', array_diff($modules, array('system')));
+  state()->set('install_profile_modules', array_diff($modules, array('system')));
   $install_state['database_tables_exist'] = TRUE;
 }
 
@@ -1517,9 +1517,9 @@ function install_bootstrap_full(&$install_state) {
  *   The batch definition.
  */
 function install_profile_modules(&$install_state) {
-  $modules = variable_get('install_profile_modules', array());
+  $modules = state()->get('install_profile_modules') ?: array();
   $files = system_rebuild_module_data();
-  variable_del('install_profile_modules');
+  state()->delete('install_profile_modules');
 
   // Always install required modules first. Respect the dependencies between
   // the modules.
