@@ -20,16 +20,16 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Attempts to enable translation module without language enabled.
+   * Attempts to enable the Entity Translation module without Language enabled.
    */
   function testEnableWithoutDependency() {
-    // Attempt to enable content translation without language enabled.
+    // Attempt to enable Entity Translation without Language enabled.
     $edit = array();
-    $edit['modules[Core][translation][enable]'] = 'translation';
+    $edit['modules[Core][translation_entity][enable]'] = 'translation_entity';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), 'Dependency required.');
 
-    $this->assertModules(array('translation', 'locale', 'language'), FALSE);
+    $this->assertModules(array('translation_entity', 'language'), FALSE);
 
     // Assert that the language tables weren't enabled.
     $this->assertTableCount('language', FALSE);
@@ -37,7 +37,7 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPost(NULL, NULL, t('Continue'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
 
-    $this->assertModules(array('translation', 'language'), TRUE);
+    $this->assertModules(array('translation_entity', 'language'), TRUE);
 
     // Assert that the language tables were enabled.
     $this->assertTableCount('language', TRUE);
