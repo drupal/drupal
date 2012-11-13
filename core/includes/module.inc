@@ -507,7 +507,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       // @todo The if statement is here because install_begin_request() creates
       //   a container without a kernel. It probably shouldn't.
       if ($kernel = drupal_container()->get('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
-        $kernel->updateModules(module_list());
+        $kernel->updateModules(module_list(), array($module => drupal_get_path('module', $module)));
       }
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);

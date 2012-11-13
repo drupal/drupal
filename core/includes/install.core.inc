@@ -1502,7 +1502,7 @@ function install_bootstrap_full(&$install_state) {
   module_list_reset();
 
   // Instantiate the kernel.
-  $kernel = new DrupalKernel('prod', FALSE, NULL);
+  $kernel = new DrupalKernel('prod', FALSE, drupal_classloader());
   $kernel->boot();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 }

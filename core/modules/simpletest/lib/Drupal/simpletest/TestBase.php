@@ -912,7 +912,7 @@ abstract class TestBase {
     // container in drupal_container(). Drupal\simpletest\TestBase::tearDown()
     // restores the original container.
     // @see Drupal\Core\DrupalKernel::initializeContainer()
-    $this->kernel = new DrupalKernel('testing', FALSE, NULL);
+    $this->kernel = new DrupalKernel('testing', FALSE, drupal_classloader());
     // Booting the kernel is necessary to initialize the new DIC. While
     // normally the kernel gets booted on demand in
     // Symfony\Component\HttpKernel\handle(), this kernel needs manual booting

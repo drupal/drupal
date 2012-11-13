@@ -8,6 +8,8 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\CoreBundle;
 use Drupal\Component\PhpStorage\PhpStorageInterface;
 use Symfony\Component\HttpKernel\Kernel;
@@ -32,15 +34,29 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * Holds the list of enabled modules.
    *
    * @var array
+   *   An associative array whose keys are module names and whose values are
+   *   ignored.
    */
   protected $moduleList;
 
   /**
-   * Cache object for getting or setting the compiled container's class name.
+   * Holds an updated list of enabled modules.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
+   * @var array
+   *   An associative array whose keys are module names and whose values are
+   *   ignored.
    */
-  protected $compilationIndexCache;
+  protected $newModuleList;
+
+  /**
+   * An array of module data objects.
+   *
+   * The data objects have the same data structure as returned by
+   * file_scan_directory() but only the uri property is used.
+   *
+   * @var array
+   */
+  protected $moduleData = array();
 
   /**
    * PHP code storage object to use for the compiled container.
@@ -48,6 +64,20 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * @var \Drupal\Component\PhpStorage\PhpStorageInterface
    */
   protected $storage;
+
+  /**
+   * The classloader object.
+   *
+   * @var \Symfony\Component\ClassLoader\UniversalClassLoader
+   */
+  protected $classLoader;
+
+  /**
+   * The list of the classnames of the bundles in this kernel.
+   *
+   * @var array
+   */
+  protected $bundleClasses;
 
   /**
    * Constructs a DrupalKernel object.
@@ -60,26 +90,20 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    *   Boolean indicating whether we are in debug mode. Used by
    *   Symfony\Component\HttpKernel\Kernel::__construct(). Drupal does not use
    *   this value currently. Pass TRUE.
-   * @param array $module_list
-   *   (optional) The array of enabled modules as returned by module_list().
-   * @param Drupal\Core\Cache\CacheBackendInterface $compilation_index_cache
-   *   (optional) If wanting to dump a compiled container to disk or use a
-   *   previously compiled container, the cache object for the bin that stores
-   *   the class name of the compiled container.
+   * @param \Symfony\Component\ClassLoader\UniversalClassLoader $class_loader
+   *   (optional) The classloader is only used if $storage is not given or
+   *   the load from storage fails and a container rebuild is required. In
+   *   this case, the loaded modules will be registered with this loader in
+   *   order to be able to find the module bundles.
+   * @param \Drupal\Component\PhpStorage\PhpStorageInterface $storage
+   *   (optional) An object handling the load and save of the compiled
+   *   container. If not specified, the container will neither be stored to
+   *   disk nor read from there.
    */
-  public function __construct($environment, $debug, array $module_list = NULL, CacheBackendInterface $compilation_index_cache = NULL) {
+  public function __construct($environment, $debug, UniversalClassLoader $class_loader, PhpStorageInterface $storage = NULL) {
     parent::__construct($environment, $debug);
-    $this->compilationIndexCache = $compilation_index_cache;
-    $this->storage = drupal_php_storage('service_container');
-    if (isset($module_list)) {
-      $this->moduleList = $module_list;
-    }
-    else {
-      // @todo This is a temporary measure which will no longer be necessary
-      //   once we have an ExtensionHandler for managing this list. See
-      //   http://drupal.org/node/1331486.
-      $this->moduleList = module_list();
-    }
+    $this->storage = $storage;
+    $this->classLoader = $class_loader;
   }
 
   /**
@@ -93,28 +117,89 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   }
 
   /**
+   * Overrides Kernel::boot().
+   */
+  public function boot() {
+    if ($this->booted) {
+      return;
+    }
+    $this->initializeContainer();
+    $this->booted = TRUE;
+  }
+
+  /**
    * Returns an array of available bundles.
    */
   public function registerBundles() {
     $bundles = array(
       new CoreBundle(),
     );
+    if (!isset($this->moduleList)) {
+      $storage = new FileStorage(config_get_config_directory());
+      $module_list = $storage->read('system.module');
+      $this->moduleList = isset($module_list['enabled']) ? $module_list['enabled'] : array();
+    }
 
-    foreach ($this->moduleList as $module) {
+    $namespaces = $this->classLoader->getNamespaces();
+    foreach ($this->moduleList as $module => $weight) {
+      // When installing new modules, the modules in the list passed to
+      // updateModules() do not yet have their namespace registered.
+      $namespace = 'Drupal\\' . $module;
+      if (!isset($namespaces[$namespace]) && $this->moduleData($module)) {
+        $this->classLoader->registerNamespace($namespace, dirname(DRUPAL_ROOT . '/' . $this->moduleData($module)->uri) . '/lib');
+      }
       $camelized = ContainerBuilder::camelize($module);
       $class = "Drupal\\{$module}\\{$camelized}Bundle";
       if (class_exists($class)) {
         $bundles[] = new $class();
+        $this->bundleClasses[] = $class;
       }
     }
     return $bundles;
   }
 
   /**
+   * Returns module data on the filesystem.
+   *
+   * @param $module
+   *   The name of the module.
+   *
+   * @return \stdClass|bool
+   *   Returns a stdClass object if the module data is found containing at
+   *   least an uri property with the module path, for example
+   *   core/modules/user/user.module.
+   */
+  protected function moduleData($module) {
+    if (!$this->moduleData) {
+      // Find filenames to prime the classloader. First, find profiles.
+      // Profiles might want to add a bundle too and they also can contain
+      // modules.
+      $profiles_scanner = new SystemListing();
+      $all_profiles = $profiles_scanner->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles');
+      $profiles = array_keys(array_intersect_key($this->moduleList, $all_profiles));
+      $storage = new FileStorage(config_get_config_directory());
+      // If a module is within a profile directory but specifies another
+      // profile for testing, it needs to be found in the parent profile.
+      if (($parent_profile_config = $storage->read('simpletest.settings')) && isset($parent_profile_config['parent_profile']) && $parent_profile_config['parent_profile'] != $profiles[0]) {
+        // In case both profile directories contain the same extension, the
+        // actual profile always has precedence.
+        array_unshift($profiles, $parent_profile_config['parent_profile']);
+      }
+      // Now find modules.
+      $modules_scanner = new SystemListing($profiles);
+      $this->moduleData = $all_profiles + $modules_scanner->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules');
+    }
+    return isset($this->moduleData[$module]) ? $this->moduleData[$module] : FALSE;
+  }
+
+  /**
    * Implements Drupal\Core\DrupalKernelInterface::updateModules().
    */
-  public function updateModules($module_list) {
-    $this->moduleList = $module_list;
+  public function updateModules(array $module_list, array $module_paths = array()) {
+    $this->newModuleList = $module_list;
+    foreach ($module_paths as $module => $path) {
+      $this->moduleData[$module] = (object) array('uri' => $path);
+    }
     // If we haven't yet booted, we don't need to do anything: the new module
     // list will take effect when boot() is called. If we have already booted,
     // then reboot in order to refresh the bundle list and container.
@@ -126,33 +211,63 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   }
 
   /**
+   * Returns the classname based on environment, debug and testing prefix.
+   *
+   * @return string
+   *   The class name.
+   */
+  protected function getClassName() {
+    $parts = array('service_container', $this->environment, $this->debug);
+    // Make sure to use a testing-specific container even in the parent site.
+    if (!empty($GLOBALS['drupal_test_info']['test_run_id'])) {
+      $parts[] = $GLOBALS['drupal_test_info']['test_run_id'];
+    }
+    elseif ($prefix = drupal_valid_test_ua()) {
+      $parts[] = $prefix;
+    }
+    return implode('_', $parts);
+  }
+
+  /**
    * Initializes the service container.
    */
   protected function initializeContainer() {
     $this->container = NULL;
-    if ($this->compilationIndexCache) {
-      // The name of the compiled container class is generated from the hash of
-      // its contents and cached. This enables multiple compiled containers
-      // (for example, for different states of which modules are enabled) to
-      // exist simultaneously on disk and in memory.
-      if ($cache = $this->compilationIndexCache->get(implode(':', array('service_container', $this->environment, $this->debug)))) {
-        $class = $cache->data;
-        $cache_file = $class . '.php';
+    $class = $this->getClassName();
+    $cache_file = $class . '.php';
 
-        // First, try to load.
-        if (!class_exists($class, FALSE)) {
-          $this->storage->load($cache_file);
-        }
-        // If the load succeeded or the class already existed, use it.
-        if (class_exists($class, FALSE)) {
-          $fully_qualified_class_name = '\\' . $class;
-          $this->container = new $fully_qualified_class_name;
-        }
+    if ($this->storage) {
+      // First, try to load.
+      if (!class_exists($class, FALSE)) {
+        $this->storage->load($cache_file);
+      }
+      // If the load succeeded or the class already existed, use it.
+      if (class_exists($class, FALSE)) {
+        $fully_qualified_class_name = '\\' . $class;
+        $this->container = new $fully_qualified_class_name;
       }
     }
+    // First check whether the list of modules changed in this request.
+    if (isset($this->newModuleList)) {
+      if (isset($this->container) && isset($this->moduleList) && array_keys($this->moduleList) !== array_keys($this->newModuleList)) {
+        unset($this->container);
+      }
+      $this->moduleList = $this->newModuleList;
+      unset($this->newModuleList);
+    }
+    // Second, verify that some other request -- for example on another
+    // web frontend or during the installer -- changed the list of enabled
+    // modules.
+    if (isset($this->container)) {
+      $module_list = $this->moduleList ?: $this->container->get('config.factory')->get('system.module')->load()->get('enabled');
+      if (array_keys((array)$module_list) !== $this->container->getParameter('container.modules')) {
+        unset($this->container);
+      }
+    }
+
     if (!isset($this->container)) {
       $this->container = $this->buildContainer();
-      if ($this->compilationIndexCache && !$this->dumpDrupalContainer($this->container, $this->getContainerBaseClass())) {
+      if ($this->storage && !$this->dumpDrupalContainer($this->container, $this->getContainerBaseClass())) {
         // We want to log this as an error but we cannot call watchdog() until
         // the container has been fully built and set in drupal_container().
         $error = 'Container cannot be written to disk';
@@ -174,7 +289,10 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * @return ContainerBuilder The compiled service container
    */
   protected function buildContainer() {
+    $this->initializeBundles();
     $container = $this->getContainerBuilder();
+    $container->setParameter('container.bundles', $this->bundleClasses);
+    $container->setParameter('container.modules', array_keys($this->moduleList));
 
     // Merge in the minimal bootstrap container.
     if ($bootstrap_container = drupal_container()) {
@@ -216,11 +334,8 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     }
     // Cache the container.
     $dumper = new PhpDumper($container);
-    $content = $dumper->dump(array('class' => 'DrupalServiceContainerStub', 'base_class' => $baseClass));
-    $class = 'c' . hash('sha256', $content);
-    $content = str_replace('DrupalServiceContainerStub', $class, $content);
-    $this->compilationIndexCache->set(implode(':', array('service_container', $this->environment, $this->debug)), $class);
-
+    $class = $this->getClassName();
+    $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
     return $this->storage->save($class . '.php', $content);
   }
 

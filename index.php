@@ -28,7 +28,7 @@ require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
 // @todo Figure out how best to handle the Kernel constructor parameters.
-$kernel = new DrupalKernel('prod', FALSE, NULL, cache('bootstrap'));
+$kernel = new DrupalKernel('prod', FALSE, drupal_classloader(), drupal_php_storage('service_container'));
 
 // Create a request object from the HTTPFoundation.
 $request = Request::createFromGlobals();

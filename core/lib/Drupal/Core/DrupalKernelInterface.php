@@ -25,6 +25,8 @@ interface DrupalKernelInterface extends KernelInterface {
    *
    * @param array $module_list
    *   The new list of modules.
+   * @param array $module_path
+   *   List of module paths, keyed by module name.
    */
-  public function updateModules($module_list);
+  public function updateModules(array $module_list, array $module_path = array());
 }

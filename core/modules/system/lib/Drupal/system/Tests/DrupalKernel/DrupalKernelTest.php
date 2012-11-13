@@ -7,8 +7,9 @@
 
 namespace Drupal\system\Tests\DrupalKernel;
 
-use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\DrupalKernel;
+use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
+use Drupal\Component\PhpStorage\FileReadOnlyStorage;
 use Drupal\simpletest\UnitTestBase;
 use ReflectionClass;
 
@@ -34,21 +35,25 @@ class DrupalKernelTest extends UnitTestBase {
     // We need to be able to restore it to the correct one at the end of this
     // test.
     $original_container = drupal_container();
-    global $conf;
-    $conf['php_storage']['service_container'] = array(
-      'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
+    $classloader = drupal_classloader();
+    $configuration = array(
+      'bin' => 'service_container',
+      'directory' => DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php',
       'secret' => $GLOBALS['drupal_hash_salt'],
     );
-    $cache = new MemoryBackend('test');
+    // @todo: write a memory based storage backend for testing.
+    $php_storage = new MTimeProtectedFastFileStorage($configuration);
     $module_enabled = array(
       'system' => 'system',
       'user' => 'user',
     );
-    $kernel = new DrupalKernel('testing', FALSE, $module_enabled, $cache);
+    $kernel = new DrupalKernel('testing', FALSE, $classloader, $php_storage);
+    $kernel->updateModules($module_enabled);
     $kernel->boot();
     // Instantiate it a second time and we should get the compiled Container
     // class.
-    $kernel = new DrupalKernel('testing', FALSE, $module_enabled, $cache);
+    $kernel = new DrupalKernel('testing', FALSE, $classloader, $php_storage);
+    $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
     $refClass = new ReflectionClass($container);
@@ -62,11 +67,9 @@ class DrupalKernelTest extends UnitTestBase {
 
     // Now use the read-only storage implementation, simulating a "production"
     // environment.
-    drupal_static_reset('drupal_php_storage');
-    $conf['php_storage']['service_container'] = array(
-      'class' => 'Drupal\Component\PhpStorage\FileReadOnlyStorage',
-    );
-    $kernel = new DrupalKernel('testing', FALSE, $module_enabled, $cache);
+    $php_storage = new FileReadOnlyStorage($configuration);
+    $kernel = new DrupalKernel('testing', FALSE, $classloader, $php_storage);
+    $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
     $refClass = new ReflectionClass($container);
@@ -86,17 +89,14 @@ class DrupalKernelTest extends UnitTestBase {
 
     // Add another module so that we can test that the new module's bundle is
     // registered to the new container.
-    $module_enabled = array(
-      'system' => 'system',
-      'user' => 'user',
-      'bundle_test' => 'bundle_test',
-    );
-    $cache->flush();
-    $kernel = new DrupalKernel('testing', FALSE, $module_enabled, $cache);
+    $module_enabled['bundle_test'] = 'bundle_test';
+    $kernel = new DrupalKernel('testing', FALSE, $classloader, $php_storage);
+    $kernel->updateModules($module_enabled);
     $kernel->boot();
     // Instantiate it a second time and we should still get a ContainerBuilder
     // class because we are using the read-only PHP storage.
-    $kernel = new DrupalKernel('testing', FALSE, $module_enabled, $cache);
+    $kernel = new DrupalKernel('testing', FALSE, $classloader, $php_storage);
+    $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
     $refClass = new ReflectionClass($container);
