@@ -403,7 +403,7 @@ function conf_init() {
     include_once './'. conf_path() .'/settings.php';
   }
 
-  // Ignore the placeholder url from default.settings.php.
+  // Ignore the placeholder URL from default.settings.php.
   if (isset($db_url) && $db_url == 'mysql://username:password@localhost/databasename') {
     $db_url = '';
   }
@@ -442,7 +442,7 @@ function conf_init() {
   }
   else {
     // Otherwise use $base_url as session name, without the protocol
-    // to use the same session identifiers across http and https.
+    // to use the same session identifiers across HTTP and HTTPS.
     list( , $session_name) = explode('://', $base_url, 2);
     // We escape the hostname because it can be modified by a visitor.
     if (!empty($_SERVER['HTTP_HOST'])) {

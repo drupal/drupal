@@ -38,7 +38,7 @@ define('FILE_STATUS_PERMANENT', 1);
  * @return A string containing a URL that can be used to download the file.
  */
 function file_create_url($path) {
-  // Strip file_directory_path from $path. We only include relative paths in urls.
+  // Strip file_directory_path from $path. We only include relative paths in URLs.
   if (strpos($path, file_directory_path() .'/') === 0) {
     $path = trim(substr($path, strlen(file_directory_path())), '\\/');
   }
@@ -862,7 +862,7 @@ function file_transfer($source, $headers) {
   }
   
   // IE cannot download private files because it cannot store files downloaded
-  // over https in the browser cache. The problem can be solved by sending
+  // over HTTPS in the browser cache. The problem can be solved by sending
   // custom headers to IE. See http://support.microsoft.com/kb/323308/en-us
   if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
     drupal_set_header('Cache-Control: private');

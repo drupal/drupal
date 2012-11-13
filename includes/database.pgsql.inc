@@ -52,7 +52,7 @@ function db_connect($url) {
   $url = parse_url($url);
   $conn_string = '';
 
-  // Decode url-encoded information in the db connection string
+  // Decode urlencoded information in the db connection string
   if (isset($url['user'])) {
     $conn_string .= ' user='. urldecode($url['user']);
   }

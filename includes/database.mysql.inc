@@ -55,9 +55,9 @@ function db_connect($url) {
     _db_error_page('Unable to use the MySQL database because the MySQL extension for PHP is not installed. Check your <code>php.ini</code> to see how you can enable it.');
   }
 
-  // Decode url-encoded information in the db connection string
+  // Decode urlencoded information in the db connection string
   $url['user'] = urldecode($url['user']);
-  // Test if database url has a password.
+  // Test if database URL has a password.
   $url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : '';
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);

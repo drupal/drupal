@@ -1842,7 +1842,7 @@ function form_expand_ahah($element) {
     if (is_string($ahah_binding['progress'])) {
       $ahah_binding['progress'] = array('type' => $ahah_binding['progress']);
     }
-    // Change progress path to a full url.
+    // Change progress path to a full URL.
     if (isset($ahah_binding['progress']['path'])) {
       $ahah_binding['progress']['url'] = url($ahah_binding['progress']['path']);
     }

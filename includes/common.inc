@@ -176,7 +176,7 @@ function drupal_final_markup($content) {
  * Add a feed URL for the current page.
  *
  * @param $url
- *   A url for the feed.
+ *   A URL for the feed.
  * @param $title
  *   The title of the feed.
  */
@@ -533,7 +533,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     $defaults['Content-Length'] = 'Content-Length: '. $content_length;
   }
 
-  // If the server url has a user then attempt to use basic authentication
+  // If the server URL has a user then attempt to use basic authentication
   if (isset($uri['user'])) {
     $defaults['Authorization'] = 'Authorization: Basic '. base64_encode($uri['user'] . (!empty($uri['pass']) ? ":". $uri['pass'] : ''));
   }
@@ -3829,7 +3829,7 @@ function drupal_flush_all_caches() {
  * Changes the character added to all css/js files as dummy query-string,
  * so that all browsers are forced to reload fresh files. We keep
  * 20 characters history (FIFO) to avoid repeats, but only the first
- * (newest) character is actually used on urls, to keep them short.
+ * (newest) character is actually used on URLs, to keep them short.
  * This is also called from update.php.
  */
 function _drupal_flush_css_js() {

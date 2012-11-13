@@ -61,9 +61,9 @@ function db_connect($url) {
 
   $url = parse_url($url);
 
-  // Decode url-encoded information in the db connection string
+  // Decode urlencoded information in the db connection string
   $url['user'] = urldecode($url['user']);
-  // Test if database url has a password.
+  // Test if database URL has a password.
   $url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : '';
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);

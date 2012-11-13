@@ -1592,7 +1592,7 @@ function theme_more_help_link($url) {
  *
  * @see theme_feed_icon()
  * @param $url
- *   The url of the feed.
+ *   The URL of the feed.
  */
 function theme_xml_icon($url) {
   if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
@@ -1604,7 +1604,7 @@ function theme_xml_icon($url) {
  * Return code that emits an feed icon.
  *
  * @param $url
- *   The url of the feed.
+ *   The URL of the feed.
  * @param $title
  *   A descriptive title of the feed.
   */
@@ -1618,7 +1618,7 @@ function theme_feed_icon($url, $title) {
  * Returns code that emits the 'more' link used on blocks.
  *
  * @param $url
- *   The url of the main page
+ *   The URL of the main page
  * @param $title
  *   A descriptive verb for the link, like 'Read more'
  */

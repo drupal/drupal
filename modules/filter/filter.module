@@ -746,7 +746,7 @@ function _filter_url_settings($format) {
 
 /**
  * URL filter. Automatically converts text web addresses (URLs, e-mail addresses,
- * ftp links, etc.) into hyperlinks.
+ * FTP links, etc.) into hyperlinks.
  */
 function _filter_url($text, $format) {
   // Pass length to regexp callback

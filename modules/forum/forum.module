@@ -690,7 +690,7 @@ function template_preprocess_forums(&$variables) {
       // Check if the current user has the 'create' permission for this node type.
       if (node_access('create', $type)) {
         // Fetch the "General" name of the content type;
-        // Push the link with title and url to the array.
+        // Push the link with title and URL to the array.
         $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => 'node/add/'. str_replace('_', '-', $type) .'/'. $variables['tid']);
       }
     }
