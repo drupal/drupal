@@ -79,6 +79,9 @@ class ThemeRegistry extends CacheArray {
     return array_fill_keys(array_keys($this->completeRegistry), NULL);
   }
 
+  /**
+   * Overrides CacheArray::offsetExists().
+   */
   public function offsetExists($offset) {
     // Since the theme registry allows for theme hooks to be requested that
     // are not registered, just check the existence of the key in the registry.
@@ -87,6 +90,9 @@ class ThemeRegistry extends CacheArray {
     return array_key_exists($offset, $this->storage);
   }
 
+  /**
+   * Overrides CacheArray::offsetGet().
+   */
   public function offsetGet($offset) {
     // If the offset is set but empty, it is a registered theme hook that has
     // not yet been requested. Offsets that do not exist at all were not
@@ -99,6 +105,9 @@ class ThemeRegistry extends CacheArray {
     }
   }
 
+  /**
+   * Implements CacheArray::resolveCacheMiss().
+   */
   public function resolveCacheMiss($offset) {
     if (!isset($this->completeRegistry)) {
       $this->completeRegistry = theme_get_registry();
@@ -110,6 +119,9 @@ class ThemeRegistry extends CacheArray {
     return $this->storage[$offset];
   }
 
+  /**
+   * Overrides CacheArray::set().
+   */
   public function set($data, $lock = TRUE) {
     $lock_name = $this->cid . ':' . $this->bin;
     if (!$lock || lock()->acquire($lock_name)) {

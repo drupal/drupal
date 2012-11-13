@@ -23,7 +23,7 @@ class SchemaCache extends CacheArray {
   }
 
   /**
-   * Overrides CacheArray::resolveCacheMiss().
+   * Implements CacheArray::resolveCacheMiss().
    */
   protected function resolveCacheMiss($offset) {
     $complete_schema = drupal_get_complete_schema();

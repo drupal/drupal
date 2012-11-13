@@ -51,7 +51,7 @@ class LocaleLookup extends CacheArray {
   }
 
   /**
-   * Overrides CacheArray::resolveCacheMiss().
+   * Implements CacheArray::resolveCacheMiss().
    */
   protected function resolveCacheMiss($offset) {
     $translation = $this->stringStorage->findTranslation(array(

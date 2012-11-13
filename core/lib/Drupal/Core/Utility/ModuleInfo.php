@@ -22,7 +22,7 @@ class ModuleInfo extends CacheArray {
   protected $info;
 
   /**
-   * Overrides CacheArray::resolveCacheMiss().
+   * Implements CacheArray::resolveCacheMiss().
    */
   function resolveCacheMiss($offset) {
     $data = array();
