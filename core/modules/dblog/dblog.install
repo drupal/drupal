@@ -86,6 +86,7 @@ function dblog_schema() {
     'indexes' => array(
       'type' => array('type'),
       'uid' => array('uid'),
+      'severity' => array('severity'),
     ),
   );
 
