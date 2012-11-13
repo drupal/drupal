@@ -97,7 +97,7 @@ function dblog_init() {
 /**
  * Implementation of hook_cron().
  *
- * Remove expired log messages and flood control events.
+ * Remove expired log messages.
  */
 function dblog_cron() {
   // Cleanup the watchdog table
