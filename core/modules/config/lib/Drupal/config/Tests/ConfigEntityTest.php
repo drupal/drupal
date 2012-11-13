@@ -252,6 +252,21 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertNoLinkByHref("admin/structure/config_test/manage/$id/edit");
     $id = $edit['id'];
     $this->assertLinkByHref("admin/structure/config_test/manage/$id/edit");
+
+    // Create a configuration entity with '0' machine name.
+    $edit = array(
+      'id' => '0',
+      'label' => '0',
+    );
+    $this->drupalPost('admin/structure/config_test/add', $edit, 'Save');
+    $this->assertResponse(200);
+    $message_insert = format_string('%label configuration has been created.', array('%label' => $edit['label']));
+    $this->assertRaw($message_insert);
+    $this->assertLinkByHref('admin/structure/config_test/manage/0/edit');
+    $this->assertLinkByHref('admin/structure/config_test/manage/0/delete');
+    $this->drupalPost('admin/structure/config_test/manage/0/delete', array(), 'Delete');
+    $this->assertFalse(entity_load('config_test', '0'), 'Test entity deleted');
+
   }
 
 }
