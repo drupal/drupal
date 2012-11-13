@@ -1996,6 +1996,19 @@ function drupal_hash_base64($data) {
 }
 
 /**
+ * Gets a salt useful for hardening against SQL injection.
+ *
+ * @return
+ *   A salt based on information in settings.php, not in the database.
+ */
+function drupal_get_hash_salt() {
+  global $drupal_hash_salt;
+  // If the $drupal_hash_salt variable is empty, a hash of the serialized
+  // database credentials is used as a fallback salt.
+  return empty($drupal_hash_salt) ? hash('sha256', serialize(Database::getConnectionInfo('default'))) : $drupal_hash_salt;
+}
+
+/**
  * Merges multiple arrays, recursively, and returns the merged array.
  *
  * This function is similar to PHP's array_merge_recursive() function, but it
@@ -2525,7 +2538,6 @@ function typed_data() {
  *   HMAC and timestamp.
  */
 function drupal_valid_test_ua($new_prefix = NULL) {
-  global $drupal_hash_salt;
   static $test_prefix;
 
   if (isset($new_prefix)) {
@@ -2541,7 +2553,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     // We use the salt from settings.php to make the HMAC key, since
     // the database is not yet initialized and we can't access any Drupal variables.
     // The file properties add more entropy not easily accessible to others.
-    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
     // Since we are making a local request a 5 second time window is allowed,
     // and the HMAC must match.
@@ -2559,14 +2571,13 @@ function drupal_valid_test_ua($new_prefix = NULL) {
  * Generates a user agent string with a HMAC and timestamp for simpletest.
  */
 function drupal_generate_test_ua($prefix) {
-  global $drupal_hash_salt;
   static $key;
 
   if (!isset($key)) {
     // We use the salt from settings.php to make the HMAC key, since
     // the database is not yet initialized and we can't access any Drupal variables.
     // The file properties add more entropy not easily accessible to others.
-    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
   }
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);
@@ -3102,7 +3113,7 @@ function drupal_classloader() {
       case 'apc':
         if (function_exists('apc_store')) {
           require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
-          $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
+          $loader = new ApcUniversalClassLoader('drupal.' . drupal_get_hash_salt());
           break;
         }
       // Fall through to the default loader if APC was not loaded, so that the
@@ -3465,7 +3476,7 @@ function drupal_php_storage($name = 'default') {
     else {
       $configuration = array(
         'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
-        'secret' => $GLOBALS['drupal_hash_salt'],
+        'secret' => drupal_get_hash_salt(),
       );
     }
     $class = isset($configuration['class']) ? $configuration['class'] : 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
