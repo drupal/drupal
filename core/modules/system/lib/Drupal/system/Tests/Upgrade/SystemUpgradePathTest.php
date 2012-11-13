@@ -78,6 +78,17 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'cancel_method' => 'user_cancel_reassign',
     );
 
+    $expected_config['system.filter'] = array(
+      'protocols.0' => 'http',
+      'protocols.1' => 'https',
+      'protocols.2' => 'ftp',
+      'protocols.3' => 'mailto',
+    );
+
+    $expected_config['filter.settings'] = array(
+      'fallback_format' => 'plain_text'
+    );
+
     foreach ($expected_config as $file => $values) {
       $config = config($file);
       $this->verbose(print_r($config->get(), TRUE));

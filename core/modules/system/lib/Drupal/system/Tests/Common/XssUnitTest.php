@@ -7,12 +7,19 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests for check_plain(), filter_xss(), format_string(), and check_url().
  */
-class XssUnitTest extends UnitTestBase {
+class XssUnitTest extends DrupalUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('filter');
 
   public static function getInfo() {
     return array(
@@ -20,6 +27,11 @@ class XssUnitTest extends UnitTestBase {
       'description' => 'Confirm that check_plain(), filter_xss(), format_string() and check_url() work correctly, including invalid multi-byte sequences.',
       'group' => 'Common',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+    config_install_default_config('module', 'system');
   }
 
   /**

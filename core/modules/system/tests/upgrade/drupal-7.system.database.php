@@ -94,6 +94,10 @@ db_insert('variable')->fields(array(
 ->values(array(
   'name' => 'user_cancel_method',
   'value' => 's:20:"user_cancel_reassign"',
+  ))
+->values(array(
+  'name' => 'filter_allowed_protocols',
+  'value' => 'a:4:{i:0;s:4:"http";i:1;s:5:"https";i:2;s:3:"ftp";i:3;s:6:"mailto";}',
 ))
 ->execute();
 
@@ -105,4 +109,8 @@ db_update('variable')
     ->fields(array('value' => 's:22:"Testing config upgrade";'))
     ->condition('name', 'site_name')
     ->execute();
+db_update('variable')
+  ->fields(array('value' => 's:10:"plain_text";'))
+  ->condition('name', 'filter_fallback_format')
+  ->execute();
 

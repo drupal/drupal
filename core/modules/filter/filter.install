@@ -143,7 +143,25 @@ function filter_install() {
   );
   $plain_text_format = (object) $plain_text_format;
   filter_format_save($plain_text_format);
-
-  // Set the fallback format to plain text.
-  variable_set('filter_fallback_format', $plain_text_format->format);
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * Moves filter_fallback settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function filter_update_8000() {
+  update_variables_to_config('filter.settings', array(
+    'filter_fallback_format' => 'fallback_format',
+  ));
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */

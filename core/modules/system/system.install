@@ -2209,6 +2209,21 @@ function system_update_8034() {
 }
 
 /**
+ * Moves filter_allowed_protocols variable to config.
+ *
+ * This config is provided now by the system module because it is used by
+ * drupal_strip_dangerous_protocols() and must to be available before the filter
+ * module be installed.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8035() {
+  update_variables_to_config('system.filter', array(
+    'filter_allowed_protocols' => 'protocols',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

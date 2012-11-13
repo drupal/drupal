@@ -7,19 +7,32 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use stdClass;
 
 /**
  * Unit tests for core filters.
  */
-class FilterUnitTest extends UnitTestBase {
+class FilterUnitTest extends DrupalUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('filter');
+
   public static function getInfo() {
     return array(
       'name' => 'Filter module filters',
       'description' => 'Tests Filter module filters individually.',
       'group' => 'Filter',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+    config_install_default_config('module', 'system');
   }
 
   /**
@@ -479,7 +492,7 @@ me@me.tv
       ),
       // Absolute URL protocols.
       // The list to test is found in the beginning of _filter_url() at
-      // $protocols = variable_get('filter_allowed_protocols'... (approx line 1325).
+      // $protocols = config('system.filter')->get('protocols')... (approx line 1555).
       '
 https://example.com,
 ftp://ftp.example.com,

@@ -1,0 +1,13 @@
+protocols:
+  - http
+  - https
+  - ftp
+  - news
+  - nntp
+  - telnet
+  - mailto
+  - irc
+  - ssh
+  - sftp
+  - webcal
+  - rtsp

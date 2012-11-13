@@ -1296,7 +1296,10 @@ function drupal_strip_dangerous_protocols($uri) {
   static $allowed_protocols;
 
   if (!isset($allowed_protocols)) {
-    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp', 'ssh', 'tel', 'telnet', 'webcal')));
+    // filter_xss_admin() is called by the installer and update.php, in which
+    // case the configuration may not exist (yet). Provide a minimal default set
+    // of allowed protocols for these cases.
+    $allowed_protocols = array_flip(config('system.filter')->get('protocols') ?: array('http', 'https'));
   }
 
   // Iteratively remove any invalid protocol found.
