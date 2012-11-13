@@ -900,26 +900,24 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
 }
 
 /**
- * Returns an array of language names.
+ * Prepares a list of language names.
  *
- * This is a one to one copy of locale_language_list because we can't rely on enabled locale module.
+ * This is a wrapper around language_list to return a plain key value array.
  *
- * @param $field
- *   'name' => names in current language, localized
- *   'native' => native names
- * @param $all
- *   Boolean to return all languages or only enabled ones
+ * @param string $field
+ *   The field of the language object which should be used as the value of the
+ *   array.
+ * @param int $flags
+ *   (optional) Specifies the state of the languages that have to be returned.
+ *   It can be: LANGUAGE_CONFIGURABLE, LANGUAGE_LOCKED, LANGUAGE_ALL.
+ *
+ * @return array
+ *   An array of language names (or $field) keyed by the langcode.
  *
  * @see locale_language_list()
- * @todo Figure out whether we need this with language module.
  */
-function views_language_list($field = 'name', $all = FALSE) {
-  if ($all) {
-    $languages = language_list();
-  }
-  else {
-    $languages = language_list();
-  }
+function views_language_list($field = 'name', $flags = LANGUAGE_ALL) {
+  $languages = language_list($flags);
   $list = array();
   foreach ($languages as $language) {
     $list[$language->langcode] = ($field == 'name') ? t($language->name) : $language->$field;
