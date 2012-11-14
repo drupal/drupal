@@ -14,7 +14,7 @@ REQUIREMENTS AND NOTES
 
 Drupal requires:
 
-- A web server. Apache (version 2.0 or greater) is recommended.
+- A web server. Apache 2.0 (or greater) & Nginx 1.1 (or greater) are recommended.
 - PHP 5.3.5 (or greater) (http://www.php.net/).
 - One of the following databases:
   - MySQL 5.0.15 (or greater) (http://www.mysql.com/).
