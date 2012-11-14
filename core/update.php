@@ -459,7 +459,8 @@ $container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
   ->addArgument(new Reference('database'));
 $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
   ->addArgument(new Reference('router.dumper'))
-  ->addArgument(new Reference('lock'));
+  ->addArgument(new Reference('lock'))
+  ->addArgument(new Reference('dispatcher'));
 
 // Turn error reporting back on. From now on, only fatal errors (which are
 // not passed through the error handler) will cause a message to be printed.

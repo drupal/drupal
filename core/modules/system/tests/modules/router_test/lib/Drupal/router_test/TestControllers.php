@@ -30,4 +30,8 @@ class TestControllers {
     return $value;
   }
 
+  public function test5() {
+    return "test5";
+  }
+
 }
