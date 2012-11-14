@@ -518,7 +518,7 @@ abstract class TestBase {
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
-  protected function assertIdenticalObject($object1, $object2, $message = '', $group = '') {
+  protected function assertIdenticalObject($object1, $object2, $message = '', $group = 'Other') {
     $message = $message ?: format_string('!object1 is identical to !object2', array(
       '!object1' => var_export($object1, TRUE),
       '!object2' => var_export($object2, TRUE),
@@ -527,7 +527,7 @@ abstract class TestBase {
     foreach ($object1 as $key => $value) {
       $identical = $identical && isset($object2->$key) && $object2->$key === $value;
     }
-    return $this->assertTrue($identical, $message);
+    return $this->assertTrue($identical, $message, $group);
   }
 
 

@@ -2205,7 +2205,7 @@ abstract class WebTestBase extends TestBase {
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   (optional) The group this message is in, which is displayed in a column
+   *   The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
@@ -2286,7 +2286,7 @@ abstract class WebTestBase extends TestBase {
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    * @param $group
-   *   (optional) The group this message is in, which is displayed in a column
+   *   The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
@@ -2428,11 +2428,16 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertThemeOutput($callback, array $variables = array(), $expected, $message = '') {
+  protected function assertThemeOutput($callback, array $variables = array(), $expected, $message = '', $group = 'Other') {
     $output = theme($callback, $variables);
     $this->verbose('Variables:' . '<pre>' .  check_plain(var_export($variables, TRUE)) . '</pre>'
       . '<hr />' . 'Result:' . '<pre>' .  check_plain(var_export($output, TRUE)) . '</pre>'
@@ -2443,7 +2448,7 @@ abstract class WebTestBase extends TestBase {
       $message = '%callback rendered correctly.';
     }
     $message = format_string($message, array('%callback' => 'theme_' . $callback . '()'));
-    return $this->assertIdentical($output, $expected, $message);
+    return $this->assertIdentical($output, $expected, $message, $group);
   }
 
   /**
@@ -2576,12 +2581,13 @@ abstract class WebTestBase extends TestBase {
    * @param $group
    *   (optional) The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByName($name, $value = NULL, $message = NULL) {
+  protected function assertFieldByName($name, $value = NULL, $message = NULL, $group = 'Browser') {
     if (!isset($message)) {
       if (!isset($value)) {
         $message = t('Found field with name @name', array(
@@ -2595,7 +2601,7 @@ abstract class WebTestBase extends TestBase {
         ));
       }
     }
-    return $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value, $message, t('Browser'));
+    return $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value, $message, $group);
   }
 
   /**
@@ -2612,13 +2618,14 @@ abstract class WebTestBase extends TestBase {
    * @param $group
    *   (optional) The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldByName($name, $value = '', $message = '') {
-    return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : t('Did not find field by name @name', array('@name' => $name)), t('Browser'));
+  protected function assertNoFieldByName($name, $value = '', $message = '', $group = 'Browser') {
+    return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : t('Did not find field by name @name', array('@name' => $name)), $group);
   }
 
   /**
@@ -2635,13 +2642,14 @@ abstract class WebTestBase extends TestBase {
    * @param $group
    *   (optional) The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldById($id, $value = '', $message = '') {
-    return $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : t('Found field by id @id', array('@id' => $id)), t('Browser'));
+  protected function assertFieldById($id, $value = '', $message = '', $group = 'Browser') {
+    return $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : t('Found field by id @id', array('@id' => $id)), $group);
   }
 
   /**
@@ -2658,13 +2666,14 @@ abstract class WebTestBase extends TestBase {
    * @param $group
    *   (optional) The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldById($id, $value = '', $message = '') {
-    return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : t('Did not find field by id @id', array('@id' => $id)), t('Browser'));
+  protected function assertNoFieldById($id, $value = '', $message = '', $group = 'Browser') {
+    return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : t('Did not find field by id @id', array('@id' => $id)), $group);
   }
 
   /**
@@ -2676,12 +2685,18 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldChecked($id, $message = '') {
+  protected function assertFieldChecked($id, $message = '', $group = 'Browser') {
     $elements = $this->xpath('//input[@id=:id]', array(':id' => $id));
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is checked.', array('@id' => $id)), t('Browser'));
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is checked.', array('@id' => $id)), $group);
   }
 
   /**
@@ -2693,12 +2708,18 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldChecked($id, $message = '') {
+  protected function assertNoFieldChecked($id, $message = '', $group = 'Browser') {
     $elements = $this->xpath('//input[@id=:id]', array(':id' => $id));
-    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is not checked.', array('@id' => $id)), t('Browser'));
+    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is not checked.', array('@id' => $id)), $group);
   }
 
   /**
@@ -2712,12 +2733,18 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertOption($id, $option, $message = '') {
+  protected function assertOption($id, $option, $message = '', $group = 'Browser') {
     $options = $this->xpath('//select[@id=:id]/option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($options[0]), $message ? $message : t('Option @option for field @id exists.', array('@option' => $option, '@id' => $id)), t('Browser'));
+    return $this->assertTrue(isset($options[0]), $message ? $message : t('Option @option for field @id exists.', array('@option' => $option, '@id' => $id)), $group);
   }
 
   /**
@@ -2731,13 +2758,19 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoOption($id, $option, $message = '') {
+  protected function assertNoOption($id, $option, $message = '', $group = 'Browser') {
     $selects = $this->xpath('//select[@id=:id]', array(':id' => $id));
     $options = $this->xpath('//select[@id=:id]/option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : t('Option @option for field @id does not exist.', array('@option' => $option, '@id' => $id)), t('Browser'));
+    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : t('Option @option for field @id does not exist.', array('@option' => $option, '@id' => $id)), $group);
   }
 
   /**
@@ -2751,14 +2784,20 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    *
    * @todo $id is unusable. Replace with $name.
    */
-  protected function assertOptionSelected($id, $option, $message = '') {
+  protected function assertOptionSelected($id, $option, $message = '', $group = 'Browser') {
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : t('Option @option for field @id is selected.', array('@option' => $option, '@id' => $id)), t('Browser'));
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : t('Option @option for field @id is selected.', array('@option' => $option, '@id' => $id)), $group);
   }
 
   /**
@@ -2772,12 +2811,18 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoOptionSelected($id, $option, $message = '') {
+  protected function assertNoOptionSelected($id, $option, $message = '', $group = 'Browser') {
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['selected']), $message ? $message : t('Option @option for field @id is not selected.', array('@option' => $option, '@id' => $id)), t('Browser'));
+    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['selected']), $message ? $message : t('Option @option for field @id is not selected.', array('@option' => $option, '@id' => $id)), $group);
   }
 
   /**
@@ -2794,6 +2839,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2815,6 +2861,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2841,6 +2888,7 @@ abstract class WebTestBase extends TestBase {
    *   it should add a "todo" comment above the call to this function explaining
    *   the legacy bug that the test wishes to ignore and including a link to an
    *   issue that is working to fix that legacy bug.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2864,6 +2912,7 @@ abstract class WebTestBase extends TestBase {
    *   Field attributes.
    * @param $value
    *   Value of field.
+   *
    * @return
    *   XPath for specified values.
    */
@@ -2882,13 +2931,19 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
+   *
    * @return
    *   Assertion result.
    */
-  protected function assertResponse($code, $message = '') {
+  protected function assertResponse($code, $message = '', $group = 'Browser') {
     $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
-    return $this->assertTrue($match, $message ? $message : t('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
+    return $this->assertTrue($match, $message ? $message : t('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), $group);
   }
 
   /**
@@ -2901,14 +2956,19 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Browser'; most tests do not override
+   *   this default.
    *
    * @return
    *   Assertion result.
    */
-  protected function assertNoResponse($code, $message = '') {
+  protected function assertNoResponse($code, $message = '', $group = 'Browser') {
     $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
-    return $this->assertFalse($match, $message ? $message : t('HTTP response not expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
+    return $this->assertFalse($match, $message ? $message : t('HTTP response not expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), $group);
   }
 
   /**
@@ -2924,14 +2984,19 @@ abstract class WebTestBase extends TestBase {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'E-mail'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertMail($name, $value = '', $message = '') {
+  protected function assertMail($name, $value = '', $message = '', $group = 'E-mail') {
     $captured_emails = state()->get('system.test_email_collector') ?: array();
     $email = end($captured_emails);
-    return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, t('E-mail'));
+    return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, $group);
   }
 
   /**
@@ -2943,11 +3008,20 @@ abstract class WebTestBase extends TestBase {
    *   String to search for.
    * @param $email_depth
    *   Number of emails to search for string, starting with most recent.
+   * @param $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertMailString($field_name, $string, $email_depth) {
+  protected function assertMailString($field_name, $string, $email_depth, $message = '', $group = 'Other') {
     $mails = $this->drupalGetMails();
     $string_found = FALSE;
     for ($i = count($mails) -1; $i >= count($mails) - $email_depth && $i >= 0; $i--) {
@@ -2961,7 +3035,10 @@ abstract class WebTestBase extends TestBase {
         break;
       }
     }
-    return $this->assertTrue($string_found, t('Expected text found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $string)));
+    if (!$message) {
+      $message = format_string('Expected text found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $string));
+    }
+    return $this->assertTrue($string_found, $message, $group);
   }
 
   /**
@@ -2971,15 +3048,27 @@ abstract class WebTestBase extends TestBase {
    *   Name of field or message property to assert: subject, body, id, ...
    * @param $regex
    *   Pattern to search for.
+   * @param $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertMailPattern($field_name, $regex, $message) {
+  protected function assertMailPattern($field_name, $regex, $message = '', $group = 'Other') {
     $mails = $this->drupalGetMails();
     $mail = end($mails);
     $regex_found = preg_match("/$regex/", $mail[$field_name]);
-    return $this->assertTrue($regex_found, t('Expected text found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $regex)));
+    if (!$message) {
+      $message = format_string('Expected text found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $regex));
+    }
+    return $this->assertTrue($regex_found, $message, $group);
   }
 
   /**
