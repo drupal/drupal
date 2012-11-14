@@ -1512,6 +1512,10 @@ function system_cron_settings($form, &$form_state) {
     '#markup' => $status,
   );
 
+  $form['cron_url'] = array(
+    '#markup' => '<p>' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . state()->get('system.cron_key'), array('absolute' => TRUE)))) . '</p>',
+  );
+
   $form['cron'] = array(
     '#type' => 'fieldset',
   );
