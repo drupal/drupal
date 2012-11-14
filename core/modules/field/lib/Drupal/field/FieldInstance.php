@@ -68,7 +68,7 @@ class FieldInstance implements \ArrayAccess {
         'settings' => $widget_properties['settings'],
         'weight' => $widget_properties['weight'],
       );
-      $this->widget = field_get_plugin_manager('widget')->getInstance($options);
+      $this->widget = drupal_container()->get('plugin.manager.field.widget')->getInstance($options);
     }
 
     return $this->widget;
@@ -142,7 +142,7 @@ class FieldInstance implements \ArrayAccess {
         'weight' => $display_properties['weight'],
         'view_mode' => $view_mode,
       );
-      $formatter = field_get_plugin_manager('formatter')->getInstance($options);
+      $formatter = drupal_container()->get('plugin.manager.field.formatter')->getInstance($options);
     }
     else {
       $formatter = NULL;
