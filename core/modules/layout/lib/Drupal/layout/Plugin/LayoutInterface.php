@@ -7,10 +7,12 @@
 
 namespace Drupal\layout\Plugin;
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
+
 /**
  * Defines the shared interface for all layout plugins.
  */
-interface LayoutInterface {
+interface LayoutInterface extends PluginInspectionInterface {
 
   /**
    * Returns a list of regions.

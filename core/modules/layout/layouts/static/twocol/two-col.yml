@@ -4,5 +4,9 @@ template: two-col
 stylesheets:
   - two-col.css
 regions:
-  first: 'First column'
-  second: 'Second column'
+  first:
+    label: Left side
+    type: content
+  second:
+    label: Right side
+    type: aside

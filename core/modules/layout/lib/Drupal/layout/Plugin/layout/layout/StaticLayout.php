@@ -88,11 +88,11 @@ class StaticLayout extends PluginBase implements LayoutInterface {
     );
 
     // Render all regions needed for this layout.
-    foreach ($this->getRegions() as $region => $title) {
+    foreach ($this->getRegions() as $region => $info) {
       // @todo This is just stub code to fill in regions with stuff for now.
       // When blocks are related to layouts and not themes, we can make this
       // really be filled in with blocks.
-      $build['#content'][$region] = '<h3>' . $title . '</h3>';
+      $build['#content'][$region] = '<h3>' . $info['label'] . '</h3>';
     }
 
     // Fill in attached CSS and JS files based on metadata.

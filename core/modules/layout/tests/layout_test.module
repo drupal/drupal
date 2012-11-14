@@ -27,7 +27,10 @@ function layout_test_page() {
   global $theme;
   $theme = 'layout_test_theme';
   theme_enable(array($theme));
-  $layout = layout_manager()->createInstance('static_layout:layout_test_theme__two-col');
+  $display = entity_load('display', 'test_twocol');
+  $layout = $display->getLayoutInstance();
+  // @todo This tests that the layout can render its regions, but does not test
+  //   block rendering: http://drupal.org/node/1812720.
   return $layout->renderLayout();
 }
 
