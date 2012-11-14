@@ -31,6 +31,15 @@ class AnnotatedClassDiscoveryTest extends DiscoveryTestBase {
         'color' => 'green',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple',
       ),
+      'banana' => array(
+        'id' => 'banana',
+        'label' => 'Banana',
+        'color' => 'yellow',
+        'uses' => array(
+          'bread' => t('Banana bread'),
+        ),
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Banana',
+      ),
       'cherry' => array(
         'id' => 'cherry',
         'label' => 'Cherry',

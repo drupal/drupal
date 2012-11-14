@@ -36,14 +36,32 @@ class Plugin implements AnnotationInterface {
    * classed annotations that were used.
    */
   public function __construct($values) {
+    $this->definition = $this->parse($values);
+  }
+
+  /**
+   * Parses an annotation into its definition.
+   *
+   * @param array $values
+   *   The annotation array.
+   *
+   * @return array
+   *  The parsed annotation as a definition.
+   */
+  protected function parse(array $values) {
+    $definitions = array();
     foreach ($values as $key => $value) {
       if ($value instanceof AnnotationInterface) {
-        $this->definition[$key] = $value->get();
+        $definitions[$key] = $value->get();
+      }
+      elseif (is_array($value)) {
+        $definitions[$key] = $this->parse($value);
       }
       else {
-        $this->definition[$key] = $value;
+        $definitions[$key] = $value;
       }
     }
+    return $definitions;
   }
 
   /**
