@@ -1384,6 +1384,11 @@ class ViewExecutable {
    * To be called externally, probably by an AJAX handler of some flavor.
    * Can also be called when views are embedded, as this guarantees
    * normalized output.
+   *
+   * This function does not do any access checks on the view. It is the
+   * responsibility of the caller to check $view->access() or implement other
+   * access logic. To render the view normally with access checks, use
+   * views_embed_view() instead.
    */
   public function preview($display_id = NULL, $args = array()) {
     if (empty($this->current_display) || ((!empty($display_id)) && $this->current_display != $display_id)) {
