@@ -219,9 +219,13 @@ abstract class PathPluginBase extends DisplayPluginBase {
       ),
     );
 
-    $path = strip_tags('/' . $this->getOption('path'));
+    $path = strip_tags($this->getOption('path'));
+
     if (empty($path)) {
-      $path = t('None');
+      $path = t('No path is set');
+    }
+    else {
+      $path = '/' . $path;
     }
 
     $options['path'] = array(
