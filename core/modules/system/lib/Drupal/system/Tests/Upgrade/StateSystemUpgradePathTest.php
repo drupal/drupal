@@ -67,6 +67,10 @@ class StateSystemUpgradePathTest extends UpgradePathTestBase {
       'value' => 1304208000,
       'variable_name' => 'update_last_email_notification',
     );
+    $expected_state['comment.node_comment_statistics_scale'] = array(
+      'value' => 1.0 / 1000,
+      'variable_name' => 'node_cron_comments_scale',
+    );
 
     foreach ($expected_state as $name => $data) {
       $this->assertIdentical(state()->get($name), $data['value']);

@@ -27,6 +27,9 @@ function comment_uninstall() {
     variable_del('comment_preview_' . $node_type);
     variable_del('comment_subject_field_' . $node_type);
   }
+
+  // Remove states.
+  state()->delete('comment.node_comment_statistics_scale');
 }
 
 /**
@@ -379,6 +382,15 @@ function comment_update_8003(&$sandbox) {
   update_add_uuids($sandbox, 'comment', 'cid', $cids);
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+}
+
+/**
+ * Convert variables to state.
+ */
+function comment_update_8004() {
+  update_variables_to_state(array(
+    'node_cron_comments_scale' => 'comment.node_comment_statistics_scale',
+  ));
 }
 
 /**

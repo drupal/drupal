@@ -43,3 +43,7 @@ db_merge('variable')
   ->key(array('name' => 'cron_key'))
   ->fields(array('value' => serialize('kdm95qppDDlyZrcUOx453YwQqDA4DNmxi4VQcxzFU9M')))
   ->execute();
+db_merge('variable')
+  ->key(array('name' => 'node_cron_comments_scale'))
+  ->fields(array('value' => serialize(1.0 / 1000)))
+  ->execute();
