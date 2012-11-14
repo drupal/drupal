@@ -86,20 +86,4 @@ class RouterTest extends WebTestBase {
     $this->assertNoPattern('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
   }
 
-  /**
-   * Checks that dynamically defined and altered routes work correctly.
-   *
-   * @see \Drupal\router_test\RouteSubscriber
-   */
-  public function testDynamicRoutes() {
-    // Test the dynamically added route.
-    $this->drupalGet('router_test/test5');
-    $this->assertResponse(200);
-    $this->assertRaw('test5', 'The correct string was returned because the route was successful.');
-
-    // Test the altered route.
-    $this->drupalGet('router_test/test6');
-    $this->assertResponse(200);
-    $this->assertRaw('test5', 'The correct string was returned because the route was successful.');
-  }
 }
