@@ -13,8 +13,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
  * Provides field and instance definitions for the current runtime environment.
  *
  * A Drupal\field\FieldInfo object is created and statically persisted through
- * the request by the field_info_cache() function. The object properties act as
- * a "static cache" of fields and instances definitions.
+ * the request by the _field_info_field_cache() function. The object properties
+ * act as a "static cache" of fields and instances definitions.
  *
  * The preferred way to access definitions is through the getBundleInstances()
  * method, which keeps cache entries per bundle, storing both fields and
@@ -61,7 +61,7 @@ class FieldInfo {
   protected $loadedAllFields = FALSE;
 
   /**
-   * Separately tracks requested field names or IDs that do not exists.
+   * Separately tracks requested field names or IDs that do not exist.
    *
    * @var array
    */
@@ -202,9 +202,6 @@ class FieldInfo {
 
   /**
    * Retrieves all active, non-deleted instances definitions.
-   *
-   * This method does not read from nor populate the "static" and persistent
-   * caches.
    *
    * @param $entity_type
    *   (optional) The entity type.

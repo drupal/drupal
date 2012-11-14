@@ -399,13 +399,13 @@ function field_info_field_by_ids() {
 /**
  * Retrieves information about field instances.
  *
- * Use of this function to retriev instances across separate bundles (i.e. when
- * the $bundle parameter is NULL) should be avoided when possible, since it
- * loads and  statically caches a potentially large array of information. Use
- * field_info_field_map() instead.
+ * Use of this function to retrieve instances across separate bundles (i.e.
+ * when the $bundle parameter is NULL) should be avoided when possible, since
+ * it loads and statically caches a potentially large array of information.
+ * Use field_info_field_map() instead.
  *
  * When retrieving the instances of a specific bundle (i.e. when both
- * $entity_type and $bundle_name are provided, the function also populates a
+ * $entity_type and $bundle_name are provided), the function also populates a
  * static cache with the corresponding field definitions, allowing fast
  * retrieval of field_info_field() later in the request.
  *
