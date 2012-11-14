@@ -1057,7 +1057,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
         'class' => array('comment-node-type-settings-form'),
       ),
       '#attached' => array(
-        'library' => array('comment', 'drupal.comment'),
+        'library' => array(array('comment', 'drupal.comment')),
       ),
     );
     // Unlike coment_form_node_form_alter(), all of these settings are applied
@@ -1164,7 +1164,7 @@ function comment_form_node_form_alter(&$form, $form_state) {
       'class' => array('comment-node-settings-form'),
     ),
     '#attached' => array(
-      'library' => array('comment', 'drupal.comment'),
+      'library' => array(array('comment', 'drupal.comment')),
     ),
     '#weight' => 30,
   );
