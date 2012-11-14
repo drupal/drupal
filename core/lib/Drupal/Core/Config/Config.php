@@ -196,7 +196,7 @@ class Config {
    *   The configuration object.
    */
   public function setOverride(array $data) {
-    $this->overrides = NestedArray::mergeDeepArray(array($this->overrides, $data));
+    $this->overrides = NestedArray::mergeDeepArray(array($this->overrides, $data), TRUE);
     $this->resetOverriddenData();
     return $this;
   }
@@ -212,7 +212,7 @@ class Config {
   protected function setOverriddenData() {
     $this->overriddenData = $this->data;
     if (!empty($this->overrides)) {
-      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->overrides));
+      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->overrides), TRUE);
     }
     return $this;
   }
@@ -388,7 +388,7 @@ class Config {
   /**
    * Retrieve the storage used to load and save this configuration object.
    *
-   * @return Drupal\Core\Config\StorageInterface
+   * @return \Drupal\Core\Config\StorageInterface
    *   The configuration storage object.
    */
   public function getStorage() {
@@ -400,5 +400,20 @@ class Config {
    */
   protected function notify($config_event_name) {
     $this->eventDispatcher->dispatch('config.' . $config_event_name, new ConfigEvent($this));
+  }
+
+  /*
+   * Merges data into a configuration object.
+   *
+   * @param array $data_to_merge
+   *   An array containing data to merge.
+   *
+   * @return \Drupal\Core\Config\Config
+   *   The configuration object.
+   */
+  public function merge(array $data_to_merge) {
+    // Preserve integer keys so that config keys are not changed.
+    $this->data = NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE);
+    return $this;
   }
 }

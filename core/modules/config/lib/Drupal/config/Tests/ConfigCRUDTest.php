@@ -90,6 +90,17 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $renamed_config = config($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
     $this->assertIdentical($renamed_config->isNew(), FALSE);
+
+    // Merge data into the configuration object.
+    $new_config = config($new_name);
+    $expected_values = array(
+      'value' => 'herp',
+      '404' => 'derp',
+    );
+    $new_config->merge($expected_values);
+    $new_config->save();
+    $this->assertIdentical($new_config->get('value'), $expected_values['value']);
+    $this->assertIdentical($new_config->get('404'), $expected_values['404']);
   }
 
 }

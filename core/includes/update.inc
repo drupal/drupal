@@ -12,6 +12,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Minimum schema version of Drupal 7 required for upgrade to Drupal 8.
@@ -1218,17 +1219,14 @@ function update_variables_to_config($config_name, array $variable_map) {
   }
   $default_data = $file->read($config_name);
 
+  // Apply the default values.
+  $config->setData($default_data);
+
   // Merge any possibly existing original data into default values.
   // Only relevant when being called repetitively on the same config object.
   if (!empty($original_data)) {
-    $data = drupal_array_merge_deep($default_data, $original_data);
+    $config->merge($original_data);
   }
-  else {
-    $data = $default_data;
-  }
-
-  // Apply the default values.
-  $config->setData($data);
 
   // Fetch existing variables.
   $variables = db_query('SELECT name, value FROM {variable} WHERE name IN (:variables)', array(':variables' => array_keys($variable_map)))->fetchAllKeyed();
