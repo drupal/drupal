@@ -43,39 +43,82 @@ class FunctionsTest extends WebTestBase {
       'id' => 'parentlist',
     );
     $variables['items'] = array(
+      // A plain string value forms an own item.
       'a',
+      // Items can be fully-fledged render arrays with their own attributes.
       array(
-        'data' => 'b',
-        'children' => array(
-          'c',
-          // Nested children may use additional attributes.
-          array(
-            'data' => 'd',
-            'class' => array('dee'),
-          ),
-          // Any string key is treated as child list attribute.
-          'id' => 'childlist',
+        '#wrapper_attributes' => array(
+          'id' => 'item-id-b',
         ),
-        // Any other keys are treated as item attributes.
-        'id' => 'bee',
-        'type' => 'ol',
+        '#markup' => 'b',
+        'childlist' => array(
+          '#theme' => 'item_list',
+          '#attributes' => array('id' => 'blist'),
+          '#type' => 'ol',
+          '#items' => array(
+            'ba',
+            array(
+              '#markup' => 'bb',
+              '#wrapper_attributes' => array('class' => array('item-class-bb')),
+            ),
+          ),
+        ),
       ),
+      // However, items can also be child #items.
       array(
-        'data' => 'e',
-        'id' => 'E',
+        '#markup' => 'c',
+        'childlist' => array(
+          '#attributes' => array('id' => 'clist'),
+          'ca',
+          array(
+            '#markup' => 'cb',
+            '#wrapper_attributes' => array('class' => array('item-class-cb')),
+            'children' => array(
+              'cba',
+              'cbb',
+            ),
+          ),
+          'cc',
+        ),
       ),
+      // Use #markup to be able to specify #wrapper_attributes.
+      array(
+        '#markup' => 'd',
+        '#wrapper_attributes' => array('id' => 'item-id-d'),
+      ),
+      // An empty item with attributes.
+      array(
+        '#wrapper_attributes' => array('id' => 'item-id-e'),
+      ),
+      // Lastly, another plain string item.
+      'f',
     );
-    $inner = '<div class="item-list"><ol id="childlist">';
-    $inner .= '<li class="odd first">c</li>';
-    $inner .= '<li class="dee even last">d</li>';
-    $inner .= '</ol></div>';
+
+    $inner_b = '<div class="item-list"><ol id="blist">';
+    $inner_b .= '<li class="odd first">ba</li>';
+    $inner_b .= '<li class="item-class-bb even last">bb</li>';
+    $inner_b .= '</ol></div>';
+
+    $inner_cb = '<div class="item-list"><ul>';
+    $inner_cb .= '<li class="odd first">cba</li>';
+    $inner_cb .= '<li class="even last">cbb</li>';
+    $inner_cb .= '</ul></div>';
+
+    $inner_c = '<div class="item-list"><ul id="clist">';
+    $inner_c .= '<li class="odd first">ca</li>';
+    $inner_c .= '<li class="item-class-cb even">cb' . $inner_cb . '</li>';
+    $inner_c .= '<li class="odd last">cc</li>';
+    $inner_c .= '</ul></div>';
 
     $expected = '<div class="item-list">';
     $expected .= '<h3>Some title</h3>';
     $expected .= '<ul id="parentlist">';
     $expected .= '<li class="odd first">a</li>';
-    $expected .= '<li id="bee" class="even">b' . $inner . '</li>';
-    $expected .= '<li id="E" class="odd last">e</li>';
+    $expected .= '<li id="item-id-b" class="even">b' . $inner_b . '</li>';
+    $expected .= '<li class="odd">c' . $inner_c . '</li>';
+    $expected .= '<li id="item-id-d" class="even">d</li>';
+    $expected .= '<li id="item-id-e" class="odd"></li>';
+    $expected .= '<li class="even last">f</li>';
     $expected .= '</ul></div>';
 
     $this->assertThemeOutput('item_list', $variables, $expected);

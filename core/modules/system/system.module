@@ -504,7 +504,6 @@ function system_element_info() {
   // Form structure.
   $types['item'] = array(
     '#markup' => '',
-    '#pre_render' => array('drupal_pre_render_markup'),
     '#theme_wrappers' => array('form_element'),
   );
   $types['hidden'] = array(
@@ -517,10 +516,9 @@ function system_element_info() {
   );
   $types['markup'] = array(
     '#markup' => '',
-    '#pre_render' => array('drupal_pre_render_markup'),
   );
   $types['link'] = array(
-    '#pre_render' => array('drupal_pre_render_link', 'drupal_pre_render_markup'),
+    '#pre_render' => array('drupal_pre_render_link'),
   );
   $types['fieldset'] = array(
     '#collapsible' => FALSE,
@@ -4208,7 +4206,7 @@ function theme_exposed_filters($variables) {
   if (isset($form['current'])) {
     $items = array();
     foreach (element_children($form['current']) as $key) {
-      $items[] = drupal_render($form['current'][$key]);
+      $items[] = $form['current'][$key];
     }
     $output .= theme('item_list', array('items' => $items, 'attributes' => array('class' => array('clearfix', 'current-filters'))));
   }

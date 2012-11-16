@@ -5385,27 +5385,6 @@ function drupal_pre_render_dropbutton($element) {
 }
 
 /**
- * Pre-render callback: Appends contents in #markup to #children.
- *
- * This needs to be a #pre_render callback, because eventually assigned
- * #theme_wrappers will expect the element's rendered content in #children.
- * Note that if also a #theme is defined for the element, then the result of
- * the theme callback will override #children.
- *
- * @param $elements
- *   A structured array using the #markup key.
- *
- * @return
- *   The passed-in elements, but #markup appended to #children.
- *
- * @see drupal_render()
- */
-function drupal_pre_render_markup($elements) {
-  $elements['#children'] = $elements['#markup'];
-  return $elements;
-}
-
-/**
  * Renders the page, including all theming.
  *
  * @param $page
@@ -5587,10 +5566,19 @@ function drupal_render(&$elements) {
   // If #theme was not set and the element has children, render them now.
   // This is the same process as drupal_render_children() but is inlined
   // for speed.
-  if ($elements['#children'] == '') {
+  if ($elements['#children'] === '') {
     foreach ($children as $key) {
       $elements['#children'] .= drupal_render($elements[$key]);
     }
+  }
+  // If #theme was not set, but the element has raw #markup, prepend the content
+  // in #markup to #children. #children may contain the rendered content
+  // supplied by #theme, or the rendered child elements, as processed above. If
+  // both #theme and #markup are set, then #theme is responsible for rendering
+  // the element. Eventually assigned #theme_wrappers will expect both the
+  // element's #markup and the rendered content of child elements in #children.
+  if (!isset($elements['#theme']) && isset($elements['#markup'])) {
+    $elements['#children'] = $elements['#markup'] . $elements['#children'];
   }
 
   // Let the theme functions in #theme_wrappers add markup around the rendered

@@ -937,6 +937,9 @@ function theme($hook, $variables = array()) {
     }
     $hook = $candidate;
   }
+  // Save the original theme hook, so it can be supplied to theme variable
+  // preprocess callbacks.
+  $original_hook = $hook;
 
   // If there's no implementation, check for more generic fallbacks. If there's
   // still no implementation, log an error and return an empty string.
@@ -996,6 +999,10 @@ function theme($hook, $variables = array()) {
   elseif (!empty($info['render element'])) {
     $variables += array($info['render element'] => array());
   }
+  // Supply original caller info.
+  $variables += array(
+    'theme_hook_original' => $original_hook,
+  );
 
   // Invoke the variable processors, if any. The processors may specify
   // alternate suggestions for which hook's template/function to use. If the
@@ -2122,19 +2129,60 @@ function theme_mark($variables) {
 }
 
 /**
+ * Preprocesses variables for theme_item_list().
+ *
+ * @param array $variables
+ *   An associative array containing theme variables for theme_item_list().
+ *   'items' in variables will be processed to automatically inherit the
+ *   variables of this list to any possibly contained nested lists that do not
+ *   specify custom render properties. This allows callers to specify larger
+ *   nested lists, without having to explicitly specify and repeat the render
+ *   properties for all nested child lists.
+ */
+function template_preprocess_item_list(&$variables) {
+  foreach ($variables['items'] as &$item) {
+    // If the item value is an array, then it is a render array.
+    if (is_array($item)) {
+      // Determine whether there are any child elements in the item that are not
+      // fully-specified render arrays. If there are any, then the child
+      // elements present nested lists and we automatically inherit the render
+      // array properties of the current list to them.
+      foreach (element_children($item) as $key) {
+        $child = &$item[$key];
+        // If this child element does not specify how it can be rendered, then
+        // we need to inherit the render properties of the current list.
+        if (!isset($child['#type']) && !isset($child['#theme']) && !isset($child['#markup'])) {
+          // Since theme_item_list() supports both strings and render arrays as
+          // items, the items of the nested list may have been specified as the
+          // child elements of the nested list, instead of #items. For
+          // convenience, we automatically move them into #items.
+          if (!isset($child['#items'])) {
+            // This is the same condition as in element_children(), which cannot
+            // be used here, since it triggers an error on string values.
+            foreach ($child as $child_key => $child_value) {
+              if ($child_key[0] !== '#') {
+                $child['#items'][$child_key] = $child_value;
+                unset($child[$child_key]);
+              }
+            }
+          }
+          // Lastly, inherit the original theme variables of the current list.
+          $child['#theme'] = $variables['theme_hook_original'];
+          $child['#type'] = $variables['type'];
+        }
+      }
+    }
+  }
+}
+
+/**
  * Returns HTML for a list or nested list of items.
  *
  * @param $variables
  *   An associative array containing:
- *   - items: A list of items to render. String values are rendered as is. Each
- *     item can also be an associative array containing:
- *     - data: The string content of the list item.
- *     - children: A list of nested child items to render that behave
- *       identically to 'items', but any non-numeric string keys are treated as
- *       HTML attributes for the child list that wraps 'children'.
- *     - type: The type of list to return (e.g. "ul", "ol").
- *     Any other key/value pairs are used as HTML attributes for the list item
- *     in 'data'.
+ *   - items: A list of items to render. Allowed values are strings or
+ *     render arrays. Render arrays can specify list item attributes in the
+ *     #wrapper_attributes property.
  *   - title: The title of the list.
  *   - type: The type of list to return (e.g. "ul", "ol").
  *   - attributes: The attributes applied to the list element.
@@ -2142,6 +2190,7 @@ function theme_mark($variables) {
 function theme_item_list($variables) {
   $items = $variables['items'];
   $title = (string) $variables['title'];
+  // @todo 'type' clashes with '#type'. Rename to 'tag'.
   $type = $variables['type'];
   $list_attributes = $variables['attributes'];
 
@@ -2151,40 +2200,15 @@ function theme_item_list($variables) {
 
     $num_items = count($items);
     $i = 0;
-    foreach ($items as $key => $item) {
+    foreach ($items as &$item) {
       $i++;
       $attributes = array();
-
       if (is_array($item)) {
-        $value = '';
-        if (isset($item['data'])) {
-          $value .= $item['data'];
+        if (isset($item['#wrapper_attributes'])) {
+          $attributes = $item['#wrapper_attributes'];
         }
-        $attributes = array_diff_key($item, array('data' => 0, 'children' => 0, 'type' => 0));
-
-        // Append nested child list, if any.
-        if (isset($item['children'])) {
-          // HTML attributes for the outer list are defined in the 'attributes'
-          // theme variable, but not inherited by children. For nested lists,
-          // all non-numeric keys in 'children' are used as list attributes.
-          $child_list_attributes = array();
-          foreach ($item['children'] as $child_key => $child_item) {
-            if (is_string($child_key)) {
-              $child_list_attributes[$child_key] = $child_item;
-              unset($item['children'][$child_key]);
-            }
-          }
-          $value .= theme('item_list', array(
-            'items' => $item['children'],
-            'type' => (isset($item['type']) ? $item['type'] : $type),
-            'attributes' => $child_list_attributes,
-          ));
-        }
+        $item = drupal_render($item);
       }
-      else {
-        $value = $item;
-      }
-
       $attributes['class'][] = ($i % 2 ? 'odd' : 'even');
       if ($i == 1) {
         $attributes['class'][] = 'first';
@@ -2192,8 +2216,7 @@ function theme_item_list($variables) {
       if ($i == $num_items) {
         $attributes['class'][] = 'last';
       }
-
-      $output .= '<li' . new Attribute($attributes) . '>' . $value . '</li>';
+      $output .= '<li' . new Attribute($attributes) . '>' . $item . '</li>';
     }
     $output .= "</$type>";
   }
