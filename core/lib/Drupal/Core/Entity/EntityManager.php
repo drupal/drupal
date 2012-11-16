@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
+use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -222,7 +223,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function __construct() {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
-    $this->discovery = new AlterDecorator(new AnnotatedClassDiscovery('Core', 'Entity'), 'entity_info');
+    $this->discovery = new AlterDecorator(new InfoHookDecorator(new AnnotatedClassDiscovery('Core', 'Entity'), 'entity_info'), 'entity_info');
     $this->factory = new DefaultFactory($this);
 
     // Entity type plugins includes translated strings, so each language is

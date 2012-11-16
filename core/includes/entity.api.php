@@ -11,22 +11,43 @@
  */
 
 /**
- * Alter the entity type definition.
+ * Add to entity type definitions.
  *
- * Modules may implement this hook to alter the information that defines an
- * entity. All properties that are available in
- * \Drupal\Core\Entity\EntityManager can be altered here.
+ * Modules may implement this hook to add information to defined entity types.
  *
  * @param array $entity_info
  *   An associative array of all entity type definitions, keyed by the entity
- *   type name.
+ *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
  * @see \Drupal\Core\Entity\EntityManager
  * @see entity_get_info()
+ */
+function hook_entity_info(&$entity_info) {
+  // Add the 'Print' view mode for nodes.
+  $entity_info['node']['view_modes']['print'] = array(
+    'label' => t('Print'),
+    'custom_settings' => FALSE,
+  );
+}
+
+/**
+ * Alter the entity type definitions.
  *
- * @todo Allow a module to add its bundles and view modes before other modules
- *   alter the definition.
+ * Modules may implement this hook to alter the information that defines an
+ * entity type. All properties that are available in
+ * \Drupal\Core\Entity\EntityManager can be altered here.
+ *
+ * Do not use this hook to add information to entity types. Use
+ * hook_entity_info() for that instead.
+ *
+ * @param array $entity_info
+ *   An associative array of all entity type definitions, keyed by the entity
+ *   type name. Passed by reference.
+ *
+ * @see \Drupal\Core\Entity\Entity
+ * @see \Drupal\Core\Entity\EntityManager
+ * @see entity_get_info()
  */
 function hook_entity_info_alter(&$entity_info) {
   // Set the controller class for nodes to an alternate implementation of the

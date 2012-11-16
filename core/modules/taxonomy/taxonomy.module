@@ -106,9 +106,9 @@ function taxonomy_permission() {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_info().
  */
-function taxonomy_entity_info_alter(&$info) {
+function taxonomy_entity_info(&$info) {
   foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
     $info['taxonomy_term']['bundles'][$machine_name] = array(
       'label' => $vocabulary->name,

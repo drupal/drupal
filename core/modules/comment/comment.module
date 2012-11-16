@@ -98,9 +98,9 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_info().
  */
-function comment_entity_info_alter(&$info) {
+function comment_entity_info(&$info) {
   foreach (node_type_get_names() as $type => $name) {
     $info['comment']['bundles']['comment_node_' . $type] = array(
       'label' => t('@node_type comment', array('@node_type' => $name)),
