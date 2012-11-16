@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Test module for Transliteration hook.
+ *
+ * @see hook_transliteration_overrides_alter()
+ */
+
+/**
+ * Implements hook_transliteration_overrides_alter().
+ *
+ * Provides overrides for a fake language with language code 'zz'.
+ */
+function transliterate_test_transliteration_overrides_alter(&$overrides, $langcode) {
+  if ($langcode == 'zz') {
+    // The default transliteration of Ä is A, but change it to Z for testing.
+    $overrides['zz'][0xC4] = 'Z';
+  }
+  else {
+    $overrides['zz'][0xC4] = 'W';
+  }
+}

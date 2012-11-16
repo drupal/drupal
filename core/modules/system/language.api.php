@@ -184,3 +184,70 @@ function hook_language_fallback_candidates_alter(array &$fallback_candidates) {
 /**
  * @} End of "addtogroup hooks".
  */
+
+/**
+ * @defgroup transliteration Transliteration
+ * @{
+ * Transliterate from Unicode to US-ASCII
+ *
+ * Transliteration is the process of translating individual non-US-ASCII
+ * characters into ASCII characters, which specifically does not transform
+ * non-printable and punctuation characters in any way. This process will always
+ * be both inexact and language-dependent. For instance, the character Ö (O with
+ * an umlaut) is commonly transliterated as O, but in German text, the
+ * convention would be to transliterate it as Oe or OE, depending on the context
+ * (beginning of a capitalized word, or in an all-capital letter context).
+ *
+ * The Drupal default transliteration process transliterates text character by
+ * character using a database of generic character transliterations and
+ * language-specific overrides. Character context (such as all-capitals
+ * vs. initial capital letter only) is not taken into account, and in
+ * transliterations of capital letters that result in two or more letters, by
+ * convention only the first is capitalized in the Drupal transliteration
+ * result. So, the process has limitations; however, since the reason for
+ * transliteration is typically to create machine names or file names, this
+ * should not really be a problem. After transliteration, other transformation
+ * or validation may be necessary, such as converting spaces to another
+ * character, removing non-printable characters, lower-casing, etc.
+ *
+ * Here is a code snippet to transliterate some text:
+ * @code
+ * // Use the current default interface language.
+ * $langcode = language(LANGUAGE_TYPE_INTERFACE)->langcode;
+ * // Instantiate the transliteration class.
+ * $trans = drupal_container()->get('transliteration');
+ * // Use this to transliterate some text.
+ * $transformed = $trans->transliterate($string, $langcode);
+ * @endcode
+ *
+ * Drupal Core provides the generic transliteration character tables and
+ * overrides for a few common languages; modules can implement
+ * hook_transliteration_overrides_alter() to provide further language-specific
+ * overrides. Modules can also completely override the transliteration classes
+ * in \Drupal\Core\CoreBundle.
+ */
+
+/**
+ * Provide language overrides for transliteration.
+ *
+ * @param array $overrides
+ *   Associative array of language overrides. The outermost key is the language
+ *   code, and the corresponding value is an array whose keys are integer
+ *   Unicode character codes, and whose values are the transliterations of those
+ *   characters in the given language, to override default transliterations.
+ * @param string $langcode
+ *   The code for the language that is being transliterated.
+ *
+ * @ingroup hooks
+ */
+function hook_transliteration_overrides_alter(&$overrides, $langcode) {
+  // Provide special overrides for German for a custom site.
+  if ($langcode == 'de') {
+    // The core-provided transliteration of Ä is Ae, but we want just A.
+    $overrides['de'][0xC4] = 'A';
+  }
+}
+
+/**
+ * @} End of "defgroup transliteration".
+ */

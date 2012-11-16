@@ -1,0 +1,6 @@
+name = "Transliteration test module"
+description = "Tests the transliteration hook"
+package = Testing
+version = VERSION
+core = 8.x
+hidden = TRUE
