@@ -454,7 +454,7 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
   // this form. Copying field values must be done using field_attach_submit().
   $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $entity->bundle())) : $form_state['values'];
   foreach ($values_excluding_fields as $key => $value) {
-    $entity->$key = $value;
+    $entity->set($key, $value);
   }
 
   // Invoke all specified builders for copying form values to entity properties.

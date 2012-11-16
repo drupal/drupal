@@ -123,6 +123,12 @@ class ViewListController extends EntityListController {
         'weight' => 10,
       );
     }
+    $definition['clone'] = array(
+      'title' => t('Clone'),
+      'href' => "$path/clone",
+      'weight' => 15,
+    );
+
     return $definition;
   }
 

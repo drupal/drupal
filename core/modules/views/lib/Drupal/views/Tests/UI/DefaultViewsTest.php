@@ -73,6 +73,23 @@ class DefaultViewsTest extends UITestBase {
     // $this->drupalGet('frontpage');
     // $this->assertNoText($new_title);
 
+    // Clone the view and check that the normal schema of cloned views is used.
+    $this->drupalGet('admin/structure/views');
+    $this->clickViewsOperationLink(t('Clone'), '/frontpage');
+    $edit = array(
+      'name' => 'clone_of_frontpage',
+    );
+    $this->assertTitle(t('Clone of @human_name | @site-name', array('@human_name' => 'Front page', '@site-name' => config('system.site')->get('name'))));
+    $this->drupalPost(NULL, $edit, t('Clone'));
+    $this->assertUrl('admin/structure/views/view/clone_of_frontpage/edit', array(), 'The normal cloning name schema is applied.');
+
+    // Clone a view and set a custom name.
+    $this->drupalGet('admin/structure/views');
+    $this->clickViewsOperationLink(t('Clone'), '/frontpage');
+    $random_name = strtolower($this->randomName());
+    $this->drupalPost(NULL, array('name' => $random_name), t('Clone'));
+    $this->assertUrl("admin/structure/views/view/$random_name/edit", array(), 'The custom view name got saved.');
+
     // Now disable the view, and make sure it stops appearing on the main view
     // listing page but instead goes back to displaying on the disabled views
     // listing page.
@@ -126,7 +143,7 @@ class DefaultViewsTest extends UITestBase {
         break;
       }
     }
-    $this->assertTrue(isset($index), t('Link to "@label" containing @part found.', array('@label' => $label, '@part' => $unique_href_part)));
+    $this->assertTrue(isset($index), format_string('Link to "@label" containing @part found.', array('@label' => $label, '@part' => $unique_href_part)));
     if (isset($index)) {
       return $this->clickLink($label, $index);
     }

@@ -26,7 +26,8 @@ use Drupal\Core\Annotation\Translation;
  *   form_controller_class = {
  *     "edit" = "Drupal\views_ui\ViewEditFormController",
  *     "add" = "Drupal\views_ui\ViewAddFormController",
- *     "preview" = "Drupal\views_ui\ViewPreviewFormController"
+ *     "preview" = "Drupal\views_ui\ViewPreviewFormController",
+ *     "clone" = "Drupal\views_ui\ViewCloneFormController"
  *   },
  *   config_prefix = "views.view",
  *   fieldable = FALSE,

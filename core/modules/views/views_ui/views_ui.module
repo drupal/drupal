@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\Core\Entity\EntityInterface;
@@ -47,6 +48,14 @@ function views_ui_menu() {
     'title' => 'List',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
+  ) + $base;
+
+  $items['admin/structure/views/view/%views_ui_cache/clone'] = array(
+    'title callback' => 'views_ui_clone_title',
+    'title arguments' => array(4),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(4, 'clone'),
+    'type' => MENU_CALLBACK,
   ) + $base;
 
   $items['admin/structure/views/view/%views_ui/enable'] = array(
@@ -371,6 +380,16 @@ function views_ui_cache_set(ViewUI $view) {
   $executable->query = NULL;
   $executable->displayHandlers = array();
   drupal_container()->get('user.tempstore')->get('views')->set($view->get('name'), $view);
+}
+
+/**
+ * Title callback for the views clone form.
+ *
+ * @param \Drupal\views\ViewExecutable $view
+ *   The view to clone.
+ */
+function views_ui_clone_title(ViewUI $view) {
+  return t('Clone of @human_name', array('@human_name' => $view->getHumanName()));
 }
 
 /**
