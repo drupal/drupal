@@ -51,13 +51,9 @@ class DBLogTest extends RESTTestBase {
   public function testWatchdog() {
     // Write a log message to the DB.
     watchdog('rest_test', 'Test message');
-    // Get ID of the written message.
-    $result = db_select('watchdog', 'w')
-      ->condition('type', 'rest_test')
-      ->fields('w', array('wid'))
-      ->execute()
-      ->fetchCol();
-    $id = $result[0];
+    // Get the ID of the written message.
+    $id = db_query_range("SELECT wid FROM {watchdog} WHERE type = :type ORDER BY wid DESC", 0, 1, array(':type' => 'rest_test'))
+      ->fetchField();
 
     // Create a user account that has the required permissions to read
     // the watchdog resource via the web API.

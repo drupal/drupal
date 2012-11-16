@@ -72,7 +72,9 @@ class CoreBundle extends Bundle
       ->addArgument(new Reference('database'));
     $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
       ->addArgument(new Reference('router.dumper'))
-      ->addArgument(new Reference('lock'));
+      ->addArgument(new Reference('lock'))
+      ->addArgument(new Reference('dispatcher'));
+
 
     $container->register('matcher', 'Drupal\Core\Routing\ChainMatcher');
     $container->register('legacy_url_matcher', 'Drupal\Core\LegacyUrlMatcher')

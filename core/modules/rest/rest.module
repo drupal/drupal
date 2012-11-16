@@ -5,9 +5,6 @@
  * RESTful web services module.
  */
 
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
-
 /**
  * Implements hook_menu().
  *
@@ -24,32 +21,6 @@ function rest_menu() {
     'file' => 'rest.admin.inc',
   );
   return $items;
-}
-
-/**
- * Implements hook_route_info().
- */
-function rest_route_info() {
-  $collection = new RouteCollection();
-
-  // This hook is called during module enabling where the manager has not been
-  // registered as service yet.
-  if (drupal_container()->has('plugin.manager.rest')) {
-    $manager = drupal_container()->get('plugin.manager.rest');
-    $resources = config('rest')->get('resources');
-    if ($resources && $enabled = array_intersect_key($manager->getDefinitions(), $resources)) {
-      foreach ($enabled as $key => $resource) {
-        $plugin = $manager->getInstance(array('id' => $key));
-
-        // @todo Switch to ->addCollection() once http://drupal.org/node/1819018 is resolved.
-        foreach ($plugin->routes() as $name => $route) {
-          $collection->add("rest.$name", $route);
-        }
-      }
-    }
-  }
-
-  return $collection;
 }
 
 /**
