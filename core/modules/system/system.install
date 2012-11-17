@@ -1934,14 +1934,11 @@ function system_update_8020() {
       ->execute();
     // Rename {blocked_ips} table into {ban_ip}.
     db_rename_table('blocked_ips', 'ban_ip');
-    // Rename all references to the action callback.
-    db_update('actions')
-      ->fields(array('callback' => 'ban_ip_action'))
+    // Remove all references to the removed action callback.
+    db_delete('actions')
       ->condition('callback', 'system_block_ip_action')
       ->execute();
-    // Rename the action's aid.
-    db_update('actions')
-      ->fields(array('aid' => 'ban_ip_action'))
+    db_delete('actions')
       ->condition('aid', 'system_block_ip_action')
       ->execute();
     // Enable the new Ban module.

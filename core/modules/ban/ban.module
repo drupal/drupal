@@ -71,30 +71,3 @@ function ban_menu() {
 function ban_ip_load($iid) {
   return db_query("SELECT * FROM {ban_ip} WHERE iid = :iid", array(':iid' => $iid))->fetchAssoc();
 }
-
-/**
- * Implements hook_action_info().
- */
-function ban_action_info() {
-  return array(
-    'ban_ip_action' => array(
-      'type' => 'user',
-      'label' => t('Ban IP address of current user'),
-      'configurable' => FALSE,
-      'triggers' => array('any'),
-    ),
-  );
-}
-
-/**
- * Bans the current user's IP address.
- *
- * @ingroup actions
- */
-function ban_ip_action() {
-  $ip = ip_address();
-  db_insert('ban_ip')
-    ->fields(array('ip' => $ip))
-    ->execute();
-  watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
-}
