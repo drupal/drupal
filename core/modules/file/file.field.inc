@@ -427,11 +427,12 @@ function file_field_widget_process($element, &$form_state, $form) {
 
   // Add the description field if enabled.
   if (!empty($instance['settings']['description_field']) && $item['fid']) {
+    $config = config('file.settings');
     $element['description'] = array(
-      '#type' => variable_get('file_description_type', 'textfield'),
+      '#type' => $config->get('description.type'),
       '#title' => t('Description'),
       '#value' => isset($item['description']) ? $item['description'] : '',
-      '#maxlength' => variable_get('file_description_length', 128),
+      '#maxlength' => $config->get('description.length'),
       '#description' => t('The description may be used as the label of the link to the file.'),
     );
   }

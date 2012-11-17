@@ -1231,7 +1231,8 @@ function file_managed_file_pre_render($element) {
  *   An associative array containing:
  *   - file: A file object to which the link will be created.
  *   - icon_directory: (optional) A path to a directory of icons to be used for
- *     files. Defaults to the value of the "file_icon_directory" variable.
+ *     files. Defaults to the value of the "icon.directory"
+ *     variable.
  *
  * @ingroup themeable
  */
@@ -1270,7 +1271,8 @@ function theme_file_link($variables) {
  *   An associative array containing:
  *   - file: A file entity for which to make an icon.
  *   - icon_directory: (optional) A path to a directory of icons to be used for
- *     files. Defaults to the value of the "file_icon_directory" variable.
+ *     files. Defaults to the value of the "icon.directory"
+ *     variable.
  *
  * @ingroup themeable
  */
@@ -1290,7 +1292,7 @@ function theme_file_icon($variables) {
  *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
- *   the value of the "file_icon_directory" variable.
+ *   the value of the "icon.directory" variable.
  *
  * @return
  *   A URL string to the icon, or FALSE if an appropriate icon cannot be found.
@@ -1309,7 +1311,7 @@ function file_icon_url(File $file, $icon_directory = NULL) {
  *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
- *   the value of the "file_icon_directory" variable.
+ *   the value of the "icon.directory" variable.
  *
  * @return
  *   A string to the icon as a local path, or FALSE if an appropriate icon could
@@ -1318,7 +1320,7 @@ function file_icon_url(File $file, $icon_directory = NULL) {
 function file_icon_path(File $file, $icon_directory = NULL) {
   // Use the default set of icons if none specified.
   if (!isset($icon_directory)) {
-    $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'file') . '/icons');
+    $icon_directory = config('file.settings')->get('icon.directory');
   }
 
   // If there's an icon matching the exact mimetype, go for it.

@@ -232,3 +232,16 @@ function file_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+* Converts default_file_main variable to config.
+*
+* @ingroup config_upgrade
+*/
+function file_update_8000() {
+  update_variables_to_config('file.settings', array(
+    'file_description_type' => 'description.type',
+    'file_description_length'=>'description.length',
+    'file_icon_directory'=>'icon.directory',
+  ));
+}
