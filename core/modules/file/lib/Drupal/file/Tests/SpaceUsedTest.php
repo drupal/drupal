@@ -8,13 +8,13 @@
 namespace Drupal\file\Tests;
 
 /**
- *  This will run tests against the file_space_used() function.
+ *  This will run tests against the $file_managed->spaceUsed() function.
  */
 class SpaceUsedTest extends FileManagedTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File space used tests',
-      'description' => 'Tests the file_space_used() function.',
+      'description' => 'Tests the spaceUsed() function.',
       'group' => 'File API',
     );
   }
@@ -43,21 +43,22 @@ class SpaceUsedTest extends FileManagedTestBase {
    * Test different users with the default status.
    */
   function testFileSpaceUsed() {
+    $file = entity_get_controller('file');
     // Test different users with default status.
-    $this->assertEqual(file_space_used(2), 70);
-    $this->assertEqual(file_space_used(3), 300);
-    $this->assertEqual(file_space_used(), 370);
+    $this->assertEqual($file->spaceUsed(2), 70);
+    $this->assertEqual($file->spaceUsed(3), 300);
+    $this->assertEqual($file->spaceUsed(), 370);
 
     // Test the status fields
-    $this->assertEqual(file_space_used(NULL, 0), 4);
-    $this->assertEqual(file_space_used(NULL, FILE_STATUS_PERMANENT), 370);
+    $this->assertEqual($file->spaceUsed(NULL, 0), 4);
+    $this->assertEqual($file->spaceUsed(NULL, FILE_STATUS_PERMANENT), 370);
 
     // Test both the user and status.
-    $this->assertEqual(file_space_used(1, 0), 0);
-    $this->assertEqual(file_space_used(1, FILE_STATUS_PERMANENT), 0);
-    $this->assertEqual(file_space_used(2, 0), 1);
-    $this->assertEqual(file_space_used(2, FILE_STATUS_PERMANENT), 70);
-    $this->assertEqual(file_space_used(3, 0), 3);
-    $this->assertEqual(file_space_used(3, FILE_STATUS_PERMANENT), 300);
+    $this->assertEqual($file->spaceUsed(1, 0), 0);
+    $this->assertEqual($file->spaceUsed(1, FILE_STATUS_PERMANENT), 0);
+    $this->assertEqual($file->spaceUsed(2, 0), 1);
+    $this->assertEqual($file->spaceUsed(2, FILE_STATUS_PERMANENT), 70);
+    $this->assertEqual($file->spaceUsed(3, 0), 3);
+    $this->assertEqual($file->spaceUsed(3, FILE_STATUS_PERMANENT), 300);
   }
 }

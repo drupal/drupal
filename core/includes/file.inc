@@ -1026,29 +1026,6 @@ function file_unmanaged_delete_recursive($path, $callback = NULL) {
 }
 
 /**
- * Determines total disk space used by a single user or the whole filesystem.
- *
- * @param $uid
- *   Optional. A user id, specifying NULL returns the total space used by all
- *   non-temporary files.
- * @param $status
- *   Optional. The file status to consider. The default is to only
- *   consider files in status FILE_STATUS_PERMANENT.
- *
- * @return
- *   An integer containing the number of bytes used.
- */
-function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
-  $query = db_select('file_managed', 'f');
-  $query->condition('f.status', $status);
-  $query->addExpression('SUM(f.filesize)', 'filesize');
-  if (isset($uid)) {
-    $query->condition('f.uid', $uid);
-  }
-  return $query->execute()->fetchField();
-}
-
-/**
  * Saves a file upload to a new location.
  *
  * The file will be added to the {file_managed} table as a temporary file.

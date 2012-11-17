@@ -397,8 +397,8 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
     $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($file->filesize), '%maxsize' => format_size($file_limit)));
   }
 
-  // Save a query by only calling file_space_used() when a limit is provided.
-  if ($user_limit && (file_space_used($user->uid) + $file->filesize) > $user_limit) {
+  // Save a query by only calling spaceUsed() when a limit is provided.
+  if ($user_limit && (entity_get_controller('file')->spaceUsed($user->uid) + $file->filesize) > $user_limit) {
     $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', array('%filesize' => format_size($file->filesize), '%quota' => format_size($user_limit)));
   }
 
@@ -710,13 +710,7 @@ function file_file_download($uri, $field_type = 'file') {
  * Implements file_cron()
  */
 function file_cron() {
-  // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
-  // Use separate placeholders for the status to avoid a bug in some versions
-  // of PHP. See http://drupal.org/node/352956.
-  $result = db_query('SELECT fid FROM {file_managed} WHERE status <> :permanent AND timestamp < :timestamp', array(
-    ':permanent' => FILE_STATUS_PERMANENT,
-    ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE
-  ));
+  $result = entity_get_controller('file')->retrieveTemporaryFiles();
   foreach ($result as $row) {
     if ($file = file_load($row->fid)) {
       $references = file_usage()->listUsage($file);

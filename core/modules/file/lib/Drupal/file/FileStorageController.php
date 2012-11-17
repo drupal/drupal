@@ -62,4 +62,41 @@ class FileStorageController extends DatabaseStorageController {
       ->execute();
   }
 
+  /**
+   * Determines total disk space used by a single user or the whole filesystem.
+   *
+   * @param int $uid
+   *   Optional. A user id, specifying NULL returns the total space used by all
+   *   non-temporary files.
+   * @param $status
+   *   Optional. The file status to consider. The default is to only
+   *   consider files in status FILE_STATUS_PERMANENT.
+   *
+   * @return int
+   *   An integer containing the number of bytes used.
+   */
+  public function spaceUsed($uid = NULL, $status = FILE_STATUS_PERMANENT) {
+    $query = db_select($this->entityInfo['base_table'], 'f')
+      ->condition('f.status', $status);
+    $query->addExpression('SUM(f.filesize)', 'filesize');
+    if (isset($uid)) {
+      $query->condition('f.uid', $uid);
+    }
+    return $query->execute()->fetchField();
+  }
+
+  /**
+   * Retrieve temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+   *
+   *  @return
+   *    A list of files to be deleted.
+   */
+  public function retrieveTemporaryFiles() {
+    // Use separate placeholders for the status to avoid a bug in some versions
+    // of PHP. See http://drupal.org/node/352956.
+    return db_query('SELECT fid FROM {' . $this->entityInfo['base_table'] . '} WHERE status <> :permanent AND timestamp < :timestamp', array(
+      ':permanent' => FILE_STATUS_PERMANENT,
+      ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE
+    ));
+  }
 }
