@@ -141,8 +141,8 @@ Topic coordinators
 ------------------
 
 Accessibility
-- Everett Zufelt 'Everett Zufelt' http://drupal.org/user/406552
 - Brandon Bowersox-Johnson 'bowersox' http://drupal.org/user/186415
+- Mike Gifford 'mgifford' http://drupal.org/user/27930
 
 Documentation
 - Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
