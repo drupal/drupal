@@ -3001,7 +3001,7 @@ function node_access_grants($op, $account = NULL) {
  *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
  *
  * @see hook_node_grants()
- * @see _node_query_node_access_alter()
+ * @see node_query_node_access_alter()
  */
 function node_access_view_all_nodes($account = NULL) {
   global $user;
