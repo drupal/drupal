@@ -335,6 +335,34 @@ ul.tabs {
 }
 
 /**
+ * Styles for link buttons and action links.
+ */
+.action-links {
+  list-style: none;
+  padding: 0;
+  margin: 1em 0;
+}
+.action-links li {
+  display: inline-block;
+  margin: 0 0.3em;
+}
+.action-links li:first-child {
+  margin-left: 0; /* LTR */
+}
+a.button {
+  display: inline-block;
+  line-height: 160%;
+  padding: 0.2em 0.5em 0.3em;
+  text-decoration: none;
+}
+a.button.add:before {
+  content: '+';
+  font-weight: 900;
+  margin-left: -0.1em; /* LTR */
+  padding-right: 0.2em; /* LTR */
+}
+
+/**
  * Styles for system messages.
  */
 div.messages {

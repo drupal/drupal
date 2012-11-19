@@ -1030,19 +1030,9 @@ div.tabs {
   border-bottom: none;
   border-radius: 5px;
 }
-ul.action-links {
-  list-style: none;
-  margin: 5px;
-  padding: 0.5em 1em;
-}
-ul.action-links li {
-  display: inline-block;
-  margin-left: 10px;
-}
 ul.action-links li a {
   padding-left: 15px;
-  background: url(../images/add.png) no-repeat left center;
-  margin: 0 10px 0 0;
+  margin: 0;
 }
 
 /* ---------------- Messages  ----------------- */

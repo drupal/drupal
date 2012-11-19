@@ -71,9 +71,11 @@ class BlockTest extends WebTestBase {
 
     // Confirm that the add block link appears on block overview pages.
     $this->drupalGet('admin/structure/block');
-    $this->assertRaw(l('Add block', 'admin/structure/block/add'), 'Add block link is present on block overview page for default theme.');
+    $this->assertLink(t('Add block'));
+    $this->assertLinkByHref('admin/structure/block/add');
     $this->drupalGet('admin/structure/block/list/seven');
-    $this->assertRaw(l('Add block', 'admin/structure/block/list/seven/add'), 'Add block link is present on block overview page for non-default theme.');
+    $this->assertLink(t('Add block'));
+    $this->assertLinkByHref('admin/structure/block/list/seven/add');
 
     // Confirm that hidden regions are not shown as options for block placement
     // when adding a new block.

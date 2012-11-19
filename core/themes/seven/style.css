@@ -709,20 +709,41 @@ select.form-select:focus {
 .js input.throbbing {
   background-position: 100% -16px;
 }
-ul.action-links {
-  margin: 1em 0;
-  padding: 0 20px 0 20px; /* LTR */
-  list-style-type: none;
-  overflow: hidden;
+a.button.add {
+  background: #1078d8;
+  background-image: -webkit-linear-gradient(top, #419ff1, #1076d5);
+  background-image: -moz-linear-gradient(top, #419ff1, #1076d5);
+  background-image: -o-linear-gradient(top, #419ff1, #1076d5);
+  background-image: linear-gradient(to bottom, #419ff1, #1076d5);
+  border: 1px solid #0048c8;
+  border-radius: .4em;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4);
+  color: #fff;
+  font-size: 1em;
+  line-height: normal;
+  margin: 0;
+  padding: 4px 1em;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
 }
-ul.action-links li {
-  float: left; /* LTR */
-  margin: 0 1em 0 0; /* LTR */
+a.button.add:focus,
+a.button.add:hover {
+  background-color: #419cf1;
+  background-image: -webkit-linear-gradient(top, #59abf3, #2a90ef);
+  background-image: -moz-linear-gradient(top, #59abf3, #2a90ef);
+  background-image: -o-linear-gradient(top, #59abf3, #2a90ef);
+  background-image: linear-gradient(to bottom, #59abf3, #2a90ef);
+  color: #fff;
 }
-ul.action-links a {
-  padding-left: 15px; /* LTR */
-  background: transparent url(images/add.png) no-repeat 0 center;
-  line-height: 30px;
+a.button.add:active {
+  background-color: #0e69be;
+  background-image: -webkit-linear-gradient(top, #0e69be, #2a93ef);
+  background-image: -moz-linear-gradient(top, #0e69be, #2a93ef);
+  background-image: -o-linear-gradient(top, #0e69be, #2a93ef);
+  background-image: -ms-linear-gradient(top, #0e69be, #2a93ef);
+  background-image: linear-gradient(to bottom, #0e69be, #2a93ef);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .25);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .25);
 }
 
 /**

@@ -76,6 +76,20 @@ ul.menu {
 }
 
 /**
+ * RTL Styles for link buttons and action links.
+ */
+.action-links li:first-child {
+  margin-left: auto;
+  margin-right: 0;
+}
+a.button.add:before {
+  margin-left: 0;
+  margin-right: -0.1em;
+  padding-left: 0.2em;
+  padding-right: 0;
+}
+
+/**
  * RTL Styles for system messages.
  */
 
