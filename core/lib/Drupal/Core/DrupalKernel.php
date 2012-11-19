@@ -195,7 +195,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   /**
    * Implements Drupal\Core\DrupalKernelInterface::updateModules().
    */
-  public function updateModules(array $module_list, array $module_paths = array()) {
+  public function updateModules(array $module_list, array $module_paths = array(), ContainerBuilder $base_container = NULL) {
     $this->newModuleList = $module_list;
     foreach ($module_paths as $module => $path) {
       $this->moduleData[$module] = (object) array('uri' => $path);
@@ -204,7 +204,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     // list will take effect when boot() is called. If we have already booted,
     // then reboot in order to refresh the bundle list and container.
     if ($this->booted) {
-      drupal_container(NULL, TRUE);
+      drupal_container($base_container, TRUE);
       $this->booted = FALSE;
       $this->boot();
     }

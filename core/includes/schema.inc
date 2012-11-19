@@ -66,9 +66,9 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
  *   If TRUE, the schema will be rebuilt instead of retrieved from the cache.
  */
 function drupal_get_complete_schema($rebuild = FALSE) {
-  static $schema = array();
+  static $schema;
 
-  if (empty($schema) || $rebuild) {
+  if (!isset($schema) || $rebuild) {
     // Try to load the schema from cache.
     if (!$rebuild && $cached = cache()->get('schema')) {
       $schema = $cached->data;
@@ -100,15 +100,15 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         _drupal_schema_initialize($current, $module);
         $schema = array_merge($schema, $current);
       }
-
       drupal_alter('schema', $schema);
+
+      if ($rebuild) {
+        cache()->invalidateTags(array('schema' => TRUE));
+      }
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.
       if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
-        cache()->set('schema', $schema);
-      }
-      if ($rebuild) {
-        cache()->invalidateTags(array('schema' => TRUE));
+        cache()->set('schema', $schema, CacheBackendInterface::CACHE_PERMANENT, array('schema' => TRUE));
       }
     }
   }
@@ -284,8 +284,11 @@ function drupal_get_schema_unprocessed($module, $table = NULL) {
   module_load_install($module);
   $schema = module_invoke($module, 'schema');
 
-  if (isset($table) && isset($schema[$table])) {
-    return $schema[$table];
+  if (isset($table)) {
+    if (isset($schema[$table])) {
+      return $schema[$table];
+    }
+    return array();
   }
   elseif (!empty($schema)) {
     return $schema;
