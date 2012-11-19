@@ -8,7 +8,7 @@
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @defgroup ajax Views AJAX library
+ * @defgroup views_ajax Views AJAX library
  * @{
  * Handles the server side AJAX interactions of Views.
  */
