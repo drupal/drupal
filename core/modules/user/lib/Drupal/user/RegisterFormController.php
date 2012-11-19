@@ -110,7 +110,7 @@ class RegisterFormController extends AccountFormController {
     $form_state['user'] = $account;
     $form_state['values']['uid'] = $account->uid;
 
-    watchdog('user', 'New user: %name (%email).', array('%name' => $form_state['values']['name'], '%email' => $form_state['values']['mail']), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
+    watchdog('user', 'New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>'), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
 
     // Add plain text password into user account to generate mail tokens.
     $account->password = $pass;

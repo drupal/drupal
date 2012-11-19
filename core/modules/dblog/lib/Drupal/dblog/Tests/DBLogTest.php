@@ -257,7 +257,7 @@ class DBLogTest extends WebTestBase {
     // Add user.
     // Default display includes name and email address; if too long, the email
     // address is replaced by three periods.
-    $this->assertLogMessage(t('New user: %name (%email).', array('%name' => $name, '%email' => $user->mail)), 'DBLog event was recorded: [add user]');
+    $this->assertLogMessage(t('New user: %name %email.', array('%name' => $name, '%email' => '<' . $user->mail . '>')), 'DBLog event was recorded: [add user]');
     // Login user.
     $this->assertLogMessage(t('Session opened for %name.', array('%name' => $name)), 'DBLog event was recorded: [login user]');
     // Logout user.
