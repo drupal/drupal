@@ -97,4 +97,31 @@ class MailTest extends WebTestBase implements MailInterface {
   public function mail(array $message) {
     self::$sent_message = $message;
   }
+
+  /**
+   * Tests that drupal_wrap_mail() removes trailing whitespace before newlines.
+   */
+  public function testRemoveTrailingWhitespace() {
+    $text = "Hi there! \nHerp Derp";
+    $mail_lines = explode("\n", drupal_wrap_mail($text));
+    $this->assertNotEqual(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
+  }
+
+  /**
+   * Tests that drupal_wrap_mail() does not remove the trailing whitespace from
+   * Usenet style signatures.
+   *
+   * RFC 3676 says, "This is a special case; an (optionally quoted or quoted and
+   * stuffed) line consisting of DASH DASH SP is neither fixed nor flowed."
+   */
+  public function testUsenetSignature() {
+    $text = "Hi there!\n-- \nHerp Derp";
+    $mail_lines = explode("\n", drupal_wrap_mail($text));
+    $this->assertEqual("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
+
+    $text = "Hi there!\n--  \nHerp Derp";
+    $mail_lines = explode("\n", drupal_wrap_mail($text));
+    $this->assertEqual("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
+  }
 }
+

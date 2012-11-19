@@ -313,8 +313,9 @@ function drupal_wrap_mail($text, $indent = '') {
   $soft = strpos($clean_indent, ' ') === FALSE;
   // Check if the string has line breaks.
   if (strpos($text, "\n") !== FALSE) {
-    // Remove trailing spaces to make existing breaks hard.
-    $text = preg_replace('/ +\n/m', "\n", $text);
+    // Remove trailing spaces to make existing breaks hard, but leave signature
+    // marker untouched (RFC 3676, Section 4.3).
+    $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);
     // Wrap each line at the needed width.
     $lines = explode("\n", $text);
     array_walk($lines, '_drupal_wrap_mail_line', array('soft' => $soft, 'length' => strlen($indent)));
