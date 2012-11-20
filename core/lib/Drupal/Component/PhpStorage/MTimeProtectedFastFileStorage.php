@@ -101,7 +101,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     $i = 0;
     while (($mtime = $this->getUncachedMTime($directory)) && ($mtime != $previous_mtime)) {
       $previous_mtime = $mtime;
-      chmod($directory, 0300);
+      chmod($directory, 0700);
       // Reset the file back in the temporary location if this is not the first
       // iteration.
       if ($i > 0) {
