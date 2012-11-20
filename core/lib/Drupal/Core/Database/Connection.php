@@ -741,6 +741,20 @@ abstract class Connection extends PDO {
   }
 
   /**
+   * Escapes a database name string.
+   *
+   * Force all database names to be strictly alphanumeric-plus-underscore.
+   * For some database drivers, it may also wrap the database name in
+   * database-specific escape characters.
+   *
+   * @return string
+   *   The sanitized database name string.
+   */
+  public function escapeDatabase($database) {
+    return preg_replace('/[^A-Za-z0-9_.]+/', '', $database);
+  }
+
+  /**
    * Escapes a table name string.
    *
    * Force all table names to be strictly alphanumeric-plus-underscore.
@@ -1088,6 +1102,16 @@ abstract class Connection extends PDO {
    */
   abstract public function databaseType();
 
+  /**
+   * Creates a database.
+   *
+   * In order to use this method, you must be connected without a database
+   * specified.
+   *
+   * @param string $database
+   *   The name of the database to create.
+   */
+  abstract public function createDatabase($database);
 
   /**
    * Gets any special processing requirements for the condition operator.

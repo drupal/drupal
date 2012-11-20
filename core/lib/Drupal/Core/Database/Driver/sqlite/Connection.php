@@ -8,6 +8,7 @@
 namespace Drupal\Core\Database\Driver\sqlite;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\TransactionNoActiveException;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionCommitFailedException;
@@ -16,6 +17,7 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 
 use PDO;
 use Exception;
+use SplFileInfo;
 
 /**
  * Specific SQLite implementation of DatabaseConnection.
@@ -31,6 +33,11 @@ class Connection extends DatabaseConnection {
    * @var boolean
    */
   protected $savepointSupport = FALSE;
+
+  /**
+   * Error code for "Unable to open database file" error.
+   */
+  const DATABASE_NOT_FOUND = 14;
 
   /**
    * Whether or not the active transaction (if any) will be rolled back.
@@ -265,6 +272,22 @@ class Connection extends DatabaseConnection {
 
   public function databaseType() {
     return 'sqlite';
+  }
+
+  /**
+   * Overrides \Drupal\Core\Database\Connection::createDatabase().
+   *
+   * @param string $database
+   *   The name of the database to create.
+   *
+   * @throws DatabaseNotFoundException
+   */
+  public function createDatabase($database) {
+    // Verify the database is writable.
+    $db_directory = new SplFileInfo(dirname($database));
+    if (!$db_directory->isDir() && !drupal_mkdir($db_directory->getPathName(), 0755, TRUE)) {
+      throw new DatabaseNotFoundException('Unable to create database directory ' . $db_directory->getPathName());
+    }
   }
 
   public function mapConditionOperator($operator) {

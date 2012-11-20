@@ -7,9 +7,12 @@
 
 namespace Drupal\Core\Database\Driver\sqlite\Install;
 
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
 
-use SplFileInfo;
+use Exception;
 
 class Tasks extends InstallTasks {
   protected $pdoDriver = 'sqlite';
@@ -41,17 +44,61 @@ class Tasks extends InstallTasks {
     return $form;
   }
 
-  public function validateDatabaseSettings($database) {
-    // Perform standard validation.
-    $errors = parent::validateDatabaseSettings($database);
-
-    // Verify the database is writable.
-    $db_directory = new SplFileInfo(dirname($database['database']));
-    if (!$db_directory->isWritable()) {
-      $errors[$database['driver'] . '][database'] = st('The directory you specified is not writable by the web server.');
+  /**
+   * Check database connection and attempt to create database if the database is
+   * missing.
+   */
+  protected function connect() {
+    try {
+      // This doesn't actually test the connection.
+      db_set_active();
+      // Now actually do a check.
+      Database::getConnection();
+      $this->pass('Drupal can CONNECT to the database ok.');
     }
+    catch (Exception $e) {
+      // Attempt to create the database if it is not found.
+      if ($e->getCode() == Connection::DATABASE_NOT_FOUND) {
+        // Remove the database string from connection info.
+        $connection_info = Database::getConnectionInfo();
+        $database = $connection_info['default']['database'];
 
-    return $errors;
+        // We cannot use file_directory_temp() here because we haven't yet
+        // successfully connected to the database.
+        $connection_info['default']['database'] = drupal_tempnam(sys_get_temp_dir(), 'sqlite');
+
+        // In order to change the Database::$databaseInfo array, need to remove
+        // the active connection, then re-add it with the new info.
+        Database::removeConnection('default');
+        Database::addConnectionInfo('default', 'default', $connection_info['default']);
+
+        try {
+          Database::getConnection()->createDatabase($database);
+          Database::closeConnection();
+
+          // Now, restore the database config.
+          Database::removeConnection('default');
+          $connection_info['default']['database'] = $database;
+          Database::addConnectionInfo('default', 'default', $connection_info['default']);
+
+          // Check the database connection.
+          Database::getConnection();
+          $this->pass('Drupal can CONNECT to the database ok.');
+        }
+        catch (DatabaseNotFoundException $e) {
+          // Still no dice; probably a permission issue. Raise the error to the
+          // installer.
+          $this->fail(st('Database %database not found. The server reports the following message when attempting to create the database: %error.', array('%database' => $database, '%error' => $e->getMessage())));
+        }
+      }
+      else {
+        // Database connection failed for some other reason than the database
+        // not existing.
+        $this->fail(st('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 }
 

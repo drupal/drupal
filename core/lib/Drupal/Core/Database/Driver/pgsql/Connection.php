@@ -9,8 +9,10 @@ namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
 
+use Locale;
 use PDO;
 use PDOException;
 
@@ -25,6 +27,11 @@ class Connection extends DatabaseConnection {
    * The name by which to obtain a lock for retrive the next insert id.
    */
   const POSTGRESQL_NEXTID_LOCK = 1000;
+
+  /**
+   * Error code for "Unknown database" error.
+   */
+  const DATABASE_NOT_FOUND = 7;
 
   public function __construct(array $connection_options = array()) {
     // This driver defaults to transaction support, except if explicitly passed FALSE.
@@ -55,6 +62,7 @@ class Connection extends DatabaseConnection {
 
     $this->connectionOptions = $connection_options;
 
+    $connection_options['database'] = (!empty($connection_options['database']) ? $connection_options['database'] : 'template1');
     $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
 
     // Allow PDO options to be overridden.
@@ -165,6 +173,36 @@ class Connection extends DatabaseConnection {
 
   public function databaseType() {
     return 'pgsql';
+  }
+
+  /**
+   * Overrides \Drupal\Core\Database\Connection::createDatabase().
+   *
+   * @param string $database
+   *   The name of the database to create.
+   *
+   * @throws DatabaseNotFoundException
+   */
+  public function createDatabase($database) {
+    // Escape the database name.
+    $database = Database::getConnection()->escapeDatabase($database);
+
+    // If the PECL intl extension is installed, use it to determine the proper
+    // locale.  Otherwise, fall back to en_US.
+    if (class_exists('Locale')) {
+      $locale = Locale::getDefault();
+    }
+    else {
+      $locale = 'en_US';
+    }
+
+    try {
+      // Create the database and set it as active.
+      $this->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='utf8' LC_CTYPE='$locale.utf8' LC_COLLATE='$locale.utf8'");
+    }
+    catch (\Exception $e) {
+      throw new DatabaseNotFoundException($e->getMessage());
+    }
   }
 
   public function mapConditionOperator($operator) {

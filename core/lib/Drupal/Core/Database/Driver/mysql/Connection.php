@@ -10,6 +10,7 @@ namespace Drupal\Core\Database\Driver\mysql;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
@@ -22,6 +23,11 @@ use PDO;
  */
 
 class Connection extends DatabaseConnection {
+
+  /**
+   * Error code for "Unknown database" error.
+   */
+  const DATABASE_NOT_FOUND = 1049;
 
   /**
    * Flag to indicate if the cleanup function in __destruct() should run.
@@ -47,7 +53,9 @@ class Connection extends DatabaseConnection {
       // Default to TCP connection on port 3306.
       $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . (empty($connection_options['port']) ? 3306 : $connection_options['port']);
     }
-    $dsn .= ';dbname=' . $connection_options['database'];
+    if (!empty($connection_options['database'])) {
+      $dsn .= ';dbname=' . $connection_options['database'];
+    }
     // Allow PDO options to be overridden.
     $connection_options += array(
       'pdo' => array(),
@@ -111,6 +119,28 @@ class Connection extends DatabaseConnection {
 
   public function databaseType() {
     return 'mysql';
+  }
+
+  /**
+   * Overrides \Drupal\Core\Database\Connection::createDatabase().
+   *
+   * @param string $database
+   *   The name of the database to create.
+   *
+   * @throws DatabaseNotFoundException
+   */
+  public function createDatabase($database) {
+    // Escape the database name.
+    $database = Database::getConnection()->escapeDatabase($database);
+
+    try {
+      // Create the database and set it as active.
+      $this->exec("CREATE DATABASE $database");
+      $this->exec("USE $database");
+    }
+    catch (\Exception $e) {
+      throw new DatabaseNotFoundException($e->getMessage());
+    }
   }
 
   public function mapConditionOperator($operator) {
