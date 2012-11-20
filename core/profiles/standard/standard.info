@@ -9,6 +9,7 @@ dependencies[] = color
 dependencies[] = config
 dependencies[] = comment
 dependencies[] = contextual
+dependencies[] = contact
 dependencies[] = help
 dependencies[] = image
 dependencies[] = menu

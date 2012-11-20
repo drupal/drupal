@@ -97,7 +97,7 @@ function contact_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_site_form'),
     'access arguments' => array('access site-wide contact form'),
-    'menu_name' => 'main',
+    'menu_name' => 'footer',
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'contact.pages.inc',
   );

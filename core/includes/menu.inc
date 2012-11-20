@@ -1753,6 +1753,7 @@ function menu_list_system_menus() {
     'admin' => 'Administration',
     'account' => 'User account menu',
     'main' => 'Main navigation',
+    'footer' => 'Footer menu',
   );
 }
 
@@ -3321,22 +3322,22 @@ function _menu_find_router_path($link_path) {
 }
 
 /**
- * Inserts, updates, or deletes an uncustomized menu link related to a module.
+ * Inserts, updates, enables, disables, or deletes an uncustomized menu link.
  *
- * @param $module
- *   The name of the module.
- * @param $op
- *   Operation to perform: insert, update or delete.
- * @param $link_path
+ * @param string $module
+ *   The name of the module that owns the link.
+ * @param string $op
+ *   Operation to perform: insert, update, enable, disable, or delete.
+ * @param string $link_path
  *   The path this link points to.
- * @param $link_title
- *   Title of the link to insert or new title to update the link to.
+ * @param string $link_title
+ *   (optional) Title of the link to insert or new title to update the link to.
  *   Unused for delete.
  *
- * @return
+ * @return integer|null
  *   The insert op returns the mlid of the new item. Others op return NULL.
  */
-function menu_link_maintain($module, $op, $link_path, $link_title) {
+function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
   switch ($op) {
     case 'insert':
       $menu_link = array(
@@ -3345,15 +3346,34 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
         'module' => $module,
       );
       return menu_link_save($menu_link);
-      break;
+
     case 'update':
       $result = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path AND module = :module AND customized = 0", array(':link_path' => $link_path, ':module' => $module))->fetchAll(PDO::FETCH_ASSOC);
       foreach ($result as $link) {
-        $link['link_title'] = $link_title;
+        $existing = $link;
+        if (isset($link_title)) {
+          $link['link_title'] = $link_title;
+        }
         $link['options'] = unserialize($link['options']);
-        menu_link_save($link);
+        menu_link_save($link, $existing);
       }
       break;
+
+    case 'enable':
+    case 'disable':
+      $result = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path AND module = :module AND customized = 0", array(':link_path' => $link_path, ':module' => $module))->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($result as $link) {
+        $existing = $link;
+        $link['hidden'] = ($op == 'disable' ? 1 : 0);
+        $link['customized'] = 1;
+        if (isset($link_title)) {
+          $link['link_title'] = $link_title;
+        }
+        $link['options'] = unserialize($link['options']);
+        menu_link_save($link, $existing);
+      }
+      break;
+
     case 'delete':
       menu_link_delete(NULL, $link_path);
       break;

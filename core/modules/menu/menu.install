@@ -51,6 +51,7 @@ function menu_install() {
     'account' => $t('Links related to the user account.'),
     'admin' => $t('Contains links to administrative tasks.'),
     'main' => $t('Use this for linking to the main site sections.'),
+    'footer' => $t('Use this for linking to site information.'),
   );
   foreach ($system_menus as $menu_name => $title) {
     $menu = array(
@@ -99,5 +100,18 @@ function menu_update_8001() {
       ->fields(array('menu_name' => $new))
       ->execute();
   }
+}
+
+/**
+ * Adds the footer menu to custom menus.
+ */
+function menu_update_8002() {
+  db_insert('menu_custom')
+    ->fields(array(
+      'menu_name' => 'footer',
+      'title' => 'Footer menu',
+      'description' => 'Use this for linking to site information.',
+    ))
+    ->execute();
 }
 

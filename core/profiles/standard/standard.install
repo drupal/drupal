@@ -120,6 +120,16 @@ function standard_install() {
     ),
     array(
       'module' => 'system',
+      'delta' => 'menu-footer',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'footer',
+      'pages' => '',
+      'cache' => -1,
+    ),
+    array(
+      'module' => 'system',
       'delta' => 'powered-by',
       'theme' => $default_theme,
       'status' => 1,
@@ -401,6 +411,11 @@ function standard_install() {
   );
   menu_link_save($item);
 
+  // Enable the Contact link in the footer menu.
+  menu_link_maintain('system', 'enable', 'contact');
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
+
   // Populate the default shortcut set.
   $shortcut_set = shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME);
   $shortcut_set->links[] = array(
@@ -414,9 +429,6 @@ function standard_install() {
     'weight' => -19,
   );
   shortcut_set_save($shortcut_set);
-
-  // Update the menu router information.
-  menu_router_rebuild();
 
   // Enable the admin theme.
   theme_enable(array('seven'));

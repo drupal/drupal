@@ -114,8 +114,8 @@ function bartik_process_maintenance_page(&$variables) {
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function bartik_preprocess_block(&$variables) {
-  // In the header region visually hide block titles.
-  if ($variables['block']->region == 'header') {
+  // In the header and footer regions visually hide block titles.
+  if ($variables['block']->region == 'header' || $variables['block']->region == 'footer') {
     $variables['title_attributes']['class'][] = 'element-invisible';
   }
 }

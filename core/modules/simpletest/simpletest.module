@@ -325,14 +325,15 @@ function simpletest_test_get_all() {
       $classes = array();
       $module_data = system_rebuild_module_data();
       $all_data = $module_data + system_rebuild_theme_data();
+      $all_data += drupal_system_listing('/\.profile$/', 'profiles', 'name');
       foreach ($all_data as $name => $data) {
         // Build directory in which the test files would reside.
-        $tests_dir = DRUPAL_ROOT . '/' . dirname($data->filename) . '/lib/Drupal/' . $name . '/Tests';
+        $tests_dir = DRUPAL_ROOT . '/' . dirname($data->uri) . '/lib/Drupal/' . $name . '/Tests';
         // Scan it for test files if it exists.
         if (is_dir($tests_dir)) {
           $files = file_scan_directory($tests_dir, '/.*\.php/');
           if (!empty($files)) {
-            $basedir = DRUPAL_ROOT . '/' . dirname($data->filename) . '/lib/';
+            $basedir = DRUPAL_ROOT . '/' . dirname($data->uri) . '/lib/';
             foreach ($files as $file) {
               // Convert the file name into the namespaced class name.
               $replacements = array(
