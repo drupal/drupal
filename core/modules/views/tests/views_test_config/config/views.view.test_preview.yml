@@ -1,0 +1,61 @@
+api_version: '3.0'
+base_field: id
+base_table: views_test_data
+core: 8.x
+description: ''
+disabled: '0'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: some
+        options:
+          items_per_page: '10'
+          offset: '0'
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        name:
+          id: standard
+          table: views_test_data
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Name
+          exclude: '0'
+      filters: {  }
+      sorts: {  }
+      filter_groups:
+        operator: AND
+        groups: {  }
+      title: 'Test preview'
+      arguments:
+        id:
+          id: numeric
+          table: views_test_data
+          field: id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: ignore
+          title_enable: '0'
+          title: ''
+human_name: test_preview
+module: views
+name: test_preview
+tag: ''

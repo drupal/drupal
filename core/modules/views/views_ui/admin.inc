@@ -315,9 +315,19 @@ function views_ui_edit_page(ViewUI $view, $display_id = NULL) {
   return $build;
 }
 
-function views_ui_build_preview(ViewUI $view, $display_id, $render = TRUE) {
+/**
+ * Page callback for rendering the preview form and the preview of the view.
+ *
+ * @param \Drupal\views_ui\ViewUI $view
+ *   The view UI object to preview.
+ * @param string $display_id
+ *   The display ID to preview.
+ *
+ * @return array
+ *   The form array of the full preview form.
+ */
+function views_ui_build_preview(ViewUI $view, $display_id) {
   $view->displayID = $display_id;
-  $view->renderPreview = $render;
   return entity_get_form($view, 'preview');
 }
 

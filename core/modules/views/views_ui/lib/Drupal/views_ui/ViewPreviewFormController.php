@@ -47,7 +47,6 @@ class ViewPreviewFormController extends ViewFormControllerBase {
       '#description' => t('Separate contextual filter values with a "/". For example, %example.', array('%example' => '40/12/10')),
       '#id' => 'preview-args',
     );
-    $form['controls']['#action'] = url('admin/structure/views/view/' . $view->get('name') .'/preview/' . $view->displayID);
 
     $args = array();
     if (!empty($form_state['values']['view_args'])) {
@@ -80,6 +79,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
         '#type' => 'submit',
         '#value' => t('Update preview'),
         '#attributes' => array('class' => array('arguments-preview')),
+        '#submit' => array(array($this, 'submitPreview')),
         '#id' => 'preview-submit',
         '#ajax' => array(
           'path' => 'admin/structure/views/view/' . $view->get('name') . '/preview/' . $view->displayID . '/ajax',
@@ -90,6 +90,18 @@ class ViewPreviewFormController extends ViewFormControllerBase {
         ),
       ),
     );
+  }
+
+  /**
+   * Form submission handler for the Preview button.
+   */
+  public function submitPreview($form, &$form_state) {
+    // Rebuild the form with a pristine $view object.
+    $view = $this->getEntity($form_state);
+    $form_state['build_info']['args'][0] = views_ui_cache_load($view->get('name'));
+    $view->renderPreview = TRUE;
+    $form_state['show_preview'] = TRUE;
+    $form_state['rebuild'] = TRUE;
   }
 
 }
