@@ -134,11 +134,11 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('module_test'), TRUE);
     variable_set('dependency_test', 'dependency');
     // module_test creates a dependency chain:
-    // - forum depends on taxonomy, comment, and poll (via module_test)
+    // - forum depends on taxonomy, comment, history, and poll (via module_test)
     // - taxonomy depends on options
     // - poll depends on php (via module_test)
     // The correct enable order is:
-    $expected_order = array('comment', 'options', 'taxonomy', 'php', 'poll', 'forum');
+    $expected_order = array('comment', 'history', 'options', 'taxonomy', 'php', 'poll', 'forum');
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
@@ -146,14 +146,15 @@ class DependencyTest extends ModuleTestBase {
     $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $this->assertText(t('You must enable the Taxonomy, Options, Comment, Poll, PHP Filter modules to install Forum.'));
+    $this->assertText(t('You must enable the History, Taxonomy, Options, Comment, Poll, PHP Filter modules to install Forum.'));
+    $edit['modules[Core][history][enable]'] = 'history';
     $edit['modules[Core][options][enable]'] = 'options';
     $edit['modules[Core][taxonomy][enable]'] = 'taxonomy';
     $edit['modules[Core][comment][enable]'] = 'comment';
     $edit['modules[Core][poll][enable]'] = 'poll';
     $edit['modules[Core][php][enable]'] = 'php';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum', 'poll', 'php', 'comment', 'taxonomy', 'options'), TRUE);
+    $this->assertModules(array('forum', 'poll', 'php', 'comment', 'history', 'taxonomy', 'options'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
     $this->assertIdentical(variable_get('test_module_enable_order', array()), $expected_order);

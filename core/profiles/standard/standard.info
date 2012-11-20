@@ -3,6 +3,7 @@ description = Install with commonly used features pre-configured.
 version = VERSION
 core = 8.x
 dependencies[] = node
+dependencies[] = history
 dependencies[] = block
 dependencies[] = color
 dependencies[] = config

@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * Records which users has read which content.
+ *
+ * @todo
+ * - Generic helper for _forum_user_last_visit() + history_read().
+ * - Generic helper for node_mark().
+ */
+
+use Drupal\node\Plugin\Core\Entity\Node;
+
+/**
+ * Entities changed before this time are always shown as read.
+ *
+ * Entities changed within this time may be marked as new, updated, or read,
+ * depending on their state for the current user. Defaults to 30 days ago.
+ */
+define('HISTORY_READ_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
+
+/**
+ * Retrieves the timestamp for the current user's last view of a specified node.
+ *
+ * @param int $nid
+ *   A node ID.
+ *
+ * @return int
+ *   If a node has been previously viewed by the user, the timestamp in seconds
+ *   of when the last view occurred; otherwise, zero.
+ */
+function history_read($nid) {
+  global $user;
+  $history = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($history[$nid])) {
+    $history[$nid] = db_query("SELECT timestamp FROM {history} WHERE uid = :uid AND nid = :nid", array(':uid' => $user->uid, ':nid' => $nid))->fetchObject();
+  }
+
+  return (isset($history[$nid]->timestamp) ? $history[$nid]->timestamp : 0);
+}
+
+/**
+ * Updates 'last viewed' timestamp of the specified entity for the current user.
+ *
+ * @param $nid
+ *   The node ID that has been read.
+ * @param $account
+ *   (optional) The user account to update the history for. Defaults to the
+ *   current user.
+ */
+function history_write($nid, $account = NULL) {
+  global $user;
+
+  if (!isset($account)) {
+    $account = $user;
+  }
+
+  if ($account->uid) {
+    db_merge('history')
+      ->key(array(
+        'uid' => $account->uid,
+        'nid' => $nid,
+      ))
+      ->fields(array('timestamp' => REQUEST_TIME))
+      ->execute();
+   }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function history_cron() {
+  db_delete('history')
+    ->condition('timestamp', HISTORY_READ_LIMIT, '<')
+    ->execute();
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function history_node_delete(Node $node) {
+  db_delete('history')
+    ->condition('nid', $node->nid)
+    ->execute();
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function history_user_cancel($edit, $account, $method) {
+  switch ($method) {
+    case 'user_cancel_reassign':
+      db_delete('history')
+        ->condition('uid', $account->uid)
+        ->execute();
+      break;
+  }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function history_user_delete($account) {
+  db_delete('history')
+    ->condition('uid', $account->uid)
+    ->execute();
+}

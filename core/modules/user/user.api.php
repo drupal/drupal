@@ -126,10 +126,6 @@ function hook_user_cancel($edit, $account, $method) {
         ->fields(array('uid' => 0))
         ->condition('uid', $account->uid)
         ->execute();
-      // Clean history.
-      db_delete('history')
-        ->condition('uid', $account->uid)
-        ->execute();
       break;
   }
 }

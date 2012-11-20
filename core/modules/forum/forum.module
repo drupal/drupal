@@ -873,7 +873,7 @@ function forum_forum_load($tid = NULL) {
 /**
  * Calculates the number of new posts in a forum that the user has not yet read.
  *
- * Nodes are new if they are newer than NODE_NEW_LIMIT.
+ * Nodes are new if they are newer than HISTORY_READ_LIMIT.
  *
  * @param $term
  *   The term ID of the forum.
@@ -890,7 +890,7 @@ function _forum_topics_unread($term, $uid) {
   $query->addExpression('COUNT(n.nid)', 'count');
   return $query
     ->condition('status', 1)
-    ->condition('n.created', NODE_NEW_LIMIT, '>')
+    ->condition('n.created', HISTORY_READ_LIMIT, '>')
     ->isNull('h.nid')
     ->addTag('node_access')
     ->execute()
@@ -1311,7 +1311,7 @@ function template_preprocess_forum_submitted(&$variables) {
  *
  * @return
  *   The timestamp when the user last viewed this node, if the user has
- *   previously viewed the node; otherwise NODE_NEW_LIMIT.
+ *   previously viewed the node; otherwise HISTORY_READ_LIMIT.
  */
 function _forum_user_last_visit($nid) {
   global $user;
@@ -1320,10 +1320,10 @@ function _forum_user_last_visit($nid) {
   if (empty($history)) {
     $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid', array(':uid' => $user->uid));
     foreach ($result as $t) {
-      $history[$t->nid] = $t->timestamp > NODE_NEW_LIMIT ? $t->timestamp : NODE_NEW_LIMIT;
+      $history[$t->nid] = $t->timestamp > HISTORY_READ_LIMIT ? $t->timestamp : HISTORY_READ_LIMIT;
     }
   }
-  return isset($history[$nid]) ? $history[$nid] : NODE_NEW_LIMIT;
+  return isset($history[$nid]) ? $history[$nid] : HISTORY_READ_LIMIT;
 }
 
 /**

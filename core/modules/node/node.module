@@ -51,15 +51,6 @@ const NODE_NOT_STICKY = 0;
 const NODE_STICKY = 1;
 
 /**
- * Denotes the time cutoff for nodes marked as read.
- *
- * Nodes changed before this time are always marked as read. Nodes changed after
- * this time may be marked new, updated, or read, depending on their state for
- * the current user. Defaults to 30 days ago.
- */
-define('NODE_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
-
-/**
  * Denotes that access is allowed for a node.
  *
  * Modules should return this value from hook_node_access() to allow access to a
@@ -183,15 +174,6 @@ function node_theme() {
 }
 
 /**
- * Implements hook_cron().
- */
-function node_cron() {
-  db_delete('history')
-    ->condition('timestamp', NODE_NEW_LIMIT, '<')
-    ->execute();
-}
-
-/**
  * Implements hook_entity_info().
  */
 function node_entity_info(&$info) {
@@ -302,46 +284,6 @@ function node_title_list($result, $title = NULL) {
 }
 
 /**
- * Updates the 'last viewed' timestamp of the specified node for current user.
- *
- * @param Drupal\node\Node $node
- *   A node entity.
- */
-function node_tag_new(Node $node) {
-  global $user;
-  if ($user->uid) {
-    db_merge('history')
-      ->key(array(
-        'uid' => $user->uid,
-        'nid' => $node->nid,
-      ))
-      ->fields(array('timestamp' => REQUEST_TIME))
-      ->execute();
-   }
-}
-
-/**
- * Retrieves the timestamp for the current user's last view of a specified node.
- *
- * @param int $nid
- *   A node ID.
- *
- * @return int
- *   If a node has been previously viewed by the user, the timestamp in seconds
- *   of when the last view occurred; otherwise, zero.
- */
-function node_last_viewed($nid) {
-  global $user;
-  $history = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($history[$nid])) {
-    $history[$nid] = db_query("SELECT timestamp FROM {history} WHERE uid = :uid AND nid = :nid", array(':uid' => $user->uid, ':nid' => $nid))->fetchObject();
-  }
-
-  return (isset($history[$nid]->timestamp) ? $history[$nid]->timestamp : 0);
-}
-
-/**
  * Decides on the type of marker to be displayed for a given node.
  *
  * @param $nid
@@ -356,16 +298,16 @@ function node_mark($nid, $timestamp) {
   global $user;
   $cache = &drupal_static(__FUNCTION__, array());
 
-  if (!$user->uid) {
+  if (!$user->uid || !module_exists('history')) {
     return MARK_READ;
   }
   if (!isset($cache[$nid])) {
-    $cache[$nid] = node_last_viewed($nid);
+    $cache[$nid] = history_read($nid);
   }
-  if ($cache[$nid] == 0 && $timestamp > NODE_NEW_LIMIT) {
+  if ($cache[$nid] == 0 && $timestamp > HISTORY_READ_LIMIT) {
     return MARK_NEW;
   }
-  elseif ($timestamp > $cache[$nid] && $timestamp > NODE_NEW_LIMIT) {
+  elseif ($timestamp > $cache[$nid] && $timestamp > HISTORY_READ_LIMIT) {
     return MARK_UPDATED;
   }
   return MARK_READ;
@@ -1114,7 +1056,9 @@ function node_show(Node $node, $message = FALSE) {
   $nodes = array('nodes' => node_view_multiple(array($node->nid => $node), 'full'));
 
   // Update the history table, stating that this user viewed this node.
-  node_tag_new($node);
+  if (module_exists('history')) {
+    history_write($node->nid);
+  }
 
   return $nodes;
 }
@@ -1503,10 +1447,6 @@ function node_user_cancel($edit, $account, $method) {
         ->fields(array('uid' => 0))
         ->condition('uid', $account->uid)
         ->execute();
-      // Clean history.
-      db_delete('history')
-        ->condition('uid', $account->uid)
-        ->execute();
       break;
   }
 }
@@ -1528,10 +1468,6 @@ function node_user_predelete($account) {
   foreach ($revisions as $revision) {
     node_revision_delete($revision);
   }
-  // Clean history.
-  db_delete('history')
-    ->condition('uid', $account->uid)
-    ->execute();
 }
 
 /**

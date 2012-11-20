@@ -20,7 +20,7 @@ abstract class CommentTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'node');
+  public static $modules = array('comment', 'node', 'history');
 
   /**
    * An administrative user with permission to configure comment settings.

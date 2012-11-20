@@ -159,9 +159,6 @@ class NodeStorageController extends DatabaseStorageController {
     // Delete values from other tables also referencing this node.
     $ids = array_keys($nodes);
 
-    db_delete('history')
-      ->condition('nid', $ids, 'IN')
-      ->execute();
     db_delete('node_access')
       ->condition('nid', $ids, 'IN')
       ->execute();

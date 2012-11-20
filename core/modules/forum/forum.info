@@ -1,6 +1,7 @@
 name = Forum
 description = Provides discussion forums.
 dependencies[] = node
+dependencies[] = history
 dependencies[] = taxonomy
 dependencies[] = comment
 package = Core

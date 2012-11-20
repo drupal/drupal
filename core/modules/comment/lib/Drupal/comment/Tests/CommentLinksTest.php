@@ -141,8 +141,8 @@ class CommentLinksTest extends CommentTestBase {
         comment_save($comment);
         $this->comment = $comment;
 
-        // comment_num_new() relies on node_last_viewed(), so ensure that no one
-        // has seen the node of this comment.
+        // comment_num_new() relies on history_read(), so ensure that no one has
+        // seen the node of this comment.
         db_delete('history')->condition('nid', $this->node->nid)->execute();
       }
       else {

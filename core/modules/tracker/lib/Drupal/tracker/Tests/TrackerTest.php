@@ -19,7 +19,7 @@ class TrackerTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'tracker');
+  public static $modules = array('comment', 'tracker', 'history');
 
   /**
    * The main user for testing.
