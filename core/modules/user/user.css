@@ -1,4 +1,3 @@
-
 #permissions td.module {
   font-weight: bold;
 }
@@ -87,4 +86,15 @@ div.password-suggestions ul {
 }
 .profile dd {
   margin: 0 0 1em 0;
+}
+
+/**
+ * Toolbar icon.
+ */
+.icon-user:before {
+  background-image: url("images/icon-user.png");
+}
+.icon-user:active:before,
+.icon-user.active:before {
+  background-image: url("images/icon-user-active.png");
 }

@@ -1246,6 +1246,19 @@ function system_library_info() {
     ),
   );
 
+  // A utility function to limit calls to a function with a given time.
+  $libraries['drupal.debounce'] = array(
+    'title' => 'Drupal debounce',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/debounce.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      // @todo remove drupal dependency.
+      array('system', 'drupal'),
+    ),
+  );
+
   // jQuery.
   $libraries['jquery'] = array(
     'title' => 'jQuery',
@@ -1861,7 +1874,6 @@ function system_library_info() {
       array('system', 'jquery'),
     ),
   );
-
   $libraries['drupal.tableselect'] = array(
     'title' => 'Tableselect',
     'version' => VERSION,

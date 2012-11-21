@@ -5,22 +5,6 @@
  */
 
 /**
- * Toolbar.
- */
-#shortcut-toolbar ul {
-  margin-left: 0;
-  margin-right: 5px;
-}
-#shortcut-toolbar a {
-  margin-left: 5px;
-  margin-right: 0;
-}
-#shortcut-toolbar .icon {
-  margin-left: 5px;
-  margin-right: 0;
-}
-
-/**
  * Add/remove links.
  */
 .add-or-remove-shortcuts .icon {
@@ -41,4 +25,17 @@
 .add-or-remove-shortcuts a:focus .text,
 .add-or-remove-shortcuts a:hover .text {
   border-radius: 5px 0 0 5px;
+}
+
+/**
+ * Toolbar.
+ */
+.toolbar-js .horizontal #edit-shortcuts {
+  border-left: 0 none;
+  border-right: 1px solid #d9d9d9;
+  float: right;
+  margin-left: 0;
+  margin-right: 0.3333em;
+  padding-left: 0.3333em;
+  padding-right: 0.6667em;
 }

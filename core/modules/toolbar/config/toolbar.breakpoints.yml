@@ -1,0 +1,3 @@
+narrow: 'only screen and (min-width: 16.5em)'
+standard: 'only screen and (min-width: 38.125em)'
+wide: 'only screen and (min-width: 50em)'

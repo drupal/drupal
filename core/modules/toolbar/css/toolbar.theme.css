@@ -1,0 +1,148 @@
+/**
+ * @file toolbar.theme.css
+ */
+.toolbar {
+  font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
+  /* Set base font size to 13px based on root ems. */
+  font-size: 0.8125rem;
+  -moz-tap-highlight-color: rgba(0,0,0,0);
+  -o-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  tap-highlight-color: rgba(0,0,0,0);
+  -moz-touch-callout: none;
+  -o-touch-callout: none;
+  -webkit-touch-callout: none;
+  touch-callout: none;
+}
+.toolbar a {
+  cursor: pointer;
+  padding: 1em 1.3333em;
+  text-decoration: none;
+}
+.toolbar a:hover {
+  text-decoration: underline;
+}
+
+/**
+ * Toolbar bar.
+ */
+.toolbar .bar {
+  background-color: #0f0f0f;
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3333);
+  color: #dddddd;
+}
+.toolbar .bar a:hover {
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
+  text-decoration: none;
+}
+.toolbar .bar a.active {
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+}
+.toolbar .bar a {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/**
+ * Toolbar tray.
+ */
+.toolbar .tray > .lining {
+  background-color: #ffffff;
+}
+.toolbar .horizontal > .lining {
+  padding-right: 5em; /* LTR */
+}
+.toolbar .vertical > .lining,
+.toolbar .vertical > .lining:before {
+  background-color: #ffffff;
+  border-right: 1px solid #aaaaaa; /* LTR */
+}
+.toolbar .vertical > .lining:before {
+  box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
+}
+.toolbar .horizontal {
+  border-bottom: 1px solid #aaaaaa;
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3333);
+}
+.toolbar .horizontal .tray {
+  background-color: #f5f5f5;
+}
+.toolbar .tray a {
+  color: #707070;
+}
+.toolbar .tray a:hover,
+.toolbar .tray a:active,
+.toolbar .tray a.active {
+  color: #000;
+}
+.toolbar .horizontal .menu {
+  background-color: #ffffff;
+}
+.toolbar .horizontal .menu li + li {
+  border-left: 1px solid #dddddd; /* LTR */
+}
+.toolbar .horizontal .menu li:last-child {
+  border-right: 1px solid #dddddd; /* LTR */
+}
+.toolbar .vertical .menu li + li {
+  border-top: 1px solid #dddddd;
+}
+.toolbar .vertical .menu li:last-child {
+  border-bottom: 1px solid #dddddd;
+}
+.toolbar .vertical .menu .menu li {
+  border: 0 none;
+}
+.toolbar .vertical .menu ul ul {
+  border-bottom: 1px solid #dddddd;
+  border-top: 1px solid #dddddd;
+}
+.toolbar .vertical .menu li:last-child > ul {
+  border-bottom: 0;
+}
+.toolbar .vertical .menu .menu .menu {
+  margin-left: 1.3333em; /* LTR */
+}
+.toolbar .vertical .menu .menu .menu .menu {
+  margin-left: 0.25em; /* LTR */
+}
+.toolbar .menu .menu a {
+  color: #434343;
+}
+.toolbar .vertical .menu .menu .menu a {
+  padding-left: 0.6667em; /* LTR */
+}
+
+/**
+ * Orientation toggle.
+ */
+.toolbar .toggle-orientation {
+  background-color: #f5f5f5;
+  padding: 0.6667em;
+}
+.toolbar .horizontal .toggle-orientation {
+  border-left: 1px solid #c9c9c9; /* LTR */
+}
+.toolbar .toggle-orientation > .lining {
+  float: right; /* LTR */
+  padding: 0.1667em;
+}
+.toolbar .toggle-orientation button {
+  cursor: pointer;
+  display: inline-block;
+  height: 16px;
+  padding: 0;
+  text-indent: -999em;
+  width: 20px;
+}
+.toolbar .toggle-orientation button:before {
+  left: 0; /* LTR */
+}
+.toolbar .toggle-orientation [value="vertical"]:before {
+  background-image: url('../images/icon-toggle-vertical.png'); /* LTR */
+}
+.toolbar .toggle-orientation [value="horizontal"]:before {
+  background-image: url('../images/icon-toggle-horizontal.png');
+}

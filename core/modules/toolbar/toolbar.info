@@ -3,3 +3,7 @@ description = Provides a toolbar that shows the top-level administration menu it
 core = 8.x
 package = Core
 version = VERSION
+
+dependencies[] = breakpoint
+
+configure = admin/structure/toolbar

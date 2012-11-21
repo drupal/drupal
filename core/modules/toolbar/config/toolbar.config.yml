@@ -1,0 +1,3 @@
+breakpoints:
+  - 'module.toolbar.narrow'
+  - 'module.toolbar.wide'

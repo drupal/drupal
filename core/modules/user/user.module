@@ -3100,6 +3100,66 @@ function user_file_download_access($field, EntityInterface $entity, File $file) 
 }
 
 /**
+ * Implements hook_toolbar().
+ */
+function user_toolbar() {
+  global $user;
+
+  // Add logout & user account links or login link.
+  if ($user->uid) {
+    $links = array(
+      'account' => array(
+        'title' => t('View profile'),
+        'href' => 'user',
+        'html' => TRUE,
+        'attributes' => array(
+          'title' => t('User account'),
+        ),
+      ),
+      'logout' => array(
+        'title' => t('Log out'),
+        'href' => 'user/logout',
+      ),
+    );
+  }
+  else {
+     $links = array(
+      'login' => array(
+        'title' => t('Log in'),
+        'href' => 'user',
+      ),
+    );
+  }
+
+  $user_tray = array(
+    '#heading' => t('User account actions'),
+    'content' => array(
+      '#theme' => 'links__toolbar_user',
+      '#links' => $links,
+      '#attributes' => array(
+        'class' => array('menu',),
+      ),
+    ),
+  );
+
+  $items['user'] = array(
+    'tab' => array(
+      'title' => user_format_name($user),
+      'href' => 'user',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('My account'),
+        'class' => array('icon', 'icon-user'),
+      ),
+    ),
+    'tray' => $user_tray,
+    'weight' => 100,
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_library_info().
  */
 function user_library_info() {

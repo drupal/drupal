@@ -5,6 +5,9 @@
  * Administration toolbar for quick access to top level administration items.
  */
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\Core\Template\Attribute;
+
 /**
  * Implements hook_help().
  */
@@ -16,7 +19,7 @@ function toolbar_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying administrative links') . '</dt>';
-      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative links across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by using the show/hide shortcuts link at the end of the toolbar.', array('@shortcuts-help' => url('admin/help/shortcut'))) . '</dd>';
+      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative links across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by clicking on its corresponding tab.', array('@shortcuts-help' => url('admin/help/shortcut'))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -41,12 +44,6 @@ function toolbar_theme($existing, $type, $theme, $path) {
     'render element' => 'toolbar',
     'template' => 'toolbar',
   );
-  $items['toolbar_toggle'] = array(
-    'variables' => array(
-      'collapsed' => NULL,
-      'attributes' => array(),
-    ),
-  );
   return $items;
 }
 
@@ -54,62 +51,76 @@ function toolbar_theme($existing, $type, $theme, $path) {
  * Implements hook_menu().
  */
 function toolbar_menu() {
-  $items['toolbar/toggle'] = array(
-    'title' => 'Toggle drawer visibility',
+  $items['toolbar/subtrees/%'] = array(
+    'page callback' => 'toolbar_subtrees_jsonp',
+    'page arguments' => array(2),
+    'access callback' => '_toolbar_subtrees_access',
+    'access arguments' => array(2),
     'type' => MENU_CALLBACK,
-    'page callback' => 'toolbar_toggle_page',
-    'access arguments' => array('access toolbar'),
   );
   return $items;
 }
 
 /**
- * Page callback: Toggles the visibility of the toolbar drawer.
+ * Access callback: Returns if the user has access to the rendered subtree requested by the hash.
  *
  * @see toolbar_menu().
  */
-function toolbar_toggle_page() {
-  global $base_path;
-  // Toggle the value in the cookie.
-  setcookie('Drupal.toolbar.collapsed', !_toolbar_is_collapsed(), NULL, $base_path);
-  // Redirect the user from where he used the toggle element.
-  drupal_goto();
+function _toolbar_subtrees_access($hash) {
+  return user_access('access toolbar') && ($hash == _toolbar_get_subtree_hash());
 }
 
 /**
- * Formats an element used to toggle the toolbar drawer's visibility.
+ * Page callback: Returns the rendered subtree of each top-level toolbar link.
  *
- * @param $variables
- *   An associative array containing:
- *   - collapsed: A boolean value representing the toolbar drawer's visibility.
- *   - attributes: An associative array of HTML attributes.
- *
- * @return
- *   An HTML string representing the element for toggling.
- *
- * @ingroup themable
+ * @see toolbar_menu().
  */
-function theme_toolbar_toggle($variables) {
-  if ($variables['collapsed']) {
-    $toggle_text = t('Show shortcuts');
-  }
-  else {
-    $toggle_text = t('Hide shortcuts');
-    $variables['attributes']['class'][] = 'toggle-active';
-  }
-  return l($toggle_text, 'toolbar/toggle', array('query' => drupal_get_destination(), 'attributes' => array('title' => $toggle_text) + $variables['attributes']));
+function toolbar_subtrees_jsonp($hash) {
+  _toolbar_initialize_page_cache();
+  $subtrees = toolbar_get_rendered_subtrees();
+  $response = new JsonResponse($subtrees);
+  $response->setCallback('Drupal.toolbar.setSubtrees');
+  return $response;
 }
 
 /**
- * Determines the current state of the toolbar drawer's visibility.
+ * Use Drupal's page cache for toolbar/subtrees/*, even for authenticated users.
  *
- * @return
- *   TRUE when drawer is collapsed, FALSE when it is expanded.
+ * This gets invoked after full bootstrap, so must duplicate some of what's
+ * done by _drupal_bootstrap_page_cache().
+ *
+ * @todo Replace this hack with something better integrated with DrupalKernel
+ *   once Drupal's page caching itself is properly integrated.
  */
-function _toolbar_is_collapsed() {
-  // PHP converts dots into underscores in cookie names to avoid problems with
-  // its parser, so we use a converted cookie name.
-  return isset($_COOKIE['Drupal_toolbar_collapsed']) ? $_COOKIE['Drupal_toolbar_collapsed'] : 0;
+function _toolbar_initialize_page_cache() {
+  $GLOBALS['conf']['system.performance']['cache']['page']['enabled'] = TRUE;
+  drupal_page_is_cacheable(TRUE);
+
+  // If we have a cache, serve it.
+  // @see _drupal_bootstrap_page_cache()
+  $cache = drupal_page_get_cache();
+  if (is_object($cache)) {
+    header('X-Drupal-Cache: HIT');
+    // Restore the metadata cached with the page.
+    $_GET['q'] = $cache->data['path'];
+    date_default_timezone_set(drupal_get_user_timezone());
+
+    drupal_serve_page_from_cache($cache);
+
+    // We are done.
+    exit;
+  }
+
+  // Otherwise, create a new page response (that will be cached).
+  header('X-Drupal-Cache: MISS');
+
+  // The Expires HTTP header is the heart of the client-side HTTP caching. The
+  // additional server-side page cache only takes effect when the client
+  // accesses the callback URL again (e.g., after clearing the browser cache or
+  // when force-reloading a Drupal page).
+  $max_age = 3600 * 24 * 365;
+  drupal_add_http_header('Expires', gmdate(DATE_RFC1123, REQUEST_TIME + $max_age));
+  drupal_add_http_header('Cache-Control', 'private, max-age=' . $max_age);
 }
 
 /**
@@ -121,7 +132,6 @@ function toolbar_page_build(&$page) {
   $page['page_top']['toolbar'] = array(
     '#pre_render' => array('toolbar_pre_render'),
     '#access' => user_access('access toolbar'),
-    'toolbar_drawer' => array(),
   );
 }
 
@@ -139,27 +149,42 @@ function toolbar_pre_render($toolbar) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for html.tpl.php.
- *
- * Add some page classes, so global page theming can adjust to the toolbar.
+ * Implements template_preprocess_HOOK().
  */
-function toolbar_preprocess_html(&$vars) {
-  if (isset($vars['page']['page_top']['toolbar']) && user_access('access toolbar')) {
-    $vars['attributes']['class'][] = 'toolbar';
-    if (!_toolbar_is_collapsed()) {
-      $vars['attributes']['class'][] = 'toolbar-drawer';
-    }
-  }
-}
+function template_preprocess_toolbar(&$variables) {
+  // Metadata for the toolbar wrapping element.
+  $variables['attributes'] = new Attribute(array(
+    // The id cannot be simply "toolbar" or it will clash with the simpletest
+    // tests listing which produces a checkbox with attribute id="toolbar"
+    'id' => 'toolbar-administration',
+    // The 'overlay-displace-top' class pushes the overlay down, so it appears
+    // below the toolbar.
+    'class' => array('toolbar', 'overlay-displace-top'),
+    'role' => 'navigation'
+  ));
 
-/**
- * Implements hook_preprocess_HOOK() for toolbar.tpl.php.
- *
- * Adding the 'overlay-displace-top' class to the toolbar pushes the overlay
- * down, so it appears below the toolbar.
- */
-function toolbar_preprocess_toolbar(&$variables) {
-  $variables['attributes']['class'][] = "overlay-displace-top";
+  // Provide a convenience variable for the themed tabs.
+  $variables['toolbar']['tabs']['#attributes']['class'][] = 'overlay-displace-top';
+  $variables['tabs'] = $variables['toolbar']['tabs'];
+
+  // Place the tabs in a top-level variable so that attribute information
+  // can be associated with each one.
+  foreach ($variables['toolbar']['trays'] as $key => $tray) {
+    // Create tray heading text. Prefer the provided heading text if it exists.
+    $heading = isset($tray['#heading']) ? $tray['#heading'] : t('@group actions', array('@group' => $key));
+
+    $variables['trays'][$key] = array(
+      'heading' => $heading,
+      'content' => $variables['toolbar']['trays'][$key],
+      'attributes' => new Attribute(array(
+          'id' => 'toolbar-tray-' . $key,
+          'class' => array('tray', 'overlay-displace-top', $key),
+          'data-toolbar-tray' => $key,
+          'aria-owned-by' => 'toolbar-tab-' . $key,
+        )
+      ),
+    );
+  }
 }
 
 /**
@@ -179,93 +204,148 @@ function toolbar_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Builds the admin menu as a structured array ready for drupal_render().
+ * Implements hook_toolbar().
+ */
+function toolbar_toolbar() {
+  $items = array();
+
+  // The 'Home' tab is a simple link, with no corresponding tray.
+  $items['home'] = array(
+    'tab' => array(
+      'title' => t('Home'),
+      'href' => '<front>',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Home page'),
+        'class' => array('icon', 'icon-home'),
+      ),
+    ),
+    'weight' => -20,
+  );
+
+  // Retrieve the administration menu from the database.
+  $tree = toolbar_get_menu_tree();
+
+  // Add attributes to the links before rendering.
+  toolbar_menu_navigation_links($tree);
+
+  $menu = array(
+    'toolbar_administration' => array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('toolbar-menu',),
+      ),
+      'administration_menu' => menu_tree_output($tree),
+    ),
+    '#heading' => t('Administration menu'),
+  );
+
+  // To conserve bandwidth, we only include the top-level links in the HTML.
+  // The subtrees are included in a JSONP script, cached by the browser. Here we
+  // add that JSONP script. We add it as an external script, because it's a
+  // Drupal path, not a file available via a stream wrapper.
+  // @see toolbar_subtrees_jsonp()
+  $menu['toolbar_administration']['#attached']['js'][url('toolbar/subtrees/' . _toolbar_get_subtree_hash())] = array('type' => 'external');
+
+  $items['administration'] = array(
+    'tab' => array(
+      'title' => t('Menu'),
+      'href' => 'admin',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Admin menu'),
+        'class' => array('icon', 'icon-menu'),
+      ),
+    ),
+    'tray' => $menu,
+    'weight' => -15,
+  );
+
+  return $items;
+}
+
+/**
+ * Builds the Toolbar as a structured array ready for drupal_render().
  *
  * @return
- *   Array of links and settings relating to the admin menu.
+ *   A renderable arrray, with two children:
+ *   - 'tabs': an array of links, rendered by theme('links').
+ *   - 'trays': an array of render elements displayed when the corresponding tab
+ *     is activated.
  */
 function toolbar_view() {
-  global $user;
 
-  $build = array(
-    '#theme' => 'toolbar',
-    '#attached'=> array(
-      'library' => array(
-        array('toolbar', 'drupal.toolbar'),
-      ),
-    ),
-  );
+  $build = array('#theme' => 'toolbar');
+  $build['#attached']['library'][] = array('toolbar', 'toolbar');
 
-  // Retrieve the admin menu from the database.
-  $links = toolbar_menu_navigation_links(toolbar_get_menu_tree());
-  $build['toolbar_menu'] = array(
-    '#theme' => 'links__toolbar_menu',
-    '#links' => $links,
-    '#attributes' => array('id' => 'toolbar-menu'),
-    '#heading' => array('text' => t('Administrative toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
-  );
+  // Get the configured breakpoint to switch from vertical to horizontal
+  // toolbar presentation.
+  $breakpoints = entity_load('breakpoint_group', 'module.toolbar.toolbar');
+  if (!empty($breakpoints)) {
+    $media_queries = array();
+    $media_queries['toolbar']['breakpoints'] = array_map(
+      function($object) {return $object->mediaQuery;},
+      $breakpoints->breakpoints);
 
-  // Add logout & user account links or login link.
-  if ($user->uid) {
-    $links = array(
-      'account' => array(
-        'title' => t('Hello <strong>@username</strong>', array('@username' => user_format_name($user))),
-        'href' => 'user',
-        'html' => TRUE,
-        'attributes' => array('title' => t('User account')),
-      ),
-      'logout' => array(
-        'title' => t('Log out'),
-        'href' => 'user/logout',
-      ),
+    $build['#attached']['js'][] = array(
+      'data' => $media_queries,
+      'type' => 'setting',
     );
+    // // Load the breakpoints for toolbar.
+    foreach ($breakpoints->breakpoints as $key => $breakpoint) {
+      $build['#attached']['js'][0]['data']['toolbar']['breakpoints'][$key] = $breakpoint->mediaQuery;
+    }
   }
-  else {
-     $links = array(
-      'login' => array(
-        'title' => t('Log in'),
-        'href' => 'user',
-      ),
-    );
-  }
-  $build['toolbar_user'] = array(
-    '#theme' => 'links__toolbar_user',
-    '#links' => $links,
-    '#attributes' => array('id' => 'toolbar-user'),
-  );
 
-  // Add a "home" link.
-  $link = array(
-    'home' => array(
-      'title' => '<span class="home-link">Home</span>',
-      'href' => '<front>',
-      'html' => TRUE,
-      'attributes' => array('title' => t('Home')),
-    ),
-  );
-  $build['toolbar_home'] = array(
+  // Get toolbar items from all modules that implement hook_toolbar() or
+  // hook_toolbar_alter().
+  $toolbar_groups = module_invoke_all('toolbar');
+  drupal_alter('toolbar', $toolbar_groups);
+  uasort($toolbar_groups, 'drupal_sort_weight');
+
+  // Build the tabs and trays from the toolbar groups.
+  $build['trays'] = array();
+  $build['tabs'] = array(
     '#theme' => 'links',
-    '#links' => $link,
-    '#attributes' => array('id' => 'toolbar-home'),
+    '#links' => array(),
+    '#attributes' => array(
+      'class' => array('bar', 'clearfix'),
+    ),
+    '#heading' => array('text' => t('Toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
+  );
+  $tab_defaults = array(
+    'title' => '',
+    'href' => '',
+    'html' => FALSE,
+    'attributes' => new Attribute(),
   );
 
-  // Add an anchor to be able to toggle the visibility of the drawer.
-  $build['toolbar_toggle'] = array(
-    '#theme' => 'toolbar_toggle',
-    '#collapsed' => _toolbar_is_collapsed(),
-    '#attributes' => array('class' => array('toggle')),
-  );
+  foreach ($toolbar_groups as $group => $items) {
+    if ($tab = $items['tab']) {
+      // Merge in the defaults.
+      $tab += $tab_defaults;
+    }
+    // Register a tray if one is associated with this tab.
+    if (!empty($items['tray'])) {
+      // Provide an id, a data attribute linking each tab to the corresponding
+      // tray and aria information.
+      $tab['attributes']['id'] = 'toolbar-tab-' . $group;
+      $tab['attributes']['data-toolbar-tray'] = $group;
+      $tab['attributes']['aria-owns'] = 'toolbar-tray-' . $group;
+      $tab['attributes']['role'] = 'button';
+      $tab['attributes']['aria-pressed'] = 'false';
 
-  // Prepare the drawer links CSS classes.
-  $toolbar_drawer_classes = array(
-    'toolbar-drawer',
-    'clearfix',
-  );
-  if (_toolbar_is_collapsed()) {
-    $toolbar_drawer_classes[] = 'collapsed';
+      if (array_key_exists($group, $build['trays'])) {
+        array_merge($build['trays'][$group], $items['tray']);
+      }
+      else {
+        // Assign the tray to the build.
+        $build['trays'][$group] = $items['tray'];
+      }
+    }
+    // Assign the tabs to the build.
+    $build['tabs']['#links'][$group] = $tab;
   }
-  $build['toolbar_drawer']['#type'] = 'container';
-  $build['toolbar_drawer']['#attributes']['class'] = $toolbar_drawer_classes;
 
   return $build;
 }
@@ -299,34 +379,55 @@ function toolbar_get_menu_tree() {
  * @return
  *   An array of links as defined above.
  */
-function toolbar_menu_navigation_links($tree) {
-  $links = array();
-  foreach ($tree as $item) {
-    if (!$item['link']['hidden'] && $item['link']['access']) {
-      // Make sure we have a path specific ID in place, so we can attach icons
-      // and behaviors to the items.
-      $id = str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['href']);
+function toolbar_menu_navigation_links(&$tree) {
+  foreach ($tree as $key => $item) {
+    // Configure sub-items.
+    if (!empty($item['below'])) {
+      toolbar_menu_navigation_links($tree[$key]['below']);
+    }
+    // Make sure we have a path specific ID in place, so we can attach icons
+    // and behaviors to the items.
+    $tree[$key]['link']['localized_options']['attributes'] = array(
+      'id' => 'toolbar-link-' . str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['link_path']),
+      'class' => array(
+        'icon',
+        'icon-' . strtolower(str_replace(' ', '-', $item['link']['title'])),
+      ),
+    );
+  }
+}
 
-      $link = $item['link']['localized_options'];
-      $link['href'] = $item['link']['href'];
-      // Add icon placeholder.
-      $link['title'] = '<span class="icon"></span>' . check_plain($item['link']['title']);
-      // Add admin link ID.
-      $link['attributes'] = array('id' => 'toolbar-link-' . $id);
-      if (!empty($item['link']['description'])) {
-        $link['title'] .= ' <span class="element-invisible">(' . $item['link']['description'] . ')</span>';
-        $link['attributes']['title'] = $item['link']['description'];
+/**
+ * Returns the rendered subtree of each top-level toolbar link.
+ */
+function toolbar_get_rendered_subtrees() {
+  $subtrees = array();
+  $tree = toolbar_get_menu_tree();
+  foreach ($tree as $tree_item) {
+    $item = $tree_item['link'];
+    if (!$item['hidden'] && $item['access']) {
+      if ($item['has_children']) {
+        $query = db_select('menu_links');
+        $query->addField('menu_links', 'mlid');
+        $query->condition('has_children', 1);
+        for ($i=1; $i <= $item['depth']; $i++) {
+          $query->condition('p' . $i, $item['p' . $i]);
+        }
+        $parents = $query->execute()->fetchCol();
+        $subtree = menu_build_tree($item['menu_name'], array('expanded' => $parents, 'min_depth' => $item['depth']+1));
+        toolbar_menu_navigation_links($subtree);
+        $subtree = menu_tree_output($subtree);
+        $subtree = drupal_render($subtree);
       }
-      $link['html'] = TRUE;
+      else {
+        $subtree = '';
+      }
 
-      $class = ' path-' . $id;
-      if (toolbar_in_active_trail($item['link']['href'])) {
-        $class .= ' active-trail';
-      }
-      $links['menu-' . $item['link']['mlid'] . $class] = $link;
+      $id = str_replace(array('/', '<', '>'), array('-', '', ''), $item['href']);
+      $subtrees[$id] = $subtree;
     }
   }
-  return $links;
+  return $subtrees;
 }
 
 /**
@@ -361,23 +462,67 @@ function toolbar_in_active_trail($path) {
  * Implements hook_library_info().
  */
 function toolbar_library_info() {
-  $libraries['drupal.toolbar'] = array(
+  $libraries['toolbar'] = array(
     'title' => 'Toolbar',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'toolbar') . '/toolbar.js' => array(),
+      drupal_get_path('module', 'toolbar') . '/js/toolbar.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'toolbar') . '/toolbar.css',
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.base.css',
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.theme.css',
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.icons.css',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+      array('system', 'matchmedia'),
       array('system', 'jquery.once'),
-      array('system', 'jquery.cookie'),
+      array('system', 'drupal.debounce'),
+      array('toolbar', 'toolbar.menu'),
+    ),
+  );
+
+  $libraries['toolbar.menu'] = array(
+    'title' => 'Toolbar nested accordion menus.',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'toolbar') . '/js/toolbar.menu.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.menu.css',
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
     ),
   );
 
   return $libraries;
+}
+
+/**
+ * Implements hook_cache_flush().
+ */
+function toolbar_cache_flush() {
+  return array('toolbar');
+}
+
+/**
+ * Returns the hash of the per-user rendered toolbar subtrees.
+ */
+function _toolbar_get_subtree_hash() {
+  global $user;
+  $cid = $user->uid . ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  if ($cache = cache('toolbar')->get($cid)) {
+    $hash = $cache->data;
+  }
+  else {
+    $subtrees = toolbar_get_rendered_subtrees();
+    $hash = drupal_hash_base64(serialize($subtrees));
+    cache('toolbar')->set($cid, $hash);
+  }
+  return $hash;
 }

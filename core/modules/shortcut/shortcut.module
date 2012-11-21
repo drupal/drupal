@@ -713,20 +713,9 @@ function shortcut_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_page_alter().
+ * Implements hook_toolbar().
  */
-function shortcut_page_alter(&$page) {
-  if (isset($page['page_top']['toolbar'])) {
-    // If the toolbar is available, add a pre-render function to display the
-    // current shortcuts in the toolbar drawer.
-    $page['page_top']['toolbar']['#pre_render'][] = 'shortcut_toolbar_pre_render';
-  }
-}
-
-/**
- * Pre-render function for adding shortcuts to the toolbar drawer.
- */
-function shortcut_toolbar_pre_render($toolbar) {
+function shortcut_toolbar() {
   $links = shortcut_renderable_links();
   $links['#attached'] = array(
     'css' => array(
@@ -734,8 +723,6 @@ function shortcut_toolbar_pre_render($toolbar) {
       drupal_get_path('module', 'shortcut') . '/shortcut.theme.css',
     ),
   );
-  $links['#prefix'] = '<div id="shortcut-toolbar">';
-  $links['#suffix'] = '</div>';
   $shortcut_set = shortcut_current_displayed_set();
   $configure_link = NULL;
   if (shortcut_set_edit_access($shortcut_set)) {
@@ -743,17 +730,30 @@ function shortcut_toolbar_pre_render($toolbar) {
       '#type' => 'link',
       '#title' => t('Edit shortcuts'),
       '#href' => 'admin/config/user-interface/shortcut/' . $shortcut_set->set_name,
-      '#options' => array('attributes' => array('id' => 'edit-shortcuts')),
+      '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
     );
   }
 
-  $drawer = array(
+  $links_tray = array(
+    '#heading' => t('User-defined shortcuts'),
     'shortcuts' => $links,
     'configure' => $configure_link,
   );
 
-  $toolbar['toolbar_drawer'][] = $drawer;
-  return $toolbar;
+  $items['shortcuts'] = array(
+    'tab' => array(
+      'title' => t('Shortcuts'),
+      'href' => 'admin/config/user-interface/shortcut',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Shortcuts'),
+        'class' => array('icon', 'icon-shortcut'),
+      ),
+    ),
+    'tray' => $links_tray,
+    'weight' => -10,
+  );
+  return $items;
 }
 
 /**

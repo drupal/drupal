@@ -5,21 +5,6 @@
  */
 
 /**
- * Toolbar.
- */
-#edit-shortcuts {
-  left: 0;
-  position: absolute;
-  top: 0;
-}
-#shortcut-toolbar ul {
-  float: none;
-}
-#shortcut-toolbar .icon {
-  float: right;
-}
-
-/**
  * Add/remove links.
  */
 .add-or-remove-shortcuts .icon,

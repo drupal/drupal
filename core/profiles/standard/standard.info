@@ -5,6 +5,7 @@ core = 8.x
 dependencies[] = node
 dependencies[] = history
 dependencies[] = block
+dependencies[] = breakpoint
 dependencies[] = color
 dependencies[] = config
 dependencies[] = comment

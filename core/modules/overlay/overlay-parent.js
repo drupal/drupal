@@ -881,9 +881,9 @@ Drupal.overlay.getPath = function (link) {
  */
 Drupal.overlay.getDisplacement = function (region) {
   var displacement = 0;
-  var lastDisplaced = $('.overlay-displace-' + region + ':last');
+  var lastDisplaced = $('[data-offset-' + region + ']');
   if (lastDisplaced.length) {
-    displacement = lastDisplaced.offset().top + lastDisplaced.outerHeight();
+    displacement = parseInt(lastDisplaced.attr('data-offset-' + region));
   }
   return displacement;
 };

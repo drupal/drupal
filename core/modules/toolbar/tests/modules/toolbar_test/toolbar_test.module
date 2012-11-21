@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * A dummy module to test API interaction with the Toolbar module.
+ */
+
+/**
+ * Um
+ */
+function toolbar_test_toolbar() {
+  $tray_items = array(
+    l('link 1', '<front>'),
+    l('link 2', '<front>'),
+    l('link 3', '<front>'),
+  );
+  $items['testing'] = array(
+    'tab' => array(
+      'title' => t('Test tab'),
+      'href' => '',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Test tab'),
+      ),
+    ),
+    'tray' => array(
+      '#heading' => t('Test tray'),
+      'content' => array(
+        '#theme' => 'item_list',
+        '#items' => $tray_items,
+        '#attributes' => array(
+          'class' => array('menu'),
+        ),
+      ),
+    ),
+    'weight' => 50,
+  );
+
+  return $items;
+}
