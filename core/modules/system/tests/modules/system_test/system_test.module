@@ -247,11 +247,11 @@ function system_test_exit() {
 function system_test_system_info_alter(&$info, $file, $type) {
   // We need a static otherwise the last test will fail to alter common_test.
   static $test;
-  if (($dependencies = variable_get('dependencies', array())) || $test) {
+  if (($dependencies = state()->get('system_test.dependencies')) || $test) {
     if ($file->name == 'module_test') {
       $info['hidden'] = FALSE;
       $info['dependencies'][] = array_shift($dependencies);
-      variable_set('dependencies', $dependencies);
+      state()->set('system_test.dependencies', $dependencies);
       $test = TRUE;
     }
     if ($file->name == 'common_test') {
