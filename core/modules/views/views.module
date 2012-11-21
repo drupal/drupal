@@ -1110,7 +1110,13 @@ function views_hook_info() {
   $hooks['views_data'] = array(
     'group' => 'views',
   );
+  $hooks['views_data_alter'] = array(
+    'group' => 'views',
+  );
   $hooks['views_query_substitutions'] = array(
+    'group' => 'views',
+  );
+  $hooks['views_form_substitutions'] = array(
     'group' => 'views',
   );
 
@@ -1641,6 +1647,14 @@ function views_form_views_form($form, &$form_state, ViewExecutable $view, $outpu
     '#weight' => 50,
   );
 
+  $form['actions'] = array(
+    '#type' => 'actions',
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
   $substitutions = array();
   foreach ($view->field as $field_name => $field) {
     $form_element_name = $field_name;
@@ -1695,15 +1709,6 @@ function views_form_views_form($form, &$form_state, ViewExecutable $view, $outpu
   $form['#substitutions'] = array(
     '#type' => 'value',
     '#value' => $substitutions,
-  );
-  $form['actions'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('form-actions')),
-    '#weight' => 100,
-  );
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
   );
 
   return $form;

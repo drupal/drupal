@@ -814,6 +814,33 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
+   * Determines the entity type used by this handler.
+   *
+   * If this handler uses a relationship, the base class of the relationship is
+   * taken into account.
+   *
+   * @return string
+   *   The machine name of the entity type.
+   */
+  public function getEntityType() {
+    // If the user has configured a relationship on the handler take that into
+    // account.
+    if (!empty($this->options['relationship']) && $this->options['relationship'] != 'none') {
+      $views_data = views_fetch_data($this->view->relationship->table);
+    }
+    else {
+      $views_data = views_fetch_data($this->view->storage->get('base_table'));
+    }
+
+    if (isset($views_data['table']['entity type'])) {
+      return $views_data['table']['entity type'];
+    }
+    else {
+      throw new \Exception(format_string('No entity type for field @field on view @view', array('@field' => $this->options['id'], '@view' => $this->view->storage->get('name'))));
+    }
+  }
+
+  /**
    * Breaks x,y,z and x+y+z into an array. Numeric only.
    *
    * @param string $str
