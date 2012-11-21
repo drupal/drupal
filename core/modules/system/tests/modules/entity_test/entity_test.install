@@ -43,6 +43,13 @@ function entity_test_schema() {
         'not null' => TRUE,
         'description' => 'Primary Key: Unique entity-test item ID.',
       ),
+      'revision_id' => array(
+        'description' => 'The current {entity_test_property_revision}.revision_id version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'uuid' => array(
         'description' => 'Unique Key: Universally unique identifier for this entity.',
         'type' => 'varchar',
@@ -70,6 +77,13 @@ function entity_test_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'The {entity_test}.id of the test entity.',
+      ),
+      'revision_id' => array(
+        'description' => 'The current {entity_test_property_revision}.revision_id version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
       ),
       'langcode' => array(
         'description' => 'The {language}.langcode of this variant of this test entity.',
@@ -107,6 +121,58 @@ function entity_test_schema() {
       'id' => array('entity_test' => 'id'),
     ),
     'primary key' => array('id', 'langcode'),
+  );
+  $schema['entity_test_property_revision'] = array(
+    'description' => 'Stores entity_test item property revisions.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The {entity_test}.id of the test entity.',
+      ),
+      'revision_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The primary identifier for this version.',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this variant of this test entity.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'default_langcode' => array(
+        'description' => 'Boolean indicating whether the current variant is in the original entity language.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'name' => array(
+        'description' => 'The name of the test entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'user_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => "The {users}.uid of the associated user.",
+      ),
+    ),
+    'indexes' => array(
+      'user_id' => array('user_id'),
+    ),
+    'foreign keys' => array(
+      'user_id' => array('users' => 'uid'),
+      'id' => array('entity_test' => 'id'),
+    ),
+    'primary key' => array('revision_id', 'id', 'langcode'),
   );
   return $schema;
 }

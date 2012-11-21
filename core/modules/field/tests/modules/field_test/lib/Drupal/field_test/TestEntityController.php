@@ -18,10 +18,10 @@ class TestEntityController extends DatabaseStorageController {
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::preSaveRevision().
    */
-  public function preSaveRevision(array &$record, EntityInterface $entity) {
+  public function preSaveRevision(\stdClass $record, EntityInterface $entity) {
     // Allow for predefined revision ids.
-    if (!empty($record['use_provided_revision_id'])) {
-      $record['ftvid'] = $record['use_provided_revision_id'];
+    if (!empty($record->use_provided_revision_id)) {
+      $record->ftvid = $record->use_provided_revision_id;
     }
   }
 

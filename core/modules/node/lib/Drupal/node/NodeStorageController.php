@@ -100,7 +100,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::preSaveRevision().
    */
-  protected function preSaveRevision(array &$record, EntityInterface $entity) {
+  protected function preSaveRevision(\stdClass $record, EntityInterface $entity) {
     if ($entity->isNewRevision()) {
       // When inserting either a new node or a new node revision, $node->log
       // must be set because {node_revision}.log is a text column and therefore
@@ -110,23 +110,23 @@ class NodeStorageController extends DatabaseStorageController {
       // empty string in that case.
       // @todo: Make the {node_revision}.log column nullable so that we can
       // remove this check.
-      if (!isset($record['log'])) {
-        $record['log'] = '';
+      if (!isset($record->log)) {
+        $record->log = '';
       }
     }
-    elseif (!isset($record['log']) || $record['log'] === '') {
+    elseif (!isset($record->log) || $record->log === '') {
       // If we are updating an existing node without adding a new revision, we
       // need to make sure $node->log is unset whenever it is empty. As long as
       // $node->log is unset, drupal_write_record() will not attempt to update
       // the existing database column when re-saving the revision; therefore,
       // this code allows us to avoid clobbering an existing log entry with an
       // empty one.
-      unset($record['log']);
+      unset($record->log);
     }
 
     if ($entity->isNewRevision()) {
-      $record['timestamp'] = REQUEST_TIME;
-      $record['uid'] = isset($record['revision_uid']) ? $record['revision_uid'] : $GLOBALS['user']->uid;
+      $record->timestamp = REQUEST_TIME;
+      $record->uid = isset($record->revision_uid) ? $record->revision_uid : $GLOBALS['user']->uid;
     }
   }
 

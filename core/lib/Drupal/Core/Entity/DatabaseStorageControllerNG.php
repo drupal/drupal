@@ -105,7 +105,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     // Now map the record values to the according entity properties and
     // activate compatibility mode.
-    $queried_entities = $this->mapFromStorageRecords($queried_entities);
+    $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
     // Attach fields.
     if ($this->entityInfo['fieldable']) {
@@ -139,10 +139,15 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   /**
    * Maps from storage records to entity objects.
    *
+   * @param array $records
+   *   Associative array of query results, keyed on the entity ID.
+   * @param boolean $load_revision
+   *   (optional) TRUE if the revision should be loaded, defaults to FALSE.
+   *
    * @return array
    *   An array of entity objects implementing the EntityInterface.
    */
-  protected function mapFromStorageRecords(array $records) {
+  protected function mapFromStorageRecords(array $records, $load_revision = FALSE) {
 
     foreach ($records as $id => $record) {
       $entity = new $this->entityClass(array(), $this->entityType);
@@ -181,13 +186,27 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $entity->updateOriginalValues();
 
       if (!$entity->isNew()) {
-        $return = drupal_write_record($this->entityInfo['base_table'], $record, $this->idKey);
+        if ($entity->isDefaultRevision()) {
+          $return = drupal_write_record($this->entityInfo['base_table'], $record, $this->idKey);
+        }
+        else {
+          // @todo, should a different value be returned when saving an entity
+          // with $isDefaultRevision = FALSE?
+          $return = FALSE;
+        }
+        if ($this->revisionKey) {
+          $record->{$this->revisionKey} = $this->saveRevision($entity);
+        }
         $this->resetCache(array($entity->id()));
         $this->postSave($entity, TRUE);
         $this->invokeHook('update', $entity);
       }
       else {
         $return = drupal_write_record($this->entityInfo['base_table'], $record);
+        if ($this->revisionKey) {
+          $entity->{$this->idKey}->value = $record->{$this->idKey};
+          $record->{$this->revisionKey} = $this->saveRevision($entity);
+        }
         // Reset general caches, but keep caches specific to certain entities.
         $this->resetCache(array());
 
@@ -211,13 +230,57 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   }
 
   /**
+   * Saves an entity revision.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return integer
+   *   The revision id.
+   */
+  protected function saveRevision(EntityInterface $entity) {
+    $record = $this->mapToRevisionStorageRecord($entity);
+
+    // When saving a new revision, set any existing revision ID to NULL so as to
+    // ensure that a new revision will actually be created.
+    if ($entity->isNewRevision() && isset($record->{$this->revisionKey})) {
+      $record->{$this->revisionKey} = NULL;
+    }
+
+    $this->preSaveRevision($record, $entity);
+
+    if ($entity->isNewRevision()) {
+      drupal_write_record($this->revisionTable, $record);
+      if ($entity->isDefaultRevision()) {
+        db_update($this->entityInfo['base_table'])
+          ->fields(array($this->revisionKey => $record->{$this->revisionKey}))
+          ->condition($this->idKey, $record->{$this->idKey})
+          ->execute();
+      }
+      $entity->setNewRevision(FALSE);
+    }
+    else {
+      drupal_write_record($this->revisionTable, $record, $this->revisionKey);
+    }
+    // Make sure to update the new revision key for the entity.
+    $entity->{$this->revisionKey}->value = $record->{$this->revisionKey};
+    return $record->{$this->revisionKey};
+  }
+
+  /**
    * Overrides DatabaseStorageController::invokeHook().
    *
    * Invokes field API attachers in compatibility mode and disables it
    * afterwards.
    */
   protected function invokeHook($hook, EntityInterface $entity) {
-    if (!empty($this->entityInfo['fieldable']) && function_exists($function = 'field_attach_' . $hook)) {
+    $function = 'field_attach_' . $hook;
+    // @todo: field_attach_delete_revision() is named the wrong way round,
+    // consider renaming it.
+    if ($function == 'field_attach_revision_delete') {
+      $function = 'field_attach_delete_revision';
+    }
+    if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
       $entity->setCompatibilityMode(TRUE);
       $function($this->entityType, $entity);
       $entity->setCompatibilityMode(FALSE);
@@ -237,6 +300,18 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     foreach ($this->entityInfo['schema_fields_sql']['base_table'] as $name) {
       $record->$name = $entity->$name->value;
     }
+    return $record;
+  }
+
+  /**
+   * Maps from an entity object to the storage record of the revision table.
+   */
+  protected function mapToRevisionStorageRecord(EntityInterface $entity) {
+    $record = new \stdClass();
+    foreach ($this->entityInfo['schema_fields_sql']['revision_table'] as $name) {
+      $record->$name = $entity->$name->value;
+    }
+
     return $record;
   }
 }

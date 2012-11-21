@@ -552,13 +552,16 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     $record = (array) $entity;
 
     // When saving a new revision, set any existing revision ID to NULL so as to
-    // ensure that a new revision will actually be created, then store the old
-    // revision ID in a separate property for use by hook implementations.
+    // ensure that a new revision will actually be created.
     if ($entity->isNewRevision() && $record[$this->revisionKey]) {
       $record[$this->revisionKey] = NULL;
     }
 
+    // Cast to object as preSaveRevision() expects one to be compatible with the
+    // upcoming NG storage controller.
+    $record = (object) $record;
     $this->preSaveRevision($record, $entity);
+    $record = (array) $record;
 
     if ($entity->isNewRevision()) {
       drupal_write_record($this->revisionTable, $record);
@@ -613,12 +616,12 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   /**
    * Act on a revision before being saved.
    *
-   * @param array $record
-   *   The revision array.
+   * @param \stdClass $record
+   *   The revision object.
    * @param Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    */
-  protected function preSaveRevision(array &$record, EntityInterface $entity) { }
+  protected function preSaveRevision(\stdClass $record, EntityInterface $entity) { }
 
   /**
    * Invokes a hook on behalf of the entity.

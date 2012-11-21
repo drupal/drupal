@@ -47,23 +47,31 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
    * @return array
    *   An array of entity objects implementing the EntityInterface.
    */
-  protected function mapFromStorageRecords(array $records) {
-    $records = parent::mapFromStorageRecords($records);
+  protected function mapFromStorageRecords(array $records, $load_revision = FALSE) {
+    $records = parent::mapFromStorageRecords($records, $load_revision);
 
     // Load data of translatable properties.
-    $this->attachPropertyData($records);
+    $this->attachPropertyData($records, $load_revision);
     return $records;
   }
 
   /**
    * Attaches property data in all languages for translatable properties.
    */
-  protected function attachPropertyData(&$queried_entities) {
-    $data = db_select('entity_test_property_data', 'data', array('fetch' => PDO::FETCH_ASSOC))
+  protected function attachPropertyData(&$queried_entities, $load_revision = FALSE) {
+    $query = db_select('entity_test_property_data', 'data', array('fetch' => PDO::FETCH_ASSOC))
       ->fields('data')
       ->condition('id', array_keys($queried_entities))
-      ->orderBy('data.id')
-      ->execute();
+      ->orderBy('data.id');
+    if ($load_revision) {
+      // Get revision id's.
+      $revision_ids = array();
+      foreach ($queried_entities as $id => $entity) {
+        $revision_ids[] = $entity->get('revision_id')->value;
+      }
+      $query->condition('revision_id', $revision_ids);
+    }
+    $data = $query->execute();
 
     foreach ($data as $values) {
       $id = $values['id'];
@@ -96,6 +104,7 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
 
       $values = array(
         'id' => $entity->id(),
+        'revision_id' => $entity->getRevisionId(),
         'langcode' => $langcode,
         'default_langcode' => intval($default_langcode == $langcode),
         'name' => $translation->name->value,
@@ -129,6 +138,12 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
       'type' => 'integer_field',
       'read-only' => TRUE,
     );
+    $fields['revision_id'] = array(
+      'label' => t('ID'),
+      'description' => t('The version id of the test entity.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
     $fields['uuid'] = array(
       'label' => t('UUID'),
       'description' => t('The UUID of the test entity.'),
@@ -138,6 +153,11 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
       'label' => t('Language code'),
       'description' => t('The language code of the test entity.'),
       'type' => 'language_field',
+    );
+    $fields['default_langcode'] = array(
+      'label' => t('Default language'),
+      'description' => t('Flag to inditcate whether this is the default language.'),
+      'type' => 'boolean_field',
     );
     $fields['name'] = array(
       'label' => t('Name'),
