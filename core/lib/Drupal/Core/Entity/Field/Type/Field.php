@@ -10,7 +10,7 @@ namespace Drupal\Core\Entity\Field\Type;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\Type\TypedData;
-use Drupal\user\User;
+use Drupal\user\Plugin\Core\Entity\User;
 use ArrayIterator;
 use IteratorAggregate;
 use InvalidArgumentException;
@@ -296,7 +296,7 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
   /**
    * Implements AccessibleInterface::access().
    */
-  public function access(User $account = NULL) {
+  public function access($operation = 'view', User $account = NULL) {
     // TODO: Implement access() method. Use item access.
   }
 }

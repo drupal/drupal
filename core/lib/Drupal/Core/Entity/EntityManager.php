@@ -60,6 +60,10 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *   Drupal\Core\Entity\EntityListController.
  * - render_controller_class: The name of the class that is used to render the
  *   entities. Defaults to Drupal\Core\Entity\EntityRenderController.
+ * - access_controller_class: The name of the class that is used for access
+ *   checks. The class must implement
+ *   Drupal\Core\Entity\EntityAccessControllerInterface. Defaults to
+ *   Drupal\Core\Entity\EntityAccessController.
  * - translation_controller_class: (optional) The name of the translation
  *   controller class that should be used to handle the translation process.
  *   See Drupal\translation_entity\EntityTranslationControllerInterface for more
@@ -212,6 +216,7 @@ class EntityManager extends PluginManagerBase {
     ),
     'list_controller_class' => 'Drupal\Core\Entity\EntityListController',
     'render_controller_class' => 'Drupal\Core\Entity\EntityRenderController',
+    'access_controller_class' => 'Drupal\Core\Entity\EntityAccessController',
     'static_cache' => TRUE,
     'translation' => array(),
     'bundles' => array(),

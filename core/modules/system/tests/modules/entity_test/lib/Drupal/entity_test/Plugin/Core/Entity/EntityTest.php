@@ -19,6 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test entity"),
  *   module = "entity_test",
  *   controller_class = "Drupal\entity_test\EntityTestStorageController",
+ *   access_controller_class = "Drupal\entity_test\EntityTestAccessController",
  *   form_controller_class = {
  *     "default" = "Drupal\entity_test\EntityTestFormController"
  *   },

@@ -233,8 +233,9 @@ class EntityTranslation extends TypedData implements IteratorAggregate, Accessib
   /**
    * Implements AccessibleInterface::access().
    */
-  public function access(\Drupal\user\User $account = NULL) {
-    // @todo implement
+  public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
+    $method = $operation . 'Access';
+    return entity_access_controller($this->parent->entityType())->$method($this->parent, $this->langcode, $account);
   }
 
   /**

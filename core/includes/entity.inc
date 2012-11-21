@@ -305,6 +305,27 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
 }
 
 /**
+ * Returns the entity access controller for the given entity type.
+ *
+ * @param string $entity_type
+ *   The type of the entity.
+ *
+ * @return \Drupal\Core\Entity\EntityAccessControllerInterface
+ *   An entity access controller instance.
+ *
+ * @see \Drupal\Core\Entity\EntityManager
+ */
+function entity_access_controller($entity_type) {
+  $controllers = &drupal_static(__FUNCTION__, array());
+  if (!isset($controllers[$entity_type])) {
+    $type_info = entity_get_info($entity_type);
+    $class = $type_info['access_controller_class'];
+    $controllers[$entity_type] = new $class($entity_type);
+  }
+  return $controllers[$entity_type];
+}
+
+/**
  * Returns an entity form controller for the given operation.
  *
  * Since there might be different scenarios in which an entity is edited,

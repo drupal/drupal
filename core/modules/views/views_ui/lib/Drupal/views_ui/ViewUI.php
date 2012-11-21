@@ -991,7 +991,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
-  public function access(\Drupal\user\User $account = NULL) {
+  public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
     return $this->__call(__FUNCTION__, func_get_args());
   }
 
