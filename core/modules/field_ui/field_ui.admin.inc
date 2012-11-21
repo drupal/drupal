@@ -41,7 +41,7 @@ function field_ui_fields_list() {
         }
 
         // Add the current instance.
-        $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
+        $admin_path = field_ui_bundle_admin_path($entity_type, $bundle);
         $rows[$field_name]['data'][2][] = $admin_path ? l($bundles[$entity_type][$bundle]['label'], $admin_path . '/fields') : $bundles[$entity_type][$bundle]['label'];
       }
     }
@@ -719,7 +719,7 @@ function field_ui_field_delete_form($form, &$form_state, $instance) {
   $entity_type = $instance['entity_type'];
   $field = field_info_field($instance['field_name']);
 
-  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
+  $admin_path = field_ui_bundle_admin_path($entity_type, $bundle);
 
   $form['entity_type'] = array('#type' => 'value', '#value' => $entity_type);
   $form['bundle'] = array('#type' => 'value', '#value' => $bundle);
@@ -766,7 +766,7 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
     drupal_set_message(t('There was a problem removing the %field from the %type content type.', array('%field' => $instance['label'], '%type' => $bundle_label)), 'error');
   }
 
-  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
+  $admin_path = field_ui_bundle_admin_path($entity_type, $bundle);
   $form_state['redirect'] = field_ui_get_destinations(array($admin_path . '/fields'));
 
   // Fields are purged on cron. However field module prevents disabling modules
@@ -1132,6 +1132,6 @@ function field_ui_next_destination($entity_type, $bundle) {
     unset($_REQUEST['destinations']);
     return field_ui_get_destinations($destinations);
   }
-  $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
+  $admin_path = field_ui_bundle_admin_path($entity_type, $bundle);
   return $admin_path . '/fields';
 }

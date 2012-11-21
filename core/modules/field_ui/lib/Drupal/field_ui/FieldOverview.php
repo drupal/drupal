@@ -21,7 +21,7 @@ class FieldOverview extends OverviewBase {
     $this->entity_type = $entity_type;
     $this->bundle = $bundle;
     $this->view_mode = 'form';
-    $this->adminPath = _field_ui_bundle_admin_path($this->entity_type, $this->bundle);
+    $this->adminPath = field_ui_bundle_admin_path($this->entity_type, $this->bundle);
   }
 
   /**
