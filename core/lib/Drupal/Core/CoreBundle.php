@@ -108,6 +108,8 @@ class CoreBundle extends Bundle
       ->addTag('nested_matcher', array('method' => 'setInitialMatcher'));
     $container->register('http_method_matcher', 'Drupal\Core\Routing\HttpMethodMatcher')
       ->addTag('nested_matcher', array('method' => 'addPartialMatcher'));
+    $container->register('mime_type_matcher', 'Drupal\Core\Routing\MimeTypeMatcher')
+      ->addTag('nested_matcher', array('method' => 'addPartialMatcher'));
     $container->register('first_entry_final_matcher', 'Drupal\Core\Routing\FirstEntryFinalMatcher')
       ->addTag('nested_matcher', array('method' => 'setFinalMatcher'));
 

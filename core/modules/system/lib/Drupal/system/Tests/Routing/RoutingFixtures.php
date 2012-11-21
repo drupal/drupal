@@ -61,6 +61,7 @@ class RoutingFixtures {
 
     $route = new Route('path/two');
     $route->setRequirement('_method', 'GET');
+    $route->setRequirement('_format', 'json');
     $collection->add('route_c', $route);
 
     $route = new Route('path/three');
@@ -68,6 +69,7 @@ class RoutingFixtures {
 
     $route = new Route('path/two');
     $route->setRequirement('_method', 'GET|HEAD');
+    $route->setRequirement('_format', 'html');
     $collection->add('route_e', $route);
 
     return $collection;
