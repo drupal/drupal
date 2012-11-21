@@ -354,6 +354,9 @@ function field_read_fields($params = array(), $include_additional = array()) {
       }
       $key = 'fci.' . $key;
     }
+    else {
+      $key = 'fc.' . $key;
+    }
 
     $query->condition($key, $value);
   }
