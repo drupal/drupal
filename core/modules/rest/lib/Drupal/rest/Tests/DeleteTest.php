@@ -34,18 +34,7 @@ class DeleteTest extends RESTTestBase {
    */
   public function testDelete() {
     foreach (entity_get_info() as $entity_type => $info) {
-      // Enable web API for this entity type.
-      $config = config('rest');
-      $config->set('resources', array(
-        'entity:' . $entity_type => 'entity:' . $entity_type,
-      ));
-      $config->save();
-
-      // Rebuild routing cache, so that the web API paths are available.
-      drupal_container()->get('router.builder')->rebuild();
-      // Reset the Simpletest permission cache, so that the new resource
-      // permissions get picked up.
-      drupal_static_reset('checkPermissions');
+      $this->enableService('entity:' . $entity_type);
       // Create a user account that has the required permissions to delete
       // resources via the web API.
       $account = $this->drupalCreateUser(array('restful delete entity:' . $entity_type));
@@ -81,6 +70,7 @@ class DeleteTest extends RESTTestBase {
       $this->assertNotIdentical(FALSE, entity_load($entity_type, $entity->id(), TRUE), 'The ' . $entity_type . ' entity is still in the database.');
     }
     // Try to delete a resource which is not web API enabled.
+    $this->enableService(FALSE);
     $account = $this->drupalCreateUser();
     // Reset cURL here because it is confused from our previously used cURL
     // options.
@@ -88,32 +78,7 @@ class DeleteTest extends RESTTestBase {
     $this->drupalLogin($account);
     $this->httpRequest('entity/user/' . $account->id(), 'DELETE');
     $user = entity_load('user', $account->id(), TRUE);
-    $this->assertEqual($account->id(), $user->id());
+    $this->assertEqual($account->id(), $user->id(), 'User still exists in the database.');
     $this->assertResponse(404);
-  }
-
-  /**
-   * Creates entity objects based on their types.
-   *
-   * Required properties differ from entity type to entity type, so we keep a
-   * minimum mapping here.
-   *
-   * @param string $entity_type
-   *   The type of the entity that should be created..
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The new entity object.
-   */
-  protected function entityCreate($entity_type) {
-    switch ($entity_type) {
-      case 'entity_test':
-        return entity_create('entity_test', array('name' => 'test', 'user_id' => 1));
-      case 'node':
-        return entity_create('node', array('title' => $this->randomString()));
-      case 'user':
-        return entity_create('user', array('name' => $this->randomName()));
-      default:
-        return entity_create($entity_type, array());
-    }
   }
 }

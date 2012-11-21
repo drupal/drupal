@@ -7,17 +7,19 @@
 
 namespace Drupal\rest\Plugin\rest\resource;
 
-use Drupal\rest\Plugin\ResourceBase;
 use Drupal\Core\Annotation\Plugin;
-use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Annotation\Translation;
+use Drupal\rest\Plugin\ResourceBase;
+use Drupal\rest\ResourceResponse;
+
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides a resource for database watchdog log entries.
  *
  * @Plugin(
- *  id = "dblog",
- *  label = "Watchdog database log"
+ *   id = "dblog",
+ *   label = @Translation("Watchdog database log")
  * )
  */
 class DBLogResource extends ResourceBase {
@@ -38,23 +40,24 @@ class DBLogResource extends ResourceBase {
    *
    * Returns a watchdog log entry for the specified ID.
    *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   The response object.
+   * @return \Drupal\rest\ResourceResponse
+   *   The response containing the log entry.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function get($id = NULL) {
     if ($id) {
-      $result = db_select('watchdog', 'w')
-        ->condition('wid', $id)
-        ->fields('w')
-        ->execute()
-        ->fetchAll();
-      if (empty($result)) {
-        throw new NotFoundHttpException('Not Found');
+      $result = db_query("SELECT * FROM {watchdog} WHERE wid = :wid", array(':wid' => $id))
+        ->fetchObject();
+      if (!empty($result)) {
+        // Serialization is done here, so we indicate with NULL that there is no
+        // subsequent serialization necessary.
+        $response = new ResourceResponse(NULL, 200, array('Content-Type' => 'application/json'));
+        // @todo remove hard coded format here.
+        $response->setContent(drupal_json_encode($result));
+        return $response;
       }
-      // @todo remove hard coded format here.
-      return new Response(drupal_json_encode($result[0]), 200, array('Content-Type' => 'application/json'));
     }
+    throw new NotFoundHttpException('Not Found');
   }
 }

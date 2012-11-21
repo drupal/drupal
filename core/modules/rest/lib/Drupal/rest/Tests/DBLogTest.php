@@ -19,7 +19,7 @@ class DBLogTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('rest', 'dblog');
+  public static $modules = array('jsonld', 'rest', 'dblog');
 
   public static function getInfo() {
     return array(
@@ -32,17 +32,7 @@ class DBLogTest extends RESTTestBase {
   public function setUp() {
     parent::setUp();
     // Enable web API for the watchdog resource.
-    $config = config('rest');
-    $config->set('resources', array(
-      'dblog' => 'dblog',
-    ));
-    $config->save();
-
-    // Rebuild routing cache, so that the web API paths are available.
-    drupal_container()->get('router.builder')->rebuild();
-    // Reset the Simpletest permission cache, so that the new resource
-    // permissions get picked up.
-    drupal_static_reset('checkPermissions');
+    $this->enableService('dblog');
   }
 
   /**
@@ -60,15 +50,16 @@ class DBLogTest extends RESTTestBase {
     $account = $this->drupalCreateUser(array('restful get dblog'));
     $this->drupalLogin($account);
 
-    $response = $this->httpRequest("dblog/$id", 'GET');
+    $response = $this->httpRequest("dblog/$id", 'GET', NULL, 'application/json');
     $this->assertResponse(200);
+    $this->assertHeader('Content-Type', 'application/json');
     $log = drupal_json_decode($response);
     $this->assertEqual($log['wid'], $id, 'Log ID is correct.');
     $this->assertEqual($log['type'], 'rest_test', 'Type of log message is correct.');
     $this->assertEqual($log['message'], 'Test message', 'Log message text is correct.');
 
     // Request an unknown log entry.
-    $response = $this->httpRequest("dblog/9999", 'GET');
+    $response = $this->httpRequest("dblog/9999", 'GET', NULL, 'application/json');
     $this->assertResponse(404);
     $this->assertEqual($response, 'Not Found', 'Response message is correct.');
   }
