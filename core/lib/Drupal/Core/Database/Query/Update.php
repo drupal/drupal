@@ -212,6 +212,10 @@ class Update extends Query implements ConditionInterface {
       if (!empty($data['arguments'])) {
         $update_values += $data['arguments'];
       }
+      if ($data['expression'] instanceof SelectInterface) {
+        $data['expression']->compile($this->connection, $this);
+        $update_values += $data['expression']->arguments();
+      }
       unset($fields[$field]);
     }
 
@@ -245,6 +249,11 @@ class Update extends Query implements ConditionInterface {
     $fields = $this->fields;
     $update_fields = array();
     foreach ($this->expressionFields as $field => $data) {
+      if ($data['expression'] instanceof SelectInterface) {
+        // Compile and cast expression subquery to a string.
+        $data['expression']->compile($this->connection, $this);
+        $data['expression'] = ' (' . $data['expression'] . ')';
+      }
       $update_fields[] = $field . '=' . $data['expression'];
       unset($fields[$field]);
     }
