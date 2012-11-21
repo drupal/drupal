@@ -212,7 +212,7 @@ abstract class WebTestBase extends TestBase {
    *   - status: NODE_PUBLISHED.
    *   - sticky: NODE_NOT_STICKY.
    *   - type: 'page'.
-   *   - langcode: LANGCODE_NOT_SPECIFIED. (If a 'langcode' key is provided in
+   *   - langcode: LANGUAGE_NOT_SPECIFIED. (If a 'langcode' key is provided in
    *     the array, this language code will also be used for a randomly
    *     generated body field for that language, and the body for
    *     LANGUAGE_NOT_SPECIFIED will remain empty.)
