@@ -58,13 +58,80 @@ small .admin-link:after {
 /**
  * Modules page.
  */
+#system-modules table {
+  table-layout: fixed;
+}
 #system-modules div.incompatible {
   font-weight: bold;
+}
+#system-modules th.checkbox {
+  width: 4%;
+}
+#system-modules th.name {
+  width: 25%;
+}
+#system-modules td {
+  vertical-align: top;
+}
+#system-modules .expand .inner {
+  background: transparent url(../../misc/menu-collapsed.png) left .6em no-repeat;
+  margin-left: -12px;
+  padding-left: 12px;
+}
+#system-modules .expanded .expand .inner {
+  background: transparent url(../../misc/menu-expanded.png) left .6em no-repeat;
+}
+#system-modules label {
+  color: #1d1d1d;
+  font-size: 1.15em;
+}
+#system-modules .description {
+  cursor: pointer;
+}
+#system-modules .description .inner {
+  color: #5c5c5b;
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden; /* truncates descriptions if too long */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#system-modules .expanded .description .inner {
+  height: auto;
+  overflow: visible;
+  white-space: normal;
+}
+#system-modules .expanded .description .text {
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+@media screen and (max-width: 40em) {
+  #system-modules th.name {
+    width: 20%;
+  }
+  #system-modules th.description {
+    width: 40%;
+  }
+}
+#system-modules .requirements {
+  padding: 5px 0;
+  max-width: 490px;
+}
+#system-modules .links {
+  overflow: hidden; /* prevents collapse */
+}
+#system-modules .checkbox {
+  margin: 0 5px;
+}
+#system-modules .checkbox .form-item {
+  margin-bottom: 0;
 }
 div.admin-requirements,
 div.admin-required {
   font-size: 0.9em;
-  color: #444;
+  color: #666;
 }
 span.admin-disabled {
   color: #800;
@@ -77,8 +144,10 @@ span.admin-missing {
 }
 a.module-link {
   display: block;
-  padding: 1px 0 1px 20px; /* LTR */
+  padding: 2px 20px;
   white-space: nowrap;
+  margin-top: 2px;
+  float: left; /* LTR */
 }
 a.module-link-help {
   background: url(../../misc/help.png) 0 50% no-repeat; /* LTR */

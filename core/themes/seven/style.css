@@ -1025,6 +1025,33 @@ div.add-or-remove-shortcuts {
   margin-bottom: 0;
 }
 
+/* Modules page */
+#system-modules fieldset {
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+#system-modules .fieldset-wrapper {
+  padding: 0;
+}
+#system-modules table {
+  border: 0;
+}
+#system-modules tr.even,
+#system-modules tr.odd {
+  background: #f3f4ee;
+  border: 0;
+  border-bottom: 10px solid #fff;
+}
+#system-modules tr td:last-child {
+  border: 0;
+}
+#system-modules table th {
+  border: 0;
+  border-bottom: 10px solid #fff;
+}
+#system-modules .sticky-header th {
+  border: 0;
+}
 /* Recent content block */
 #block-node-recent table,
 #block-node-recent tr {
