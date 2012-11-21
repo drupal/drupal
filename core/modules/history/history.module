@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Records which users has read which content.
+ * Records which users have read which content.
  *
  * @todo
  * - Generic helper for _forum_user_last_visit() + history_read().
