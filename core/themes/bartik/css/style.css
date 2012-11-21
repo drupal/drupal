@@ -128,6 +128,7 @@ table,
 input,
 textarea,
 select,
+.form-button,
 a.button {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
 }
@@ -1086,7 +1087,7 @@ div.password-confirm {
 
 /* ---------------- Buttons    ---------------- */
 
-input.form-submit,
+.form-button,
 a.button {
   background: #fff url(../images/buttons.png) 0 0 repeat-x;
   border: 1px solid #e4e4e4;
@@ -1103,13 +1104,15 @@ a.button {
   padding: 4px 17px;
   border-radius: 15px;
 }
-a.button:link,
-a.button:visited,
-a.button:hover,
+.form-button:focus,
+.form-button:hover,
+.form-button:active,
 a.button:focus,
+a.button:hover,
 a.button:active {
   text-decoration: none;
   color: #5a5a5a;
+  background: #dedede;
 }
 
 /* -------------- Form Elements   ------------- */
@@ -1244,6 +1247,7 @@ input.form-submit:focus {
 .form-actions {
   padding-top: 10px;
 }
+
 /* Contact Form */
 .contact-form #edit-name {
   width: 75%;
@@ -1264,16 +1268,24 @@ input.form-submit:focus {
 }
 
 /* Disabled form elements */
-input.form-button-disabled,
-input.form-button-disabled:hover,
-input.form-button-disabled:focus,
-input.form-button-disabled:active,
 .form-disabled input,
 .form-disabled select,
-.form-disabled textarea {
+.form-disabled textarea,
+.form-button-disabled,
+.form-button-disabled:hover,
+.form-button-disabled:focus,
+.form-button-disabled:active {
   background: #ededed;
   border-color: #bbb;
   color: #717171;
+}
+.image-button-disabled,
+.image-button-disabled:hover,
+.image-button-disabled:focus,
+.image-button-disabled:active {
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+  opacity: .5;
 }
 .form-disabled label {
   color: #717171;

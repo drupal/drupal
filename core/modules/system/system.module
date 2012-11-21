@@ -300,7 +300,7 @@ function system_element_info() {
   $types['submit'] = array(
     '#input' => TRUE,
     '#name' => 'op',
-    '#button_type' => 'submit',
+    '#is_button' => TRUE,
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
     '#process' => array('form_process_button', 'ajax_process_form'),
@@ -309,7 +309,7 @@ function system_element_info() {
   $types['button'] = array(
     '#input' => TRUE,
     '#name' => 'op',
-    '#button_type' => 'submit',
+    '#is_button' => TRUE,
     '#executes_submit_callback' => FALSE,
     '#limit_validation_errors' => FALSE,
     '#process' => array('form_process_button', 'ajax_process_form'),
@@ -317,7 +317,7 @@ function system_element_info() {
   );
   $types['image_button'] = array(
     '#input' => TRUE,
-    '#button_type' => 'submit',
+    '#is_button' => TRUE,
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
     '#process' => array('form_process_button', 'ajax_process_form'),

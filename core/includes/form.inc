@@ -1169,7 +1169,7 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
     // allow the value of the clicked button to be retained in its normal
     // $form_state['values'] locations, even if these locations are not included
     // in #limit_validation_errors.
-    if (isset($form_state['triggering_element']['#button_type'])) {
+    if (!empty($form_state['triggering_element']['#is_button'])) {
       $button_value = $form_state['triggering_element']['#value'];
 
       // Like all input controls, the button value may be in the location
@@ -1947,7 +1947,7 @@ function form_builder($form_id, &$element, &$form_state) {
     }
 
     // Special processing if the triggering element is a button.
-    if (isset($form_state['triggering_element']['#button_type'])) {
+    if (!empty($form_state['triggering_element']['#is_button'])) {
       // Because there are several ways in which the triggering element could
       // have been determined (including from input variables set by JavaScript
       // or fallback behavior implemented for IE), and because buttons often
@@ -2083,7 +2083,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     // If the form was submitted by the browser rather than via Ajax, then it
     // can only have been triggered by a button, and we need to determine which
     // button within the constraints of how browsers provide this information.
-    if (isset($element['#button_type'])) {
+    if (!empty($element['#is_button'])) {
       // All buttons in the form need to be tracked for
       // form_state_values_clean() and for the form_builder() code that handles
       // a form submission containing no button information in $_POST.
@@ -3929,6 +3929,9 @@ function theme_submit($variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #attributes, #button_type, #name, #value.
  *
+ * The #button_type property accepts any value, though core themes have css that
+ * styles the following button_types appropriately: 'primary', 'danger'.
+ *
  * @ingroup themeable
  */
 function theme_button($variables) {
@@ -3936,7 +3939,13 @@ function theme_button($variables) {
   $element['#attributes']['type'] = 'submit';
   element_set_attributes($element, array('id', 'name', 'value'));
 
-  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
+  $element['#attributes']['class'][] = 'form-button';
+  if (!empty($element['#button_type'])) {
+    $element['#attributes']['class'][] = 'form-button-' . $element['#button_type'];
+  }
+  // @todo Various JavaScript depends on this button class.
+  $element['#attributes']['class'][] = 'form-submit';
+
   if (!empty($element['#attributes']['disabled'])) {
     $element['#attributes']['class'][] = 'form-button-disabled';
   }
@@ -3952,6 +3961,9 @@ function theme_button($variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #attributes, #button_type, #name, #value, #title, #src.
  *
+ * The #button_type property accepts any value, though core themes have css that
+ * styles the following button_types appropriately: 'primary', 'danger'.
+ *
  * @ingroup themeable
  */
 function theme_image_button($variables) {
@@ -3965,9 +3977,15 @@ function theme_image_button($variables) {
     $element['#attributes']['title'] = $element['#title'];
   }
 
-  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
+  $element['#attributes']['class'][] = 'image-button';
+  if (!empty($element['#button_type'])) {
+    $element['#attributes']['class'][] = 'image-button-' . $element['#button_type'];
+  }
+  // @todo Various JavaScript depends on this button class.
+  $element['#attributes']['class'][] = 'form-submit';
+
   if (!empty($element['#attributes']['disabled'])) {
-    $element['#attributes']['class'][] = 'form-button-disabled';
+    $element['#attributes']['class'][] = 'image-button-disabled';
   }
 
   return '<input' . new Attribute($element['#attributes']) . ' />';

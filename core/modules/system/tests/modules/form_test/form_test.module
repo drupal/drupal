@@ -307,6 +307,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_required_attribute'),
     'access callback' => TRUE,
   );
+  $items['form-test/button-class'] = array(
+    'title' => 'Button class testing',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_button_class'),
+    'access callback' => TRUE,
+  );
 
   return $items;
 }
@@ -2308,5 +2314,18 @@ function form_test_html_id($form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Save',
   );
+  return $form;
+}
+
+/**
+ * Builds a simple form to test form button classes.
+ */
+function form_test_button_class($form, &$form_state) {
+  $form['button'] = array(
+    '#value' => 'test',
+    '#type' => 'button',
+    '#button_type' => 'foo',
+  );
+
   return $form;
 }

@@ -99,6 +99,12 @@ class EntityFormController implements EntityFormControllerInterface {
       $delete = $element['delete'];
       unset($element['delete']);
       $element['delete'] = $delete;
+      $element['delete']['#button_type'] = 'danger';
+    }
+
+    if (isset($element['submit'])) {
+      // Give the primary submit button a #button_type of primary.
+      $element['submit']['#button_type'] = 'primary';
     }
 
     $count = 0;

@@ -146,7 +146,7 @@ ul.tips {
 
 /* ----------------- Buttons ------------------ */
 
-input.form-submit,
+.form-button,
 a.button {
   margin-right: 0;
   margin-left: 0.6em;

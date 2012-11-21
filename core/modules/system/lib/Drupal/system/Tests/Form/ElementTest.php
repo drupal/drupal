@@ -92,4 +92,18 @@ class ElementTest extends WebTestBase {
       )));
     }
   }
+
+  /**
+   * Tests button classes.
+   */
+  function testButtonClasses() {
+    $this->drupalGet('form-test/button-class');
+    // Just contains(@class, "form-button") won't do because then
+    //  form-button-foo would contain form-button. Instead, check
+    // ' form-button '. Make sure it matches in the beginning and the end too
+    // by adding a space before and after.
+    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " form-button ")]')));
+    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " form-button-foo ")]')));
+  }
+
 }

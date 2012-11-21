@@ -204,6 +204,9 @@ class CommentFormController extends EntityFormController {
     // No delete action on the comment form.
     unset($element['delete']);
 
+    // Mark the submit action as the primary action, when it appears.
+    $element['submit']['#button_type'] = 'primary';
+
     // Only show the save button if comment previews are optional or if we are
     // already previewing the submission.
     $element['submit']['#access'] = ($comment->cid && user_access('administer comments')) || $preview_mode != DRUPAL_REQUIRED || isset($form_state['comment_preview']);

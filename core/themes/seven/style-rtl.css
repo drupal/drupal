@@ -127,8 +127,9 @@ body div.form-type-checkbox div.description {
   margin-left: 0;
   margin-right: 1.5em;
 }
-input.form-submit,
-a.button {
+a.button,
+.form-button,
+.image-button {
   margin-left: 1em;
   margin-right: 0;
 }

@@ -21,16 +21,10 @@ class ProfileFormController extends AccountFormController {
     $element = parent::actions($form, $form_state);
     $account = $this->getEntity($form_state);
 
-    // @todo Actually the cancel action can be assimilated to the delete one: we
-    // should alter it instead of providing a new one.
-    unset($element['delete']);
-
-    $element['cancel'] = array(
-      '#type' => 'submit',
-      '#value' => t('Cancel account'),
-      '#submit' => array('user_edit_cancel_submit'),
-      '#access' => $account->uid > 1 && (($account->uid == $GLOBALS['user']->uid && user_access('cancel account')) || user_access('administer users')),
-    );
+    $element['delete']['#type'] = 'submit';
+    $element['delete']['#value'] = t('Cancel account');
+    $element['delete']['#submit'] = array('user_edit_cancel_submit');
+    $element['delete']['#access'] = $account->uid > 1 && (($account->uid == $GLOBALS['user']->uid && user_access('cancel account')) || user_access('administer users'));
 
     return $element;
   }

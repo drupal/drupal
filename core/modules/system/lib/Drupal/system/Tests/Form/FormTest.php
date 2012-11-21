@@ -569,9 +569,13 @@ class FormTest extends WebTestBase {
         continue;
       }
       // Setup XPath and CSS class depending on #type.
-      if (in_array($item['#type'], array('image_button', 'button', 'submit'))) {
+      if (in_array($item['#type'], array('button', 'submit'))) {
         $path = "//!type[contains(@class, :div-class) and @value=:value]";
         $class = 'form-button-disabled';
+      }
+      elseif (in_array($item['#type'], array('image_button'))) {
+        $path = "//!type[contains(@class, :div-class) and @value=:value]";
+        $class = 'image-button-disabled';
       }
       else {
         // starts-with() required for checkboxes.

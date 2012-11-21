@@ -2313,7 +2313,7 @@ function views_fetch_fields($base, $type, $grouping = FALSE, $sub_type = NULL) {
  */
 function views_ui_form_button_was_clicked($element, &$form_state) {
   $process_input = empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
-  if ($process_input && !isset($form_state['triggering_element']) && isset($element['#button_type']) && isset($form_state['input'][$element['#name']]) && isset($element['#values']) && in_array($form_state['input'][$element['#name']], $element['#values'], TRUE)) {
+  if ($process_input && !isset($form_state['triggering_element']) && !empty($element['#is_button']) && isset($form_state['input'][$element['#name']]) && isset($element['#values']) && in_array($form_state['input'][$element['#name']], $element['#values'], TRUE)) {
     $form_state['triggering_element'] = $element;
   }
   return $element;

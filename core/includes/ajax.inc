@@ -631,7 +631,7 @@ function ajax_pre_render_element($element) {
       // If the element is a (non-image) button, its name may not identify it
       // uniquely, in which case a match on value is also needed.
       // @see _form_button_was_clicked()
-      if (isset($element['#button_type']) && empty($element['#has_garbage_value'])) {
+      if (!empty($element['#is_button']) && empty($element['#has_garbage_value'])) {
         $settings['submit']['_triggering_element_value'] = $element['#value'];
       }
     }

@@ -615,12 +615,16 @@ body div.form-type-radio div.description,
 body div.form-type-checkbox div.description {
   margin-left: 1.5em; /* LTR */
 }
-input.form-submit,
-a.button {
-  cursor: pointer;
-  padding: 4px 17px;
+a.button,
+.form-button,
+.image-button {
   margin-bottom: 1em;
   margin-right: 1em; /* LTR */
+}
+a.button,
+.form-button {
+  cursor: pointer;
+  padding: 4px 17px;
   color: #5a5a5a;
   text-align: center;
   font-weight: normal;
@@ -630,29 +634,29 @@ a.button {
   border-bottom: 1px solid #b4b4b4;
   border-left-color: #d2d2d2;
   border-right-color: #d2d2d2;
-  background: url(images/buttons.png) 0 0 repeat-x;
+  background-color: #e4e4e4;
   border-radius: 20px;
 }
-a.button:link,
-a.button:visited,
 a.button:hover,
-a.button:active {
+a.button:active,
+.form-button:hover,
+.form-button:active {
   text-decoration: none;
 }
-input.form-submit:hover,
-input.form-submit:focus,
+a.button:focus,
 a.button:hover,
-a.button:focus {
-  background-position: 0 -40px;
+.form-button:focus,
+.form-button:hover {
+  background-color: #c0c0c0;
   border: 1px solid #bebebe;
   border-left-color: #afafaf;
   border-right-color: #afafaf;
   border-bottom-color: #9b9b9b;
   color: #2e2e2e;
 }
-input.form-submit:active,
-a.button:active {
-  background-position: 0 -80px;
+a.button:active,
+.form-button:active {
+  background-color: #565656;
   border: 1px solid #333;
   border-left-color: #222;
   border-right-color: #222;
@@ -660,9 +664,26 @@ a.button:active {
   color: #fff;
   text-shadow: #222 0 -1px 0;
 }
-input.form-button-disabled,
-input.form-button-disabled:active {
-  background: #eee none;
+.form-button-primary {
+  background-color: #9dcae7;
+  border: 1px solid #8eB7cd;
+  border-bottom-color: #7691a2;
+  color: #133B54;
+}
+.form-button-primary:focus,
+.form-button-primary:hover {
+  background-color: #73b3dd;
+  border: 1px solid #6ea3bf;
+  border-bottom-color: #4680a0;
+}
+.form-button-primary:active {
+  background-color: #3981b1;
+  border: 1px solid #36647c;
+  border-bottom-color: #284657;
+}
+.form-button-disabled,
+.form-button-disabled:active {
+  background-color: #eee;
   border-color: #eee;
   text-shadow: none;
   color: #999;
