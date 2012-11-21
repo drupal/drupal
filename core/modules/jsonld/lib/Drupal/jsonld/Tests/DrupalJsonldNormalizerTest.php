@@ -9,21 +9,30 @@ namespace Drupal\jsonld\Tests;
 
 use Drupal\config\Tests\ConfigEntityTest;
 use Drupal\Core\Language\Language;
-use Drupal\jsonld\DrupalJsonldNormalizer;
+use Drupal\jsonld\JsonldEntityNormalizer;
+use Drupal\jsonld\JsonldEntityReferenceNormalizer;
+use Drupal\jsonld\JsonldFieldItemNormalizer;
 use Drupal\jsonld\Tests\JsonldNormalizerTestBase;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Test the vendor specific JSON-LD normalizer.
  */
 class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
+
   /**
-   * The normalizer to be tested.
+   * The format being tested.
    */
-  protected $normalizer;
+  protected static $format = 'drupal_jsonld';
+
+  /**
+   * The Normalizers to be tested.
+   */
+  protected $normalizers;
 
   public static function getInfo() {
     return array(
-      'name' => 'Drupal JSON-LD Normalizer',
+      'name' => 'vnd.drupal.ld+json Normalization',
       'description' => "Test Drupal's vendor specific JSON-LD normalizer.",
       'group' => 'JSON-LD',
     );
@@ -35,25 +44,34 @@ class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->normalizer = new DrupalJsonldNormalizer();
+    $this->normalizers = array(
+      'entityreference' => new JsonldEntityReferenceNormalizer(),
+      'field_item' => new JsonldFieldItemNormalizer(),
+      'entity' => new JsonldEntityNormalizer(),
+    );
+    $serializer = new Serializer($this->normalizers);
+    $this->normalizers['entity']->setSerializer($serializer);
   }
 
   /**
    * Tests the supportsNormalization function.
    */
   public function testSupportsNormalization() {
-    $function = 'DrupalJsonldNormalizer::supportsNormlization';
-    $supportedFormat = 'drupal_jsonld';
-    $unsupportedFormat = 'jsonld';
+    $format = static::$format;
     $supportedEntity = entity_create('entity_test', array());
     $unsupportedEntity = new ConfigEntityTest();
+    $field = $supportedEntity->get('uuid');
+    $entityreferenceField = $supportedEntity->get('user_id');
 
-    // Supported entity, supported format.
-    $this->assertTrue($this->normalizer->supportsNormalization($supportedEntity, $supportedFormat), "$function returns TRUE for supported format.");
-    // Supported entity, unsupported format.
-    $this->assertFalse($this->normalizer->supportsNormalization($supportedEntity, $unsupportedFormat), "$function returns FALSE for unsupported format.");
-    // Unsupported entity, supported format.
-    $this->assertFalse($this->normalizer->supportsNormalization($unsupportedEntity, $supportedFormat), "$function returns FALSE for unsupported entity type.");
+    // Supported entity.
+    $this->assertTrue($this->normalizers['entity']->supportsNormalization($supportedEntity, static::$format), "Entity normalization is supported for $format on content entities.");
+    // Unsupported entity.
+    $this->assertFalse($this->normalizers['entity']->supportsNormalization($unsupportedEntity, static::$format), "Normalization is not supported for other entity types.");
+
+    // Field item.
+    $this->assertTrue($this->normalizers['field_item']->supportsNormalization($field->offsetGet(0), static::$format), "Field item normalization is supported for $format.");
+    // Entity reference field item.
+    $this->assertTrue($this->normalizers['entityreference']->supportsNormalization($entityreferenceField->offsetGet(0), static::$format), "Entity reference field item normalization is supported for $format.");
   }
 
   /**
@@ -92,14 +110,14 @@ class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
       'uuid' => array(
         'und' => array(
           array(
-            'value' => $entity->uuid()
+            'value' => $entity->uuid(),
           ),
         ),
       ),
       'user_id' => array(
         'de' => array(
           array(
-            'value' => 1,
+            '@id' => url('user/' . $values['user_id'], array('absolute' => TRUE)),
           ),
         ),
       ),
@@ -125,7 +143,7 @@ class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
       ),
     );
 
-    $normalized = $this->normalizer->normalize($entity);
+    $normalized = $this->normalizers['entity']->normalize($entity, static::$format);
     // Test ordering. The @context and @id properties should always be first.
     $keys = array_keys($normalized);
     $this->assertEqual($keys[0], '@id', '@id and @context attributes placed correctly.');

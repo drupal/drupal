@@ -22,9 +22,41 @@ class JsonldBundle extends Bundle {
   public function build(ContainerBuilder $container) {
     $priority = 5;
 
-    $container->register('serializer.normalizer.jsonld', 'Drupal\jsonld\JsonldNormalizer')->addTag('normalizer', array('priority' => $priority));
-    $container->register('serializer.encoder.jsonld', 'Drupal\jsonld\JsonldEncoder')->addTag('encoder', array('priority' => $priority));
-    $container->register('serializer.normalizer.drupal_jsonld', 'Drupal\jsonld\DrupalJsonldNormalizer')->addTag('normalizer', array('priority' => $priority));
-    $container->register('serializer.encoder.drupal_jsonld', 'Drupal\jsonld\DrupalJsonldEncoder')->addTag('encoder', array('priority' => $priority));
+    // Normalizers can be specified to support a particular class and format in
+    // Normalizer::supportsNormalization(). Since the first matching Normalizer
+    // is used, Normalizers should be ordered from most specific to least
+    // specific.
+    $normalizers = array(
+      // Field Item.
+      'entity_reference' => array(
+        'jsonld' => 'Drupal\jsonld\JsonldEntityReferenceNormalizer',
+      ),
+      'field_item' => array(
+        'jsonld' => 'Drupal\jsonld\JsonldFieldItemNormalizer',
+      ),
+      // Entity.
+      'entity' => array(
+        'jsonld' => 'Drupal\jsonld\JsonldEntityNormalizer',
+      ),
+    );
+    // Encoders can only specify which format they support in
+    // Encoder::supportsEncoding().
+    $encoders = array(
+      'jsonld' => 'Drupal\jsonld\JsonldEncoder',
+    );
+
+    // Add Normalizers to service container.
+    foreach ($normalizers as $supported_class => $formats) {
+      foreach ($formats as $format => $normalizer_class) {
+        $container->register("serializer.normalizer.{$supported_class}.{$format}", $normalizer_class)
+          ->addTag('normalizer', array('priority' => $priority));
+      }
+    }
+
+    // Add Encoders to service container.
+    foreach ($encoders as $format => $encoder_class) {
+      $container->register("serializer.encoder.{$format}", $encoder_class)
+        ->addTag('encoder', array('priority' => $priority));
+    }
   }
 }

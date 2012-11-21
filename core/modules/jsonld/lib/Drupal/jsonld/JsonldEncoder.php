@@ -18,11 +18,11 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 class JsonldEncoder extends JsonEncoder implements EncoderInterface {
 
   /**
-   * The format that this Encoder supports.
+   * The formats that this Encoder supports.
    *
-   * @var string
+   * @var array
    */
-  static protected $format = 'jsonld';
+  static protected $format = array('jsonld', 'drupal_jsonld');
 
   /**
    * Check whether the request is for JSON-LD.
@@ -34,6 +34,6 @@ class JsonldEncoder extends JsonEncoder implements EncoderInterface {
    *   Returns TRUE if the encoder can handle the request.
    */
   public function supportsEncoding($format) {
-    return static::$format === $format;
+    return in_array($format, static::$format);
   }
 }
