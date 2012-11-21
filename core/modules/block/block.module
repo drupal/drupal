@@ -851,7 +851,7 @@ function block_block_list_alter(&$blocks) {
       if ($block->visibility < BLOCK_VISIBILITY_PHP) {
         // Compare the lowercase path alias (if any) and internal path.
         $path = current_path();
-        $path_alias = drupal_strtolower(drupal_get_path_alias($path));
+        $path_alias = drupal_strtolower(drupal_container()->get('path.alias_manager')->getPathAlias($path));
         $page_match = drupal_match_path($path_alias, $pages) || (($path != $path_alias) && drupal_match_path($path, $pages));
         // When $block->visibility has a value of 0 (BLOCK_VISIBILITY_NOTLISTED),
         // the block is displayed on all pages except those listed in $block->pages.

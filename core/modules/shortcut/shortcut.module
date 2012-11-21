@@ -616,7 +616,7 @@ function shortcut_set_title_exists($title) {
  */
 function shortcut_valid_link($path) {
   // Do not use URL aliases.
-  $normal_path = drupal_get_normal_path($path);
+  $normal_path = drupal_container()->get('path.alias_manager')->getSystemPath($path);
   if ($path != $normal_path) {
     $path = $normal_path;
   }

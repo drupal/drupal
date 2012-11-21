@@ -13,6 +13,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterNestedMatchersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -82,6 +83,20 @@ class CoreBundle extends Bundle
     $container->register('nested_matcher', 'Drupal\Core\Routing\NestedMatcher')
       ->addTag('chained_matcher', array('priority' => 5));
 
+    $container
+      ->register('cache.path', 'Drupal\Core\Cache\CacheBackendInterface')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('path');
+
+    $container->register('path.alias_manager.cached', 'Drupal\Core\CacheDecorator\AliasManagerCacheDecorator')
+      ->addArgument(new Reference('path.alias_manager'))
+      ->addArgument(new Reference('cache.path'));
+
+    $container->register('path.crud', 'Drupal\Core\Path\Path')
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('path.alias_manager'));
+
     // The following services are tagged as 'nested_matcher' services and are
     // processed in the RegisterNestedMatchersPass compiler pass. Each one
     // needs to be set on the matcher using a different method, so we use a
@@ -110,6 +125,7 @@ class CoreBundle extends Bundle
     $container->register('maintenance_mode_subscriber', 'Drupal\Core\EventSubscriber\MaintenanceModeSubscriber')
       ->addTag('event_subscriber');
     $container->register('path_subscriber', 'Drupal\Core\EventSubscriber\PathSubscriber')
+      ->addArgument(new Reference('path.alias_manager.cached'))
       ->addTag('event_subscriber');
     $container->register('legacy_request_subscriber', 'Drupal\Core\EventSubscriber\LegacyRequestSubscriber')
       ->addTag('event_subscriber');

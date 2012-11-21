@@ -27,32 +27,6 @@ function url_alter_test_foo() {
 }
 
 /**
- * Implements hook_url_inbound_alter().
- */
-function url_alter_test_url_inbound_alter(&$path, $original_path, $path_language) {
-  if (!request_path() && current_path()) {
-    drupal_set_message("current_path() is non-empty with an empty request path.");
-  }
-
-  // Rewrite user/username to user/uid.
-  if (preg_match('!^user/([^/]+)(/.*)?!', $path, $matches)) {
-    if ($account = user_load_by_name($matches[1])) {
-      $matches += array(2 => '');
-      $path = 'user/' . $account->uid . $matches[2];
-    }
-  }
-
-  // Rewrite community/ to forum/.
-  if ($path == 'community' || strpos($path, 'community/') === 0) {
-    $path = 'forum' . substr($path, 9);
-  }
-
-  if ($path == 'url-alter-test/bar') {
-    $path = 'url-alter-test/foo';
-  }
-}
-
-/**
  * Implements hook_url_outbound_alter().
  */
 function url_alter_test_url_outbound_alter(&$path, &$options, $original_path) {

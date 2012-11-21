@@ -20,7 +20,7 @@
  *   - pid: Unique path alias identifier.
  *   - langcode: The language code of the alias.
  *
- * @see path_save()
+ * @see \Drupal\Core\Path\Path::save()
  */
 function hook_path_insert($path) {
   db_insert('mytable')
@@ -41,7 +41,7 @@ function hook_path_insert($path) {
  *   - pid: Unique path alias identifier.
  *   - langcode: The language code of the alias.
  *
- * @see path_save()
+ * @see \Drupal\Core\Path\Path::save()
  */
 function hook_path_update($path) {
   db_update('mytable')
@@ -60,7 +60,7 @@ function hook_path_update($path) {
  *   - pid: Unique path alias identifier.
  *   - langcode: The language code of the alias.
  *
- * @see path_delete()
+ * @see \Drupal\Core\Path\Path::delete()
  */
 function hook_path_delete($path) {
   db_delete('mytable')

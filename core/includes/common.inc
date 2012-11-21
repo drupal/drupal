@@ -2208,7 +2208,7 @@ function url($path = NULL, array $options = array()) {
   }
   elseif (!empty($path) && !$options['alias']) {
     $langcode = isset($options['language']) && isset($options['language']->langcode) ? $options['language']->langcode : '';
-    $alias = drupal_get_path_alias($original_path, $langcode);
+    $alias = drupal_container()->get('path.alias_manager')->getPathAlias($original_path, $langcode);
     if ($alias != $original_path) {
       $path = $alias;
     }
@@ -4921,9 +4921,6 @@ function _drupal_bootstrap_full($skip = FALSE) {
   // Initialize language (which can strip path prefix) prior to initializing
   // current_path().
   drupal_language_initialize();
-
-  // Initialize current_path() prior to invoking hook_init().
-  drupal_path_initialize();
 
   // Let all modules take action before the menu system handles the request.
   // We do not want this while running update.php.

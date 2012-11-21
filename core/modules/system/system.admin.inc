@@ -1410,10 +1410,11 @@ function system_site_information_settings($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => t('Front page'),
   );
+  $front_page = $site_config->get('page.front') != 'user' ? drupal_container()->get('path.alias_manager')->getPathAlias($site_config->get('page.front')) : '';
   $form['front_page']['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
-    '#default_value' => ($site_config->get('page.front') != 'user' ? drupal_get_path_alias($site_config->get('page.front')) : ''),
+    '#default_value' => $front_page,
     '#size' => 40,
     '#description' => t('Optionally, specify a relative URL to display as the front page. Leave blank to display the default front page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
@@ -1455,7 +1456,7 @@ function system_site_information_settings_validate($form, &$form_state) {
   }
   else {
     // Get the normal path of the front page.
-    form_set_value($form['front_page']['site_frontpage'], drupal_get_normal_path($form_state['values']['site_frontpage']), $form_state);
+    form_set_value($form['front_page']['site_frontpage'], drupal_container()->get('path.alias_manager')->getSystemPath($form_state['values']['site_frontpage']), $form_state);
   }
   // Validate front page path.
   if (!drupal_valid_path($form_state['values']['site_frontpage'])) {
@@ -1463,10 +1464,10 @@ function system_site_information_settings_validate($form, &$form_state) {
   }
   // Get the normal paths of both error pages.
   if (!empty($form_state['values']['site_403'])) {
-    form_set_value($form['error_page']['site_403'], drupal_get_normal_path($form_state['values']['site_403']), $form_state);
+    form_set_value($form['error_page']['site_403'], drupal_container()->get('path.alias_manager')->getSystemPath($form_state['values']['site_403']), $form_state);
   }
   if (!empty($form_state['values']['site_404'])) {
-    form_set_value($form['error_page']['site_404'], drupal_get_normal_path($form_state['values']['site_404']), $form_state);
+    form_set_value($form['error_page']['site_404'], drupal_container()->get('path.alias_manager')->getSystemPath($form_state['values']['site_404']), $form_state);
   }
   // Validate 403 error path.
   if (!empty($form_state['values']['site_403']) && !drupal_valid_path($form_state['values']['site_403'])) {

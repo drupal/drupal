@@ -417,7 +417,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
  */
 function menu_edit_item_validate($form, &$form_state) {
   $item = &$form_state['values'];
-  $normal_path = drupal_get_normal_path($item['link_path']);
+  $normal_path = drupal_container()->get('path.alias_manager')->getSystemPath($item['link_path']);
   if ($item['link_path'] != $normal_path) {
     drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $item['link_path'], '%normal_path' => $normal_path)));
     $item['link_path'] = $normal_path;

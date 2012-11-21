@@ -40,41 +40,43 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $name = $account->name;
 
     // Test a single altered path.
-    $this->assertUrlInboundAlter("user/$name", "user/$uid");
+    $this->drupalGet("user/$name");
+    $this->assertResponse('200', 'The user/username path gets resolved correctly');
     $this->assertUrlOutboundAlter("user/$uid", "user/$name");
 
     // Test that a path always uses its alias.
     $path = array('source' => "user/$uid/test1", 'alias' => 'alias/test1');
-    path_save($path);
+    drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
     $this->assertUrlInboundAlter('alias/test1', "user/$uid/test1");
     $this->assertUrlOutboundAlter("user/$uid/test1", 'alias/test1');
 
-    // Test that alias source paths are normalized in the interface.
-    $edit = array('source' => "user/$name/edit", 'alias' => 'alias/test2');
+    // Test adding an alias via the UI.
+    $edit = array('source' => "user/$uid/edit", 'alias' => 'alias/test2');
     $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
     $this->assertText(t('The alias has been saved.'));
-
-    // Test that a path always uses its alias.
-    $this->assertUrlInboundAlter('alias/test2', "user/$uid/edit");
+    $this->drupalGet('alias/test2');
+    $this->assertResponse('200', 'The path alias gets resolved correctly');
     $this->assertUrlOutboundAlter("user/$uid/edit", 'alias/test2');
 
     // Test a non-existent user is not altered.
     $uid++;
-    $this->assertUrlInboundAlter("user/$uid", "user/$uid");
     $this->assertUrlOutboundAlter("user/$uid", "user/$uid");
 
     // Test that 'forum' is altered to 'community' correctly, both at the root
     // level and for a specific existing forum.
-    $this->assertUrlInboundAlter('community', 'forum');
+    $this->drupalGet('community');
+    $this->assertText('General discussion', 'The community path gets resolved correctly');
     $this->assertUrlOutboundAlter('forum', 'community');
     $forum_vid = config('forum.settings')->get('vocabulary');
+    $term_name = $this->randomName();
     $tid = db_insert('taxonomy_term_data')
       ->fields(array(
-        'name' => $this->randomName(),
+        'name' => $term_name,
         'vid' => $forum_vid,
       ))
       ->execute();
-    $this->assertUrlInboundAlter("community/$tid", "forum/$tid");
+    $this->drupalGet("community/$tid");
+    $this->assertText($term_name, 'The community/{tid} path gets resolved correctly');
     $this->assertUrlOutboundAlter("forum/$tid", "community/$tid");
   }
 
@@ -85,14 +87,6 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $this->drupalGet('url-alter-test/bar');
     $this->assertRaw('request_path=url-alter-test/bar', 'request_path() returns the requested path.');
     $this->assertRaw('current_path=url-alter-test/foo', 'current_path() returns the internal path.');
-  }
-
-  /**
-   * Tests that current_path() is initialized when the request path is empty.
-   */
-  function testGetQInitialized() {
-    $this->drupalGet('');
-    $this->assertText("current_path() is non-empty with an empty request path.", 'current_path() is initialized with an empty request path.');
   }
 
   /**
@@ -118,7 +112,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
    *
    * @param $original
    *   A string with the aliased or un-normal path that is run through
-   *   drupal_get_normal_path().
+   *   drupal_container()->get('path.alias_manager')->getSystemPath().
    * @param $final
    *   A string with the expected result after url().
    * @return
@@ -126,7 +120,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
    */
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
-    $result = drupal_get_normal_path($original);
+    $result = drupal_container()->get('path.alias_manager')->getSystemPath($original);
     $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 }

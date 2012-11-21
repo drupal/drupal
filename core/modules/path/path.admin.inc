@@ -75,7 +75,7 @@ function path_admin_overview($keys = NULL) {
 
     // If the system path maps to a different URL alias, highlight this table
     // row to let the user know of old aliases.
-    if ($data->alias != drupal_get_path_alias($data->source, $data->langcode)) {
+    if ($data->alias != drupal_container()->get('path.alias_manager')->getPathAlias($data->source, $data->langcode)) {
       $row['class'] = array('warning');
     }
 
@@ -217,7 +217,7 @@ function path_admin_form_delete_submit($form, &$form_state) {
  */
 function path_admin_form_validate($form, &$form_state) {
   $source = &$form_state['values']['source'];
-  $source = drupal_get_normal_path($source);
+  $source = drupal_container()->get('path.alias_manager')->getSystemPath($source);
   $alias = $form_state['values']['alias'];
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if language.module is enabled, otherwise save for all
@@ -249,7 +249,15 @@ function path_admin_form_submit($form, &$form_state) {
   // Remove unnecessary values.
   form_state_values_clean($form_state);
 
-  path_save($form_state['values']);
+  $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
+  $source = &$form_state['values']['source'];
+  $source = drupal_container()->get('path.alias_manager')->getSystemPath($source);
+  $alias = $form_state['values']['alias'];
+  // Language is only set if language.module is enabled, otherwise save for all
+  // languages.
+  $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LANGUAGE_NOT_SPECIFIED;
+
+  drupal_container()->get('path.crud')->save($source, $alias, $langcode, $pid);
 
   drupal_set_message(t('The alias has been saved.'));
   $form_state['redirect'] = 'admin/config/search/path';
@@ -281,7 +289,7 @@ function path_admin_delete_confirm($form, &$form_state, $path) {
  */
 function path_admin_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
-    path_delete($form_state['path']['pid']);
+    drupal_container()->get('path.crud')->delete(array('pid' => $form_state['path']['pid']));
     $form_state['redirect'] = 'admin/config/search/path';
   }
 }

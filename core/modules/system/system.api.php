@@ -3476,7 +3476,7 @@ function hook_system_themes_page_alter(&$theme_groups) {
  * @param $path_language
  *   The language of the path.
  *
- * @see drupal_get_normal_path()
+ * @see \Drupal\Core\Path\AliasManager::getSystemPath()
  */
 function hook_url_inbound_alter(&$path, $original_path, $path_language) {
   // Create the path user/me/edit, which allows a user to edit their account.

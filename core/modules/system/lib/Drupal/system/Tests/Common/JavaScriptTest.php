@@ -176,7 +176,7 @@ class JavaScriptTest extends WebTestBase {
     $this->drupalGet('common-test/query-string');
     $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
     $path = array('source' => 'common-test/query-string', 'alias' => 'common-test/currentpath-check');
-    path_save($path);
+    drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
     $this->drupalGet('common-test/currentpath-check');
     $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings for an aliased path');
   }

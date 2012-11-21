@@ -252,7 +252,7 @@ for ($i = 0; $i < 12; $i++) {
     'alias' => "content/poll/$i/results",
     'source' => "node/$node->nid/results",
   );
-  path_save($path);
+  drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
 
   // Add some votes
   $node = node_load($node->nid);

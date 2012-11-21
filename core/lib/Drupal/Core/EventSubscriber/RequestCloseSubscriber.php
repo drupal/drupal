@@ -29,7 +29,6 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    */
   public function onTerminate(PostResponseEvent $event) {
     module_invoke_all('exit');
-    drupal_cache_system_paths();
     module_implements_write_cache();
     system_run_automated_cron();
   }
@@ -41,7 +40,7 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::TERMINATE][] = array('onTerminate');
+    $events[KernelEvents::TERMINATE][] = array('onTerminate', 100);
 
     return $events;
   }

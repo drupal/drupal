@@ -760,6 +760,12 @@ abstract class WebTestBase extends TestBase {
     variable_set('mail_system', array('default-system' => 'Drupal\Core\Mail\VariableLog'));
 
     drupal_set_time_limit($this->timeLimit);
+    // Temporary fix so that when running from run-tests.sh we don't get an
+    // empty current path which would indicate we're on the home page.
+    $path = current_path();
+    if (empty($path)) {
+      _current_path('run-tests');
+    }
     $this->setup = TRUE;
   }
 

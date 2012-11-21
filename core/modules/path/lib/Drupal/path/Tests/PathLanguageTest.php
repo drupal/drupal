@@ -82,7 +82,7 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Clear the path lookup cache.
-    drupal_lookup_path('wipe');
+    drupal_container()->get('path.alias_manager')->cacheClear();
 
     // Ensure the node was created.
     $french_node = $this->drupalGetNodeByTitle($edit["title"]);
@@ -121,7 +121,7 @@ class PathLanguageTest extends PathTestBase {
     // We need to ensure that the user language preference is not taken into
     // account while determining the path alias language, because if this
     // happens we have no way to check that the path alias is valid: there is no
-    // path alias for French matching the english alias. So drupal_lookup_path()
+    // path alias for French matching the english alias. So the alias manager
     // needs to use the URL language to check whether the alias is valid.
     $this->drupalGet($english_alias);
     $this->assertText($english_node->label(), 'Alias for English translation works.');
@@ -145,20 +145,20 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalGet($french_alias);
     $this->assertResponse(404, 'Alias for French translation is unavailable when URL language negotiation is disabled.');
 
-    // drupal_lookup_path() has an internal static cache. Check to see that
+    // The alias manager has an internal path lookup cache. Check to see that
     // it has the appropriate contents at this point.
-    drupal_lookup_path('wipe');
-    $french_node_path = drupal_lookup_path('source', $french_alias, $french_node->langcode);
+    drupal_container()->get('path.alias_manager')->cacheClear();
+    $french_node_path = drupal_container()->get('path.alias_manager')->getSystemPath($french_alias, $french_node->langcode);
     $this->assertEqual($french_node_path, 'node/' . $french_node->nid, 'Normal path works.');
     // Second call should return the same path.
-    $french_node_path = drupal_lookup_path('source', $french_alias, $french_node->langcode);
+    $french_node_path = drupal_container()->get('path.alias_manager')->getSystemPath($french_alias, $french_node->langcode);
     $this->assertEqual($french_node_path, 'node/' . $french_node->nid, 'Normal path is the same.');
 
     // Confirm that the alias works.
-    $french_node_alias = drupal_lookup_path('alias', 'node/' . $french_node->nid, $french_node->langcode);
+    $french_node_alias = drupal_container()->get('path.alias_manager')->getPathAlias('node/' . $french_node->nid, $french_node->langcode);
     $this->assertEqual($french_node_alias, $french_alias, 'Alias works.');
     // Second call should return the same alias.
-    $french_node_alias = drupal_lookup_path('alias', 'node/' . $french_node->nid, $french_node->langcode);
+    $french_node_alias = drupal_container()->get('path.alias_manager')->getPathAlias('node/' . $french_node->nid, $french_node->langcode);
     $this->assertEqual($french_node_alias, $french_alias, 'Alias is the same.');
   }
 }

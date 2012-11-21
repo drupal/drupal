@@ -101,7 +101,7 @@ class ExceptionController extends ContainerAware {
     $system_path = $request->attributes->get('system_path');
     watchdog('access denied', $system_path, array(), WATCHDOG_WARNING);
 
-    $path = drupal_get_normal_path(config('system.site')->get('page.403'));
+    $path = $this->container->get('path.alias_manager')->getSystemPath(config('system.site')->get('page.403'));
     if ($path && $path != $system_path) {
       // Keep old path for reference, and to allow forms to redirect to it.
       if (!isset($_GET['destination'])) {
@@ -173,7 +173,7 @@ class ExceptionController extends ContainerAware {
       $_GET['destination'] = $system_path;
     }
 
-    $path = drupal_get_normal_path(config('system.site')->get('page.404'));
+    $path = $this->container->get('path.alias_manager')->getSystemPath(config('system.site')->get('page.404'));
     if ($path && $path != $system_path) {
       // @todo Um, how do I specify an override URL again? Totally not clear. Do
       //   that and sub-call the kernel rather than using meah().

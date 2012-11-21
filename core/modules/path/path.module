@@ -107,7 +107,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     if ($node->langcode != LANGUAGE_NOT_SPECIFIED) {
       $conditions['langcode'] = $node->langcode;
     }
-    $path = path_load($conditions);
+    $path = drupal_container()->get('path.crud')->load($conditions);
     if ($path === FALSE) {
       $path = array();
     }
@@ -190,14 +190,13 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
  */
 function path_node_insert(Node $node) {
   if (isset($node->path)) {
-    $path = $node->path;
-    $path['alias'] = trim($path['alias']);
+    $alias = trim($node->path['alias']);
     // Only save a non-empty alias.
-    if (!empty($path['alias'])) {
+    if (!empty($alias)) {
       // Ensure fields for programmatic executions.
-      $path['source'] = 'node/' . $node->nid;
-      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
-      path_save($path);
+      $source = 'node/' . $node->nid;
+      $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
+      drupal_container()->get('path.crud')->save($source, $alias, $langcode);
     }
   }
 }
@@ -208,17 +207,17 @@ function path_node_insert(Node $node) {
 function path_node_update(Node $node) {
   if (isset($node->path)) {
     $path = $node->path;
-    $path['alias'] = trim($path['alias']);
+    $alias = trim($path['alias']);
     // Delete old alias if user erased it.
     if (!empty($path['pid']) && empty($path['alias'])) {
-      path_delete($path['pid']);
+      drupal_container()->get('path.crud')->delete(array('pid' => $path['pid']));
     }
     // Only save a non-empty alias.
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
-      $path['source'] = 'node/' . $node->nid;
-      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
-      path_save($path);
+      $source = 'node/' . $node->nid;
+      $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
+      drupal_container()->get('path.crud')->save($source, $alias, $langcode, $path['pid']);
     }
   }
 }
@@ -228,7 +227,7 @@ function path_node_update(Node $node) {
  */
 function path_node_predelete(Node $node) {
   // Delete all aliases associated with this node.
-  path_delete(array('source' => 'node/' . $node->nid));
+  drupal_container()->get('path.crud')->delete(array('source' => 'node/' . $node->nid));
 }
 
 /**
@@ -238,7 +237,7 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
   // Make sure this does not show up on the delete confirmation form.
   if (empty($form_state['confirm_delete'])) {
     $term = $form_state['controller']->getEntity($form_state);
-    $path = (isset($term->tid) ? path_load('taxonomy/term/' . $term->tid) : array());
+    $path = (isset($term->tid) ? drupal_container()->get('path.crud')->load(array('source' => 'taxonomy/term/' . $term->tid)) : array());
     if ($path === FALSE) {
       $path = array();
     }
@@ -279,7 +278,7 @@ function path_taxonomy_term_insert(Term $term) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'taxonomy/term/' . $term->tid;
       $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
-      path_save($path);
+      drupal_container()->get('path.crud')->save($path['source'], $path['alias'], $path['langcode']);
     }
   }
 }
@@ -293,14 +292,15 @@ function path_taxonomy_term_update(Term $term) {
     $path['alias'] = trim($path['alias']);
     // Delete old alias if user erased it.
     if (!empty($path['pid']) && empty($path['alias'])) {
-      path_delete($path['pid']);
+      drupal_container()->get('path.crud')->delete(array('pid' => $path['pid']));
     }
     // Only save a non-empty alias.
     if (!empty($path['alias'])) {
+      $pid = (!empty($path['pid']) ? $path['pid'] : NULL);
       // Ensure fields for programmatic executions.
       $path['source'] = 'taxonomy/term/' . $term->tid;
       $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
-      path_save($path);
+      drupal_container()->get('path.crud')->save($path['source'], $path['alias'], $path['langcode'], $pid);
     }
   }
 }
@@ -310,7 +310,7 @@ function path_taxonomy_term_update(Term $term) {
  */
 function path_taxonomy_term_delete(Term $term) {
   // Delete all aliases associated with this term.
-  path_delete(array('source' => 'taxonomy/term/' . $term->tid));
+  drupal_container()->get('path.crud')->delete(array('source' => 'taxonomy/term/' . $term->tid));
 }
 
 /**

@@ -2994,7 +2994,7 @@ function _menu_delete_item($item, $force = FALSE) {
  * @param $item
  *   An associative array representing a menu link item, with elements:
  *   - link_path: (required) The path of the menu item, which should be
- *     normalized first by calling drupal_get_normal_path() on it.
+ *     normalized first by calling drupal_container()->get('path.alias_manager')->getSystemPath() on it.
  *   - link_title: (required) Title to appear in menu for the link.
  *   - menu_name: (optional) The machine name of the menu for the link.
  *     Defaults to 'tools'.

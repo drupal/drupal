@@ -2490,6 +2490,10 @@ function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
       ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
       ->addArgument(new Reference('database'));
 
+    $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('keyvalue.database'));
+
     // Register the EntityManager.
     $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
   }
