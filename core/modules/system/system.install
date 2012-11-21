@@ -2221,6 +2221,17 @@ function system_update_8035() {
 }
 
 /**
+ * Move the admin_compact_mode setting from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8036() {
+  update_variables_to_config('system.site', array(
+    'admin_compact_mode' => 'admin_compact_mode',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

@@ -3379,7 +3379,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 function system_admin_compact_mode() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
-  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : variable_get('admin_compact_mode', FALSE);
+  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : config('system.site')->get('admin_compact_mode');
 }
 
 /**
