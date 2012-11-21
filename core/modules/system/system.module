@@ -564,13 +564,6 @@ function system_element_info() {
  * Implements hook_menu().
  */
 function system_menu() {
-  $items['cron/%'] = array(
-    'title' => 'Run cron',
-    'page callback' => 'system_cron_page',
-    'access callback' => 'system_cron_access',
-    'access arguments' => array(1),
-    'type' => MENU_CALLBACK,
-  );
   $items['system/files'] = array(
     'title' => 'File download',
     'page callback' => 'file_download',
@@ -1074,41 +1067,6 @@ function system_menu() {
   }
 
   return $items;
-}
-
-/**
- * Page callback; Execute cron tasks.
- *
- * @see system_cron_access().
- */
-
-function system_cron_page() {
-  drupal_page_is_cacheable(FALSE);
-  drupal_cron_run();
-
-  // HTTP 204 is "No content", meaning "I did what you asked and we're done."
-  return new Response('', 204);
-}
-
-/**
- * Access callback for system_cron().
- *
- * @param string $key
- *   A hash to validate the page request origin.
- *
- * @see system_cron_page().
- */
-function system_cron_access($key) {
-  if ($key != state()->get('system.cron_key')) {
-    watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
-    return FALSE;
-  }
-  elseif (config('system.maintenance')->get('enabled')) {
-    watchdog('cron', 'Cron could not run because the site is in maintenance mode.', array(), WATCHDOG_NOTICE);
-    return FALSE;
-  }
-
-  return TRUE;
 }
 
 /**

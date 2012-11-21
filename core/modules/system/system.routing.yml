@@ -1,0 +1,4 @@
+cron:
+  pattern: '/cron/{key}'
+  defaults:
+    _controller: '\Drupal\system\CronController::run'
