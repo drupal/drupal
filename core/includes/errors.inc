@@ -122,6 +122,7 @@ function _drupal_decode_exception($exception) {
     '%file' => $caller['file'],
     '%line' => $caller['line'],
     'severity_level' => WATCHDOG_ERROR,
+    'backtrace' => $backtrace,
   );
 }
 
