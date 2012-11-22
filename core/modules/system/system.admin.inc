@@ -1508,7 +1508,7 @@ function system_cron_settings($form, &$form_state) {
     '#submit' => array('system_run_cron_submit'),
   );
 
-  $status = '<p>' . t('Last run: %cron-last ago.', array('%cron-last' => format_interval(REQUEST_TIME - variable_get('cron_last')),)) . '</p>';
+  $status = '<p>' . t('Last run: %cron-last ago.', array('%cron-last' => format_interval(REQUEST_TIME - state()->get('system.cron_last')))) . '</p>';
   $form['status'] = array(
     '#markup' => $status,
   );

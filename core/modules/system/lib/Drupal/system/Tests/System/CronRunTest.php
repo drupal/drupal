@@ -98,4 +98,17 @@ class CronRunTest extends WebTestBase {
     $result = state()->get('common_test.cron');
     $this->assertEqual($result, 'success', 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
   }
+
+  /**
+   * Make sure the cron UI reads from the state storage.
+   */
+  function testCronUI() {
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+    $this->drupalGet('admin/config/system/cron');
+    // Don't use REQUEST to calculate the exact time, because that will
+    // fail randomly. Look for the word 'years', because without a timestamp,
+    // the time will start at 1 January 1970.
+    $this->assertNoText('years');
+  }
 }
