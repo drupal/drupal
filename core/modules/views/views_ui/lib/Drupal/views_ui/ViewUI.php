@@ -251,6 +251,7 @@ class ViewUI implements ViewStorageInterface {
         // which display the user wants to update, views_ui_standard_submit will
         // take care of running the regular submit handler as appropriate.
         '#submit' => array(array($this, 'standardSubmit')),
+        '#button_type' => 'primary',
       );
       // Form API button click detection requires the button's #value to be the
       // same between the form build of the initial page request, and the initial
