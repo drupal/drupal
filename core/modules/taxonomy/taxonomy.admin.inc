@@ -249,7 +249,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
       }
     }
   }
-
+  $destination = drupal_get_destination();
   // Build the actual form.
   foreach ($current_page as $key => $term) {
     // Save the term for the current page so we don't have to load it a second time.
@@ -285,9 +285,16 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
       );
     }
     $operations = array(
-      'edit' => array('title' => t('edit'), 'href' => 'taxonomy/term/' . $term->tid . '/edit', 'query' => drupal_get_destination()),
-      'delete' => array('title' => t('delete'), 'href' => 'taxonomy/term/' . $term->tid . '/delete', 'query' => drupal_get_destination()),
+      'edit' => array('title' => t('edit'), 'href' => 'taxonomy/term/' . $term->tid . '/edit', 'query' => $destination),
+      'delete' => array('title' => t('delete'), 'href' => 'taxonomy/term/' . $term->tid . '/delete', 'query' => $destination),
     );
+    if (module_invoke('translation_entity', 'translate_access', $term)) {
+      $operations['translate'] = array(
+        'title' => t('translate'),
+        'href' => 'taxonomy/term/' . $term->tid . '/translations',
+        'query' => $destination,
+      );
+    }
     $form[$key]['operations'] = array(
       '#type' => 'operations',
       '#links' => $operations,

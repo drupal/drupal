@@ -560,6 +560,13 @@ function node_admin_nodes() {
         'query' => $destination,
       );
     }
+    if (module_invoke('translation_entity', 'enabled', 'node', $node->bundle())) {
+      $operations['translate'] = array(
+        'title' => t('translate'),
+        'href' => 'node/' . $node->nid . '/translations',
+        'query' => $destination,
+      );
+    }
     $options[$node->nid]['operations'] = array();
     if (count($operations) > 1) {
       // Render an unordered list of operations links.

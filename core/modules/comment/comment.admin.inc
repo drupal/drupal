@@ -136,6 +136,13 @@ function comment_admin_overview($form, &$form_state, $arg) {
       'href' => 'comment/' . $comment->cid . '/edit',
       'query' => $destination,
     );
+    if (module_invoke('translation_entity', 'translate_access', $comment)) {
+      $links['translate'] = array(
+        'title' => t('translate'),
+        'href' => 'comment/' . $comment->cid . '/translations',
+        'query' => $destination,
+      );
+    }
     $options[$comment->cid]['operations']['data'] = array(
       '#type' => 'operations',
       '#links' => $links,

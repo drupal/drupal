@@ -60,6 +60,23 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
+   * Tests translate link on content admin page.
+   */
+  function testTranslateLinkContentAdminPage() {
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
+    $this->drupalLogin($this->admin_user);
+
+    $page = $this->drupalCreateNode(array('type' => 'page'));
+    $article = $this->drupalCreateNode(array('type' => 'article'));
+
+    // Verify translation links.
+    $this->drupalGet('admin/content');
+    $this->assertResponse(200);
+    $this->assertLinkByHref('node/' . $article->nid . '/translations');
+    $this->assertNoLinkByHref('node/' . $page->nid . '/translations');
+  }
+
+  /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {

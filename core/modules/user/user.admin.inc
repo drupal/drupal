@@ -192,11 +192,11 @@ function user_admin_account() {
   );
 
   $destination = drupal_get_destination();
-
   $status = array(t('blocked'), t('active'));
   $roles = array_map('check_plain', user_roles(TRUE));
   $accounts = array();
   foreach ($result as $account) {
+    $account = user_load($account->uid);
     $users_roles = array();
     $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->uid));
     foreach ($roles_result as $user_role) {
@@ -214,9 +214,16 @@ function user_admin_account() {
     $links = array();
     $links['edit'] = array(
       'title' => t('edit'),
-      'href' => "user/$account->uid/edit",
+      'href' => 'user/' . $account->uid . '/edit',
       'query' => $destination,
     );
+    if (module_invoke('translation_entity', 'translate_access', $account)) {
+      $links['translate'] = array(
+        'title' => t('translate'),
+        'href' => 'user/' . $account->uid . '/translations',
+        'query' => $destination,
+      );
+    }
     $options[$account->uid]['operations']['data'] = array(
       '#type' => 'operations',
       '#links' => $links,

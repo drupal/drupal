@@ -74,8 +74,11 @@ class CommentTranslationUITest extends EntityTranslationUITest {
   /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::createEntity().
    */
-  protected function createEntity($values, $langcode) {
-    $node = $this->drupalCreateNode(array('type' => $this->nodeBundle));
+  protected function createEntity($values, $langcode, $node_bundle = NULL) {
+    if (!isset($node_bundle)) {
+      $node_bundle = $this->nodeBundle;
+    }
+    $node = $this->drupalCreateNode(array('type' => $node_bundle));
     $values['nid'] = $node->nid;
     $values['uid'] = $node->uid;
     return parent::createEntity($values, $langcode);
@@ -90,6 +93,23 @@ class CommentTranslationUITest extends EntityTranslationUITest {
       'subject' => $this->subject,
       'comment_body' => array(array('value' => $this->randomString(16))),
     ) + parent::getNewEntityValues($langcode);
+  }
+
+  /**
+   * Tests translate link on comment content admin page.
+   */
+  function testTranslateLinkCommentAdminPage() {
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer comments', 'translate any entity'));
+    $this->drupalLogin($this->admin_user);
+
+    $cid_translatable = $this->createEntity(array(), $this->langcodes[0], $this->nodeBundle);
+    $cid_untranslatable = $this->createEntity(array(), $this->langcodes[0], 'page');
+
+    // Verify translation links.
+    $this->drupalGet('admin/content/comment');
+    $this->assertResponse(200);
+    $this->assertLinkByHref('comment/' . $cid_translatable . '/translations');
+    $this->assertNoLinkByHref('comment/' . $cid_untranslatable . '/translations');
   }
 
 }
