@@ -305,8 +305,8 @@ function theme_field_ui_table($variables) {
  *   The processed form for the given entity type and bundle.
  *
  * @see field_ui_menu()
- * @see field_ui_field_overview_form_validate()
- * @see field_ui_field_overview_form_submit()
+ * @see Drupal\field_ui\FieldOverview::validate()
+ * @see Drupal\field_ui\FieldOverview::submit()
  * @ingroup forms
  */
 function field_ui_field_overview($entity_type, $bundle) {
