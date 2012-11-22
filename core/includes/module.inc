@@ -96,8 +96,7 @@ function module_list($type = 'module_enabled', array $fixed_list = NULL, $reset 
   if (isset($fixed_list)) {
     $module_list = array();
     foreach ($fixed_list as $name => $module) {
-      drupal_classloader_register($name, dirname($module['filename']));
-      drupal_get_filename('module', $name, $module['filename']);
+      system_register('module', $name, $module['filename']);
       $module_list[$name] = $name;
     }
     $list = $module_list;
@@ -161,8 +160,7 @@ function system_list($type) {
     // drupal_get_filename() static cache for bootstrap modules only.
     // The rest is stored separately to keep the bootstrap module cache small.
     foreach ($bootstrap_list as $name => $filename) {
-      drupal_classloader_register($name, dirname($filename));
-      drupal_get_filename('module', $name, $filename);
+      system_register('module', $name, $filename);
     }
     // We only return the module names here since module_list() doesn't need
     // the filename itself.
@@ -256,8 +254,7 @@ function system_list($type) {
     // To avoid a separate database lookup for the filepath, prime the
     // drupal_get_filename() static cache with all enabled modules and themes.
     foreach ($lists['filepaths'] as $item) {
-      drupal_get_filename($item['type'], $item['name'], $item['filepath']);
-      drupal_classloader_register($item['name'], dirname($item['filepath']));
+      system_register($item['type'], $item['name'], $item['filepath']);
     }
   }
 
@@ -281,6 +278,22 @@ function system_list_reset() {
   // necessarily rebuilt afterwards.
   // @todo Obsolete with proper installation status for themes.
   state()->delete('system.theme.data');
+}
+
+/**
+ * Registers an extension in runtime registries for execution.
+ *
+ * @param string $type
+ *   The extension type; e.g., 'module' or 'theme'.
+ * @param string $name
+ *   The internal name of the extension; e.g., 'node'.
+ * @param string $uri
+ *   The relative URI of the primary extension file; e.g.,
+ *   'core/modules/node/node.module'.
+ */
+function system_register($type, $name, $uri) {
+  drupal_get_filename($type, $name, $uri);
+  drupal_classloader_register($name, dirname($uri));
 }
 
 /**
