@@ -56,7 +56,21 @@ class PathMatcher implements InitialMatcherInterface {
    */
   public function matchRequestPartial(Request $request) {
 
-    $path = rtrim($request->getPathInfo(), '/');
+    // The 'system_path' has language prefix stripped and path alias resolved,
+    // whereas getPathInfo() returns the requested path. In Drupal, the request
+    // always contains a system_path attribute, but this component may get
+    // adopted by non-Drupal projects. Some unit tests also skip initializing
+    // 'system_path'.
+    // @todo Consider abstracting this to a separate object.
+    if ($request->attributes->has('system_path')) {
+      // system_path never has leading or trailing slashes.
+      $path = '/' . $request->attributes->get('system_path');
+    }
+    else {
+      // getPathInfo() always has leading slash, and might or might not have a
+      // trailing slash.
+      $path = rtrim($request->getPathInfo(), '/');
+    }
 
     $parts = array_slice(array_filter(explode('/', $path)), 0, MatcherDumper::MAX_PARTS);
 

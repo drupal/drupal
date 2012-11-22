@@ -10,6 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -41,6 +42,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespond(FilterResponseEvent $event) {
+    if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+      return;
+    }
+
     $response = $event->getResponse();
 
     // Set the X-UA-Compatible HTTP header to force IE to use the most recent

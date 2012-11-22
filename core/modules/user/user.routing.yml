@@ -1,0 +1,4 @@
+user_register:
+  pattern: '/user/register'
+  defaults:
+    _content: '\Drupal\user\UserRouteController::register'

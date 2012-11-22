@@ -52,7 +52,7 @@ class HtmlPageController implements ContainerAwareInterface {
     // require an _internal route.  For examples, see:
     // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Resources/config/routing/internal.xml
     // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/InternalController.php
-    $attributes = $request->attributes;
+    $attributes = clone $request->attributes;
     $controller = $_content;
 
     // We need to clean off the derived information and such so that the
@@ -62,8 +62,12 @@ class HtmlPageController implements ContainerAwareInterface {
 
     $response = $this->container->get('http_kernel')->forward($controller, $attributes->all(), $request->query->all());
 
-    $page_content = $response->getContent();
+    // For successful (HTTP status 200) responses, decorate with blocks.
+    if ($response->isOk()) {
+      $page_content = $response->getContent();
+      $response = new Response(drupal_render_page($page_content));
+    }
 
-    return new Response(drupal_render_page($page_content));
+    return $response;
   }
 }

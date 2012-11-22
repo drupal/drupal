@@ -299,4 +299,27 @@ class PathMatcherTest extends UnitTestBase {
 
   }
 
+  /**
+   * Confirms that system_path attribute overrides request path.
+   */
+  function testSystemPathMatch() {
+    $connection = Database::getConnection();
+    $matcher = new PathMatcher($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
+    $dumper->dump();
+
+    $request = Request::create('/path/one', 'GET');
+    $request->attributes->set('system_path', 'path/two');
+
+    $routes = $matcher->matchRequestPartial($request);
+
+    foreach ($routes as $route) {
+      $this->assertEqual($route->getPattern(), '/path/two', 'Found path has correct pattern');
+    }
+  }
+
 }

@@ -1070,11 +1070,6 @@ function user_is_logged_in() {
   return (bool) $GLOBALS['user']->uid;
 }
 
-function user_register() {
-  $account = entity_create('user', array());
-  return entity_get_form($account, 'register');
-}
-
 function user_register_access() {
   return user_is_anonymous() && (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
 }
@@ -1160,9 +1155,14 @@ function user_menu() {
 
   $items['user/register'] = array(
     'title' => 'Create new account',
-    'page callback' => 'user_register',
-    'access callback' => 'user_register_access',
     'type' => MENU_LOCAL_TASK,
+    // @todo This route is now declared in user.routing.yml, so the below are
+    //   only needed for drupal_valid_path(). Without a non-empty (but not
+    //   necessarily valid) page callback, _menu_router_build() overrides the
+    //   access callback to 0. Remove once drupal_valid_path works with the new
+    //   routing system: http://drupal.org/node/1793520.
+    'page callback' => 'NOT_USED',
+    'access callback' => 'user_register_access',
   );
 
   $items['user/password'] = array(
