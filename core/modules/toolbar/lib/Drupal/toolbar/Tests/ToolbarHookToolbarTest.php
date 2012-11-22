@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\toolbar\Tests\ToolbarHookToolbarTest.
+ * Contains \Drupal\toolbar\Tests\ToolbarHookToolbarTest.
  */
 
 namespace Drupal\toolbar\Tests;
@@ -19,12 +19,12 @@ class ToolbarHookToolbarTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('toolbar', 'toolbar_test');
+  public static $modules = array('toolbar', 'toolbar_test', 'test_page_test');
 
   public static function getInfo() {
     return array(
       'name' => 'Toolbar hook_toolbar',
-      'description' => 'Tests the implementation of hook_toolbar by a module.',
+      'description' => 'Tests the implementation of hook_toolbar() by a module.',
       'group' => 'Toolbar',
     );
   }
@@ -38,11 +38,10 @@ class ToolbarHookToolbarTest extends WebTestBase {
   }
 
   /**
-   * Tests for inclusion of a tab and tray in the toolbar by a module
-   * implementing hook_toolbar.
+   * Tests for a tab and tray provided by a module implementing hook_toolbar().
    */
   function testHookToolbar() {
-    $this->drupalGet('/node');
+    $this->drupalGet('test-page');
     $this->assertResponse(200);
 
     // Assert that the toolbar is present in the HTML.
@@ -54,4 +53,5 @@ class ToolbarHookToolbarTest extends WebTestBase {
     // Assert that the tray registered by toolbar_test is present.
     $this->assertRaw('id="toolbar-tray-testing"');
   }
+
 }
