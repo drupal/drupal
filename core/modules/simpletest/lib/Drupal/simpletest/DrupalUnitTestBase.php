@@ -65,13 +65,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   private $themeData;
 
   /**
-   * Base service container for rebooting DrupalKernel.
-   *
-   * @var \Drupal\Core\DependencyInjection\ContainerBuilder
-   */
-  private $baseContainer;
-
-  /**
    * Sets up Drupal unit test environment.
    *
    * @see DrupalUnitTestBase::$modules
@@ -125,6 +118,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    */
   public function containerBuild($container) {
     global $conf;
+    // Keep the container object around for tests.
+    $this->container = $container;
     $conf['lock_backend'] = 'Drupal\Core\Lock\NullLockBackend';
     $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
     $container
