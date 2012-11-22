@@ -356,6 +356,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
    * Tests that openid.signed is verified.
    */
   function testSignatureValidation() {
+    module_load_include('inc', 'openid');
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
 
@@ -372,7 +373,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     // Sign all mandatory fields and a custom field.
     $keys_to_sign = array('op_endpoint', 'claimed_id', 'identity', 'return_to', 'response_nonce', 'assoc_handle', 'foo');
     $association = new stdClass();
-    $association->mac_key = variable_get('mac_key');
+    $association->mac_key = NULL;
     $response = array(
       'openid.op_endpoint' => url('openid-test/endpoint', array('absolute' => TRUE)),
       'openid.claimed_id' => $identity,

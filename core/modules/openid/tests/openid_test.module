@@ -271,7 +271,7 @@ function _openid_test_endpoint_associate() {
   $shared = _openid_math_powmod($cpub, $private, $mod);
 
   // Encrypt the MAC key using the shared secret.
-  $enc_mac_key = base64_encode(_openid_dh_xorsecret($shared, base64_decode(variable_get('mac_key'))));
+  $enc_mac_key = base64_encode(_openid_dh_xorsecret($shared, NULL));
 
   // Generate response including our public key and the MAC key. Using our
   // public key and its own private key, the Relying Party can calculate the
@@ -343,7 +343,7 @@ function _openid_test_endpoint_authenticate() {
 
   // Sign the message using the MAC key that was exchanged during association.
   $association = new stdClass();
-  $association->mac_key = variable_get('mac_key');
+  $association->mac_key = NULL;
   if (!isset($response['openid.sig'])) {
     $response['openid.sig'] = _openid_signature($association, $response, $keys_to_sign);
   }
