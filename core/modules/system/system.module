@@ -3486,9 +3486,7 @@ function system_get_module_admin_tasks($module, $info) {
  */
 function system_cron() {
   // Cleanup the flood.
-  db_delete('flood')
-    ->condition('expiration', REQUEST_TIME, '<')
-    ->execute();
+  drupal_container()->get('flood')->garbageCollection();
 
   $cache_bins = array_merge(module_invoke_all('cache_flush'), array('form', 'menu'));
   foreach ($cache_bins as $bin) {

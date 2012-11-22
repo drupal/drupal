@@ -202,6 +202,9 @@ class CoreBundle extends Bundle {
       ->addArgument(array())
       ->addArgument(array());
 
+    $container->register('flood', 'Drupal\Core\Flood\DatabaseBackend')
+      ->addArgument(new Reference('database'));
+
     $container->addCompilerPass(new RegisterMatchersPass());
     $container->addCompilerPass(new RegisterNestedMatchersPass());
     // Add a compiler pass for registering event subscribers.

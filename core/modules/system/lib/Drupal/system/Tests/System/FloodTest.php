@@ -30,19 +30,45 @@ class FloodTest extends WebTestBase {
     $name = 'flood_test_cleanup';
 
     // Register expired event.
-    flood_register_event($name, $window_expired);
+    drupal_container()->get('flood')->register($name, $window_expired);
     // Verify event is not allowed.
-    $this->assertFalse(flood_is_allowed($name, $threshold));
+    $this->assertFalse(drupal_container()->get('flood')->isAllowed($name, $threshold));
     // Run cron and verify event is now allowed.
     $this->cronRun();
-    $this->assertTrue(flood_is_allowed($name, $threshold));
+    $this->assertTrue(drupal_container()->get('flood')->isAllowed($name, $threshold));
 
     // Register unexpired event.
-    flood_register_event($name);
+    drupal_container()->get('flood')->register($name);
     // Verify event is not allowed.
-    $this->assertFalse(flood_is_allowed($name, $threshold));
+    $this->assertFalse(drupal_container()->get('flood')->isAllowed($name, $threshold));
     // Run cron and verify event is still not allowed.
     $this->cronRun();
-    $this->assertFalse(flood_is_allowed($name, $threshold));
+    $this->assertFalse(drupal_container()->get('flood')->isAllowed($name, $threshold));
+  }
+
+  /**
+   * Test flood control memory backend.
+   */
+  function testMemoryBackend() {
+    $threshold = 1;
+    $window_expired = -1;
+    $name = 'flood_test_cleanup';
+
+    $flood = new \Drupal\Core\Flood\MemoryBackend;
+    // Register expired event.
+    $flood->register($name, $window_expired);
+    // Verify event is not allowed.
+    $this->assertFalse($flood->isAllowed($name, $threshold));
+    // Run cron and verify event is now allowed.
+    $flood->garbageCollection();
+    $this->assertTrue($flood->isAllowed($name, $threshold));
+
+    // Register unexpired event.
+    $flood->register($name);
+    // Verify event is not allowed.
+    $this->assertFalse($flood->isAllowed($name, $threshold));
+    // Run cron and verify event is still not allowed.
+    $flood->garbageCollection();
+    $this->assertFalse($flood->isAllowed($name, $threshold));
   }
 }
