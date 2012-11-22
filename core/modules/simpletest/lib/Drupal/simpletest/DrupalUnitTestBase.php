@@ -86,21 +86,18 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     }
 
     parent::setUp();
-
     // Build a minimal, partially mocked environment for unit tests.
-    $this->setUpContainer();
+    $this->containerBuild(drupal_container());
+    // Make sure it survives kernel rebuilds.
+    $GLOBALS['conf']['container_bundles'][] = 'Drupal\simpletest\TestBundle';
 
     state()->set('system.module.files', $this->moduleFiles);
     state()->set('system.theme.files', $this->themeFiles);
     state()->set('system.theme.data', $this->themeData);
 
-    // Back up the base container for enableModules().
-    $this->baseContainer = clone $this->container;
-
     // Bootstrap the kernel.
     $this->kernel = new DrupalKernel('testing', TRUE, drupal_classloader());
     $this->kernel->boot();
-    $this->container = drupal_container();
 
     // Ensure that the module list is initially empty.
     $this->moduleList = array();
@@ -126,26 +123,16 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    * @see DrupalUnitTestBase::setUp()
    * @see DrupalUnitTestBase::enableModules()
    */
-  protected function setUpContainer() {
+  public function containerBuild($container) {
     global $conf;
-
     $conf['lock_backend'] = 'Drupal\Core\Lock\NullLockBackend';
     $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
-    $this->container
+    $container
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')
       ->addArgument($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
     $conf['keyvalue_default'] = 'keyvalue.memory';
-    $this->container
+    $container
       ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
-  }
-
-  /**
-   * Overrides TestBase::tearDown().
-   */
-  protected function tearDown() {
-    // Ensure that TestBase::tearDown() gets a working container.
-    $this->container = $this->baseContainer;
-    parent::tearDown();
   }
 
   /**
@@ -212,15 +199,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
 
       // Call module_enable() to enable (install) the new module.
       if ($install) {
-        // module_enable() reboots DrupalKernel, but that builds an entirely new
-        // ContainerBuilder, retrieving a fresh base container from
-        // drupal_container(), which means that all of the service overrides
-        // from DrupalUnitTestBase::setUpContainer() are lost, in turn triggering
-        // invalid service reference errors; e.g., in TestBase::tearDown().
-        // Since DrupalKernel also replaces the container in drupal_container()
-        // after (re-)booting, we have to re-inject a new copy of our initial
-        // base container that was built in setUpContainer().
-        drupal_container(clone $this->baseContainer);
         module_enable(array($module), FALSE);
       }
     }
@@ -229,8 +207,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       module_load_all(FALSE, TRUE);
       module_implements_reset();
     }
-    $kernel = $this->container->get('kernel');
-    $kernel->updateModules($this->moduleList, $new_enabled, clone $this->baseContainer);
   }
 
 }

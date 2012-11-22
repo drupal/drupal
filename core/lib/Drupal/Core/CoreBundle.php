@@ -11,15 +11,12 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterNestedMatchersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-
-use Drupal\Core\Database\Database;
 
 /**
  * Bundle class for mandatory core services.
@@ -28,10 +25,61 @@ use Drupal\Core\Database\Database;
  * Injection Container. Modules wishing to register services to the container
  * should extend Symfony's Bundle class directly, not this class.
  */
-class CoreBundle extends Bundle
-{
+class CoreBundle extends Bundle {
 
+  /**
+   * Implements \Symfony\Component\HttpKernel\Bundle\BundleInterface::build().
+   */
   public function build(ContainerBuilder $container) {
+
+    // Register active configuration storage.
+    $container
+      ->register('config.cachedstorage.storage', 'Drupal\Core\Config\FileStorage')
+      ->addArgument(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
+    // @todo Replace this with a cache.factory service plus 'config' argument.
+    $container
+      ->register('cache.config', 'Drupal\Core\Cache\CacheBackendInterface')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('config');
+
+    $container
+      ->register('config.storage', 'Drupal\Core\Config\CachedStorage')
+      ->addArgument(new Reference('config.cachedstorage.storage'))
+      ->addArgument(new Reference('cache.config'));
+
+    // Register configuration object factory.
+    $container->register('config.subscriber.globalconf', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
+    $container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher')
+      ->addMethodCall('addSubscriber', array(new Reference('config.subscriber.globalconf')));
+    $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
+      ->addArgument(new Reference('config.storage'))
+      ->addArgument(new Reference('dispatcher'));
+
+    // Register staging configuration storage.
+    $container
+      ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
+      ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+
+    // Register the service for the default database connection.
+    $container->register('database', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('default');
+    // Register the KeyValueStore factory.
+    $container
+      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
+      ->addArgument(new Reference('service_container'));
+    $container
+      ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
+      ->addArgument(new Reference('database'));
+
+    $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('keyvalue.database'));
+
+    // Register the EntityManager.
+    $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
 
     // The 'request' scope and service enable services to depend on the Request
     // object and get reconstructed when the request object changes (e.g.,

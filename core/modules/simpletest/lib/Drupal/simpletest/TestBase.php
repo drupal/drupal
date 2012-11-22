@@ -639,6 +639,7 @@ abstract class TestBase {
    *   methods during debugging.
    */
   public function run(array $methods = array()) {
+    TestBundle::$currentTest = $this;
     $simpletest_config = config('simpletest.settings');
 
     $class = get_class($this);
@@ -710,6 +711,7 @@ abstract class TestBase {
         }
       }
     }
+    TestBundle::$currentTest = NULL;
     // Clear out the error messages and restore error handler.
     drupal_get_messages();
     restore_error_handler();
@@ -912,7 +914,7 @@ abstract class TestBase {
     // container in drupal_container(). Drupal\simpletest\TestBase::tearDown()
     // restores the original container.
     // @see Drupal\Core\DrupalKernel::initializeContainer()
-    $this->kernel = new DrupalKernel('testing', FALSE, drupal_classloader());
+    $this->kernel = new DrupalKernel('testing', FALSE, drupal_classloader(), FALSE);
     // Booting the kernel is necessary to initialize the new DIC. While
     // normally the kernel gets booted on demand in
     // Symfony\Component\HttpKernel\handle(), this kernel needs manual booting

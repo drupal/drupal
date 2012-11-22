@@ -2264,6 +2264,13 @@ function _drupal_bootstrap_configuration() {
 
   // Load the procedural configuration system helper functions.
   require_once DRUPAL_ROOT . '/core/includes/config.inc';
+  // Redirect the user to the installation script if Drupal has not been
+  // installed yet (i.e., if no $databases array has been defined in the
+  // settings.php file) and we are not already installing.
+  if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    install_goto('core/install.php');
+  }
 }
 
 /**
@@ -2359,15 +2366,6 @@ function _drupal_initialize_db_test_prefix() {
  * Initializes the database system by loading database.inc.
  */
 function _drupal_bootstrap_database() {
-  // Redirect the user to the installation script if Drupal has not been
-  // installed yet (i.e., if no $databases array has been defined in the
-  // settings.php file) and we are not already installing.
-  if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    install_goto('core/install.php');
-  }
-
-
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
   require_once DRUPAL_ROOT . '/core/includes/database.inc';
@@ -2442,10 +2440,9 @@ function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
     $container = $new_container;
   }
   if (!isset($container)) {
-    // Return a ContainerBuilder instance with the bare essentials needed for any
-    // full bootstrap regardless of whether there will be a DrupalKernel involved.
-    // This will get merged with the full Kernel-built Container on normal page
-    // requests.
+    // This is only ever used by the installer and by run-tests.sh.
+    // @todo Remove this entire section once these have been converted to use a
+    //   kernel.
     $container = new ContainerBuilder();
 
     // Register active configuration storage.
@@ -2707,10 +2704,8 @@ function language($type, $reset = FALSE) {
   // When the language_manager service exists (is both defined and the 'request'
   // scope is active in the container), use it to get the language. Otherwise
   // return the default language.
-  try {
+  if (drupal_container()->isScopeActive('request')) {
     $language_manager = drupal_container()->get('language_manager', Container::NULL_ON_INVALID_REFERENCE);
-  }
-  catch (DependencyInjectionRuntimeException $e) {
   }
 
   if (isset($language_manager)) {
@@ -3446,54 +3441,6 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
   // - The memory limit is greater than or equal to the memory required for
   //   the operation.
   return ((!$memory_limit) || ($memory_limit == -1) || (parse_size($memory_limit) >= parse_size($required)));
-}
-
-/**
- * Instantiates and statically caches a storage controller for generated PHP code.
- *
- * By default, this returns an instance of the
- * Drupal\Component\PhpStorage\MTimeProtectedFileStorage class.
- *
- * Classes implementing
- * Drupal\Component\PhpStorage\PhpStorageInterface can be registered for a
- * specific bin or as a default implementation.
- *
- * @param $name
- *   The name for which the storage controller should be returned. Defaults to
- *   'default'. The name is also used as the storage bin if one is not
- *   specified in the configuration.
- *
- * @return Drupal\Component\PhpStorage\PhpStorageInterface
- *   An instantiated storage controller for the specified name.
- *
- * @see Drupal\Component\PhpStorage\PhpStorageInterface
- */
-function drupal_php_storage($name = 'default') {
-  global $conf;
-  $storage_controllers = &drupal_static(__FUNCTION__);
-  if (!isset($storage_controllers[$name])) {
-    if (isset($conf['php_storage'][$name])) {
-      $configuration = $conf['php_storage'][$name];
-    }
-    elseif (isset($conf['php_storage']['default'])) {
-      $configuration = $conf['php_storage']['default'];
-    }
-    else {
-      $configuration = array(
-        'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
-        'secret' => drupal_get_hash_salt(),
-      );
-    }
-    $class = isset($configuration['class']) ? $configuration['class'] : 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
-    if (!isset($configuration['bin'])) {
-      $configuration['bin'] = $name;
-    }
-    if (!isset($configuration['directory'])) {
-      $configuration['directory'] = DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php';
-    }
-    $storage_controllers[$name] = new $class($configuration);
-  }
-  return $storage_controllers[$name];
 }
 
 /**

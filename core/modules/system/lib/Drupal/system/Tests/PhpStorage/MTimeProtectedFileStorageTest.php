@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\PhpStorage;
 
+use Drupal\Component\PhpStorage\PhpStorageFactory;
+
 /**
  * Tests the directory mtime based PHP loader implementation.
  */
@@ -45,7 +47,7 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
    * Tests basic load/save/delete operations.
    */
   function testCRUD() {
-    $php = drupal_php_storage('simpletest');
+    $php = $this->storageFactory->get('simpletest');
     $this->assertIdentical(get_class($php), $this->storageClass);
     $this->assertCRUD($php);
   }
@@ -57,7 +59,7 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
    * mtime too.
    */
   function testSecurity() {
-    $php = drupal_php_storage('simpletest');
+    $php = $this->storageFactory->get('simpletest');
     $name = 'simpletest.php';
     $php->save($name, '<?php');
     $expected_root_directory = DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php/simpletest';
@@ -82,8 +84,8 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
     // a second of the initial save().
     sleep(1);
     for ($i = 0; $i < 2; $i++) {
-      drupal_static_reset('drupal_php_storage');
-      $php = drupal_php_storage('simpletest');
+      $storageFactory = new PhpStorageFactory();
+      $php = $this->storageFactory->get('simpletest');
       $GLOBALS['hacked'] = FALSE;
       $untrusted_code = "<?php\n" . '$GLOBALS["hacked"] = TRUE;';
       chmod($expected_directory, 0700);

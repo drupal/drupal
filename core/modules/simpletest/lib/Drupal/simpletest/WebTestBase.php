@@ -713,11 +713,22 @@ abstract class WebTestBase extends TestBase {
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
     $batch = array();
-
+    $variables = array(
+      'file_public_path' =>  $this->public_files_directory,
+      'file_private_path' =>  $this->private_files_directory,
+      'file_temporary_path' =>  $this->temp_files_directory,
+      'locale_translate_file_directory' =>  $this->translation_files_directory,
+    );
+    foreach ($variables as $name => $value) {
+      $GLOBALS['conf'][$name] = $value;
+    }
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     install_drupal($settings);
     $this->rebuildContainer();
+    foreach ($variables as $name => $value) {
+      variable_set($name, $value);
+    }
 
     // Restore the original Simpletest batch.
     $batch = &batch_get();
@@ -728,10 +739,6 @@ abstract class WebTestBase extends TestBase {
     unset($conf['lock_backend']);
 
     // Set path variables.
-    variable_set('file_public_path', $this->public_files_directory);
-    variable_set('file_private_path', $this->private_files_directory);
-    variable_set('file_temporary_path', $this->temp_files_directory);
-    variable_set('locale_translate_file_directory', $this->translation_files_directory);
 
     // Set 'parent_profile' of simpletest to add the parent profile's
     // search path to the child site's search paths.

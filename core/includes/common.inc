@@ -3,6 +3,7 @@
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -6745,8 +6746,8 @@ function drupal_flush_all_caches() {
   menu_router_rebuild();
 
   // Wipe the PHP Storage caches.
-  drupal_php_storage('service_container')->deleteAll();
-  drupal_php_storage('twig')->deleteAll();
+  PhpStorageFactory::get('service_container')->deleteAll();
+  PhpStorageFactory::get('twig')->deleteAll();
 
   // Re-initialize the maintenance theme, if the current request attempted to
   // use it. Unlike regular usages of this function, the installer and update

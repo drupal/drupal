@@ -20,6 +20,11 @@ use Drupal\Core\Database\ConnectionNotDefinedException;
 abstract class UnitTestBase extends TestBase {
 
   /**
+   * @var array
+   */
+ protected $configDirectories;
+
+  /**
    * Constructor for UnitTestBase.
    */
   function __construct($test_id = NULL) {

@@ -25,10 +25,10 @@ define('DRUPAL_ROOT', getcwd());
 // @see Drupal\Core\EventSubscriber\PathSubscriber;
 // @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
 require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
 // @todo Figure out how best to handle the Kernel constructor parameters.
-$kernel = new DrupalKernel('prod', FALSE, drupal_classloader(), drupal_php_storage('service_container'));
+$kernel = new DrupalKernel('prod', FALSE, drupal_classloader());
 
 // Create a request object from the HTTPFoundation.
 $request = Request::createFromGlobals();

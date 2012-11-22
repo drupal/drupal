@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\PhpStorage\PhpStorageFactory;
+
 /**
  * A class that defines a Twig environment for Drupal.
  *
@@ -24,9 +26,8 @@ class TwigEnvironment extends \Twig_Environment {
    * internally.
    */
   public function __construct(\Twig_LoaderInterface $loader = NULL, $options = array()) {
-    // @todo Pass as arguments from the DIC?
+    // @todo Pass as arguments from the DIC.
     $this->cache_object = cache();
-    $this->storage = drupal_php_storage('twig');
 
     parent::__construct($loader, $options);
   }
@@ -47,7 +48,7 @@ class TwigEnvironment extends \Twig_Environment {
   public function updateCompiledTemplate($cache_filename, $name) {
     $source = $this->loader->getSource($name);
     $compiled_source = $this->compileSource($source, $name);
-    $this->storage->save($cache_filename, $compiled_source);
+    $this->storage()->save($cache_filename, $compiled_source);
     // Save the last modification time
     $cid = 'twig:' . $cache_filename;
     $this->cache_object->set($cid, REQUEST_TIME);
@@ -83,9 +84,9 @@ class TwigEnvironment extends \Twig_Environment {
           $this->updateCompiledTemplate($cache_filename, $name);
         }
 
-        if (!$this->storage->load($cache_filename)) {
+        if (!$this->storage()->load($cache_filename)) {
           $this->updateCompiledTemplate($cache_filename, $name);
-          $this->storage->load($cache_filename);
+          $this->storage()->load($cache_filename);
         }
       }
     }
@@ -95,6 +96,18 @@ class TwigEnvironment extends \Twig_Environment {
     }
 
     return $this->loadedTemplates[$cls] = new $cls($this);
+  }
+
+  /**
+   * Gets the PHP code storage object to use for the compiled Twig files.
+   *
+   * @return \Drupal\Component\PhpStorage\PhpStorageInterface
+   */
+  protected function storage() {
+    if (!isset($this->storage)) {
+      $this->storage = PhpStorageFactory::get('service_container');
+    }
+    return $this->storage;
   }
 
 }

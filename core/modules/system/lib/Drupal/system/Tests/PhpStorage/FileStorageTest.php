@@ -39,7 +39,7 @@ class FileStorageTest extends PhpStorageTestBase {
    * Tests basic load/save/delete operations.
    */
   function testCRUD() {
-    $php = drupal_php_storage('simpletest');
+    $php = $this->storageFactory->get('simpletest');
     $this->assertIdentical(get_class($php), 'Drupal\Component\PhpStorage\FileStorage');
     $this->assertCRUD($php);
   }
@@ -48,7 +48,7 @@ class FileStorageTest extends PhpStorageTestBase {
    * Tests writing with one class and reading with another.
    */
   function testReadOnly() {
-    $php = drupal_php_storage('simpletest');
+    $php = $this->storageFactory->get('simpletest');
     $name = $this->randomName() . '/' . $this->randomName() . '.php';
 
     // Find a global that doesn't exist.
@@ -60,7 +60,7 @@ class FileStorageTest extends PhpStorageTestBase {
     $code = "<?php\n\$GLOBALS[$random] = TRUE;";
     $success = $php->save($name, $code);
     $this->assertIdentical($success, TRUE);
-    $php_read = drupal_php_storage('readonly');
+    $php_read = $this->storageFactory->get('readonly');
     $php_read->load($name);
     $this->assertTrue($GLOBALS[$random]);
 
