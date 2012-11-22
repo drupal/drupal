@@ -1,5 +1,5 @@
-name = "Transliteration test module"
-description = "Tests the transliteration hook"
+name = "Transliteration test"
+description = "Helper module for Transliteration system tests."
 package = Testing
 version = VERSION
 core = 8.x

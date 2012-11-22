@@ -195,7 +195,8 @@ class CoreBundle extends Bundle {
       ->setFactoryClass('Drupal\Core\ExceptionController')
       ->setFactoryMethod('getExceptionListener');
 
-    $container->register('transliteration', 'Drupal\Component\Transliteration\PHPTransliteration');
+    $container
+      ->register('transliteration', 'Drupal\Core\Transliteration\PHPTransliteration');
 
     // Add Serializer with arguments to be replaced in the compiler pass.
     $container->register('serializer', 'Symfony\Component\Serializer\Serializer')

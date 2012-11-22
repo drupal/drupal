@@ -228,11 +228,10 @@ function hook_language_fallback_candidates_alter(array &$fallback_candidates) {
  */
 
 /**
- * Provide language overrides for transliteration.
+ * Provide language-specific overrides for transliteration.
  *
  * @param array $overrides
- *   Associative array of language overrides. The outermost key is the language
- *   code, and the corresponding value is an array whose keys are integer
+ *   Associative array of language-specific overrides whose keys are integer
  *   Unicode character codes, and whose values are the transliterations of those
  *   characters in the given language, to override default transliterations.
  * @param string $langcode
@@ -244,7 +243,7 @@ function hook_transliteration_overrides_alter(&$overrides, $langcode) {
   // Provide special overrides for German for a custom site.
   if ($langcode == 'de') {
     // The core-provided transliteration of Ä is Ae, but we want just A.
-    $overrides['de'][0xC4] = 'A';
+    $overrides[0xC4] = 'A';
   }
 }
 

@@ -7,15 +7,13 @@
 
 namespace Drupal\system\Tests\Transliteration;
 
-use Drupal\Component\Transliteration\PHPTransliteration;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Transliteration\PHPTransliteration;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the transliteration class.
- *
- * We need this to be a WebTestBase class because it uses drupal_container().
+ * Tests Transliteration component functionality.
  */
-class TransliterationTest extends WebTestBase {
+class TransliterationTest extends DrupalUnitTestBase {
   /**
    * Modules to enable.
    *
@@ -26,7 +24,7 @@ class TransliterationTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Transliteration functionality',
-      'description' => 'Tests the transliteration component',
+      'description' => 'Tests Transliteration component functionality.',
       'group' => 'Transliteration',
     );
   }
@@ -76,16 +74,26 @@ class TransliterationTest extends WebTestBase {
 
     // Test each case both with a new instance of the transliteration class,
     // and with one that builds as it goes.
-    $common_transliterator = drupal_container()->get('transliteration');
+    $transliterator_service = $this->container->get('transliteration');
 
     foreach($cases as $case) {
-      list($langcode, $before, $after) = $case;
-      $transliterator = new PHPTransliteration();
-      $actual = $transliterator->transliterate($before, $langcode);
-      $this->assertEqual($after, $actual, format_string('@before is correctly transliterated to @after in new class (@actual) in language @langcode', array('@before' => $before, '@langcode' => $langcode, '@after' => $after, '@actual' => $actual)));
+      list($langcode, $original, $expected) = $case;
+      $transliterator_class = new PHPTransliteration();
+      $actual = $transliterator_class->transliterate($original, $langcode);
+      $this->assertIdentical($actual, $expected, format_string('@original transliteration to @actual is identical to @expected for language @langcode in new class instance.', array(
+        '@original' => $original,
+        '@langcode' => $langcode,
+        '@expected' => $expected,
+        '@actual' => $actual,
+      )));
 
-      $actual = $common_transliterator->transliterate($before, $langcode);
-      $this->assertEqual($after, $actual, format_string('@before is correctly transliterated to @after in previously-used class (@actual) in language @langcode', array('@before' => $before, '@langcode' => $langcode, '@after' => $after, '@actual' => $actual)));
+      $actual = $transliterator_service->transliterate($original, $langcode);
+      $this->assertIdentical($actual, $expected, format_string('@original transliteration to @actual is identical to @expected for language @langcode in service instance.', array(
+        '@original' => $original,
+        '@langcode' => $langcode,
+        '@expected' => $expected,
+        '@actual' => $actual,
+      )));
     }
   }
 }

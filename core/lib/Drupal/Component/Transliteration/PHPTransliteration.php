@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\Component\Transliteration\PhpTransliteration.
+ * Definition of \Drupal\Component\Transliteration\PHPTransliteration.
  *
  * Some parts of this code were derived from the MediaWiki project's UtfNormal
  * class, Copyright © 2004 Brion Vibber <brion@pobox.com>,
@@ -15,20 +15,16 @@ namespace Drupal\Component\Transliteration;
  * Implements transliteration without using the PECL extensions.
  *
  * Transliterations are done character-by-character, by looking up non-US-ASCII
- * characters in a transliteration database. The database comes from two types
- * of files, both of which are searched for in the
- * PHPTransliteration::$dataDirectory directory. First, language-specific
- * overrides are searched (see PHPTranslation::readLanguageOverrides() for
- * details of these files). If there is no language-specific override for a
- * character, the generic transliteration character tables are searched (see
- * PHPTranslation::readGenericData() for details of these files). If looking up
- * the character in the generic table results in a NULL value, or an illegal
- * character is encountered, then a substitute character is returned.
+ * characters in a transliteration database.
  *
- * This class is the registered transliteration class returned from
- * drupal_container()->get('transliteration') by default.
- *
- * @ingroup transliteration
+ * The database comes from two types of files, both of which are searched for in
+ * the PHPTransliteration::$dataDirectory directory. First, language-specific
+ * overrides are searched (see PHPTransliteration::readLanguageOverrides()). If
+ * there is no language-specific override for a character, the generic
+ * transliteration character tables are searched (see
+ * PHPTransliteration::readGenericData()). If looking up the character in the
+ * generic table results in a NULL value, or an illegal character is
+ * encountered, then a substitute character is returned.
  */
 class PHPTransliteration implements TransliterationInterface {
 
@@ -68,13 +64,6 @@ class PHPTransliteration implements TransliterationInterface {
   protected $genericMap = array();
 
   /**
-   * Returns this PHPTransliteration object (for the Drupal Container).
-   */
-  public function get() {
-    return $this;
-  }
-
-  /**
    * Constructs a transliteration object.
    *
    * @param string $data_directory
@@ -83,7 +72,6 @@ class PHPTransliteration implements TransliterationInterface {
    *   file resides.
    */
   public function __construct($data_directory = NULL) {
-    // Set up data directory and tail bytes table.
     $this->dataDirectory = (isset($data_directory)) ? $data_directory : __DIR__ . '/data';
   }
 
@@ -184,9 +172,7 @@ class PHPTransliteration implements TransliterationInterface {
    * PHPTransliteration::$dataDirectory. These files should set up an array
    * variable $overrides with an element whose key is $langcode and whose value
    * is an array whose keys are character codes, and whose values are their
-   * transliterations in this language. The resulting $overrides array is
-   * altered by invoking hook_transliteration_overrides_alter() to let modules
-   * add additional overrides.
+   * transliterations in this language.
    *
    * @param $langcode
    *   Code for the language to read.
@@ -199,14 +185,11 @@ class PHPTransliteration implements TransliterationInterface {
     // Read in this file, which should set up a variable called $overrides,
     // which will be local to this function.
     if (is_file($file)) {
-      include($file);
+      include $file;
     }
     if (!isset($overrides) || !is_array($overrides)) {
       $overrides = array($langcode => array());
     }
-
-    // Let modules alter the list, and save it.
-    drupal_alter('transliteration_overrides', $overrides, $langcode);
     $this->languageOverrides[$langcode] = $overrides[$langcode];
   }
 
@@ -229,7 +212,7 @@ class PHPTransliteration implements TransliterationInterface {
     // Read in this file, which should set up a variable called $base, which
     // will be local to this function.
     if (is_file($file)) {
-      include($file);
+      include $file;
     }
     if (!isset($base) || !is_array($base)) {
       $base = array();
