@@ -28,38 +28,15 @@ class WidgetPluginManager extends PluginManagerBase {
   );
 
   /**
-   * The cache bin used for plugin definitions.
-   *
-   * @var string
-   */
-  protected $cache_bin = 'field';
-
-  /**
-   * The cache id used for plugin definitions.
-   *
-   * @var string
-   */
-  protected $cache_id = 'field_widget_types';
-
-  /**
    * Constructs a WidgetPluginManager object.
    */
   public function __construct() {
-    $this->baseDiscovery = new AlterDecorator(new WidgetLegacyDiscoveryDecorator(new AnnotatedClassDiscovery('field', 'widget')), 'field_widget_info');
-    $this->discovery = new CacheDecorator($this->baseDiscovery, $this->cache_id, $this->cache_bin);
+    $this->discovery = new AnnotatedClassDiscovery('field', 'widget');
+    $this->discovery = new WidgetLegacyDiscoveryDecorator($this->discovery);
+    $this->discovery = new AlterDecorator($this->discovery, 'field_widget_info');
+    $this->discovery = new CacheDecorator($this->discovery, 'field_widget_types',  'field');
 
     $this->factory = new WidgetFactory($this);
-  }
-
-  /**
-   * Clears cached definitions.
-   *
-   * @todo Remove when http://drupal.org/node/1764232 is fixed.
-   */
-  public function clearDefinitions() {
-    // Clear 'static' data by creating a new object.
-    $this->discovery = new CacheDecorator($this->baseDiscovery, $this->cache_id, $this->cache_bin);
-    cache($this->cache_bin)->delete($this->cache_id);
   }
 
   /**

@@ -8,11 +8,12 @@
 namespace Drupal\Component\Plugin;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 
 /**
  * Base class for plugin managers.
  */
-abstract class PluginManagerBase implements PluginManagerInterface {
+abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface {
 
   /**
    * The object that discovers plugins managed by this manager.
@@ -65,6 +66,15 @@ abstract class PluginManagerBase implements PluginManagerInterface {
     }
 
     return $definitions;
+  }
+
+  /**
+   * Implements \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface::clearCachedDefinitions().
+   */
+  public function clearCachedDefinitions() {
+    if ($this->discovery instanceof CachedDiscoveryInterface) {
+      $this->discovery->clearCachedDefinitions();
+    }
   }
 
   /**

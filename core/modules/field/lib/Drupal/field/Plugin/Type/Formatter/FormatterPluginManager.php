@@ -27,38 +27,15 @@ class FormatterPluginManager extends PluginManagerBase {
   );
 
   /**
-   * The cache bin used for plugin definitions.
-   *
-   * @var string
-   */
-  protected $cache_bin = 'field';
-
-  /**
-   * The cache id used for plugin definitions.
-   *
-   * @var string
-   */
-  protected $cache_id = 'field_formatter_types';
-
-  /**
    * Constructs a FormatterPluginManager object.
    */
   public function __construct() {
-    $this->baseDiscovery = new AlterDecorator(new FormatterLegacyDiscoveryDecorator(new AnnotatedClassDiscovery('field', 'formatter')), 'field_formatter_info');
-    $this->discovery = new CacheDecorator($this->baseDiscovery, $this->cache_id, $this->cache_bin);
+    $this->discovery = new AnnotatedClassDiscovery('field', 'formatter');
+    $this->discovery = new FormatterLegacyDiscoveryDecorator($this->discovery);
+    $this->discovery = new AlterDecorator($this->discovery, 'field_formatter_info');
+    $this->discovery = new CacheDecorator($this->discovery, 'field_formatter_types', 'field');
 
     $this->factory = new FormatterFactory($this);
-  }
-
-  /**
-   * Clears cached definitions.
-   *
-   * @todo Remove when http://drupal.org/node/1764232 is fixed.
-   */
-  public function clearDefinitions() {
-    // Clear 'static' data by creating a new object.
-    $this->discovery = new CacheDecorator($this->baseDiscovery, $this->cache_id, $this->cache_bin);
-    cache($this->cache_bin)->delete($this->cache_id);
   }
 
   /**

@@ -7,12 +7,13 @@
 
 namespace Drupal\Core\Plugin\Discovery;
 
+use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Enables static and persistent caching of discovered plugin definitions.
  */
-class CacheDecorator implements DiscoveryInterface {
+class CacheDecorator implements CachedDiscoveryInterface {
 
   /**
    * The cache key used to store the definition list.
@@ -107,6 +108,16 @@ class CacheDecorator implements DiscoveryInterface {
       cache($this->cacheBin)->set($this->cacheKey, $definitions);
     }
     $this->definitions = $definitions;
+  }
+
+  /**
+   * Implements \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface::clearCachedDefinitions().
+   */
+  public function clearCachedDefinitions() {
+    if (isset($this->cacheKey)) {
+      cache($this->cacheBin)->delete($this->cacheKey);
+    }
+    $this->definitions = NULL;
   }
 
   /**
