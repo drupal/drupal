@@ -44,11 +44,11 @@ display:
     position: '0'
   page_1:
     display_options:
-      path: test_rename_reset_button
+      path: test_reset_button
     display_plugin: page
     display_title: Page
     id: page_1
     position: '0'
 human_name: ''
-name: test_rename_reset_button
+name: test_reset_button
 tag: ''

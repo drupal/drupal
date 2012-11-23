@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Tests\UI\UITestBase;
+
 /**
  * Tests exposed forms.
  */
-class ExposedFormTest extends PluginTestBase {
+class ExposedFormTest extends UITestBase {
 
   /**
    * Modules to enable.
@@ -30,26 +32,38 @@ class ExposedFormTest extends PluginTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableViewsTestModule();
-
     $this->drupalCreateContentType(array('type' => 'article'));
     $this->drupalCreateContentType(array('type' => 'page'));
+
+    // Create some random nodes.
+    for ($i = 0; $i < 5; $i++) {
+      $this->drupalCreateNode();
+    }
+  }
+
+  /**
+   * Tests whether the reset button works on an expoed form.
+   */
+  public function testResetButton() {
+    $this->drupalGet('test_reset_button', array('query' => array('type' => 'article')));
+    // Test that the type has been set.
+    $this->assertFieldById('edit-type', 'article', 'Article type filter set.');
+
+    // Test the reset works.
+    $this->drupalGet('test_reset_button', array('query' => array('op' => 'Reset')));
+    $this->assertResponse(200);
+    // Test the type has been reset.
+    $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
   }
 
   /**
    * Tests, whether and how the reset button can be renamed.
    */
   public function testRenameResetButton() {
-    $account = $this->drupalCreateUser();
-    $this->drupalLogin($account);
-    // Create some random nodes.
-    for ($i = 0; $i < 5; $i++) {
-      $this->drupalCreateNode();
-    }
     // Look at the page and check the label "reset".
-    $this->drupalGet('test_rename_reset_button');
+    $this->drupalGet('test_reset_button');
     // Rename the label of the reset button.
-    $view = views_get_view('test_rename_reset_button');
+    $view = views_get_view('test_reset_button');
     $view->setDisplay();
 
     $exposed_form = $view->display_handler->getOption('exposed_form');
@@ -61,7 +75,7 @@ class ExposedFormTest extends PluginTestBase {
     views_invalidate_cache();
 
     // Look whether ther reset button label changed.
-    $this->drupalGet('test_rename_reset_button');
+    $this->drupalGet('test_reset_button');
     $this->assertResponse(200);
 
     $this->helperButtonHasLabel('edit-reset', $expected_label);
@@ -71,8 +85,6 @@ class ExposedFormTest extends PluginTestBase {
    * Tests the admin interface of exposed filter and sort items.
    */
   function testExposedAdminUi() {
-    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
-    $this->drupalLogin($admin_user);
     menu_router_rebuild();
     $edit = array();
 

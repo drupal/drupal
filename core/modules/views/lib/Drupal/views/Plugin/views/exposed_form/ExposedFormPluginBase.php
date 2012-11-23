@@ -312,6 +312,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
       $this->view->exposed_data = array();
     }
 
+    $form_state['redirect'] = current_path();
     $form_state['values'] = array();
   }
 
