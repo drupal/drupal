@@ -1997,14 +1997,12 @@ function drupal_hash_base64($data) {
 /**
  * Gets a salt useful for hardening against SQL injection.
  *
- * @return
+ * @return string
  *   A salt based on information in settings.php, not in the database.
  */
 function drupal_get_hash_salt() {
   global $drupal_hash_salt;
-  // If the $drupal_hash_salt variable is empty, a hash of the serialized
-  // database credentials is used as a fallback salt.
-  return empty($drupal_hash_salt) ? hash('sha256', serialize(Database::getConnectionInfo('default'))) : $drupal_hash_salt;
+  return !empty($drupal_hash_salt) ? $drupal_hash_salt : '';
 }
 
 /**
@@ -2256,11 +2254,11 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
-  // Make sure we are using the test database prefix in child Drupal sites.
-  _drupal_initialize_db_test_prefix();
-
   // Activate the class loader.
   drupal_classloader();
+
+  // Make sure we are using the test database prefix in child Drupal sites.
+  _drupal_initialize_db_test_prefix();
 
   // Load the procedural configuration system helper functions.
   require_once DRUPAL_ROOT . '/core/includes/config.inc';
@@ -2550,9 +2548,9 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^(simpletest\d+);(.+);(.+);(.+)$/", $_SERVER['HTTP_USER_AGENT'], $matches)) {
     list(, $prefix, $time, $salt, $hmac) = $matches;
     $check_string =  $prefix . ';' . $time . ';' . $salt;
-    // We use the salt from settings.php to make the HMAC key, since
-    // the database is not yet initialized and we can't access any Drupal variables.
-    // The file properties add more entropy not easily accessible to others.
+    // Use the salt from settings.php to create the HMAC key, since no services
+    // are available yet. The file properties add more entropy not easily
+    // accessible to others.
     $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
     // Since we are making a local request a 5 second time window is allowed,
@@ -2574,9 +2572,9 @@ function drupal_generate_test_ua($prefix) {
   static $key;
 
   if (!isset($key)) {
-    // We use the salt from settings.php to make the HMAC key, since
-    // the database is not yet initialized and we can't access any Drupal variables.
-    // The file properties add more entropy not easily accessible to others.
+    // Use the salt from settings.php to create the HMAC key, since no services
+    // are available yet. The file properties add more entropy not easily
+    // accessible to others.
     $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
   }
   // Generate a moderately secure HMAC based on the database credentials.
