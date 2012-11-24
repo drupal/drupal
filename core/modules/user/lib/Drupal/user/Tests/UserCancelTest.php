@@ -71,10 +71,9 @@ class UserCancelTest extends WebTestBase {
   function testUserCancelUid1() {
     // Update uid 1's name and password to we know it.
     $password = user_password();
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
     $account = array(
       'name' => 'user1',
-      'pass' => user_hash_password(trim($password)),
+      'pass' => drupal_container()->get('password')->hash(trim($password)),
     );
     // We cannot use $account->save() here, because this would result in the
     // password being hashed again.

@@ -81,11 +81,12 @@ while ($param = array_shift($_SERVER['argv'])) {
 chdir('..');
 define('DRUPAL_ROOT', getcwd());
 
-include_once DRUPAL_ROOT . '/core/includes/password.inc';
 include_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 
+$password_hasher = drupal_container()->get('password');
+
 foreach ($passwords as $password) {
-  print("\npassword: $password \t\thash: ". user_hash_password($password) ."\n");
+  print("\npassword: $password \t\thash: ". $password_hasher->hash($password) ."\n");
 }
 print("\n");
 

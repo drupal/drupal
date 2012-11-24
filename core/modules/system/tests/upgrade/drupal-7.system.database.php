@@ -98,6 +98,10 @@ db_insert('variable')->fields(array(
 ->values(array(
   'name' => 'filter_allowed_protocols',
   'value' => 'a:4:{i:0;s:4:"http";i:1;s:5:"https";i:2;s:3:"ftp";i:3;s:6:"mailto";}',
+  ))
+->values(array(
+    'name' => 'password_count_log2',
+    'value' => 'i:42;',
 ))
 ->execute();
 

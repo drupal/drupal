@@ -61,8 +61,7 @@ class UpdateScriptTest extends WebTestBase {
     // Access the update page as user 1.
     $user1 = user_load(1);
     $user1->pass_raw = user_password();
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
-    $user1->pass = user_hash_password(trim($user1->pass_raw));
+    $user1->pass = drupal_container()->get('password')->hash(trim($user1->pass_raw));
     db_query("UPDATE {users} SET pass = :pass WHERE uid = :uid", array(':pass' => $user1->pass, ':uid' => $user1->uid));
     $this->drupalLogin($user1);
     $this->drupalGet($this->update_url, array('external' => TRUE));

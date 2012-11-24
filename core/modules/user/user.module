@@ -655,8 +655,7 @@ function user_validate_current_pass(&$form, &$form_state) {
     // form values like password_confirm that have their own validation
     // that prevent them from being empty if they are changed.
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
-      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
-      $current_pass_failed = empty($form_state['values']['current_pass']) || !user_check_password($form_state['values']['current_pass'], $account);
+      $current_pass_failed = empty($form_state['values']['current_pass']) || !drupal_container()->get('password')->check($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
         form_set_error($key);
@@ -1706,14 +1705,13 @@ function user_authenticate($name, $password) {
   if (!empty($name) && !empty($password)) {
     $account = user_load_by_name($name);
     if ($account) {
-      // Allow alternate password hashing schemes.
-      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
-      if (user_check_password($password, $account)) {
+      $password_hasher = drupal_container()->get('password');
+      if ($password_hasher->check($password, $account)) {
         // Successful authentication.
         $uid = $account->uid;
 
         // Update user to new password scheme if needed.
-        if (user_needs_new_hash($account)) {
+        if ($password_hasher->userNeedsNewHash($account)) {
           $account->pass = $password;
           $account->save();
         }

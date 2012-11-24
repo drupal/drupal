@@ -30,7 +30,6 @@ include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // Enable requested modules
-require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
 include_once './modules/system/system.admin.inc';
 $form = system_modules();
 foreach ($modules_to_enable as $module) {
@@ -45,12 +44,13 @@ drupal_cron_run();
 
 // Create six users
 $query = db_insert('users')->fields(array('uid', 'name', 'pass', 'mail', 'status', 'created', 'access'));
+$password_hasher = drupal_container()->get('password');
 for ($i = 0; $i < 6; $i++) {
   $name = "test user $i";
   $pass = md5("test PassW0rd $i !(.)");
   $mail = "test$i@example.com";
   $now = mktime(0, 0, 0, 1, $i + 1, 2010);
-  $query->values(array(db_next_id(), $name, user_hash_password($pass), $mail, 1, $now, $now));
+  $query->values(array(db_next_id(), $name, $password_hasher->hash($pass), $mail, 1, $now, $now));
 }
 $query->execute();
 

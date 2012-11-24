@@ -2232,6 +2232,15 @@ function system_update_8036() {
 }
 
 /**
+ * Remove the 'password_count_log2' variable.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8037() {
+  update_variable_del('password_count_log2');
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

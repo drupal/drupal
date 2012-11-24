@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Password\PhpassHashedPassword;
 
 /**
  * Functional tests for user logins, including rate limiting of login attempts.
@@ -102,25 +103,32 @@ class UserLoginTest extends WebTestBase {
    * Test that user password is re-hashed upon login after changing $count_log2.
    */
   function testPasswordRehashOnLogin() {
-    // Load password hashing API.
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
-    // Set initial $count_log2 to the default, DRUPAL_HASH_COUNT.
-    variable_set('password_count_log2', DRUPAL_HASH_COUNT);
+    // Determine default log2 for phpass hashing algoritm
+    $default_count_log2 = 16;
+
+    // Retrieve instance of password hashing algorithm
+    $password_hasher = drupal_container()->get('password');
+
     // Create a new user and authenticate.
     $account = $this->drupalCreateUser(array());
     $password = $account->pass_raw;
     $this->drupalLogin($account);
     $this->drupalLogout();
-    // Load the stored user. The password hash should reflect $count_log2.
+    // Load the stored user. The password hash should reflect $default_count_log2.
     $account = user_load($account->uid);
-    $this->assertIdentical(_password_get_count_log2($account->pass), DRUPAL_HASH_COUNT);
-    // Change $count_log2 and log in again.
-    variable_set('password_count_log2', DRUPAL_HASH_COUNT + 1);
+    $this->assertIdentical($password_hasher->getCountLog2($account->pass), $default_count_log2);
+
+    // Change the required number of iterations by loading a test-module
+    // containing the necessary container builder code and then verify that the
+    // users password gets rehashed during the login.
+    $overridden_count_log2 = 19;
+    module_enable(array('user_custom_phpass_params_test'));
+
     $account->pass_raw = $password;
     $this->drupalLogin($account);
     // Load the stored user, which should have a different password hash now.
     $account = user_load($account->uid, TRUE);
-    $this->assertIdentical(_password_get_count_log2($account->pass), DRUPAL_HASH_COUNT + 1);
+    $this->assertIdentical($password_hasher->getCountLog2($account->pass), $overridden_count_log2);
   }
 
   /**

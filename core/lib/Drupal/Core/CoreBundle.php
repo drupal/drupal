@@ -145,6 +145,15 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('database'))
       ->addArgument(new Reference('path.alias_manager'));
 
+    // Add password hashing service. The argument to PhpassHashedPassword
+    // constructor is the log2 number of iterations for password stretching.
+    // This should increase by 1 every Drupal version in order to counteract
+    // increases in the speed and power of computers available to crack the
+    // hashes. The current password hashing method was introduced in Drupal 7
+    // with a log2 count of 15.
+    $container->register('password', 'Drupal\Core\Password\PhpassHashedPassword')
+      ->addArgument(16);
+
     // The following services are tagged as 'nested_matcher' services and are
     // processed in the RegisterNestedMatchersPass compiler pass. Each one
     // needs to be set on the matcher using a different method, so we use a
