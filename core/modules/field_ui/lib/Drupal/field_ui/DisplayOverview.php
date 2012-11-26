@@ -101,7 +101,18 @@ class DisplayOverview extends OverviewBase {
     // Field rows.
     foreach ($instances as $name => $instance) {
       $field = field_info_field($instance['field_name']);
-      $display = $instance['display'][$this->view_mode];
+
+      if (isset($instance['display'][$this->view_mode])) {
+        $display = $instance['display'][$this->view_mode];
+      }
+      else {
+        $display = array(
+          'type' => 'hidden',
+          'label' => 'above',
+          'weight' => 0,
+        );
+      }
+
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
         '#row_type' => 'field',
