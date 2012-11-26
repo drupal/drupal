@@ -23,12 +23,7 @@ class UserStorageController extends DatabaseStorageController {
    * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
    */
   function attachLoad(&$queried_users, $load_revision = FALSE) {
-    // Build an array of user picture IDs so that these can be fetched later.
-    $picture_fids = array();
     foreach ($queried_users as $key => $record) {
-      if ($record->picture) {
-        $picture_fids[] = $record->picture;
-      }
       $queried_users[$key]->data = unserialize($record->data);
       $queried_users[$key]->roles = array();
       if ($record->uid) {
@@ -45,15 +40,6 @@ class UserStorageController extends DatabaseStorageController {
       $queried_users[$record->uid]->roles[$record->rid] = $record->name;
     }
 
-    // Add the full file objects for user pictures if enabled.
-    if (!empty($picture_fids) && variable_get('user_pictures', 1) == 1) {
-      $pictures = file_load_multiple($picture_fids);
-      foreach ($queried_users as $entity) {
-        if (!empty($entity->picture) && isset($pictures[$entity->picture])) {
-          $entity->picture = $pictures[$entity->picture];
-        }
-      }
-    }
     // Call the default attachLoad() method. This will add fields and call
     // hook_user_load().
     parent::attachLoad($queried_users, $load_revision);
@@ -97,45 +83,7 @@ class UserStorageController extends DatabaseStorageController {
       }
     }
 
-    if (!empty($entity->picture_upload)) {
-      $entity->picture = $entity->picture_upload;
-    }
-    // Delete the picture if the submission indicates that it should be deleted
-    // and no replacement was submitted.
-    elseif (!empty($entity->picture_delete)) {
-      $entity->picture = 0;
-      file_usage()->delete($entity->original->picture, 'user', 'user', $entity->uid);
-      file_delete($entity->original->picture->fid);
-    }
-
     if (!$entity->isNew()) {
-      // Process picture uploads.
-      if (!empty($entity->picture->fid) && (!isset($entity->original->picture->fid) || $entity->picture->fid != $entity->original->picture->fid)) {
-        $picture = $entity->picture;
-        // If the picture is a temporary file, move it to its final location
-        // and make it permanent.
-        if (!$picture->status) {
-          $info = image_get_info($picture->uri);
-          $picture_directory =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
-
-          // Prepare the pictures directory.
-          file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
-          $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $entity->uid . '-' . REQUEST_TIME . '.' . $info['extension']);
-
-          // Move the temporary file into the final location.
-          if ($picture = file_move($picture, $destination, FILE_EXISTS_RENAME)) {
-            $entity->picture = $picture;
-            file_usage()->add($picture, 'user', 'user', $entity->uid);
-          }
-        }
-        // Delete the previous picture if it was deleted or replaced.
-        if (!empty($entity->original->picture->fid)) {
-          file_usage()->delete($entity->original->picture, 'user', 'user', $entity->uid);
-          file_delete($entity->original->picture->fid);
-        }
-      }
-      $entity->picture = empty($entity->picture->fid) ? 0 : $entity->picture->fid;
-
       // If the password is empty, that means it was not changed, so use the
       // original password.
       if (empty($entity->pass)) {

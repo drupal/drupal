@@ -20,7 +20,8 @@
  * - $permalink: Comment permalink.
  * - $submitted: Submission information created from $author and $created during
  *   template_preprocess_comment().
- * - $user_picture: The comment author's picture from user-picture.tpl.php.
+ * - $user_picture: The comment author's picture. Use render($user_picture) to
+ *   print it.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
  *   unpublished, published, or preview.
@@ -79,7 +80,7 @@
   <?php print render($title_suffix); ?>
 
   <footer>
-    <?php print $user_picture; ?>
+    <?php print render($user_picture); ?>
     <p class="submitted"><?php print $submitted; ?></p>
     <?php
       // Indicate the semantic relationship between parent and child comments

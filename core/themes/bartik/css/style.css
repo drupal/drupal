@@ -622,10 +622,9 @@ h1#page-title {
   color: #68696b;
   margin-bottom: -5px;
 }
-.submitted .user-picture img {
+.submitted .field-name-field-user-picture img {
   float: left; /* LTR */
-  height: 20px;
-  margin: 1px 5px 0 0; /* LTR */
+  margin: 1px 20px 0 0; /* LTR */
 }
 .field-type-taxonomy-term-reference {
   margin: 0 0 1.2em;
@@ -657,7 +656,7 @@ h1#page-title {
   text-align: right;
 }
 .field-type-image img,
-.user-picture img {
+.field-name-field-user-picture img {
   margin: 0 0 1em;
 }
 ul.links {
@@ -678,7 +677,7 @@ ul.links {
 .comment h2.title {
   margin-bottom: 1em;
 }
-.comment div.user-picture img {
+.comment .field-name-field-user-picture img {
   margin-left: 0; /* LTR */
 }
 .comment {
@@ -1058,7 +1057,7 @@ div.messages {
 
 /* -------------- User Profile   -------------- */
 
-.profile .user-picture {
+.profile .field-name-field-user-picture {
   float: none;
 }
 

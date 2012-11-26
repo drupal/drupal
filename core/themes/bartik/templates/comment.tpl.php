@@ -20,7 +20,6 @@
  * - $permalink: Comment permalink.
  * - $submitted: Submission information created from $author and $created
  *   during template_preprocess_comment().
- * - $picture: Authors picture.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
  *   unpublished, published, or preview.
@@ -73,7 +72,7 @@
 
   <div class="attribution">
 
-    <?php print $user_picture; ?>
+    <?php print render($user_picture); ?>
 
     <div class="submitted">
       <p class="commenter-name">

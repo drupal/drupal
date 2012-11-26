@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the user module.
  */
 
+use Drupal\Component\Uuid\Uuid;
+
 /**
  * Implements hook_schema().
  */
@@ -120,12 +122,6 @@ function user_schema() {
         'default' => '',
         'description' => 'The {language}.langcode that the user prefers for viewing administration pages.',
       ),
-      'picture' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => "Foreign key: {file_managed}.fid of user's picture.",
-      ),
       'init' => array(
         'type' => 'varchar',
         'length' => 254,
@@ -145,7 +141,6 @@ function user_schema() {
       'access' => array('access'),
       'created' => array('created'),
       'mail' => array('mail'),
-      'picture' => array('picture'),
     ),
     'unique keys' => array(
       'uuid' => array('uuid'),
@@ -628,5 +623,246 @@ function user_update_8010() {
 }
 
 /**
+ * Create user picture field.
+ */
+function user_update_8011() {
+  global $user;
+
+  // User pictures can only be migrated to the new user picture image field
+  // if Image module is installed.
+  if (!module_exists('image')) {
+    module_enable(array('image'));
+  }
+
+  if ($default_image = update_variable_get('user_picture_default', '')) {
+    $picture_directory =  update_variable_get('file_default_scheme', 'public') . '://' . update_variable_get('user_picture_path', 'pictures');
+    file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
+    $destination = file_stream_wrapper_uri_normalize($picture_directory . '/' . drupal_basename($default_image));
+    // The file entity needs to be created manually as entities can not be
+    // created/saved during the upgrade path. Attempt to replicate the behavior
+    // of file_save_data() by updating an eventually existing record for that
+    // file.
+    file_unmanaged_save_data($default_image, $destination, FILE_EXISTS_REPLACE);
+    $uuid = new Uuid();
+    db_merge('file_managed')
+      ->key(array(
+        'uri' => $destination,
+      ))
+      ->fields(array(
+        'uid' => $user->uid,
+        'status' => FILE_STATUS_PERMANENT,
+        'filename' => drupal_basename($destination),
+        'uuid' => $uuid->generate(),
+        'langcode' => LANGUAGE_NOT_SPECIFIED,
+        'filesize' => filesize($destination),
+        'filemime' => file_get_mimetype($destination),
+        'timestamp' => REQUEST_TIME,
+      ))
+      ->execute();
+    $default_image_fid = db_query('SELECT fid FROM {file_managed} WHERE uri = :uri', array(':uri' => $destination))->fetchField();
+  }
+  $settings = array(
+    // In D7, user pictures did not require Image module to work. Image module
+    // only allowed usage of an image style to format user pictures in the
+    // output. The 'user_pictures' variable had a global effect on the
+    // presence of the user picture functionality before. The new user picture
+    // image field is created regardless of that global setting, which means
+    // the field appears on the user account form after migration, even if
+    // user pictures were disabled previously. The picture is only hidden in
+    // the output.
+    'formatter' => update_variable_get('user_pictures', 0) ? 'image' : 'hidden',
+    'file_directory' => update_variable_get('user_picture_path', 'pictures'),
+    'default_image' => !empty($default_image_fid) ? $default_image_fid : 0,
+    'image_style' => update_variable_get('user_picture_style', ''),
+    'max_resolution' => update_variable_get('user_picture_dimensions', '85x85'),
+    'max_filesize' => update_variable_get('user_picture_file_size', '30') . ' KB',
+    'description' => update_variable_get('user_picture_guidelines', ''),
+  );
+
+  $field = _user_install_picture_field($settings);
+
+  // Add file usage for the default field.
+  if (!empty($default_image_fid)) {
+    db_insert('file_usage')
+      ->fields(array(
+        'fid' => $default_image_fid,
+        'module' => 'image',
+        'type' => 'default_image',
+        'id' => $field['id'],
+        'count' => 1,
+      ))
+      ->execute();
+  }
+
+  // Update the user bundle settings and hide the member_for extra field.
+  $settings = update_variable_get('field_bundle_settings_user__user');
+  $settings['extra_fields']['display']['member_for']['compact'] = array(
+    'weight' => 0,
+    'visible' => FALSE,
+  );
+  update_variable_set('field_bundle_settings_user__user', $settings);
+
+  // Delete old variables.
+  update_variable_del('user_pictures');
+  update_variable_del('user_picture_path');
+  update_variable_del('user_picture_default');
+  update_variable_del('user_picture_style');
+  update_variable_del('user_picture_dimensions');
+  update_variable_del('user_picture_file_size');
+  update_variable_del('user_picture_guidelines');
+}
+
+/**
+ * Migrate {users}.picture to 'user_picture' image field.
+ */
+function user_update_8012(&$sandbox) {
+  // Initialize total values to process.
+  if (!isset($sandbox['total'])) {
+    $sandbox['total'] = (int) db_query('SELECT COUNT(picture) FROM {users} WHERE picture > 0')->fetchField();
+    $sandbox['processed'] = 0;
+  }
+
+  if ($sandbox['total']) {
+    // Retrieve next 20 rows to migrate.
+    $rows = db_query_range('SELECT uid, picture FROM {users} WHERE picture > 0', 0, 20)->fetchAllKeyed();
+    foreach ($rows as $uid => $fid) {
+      // Add a row to the field data and revision tables.
+      db_insert('field_data_user_picture')
+        ->fields(array(
+          'entity_type' => 'user',
+          'bundle' => 'user',
+          'entity_id' => $uid,
+          'revision_id' => $uid,
+          'langcode' => LANGUAGE_NOT_SPECIFIED,
+          'delta' => 0,
+          'user_picture_fid' => $fid,
+        ))
+        ->execute();
+      db_insert('field_revision_user_picture')
+        ->fields(array(
+          'entity_type' => 'user',
+          'bundle' => 'user',
+          'entity_id' => $uid,
+          'revision_id' => $uid,
+          'langcode' => LANGUAGE_NOT_SPECIFIED,
+          'delta' => 0,
+          'user_picture_fid' => $fid,
+        ))
+        ->execute();
+
+      // Update file usage from user to file module.
+      // @see file_field_insert()
+      // Old: file_usage_add($picture, 'user', 'user', $entity->uid);
+      // New: file_usage_add(file_load($item['fid']), 'file', $entity_type, $id);
+      db_update('file_usage')
+        ->condition('fid', $fid)
+        ->condition('module', 'user')
+        ->condition('type', 'user')
+        ->condition('id', $uid)
+        ->fields(array(
+          'module' => 'file',
+        ))
+        ->execute();
+    }
+
+    // Set picture column of the migrated users to 0.
+    db_update('users')
+      ->fields(array(
+        'picture' => 0,
+      ))
+      ->condition('uid', array_keys($rows))
+      ->execute();
+
+    // Report status.
+    $sandbox['processed'] += count($rows);
+  }
+  $sandbox['#finished'] = $sandbox['total'] ? $sandbox['processed'] / $sandbox['total'] : 1;
+
+}
+
+/**
+ * Deletes {users}.picture field.
+ */
+function user_update_8013() {
+  db_drop_field('users', 'picture');
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */
+
+/**
+ * Creates a user picture image field for the User entity.
+ */
+function _user_install_picture_field(array $settings = array()) {
+  $t = get_t();
+  $settings += array(
+    'formatter' => 'image',
+    'file_directory' => 'pictures',
+    'default_image' => 0,
+    'image_style' => 'thumbnail',
+    'max_resolution' => '85x85',
+    'max_filesize' => '30 KB',
+    'description' => $t('Your virtual face or picture.'),
+  );
+
+  $field = array(
+    'field_name' => 'user_picture',
+    'module' => 'image',
+    'type' => 'image',
+    'cardinality' => 1,
+    'locked' => FALSE,
+    'indexes' => array('fid' => array('fid')),
+    'settings' => array(
+      'uri_scheme' => 'public',
+      'default_image' => FALSE,
+    ),
+    'storage' => array(
+      'type' => 'field_sql_storage',
+      'settings' => array(),
+    ),
+  );
+  _update_7000_field_create_field($field);
+
+  $instance = array(
+    'field_name' => 'user_picture',
+    'entity_type' => 'user',
+    'label' => 'Picture',
+    'bundle' => 'user',
+    'description' => $settings['description'],
+    'required' => FALSE,
+    'settings' => array(
+      'file_extensions' => 'png gif jpg jpeg',
+      'file_directory' => $settings['file_directory'],
+      'max_filesize' => $settings['max_filesize'],
+      'alt_field' => 0,
+      'title_field' => 0,
+      'max_resolution' => $settings['max_resolution'],
+      'min_resolution' => '',
+      'default_image' => $settings['default_image'],
+    ),
+    'widget' => array(
+      'module' => 'image',
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => -1,
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => $settings['formatter'],
+        'settings' => array('image_style' => 'thumbnail', 'image_link' => 'content'),
+      ),
+      'compact' => array(
+        'label' => 'hidden',
+        'type' => $settings['formatter'],
+        'settings' => array('image_style' => $settings['image_style'], 'image_link' => 'content'),
+      ),
+    ),
+  );
+  _update_7000_field_create_instance($field, $instance);
+  return $field;
+}

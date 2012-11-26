@@ -44,12 +44,11 @@ class CommentPreviewTest extends CommentTestBase {
     // Login as web user and add a signature and a user picture.
     $this->drupalLogin($this->web_user);
     config('user.settings')->set('signatures', 1)->save();
-    variable_set('user_pictures', 1);
     $test_signature = $this->randomName();
     $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
     $edit['signature[format]'] = 'filtered_html';
     $image = current($this->drupalGetTestFiles('image'));
-    $edit['files[picture_upload]'] = drupal_realpath($image->uri);
+    $edit['files[user_picture_und_0]'] = drupal_realpath($image->uri);
     $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
 
     // As the web user, fill in the comment form and preview the comment.

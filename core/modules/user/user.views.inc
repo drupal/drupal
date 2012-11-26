@@ -153,25 +153,6 @@ function user_views_data() {
     ),
   );
 
-  // picture
-  $data['users']['picture'] = array(
-    'title' => t('Picture'),
-    'help' => t("The user's picture, if allowed."), // The help that appears on the UI,
-    // Information for displaying the uid
-    'field' => array(
-      'id' => 'user_picture',
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'id' => 'boolean',
-      'label' => t('Has Avatar'),
-      'type' => 'yes-no',
-    ),
-  );
-
   // link
   $data['users']['view_user'] = array(
     'field' => array(

@@ -83,9 +83,9 @@ ul.tips {
 
 /* ----------------- Content ------------------ */
 
-.submitted .user-picture img {
+.submitted .field-name-field-user-picture img {
   float: right;
-  margin-left: 5px;
+  margin-left: 20px;
   margin-right: 0;
 }
 .field-type-taxonomy-term-reference .field-label {
@@ -104,7 +104,7 @@ ul.tips {
 
 /* ----------------- Comments ----------------- */
 
-.comment .user-picture img {
+.comment .field-name-field-user-picture img {
   margin-right: 0;
 }
 .comment .attribution {

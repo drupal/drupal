@@ -253,12 +253,6 @@ function standard_install() {
   // Don't display date and author information for "Basic page" nodes by default.
   variable_set('node_submitted_page', FALSE);
 
-  // Enable user picture support and set the default to a square thumbnail option.
-  variable_set('user_pictures', '1');
-  variable_set('user_picture_dimensions', '1024x1024');
-  variable_set('user_picture_file_size', '800');
-  variable_set('user_picture_style', 'thumbnail');
-
   // Allow visitor account creation with administrative approval.
   $user_settings = config('user.settings');
   $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
@@ -382,6 +376,17 @@ function standard_install() {
     ),
   );
   field_create_instance($instance);
+
+  // Create user picture field.
+  module_load_install('user');
+  _user_install_picture_field();
+  // Remove 'summary' pseudo-field from compact view mode on the User entity.
+  $bundle_settings = field_bundle_settings('user', 'user');
+  $bundle_settings['extra_fields']['display']['member_for']['compact'] = array(
+    'visible' => FALSE,
+    'weight' => 10,
+  );
+  field_bundle_settings('user', 'user', $bundle_settings);
 
   // Enable default permissions for system roles.
   $filtered_html_permission = filter_permission_name($filtered_html_format);

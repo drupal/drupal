@@ -185,7 +185,6 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), 'Correct time zone field.');
     $this->assertEqual($new_user->langcode, language_default()->langcode, 'Correct language field.');
     $this->assertEqual($new_user->preferred_langcode, language_default()->langcode, 'Correct preferred language field.');
-    $this->assertEqual($new_user->picture, 0, 'Correct picture field.');
     $this->assertEqual($new_user->init, $mail, 'Correct init field.');
   }
 

@@ -499,7 +499,11 @@ function update_fix_d8_requirements() {
   global $conf;
 
   if (drupal_get_installed_schema_version('system') < 8000 && !update_variable_get('update_d8_requirements', FALSE)) {
-    // @todo: Make critical, first-run changes to the database here.
+
+    // Make sure that file.module is enabled as it is required for the user
+    // picture upgrade path.
+    update_module_enable(array('file'));
+
     update_variable_set('update_d8_requirements', TRUE);
   }
 }

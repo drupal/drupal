@@ -26,19 +26,13 @@ class UserEditTest extends WebTestBase {
    * Test user edit page.
    */
   function testUserEdit() {
-    // Test user edit functionality with user pictures disabled.
-    variable_set('user_pictures', 0);
+    // Test user edit functionality.
     $user1 = $this->drupalCreateUser(array('change own username'));
     $user2 = $this->drupalCreateUser(array());
     $this->drupalLogin($user1);
 
     // Test that error message appears when attempting to use a non-unique user name.
     $edit['name'] = $user2->name;
-    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
-    $this->assertRaw(t('The name %name is already taken.', array('%name' => $edit['name'])));
-
-    // Repeat the test with user pictures enabled, which modifies the form.
-    variable_set('user_pictures', 1);
     $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
     $this->assertRaw(t('The name %name is already taken.', array('%name' => $edit['name'])));
 

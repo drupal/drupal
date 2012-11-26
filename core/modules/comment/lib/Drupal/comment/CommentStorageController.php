@@ -34,7 +34,7 @@ class CommentStorageController extends DatabaseStorageController {
     $query->addField('n', 'type', 'node_type');
     $query->innerJoin('users', 'u', 'base.uid = u.uid');
     $query->addField('u', 'name', 'registered_name');
-    $query->fields('u', array('uid', 'signature', 'signature_format', 'picture'));
+    $query->fields('u', array('uid', 'signature', 'signature_format'));
     return $query;
   }
 

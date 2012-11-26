@@ -10,7 +10,7 @@
  *   or print a subset such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
- * - $user_picture: The node author's picture from user-picture.tpl.php.
+ * - $user_picture: The node author's picture. Use render() to print it.
  * - $date: Formatted creation date. Preprocess functions can reformat it by
  *   calling format_date() with the desired parameters on the $created variable.
  * - $name: Themed username of node author output from theme_username().
@@ -86,7 +86,7 @@
 
   <?php if ($display_submitted): ?>
     <footer>
-      <?php print $user_picture; ?>
+      <?php print render($user_picture); ?>
       <p class="submitted"><?php print $submitted; ?></p>
     </footer>
   <?php endif; ?>

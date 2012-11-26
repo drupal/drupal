@@ -357,6 +357,15 @@ function _update_7000_field_create_instance($field, &$instance) {
     'deleted' => 0,
   );
 
+  // Merge in display defaults.
+  if (isset($instance['display'])) {
+    foreach ($instance['display'] as &$display) {
+      $display += array(
+        'weight' => 0,
+      );
+    }
+  }
+
   // The serialized 'data' column contains everything from $instance that does
   // not have its own column and is not automatically populated when the
   // instance is read.

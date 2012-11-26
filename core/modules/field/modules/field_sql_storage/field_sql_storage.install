@@ -118,11 +118,15 @@ function field_sql_storage_update_8000(&$sandbox) {
     $table_info = array($data_table => $primary_key_data, $revision_table => $primary_key_revision);
 
     foreach ($table_info as $table => $primary_key) {
-      db_drop_primary_key($table);
-      db_drop_index($table, 'language');
-      db_change_field($table, 'language', 'langcode', $field_langcode);
-      db_add_primary_key($table, $primary_key);
-      db_add_index($table, 'langcode', $langcode_index);
+      // Do not attempt to rename the 'language' column for fields that already
+      // contain it (created during the upgrade before this update function).
+      if (db_field_exists($table, 'language')) {
+        db_drop_primary_key($table);
+        db_drop_index($table, 'language');
+        db_change_field($table, 'language', 'langcode', $field_langcode);
+        db_add_primary_key($table, $primary_key);
+        db_add_index($table, 'langcode', $langcode_index);
+      }
     }
   }
 }

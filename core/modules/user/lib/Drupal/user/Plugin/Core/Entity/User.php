@@ -47,7 +47,11 @@ use Drupal\Core\Annotation\Translation;
  *     "full" = {
  *       "label" = "User account",
  *       "custom_settings" = FALSE
- *     }
+ *     },
+ *     "compact" = {
+         "label" = "Compact",
+         "custom_settings" = TRUE
+       }
  *   }
  * )
  */
@@ -166,13 +170,6 @@ class User extends Entity {
    * @var string
    */
   public $preferred_admin_langcode = LANGUAGE_NOT_SPECIFIED;
-
-  /**
-   * The file ID of the user's picture.
-   *
-   * @var integer
-   */
-  public $picture = 0;
 
   /**
    * The email address used for initial account creation.

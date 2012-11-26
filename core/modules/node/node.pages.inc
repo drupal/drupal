@@ -133,7 +133,6 @@ function node_preview(Node $node) {
       // user ID 0 denotes the anonymous user.
       if ($user = user_load_by_name($node->name)) {
         $node->uid = $user->uid;
-        $node->picture = $user->picture;
       }
       else {
         $node->uid = 0; // anonymous user
@@ -142,7 +141,6 @@ function node_preview(Node $node) {
     elseif ($node->uid) {
       $user = user_load($node->uid);
       $node->name = $user->name;
-      $node->picture = $user->picture;
     }
 
     $node->changed = REQUEST_TIME;

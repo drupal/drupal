@@ -409,7 +409,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
 
   // Some features are not always available
   $disabled = array();
-  if (!variable_get('user_pictures', 0)) {
+  if (!user_picture_enabled()) {
     $disabled['toggle_node_user_picture'] = TRUE;
     $disabled['toggle_comment_user_picture'] = TRUE;
   }

@@ -1148,7 +1148,14 @@ function template_preprocess_node(&$variables) {
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $variables['display_submitted'] = TRUE;
     $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
-    $variables['user_picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', array('account' => $node)) : '';
+    if (theme_get_setting('toggle_node_user_picture')) {
+      // To change user picture settings (e.g. image style), edit the 'compact'
+      // view mode on User entity.
+      $variables['user_picture'] = user_view($node->account, 'compact');
+    }
+    else {
+      $variables['user_picture'] = array();
+    }
   }
   else {
     $variables['display_submitted'] = FALSE;

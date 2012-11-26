@@ -1599,7 +1599,6 @@ function comment_preview(Comment $comment) {
       $comment->name = check_plain($account->name);
       $comment->signature = $account->signature;
       $comment->signature_format = $account->signature_format;
-      $comment->picture = $account->picture;
     }
     elseif (empty($comment->name)) {
       $comment->name = config('user.settings')->get('anonymous');
@@ -1655,7 +1654,14 @@ function template_preprocess_comment(&$variables) {
   $variables['changed'] = format_date($comment->changed);
 
   $variables['new'] = !empty($comment->new) ? t('new') : '';
-  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
+  if (theme_get_setting('toggle_comment_user_picture')) {
+    // To change user picture settings (e.g., image style), edit the 'compact'
+    // view mode on the User entity.
+    $variables['user_picture'] = user_view($comment->account, 'compact');
+  }
+  else {
+    $variables['user_picture'] = array();
+  }
   $variables['signature'] = $comment->signature;
 
   $uri = $comment->uri();

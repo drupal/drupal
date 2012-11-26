@@ -32,6 +32,19 @@ abstract class FieldUiTestBase extends WebTestBase {
     $type_name = strtolower($this->randomName(8)) . '_test';
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->type = $type->type;
+
+    // Create a default vocabulary.
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
+      'name' => $this->randomName(),
+      'description' => $this->randomName(),
+      'machine_name' => drupal_strtolower($this->randomName()),
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'help' => '',
+      'nodes' => array('article' => 'article'),
+      'weight' => mt_rand(0, 10),
+    ));
+    taxonomy_vocabulary_save($vocabulary);
+    $this->vocabulary = $vocabulary->machine_name;
   }
 
   /**
