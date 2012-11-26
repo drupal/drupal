@@ -61,7 +61,7 @@ function dblog_overview() {
     $rows[] = array('data' =>
       array(
         // Cells
-        array('class' => 'icon'),
+        array('class' => array('icon')),
         t($dblog->type),
         format_date($dblog->timestamp, 'short'),
         theme('dblog_message', array('event' => $dblog, 'link' => TRUE)),

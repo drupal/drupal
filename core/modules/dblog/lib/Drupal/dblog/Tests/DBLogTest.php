@@ -518,6 +518,10 @@ class DBLogTest extends WebTestBase {
       $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
     }
 
+    $this->drupalGet('admin/reports/dblog', array('query' => array('order' => 'Type')));
+    $this->assertResponse(200);
+    $this->assertText(t('Operations'), 'Operations text found');
+
     // Clear all logs and make sure the confirmation message is found.
     $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
     $this->assertText(t('Database log cleared.'), 'Confirmation message found');
