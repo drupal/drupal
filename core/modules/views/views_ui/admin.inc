@@ -295,10 +295,10 @@ function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
 
   $account = user_load($view->locked->owner);
   $form = confirm_form($form,
-                  t('Are you sure you want to break the lock on view %name?',
+                  t('Do you want to break the lock on view %name?',
                   array('%name' => $view->get('name'))),
                   $cancel,
-                  t('By breaking this lock, any unsaved changes made by !user will be lost!', array('!user' => theme('username', array('account' => $account)))),
+                  t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => $account)))),
                   t('Break lock'),
                   t('Cancel'));
   $form['actions']['submit']['#submit'][] = array($view, 'submitBreakLock');
