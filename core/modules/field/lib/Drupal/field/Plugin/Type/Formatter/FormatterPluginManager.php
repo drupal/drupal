@@ -22,8 +22,8 @@ class FormatterPluginManager extends PluginManagerBase {
    * Overrides Drupal\Component\Plugin\PluginManagerBase:$defaults.
    */
   protected $defaults = array(
+    'field_types' => array(),
     'settings' => array(),
-    'default_value' => TRUE,
   );
 
   /**

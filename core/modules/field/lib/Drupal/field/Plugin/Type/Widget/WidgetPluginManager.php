@@ -22,6 +22,7 @@ class WidgetPluginManager extends PluginManagerBase {
    * Overrides Drupal\Component\Plugin\PluginManagerBase:$defaults.
    */
   protected $defaults = array(
+    'field_types' => array(),
     'settings' => array(),
     'multiple_values' => FALSE,
     'default_value' => TRUE,
