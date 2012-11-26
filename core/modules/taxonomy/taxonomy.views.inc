@@ -489,7 +489,7 @@ function views_taxonomy_set_breadcrumb(&$breadcrumb, &$argument) {
       continue;
     }
     if (!empty($argument->options['use_taxonomy_term_path'])) {
-      $path = taxonomy_term_uri($parent);
+      $path = $parent->uri();
       $path = $path['path'];
     }
     else {
