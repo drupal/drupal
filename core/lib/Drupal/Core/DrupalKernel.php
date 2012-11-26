@@ -192,7 +192,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       // When installing new modules, the modules in the list passed to
       // updateModules() do not yet have their namespace registered.
       $namespace = 'Drupal\\' . $module;
-      if (!isset($namespaces[$namespace]) && $this->moduleData($module)) {
+      if (empty($namespaces[$namespace]) && $this->moduleData($module)) {
         $path = dirname(DRUPAL_ROOT . '/' . $this->moduleData($module)->uri) . '/lib';
         $this->modulePaths[$module] = $path;
         $this->classLoader->registerNamespace($namespace, $path);
@@ -319,15 +319,20 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       // All namespaces must be registered before we attempt to use any service
       // from the container.
       $namespaces = $this->classLoader->getNamespaces();
+      $namespaces_revert = array();
       foreach ($this->container->getParameter('container.modules') as $module => $path) {
         $namespace = 'Drupal\\' . $module;
-        if (!isset($namespaces[$namespace])) {
+        if (empty($namespaces[$namespace])) {
           $this->classLoader->registerNamespace($namespace, $path);
+          $namespaces_revert[$namespace] = array();
         }
       }
       $module_list = $this->moduleList ?: $this->container->get('config.factory')->get('system.module')->load()->get('enabled');
       if (array_keys((array)$module_list) !== array_keys($this->container->getParameter('container.modules'))) {
         unset($this->container);
+        // Since 'container.modules' was incorrect, revert the classloader
+        // registrations, and allow buildContainer() to get it right.
+        $this->classLoader->registerNamespaces($namespaces_revert);
       }
     }
 
