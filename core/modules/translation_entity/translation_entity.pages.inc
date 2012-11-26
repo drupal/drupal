@@ -113,7 +113,7 @@ function translation_entity_overview(EntityInterface $entity) {
             $links['add']['title'] = t('add');
           }
           elseif ($field_ui) {
-            $entity_path = _field_ui_bundle_admin_path($entity->entityType(), $entity->bundle());
+            $entity_path = field_ui_bundle_admin_path($entity->entityType(), $entity->bundle());
             // Link directly to the fields tab to make it easier to find the
             // setting to enable translation on fields.
             $path = $entity_path . '/fields';
