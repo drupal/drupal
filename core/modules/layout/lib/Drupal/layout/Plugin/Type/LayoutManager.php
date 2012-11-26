@@ -9,6 +9,7 @@ namespace Drupal\layout\Plugin\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
+use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\Plugin\Factory\ReflectionFactory;
 
@@ -26,7 +27,10 @@ class LayoutManager extends PluginManagerBase {
    */
   public function __construct() {
     // Create layout plugin derivatives from declaratively defined layouts.
-    $this->discovery = new DerivativeDiscoveryDecorator(new AnnotatedClassDiscovery('layout', 'layout'));
+    $this->discovery = new AnnotatedClassDiscovery('layout', 'layout');
+    $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
+    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
+
     $this->factory = new ReflectionFactory($this);
   }
 }

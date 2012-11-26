@@ -49,23 +49,14 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
    * Implements Drupal\Component\Plugin\PluginManagerInterface::getDefinition().
    */
   public function getDefinition($plugin_id) {
-    $definition = $this->discovery->getDefinition($plugin_id);
-    if (isset($definition)) {
-      $this->processDefinition($definition, $plugin_id);
-    }
-    return $definition;
+    return $this->discovery->getDefinition($plugin_id);;
   }
 
   /**
    * Implements Drupal\Component\Plugin\PluginManagerInterface::getDefinitions().
    */
   public function getDefinitions() {
-    $definitions = $this->discovery->getDefinitions();
-    foreach ($definitions as $plugin_id => &$definition) {
-      $this->processDefinition($definition, $plugin_id);
-    }
-
-    return $definitions;
+    return $this->discovery->getDefinitions();
   }
 
   /**
@@ -98,7 +89,7 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
    * additional processing logic they can do that by replacing or extending the
    * method.
    */
-  protected function processDefinition(&$definition, $plugin_id) {
+  public function processDefinition(&$definition, $plugin_id) {
     $definition = NestedArray::mergeDeep($this->defaults, $definition);
   }
 

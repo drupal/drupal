@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
@@ -228,7 +229,11 @@ class EntityManager extends PluginManagerBase {
    */
   public function __construct() {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
-    $this->discovery = new AlterDecorator(new InfoHookDecorator(new AnnotatedClassDiscovery('Core', 'Entity'), 'entity_info'), 'entity_info');
+    $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity');
+    $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
+    $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
+    // @todo Run process before altering, see http://drupal.org/node/1848964.
+    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->factory = new DefaultFactory($this);
 
     // Entity type plugins includes translated strings, so each language is
@@ -266,7 +271,7 @@ class EntityManager extends PluginManagerBase {
   /**
    * Overrides Drupal\Component\Plugin\PluginManagerBase::processDefinition().
    */
-  protected function processDefinition(&$definition, $plugin_id) {
+  public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
     // @todo Remove this check once http://drupal.org/node/1780396 is resolved.

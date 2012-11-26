@@ -8,6 +8,7 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
@@ -34,6 +35,7 @@ class WidgetPluginManager extends PluginManagerBase {
   public function __construct() {
     $this->discovery = new AnnotatedClassDiscovery('field', 'widget');
     $this->discovery = new WidgetLegacyDiscoveryDecorator($this->discovery);
+    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'field_widget_info');
     $this->discovery = new CacheDecorator($this->discovery, 'field_widget_types',  'field');
 
