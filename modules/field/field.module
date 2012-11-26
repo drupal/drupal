@@ -1197,7 +1197,7 @@ function _element_validate_integer($element, &$form_state) {
  * Use element_validate_integer_positive() instead.
  *
  * @deprecated
- * @see element_validate_number_positive()
+ * @see element_validate_integer_positive()
  */
 function _element_validate_integer_positive($element, &$form_state) {
   element_validate_integer_positive($element, $form_state);
