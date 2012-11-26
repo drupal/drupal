@@ -99,7 +99,7 @@ abstract class ModuleTestBase extends WebTestBase {
       return;
     }
     $module_file_storage = new FileStorage($module_config_dir);
-    $names = $module_file_storage->listAll();
+    $names = $module_file_storage->listAll($module . '.');
 
     // Verify that the config directory is not empty.
     $this->assertTrue($names);
