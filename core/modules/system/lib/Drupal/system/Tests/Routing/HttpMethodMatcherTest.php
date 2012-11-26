@@ -44,7 +44,7 @@ class HttpMethodMatcherTest extends UnitTestBase {
 
     $this->fixtures = new RoutingFixtures();
   }
-  
+
   /**
    * Confirms that the HttpMethod matcher matches properly.
    */
@@ -78,7 +78,7 @@ class HttpMethodMatcherTest extends UnitTestBase {
 
     $attributes = $matcher->matchRequest($request);
 
-    $this->assertEqual($attributes['_route'], 'route_a', 'The correct matching route was found.');
+    $this->assertEqual($attributes['_route']->getOption('_name'), 'route_a', 'The correct matching route was found.');
   }
 
   /**

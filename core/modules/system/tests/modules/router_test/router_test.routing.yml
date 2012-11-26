@@ -2,24 +2,46 @@ router_test_1:
   pattern: '/router_test/test1'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
 
 router_test_2:
   pattern: '/router_test/test2'
   defaults:
     _content: '\Drupal\router_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'
 
 router_test_3:
   pattern: '/router_test/test3/{value}'
   defaults:
     _content: '\Drupal\router_test\TestControllers::test3'
+  requirements:
+    _access: 'TRUE'
 
 router_test_4:
   pattern: '/router_test/test4/{value}'
   defaults:
     _content: '\Drupal\router_test\TestControllers::test4'
     value: 'narf'
+  requirements:
+    _access: 'TRUE'
 
 router_test_6:
   pattern: '/router_test/test6'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+router_test_7:
+  pattern: '/router_test/test7'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test7'
+  requirements:
+    _permission: 'access test7'
+
+router_test_8:
+  pattern: '/router_test/test8'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test8'

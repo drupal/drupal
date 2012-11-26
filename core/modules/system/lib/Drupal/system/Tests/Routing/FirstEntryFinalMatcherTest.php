@@ -61,7 +61,7 @@ class FirstEntryFinalMatcherTest extends UnitTestBase {
     $matcher->setCollection($collection);
     $attributes = $matcher->matchRequest($request);
 
-    $this->assertEqual($attributes['_route'], 'route_a', 'The correct matching route was found.');
+    $this->assertEqual($attributes['_route']->getOption('_name'), 'route_a', 'The correct matching route was found.');
     $this->assertEqual($attributes['_controller'], 'foo', 'The correct controller was found.');
   }
 
@@ -82,7 +82,7 @@ class FirstEntryFinalMatcherTest extends UnitTestBase {
     $matcher->setCollection($collection);
     $attributes = $matcher->matchRequest($request);
 
-    $this->assertEqual($attributes['_route'], 'route_a', 'The correct matching route was found.');
+    $this->assertEqual($attributes['_route']->getOption('_name'), 'route_a', 'The correct matching route was found.');
     $this->assertEqual($attributes['_controller'], 'foo', 'The correct controller was found.');
     $this->assertEqual($attributes['value'], 'narf', 'Required placeholder value found.');
   }
@@ -105,7 +105,7 @@ class FirstEntryFinalMatcherTest extends UnitTestBase {
     $matcher->setCollection($collection);
     $attributes = $matcher->matchRequest($request);
 
-    $this->assertEqual($attributes['_route'], 'route_a', 'The correct matching route was found.');
+    $this->assertEqual($attributes['_route']->getOption('_name'), 'route_a', 'The correct matching route was found.');
     $this->assertEqual($attributes['_controller'], 'foo', 'The correct controller was found.');
     $this->assertEqual($attributes['value'], 'poink', 'Optional placeholder value used default.');
   }

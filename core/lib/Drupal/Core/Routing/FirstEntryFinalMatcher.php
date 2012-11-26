@@ -53,7 +53,8 @@ class FirstEntryFinalMatcher implements FinalMatcherInterface {
 
       preg_match($compiled->getRegex(), $path, $matches);
 
-      return array_merge($this->mergeDefaults($matches, $route->getDefaults()), array('_route' => $name));
+      $route->setOption('_name', $name);
+      return array_merge($this->mergeDefaults($matches, $route->getDefaults()), array('_route' => $route));
     }
   }
 

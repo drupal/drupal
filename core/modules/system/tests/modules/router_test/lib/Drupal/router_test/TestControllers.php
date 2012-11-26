@@ -34,4 +34,16 @@ class TestControllers {
     return "test5";
   }
 
+  public function test6() {
+    return new Response('test6');
+  }
+
+  public function test7() {
+    return new Response('test7text');
+  }
+
+  public function test8() {
+    return new Response('test8');
+  }
+
 }

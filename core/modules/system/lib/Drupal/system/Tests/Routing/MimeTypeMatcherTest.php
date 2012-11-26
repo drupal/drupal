@@ -93,7 +93,7 @@ class MimeTypeMatcherTest extends UnitTestBase {
     $request->headers->set('Accept', 'text/html, text/xml;q=0.9');
 
     $attributes = $matcher->matchRequest($request);
-    $this->assertEqual($attributes['_route'], 'route_e', 'The correct matching route was found.');
+    $this->assertEqual($attributes['_route']->getOption('_name'), 'route_e', 'The correct matching route was found.');
   }
 
   /**

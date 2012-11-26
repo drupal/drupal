@@ -35,6 +35,8 @@ class RouteTestSubscriber implements EventSubscriberInterface {
     $collection = $event->getRouteCollection();
     $route = new Route('/router_test/test5', array(
       '_content' => '\Drupal\router_test\TestControllers::test5'
+    ), array(
+      '_access' => 'TRUE'
     ));
     $collection->add('router_test_5', $route);
   }
