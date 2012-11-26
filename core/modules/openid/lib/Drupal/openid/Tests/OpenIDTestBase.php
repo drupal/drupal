@@ -19,7 +19,7 @@ abstract class OpenIDTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'node', 'openid');
+  public static $modules = array('block', 'openid', 'test_page_test');
 
   function setUp() {
     parent::setUp();
@@ -42,13 +42,7 @@ abstract class OpenIDTestBase extends WebTestBase {
 
     // Use a different front page than login page for testing OpenID login from
     // the user login block.
-    config('system.site')->set('page.front', 'node')->save();
-
-    // Create Basic page and Article node types.
-    if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
-    }
+    config('system.site')->set('page.front', 'test-page')->save();
   }
 
   /**
