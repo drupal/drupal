@@ -575,13 +575,7 @@ function views_page_alter(&$page) {
   // If the main content of this page contains a view, attach its contextual
   // links to the overall page array. This allows them to be rendered directly
   // next to the page title.
-  $view = views_get_page_view();
-  if (!empty($view)) {
-    // If a module is still putting in the display like we used to, catch that.
-    if (is_subclass_of($view, 'views_plugin_display')) {
-      $view = $view->view;
-    }
-
+  if ($view = views_get_page_view()) {
     views_add_contextual_links($page, 'page', $view, $view->current_display);
   }
 }
