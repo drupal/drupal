@@ -19,15 +19,18 @@ class ViewListController extends EntityListController {
    * Overrides Drupal\Core\Entity\EntityListController::load();
    */
   public function load() {
-    $entities = parent::load();
-    uasort($entities, function ($a, $b) {
-      $a_enabled = $a->isEnabled();
-      $b_enabled = $b->isEnabled();
-      if ($a_enabled != $b_enabled) {
-        return $a_enabled < $b_enabled;
+    $entities = array(
+      'enabled' => array(),
+      'disabled' => array(),
+    );
+    foreach (parent::load() as $entity) {
+      if ($entity->isEnabled()) {
+        $entities['enabled'][] = $entity;
       }
-      return $a->id() > $b->id();
-    });
+      else {
+        $entities['disabled'][] = $entity;
+      }
+    }
     return $entities;
   }
 
@@ -156,10 +159,30 @@ class ViewListController extends EntityListController {
    * Overrides Drupal\Core\Entity\EntityListController::render();
    */
   public function render() {
-    $list = parent::render();
+    $entities = $this->load();
+    $list['#type'] = 'container';
     $list['#attached']['css'] = ViewFormControllerBase::getAdminCSS();
     $list['#attached']['library'][] = array('system', 'drupal.ajax');
     $list['#attributes']['id'] = 'views-entity-list';
+    $list['enabled']['heading']['#markup'] = '<h2>' . t('Enabled') . '</h2>';
+    $list['disabled']['heading']['#markup'] = '<h2>' . t('Disabled') . '</h2>';
+    foreach (array('enabled', 'disabled') as $status) {
+      $list[$status]['#type'] = 'container';
+      $list[$status]['#attributes'] = array('class' => array('views-list-section', $status));
+      $list[$status]['table'] = array(
+        '#theme' => 'table',
+        '#header' => $this->buildHeader(),
+        '#rows' => array(),
+      );
+      foreach ($entities[$status] as $entity) {
+        $list[$status]['table']['#rows'][$entity->id()] = $this->buildRow($entity);
+      }
+    }
+    // @todo Use a placeholder for the entity label if this is abstracted to
+    // other entity types.
+    $list['enabled']['table']['#empty'] = t('There are no enabled views.');
+    $list['disabled']['table']['#empty'] = t('There are no disabled views.');
+
     return $list;
   }
 

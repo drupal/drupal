@@ -116,6 +116,37 @@ class DefaultViewsTest extends UITestBase {
   }
 
   /**
+   * Tests that enabling views moves them to the correct table.
+   */
+  function testSplitListing() {
+    // Build a re-usable xpath query.
+    $xpath = '//div[@id="views-entity-list"]/div[@class = :status]/table//tr[@title = :title]';
+    $arguments = array(
+      ':status' => 'views-list-section enabled',
+      ':title' => t('Machine name: test_view_status'),
+    );
+
+    $this->drupalGet('admin/structure/views');
+
+    $elements = $this->xpath($xpath, $arguments);
+    $this->assertIdentical(count($elements), 0, 'A disabled view is not found in the enabled views table.');
+
+    $arguments[':status'] = 'views-list-section disabled';
+    $elements = $this->xpath($xpath, $arguments);
+    $this->assertIdentical(count($elements), 1, 'A disabled view is found in the disabled views table.');
+
+    // Enable the view.
+    $this->clickViewsOperationLink(t('Enable'), '/test_view_status/');
+
+    $elements = $this->xpath($xpath, $arguments);
+    $this->assertIdentical(count($elements), 0, 'After enabling a view, it is not found in the disabled views table.');
+
+    $arguments[':status'] = 'views-list-section enabled';
+    $elements = $this->xpath($xpath, $arguments);
+    $this->assertIdentical(count($elements), 1, 'After enabling a view, it is found in the enabled views table.');
+  }
+
+  /**
    * Click a link to perform an operation on a view.
    *
    * In general, we expect lots of links titled "enable" or "disable" on the
