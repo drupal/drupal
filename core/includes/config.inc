@@ -256,7 +256,7 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
       // Check whether the module implements hook_config_import() and ask it to
       // handle the configuration change.
       $handled_by_module = FALSE;
-      if (module_hook($module, 'config_import_' . $op)) {
+      if (module_exists($module) && module_hook($module, 'config_import_' . $op)) {
         $old_config = new Config($name, $target_storage);
         $old_config->load();
 
