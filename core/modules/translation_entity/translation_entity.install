@@ -66,8 +66,7 @@ function translation_entity_install() {
 function translation_entity_enable() {
   $t_args = array(
     '!language_url' => url('admin/config/regional/language'),
-    '!settings_url' => url('admin/config/regional/translation_entity'),
   );
-  $message = t('You just added content translation capabilities to your site. To exploit them be sure to <a href="!language_url">enable at least two languages</a> and <a href="!settings_url">enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em> and any other element whose content you wish to translate.', $t_args);
+  $message = t('You just added content translation capabilities to your site. To exploit them be sure to <a href="!language_url">enable at least two languages</a> and enable translation for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em> and any other element whose content you wish to translate.', $t_args);
   drupal_set_message($message, 'warning');
 }
