@@ -18,6 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "taxonomy_term",
  *   label = @Translation("Taxonomy term"),
+ *   bundle_label = @Translation("Vocabulary"),
  *   module = "taxonomy",
  *   controller_class = "Drupal\taxonomy\TermStorageController",
  *   render_controller_class = "Drupal\taxonomy\TermRenderController",

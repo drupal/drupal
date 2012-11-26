@@ -39,6 +39,9 @@ function translation_entity_help($path, $arg) {
       $output .= '<dd>' . t('The Entity Translation module makes a basic set of permissions available. Additional <a href="@permissions">permissions</a> are made available after translation is enabled for each translatable element.', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-translation_entity')))) . '</dd>';
       $output .= '</dl>';
       return $output;
+
+    case 'admin/config/regional/translation_entity':
+      return '<p>' . t('Setup your content translation settings for all the translatable elements on your website. This allows you to enable/disable and configure them at once. As soon as new content types, vocabularies and other translatable elements are available, you will be able to configure them here.') . '</p>';
   }
 }
 
@@ -157,12 +160,20 @@ function translation_entity_menu() {
     }
   }
 
+  $items['admin/config/regional/translation_entity'] = array(
+    'title' => 'Content translation settings',
+    'description' => 'Configure content translation for any translatable element.',
+    'page callback' => 'translation_entity_admin_page',
+    'access arguments' => array('administer entity translation'),
+    'file' => 'translation_entity.admin.inc',
+  );
+
   $items['admin/config/regional/translation_entity/translatable/%'] = array(
     'title' => 'Confirm change in translatability.',
     'description' => 'Confirm page for changing field translatability.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('translation_entity_translatable_form', 5),
-    'access arguments' => array('toggle field translatability'),
+    'access arguments' => array('administer entity translation'),
     'file' => 'translation_entity.admin.inc',
   );
 
@@ -342,6 +353,26 @@ function translation_entity_enabled($entity_type, $bundle = NULL, $skip_handler 
 }
 
 /**
+ * Returns a list of supported entity types.
+ *
+ * @return array
+ *   An array of entity type names.
+ */
+function translation_entity_supported() {
+  $supported = array();
+  foreach (entity_get_info() as $entity_type => $info) {
+    // @todo Revisit this once all core entities are migrated to the Entity
+    //   Field API and translation for configuration entities has been sorted
+    //   out.
+    $entity_class = new ReflectionClass($info['class']);
+    if (!empty($info['fieldable']) && !$entity_class->implementsInterface('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+      $supported[$entity_type] = $entity_type;
+    }
+  }
+  return $supported;
+}
+
+/**
  * Entity translation controller factory.
  *
  * @param string $entity_type
@@ -394,9 +425,9 @@ function translation_entity_permission() {
       'title' => t('Edit original values'),
       'description' => t('Access the entity form in the original language.'),
     ),
-    'toggle field translatability' => array(
-      'title' => t('Toggle field translatability'),
-      'description' => t('Toggle translatability of fields performing a bulk update.'),
+    'administer entity translation' => array(
+      'title' => t('Administer entity translation'),
+      'description' => t('Configure translatability of entities and fields.'),
     ),
     'translate any entity' => array(
       'title' => t('Translate any entity'),
@@ -598,7 +629,7 @@ function translation_entity_form_field_ui_field_edit_form_alter(array &$form, ar
         '#title' => $link_title,
         '#href' => $path,
         '#options' => array('query' => drupal_get_destination()),
-        '#access' => user_access('toggle field translatability'),
+        '#access' => user_access('administer entity translation'),
       ),
     );
   }
@@ -658,19 +689,20 @@ function translation_entity_enable_widget($entity_type, $bundle, array &$form, a
  *   Processed language configuration element.
  */
 function translation_entity_language_configuration_element_process(array $element, array &$form_state, array &$form) {
-  $form_state['translation_entity']['key'] = $element['#name'];
-  $context = $form_state['language'][$element['#name']];
+  if (empty($element['#translation_entity_skip_alter'])) {
+    $form_state['translation_entity']['key'] = $element['#name'];
+    $context = $form_state['language'][$element['#name']];
 
-  $element['translation_entity'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable translation'),
-    '#default_value' => translation_entity_enabled($context['entity_type'], $context['bundle']),
-    '#element_validate' => array('translation_entity_language_configuration_element_validate'),
-    '#prefix' => '<label>' . t('Translation') . '</label>',
-  );
+    $element['translation_entity'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable translation'),
+      '#default_value' => translation_entity_enabled($context['entity_type'], $context['bundle']),
+      '#element_validate' => array('translation_entity_language_configuration_element_validate'),
+      '#prefix' => '<label>' . t('Translation') . '</label>',
+    );
 
-  $form['#submit'][] = 'translation_entity_language_configuration_element_submit';
-
+    $form['#submit'][] = 'translation_entity_language_configuration_element_submit';
+  }
   return $element;
 }
 
@@ -714,4 +746,64 @@ function translation_entity_language_configuration_element_submit(array $form, a
     entity_info_cache_clear();
     menu_router_rebuild();
   }
+}
+
+/**
+ * Stores entity translation settings.
+ *
+ * @param array $settings
+ *   An associative array of settings keyed by entity type and bundle. At bundle
+ *   level the following keys are available:
+ *   - translatable: The bundle translatability status.
+ *   - settings: An array of language configuration settings as defined by
+ *     language_save_default_configuration().
+ *   - fields: An associative array with field names as keys and a boolean as
+ *     value, indicating field translatability.
+ */
+function translation_entity_save_settings($settings) {
+  $fields = array();
+
+  foreach ($settings as $entity_type => $entity_settings) {
+    foreach ($entity_settings as $bundle => $bundle_settings) {
+      // Update bundle translatability.
+      translation_entity_set_config($entity_type, $bundle, 'enabled', $bundle_settings['translatable']);
+      // Update language settings.
+      language_save_default_configuration($entity_type, $bundle, $bundle_settings['settings']['language']);
+      // Collapse field settings since here we have per instance settings, but
+      // translatability has per-field scope. We assume that all the field
+      // instances have the same value.
+      if (!empty($bundle_settings['fields'])) {
+        foreach ($bundle_settings['fields'] as $field_name => $translatable) {
+          // If a field is enabled for translation for at least one instance we
+          // need to mark it as translatable.
+          $fields[$field_name] = $translatable || !empty($fields[$field_name]);
+        }
+      }
+      // @todo Store non-configurable field settings to be able to alter their
+      //   definition afterwards.
+    }
+  }
+
+  // Update field translatability.
+  foreach ($fields as $field_name => $translatable) {
+    $field = field_info_field($field_name);
+    $field['translatable'] = $translatable;
+    field_update_field($field);
+  }
+
+  // Ensure entity and menu router information are correctly rebuilt.
+  entity_info_cache_clear();
+  menu_router_rebuild();
+}
+
+/**
+ * Implemements hook_theme().
+ */
+function translation_entity_theme() {
+  return array(
+    'translation_entity_admin_settings_table' => array(
+      'render element' => 'element',
+      'file' => 'translation_entity.admin.inc',
+    ),
+  );
 }

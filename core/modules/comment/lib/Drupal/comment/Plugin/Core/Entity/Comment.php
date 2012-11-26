@@ -18,6 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "comment",
  *   label = @Translation("Comment"),
+ *   bundle_label = @Translation("Content type"),
  *   module = "comment",
  *   controller_class = "Drupal\comment\CommentStorageController",
  *   render_controller_class = "Drupal\comment\CommentRenderController",
