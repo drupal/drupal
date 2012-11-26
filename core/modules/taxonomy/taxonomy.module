@@ -1015,6 +1015,7 @@ function taxonomy_field_info() {
       'description' => t('This field stores a reference to a taxonomy term.'),
       'default_widget' => 'options_select',
       'default_formatter' => 'taxonomy_term_reference_link',
+      'field item class' => 'Drupal\taxonomy\Type\TaxonomyTermReferenceItem',
       'settings' => array(
         'allowed_values' => array(
           array(
