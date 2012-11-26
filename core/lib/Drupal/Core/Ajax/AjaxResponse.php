@@ -27,20 +27,29 @@ class AjaxResponse extends JsonResponse {
    *
    * @param object $command
    *   An AJAX command object implementing CommandInterface.
+   * @param boolean $prepend
+   *   A boolean which determines whether the new command should be executed
+   *   before previously added commands. Defaults to FALSE.
    *
    * @return AjaxResponse
    *   The current AjaxResponse.
    */
-  public function addCommand($command) {
-    $this->commands[] = $command->render();
+  public function addCommand($command, $prepend = FALSE) {
+    if ($prepend) {
+      array_unshift($this->commands, $command->render());
+    }
+    else {
+      $this->commands[] = $command->render();
+    }
+
     return $this;
   }
 
   /**
    * Sets the response's data to be the array of AJAX commands.
    *
-   * @param
-   *   $request A request object.
+   * @param Request $request
+   *   A request object.
    *
    * @return
    *   Response The current response.
@@ -54,24 +63,25 @@ class AjaxResponse extends JsonResponse {
   /**
    * Prepares the AJAX commands for sending back to the client.
    *
-   * @param Request
+   * @param Request $request
    *   The request object that the AJAX is responding to.
    *
    * @return array
    *   An array of commands ready to be returned as JSON.
    */
-  protected function ajaxRender($request) {
+  protected function ajaxRender(Request $request) {
     // Ajax responses aren't rendered with html.tpl.php, so we have to call
     // drupal_get_css() and drupal_get_js() here, in order to have new files
     // added during this request to be loaded by the page. We only want to send
     // back files that the page hasn't already loaded, so we implement simple
     // diffing logic using array_diff_key().
+    $ajax_page_state = $request->request->get('ajax_page_state');
     foreach (array('css', 'js') as $type) {
       // It is highly suspicious if $_POST['ajax_page_state'][$type] is empty,
       // since the base page ought to have at least one JS file and one CSS file
       // loaded. It probably indicates an error, and rather than making the page
       // reload all of the files, instead we return no new files.
-      if (empty($request->parameters['ajax_page_state'][$type])) {
+      if (empty($ajax_page_state[$type])) {
         $items[$type] = array();
       }
       else {
@@ -90,7 +100,7 @@ class AjaxResponse extends JsonResponse {
           }
         }
         // Ensure that the page doesn't reload what it already has.
-        $items[$type] = array_diff_key($items[$type], $request->parameters['ajax_page_state'][$type]);
+        $items[$type] = array_diff_key($items[$type], $ajax_page_state[$type]);
       }
     }
 
@@ -105,21 +115,26 @@ class AjaxResponse extends JsonResponse {
     $scripts_footer = drupal_get_js('footer', $items['js'], TRUE);
     $scripts_header = drupal_get_js('header', $items['js'], TRUE);
 
+    // Prepend commands to add the resources, preserving their relative order.
+    $resource_commands = array();
     if (!empty($styles)) {
-      $this->addCommand(new AddCssCommand($styles));
+      $resource_commands[] = new AddCssCommand($styles);
     }
     if (!empty($scripts_header)) {
-      $this->addCommand(new PrependCommand('head', $scripts_header));
+      $resource_commands[] = new PrependCommand('head', $scripts_header);
     }
     if (!empty($scripts_footer)) {
-      $this->addCommand(new AppendCommand('body', $scripts_footer));
+      $resource_commands[] = new AppendCommand('body', $scripts_footer);
+    }
+    foreach (array_reverse($resource_commands) as $resource_command) {
+      $this->addCommand($resource_command, TRUE);
     }
 
-    // Now add a command to merge changes and additions to Drupal.settings.
+    // Prepend a command to merge changes and additions to Drupal.settings.
     $scripts = drupal_add_js();
     if (!empty($scripts['settings'])) {
       $settings = $scripts['settings'];
-      $this->addCommand(new SettingsCommand(call_user_func_array('array_merge_recursive', $settings['data']), TRUE));
+      $this->addCommand(new SettingsCommand(call_user_func_array('array_merge_recursive', $settings['data']), TRUE), TRUE);
     }
 
     $commands = $this->commands;
