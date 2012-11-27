@@ -44,13 +44,15 @@
   <tbody>
   <?php foreach ($topics as $topic): ?>
     <tr class="<?php print $topic->zebra;?>">
-      <td class="icon"><?php print $topic->icon; ?></td>
-      <td class="title">
-        <div>
-          <?php print $topic->title; ?>
-        </div>
-        <div>
-          <?php print $topic->created; ?>
+      <td class="topic">
+        <?php print $topic->icon; ?>
+        <div class="title">
+          <div>
+            <?php print $topic->title; ?>
+          </div>
+          <div>
+            <?php print $topic->created; ?>
+          </div>
         </div>
       </td>
     <?php if ($topic->moved): ?>

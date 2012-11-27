@@ -16,7 +16,7 @@
  * @ingroup themeable
  */
 ?>
-<div class="topic-status-<?php print $icon_class ?>" title="<?php print $icon_title ?>">
+<div class="icon topic-status-<?php print $icon_class ?>" title="<?php print $icon_title ?>">
 <?php if ($first_new): ?>
   <a id="new"></a>
 <?php endif; ?>

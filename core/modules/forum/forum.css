@@ -15,8 +15,7 @@
 #forum td.pager {
   white-space: nowrap;
 }
-
-#forum td.forum .icon {
+#forum .icon{
   background-image: url(../../misc/forum-icons.png);
   background-repeat: no-repeat;
   float: left; /* LTR */
@@ -24,31 +23,25 @@
   margin: 0 9px 0 0; /* LTR */
   width: 24px;
 }
-#forum td.forum .forum-status-new {
-  background-position: -24px 0;
+#forum .title {
+  overflow: hidden;
 }
-
 #forum div.indent {
   margin-left: 20px;
 }
-#forum .icon div {
-  background-image: url(../../misc/forum-icons.png);
-  background-repeat: no-repeat;
-  width: 24px;
-  height: 24px;
-}
-#forum .icon .topic-status-new {
+
+#forum .topic-status-new {
   background-position: -24px 0;
 }
-#forum .icon .topic-status-hot {
+#forum .topic-status-hot {
   background-position: -48px 0;
 }
-#forum .icon .topic-status-hot-new {
+#forum .topic-status-hot-new {
   background-position: -72px 0;
 }
-#forum .icon .topic-status-sticky {
+#forum .topic-status-sticky {
   background-position: -96px 0;
 }
-#forum .icon .topic-status-closed {
+#forum .topic-status-closed {
   background-position: -120px 0;
 }
