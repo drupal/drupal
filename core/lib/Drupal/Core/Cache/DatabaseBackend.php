@@ -272,6 +272,7 @@ class DatabaseBackend implements CacheBackendInterface {
         $query_tags[] = $tag;
       }
    }
+
     if ($query_tags) {
       try {
         if ($db_tags = Database::getConnection()->query('SELECT tag, invalidations FROM {cache_tags} WHERE tag IN (:tags)', array(':tags' => $query_tags))->fetchAllKeyed()) {

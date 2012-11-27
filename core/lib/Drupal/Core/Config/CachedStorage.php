@@ -69,7 +69,7 @@ class CachedStorage implements StorageInterface {
     // Read from the storage on a cache miss and cache the data, if any.
     $data = $this->storage->read($name);
     if ($data !== FALSE) {
-      $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT, array('config' => array($name)));
+      $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
     }
     // If the cache contained bogus data and there is no data in the storage,
     // wipe the cache entry.
@@ -86,7 +86,7 @@ class CachedStorage implements StorageInterface {
     if ($this->storage->write($name, $data)) {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
-      $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT, array('config' => array($name)));
+      $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
       return TRUE;
     }
     return FALSE;
