@@ -1400,11 +1400,28 @@ function system_library_info() {
     'js' => array(
       'core/misc/html5.js' => array(
         'group' => JS_LIBRARY,
-        'weight' => -21,
+        'weight' => -22,
         'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE),
       ),
     ),
   );
+
+  // Modernizr.
+  $libraries['modernizr'] = array(
+    'title' => 'Modernizr',
+    'website' => 'http://modernizr.com/',
+    'version' => '2.6.2',
+    'js' => array(
+      'core/misc/modernizr/modernizr.min.js' => array(
+        'every_page' => TRUE,
+        'group' => JS_LIBRARY,
+        'preprocess' => 0,
+        'scope' => 'header',
+        'weight' => -21,
+      ),
+    ),
+  );
+
   // Normalize.
   $libraries['normalize'] = array(
     'title' => 'normalize.css',

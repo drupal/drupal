@@ -2754,6 +2754,7 @@ function template_process_page(&$variables) {
  */
 function template_process_html(&$variables) {
   drupal_add_library('system', 'html5shiv', TRUE);
+  drupal_add_library('system', 'modernizr', TRUE);
   // Render page_top and page_bottom into top level variables.
   $variables['page_top'] = drupal_render($variables['page']['page_top']);
   $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
