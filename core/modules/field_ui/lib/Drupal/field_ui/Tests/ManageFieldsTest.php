@@ -69,9 +69,13 @@ class ManageFieldsTest extends FieldUiTestBase {
 
   /**
    * Tests the manage fields page.
+   *
+   * @param string $type
+   *   (optional) The name of a content type.
    */
-  function manageFieldsPage() {
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
+  function manageFieldsPage($type = '') {
+    $type = empty($type) ? $this->type : $type;
+    $this->drupalGet('admin/structure/types/manage/' . $type . '/fields');
     // Check all table columns.
     $table_headers = array(
       t('Label'),
@@ -331,8 +335,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'type' => $type2,
     );
     $this->drupalPost('admin/structure/types/manage/' . $this->type, $options, t('Save content type'));
-
-    $this->drupalGet('admin/structure/types/manage/' . $type2 . '/fields');
+    $this->manageFieldsPage($type2);
   }
 
   /**
