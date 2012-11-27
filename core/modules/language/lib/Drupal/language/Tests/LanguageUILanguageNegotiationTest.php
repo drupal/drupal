@@ -239,101 +239,86 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $account->preferred_langcode = NULL;
     $account->save();
 
-    $tests = array(
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_SELECTED),
-        'path' => 'admin/config',
-        'expect' => $default_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
-        'http_header' => array(),
-        'message' => 'USER > DEFAULT: no preferred user language setting, the UI language is default',
-      ),
+    $test = array(
+      'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_SELECTED),
+      'path' => 'admin/config',
+      'expect' => $default_string,
+      'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
+      'http_header' => array(),
+      'message' => 'USER > DEFAULT: no preferred user language setting, the UI language is default',
     );
+    $this->runTest($test);
 
     // Set preferred langcode for user to unknown language.
     $account = $this->loggedInUser;
     $account->preferred_langcode = $langcode_unknown;
     $account->save();
 
-    $tests = array(
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_SELECTED),
-        'path' => 'admin/config',
-        'expect' => $default_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
-        'http_header' => array(),
-        'message' => 'USER > DEFAULT: invalid preferred user language setting, the UI language is default',
-      ),
+    $test = array(
+      'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_SELECTED),
+      'path' => 'admin/config',
+      'expect' => $default_string,
+      'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
+      'http_header' => array(),
+      'message' => 'USER > DEFAULT: invalid preferred user language setting, the UI language is default',
     );
-
+    $this->runTest($test);
 
     // Set preferred langcode for user to non default.
     $account->preferred_langcode = $langcode;
     $account->save();
 
-    $tests = array(
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_SELECTED),
-        'path' => 'admin/config',
-        'expect' => $language_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_USER,
-        'http_header' => array(),
-        'message' => 'USER > DEFAULT: defined prefereed user language setting, the UI language is based on user setting',
-      ),
+    $test = array(
+      'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_SELECTED),
+      'path' => 'admin/config',
+      'expect' => $language_string,
+      'expected_method_id' => LANGUAGE_NEGOTIATION_USER,
+      'http_header' => array(),
+      'message' => 'USER > DEFAULT: defined prefereed user language setting, the UI language is based on user setting',
     );
-
-    foreach ($tests as $test) {
-      $this->runTest($test);
-    }
+    $this->runTest($test);
 
     // Set preferred admin langcode for user to NULL.
     $account->preferred_admin_langcode = NULL;
     $account->save();
 
-    $tests = array(
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_SELECTED),
-        'path' => 'admin/config',
-        'expect' => $default_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
-        'http_header' => array(),
-        'message' => 'USER ADMIN > DEFAULT: no preferred user admin language setting, the UI language is default',
-      ),
+    $test = array(
+      'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_SELECTED),
+      'path' => 'admin/config',
+      'expect' => $default_string,
+      'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
+      'http_header' => array(),
+      'message' => 'USER ADMIN > DEFAULT: no preferred user admin language setting, the UI language is default',
     );
+    $this->runTest($test);
 
     // Set preferred admin langcode for user to unknown language.
     $account->preferred_admin_langcode = $langcode_unknown;
     $account->save();
 
-    $tests = array(
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_SELECTED),
-        'path' => 'admin/config',
-        'expect' => $default_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
-        'http_header' => array(),
-        'message' => 'USER ADMIN > DEFAULT: invalid preferred user admin language setting, the UI language is default',
-      ),
+    $test = array(
+      'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_SELECTED),
+      'path' => 'admin/config',
+      'expect' => $default_string,
+      'expected_method_id' => LANGUAGE_NEGOTIATION_SELECTED,
+      'http_header' => array(),
+      'message' => 'USER ADMIN > DEFAULT: invalid preferred user admin language setting, the UI language is default',
     );
+    $this->runTest($test);
 
     // Set preferred admin langcode for user to non default.
     $account->preferred_admin_langcode = $langcode;
     $account->save();
 
-    $tests = array(
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_SELECTED),
-        'path' => 'admin/config',
-        'expect' => $language_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_USER_ADMIN,
-        'http_header' => array(),
-        'message' => 'USER ADMIN > DEFAULT: defined prefereed user admin language setting, the UI language is based on user setting',
-      ),
+    $test = array(
+      'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_SELECTED),
+      'path' => 'admin/config',
+      'expect' => $language_string,
+      'expected_method_id' => LANGUAGE_NEGOTIATION_USER_ADMIN,
+      'http_header' => array(),
+      'message' => 'USER ADMIN > DEFAULT: defined prefereed user admin language setting, the UI language is based on user setting',
     );
-
-    foreach ($tests as $test) {
-      $this->runTest($test);
-    }
+    $this->runTest($test);
 
     // Setup for domain negotiation, first configure the language to have domain
     // URL.
