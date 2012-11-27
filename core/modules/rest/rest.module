@@ -58,7 +58,7 @@ function rest_help($path, $arg) {
       $output .= '</dl>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Granting permissions') . '</dt>';
-      $output .= '<dd>' . t('The <a href="@permission-rest">permissions page</a> allows you to determine what user roles may access a web service operation.', array('@admin-rest' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</dd>';
+      $output .= '<dd>' . t('The <a href="@permission-rest">permissions page</a> allows you to determine what user roles may access a web service operation.', array('@permission-rest' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
