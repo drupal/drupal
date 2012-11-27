@@ -17,3 +17,48 @@ function overlay_enable() {
     $_SESSION['overlay_enable_redirect'] = 1;
   }
 }
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function overlay_update_dependencies() {
+  // Migrate users.data after User module prepared the tables.
+  $dependencies['overlay'][8000] = array(
+    'user' => 8011,
+  );
+  return $dependencies;
+}
+
+/**
+ * Migrate {users}.data into {users_data}.
+ */
+function overlay_update_8000() {
+  $query = db_select('_d7_users_data', 'ud');
+  $query->condition('name', 'overlay');
+  $query->addField('ud', 'uid');
+  $query->addExpression("'overlay'", 'module');
+  $query->addExpression("'enabled'", 'name');
+  $query->addField('ud', 'value', 'value');
+  $query->addExpression(1, 'serialized');
+
+  db_insert('users_data')
+    ->from($query)
+    ->execute();
+
+  // Migrate 'overlay_message_dismissed'.
+  $query = db_select('_d7_users_data', 'ud');
+  $query->condition('name', 'overlay_message_dismissed');
+  $query->addField('ud', 'uid');
+  $query->addExpression("'overlay'", 'module');
+  $query->addExpression("'message_dismissed'", 'name');
+  $query->addField('ud', 'value', 'value');
+  $query->addExpression(1, 'serialized');
+
+  db_insert('users_data')
+    ->from($query)
+    ->execute();
+
+  db_delete('_d7_users_data')
+    ->condition('name', array('overlay', 'overlay_message_dismissed'))
+    ->execute();
+}

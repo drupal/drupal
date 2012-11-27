@@ -819,13 +819,13 @@ abstract class TestBase {
     $this->originalContainer = clone drupal_container();
     $this->originalLanguage = $language_interface;
     $this->originalConfigDirectories = $GLOBALS['config_directories'];
-    $this->originalThemeKey = $GLOBALS['theme_key'];
-    $this->originalTheme = $GLOBALS['theme'];
+    $this->originalThemeKey = isset($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : NULL;
+    $this->originalTheme = isset($GLOBALS['theme']) ? $GLOBALS['theme'] : NULL;
 
     // Save further contextual information.
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
-    $this->originalUser = clone $user;
+    $this->originalUser = isset($user) ? clone $user : NULL;
 
     // Ensure that the current session is not changed by the new environment.
     drupal_save_session(FALSE);

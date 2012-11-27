@@ -105,9 +105,6 @@ function _drupal_session_read($sid) {
   // We found the client's session record and they are an authenticated,
   // active user.
   if ($user && $user->uid > 0 && $user->status == 1) {
-    // This is done to unserialize the data member of $user.
-    $user->data = unserialize($user->data);
-
     // Add roles element to $user.
     $user->roles = array();
     $user->roles[DRUPAL_AUTHENTICATED_RID] = DRUPAL_AUTHENTICATED_RID;

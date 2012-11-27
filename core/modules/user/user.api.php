@@ -229,11 +229,6 @@ function hook_user_operations() {
  *
  * This hook is invoked before the user account is saved to the database.
  *
- * Modules that want to store properties in the serialized {users}.data column,
- * which is automatically loaded whenever a user account object is loaded, may
- * add their properties to $account->data in order to have their data serialized
- * on save.
- *
  * @param $account
  *   The user account object.
  *
@@ -241,10 +236,9 @@ function hook_user_operations() {
  * @see hook_user_update()
  */
 function hook_user_presave($account) {
-  // Make sure that our form value 'mymodule_foo' is stored as
-  // 'mymodule_bar' in the 'data' (serialized) column.
+  // Ensure that our value is an array.
   if (isset($account->mymodule_foo)) {
-    $account->data['mymodule_bar'] = $account->mymodule_foo;
+    $account->mymodule_foo = (array) $account->mymodule_foo;
   }
 }
 

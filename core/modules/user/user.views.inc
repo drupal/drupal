@@ -316,14 +316,6 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['data'] = array(
-    'title' => t('Data'),
-    'help' => t('Provide serialized data of the user'),
-    'field' => array(
-      'id' => 'serialized',
-    ),
-  );
-
   // users_roles table
 
   $data['users_roles']['table']['group']  = t('User');

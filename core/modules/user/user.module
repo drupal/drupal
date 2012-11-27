@@ -2805,12 +2805,11 @@ function user_node_load($nodes, $types) {
   }
 
   // Fetch name and data for these users.
-  $user_fields = db_query("SELECT uid, name, data FROM {users} WHERE uid IN (:uids)", array(':uids' => $uids))->fetchAllAssoc('uid');
+  $user_names = db_query("SELECT uid, name FROM {users} WHERE uid IN (:uids)", array(':uids' => $uids))->fetchAllKeyed();
 
   // Add these values back into the node objects.
   foreach ($uids as $nid => $uid) {
-    $nodes[$nid]->name = $user_fields[$uid]->name;
-    $nodes[$nid]->data = $user_fields[$uid]->data;
+    $nodes[$nid]->name = $user_names[$uid];
   }
 }
 
@@ -2927,6 +2926,8 @@ function user_modules_uninstalled($modules) {
    db_delete('role_permission')
      ->condition('module', $modules, 'IN')
      ->execute();
+  // Remove any potentially orphan module data stored for users.
+  drupal_container()->get('user.data')->delete($modules);
 }
 
 /**

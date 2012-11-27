@@ -29,6 +29,7 @@ class FilledStandardUpgradePathTest extends UpgradePathTestBase {
     // Path to the database dump files.
     $this->databaseDumpFiles = array(
       drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.filled.standard_all.database.php.gz',
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.user_data.database.php',
     );
     parent::setUp();
   }
@@ -96,5 +97,28 @@ class FilledStandardUpgradePathTest extends UpgradePathTestBase {
     $blog_type = node_type_load('blog');
     $this->assertEqual($blog_type->module, 'node', "Content type 'blog' has been reassigned from the blog module to the node module.");
     $this->assertEqual($blog_type->base, 'node_content', "The base string used to construct callbacks corresponding to content type 'Blog' has been reassigned to 'node_content'.");
+
+    // Check that user data has been migrated correctly.
+    $query = db_query('SELECT * FROM {users_data}');
+
+    $userdata = array();
+    $i = 0;
+    foreach ($query as $row) {
+      $i++;
+      $userdata[$row->uid][$row->module][$row->name] = $row;
+    }
+    // Check that the correct amount of rows exist.
+    $this->assertEqual($i, 5);
+    // Check that the data has been converted correctly.
+    $this->assertEqual(unserialize($userdata[1]['contact']['enabled']->value), 1);
+    $this->assertEqual($userdata[1]['contact']['enabled']->serialized, 1);
+    $this->assertEqual(unserialize($userdata[2]['contact']['enabled']->value), 0);
+    $this->assertEqual(unserialize($userdata[1]['overlay']['enabled']->value), 1);
+    $this->assertEqual(unserialize($userdata[2]['overlay']['enabled']->value), 1);
+    $this->assertEqual(unserialize($userdata[1]['overlay']['message_dismissed']->value), 1);
+    $this->assertFalse(isset($userdata[2]['overlay']['message_dismissed']));
+
+    // Make sure that only the garbage is remaining in the helper table.
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {_d7_users_data}')->fetchField(), 2);
   }
 }

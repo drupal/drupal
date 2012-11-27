@@ -77,7 +77,6 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
     $this->assertEqual($user->mail, 'john@example.com', 'User was registered with right email address.');
     $this->assertEqual($user->timezone, 'Europe/London', 'User was registered with right timezone.');
     $this->assertEqual($user->preferred_langcode, 'pt', 'User was registered with right language.');
-    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     $this->submitLoginForm($identity);
     $this->assertRaw(t('You must validate your email address for this account before logging in via OpenID.'));
@@ -126,7 +125,6 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
     $this->assertEqual($user->mail, 'john@example.com', 'User was registered with right email address.');
     $this->assertEqual($user->timezone, 'Europe/London', 'User was registered with right timezone.');
     $this->assertEqual($user->preferred_langcode, 'pt-br', 'User was registered with right language.');
-    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     $this->drupalLogout();
 
@@ -171,7 +169,6 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
     $user = user_load_by_name('john');
     $this->assertTrue($user, 'User was registered with right username.');
     $this->assertEqual($user->preferred_langcode, language_default()->langcode, 'User language is site default.');
-    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     // Follow the one-time login that was sent in the welcome e-mail.
     $this->drupalGet($reset_url);
@@ -211,7 +208,6 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
     $user = user_load_by_name('john');
     $this->assertTrue($user, 'User was registered with right username.');
     $this->assertEqual($user->preferred_langcode, language_default()->langcode, 'User language is site default.');
-    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     // Follow the one-time login that was sent in the welcome e-mail.
     $this->drupalGet($reset_url);

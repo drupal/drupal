@@ -129,13 +129,6 @@ function user_schema() {
         'default' => '',
         'description' => 'E-mail address used for initial account creation.',
       ),
-      'data' => array(
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-        'serialize' => TRUE,
-        'description' => 'A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future version of Drupal.',
-      ),
     ),
     'indexes' => array(
       'access' => array('access'),
@@ -267,6 +260,54 @@ function user_schema() {
     ),
   );
 
+  $schema['users_data'] = array(
+    'description' => 'Stores module data as key/value pairs per user.',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'Primary key: {users}.uid for user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'module' => array(
+        'description' => 'The name of the module declaring the variable.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'name' => array(
+        'description' => 'The identifier of the data.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'value' => array(
+        'description' => 'The value.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'serialized' => array(
+        'description' => 'Whether value is serialized.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid', 'module', 'name'),
+    'indexes' => array(
+      'module' => array('module'),
+      'name' => array('name'),
+    ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
+  );
+
   $schema['users_roles'] = array(
     'description' => 'Maps users to roles.',
     'fields' => array(
@@ -326,7 +367,6 @@ function user_install() {
       'mail' => 'placeholder-for-uid-1',
       'created' => REQUEST_TIME,
       'status' => 1,
-      'data' => NULL,
     ))
     ->execute();
 
@@ -785,6 +825,142 @@ function user_update_8012(&$sandbox) {
  */
 function user_update_8013() {
   db_drop_field('users', 'picture');
+}
+
+/**
+ * Create new {users_data} table.
+ */
+function user_update_8014() {
+  // Create the {users_data} table.
+  db_create_table('users_data', array(
+    'description' => 'Stores module data as key/value pairs per user.',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'Primary key: {users}.uid for user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'module' => array(
+        'description' => 'The name of the module declaring the variable.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'name' => array(
+        'description' => 'The identifier of the data.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'value' => array(
+        'description' => 'The value.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'serialized' => array(
+        'description' => 'Whether value is serialized.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid', 'module', 'name'),
+    'indexes' => array(
+      'module' => array('module'),
+      'name' => array('name'),
+    ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
+  ));
+
+  // Create backup table for data migration.
+  // Since the origin/owner of individual values in {users}.data is unknown,
+  // other modules need to migrate their existing values from {_d7_users_data}.
+  db_create_table('_d7_users_data', array(
+    'description' => 'Backup of {users}.data for migration.',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'Primary Key: {users}.uid for user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'name' => array(
+        'description' => 'The name of the variable.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'value' => array(
+        'description' => 'The serialized value of the variable.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('uid', 'name'),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
+  ));
+}
+
+/**
+ * Move existing {users}.data into {_d7_users_data} migration table.
+ */
+function user_update_8015(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    // The anonymous user cannot have data, so start with uid 1.
+    $sandbox['last'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(uid) FROM {users} WHERE uid > 0')->fetchField();
+  }
+
+  // Process 20 user records at a time. E.g., if there are 10 data keys per user
+  // record, that leads to an insert query with 200 values.
+  $result = db_query_range('SELECT uid, data FROM {users} WHERE uid > :uid ORDER BY uid ASC', 0, 20, array(':uid' => $sandbox['last']))->fetchAllKeyed();
+  $query = db_insert('_d7_users_data')->fields(array('uid', 'name', 'value'));
+  $has_values = FALSE;
+  foreach ($result as $uid => $data) {
+    $sandbox['progress']++;
+    $sandbox['last'] = $uid;
+    if (empty($data)) {
+      continue;
+    }
+    $data = unserialize($data);
+    if (!empty($data) && is_array($data)) {
+      $has_values = TRUE;
+      foreach ($data as $name => $value) {
+        $query->values(array(
+          'uid' => $uid,
+          'name' => $name,
+          'value' => serialize($value),
+        ));
+      }
+    }
+  }
+  if ($has_values) {
+    $query->execute();
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+}
+
+/**
+ * Drop {users}.data column.
+ */
+function user_update_8016() {
+  db_drop_field('users', 'data');
 }
 
 /**

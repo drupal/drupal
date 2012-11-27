@@ -87,6 +87,7 @@ function overlay_theme() {
 function overlay_form_user_profile_form_alter(&$form, &$form_state) {
   $account = $form_state['controller']->getEntity($form_state);
   if (user_access('access overlay', $account)) {
+    $account_data = drupal_container()->get('user.data')->get('overlay', $account->id(), 'enabled');
     $form['overlay_control'] = array(
       '#type' => 'details',
       '#title' => t('Administrative overlay'),
@@ -97,17 +98,17 @@ function overlay_form_user_profile_form_alter(&$form, &$form_state) {
       '#type' => 'checkbox',
       '#title' => t('Use the overlay for administrative pages.'),
       '#description' => t('Show administrative pages on top of the page you started from.'),
-      '#default_value' => isset($account->data['overlay']) ? $account->data['overlay'] : 1,
+      '#default_value' => isset($account_data) ? $account_data : 1,
     );
   }
 }
 
 /**
- * Implements hook_user_presave().
+ * Implements hook_user_update().
  */
-function overlay_user_presave($account) {
+function overlay_user_update($account) {
   if (isset($account->overlay)) {
-    $account->data['overlay'] = $account->overlay;
+    drupal_container()->get('user.data')->set('overlay', $account->id(), 'enabled', (int) $account->overlay);
   }
 }
 
@@ -126,7 +127,8 @@ function overlay_init() {
 
   // Only act if the user has access to the overlay and a mode was not already
   // set. Other modules can also enable the overlay directly for other uses.
-  $use_overlay = !isset($user->data['overlay']) || $user->data['overlay'];
+  $user_data = drupal_container()->get('user.data')->get('overlay', $user->uid, 'enabled');
+  $use_overlay = !isset($user_data) || $user_data;
   if (empty($mode) && user_access('access overlay') && $use_overlay) {
     $current_path = current_path();
     // After overlay is enabled on the modules page, redirect to
@@ -354,9 +356,7 @@ function overlay_user_dismiss_message() {
     throw new AccessDeniedHttpException();
   }
 
-  $account = user_load($user->uid);
-  $account->data['overlay_message_dismissed'] = 1;
-  $account->save();
+  drupal_container()->get('user.data')->set('overlay', $user->uid, 'message_dismissed', 1);
   drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
   // Destination is normally given. Go to the user profile as a fallback.
   drupal_goto('user/' . $user->uid . '/edit');
@@ -378,7 +378,13 @@ function overlay_user_dismiss_message() {
 function overlay_disable_message() {
   global $user;
 
-  if (!empty($user->uid) && empty($user->data['overlay_message_dismissed']) && (!isset($user->data['overlay']) || $user->data['overlay']) && user_access('access overlay')) {
+  $build = array();
+  if (empty($user->uid) || !user_access('access overlay')) {
+    return $build;
+  }
+
+  $user_data = drupal_container()->get('user.data')->get('overlay', $user->uid);
+  if (empty($user_data['message_dismissed']) && (!isset($user_data['enabled']) || $user_data['enabled'])) {
     $build = array(
       '#theme' => 'overlay_disable_message',
       '#weight' => -99,
@@ -417,9 +423,6 @@ function overlay_disable_message() {
         ),
       )
     );
-  }
-  else {
-    $build = array();
   }
 
   return $build;

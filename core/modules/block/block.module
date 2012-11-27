@@ -599,6 +599,7 @@ function block_form_user_profile_form_alter(&$form, &$form_state) {
   $account = $form_state['controller']->getEntity($form_state);
   $rids = array_keys($account->roles);
   $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
+  $account_data = drupal_container()->get('user.data')->get('block', $account->id(), 'block');
 
   $blocks = array();
   foreach ($result as $block) {
@@ -607,7 +608,7 @@ function block_form_user_profile_form_alter(&$form, &$form_state) {
       $blocks[$block->module][$block->delta] = array(
         '#type' => 'checkbox',
         '#title' => check_plain($data[$block->delta]['info']),
-        '#default_value' => isset($account->data['block'][$block->module][$block->delta]) ? $account->data['block'][$block->module][$block->delta] : ($block->custom == 1),
+        '#default_value' => isset($account_data[$block->module][$block->delta]) ? $account_data[$block->module][$block->delta] : ($block->custom == 1),
       );
     }
   }
@@ -639,11 +640,11 @@ function block_field_extra_fields() {
 }
 
 /**
- * Implements hook_user_presave().
+ * Implements hook_user_update().
  */
-function block_user_presave($account) {
+function block_user_update($account) {
   if (isset($account->block)) {
-    $account->data['block'] = $account->block;
+    drupal_container()->get('user.data')->set('block', $account->id(), 'block', $account->block);
   }
 }
 
@@ -805,6 +806,10 @@ function block_block_list_alter(&$blocks) {
     $block_langcodes[$record->module][$record->delta][$record->type][$record->langcode] = TRUE;
   }
 
+  if ($user->uid) {
+    $user_data = drupal_container()->get('user.data')->get('block', $user->uid, 'block');
+  }
+
   foreach ($blocks as $key => $block) {
     if (!isset($block->theme) || !isset($block->status) || $block->theme != $theme_key || $block->status != 1) {
       // This block was added by a contrib module, leave it in the list.
@@ -822,8 +827,8 @@ function block_block_list_alter(&$blocks) {
 
     // Use the user's block visibility setting, if necessary.
     if ($block->custom != BLOCK_CUSTOM_FIXED) {
-      if ($user->uid && isset($user->data['block'][$block->module][$block->delta])) {
-        $enabled = $user->data['block'][$block->module][$block->delta];
+      if ($user->uid && isset($user_data[$block->module][$block->delta])) {
+        $enabled = $user_data[$block->module][$block->delta];
       }
       else {
         $enabled = ($block->custom == BLOCK_CUSTOM_ENABLED);

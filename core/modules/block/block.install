@@ -233,6 +233,10 @@ function block_update_dependencies() {
   $dependencies['block'][8002] = array(
     'user' => 8002,
   );
+  // Migrate users.data after User module prepared the tables.
+  $dependencies['block'][8005] = array(
+    'user' => 8011,
+  );
   return $dependencies;
 }
 
@@ -351,6 +355,28 @@ function block_update_8004() {
       ->fields(array('delta' => $new))
       ->execute();
   }
+}
+
+/**
+ * Migrate {users}.data into {users_data}.
+ */
+function block_update_8005() {
+  $query = db_select('_d7_users_data', 'ud');
+  $query->addField('ud', 'uid');
+  $query->addExpression("'block'", 'module');
+  $query->addExpression("'block'", 'name');
+  // Take over the extracted and serialized value in {_d7_users_data} as-is.
+  $query->addField('ud', 'value');
+  $query->addExpression('1', 'serialized');
+  $query->condition('name', 'block');
+
+  db_insert('users_data')
+    ->from($query)
+    ->execute();
+
+  db_delete('_d7_users_data')
+    ->condition('name', 'block')
+    ->execute();
 }
 
 /**

@@ -369,7 +369,7 @@ function simpletest_script_run_one_test($test_id, $test_class) {
 
   try {
     // Bootstrap Drupal.
-    drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
     simpletest_classloader_register();
 

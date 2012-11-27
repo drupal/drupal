@@ -388,13 +388,14 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
   $current = REQUEST_TIME;
 
   // Basic validation of arguments.
-  if (isset($account->data['user_cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
+  $account_data = drupal_container()->get('user.data')->get('user', $account->id());
+  if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
     // Validate expiration and hashed password/login.
     if ($timestamp <= $current && $current - $timestamp < $timeout && $account->uid && $timestamp >= $account->login && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
       $edit = array(
-        'user_cancel_notify' => isset($account->data['user_cancel_notify']) ? $account->data['user_cancel_notify'] : config('user.settings')->get('notify.status_canceled'),
+        'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : config('user.settings')->get('notify.status_canceled'),
       );
-      user_cancel($edit, $account->uid, $account->data['user_cancel_method']);
+      user_cancel($edit, $account->id(), $account_data['cancel_method']);
       // Since user_cancel() is not invoked via Form API, batch processing needs
       // to be invoked manually and should redirect to the front page after
       // completion.
