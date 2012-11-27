@@ -2,9 +2,9 @@
 
 "use strict";
 
-Drupal.behaviors.menuFieldsetSummaries = {
+Drupal.behaviors.menuDetailsSummaries = {
   attach: function (context) {
-    $(context).find('fieldset.menu-link-form').drupalSetSummary(function (context) {
+    $(context).find('.menu-link-form').drupalSetSummary(function (context) {
       var $context = $(context);
       if ($context.find('.form-item-menu-enabled input').is(':checked')) {
         return Drupal.checkPlain($context.find('.form-item-menu-link-title input').val());
@@ -22,7 +22,7 @@ Drupal.behaviors.menuFieldsetSummaries = {
 Drupal.behaviors.menuLinkAutomaticTitle = {
   attach: function (context) {
     var $context = $(context);
-    $context.find('fieldset.menu-link-form').each(function () {
+    $context.find('.menu-link-form').each(function () {
       var $this = $(this);
       // Try to find menu settings widget elements as well as a 'title' field in
       // the form, but play nicely with user permissions and form alterations.
@@ -53,7 +53,7 @@ Drupal.behaviors.menuLinkAutomaticTitle = {
           $link_title.val('');
           $link_title.removeData('menuLinkAutomaticTitleOveridden');
         }
-        $checkbox.closest('fieldset.vertical-tabs-pane').trigger('summaryUpdated');
+        $checkbox.closest('.vertical-tabs-pane').trigger('summaryUpdated');
         $checkbox.trigger('formUpdated');
       });
       // Take over any title change.

@@ -174,7 +174,7 @@ function locale_translate_export_form($form, &$form_state) {
       '#empty_value' => LANGUAGE_SYSTEM,
     );
     $form['content_options'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Export options'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,

@@ -8,9 +8,9 @@
 
 "use strict";
 
-Drupal.behaviors.bookFieldsetSummaries = {
+Drupal.behaviors.bookDetailsSummaries = {
   attach: function (context) {
-    $(context).find('fieldset.book-outline-form').drupalSetSummary(function (context) {
+    $(context).find('.book-outline-form').drupalSetSummary(function (context) {
       var $select = $(context).find('.book-title-select');
       var val = $select.val();
 

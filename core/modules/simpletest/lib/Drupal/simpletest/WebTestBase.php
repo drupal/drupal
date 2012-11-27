@@ -1387,7 +1387,7 @@ abstract class WebTestBase extends TestBase {
             if ($wrapperNode) {
               // ajax.js adds an enclosing DIV to work around a Safari bug.
               $newDom = new DOMDocument();
-              $newDom->loadHTML('<div>' . $command['data'] . '</div>');
+              @$newDom->loadHTML('<div>' . $command['data'] . '</div>');
               $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
               $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
               // The "method" is a jQuery DOM manipulation function. Emulate

@@ -211,7 +211,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
       // Add translation values and workflow options.
       $form['tnid'] = array('#type' => 'value', '#value' => $node->tnid);
       $form['translation'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Translation settings'),
         '#access' => translation_user_can_translate_node($node),
         '#collapsible' => TRUE,

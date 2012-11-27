@@ -50,10 +50,10 @@ class CommentFormController extends EntityFormController {
     $form['author'] = array(
       '#weight' => 10,
     );
-    // Display author information in a fieldset for comment moderators.
+    // Display author information in a details element for comment moderators.
     if ($is_admin) {
       $form['author'] += array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Administration'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,

@@ -8,7 +8,8 @@
  * HTML elements.
  */
 fieldset {
-  margin-bottom: 1em;
+  border: 1px solid #ccc;
+  margin: 1em 0;
   padding: 0.5em;
 }
 form {
@@ -183,22 +184,43 @@ abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
 }
 
 /**
- * Collapsible fieldsets.
+ * Collapsible details.
  *
  * @see collapse.js
+ * @thanks http://nicolasgallagher.com/css-background-image-hacks/
  */
-.js fieldset.collapsible > legend .fieldset-legend a {
-  background: url(../../misc/menu-expanded.png) 5px 65% no-repeat; /* LTR */
-  padding-left: 15px; /* LTR */
+details {
+  border: 1px solid #ccc;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
-.js fieldset.collapsed > legend .fieldset-legend a {
-  background-image: url(../../misc/menu-collapsed.png); /* LTR */
-  background-position: 5px 50%; /* LTR */
+details > .details-wrapper {
+  padding: 0.5em 1.5em;
 }
-.fieldset-legend span.summary {
-  color: #999;
-  font-size: 0.9em;
-  margin-left: 0.5em;
+/* @todo Regression: The summary of uncollapsible details are no longer
+     vertically aligned with the .details-wrapper in browsers without native
+     details support. */
+summary {
+  padding: 0.2em 0.5em;
+}
+.collapse-processed > summary {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+.collapse-processed > summary:before {
+  background: url(../../misc/menu-expanded.png) 0px 100% no-repeat; /* LTR */
+  content: "";
+  float: left;
+  height: 1em;
+  width: 1em;
+}
+.collapse-processed:not([open]) > summary:before {
+  background-position: 25% 35%; /* LTR */
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 /**

@@ -562,7 +562,7 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
 
   // Create a form structure for the field values.
   $form['field'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Field settings'),
     '#description' => $description,
     '#tree' => TRUE,
@@ -656,7 +656,7 @@ function field_ui_widget_type_form($form, &$form_state, FieldInstance $instance)
   );
 
   $form['basic'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Change widget'),
   );
   $form['basic']['widget_type'] = array(
@@ -815,15 +815,15 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   // Create a form structure for the instance values.
   $form['instance'] = array(
     '#tree' => TRUE,
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('%type settings', array('%type' => $bundles[$entity_type][$bundle]['label'])),
     '#description' => t('These settings apply only to the %field field when used in the %type type.', array(
       '%field' => $instance['label'],
       '%type' => $bundles[$entity_type][$bundle]['label'],
     )),
     // Ensure field_ui_field_edit_instance_pre_render() gets called in addition
-    // to, not instead of, the #pre_render function(s) needed by all fieldsets.
-    '#pre_render' => array_merge(array('field_ui_field_edit_instance_pre_render'), element_info_property('fieldset', '#pre_render', array())),
+    // to, not instead of, the #pre_render function(s) needed by all details.
+    '#pre_render' => array_merge(array('field_ui_field_edit_instance_pre_render'), element_info_property('details', '#pre_render', array())),
   );
 
   // Build the non-configurable instance values.
@@ -908,7 +908,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
 
   // Create a form structure for the field values.
   $form['field'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#title' => t('Global settings'),
@@ -966,7 +966,7 @@ function field_ui_field_edit_form_delete_submit($form, &$form_state) {
 /**
  * Render API callback: Merges instance, widget and other settings.
  *
- * Combines the instance, widget, and other settings into a single fieldset so
+ * Combines the instance, widget, and other settings into a single details so
  * that elements within each group can be shown at different weights as if they
  * all had the same parent.
  *
@@ -994,14 +994,14 @@ function field_ui_field_edit_instance_pre_render($element) {
 }
 
 /**
- * Builds the default value fieldset for a given field instance.
+ * Builds the default value widget for a given field instance.
  */
 function field_ui_default_value_widget($field, $instance, &$form, &$form_state) {
   $field_name = $field['field_name'];
   $entity = $form['#entity'];
 
   $element = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Default value'),
     '#collapsible' => FALSE,
     '#tree' => TRUE,

@@ -331,7 +331,7 @@ function statistics_settings_form($form, &$form_state) {
   $config = config('statistics.settings');
   // Access log settings.
   $form['access'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Access log settings'),
   );
   $form['access']['statistics_enable_access_log'] = array(
@@ -350,7 +350,7 @@ function statistics_settings_form($form, &$form_state) {
 
   // Content counter settings.
   $form['content'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Content viewing counter settings'),
   );
   $form['content']['statistics_count_content_views'] = array(

@@ -232,7 +232,7 @@ abstract class Tasks {
     );
 
     $form['advanced_options'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => st('Advanced options'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,

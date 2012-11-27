@@ -284,7 +284,7 @@ function contact_mail($key, &$message, $params) {
  */
 function contact_form_user_profile_form_alter(&$form, &$form_state) {
   $form['contact'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Contact settings'),
     '#weight' => 5,
     '#collapsible' => TRUE,
@@ -314,7 +314,7 @@ function contact_user_presave($account) {
  */
 function contact_form_user_admin_settings_alter(&$form, &$form_state) {
   $form['contact'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Contact settings'),
     '#weight' => 0,
   );

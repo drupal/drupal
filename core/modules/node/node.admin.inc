@@ -166,7 +166,7 @@ function node_filter_form() {
 
   $i = 0;
   $form['filters'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Show only items where'),
     '#theme' => 'exposed_filters__node',
   );
@@ -431,7 +431,7 @@ function node_admin_nodes() {
 
   // Build the 'Update options' form.
   $form['options'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Update options'),
     '#attributes' => array('class' => array('container-inline')),
     '#access' => $admin_access,

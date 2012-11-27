@@ -256,8 +256,8 @@ function drupal_get_form($form_id) {
  *     handler, and is also used in Ajax handlers.
  *   - has_file_element: Internal. If TRUE, there is a file element and Form API
  *     will set the appropriate 'enctype' HTML attribute on the form.
- *   - groups: Internal. An array containing references to fieldsets to render
- *     them within vertical tabs.
+ *   - groups: Internal. An array containing references to details elements to
+ *     render them within vertical tabs.
  *   - storage: $form_state['storage'] is not a special key, and no specific
  *     support is provided for it in the Form API. By tradition it was
  *     the location where application-specific data was stored for communication
@@ -1706,9 +1706,9 @@ function form_error(&$element, $message = '') {
  *   type, one of the functions in this array is form_process_date(), which adds
  *   the individual 'year', 'month', 'day', etc. child elements. These functions
  *   can also be used to set additional properties or implement special logic
- *   other than adding child elements: for example, for the 'fieldset' element
- *   type, one of the functions in this array is form_process_fieldset(), which
- *   adds the attributes and JavaScript needed to make the fieldset collapsible
+ *   other than adding child elements: for example, for the 'details' element
+ *   type, one of the functions in this array is form_process_details(), which
+ *   adds the attributes and JavaScript needed to make the details collapsible
  *   if the #collapsible property is set. The #process functions are called in
  *   preorder traversal, meaning they are called for the parent element first,
  *   then for the child elements.
@@ -2814,6 +2814,39 @@ function theme_fieldset($variables) {
 }
 
 /**
+ * Returns HTML for a details form element and its children.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #attributes, #children, #collapsed, #collapsible,
+ *     #description, #id, #title, #value.
+ *
+ * @ingroup themeable
+ */
+function theme_details($variables) {
+  $element = $variables['element'];
+  element_set_attributes($element, array('id'));
+  _form_set_attributes($element, array('form-wrapper'));
+
+  $output = '<details' . new Attribute($element['#attributes']) . '>';
+  if (!empty($element['#title'])) {
+    $output .= '<summary>' . $element['#title'] . '</summary>';
+  }
+  $output .= '<div class="details-wrapper">';
+  if (!empty($element['#description'])) {
+    $output .= '<div class="details-description">' . $element['#description'] . '</div>';
+  }
+  $output .= $element['#children'];
+  if (isset($element['#value'])) {
+    $output .= $element['#value'];
+  }
+  $output .= '</div>';
+  $output .= "</details>\n";
+  return $output;
+}
+
+/**
  * Returns HTML for a radio button form element.
  *
  * Note: The input "name" attribute needs to be sanitized before output, which
@@ -3670,29 +3703,29 @@ function form_validate_machine_name(&$element, &$form_state) {
 }
 
 /**
- * Arranges fieldsets into groups.
+ * Arranges details into groups.
  *
  * @param $element
  *   An associative array containing the properties and children of the
- *   fieldset. Note that $element must be taken by reference here, so processed
+ *   details. Note that $element must be taken by reference here, so processed
  *   child elements are taken over into $form_state.
  * @param $form_state
- *   The $form_state array for the form this fieldset belongs to.
+ *   The $form_state array for the form this details belongs to.
  *
  * @return
  *   The processed element.
  */
-function form_process_fieldset(&$element, &$form_state) {
+function form_process_details(&$element, &$form_state) {
   $parents = implode('][', $element['#parents']);
 
-  // Each fieldset forms a new group. The #type 'vertical_tabs' basically only
-  // injects a new fieldset.
+  // Each details element forms a new group. The #type 'vertical_tabs' basically
+  // only injects a new details element.
   $form_state['groups'][$parents]['#group_exists'] = TRUE;
   $element['#groups'] = &$form_state['groups'];
 
-  // Process vertical tabs group member fieldsets.
+  // Process vertical tabs group member details elements.
   if (isset($element['#group'])) {
-    // Add this fieldset to the defined group (by reference).
+    // Add this details element to the defined group (by reference).
     $group = $element['#group'];
     $form_state['groups'][$group][] = &$element;
   }
@@ -3708,28 +3741,28 @@ function form_process_fieldset(&$element, &$form_state) {
  *
  * @param $element
  *   An associative array containing the properties and children of the
- *   fieldset.
+ *   details.
  *
  * @return
  *   The modified element with all group members.
  */
-function form_pre_render_fieldset($element) {
-  // The .form-wrapper class is required for #states to treat fieldsets like
+function form_pre_render_details($element) {
+  // The .form-wrapper class is required for #states to treat details like
   // containers.
   if (!isset($element['#attributes']['class'])) {
     $element['#attributes']['class'] = array();
   }
 
-  // Collapsible fieldsets
+  // Collapsible details.
   if (!empty($element['#collapsible'])) {
     $element['#attached']['library'][] = array('system', 'drupal.collapse');
     $element['#attributes']['class'][] = 'collapsible';
-    if (!empty($element['#collapsed'])) {
-      $element['#attributes']['class'][] = 'collapsed';
-    }
+  }
+  if (empty($element['#collapsed'])) {
+    $element['#attributes']['open'] = 'open';
   }
 
-  // Fieldsets may be rendered outside of a Form API context.
+  // Details may be rendered outside of a Form API context.
   if (!isset($element['#parents']) || !isset($element['#groups'])) {
     return $element;
   }
@@ -3741,7 +3774,7 @@ function form_pre_render_fieldset($element) {
       // Break references and indicate that the element should be rendered as
       // group member.
       $child = (array) $element['#groups'][$parents][$key];
-      $child['#group_fieldset'] = TRUE;
+      $child['#group_details'] = TRUE;
       // Inject the element as new child element.
       $element[] = $child;
 
@@ -3761,7 +3794,7 @@ function form_pre_render_fieldset($element) {
       // Intentionally empty to clarify the flow; we simply return $element.
     }
     // If we injected this element into the group, then we want to render it.
-    elseif (!empty($element['#group_fieldset'])) {
+    elseif (!empty($element['#group_details'])) {
       // Intentionally empty to clarify the flow; we simply return $element.
     }
     // Otherwise, this element belongs to a group and the group exists, so we do
@@ -3779,7 +3812,7 @@ function form_pre_render_fieldset($element) {
  *
  * @param $element
  *   An associative array containing the properties and children of the
- *   fieldset.
+ *   details element.
  * @param $form_state
  *   The $form_state array for the form this vertical tab widget belongs to.
  *
@@ -3787,10 +3820,10 @@ function form_pre_render_fieldset($element) {
  *   The processed element.
  */
 function form_process_vertical_tabs($element, &$form_state) {
-  // Inject a new fieldset as child, so that form_process_fieldset() processes
-  // this fieldset like any other fieldset.
+  // Inject a new details as child, so that form_process_details() processes
+  // this details element like any other details.
   $element['group'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#theme_wrappers' => array(),
     '#parents' => $element['#parents'],
   );
@@ -3813,12 +3846,12 @@ function form_process_vertical_tabs($element, &$form_state) {
 }
 
 /**
- * Returns HTML for an element's children fieldsets as vertical tabs.
+ * Returns HTML for an element's children details as vertical tabs.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties and children of
- *     the fieldset. Properties used: #children.
+ *     the details element. Properties used: #children.
  *
  * @ingroup themeable
  */

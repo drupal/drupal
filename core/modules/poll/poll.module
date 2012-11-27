@@ -318,7 +318,7 @@ function poll_form(Node $node, &$form_state) {
   $active = array(0 => t('Closed'), 1 => t('Active'));
 
   $form['settings'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#collapsible' => TRUE,
     '#title' => t('Poll settings'),
     '#weight' => -3,

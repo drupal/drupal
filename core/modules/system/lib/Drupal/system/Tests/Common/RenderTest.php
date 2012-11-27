@@ -94,7 +94,7 @@ class RenderTest extends WebTestBase {
     $child_js = drupal_get_path('module', 'forum') . '/forum.js';
     $subchild_js = drupal_get_path('module', 'book') . '/book.js';
     $element = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#cache' => array(
         'keys' => array('simpletest', 'drupal_render', 'children_attached'),
       ),
@@ -102,7 +102,7 @@ class RenderTest extends WebTestBase {
       '#title' => 'Parent',
     );
     $element['child'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#attached' => array('js' => array($child_js)),
       '#title' => 'Child',
     );
@@ -240,19 +240,19 @@ class RenderTest extends WebTestBase {
     ));
 
     $element = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->randomName(),
     );
-    $this->assertRenderedElement($element, '//fieldset/legend[contains(., :title)]', array(
+    $this->assertRenderedElement($element, '//details/summary[contains(., :title)]', array(
       ':title' => $element['#title'],
     ));
 
     $element = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->randomName(),
       '#collapsible' => TRUE,
     );
-    $this->assertRenderedElement($element, '//fieldset[contains(@class, :class)]', array(
+    $this->assertRenderedElement($element, '//details[contains(@class, :class)]', array(
       ':class' => 'collapsible',
     ));
 
@@ -261,7 +261,7 @@ class RenderTest extends WebTestBase {
       '#title' => $this->randomName(),
       '#markup' => $this->randomName(),
     );
-    $this->assertRenderedElement($element, '//fieldset/div/div[contains(@class, :class) and contains(., :markup)]', array(
+    $this->assertRenderedElement($element, '//details/div/div[contains(@class, :class) and contains(., :markup)]', array(
       ':class' => 'form-type-item',
       ':markup' => $element['item']['#markup'],
     ));

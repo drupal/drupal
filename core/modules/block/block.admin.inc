@@ -303,7 +303,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
 
   // Region settings.
   $form['regions'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Region settings'),
     '#collapsible' => FALSE,
     '#description' => t('Specify in which themes and regions this block is displayed.'),
@@ -355,7 +355,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
 
   // Per-path visibility.
   $form['visibility']['path'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Pages'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -429,7 +429,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
       $langcodes_options[$language->langcode] = $language->name;
     }
     $form['visibility']['language'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Languages'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
@@ -467,7 +467,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   ))->fetchCol();
   $role_options = array_map('check_plain', user_roles());
   $form['visibility']['role'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Roles'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -484,7 +484,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
 
   // Per-user visibility.
   $form['visibility']['user'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Users'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

@@ -332,7 +332,7 @@ function views_ui_build_preview(ViewUI $view, $display_id) {
 }
 
 /**
- * Move form elements into fieldsets for presentation purposes.
+ * Move form elements into details for presentation purposes.
  *
  * Many views forms use #tree = TRUE to keep their values in a hierarchy for
  * easier storage. Moving the form elements into fieldsets during form building
@@ -1863,7 +1863,7 @@ function views_ui_admin_settings_basic($form, &$form_state) {
   );
 
   $form['live_preview'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Live preview settings'),
   );
 
@@ -1949,7 +1949,7 @@ function views_ui_admin_settings_advanced() {
   $config = config('views.settings');
 
   $form['cache'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Caching'),
   );
 
@@ -1967,7 +1967,7 @@ function views_ui_admin_settings_advanced() {
   );
 
   $form['debug'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Debugging'),
   );
 
@@ -2015,7 +2015,7 @@ function views_ui_admin_settings_advanced() {
   $options = views_fetch_plugin_names('display_extender');
   if (!empty($options)) {
     $form['extenders'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
     );
     ;
     $form['extenders']['display_extenders'] = array(

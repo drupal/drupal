@@ -20,8 +20,10 @@ hr {
   height: 1px;
   background: #cccccc;
 }
+summary,
 legend {
   font-weight: bold;
+  text-transform: uppercase;
 }
 h1,
 h2,
@@ -493,50 +495,21 @@ tr td:last-child {
     display: none;
   }
 }
+
 /**
- * Fieldsets.
- *
- * Fieldset legends are displayed like containers in Seven. However, several
- * browsers do not support styling of LEGEND elements. To achieve the desired
- * styling:
- * - All fieldsets use 'position: relative'.
- * - All legend labels are wrapped in a single span.fieldset-legend that uses
- *   'position: absolute', which means that the LEGEND element itself is not
- *   rendered by browsers.
- * - Due to using 'position: absolute', collapsed fieldsets do not have a
- *   height; the fieldset requires a 'padding-top' to make the absolute
- *   positioned .fieldset-legend appear as though it would have a height.
- * - Various browsers are positioning the legend differently if there is a
- *   'padding-left'/'padding-right' applied on a fieldset and inherit the
- *   positioning even to absolute positioned elements within; we therefore have
- *   to apply all padding to the inner .fieldset-wrapper instead.
+ * Collapsible details.
  */
-fieldset {
-  border: 1px solid #ccc;
-  padding: 2.5em 0 0 0; /* LTR */
-  position: relative;
-  margin: 1em 0;
+details {
+  line-height: 1.295em;
 }
-fieldset .fieldset-legend {
-  margin-top: 0.5em;
-  padding-left: 15px; /* LTR */
-  position: absolute;
-  text-transform: uppercase;
+details summary {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
-fieldset .fieldset-wrapper {
-  padding: 0 13px 13px 15px; /* LTR */
-}
-fieldset.collapsed {
-  background-color: transparent;
-}
-.js fieldset.collapsed {
-  border-width: 1px;
-  height: auto;
-}
-fieldset fieldset {
+details details {
   background-color: #fff;
 }
-fieldset fieldset fieldset {
+details details details {
   background-color: #f8f8f8;
 }
 
@@ -544,21 +517,10 @@ fieldset fieldset fieldset {
  * Form elements.
  */
 .form-item {
-  padding: 9px 0;
-  margin: 0 0 10px;
-}
-.filter-wrapper .form-item,
-div.teaser-checkbox .form-item,
-.form-item .form-item {
-  padding: 5px 0;
-  margin: 0;
-  border: 0;
+  margin: 1em 0;
 }
 .form-type-checkbox {
   padding: 0;
-}
-.text-format-wrapper .form-item {
-  padding-bottom: 0;
 }
 .form-item label {
   margin: 0;
@@ -588,17 +550,7 @@ div.teaser-checkbox .form-item,
 
 /* Filter */
 .filter-wrapper {
-  border-top: 0;
-  padding: 10px 2px;
-}
-.filter-wrapper .fieldset-wrapper {
-  padding: 0 6px;
-}
-.filter-wrapper .form-item,
-.filter-wrapper .filter-guidelines,
-.filter-wrapper .filter-help {
   font-size: 0.923em;
-  padding: 2px 0 0 0; /* LTR */
 }
 ul.tips,
 div.description,
@@ -819,7 +771,7 @@ a.button.add:active {
     margin-bottom: 2px;
     width: 100%;
   }
-  fieldset .fieldset-legend {
+  details summary {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1141,29 +1093,29 @@ div.add-or-remove-shortcuts {
 
 /* @group Forms */
 
-fieldset fieldset {
-  border: medium none;
-}
-
 /**
- * Seven positions the legend absolutely, but does not have a way to ignore
- * fieldsets without a legend so we make one up.
+ * Seven positions the summary absolutely, but does not have a way to ignore
+ * details without a summary so we make one up.
+ *
+ * @todo Neither a fieldset without legend nor a details without summary is
+ *   valid HTML markup in any way. Refactor Views UI to not produce such invalid
+ *   markup.
  */
-fieldset.fieldset-no-legend {
+details.fieldset-no-legend {
   padding-top: 0;
 }
 
 /**
  * Being extra safe here and scoping this to the add view wizard form (where
- * a layout problem occurs for the Display format fieldset if we don't fix its
+ * a layout problem occurs for the Display format details if we don't fix its
  * padding), but it's probably safe to just let it apply everywhere.
  */
-#views-ui-add-form fieldset fieldset .fieldset-wrapper {
+#views-ui-add-form details details .details-wrapper {
   padding-left: 0;
   padding-right: 0;
 }
 
-.views-display-tab fieldset.box-padding .fieldset-wrapper {
+.views-display-tab details.box-padding .details-wrapper {
   padding: 0;
 }
 
@@ -1435,7 +1387,7 @@ fieldset.fieldset-no-legend {
   top: -1px;
 }
 
-.views-ui-dialog fieldset.collapsible:not(.collapsed) {
+.views-ui-dialog details.collapsible:not(.collapsed) {
   padding-top: 1.5em;
 }
 

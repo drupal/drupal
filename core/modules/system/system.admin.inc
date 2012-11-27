@@ -248,7 +248,7 @@ function system_themes_page() {
 function system_themes_admin_form($form, &$form_state, $theme_options) {
   // Administration theme settings.
   $form['admin_theme'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Administration theme'),
   );
   $form['admin_theme']['admin_theme'] = array(
@@ -419,7 +419,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   }
 
   $form['theme_settings'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Toggle display'),
     '#description' => t('Enable or disable the display of certain page elements.'),
   );
@@ -434,7 +434,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   }
 
   if (!element_children($form['theme_settings'])) {
-    // If there is no element in the theme settings fieldset then do not show
+    // If there is no element in the theme settings details then do not show
     // it -- but keep it in the form if another module wants to alter.
     $form['theme_settings']['#access'] = FALSE;
   }
@@ -442,7 +442,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   // Logo settings, only available when file.module is enabled.
   if ((!$key) || in_array('logo', $features) && module_exists('file')) {
     $form['logo'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Logo image settings'),
       '#attributes' => array('class' => array('theme-settings-bottom')),
     );
@@ -476,7 +476,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
 
   if ((!$key) || in_array('favicon', $features) && module_exists('file')) {
     $form['favicon'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Shortcut icon settings'),
       '#description' => t("Your shortcut icon, or 'favicon', is displayed in the address bar and bookmarks of most browsers."),
     );
@@ -545,7 +545,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     $function = $themes[$key]->prefix . '_engine_settings';
     if (function_exists($function)) {
       $form['engine_specific'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Theme-engine-specific settings'),
         '#description' => t('These settings only exist for the themes based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)),
       );
@@ -911,24 +911,24 @@ function system_modules($form, $form_state = array()) {
     $form['modules'][$module->info['package']][$filename] = _system_modules_build_row($module->info, $extra);
   }
 
-  // Add basic information to the fieldsets.
+  // Add basic information to the details.
   foreach (element_children($form['modules']) as $package) {
     $form['modules'][$package] += array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t($package),
       '#collapsible' => TRUE,
-      '#theme' => 'system_modules_fieldset',
+      '#theme' => 'system_modules_details',
       '#header' => array(
         array('data' => t('<span class="element-invisible">Enabled</span>'), 'class' => array('checkbox')),
         array('data' => t('Name'), 'class' => array('name')),
         array('data' => t('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
       ),
-      // Ensure that the "Core" package fieldset comes first.
+      // Ensure that the "Core" package comes first.
       '#weight' => $package == 'Core' ? -10 : NULL,
     );
   }
 
-  // Lastly, sort all fieldsets by title.
+  // Lastly, sort all packages by title.
   uasort($form['modules'], 'element_sort_by_title');
 
   $form['#attached']['library'][] = array('system', 'drupal.system.modules');
@@ -1384,7 +1384,7 @@ function system_site_information_settings($form, &$form_state) {
   }
 
   $form['site_information'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Site details'),
   );
   $form['site_information']['site_name'] = array(
@@ -1407,7 +1407,7 @@ function system_site_information_settings($form, &$form_state) {
     '#required' => TRUE,
   );
   $form['front_page'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Front page'),
   );
   $front_page = $site_config->get('page.front') != 'user' ? drupal_container()->get('path.alias_manager')->getPathAlias($site_config->get('page.front')) : '';
@@ -1420,7 +1420,7 @@ function system_site_information_settings($form, &$form_state) {
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
   );
   $form['error_page'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Error pages'),
   );
   $form['error_page']['site_403'] = array(
@@ -1518,7 +1518,7 @@ function system_cron_settings($form, &$form_state) {
   );
 
   $form['cron'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
   );
   $form['cron']['cron_safe_threshold'] = array(
     '#type' => 'select',
@@ -1603,7 +1603,7 @@ function system_performance_settings($form, &$form_state) {
   $config = config('system.performance');
 
   $form['clear_cache'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Clear cache'),
   );
 
@@ -1614,7 +1614,7 @@ function system_performance_settings($form, &$form_state) {
   );
 
   $form['caching'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Caching'),
   );
 
@@ -1644,7 +1644,7 @@ function system_performance_settings($form, &$form_state) {
   }
 
   $form['bandwidth_optimization'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Bandwidth optimization'),
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
@@ -1870,7 +1870,7 @@ function system_regional_settings() {
   $zones = system_time_zones();
 
   $form['locale'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Locale'),
   );
 
@@ -1891,7 +1891,7 @@ function system_regional_settings() {
   );
 
   $form['timezone'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Time zones'),
   );
 
@@ -2493,12 +2493,12 @@ function theme_status_report($variables) {
  *
  * @ingroup themeable
  */
-function theme_system_modules_fieldset($variables) {
+function theme_system_modules_details($variables) {
   $form = $variables['form'];
 
   // Individual table headers.
   $rows = array();
-  // Iterate through all the modules, which are children of this fieldset.
+  // Iterate through all the modules, which are children of this element.
   foreach (element_children($form) as $key) {
     // Stick the key into $module for easier access.
     $module = $form[$key];

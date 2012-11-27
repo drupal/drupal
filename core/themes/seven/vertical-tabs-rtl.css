@@ -16,6 +16,5 @@ div.vertical-tabs ul li.selected a:active {
   border-left-color: #fff;
 }
 div.vertical-tabs .vertical-tabs-panes {
-  margin: 0 265px 0 0;
-  padding: 10px 0 10px 15px;
+  margin: 0 245px 0 0;
 }

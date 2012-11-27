@@ -8,7 +8,7 @@ div.vertical-tabs {
   margin: 10px 0;
   position: relative;
 }
-fieldset.vertical-tabs-pane {
+.vertical-tabs-pane {
   border: 0;
   padding: 0;
   margin: 0;
@@ -66,14 +66,10 @@ div.vertical-tabs ul li.selected a:focus strong {
   text-decoration: underline;
 }
 div.vertical-tabs .vertical-tabs-panes {
-  margin: 0 0 0 265px; /* LTR */
-  padding: 10px 15px 10px 0; /* LTR */
+  margin: 0 0 0 245px; /* LTR */
 }
-fieldset.vertical-tabs-pane > legend {
+.vertical-tabs-pane > summary {
   display: none;
-}
-.vertical-tabs-pane .fieldset-wrapper > div:first-child {
-  padding-top: 5px;
 }
 
 /**
@@ -82,7 +78,7 @@ fieldset.vertical-tabs-pane > legend {
  * with "box-sizing" to prevent box model issues from occurring in most browsers.
 */
 .vertical-tabs .form-type-textfield input {
-  width: 100%;
+  max-width: 100%;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;

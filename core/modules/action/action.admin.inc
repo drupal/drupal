@@ -96,7 +96,7 @@ function action_admin_manage() {
  */
 function action_admin_manage_form($form, &$form_state, $options = array()) {
   $form['parent'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Create an advanced action'),
     '#attributes' => array('class' => array('container-inline')),
   );

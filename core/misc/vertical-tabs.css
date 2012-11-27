@@ -11,12 +11,11 @@ div.vertical-tabs {
   margin: -1px 0 -1px -15em; /* LTR */
   float: left; /* LTR */
 }
-.vertical-tabs fieldset.vertical-tabs-pane {
-  margin: 0 !important;
-  padding: 0 1em;
+.vertical-tabs .vertical-tabs-pane {
+  margin: 0;
   border: 0;
 }
-fieldset.vertical-tabs-pane > legend {
+.vertical-tabs-pane > summary {
   display: none;
 }
 
@@ -62,7 +61,7 @@ fieldset.vertical-tabs-pane > legend {
  * with "box-sizing" to prevent box model issues from occurring in most browsers.
 */
 .vertical-tabs .form-type-textfield input {
-  width: 100%;
+  max-width: 100%;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;

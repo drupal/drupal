@@ -38,24 +38,12 @@
 }
 
 /**
- * Collapsible fieldsets.
+ * Collapsible details.
  *
  * @see collapse.js
  */
-.js fieldset.collapsed {
-  border-bottom-width: 0;
-  border-left-width: 0;
-  border-right-width: 0;
-  height: 1em;
-}
-.js fieldset.collapsed .fieldset-wrapper {
+.js details:not([open]) .details-wrapper {
   display: none;
-}
-fieldset.collapsible {
-  position: relative;
-}
-fieldset.collapsible .fieldset-legend {
-  display: block;
 }
 
 /**
@@ -192,8 +180,8 @@ tr .ajax-progress-throbber .throbber {
 .container-inline label {
   display: inline;
 }
-/* Fieldset contents always need to be rendered as block. */
-.container-inline .fieldset-wrapper {
+/* Details contents always need to be rendered as block. */
+.container-inline .details-wrapper {
   display: block;
 }
 
@@ -216,7 +204,7 @@ tr .ajax-progress-throbber .throbber {
  * Hide elements from all users.
  *
  * Used for elements which should not be immediately displayed to any user. An
- * example would be a collapsible fieldset that will be expanded with a click
+ * example would be collapsible details that will be expanded with a click
  * from a user. The effect of this class can be toggled with the jQuery show()
  * and hide() functions.
  */

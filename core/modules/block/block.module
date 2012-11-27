@@ -611,10 +611,10 @@ function block_form_user_profile_form_alter(&$form, &$form_state) {
       );
     }
   }
-  // Only display the fieldset if there are any personalizable blocks.
+  // Only display the form element if there are any personalizable blocks.
   if ($blocks) {
     $form['block'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Personalize blocks'),
       '#description' => t('Blocks consist of content or information that complements the main content of the page. Enable or disable optional blocks using the checkboxes below.'),
       '#weight' => 3,

@@ -157,7 +157,7 @@ abstract class AccountFormController extends EntityFormController {
 
     // Signature.
     $form['signature_settings'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Signature settings'),
       '#weight' => 1,
       '#access' => (!$register && $config->get('signatures')),
@@ -179,7 +179,7 @@ abstract class AccountFormController extends EntityFormController {
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
     $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_SELECTED;
     $form['language'] = array(
-      '#type' => language_multilingual() ? 'fieldset' : 'container',
+      '#type' => language_multilingual() ? 'details' : 'container',
       '#title' => t('Language settings'),
       // Display language selector when either creating a user on the admin
       // interface or editing a user account.

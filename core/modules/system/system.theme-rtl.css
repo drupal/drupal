@@ -42,16 +42,19 @@ caption {
 }
 
 /**
- * Collapsible fieldsets.
+ * Collapsible details.
  */
-.js fieldset.collapsible > legend .fieldset-legend {
-  background-position: 98% 75%;
-  padding-left: 0;
-  padding-right: 15px;
+.collapse-processed > summary:before {
+  background-position: 100% 100%;
+  float: right;
 }
-.js fieldset.collapsed > legend .fieldset-legend {
-  background-image: url(../../misc/menu-collapsed-rtl.png);
-  background-position: 98% 50%;
+.collapse-processed:not([open]) > summary:before {
+  background-position: 75% 35%;
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 /**

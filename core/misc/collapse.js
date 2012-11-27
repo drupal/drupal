@@ -3,22 +3,57 @@
 "use strict";
 
 /**
- * The collapsible fieldset object represents a single collapsible fieldset.
+ * Details feature detection.
+ *
+ * @todo This is a stop-gap fix only. collapse.js needs to be replaced with a
+ *   proper HTML5 details polyfill.
+ *
+ * @author Mathias Bynens
+ * @see http://mathiasbynens.be/notes/html5-details-jquery
  */
-function CollapsibleFieldset(node, settings) {
+var isDetailsSupported = (function (doc) {
+  var el = doc.createElement('details'),
+      fake,
+      root,
+      diff;
+  if (!('open' in el)) {
+    return false;
+  }
+  root = doc.body || (function () {
+    var de = doc.documentElement;
+    fake = true;
+    return de.insertBefore(doc.createElement('body'), de.firstElementChild || de.firstChild);
+  }());
+  el.innerHTML = '<summary>a</summary>b';
+  el.style.display = 'block';
+  root.appendChild(el);
+  diff = el.offsetHeight;
+  el.open = true;
+  diff = diff != el.offsetHeight;
+  root.removeChild(el);
+  if (fake) {
+    root.parentNode.removeChild(root);
+  }
+  return diff;
+}(document));
+
+/**
+ * The collapsible details object represents a single collapsible details element.
+ */
+function CollapsibleDetails(node, settings) {
   this.$node = $(node);
-  this.$node.data('fieldset', this);
+  this.$node.data('details', this);
   this.settings = $.extend({
       duration:'fast',
       easing:'linear'
     },
     settings
   );
-  // Expand fieldset if there are errors inside, or if it contains an
+  // Expand details if there are errors inside, or if it contains an
   // element that is targeted by the URI fragment identifier.
   var anchor = location.hash && location.hash !== '#' ? ', ' + location.hash : '';
   if (this.$node.find('.error' + anchor).length) {
-    this.$node.removeClass('collapsed');
+    this.$node.attr('open', true);
   }
   // Initialize and setup the summary,
   this.setupSummary();
@@ -27,19 +62,19 @@ function CollapsibleFieldset(node, settings) {
 }
 
 /**
- * Extend CollapsibleFieldset function.
+ * Extend CollapsibleDetails function.
  */
-$.extend(CollapsibleFieldset, {
+$.extend(CollapsibleDetails, {
   /**
-   * Holds references to instantiated CollapsibleFieldset objects.
+   * Holds references to instantiated CollapsibleDetails objects.
    */
-  fieldsets: []
+  instances: []
 });
 
 /**
- * Extend CollapsibleFieldset prototype.
+ * Extend CollapsibleDetails prototype.
  */
-$.extend(CollapsibleFieldset.prototype, {
+$.extend(CollapsibleDetails.prototype, {
   /**
    * Flag preventing multiple simultaneous animations.
    */
@@ -57,17 +92,16 @@ $.extend(CollapsibleFieldset.prototype, {
    * Initialize and setup legend markup.
    */
   setupLegend: function () {
-    // Turn the legend into a clickable link, but retain span.fieldset-legend
-    // for CSS positioning.
-    var $legend = this.$node.find('> legend .fieldset-legend');
+    // Turn the summary into a clickable link.
+    var $legend = this.$node.find('> summary');
 
-    $('<span class="fieldset-legend-prefix element-invisible"></span>')
-      .append(this.$node.hasClass('collapsed') ? Drupal.t('Show') : Drupal.t('Hide'))
+    $('<span class="details-summary-prefix element-invisible"></span>')
+      .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
       .prependTo($legend)
       .after(' ');
 
     // .wrapInner() does not retain bound events.
-    var $link = $('<a class="fieldset-title" href="#"></a>')
+    var $link = $('<a class="details-title" href="#"></a>')
       .prepend($legend.contents())
       .appendTo($legend)
       .click($.proxy(this.onLegendClick, this));
@@ -88,19 +122,18 @@ $.extend(CollapsibleFieldset.prototype, {
     this.$summary.html(text ? ' (' + text + ')' : '');
   },
   /**
-   * Toggle the visibility of a fieldset using smooth animations.
+   * Toggle the visibility of a details element using smooth animations.
    */
   toggle: function () {
     // Don't animate multiple times.
     if (this.animating) {
       return;
     }
-    if (this.$node.is('.collapsed')) {
-      var $content = this.$node.find('> .fieldset-wrapper').hide();
+    if (!this.$node.attr('open')) {
+      var $content = this.$node.find('> .details-wrapper').hide();
       this.$node
-        .removeClass('collapsed')
         .trigger({ type:'collapsed', value:false })
-        .find('> legend span.fieldset-legend-prefix').html(Drupal.t('Hide'));
+        .find('> summary span.details-summary-prefix').html(Drupal.t('Hide'));
       $content.slideDown(
         $.extend(this.settings, {
           complete:$.proxy(this.onCompleteSlideDown, this)
@@ -109,7 +142,7 @@ $.extend(CollapsibleFieldset.prototype, {
     }
     else {
       this.$node.trigger({ type:'collapsed', value:true });
-      this.$node.find('> .fieldset-wrapper').slideUp(
+      this.$node.find('> .details-wrapper').slideUp(
         $.extend(this.settings, {
           complete:$.proxy(this.onCompleteSlideUp, this)
         })
@@ -117,19 +150,20 @@ $.extend(CollapsibleFieldset.prototype, {
     }
   },
   /**
-   * Completed opening fieldset.
+   * Completed opening details element.
    */
   onCompleteSlideDown: function () {
+    this.$node.attr('open', true);
     this.$node.trigger('completeSlideDown');
     this.animating = false;
   },
   /**
-   * Completed closing fieldset.
+   * Completed closing details element.
    */
   onCompleteSlideUp: function () {
+    this.$node.attr('open', false);
     this.$node
-      .addClass('collapsed')
-      .find('> legend span.fieldset-legend-prefix').html(Drupal.t('Show'));
+      .find('> summary span.details-summary-prefix').html(Drupal.t('Show'));
     this.$node.trigger('completeSlideUp');
     this.animating = false;
   }
@@ -137,16 +171,19 @@ $.extend(CollapsibleFieldset.prototype, {
 
 Drupal.behaviors.collapse = {
   attach: function (context, settings) {
-    var $collapsibleFieldsets = $(context).find('fieldset.collapsible').once('collapse');
-    if ($collapsibleFieldsets.length) {
-      for (var i = 0; i < $collapsibleFieldsets.length; i++) {
-        CollapsibleFieldset.fieldsets.push(new CollapsibleFieldset($collapsibleFieldsets[i], settings.collapsibleFieldset));
+    if (isDetailsSupported) {
+      return;
+    }
+    var $collapsibleDetails = $(context).find('details.collapsible').once('collapse');
+    if ($collapsibleDetails.length) {
+      for (var i = 0; i < $collapsibleDetails.length; i++) {
+        CollapsibleDetails.instances.push(new CollapsibleDetails($collapsibleDetails[i], settings.collapsibleDetails));
       }
     }
   }
 };
 
 // Expose constructor in the public space.
-Drupal.CollapsibleFieldset = CollapsibleFieldset;
+Drupal.CollapsibleDetails = CollapsibleDetails;
 
 })(jQuery, Drupal);

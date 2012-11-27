@@ -104,7 +104,7 @@ class Full extends PagerPluginBase {
     );
 
     $form['tags'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
       '#tree' => TRUE,
@@ -142,7 +142,7 @@ class Full extends PagerPluginBase {
     );
 
     $form['expose'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
       '#tree' => TRUE,

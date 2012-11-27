@@ -276,13 +276,13 @@ class SimpleTestTest extends WebTestBase {
   function getTestResults() {
     $results = array();
     if ($this->parse()) {
-      if ($fieldset = $this->getResultFieldSet()) {
+      if ($details = $this->getResultFieldSet()) {
         // Code assumes this is the only test in group.
-        $results['summary'] = $this->asText($fieldset->div->div[1]);
-        $results['name'] = $this->asText($fieldset->legend);
+        $results['summary'] = $this->asText($details->div->div[1]);
+        $results['name'] = $this->asText($details->summary);
 
         $results['assertions'] = array();
-        $tbody = $fieldset->div->table->tbody;
+        $tbody = $details->div->table->tbody;
         foreach ($tbody->tr as $row) {
           $assertion = array();
           $assertion['message'] = $this->asText($row->td[0]);
@@ -300,14 +300,14 @@ class SimpleTestTest extends WebTestBase {
   }
 
   /**
-   * Get the fieldset containing the results for group this test is in.
+   * Get the details containing the results for group this test is in.
    */
   function getResultFieldSet() {
-    $fieldsets = $this->xpath('//fieldset');
+    $all_details = $this->xpath('//details');
     $info = $this->getInfo();
-    foreach ($fieldsets as $fieldset) {
-      if ($this->asText($fieldset->legend) == $info['name']) {
-        return $fieldset;
+    foreach ($all_details as $details) {
+      if ($this->asText($details->summary) == $info['name']) {
+        return $details;
       }
     }
     return FALSE;

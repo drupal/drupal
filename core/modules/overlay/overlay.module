@@ -88,7 +88,7 @@ function overlay_form_user_profile_form_alter(&$form, &$form_state) {
   $account = $form_state['controller']->getEntity($form_state);
   if (user_access('access overlay', $account)) {
     $form['overlay_control'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Administrative overlay'),
       '#weight' => 4,
       '#collapsible' => TRUE,

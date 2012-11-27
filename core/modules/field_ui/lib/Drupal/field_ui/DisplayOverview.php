@@ -348,7 +348,7 @@ class DisplayOverview extends OverviewBase {
       // Only show the settings if there is more than one view mode.
       if (count($view_modes) > 1) {
         $form['modes'] = array(
-          '#type' => 'fieldset',
+          '#type' => 'details',
           '#title' => t('Custom display settings'),
           '#collapsible' => TRUE,
           '#collapsed' => TRUE,

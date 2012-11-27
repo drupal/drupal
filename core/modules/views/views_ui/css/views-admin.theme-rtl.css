@@ -72,7 +72,7 @@
 }
 
 .container-inline > * + *,
-.container-inline .fieldset-wrapper > * + * {
+.container-inline .details-wrapper > * + * {
   padding-left: 0;
   padding-right: 4px;
 }
@@ -122,13 +122,13 @@
 
 /* @end */
 
-/* @group Attachment details collapsible fieldset
+/* @group Attachment collapsible details
  *
- * The attachment details section is a collapsible fieldset, but should not
+ * The attachment section is a collapsible details, but should not
  * have a border around it.
  */
 
-.views-display-tab .fieldset-legend {
+.views-display-tab summary {
   left: auto;
   right: -5px;
 }

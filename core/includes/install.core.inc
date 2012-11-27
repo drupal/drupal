@@ -1880,7 +1880,7 @@ function install_check_requirements($install_state) {
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
   $form['site_information'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => st('Site information'),
     '#collapsible' => FALSE,
   );
@@ -1899,7 +1899,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#weight' => -15,
   );
   $form['admin_account'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => st('Site maintenance account'),
     '#collapsible' => FALSE,
   );
@@ -1928,7 +1928,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   );
 
   $form['server_settings'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => st('Server settings'),
     '#collapsible' => FALSE,
   );
@@ -1955,7 +1955,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   );
 
   $form['update_notifications'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => st('Update notifications'),
     '#collapsible' => FALSE,
   );

@@ -7,10 +7,10 @@
 
 "use strict";
 
-Drupal.behaviors.nodeFieldsetSummaries = {
+Drupal.behaviors.nodeDetailsSummaries = {
   attach: function (context) {
     var $context = $(context);
-    $context.find('fieldset.node-form-revision-information').drupalSetSummary(function (context) {
+    $context.find('.node-form-revision-information').drupalSetSummary(function (context) {
       var $context = $(context);
       var revisionCheckbox = $context.find('.form-item-revision input');
 
@@ -25,7 +25,7 @@ Drupal.behaviors.nodeFieldsetSummaries = {
       return Drupal.t('No revision');
     });
 
-    $context.find('fieldset.node-form-author').drupalSetSummary(function (context) {
+    $context.find('.node-form-author').drupalSetSummary(function (context) {
       var $context = $(context);
       var name = $context.find('.form-item-name input').val() || Drupal.settings.anonymous,
         date = $context.find('.form-item-date input').val();
@@ -34,7 +34,7 @@ Drupal.behaviors.nodeFieldsetSummaries = {
         Drupal.t('By @name', { '@name': name });
     });
 
-    $context.find('fieldset.node-form-options').drupalSetSummary(function (context) {
+    $context.find('.node-form-options').drupalSetSummary(function (context) {
       var $context = $(context);
       var vals = [];
 

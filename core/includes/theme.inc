@@ -3121,6 +3121,9 @@ function drupal_common_theme() {
     'fieldset' => array(
       'render element' => 'element',
     ),
+    'details' => array(
+      'render element' => 'element',
+    ),
     'radio' => array(
       'render element' => 'element',
     ),

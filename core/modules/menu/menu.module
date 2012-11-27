@@ -645,7 +645,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
   }
 
   $form['menu'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Menu settings'),
     '#access' => user_access('administer menu'),
     '#collapsible' => TRUE,
@@ -752,7 +752,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   $menu_options = menu_get_menus();
   $type = $form['#node_type'];
   $form['menu'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Menu settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

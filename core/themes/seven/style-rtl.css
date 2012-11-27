@@ -99,26 +99,7 @@ tr td:last-child {
   border-right: none;
 }
 
-/**
- * Fieldsets.
- */
-fieldset {
-  padding: 2.5em 0 0 0;
-}
-fieldset .fieldset-legend {
-  padding-right: 15px;
-  right: 0;
-}
-fieldset .fieldset-wrapper {
-  padding: 0 15px 13px 13px;
-}
-
 /* Filter */
-.filter-wrapper .form-item,
-.filter-wrapper .filter-guidelines,
-.filter-wrapper .filter-help {
-  padding: 2px 0 0 0;
-}
 ul.tips li {
   margin: 0.25em 1.5em 0.25em 0;
 }

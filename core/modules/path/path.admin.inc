@@ -303,7 +303,7 @@ function path_admin_delete_confirm_submit($form, &$form_state) {
  */
 function path_admin_filter_form($form, &$form_state, $keys = '') {
   $form['#attributes'] = array('class' => array('search-form'));
-  $form['basic'] = array('#type' => 'fieldset',
+  $form['basic'] = array('#type' => 'details',
     '#title' => t('Filter aliases'),
     '#attributes' => array('class' => array('container-inline')),
   );

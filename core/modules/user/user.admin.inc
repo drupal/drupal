@@ -38,7 +38,7 @@ function user_filter_form() {
 
   $i = 0;
   $form['filters'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Show only users where'),
     '#theme' => 'exposed_filters__user',
   );
@@ -170,7 +170,7 @@ function user_admin_account() {
   $result = $query->execute();
 
   $form['options'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Update options'),
     '#attributes' => array('class' => array('container-inline')),
   );
@@ -282,7 +282,7 @@ function user_admin_settings($form, &$form_state) {
 
   // Settings for anonymous users.
   $form['anonymous_settings'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Anonymous users'),
   );
   $form['anonymous_settings']['anonymous'] = array(
@@ -295,7 +295,7 @@ function user_admin_settings($form, &$form_state) {
 
   // Administrative role option.
   $form['admin_role'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Administrator role'),
   );
 
@@ -317,7 +317,7 @@ function user_admin_settings($form, &$form_state) {
   // @todo Remove this check once language settings are generalized.
   if (module_exists('translation_entity')) {
     $form['language'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Language settings'),
       '#tree' => TRUE,
     );
@@ -327,7 +327,7 @@ function user_admin_settings($form, &$form_state) {
 
   // User registration settings.
   $form['registration_cancellation'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Registration and cancellation'),
   );
   $form['registration_cancellation']['user_register'] = array(
@@ -368,7 +368,7 @@ function user_admin_settings($form, &$form_state) {
 
   // Account settings.
   $form['personalization'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Personalization'),
   );
   $form['personalization']['user_signatures'] = array(
@@ -389,7 +389,7 @@ function user_admin_settings($form, &$form_state) {
   $email_token_help = t('Available variables are: [site:name], [site:url], [user:name], [user:mail], [site:login-url], [site:url-brief], [user:edit-url], [user:one-time-login-url], [user:cancel-url].');
 
   $form['email_admin_created'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Welcome (new user created by administrator)'),
     '#collapsible' => TRUE,
     '#collapsed' => ($config->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY),
@@ -410,7 +410,7 @@ function user_admin_settings($form, &$form_state) {
   );
 
   $form['email_pending_approval'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Welcome (awaiting approval)'),
     '#collapsible' => TRUE,
     '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
@@ -431,7 +431,7 @@ function user_admin_settings($form, &$form_state) {
   );
 
   $form['email_no_approval_required'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Welcome (no approval required)'),
     '#collapsible' => TRUE,
     '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS),
@@ -452,7 +452,7 @@ function user_admin_settings($form, &$form_state) {
   );
 
   $form['email_password_reset'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Password recovery'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -474,7 +474,7 @@ function user_admin_settings($form, &$form_state) {
   );
 
   $form['email_activated'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Account activation'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -509,7 +509,7 @@ function user_admin_settings($form, &$form_state) {
   );
 
   $form['email_blocked'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Account blocked'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -544,7 +544,7 @@ function user_admin_settings($form, &$form_state) {
   );
 
   $form['email_cancel_confirm'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Account cancellation confirmation'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -565,7 +565,7 @@ function user_admin_settings($form, &$form_state) {
   );
 
   $form['email_canceled'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Account canceled'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

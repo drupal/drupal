@@ -146,7 +146,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
     // translation and there are at least two translations available.
     if ($has_translations && $new_translation) {
       $form['source_langcode'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Source language: @language', array('@language' => $languages[$source_langcode]->name)),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
@@ -214,7 +214,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
     // translation available or a new one is about to be created.
     if ($new_translation || $has_translations) {
       $form['translation'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Translation'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
@@ -312,7 +312,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
     // Elements which can have a #title attribute according to FAPI Reference.
     if (!isset($suffix)) {
       $suffix = ' <span class="translation-entity-all-languages">(' . t('all languages') . ')</span>';
-      $fapi_title_elements = array_flip(array('checkbox', 'checkboxes', 'date', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'textfield', 'weight'));
+      $fapi_title_elements = array_flip(array('checkbox', 'checkboxes', 'date', 'details', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'textfield', 'weight'));
     }
 
     // Update #title attribute for all elements that are allowed to have a

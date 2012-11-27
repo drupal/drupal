@@ -61,7 +61,7 @@ function search_admin_settings($form, &$form_state) {
   $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
   $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
   $status = '<p><strong>' . t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) . ' ' . $count . '</strong></p>';
-  $form['status'] = array('#type' => 'fieldset', '#title' => t('Indexing status'));
+  $form['status'] = array('#type' => 'details', '#title' => t('Indexing status'));
   $form['status']['status'] = array('#markup' => $status);
   $form['status']['wipe'] = array('#type' => 'submit', '#value' => t('Re-index site'), '#submit' => array('search_admin_reindex_submit'));
 
@@ -69,7 +69,7 @@ function search_admin_settings($form, &$form_state) {
 
   // Indexing throttle:
   $form['indexing_throttle'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Indexing throttle')
   );
   $form['indexing_throttle']['cron_limit'] = array(
@@ -81,7 +81,7 @@ function search_admin_settings($form, &$form_state) {
   );
   // Indexing settings:
   $form['indexing_settings'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Indexing settings')
   );
   $form['indexing_settings']['info'] = array(
@@ -103,7 +103,7 @@ function search_admin_settings($form, &$form_state) {
   );
 
   $form['active'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Active search modules')
   );
   $module_options = _search_get_module_names();

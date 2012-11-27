@@ -5375,8 +5375,8 @@ function drupal_render_page($page) {
  *
  * The #theme_wrappers property contains an array of theme functions which will
  * be called, in order, after #theme has run. These can be used to add further
- * markup around the rendered children; e.g., fieldsets add the required markup
- * for a fieldset around their rendered child elements. All wrapper theme
+ * markup around the rendered children; e.g., details add the required markup
+ * for a details element around their rendered child elements. All wrapper theme
  * functions have to include the element's #children property in their output,
  * as it contains the output of the previous theme functions and the rendered
  * children.

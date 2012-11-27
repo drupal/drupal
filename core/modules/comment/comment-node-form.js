@@ -7,15 +7,15 @@
 
 "use strict";
 
-Drupal.behaviors.commentFieldsetSummaries = {
+Drupal.behaviors.commentDetailsSummaries = {
   attach: function (context) {
     var $context = $(context);
-    $context.find('fieldset.comment-node-settings-form').drupalSetSummary(function (context) {
+    $context.find('.comment-node-settings-form').drupalSetSummary(function (context) {
       return Drupal.checkPlain($(context).find('.form-item-comment input:checked').next('label').text());
     });
 
     // Provide the summary for the node type form.
-    $context.find('fieldset.comment-node-type-settings-form').drupalSetSummary(function(context) {
+    $context.find('.comment-node-type-settings-form').drupalSetSummary(function(context) {
       var $context = $(context);
       var vals = [];
 

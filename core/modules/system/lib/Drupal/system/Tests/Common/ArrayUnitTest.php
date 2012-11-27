@@ -36,12 +36,12 @@ class ArrayUnitTest extends UnitTestBase {
     parent::setUp();
 
     // Create a form structure with a nested element.
-    $this->form['fieldset']['element'] = array(
+    $this->form['details']['element'] = array(
      '#value' => 'Nested element',
     );
 
     // Set up parent array.
-    $this->parents = array('fieldset', 'element');
+    $this->parents = array('details', 'element');
   }
 
   /**
@@ -57,7 +57,7 @@ class ArrayUnitTest extends UnitTestBase {
     $value['#value'] = 'New value';
     $value = drupal_array_get_nested_value($this->form, $this->parents);
     $this->assertEqual($value['#value'], 'New value', 'Nested element value was changed by reference.');
-    $this->assertEqual($this->form['fieldset']['element']['#value'], 'New value', 'Nested element value was changed by reference.');
+    $this->assertEqual($this->form['details']['element']['#value'], 'New value', 'Nested element value was changed by reference.');
 
     // Verify that an existing key is reported back.
     $key_exists = NULL;
@@ -83,8 +83,8 @@ class ArrayUnitTest extends UnitTestBase {
 
     // Verify setting the value of a nested element.
     drupal_array_set_nested_value($this->form, $this->parents, $new_value);
-    $this->assertEqual($this->form['fieldset']['element']['#value'], 'New value', 'Changed nested element value found.');
-    $this->assertIdentical($this->form['fieldset']['element']['#required'], TRUE, 'New nested element value found.');
+    $this->assertEqual($this->form['details']['element']['#value'], 'New value', 'Changed nested element value found.');
+    $this->assertIdentical($this->form['details']['element']['#required'], TRUE, 'New nested element value found.');
   }
 
   /**
@@ -97,13 +97,13 @@ class ArrayUnitTest extends UnitTestBase {
     $parents = $this->parents;
     $parents[] = 'foo';
     drupal_array_unset_nested_value($this->form, $parents, $key_existed);
-    $this->assertTrue(isset($this->form['fieldset']['element']['#value']), 'Outermost nested element key still exists.');
+    $this->assertTrue(isset($this->form['details']['element']['#value']), 'Outermost nested element key still exists.');
     $this->assertIdentical($key_existed, FALSE, 'Non-existing key not found.');
 
     // Verify unsetting a nested element.
     $key_existed = NULL;
     drupal_array_unset_nested_value($this->form, $this->parents, $key_existed);
-    $this->assertFalse(isset($this->form['fieldset']['element']), 'Removed nested element not found.');
+    $this->assertFalse(isset($this->form['details']['element']), 'Removed nested element not found.');
     $this->assertIdentical($key_existed, TRUE, 'Existing key was found.');
   }
 

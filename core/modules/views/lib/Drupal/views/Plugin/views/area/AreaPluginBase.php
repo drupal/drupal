@@ -114,7 +114,7 @@ abstract class AreaPluginBase extends HandlerBase {
 
     if (!empty($options)) {
       $form['tokens'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Replacement patterns'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,

@@ -6,9 +6,9 @@
 
 "use strict";
 
-Drupal.behaviors.pathFieldsetSummaries = {
+Drupal.behaviors.pathDetailsSummaries = {
   attach: function (context) {
-    $(context).find('fieldset.path-form').drupalSetSummary(function (context) {
+    $(context).find('.path-form').drupalSetSummary(function (context) {
       var path = $('.form-item-path-alias input').val();
 
       return path ?

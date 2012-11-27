@@ -154,7 +154,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
   );
 
   $form['submission'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Submission form settings'),
     '#collapsible' => TRUE,
     '#group' => 'additional_settings',
@@ -189,7 +189,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#description' => t('This text will be displayed at the top of the page when creating or editing content of this type.'),
   );
   $form['workflow'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Publishing options'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -208,7 +208,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
   );
   if (module_exists('language')) {
     $form['language'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Language settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
@@ -228,7 +228,7 @@ function node_type_form($form, &$form_state, $type = NULL) {
     $form['#submit'][] = 'language_configuration_element_submit';
   }
   $form['display'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Display settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

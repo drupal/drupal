@@ -397,7 +397,7 @@ function book_get_books() {
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  *
- * Adds the book fieldset to the node form.
+ * Adds the book form element to the node form.
  *
  * @see book_pick_book_nojs_submit()
  */
@@ -513,7 +513,7 @@ function _book_add_form_elements(&$form, &$form_state, Node $node) {
   }
 
   $form['book'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Book outline'),
     '#weight' => 10,
     '#collapsible' => TRUE,

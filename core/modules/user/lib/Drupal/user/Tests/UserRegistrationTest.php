@@ -161,10 +161,10 @@ class UserRegistrationTest extends WebTestBase {
     variable_set('configurable_timezones', 1);
     variable_set('date_default_timezone', 'Europe/Brussels');
 
-    // Check that the account information fieldset's options are not displayed
-    // is a fieldset if there is not more than one fieldset in the form.
+    // Check that the account information options are not displayed
+    // as a details element if there is not more than one details in the form.
     $this->drupalGet('user/register');
-    $this->assertNoRaw('<fieldset id="edit-account"><legend>Account information</legend>', 'Account settings fieldset was hidden.');
+    $this->assertNoRaw('<details id="edit-account"><summary>Account information</summary>');
 
     $edit = array();
     $edit['name'] = $name = $this->randomName();

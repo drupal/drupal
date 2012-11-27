@@ -284,7 +284,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
       $settings_form = $function($form, $form_state, $filters[$name], $format, $defaults, $filters);
       if (!empty($settings_form)) {
         $form['filters']['settings'][$name] = array(
-          '#type' => 'fieldset',
+          '#type' => 'details',
           '#title' => $filter['title'],
           '#parents' => array('filters', $name, 'settings'),
           '#weight' => $filter['weight'],

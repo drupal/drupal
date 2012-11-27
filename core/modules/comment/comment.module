@@ -1048,7 +1048,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
 function comment_form_node_type_form_alter(&$form, $form_state) {
   if (isset($form['type'])) {
     $form['comment'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Comment settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
@@ -1154,7 +1154,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
 function comment_form_node_form_alter(&$form, $form_state) {
   $node = $form_state['controller']->getEntity($form_state);
   $form['comment_settings'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#access' => user_access('administer comments'),
     '#title' => t('Comment settings'),
     '#collapsible' => TRUE,

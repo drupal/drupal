@@ -87,7 +87,7 @@ class LocaleContentTest extends WebTestBase {
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type2->type}");
-    $this->assertText(t('Language settings'), 'Multilingual support fieldset present on content type configuration form.');
+    $this->assertText(t('Language settings'), 'Multilingual support widget present on content type configuration form.');
     $edit = array(
       'language_configuration[language_hidden]' => FALSE,
     );

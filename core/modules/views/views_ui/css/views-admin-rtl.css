@@ -47,15 +47,10 @@
 
 /* @end */
 
-/* @group Attachment details collapsible fieldset */
+/* @group Attachment collapsible details */
 
-.views-display-tab .fieldset-legend {
+.views-display-tab summary {
   left: auto;
-}
-
-.views-display-columns fieldset .fieldset-legend {
-  padding-left: inherit;
-  padding-right: 0;
 }
 
 /* @end */

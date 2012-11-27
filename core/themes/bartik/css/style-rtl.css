@@ -211,9 +211,6 @@ ul.action-links li a {
 
 /* -------------- Form Elements   ------------- */
 
-.fieldset-legend span.summary {
-  margin-left: 0;
-}
 #user-profile-form input#edit-submit {
   margin-left: 0;
 }
@@ -294,7 +291,7 @@ ul.action-links li a {
 
 /* @group Collapsible */
 
-.views-display-columns fieldset .fieldset-legend {
+.views-display-columns details summary {
   padding: 0 2px 4px 0;
 }
 

@@ -150,11 +150,11 @@
 
 /* @group Forms */
 
-fieldset.box-padding {
+details.box-padding {
   border: none;
 }
 
-.views-admin fieldset fieldset {
+.views-admin details details {
   margin-bottom: 0;
 }
 
@@ -183,17 +183,17 @@ input.form-radio {
 }
 
 .container-inline > * + *,
-.container-inline .fieldset-wrapper > * + * {
+.container-inline .details-wrapper > * + * {
   padding-left: 4px; /* LTR */
 }
 
-.views-admin fieldset fieldset.container-inline {
+.views-admin details details.container-inline {
   margin-bottom: 1em;
   margin-top: 1em;
   padding-top: 0;
 }
 
-.views-admin fieldset fieldset.container-inline > .fieldset-wrapper {
+.views-admin details details.container-inline > .details-wrapper {
   padding-bottom: 0;
 }
 
@@ -385,9 +385,9 @@ td.group-title {
   padding-right: 10px;
 }
 
-/* This keeps the collapsible fieldsets of options from crashing into the bottom
+/* This keeps the collapsible details of options from crashing into the bottom
  * of the edit option columns. Because the edit option columns are floated, the collapsible
- * fieldsets need to be floated as well so that the margin above the fieldset interacts with
+ * details need to be floated as well so that the margin above the details interacts with
  * the float edit option columns.
  */
 #edit-options .collapsible {
@@ -570,10 +570,6 @@ ul#views-display-menu-tabs li.add ul.action-list li{
    margin-top: 0;
  }
 
-.views-display-column fieldset.collapsible legend {
-  font-size: 13px;
-}
-
  /* @end */
 
 /* @group Auto preview
@@ -591,7 +587,7 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   margin-left: 2px;
 }
 
-#views-ui-preview-form .form-type-textfield {
+#views-ui-preview-form .form-type-textfield, #views-ui-preview-form .form-actions {
   margin-top: 5px;
 }
 
@@ -727,11 +723,11 @@ ul#views-display-menu-tabs li.add ul.action-list li{
  * The preview controls and the preview pane
  */
 
-#edit-displays-preview-controls .fieldset-wrapper > * {
+#edit-displays-preview-controls .details-wrapper > * {
   float: left;
 }
 
-#edit-displays-preview-controls .fieldset-wrapper > .form-item {
+#edit-displays-preview-controls .details-wrapper > .form-item {
   margin-top: 0.3333em;
 }
 
@@ -884,7 +880,7 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   padding: 8px 13px;
 }
 
-.views-ui-dialog fieldset .item-list {
+.views-ui-dialog details .item-list {
   padding-left: 2em;
 }
 

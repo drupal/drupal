@@ -7,18 +7,18 @@
 /**
  * Filter information under field.
  */
-.text-format-wrapper .form-item {
+.text-format-wrapper > .form-item {
   margin-bottom: 0;
 }
 
 .filter-wrapper {
+  border: 1px solid #ccc;
   border-top: 0;
   margin: 0;
-  padding: 1.5em 0;
+  padding: 0.5em 1.5em;
 }
 .filter-wrapper .form-item {
-  float: left; /* LTR */
-  padding: 0 0 0.5em 1.5em; /* LTR */
+  margin-top: 0;
 }
 .filter-wrapper .form-item label {
   display: inline;
@@ -26,7 +26,6 @@
 
 .filter-help {
   float: right; /* LTR */
-  padding: 0 1.5em 0.5em;
 }
 .filter-help p {
   margin: 0;
@@ -36,10 +35,6 @@
   padding: 0 20px;
 }
 
-.filter-guidelines {
-  clear: left;
-  padding: 0 1.5em;
-}
 .text-format-wrapper .description {
   margin-top: 0.5em;
 }

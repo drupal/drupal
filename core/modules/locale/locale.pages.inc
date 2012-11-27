@@ -167,7 +167,7 @@ function locale_translate_filter_form($form, &$form_state) {
   );
 
   $form['filters'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Filter translatable strings'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,

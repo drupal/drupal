@@ -44,7 +44,7 @@ function comment_admin($type = 'new') {
 function comment_admin_overview($form, &$form_state, $arg) {
   // Build an 'Update options' form.
   $form['options'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Update options'),
     '#attributes' => array('class' => array('container-inline')),
   );

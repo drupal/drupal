@@ -53,7 +53,7 @@ function filter_help($path, $arg) {
       $output .= '<dt>' . t('Defining text formats') . '</dt>';
       $output .= '<dd>' . t('One format is included by default: <em>Plain text</em> (which removes all HTML tags). Additional formats may be created by your installation profile when you install Drupal, and more can be created by an administrator on the <a href="@text-formats">Text formats page</a>.', array('@text-formats' => url('admin/config/content/formats'))) . '</dd>';
       $output .= '<dt>' . t('Choosing a text format') . '</dt>';
-      $output .= '<dd>' . t('Users with access to more than one text format can use the <em>Text format</em> fieldset to choose between available text formats when creating or editing multi-line content. Administrators can define the text formats available to each user role, and control the order of formats listed in the <em>Text format</em> fieldset on the <a href="@text-formats">Text formats page</a>.', array('@text-formats' => url('admin/config/content/formats'))) . '</dd>';
+      $output .= '<dd>' . t('Users with access to more than one text format can use the <em>Text format</em> widget to choose between available text formats when creating or editing multi-line content. Administrators can define the text formats available to each user role, and control the order of formats listed in the <em>Text format</em> widget on the <a href="@text-formats">Text formats page</a>.', array('@text-formats' => url('admin/config/content/formats'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -905,7 +905,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
  * selector:
  * - value: Holds the original element, having its #type changed to the value
  *   of #base_type or 'textarea' by default.
- * - format: Holds the text format fieldset and the text format selection,
+ * - format: Holds the text format details and the text format selection,
  *   using the text format ID specified in #format or the user's default format
  *   by default, if NULL.
  *
@@ -967,7 +967,7 @@ function filter_process_format($element) {
 
   // Setup child container for the text format widget.
   $element['format'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'container',
     '#attributes' => array('class' => array('filter-wrapper')),
   );
 
@@ -1083,7 +1083,7 @@ function filter_form_access_denied($element) {
  */
 function theme_text_format_wrapper($variables) {
   $element = $variables['element'];
-  $output = '<div class="text-format-wrapper">';
+  $output = '<div class="text-format-wrapper form-item">';
   $output .= $element['#children'];
   if (!empty($element['#description'])) {
     $output .= '<div class="description">' . $element['#description'] . '</div>';

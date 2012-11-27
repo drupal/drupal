@@ -312,9 +312,9 @@ class ForumTest extends WebTestBase {
     // Test tags vocabulary term form is not affected.
     $this->drupalGet('admin/structure/taxonomy/tags/add');
     $this->assertField('parent[]', 'Parent field found.');
-    // Test relations fieldset exists.
-    $relations_fieldset = $this->xpath("//fieldset[@id='edit-relations']");
-    $this->assertTrue(isset($relations_fieldset[0]), 'Relations fieldset element found.');
+    // Test relations widget exists.
+    $relations_widget = $this->xpath("//details[@id='edit-relations']");
+    $this->assertTrue(isset($relations_widget[0]), 'Relations widget element found.');
   }
 
   /**

@@ -68,7 +68,7 @@ function update_script_selection_form($form, &$form_state) {
   $incompatible_count = 0;
   $form['start'] = array(
     '#tree' => TRUE,
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#collapsed' => TRUE,
     '#collapsible' => TRUE,
   );

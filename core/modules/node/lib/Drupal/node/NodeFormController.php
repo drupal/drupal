@@ -116,7 +116,7 @@ class NodeFormController extends EntityFormController {
     // Add a log field if the "Create new revision" option is checked, or if the
     // current user has the ability to check that option.
     $form['revision_information'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Revision information'),
       '#collapsible' => TRUE,
       // Collapsed by default when "Create new revision" is unchecked.
@@ -160,7 +160,7 @@ class NodeFormController extends EntityFormController {
 
     // Node author information for administrators.
     $form['author'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#access' => user_access('administer nodes'),
       '#title' => t('Authoring information'),
       '#collapsible' => TRUE,
@@ -201,7 +201,7 @@ class NodeFormController extends EntityFormController {
 
     // Node options for administrators.
     $form['options'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#access' => user_access('administer nodes'),
       '#title' => t('Publishing options'),
       '#collapsible' => TRUE,

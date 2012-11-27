@@ -133,7 +133,7 @@ function hook_search_status() {
 function hook_search_admin() {
   // Output form for defining rank factor weights.
   $form['content_ranking'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Content ranking'),
   );
   $form['content_ranking']['#theme'] = 'node_search_admin';

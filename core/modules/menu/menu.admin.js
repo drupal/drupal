@@ -13,10 +13,10 @@ Drupal.behaviors.menuChangeParentItems = {
  * Function to set the options of the menu parent item dropdown.
  */
 Drupal.menuUpdateParentList = function () {
-  var $menuFieldset = $('#edit-menu');
+  var $menu = $('#edit-menu');
   var values = [];
 
-  $menuFieldset.find('input:checked').each(function () {
+  $menu.find('input:checked').each(function () {
     // Get the names of all checked menus.
     values.push(Drupal.checkPlain($.trim($(this).val())));
   });

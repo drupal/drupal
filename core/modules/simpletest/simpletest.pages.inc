@@ -10,7 +10,7 @@
  */
 function simpletest_test_form($form) {
   $form['tests'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Tests'),
     '#description' => t('Select the test(s) or test group(s) you would like to run, and click <em>Run tests</em>.'),
   );
@@ -41,7 +41,7 @@ function simpletest_test_form($form) {
     '#value' => t('Run tests'),
   );
   $form['clean'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#title' => t('Clean test environment'),
@@ -219,9 +219,9 @@ function simpletest_result_form($form, &$form_state, $test_id) {
     'fail' => array(),
   );
 
-  // Summary result fieldset.
+  // Summary result widget.
   $form['result'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Results'),
   );
   $form['result']['summary'] = $summary = array(
@@ -238,10 +238,10 @@ function simpletest_result_form($form, &$form_state, $test_id) {
   $header = array(t('Message'), t('Group'), t('Filename'), t('Line'), t('Function'), array('colspan' => 2, 'data' => t('Status')));
   $form['result']['results'] = array();
   foreach ($results as $group => $assertions) {
-    // Create group fieldset with summary information.
+    // Create group details with summary information.
     $info = call_user_func(array($group, 'getInfo'));
     $form['result']['results'][$group] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $info['name'],
       '#description' => $info['description'],
       '#collapsible' => TRUE,
@@ -289,7 +289,7 @@ function simpletest_result_form($form, &$form_state, $test_id) {
   // Actions.
   $form['#action'] = url('admin/config/development/testing/results/re-run');
   $form['action'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Actions'),
     '#attributes' => array('class' => array('container-inline')),
     '#weight' => -11,
@@ -437,7 +437,7 @@ function simpletest_result_status_image($status) {
 function simpletest_settings_form($form, &$form_state) {
   $config = config('simpletest.settings');
   $form['general'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('General'),
   );
   $form['general']['simpletest_clear_results'] = array(
@@ -454,7 +454,7 @@ function simpletest_settings_form($form, &$form_state) {
   );
 
   $form['httpauth'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('HTTP authentication'),
     '#description' => t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
     '#collapsible' => TRUE,

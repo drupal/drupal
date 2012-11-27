@@ -1,3 +1,6 @@
+.locale-translate-filter-form .details-wrapper {
+  overflow: hidden;
+}
 .locale-translate-filter-form .form-item-langcode,
 .locale-translate-filter-form .form-item-translation,
 .locale-translate-filter-form .form-item-customized {
@@ -16,7 +19,7 @@
 }
 .locale-translate-filter-form .form-actions {
   float: left; /* LTR */
-  padding: 3.5ex 0 0 0; /* LTR */
+  padding: 3.8ex 0 0 0; /* LTR */
 }
 .locale-translate-edit-form th {
   width: 50%;
@@ -39,10 +42,6 @@
 
 .locale-translate-filter-form .form-wrapper {
   margin-bottom:0;
-}
-
-.locale-translate-edit-form .locale-translate-edit-table {
-  margin-top: 54px;
 }
 
 .locale-translate-edit-form table.changed {

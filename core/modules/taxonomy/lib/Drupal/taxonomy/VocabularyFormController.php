@@ -58,7 +58,7 @@ class VocabularyFormController extends EntityFormController {
     );
     if (module_exists('language')) {
       $form['default_terms_language'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Terms language'),
       );
       $form['default_terms_language']['default_language'] = array(

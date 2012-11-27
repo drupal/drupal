@@ -11,12 +11,12 @@ Drupal.behaviors.contentTypes = {
   attach: function (context) {
     var $context = $(context);
     // Provide the vertical tab summaries.
-    $context.find('fieldset#edit-submission').drupalSetSummary(function(context) {
+    $context.find('#edit-submission').drupalSetSummary(function(context) {
       var vals = [];
       vals.push(Drupal.checkPlain($(context).find('#edit-title-label').val()) || Drupal.t('Requires a title'));
       return vals.join(', ');
     });
-    $context.find('fieldset#edit-workflow').drupalSetSummary(function(context) {
+    $context.find('#edit-workflow').drupalSetSummary(function(context) {
       var vals = [];
       $(context).find("input[name^='node_options']:checked").parent().each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
@@ -26,7 +26,7 @@ Drupal.behaviors.contentTypes = {
       }
       return vals.join(', ');
     });
-    $('fieldset#edit-language', context).drupalSetSummary(function(context) {
+    $('#edit-language', context).drupalSetSummary(function(context) {
       var vals = [];
 
       vals.push($(".form-item-language-configuration-langcode select option:selected", context).text());
@@ -37,7 +37,7 @@ Drupal.behaviors.contentTypes = {
 
       return vals.join(', ');
     });
-    $context.find('fieldset#edit-display').drupalSetSummary(function(context) {
+    $context.find('#edit-display').drupalSetSummary(function(context) {
       var vals = [];
       var $context = $(context);
       $context.find('input:checked').next('label').each(function() {

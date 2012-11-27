@@ -456,13 +456,13 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['columns']['second']['footer'] = array();
     $build['columns']['second']['pager'] = array();
 
-    // The third column buckets are wrapped in a fieldset.
+    // The third column buckets are wrapped in details.
     $build['columns']['third'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Advanced'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#theme_wrappers' => array('fieldset', 'container'),
+      '#theme_wrappers' => array('details', 'container'),
       '#attributes' => array(
         'class' => array(
           'views-display-column',
@@ -471,7 +471,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       ),
     );
 
-    // Collapse the fieldset by default.
+    // Collapse the details by default.
     if (config('views.settings')->get('ui.show.advanced_column')) {
       $build['columns']['third']['#collapsed'] = FALSE;
     }

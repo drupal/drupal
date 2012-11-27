@@ -8,7 +8,7 @@
 #permissions tr.even .form-item {
   white-space: normal;
 }
-#user-admin-settings fieldset .fieldset-description {
+#user-admin-settings .details-description {
   font-size: 0.85em;
   padding-bottom: .5em;
 }

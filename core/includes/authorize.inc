@@ -158,7 +158,7 @@ function _authorize_filetransfer_connection_settings($backend) {
  *
  * The default settings for the file transfer connection forms are saved in
  * the database. The settings are stored as a nested array in the case of a
- * settings form that has fieldsets or otherwise uses a nested structure.
+ * settings form that has details or otherwise uses a nested structure.
  * Therefore, to properly add defaults, we need to walk through all the
  * children form elements and process those defaults recursively.
  *
@@ -170,14 +170,14 @@ function _authorize_filetransfer_connection_settings($backend) {
  *   The default settings for the file transfer backend we're operating on.
  */
 function _authorize_filetransfer_connection_settings_set_defaults(&$element, $key, array $defaults) {
-  // If we're operating on a form element which isn't a fieldset, and we have
+  // If we're operating on a form element which isn't a details, and we have
   // a default setting saved, stash it in #default_value.
-  if (!empty($key) && isset($defaults[$key]) && isset($element['#type']) && $element['#type'] != 'fieldset') {
+  if (!empty($key) && isset($defaults[$key]) && isset($element['#type']) && $element['#type'] != 'details') {
     $element['#default_value'] = $defaults[$key];
   }
   // Now, we walk through all the child elements, and recursively invoke
   // ourself on each one. Since the $defaults settings array can be nested
-  // (because of #tree, any values inside fieldsets will be nested), if
+  // (because of #tree, any values inside details will be nested), if
   // there's a subarray of settings for the form key we're currently
   // processing, pass in that subarray to the recursive call. Otherwise, just
   // pass on the whole $defaults array.

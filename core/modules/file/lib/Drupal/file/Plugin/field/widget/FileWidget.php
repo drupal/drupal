@@ -142,7 +142,7 @@ class FileWidget extends WidgetBase {
       // building up the full list (like draggable table rows).
       $elements['#file_upload_delta'] = $delta;
       $elements['#theme'] = 'file_widget_multiple';
-      $elements['#theme_wrappers'] = array('fieldset');
+      $elements['#theme_wrappers'] = array('details');
       $elements['#process'] = array('file_field_widget_process_multiple');
       $elements['#title'] = $title;
 

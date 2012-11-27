@@ -3,13 +3,13 @@
 "use strict";
 
 /**
- * This script transforms a set of fieldsets into a stack of vertical
+ * This script transforms a set of details into a stack of vertical
  * tabs. Another tab pane can be selected by clicking on the respective
  * tab.
  *
  * Each tab may have a summary which can be updated by another
- * script. For that to work, each fieldset has an associated
- * 'verticalTabCallback' (with jQuery.data() attached to the fieldset),
+ * script. For that to work, each details element has an associated
+ * 'verticalTabCallback' (with jQuery.data() attached to the details),
  * which is called every time the user performs an update to a form
  * element inside the tab pane.
  */
@@ -25,9 +25,9 @@ Drupal.behaviors.verticalTabs = {
       var focusID = $this.find(':hidden.vertical-tabs-active-tab').val();
       var tab_focus;
 
-      // Check if there are some fieldsets that can be converted to vertical-tabs
-      var $fieldsets = $this.find('> fieldset');
-      if ($fieldsets.length === 0) {
+      // Check if there are some details that can be converted to vertical-tabs
+      var $details = $this.find('> details');
+      if ($details.length === 0) {
         return;
       }
 
@@ -35,16 +35,17 @@ Drupal.behaviors.verticalTabs = {
       var tab_list = $('<ul class="vertical-tabs-list"></ul>');
       $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tab_list);
 
-      // Transform each fieldset into a tab.
-      $fieldsets.each(function () {
+      // Transform each details into a tab.
+      $details.each(function () {
         var $this = $(this);
         var vertical_tab = new Drupal.verticalTab({
-          title: $this.find('> legend').text(),
-          fieldset: $this
+          title: $this.find('> summary').text(),
+          details: $this
         });
         tab_list.append(vertical_tab.item);
         $this
           .removeClass('collapsible collapsed')
+          .attr('open', true)
           .addClass('vertical-tabs-pane')
           .data('verticalTab', vertical_tab);
         if (this.id === focusID) {
@@ -79,7 +80,7 @@ Drupal.behaviors.verticalTabs = {
  * @param settings
  *   An object with the following keys:
  *   - title: The name of the tab.
- *   - fieldset: The jQuery object of the fieldset that is the tab pane.
+ *   - details: The jQuery object of the details element that is the tab pane.
  */
 Drupal.verticalTab = function (settings) {
   var self = this;
@@ -96,12 +97,12 @@ Drupal.verticalTab = function (settings) {
     event.preventDefault();
     if (event.keyCode === 13) {
       self.focus();
-      // Set focus on the first input field of the visible fieldset/tab pane.
-      $("fieldset.vertical-tabs-pane :input:visible:enabled:first").focus();
+      // Set focus on the first input field of the visible details/tab pane.
+      $(".vertical-tabs-pane :input:visible:enabled:first").focus();
     }
   });
 
-  this.fieldset
+  this.details
     .bind('summaryUpdated', function () {
       self.updateSummary();
     })
@@ -113,17 +114,17 @@ Drupal.verticalTab.prototype = {
    * Displays the tab's content pane.
    */
   focus: function () {
-    this.fieldset
-      .siblings('fieldset.vertical-tabs-pane')
+    this.details
+      .siblings('.vertical-tabs-pane')
         .each(function () {
           var tab = $(this).data('verticalTab');
-          tab.fieldset.hide();
+          tab.details.hide();
           tab.item.removeClass('selected');
         })
         .end()
       .show()
       .siblings(':hidden.vertical-tabs-active-tab')
-        .val(this.fieldset.attr('id'));
+        .val(this.details.attr('id'));
     this.item.addClass('selected');
     // Mark the active tab for screen readers.
     $('#active-vertical-tab').remove();
@@ -134,7 +135,7 @@ Drupal.verticalTab.prototype = {
    * Updates the tab's summary.
    */
   updateSummary: function () {
-    this.summary.html(this.fieldset.drupalGetSummary());
+    this.summary.html(this.details.drupalGetSummary());
   },
 
   /**
@@ -148,8 +149,8 @@ Drupal.verticalTab.prototype = {
     // method.
     this.item.parent().children('.vertical-tab-button').removeClass('first')
       .filter(':visible:first').addClass('first');
-    // Display the fieldset.
-    this.fieldset.removeClass('vertical-tab-hidden').show();
+    // Display the details element.
+    this.details.removeClass('vertical-tab-hidden').show();
     // Focus this tab.
     this.focus();
     return this;
@@ -166,10 +167,10 @@ Drupal.verticalTab.prototype = {
     // method.
     this.item.parent().children('.vertical-tab-button').removeClass('first')
       .filter(':visible:first').addClass('first');
-    // Hide the fieldset.
-    this.fieldset.addClass('vertical-tab-hidden').hide();
+    // Hide the details element.
+    this.details.addClass('vertical-tab-hidden').hide();
     // Focus the first visible tab (if there is one).
-    var $firstTab = this.fieldset.siblings('.vertical-tabs-pane:not(.vertical-tab-hidden):first');
+    var $firstTab = this.details.siblings('.vertical-tabs-pane:not(.vertical-tab-hidden):first');
     if ($firstTab.length) {
       $firstTab.data('verticalTab').focus();
     }

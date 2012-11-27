@@ -527,7 +527,7 @@ abstract class FieldPluginBase extends HandlerBase {
     );
 
     $form['style_settings'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Style settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
@@ -678,7 +678,7 @@ abstract class FieldPluginBase extends HandlerBase {
 
     $form['alter'] = array(
       '#title' => t('Rewrite results'),
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#weight' => 100,
@@ -882,7 +882,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       // the parent in situations like this, so we need a second div to
       // make this work.
       $form['alter']['help'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Replacement patterns'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
@@ -1029,7 +1029,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     }
 
     $form['empty_field_behavior'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('No results behavior'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,

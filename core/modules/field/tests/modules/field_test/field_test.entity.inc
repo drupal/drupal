@@ -202,7 +202,7 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
 
   // Second entity.
   $form['entity_2'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Second entity'),
     '#tree' => TRUE,
     '#parents' => array('entity_2'),

@@ -293,9 +293,9 @@ abstract class HandlerBase extends PluginBase {
     );
 
     // This form is long and messy enough that the "Administrative title" option
-    // belongs in a "more options" fieldset at the bottom of the form.
+    // belongs in "more options" details at the bottom of the form.
     $form['more'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('More'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,

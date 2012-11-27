@@ -1116,83 +1116,35 @@ a.button:active {
 
 /* -------------- Form Elements   ------------- */
 
-fieldset {
-  background: #ffffff;
-  border: 1px solid #cccccc;
-  margin-top: 10px;
-  margin-bottom: 32px;
-  padding: 0 0 10px;
-  position: relative;
-  top: 12px; /* Offsets the negative margin of legends */
+details,
+fieldset,
+.filter-wrapper {
   border-radius: 4px;
 }
-.fieldset-wrapper {
-  margin-top: 25px;
-}
-.node-form .vertical-tabs .fieldset-wrapper {
-  margin-top: 0;
-}
 .filter-wrapper {
-  top: 0;
-  padding: 1em 0 0.2em;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 .filter-help a {
   font-size: 0.857em;
-  padding: 2px 20px 0;
 }
 .filter-wrapper .form-item label {
   margin-right: 10px;
 }
-.filter-wrapper .form-item {
-  padding: 0 0 0.5em 0.5em;
-}
-.filter-guidelines {
-  padding: 0 1.5em 0 0.5em;
-}
-fieldset.collapsed {
-  background: transparent;
-  border-radius: 0;
-}
-fieldset legend {
+summary {
   background: #dbdbdb;
-  border: 1px solid #ccc;
-  border-bottom: none;
   color: #3b3b3b;
-  display: block;
-  height: 2em;
-  left: -1px; /* LTR */
-  font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
-  line-height: 2;
-  padding: 0;
-  position: absolute;
-  text-indent: 10px;
   text-shadow: 0 1px 0 #fff;
-  top: -12px;
-  width: 100%;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
 }
-fieldset.collapsed legend {
-  border-radius: 4px;
-}
-fieldset legend a {
+details summary a {
   color: #3b3b3b;
 }
-fieldset legend a:hover,
-fieldset legend a:focus,
-fieldset legend a:active {
+details summary a:hover,
+details summary a:focus,
+details summary a:active {
   color: #000;
 }
-fieldset .fieldset-wrapper {
-  padding: 0 10px;
-}
-fieldset .fieldset-description {
-  margin-top: 5px;
-  margin-bottom: 1em;
-  line-height: 1.4;
-  color: #3c3c3c;
+details .details-description {
   font-style: italic;
 }
 input {
@@ -1227,10 +1179,6 @@ input.form-submit:focus {
 }
 .password-suggestions ul li {
   margin-left: 1.2em; /* LTR */
-}
-.form-item {
-  margin-bottom: 1em;
-  margin-top: 2px;
 }
 .form-item label {
   font-size: 0.929em;
@@ -1352,7 +1300,7 @@ input.form-submit:focus {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
-.comment-form fieldset.filter-wrapper .fieldset-wrapper,
+.comment-form details.filter-wrapper .details-wrapper,
 .comment-form .text-format-wrapper .form-item {
   margin-top: 0;
   margin-bottom: 0;
@@ -1364,7 +1312,7 @@ input.form-submit:focus {
 .filter-wrapper .form-select {
   min-width: 120px;
 }
-.comment-form fieldset.filter-wrapper .tips {
+.comment-form details.filter-wrapper .tips {
   font-size: 0.786em;
 }
 #comment-body-add-more-wrapper .form-type-textarea label {
@@ -1382,9 +1330,6 @@ div.password-suggestions {
 .ui-widget-overlay {
   background: #222222;
   opacity: 0.7;
-}
-div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
-  padding: 1em;
 }
 #forum .name {
   font-size: 1.083em;
@@ -1503,10 +1448,10 @@ div.add-or-remove-shortcuts {
   margin: 0 5px;
 }
 /* Fix spacing when Seven is used in the overlay. */
-#system-theme-settings fieldset {
+#system-theme-settings details {
   padding: 0;
 }
-#system-theme-settings fieldset .fieldset-legend {
+#system-theme-settings details summary {
   margin-top: 0;
 }
 /* Configuration. */
@@ -1821,11 +1766,11 @@ div.admin-panel .description {
 
 /* @end */
 
-.views-display-column .fieldset-wrapper {
+.views-display-column .details-wrapper {
   margin-top: 0;
 }
 
-.views-display-column fieldset legend {
+.views-display-column details summary {
   background: none;
   border: none;
   font-family: inherit;
@@ -1837,11 +1782,11 @@ div.admin-panel .description {
   top: 3px;
 }
 
-.views-display-columns fieldset {
+.views-display-columns details {
   position: inherit;
 }
 
-.views-display-columns fieldset .fieldset-legend {
+.views-display-columns details summary {
   padding: 0 0 4px 2px; /* LTR */
 }
 

@@ -650,7 +650,7 @@ function language_negotiation_configure_url_form($form, &$form_state) {
   );
 
   $form['prefix'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#tree' => TRUE,
     '#title' => t('Path prefix configuration'),
     '#description' => t('Language codes or other custom text to use as a path prefix for URL language detection. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".'),
@@ -663,7 +663,7 @@ function language_negotiation_configure_url_form($form, &$form_state) {
     ),
   );
   $form['domain'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#tree' => TRUE,
     '#title' => t('Domain configuration'),
     '#description' => t('The domain names to use for these languages. Leave blank for the default language. Use with caution in a production environment.<strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
@@ -882,7 +882,7 @@ function language_negotiation_configure_browser_form($form, &$form_state) {
 
   // Add empty row.
   $form['new_mapping'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Add a new mapping'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
