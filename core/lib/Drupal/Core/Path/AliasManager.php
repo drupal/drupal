@@ -8,7 +8,7 @@
 namespace Drupal\Core\Path;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\KeyValueStore\KeyValueDatabaseFactory;
+use Drupal\Core\KeyValueStore\KeyValueFactory;
 
 class AliasManager implements AliasManagerInterface {
 
@@ -78,7 +78,7 @@ class AliasManager implements AliasManagerInterface {
    */
   protected $preloadedPathLookups = array();
 
-  public function __construct(Connection $connection, KeyValueDatabaseFactory $keyvalue) {
+  public function __construct(Connection $connection, KeyValueFactory $keyvalue) {
     $this->connection = $connection;
     $this->state = $keyvalue->get('state');
     $this->langcode = language(LANGUAGE_TYPE_URL)->langcode;

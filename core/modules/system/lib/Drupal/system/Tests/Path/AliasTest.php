@@ -7,16 +7,15 @@
 
 namespace Drupal\system\Tests\Path;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Database\Database;
-use Drupal\Core\KeyValueStore\KeyValueDatabaseFactory;
 use Drupal\Core\Path\Path;
 use Drupal\Core\Path\AliasManager;
 
 /**
  * Tests path alias CRUD and lookup functionality.
  */
-class AliasTest extends UnitTestBase {
+class AliasTest extends DrupalUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -26,9 +25,8 @@ class AliasTest extends UnitTestBase {
     );
   }
 
-  function __construct($test_id = NULL) {
-    parent::__construct($test_id);
-
+  public function setUp() {
+    parent::setUp();
     $this->fixtures = new UrlAliasFixtures();
   }
 
@@ -45,7 +43,7 @@ class AliasTest extends UnitTestBase {
     $this->fixtures->createTables($connection);
 
     //Create AliasManager and Path object.
-    $aliasManager = new AliasManager($connection, new KeyValueDatabaseFactory($connection));
+    $aliasManager = new AliasManager($connection, $this->container->get('keyvalue'));
     $path = new Path($connection, $aliasManager);
 
     $aliases = $this->fixtures->sampleUrlAliases();
@@ -98,7 +96,7 @@ class AliasTest extends UnitTestBase {
     $this->fixtures->createTables($connection);
 
     //Create AliasManager and Path object.
-    $aliasManager = new AliasManager($connection, new KeyValueDatabaseFactory($connection));
+    $aliasManager = new AliasManager($connection, $this->container->get('keyvalue'));
     $pathObject = new Path($connection, $aliasManager);
 
     // Test the situation where the source is the same for multiple aliases.

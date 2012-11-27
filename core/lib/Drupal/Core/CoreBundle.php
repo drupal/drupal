@@ -77,7 +77,7 @@ class CoreBundle extends Bundle {
 
     $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
       ->addArgument(new Reference('database'))
-      ->addArgument(new Reference('keyvalue.database'));
+      ->addArgument(new Reference('keyvalue'));
 
     // Register the EntityManager.
     $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
