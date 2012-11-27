@@ -264,6 +264,15 @@ function update_results_page() {
   return $output;
 }
 
+/**
+ * Provides an overview of the Drupal database update.
+ *
+ * This page provides cautionary suggestions that should happen before
+ * proceeding with the update to ensure data integrity.
+ *
+ * @return
+ *   Rendered HTML form.
+ */
 function update_info_page() {
   // Change query-strings on css/js files to enforce reload for all users.
   _drupal_flush_css_js();
@@ -289,6 +298,12 @@ function update_info_page() {
   return $output;
 }
 
+/**
+ * Renders a 403 access denied page for update.php.
+ *
+ * @return
+ *   Rendered HTML warning with 403 status.
+ */
 function update_access_denied_page() {
   drupal_add_http_header('Status', '403 Forbidden');
   watchdog('access denied', 'update.php', array(), WATCHDOG_WARNING);
