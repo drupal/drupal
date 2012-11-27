@@ -1739,8 +1739,24 @@ function theme_links($variables) {
         if ($is_current_path && $is_current_language) {
           $class[] = 'active';
         }
-        // Pass in $link as $options, they share the same keys.
-        $item = l($link['title'], $link['href'], $link);
+        // @todo Reconcile Views usage of 'ajax' as a boolean with the rest of
+        //   core's usage of it as an array.
+        if (isset($link['ajax']) && is_array($link['ajax'])) {
+          // To attach Ajax behavior, render a link element, rather than just
+          // call l().
+          $link_element = array(
+            '#type' => 'link',
+            '#title' => $link['title'],
+            '#href' => $link['href'],
+            '#ajax' => $link['ajax'],
+            '#options' => array_diff_key($link, drupal_map_assoc(array('title', 'href', 'ajax'))),
+          );
+          $item = drupal_render($link_element);
+        }
+        else {
+          // Pass in $link as $options, they share the same keys.
+          $item = l($link['title'], $link['href'], $link);
+        }
       }
       // Handle title-only text items.
       else {

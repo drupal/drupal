@@ -26,6 +26,16 @@ function ajax_test_menu() {
     'page callback' => 'ajax_test_link',
     'access callback' => TRUE,
   );
+  $items['ajax-test/dialog'] = array(
+    'title' => 'AJAX Dialog',
+    'page callback' => 'ajax_test_dialog',
+    'access callback' => TRUE,
+  );
+  $items['ajax-test/dialog-contents'] = array(
+    'title' => 'AJAX Dialog contents',
+    'page callback' => 'ajax_test_dialog_contents',
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -74,3 +84,100 @@ function ajax_test_link() {
   );
   return $build;
 }
+
+/**
+ * Menu callback: Renders a form elements and links with #ajax['dialog'].
+ */
+function ajax_test_dialog() {
+  // Add two wrapper elements for testing non-modal dialogs. Modal dialogs use
+  // the global drupal-modal wrapper by default.
+  $build['dialog_wrappers'] = array('#markup' => '<div id="ajax-test-dialog-wrapper-1"></div><div id="ajax-test-dialog-wrapper-2"></div>');
+
+  // Dialog behavior applied to a button.
+  $build['form'] = drupal_get_form('ajax_test_dialog_form');
+
+  // Dialog behavior applied to a #type => 'link'.
+  $build['link'] = array(
+    '#type' => 'link',
+    '#title' => 'Link 1 (modal)',
+    '#href' => 'ajax-test/dialog-contents',
+    '#ajax' => array(
+      'dialog' => array('modal' => TRUE),
+    ),
+  );
+
+  // Dialog behavior applied to links rendered by theme_links().
+  $build['links'] = array(
+    '#theme' => 'links',
+    '#links' => array(
+      'link2' => array(
+        'title' => 'Link 2 (modal)',
+        'href' => 'ajax-test/dialog-contents',
+        'ajax' => array(
+          'dialog' => array('modal' => TRUE),
+         ),
+      ),
+      'link3' => array(
+        'title' => 'Link 3 (non-modal)',
+        'href' => 'ajax-test/dialog-contents',
+        'ajax' => array(
+          'dialog' => array(),
+          'wrapper' => 'ajax-test-dialog-wrapper-2',
+        ),
+      ),
+    ),
+  );
+  return $build;
+}
+
+/**
+ * Form builder: Renders buttons with #ajax['dialog'].
+ */
+function ajax_test_dialog_form($form, &$form_state) {
+  $form['button1'] = array(
+    '#type' => 'submit',
+    '#value' => 'Button 1 (modal)',
+    '#ajax' => array(
+      'dialog' => array('modal' => TRUE),
+    ),
+  );
+  $form['button2'] = array(
+    '#type' => 'submit',
+    '#value' => 'Button 2 (non-modal)',
+    '#ajax' => array(
+      'dialog' => array(),
+      'wrapper' => 'ajax-test-dialog-wrapper-1',
+    ),
+  );
+  return $form;
+}
+
+/**
+ * Form submit handler for ajax_test_dialog_form().
+ */
+function ajax_test_dialog_form_submit($form, &$form_state) {
+  $form_state['redirect'] = 'ajax-test/dialog-contents';
+}
+
+/**
+ * Menu callback: Returns the contents for dialogs opened by ajax_test_dialog().
+ */
+function ajax_test_dialog_contents() {
+  // This is a regular render array; the keys do not have special meaning.
+  return array(
+    'content' => array(
+      '#markup' => 'Example message',
+    ),
+    'cancel'=> array(
+      '#type' => 'link',
+      '#title' => 'Cancel',
+      '#href' => '',
+      '#attributes' => array(
+        // This is a special class to which JavaScript assigns dialog closing
+        // behavior.
+        'class' => array('dialog-cancel'),
+      ),
+    ),
+  );
+}
+

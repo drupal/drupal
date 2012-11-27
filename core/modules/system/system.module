@@ -1171,6 +1171,21 @@ function system_library_info() {
     ),
   );
 
+  // Drupal's dialog component.
+  $libraries['drupal.dialog'] = array(
+    'title' => 'Drupal Dialog',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/dialog.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'jquery.ui.dialog')
+    ),
+  );
+
   // Drupal's states library.
   $libraries['drupal.states'] = array(
     'title' => 'Drupal states',

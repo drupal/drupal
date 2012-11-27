@@ -101,7 +101,6 @@ Drupal.behaviors.AJAX = {
  */
 Drupal.ajax = function (base, element, element_settings) {
   var defaults = {
-    url: 'system/ajax',
     event: 'mousedown',
     keypress: true,
     selector: '#' + base,
@@ -119,8 +118,54 @@ Drupal.ajax = function (base, element, element_settings) {
 
   $.extend(this, defaults, element_settings);
 
+  // @todo Remove this after refactoring the PHP code to:
+  //   - Call this 'selector'.
+  //   - Include the '#' for ID-based selectors.
+  //   - Support non-ID-based selectors.
+  if (this.wrapper) {
+    this.wrapper = '#' + this.wrapper;
+  }
+
+  // For Ajax responses that are wanted in a dialog, use the needed method.
+  // If wanted in a modal dialog, also use the needed wrapper.
+  if (this.dialog) {
+    this.method = 'html';
+    if (this.dialog.modal) {
+      this.wrapper = '#drupal-modal';
+    }
+  }
+
   this.element = element;
   this.element_settings = element_settings;
+
+  // If there isn't a form, jQuery.ajax() will be used instead, allowing us to
+  // bind Ajax to links as well.
+  if (this.element.form) {
+    this.form = $(this.element.form);
+  }
+
+  // If no Ajax callback URL was given, use the link href or form action.
+  if (!this.url) {
+    if ($(element).is('a')) {
+      this.url = $(element).attr('href');
+    }
+    else if (element.form) {
+      this.url = this.form.attr('action');
+
+      // @todo If there's a file input on this form, then jQuery will submit the
+      //   AJAX response with a hidden Iframe rather than the XHR object. If the
+      //   response to the submission is an HTTP redirect, then the Iframe will
+      //   follow it, but the server won't content negotiate it correctly,
+      //   because there won't be an ajax_iframe_upload POST variable. Until we
+      //   figure out a work around to this problem, we prevent AJAX-enabling
+      //   elements that submit to the same URL as the form when there's a file
+      //   input. For example, this means the Delete button on the edit form of
+      //   an Article node doesn't open its confirmation form in a dialog.
+      if (this.form.find(':file').length) {
+        return;
+      }
+    }
+  }
 
   // Replacing 'nojs' with 'ajax' in the URL allows for an easy method to let
   // the server detect when it needs to degrade gracefully.
@@ -129,14 +174,7 @@ Drupal.ajax = function (base, element, element_settings) {
   // 2. /nojs$ - The end of a URL string.
   // 3. /nojs? - Followed by a query (e.g. path/nojs?destination=foobar).
   // 4. /nojs# - Followed by a fragment (e.g.: path/nojs#myfragment).
-  this.url = element_settings.url.replace(/\/nojs(\/|$|\?|#)/g, '/ajax$1');
-  this.wrapper = '#' + element_settings.wrapper;
-
-  // If there isn't a form, jQuery.ajax() will be used instead, allowing us to
-  // bind Ajax to links as well.
-  if (this.element.form) {
-    this.form = $(this.element.form);
-  }
+  this.url = this.url.replace(/\/nojs(\/|$|\?|#)/g, '/ajax$1');
 
   // Set the options for the ajaxSubmit function.
   // The 'this' variable will not persist inside of the options object.
@@ -519,6 +557,18 @@ Drupal.ajax.prototype.commands = {
 
     // Add the new content to the page.
     wrapper[method](new_content);
+
+    // If the requesting object wanted the response in a dialog, open that
+    // dialog. However, a single server response can include multiple insert
+    // commands (e.g., one for the primary content and another one for status
+    // messages), but we only want to open the dialog once, so we assume that
+    // only commands with a title property are dialog eligible.
+    // @todo Consider whether this is overloading title inappropriately, and
+    //   if so, find another way to determine dialog eligibility.
+    if (ajax.dialog && ('title' in response)) {
+      var dialog = Drupal.dialog(wrapper, {title: response.title});
+      ajax.dialog.modal ? dialog.showModal() : dialog.show();
+    }
 
     // Immediately hide the new content if we're using any effects.
     if (effect.showEffect !== 'show') {

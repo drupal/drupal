@@ -473,8 +473,13 @@ function ajax_prepare_response($page_callback_result) {
     // manipulation method is used. The method used is specified by
     // #ajax['method']. The default method is 'replaceWith', which completely
     // replaces the old wrapper element and its content with the new HTML.
+    // Since this is the primary response content returned to the client, we
+    // also attach the page title. It is up to client code to determine if and
+    // how to display that. For example, if the requesting element is configured
+    // to display the response in a dialog (via #ajax['dialog']), it can use
+    // this for the dialog title.
     $html = is_string($page_callback_result) ? $page_callback_result : drupal_render($page_callback_result);
-    $commands[] = ajax_command_insert(NULL, $html);
+    $commands[] = ajax_command_insert(NULL, $html) + array('title' => drupal_get_title());
     // Add the status messages inside the new content's wrapper element, so that
     // on subsequent Ajax requests, it is treated as old content.
     $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
@@ -531,8 +536,8 @@ function ajax_pre_render_element($element) {
   // Initialize #ajax_processed, so we do not process this element again.
   $element['#ajax_processed'] = FALSE;
 
-  // Nothing to do if there is neither a callback nor a path.
-  if (!(isset($element['#ajax']['callback']) || isset($element['#ajax']['path']))) {
+  // Nothing to do if there are no Ajax settings.
+  if (empty($element['#ajax'])) {
     return $element;
   }
 
@@ -589,12 +594,24 @@ function ajax_pre_render_element($element) {
   if (isset($element['#ajax']['event'])) {
     $element['#attached']['library'][] = array('system', 'jquery.form');
     $element['#attached']['library'][] = array('system', 'drupal.ajax');
+    if (!empty($element['#ajax']['dialog'])) {
+      $element['#attached']['library'][] = array('system', 'drupal.dialog');
+    }
 
     $settings = $element['#ajax'];
 
-    // Assign default settings.
+    // Assign default settings. When 'path' is set to NULL, ajax.js submits the
+    // Ajax request to the same URL as the form or link destination is for
+    // someone with JavaScript disabled. This is generally preferred as a way to
+    // ensure consistent server processing for js and no-js users, and Drupal's
+    // content negotiation takes care of formatting the response appropriately.
+    // However, 'path' and 'options' may be set when wanting server processing
+    // to be substantially different for a JavaScript triggered submission.
+    // One such substantial difference is form elements that use
+    // #ajax['callback'] for determining which part of the form needs
+    // re-rendering. For that, we have a special 'system/ajax' route.
     $settings += array(
-      'path' => 'system/ajax',
+      'path' => isset($settings['callback']) ? 'system/ajax' : NULL,
       'options' => array(),
     );
 
@@ -604,7 +621,7 @@ function ajax_pre_render_element($element) {
     }
 
     // Change path to URL.
-    $settings['url'] = url($settings['path'], $settings['options']);
+    $settings['url'] = isset($settings['path']) ? url($settings['path'], $settings['options']) : NULL;
     unset($settings['path'], $settings['options']);
 
     // Add special data to $settings['submit'] so that when this element
