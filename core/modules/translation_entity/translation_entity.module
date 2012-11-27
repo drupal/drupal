@@ -131,6 +131,7 @@ function translation_entity_menu() {
         'page callback' => 'translation_entity_overview',
         'page arguments' => array($entity_position),
         'type' => MENU_LOCAL_TASK,
+        'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
         'weight' => 2,
       ) + $item;
 

@@ -60,6 +60,7 @@ function translation_menu() {
     'access callback' => '_translation_tab_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 2,
     'file' => 'translation.pages.inc',
   );
