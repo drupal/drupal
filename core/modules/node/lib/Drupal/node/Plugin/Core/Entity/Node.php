@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "node",
- *   label = @Translation("Node"),
+ *   label = @Translation("Content"),
  *   module = "node",
  *   controller_class = "Drupal\node\NodeStorageController",
  *   render_controller_class = "Drupal\node\NodeRenderController",
