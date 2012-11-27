@@ -393,7 +393,7 @@ class UserCancelTest extends WebTestBase {
   function testMassUserCancelByAdmin() {
     config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Enable account cancellation notification.
-    variable_set('user_mail_status_canceled_notify', TRUE);
+    config('user.settings')->set('notify.status_canceled', TRUE)->save();
 
     // Create administrative user.
     $admin_user = $this->drupalCreateUser(array('administer users'));
