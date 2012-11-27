@@ -89,7 +89,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     state()->set('system.theme.data', $this->themeData);
 
     // Bootstrap the kernel.
-    $this->kernel = new DrupalKernel('testing', TRUE, drupal_classloader());
+    // No need to dump it; this test runs in-memory.
+    $this->kernel = new DrupalKernel('testing', TRUE, drupal_classloader(), FALSE);
     $this->kernel->boot();
 
     // Ensure that the module list is initially empty.
