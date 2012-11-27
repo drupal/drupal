@@ -43,9 +43,9 @@ class ForumTest extends WebTestBase {
   protected $web_user;
 
   /**
-   * An array representing a container.
+   * An array representing a forum container.
    */
-  protected $container;
+  protected $forumContainer;
 
   /**
    * An array representing a forum.
@@ -259,15 +259,15 @@ class ForumTest extends WebTestBase {
 
     // Edit forum taxonomy.
     // Restoration of the settings fails and causes subsequent tests to fail.
-    $this->container = $this->editForumTaxonomy();
+    $this->forumContainer = $this->editForumTaxonomy();
     // Create forum container.
-    $this->container = $this->createForum('container');
+    $this->forumContainer = $this->createForum('container');
     // Verify "edit container" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
     $this->clickLink('edit container');
     $this->assertRaw('Edit container', 'Followed the link to edit the container');
     // Create forum inside the forum container.
-    $this->forum = $this->createForum('forum', $this->container['tid']);
+    $this->forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Verify the "edit forum" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
     $this->clickLink('edit forum');
@@ -275,7 +275,7 @@ class ForumTest extends WebTestBase {
     // Navigate back to forum structure page.
     $this->drupalGet('admin/structure/forum');
     // Create second forum in container.
-    $this->delete_forum = $this->createForum('forum', $this->container['tid']);
+    $this->delete_forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Save forum overview.
     $this->drupalPost('admin/structure/forum/', array(), t('Save'));
     $this->assertRaw(t('The configuration options have been saved.'));
@@ -290,7 +290,7 @@ class ForumTest extends WebTestBase {
     $this->assertNoFieldByName('op', t('Delete'), 'Delete button not found.');
 
     // Test term edit form alterations.
-    $this->drupalGet('taxonomy/term/' . $this->container['tid'] . '/edit');
+    $this->drupalGet('taxonomy/term/' . $this->forumContainer['tid'] . '/edit');
     // Test parent field been hidden by forum module.
     $this->assertNoField('parent[]', 'Parent field not found.');
 
@@ -435,7 +435,7 @@ class ForumTest extends WebTestBase {
     // Login the user.
     $this->drupalLogin($user);
     // Attempt to create forum topic under a container.
-    $this->createForumTopic($this->container, TRUE);
+    $this->createForumTopic($this->forumContainer, TRUE);
     // Create forum node.
     $node = $this->createForumTopic($this->forum, FALSE);
     // Verify the user has access to all the forum nodes.
@@ -516,9 +516,9 @@ class ForumTest extends WebTestBase {
     }
 
     // View forum container page.
-    $this->verifyForumView($this->container);
+    $this->verifyForumView($this->forumContainer);
     // View forum page.
-    $this->verifyForumView($this->forum, $this->container);
+    $this->verifyForumView($this->forum, $this->forumContainer);
     // View root forum page.
     $this->verifyForumView($this->root_forum);
 
@@ -529,7 +529,7 @@ class ForumTest extends WebTestBase {
     $breadcrumb = array(
       l(t('Home'), NULL),
       l(t('Forums'), 'forum'),
-      l($this->container['name'], 'forum/' . $this->container['tid']),
+      l($this->forumContainer['name'], 'forum/' . $this->forumContainer['tid']),
       l($this->forum['name'], 'forum/' . $this->forum['tid']),
     );
     $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), 'Breadcrumbs were displayed');
