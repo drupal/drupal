@@ -286,21 +286,6 @@ function views_ui_theme() {
 }
 
 /**
- * Impements hook_custom_theme()
- */
-function views_ui_custom_theme() {
-  $theme = config('views.settings')->get('ui.custom_theme');
-
-  if ($theme != '_default') {
-    $available = list_themes();
-
-    if (isset($available[$theme]) && $available[$theme]->status && preg_match('/^admin\/structure\/views/', current_path())) {
-      return $theme;
-    }
-  }
-}
-
-/**
  * Page title callback for the Edit View page.
  */
 function views_ui_edit_page_title(ViewUI $view) {

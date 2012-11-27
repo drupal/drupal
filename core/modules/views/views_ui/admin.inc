@@ -1855,14 +1855,6 @@ function views_ui_admin_settings_basic($form, &$form_state) {
     '#default_value' => $config->get('ui.show.display_embed'),
   );
 
-  $form['basic']['ui_custom_theme'] = array(
-    '#type' => 'select',
-    '#title' => t('Custom admin theme for the Views UI'),
-    '#options' => array('_default' => t('- Use default -')) + $options,
-    '#default_value' => $config->get('ui.custom_theme'),
-    '#description' => t('In some cases you might want to select a different admin theme for the Views UI.')
-  );
-
   $form['basic']['ui_exposed_filter_any_label'] = array(
     '#type' => 'select',
     '#title' => t('Label for "Any" value on non-required single-select exposed filters'),
@@ -1937,7 +1929,6 @@ function views_ui_admin_settings_basic_submit(&$form, &$form_state) {
     ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
     ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
     ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])
-    ->set('ui.custom_theme', $form_state['values']['ui_custom_theme'])
     ->set('ui.exposed_filter_any_label', $form_state['values']['ui_exposed_filter_any_label'])
     ->set('ui.always_live_preview', $form_state['values']['ui_always_live_preview'])
     ->set('ui.show.preview_information', $form_state['values']['ui_show_preview_information'])

@@ -43,7 +43,6 @@ function views_update_8000() {
     'views_ui_show_master_display' => 'ui.show.master_display',
     'views_ui_show_advanced_column' => 'ui.show.advanced_column',
     'views_ui_display_embed' => 'ui.show.display_embed',
-    'views_ui_custom_theme' => 'ui.custom_theme',
     'views_exposed_filter_any_label' => 'exposed_filter_any_label',
     'views_ui_always_live_preview' => 'ui.always_live_preview',
     'views_ui_always_live_preview_button' => 'ui.always_live_preview_button',
