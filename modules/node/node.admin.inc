@@ -7,6 +7,10 @@
 
 /**
  * Menu callback: confirm rebuilding of permissions.
+ *
+ * @see node_configure_rebuild_confirm_submit()
+ * @see node_menu()
+ * @ingroup forms
  */
 function node_configure_rebuild_confirm() {
   return confirm_form(array(), t('Are you sure you want to rebuild the permissions on site content?'),
@@ -15,6 +19,8 @@ function node_configure_rebuild_confirm() {
 
 /**
  * Handler for wipe confirmation
+ *
+ * @see node_configure_rebuild_confirm()
  */
 function node_configure_rebuild_confirm_submit($form, &$form_state) {
   node_access_rebuild(TRUE);
@@ -66,6 +72,9 @@ function node_node_operations() {
 
 /**
  * List node administration filters that can be applied.
+ *
+ * @return
+ *   An associative array of filters.
  */
 function node_filters() {
   // Regular filters
@@ -110,7 +119,7 @@ function node_filters() {
 }
 
 /**
- * Apply filters for node administration filters based on session.
+ * Applies filters for node administration filters based on session.
  *
  * @param $query
  *   A SelectQuery to which the filters should be applied.
@@ -133,7 +142,16 @@ function node_build_filter_query(SelectQueryInterface $query) {
 }
 
 /**
- * Return form for node administration filters.
+ * Returns the node administration filters form array to node_admin_content().
+ *
+ * @see node_admin_nodes()
+ * @see node_admin_nodes_submit()
+ * @see node_admin_nodes_validate()
+ * @see node_filter_form_submit()
+ * @see node_multiple_delete_confirm()
+ * @see node_multiple_delete_confirm_submit()
+ *
+ * @ingroup forms
  */
 function node_filter_form() {
   $session = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
@@ -208,7 +226,15 @@ function node_filter_form() {
 }
 
 /**
- * Process result from node administration filter form.
+ * Form submission handler for node_filter_form().
+ *
+ * @see node_admin_content()
+ * @see node_admin_nodes()
+ * @see node_admin_nodes_submit()
+ * @see node_admin_nodes_validate()
+ * @see node_filter_form()
+ * @see node_multiple_delete_confirm()
+ * @see node_multiple_delete_confirm_submit()
  */
 function node_filter_form_submit($form, &$form_state) {
   $filters = node_filters();
@@ -240,15 +266,15 @@ function node_filter_form_submit($form, &$form_state) {
  * Make mass update of nodes, changing all nodes in the $nodes array
  * to update them with the field values in $updates.
  *
- * IMPORTANT NOTE: This function is intended to work when called
- * from a form submit handler. Calling it outside of the form submission
- * process may not work correctly.
+ * IMPORTANT NOTE: This function is intended to work when called from a form
+ * submission handler. Calling it outside of the form submission process may not
+ * work correctly.
  *
  * @param array $nodes
  *   Array of node nids to update.
  * @param array $updates
- *   Array of key/value pairs with node field names and the
- *   value to update that field to.
+ *   Array of key/value pairs with node field names and the value to update that
+ *   field to.
  */
 function node_mass_update($nodes, $updates) {
   // We use batch processing to prevent timeout when updating a large number
@@ -279,7 +305,17 @@ function node_mass_update($nodes, $updates) {
 }
 
 /**
- * Node Mass Update - helper function.
+ * Updates individual nodes when fewer than 10 are queued.
+ *
+ * @param $nid
+ *   ID of node to update.
+ * @param $updates
+ *   Associative array of updates.
+ *
+ * @return object
+ *   An updated node object.
+ *
+ * @see node_mass_update()
  */
 function _node_mass_update_helper($nid, $updates) {
   $node = node_load($nid, NULL, TRUE);
@@ -293,7 +329,14 @@ function _node_mass_update_helper($nid, $updates) {
 }
 
 /**
- * Node Mass Update Batch operation
+ * Executes a batch operation for node_mass_update().
+ *
+ * @param array $nodes
+ *   An array of node IDs.
+ * @param array $updates
+ *   Associative array of updates.
+ * @param array $context
+ *   An array of contextual key/values.
  */
 function _node_mass_update_batch_process($nodes, $updates, &$context) {
   if (!isset($context['sandbox']['progress'])) {
@@ -324,7 +367,15 @@ function _node_mass_update_batch_process($nodes, $updates, &$context) {
 }
 
 /**
- * Node Mass Update Batch 'finished' callback.
+ * Menu callback: Reports the status of batch operation for node_mass_update().
+ *
+ * @param bool $success
+ *   A boolean indicating whether the batch mass update operation successfully
+ *   concluded.
+ * @param int $results
+ *   The number of nodes updated via the batch mode process.
+ * @param array $operations
+ *   An array of function calls (not used in this function).
  */
 function _node_mass_update_batch_finished($success, $results, $operations) {
   if ($success) {
@@ -339,7 +390,17 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
 }
 
 /**
- * Menu callback: content administration.
+ * Page callback: Form constructor for the content administration form.
+ *
+ * @see node_admin_nodes()
+ * @see node_admin_nodes_submit()
+ * @see node_admin_nodes_validate()
+ * @see node_filter_form()
+ * @see node_filter_form_submit()
+ * @see node_menu()
+ * @see node_multiple_delete_confirm()
+ * @see node_multiple_delete_confirm_submit()
+ * @ingroup forms
  */
 function node_admin_content($form, $form_state) {
   if (isset($form_state['values']['operation']) && $form_state['values']['operation'] == 'delete') {
@@ -354,6 +415,15 @@ function node_admin_content($form, $form_state) {
 
 /**
  * Form builder: Builds the node administration overview.
+ *
+ * @see node_admin_nodes_submit()
+ * @see node_admin_nodes_validate()
+ * @see node_filter_form()
+ * @see node_filter_form_submit()
+ * @see node_multiple_delete_confirm()
+ * @see node_multiple_delete_confirm_submit()
+ *
+ * @ingroup forms
  */
 function node_admin_nodes() {
   $admin_access = user_access('administer nodes');
@@ -525,8 +595,15 @@ function node_admin_nodes() {
 /**
  * Validate node_admin_nodes form submissions.
  *
- * Check if any nodes have been selected to perform the chosen
- * 'Update option' on.
+ * Checks whether any nodes have been selected to perform the chosen 'Update
+ * option' on.
+ *
+ * @see node_admin_nodes()
+ * @see node_admin_nodes_submit()
+ * @see node_filter_form()
+ * @see node_filter_form_submit()
+ * @see node_multiple_delete_confirm()
+ * @see node_multiple_delete_confirm_submit()
  */
 function node_admin_nodes_validate($form, &$form_state) {
   // Error if there are no items to select.
@@ -538,7 +615,14 @@ function node_admin_nodes_validate($form, &$form_state) {
 /**
  * Process node_admin_nodes form submissions.
  *
- * Execute the chosen 'Update option' on the selected nodes.
+ * Executes the chosen 'Update option' on the selected nodes.
+ *
+ * @see node_admin_nodes()
+ * @see node_admin_nodes_validate()
+ * @see node_filter_form()
+ * @see node_filter_form_submit()
+ * @see node_multiple_delete_confirm()
+ * @see node_multiple_delete_confirm_submit()
  */
 function node_admin_nodes_submit($form, &$form_state) {
   $operations = module_invoke_all('node_operations');
@@ -564,6 +648,17 @@ function node_admin_nodes_submit($form, &$form_state) {
   }
 }
 
+/**
+ * Multiple node deletion confirmation form for node_admin_content().
+ *
+ * @see node_admin_nodes()
+ * @see node_admin_nodes_submit()
+ * @see node_admin_nodes_validate()
+ * @see node_filter_form()
+ * @see node_filter_form_submit()
+ * @see node_multiple_delete_confirm_submit()
+ * @ingroup forms
+ */
 function node_multiple_delete_confirm($form, &$form_state, $nodes) {
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values
@@ -587,6 +682,16 @@ function node_multiple_delete_confirm($form, &$form_state, $nodes) {
                     t('Delete'), t('Cancel'));
 }
 
+/**
+ * Form submission handler for node_multiple_delete_confirm().
+ *
+ * @see node_admin_nodes()
+ * @see node_admin_nodes_submit()
+ * @see node_admin_nodes_validate()
+ * @see node_filter_form()
+ * @see node_filter_form_submit()
+ * @see node_multiple_delete_confirm()
+ */
 function node_multiple_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     node_delete_multiple(array_keys($form_state['values']['nodes']));

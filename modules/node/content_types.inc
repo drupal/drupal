@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Content type editing UI.
+ * Content type editing user interface.
  */
 
 /**
@@ -388,8 +388,7 @@ function node_node_type_update($info) {
 }
 
 /**
- * Resets all of the relevant fields of a module-defined node type to their
- * default values.
+ * Resets relevant fields of a module-defined node type to their default values.
  *
  * @param $type
  *   The node type to reset. The node type is passed back by reference with its
@@ -410,6 +409,8 @@ function node_type_reset($type) {
 
 /**
  * Menu callback; delete a single content type.
+ *
+ * @ingroup forms
  */
 function node_type_delete_confirm($form, &$form_state, $type) {
   $form['type'] = array('#type' => 'value', '#value' => $type->type);
@@ -430,6 +431,8 @@ function node_type_delete_confirm($form, &$form_state, $type) {
 
 /**
  * Process content type delete confirm submissions.
+ *
+ * @see node_type_delete_confirm()
  */
 function node_type_delete_confirm_submit($form, &$form_state) {
   node_type_delete($form_state['values']['type']);

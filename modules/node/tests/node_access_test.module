@@ -2,7 +2,9 @@
 
 /**
  * @file
- * Dummy module implementing node access related hooks to test API interaction
+ * A dummy module implementing node access related hooks for testing purposes.
+ *
+ * A dummy module implementing node access related hooks to test API interaction
  * with the Node module. This module restricts view permission to those with
  * a special 'node test view' permission.
  */
@@ -140,6 +142,8 @@ function node_access_test_page() {
  * database query is shown, and a list of the node IDs, for debugging purposes.
  * And if there is a query exception, the page says "Exception" and gives the
  * error.
+ *
+ * @see node_access_test_menu()
  */
 function node_access_entity_test_page() {
   $output = '';
