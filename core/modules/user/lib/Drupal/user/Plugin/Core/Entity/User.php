@@ -49,9 +49,9 @@ use Drupal\Core\Annotation\Translation;
  *       "custom_settings" = FALSE
  *     },
  *     "compact" = {
-         "label" = "Compact",
-         "custom_settings" = TRUE
-       }
+ *       "label" = "Compact",
+ *       "custom_settings" = TRUE
+ *     }
  *   }
  * )
  */

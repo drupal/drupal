@@ -455,12 +455,6 @@ function field_ui_widget_type_options($field_type = NULL, $by_label = FALSE) {
     $widget_types = field_info_widget_types();
     uasort($widget_types, 'drupal_sort_weight');
     foreach ($widget_types as $name => $widget_type) {
-      if (!isset($widget_type['field_types'])) {
-        // @todo: TestFieldWidgetMultiple widget is found but the info alter
-        //   hook isn't. Looks like another namespace problem. Ignore this entry
-        //   to allow the tests to pass. See http://drupal.org/node/1836008.
-        continue;
-      }
       foreach ($widget_type['field_types'] as $widget_field_type) {
         // Check that the field type exists.
         if (isset($field_types[$widget_field_type])) {
