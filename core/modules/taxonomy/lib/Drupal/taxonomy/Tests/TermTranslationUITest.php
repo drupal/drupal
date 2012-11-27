@@ -20,6 +20,13 @@ class TermTranslationUITest extends EntityTranslationUITest {
   protected $name;
 
   /**
+   * The vocabulary used for creating terms.
+   *
+   * @var \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary
+   */
+  protected $vocabulary;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -51,7 +58,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
     parent::setupBundle();
 
     // Create a vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->bundle,
       'description' => $this->randomName(),
       'machine_name' => $this->bundle,
@@ -59,7 +66,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
       'help' => '',
       'weight' => mt_rand(0, 10),
     ));
-    taxonomy_vocabulary_save($vocabulary);
+    $this->vocabulary->save();
   }
 
   /**
@@ -72,13 +79,16 @@ class TermTranslationUITest extends EntityTranslationUITest {
   /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::createEntity().
    */
-  protected function createEntity($values, $langcode, $vocabulary_name = NULL) {
-    if (!isset($vocabulary_name)) {
-      $vocabulary_name = $this->bundle;
+  protected function createEntity($values, $langcode, $bundle_name = NULL) {
+    if (isset($bundle_name)) {
+      $vocabulary = taxonomy_vocabulary_machine_name_load($bundle_name);
     }
-    $vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary_name);
+    else {
+      $vocabulary = $this->vocabulary;
+    }
+    // Term needs vid to be saved.
     $values['vid'] = $vocabulary->id();
-    return parent::createEntity($values, $langcode);
+    return parent::createEntity($values, $langcode, $bundle_name);
   }
 
   /**
@@ -110,7 +120,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer taxonomy', 'translate any entity'));
     $this->drupalLogin($this->admin_user);
 
-    $translatable_vocabulary_name = taxonomy_vocabulary_machine_name_load($this->bundle)->name;
+    $translatable_vocabulary_name = $this->vocabulary->name;
     $translatable_tid = $this->createEntity(array(), $this->langcodes[0]);
 
     // Create an untranslatable vocabulary.
@@ -122,7 +132,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
       'help' => '',
       'weight' => mt_rand(0, 10),
     ));
-    taxonomy_vocabulary_save($untranslatable_vocabulary);
+    $untranslatable_vocabulary->save();
 
     $untranslatable_vocabulary_name = $untranslatable_vocabulary->name;
     $untranslatable_tid = $this->createEntity(array(), $this->langcodes[0], $untranslatable_vocabulary_name);

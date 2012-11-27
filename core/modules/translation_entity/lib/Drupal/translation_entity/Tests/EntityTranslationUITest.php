@@ -231,16 +231,19 @@ abstract class EntityTranslationUITest extends WebTestBase {
    *   An array of initial values for the entity.
    * @param string $langcode
    *   The initial language code of the entity.
+   * @param string $bundle_name
+   *   (optional) The entity bundle, if the entity uses bundles. Defaults to
+   *   NULL. If left NULL, $this->bundle will be used.
    *
    * @return
    *   The entity id.
    */
-  protected function createEntity($values, $langcode) {
+  protected function createEntity($values, $langcode, $bundle_name = NULL) {
     $entity_values = $values;
     $entity_values['langcode'] = $langcode;
     $info = entity_get_info($this->entityType);
     if (!empty($info['entity_keys']['bundle'])) {
-      $entity_values[$info['entity_keys']['bundle']] = $this->bundle;
+      $entity_values[$info['entity_keys']['bundle']] = $bundle_name ?: $this->bundle;
     }
     $controller = entity_get_controller($this->entityType);
     if (!($controller instanceof DatabaseStorageControllerNG)) {
@@ -280,7 +283,7 @@ abstract class EntityTranslationUITest extends WebTestBase {
   /**
    * Returns the translation object to use to retrieve the translated values.
    *
-   * @param \Drupal\Core\Enitity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being tested.
    * @param string $langcode
    *   The language code identifying the translation to be retrieved.
