@@ -495,13 +495,14 @@ abstract class Connection extends PDO {
    * @return Drupal\Core\Database\StatementInterface
    *   This method will return one of: the executed statement, the number of
    *   rows affected by the query (not the number matched), or the generated
-   *   insert IT of the last query, depending on the value of
+   *   insert ID of the last query, depending on the value of
    *   $options['return']. Typically that value will be set by default or a
    *   query builder and should not be set by a user. If there is an error,
    *   this method will return NULL and may throw an exception if
    *   $options['throw_exception'] is TRUE.
    *
    * @throws PDOException
+   * @throws Drupal\Core\Database\IntegrityConstraintViolationException
    */
   public function query($query, array $args = array(), $options = array()) {
 
@@ -545,7 +546,13 @@ abstract class Connection extends PDO {
         // debug information.
         $query_string = ($query instanceof DatabaseStatementInterface) ? $stmt->getQueryString() : $query;
         $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
-        $exception = new DatabaseExceptionWrapper($message, 0, $e);
+        // Match all SQLSTATE 23xxx errors.
+        if (substr($e->getCode(), -6, -3) == '23') {
+          $exception = new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+        }
+        else {
+          $exception = new DatabaseExceptionWrapper($message, 0, $e);
+        }
 
         throw $exception;
       }

@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Lock;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
  * Defines the database lock backend. This is the default backend in Drupal.
@@ -53,12 +53,12 @@ class DatabaseLockBackend extends LockBackendAbstract {
           // We never need to try again.
           $retry = FALSE;
         }
-        catch (DatabaseExceptionWrapper $e) {
+        catch (IntegrityConstraintViolationException $e) {
           // Suppress the error. If this is our first pass through the loop,
-          // then $retry is FALSE. In this case, the insert must have failed
-          // meaning some other request acquired the lock but did not release it.
-          // We decide whether to retry by checking lock_may_be_available()
-          // Since this will break the lock in case it is expired.
+          // then $retry is FALSE. In this case, the insert failed because some
+          // other request acquired the lock but did not release it. We decide
+          // whether to retry by checking lockMayBeAvailable(). This will clear
+          // the offending row from the database table in case it has expired.
           $retry = $retry ? FALSE : $this->lockMayBeAvailable($name);
         }
         // We only retry in case the first attempt failed, but we then broke

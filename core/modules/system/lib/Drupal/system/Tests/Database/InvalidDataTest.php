@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Database;
 
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Exception;
 
 /**
@@ -46,7 +47,7 @@ class InvalidDataTest extends DatabaseTestBase {
         ->execute();
       $this->fail('Insert succeedded when it should not have.');
     }
-    catch (Exception $e) {
+    catch (IntegrityConstraintViolationException $e) {
       // Check if the first record was inserted.
       $name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 63))->fetchField();
 

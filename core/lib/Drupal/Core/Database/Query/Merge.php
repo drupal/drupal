@@ -9,6 +9,7 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 use Exception;
 
@@ -423,7 +424,7 @@ class Merge extends Query implements ConditionInterface {
           $insert->execute();
           return self::STATUS_INSERT;
         }
-        catch (Exception $e) {
+        catch (IntegrityConstraintViolationException $e) {
           // The insert query failed, maybe it's because a racing insert query
           // beat us in inserting the same row. Retry the select query, if it
           // returns a row, ignore the error and continue with the update

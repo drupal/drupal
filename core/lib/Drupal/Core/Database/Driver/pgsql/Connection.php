@@ -11,6 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 use Locale;
 use PDO;
@@ -132,6 +133,10 @@ class Connection extends DatabaseConnection {
     }
     catch (PDOException $e) {
       if ($options['throw_exception']) {
+        // Match all SQLSTATE 23xxx errors.
+        if (substr($e->getCode(), -6, -3) == '23') {
+          $e = new IntegrityConstraintViolationException($e->getMessage(), $e->getCode(), $e);
+        }
         // Add additional debug information.
         if ($query instanceof StatementInterface) {
           $e->query_string = $stmt->getQueryString();
