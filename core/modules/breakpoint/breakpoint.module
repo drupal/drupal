@@ -97,12 +97,10 @@ function breakpoint_modules_uninstalled($modules) {
 function _breakpoint_theme_enabled($theme_list) {
   $themes = list_themes();
   foreach ($theme_list as $theme_key) {
-    if ($themes[$theme_key]->status) {
-      $media_queries = breakpoint_get_theme_media_queries($theme_key);
-      _breakpoint_import_media_queries($theme_key, $themes[$theme_key]->info['name'], Breakpoint::SOURCE_TYPE_THEME, $media_queries);
-      // Import custom groups.
-      _breakpoint_import_breakpoint_groups($theme_key, Breakpoint::SOURCE_TYPE_THEME);
-    }
+    $media_queries = breakpoint_get_theme_media_queries($theme_key);
+    _breakpoint_import_media_queries($theme_key, $themes[$theme_key]->info['name'], Breakpoint::SOURCE_TYPE_THEME, $media_queries);
+    // Import custom groups.
+    _breakpoint_import_breakpoint_groups($theme_key, Breakpoint::SOURCE_TYPE_THEME);
   }
 }
 
