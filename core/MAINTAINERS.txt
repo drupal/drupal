@@ -133,6 +133,12 @@ Theme system
 Token system
 - Dave Reid 'davereid' http://drupal.org/user/53892
 
+Transliteration system
+- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
+- Damien Tournoud 'DamZ' http://drupal.org/user/22211
+- Daniel F. Kudwien 'sun' http://drupal.org/user/54136
+- Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
+
 XML-RPC system
 - Frederic G. Marand 'fgm' http://drupal.org/user/27985
 
