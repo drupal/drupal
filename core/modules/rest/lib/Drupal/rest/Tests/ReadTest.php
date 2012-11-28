@@ -33,11 +33,11 @@ class ReadTest extends RESTTestBase {
    * Tests several valid and invalid read requests on all entity types.
    */
   public function testRead() {
-    // @todo once EntityNG is implemented for other entity types use the full
-    // entity_get_info() for all entity types here.
-    $entity_test_info = entity_get_info('entity_test');
-    $entity_info = array('entity_test' => $entity_test_info);
-    foreach ($entity_info as $entity_type => $info) {
+    // @todo once EntityNG is implemented for other entity types expand this at
+    // least to nodes and users.
+    // Define the entity types we want to test.
+    $entity_types = array('entity_test');
+    foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type);
       // Create a user account that has the required permissions to delete
       // resources via the web API.

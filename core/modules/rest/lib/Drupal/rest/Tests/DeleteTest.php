@@ -33,7 +33,9 @@ class DeleteTest extends RESTTestBase {
    * Tests several valid and invalid delete requests on all entity types.
    */
   public function testDelete() {
-    foreach (entity_get_info() as $entity_type => $info) {
+    // Define the entity types we want to test.
+    $entity_types = array('entity_test', 'node', 'user');
+    foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type);
       // Create a user account that has the required permissions to delete
       // resources via the web API.
