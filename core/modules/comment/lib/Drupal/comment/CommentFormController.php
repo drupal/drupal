@@ -378,6 +378,6 @@ class CommentFormController extends EntityFormController {
     $form_state['redirect'] = $redirect;
     // Clear the block and page caches so that anonymous users see the comment
     // they have posted.
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
   }
 }

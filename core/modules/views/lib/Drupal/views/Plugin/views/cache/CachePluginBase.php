@@ -196,7 +196,7 @@ abstract class CachePluginBase extends PluginBase {
    * to be sure that we catch everything. Maybe that's a bad idea.
    */
   function cache_flush() {
-    cache($this->table)->invalidateTags(array($this->view->storage->get('name') => TRUE));
+    cache($this->table)->deleteTags(array($this->view->storage->get('name') => TRUE));
   }
 
   /**

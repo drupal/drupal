@@ -50,7 +50,7 @@ function entity_get_info($entity_type = NULL) {
 function entity_info_cache_clear() {
   drupal_static_reset('entity_get_info');
   // Clear all languages.
-  cache()->invalidateTags(array('entity_info' => TRUE));
+  cache()->deleteTags(array('entity_info' => TRUE));
 }
 
 /**

@@ -103,7 +103,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
       drupal_alter('schema', $schema);
 
       if ($rebuild) {
-        cache()->invalidateTags(array('schema' => TRUE));
+        cache()->deleteTags(array('schema' => TRUE));
       }
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.

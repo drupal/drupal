@@ -112,7 +112,7 @@ class FieldInfo {
 
     $this->bundleExtraFields = array();
 
-    cache('field')->invalidateTags(array('field_info' => TRUE));
+    cache('field')->deleteTags(array('field_info' => TRUE));
   }
 
   /**

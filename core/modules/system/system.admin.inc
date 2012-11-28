@@ -735,7 +735,7 @@ function system_theme_settings_submit($form, &$form_state) {
   variable_set($key, $values);
   drupal_set_message(t('The configuration options have been saved.'));
 
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
 }
 
 /**
@@ -1714,7 +1714,7 @@ function system_clear_cache_submit($form, &$form_state) {
  * @ingroup forms
  */
 function system_clear_page_cache_submit($form, &$form_state) {
-  cache('page')->flush();
+  cache('page')->deleteAll();
 }
 
 /**

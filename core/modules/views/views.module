@@ -930,24 +930,24 @@ function views_cache_flush() {
  * Implements hook_field_create_instance.
  */
 function views_field_create_instance($instance) {
-  cache('views_info')->flush();
-  cache('views_results')->flush();
+  cache('views_info')->deleteAll();
+  cache('views_results')->deleteAll();
 }
 
 /**
  * Implements hook_field_update_instance.
  */
 function views_field_update_instance($instance, $prior_instance) {
-  cache('views_info')->flush();
-  cache('views_results')->flush();
+  cache('views_info')->deleteAll();
+  cache('views_results')->deleteAll();
 }
 
 /**
  * Implements hook_field_delete_instance.
  */
 function views_field_delete_instance($instance) {
-  cache('views_info')->flush();
-  cache('views_results')->flush();
+  cache('views_info')->deleteAll();
+  cache('views_results')->deleteAll();
 }
 
 /**
@@ -955,10 +955,10 @@ function views_field_delete_instance($instance) {
  */
 function views_invalidate_cache() {
   // Clear the views cache.
-  cache('views_info')->flush();
+  cache('views_info')->deleteAll();
 
   // Clear the page and block cache.
-  cache_invalidate(array('content' => TRUE));
+  cache_delete_tags(array('content' => TRUE));
 
   // Set the menu as needed to be rebuilt.
   state()->set('menu_rebuild_needed', TRUE);

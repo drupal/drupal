@@ -99,6 +99,6 @@ abstract class CacheTestBase extends WebTestBase {
       $bin = $this->default_bin;
     }
 
-    cache($bin)->expire();
+    cache($bin)->deleteExpired();
   }
 }

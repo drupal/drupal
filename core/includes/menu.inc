@@ -2617,7 +2617,7 @@ function menu_link_load($mlid) {
  * Clears the cached cached data for a single named menu.
  */
 function menu_cache_clear($menu_name = 'tools') {
-  cache('menu')->invalidateTags(array('menu' => $menu_name));
+  cache('menu')->deleteTags(array('menu' => $menu_name));
   // Also clear the menu system static caches.
   menu_reset_static_cache();
 }
@@ -2629,7 +2629,7 @@ function menu_cache_clear($menu_name = 'tools') {
  * might have been made to the router items or menu links.
  */
 function menu_cache_clear_all() {
-  cache('menu')->flush();
+  cache('menu')->deleteAll();
   menu_reset_static_cache();
 }
 
@@ -3258,13 +3258,13 @@ function _menu_clear_page_cache() {
   // Clear the page and block caches, but at most twice, including at
   //  the end of the page load when there are multiple links saved or deleted.
   if ($cache_cleared == 0) {
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
     // Keep track of which menus have expanded items.
     _menu_set_expanded_menus();
     $cache_cleared = 1;
   }
   elseif ($cache_cleared == 1) {
-    drupal_register_shutdown_function('cache_invalidate', array('content', TRUE));
+    drupal_register_shutdown_function('cache_invalidate_tags', array('content', TRUE));
     // Keep track of which menus have expanded items.
     drupal_register_shutdown_function('_menu_set_expanded_menus');
     $cache_cleared = 2;

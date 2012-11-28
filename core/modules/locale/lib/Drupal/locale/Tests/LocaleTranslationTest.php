@@ -144,6 +144,10 @@ class LocaleTranslationTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertRaw($translation_to_en, t('English translation properly saved.'));
 
+    // Reset the tag cache on the tester side in order to pick up the call to
+    // cache()->deleteTags() on the tested side.
+    drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
+
     $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, t('t() works for non-English.'));
     // Refresh the locale() cache to get fresh data from t() below. We are in
     // the same HTTP request and therefore t() is not refreshed by saving the
@@ -260,7 +264,7 @@ class LocaleTranslationTest extends WebTestBase {
     // Test JavaScript translation rebuilding.
     file_unmanaged_delete($js_file);
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
     _locale_rebuild_js($langcode);
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : t('not found'))));
   }

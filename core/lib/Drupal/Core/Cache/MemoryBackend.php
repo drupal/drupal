@@ -24,11 +24,6 @@ class MemoryBackend implements CacheBackendInterface {
   protected $cache = array();
 
   /**
-   * All tags invalidated during the request.
-   */
-  protected $invalidatedTags = array();
-
-  /**
    * Constructs a MemoryBackend object.
    *
    * @param string $bin
@@ -40,9 +35,9 @@ class MemoryBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::get().
    */
-  public function get($cid) {
+  public function get($cid, $allow_invalid = FALSE) {
     if (isset($this->cache[$cid])) {
-      return $this->prepareItem($this->cache[$cid]);
+      return $this->prepareItem($this->cache[$cid], $allow_invalid);
     }
     else {
       return FALSE;
@@ -52,13 +47,13 @@ class MemoryBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
-  public function getMultiple(&$cids) {
+  public function getMultiple(&$cids, $allow_invalid = FALSE) {
     $ret = array();
 
     $items = array_intersect_key($this->cache, array_flip($cids));
 
     foreach ($items as $item) {
-      $item = $this->prepareItem($item);
+      $item = $this->prepareItem($item, $allow_invalid);
       if ($item) {
         $ret[$item->cid] = $item;
       }
@@ -82,13 +77,15 @@ class MemoryBackend implements CacheBackendInterface {
    *   The item with data as appropriate or FALSE if there is no
    *   valid item to load.
    */
-  protected function prepareItem($cache) {
+  protected function prepareItem($cache, $allow_invalid) {
     if (!isset($cache->data)) {
       return FALSE;
     }
 
-    // The cache data is invalid if any of its tags have been cleared since.
-    if (count($cache->tags) && $this->hasInvalidatedTags($cache)) {
+    // Check expire time.
+    $cache->valid = $cache->expire == CacheBackendInterface::CACHE_PERMANENT || $cache->expire >= REQUEST_TIME;
+
+    if (!$allow_invalid && !$cache->valid) {
       return FALSE;
     }
 
@@ -102,26 +99,10 @@ class MemoryBackend implements CacheBackendInterface {
     $this->cache[$cid] = (object) array(
       'cid' => $cid,
       'data' => $data,
+      'created' => REQUEST_TIME,
       'expire' => $expire,
-      'tags' => $tags,
-      'checksum' => $this->checksum($this->flattenTags($tags)),
+      'tags' => $this->flattenTags($tags),
     );
-  }
-
-  /**
-   * Calculates a checksum so data can be invalidated using tags.
-   */
-  public function checksum($tags) {
-    $checksum = '';
-
-    foreach ($tags as $tag) {
-      // Has the tag already been invalidated.
-      if (isset($this->invalidatedTags[$tag])) {
-        $checksum = $checksum . $tag . ':' . $this->invalidatedTags[$tag];
-      }
-    }
-
-    return $checksum;
   }
 
   /**
@@ -139,47 +120,79 @@ class MemoryBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
    */
-  public function flush() {
+  public function deleteTags(array $tags) {
+    $flat_tags = $this->flattenTags($tags);
+    foreach ($this->cache as $cid => $item) {
+      if (array_intersect($flat_tags, $item->tags)) {
+        unset($this->cache[$cid]);
+      }
+    }
+  }
+
+  /**
+   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteAll().
+   */
+  public function deleteAll() {
     $this->cache = array();
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::expire().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteExpired().
    *
-   * Cache expiration is not implemented for PHP ArrayBackend as this backend
-   * only persists during a single request and expiration are done using
+   * Cache expiration is not implemented for MemoryBackend as this backend only
+   * persists during a single request and expiration are done using
    * REQUEST_TIME.
    */
-  public function expire() {
+  public function deleteExpired() {
   }
 
   /**
-   * Checks to see if any of the tags associated with a cache object have been
-   * invalidated.
-   *
-   * @param object @cache
-   *   An cache object to calculate and compare it's original checksum for.
-   *
-   * @return boolean
-   *   TRUE if the a tag has been invalidated, FALSE otherwise.
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
    */
-  protected function hasInvalidatedTags($cache) {
-    if ($cache->checksum != $this->checksum($this->flattenTags($cache->tags))) {
-      return TRUE;
-    }
-    return FALSE;
+  public function invalidate($cid) {
+    $this->cache[$cid]->expire = REQUEST_TIME - 1;
   }
 
   /**
-   * Flattens a tags array into a numeric array suitable for string storage.
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
+   */
+  public function invalidateMultiple(array $cids) {
+    foreach ($cids as $cid) {
+      $this->cache[$cid]->expire = REQUEST_TIME - 1;
+    }
+  }
+
+  /**
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
+   */
+  public function invalidateTags(array $tags) {
+    $flat_tags = $this->flattenTags($tags);
+    foreach ($this->cache as $cid => $item) {
+      if (array_intersect($flat_tags, $item->tags)) {
+        $this->cache[$cid]->expire = REQUEST_TIME - 1;
+      }
+    }
+  }
+
+  /**
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
+   */
+  public function invalidateAll() {
+    foreach ($this->cache as $cid => $item) {
+      $this->cache[$cid]->expire = REQUEST_TIME - 1;
+    }
+  }
+
+  /**
+   * 'Flattens' a tags array into an array of strings.
    *
    * @param array $tags
    *   Associative array of tags to flatten.
    *
-   * @return
-   *   An array of flattened tag identifiers.
+   * @return array
+   *   An indexed array of strings.
    */
   protected function flattenTags(array $tags) {
     if (isset($tags[0])) {
@@ -198,20 +211,6 @@ class MemoryBackend implements CacheBackendInterface {
       }
     }
     return $flat_tags;
-  }
-
-  /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
-   */
-  public function invalidateTags(array $tags) {
-    foreach ($this->flattenTags($tags) as $tag) {
-      if (isset($this->invalidatedTags[$tag])) {
-        $this->invalidatedTags[$tag] = $this->invalidatedTags[$tag] + 1;
-      }
-      else {
-        $this->invalidatedTags[$tag] = 1;
-      }
-    }
   }
 
   /**

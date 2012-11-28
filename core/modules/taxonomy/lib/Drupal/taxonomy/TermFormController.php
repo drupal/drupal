@@ -168,7 +168,7 @@ class TermFormController extends EntityFormController {
         drupal_set_message(t('Updated term %term.', array('%term' => $term->label())));
         watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
         // Clear the page and block caches to avoid stale data.
-        cache_invalidate(array('content' => TRUE));
+        cache_invalidate_tags(array('content' => TRUE));
         break;
     }
 

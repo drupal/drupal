@@ -36,14 +36,14 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::get().
    */
-  public function get($cid) {
+  public function get($cid, $allow_invalid = FALSE) {
     return FALSE;
   }
 
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::getMultiple().
    */
-  public function getMultiple(&$cids) {
+  public function getMultiple(&$cids, $allow_invalid = FALSE) {
     return array();
   }
 
@@ -77,6 +77,66 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::deleteAll().
+   */
+  public function deleteAll() {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        parent::deleteAll();
+      }
+    }
+    catch (Exception $e) {}
+  }
+
+  /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::deleteExpired().
+   */
+  public function deleteExpired() {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        parent::deleteExpired();
+      }
+    }
+    catch (Exception $e) {}
+  }
+
+  /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::deleteTags().
+   */
+  public function deleteTags(array $tags) {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        parent::deleteTags($tags);
+      }
+    }
+    catch (Exception $e) {}
+  }
+
+  /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::invalidate().
+   */
+  public function invalidate($cid) {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        parent::invalidate($cid);
+      }
+    }
+    catch (Exception $e) {}
+  }
+
+  /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::invalidateMultiple().
+   */
+  public function invalidateMultiple(array $cids) {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        parent::invalidateMultiple($cids);
+      }
+    }
+    catch (Exception $e) {}
+  }
+
+  /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::invalidateTags().
    */
   public function invalidateTags(array $tags) {
@@ -89,24 +149,12 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Overrides Drupal\Core\Cache\DatabaseBackend::flush().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
    */
-  public function flush() {
+  public function invalidateAll() {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
-        parent::flush();
-      }
-    }
-    catch (Exception $e) {}
-  }
-
-  /**
-   * Overrides Drupal\Core\Cache\DatabaseBackend::expire().
-   */
-  public function expire() {
-    try {
-      if (class_exists('Drupal\Core\Database\Database')) {
-        parent::expire();
+        parent::invalidateAll($tags);
       }
     }
     catch (Exception $e) {}

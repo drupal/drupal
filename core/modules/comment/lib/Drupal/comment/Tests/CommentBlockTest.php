@@ -73,7 +73,7 @@ class CommentBlockTest extends CommentTestBase {
     user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
     // drupalCreateNode() does not automatically flush content caches unlike
     // posting a node from a node form.
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
     $this->drupalGet('');
     $this->assertNoText($block['title'], 'Block was not found.');
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));

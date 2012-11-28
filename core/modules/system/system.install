@@ -596,6 +596,12 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'deletions' => array(
+        'description' => 'Number incremented when the tag is deleted.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('tag'),
   );
@@ -641,8 +647,14 @@ function system_schema() {
         'size' => 'big',
         'not null' => FALSE,
       ),
-      'checksum' => array(
+      'checksum_invalidations' => array(
         'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'checksum_deletions' => array(
+        'description' => 'The tag deletion sum when this entry was saved.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -1505,8 +1517,14 @@ function system_schema_cache_8007() {
         'size' => 'big',
         'not null' => FALSE,
       ),
-      'checksum' => array(
+      'checksum_invalidations' => array(
         'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'checksum_deletions' => array(
+        'description' => 'The tag deletion sum when this entry was saved.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -1631,8 +1649,14 @@ function system_update_8003() {
         'size' => 'big',
         'not null' => FALSE,
       ),
-      'checksum' => array(
+      'checksum_invalidations' => array(
         'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'checksum_deletions' => array(
+        'description' => 'The tag deletion sum when this entry was saved.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -1707,6 +1731,12 @@ function system_update_8006() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'deletions' => array(
+        'description' => 'Number incremented when the tag is deleted.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('tag'),
   );
@@ -1730,8 +1760,14 @@ function system_update_8007() {
         'size' => 'big',
         'not null' => FALSE,
       ));
-      db_add_field($table, 'checksum', array(
+      db_add_field($table, 'checksum_invalidations', array(
         'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ));
+      db_add_field($table, 'checksum_deletions', array(
+        'description' => 'The tag deletion sum when this entry was saved.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

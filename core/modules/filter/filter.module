@@ -310,7 +310,7 @@ function filter_format_save($format) {
     $return = SAVED_UPDATED;
 
     // Clear the filter cache whenever a text format is updated.
-    cache('filter')->invalidateTags(array('filter_format' => $format->format));
+    cache('filter')->deleteTags(array('filter_format' => $format->format));
   }
 
   filter_formats_reset();
@@ -340,7 +340,7 @@ function filter_format_disable($format) {
 
   // Clear the filter cache whenever a text format is disabled.
   filter_formats_reset();
-  cache('filter')->invalidateTags(array('filter_format' => $format->format));
+  cache('filter')->deleteTags(array('filter_format' => $format->format));
 }
 
 /**
@@ -487,7 +487,7 @@ function filter_formats($account = NULL) {
  * @see filter_formats()
  */
 function filter_formats_reset() {
-  cache()->invalidateTags(array('filter_formats' => TRUE));
+  cache()->deleteTags(array('filter_formats' => TRUE));
   cache()->delete('filter_list_format');
   drupal_static_reset('filter_list_format');
   drupal_static_reset('filter_formats');

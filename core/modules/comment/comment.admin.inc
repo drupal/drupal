@@ -204,7 +204,7 @@ function comment_admin_overview_submit($form, &$form_state) {
   }
   drupal_set_message(t('The update has been performed.'));
   $form_state['redirect'] = 'admin/content/comment';
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
 }
 
 /**
@@ -252,7 +252,7 @@ function comment_multiple_delete_confirm($form, &$form_state) {
 function comment_multiple_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     comment_delete_multiple(array_keys($form_state['values']['comments']));
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
     $count = count($form_state['values']['comments']);
     watchdog('content', 'Deleted @count comments.', array('@count' => $count));
     drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
@@ -311,7 +311,7 @@ function comment_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('The comment and all its replies have been deleted.'));
   watchdog('content', 'Deleted comment @cid and its replies.', array('@cid' => $comment->cid));
   // Clear the cache so an anonymous user sees that his comment was deleted.
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
 
   $form_state['redirect'] = "node/$comment->nid";
 }

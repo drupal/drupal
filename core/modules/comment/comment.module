@@ -1991,7 +1991,7 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
  */
 function comment_save_action(Comment $comment) {
   comment_save($comment);
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
   watchdog('action', 'Saved comment %title', array('%title' => $comment->subject));
 }
 

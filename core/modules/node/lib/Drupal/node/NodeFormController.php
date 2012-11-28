@@ -383,7 +383,7 @@ class NodeFormController extends EntityFormController {
     }
 
     // Clear the page and block caches.
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
   }
 
   /**

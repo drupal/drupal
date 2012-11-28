@@ -147,7 +147,7 @@ function _field_info_collate_types() {
 function _field_info_collate_types_reset() {
   drupal_static_reset('_field_info_collate_types');
   // Clear all languages.
-  cache('field')->invalidateTags(array('field_info_types' => TRUE));
+  cache('field')->deleteTags(array('field_info_types' => TRUE));
 }
 
 /**

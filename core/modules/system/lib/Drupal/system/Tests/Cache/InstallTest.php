@@ -85,7 +85,7 @@ class InstallTest extends CacheTestBase {
     $database_cache->set('cache_two', 'Two');
     $this->assertEqual($database_cache->get('cache_one')->data, 'One');
     $this->assertEqual($database_cache->get('cache_two')->data, 'Two');
-    $install_cache->flush();
+    $install_cache->deleteAll();
     $this->assertFalse($database_cache->get('cache_one'));
     $this->assertFalse($database_cache->get('cache_two'));
 
@@ -106,8 +106,8 @@ class InstallTest extends CacheTestBase {
       $install_cache->isEmpty();
       $install_cache->delete('cache_one');
       $install_cache->deleteMultiple(array('cache_one', 'cache_two'));
-      $install_cache->flush();
-      $install_cache->expire();
+      $install_cache->deleteAll();
+      $install_cache->deleteExpired();
       $install_cache->garbageCollection();
       $install_cache->invalidateTags(array('tag'));
       $this->pass("The installer's cache backend can be used even when the cache database tables are unavailable.");

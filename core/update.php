@@ -278,7 +278,7 @@ function update_info_page() {
   _drupal_flush_css_js();
   // Flush the cache of all data for the update status module.
   if (db_table_exists('cache_update')) {
-    cache('update')->flush();
+    cache('update')->deleteAll();
   }
 
   update_task_list('info');

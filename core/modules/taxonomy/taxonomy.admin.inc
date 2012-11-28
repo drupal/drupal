@@ -582,7 +582,7 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
   if (!isset($_GET['destination'])) {
     $form_state['redirect'] = 'admin/structure/taxonomy';
   }
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
   return;
 }
 
@@ -622,7 +622,7 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
   return;
 }
 

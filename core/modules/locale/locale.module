@@ -239,7 +239,7 @@ function locale_stream_wrappers() {
 function locale_language_insert($language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface.
-  cache('page')->flush();
+  cache('page')->deleteAll();
   // Force JavaScript translation file re-creation for the new language.
   _locale_invalidate_js($language->langcode);
 }
@@ -250,7 +250,7 @@ function locale_language_insert($language) {
 function locale_language_update($language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface.
-  cache('page')->flush();
+  cache('page')->deleteAll();
   // Force JavaScript translation file re-creation for the modified language.
   _locale_invalidate_js($language->langcode);
 }
@@ -269,7 +269,7 @@ function locale_language_delete($language) {
   _locale_invalidate_js($language->langcode);
 
   // Changing the language settings impacts the interface:
-  cache('page')->flush();
+  cache('page')->deleteAll();
 
   // Clearing all locale cache from database
   cache()->delete('locale:' . $language->langcode);
@@ -790,7 +790,7 @@ function _locale_refresh_translations($langcodes, $lids) {
     }
   }
   // Clear locale cache.
-  cache()->invalidateTags(array('locale' => TRUE));
+  cache()->deleteTags(array('locale' => TRUE));
 }
 
 /**

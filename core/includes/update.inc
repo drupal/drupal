@@ -228,7 +228,7 @@ function update_prepare_d8_bootstrap() {
 
       // Make sure that the bootstrap cache is cleared as that might contain
       // incompatible data structures.
-      cache('bootstrap')->flush();
+      cache('bootstrap')->deleteAll();
 
       // Retrieve all installed extensions from the {system} table.
       // Uninstalled extensions are ignored and not converted.

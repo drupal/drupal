@@ -49,7 +49,7 @@ class ProfileFormController extends AccountFormController {
 
     // Clear the page cache because pages can contain usernames and/or profile
     // information:
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
 
     drupal_set_message(t('The changes have been saved.'));
   }

@@ -835,9 +835,9 @@ function image_style_flush($style) {
 
   // Clear page caches when flushing.
   if (module_exists('block')) {
-    cache('block')->flush();
+    cache('block')->deleteAll();
   }
-  cache('page')->flush();
+  cache('page')->deleteAll();
 }
 
 /**

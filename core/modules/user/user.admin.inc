@@ -733,7 +733,7 @@ function user_admin_permissions_submit($form, &$form_state) {
   drupal_set_message(t('The changes have been saved.'));
 
   // Clear the cached pages and blocks.
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
 }
 
 /**

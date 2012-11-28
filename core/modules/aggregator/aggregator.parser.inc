@@ -45,7 +45,7 @@ function aggregator_aggregator_parse($feed) {
     $feed->modified = $modified;
 
     // Clear the page and block caches.
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
 
     return TRUE;
   }

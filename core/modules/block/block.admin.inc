@@ -207,7 +207,7 @@ function block_admin_display_form_submit($form, &$form_state) {
     throw $e;
   }
   drupal_set_message(t('The block settings have been updated.'));
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
 }
 
 /**
@@ -606,7 +606,7 @@ function block_admin_configure_submit($form, &$form_state) {
       throw $e;
     }
     drupal_set_message(t('The block configuration has been saved.'));
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
     $form_state['redirect'] = 'admin/structure/block';
   }
 }
@@ -715,7 +715,7 @@ function block_add_block_form_submit($form, &$form_state) {
   }
 
   drupal_set_message(t('The block has been created.'));
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
   $form_state['redirect'] = 'admin/structure/block';
 }
 
@@ -763,7 +763,7 @@ function block_custom_block_delete_submit($form, &$form_state) {
     ->execute();
 
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_state['values']['info'])));
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
   $form_state['redirect'] = 'admin/structure/block';
   return;
 }

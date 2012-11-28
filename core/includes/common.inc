@@ -6623,7 +6623,7 @@ function drupal_flush_all_caches() {
   // This is executed based on old/previously known information, which is
   // sufficient, since new extensions cannot have any primed caches yet.
   foreach (module_invoke_all('cache_flush') as $bin) {
-    cache($bin)->flush();
+    cache($bin)->deleteAll();
   }
 
   // Flush asset file caches.

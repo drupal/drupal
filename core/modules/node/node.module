@@ -757,7 +757,7 @@ function _node_types_build($rebuild = FALSE) {
  * Clears the node type cache.
  */
 function node_type_cache_reset() {
-  cache()->invalidateTags(array('node_types' => TRUE));
+  cache()->deleteTags(array('node_types' => TRUE));
   drupal_static_reset('_node_types_build');
 }
 
@@ -3263,7 +3263,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   if (!isset($batch)) {
     drupal_set_message(t('Content permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
-    cache_invalidate(array('content' => TRUE));
+    cache_invalidate_tags(array('content' => TRUE));
   }
 }
 
@@ -3323,7 +3323,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
   else {
     drupal_set_message(t('The content access permissions have not been properly rebuilt.'), 'error');
   }
-  cache_invalidate(array('content' => TRUE));
+  cache_invalidate_tags(array('content' => TRUE));
 }
 
 /**
