@@ -102,6 +102,12 @@ label.option {
   display: inline;
   font-weight: normal;
 }
+h4.label {
+  font-size: inherit;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
 .form-checkboxes .form-item,
 .form-radios .form-item {
   margin-top: 0.4em;
