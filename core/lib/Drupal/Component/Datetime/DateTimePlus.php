@@ -710,7 +710,7 @@ class DateTimePlus extends \DateTime {
 
         // If we're working with a non-gregorian calendar, indicate that.
         $calendar_type = \IntlDateFormatter::GREGORIAN;
-        if ($calendar != SELF::CALENDAR) {
+        if ($calendar != self::CALENDAR) {
           $calendar_type = \IntlDateFormatter::TRADITIONAL;
         }
 
