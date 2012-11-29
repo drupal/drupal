@@ -104,12 +104,12 @@ INSTALLATION
 
 3. Create the Drupal database.
 
-   Because Drupal stores all site information in a database, you must create
-   this database in order to install Drupal, and grant Drupal certain database
-   privileges (such as the ability to create tables). For details, consult
-   INSTALL.mysql.txt, INSTALL.pgsql.txt, or INSTALL.sqlite.txt. You may also
-   need to consult your web hosting provider for instructions specific to your
-   web host.
+   Because Drupal stores all site information in a database, the Drupal
+   installer will attempt to create this database for you. If you create the
+   database manually, you must grant Drupal certain database privileges (such as
+   the ability to create tables).  For details, consult INSTALL.mysql.txt,
+   INSTALL.pgsql.txt, or INSTALL.sqlite.txt. You may also need to consult your
+   web hosting provider for instructions specific to your web host.
 
    Take note of the username, password, database name, and hostname as you
    create the database. You will enter this information during the install.
