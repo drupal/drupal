@@ -323,14 +323,14 @@ const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 /**
  * $config_directories key for active directory.
  *
- * @see config_get_config_directory
+ * @see config_get_config_directory()
  */
 const CONFIG_ACTIVE_DIRECTORY = 'active';
 
 /**
  * $config_directories key for staging directory.
  *
- * @see config_get_config_directory
+ * @see config_get_config_directory()
  */
 const CONFIG_STAGING_DIRECTORY = 'staging';
 
