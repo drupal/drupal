@@ -30,11 +30,6 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 // @todo Figure out how best to handle the Kernel constructor parameters.
 $kernel = new DrupalKernel('prod', FALSE, drupal_classloader());
 
-// @todo Remove this once everything in the bootstrap has been
-//   converted to services in the DIC.
-$kernel->boot();
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
-
 // Create a request object from the HTTPFoundation.
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request)->prepare($request)->send();

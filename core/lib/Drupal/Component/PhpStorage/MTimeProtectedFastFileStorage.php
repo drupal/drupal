@@ -40,8 +40,6 @@ use DirectoryIterator;
  */
 class MTimeProtectedFastFileStorage extends FileStorage {
 
-  const HTACCESS="SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nDeny from all\nOptions None\nOptions +FollowSymLinks";
-
   /**
    * The secret used in the HMAC.
    *
@@ -146,10 +144,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       mkdir($this->directory, 0700, TRUE);
     }
     chmod($this->directory, 0700);
-    $htaccess_path =  $this->directory . '/.htaccess';
-    if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, self::HTACCESS)) {
-      @chmod($htaccess_path, 0444);
-    }
+    file_save_htaccess($this->directory);
   }
 
   /**

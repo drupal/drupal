@@ -8,7 +8,6 @@
 namespace Drupal\simpletest;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\DrupalKernel;
 use ReflectionMethod;
@@ -820,9 +819,7 @@ abstract class TestBase {
     $this->originalContainer = clone drupal_container();
     $this->originalLanguage = $language_interface;
     $this->originalConfigDirectories = $GLOBALS['config_directories'];
-    if (isset($GLOBALS['theme_key'])) {
-      $this->originalThemeKey = $GLOBALS['theme_key'];
-    }
+    $this->originalThemeKey = isset($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : NULL;
     $this->originalTheme = isset($GLOBALS['theme']) ? $GLOBALS['theme'] : NULL;
 
     // Save further contextual information.
@@ -876,8 +873,7 @@ abstract class TestBase {
     }
 
     // Reset and create a new service container.
-    $this->container = new ContainerBuilder();
-    drupal_container($this->container);
+    $this->container = drupal_container(NULL, TRUE);
 
     // Unset globals.
     unset($GLOBALS['theme_key']);
@@ -910,6 +906,9 @@ abstract class TestBase {
    *   enabled modules to be immediately available in the same request.
    */
   protected function rebuildContainer() {
+    // DrupalKernel expects to merge a fresh bootstrap container, not remerge
+    // what is left over from a prior container build.
+    drupal_container(NULL, TRUE);
     // Create a new DrupalKernel for testing purposes, now that all required
     // modules have been enabled. This also stores a new dependency injection
     // container in drupal_container(). Drupal\simpletest\TestBase::tearDown()
@@ -967,13 +966,11 @@ abstract class TestBase {
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
     simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
-    if (($container = drupal_container()) && $container->has('keyvalue')) {
-      $captured_emails = state()->get('system.test_email_collector') ?: array();
-      $emailCount = count($captured_emails);
-      if ($emailCount) {
-        $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');
-        $this->pass($message, t('E-mail'));
-      }
+    $captured_emails = state()->get('system.test_email_collector') ?: array();
+    $emailCount = count($captured_emails);
+    if ($emailCount) {
+      $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');
+      $this->pass($message, t('E-mail'));
     }
 
     // Delete temporary files directory.
@@ -988,9 +985,7 @@ abstract class TestBase {
     $databases['default']['default'] = $connection_info['default'];
 
     // Restore original globals.
-    if (isset($this->originalThemeKey)) {
-      $GLOBALS['theme_key'] = $this->originalThemeKey;
-    }
+    $GLOBALS['theme_key'] = $this->originalThemeKey;
     $GLOBALS['theme'] = $this->originalTheme;
 
     // Reset all static variables.

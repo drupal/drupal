@@ -8,7 +8,6 @@
 namespace Drupal\simpletest;
 
 use Drupal\Core\DrupalKernel;
-use Symfony\Component\DependencyInjection\Reference;
 use Drupal\Core\Database\Database;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -130,21 +129,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     $conf['keyvalue_default'] = 'keyvalue.memory';
     $container
       ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
-    if (!$container->has('keyvalue')) {
-      // TestBase::setUp puts a completely empty container in
-      // drupal_container() which is somewhat the mirror of the empty
-      // environment being set up. Unit tests need not to waste time with
-      // getting a container set up for them. Drupal Unit Tests might just get
-      // away with a simple container holding the absolute bare minimum. When
-      // a kernel is overridden then there's no need to re-register the keyvalue
-      // service but when a test is happy with the superminimal container put
-      // together here, it still might a keyvalue storage for anything (for 
-      // eg. module_enable) using state() -- that's why a memory service was
-      // added in the first place.
-      $container
-        ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
-        ->addArgument(new Reference('service_container'));
-    }
   }
 
   /**

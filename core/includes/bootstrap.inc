@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
@@ -129,44 +128,39 @@ const WATCHDOG_DEBUG = 7;
 const DRUPAL_BOOTSTRAP_CONFIGURATION = 0;
 
 /**
- * Second bootstrap phase, initalize a kernel.
+ * Second bootstrap phase: try to serve a cached page.
  */
-const DRUPAL_BOOTSTRAP_KERNEL = 1;
+const DRUPAL_BOOTSTRAP_PAGE_CACHE = 1;
 
 /**
- * Third bootstrap phase: try to serve a cached page.
+ * Third bootstrap phase: initialize database layer.
  */
-const DRUPAL_BOOTSTRAP_PAGE_CACHE = 2;
+const DRUPAL_BOOTSTRAP_DATABASE = 2;
 
 /**
- * Fourth bootstrap phase: initialize database layer.
+ * Fourth bootstrap phase: initialize the variable system.
  */
-const DRUPAL_BOOTSTRAP_DATABASE = 3;
+const DRUPAL_BOOTSTRAP_VARIABLES = 3;
 
 /**
- * Fifth bootstrap phase: initialize the variable system.
+ * Fifth bootstrap phase: initialize session handling.
  */
-const DRUPAL_BOOTSTRAP_VARIABLES = 4;
+const DRUPAL_BOOTSTRAP_SESSION = 4;
 
 /**
- * Sixth bootstrap phase: initialize session handling.
+ * Sixth bootstrap phase: set up the page header.
  */
-const DRUPAL_BOOTSTRAP_SESSION = 5;
+const DRUPAL_BOOTSTRAP_PAGE_HEADER = 5;
 
 /**
- * Seventh bootstrap phase: set up the page header.
+ * Seventh bootstrap phase: load code for subsystems and modules.
  */
-const DRUPAL_BOOTSTRAP_PAGE_HEADER = 6;
-
-/**
- * Eighth bootstrap phase: load code for subsystems and modules.
- */
-const DRUPAL_BOOTSTRAP_CODE = 7;
+const DRUPAL_BOOTSTRAP_CODE = 6;
 
 /**
  * Final bootstrap phase: initialize language, path, theme, and modules.
  */
-const DRUPAL_BOOTSTRAP_FULL = 8;
+const DRUPAL_BOOTSTRAP_FULL = 7;
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -2111,7 +2105,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   // Not drupal_static(), because does not depend on any run-time information.
   static $phases = array(
     DRUPAL_BOOTSTRAP_CONFIGURATION,
-    DRUPAL_BOOTSTRAP_KERNEL,
     DRUPAL_BOOTSTRAP_PAGE_CACHE,
     DRUPAL_BOOTSTRAP_DATABASE,
     DRUPAL_BOOTSTRAP_VARIABLES,
@@ -2122,15 +2115,14 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   );
   // Not drupal_static(), because the only legitimate API to control this is to
   // call drupal_bootstrap() with a new phase parameter.
-  static $final_phase = -1;
+  static $final_phase;
   // Not drupal_static(), because it's impossible to roll back to an earlier
   // bootstrap state.
   static $stored_phase = -1;
 
-  // When not recursing, store the phase name so it's not forgotten during
-  // recursion. Additionally, ensure that $final_phase is never rolled back to an
-  // earlier bootstrap state.
-  if ($new_phase && $phase > $final_phase) {
+  // When not recursing, store the phase name so it's not forgotten while
+  // recursing.
+  if ($new_phase) {
     $final_phase = $phase;
   }
   if (isset($phase)) {
@@ -2148,10 +2140,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
       switch ($current_phase) {
         case DRUPAL_BOOTSTRAP_CONFIGURATION:
           _drupal_bootstrap_configuration();
-          break;
-
-        case DRUPAL_BOOTSTRAP_KERNEL:
-          _drupal_bootstrap_kernel();
           break;
 
         case DRUPAL_BOOTSTRAP_PAGE_CACHE:
@@ -2283,18 +2271,6 @@ function _drupal_bootstrap_configuration() {
   if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     install_goto('core/install.php');
-  }
-}
-
-/**
- * Initialize the kernel / service container.
- */
-function _drupal_bootstrap_kernel() {
-  // Normally, index.php puts a container in drupal_container() by creating a
-  // kernel. If there is no container yet, create one.
-  if (!drupal_container()) {
-    $kernel = new DrupalKernel('prod', FALSE, drupal_classloader());
-    $kernel->boot();
   }
 }
 
@@ -2434,27 +2410,90 @@ function drupal_get_bootstrap_phase() {
 /**
  * Retrieves the Drupal Container to standardize object construction.
  *
- * The container is built by the kernel and passed in to this function which
- * stores it statically. The container always contains the services from
- * \Drupal\Core\CoreBundle, the bundles of enabled modules and any other
- * bundles defined in $GLOBALS['conf']['container_bundles'].
+ * On a normal page request the container is built by the kernel and passed in
+ * to this function which stores it statically. Any full bootstrap outside of
+ * the context of a page request will require a container with a minimal set of
+ * services. If this function is called without the $rebuild parameter, and no
+ * container object has been statically cached, it builds this minimal container,
+ * registering the services that are required.
  *
  * @see Drupal\Core\DrupalKernel
  *
  * @param Symfony\Component\DependencyInjection\Container $new_container
- *   (optional) A new container instance to replace the current.
+ *   A new container instance to replace the current.
+ * @param bool $rebuild
+ *   (optional) Internal use only. Whether to enforce a rebuild of the container.
+ *   Used by the testing framework to inject a fresh container for unit tests.
  *
- * @return Symfony\Component\DependencyInjection\Container|bool
+ * @return Symfony\Component\DependencyInjection\Container
  *   The instance of the Container used to set up and maintain object
- *   instances or FALSE if none exist yet.
+ *   instances.
  */
-function drupal_container(Container $new_container = NULL) {
+function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
   // We do not use drupal_static() here because we do not have a mechanism by
   // which to reinitialize the stored objects, so a drupal_static_reset() call
   // would leave Drupal in a nonfunctional state.
-  static $container;
+  static $container = NULL;
+  if ($rebuild) {
+    $container = NULL;
+  }
   if (isset($new_container)) {
     $container = $new_container;
+  }
+  if (!isset($container)) {
+    // This is only ever used by the installer and by run-tests.sh.
+    // @todo Remove this entire section once these have been converted to use a
+    //   kernel.
+    $container = new ContainerBuilder();
+
+    // Register active configuration storage.
+    $container
+      ->register('config.cachedstorage.storage', 'Drupal\Core\Config\FileStorage')
+      ->addArgument(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
+    // @todo Replace this with a cache.factory service plus 'config' argument.
+    $container
+      ->register('cache.config', 'Drupal\Core\Cache\CacheBackendInterface')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('config');
+
+    $container
+      ->register('config.storage', 'Drupal\Core\Config\CachedStorage')
+      ->addArgument(new Reference('config.cachedstorage.storage'))
+      ->addArgument(new Reference('cache.config'));
+
+    // Register configuration object factory.
+    $container->register('config.subscriber.globalconf', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
+    $container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher')
+      ->addMethodCall('addSubscriber', array(new Reference('config.subscriber.globalconf')));
+    $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
+      ->addArgument(new Reference('config.storage'))
+      ->addArgument(new Reference('dispatcher'));
+
+    // Register staging configuration storage.
+    $container
+      ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
+      ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+
+    // Register the service for the default database connection.
+    $container->register('database', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('default');
+    // Register the KeyValueStore factory.
+    $container
+      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
+      ->addArgument(new Reference('service_container'));
+    $container
+      ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
+      ->addArgument(new Reference('database'));
+
+    $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('keyvalue'));
+
+    // Register the EntityManager.
+    $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
   }
   return $container;
 }
