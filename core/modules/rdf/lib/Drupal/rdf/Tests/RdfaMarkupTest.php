@@ -99,7 +99,7 @@ class RdfaMarkupTest extends WebTestBase {
    */
   function testAttributesInMarkupFile() {
     // Create a user to post the image.
-    $admin_user = $this->drupalCreateUser(array('edit own article content', 'revert revisions', 'administer content types'));
+    $admin_user = $this->drupalCreateUser(array('edit own article content', 'revert article revisions', 'administer content types'));
     $this->drupalLogin($admin_user);
 
     $langcode = LANGUAGE_NOT_SPECIFIED;

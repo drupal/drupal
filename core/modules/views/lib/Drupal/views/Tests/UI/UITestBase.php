@@ -28,7 +28,7 @@ abstract class UITestBase extends ViewTestBase {
 
     $this->adminUser = $this->drupalCreateUser(array('administer views'));
 
-    $views_admin = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view revisions'));
+    $views_admin = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view all revisions'));
     $this->drupalLogin($views_admin);
   }
 

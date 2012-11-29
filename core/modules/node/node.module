@@ -1219,14 +1219,16 @@ function node_permission() {
     'view own unpublished content' => array(
       'title' => t('View own unpublished content'),
     ),
-    'view revisions' => array(
-      'title' => t('View content revisions'),
+    'view all revisions' => array(
+      'title' => t('View all revisions'),
     ),
-    'revert revisions' => array(
-      'title' => t('Revert content revisions'),
+    'revert all revisions' => array(
+      'title' => t('Revert all revisions'),
+      'description' => t('Role requires permission <em>view revisions</em> and <em>edit rights</em> for nodes in question, or <em>administer nodes</em>.'),
     ),
-    'delete revisions' => array(
-      'title' => t('Delete content revisions'),
+    'delete all revisions' => array(
+      'title' => t('Delete all revisions'),
+      'description' => t('Role requires permission to <em>view revisions</em> and <em>delete rights</em> for nodes in question, or <em>administer nodes</em>.'),
     ),
   );
 
@@ -1531,12 +1533,17 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL, $langc
   $access = &drupal_static(__FUNCTION__, array());
 
   $map = array(
-    'view' => 'view revisions',
-    'update' => 'revert revisions',
-    'delete' => 'delete revisions',
+    'view' => 'view all revisions',
+    'update' => 'revert all revisions',
+    'delete' => 'delete all revisions',
+  );
+  $type_map = array(
+    'view' => "view $node->type revisions",
+    'update' => "revert $node->type revisions",
+    'delete' => "delete $node->type revisions",
   );
 
-  if (!$node || !isset($map[$op])) {
+  if (!$node || !isset($map[$op]) || !isset($type_map[$op])) {
     // If there was no node to check against, or the $op was not one of the
     // supported ones, we return access denied.
     return FALSE;
@@ -1557,7 +1564,7 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL, $langc
 
   if (!isset($access[$cid])) {
     // Perform basic permission checks first.
-    if (!user_access($map[$op], $account) && !user_access('administer nodes', $account)) {
+    if (!user_access($map[$op], $account) && !user_access($type_map[$op], $account) && !user_access('administer nodes', $account)) {
       return $access[$cid] = FALSE;
     }
 
@@ -2860,6 +2867,17 @@ function node_list_permissions($type) {
     ),
     "delete any $type->type content" => array(
       'title' => t('%type_name: Delete any content', array('%type_name' => $type->name)),
+    ),
+    "view $type->type revisions" => array(
+      'title' => t('%type_name: View revisions', array('%type_name' => $type->name)),
+    ),
+    "revert $type->type revisions" => array(
+      'title' => t('%type_name: Revert revisions', array('%type_name' => $type->name)),
+      'description' => t('Role requires permission <em>view revisions</em> and <em>edit rights</em> for nodes in question, or <em>administer nodes</em>.'),
+    ),
+    "delete $type->type revisions" => array(
+      'title' => t('%type_name: Delete revisions', array('%type_name' => $type->name)),
+      'description' => t('Role requires permission to <em>view revisions</em> and <em>delete rights</em> for nodes in question, or <em>administer nodes</em>.'),
     ),
   );
   return $perms;

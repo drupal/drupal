@@ -719,6 +719,21 @@ function node_update_8012() {
 
 
 /**
+ * Renames global revision permissions to use the word 'all'.
+ */
+function node_update_8013() {
+  $actions = array('view', 'delete', 'revert');
+
+  foreach ($actions as $action) {
+    db_update('role_permission')
+      ->fields(array('permission' => $action . ' all revisions'))
+      ->condition('permission', $action . ' revisions')
+      ->condition('module', 'node')
+      ->execute();
+  }
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x"
  * The next series of updates should start at 9000.
  */

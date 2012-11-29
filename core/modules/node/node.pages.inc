@@ -255,16 +255,19 @@ function node_revision_overview($node) {
   $revisions = node_revision_list($node);
 
   $rows = array();
+  $type = $node->type;
+
   $revert_permission = FALSE;
-  if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
+  if ((user_access("revert $type revisions") || user_access('revert all revisions') || user_access('administer nodes')) && node_access('update', $node)) {
     $revert_permission = TRUE;
   }
   $delete_permission = FALSE;
-  if ((user_access('delete revisions') || user_access('administer nodes')) && node_access('delete', $node)) {
+  if ((user_access("delete $type revisions") || user_access('delete all revisions') || user_access('administer nodes')) && node_access('delete', $node)) {
     $delete_permission = TRUE;
   }
   foreach ($revisions as $revision) {
     $row = array();
+    $type = $node->type;
     if ($revision->current_vid > 0) {
       $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', array('account' => $revision))))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
