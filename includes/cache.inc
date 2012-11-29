@@ -101,7 +101,7 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *  - cache_menu: Stores the structure of visible navigation menus per page.
  *
  *  - cache_page: Stores generated pages for anonymous users. It is flushed
- *  very often, whenever a page changes, at least for every ode and comment
+ *  very often, whenever a page changes, at least for every node and comment
  *  submission. This is the only bin affected by the page cache setting on
  *  the administrator panel.
  *
