@@ -106,6 +106,7 @@ class Layout implements DerivativeInterface {
         $this->derivatives[$key] = $directory->read($fileinfo->getBasename('.yml'));
         $this->derivatives[$key]['theme'] = $key;
         $this->derivatives[$key]['path'] = $fileinfo->getPath();
+        $this->derivatives[$key]['provider'] = $provider;
         // If the layout author didn't specify a template name, assume the same
         // name as the yml file.
         if (!isset($this->derivatives[$key]['template'])) {

@@ -6,6 +6,55 @@
  */
 
 /**
+ * Implements hook_menu().
+ */
+function layout_menu() {
+  $items['admin/structure/templates'] = array(
+    'title' => 'Templates',
+    'description' => 'Overview of the list of layout templates available.',
+    'page callback' => 'layout_page_list',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer layouts'),
+    'file' => 'layout.admin.inc',
+  );
+  $items['admin/structure/templates/manage/%'] = array(
+    'title' => 'View template',
+    'page callback' => 'layout_page_view',
+    'page arguments' => array(4),
+    'access callback' => 'layout_user_access',
+    'access arguments' => array(4),
+    'file' => 'layout.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Access callback: Checks the existence of a layout.
+ *
+ * @param string $key
+ *   The key of the page layout being requested.
+ *
+ * @return bool
+ *   TRUE if the current user can access page layout menu items; FALSE
+ *   otherwise.
+ */
+function layout_user_access($key) {
+  return (user_access('administer layouts') && layout_manager()->getDefinition($key));
+}
+
+/**
+ * Implements hook_permission().
+ */
+function layout_permission() {
+  return array(
+    'administer layouts' => array(
+      'title' => t('Administer templates'),
+      'description' => t('Access administration functions for templates.'),
+    ),
+  );
+}
+
+/**
  * Get the layout plugin manager instance.
  *
  * @return Drupal\layout\Plugin\Type\LayoutManager

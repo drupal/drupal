@@ -52,7 +52,7 @@ class LayoutDerivativesTest extends WebTestBase {
 
     // Render the layout and look at whether expected region names and classes
     // were in the output.
-    $render = $layout->renderLayout();
+    $render = $this->renderLayoutDemonstration($layout);
     $this->drupalSetContent($render);
     $this->assertText('Middle column');
     $this->assertRaw('class="layout-display layout-one-col');
@@ -68,11 +68,30 @@ class LayoutDerivativesTest extends WebTestBase {
 
     // Render the layout and look at whether expected region names and classes
     // were in the output.
-    $render = $layout->renderLayout();
+    $render = $this->renderLayoutDemonstration($layout);
     $this->drupalSetContent($render);
     $this->assertText('Left side');
     $this->assertText('Right side');
     $this->assertRaw('<div class="layout-region layout-col-right">');
+  }
+
+  /**
+   * Renders the layout with sample region content.
+   *
+   * @param \Drupal\layout\Plugin\LayoutInterface $layout
+   *   The layout to be rendered.
+   *
+   * @return string
+   *   Rendered HTML output from the layout.
+   */
+  function renderLayoutDemonstration($layout) {
+    // Add sample content in the regions that is looked for in the tests.
+    $regions = $layout->getRegions();
+    foreach ($regions as $region => $info) {
+      $regions[$region] = '<h3>' . $info['label'] . '</h3>';
+    }
+
+    return $layout->renderLayout(FALSE, $regions);
   }
 
   /**

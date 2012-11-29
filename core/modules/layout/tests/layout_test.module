@@ -27,11 +27,19 @@ function layout_test_page() {
   global $theme;
   $theme = 'layout_test_theme';
   theme_enable(array($theme));
+
   $display = entity_load('display', 'test_twocol');
   $layout = $display->getLayoutInstance();
+
   // @todo This tests that the layout can render its regions, but does not test
   //   block rendering: http://drupal.org/node/1812720.
-  return $layout->renderLayout();
+  // Add sample content in the regions that is looked for in the tests.
+  $regions = $layout->getRegions();
+  foreach ($regions as $region => $info) {
+    $regions[$region] = '<h3>' . $info['label'] . '</h3>';
+  }
+
+  return $layout->renderLayout(FALSE, $regions);
 }
 
 /**

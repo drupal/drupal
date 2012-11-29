@@ -78,7 +78,7 @@ class StaticLayout extends PluginBase implements LayoutInterface {
   /**
    * Implements Drupal\layout\Plugin\LayoutInterface::renderLayout().
    */
-  public function renderLayout($admin = FALSE) {
+  public function renderLayout($admin = FALSE, $regions = array()) {
     $definition = $this->getDefinition();
 
     // Assemble a render array with the regions and attached CSS/JS.
@@ -89,10 +89,8 @@ class StaticLayout extends PluginBase implements LayoutInterface {
 
     // Render all regions needed for this layout.
     foreach ($this->getRegions() as $region => $info) {
-      // @todo This is just stub code to fill in regions with stuff for now.
-      // When blocks are related to layouts and not themes, we can make this
-      // really be filled in with blocks.
-      $build['#content'][$region] = '<h3>' . $info['label'] . '</h3>';
+      // Initialize regions which were not provided as empty.
+      $build['#content'][$region] = empty($regions[$region]) ? '' : $regions[$region];
     }
 
     // Fill in attached CSS and JS files based on metadata.
