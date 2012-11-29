@@ -70,10 +70,10 @@ function field_test_field_storage_details_alter(&$details, $field) {
  */
 function _field_test_storage_data($data = NULL) {
   if (!isset($data)) {
-    return variable_get('field_test_storage_data', array());
+    return state()->get('field_test.storage_data');
   }
   else {
-    variable_set('field_test_storage_data', $data);
+    state()->set('field_test.storage_data', $data);
   }
 }
 

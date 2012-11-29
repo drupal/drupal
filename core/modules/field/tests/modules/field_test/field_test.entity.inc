@@ -30,7 +30,7 @@ function field_test_entity_info_alter(&$entity_info) {
           'custom_settings' => TRUE,
         ),
       );
-      $entity_info[$entity_type]['bundles'] = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+      $entity_info[$entity_type]['bundles'] = state()->get('field_test_bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
       if ($entity_type == 'test_entity_bundle') {
         $entity_info[$entity_type]['bundles'] += array('test_entity_2' => array('label' => 'Test entity 2'));
       }
@@ -64,9 +64,9 @@ function field_test_entity_info_translatable($entity_type = NULL, $translatable 
  *   name will be used.
  */
 function field_test_create_bundle($bundle, $text = NULL) {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+  $bundles = state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
   $bundles += array($bundle => array('label' => $text ? $text : $bundle));
-  variable_set('field_test_bundles', $bundles);
+  state()->set('field_test.bundles', $bundles);
 
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
@@ -85,10 +85,10 @@ function field_test_create_bundle($bundle, $text = NULL) {
  *   The new machine-readable name of the bundle.
  */
 function field_test_rename_bundle($bundle_old, $bundle_new) {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+  $bundles = state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
   $bundles[$bundle_new] = $bundles[$bundle_old];
   unset($bundles[$bundle_old]);
-  variable_set('field_test_bundles', $bundles);
+  state()->set('field_test.bundles', $bundles);
 
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
@@ -105,9 +105,9 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
  *   The machine-readable name of the bundle to delete.
  */
 function field_test_delete_bundle($bundle) {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+  $bundles = state()->get('field_test.bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
   unset($bundles[$bundle]);
-  variable_set('field_test_bundles', $bundles);
+  state()->set('field_test.bundles', $bundles);
 
   $info = entity_get_info();
   foreach ($info as $type => $type_info) {
