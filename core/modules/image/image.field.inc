@@ -22,7 +22,9 @@ function image_field_info() {
         'file_directory' => '',
         'max_filesize' => '',
         'alt_field' => 0,
+        'alt_field_required' => 0,
         'title_field' => 0,
+        'title_field_required' => 0,
         'max_resolution' => '',
         'min_resolution' => '',
         'default_image' => 0,
@@ -139,7 +141,18 @@ function image_field_instance_settings_form($field, $instance) {
     '#title' => t('Enable <em>Alt</em> field'),
     '#default_value' => $settings['alt_field'],
     '#description' => t('The alt attribute may be used by search engines, screen readers, and when the image cannot be loaded.'),
+    '#weight' => 9,
+  );
+  $form['alt_field_required'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('<em>Alt</em> field required'),
+    '#default_value' => $settings['alt_field_required'],
     '#weight' => 10,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="instance[settings][alt_field]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
   $form['title_field'] = array(
     '#type' => 'checkbox',
@@ -148,6 +161,18 @@ function image_field_instance_settings_form($field, $instance) {
     '#description' => t('The title attribute is used as a tooltip when the mouse hovers over the image.'),
     '#weight' => 11,
   );
+  $form['title_field_required'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('<em>Title</em> field required'),
+    '#default_value' => $settings['title_field_required'],
+    '#weight' => 12,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="instance[settings][title_field]"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
 
   // Add the default image to the instance.
   $form['default_image'] = array(
@@ -316,6 +341,10 @@ function image_field_widget_process($element, &$form_state, $form) {
     );
   }
 
+  // Get field settings.
+  $instance = field_widget_instance($element, $form_state);
+  $settings = $instance['settings'];
+
   // Add the additional alt and title fields.
   $element['alt'] = array(
     '#title' => t('Alternate text'),
@@ -326,6 +355,7 @@ function image_field_widget_process($element, &$form_state, $form) {
     '#maxlength' => 512,
     '#weight' => -2,
     '#access' => (bool) $item['fid'] && $element['#alt_field'],
+    '#element_validate' => $settings['alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
   );
   $element['title'] = array(
     '#type' => 'textfield',
@@ -335,9 +365,37 @@ function image_field_widget_process($element, &$form_state, $form) {
     '#maxlength' => 1024,
     '#weight' => -1,
     '#access' => (bool) $item['fid'] && $element['#title_field'],
+    '#element_validate' => $settings['alt_field_required'] == 1 ? array('_image_field_required_fields_validate') : array(),
   );
 
   return $element;
+}
+
+/**
+ * Validate callback for alt and title field, if the user wants them required.
+ *
+ * This is separated in a validate function instead of a #required flag to avoid
+ * being validated on the process callback.
+ */
+function _image_field_required_fields_validate($element, &$form_state) {
+  // Only do validation if the function is triggered from other places than
+  // the image process form.
+  if (!in_array('file_managed_file_submit', $form_state['triggering_element']['#submit'])) {
+    // If the image is not there, we do not check for empty values.
+    $parents = $element['#parents'];
+    $field = array_pop($parents);
+    $image_field = drupal_array_get_nested_value($form_state['input'], $parents);
+    // We check for the array key, so that it can be NULL (like if the user
+    // submits the form without using the "upload" button).
+    if (!array_key_exists($field, $image_field)) {
+      return;
+    }
+    // Check if field is left emtpy.
+    elseif (empty($image_field[$field])) {
+      form_error($element, t('The field !title is required', array('!title' => $element['#title'])));
+      return;
+    }
+  }
 }
 
 /**

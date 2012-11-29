@@ -53,4 +53,24 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($image_that_is_too_big, $field_name, 'article');
     $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'), 'Image exceeding max resolution was properly resized.');
   }
+
+  /**
+   * Test that required alt/title fields gets validated right.
+   */
+  function testRequiredAttributes() {
+    $field_name = strtolower($this->randomName());
+    $instance_settings = array(
+      'alt_field' => 1,
+      'alt_field_required' => 1,
+      'title_field' => 1,
+      'title_field_required' => 1,
+    );
+    $this->createImageField($field_name, 'article', array(), $instance_settings);
+    $images = $this->drupalGetTestFiles('image');
+    // Let's just use the first image.
+    $image = $images[0];
+    $nid = $this->uploadNodeImage($image, $field_name, 'article');
+    $this->assertText(t('The field Alternate text is required'), 'Node save failed when alt text required was set and alt text was left empty.');
+    $this->assertText(t('The field Title is required'), 'Node save failed when title text required was set and title text was left empty.');
+  }
 }
