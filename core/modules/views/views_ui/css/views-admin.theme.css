@@ -608,8 +608,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   margin-right: 0.75em;
 }
 
-#views-ui-preview-form .form-type-textfield .description {
-  white-space: nowrap;
+@media screen and (min-width:45em) { /* 720px */
+  #views-ui-preview-form .form-type-textfield .description {
+    white-space: nowrap;
+  }
 }
 
 /* @end */

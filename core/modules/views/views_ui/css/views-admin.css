@@ -208,13 +208,20 @@
 /* @group Attachment configuration columns */
 
 .views-display-columns > * {
-  float: left; /* LTR */
-  margin-left: 2%; /* LTR */
-  width: 32%;
+  margin-bottom: 2em;
 }
 
-.views-display-columns > *:first-child {
-  margin-left: 0; /* LTR */
+@media screen and (min-width:45em) { /* 720px */
+  .views-display-columns > * {
+    float: left; /* LTR */
+    margin-left: 2%; /* LTR */
+    margin-bottom: 0;
+    width: 32%;
+  }
+
+  .views-display-columns > *:first-child {
+    margin-left: 0; /* LTR */
+  }
 }
 
 /* @end */

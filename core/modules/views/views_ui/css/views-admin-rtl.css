@@ -57,14 +57,16 @@
 
 /* @group Attachment configuration columns */
 
-.views-display-columns > * {
-  float: right;
-  margin-left: 0;
-  margin-right: 2%;;
-}
+@media screen and (min-width:45em) { /* 720px */
+  .views-display-columns > * {
+    float: right;
+    margin-left: 0;
+    margin-right: 2%;
+  }
 
-.views-display-columns > *:first-child {
-  margin-right: 0;
+  .views-display-columns > *:first-child {
+    margin-right: 0;
+  }
 }
 
 /* @end */
