@@ -158,11 +158,6 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     }
     $this->initializeContainer();
     $this->booted = TRUE;
-    // @todo Remove this once everything in the bootstrap has been converted to
-    //   services in the DIC.
-    drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
-    // Now that full bootstrap is complete, we can dump the container if it
-    // was just rebuilt.
     if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, $this->getContainerBaseClass())) {
       watchdog('DrupalKernel', 'Container cannot be written to disk');
     }

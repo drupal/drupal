@@ -30,11 +30,6 @@ class DrupalKernelTest extends UnitTestBase {
    * Tests DIC compilation.
    */
   function testCompileDIC() {
-    // Because we'll be instantiating a new kernel during this test, the
-    // container stored in drupal_container() will be updated as a side effect.
-    // We need to be able to restore it to the correct one at the end of this
-    // test.
-    $original_container = drupal_container();
     $classloader = drupal_classloader();
     global $conf;
     $conf['php_storage']['service_container']= array(
@@ -63,9 +58,6 @@ class DrupalKernelTest extends UnitTestBase {
       !$refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
     $this->assertTrue($is_compiled_container);
 
-    // Reset the container.
-    drupal_container(NULL, TRUE);
-
     // Now use the read-only storage implementation, simulating a "production"
     // environment.
     $conf['php_storage']['service_container']['class'] = 'Drupal\Component\PhpStorage\FileReadOnlyStorage';
@@ -89,9 +81,6 @@ class DrupalKernelTest extends UnitTestBase {
     // modules.
     $this->assertFalse($container->has('bundle_test_class'));
 
-    // Reset the container.
-    drupal_container(NULL, TRUE);
-
     // Add another module so that we can test that the new module's bundle is
     // registered to the new container.
     $module_enabled['bundle_test'] = 'bundle_test';
@@ -113,8 +102,5 @@ class DrupalKernelTest extends UnitTestBase {
     $classloader = $container->get('class_loader');
     $refClass = new ReflectionClass($classloader);
     $this->assertTrue($refClass->hasMethod('getNamespaces'), 'Container has a classloader');
-
-    // Restore the original container.
-    drupal_container($original_container);
   }
 }
