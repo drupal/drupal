@@ -153,14 +153,14 @@ function file_test_reset() {
     'move' => array(),
     'delete' => array(),
   );
-  variable_set('file_test_results', $results);
+  state()->set('file_test.results', $results);
 
   // These hooks will return these values, see file_test_set_return().
   $return = array(
     'validate' => array(),
     'download' => NULL,
   );
-  variable_set('file_test_return', $return);
+  state()->set('file_test.return', $return);
 }
 
 /**
@@ -178,7 +178,7 @@ function file_test_reset() {
  * @see file_test_reset()
  */
 function file_test_get_calls($op) {
-  $results = variable_get('file_test_results', array());
+  $results = state()->get('file_test.results') ?: array();
   return $results[$op];
 }
 
@@ -191,7 +191,7 @@ function file_test_get_calls($op) {
  *   passed to each call.
  */
 function file_test_get_all_calls() {
-  return variable_get('file_test_results', array());
+  return state()->get('file_test.results') ?: array();
 }
 
 /**
@@ -207,9 +207,9 @@ function file_test_get_all_calls() {
  * @see file_test_reset()
  */
 function _file_test_log_call($op, $args) {
-  $results = variable_get('file_test_results', array());
+  $results = state()->get('file_test.results') ?: array();
   $results[$op][] = $args;
-  variable_set('file_test_results', $results);
+  state()->set('file_test.results', $results);
 }
 
 /**
@@ -225,7 +225,7 @@ function _file_test_log_call($op, $args) {
  * @see file_test_reset()
  */
 function _file_test_get_return($op) {
-  $return = variable_get('file_test_return', array($op => NULL));
+  $return = state()->get('file_test.return') ?: array($op => NULL);
   return $return[$op];
 }
 
@@ -241,9 +241,9 @@ function _file_test_get_return($op) {
  * @see file_test_reset()
  */
 function file_test_set_return($op, $value) {
-  $return = variable_get('file_test_return', array());
+  $return = state()->get('file_test.return') ?: array();
   $return[$op] = $value;
-  variable_set('file_test_return', $return);
+  state()->set('file_test.return', $return);
 }
 
 /**
@@ -315,7 +315,7 @@ function file_test_file_predelete(File $file) {
 function file_test_file_url_alter(&$uri) {
   // Only run this hook when this variable is set. Otherwise, we'd have to add
   // another hidden test module just for this hook.
-  $alter_mode = variable_get('file_test_hook_file_url_alter', FALSE);
+  $alter_mode = state()->get('file_test.hook_file_url_alter');
   if (!$alter_mode) {
     return;
   }
