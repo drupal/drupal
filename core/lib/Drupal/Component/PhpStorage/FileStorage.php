@@ -83,6 +83,10 @@ class FileStorage implements PhpStorageInterface {
    * Implements Drupal\Component\PhpStorage\PhpStorageInterface::deleteAll().
    */
   function deleteAll() {
+    // @todo remove this to properly decouple this class from Drupal.
+    if (!function_exists('file_unmanaged_delete_recursive')) {
+      include_once DRUPAL_ROOT . '/core/includes/file.inc';
+    }
     return file_unmanaged_delete_recursive($this->directory, array(__CLASS__, 'filePreDeleteCallback'));
   }
 

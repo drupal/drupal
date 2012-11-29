@@ -5,10 +5,12 @@
  * API for handling file uploads and server file management.
  */
 
+use Drupal\Core\StreamWrapper\LocalStream;
+use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Drupal\Core\StreamWrapper\LocalStream;
+
 /**
  * Stream wrapper bit flags that are the basis for composite types.
  *
@@ -558,7 +560,7 @@ function file_save_htaccess($directory, $private = TRUE) {
 
   if ($private) {
     // Private .htaccess file.
-    $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nDeny from all\nOptions None\nOptions +FollowSymLinks";
+    $htaccess_lines = MTimeProtectedFastFileStorage::HTACCESS;
   }
   else {
     // Public .htaccess file.

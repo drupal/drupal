@@ -134,6 +134,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     $this->variable_set('site_mail', 'simpletest@example.com');
 
     drupal_set_time_limit($this->timeLimit);
+    $this->rebuildContainer();
     $this->setup = TRUE;
   }
 

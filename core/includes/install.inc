@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\DrupalKernel;
 use Drupal\locale\Gettext;
 
 /**
@@ -421,6 +422,9 @@ function drupal_verify_profile($install_state) {
 function drupal_install_system() {
   // Create tables.
   drupal_install_schema('system');
+  // Immediately boot a kernel to have real services ready.
+  $kernel = new DrupalKernel('install', FALSE, drupal_classloader(), FALSE);
+  $kernel->boot();
 
   $system_path = drupal_get_path('module', 'system');
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';

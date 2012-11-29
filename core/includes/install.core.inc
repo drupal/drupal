@@ -288,6 +288,9 @@ function install_begin_request(&$install_state) {
 
   // Determine whether the configuration system is ready to operate.
   $install_state['config_verified'] = install_verify_config_directory(CONFIG_ACTIVE_DIRECTORY) && install_verify_config_directory(CONFIG_STAGING_DIRECTORY);
+  // Check existing settings.php.
+  $install_state['database_verified'] = install_verify_database_settings();
+  $install_state['settings_verified'] = $install_state['config_verified'] && $install_state['database_verified'];
 
   // If it is not, replace the configuration storage with the InstallStorage
   // implementation, for the following reasons:
@@ -309,10 +312,15 @@ function install_begin_request(&$install_state) {
   //   the default configuration provided by the installation profile and
   //   modules (most notably System module). The InstallStorage therefore reads
   //   from the default configuration directories of extensions.
-  // This override is reverted as soon as the config directory has been set up
-  // successfully.
+  // This override is reverted as soon as the config directory and the
+  // database has been set up successfully.
   // @see drupal_install_config_directories()
-  if (!$install_state['config_verified']) {
+  // @see install_settings_form_submit()
+  if ($install_state['settings_verified']) {
+    $kernel = new DrupalKernel('install', FALSE, drupal_classloader(), FALSE);
+    $kernel->boot();
+  }
+  else {
     // @todo Move into a proper Drupal\Core\DependencyInjection\InstallContainerBuilder.
     $container = new ContainerBuilder();
 
@@ -361,10 +369,6 @@ function install_begin_request(&$install_state) {
   // any code in the installer that happens to initialize the theme system from
   // accessing the database before it is set up yet.)
   drupal_maintenance_theme();
-
-  // Check existing settings.php.
-  $install_state['database_verified'] = install_verify_database_settings();
-  $install_state['settings_verified'] = $install_state['config_verified'] && $install_state['database_verified'];
 
   if ($install_state['database_verified']) {
     // Initialize the database system. Note that the connection
@@ -1104,11 +1108,6 @@ function install_settings_form_submit($form, &$form_state) {
   // Add the config directories to settings.php.
   drupal_install_config_directories();
 
-  // We have valid configuration directories in settings.php.
-  // Reset the service container, so the config.storage service will use the
-  // actual active storage for installing configuration.
-  drupal_container(NULL, TRUE);
-
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
   // last step is important since we want to trigger an error if the new
@@ -1500,10 +1499,6 @@ function install_bootstrap_full(&$install_state) {
   // Clear the module list that was overriden earlier in the process.
   // This will allow all freshly installed modules to be loaded.
   module_list_reset();
-
-  // Instantiate the kernel.
-  $kernel = new DrupalKernel('prod', FALSE, drupal_classloader(), FALSE);
-  $kernel->boot();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 }
 
