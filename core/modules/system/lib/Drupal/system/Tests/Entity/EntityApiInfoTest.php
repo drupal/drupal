@@ -32,7 +32,7 @@ class EntityApiInfoTest extends WebTestBase  {
 
     // Change the label of the test entity type and make sure changes appear
     // after flushing caches.
-    variable_set('entity_cache_test_label', 'New label.');
+    state()->set('entity_cache_test.label', 'New label.');
     $info = entity_get_info('entity_cache_test');
     $this->assertEqual($info['label'], 'Entity Cache Test', 'Original label appears in cached entity info.');
     $this->resetAll();
@@ -52,7 +52,7 @@ class EntityApiInfoTest extends WebTestBase  {
    */
   function testEntityInfoCacheWatchdog() {
     module_enable(array('entity_cache_test'));
-    $info = variable_get('entity_cache_test');
+    $info = state()->get('entity_cache_test');
     $this->assertEqual($info['label'], 'Entity Cache Test', 'Entity info label is correct.');
     $this->assertEqual($info['controller_class'], 'Drupal\Core\Entity\DatabaseStorageController', 'Entity controller class info is correct.');
   }

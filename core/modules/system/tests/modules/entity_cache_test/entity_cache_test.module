@@ -22,6 +22,6 @@ function entity_cache_test_watchdog($log_entry) {
     $info = entity_get_info('entity_cache_test');
     // Store the information in a system variable to analyze it later in the
     // test case.
-    variable_set('entity_cache_test', $info);
+    state()->set('entity_cache_test', $info);
   }
 }

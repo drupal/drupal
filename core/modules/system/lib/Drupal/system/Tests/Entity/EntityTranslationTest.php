@@ -37,7 +37,7 @@ class EntityTranslationTest extends WebTestBase {
   function setUp() {
     parent::setUp();
     // Enable translations for the test entity type.
-    variable_set('entity_test_translation', TRUE);
+    state()->set('entity_test.translation', TRUE);
 
     // Create a translatable test field.
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');

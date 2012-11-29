@@ -37,7 +37,7 @@ class EntityTranslationFormTest extends WebTestBase {
   function setUp() {
     parent::setUp();
     // Enable translations for the test entity type.
-    variable_set('entity_test_translation', TRUE);
+    state()->set('entity_test.translation', TRUE);
 
     // Create test languages.
     $this->langcodes = array();
