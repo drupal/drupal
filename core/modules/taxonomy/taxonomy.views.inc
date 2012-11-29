@@ -105,6 +105,8 @@ function taxonomy_views_data() {
     'access query tag' => 'term_access',
   );
   $data['taxonomy_term_data']['table']['entity type'] = 'taxonomy_term';
+  $data['taxonomy_term_data']['table']['wizard_id'] = 'taxonomy_term';
+
 
   // The term data table
   $data['taxonomy_term_data']['table']['join'] = array(

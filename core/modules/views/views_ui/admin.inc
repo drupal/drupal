@@ -2113,45 +2113,6 @@ function views_ui_autocomplete_tag($string = '') {
   return new JsonResponse($matches);
 }
 
-function _views_weight_sort($a, $b) {
-  if ($a['weight'] != $b['weight']) {
-    return $a['weight'] < $b['weight'] ? -1 : 1;
-  }
-  if ($a['title'] != $b['title']) {
-    return $a['title'] < $b['title'] ? -1 : 1;
-  }
-
-  return 0;
-}
-
-/**
- * Fetch a list of all base tables available
- *
- * @return
- *   A keyed array of in the form of 'base_table' => 'Description'.
- */
-function views_fetch_base_tables() {
-  static $base_tables = array();
-  if (empty($base_tables)) {
-    $weights = array();
-    $tables = array();
-    $data = views_fetch_data();
-    foreach ($data as $table => $info) {
-      if (!empty($info['table']['base'])) {
-        $tables[$table] = array(
-          'title' => $info['table']['base']['title'],
-          'description' => !empty($info['table']['base']['help']) ? $info['table']['base']['help'] : '',
-          'weight' => !empty($info['table']['base']['weight']) ? $info['table']['base']['weight'] : 0,
-        );
-      }
-    }
-    uasort($tables, '_views_weight_sort');
-    $base_tables = $tables;
-  }
-
-  return $base_tables;
-}
-
 function _views_sort_types($a, $b) {
   $a_group = drupal_strtolower($a['group']);
   $b_group = drupal_strtolower($b['group']);

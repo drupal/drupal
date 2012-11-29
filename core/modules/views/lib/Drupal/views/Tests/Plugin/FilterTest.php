@@ -52,7 +52,7 @@ class FilterTest extends PluginTestBase {
    */
   public function testFilterQuery() {
     // Check that we can find the test filter plugin.
-    $plugin = views_get_plugin('filter', 'test_filter');
+    $plugin = drupal_container()->get("plugin.manager.views.filter")->createInstance('test_filter');
     $this->assertTrue($plugin instanceof FilterPlugin, 'Test filter plugin found.');
 
     $view = views_get_view('test_filter');

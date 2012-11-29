@@ -577,7 +577,7 @@ class ViewExecutable {
 
     // Instantiate all displays
     foreach ($this->storage->get('display') as $id => $display) {
-      $this->displayHandlers[$id] = views_get_plugin('display', $display['display_plugin']);
+      $this->displayHandlers[$id] = drupal_container()->get("plugin.manager.views.display")->createInstance($display['display_plugin']);
       if (!empty($this->displayHandlers[$id])) {
         // Initialize the new display handler with data.
         // @todo Refactor display to not need the handler data by reference.
@@ -688,7 +688,7 @@ class ViewExecutable {
       $this->style_options = $style['options'];
     }
 
-    $this->style_plugin = views_get_plugin('style', $this->plugin_name);
+    $this->style_plugin = drupal_container()->get("plugin.manager.views.style")->createInstance($this->plugin_name);
 
     if (empty($this->style_plugin)) {
       return FALSE;
@@ -2207,11 +2207,12 @@ class ViewExecutable {
   public function &newDisplay($id) {
     // Create a handler.
     $display = $this->storage->get('display');
-    $this->displayHandlers[$id] = views_get_plugin('display', $display[$id]['display_plugin']);
+    $manager = drupal_container()->get("plugin.manager.views.display");
+    $this->displayHandlers[$id] = $manager->createInstance($display[$id]['display_plugin']);
     if (empty($this->displayHandlers[$id])) {
       // provide a 'default' handler as an emergency. This won't work well but
       // it will keep things from crashing.
-      $this->displayHandlers[$id] = views_get_plugin('display', 'default');
+      $this->displayHandlers[$id] = $manager->createInstance('default');
     }
 
     if (!empty($this->displayHandlers[$id])) {

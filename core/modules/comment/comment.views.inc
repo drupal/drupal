@@ -22,6 +22,7 @@ function comment_views_data() {
     'access query tag' => 'comment_access',
   );
   $data['comment']['table']['entity type'] = 'comment';
+  $data['comment']['table']['wizard_id'] = 'comment';
 
   // Fields
 

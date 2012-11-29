@@ -105,8 +105,9 @@ abstract class DisplayPluginBase extends PluginBase {
     $this->extender = array();
     $extenders = views_get_enabled_display_extenders();
     if (!empty($extenders)) {
+      $manager = drupal_container()->get('plugin.manager.views.display_extender');
       foreach ($extenders as $extender) {
-        $plugin = views_get_plugin('display_extender', $extender);
+        $plugin = $manager->createInstance($extender);
         if ($plugin) {
           $plugin->init($this->view, $this);
           $this->extender[$extender] = $plugin;

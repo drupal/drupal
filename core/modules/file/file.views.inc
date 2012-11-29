@@ -27,6 +27,7 @@ function file_views_data() {
     ),
   );
   $data['file_managed']['table']['entity type'] = 'file';
+  $data['file_managed']['table']['wizard_id'] = 'file_managed';
 
   // fid
   $data['file_managed']['fid'] = array(

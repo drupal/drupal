@@ -507,9 +507,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function build_form_style(array &$form, array &$form_state, $type) {
     $style_form =& $form['displays'][$type]['options']['style'];
     $style = $style_form['style_plugin']['#default_value'];
-    // @fixme
-
-    $style_plugin = views_get_plugin('style', $style);
+    $style_plugin = drupal_container()->get("plugin.manager.views.style")->createInstance($style);
     if (isset($style_plugin) && $style_plugin->usesRowPlugin()) {
       $options = $this->row_style_options();
       $style_form['row_plugin'] = array(
@@ -690,7 +688,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function alter_display_options(&$display_options, $form, $form_state) {
     foreach ($display_options as $display_type => $options) {
       // Allow style plugins to hook in and provide some settings.
-      $style_plugin = views_get_plugin('style', $options['style']['type']);
+      $style_plugin = drupal_container()->get("plugin.manager.views.style")->createInstance($options['style']['type']);
       $style_plugin->wizard_submit($form, $form_state, $this, $display_options, $display_type);
     }
   }
@@ -840,7 +838,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       $table_data = views_fetch_data($table);
       // If the 'in' operator is being used, map the values to an array.
       $handler = $table_data[$bundle_key]['filter']['id'];
-      $handler_definition = views_get_plugin_definition('filter', $handler);
+      $handler_definition = drupal_container()->get('plugin.manager.views.filter')->getDefinition($handler);
       if ($handler == 'in_operator' || is_subclass_of($handler_definition['class'], 'Drupal\\views\\Plugin\\views\\filter\\InOperator')) {
         $value = drupal_map_assoc(array($form_state['values']['show']['type']));
       }

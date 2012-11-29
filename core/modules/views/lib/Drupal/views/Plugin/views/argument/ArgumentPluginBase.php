@@ -301,7 +301,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
     );
 
-    $plugins = views_get_plugin_definitions('argument_validator');
+    $plugins = drupal_container()->get('plugin.manager.views.argument_validator')->getDefinitions();
     foreach ($plugins as $id => $info) {
       if (!empty($info['no_ui'])) {
         continue;
@@ -496,7 +496,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * default action is set to provide default argument.
    */
   function default_argument_form(&$form, &$form_state) {
-    $plugins = views_get_plugin_definitions('argument_default');
+    $plugins = drupal_container()->get('plugin.manager.views.argument_default')->getDefinitions();
     $options = array();
 
     $form['default_argument_skip_url'] = array(
@@ -560,7 +560,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * default action is set to display one.
    */
   function default_summary_form(&$form, &$form_state) {
-    $style_plugins = views_get_plugin_definitions('style');
+    $style_plugins = drupal_container()->get('plugin.manager.views.style')->getDefinitions();
     $summary_plugins = array();
     $format_options = array();
     foreach ($style_plugins as $key => $plugin) {
@@ -1053,7 +1053,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $options = $this->options[$options_name];
     }
 
-    $plugin = views_get_plugin($type, $name);
+    $plugin = drupal_container()->get("plugin.manager.views.$type")->createInstance($name);
     if ($plugin) {
       // Style plugins expects different parameters as argument related plugins.
       if ($type == 'style') {

@@ -87,7 +87,7 @@ class ViewAddFormController extends ViewFormControllerBase {
 
     // Create the "Show" dropdown, which allows the base table of the view to be
     // selected.
-    $wizard_plugins = views_ui_get_wizards();
+    $wizard_plugins = drupal_container()->get("plugin.manager.views.wizard")->getDefinitions();
     $options = array();
     foreach ($wizard_plugins as $key => $wizard) {
       $options[$key] = $wizard['title'];
@@ -106,7 +106,7 @@ class ViewAddFormController extends ViewFormControllerBase {
 
     // Build the rest of the form based on the currently selected wizard plugin.
     $wizard_key = $show_form['wizard_key']['#default_value'];
-    $wizard_instance = views_get_plugin('wizard', $wizard_key);
+    $wizard_instance = drupal_container()->get("plugin.manager.views.wizard")->createInstance($wizard_key);
     $form = $wizard_instance->build_form($form, $form_state);
 
     return $form;
@@ -142,10 +142,12 @@ class ViewAddFormController extends ViewFormControllerBase {
    * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
-    $wizard = views_ui_get_wizard($form_state['values']['show']['wizard_key']);
-    $form_state['wizard'] = $wizard;
-    $form_state['wizard_instance'] = views_get_plugin('wizard', $wizard['id']);
+    $wizard_type = $form_state['values']['show']['wizard_key'];
+    $wizard_instance = drupal_container()->get('plugin.manager.views.wizard')->createInstance($wizard_type);
+    $form_state['wizard'] = $wizard_instance->getDefinition();
+    $form_state['wizard_instance'] = $wizard_instance;
     $errors = $form_state['wizard_instance']->validateView($form, $form_state);
+
     foreach ($errors as $name => $message) {
       form_set_error($name, $message);
     }

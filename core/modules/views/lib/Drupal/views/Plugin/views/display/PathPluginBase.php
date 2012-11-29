@@ -61,7 +61,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
 
     $access_plugin = $this->getPlugin('access');
     if (!isset($access_plugin)) {
-      $access_plugin = views_get_plugin('access', 'none');
+      $access_plugin = drupal_container()->get("plugin.manager.views.access")->createInstance('none');
     }
 
     // Get access callback might return an array of the callback + the dynamic arguments.

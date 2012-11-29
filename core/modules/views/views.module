@@ -840,7 +840,8 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
-    $plugin = views_get_plugin_definition('display', $view->displayHandlers[$display_id]->display['display_plugin']);
+    $plugin_id = $view->displayHandlers[$display_id]->getPluginId();
+    $plugin = drupal_container()->get('plugin.manager.views.display')->getDefinition($plugin_id);
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
     // set 'contextual_links_locations' to, e.g., {""}.)
@@ -1233,6 +1234,59 @@ function views_fetch_data($table = NULL, $reset = FALSE) {
 /**
  * Fetch a list of all base tables available
  *
+ * @return array
+ *   A keyed array of in the form of 'base_table' => 'Description'.
+ */
+function views_fetch_base_tables() {
+  static $base_tables = array();
+  if (empty($base_tables)) {
+    $tables = array();
+    $data = views_fetch_data();
+    foreach ($data as $table => $info) {
+      if (!empty($info['table']['base'])) {
+        $tables[$table] = array(
+          'title' => $info['table']['base']['title'],
+          'description' => !empty($info['table']['base']['help']) ? $info['table']['base']['help'] : '',
+          'weight' => !empty($info['table']['base']['weight']) ? $info['table']['base']['weight'] : 0,
+        );
+      }
+    }
+    uasort($tables, '_views_weight_sort');
+    $base_tables = $tables;
+  }
+
+  return $base_tables;
+}
+
+/**
+ * Sorts a structured array by the 'weight' and then by 'title' element.
+ *
+ * Callback for uasort() in views_fetch_base_tables().
+ *
+ * @param array $a
+ *   First item for comparison. The compared items should be associative arrays
+ *   that include a 'weight' and title element.
+ * @param array $b
+ *   Second item for comparison.
+ *
+ * @return int
+ *   -1 if the first item comes first, 1 if second and 0 if they have the same
+ *   order.
+ */
+function _views_weight_sort($a, $b) {
+  if ($a['weight'] != $b['weight']) {
+    return $a['weight'] < $b['weight'] ? -1 : 1;
+  }
+  if ($a['title'] != $b['title']) {
+    return $a['title'] < $b['title'] ? -1 : 1;
+  }
+
+  return 0;
+}
+
+/**
+ * Fetch a list of all base tables available
+ *
  * @param $type
  *   Either 'display', 'style' or 'row'
  * @param $key
@@ -1245,7 +1299,7 @@ function views_fetch_data($table = NULL, $reset = FALSE) {
  *   A keyed array of in the form of 'base_table' => 'Description'.
  */
 function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
-  $definitions = views_get_plugin_definitions($type);
+  $definitions = drupal_container()->get("plugin.manager.views.$type")->getDefinitions();
   $plugins = array();
 
   foreach ($definitions as $id => $plugin) {
@@ -1291,39 +1345,17 @@ function views_get_plugin($type, $plugin_id) {
 /**
  * Gets all the views plugin definitions.
  *
- * @param string|false $type
- *   Either the plugin type, or FALSE to load all definitions.
- *
  * @return array
- *   An array of plugin definitions for a single type, or an associative array
- *   of plugin definitions keyed by plugin type.
+ *   An array of plugin definitions for all types.
  */
-function views_get_plugin_definitions($type = FALSE) {
-  $plugins = array();
-  $plugin_types = $type ? array($type) : ViewExecutable::getPluginTypes();
+function views_get_plugin_definitions() {
   $container = drupal_container();
-  foreach ($plugin_types as $plugin_type) {
+  $plugins = array();
+  foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
     $plugins[$plugin_type] = $container->get("plugin.manager.views.$plugin_type")->getDefinitions();
   }
-  if ($type) {
-    return $plugins[$type];
-  }
-  return $plugins;
-}
 
-/**
- * Gets the plugin definition from a plugin type with a specific ID.
- *
- * @param string $type
- *   The plugin type, e.g., 'access' or 'display'.
- * @param string $plugin_id
- *   The name of the plugin, e.g., 'standard'.
- *
- * @return array
- *   A plugin definition.
- */
-function views_get_plugin_definition($type, $plugin_id) {
-  return drupal_container()->get("plugin.manager.views.$type")->getDefinition($plugin_id);
+  return $plugins;
 }
 
 /**
@@ -1389,7 +1421,7 @@ function views_get_applicable_views($type) {
     // Loop on array keys because something seems to muck with $view->display
     // a bit in PHP4.
     foreach (array_keys($display) as $id) {
-      $plugin = views_get_plugin_definition('display', $display[$id]['display_plugin']);
+      $plugin = drupal_container()->get('plugin.manager.views.display')->getDefinition($display[$id]['display_plugin']);
       if (!empty($plugin[$type])) {
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.

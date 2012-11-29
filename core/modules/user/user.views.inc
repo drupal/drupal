@@ -24,6 +24,7 @@ function user_views_data() {
     'access query tag' => 'user_access',
   );
   $data['users']['table']['entity type'] = 'user';
+  $data['users']['table']['wizard_id'] = 'user';
 
   // uid
   $data['users']['uid'] = array(

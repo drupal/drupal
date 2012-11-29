@@ -30,6 +30,7 @@ function node_views_data() {
     ),
   );
   $data['node']['table']['entity type'] = 'node';
+  $data['node']['table']['wizard_id'] = 'node';
 
   // node table -- fields
 
@@ -422,6 +423,8 @@ function node_views_data() {
   // have a group defined will go into this field by default.
   $data['node_revision']['table']['entity type'] = 'node';
   $data['node_revision']['table']['group']  = t('Content revision');
+  $data['node_revision']['table']['wizard_id'] = 'node_revision';
+
 
   // Advertise this table as a possible base table
   $data['node_revision']['table']['base'] = array(

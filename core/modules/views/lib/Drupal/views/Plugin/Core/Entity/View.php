@@ -224,7 +224,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       return FALSE;
     }
 
-    $plugin = views_get_plugin_definition('display', $plugin_id);
+    $plugin = drupal_container()->get('plugin.manager.views.display')->getDefinition($plugin_id);
     if (empty($plugin)) {
       $plugin['title'] = t('Broken');
     }
