@@ -75,7 +75,7 @@ window.matchMedia = window.matchMedia || (function (doc, window) {
           // Only execute the callback if the state has changed.
           var oldstate = mql.matches;
           mql.check();
-          if (oldstate != mql.matches) {
+          if (oldstate !== mql.matches) {
             debounced.call(mql, mql);
           }
         };
