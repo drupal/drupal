@@ -227,4 +227,91 @@ abstract class PluginBase extends ComponentPluginBase {
     return $this->usesOptions;
   }
 
+  /**
+   * Returns a string with any core tokens replaced.
+   *
+   * @param string $string
+   *   The string to preform the token replacement on.
+   * @param array $options
+   *   An array of options, as passed to token_replace.
+   *
+   * @return string
+   *   The tokenized string.
+   */
+  public function globalTokenReplace($string = '', array $options = array()) {
+    return token_replace($string, array('view' => $this->view), $options);
+  }
+
+  /**
+   * Returns an array of available token replacements.
+   *
+   * @param bool $prepared
+   *   Whether to return the raw token info for each token or an array of
+   *   prepared tokens for each type. E.g. "[view:name]".
+   * @param array $types
+   *   An array of additional token types to return, defaults to 'site' and
+   *   'view'.
+   *
+   * @return array
+   *   An array of available token replacement info or tokens, grouped by type.
+   */
+  public function getAvailableGlobalTokens($prepared = FALSE, array $types = array()) {
+    $info = token_info();
+    // Site and view tokens should always be available.
+    $types += array('site', 'view');
+    $available = array_intersect_key($info['tokens'], array_flip($types));
+
+    // Construct the token string for each token.
+    if ($prepared) {
+      $prepared = array();
+      foreach ($available as $type => $tokens) {
+        foreach (array_keys($tokens) as $token) {
+          $prepared[$type][] = "[$type:$token]";
+        }
+      }
+
+      return $prepared;
+    }
+
+    return $available;
+  }
+
+  /**
+   * Adds elements for available core tokens to a form.
+   *
+   * @param array $form
+   *   The form array to alter, passed by reference.
+   * @param array $form_state
+   *   The form state array to alter, passed by reference.
+   */
+  public function globalTokenForm(&$form, &$form_state) {
+    $token_items = array();
+
+    foreach ($this->getAvailableGlobalTokens() as $type => $tokens) {
+      $item = array(
+        '#markup' => $type,
+        'children' => array(),
+      );
+      foreach ($tokens as $name => $info) {
+        $item['children'][$name] = "[$type:$name]" . ' - ' . $info['name'] . ': ' . $info['description'];
+      }
+
+      $token_items[$type] = $item;
+    }
+
+    $form['global_tokens'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Available global token replacements'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+    $form['global_tokens']['list'] = array(
+      '#theme' => 'item_list',
+      '#items' => $token_items,
+      '#attributes' => array(
+        'class' => array('global-tokens'),
+      ),
+    );
+  }
+
 }

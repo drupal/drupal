@@ -141,6 +141,8 @@ abstract class AreaPluginBase extends HandlerBase {
         }
       }
     }
+
+    $this->globalTokenForm($form, $form_state);
   }
 
   /**

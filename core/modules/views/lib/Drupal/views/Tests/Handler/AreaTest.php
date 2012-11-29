@@ -110,6 +110,43 @@ class AreaTest extends HandlerTestBase {
   }
 
   /**
+   * Tests global tokens.
+   */
+  public function testRenderAreaToken() {
+    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    $view = views_get_view('test_example_area');
+    $view->initHandlers();
+
+    $this->drupalGet('admin/structure/views/nojs/config-item/test_example_area/default/empty/test_example');
+
+    // Test that the list is token present.
+    $element = $this->xpath('//ul[@class="global-tokens"]');
+    $this->assertTrue($element, 'Token list found on the options form.');
+
+    $empty_handler = &$view->empty['test_example'];
+
+    // Test the list of available tokens.
+    $available = $empty_handler->getAvailableGlobalTokens();
+    foreach (array('site', 'view') as $type) {
+      $this->assertTrue(!empty($available[$type]) && is_array($available[$type]));
+      // Test that each item exists in the list.
+      foreach ($available[$type] as $token => $info) {
+        $this->assertText("[$type:$token]");
+      }
+    }
+
+    // Test the rendered output of a token.
+    $empty_handler->options['string'] = '[site:name]';
+
+    // Test we have the site:name token in the output.
+    $output = $view->preview();
+    $expected = token_replace('[site:name]');
+    $this->assertTrue(strpos($output, $expected) !== FALSE);
+  }
+
+  /**
    * Tests overriding the view title using the area title handler.
    */
   public function testTitleArea() {

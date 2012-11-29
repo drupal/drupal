@@ -32,11 +32,19 @@ class TestExample extends AreaPluginBase {
   }
 
   /**
+   * Overrides Drupal\views\Plugin\views\area\AreaPluginBase::buildOptionsForm()
+   */
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
+    $this->globalTokenForm($form, $form_state);
+  }
+
+  /**
    * Overrides Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      return $this->options['string'];
+      return $this->globalTokenReplace($this->options['string']);
     }
   }
 

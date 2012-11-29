@@ -39,8 +39,11 @@ class Title extends AreaPluginBase {
       '#type' => 'textfield',
       '#title' => t('Overridden title'),
       '#default_value' => $this->options['title'],
-      '#description' => t('Override the title of this view when it is empty.'),
+      '#description' => t('Override the title of this view when it is empty. The available global tokens below can be used here.'),
     );
+
+    // Don't use the AreaPluginBase tokenForm method, we don't want row tokens.
+    $this->globalTokenForm($form, $form_state);
   }
 
   /**
@@ -48,7 +51,8 @@ class Title extends AreaPluginBase {
    */
   function render($empty = FALSE) {
     if (!empty($this->options['title'])) {
-      $this->view->setTitle($this->sanitizeValue($this->options['title'], 'xss_admin'), PASS_THROUGH);
+      $value = $this->globalTokenReplace($this->options['title']);
+      $this->view->setTitle($this->sanitizeValue($value, 'xss_admin'), PASS_THROUGH);
     }
 
     return '';
