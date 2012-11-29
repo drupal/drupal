@@ -1876,7 +1876,7 @@ function system_library_info() {
     ),
   );
 
-  // Underscore
+  // Underscore.
   $libraries['underscore'] = array(
     'title' => 'Underscore.js',
     'website' => 'http://underscorejs.org/',
@@ -1886,7 +1886,7 @@ function system_library_info() {
     ),
   );
 
-  // Backbone
+  // Backbone.
   $libraries['backbone'] = array(
     'title' => 'Backbone.js',
     'website' => 'http://backbonejs.org/',
@@ -1896,6 +1896,35 @@ function system_library_info() {
     ),
     'dependencies' => array(
       array('system', 'underscore'),
+    ),
+  );
+
+  // VIE.
+  $libraries['vie.core'] = array(
+    'title' => 'VIE.js core (excluding services, views and xdr)',
+    'website' => 'http://viejs.org/',
+    'version' => '2.0.0-dev',
+    'js' => array(
+      'core/misc/vie/vie-core.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'underscore'),
+      array('system', 'backbone'),
+    ),
+  );
+
+  // Create.
+  $libraries['create.editonly'] = array(
+    'title' => 'Create.js edit-only (editing features only)',
+    'website' => 'http://backbonejs.org/',
+    'version' => '1.0.0-dev',
+    'js' => array(
+      'core/misc/create/create-editonly.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'vie.core'),
+      array('system', 'jquery.ui.widget'),
     ),
   );
 
