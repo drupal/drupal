@@ -22,10 +22,26 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  *     "number_integer",
  *     "number_decimal",
  *     "number_float"
+ *   },
+ *   settings = {
+ *     "placeholder" = ""
  *   }
  * )
  */
 class NumberWidget extends WidgetBase {
+
+  /**
+   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   */
+  public function settingsForm(array $form, array &$form_state) {
+    $element['placeholder'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Placeholder'),
+      '#default_value' => $this->getSetting('placeholder'),
+      '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+    );
+    return $element;
+  }
 
   /**
    * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
@@ -39,6 +55,7 @@ class NumberWidget extends WidgetBase {
     $element += array(
       '#type' => 'number',
       '#default_value' => $value,
+      '#placeholder' => $this->getSetting('placeholder'),
     );
 
     // Set the step for floating point and decimal numbers.

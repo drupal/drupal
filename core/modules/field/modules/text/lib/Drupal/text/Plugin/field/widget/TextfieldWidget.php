@@ -22,7 +22,8 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  *     "text"
  *   },
  *   settings = {
- *     "size" = "60"
+ *     "size" = "60",
+ *     "placeholder" = ""
  *   }
  * )
  */
@@ -39,6 +40,12 @@ class TextfieldWidget extends WidgetBase {
       '#required' => TRUE,
       '#min' => 1,
     );
+    $element['placeholder'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Placeholder'),
+      '#default_value' => $this->getSetting('placeholder'),
+      '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+    );
     return $element;
   }
 
@@ -50,6 +57,7 @@ class TextfieldWidget extends WidgetBase {
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
       '#size' => $this->getSetting('size'),
+      '#placeholder' => $this->getSetting('placeholder'),
       '#maxlength' => $this->field['settings']['max_length'],
       '#attributes' => array('class' => array('text-full')),
     );

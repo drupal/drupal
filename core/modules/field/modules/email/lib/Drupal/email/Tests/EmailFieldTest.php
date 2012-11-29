@@ -56,6 +56,9 @@ class EmailFieldTest extends WebTestBase {
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'email_default',
+        'settings' => array(
+          'placeholder' => 'example@example.com',
+        ),
       ),
       'display' => array(
         'full' => array(
@@ -69,6 +72,7 @@ class EmailFieldTest extends WebTestBase {
     $this->drupalGet('test-entity/add/test_bundle');
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget found.');
+    $this->assertRaw('placeholder="example@example.com"');
 
     // Submit a valid e-mail address and ensure it is accepted.
     $value = 'test@example.com';

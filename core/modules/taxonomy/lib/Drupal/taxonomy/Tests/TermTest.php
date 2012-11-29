@@ -142,7 +142,12 @@ class TermTest extends TaxonomyTestBase {
   function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
-    $instance['widget'] = array('type' => 'taxonomy_autocomplete');
+    $instance['widget'] = array(
+      'type' => 'taxonomy_autocomplete',
+      'settings' => array(
+        'placeholder' => 'Start typing here.',
+      ),
+    );
     field_update_instance($instance);
     $terms = array(
       'term1' => $this->randomName(),
@@ -159,8 +164,12 @@ class TermTest extends TaxonomyTestBase {
     // free-tagging field created by the default profile.
     $edit[$instance['field_name'] . "[$langcode]"] = drupal_implode_tags($terms);
 
+    // Verify the placeholder is there.
+    $this->drupalGet('node/add/article');
+    $this->assertRaw('placeholder="Start typing here."');
+
     // Preview and verify the terms appear but are not created.
-    $this->drupalPost('node/add/article', $edit, t('Preview'));
+    $this->drupalPost(NULL, $edit, t('Preview'));
     foreach ($terms as $term) {
       $this->assertText($term, 'The term appears on the node preview');
     }

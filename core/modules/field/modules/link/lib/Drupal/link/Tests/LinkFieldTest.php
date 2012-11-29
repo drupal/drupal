@@ -58,6 +58,9 @@ class LinkFieldTest extends WebTestBase {
       ),
       'widget' => array(
         'type' => 'link_default',
+        'settings' => array(
+          'placeholder_url' => 'http://example.com',
+        ),
       ),
       'display' => array(
         'full' => array(
@@ -71,6 +74,7 @@ class LinkFieldTest extends WebTestBase {
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][url]", '', 'Link URL field is displayed');
+    $this->assertRaw('placeholder="http://example.com"');
 
     // Verify that a valid URL can be submitted.
     $value = 'http://www.example.com/';
@@ -121,6 +125,10 @@ class LinkFieldTest extends WebTestBase {
       ),
       'widget' => array(
         'type' => 'link_default',
+        'settings' => array(
+          'placeholder_url' => 'http://example.com',
+          'placeholder_title' => 'Enter a title for this link',
+        ),
       ),
       'display' => array(
         'full' => array(
@@ -141,11 +149,15 @@ class LinkFieldTest extends WebTestBase {
       // Display creation form.
       $this->drupalGet('test-entity/add/test_bundle');
       $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][url]", '', 'URL field found.');
+      $this->assertRaw('placeholder="http://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
         $this->assertNoFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Title field not found.');
+        $this->assertNoRaw('placeholder="Enter a title for this link"');
       }
       else {
+        $this->assertRaw('placeholder="Enter a title for this link"');
+
         $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][title]", '', 'Title field found.');
         if ($title_setting === DRUPAL_REQUIRED) {
           // Verify that the title is required, if the URL is non-empty.

@@ -114,6 +114,9 @@ class TextFieldTest extends WebTestBase {
       ),
       'widget' => array(
         'type' => $widget_type,
+        'settings' => array(
+          'placeholder' => 'A placeholder on ' . $widget_type,
+        ),
       ),
       'display' => array(
         'full' => array(
@@ -128,6 +131,7 @@ class TextFieldTest extends WebTestBase {
     $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
     $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', 'Format selector is not displayed');
+    $this->assertRaw(format_string('placeholder="A placeholder on !widget_type"', array('!widget_type' => $widget_type)));
 
     // Submit with some value.
     $value = $this->randomName();

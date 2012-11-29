@@ -20,10 +20,26 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  *   label = @Translation("E-mail"),
  *   field_types = {
  *     "email"
+ *   },
+ *   settings = {
+ *     "placeholder" = ""
  *   }
  * )
  */
 class EmailDefaultWidget extends WidgetBase {
+
+  /**
+   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   */
+  public function settingsForm(array $form, array &$form_state) {
+    $element['placeholder'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Placeholder'),
+      '#default_value' => $this->getSetting('placeholder'),
+      '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+    );
+    return $element;
+  }
 
   /**
    * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
@@ -32,6 +48,7 @@ class EmailDefaultWidget extends WidgetBase {
     $element['value'] = $element + array(
       '#type' => 'email',
       '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+      '#placeholder' => $this->getSetting('placeholder'),
     );
     return $element;
   }

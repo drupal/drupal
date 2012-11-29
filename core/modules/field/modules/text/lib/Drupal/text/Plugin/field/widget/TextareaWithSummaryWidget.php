@@ -22,7 +22,8 @@ use Drupal\Core\Annotation\Translation;
  *   },
  *   settings = {
  *     "rows" = "9",
- *     "summary_rows" = "3"
+ *     "summary_rows" = "3",
+ *     "placeholder" = ""
  *   }
  * )
  */

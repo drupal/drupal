@@ -23,12 +23,26 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  *   },
  *   settings = {
  *     "size" = "60",
- *     "autocomplete_path" = "taxonomy/autocomplete"
+ *     "autocomplete_path" = "taxonomy/autocomplete",
+ *     "placeholder" = ""
  *   },
  *   multiple_values = TRUE
  * )
  */
 class TaxonomyAutocompleteWidget extends WidgetBase {
+
+  /**
+   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
+   */
+  public function settingsForm(array $form, array &$form_state) {
+    $element['placeholder'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Placeholder'),
+      '#default_value' => $this->getSetting('placeholder'),
+      '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+    );
+    return $element;
+  }
 
   /**
    * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
@@ -45,6 +59,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
       '#default_value' => taxonomy_implode_tags($tags),
       '#autocomplete_path' => $this->getSetting('autocomplete_path') . '/' . $field['field_name'],
       '#size' => $this->getSetting('size'),
+      '#placeholder' => $this->getSetting('placeholder'),
       '#maxlength' => 1024,
       '#element_validate' => array('taxonomy_autocomplete_validate'),
     );

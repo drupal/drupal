@@ -22,7 +22,8 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  *     "text_long"
  *   },
  *   settings = {
- *     "rows" = "5"
+ *     "rows" = "5",
+ *     "placeholder" = ""
  *   }
  * )
  */
@@ -39,6 +40,12 @@ class TextareaWidget extends WidgetBase {
       '#required' => TRUE,
       '#min' => 1,
     );
+    $element['placeholder'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Placeholder'),
+      '#default_value' => $this->getSetting('placeholder'),
+      '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+    );
     return $element;
   }
 
@@ -50,6 +57,7 @@ class TextareaWidget extends WidgetBase {
       '#type' => 'textarea',
       '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
       '#rows' => $this->getSetting('rows'),
+      '#placeholder' => $this->getSetting('placeholder'),
       '#attributes' => array('class' => array('text-full')),
     );
 

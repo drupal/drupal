@@ -59,6 +59,9 @@ class NumberFieldTest extends WebTestBase {
       'bundle' => 'test_bundle',
       'widget' => array(
         'type' => 'number',
+        'settings' => array(
+          'placeholder' => '0.00'
+        ),
       ),
       'display' => array(
         'default' => array(
@@ -72,6 +75,7 @@ class NumberFieldTest extends WebTestBase {
     $this->drupalGet('test-entity/add/test_bundle');
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget is displayed');
+    $this->assertRaw('placeholder="0.00"');
 
     // Submit a signed decimal value within the allowed precision and scale.
     $value = '-1234.5678';

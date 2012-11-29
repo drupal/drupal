@@ -97,8 +97,40 @@ function link_field_widget_info() {
   $widgets['link_default'] = array(
     'label' => 'Link',
     'field types' => array('link'),
+    'settings' => array(
+      'placeholder_title' => '',
+      'placeholder_url' => '',
+    ),
   );
   return $widgets;
+}
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function link_field_widget_settings_form($field, $instance) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
+  $form['placeholder_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Placeholder for URL'),
+    '#default_value' => $settings['placeholder_url'],
+    '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+  );
+  $form['placeholder_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Placeholder for link title'),
+    '#default_value' => $settings['placeholder_title'],
+    '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="instance[settings][title]"]' => array('value' => DRUPAL_DISABLED),
+      ),
+    ),
+  );
+
+  return $form;
 }
 
 /**
@@ -106,10 +138,12 @@ function link_field_widget_info() {
  */
 function link_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $settings = $instance['settings'];
+  $widget_settings = $instance['widget']['settings'];
 
   $element['url'] = array(
     '#type' => 'url',
     '#title' => t('URL'),
+    '#placeholder' => isset($widget_settings['placeholder_url']) ? $widget_settings['placeholder_url'] : '',
     '#default_value' => isset($items[$delta]['url']) ? $items[$delta]['url'] : NULL,
     '#maxlength' => 2048,
     '#required' => $element['#required'],
@@ -117,6 +151,7 @@ function link_field_widget_form(&$form, &$form_state, $field, $instance, $langco
   $element['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
+    '#placeholder' => isset($widget_settings['placeholder_title']) ? $widget_settings['placeholder_title'] : '',
     '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : NULL,
     '#maxlength' => 255,
     '#access' => $settings['title'] != DRUPAL_DISABLED,
