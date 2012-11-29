@@ -2182,13 +2182,16 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
  */
 function drupal_get_user_timezone() {
   global $user;
-  if (variable_get('configurable_timezones', 1) && $user->uid && $user->timezone) {
+  $config = config('system.date');
+
+  if ($config->get('timezone.user.configurable') && $user->uid && $user->timezone) {
     return $user->timezone;
   }
   else {
     // Ignore PHP strict notice if time zone has not yet been set in the php.ini
     // configuration.
-    return variable_get('date_default_timezone', @date_default_timezone_get());
+    $config_data_default_timezone = $config->get('timezone.default');
+    return !empty($config_data_default_timezone) ? $config_data_default_timezone : @date_default_timezone_get();
   }
 }
 

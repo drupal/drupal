@@ -573,7 +573,7 @@ function locale_library_info_alter(&$libraries, $module) {
           'ui' => array(
             'datepicker' => array(
               'isRTL' => $language_interface->direction == LANGUAGE_RTL,
-              'firstDay' => variable_get('date_first_day', 0),
+              'firstDay' => config('system.date')->get('first_day'),
             ),
           ),
         ),

@@ -33,9 +33,9 @@ class Date extends FieldPluginBase {
   public function buildOptionsForm(&$form, &$form_state) {
 
     $date_formats = array();
-    $date_types = system_get_date_types();
-    foreach ($date_types as $key => $value) {
-      $date_formats[$value['type']] = check_plain(t($value['title'] . ' format')) . ': ' . format_date(REQUEST_TIME, $value['type']);
+    $date_types = system_get_date_formats();
+    foreach ($date_types as $machine_name => $value) {
+      $date_formats[$machine_name] = check_plain(t('@name format', array('@name' => $value['name'])) . ': ' . format_date(REQUEST_TIME, $machine_name));
     }
 
     $form['date_format'] = array(

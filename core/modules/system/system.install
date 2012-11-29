@@ -2277,6 +2277,22 @@ function system_update_8037() {
 }
 
 /**
+ * Moves site system regional settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8038() {
+  update_variables_to_config('system.date', array(
+    'site_default_country' => 'country.default',
+    'date_first_day' => 'first_day',
+    'date_default_timezone' => 'timezone.default',
+    'configurable_timezones' => 'timezone.user.configurable',
+    'empty_timezone_message' => 'timezone.user.warn',
+    'user_default_timezone' => 'timezone.user.default',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

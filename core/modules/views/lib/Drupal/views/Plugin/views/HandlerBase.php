@@ -742,13 +742,7 @@ abstract class HandlerBase extends PluginBase {
    * Figure out what timezone we're in; needed for some date manipulations.
    */
   public static function getTimezone() {
-    global $user;
-    if (variable_get('configurable_timezones', 1) && $user->uid && strlen($user->timezone)) {
-      $timezone = $user->timezone;
-    }
-    else {
-      $timezone = variable_get('date_default_timezone', 0);
-    }
+    $timezone = drupal_get_user_timezone();
 
     // set up the database timezone
     $db_type = Database::getConnection()->databaseType();

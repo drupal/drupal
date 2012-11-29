@@ -35,15 +35,19 @@ class FormatDateTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp();
-    variable_set('configurable_timezones', 1);
-    variable_set('date_format_long', 'l, j. F Y - G:i');
-    variable_set('date_format_medium', 'j. F Y - G:i');
-    variable_set('date_format_short', 'Y M j - g:ia');
+    parent::setUp('language');
+    config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('formats.long.pattern.php', 'l, j. F Y - G:i')
+      ->set('formats.medium.pattern.php', 'j. F Y - G:i')
+      ->set('formats.short.pattern.php', 'Y M j - g:ia')
+      ->save();
+
     variable_set('locale_custom_strings_' . self::LANGCODE, array(
       '' => array('Sunday' => 'domingo'),
       'Long month name' => array('March' => 'marzo'),
     ));
+
     $this->refreshVariables();
   }
 
@@ -56,17 +60,12 @@ class FormatDateTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Add new date format.
-    $admin_date_format = 'j M y';
-    $edit = array('date_format' => $admin_date_format);
-    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, 'Add format');
-
-    // Add new date type.
     $edit = array(
-      'date_type' => 'Example Style',
-      'machine_name' => 'example_style',
-      'date_format' => $admin_date_format,
+      'date_format_id' => 'example_style',
+      'date_format_name' => 'Example Style',
+      'date_format_pattern' => 'j M y',
     );
-    $this->drupalPost('admin/config/regional/date-time/types/add', $edit, 'Add date type');
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07', 'Test format_date() using an admin-defined date type.');

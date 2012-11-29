@@ -47,7 +47,7 @@ display:
           table: node
           field: changed
           label: 'Last update'
-          date_format: large
+          date_format: long
       arguments:
         title:
           id: title

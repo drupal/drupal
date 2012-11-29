@@ -48,8 +48,8 @@ class DrupalDateTimeTest extends WebTestBase {
     $date_string = '2007-01-31 21:00:00';
 
     // Make sure no site timezone has been set.
-    variable_set('date_default_timezone', NULL);
-    variable_set('configurable_timezones', 0);
+    config('system.date')->set('timezone.default', NULL)->save();
+    config('system.date')->set('timezone.user.configurable', 0)->save();
 
     // Detect the system timezone.
     $system_timezone = date_default_timezone_get();
@@ -66,7 +66,7 @@ class DrupalDateTimeTest extends WebTestBase {
     $this->assertTrue($timezone == 'America/Yellowknife', 'DrupalDateTime uses the specified timezone if provided.');
 
     // Set a site timezone.
-    variable_set('date_default_timezone', 'Europe/Warsaw');
+    config('system.date')->set('timezone.default', 'Europe/Warsaw')->save();
 
     // Create a date object with an unspecified timezone, which should
     // end up using the site timezone.
@@ -75,7 +75,7 @@ class DrupalDateTimeTest extends WebTestBase {
     $this->assertTrue($timezone == 'Europe/Warsaw', 'DrupalDateTime uses the site timezone if provided.');
 
     // Create user.
-    variable_set('configurable_timezones', 1);
+    config('system.date')->set('timezone.user.configurable', 1)->save();
     $test_user = $this->drupalCreateUser(array());
     $this->drupalLogin($test_user);
 

@@ -41,8 +41,11 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    */
   function testRegisterUserWithEmailVerification() {
     config('user.settings')->set('verify_mail', TRUE)->save();
-    variable_get('configurable_timezones', 1);
-    variable_set('date_default_timezone', 'Europe/Brussels');
+
+    config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('timezone.default', 'Europe/Brussels')
+      ->save();
 
     // Tell openid_test.module to respond with these SREG fields.
     variable_set('openid_test_response', array(
@@ -97,8 +100,11 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    */
   function testRegisterUserWithoutEmailVerification() {
     config('user.settings')->set('verify_mail', FALSE)->save();
-    variable_get('configurable_timezones', 1);
-    variable_set('date_default_timezone', 'Europe/Brussels');
+
+    config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('timezone.default', 'Europe/Brussels')
+      ->save();
 
     // Tell openid_test.module to respond with these SREG fields.
     variable_set('openid_test_response', array(
@@ -137,8 +143,10 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    * information (a username that is already taken, and no e-mail address).
    */
   function testRegisterUserWithInvalidSreg() {
-    variable_get('configurable_timezones', 1);
-    variable_set('date_default_timezone', 'Europe/Brussels');
+    config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('timezone.default', 'Europe/Brussels')
+      ->save();
 
     // Tell openid_test.module to respond with these SREG fields.
     $web_user = $this->drupalCreateUser(array());
@@ -187,7 +195,6 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    * information (i.e. no username or e-mail address).
    */
   function testRegisterUserWithoutSreg() {
-    variable_get('configurable_timezones', 1);
 
     // Load the front page to get the user login block.
     $this->drupalGet('');
@@ -226,7 +233,9 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    */
   function testRegisterUserWithAXButNoSREG() {
     config('user.settings')->set('verify_mail', FALSE)->save();
-    variable_set('date_default_timezone', 'Europe/Brussels');
+    config('system.date')
+      ->set('timezone.default', 'Europe/Brussels')
+      ->save();
 
     // Tell openid_test.module to respond with these AX fields.
     variable_set('openid_test_response', array(

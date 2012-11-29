@@ -26,9 +26,11 @@ class UserTimeZoneTest extends WebTestBase {
    */
   function testUserTimeZone() {
     // Setup date/time settings for Los Angeles time.
-    variable_set('date_default_timezone', 'America/Los_Angeles');
-    variable_set('configurable_timezones', 1);
-    variable_set('date_format_medium', 'Y-m-d H:i T');
+    $config = config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('timezone.default', 'America/Los_Angeles')
+      ->set('formats.medium.pattern.php', 'Y-m-d H:i T')
+      ->save();
 
     // Create a user account and login.
     $web_user = $this->drupalCreateUser();

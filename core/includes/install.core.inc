@@ -1938,7 +1938,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#type' => 'select',
     '#title' => st('Default country'),
     '#empty_value' => '',
-    '#default_value' => variable_get('site_default_country', NULL),
+    '#default_value' => config('system.date')->get('country.default'),
     '#options' => $countries,
     '#description' => st('Select the default country for the site.'),
     '#weight' => 0,
@@ -2011,8 +2011,10 @@ function install_configure_form_submit($form, &$form_state) {
     ->set('mail', $form_state['values']['site_mail'])
     ->save();
 
-  variable_set('date_default_timezone', $form_state['values']['date_default_timezone']);
-  variable_set('site_default_country', $form_state['values']['site_default_country']);
+  config('system.date')
+    ->set('timezone.default', $form_state['values']['date_default_timezone'])
+    ->set('country.default', $form_state['values']['site_default_country'])
+    ->save();
 
   // Enable update.module if this option was selected.
   if ($form_state['values']['update_status_module'][1]) {

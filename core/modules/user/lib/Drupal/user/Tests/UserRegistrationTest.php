@@ -149,17 +149,18 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationDefaultValues() {
-    $config = config('user.settings');
     // Don't require e-mail verification and allow registration by site visitors
     // without administrator approval.
-    $config
+    $config_user_settings = config('user.settings')
       ->set('verify_mail', FALSE)
       ->set('register', USER_REGISTER_VISITORS)
       ->save();
 
     // Set the default timezone to Brussels.
-    variable_set('configurable_timezones', 1);
-    variable_set('date_default_timezone', 'Europe/Brussels');
+    $config_system_date = config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('timezone.default', 'Europe/Brussels')
+      ->save();
 
     // Check that the account information options are not displayed
     // as a details element if there is not more than one details in the form.
@@ -181,8 +182,8 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertEqual($new_user->theme, '', 'Correct theme field.');
     $this->assertEqual($new_user->signature, '', 'Correct signature field.');
     $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), 'Correct creation time.');
-    $this->assertEqual($new_user->status, $config->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
-    $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), 'Correct time zone field.');
+    $this->assertEqual($new_user->status, $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
+    $this->assertEqual($new_user->timezone, $config_system_date->get('timezone.default'), 'Correct time zone field.');
     $this->assertEqual($new_user->langcode, language_default()->langcode, 'Correct language field.');
     $this->assertEqual($new_user->preferred_langcode, language_default()->langcode, 'Correct preferred language field.');
     $this->assertEqual($new_user->init, $mail, 'Correct init field.');

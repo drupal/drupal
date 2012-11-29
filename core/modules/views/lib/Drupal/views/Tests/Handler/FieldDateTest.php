@@ -56,9 +56,9 @@ class FieldDateTest extends HandlerTestBase {
     );
     foreach ($timezones as $timezone) {
       $dates = array(
-        'small' => format_date($time, 'small', '', $timezone),
+        'short' => format_date($time, 'short', '', $timezone),
         'medium' => format_date($time, 'medium', '', $timezone),
-        'large' => format_date($time, 'large', '', $timezone),
+        'long' => format_date($time, 'long', '', $timezone),
         'custom' => format_date($time, 'custom', 'c', $timezone),
       );
       $this->assertRenderedDatesEqual($view, $dates, $timezone);
