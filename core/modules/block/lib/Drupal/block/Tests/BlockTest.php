@@ -414,7 +414,7 @@ class BlockTest extends WebTestBase {
     $this->assertEqual($current_caching, DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
 
     // Disable caching for this block.
-    variable_set('block_test_caching', DRUPAL_NO_CACHE);
+    state()->set('block_test.caching', DRUPAL_NO_CACHE);
     // Flushing all caches should call _block_rehash().
     $this->resetAll();
     // Verify that the database is updated with the new caching mode.

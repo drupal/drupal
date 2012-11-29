@@ -19,7 +19,7 @@ function block_test_system_theme_info() {
 function block_test_block_info() {
   $blocks['test_cache'] = array(
     'info' => t('Test block caching'),
-    'cache' => variable_get('block_test_caching', DRUPAL_CACHE_PER_ROLE),
+    'cache' => state()->get('block_test.caching') ?: DRUPAL_CACHE_PER_ROLE,
   );
 
   $blocks['test_html_id'] = array(
@@ -32,5 +32,5 @@ function block_test_block_info() {
  * Implements hook_block_view().
  */
 function block_test_block_view($delta = 0) {
-  return array('content' => variable_get('block_test_content', ''));
+  return array('content' => state()->get('block_test.content'));
 }

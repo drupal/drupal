@@ -42,7 +42,7 @@ class BlockHtmlIdTest extends WebTestBase {
 
     // Make sure the block has some content so it will appear
     $current_content = $this->randomName();
-    variable_set('block_test_content', $current_content);
+    state()->set('block_test.content', $current_content);
   }
 
   /**
