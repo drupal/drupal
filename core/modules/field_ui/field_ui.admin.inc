@@ -921,12 +921,34 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   if (field_behaviors_widget('multiple_values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
     $description .= '<br/>' . t("'Unlimited' will provide an 'Add more' button so the users can add as many values as they like.");
   }
-  $form['field']['cardinality'] = array(
-    '#type' => 'select',
+
+  $cardinality = $field['cardinality'];
+  $form['field']['container'] = array(
+    // We can't use the container element because it doesn't support the title
+    // or description properties.
+    '#type' => 'item',
+    '#field_prefix' => '<div class="container-inline">',
+    '#field_suffix' => '</div>',
     '#title' => t('Number of values'),
-    '#options' => array(FIELD_CARDINALITY_UNLIMITED => t('Unlimited')) + drupal_map_assoc(range(1, 10)),
-    '#default_value' => $field['cardinality'],
     '#description' => $description,
+  );
+  $form['field']['container']['cardinality'] = array(
+    '#type' => 'select',
+    '#options' => array(FIELD_CARDINALITY_UNLIMITED => t('Unlimited')) + drupal_map_assoc(range(1, 5)) + array('other' => t('More')),
+    '#default_value' => ($cardinality < 6) ? $cardinality : 'other',
+  );
+  // @todo Convert when http://drupal.org/node/1207060 gets in.
+  $form['field']['container']['cardinality_other'] = array(
+    '#type' => 'number',
+    '#default_value' => $cardinality > 5 ? $cardinality : 6,
+    '#min' => 1,
+    '#title' => t('Custom value'),
+    '#title_display' => 'invisible',
+    '#states' => array(
+      'visible' => array(
+       ':input[name="field[container][cardinality]"]' => array('value' => 'other'),
+      ),
+    ),
   );
 
   // Add additional field type settings. The field type module is
@@ -1037,6 +1059,13 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
   $field_name = $instance['field_name'];
   $entity = $form['#entity'];
 
+  // Validate field cardinality.
+  $cardinality = $form_state['values']['field']['container']['cardinality'];
+  $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
+  if ($cardinality == 'other' && empty($cardinality_other)) {
+    form_error($form['field']['container']['cardinality_other'], t('Number of values is required.'));
+  }
+
   if (isset($form['instance']['default_value_widget'])) {
     $element = $form['instance']['default_value_widget'];
 
@@ -1076,6 +1105,15 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
   $instance = $form['#instance'];
   $field = $form['#field'];
   $entity = $form['#entity'];
+
+  // Save field cardinality.
+  $cardinality = $form_state['values']['field']['container']['cardinality'];
+  $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
+  if ($cardinality == 'other') {
+    $cardinality = $cardinality_other;
+  }
+  $form_state['values']['field']['cardinality'] = $cardinality;
+  unset($form_state['values']['field']['container']);
 
   // Merge incoming values into the field.
   $field = array_merge($field, $form_state['values']['field']);

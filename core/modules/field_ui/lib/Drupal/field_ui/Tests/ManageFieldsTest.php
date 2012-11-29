@@ -65,6 +65,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->createField();
     $this->updateField();
     $this->addExistingField();
+    $this->cardinalitySettings();
   }
 
   /**
@@ -160,6 +161,49 @@ class ManageFieldsTest extends FieldUiTestBase {
       'fields[_add_existing_field][field_name]' => $this->field_name,
     );
     $this->fieldUIAddExistingField("admin/structure/types/manage/page", $edit);
+  }
+
+  /**
+   * Tests the cardinality settings of a field.
+   *
+   * We do not test if the number can be submitted with anything else than a
+   * numeric value. That is tested already in FormTest::testNumber().
+   */
+  function cardinalitySettings() {
+    $field_edit_path = 'admin/structure/types/manage/article/fields/body';
+
+    // Assert the cardinality other field cannot be empty when cardinality is
+    // set to other.
+    $edit = array(
+      'field[container][cardinality]' => 'other',
+      'field[container][cardinality_other]' => '',
+    );
+    $this->drupalPost($field_edit_path, $edit, t('Save settings'));
+    $this->assertText('Number of values is required.');
+
+    // Assert the cardinality field is set to 'Other' when the value is greater
+    // than 5.
+    $edit = array(
+      'field[container][cardinality]' => 'other',
+      'field[container][cardinality_other]' => 16,
+    );
+    $this->drupalPost($field_edit_path, $edit, t('Save settings'));
+    $this->assertText('Saved Body configuration.');
+    $this->drupalGet($field_edit_path);
+    $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 'other');
+    $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 16);
+
+    // Assert the cardinality other field is set back to 6 after changing the
+    // cardinality to less than 6.
+    $edit = array(
+      'field[container][cardinality]' => 3,
+      'field[container][cardinality_other]' => 16,
+    );
+    $this->drupalPost($field_edit_path, $edit, t('Save settings'));
+    $this->assertText('Saved Body configuration.');
+    $this->drupalGet($field_edit_path);
+    $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 3);
+    $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 6);
   }
 
   /**
