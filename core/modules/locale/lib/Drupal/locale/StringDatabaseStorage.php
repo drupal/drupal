@@ -9,7 +9,6 @@ namespace Drupal\locale;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
-use PDO;
 
 /**
  * Defines the locale string class.
@@ -63,27 +62,31 @@ class StringDatabaseStorage implements StringStorageInterface {
    * Implements Drupal\locale\StringStorageInterface::findString().
    */
   public function findString(array $conditions) {
-    $string = $this->dbStringSelect($conditions)
-    ->execute()
-    ->fetchObject('Drupal\locale\SourceString');
-    if ($string) {
+    $values = $this->dbStringSelect($conditions)
+      ->execute()
+      ->fetchAssoc();
+
+    if (!empty($values)) {
+      $string = new SourceString($values);
       $string->setStorage($this);
+      return $string;
     }
-    return $string;
   }
 
   /**
    * Implements Drupal\locale\StringStorageInterface::findTranslation().
    */
   public function findTranslation(array $conditions) {
-    $string = $this->dbStringSelect($conditions, array('translation' => TRUE))
-    ->execute()
-    ->fetchObject('Drupal\locale\TranslationString');
-    if ($string) {
+    $values = $this->dbStringSelect($conditions, array('translation' => TRUE))
+      ->execute()
+      ->fetchAssoc();
+
+    if (!empty($values)) {
+      $string = new TranslationString($values);
       $this->checkVersion($string, VERSION);
       $string->setStorage($this);
+      return $string;
     }
-    return $string;
   }
 
   /**
@@ -359,11 +362,12 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   Array of objects of the class requested.
    */
   protected function dbStringLoad(array $conditions, array $options, $class) {
+    $strings = array();
     $result = $this->dbStringSelect($conditions, $options)->execute();
-    $result->setFetchMode(PDO::FETCH_CLASS, $class);
-    $strings = $result->fetchAll();
-    foreach ($strings as $string) {
+    foreach ($result as $item) {
+      $string = new $class($item);
       $string->setStorage($this);
+      $strings[] = $string;
     }
     return $strings;
   }
