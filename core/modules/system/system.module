@@ -3519,7 +3519,7 @@ function system_time_zones($blank = NULL) {
     // reasons and should not be used, the list is filtered by a regular
     // expression.
     if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
-      $zones[$zone] = t('@zone: @date', array('@zone' => t(str_replace('_', ' ', $zone)), '@date' => format_date(REQUEST_TIME, 'custom', config('system.date')->get('formats.long.pattern.php') . ' O', $zone)));
+      $zones[$zone] = t('@zone', array('@zone' => t(str_replace('_', ' ', $zone))));
     }
   }
   // Sort the translated time zones alphabetically.
