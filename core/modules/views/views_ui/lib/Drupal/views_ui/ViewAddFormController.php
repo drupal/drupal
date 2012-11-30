@@ -31,7 +31,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     $form['#attributes']['class'] = array('views-admin');
 
     $form['name'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#attributes' => array('class' => array('fieldset-no-legend')),
     );
 
@@ -80,7 +80,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     // Create the part of the form that allows the user to select the basic
     // properties of what the view will display.
     $form['displays']['show'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#tree' => TRUE,
       '#attributes' => array('class' => array('container-inline')),
     );

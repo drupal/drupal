@@ -209,7 +209,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $this->build_sorts($form, $form_state);
 
     $form['displays']['page'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),
       '#tree' => TRUE,
     );
@@ -246,7 +246,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       '#field_prefix' => $path_prefix,
     );
     $form['displays']['page']['options']['style'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#attributes' => array('class' => array('container-inline', 'fieldset-no-legend')),
     );
 
@@ -352,7 +352,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
 
     $form['displays']['block'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),
       '#tree' => TRUE,
     );
@@ -383,7 +383,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       '#type' => 'textfield',
     );
     $form['displays']['block']['options']['style'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#attributes' => array('class' => array('container-inline', 'fieldset-no-legend')),
     );
 
