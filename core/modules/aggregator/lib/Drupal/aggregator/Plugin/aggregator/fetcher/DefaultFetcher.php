@@ -10,6 +10,7 @@ namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 use Drupal\aggregator\Plugin\FetcherInterface;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Guzzle\Http\Exception\BadResponseException;
 
 /**
  * Defines a default fetcher implementation.
@@ -28,44 +29,31 @@ class DefaultFetcher implements FetcherInterface {
    * Implements Drupal\aggregator\Plugin\FetcherInterface::fetch().
    */
   function fetch(&$feed) {
+    $request = drupal_container()->get('http_default_client')->get($feed->url);
     $feed->source_string = FALSE;
 
     // Generate conditional GET headers.
-    $headers = array();
     if ($feed->etag) {
-      $headers['If-None-Match'] = $feed->etag;
+      $request->addHeader('If-None-Match', $feed->etag);
     }
     if ($feed->modified) {
-      $headers['If-Modified-Since'] = gmdate(DATE_RFC1123, $feed->modified);
+      $request->addHeader('If-Modified-Since', gmdate(DATE_RFC1123, $feed->modified));
     }
 
-    // Request feed.
-    $result = drupal_http_request($feed->url, array('headers' => $headers));
+    try {
+      $response = $request->send();
+      $feed->source_string = $response->getBody(TRUE);
+      $feed->etag = $response->getEtag();
+      $feed->modified = strtotime($response->getLastModified());
+      $feed->http_headers = $response->getHeaders();
 
-    // Process HTTP response code.
-    switch ($result->code) {
-      case 304:
-        break;
-      case 301:
-        $feed->url = $result->redirect_url;
-        // Do not break here.
-      case 200:
-      case 302:
-      case 307:
-        if (!isset($result->data)) {
-          $result->data = '';
-        }
-        if (!isset($result->headers)) {
-          $result->headers = array();
-        }
-        $feed->source_string = $result->data;
-        $feed->http_headers = $result->headers;
-        break;
-      default:
-        watchdog('aggregator', 'The feed from %site seems to be broken due to "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
-        drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error)));
+      return TRUE;
     }
-
-    return !($feed->source_string === FALSE);
+    catch (BadResponseException $e) {
+      $response = $e->getResponse();
+      watchdog('aggregator', 'The feed from %site seems to be broken due to "%error".', array('%site' => $feed->title, '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()), WATCHDOG_WARNING);
+      drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->title, '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
+      return FALSE;
+    }
   }
 }

@@ -17,6 +17,10 @@ return array(
     'Symfony\\Component\\DependencyInjection' => $vendorDir . '/symfony/dependency-injection/',
     'Symfony\\Component\\ClassLoader' => $vendorDir . '/symfony/class-loader/',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs',
+    'Guzzle\\Stream' => $vendorDir . '/guzzle/stream/',
+    'Guzzle\\Parser' => $vendorDir . '/guzzle/parser/',
+    'Guzzle\\Http' => $vendorDir . '/guzzle/http/',
+    'Guzzle\\Common' => $vendorDir . '/guzzle/common/',
     'Doctrine\\Common' => $vendorDir . '/doctrine/common/lib/',
     'Assetic' => $vendorDir . '/kriswallsmith/assetic/src/',
 );

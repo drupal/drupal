@@ -79,6 +79,16 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('database'))
       ->addArgument(new Reference('keyvalue'));
 
+    $container->register('http_client_simpletest_subscriber', 'Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber');
+    $container->register('http_default_client', 'Guzzle\Http\Client')
+      ->addArgument(NULL)
+      ->addArgument(array(
+        'curl.CURLOPT_TIMEOUT' => 30.0,
+        'curl.CURLOPT_MAXREDIRS' => 3,
+      ))
+      ->addMethodCall('addSubscriber', array(new Reference('http_client_simpletest_subscriber')))
+      ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
+
     // Register the EntityManager.
     $container->register('plugin.manager.entity', 'Drupal\Core\Entity\EntityManager');
 

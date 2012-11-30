@@ -13,6 +13,7 @@
     "symfony/yaml": "2.1.*",
     "twig/twig": "1.8.*",
     "doctrine/common": "2.3.*",
+    "guzzle/http": "3.*",
     "kriswallsmith/assetic": "1.1.*"
   },
   "minimum-stability": "alpha"

@@ -3,7 +3,6 @@
         "name": "twig/twig",
         "version": "v1.8.3",
         "version_normalized": "1.8.3.0",
-        "time": "2012-06-18 18:48:16",
         "source": {
             "type": "git",
             "url": "git://github.com/fabpot/Twig.git",
@@ -18,6 +17,7 @@
         "require": {
             "php": ">=5.2.4"
         },
+        "time": "2012-06-18 18:48:16",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -25,6 +25,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
         "license": [
             "BSD-3"
         ],
@@ -46,19 +51,13 @@
         "homepage": "http://twig.sensiolabs.org",
         "keywords": [
             "templating"
-        ],
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        }
+        ]
     },
     {
         "name": "symfony/class-loader",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/ClassLoader",
-        "time": "2012-08-27 14:51:49",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/ClassLoader",
@@ -76,6 +75,7 @@
         "require-dev": {
             "symfony/finder": "2.1.*"
         },
+        "time": "2012-08-27 14:51:49",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -83,6 +83,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\ClassLoader": ""
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -101,19 +106,13 @@
             }
         ],
         "description": "Symfony ClassLoader Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\ClassLoader": ""
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "symfony/dependency-injection",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/DependencyInjection",
-        "time": "2012-08-28 06:54:42",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/DependencyInjection",
@@ -136,6 +135,7 @@
             "symfony/yaml": "v2.1.0-RC2",
             "symfony/config": "v2.1.0-RC2"
         },
+        "time": "2012-08-28 06:54:42",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -143,6 +143,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\DependencyInjection": ""
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -161,18 +166,12 @@
             }
         ],
         "description": "Symfony DependencyInjection Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\DependencyInjection": ""
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "doctrine/common",
         "version": "2.3.0-RC2",
         "version_normalized": "2.3.0.0-RC2",
-        "time": "2012-08-29 13:06:32",
         "source": {
             "type": "git",
             "url": "https://github.com/doctrine/common",
@@ -187,6 +186,7 @@
         "require": {
             "php": ">=5.3.2"
         },
+        "time": "2012-08-29 13:06:32",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -194,6 +194,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\Common": "lib/"
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -237,19 +242,13 @@
             "eventmanager",
             "annotations",
             "persistence"
-        ],
-        "autoload": {
-            "psr-0": {
-                "Doctrine\\Common": "lib/"
-            }
-        }
+        ]
     },
     {
         "name": "symfony/http-foundation",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/HttpFoundation",
-        "time": "2012-08-22 12:48:41",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/HttpFoundation",
@@ -264,6 +263,7 @@
         "require": {
             "php": ">=5.3.3"
         },
+        "time": "2012-08-22 12:48:41",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -271,6 +271,12 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\HttpFoundation": "",
+                "SessionHandlerInterface": "Symfony/Component/HttpFoundation/Resources/stubs"
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -289,20 +295,13 @@
             }
         ],
         "description": "Symfony HttpFoundation Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\HttpFoundation": "",
-                "SessionHandlerInterface": "Symfony/Component/HttpFoundation/Resources/stubs"
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "symfony/event-dispatcher",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/EventDispatcher",
-        "time": "2012-08-22 12:48:41",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/EventDispatcher",
@@ -324,6 +323,7 @@
             "symfony/dependency-injection": "v2.1.0-RC2",
             "symfony/http-kernel": "v2.1.0-RC2"
         },
+        "time": "2012-08-22 12:48:41",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -331,6 +331,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\EventDispatcher": ""
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -349,19 +354,13 @@
             }
         ],
         "description": "Symfony EventDispatcher Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\EventDispatcher": ""
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "symfony/http-kernel",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/HttpKernel",
-        "time": "2012-08-28 07:00:18",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/HttpKernel",
@@ -396,6 +395,7 @@
             "symfony/dependency-injection": "v2.1.0-RC2",
             "symfony/finder": "v2.1.0-RC2"
         },
+        "time": "2012-08-28 07:00:18",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -403,6 +403,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\HttpKernel": ""
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -421,19 +426,13 @@
             }
         ],
         "description": "Symfony HttpKernel Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\HttpKernel": ""
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "symfony/routing",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/Routing",
-        "time": "2012-08-28 06:54:42",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Routing",
@@ -459,6 +458,7 @@
             "symfony/yaml": "v2.1.0-RC2",
             "doctrine/common": ">=2.2,<2.4-dev"
         },
+        "time": "2012-08-28 06:54:42",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -466,6 +466,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Routing": ""
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -484,19 +489,13 @@
             }
         ],
         "description": "Symfony Routing Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\Routing": ""
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "symfony/yaml",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/Yaml",
-        "time": "2012-08-22 12:48:41",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Yaml",
@@ -511,6 +510,7 @@
         "require": {
             "php": ">=5.3.3"
         },
+        "time": "2012-08-22 12:48:41",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -518,6 +518,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Yaml": ""
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -536,19 +541,13 @@
             }
         ],
         "description": "Symfony Yaml Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\Yaml": ""
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "symfony/process",
         "version": "v2.1.0-RC2",
         "version_normalized": "2.1.0.0-RC2",
         "target-dir": "Symfony/Component/Process",
-        "time": "2012-08-26 06:13:51",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Process",
@@ -563,6 +562,7 @@
         "require": {
             "php": ">=5.3.3"
         },
+        "time": "2012-08-26 06:13:51",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -570,6 +570,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Process": ""
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -584,18 +589,12 @@
             }
         ],
         "description": "Symfony Process Component",
-        "homepage": "http://symfony.com",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\Process": ""
-            }
-        }
+        "homepage": "http://symfony.com"
     },
     {
         "name": "kriswallsmith/assetic",
         "version": "v1.1.0-alpha1",
         "version_normalized": "1.1.0.0-alpha1",
-        "time": "2012-08-28 05:33:44",
         "source": {
             "type": "git",
             "url": "http://github.com/kriswallsmith/assetic.git",
@@ -623,6 +622,7 @@
             "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
             "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris"
         },
+        "time": "2012-08-28 05:33:44",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -630,6 +630,11 @@
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Assetic": "src/"
+            }
+        },
         "license": [
             "MIT"
         ],
@@ -646,11 +651,230 @@
             "assets",
             "compression",
             "minification"
-        ],
+        ]
+    },
+    {
+        "name": "symfony/serializer",
+        "version": "v2.1.2",
+        "version_normalized": "2.1.2.0",
+        "target-dir": "Symfony/Component/Serializer",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Serializer",
+            "reference": "v2.1.2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/symfony/Serializer/zipball/v2.1.2",
+            "reference": "v2.1.2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2012-08-28 00:54:42",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.1-dev"
+            }
+        },
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
-                "Assetic": "src/"
+                "Symfony\\Component\\Serializer": ""
             }
-        }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Serializer Component",
+        "homepage": "http://symfony.com"
+    },
+    {
+        "name": "guzzle/common",
+        "version": "v3.0.5",
+        "version_normalized": "3.0.5.0",
+        "target-dir": "Guzzle/Common",
+        "source": {
+            "type": "git",
+            "url": "git://github.com/guzzle/common.git",
+            "reference": "v3.0.5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/common/archive/v3.0.5.zip",
+            "reference": "v3.0.5",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "symfony/event-dispatcher": "2.1.*"
+        },
+        "time": "2012-11-19 00:15:33",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Common": ""
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "description": "Common libraries used by Guzzle",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "event",
+            "exception",
+            "common",
+            "collection"
+        ]
+    },
+    {
+        "name": "guzzle/stream",
+        "version": "v3.0.5",
+        "version_normalized": "3.0.5.0",
+        "target-dir": "Guzzle/Stream",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/stream",
+            "reference": "v3.0.5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/stream/archive/v3.0.5.zip",
+            "reference": "v3.0.5",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "guzzle/common": "self.version"
+        },
+        "time": "2012-11-11 23:54:57",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Stream": ""
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "Guzzle stream wrapper component",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "stream",
+            "Guzzle",
+            "component"
+        ]
+    },
+    {
+        "name": "guzzle/parser",
+        "version": "v3.0.5",
+        "version_normalized": "3.0.5.0",
+        "target-dir": "Guzzle/Parser",
+        "source": {
+            "type": "git",
+            "url": "git://github.com/guzzle/parser.git",
+            "reference": "v3.0.5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/parser/archive/v3.0.5.zip",
+            "reference": "v3.0.5",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "time": "2012-11-19 00:07:13",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Parser": ""
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "description": "Interchangeable parsers used by Guzzle",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "http",
+            "url",
+            "message",
+            "cookie",
+            "URI Template"
+        ]
+    },
+    {
+        "name": "guzzle/http",
+        "version": "v3.0.5",
+        "version_normalized": "3.0.5.0",
+        "target-dir": "Guzzle/Http",
+        "source": {
+            "type": "git",
+            "url": "git://github.com/guzzle/http.git",
+            "reference": "v3.0.5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/http/archive/v3.0.5.zip",
+            "reference": "v3.0.5",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "guzzle/common": "self.version",
+            "guzzle/parser": "self.version",
+            "guzzle/stream": "self.version"
+        },
+        "time": "2012-11-18 05:28:55",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Http": ""
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "HTTP libraries used by Guzzle",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "curl",
+            "http",
+            "http client",
+            "client",
+            "Guzzle"
+        ]
     }
 ]
