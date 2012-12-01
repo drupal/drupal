@@ -7,12 +7,14 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the base relationship handler.
  *
  * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
-class RelationshipTest extends HandlerTestBase {
+class RelationshipTest extends ViewUnitTestBase {
 
   /**
    * Maps between the key in the expected result and the query result.
@@ -35,9 +37,8 @@ class RelationshipTest extends HandlerTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableViewsTestModule();
+    $this->enableModules(array('field', 'user'));
   }
-
 
   /**
    * Overrides Drupal\views\Tests\ViewTestBase::schemaDefinition().
@@ -91,7 +92,8 @@ class RelationshipTest extends HandlerTestBase {
     db_query("UPDATE {views_test_data} SET uid = 1 WHERE id = 1");
     db_query("UPDATE {views_test_data} SET uid = 2 WHERE id <> 1");
 
-    $view = $this->getBasicView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     $view->displayHandlers['default']->overrideOption('relationships', array(
       'uid' => array(

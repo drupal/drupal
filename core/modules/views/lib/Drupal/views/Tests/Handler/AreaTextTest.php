@@ -7,12 +7,14 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the text area handler.
  *
  * @see Drupal\views\Plugin\views\area\Text
  */
-class AreaTextTest extends HandlerTestBase {
+class AreaTextTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -25,11 +27,13 @@ class AreaTextTest extends HandlerTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableViewsTestModule();
+    $this->enableModules(array('system'));
+    $this->enableModules(array('filter'));
   }
 
   public function testAreaText() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // add a text header
     $string = $this->randomName();

@@ -24,7 +24,8 @@ class StyleUnformattedTest extends StyleTestBase {
    * Take sure that the default css classes works as expected.
    */
   function testDefaultRowClasses() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
     $rendered_output = $view->preview();
     $this->storeViewPreview($rendered_output);
 

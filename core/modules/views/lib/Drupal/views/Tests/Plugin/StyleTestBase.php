@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests some general style plugin related functionality.
  */
-abstract class StyleTestBase extends PluginTestBase {
+abstract class StyleTestBase extends ViewUnitTestBase {
 
   /**
    * Stores the SimpleXML representation of the output.
@@ -18,12 +20,6 @@ abstract class StyleTestBase extends PluginTestBase {
    * @var SimpleXMLElement
    */
   protected $elements;
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-  }
 
   /**
    * Stores a view output in the elements.

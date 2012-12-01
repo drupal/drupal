@@ -9,6 +9,11 @@
  * Implements hook_schema().
  */
 function views_test_data_schema() {
+  // \Drupal\views\Tests\ViewUnitTestBase uses $GLOBALS, while
+  // \Drupal\views\Tests\ViewTestBase uses state().
+  if (isset($GLOBALS['views_test_data_schema'])) {
+    return $GLOBALS['views_test_data_schema'];
+  }
   return state()->get('views_test_data_schema');
 }
 

@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests core view token replacement.
  */
-class TokenReplaceTest extends ViewTestBase {
+class TokenReplaceTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -21,9 +21,9 @@ class TokenReplaceTest extends ViewTestBase {
   }
 
   public function setUp() {
-    parent::SetUp();
+    parent::setUp();
 
-    $this->enableViewsTestModule();
+    $this->enableModules(array('system'));
   }
 
   /**

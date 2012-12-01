@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\field\Url handler.
  */
-class FieldUrlTest extends HandlerTestBase {
+class FieldUrlTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -20,12 +22,6 @@ class FieldUrlTest extends HandlerTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-  }
-
   function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['field']['id'] = 'url';
@@ -33,7 +29,8 @@ class FieldUrlTest extends HandlerTestBase {
   }
 
   public function testFieldUrl() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(
@@ -51,7 +48,7 @@ class FieldUrlTest extends HandlerTestBase {
 
     // Make the url a link.
     $view->destroy();
-    $view = $this->getView();
+    $view->setDisplay();
 
     $view->displayHandlers['default']->overrideOption('fields', array(
       'name' => array(

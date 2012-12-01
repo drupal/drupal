@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\argument\Null handler.
  */
-class ArgumentNullTest extends HandlerTestBase {
+class ArgumentNullTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -18,12 +20,6 @@ class ArgumentNullTest extends HandlerTestBase {
       'description' => 'Test the core Drupal\views\Plugin\views\argument\Null handler.',
       'group' => 'Views Handlers',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
   }
 
   function viewsData() {
@@ -35,7 +31,8 @@ class ArgumentNullTest extends HandlerTestBase {
 
   public function testAreaText() {
     // Test validation
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Add a null argument.
     $string = $this->randomString();
@@ -60,7 +57,8 @@ class ArgumentNullTest extends HandlerTestBase {
     $this->assertTrue($view->argument['null']->validateArgument(NULL), 'must_not_be returns TRUE, if there is no argument');
 
     // Test execution.
-    $view = $this->getView();
+    $view->destroy();
+    $view->setDisplay();
 
     // Add a argument, which has null as handler.
     $string = $this->randomString();

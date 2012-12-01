@@ -7,28 +7,25 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\views\Tests\ViewUnitTestBase;
 
 /**
  * Tests abstract handlers of views.
  */
-class HandlerAliasTest extends ViewTestBase {
+class HandlerAliasTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
       'name' => 'Handler alias tests',
       'description' => 'Tests handler table and field aliases.',
-      'group' => 'Views',
+      'group' => 'Views Handlers',
     );
   }
 
   protected function setUp() {
     parent::setUp();
 
-    // Create a new user for the 'real table'.
-    $this->user = $this->drupalCreateUser();
-
-    $this->enableViewsTestModule();
+    $this->enableModules(array('user'));
   }
 
   /**

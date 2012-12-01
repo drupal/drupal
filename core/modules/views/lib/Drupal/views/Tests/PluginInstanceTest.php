@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Checks general plugin data and instances for all plugin types.
  */
-class PluginInstanceTest extends ViewTestBase {
+class PluginInstanceTest extends ViewUnitTestBase {
 
   /**
    * All views plugin types.

@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the Drupal\views\Plugin\views\field\Counter handler.
  */
-class FieldCounterTest extends HandlerTestBase {
+class FieldCounterTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -23,11 +25,12 @@ class FieldCounterTest extends HandlerTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableViewsTestModule();
+    $this->enableModules(array('user'));
   }
 
   function testSimple() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
     $view->displayHandlers['default']->overrideOption('fields', array(
       'counter' => array(
         'id' => 'counter',
@@ -44,7 +47,6 @@ class FieldCounterTest extends HandlerTestBase {
     ));
     $view->preview();
 
-
     $counter = $view->style_plugin->rendered_fields[0]['counter'];
     $this->assertEqual($counter, 1, format_string('Make sure the expected number (@expected) patches with the rendered number (@counter)', array('@expected' => 1, '@counter' => $counter)));
     $counter = $view->style_plugin->rendered_fields[1]['counter'];
@@ -53,7 +55,7 @@ class FieldCounterTest extends HandlerTestBase {
     $this->assertEqual($counter, 3, format_string('Make sure the expected number (@expected) patches with the rendered number (@counter)', array('@expected' => 3, '@counter' => $counter)));
     $view->destroy();
 
-    $view = $this->getView();
+    $view->setDisplay();
     $rand_start = rand(5, 10);
     $view->displayHandlers['default']->overrideOption('fields', array(
       'counter' => array(

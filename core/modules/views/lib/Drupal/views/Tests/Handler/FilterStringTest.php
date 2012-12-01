@@ -7,12 +7,16 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\filter\String handler.
  */
-class FilterStringTest extends HandlerTestBase {
+class FilterStringTest extends ViewUnitTestBase {
 
-  var $column_map = array();
+  protected $column_map = array(
+    'views_test_data_name' => 'name',
+  );
 
   public static function getInfo() {
     return array(
@@ -22,14 +26,11 @@ class FilterStringTest extends HandlerTestBase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
-    $this->enableViewsTestModule();
-
-    $this->column_map = array(
-      'views_test_data_name' => 'name',
-    );
+    $this->enableModules(array('system'));
+    $this->enableModules(array('menu'));
   }
 
   function viewsData() {
@@ -67,19 +68,25 @@ class FilterStringTest extends HandlerTestBase {
     return $dataset;
   }
 
-  protected function getBasicView() {
-    $view = parent::getBasicView();
-    $view->displayHandlers['default']->options['fields']['description'] = array(
-      'id' => 'description',
-      'table' => 'views_test_data',
-      'field' => 'description',
-      'relationship' => 'none',
-    );
+  /**
+   * Build and return a Page view of the views_test_data table.
+   *
+   * @return view
+   */
+  protected function getBasicPageView() {
+    $view = views_get_view('test_view');
+
+    // In order to test exposed filters, we have to disable
+    // the exposed forms cache.
+    drupal_static_reset('views_exposed_form_cache');
+
+    $view->storage->newDisplay('page', 'Page', 'page_1');
     return $view;
   }
 
   function testFilterStringEqual() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -123,7 +130,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringNotEqual() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -186,7 +194,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringContains() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -232,7 +241,8 @@ class FilterStringTest extends HandlerTestBase {
 
 
   function testFilterStringWord() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -258,7 +268,8 @@ class FilterStringTest extends HandlerTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->column_map);
     $view->destroy();
 
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -323,7 +334,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringStarts() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -366,7 +378,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringNotStarts() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -423,7 +436,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringEnds() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -472,7 +486,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringNotEnds() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -523,7 +538,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringNot() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -576,7 +592,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringShorter() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -624,7 +641,8 @@ class FilterStringTest extends HandlerTestBase {
   }
 
   function testFilterStringLonger() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -667,7 +685,8 @@ class FilterStringTest extends HandlerTestBase {
 
 
   function testFilterStringEmpty() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the filtering
     $view->displayHandlers['default']->overrideOption('filters', array(

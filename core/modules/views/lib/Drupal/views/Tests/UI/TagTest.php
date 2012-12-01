@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\UI;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the views ui tagging functionality.
  */
-class TagTest extends UITestBase {
+class TagTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -45,7 +47,7 @@ class TagTest extends UITestBase {
     $matches = (array) json_decode($result->getContent());
     $this->assertEqual(count($matches), 8, 'Make sure that only a subset is returned.');
     foreach ($matches as $tag) {
-      $this->assertTrue(array_search($tag, $tags) !== FALSE, format_string('Make sure the returned tag @tag actually exists.'. array('@tag' => $tag)));
+      $this->assertTrue(array_search($tag, $tags) !== FALSE, format_string('Make sure the returned tag @tag actually exists.', array('@tag' => $tag)));
     }
 
     // Make sure an invalid result doesn't return anything.

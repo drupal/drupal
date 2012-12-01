@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Basic test class for Views query builder tests.
  */
-class BasicTest extends ViewTestBase {
+class BasicTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -20,17 +20,12 @@ class BasicTest extends ViewTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-  }
-
   /**
    * Tests a trivial result set.
    */
   public function testSimpleResultSet() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Execute the view.
     $this->executeView($view);
@@ -47,7 +42,8 @@ class BasicTest extends ViewTestBase {
    * Tests filtering of the result set.
    */
   public function testSimpleFiltering() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Add a filter.
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -105,7 +101,8 @@ class BasicTest extends ViewTestBase {
    * Tests simple argument.
    */
   public function testSimpleArgument() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Add a argument.
     $view->displayHandlers['default']->overrideOption('arguments', array(

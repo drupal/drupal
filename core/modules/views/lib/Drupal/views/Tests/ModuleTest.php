@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests basic functions from the Views module.
  */
-class ModuleTest extends ViewTestBase {
+class ModuleTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -18,13 +18,6 @@ class ModuleTest extends ViewTestBase {
       'description' => 'Tests some basic functions of views.module.',
       'group' => 'Views',
     );
-  }
-
-  public function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-    drupal_theme_rebuild();
   }
 
   public function test_views_trim_text() {
@@ -111,6 +104,7 @@ class ModuleTest extends ViewTestBase {
    * Tests the load wrapper/helper functions.
    */
   public function testLoadFunctions() {
+    $this->enableModules(array('node'), FALSE);
     $controller = entity_get_controller('view');
 
     // Test views_view_is_enabled/disabled.

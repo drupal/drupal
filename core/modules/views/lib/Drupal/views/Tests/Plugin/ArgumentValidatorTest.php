@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests Views argument validators.
  */
-class ArgumentValidatorTest extends PluginTestBase {
+class ArgumentValidatorTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -22,10 +24,10 @@ class ArgumentValidatorTest extends PluginTestBase {
 
   function testArgumentValidatePhp() {
     $string = $this->randomName();
-    $view = $this->createViewFromConfig('test_view_argument_validate_php');
+    $view = views_get_view('test_view_argument_validate_php');
+    $view->setDisplay();
     $view->displayHandlers['default']->options['arguments']['null']['validate_options']['code'] = 'return $argument == \''. $string .'\';';
 
-    $view->preExecute();
     $view->initHandlers();
     $this->assertTrue($view->argument['null']->validateArgument($string));
     // Reset safed argument validation.
@@ -34,8 +36,7 @@ class ArgumentValidatorTest extends PluginTestBase {
   }
 
   function testArgumentValidateNumeric() {
-    $view = $this->createViewFromConfig('test_view_argument_validate_numeric');
-    $view->preExecute();
+    $view = views_get_view('test_view_argument_validate_numeric');
     $view->initHandlers();
     $this->assertFalse($view->argument['null']->validateArgument($this->randomString()));
     // Reset safed argument validation.

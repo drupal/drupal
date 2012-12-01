@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests for core Drupal\views\Plugin\views\sort\SortPluginBase handler.
  */
-class SortTest extends HandlerTestBase {
+class SortTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -20,17 +22,12 @@ class SortTest extends HandlerTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-  }
-
   /**
    * Tests numeric ordering of the result set.
    */
   public function testNumericOrdering() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the ordering
     $view->displayHandlers['default']->overrideOption('sorts', array(
@@ -53,7 +50,8 @@ class SortTest extends HandlerTestBase {
       'views_test_data_age' => 'age',
     ));
 
-    $view = $this->getView();
+    $view->destroy();
+    $view->setDisplay();
 
     // Reverse the ordering
     $view->displayHandlers['default']->overrideOption('sorts', array(
@@ -81,7 +79,8 @@ class SortTest extends HandlerTestBase {
    * Tests string ordering of the result set.
    */
   public function testStringOrdering() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Change the ordering
     $view->displayHandlers['default']->overrideOption('sorts', array(
@@ -104,7 +103,8 @@ class SortTest extends HandlerTestBase {
       'views_test_data_age' => 'age',
     ));
 
-    $view = $this->getView();
+    $view->destroy();
+    $view->setDisplay();
 
     // Reverse the ordering
     $view->displayHandlers['default']->overrideOption('sorts', array(

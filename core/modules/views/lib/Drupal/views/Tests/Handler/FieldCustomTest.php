@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\field\Custom handler.
  */
-class FieldCustomTest extends HandlerTestBase {
+class FieldCustomTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -20,12 +22,6 @@ class FieldCustomTest extends HandlerTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-  }
-
   function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['field']['id'] = 'custom';
@@ -33,7 +29,8 @@ class FieldCustomTest extends HandlerTestBase {
   }
 
   public function testFieldCustom() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Alter the text of the field to a random string.
     $random = $this->randomName();

@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Date handler.
  */
-class SortDateTest extends HandlerTestBase {
+class SortDateTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -18,12 +20,6 @@ class SortDateTest extends HandlerTestBase {
       'description' => 'Test the core Drupal\views\Plugin\views\sort\Date handler.',
       'group' => 'Views Handlers',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
   }
 
   protected function expectedResultSet($granularity, $reverse = TRUE) {
@@ -154,7 +150,8 @@ class SortDateTest extends HandlerTestBase {
   public function testDateOrdering() {
     foreach (array('second', 'minute', 'hour', 'day', 'month', 'year') as $granularity) {
       foreach (array(FALSE, TRUE) as $reverse) {
-        $view = $this->getView();
+        $view = views_get_view('test_view');
+        $view->setDisplay();
 
         // Change the fields.
         $view->displayHandlers['default']->overrideOption('fields', array(

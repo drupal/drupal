@@ -7,12 +7,14 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\field\FileSize handler.
  *
  * @see CommonXssUnitTest
  */
-class FieldFileSizeTest extends HandlerTestBase {
+class FieldFileSizeTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -20,12 +22,6 @@ class FieldFileSizeTest extends HandlerTestBase {
       'description' => 'Test the core Drupal\views\Plugin\views\field\FileSize handler.',
       'group' => 'Views Handlers',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
   }
 
   function dataSet() {
@@ -46,7 +42,8 @@ class FieldFileSizeTest extends HandlerTestBase {
   }
 
   public function testFieldFileSize() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     $view->displayHandlers['default']->overrideOption('fields', array(
       'age' => array(

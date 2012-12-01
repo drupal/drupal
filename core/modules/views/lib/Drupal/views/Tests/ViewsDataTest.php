@@ -12,7 +12,7 @@ namespace Drupal\views\Tests;
  *
  * @see hook_views_data
  */
-class ViewsDataTest extends ViewTestBase {
+class ViewsDataTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -20,12 +20,6 @@ class ViewsDataTest extends ViewTestBase {
       'description' => 'Tests the fetching of views data.',
       'group' => 'Views',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
   }
 
   /**

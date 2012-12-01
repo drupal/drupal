@@ -7,12 +7,17 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the combine filter handler.
  */
-class FilterCombineTest extends HandlerTestBase {
+class FilterCombineTest extends ViewUnitTestBase {
 
-  var $column_map = array();
+  protected $column_map = array(
+    'views_test_data_name' => 'name',
+    'views_test_data_job' => 'job',
+  );
 
   public static function getInfo() {
     return array(
@@ -22,30 +27,19 @@ class FilterCombineTest extends HandlerTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-
-    $this->column_map = array(
-      'views_test_data_name' => 'name',
-      'views_test_data_job' => 'job',
-    );
-  }
-
-  protected function getBasicView() {
-    $view = parent::getBasicView();
-    $view->displayHandlers['default']->display['display_options']['fields']['job'] = array(
-      'id' => 'job',
-      'table' => 'views_test_data',
-      'field' => 'job',
-      'relationship' => 'none',
-    );
-    return $view;
-  }
-
   public function testFilterCombineContains() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
+
+    $fields = $view->displayHandlers['default']->getOption('fields');
+    $view->displayHandlers['default']->overrideOption('fields', $fields + array(
+      'job' => array(
+        'id' => 'job',
+        'table' => 'views_test_data',
+        'field' => 'job',
+        'relationship' => 'none',
+      ),
+    ));
 
     // Change the filtering.
     $view->displayHandlers['default']->overrideOption('filters', array(

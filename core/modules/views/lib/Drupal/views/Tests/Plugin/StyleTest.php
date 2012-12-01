@@ -7,12 +7,23 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Tests\ViewTestBase;
+use Drupal\views_test_data\Plugin\views\row\RowTest;
+use Drupal\views_test_data\Plugin\views\style\StyleTest as StyleTestPlugin;
+
 /**
  * Tests some general style plugin related functionality.
  *
  * @see Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
-class StyleTest extends StyleTestBase {
+class StyleTest extends ViewTestBase {
+
+  /**
+   * Stores the SimpleXML representation of the output.
+   *
+   * @var \SimpleXMLElement
+   */
+  protected $elements;
 
   public static function getInfo() {
     return array(
@@ -22,17 +33,24 @@ class StyleTest extends StyleTestBase {
     );
   }
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
+  }
+
   /**
    * Tests the general renderering of styles.
    */
   public function testStyle() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
     $style = $view->display_handler->getOption('style');
     $style['type'] = 'test_style';
     $view->display_handler->setOption('style', $style);
     $view->initDisplay();
     $view->initStyle();
-    $this->assertTrue($view->style_plugin instanceof \Drupal\views_test_data\Plugin\views\style\StyleTest, 'Make sure the right style plugin class is loaded.');
+    $this->assertTrue($view->style_plugin instanceof StyleTestPlugin, 'Make sure the right style plugin class is loaded.');
 
     $random_text = $this->randomName();
     // Set some custom text to the output and make sure that this value is
@@ -42,7 +60,8 @@ class StyleTest extends StyleTestBase {
     $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Take sure that the rendering of the style plugin appears in the output of the view.');
 
     // This run use the test row plugin and render with it.
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
     $style = $view->display_handler->getOption('style');
     $style['type'] = 'test_style';
     $view->display_handler->setOption('style', $style);
@@ -54,7 +73,7 @@ class StyleTest extends StyleTestBase {
     $view->style_plugin->setUsesRowPlugin(TRUE);
     // Reinitialize the style as it supports row plugins now.
     $view->style_plugin->init($view, $view->display_handler, array());
-    $this->assertTrue($view->style_plugin->row_plugin instanceof \Drupal\views_test_data\Plugin\views\row\RowTest, 'Make sure the right row plugin class is loaded.');
+    $this->assertTrue($view->style_plugin->row_plugin instanceof RowTest, 'Make sure the right row plugin class is loaded.');
 
     $random_text = $this->randomName();
     $view->style_plugin->row_plugin->setOutput($random_text);
@@ -67,9 +86,9 @@ class StyleTest extends StyleTestBase {
    * Tests the grouping legacy features of styles.
    */
   function testGroupingLegacy() {
-    $view = $this->view->cloneView();
+    $view = views_get_view('test_view');
     // Setup grouping by the job.
-    $view->initDisplay();
+    $view->setDisplay();
     $view->initStyle();
     $view->style_plugin->options['grouping'] = 'job';
 
@@ -163,9 +182,9 @@ class StyleTest extends StyleTestBase {
    * Tests the grouping features of styles.
    */
   function _testGrouping($stripped = FALSE) {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
     // Setup grouping by the job and the age field.
-    $view->initDisplay();
     $view->initStyle();
     $view->style_plugin->options['grouping'] = array(
       array('field' => 'job'),
@@ -282,10 +301,10 @@ class StyleTest extends StyleTestBase {
    * Tests custom css classes.
    */
   function testCustomRowClasses() {
-    $view = $this->view->cloneView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Setup some random css class.
-    $view->initDisplay();
     $view->initStyle();
     $random_name = $this->randomName();
     $view->style_plugin->options['row_class'] = $random_name . " test-token-[name]";
@@ -305,6 +324,19 @@ class StyleTest extends StyleTestBase {
       $this->assertTrue(strpos($class, "test-token-$name") !== FALSE, 'Take sure that a token in custom css class is replaced.');
 
       $count++;
+    }
+  }
+
+  /**
+   * Stores a view output in the elements.
+   */
+  protected function storeViewPreview($output) {
+    $htmlDom = new \DOMDocument();
+    @$htmlDom->loadHTML($output);
+    if ($htmlDom) {
+      // It's much easier to work with simplexml than DOM, luckily enough
+      // we can just simply import our DOM tree.
+      $this->elements = simplexml_import_dom($htmlDom);
     }
   }
 

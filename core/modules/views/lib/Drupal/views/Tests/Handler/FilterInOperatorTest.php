@@ -7,10 +7,17 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\filter\InOperator handler.
  */
-class FilterInOperatorTest extends HandlerTestBase {
+class FilterInOperatorTest extends ViewUnitTestBase {
+
+  protected $column_map = array(
+    'views_test_data_name' => 'name',
+    'views_test_data_age' => 'age',
+  );
 
   public static function getInfo() {
     return array(
@@ -23,18 +30,19 @@ class FilterInOperatorTest extends HandlerTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableViewsTestModule();
+    $this->enableModules(array('system'));
+    $this->enableModules(array('menu'));
   }
 
   function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['age']['filter']['id'] = 'in_operator';
-
     return $data;
   }
 
   public function testFilterInOperatorSimple() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Add a in_operator ordering.
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -61,12 +69,10 @@ class FilterInOperatorTest extends HandlerTestBase {
     );
 
     $this->assertEqual(2, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_data_name' => 'name',
-      'views_test_data_age' => 'age',
-    ));
+    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
 
-    $view = $this->getView();
+    $view->destroy();
+    $view->setDisplay();
 
     // Add a in_operator ordering.
     $view->displayHandlers['default']->overrideOption('filters', array(
@@ -97,20 +103,17 @@ class FilterInOperatorTest extends HandlerTestBase {
     );
 
     $this->assertEqual(3, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_data_name' => 'name',
-      'views_test_data_age' => 'age',
-    ));
+    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
   }
 
   public function testFilterInOperatorGroupedExposedSimple() {
     $filters = $this->getGroupedExposedFilters();
-    $view = $this->getBasicPageView();
+    $view = views_get_view('test_view');
 
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 1;
-    $view->setDisplay('page_1');
-    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
+    $view->setDisplay();
+    $view->displayHandlers['default']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -126,20 +129,17 @@ class FilterInOperatorTest extends HandlerTestBase {
     );
 
     $this->assertEqual(2, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_data_name' => 'name',
-      'views_test_data_age' => 'age',
-    ));
+    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
   }
 
   public function testFilterNotInOperatorGroupedExposedSimple() {
     $filters = $this->getGroupedExposedFilters();
-    $view = $this->getBasicPageView();
+    $view = views_get_view('test_view');
 
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 2;
-    $view->setDisplay('page_1');
-    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
+    $view->setDisplay();
+    $view->displayHandlers['default']->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -159,10 +159,7 @@ class FilterInOperatorTest extends HandlerTestBase {
     );
 
     $this->assertEqual(3, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_data_name' => 'name',
-      'views_test_data_age' => 'age',
-    ));
+    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
   }
 
   protected function getGroupedExposedFilters() {

@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\field\Boolean handler.
  */
-class FieldBooleanTest extends HandlerTestBase {
+class FieldBooleanTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -18,12 +20,6 @@ class FieldBooleanTest extends HandlerTestBase {
       'description' => 'Test the core Drupal\views\Plugin\views\field\Boolean handler.',
       'group' => 'Views Handlers',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
   }
 
   function dataSet() {
@@ -41,7 +37,8 @@ class FieldBooleanTest extends HandlerTestBase {
   }
 
   public function testFieldBoolean() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     $view->displayHandlers['default']->overrideOption('fields', array(
       'age' => array(

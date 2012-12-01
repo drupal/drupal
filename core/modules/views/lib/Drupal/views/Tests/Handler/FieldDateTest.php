@@ -7,10 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Tests\ViewUnitTestBase;
+
 /**
  * Tests the core Drupal\views\Plugin\views\field\Date handler.
  */
-class FieldDateTest extends HandlerTestBase {
+class FieldDateTest extends ViewUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -20,12 +22,6 @@ class FieldDateTest extends HandlerTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-  }
-
   function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['created']['field']['id'] = 'date';
@@ -33,7 +29,8 @@ class FieldDateTest extends HandlerTestBase {
   }
 
   public function testFieldDate() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     $view->displayHandlers['default']->overrideOption('fields', array(
       'created' => array(
