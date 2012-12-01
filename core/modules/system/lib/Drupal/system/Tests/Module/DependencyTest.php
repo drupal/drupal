@@ -132,7 +132,7 @@ class DependencyTest extends ModuleTestBase {
     module_enable(array('module_test'), FALSE);
     $this->resetAll();
     $this->assertModules(array('module_test'), TRUE);
-    variable_set('dependency_test', 'dependency');
+    state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
     // - forum depends on taxonomy, comment, history, and poll (via module_test)
     // - taxonomy depends on options

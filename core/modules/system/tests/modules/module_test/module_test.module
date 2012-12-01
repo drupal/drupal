@@ -15,7 +15,7 @@ function module_test_permission() {
  * Manipulate module dependencies to test dependency chains.
  */
 function module_test_system_info_alter(&$info, $file, $type) {
-  if (variable_get('dependency_test', FALSE) == 'missing dependency') {
+  if (state()->get('module_test.dependency') == 'missing dependency') {
     if ($file->name == 'forum') {
       // Make forum module depend on poll.
       $info['dependencies'][] = 'poll';
@@ -25,7 +25,7 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'foo';
     }
   }
-  elseif (variable_get('dependency_test', FALSE) == 'dependency') {
+  elseif (state()->get('module_test.dependency') == 'dependency') {
     if ($file->name == 'forum') {
       // Make the forum module depend on poll.
       $info['dependencies'][] = 'poll';
@@ -35,7 +35,7 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'php';
     }
   }
-  elseif (variable_get('dependency_test', FALSE) == 'version dependency') {
+  elseif (state()->get('module_test.dependency') == 'version dependency') {
     if ($file->name == 'forum') {
       // Make the forum module depend on poll.
       $info['dependencies'][] = 'poll';

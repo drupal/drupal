@@ -159,7 +159,7 @@ class ModuleApiTest extends WebTestBase {
 
     // First, create a fake missing dependency. Forum depends on poll, which
     // depends on a made-up module, foo. Nothing should be installed.
-    variable_set('dependency_test', 'missing dependency');
+    state()->set('module_test.dependency', 'missing dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertFalse($result, 'module_enable() returns FALSE if dependencies are missing.');
@@ -167,7 +167,7 @@ class ModuleApiTest extends WebTestBase {
 
     // Now, fix the missing dependency. Forum module depends on poll, but poll
     // depends on the PHP module. module_enable() should work.
-    variable_set('dependency_test', 'dependency');
+    state()->set('module_test.dependency', 'dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertTrue($result, 'module_enable() returns the correct value.');
@@ -230,7 +230,7 @@ class ModuleApiTest extends WebTestBase {
     // php module. But, this time do it with poll module declaring a dependency
     // on a specific version of php module in its info file. Make sure that
     // module_enable() still works.
-    variable_set('dependency_test', 'version dependency');
+    state()->set('module_test.dependency', 'version dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertTrue($result, 'module_enable() returns the correct value.');
