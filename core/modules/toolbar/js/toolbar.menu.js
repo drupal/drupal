@@ -31,7 +31,7 @@ var activeItem = JSON.parse(localStorage.getItem('Drupal.toolbar.menu.activeItem
       var $item = $toggle.closest('li');
       // Toggle the list item.
       toggleList($item);
-      // Close open siblings and their open children.
+      // Close open sibling menus.
       var $openItems = $item.siblings().filter('.open');
       toggleList($openItems, false);
       // Save link of the closest open item through a unique selector.
