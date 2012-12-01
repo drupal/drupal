@@ -24,7 +24,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
    *
    * @var array
    */
-  public static $modules = array('language', 'translation_entity', 'node');
+  public static $modules = array('language', 'translation_entity', 'node', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -74,6 +74,27 @@ class NodeTranslationUITest extends EntityTranslationUITest {
     $this->assertResponse(200);
     $this->assertLinkByHref('node/' . $article->nid . '/translations');
     $this->assertNoLinkByHref('node/' . $page->nid . '/translations');
+  }
+
+  /**
+   * Tests field translation form.
+   */
+  function testFieldTranslationForm() {
+    $admin_user = $this->drupalCreateUser(array('translate any entity', 'access administration pages', 'bypass node access'));
+    $this->drupalLogin($admin_user);
+
+    $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => 'en'));
+
+    // Visit translation page.
+    $this->drupalGet('node/' . $article->nid . '/translations');
+    $this->assertRaw('Not translated');
+
+    // Delete the only translatable field.
+    field_delete_field('field_test_et_ui_test');
+
+    // Visit translation page.
+    $this->drupalGet('node/' . $article->nid . '/translations');
+    $this->assertRaw('no translatable fields');
   }
 
   /**
