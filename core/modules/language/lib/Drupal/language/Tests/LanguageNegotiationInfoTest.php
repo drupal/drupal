@@ -42,8 +42,8 @@ class LanguageNegotiationInfoTest extends WebTestBase {
    */
   function testInfoAlterations() {
     // Enable language type/negotiation info alterations.
-    variable_set('language_test_language_types', TRUE);
-    variable_set('language_test_language_negotiation_info', TRUE);
+    state()->set('language_test.language_types', TRUE);
+    state()->set('language_test.language_negotiation_info', TRUE);
     $this->languageNegotiationUpdate();
 
     // Check that fixed language types are properly configured without the need
@@ -52,7 +52,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
 
     // Make the content language type configurable by updating the language
     // negotiation settings with the proper flag enabled.
-    variable_set('language_test_content_language_type', TRUE);
+    state()->set('language_test.content_language_type', TRUE);
     $this->languageNegotiationUpdate();
     $type = LANGUAGE_TYPE_CONTENT;
     $language_types = variable_get('language_types', language_types_get_default());
@@ -73,7 +73,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
 
     // Remove the interface language negotiation method by updating the language
     // negotiation settings with the proper flag enabled.
-    variable_set('language_test_language_negotiation_info_alter', TRUE);
+    state()->set('language_test.language_negotiation_info_alter', TRUE);
     $this->languageNegotiationUpdate();
     $negotiation = variable_get("language_negotiation_$type", array());
     $this->assertFalse(isset($negotiation[$interface_method_id]), 'Interface language negotiation method removed from the stored settings.');
@@ -93,7 +93,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
 
     // Check language negotiation results.
     $this->drupalGet('');
-    $last = variable_get('language_test_language_negotiation_last', array());
+    $last = state()->get('language_test.language_negotiation_last');
     foreach (language_types_get_all() as $type) {
       $langcode = $last[$type];
       $value = $type == LANGUAGE_TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
