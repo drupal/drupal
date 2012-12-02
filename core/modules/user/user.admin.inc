@@ -346,23 +346,20 @@ function user_admin_settings($form, &$form_state) {
     '#default_value' => $config->get('verify_mail'),
     '#description' => t('New users will be required to validate their e-mail address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
   );
-  module_load_include('inc', 'user', 'user.pages');
+  form_load_include($form_state, 'inc', 'user', 'user.pages');
   $form['registration_cancellation']['user_cancel_method'] = array(
-    '#type' => 'item',
+    '#type' => 'radios',
     '#title' => t('When cancelling a user account'),
     '#default_value' => $config->get('cancel_method'),
     '#description' => t('Users with the %select-cancel-method or %administer-users <a href="@permissions-url">permissions</a> can override this default method.', array('%select-cancel-method' => t('Select method for cancelling account'), '%administer-users' => t('Administer users'), '@permissions-url' => url('admin/people/permissions'))),
   );
   $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
-  foreach (element_children($form['registration_cancellation']['user_cancel_method']) as $element) {
-    // Remove all account cancellation methods that have #access defined, as
-    // those cannot be configured as default method.
-    if (isset($form['registration_cancellation']['user_cancel_method'][$element]['#access'])) {
-      $form['registration_cancellation']['user_cancel_method'][$element]['#access'] = FALSE;
-    }
-    // Remove the description (only displayed on the confirmation form).
-    else {
-      unset($form['registration_cancellation']['user_cancel_method'][$element]['#description']);
+  foreach (element_children($form['registration_cancellation']['user_cancel_method']) as $key) {
+    // All account cancellation methods that specify #access cannot be
+    // configured as default method.
+    // @see hook_user_cancel_methods_alter()
+    if (isset($form['registration_cancellation']['user_cancel_method'][$key]['#access'])) {
+      $form['registration_cancellation']['user_cancel_method'][$key]['#access'] = FALSE;
     }
   }
 

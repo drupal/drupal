@@ -14,21 +14,18 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserCancelTest extends WebTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('comment');
-
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Cancel account',
       'description' => 'Ensure that account cancellation methods work as expected.',
       'group' => 'User',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
   }
 
   /**
@@ -277,6 +274,8 @@ class UserCancelTest extends WebTestBase {
    */
   function testUserDelete() {
     config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
+    module_enable(array('comment'));
+    $this->resetAll();
 
     // Create a user.
     $account = $this->drupalCreateUser(array('cancel account', 'post comments', 'skip comment approval'));

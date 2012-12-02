@@ -2475,16 +2475,12 @@ function user_multiple_cancel_confirm($form, &$form_state) {
 
   $form['operation'] = array('#type' => 'hidden', '#value' => 'cancel');
 
-  module_load_include('inc', 'user', 'user.pages');
+  form_load_include($form_state, 'inc', 'user', 'user.pages');
   $form['user_cancel_method'] = array(
-    '#type' => 'item',
+    '#type' => 'radios',
     '#title' => t('When cancelling these accounts'),
   );
   $form['user_cancel_method'] += user_cancel_methods();
-  // Remove method descriptions.
-  foreach (element_children($form['user_cancel_method']) as $element) {
-    unset($form['user_cancel_method'][$element]['#description']);
-  }
 
   // Allow to send the account cancellation confirmation mail.
   $form['user_cancel_confirm'] = array(

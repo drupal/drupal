@@ -143,8 +143,8 @@ function hook_user_cancel($edit, $account, $method) {
  *   description is NOT used for the radio button, but instead should provide
  *   additional explanation to the user seeking to cancel their account.
  * - access: (optional) A boolean value indicating whether the user can access
- *   a method. If #access is defined, the method cannot be configured as default
- *   method.
+ *   a method. If 'access' is defined, the method cannot be configured as
+ *   default method.
  *
  * @param $methods
  *   An array containing user account cancellation methods, keyed by method id.

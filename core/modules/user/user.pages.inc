@@ -232,7 +232,7 @@ function user_cancel_confirm_form($form, &$form_state, $account) {
   $admin_access = user_access('administer users');
   $can_select_method = $admin_access || user_access('select account cancellation method');
   $form['user_cancel_method'] = array(
-    '#type' => 'item',
+    '#type' => 'radios',
     '#title' => ($account->uid == $user->uid ? t('When cancelling your account') : t('When cancelling the account')),
     '#access' => $can_select_method,
   );
@@ -266,22 +266,15 @@ function user_cancel_confirm_form($form, &$form_state, $account) {
   else {
     $question = t('Are you sure you want to cancel the account %name?', array('%name' => $account->name));
   }
-  $description = '';
+  $default_method = config('user.settings')->get('cancel_method');
+  $description = NULL;
   if ($can_select_method) {
     $description = t('Select the method to cancel the account above.');
-    foreach (element_children($form['user_cancel_method']) as $element) {
-      unset($form['user_cancel_method'][$element]['#description']);
-    }
   }
-  else {
-    // The radio button #description is used as description for the confirmation
-    // form.
-    foreach (element_children($form['user_cancel_method']) as $element) {
-      if ($form['user_cancel_method'][$element]['#default_value'] == $form['user_cancel_method'][$element]['#return_value']) {
-        $description = $form['user_cancel_method'][$element]['#description'];
-      }
-      unset($form['user_cancel_method'][$element]['#description']);
-    }
+  // Options supplied via user_cancel_methods() can have a custom
+  // #confirm_description property for the confirmation form description.
+  elseif (isset($form['user_cancel_method'][$default_method]['#confirm_description'])) {
+    $description = $form['user_cancel_method'][$default_method]['#confirm_description'];
   }
 
   // Always provide entity id in the same form key as in the entity edit form.
@@ -363,15 +356,22 @@ function user_cancel_methods() {
   drupal_alter('user_cancel_methods', $methods);
 
   // Turn all methods into real form elements.
+  $default_method = config('user.settings')->get('cancel_method');
+  $form = array(
+    '#options' => array(),
+    '#default_value' => $default_method,
+  );
   foreach ($methods as $name => $method) {
-    $form[$name] = array(
-      '#type' => 'radio',
-      '#title' => $method['title'],
-      '#description' => (isset($method['description']) ? $method['description'] : NULL),
-      '#return_value' => $name,
-      '#default_value' => config('user.settings')->get('cancel_method'),
-      '#parents' => array('user_cancel_method'),
-    );
+    $form['#options'][$name] = $method['title'];
+    // Add the description for the confirmation form. This description is never
+    // shown for the cancel method option, only on the confirmation form.
+    // Therefore, we use a custom #confirm_description property.
+    if (isset($method['description'])) {
+      $form[$name]['#confirm_description'] = $method['description'];
+    }
+    if (isset($method['access'])) {
+      $form[$name]['#access'] = $method['access'];
+    }
   }
   return $form;
 }
