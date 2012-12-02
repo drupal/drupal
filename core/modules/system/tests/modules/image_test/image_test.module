@@ -37,7 +37,7 @@ function image_test_reset() {
     'crop' => array(),
     'desaturate' => array(),
   );
-  variable_set('image_test_results', $results);
+  state()->set('image_test.results', $results);
 }
 
 /**
@@ -50,7 +50,7 @@ function image_test_reset() {
  *   passed to each call.
  */
 function image_test_get_all_calls() {
-  return variable_get('image_test_results', array());
+  return state()->get('image_test.results') ?: array();
 }
 
 /**
@@ -66,9 +66,9 @@ function image_test_get_all_calls() {
  * @see image_test_reset()
  */
 function _image_test_log_call($op, $args) {
-  $results = variable_get('image_test_results', array());
+  $results = state()->get('image_test.results') ?: array();
   $results[$op][] = $args;
-  variable_set('image_test_results', $results);
+  state()->set('image_test.results', $results);
 }
 
 /**

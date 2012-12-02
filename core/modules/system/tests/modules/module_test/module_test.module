@@ -155,7 +155,7 @@ function module_test_class_loading() {
 function module_test_modules_enabled($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were enabled in the correct sequence.
-  variable_set('test_module_enable_order', $modules);
+  state()->set('system_test.module_enable_order', $modules);
 }
 
 /**

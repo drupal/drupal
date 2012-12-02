@@ -157,7 +157,8 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('forum', 'poll', 'php', 'comment', 'history', 'taxonomy', 'options'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
-    $this->assertIdentical(variable_get('test_module_enable_order', array()), $expected_order);
+    $module_order = state()->get('system_test.module_enable_order') ?: array();
+    $this->assertIdentical($module_order, $expected_order);
   }
 
   /**

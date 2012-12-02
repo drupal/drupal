@@ -60,7 +60,7 @@ class EnableDisableTest extends ModuleTestBase {
 
    // Set a variable so that the hook implementations in system_test.module
    // will display messages via drupal_set_message().
-   variable_set('test_verbose_module_hooks', TRUE);
+   state()->set('system_test.verbose_module_hooks', TRUE);
 
     // Go through each module in the list and try to enable it (unless it was
     // already enabled automatically due to a dependency).

@@ -176,7 +176,8 @@ class ModuleApiTest extends WebTestBase {
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with unlisted dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
-    $this->assertEqual(variable_get('test_module_enable_order', array()), array('php', 'poll', 'forum'), 'Modules were enabled in the correct order by module_enable().');
+    $module_order = state()->get('system_test.module_enable_order') ?: array();
+    $this->assertEqual($module_order, array('php', 'poll', 'forum'), 'Modules were enabled in the correct order by module_enable().');
 
     // Now, disable the PHP module. Both forum and poll should be disabled as
     // well, in the correct order.
@@ -239,7 +240,7 @@ class ModuleApiTest extends WebTestBase {
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with version dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
-    $enable_order = variable_get('test_module_enable_order', array());
+    $enable_order = state()->get('system_test.module_enable_order') ?: array();
     $php_position = array_search('php', $enable_order);
     $poll_position = array_search('poll', $enable_order);
     $forum_position = array_search('forum', $enable_order);
