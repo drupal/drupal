@@ -225,7 +225,7 @@ class RouterTest extends WebTestBase {
   function testHookCustomTheme() {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
-    variable_set('menu_test_hook_custom_theme_name', 'stark');
+    state()->set('menu_test.hook_custom_theme_name', 'stark');
     theme_enable(array('stark', 'seven'));
 
     // Visit a page that does not implement a theme callback. The above request
@@ -241,7 +241,7 @@ class RouterTest extends WebTestBase {
   function testThemeCallbackHookCustomTheme() {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
-    variable_set('menu_test_hook_custom_theme_name', 'stark');
+    state()->set('menu_test.hook_custom_theme_name', 'stark');
     theme_enable(array('stark', 'seven'));
 
     // The menu "theme callback" should take precedence over a value set in

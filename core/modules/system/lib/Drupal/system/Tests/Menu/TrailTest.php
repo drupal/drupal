@@ -88,12 +88,12 @@ class TrailTest extends MenuTestBase {
     );
 
     // Test the tree generation for the Tools menu.
-    variable_del('menu_test_menu_tree_set_path');
+    state()->delete('menu_test.menu_tree_set_path');
     $this->assertBreadcrumb('menu-test/menu-trail', $breadcrumb, t('Menu trail - Case 1'), $tree);
 
     // Override the active trail for the Administration tree; it should not
     // affect the Tools tree.
-    variable_set('menu_test_menu_tree_set_path', $test_menu_path);
+    state()->set('menu_test.menu_tree_set_path', $test_menu_path);
     $this->assertBreadcrumb('menu-test/menu-trail', $breadcrumb, t('Menu trail - Case 1'), $tree);
 
     $breadcrumb = $config + array(
@@ -114,12 +114,12 @@ class TrailTest extends MenuTestBase {
     );
 
     // Test the tree generation for the Administration menu.
-    variable_del('menu_test_menu_tree_set_path');
+    state()->delete('menu_test.menu_tree_set_path');
     $this->assertBreadcrumb('admin/config/development/menu-trail', $breadcrumb, t('Menu trail - Case 2'), $tree);
 
     // Override the active trail for the Administration tree; it should affect
     // the breadcrumbs and Administration tree.
-    variable_set('menu_test_menu_tree_set_path', $test_menu_path);
+    state()->set('menu_test.menu_tree_set_path', $test_menu_path);
     $this->assertBreadcrumb('admin/config/development/menu-trail', $override_breadcrumb, t('Menu trail - Case 2'), $override_tree);
   }
 
@@ -171,13 +171,13 @@ class TrailTest extends MenuTestBase {
     foreach (array(403, 404) as $status_code) {
       // Before visiting the page, trigger the code in the menu_test module
       // that will record the active trail (so we can check it in this test).
-      variable_set('menu_test_record_active_trail', TRUE);
+      state()->set('menu_test.record_active_trail', TRUE);
       $this->drupalGet($paths[$status_code]);
       $this->assertResponse($status_code);
 
       // Check that the initial trail (during the Drupal bootstrap) matches
       // what we expect.
-      $initial_trail = variable_get('menu_test_active_trail_initial', array());
+      $initial_trail = state()->get('menu_test.active_trail_initial') ?: array();
       $this->assertEqual(count($initial_trail), count($expected_trail[$status_code]['initial']), format_string('The initial active trail for a @status_code page contains the expected number of items (expected: @expected, found: @found).', array(
         '@status_code' => $status_code,
         '@expected' => count($expected_trail[$status_code]['initial']),
@@ -194,7 +194,7 @@ class TrailTest extends MenuTestBase {
 
       // Check that the final trail (after the user has been redirected to the
       // custom 403/404 page) matches what we expect.
-      $final_trail = variable_get('menu_test_active_trail_final', array());
+      $final_trail = state()->get('menu_test.active_trail_final') ?: array();
       $this->assertEqual(count($final_trail), count($expected_trail[$status_code]['final']), format_string('The final active trail for a @status_code page contains the expected number of items (expected: @expected, found: @found).', array(
         '@status_code' => $status_code,
         '@expected' => count($expected_trail[$status_code]['final']),
