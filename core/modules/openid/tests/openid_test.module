@@ -108,7 +108,7 @@ function openid_test_yadis_xrds() {
     $output .= '
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)" xmlns:openid="http://openid.net/xmlns/1.0">
         <XRD>
-          <Status cid="' . check_plain(variable_get('openid_test_canonical_id_status', 'verified')) . '"/>
+          <Status cid="' . check_plain(state()->get('openid_test.canonical_id_status') ?: 'verified') . '"/>
           <ProviderID>xri://@</ProviderID>
           <CanonicalID>http://example.com/user</CanonicalID>
           <Service>
@@ -226,12 +226,12 @@ function openid_test_endpoint() {
  */
 function openid_test_redirect($count = 0) {
   if ($count == 0) {
-    $url = variable_get('openid_test_redirect_url', '');
+    $url = state()->get('openid_test.redirect_url');
   }
   else {
     $url = url('openid-test/redirect/' . --$count, array('absolute' => TRUE));
   }
-  $http_response_code = variable_get('openid_test_redirect_http_reponse_code', 301);
+  $http_response_code = state()->get('openid_test.redirect_http_response_code') ?: 301;
   return new RedirectResponse($url, $http_response_code);
 }
 
@@ -303,9 +303,10 @@ function _openid_test_endpoint_associate() {
 function _openid_test_endpoint_authenticate() {
   module_load_include('inc', 'openid');
 
-  $expected_identity = variable_get('openid_test_identity');
+  $expected_identity = state()->get('openid_test.identity');
   if ($expected_identity && $_REQUEST['openid_identity'] != $expected_identity) {
-    $response = variable_get('openid_test_response', array()) + array(
+    $response = state()->get('openid_test.response') ?: array();
+    $response += array(
       'openid.ns' => OPENID_NS_2_0,
       'openid.mode' => 'error',
       'openid.error' => 'Unexpted identity',
@@ -317,7 +318,8 @@ function _openid_test_endpoint_authenticate() {
   $nonce = _openid_nonce();
 
   // Generate response containing the user's identity.
-  $response = variable_get('openid_test_response', array()) + array(
+  $response = state()->get('openid_test.response') ?: array();
+  $response += array(
     'openid.ns' => OPENID_NS_2_0,
     'openid.mode' => 'id_res',
     'openid.op_endpoint' => url('openid-test/endpoint', array('absolute' => TRUE)),
@@ -357,7 +359,7 @@ function _openid_test_endpoint_authenticate() {
  * Implements hook_openid_request_alter().
  */
 function openid_test_openid_request_alter(&$request, $service) {
-  $parameters = variable_get('openid_test_request_alter', array());
+  $parameters = state()->get('openid_test.request_alter');
   if (isset($parameters[$request['openid.mode']])) {
     $request = $parameters[$request['openid.mode']] + $request;
   }
@@ -367,6 +369,6 @@ function openid_test_openid_request_alter(&$request, $service) {
  * Implements hook_openid_response().
  */
 function openid_test_openid_response($response, $account) {
-  variable_set('openid_test_hook_openid_response_response', $response);
-  variable_set('openid_test_hook_openid_response_account', $account ? $account : FALSE);
+  state()->set('openid_test.hook_openid_response_response', $response);
+  state()->set('openid_test.hook_openid_response_account', $account ? $account : FALSE);
 }

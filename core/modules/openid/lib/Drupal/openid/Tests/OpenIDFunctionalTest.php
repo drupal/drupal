@@ -75,9 +75,9 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE, 'fragment' => $this->randomName()));
     // Tell openid_test.module to respond with this identifier. If the fragment
     // part is present in the identifier, it should be retained.
-    variable_set('openid_test_response', array('openid.claimed_id' => $identity));
+    state()->set('openid_test.response', array('openid.claimed_id' => $identity));
     $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, 'http://specs.openid.net/auth/2.0/identifier_select', $identity);
-    variable_set('openid_test_response', array());
+    state()->set('openid_test.response', array());
 
     // Identifier is the URL of an HTML page that is sent with an HTTP header
     // that contains the URL of an XRDS document.
@@ -94,7 +94,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $this->addIdentity('@example*résumé;%25', 2, 'http://example.com/xrds', 'http://example.com/user');
 
     // Make sure that unverified CanonicalID are not trusted.
-    variable_set('openid_test_canonical_id_status', 'bad value');
+    state()->set('openid_test.canonical_id_status', 'bad value');
     $this->addIdentity('@example*résumé;%25', 2, FALSE, FALSE);
 
     // HTML-based discovery:
@@ -140,20 +140,20 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->addIdentity($identity);
-    $response = variable_get('openid_test_hook_openid_response_response');
-    $account = variable_get('openid_test_hook_openid_response_account');
+    $response = state()->get('openid_test.hook_openid_response_response');
+    $account = state()->get('openid_test.hook_openid_response_account');
     $this->assertEqual($response['openid.claimed_id'], $identity, 'hook_openid_response() was invoked.');
     $this->assertEqual($account->uid, $this->web_user->uid, 'Proper user object passed to hook_openid_response().');
 
     $this->drupalLogout();
 
     // Test logging in via the login block on the front page.
-    variable_del('openid_test_hook_openid_response_response');
-    variable_del('openid_test_hook_openid_response_account');
+    state()->delete('openid_test.hook_openid_response_response');
+    state()->delete('openid_test.hook_openid_response_account');
     $this->submitLoginForm($identity);
     $this->assertLink(t('Log out'), 0, 'User was logged in.');
-    $response = variable_get('openid_test_hook_openid_response_response');
-    $account = variable_get('openid_test_hook_openid_response_account');
+    $response = state()->get('openid_test.hook_openid_response_response');
+    $account = state()->get('openid_test.hook_openid_response_account');
     $this->assertEqual($response['openid.claimed_id'], $identity, 'hook_openid_response() was invoked.');
     $this->assertEqual($account->uid, $this->web_user->uid, 'Proper user object passed to hook_openid_response().');
 
@@ -179,11 +179,11 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
 
     // Tell openid_test.module to alter the checkid_setup request.
     $new_identity = 'http://example.com/' . $this->randomName();
-    variable_set('openid_test_identity', $new_identity);
-    variable_set('openid_test_request_alter', array('checkid_setup' => array('openid.identity' => $new_identity)));
+    state()->set('openid_test.identity', $new_identity);
+    state()->set('openid_test.request_alter', array('checkid_setup' => array('openid.identity' => $new_identity)));
     $this->submitLoginForm($identity);
     $this->assertLink(t('Log out'), 0, 'User was logged in.');
-    $response = variable_get('openid_test_hook_openid_response_response');
+    $response = state()->get('openid_test.hook_openid_response_response');
     $this->assertEqual($response['openid.identity'], $new_identity, 'hook_openid_request_alter() were invoked.');
 
     $this->drupalLogout();
@@ -292,7 +292,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
    */
   function addIdentity($identity, $version = 2, $local_id = 'http://example.com/xrds', $claimed_id = NULL) {
     // Tell openid_test.module to only accept this OP-Local Identifier.
-    variable_set('openid_test_identity', $local_id);
+    state()->set('openid_test.identity', $local_id);
 
     $edit = array('openid_identifier' => $identity);
     $this->drupalPost('user/' . $this->web_user->uid . '/openid', $edit, t('Add an OpenID'));
@@ -342,14 +342,14 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     // Identifier, we insert the same identifier also to the provider response,
     // but provider could further change the Claimed ID actually (e.g. it could
     // add unique fragment).
-    variable_set('openid_test_redirect_url', $identity);
-    variable_set('openid_test_response', array('openid.claimed_id' => $identity));
+    state()->set('openid_test.redirect_url', $identity);
+    state()->set('openid_test.response', array('openid.claimed_id' => $identity));
 
     $this->addIdentity(url('openid-test/redirect/' . $redirects, array('absolute' => TRUE)), $version, $local_id, $claimed_id);
 
     // Clean up.
-    variable_del('openid_test_redirect_url');
-    variable_del('openid_test_response');
+    state()->delete('openid_test.redirect_url');
+    state()->delete('openid_test.response');
   }
 
   /**
@@ -361,12 +361,12 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
 
     // Respond with an invalid signature.
-    variable_set('openid_test_response', array('openid.sig' => 'this-is-an-invalid-signature'));
+    state()->set('openid_test.response', array('openid.sig' => 'this-is-an-invalid-signature'));
     $this->submitLoginForm($identity);
     $this->assertRaw('OpenID login failed.');
 
     // Do not sign the mandatory field openid.assoc_handle.
-    variable_set('openid_test_response', array('openid.signed' => 'op_endpoint,claimed_id,identity,return_to,response_nonce'));
+    state()->set('openid_test.response', array('openid.signed' => 'op_endpoint,claimed_id,identity,return_to,response_nonce'));
     $this->submitLoginForm($identity);
     $this->assertRaw('OpenID login failed.');
 
@@ -385,7 +385,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
       'openid.signed' => implode(',', $keys_to_sign),
     );
     $response['openid.sig'] = _openid_signature($association, $response, $keys_to_sign);
-    variable_set('openid_test_response', $response);
+    state()->set('openid_test.response', $response);
     $this->submitLoginForm($identity);
     $this->assertNoRaw('OpenID login failed.');
     $this->assertFieldByName('name', '', 'No username was supplied by provider.');
@@ -397,7 +397,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
       'openid.sreg.nickname' => 'john',
       'openid.sreg.email' => 'john@example.com',
     );
-    variable_set('openid_test_response', $response);
+    state()->set('openid_test.response', $response);
     $this->submitLoginForm($identity);
     $this->assertNoRaw('OpenID login failed.');
     $this->assertFieldByName('name', 'john', 'Username was supplied by provider.');
