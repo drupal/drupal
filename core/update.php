@@ -48,7 +48,7 @@ if (version_compare(PHP_VERSION, '5.3.3') < 0) {
 define('MAINTENANCE_MODE', 'update');
 
 /**
- * Renders form with a list of available database updates.
+ * Renders a form with a list of available database updates.
  */
 function update_selection_page() {
   drupal_set_title('Drupal database update');
