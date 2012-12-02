@@ -216,9 +216,9 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = N
  * 'mail_system', which is a keyed array.  The default implementation
  * is the class whose name is the value of 'default-system' key. A more specific
  * match first to key and then to module will be used in preference to the
- * default. To specificy a different class for all mail sent by one module, set
+ * default. To specify a different class for all mail sent by one module, set
  * the class name as the value for the key corresponding to the module name. To
- * specificy a class for a particular message sent by one module, set the class
+ * specify a class for a particular message sent by one module, set the class
  * name as the value for the array key that is the message id, which is
  * "${module}_${key}".
  *
