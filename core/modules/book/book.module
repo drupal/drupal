@@ -1213,18 +1213,10 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['head'] = drupal_get_html_head();
 
   // HTML element attributes.
-  $variables['html_attributes']['lang'] = $language_interface->langcode;
-  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
-}
-
-/**
- * Processes variables for book-export-html.tpl.php.
- *
- * @see book-export-html.tpl.php
- */
-function template_process_book_export_html(&$variables) {
-  // Flatten out html_attributes
-  $variables['html_attributes'] = new Attribute($variables['html_attributes']);
+  $attributes = array();
+  $attributes['lang'] = $language_interface->langcode;
+  $attributes['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
+  $variables['html_attributes'] = new Attribute($attributes);
 }
 
 /**
