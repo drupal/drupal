@@ -59,19 +59,145 @@ class Tables {
    *   of this in a query for a condition or sort.
    */
   function addField($field, $type, $langcode) {
-    $parts = explode('.', $field);
-    $property = $parts[0];
-    $configurable_fields = $this->sqlQuery->getMetaData('configurable_fields');
-    if (!empty($configurable_fields[$property]) || substr($property, 0, 3) == 'id:') {
-      $field_name = $property;
-      $table = $this->ensureFieldTable($field_name, $type, $langcode);
-      // Default to .value.
-      $column = isset($parts[1]) ? $parts[1] : 'value';
-      $sql_column = _field_sql_storage_columnname($field_name, $column);
-    }
-    else {
-      $sql_column = $property;
-      $table = $this->ensureEntityTable($property, $type, $langcode);
+    $entity_type = $this->sqlQuery->getMetaData('entity_type');
+    $age = $this->sqlQuery->getMetaData('age');
+    // This variable ensures grouping works correctly. For example:
+    // ->condition('tags', 2, '>')
+    // ->condition('tags', 20, '<')
+    // ->condition('node_reference.nid.entity.tags', 2)
+    // The first two should use the same table but the last one needs to be a
+    // new table. So for the first two, the table array index will be 'tags'
+    // while the third will be 'node_reference.nid.tags'.
+    $index_prefix = '';
+    $specifiers = explode('.', $field);
+    $base_table = 'base_table';
+    $count = count($specifiers) - 1;
+    // This will contain the definitions of the last specifier seen by the
+    // system.
+    $propertyDefinitions = array();
+    $entity_info = entity_get_info($entity_type);
+    for ($key = 0; $key <= $count; $key ++) {
+      // If there is revision support and only the current revision is being
+      // queried then use the revision id. Otherwise, the entity id will do.
+      if (!empty($entity_info['entity_keys']['revision']) && $age == FIELD_LOAD_CURRENT) {
+        // This contains the relevant SQL field to be used when joining entity
+        // tables.
+        $entity_id_field = $entity_info['entity_keys']['revision'];
+        // This contains the relevant SQL field to be used when joining field
+        // tables.
+        $field_id_field = 'revision_id';
+      }
+      else {
+        $entity_id_field = $entity_info['entity_keys']['id'];
+        $field_id_field = 'entity_id';
+      }
+      // This can either be the name of an entity property (non-configurable
+      // field), a field API field (a configurable field).
+      $specifier = $specifiers[$key];
+      // First, check for field API fields by trying to retrieve the field specified.
+      // Normally it is a field name, but field_purge_batch() is passing in 
+      // id:$field_id so check that first.
+      if (substr($specifier, 0, 3) == 'id:') {
+        $field = field_info_field_by_id(substr($specifier, 3));
+      }
+      else {
+        $field = field_info_field($specifier);
+      }
+      // If we managed to retrieve the field, process it.
+      if ($field) {
+        // Find the field column.
+        $column = FALSE;
+        if ($key < $count) {
+          $next = $specifiers[$key + 1];
+          // Is this a field column?
+          if (isset($field['columns'][$next]) || in_array($next, field_reserved_columns())) {
+            // Use it.
+            $column = $next;
+            // Do not process it again.
+            $key++;
+          }
+          // If there are more specifiers, the next one must be a
+          // relationship. Either the field name followed by a relationship
+          // specifier, for example $node->field_image->entity. Or a field
+          // column followed by a relationship specifier, for example
+          // $node->field_image->fid->entity. In both cases, prepare the
+          // property definitions for the relationship. In the first case,
+          // also use the property definitions for column.
+          if ($key < $count) {
+            $relationship_specifier = $specifiers[$key + 1];
+            $propertyDefinitions = typed_data()
+              ->create(array('type' => $field['type'] . '_field'))
+              ->getPropertyDefinitions();
+            // If the column is not yet known, ie. the
+            // $node->field_image->entity case then use the id source as the
+            // column.
+            if (!$column && isset($propertyDefinitions[$relationship_specifier]['settings']['id source'])) {
+              // If this is a valid relationship, use the id source.
+              // Otherwise, the code executing the relationship will throw an
+              // exception anyways so no need to do it here.
+              $column = $propertyDefinitions[$relationship_specifier]['settings']['id source'];
+            }
+            // Prepare the next index prefix.
+            $next_index_prefix = "$relationship_specifier.$column";
+          }
+        }
+        else {
+          // If this is the last specifier, default to value.
+          $column = 'value';
+        }
+        $table = $this->ensureFieldTable($index_prefix, $field, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
+        $sql_column = _field_sql_storage_columnname($field['field_name'], $column);
+      }
+      // This is an entity property (non-configurable field).
+      else {
+        // ensureEntityTable() decides whether an entity property will be
+        // queried from the data table or the base table based on where it
+        // finds the property first. The data table is prefered, which is why
+        // it gets added before the base table.
+        $entity_tables = array();
+        if (isset($entity_info['data_table'])) {
+          $this->sqlQuery->addMetaData('simple_query', FALSE);
+          $entity_tables[$entity_info['data_table']] = drupal_get_schema($entity_info['data_table']);
+        }
+        $entity_tables[$entity_info['base_table']] = drupal_get_schema($entity_info['base_table']);
+        $sql_column = $specifier;
+        $table = $this->ensureEntityTable($index_prefix, $specifier, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
+      }
+      // If there are more specifiers to come, it's a relationship.
+      if ($key < $count) {
+        // Computed fields have prepared their property definition already, do
+        // it for properties as well.
+        if (!$propertyDefinitions) {
+          // Create a relevant entity to find the definition for this
+          // property.
+          $values = array();
+          // If there are bundles, pick one. It does not matter which,
+          // properties exist on all bundles.
+          if (!empty($entity_info['entity keys']['bundle'])) {
+            $bundles = array_keys($entity_info['bundles']);
+            $values[$entity_info['entity keys']['bundle']] = reset($bundles);
+          }
+          $entity = entity_create($entity_type, $values);
+          $propertyDefinitions = $entity->$specifier->getPropertyDefinitions();
+          $relationship_specifier = $specifiers[$key + 1];
+          $next_index_prefix = $relationship_specifier;
+        }
+        // Check for a valid relationship.
+        if (isset($propertyDefinitions[$relationship_specifier]['constraints']['entity type']) && isset($propertyDefinitions[$relationship_specifier]['settings']['id source'])) {
+          // If it is, use the entity type.
+          $entity_type = $propertyDefinitions[$relationship_specifier]['constraints']['entity type'];
+          $entity_info = entity_get_info($entity_type);
+          // Add the new entity base table using the table and sql column.
+          $join_condition= '%alias.' . $entity_info['entity_keys']['id'] . " = $table.$sql_column";
+          $base_table = $this->sqlQuery->leftJoin($entity_info['base_table'], NULL, $join_condition);
+          $propertyDefinitions = array();
+          $key++;
+          $index_prefix .= "$next_index_prefix.";
+        }
+        else {
+          throw new QueryException(format_string('Invalid specifier @next.', array('@next' => $next)));
+        }
+      }
     }
     return "$table.$sql_column";
   }
@@ -83,18 +209,13 @@ class Tables {
    * @return string
    * @throws \Drupal\Core\Entity\Query\QueryException
    */
-  protected function ensureEntityTable($property, $type, $langcode) {
-    $entity_tables = $this->sqlQuery->getMetaData('entity_tables');
-    if (!$entity_tables) {
-      throw new QueryException('Can not query entity properties without entity tables.');
-    }
+  protected function ensureEntityTable($index_prefix, $property, $type, $langcode, $base_table, $id_field, $entity_tables) {
     foreach ($entity_tables as $table => $schema) {
       if (isset($schema['fields'][$property])) {
-        if (!isset($this->entityTables[$table])) {
-          $id_field = $this->sqlQuery->getMetaData('entity_id_field');
-          $this->entityTables[$table] = $this->addJoin($type, $table, "%alias.$id_field = base_table.$id_field", $langcode);
+        if (!isset($this->entityTables[$index_prefix . $table])) {
+          $this->entityTables[$index_prefix . $table] = $this->addJoin($type, $table, "%alias.$id_field = $base_table.$id_field", $langcode);
         }
-        return $this->entityTables[$table];
+        return $this->entityTables[$index_prefix . $table];
       }
     }
     throw new QueryException(format_string('@property not found', array('@property' => $property)));
@@ -108,31 +229,17 @@ class Tables {
    * @return string
    * @throws \Drupal\Core\Entity\Query\QueryException
    */
-  protected function ensureFieldTable(&$field_name, $type, $langcode) {
-    if (!isset($this->fieldTables[$field_name])) {
-      // This is field_purge_batch() passing in a field id.
-      if (substr($field_name, 0, 3) == 'id:') {
-        $field = field_info_field_by_id(substr($field_name, 3));
-      }
-      else {
-        $field = field_info_field($field_name);
-      }
-      if (!$field) {
-        throw new QueryException(format_string('field @field_name not found', array('@field_name' => $field_name)));
-      }
-      // This is really necessary only for the id: case but it can't be run
-      // before throwing the exception.
-      $field_name = $field['field_name'];
+  protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field) {
+    $field_name = $field['field_name'];
+    if (!isset($this->fieldTables[$index_prefix . $field_name])) {
       $table = $this->sqlQuery->getMetaData('age') == FIELD_LOAD_CURRENT ? _field_sql_storage_tablename($field) : _field_sql_storage_revision_tablename($field);
-      $field_id_field = $this->sqlQuery->getMetaData('field_id_field');
-      $entity_id_field = $this->sqlQuery->getMetaData('entity_id_field');
       if ($field['cardinality'] != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
       $entity_type = $this->sqlQuery->getMetaData('entity_type');
-      $this->fieldTables[$field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = base_table.$entity_id_field AND %alias.entity_type = '$entity_type'", $langcode);
+      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = $base_table.$entity_id_field AND %alias.entity_type = '$entity_type'", $langcode);
     }
-    return $this->fieldTables[$field_name];
+    return $this->fieldTables[$index_prefix . $field_name];
   }
 
   protected function addJoin($type, $table, $join_condition, $langcode) {
