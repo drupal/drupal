@@ -56,8 +56,9 @@ abstract class ResourceBase extends PluginBase {
 
     $methods = $this->requestMethods();
     foreach ($methods as $method) {
+      $lower_method = strtolower($method);
       // Only expose routes where the HTTP request method exists on the plugin.
-      if (method_exists($this, strtolower($method))) {
+      if (method_exists($this, $lower_method)) {
         $prefix = strtr($this->plugin_id, ':', '/');
         $route = new Route("/$prefix/{id}", array(
           '_controller' => 'Drupal\rest\RequestHandler::handle',
@@ -69,6 +70,7 @@ abstract class ResourceBase extends PluginBase {
         ), array(
           // The HTTP method is a requirement for this route.
           '_method' => $method,
+          '_permission' => "restful $lower_method $this->plugin_id",
         ));
 
         $name = strtr($this->plugin_id, ':', '.');

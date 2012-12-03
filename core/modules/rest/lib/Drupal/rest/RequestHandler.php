@@ -34,31 +34,28 @@ class RequestHandler extends ContainerAware {
    */
   public function handle($plugin, Request $request, $id = NULL) {
     $method = strtolower($request->getMethod());
-    if (user_access("restful $method $plugin")) {
-      $resource = $this->container
-        ->get('plugin.manager.rest')
-        ->getInstance(array('id' => $plugin));
-      $received = $request->getContent();
-      // @todo De-serialization should happen here if the request is supposed
-      // to carry incoming data.
-      try {
-        $response = $resource->{$method}($id, $received);
-      }
-      catch (HttpException $e) {
-        return new Response($e->getMessage(), $e->getStatusCode(), $e->getHeaders());
-      }
-      $data = $response->getResponseData();
-      if ($data != NULL) {
-        // Serialize the response data.
-        $serializer = $this->container->get('serializer');
-        // @todo Replace the format here with something we get from the HTTP
-        //   Accept headers. See http://drupal.org/node/1833440
-        $output = $serializer->serialize($data, 'drupal_jsonld');
-        $response->setContent($output);
-        $response->headers->set('Content-Type', 'application/vnd.drupal.ld+json');
-      }
-      return $response;
+    $resource = $this->container
+      ->get('plugin.manager.rest')
+      ->getInstance(array('id' => $plugin));
+    $received = $request->getContent();
+    // @todo De-serialization should happen here if the request is supposed
+    // to carry incoming data.
+    try {
+      $response = $resource->{$method}($id, $received);
     }
-    return new Response('Access Denied', 403);
+    catch (HttpException $e) {
+      return new Response($e->getMessage(), $e->getStatusCode(), $e->getHeaders());
+    }
+    $data = $response->getResponseData();
+    if ($data != NULL) {
+      // Serialize the response data.
+      $serializer = $this->container->get('serializer');
+      // @todo Replace the format here with something we get from the HTTP
+      //   Accept headers. See http://drupal.org/node/1833440
+      $output = $serializer->serialize($data, 'drupal_jsonld');
+      $response->setContent($output);
+      $response->headers->set('Content-Type', 'application/vnd.drupal.ld+json');
+    }
+    return $response;
   }
 }
