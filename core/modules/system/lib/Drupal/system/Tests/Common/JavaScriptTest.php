@@ -39,8 +39,8 @@ class JavaScriptTest extends WebTestBase {
 
     // Disable preprocessing
     $config = config('system.performance');
-    $this->preprocess_js = $config->get('preprocess.js');
-    $config->set('preprocess.js', 0);
+    $this->preprocess_js = $config->get('js.preprocess');
+    $config->set('js.preprocess', 0);
     $config->save();
 
     // Reset drupal_add_js() and drupal_add_library() statics before each test.
@@ -51,7 +51,7 @@ class JavaScriptTest extends WebTestBase {
   function tearDown() {
     // Restore configured value for JavaScript preprocessing.
     $config = config('system.performance');
-    $config->set('preprocess.js', $this->preprocess_js);
+    $config->set('js.preprocess', $this->preprocess_js);
     $config->save();
     parent::tearDown();
   }
@@ -119,7 +119,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testAggregatedAttributes() {
     // Enable aggregation.
-    config('system.performance')->set('preprocess.js', 1)->save();
+    config('system.performance')->set('js.preprocess', 1)->save();
 
     $default_query_string = variable_get('css_js_query_string', '0');
 
@@ -311,7 +311,7 @@ class JavaScriptTest extends WebTestBase {
     // 'every_page' files, and one file is made for the others.
     drupal_static_reset('drupal_add_js');
     $config = config('system.performance');
-    $config->set('preprocess.js', 1);
+    $config->set('js.preprocess', 1);
     $config->save();
     drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/ajax.js');
@@ -332,7 +332,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testAggregationOrder() {
     // Enable JavaScript aggregation.
-    config('system.performance')->set('preprocess.js', 1)->save();
+    config('system.performance')->set('js.preprocess', 1)->save();
     drupal_static_reset('drupal_add_js');
 
     // Add two JavaScript files to the current request and build the cache.

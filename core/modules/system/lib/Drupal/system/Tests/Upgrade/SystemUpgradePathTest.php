@@ -53,8 +53,8 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'cache.page.enabled' => '1',
       'cache.page.max_age' => '1800',
       'response.gzip' => '1',
-      'preprocess.js' => '1',
-      'preprocess.css' => '1',
+      'js.preprocess' => '1',
+      'css.preprocess' => '1',
     );
 
     $expected_config['system.rss'] = array(

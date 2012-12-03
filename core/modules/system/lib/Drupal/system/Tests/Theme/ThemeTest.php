@@ -112,7 +112,7 @@ class ThemeTest extends WebTestBase {
     // so it doesn't matter what page we get, as long as it is themed with the
     // test theme. First we test with CSS aggregation disabled.
     $config = config('system.performance');
-    $config->set('preprocess.css', 0);
+    $config->set('css.preprocess', 0);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
     $this->assertNoText('system.base.css', 'The theme\'s .info file is able to override a module CSS file from being added to the page.');
@@ -121,10 +121,10 @@ class ThemeTest extends WebTestBase {
     // triggered during drupal_build_css_cache() when a source file doesn't
     // exist. Then allow remaining tests to continue with aggregation disabled
     // by default.
-    $config->set('preprocess.css', 1);
+    $config->set('css.preprocess', 1);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
-    $config->set('preprocess.css', 0);
+    $config->set('css.preprocess', 0);
     $config->save();
   }
 

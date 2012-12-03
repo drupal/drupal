@@ -1664,13 +1664,13 @@ function system_performance_settings($form, &$form_state) {
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate and compress CSS files.'),
-    '#default_value' => $config->get('preprocess.css'),
+    '#default_value' => $config->get('css.preprocess'),
     '#disabled' => $disabled,
   );
   $form['bandwidth_optimization']['preprocess_js'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate JavaScript files.'),
-    '#default_value' => $config->get('preprocess.js'),
+    '#default_value' => $config->get('js.preprocess'),
     '#disabled' => $disabled,
   );
 
@@ -1694,8 +1694,8 @@ function system_performance_settings_submit($form, &$form_state) {
   $config->set('cache.page.enabled', $form_state['values']['cache']);
   $config->set('cache.page.max_age', $form_state['values']['page_cache_maximum_age']);
   $config->set('response.gzip', $form_state['values']['page_compression']);
-  $config->set('preprocess.css', $form_state['values']['preprocess_css']);
-  $config->set('preprocess.js', $form_state['values']['preprocess_js']);
+  $config->set('css.preprocess', $form_state['values']['preprocess_css']);
+  $config->set('js.preprocess', $form_state['values']['preprocess_js']);
   $config->save();
 }
 

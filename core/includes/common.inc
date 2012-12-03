@@ -2818,7 +2818,7 @@ function drupal_aggregate_css(&$css_groups) {
   }
   else {
     $config = config('system.performance');
-    $preprocess_css = $config->get('preprocess.css');
+    $preprocess_css = $config->get('css.preprocess');
   }
 
   // For each group that needs aggregation, aggregate its items.
@@ -3152,9 +3152,9 @@ function drupal_build_css_cache($css) {
     // It's possible that the rewrite rules in .htaccess aren't working on this
     // server, but there's no harm (other than the time spent generating the
     // file) in generating the file anyway. Sites on servers where rewrite rules
-    // aren't working can set css_gzip_compression to FALSE in order to skip
+    // aren't working can set css.gzip to FALSE in order to skip
     // generating a file that won't be used.
-    if (variable_get('css_gzip_compression', TRUE) && extension_loaded('zlib')) {
+    if (config('system.performance')->get('css.gzip') && extension_loaded('zlib')) {
       if (!file_exists($uri . '.gz') && !file_unmanaged_save_data(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
         return FALSE;
       }
@@ -3339,7 +3339,7 @@ function drupal_clear_css_cache() {
  */
 function drupal_delete_file_if_stale($uri) {
   // Default stale file threshold is 30 days.
-  if (REQUEST_TIME - filemtime($uri) > config('system.performance')->get('preprocess.stale_file_threshold')) {
+  if (REQUEST_TIME - filemtime($uri) > config('system.performance')->get('stale_file_threshold')) {
     file_unmanaged_delete($uri);
   }
 }
@@ -4095,7 +4095,7 @@ function drupal_aggregate_js(&$js_groups) {
   }
   else {
     $config = config('system.performance');
-    $preprocess_js = $config->get('preprocess.js');
+    $preprocess_js = $config->get('js.preprocess');
   }
 
   if ($preprocess_js) {
@@ -4664,9 +4664,9 @@ function drupal_build_js_cache($files) {
     // It's possible that the rewrite rules in .htaccess aren't working on this
     // server, but there's no harm (other than the time spent generating the
     // file) in generating the file anyway. Sites on servers where rewrite rules
-    // aren't working can set js_gzip_compression to FALSE in order to skip
+    // aren't working can set js.gzip to FALSE in order to skip
     // generating a file that won't be used.
-    if (variable_get('js_gzip_compression', TRUE) && extension_loaded('zlib')) {
+    if (config('system.performance')->get('js.gzip') && extension_loaded('zlib')) {
       if (!file_exists($uri . '.gz') && !file_unmanaged_save_data(gzencode($contents, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
         return FALSE;
       }

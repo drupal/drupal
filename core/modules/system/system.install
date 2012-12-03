@@ -1940,9 +1940,9 @@ function system_update_8017() {
     'cache' => 'cache.page.enabled',
     'page_cache_maximum_age' => 'cache.page.max_age',
     'page_compression' => 'response.gzip',
-    'preprocess_css' => 'preprocess.css',
-    'preprocess_js' => 'preprocess.js',
-    'stale_file_threshold' => 'preprocess.stale_file_threshold',
+    'preprocess_css' => 'css.preprocess',
+    'preprocess_js' => 'js.preprocess',
+    'stale_file_threshold' => 'stale_file_threshold',
   ));
 }
 
@@ -2302,6 +2302,19 @@ function system_update_8039() {
     'drupal_weight_select_max' => 'weight_select_max',
   );
   update_variables_to_config('system.site', $variable_map);
+}
+
+/**
+ * Converts css and js gzip compression variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8040() {
+  $variable_map = array(
+    'css_gzip_compression' => 'css.gzip',
+    'js_gzip_compression' => 'js.gzip'
+  );
+  update_variables_to_config('system.performance', $variable_map);
 }
 
 /**

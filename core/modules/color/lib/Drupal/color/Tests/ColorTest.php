@@ -105,7 +105,7 @@ class ColorTest extends WebTestBase {
 
     // Test with aggregated CSS turned on.
     $config = config('system.performance');
-    $config->set('preprocess.css', 1);
+    $config->set('css.preprocess', 1);
     $config->save();
     $this->drupalGet('<front>');
     $stylesheets = variable_get('drupal_css_cache_files', array());
@@ -114,7 +114,7 @@ class ColorTest extends WebTestBase {
       $stylesheet_content .= join("\n", file(drupal_realpath($uri)));
     }
     $this->assertTrue(strpos($stylesheet_content, 'public://') === FALSE, 'Make sure the color paths have been translated to local paths. (' . $theme . ')');
-    $config->set('preprocess.css', 0);
+    $config->set('css.preprocess', 0);
     $config->save();
   }
 

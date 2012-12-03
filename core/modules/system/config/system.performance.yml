@@ -2,9 +2,12 @@ cache:
   page:
     enabled: '0'
     max_age: '0'
-preprocess:
-  css: '0'
-  js: '0'
-  stale_file_threshold: '2592000'
+css:
+  preprocess: '0'
+  gzip: '1'
+js:
+  preprocess: '0'
+  gzip: '1'
 response:
   gzip: '0'
+stale_file_threshold: '2592000'
