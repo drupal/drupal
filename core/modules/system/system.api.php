@@ -1034,7 +1034,7 @@ function hook_menu_link_delete($link) {
  * - #link: An associative array containing:
  *   - title: The localized title of the link.
  *   - href: The system path to link to.
- *   - localized_options: An array of options to pass to url().
+ *   - localized_options: An array of options to pass to l().
  * - #active: Whether the link should be marked as 'active'.
  *
  * @param $data
