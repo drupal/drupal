@@ -58,20 +58,6 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   protected $moduleData = array();
 
   /**
-   * Holds a list of enabled modules and their paths.
-   *
-   * This is used to store module data as a container parameter so that it can
-   * be retrieved for registering namespaces when using a compiled container.
-   * When not using a compiled container, the namespaces get registered during
-   * the process of building the container.
-   *
-   * @var array
-   *   An associative array whose keys are module names and whose values are
-   *   module paths.
-   */
-  protected $modulePaths = array();
-
-  /**
    * PHP code storage object to use for the compiled container.
    *
    * @var \Drupal\Component\PhpStorage\PhpStorageInterface
@@ -174,27 +160,17 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $bundles = array(
       new CoreBundle(),
     );
+
+    // Ensure we know what modules are enabled and that their namespaces are
+    // registered.
     if (!isset($this->moduleList)) {
       $module_list = $this->configStorage->read('system.module');
       $this->moduleList = isset($module_list['enabled']) ? $module_list['enabled'] : array();
     }
+    $this->registerModuleNamespaces($this->getModuleFileNames());
 
-    $namespaces = $this->classLoader->getNamespaces();
-    // We will need to store module locations in a container parameter so that
-    // we can register all namespaces when using a compiled container.
-    $this->modulePaths = array();
+    // Load each module's bundle class.
     foreach ($this->moduleList as $module => $weight) {
-      // When installing new modules, the modules in the list passed to
-      // updateModules() do not yet have their namespace registered.
-      $namespace = 'Drupal\\' . $module;
-      if (empty($namespaces[$namespace]) && $this->moduleData($module)) {
-        $path = dirname(DRUPAL_ROOT . '/' . $this->moduleData($module)->uri) . '/lib';
-        $this->modulePaths[$module] = $path;
-        $this->classLoader->registerNamespace($namespace, $path);
-      }
-      else {
-        $this->modulePaths[$module] = $namespaces[$namespace];
-      }
       $camelized = ContainerBuilder::camelize($module);
       $class = "Drupal\\{$module}\\{$camelized}Bundle";
       if (class_exists($class)) {
@@ -202,6 +178,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
         $this->bundleClasses[] = $class;
       }
     }
+
     // Add site specific or test bundles.
     if (!empty($GLOBALS['conf']['container_bundles'])) {
       foreach ($GLOBALS['conf']['container_bundles'] as $class) {
@@ -225,9 +202,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    */
   protected function moduleData($module) {
     if (!$this->moduleData) {
-      // Find filenames to prime the classloader. First, find profiles.
-      // Profiles might want to add a bundle too and they also can contain
-      // modules.
+      // First, find profiles.
       $profiles_scanner = new SystemListing();
       $all_profiles = $profiles_scanner->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles');
       $profiles = array_keys(array_intersect_key($this->moduleList, $all_profiles));
@@ -248,10 +223,10 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   /**
    * Implements Drupal\Core\DrupalKernelInterface::updateModules().
    */
-  public function updateModules(array $module_list, array $module_paths = array()) {
+  public function updateModules(array $module_list, array $module_filenames = array()) {
     $this->newModuleList = $module_list;
-    foreach ($module_paths as $module => $path) {
-      $this->moduleData[$module] = (object) array('uri' => $path);
+    foreach ($module_filenames as $module => $filename) {
+      $this->moduleData[$module] = (object) array('uri' => $filename);
     }
     // If we haven't yet booted, we don't need to do anything: the new module
     // list will take effect when boot() is called. If we have already booted,
@@ -307,27 +282,28 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       $this->moduleList = $this->newModuleList;
       unset($this->newModuleList);
     }
-    // Second, verify that some other request -- for example on another
-    // web frontend or during the installer -- changed the list of enabled
-    // modules.
+    // Second, check if some other request -- for example on another web
+    // frontend or during the installer -- changed the list of enabled modules.
     if (isset($this->container)) {
       // All namespaces must be registered before we attempt to use any service
       // from the container.
-      $namespaces = $this->classLoader->getNamespaces();
-      $namespaces_revert = array();
-      foreach ($this->container->getParameter('container.modules') as $module => $path) {
-        $namespace = 'Drupal\\' . $module;
-        if (empty($namespaces[$namespace])) {
-          $this->classLoader->registerNamespace($namespace, $path);
-          $namespaces_revert[$namespace] = array();
-        }
+      $container_modules = $this->container->getParameter('container.modules');
+      $namespaces_before = $this->classLoader->getNamespaces();
+      $this->registerModuleNamespaces($container_modules);
+
+      // If 'container.modules' is wrong, the container must be rebuilt.
+      if (!isset($this->moduleList)) {
+        $this->moduleList = $this->container->get('config.factory')->get('system.module')->load()->get('enabled');
       }
-      $module_list = $this->moduleList ?: $this->container->get('config.factory')->get('system.module')->load()->get('enabled');
-      if (array_keys((array)$module_list) !== array_keys($this->container->getParameter('container.modules'))) {
+      if (array_keys($this->moduleList) !== array_keys($container_modules)) {
         unset($this->container);
-        // Since 'container.modules' was incorrect, revert the classloader
-        // registrations, and allow buildContainer() to get it right.
-        $this->classLoader->registerNamespaces($namespaces_revert);
+        // Revert the class loader to its prior state. However,
+        // registerNamespaces() performs a merge rather than replace, so to
+        // effectively remove erroneous registrations, we must replace them with
+        // empty arrays.
+        $namespaces_after = $this->classLoader->getNamespaces();
+        $namespaces_before += array_fill_keys(array_diff(array_keys($namespaces_after), array_keys($namespaces_before)), array());
+        $this->classLoader->registerNamespaces($namespaces_before);
       }
     }
 
@@ -354,7 +330,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $this->initializeBundles();
     $container = $this->getContainerBuilder();
     $container->setParameter('container.bundles', $this->bundleClasses);
-    $container->setParameter('container.modules', $this->modulePaths);
+    $container->setParameter('container.modules', $this->getModuleFileNames());
     // Register the class loader as a synthetic service.
     $container->register('class_loader', 'Symfony\Component\ClassLoader\UniversalClassLoader')->setSynthetic(TRUE);
     foreach ($this->bundles as $bundle) {
@@ -423,4 +399,25 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     return $this->storage;
   }
 
+  /**
+   * Returns the file name for each enabled module.
+   */
+  protected function getModuleFileNames() {
+    $filenames = array();
+    foreach ($this->moduleList as $module => $weight) {
+      if ($data = $this->moduleData($module)) {
+        $filenames[$module] = $data->uri;
+      }
+    }
+    return $filenames;
+  }
+
+  /**
+   * Registers the namespace of each enabled module with the class loader.
+   */
+  protected function registerModuleNamespaces($moduleFileNames) {
+    foreach ($moduleFileNames as $module => $filename) {
+      $this->classLoader->registerNamespace("Drupal\\$module", DRUPAL_ROOT . '/' . dirname($filename) . '/lib');
+    }
+  }
 }
