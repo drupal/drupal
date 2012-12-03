@@ -1663,8 +1663,9 @@ function request_uri($omit_query_string = FALSE) {
  *   The message to store in the log. If empty, a text that contains all useful
  *   information about the passed-in exception is used.
  * @param $variables
- *   Array of variables to replace in the message on display. Defaults to the
- *   return value of drupal_decode_exception().
+ *   Array of variables to replace in the message on display or
+ *   NULL if message is already translated or not possible to
+ *   translate.
  * @param $severity
  *   The severity of the message, as per RFC 3164.
  * @param $link
@@ -1722,7 +1723,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * @see watchdog_severity_levels()
  * @see hook_watchdog()
  */
-function watchdog($type, $message, array $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
+function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
   static $in_error_state = FALSE;
