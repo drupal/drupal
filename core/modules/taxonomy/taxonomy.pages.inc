@@ -102,21 +102,14 @@ function taxonomy_term_feed(Term $term) {
  *
  * @param $field_name
  *   The name of the term reference field.
- * @param $tags_typed
- *   (optional) A comma-separated list of term names entered in the
- *   autocomplete form element. Only the last term is used for autocompletion.
- *   Defaults to '' (an empty string).
  *
  * @see taxonomy_menu()
  * @see taxonomy_field_widget_info()
  */
-function taxonomy_autocomplete($field_name, $tags_typed = '') {
-  // If the request has a '/' in the search text, then the menu system will have
-  // split it into multiple arguments, recover the intended $tags_typed.
-  $args = func_get_args();
-  // Shift off the $field_name argument.
-  array_shift($args);
-  $tags_typed = implode('/', $args);
+function taxonomy_autocomplete($field_name) {
+  // A comma-separated list of term names entered in the autocomplete form
+  // element. Only the last term is used for autocompletion.
+  $tags_typed = drupal_container()->get('request')->query->get('q');
 
   // Make sure the field exists and is a taxonomy field.
   if (!($field = field_info_field($field_name)) || $field['type'] !== 'taxonomy_term_reference') {

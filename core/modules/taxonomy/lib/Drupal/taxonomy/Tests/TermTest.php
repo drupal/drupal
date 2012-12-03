@@ -214,13 +214,13 @@ class TermTest extends TaxonomyTestBase {
     // Test autocomplete on term 3, which contains a comma.
     // The term will be quoted, and the " will be encoded in unicode (\u0022).
     $input = substr($term_objects['term3']->name, 0, 3);
-    $json = $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
+    $json = $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name, array('query' => array('q' => $input)));
     $this->assertEqual($json, '{"\u0022' . $term_objects['term3']->name . '\u0022":"' . $term_objects['term3']->name . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->name)));
 
     // Test autocomplete on term 4 - it is alphanumeric only, so no extra
     // quoting.
     $input = substr($term_objects['term4']->name, 0, 3);
-    $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
+    $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name, array('query' => array('q' => $input)));
     $this->assertRaw('{"' . $term_objects['term4']->name . '":"' . $term_objects['term4']->name . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term4']->name)));
 
     // Test taxonomy autocomplete with a nonexistent field.
@@ -228,7 +228,7 @@ class TermTest extends TaxonomyTestBase {
     $tag = $this->randomName();
     $message = t("Taxonomy field @field_name not found.", array('@field_name' => $field_name));
     $this->assertFalse(field_info_field($field_name), format_string('Field %field_name does not exist.', array('%field_name' => $field_name)));
-    $this->drupalGet('taxonomy/autocomplete/' . $field_name . '/' . $tag);
+    $this->drupalGet('taxonomy/autocomplete/' . $field_name, array('query' => array('q' => $tag)));
     $this->assertRaw($message, 'Autocomplete returns correct error message when the taxonomy field does not exist.');
   }
 
@@ -252,10 +252,9 @@ class TermTest extends TaxonomyTestBase {
     // Try to autocomplete a term name that matches both terms.
     // We should get both term in a json encoded string.
     $input = '10/';
-    $path = 'taxonomy/autocomplete/taxonomy_';
-    $path .= $this->vocabulary->machine_name . '/' . $input;
+    $path = 'taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name;
     // The result order is not guaranteed, so check each term separately.
-    $result = $this->drupalGet($path);
+    $result = $this->drupalGet($path, array('query' => array('q' => $input)));
     $data = drupal_json_decode($result);
     $this->assertEqual($data[$first_term->name], check_plain($first_term->name), 'Autocomplete returned the first matching term');
     $this->assertEqual($data[$second_term->name], check_plain($second_term->name), 'Autocomplete returned the second matching term');
@@ -263,17 +262,15 @@ class TermTest extends TaxonomyTestBase {
     // Try to autocomplete a term name that matches first term.
     // We should only get the first term in a json encoded string.
     $input = '10/16';
-    $url = 'taxonomy/autocomplete/taxonomy_';
-    $url .= $this->vocabulary->machine_name . '/' . $input;
-    $this->drupalGet($url);
+    $path = 'taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name;
+    $this->drupalGet($path, array('query' => array('q' => $input)));
     $target = array($first_term->name => check_plain($first_term->name));
     $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns only the expected matching term.');
 
     // Try to autocomplete a term name with both a comma and a slash.
     $input = '"term with, comma and / a';
-    $url = 'taxonomy/autocomplete/taxonomy_';
-    $url .= $this->vocabulary->machine_name . '/' . $input;
-    $this->drupalGet($url);
+    $path = 'taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name;
+    $this->drupalGet($path, array('query' => array('q' => $input)));
     $n = $third_term->name;
     // Term names containing commas or quotes must be wrapped in quotes.
     if (strpos($third_term->name, ',') !== FALSE || strpos($third_term->name, '"') !== FALSE) {

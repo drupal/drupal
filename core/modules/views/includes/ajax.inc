@@ -283,12 +283,15 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
  *
  * @param string $string
  *   (optional) A comma-separated list of user names entered in the
- *   autocomplete form element. Only the last user is used for autocompletion.
- *   Defaults to '' (an empty string).
+ *   autocomplete form element. If not passed, it is taken from the 'q' query
+ *   string parameter.
  *
  * @return Symfony\Component\HttpFoundation\JsonResponse
  */
-function views_ajax_autocomplete_user($string = '') {
+function views_ajax_autocomplete_user($string = NULL) {
+  if (!isset($string)) {
+    $string = drupal_container()->get('request')->query->get('q');
+  }
   // The user enters a comma-separated list of user name. We only autocomplete the last name.
   $array = drupal_explode_tags($string);
 
@@ -328,14 +331,11 @@ function views_ajax_autocomplete_user($string = '') {
  * @param $vid
  *   The vocabulary id of the tags which should be returned.
  *
- * @param $tags_typed
- *   The typed string of the user.
- *
  * @see taxonomy_autocomplete()
  */
-function views_ajax_autocomplete_taxonomy($vid, $tags_typed = '') {
+function views_ajax_autocomplete_taxonomy($vid) {
   // The user enters a comma-separated list of tags. We only autocomplete the last tag.
-  $tags_typed = drupal_explode_tags($tags_typed);
+  $tags_typed = drupal_explode_tags(drupal_container()->get('request')->query->get('q'));
   $tag_last = drupal_strtolower(array_pop($tags_typed));
 
   $matches = array();

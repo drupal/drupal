@@ -14,9 +14,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Menu callback; Retrieve a JSON object containing autocomplete suggestions for existing users.
  */
-function user_autocomplete($string = '') {
+function user_autocomplete() {
   $matches = array();
-  if ($string) {
+  if ($string = drupal_container()->get('request')->query->get('q')) {
     $result = db_select('users')->fields('users', array('name'))->condition('name', db_like($string) . '%', 'LIKE')->range(0, 10)->execute();
     foreach ($result as $account) {
       $matches[$account->name] = check_plain($account->name);
