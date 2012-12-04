@@ -17,6 +17,13 @@ use Drupal\views\Plugin\views\HandlerBase;
 class HandlerTest extends ViewTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view', 'test_view_handler_weight', 'test_handler_relationships', 'test_handler_test_access', 'test_filter_in_operator_ui');
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -263,7 +270,8 @@ class HandlerTest extends ViewTestBase {
    * Tests the relationship method on the base class.
    */
   public function testSetRelationship() {
-    $view = $this->createViewFromConfig('test_handler_relationships');
+    $view = views_get_view('test_handler_relationships');
+    $view->setDisplay();
     // Setup a broken relationship.
     $view->addItem('default', 'relationship', $this->randomName(), $this->randomName(), array(), 'broken_relationship');
     // Setup a valid relationship.
@@ -301,7 +309,7 @@ class HandlerTest extends ViewTestBase {
    * @see Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
   public function testPlaceholder() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
     $view->initHandlers();
     $view->initQuery();
 

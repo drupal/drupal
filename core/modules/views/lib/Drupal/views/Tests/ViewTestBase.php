@@ -26,19 +26,12 @@ abstract class ViewTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views');
-
-  /**
-   * The view to use for the test.
-   *
-   * @var Drupal\views\ViewExecutable
-   */
-  protected $view;
+  public static $modules = array('views', 'views_test_config');
 
   protected function setUp() {
     parent::setUp();
 
-    $this->view = $this->getBasicView();
+    ViewTestData::importTestViews(get_class($this));
   }
 
   /**
@@ -64,9 +57,6 @@ abstract class ViewTestBase extends WebTestBase {
     }
     $query->execute();
     $this->checkPermissions(array(), TRUE);
-
-    // Reset the test view, in case it was dependent on the test data module.
-    $this->view = $this->getBasicView();
   }
 
   /**
@@ -252,60 +242,6 @@ abstract class ViewTestBase extends WebTestBase {
    */
   protected function dataSet() {
     return ViewTestData::dataSet();
-  }
-
-  /**
-   * Builds and returns a basic view of the views_test_data table.
-   *
-   * @return Drupal\views\ViewExecutable
-   *   The built view object.
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_view');
-  }
-
-  /**
-   * Creates a new View instance by creating it directly from config data.
-   *
-   * @param string $view_name
-   *   The name of the test view to create.
-   *
-   * @return Drupal\views\ViewExecutable
-   *   A View instance.
-   */
-  protected function createViewFromConfig($view_name) {
-    if (!module_exists('views_test_config')) {
-      module_enable(array('views_test_config'));
-    }
-
-    $data = config("views.view.$view_name")->get();
-
-    $view = entity_create('view', $data);
-    $view = $view->get('executable');
-    $view->setDisplay();
-
-    return $view;
-  }
-
-  /**
-   * Clones the view used in this test and sets the default display.
-   *
-   * @param Drupal\views\Plugin\Core\Entity\View $original_view
-   *   (optional) The view to clone. If not specified, the default view for the
-   *   test will be used.
-   *
-   * @return Drupal\views\ViewExecutable
-   *   A clone of the view.
-   */
-  protected function getView($original_view = NULL) {
-    if (isset($original_view)) {
-      $view = $original_view->cloneView();
-    }
-    else {
-      $view = $this->view->cloneView();
-    }
-    $view->setDisplay();
-    return $view;
   }
 
 }

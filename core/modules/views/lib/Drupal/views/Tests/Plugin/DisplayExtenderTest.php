@@ -16,6 +16,13 @@ use Drupal\views\Tests\Plugin\PluginTestBase;
  */
 class DisplayExtenderTest extends PluginTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Display extender',
@@ -30,7 +37,6 @@ class DisplayExtenderTest extends PluginTestBase {
     $this->enableViewsTestModule();
   }
 
-
   /**
    * Test display extenders.
    */
@@ -38,7 +44,7 @@ class DisplayExtenderTest extends PluginTestBase {
     config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
     $this->assertEqual(count(views_get_enabled_display_extenders()), 1, 'Make sure that there is only one enabled display extender.');
 
-    $view = $this->getBasicView();
+    $view = views_get_view('test_view');
     $view->initDisplay();
 
     $this->assertEqual(count($view->display_handler->extender), 1, 'Make sure that only one extender is initialized.');
@@ -51,4 +57,5 @@ class DisplayExtenderTest extends PluginTestBase {
     $view->execute();
     $this->assertTrue($display_extender->testState['query'], 'Make sure the display extender was able to react on query.');
   }
+
 }

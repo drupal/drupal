@@ -14,6 +14,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class FilterCombineTest extends ViewUnitTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   protected $column_map = array(
     'views_test_data_name' => 'name',
     'views_test_data_job' => 'job',

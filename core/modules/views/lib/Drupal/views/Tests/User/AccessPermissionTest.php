@@ -16,6 +16,13 @@ use Drupal\user\Plugin\views\access\Permission;
  */
 class AccessPermissionTest extends AccessTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_access_perm');
+
   public static function getInfo() {
     return array(
       'name' => 'User: Access permission',
@@ -24,12 +31,12 @@ class AccessPermissionTest extends AccessTestBase {
     );
   }
 
-
   /**
    * Tests perm access plugin.
    */
   function testAccessPerm() {
-    $view = $this->createViewFromConfig('test_access_perm');
+    $view = views_get_view('test_access_perm');
+    $view->setDisplay();
 
     $access_plugin = $view->display_handler->getPlugin('access');
     $this->assertTrue($access_plugin instanceof Permission, 'Make sure the right class got instantiated.');

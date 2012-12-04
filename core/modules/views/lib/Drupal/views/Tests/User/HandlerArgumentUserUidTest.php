@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\User;
  */
 class HandlerArgumentUserUidTest extends UserTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_user_uid_argument');
+
   public static function getInfo() {
     return array(
       'name' => 'User: Uid Argument',

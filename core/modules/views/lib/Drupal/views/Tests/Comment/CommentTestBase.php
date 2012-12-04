@@ -42,11 +42,4 @@ abstract class CommentTestBase extends ViewTestBase {
     entity_create('comment', $comment)->save();
   }
 
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_comment_user_uid');
-  }
-
 }

@@ -12,6 +12,13 @@ namespace Drupal\views\Tests;
  */
 class TokenReplaceTest extends ViewUnitTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_tokens');
+
   public static function getInfo() {
     return array(
       'name' => 'View core token replacement',

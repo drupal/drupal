@@ -7,19 +7,17 @@
 
 namespace Drupal\views\Tests\Taxonomy;
 
-use Drupal\views\Tests\ViewTestBase;
-
 /**
  * Tests the node_term_data relationship handler.
  */
 class RelationshipNodeTermDataTest extends TaxonomyTestBase {
 
   /**
-   * The vocabulary for the test.
+   * Views used by this test.
    *
-   * @var Drupal\taxonomy\Vocabulary
+   * @var array
    */
-  protected $vocabulary;
+  public static $testViews = array('test_taxonomy_node_term_data');
 
   public static function getInfo() {
     return array(
@@ -30,7 +28,8 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
   }
 
   function testViewsHandlerRelationshipNodeTermData() {
-    $this->executeView($this->view, array($this->term1->tid, $this->term2->tid));
+    $view = views_get_view('test_taxonomy_node_term_data');
+    $this->executeView($view, array($this->term1->tid, $this->term2->tid));
     $resultset = array(
       array(
         'nid' => $this->nodes[0]->nid,
@@ -40,14 +39,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
       ),
     );
     $this->column_map = array('nid' => 'nid');
-    $this->assertIdenticalResultset($this->view, $resultset, $this->column_map);
-  }
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_taxonomy_node_term_data');
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
   }
 
 }

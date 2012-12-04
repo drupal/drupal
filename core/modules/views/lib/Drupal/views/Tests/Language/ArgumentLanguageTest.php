@@ -16,6 +16,13 @@ use Drupal\Core\Language\Language;
  */
 class ArgumentLanguageTest extends LanguageTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Argument: Language',
@@ -28,8 +35,9 @@ class ArgumentLanguageTest extends LanguageTestBase {
    * Tests the language argument.
    */
   public function testArgument() {
+    $view = views_get_view('test_view');
     foreach (array('en' => 'John', 'xx-lolspeak' => 'George') as $langcode => $name) {
-      $view = $this->getView();
+      $view->setDisplay();
       $view->displayHandlers['default']->overrideOption('arguments', array(
         'langcode' => array(
           'id' => 'langcode',

@@ -16,6 +16,13 @@ use Drupal\views\ViewExecutable;
  */
 class HandlerTest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Handler test',

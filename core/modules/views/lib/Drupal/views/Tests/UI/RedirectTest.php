@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\UI;
  */
 class RedirectTest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view', 'test_redirect_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Redirect',
@@ -24,10 +31,11 @@ class RedirectTest extends UITestBase {
    * Tests the redirecting.
    */
   public function testRedirect() {
-    $view = $this->getBasicView();
+    $view_name = 'test_view';
+    $view = views_get_view($view_name);
 
     $random_destination = $this->randomName();
-    $edit_path = "admin/structure/views/view/{$view->storage->get('name')}/edit";
+    $edit_path = "admin/structure/views/view/$view_name/edit";
 
     $this->drupalPost($edit_path, array(), t('Save') , array('query' => array('destination' => $random_destination)));
     $this->assertUrl($random_destination, array(), 'Make sure the user got redirected to the expected page defined in the destination.');
@@ -35,12 +43,13 @@ class RedirectTest extends UITestBase {
     // Setup a view with a certain page display path. If you change the path
     // but have the old url in the destination the user should be redirected to
     // the new path.
-    $view = views_get_view('test_redirect_view');
+    $view_name = 'test_redirect_view';
+    $view = views_get_view($view_name);
     $random_destination = $this->randomName();
     $new_path = $this->randomName();
 
-    $edit_path = "admin/structure/views/view/{$view->storage->get('name')}/edit";
-    $path_edit_path = "admin/structure/views/nojs/display/{$view->storage->get('name')}/page_1/path";
+    $edit_path = "admin/structure/views/view/$view_name/edit";
+    $path_edit_path = "admin/structure/views/nojs/display/$view_name/page_1/path";
 
     $this->drupalPost($path_edit_path, array('path' => $new_path), t('Apply'));
     $this->drupalPost($edit_path, array(), t('Save'), array('query' => array('destination' => 'test-redirect-view')));

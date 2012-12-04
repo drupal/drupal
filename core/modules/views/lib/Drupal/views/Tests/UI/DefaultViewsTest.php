@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\UI;
  */
 class DefaultViewsTest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view_status');
+
   public static function getInfo() {
     return array(
       'name' => 'Default views functionality',

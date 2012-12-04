@@ -16,6 +16,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class FieldUnitTest extends ViewUnitTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view', 'test_field_tokens', 'test_field_output');
+
   protected $column_map = array(
     'views_test_data_name' => 'name',
   );

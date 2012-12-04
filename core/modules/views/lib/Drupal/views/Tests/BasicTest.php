@@ -12,6 +12,13 @@ namespace Drupal\views\Tests;
  */
 class BasicTest extends ViewUnitTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view', 'test_simple_argument');
+
   public static function getInfo() {
     return array(
       'name' => 'Basic query tests',
@@ -101,56 +108,8 @@ class BasicTest extends ViewUnitTestBase {
    * Tests simple argument.
    */
   public function testSimpleArgument() {
-    $view = views_get_view('test_view');
-    $view->setDisplay();
-
-    // Add a argument.
-    $view->displayHandlers['default']->overrideOption('arguments', array(
-      'age' => array(
-        'default_action' => 'ignore',
-        'style_plugin' => 'default_summary',
-        'style_options' => array(),
-        'wildcard' => 'all',
-        'wildcard_substitution' => 'All',
-        'title' => '',
-        'breadcrumb' => '',
-        'default_argument_type' => 'fixed',
-        'default_argument' => '',
-        'validate' => array(
-          'type' => 'none',
-          'fail' => 'not found',
-        ),
-        'break_phrase' => 0,
-        'not' => 0,
-        'id' => 'age',
-        'table' => 'views_test_data',
-        'field' => 'age',
-        'validate_user_argument_type' => 'uid',
-        'validate_user_roles' => array(
-          '2' => 0,
-        ),
-        'relationship' => 'none',
-        'default_options_div_prefix' => '',
-        'default_argument_user' => 0,
-        'default_argument_fixed' => '',
-        'default_argument_php' => '',
-        'validate_argument_node_type' => array(
-          'page' => 0,
-          'story' => 0,
-        ),
-        'validate_argument_node_access' => 0,
-        'validate_argument_nid_type' => 'nid',
-        'validate_argument_vocabulary' => array(),
-        'validate_argument_type' => 'tid',
-        'validate_argument_transform' => 0,
-        'validate_user_restrict_roles' => 0,
-        'validate_argument_php' => '',
-      )
-    ));
-
-    $saved_view = clone $view;
-
     // Execute with a view
+    $view = views_get_view('test_simple_argument');
     $view->setArguments(array(27));
     $this->executeView($view);
 
@@ -171,7 +130,7 @@ class BasicTest extends ViewUnitTestBase {
     ));
 
     // Test "show all" if no argument is present.
-    $view = $saved_view->cloneView();
+    $view = views_get_view('test_simple_argument');
     $this->executeView($view);
 
     // Build the expected result.

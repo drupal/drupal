@@ -16,6 +16,13 @@ use Drupal\user\Plugin\views\access\Role;
  */
 class AccessRoleTest extends AccessTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_access_role');
+
   public static function getInfo() {
     return array(
       'name' => 'User: Access role',
@@ -28,7 +35,8 @@ class AccessRoleTest extends AccessTestBase {
    * Tests role access plugin.
    */
   function testAccessRole() {
-    $view = $this->createViewFromConfig('test_access_role');
+    $view = views_get_view('test_access_role');
+    $view->setDisplay();
 
     $view->displayHandlers['default']->options['access']['options']['role'] = array(
       $this->normalRole => $this->normalRole,
@@ -36,7 +44,6 @@ class AccessRoleTest extends AccessTestBase {
 
     $access_plugin = $view->display_handler->getPlugin('access');
     $this->assertTrue($access_plugin instanceof Role, 'Make sure the right class got instantiated.');
-
 
     $this->assertTrue($view->display_handler->access($this->adminUser), t('Admin-Account should be able to access the view everytime'));
     $this->assertFalse($view->display_handler->access($this->webUser));

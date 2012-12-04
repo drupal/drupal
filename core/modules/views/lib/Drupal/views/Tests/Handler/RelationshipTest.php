@@ -17,6 +17,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
 class RelationshipTest extends ViewUnitTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
+  /**
    * Maps between the key in the expected result and the query result.
    *
    * @var array

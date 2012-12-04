@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\User;
  */
 class RelationshipRepresentativeNode extends UserTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_groupwise_user');
+
   public static function getInfo() {
     return array(
       'name' => 'User: Representative Node Relationship',

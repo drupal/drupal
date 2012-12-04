@@ -16,6 +16,13 @@ use Drupal\Core\Language\Language;
  */
 class FieldLanguageTest extends LanguageTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Field: Language',
@@ -28,7 +35,8 @@ class FieldLanguageTest extends LanguageTestBase {
    * Tests the language field.
    */
   public function testField() {
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
     $view->displayHandlers['default']->overrideOption('fields', array(
       'langcode' => array(
         'id' => 'langcode',

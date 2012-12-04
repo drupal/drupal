@@ -17,6 +17,13 @@ use Drupal\views\Tests\ViewTestBase;
 class HandlerFilterUserNameTest extends ViewTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_user_name');
+
+  /**
    * Modules to enable.
    *
    * @var array

@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\Node;
  */
 class FilterUidRevisionTest extends NodeTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_filter_node_uid_revision');
+
   public static function getInfo() {
     return array(
       'name' => 'Node: User has revision Filter',

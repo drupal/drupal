@@ -14,6 +14,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class HandlerAliasTest extends ViewUnitTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_filter', 'test_alias');
+
   public static function getInfo() {
     return array(
       'name' => 'Handler alias tests',

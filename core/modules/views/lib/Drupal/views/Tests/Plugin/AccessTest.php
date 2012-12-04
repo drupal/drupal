@@ -15,6 +15,13 @@ namespace Drupal\views\Tests\Plugin;
  */
 class AccessTest extends PluginTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_access_none', 'test_access_static', 'test_access_dynamic');
+
   public static function getInfo() {
     return array(
       'name' => 'Access',
@@ -43,7 +50,8 @@ class AccessTest extends PluginTestBase {
    * Tests none access plugin.
    */
   function testAccessNone() {
-    $view = $this->createViewFromConfig('test_access_none');
+    $view = views_get_view('test_access_none');
+    $view->setDisplay();
 
     $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
     $this->assertTrue($view->display_handler->access($this->web_user));
@@ -60,7 +68,8 @@ class AccessTest extends PluginTestBase {
    * @see Drupal\views_test\Plugin\views\access\StaticTest
    */
   function testStaticAccessPlugin() {
-    $view = $this->createViewFromConfig('test_access_static');
+    $view = views_get_view('test_access_static');
+    $view->setDisplay();
 
     $access_plugin = $view->display_handler->getPlugin('access');
 
@@ -88,7 +97,8 @@ class AccessTest extends PluginTestBase {
    * @see Drupal\views_test\Plugin\views\access\DyamicTest
    */
   function testDynamicAccessPlugin() {
-    $view = $this->createViewFromConfig('test_access_dynamic');
+    $view = views_get_view('test_access_dynamic');
+    $view->setDisplay();
     $argument1 = $this->randomName();
     $argument2 = $this->randomName();
     state()->set('test_dynamic_access_argument1', $argument1);

@@ -13,6 +13,13 @@ namespace Drupal\views\Tests;
 class ViewElementTest extends ViewTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
+  /**
    * The raw render data array to use in tests.
    *
    * @var array
@@ -48,7 +55,8 @@ class ViewElementTest extends ViewTestBase {
    * Tests the rendered output and form output of a view element.
    */
   public function testViewElement() {
-    $view = $this->getBasicView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
 
     // Set the content as our rendered array.
     $render = $this->render;

@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Field;
 
+use Drupal\views\ViewExecutable;
+
 /**
  * Tests the field_field handler.
  * @TODO
@@ -16,6 +18,13 @@ namespace Drupal\views\Tests\Field;
  *   Check revisions
  */
 class HandlerFieldFieldTest extends FieldTestBase {
+
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view_fieldapi');
 
   public $nodes;
 
@@ -27,6 +36,9 @@ class HandlerFieldFieldTest extends FieldTestBase {
     );
   }
 
+  /**
+   * @todo.
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -59,19 +71,21 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
     }
-
-    foreach ($this->fields as $key => $field) {
-      $this->view->display_handler->display['display_options']['fields'][$field['field_name']]['id'] = $field['field_name'];
-      $this->view->display_handler->display['display_options']['fields'][$field['field_name']]['table'] = 'field_data_' . $field['field_name'];
-      $this->view->display_handler->display['display_options']['fields'][$field['field_name']]['field'] = $field['field_name'];
-    }
   }
 
   /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   * Sets up the testing view with random field data.
+   *
+   * @param \Drupal\views\ViewExecutable $view
+   *   The view to add field data to.
    */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_view_fieldapi');
+  protected function prepareView(ViewExecutable $view) {
+    $view->initDisplay();
+    foreach ($this->fields as $key => $field) {
+      $view->display_handler->options['fields'][$field['field_name']]['id'] = $field['field_name'];
+      $view->display_handler->options['fields'][$field['field_name']]['table'] = 'field_data_' . $field['field_name'];
+      $view->display_handler->options['fields'][$field['field_name']]['field'] = $field['field_name'];
+    }
   }
 
   public function testFieldRender() {
@@ -81,7 +95,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
   }
 
   public function _testSimpleFieldRender() {
-    $view = $this->getView();
+    $view = views_get_view('test_view_fieldapi');
+    $this->prepareView($view);
     $this->executeView($view);
 
     // Tests that the rendered fields match the actual value of the fields.
@@ -99,7 +114,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
    * Tests that fields with formatters runs as expected.
    */
   public function _testFormatterSimpleFieldRender() {
-    $view = $this->getView();
+    $view = views_get_view('test_view_fieldapi');
+    $this->prepareView($view);
     $view->displayHandlers['default']->options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
     $view->displayHandlers['default']->options['fields'][$this->fields[0]['field_name']]['settings'] = array(
       'trim_length' => 3,
@@ -115,11 +131,11 @@ class HandlerFieldFieldTest extends FieldTestBase {
   }
 
   public function _testMultipleFieldRender() {
-    $view = $this->getView();
+    $view = views_get_view('test_view_fieldapi');
     $field_name = $this->fields[3]['field_name'];
 
     // Test delta limit.
-    $view->initDisplay();
+    $this->prepareView($view);
     $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
     $this->executeView($view);
@@ -141,7 +157,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + offset
-    $view->initDisplay();
+    $this->prepareView($view);
     $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_offset'] = 1;
@@ -160,7 +176,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + reverse.
-    $view->initDisplay();
+    $this->prepareView($view);
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_offset'] = 0;
     $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
@@ -181,7 +197,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta first last.
-    $view->initDisplay();
+    $this->prepareView($view);
     $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 0;
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_first_last'] = TRUE;
@@ -199,7 +215,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view->destroy();
 
     // Test delta limit + custom seperator.
-    $view->initDisplay();
+    $this->prepareView($view);
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_first_last'] = FALSE;
     $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
     $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;

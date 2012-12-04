@@ -16,6 +16,13 @@ use Drupal\views\Tests\Plugin\PluginTestBase;
  */
 class DisplayPageTest extends PluginTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_page_display');
+
   public static function getInfo() {
     return array(
       'name' => 'Display: Page plugin',

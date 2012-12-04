@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\Comment;
  */
 class ArgumentUserUIDTest extends CommentTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_comment_user_uid');
+
   public static function getInfo() {
     return array(
       'name' => 'Comment: User UID Argument',
@@ -21,7 +28,8 @@ class ArgumentUserUIDTest extends CommentTestBase {
   }
 
   function testCommentUserUIDTest() {
-    $this->executeView($this->view, array($this->account->uid));
+    $view = views_get_view('test_comment_user_uid');
+    $this->executeView($view, array($this->account->uid));
     $result_set = array(
       array(
         'nid' => $this->node_user_posted->nid,
@@ -30,8 +38,8 @@ class ArgumentUserUIDTest extends CommentTestBase {
         'nid' => $this->node_user_commented->nid,
       ),
     );
-    $this->column_map = array('nid' => 'nid');
-    $this->assertIdenticalResultset($this->view, $result_set, $this->column_map);
+    $column_map = array('nid' => 'nid');
+    $this->assertIdenticalResultset($view, $result_set, $column_map);
   }
 
 }

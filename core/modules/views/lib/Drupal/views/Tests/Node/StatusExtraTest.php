@@ -14,6 +14,13 @@ namespace Drupal\views\Tests\Node;
  */
 class StatusExtraTest extends NodeTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_status_extra');
+
   public static function getInfo() {
     return array(
       'name' => 'Node: Status extra filter',

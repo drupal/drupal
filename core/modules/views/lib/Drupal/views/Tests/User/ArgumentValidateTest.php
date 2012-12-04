@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\User;
  */
 class ArgumentValidateTest extends UserTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view_argument_validate_user');
+
   public static function getInfo() {
     return array(
       'name' => 'User: Argument validator',
@@ -76,7 +83,8 @@ class ArgumentValidateTest extends UserTestBase {
   }
 
   function view_argument_validate_user($argtype) {
-    $view = $this->createViewFromConfig('test_view_argument_validate_user');
+    $view = views_get_view('test_view_argument_validate_user');
+    $view->setDisplay();
     $view->displayHandlers['default']->options['arguments']['null']['validate_options']['type'] = $argtype;
     $view->preExecute();
     $view->initHandlers();

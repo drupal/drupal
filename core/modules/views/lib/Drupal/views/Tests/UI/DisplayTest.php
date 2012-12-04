@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\UI;
  */
 class DisplayTest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_display');
+
   public static function getInfo() {
     return array(
       'name' => 'Display tests',

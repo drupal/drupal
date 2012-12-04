@@ -15,6 +15,13 @@ use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin
 class DisplayTest extends PluginTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_filter_groups');
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -111,7 +118,7 @@ class DisplayTest extends PluginTestBase {
    * Tests the overriding of filter_groups.
    */
   public function testFilterGroupsOverriding() {
-    $view = $this->createViewFromConfig('test_filter_groups');
+    $view = views_get_view('test_filter_groups');
     $view->initDisplay();
 
     // mark is as overridden, yes FALSE, means overridden.

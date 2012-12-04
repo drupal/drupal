@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\Handler;
  */
 class ArgumentStringTest extends HandlerTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_glossary');
+
   public static function getInfo() {
     return array(
       'name' => 'Argument: String',
@@ -35,7 +42,7 @@ class ArgumentStringTest extends HandlerTestBase {
       }
     }
 
-    $view = $this->createViewFromConfig('test_glossary');
+    $view = views_get_view('test_glossary');
     $this->executeView($view);
 
     $count_field = 'nid';

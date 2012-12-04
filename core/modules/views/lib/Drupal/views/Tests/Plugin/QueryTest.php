@@ -7,13 +7,20 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views_test_data\Plugin\views\query\QueryTest as QueryTestPlugin;
 
 /**
  * Tests query plugins.
  */
-class QueryTest extends ViewTestBase {
+class QueryTest extends ViewUnitTestBase {
+
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
 
   public static function getInfo() {
     return array(
@@ -21,12 +28,6 @@ class QueryTest extends ViewTestBase {
       'description' => 'Tests query plugins.',
       'group' => 'Views Plugins'
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
   }
 
   protected function viewsData() {
@@ -48,13 +49,17 @@ class QueryTest extends ViewTestBase {
    * Tests the ViewExecutable::initQuery method.
    */
   public function _testInitQuery() {
-    $view = $this->getBasicView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
+
     $view->initQuery();
     $this->assertTrue($view->query instanceof QueryTestPlugin, 'Make sure the right query plugin got instantiated.');
   }
 
   public function _testQueryExecute() {
-    $view = $this->getBasicView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
+
     $view->initQuery();
     $view->query->setAllItems($this->dataSet());
 

@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\Taxonomy;
  */
 class RelationshipRepresentativeNode extends TaxonomyTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_groupwise_term');
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy: Representative Node Relationship',

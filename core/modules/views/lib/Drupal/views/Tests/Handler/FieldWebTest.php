@@ -14,6 +14,13 @@ namespace Drupal\views\Tests\Handler;
  */
 class FieldWebTest extends HandlerTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view', 'test_field_classes', 'test_field_output', 'test_click_sort');
+
   protected $column_map = array(
     'views_test_data_name' => 'name',
   );

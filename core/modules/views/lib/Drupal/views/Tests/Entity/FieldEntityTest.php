@@ -14,6 +14,12 @@ use Drupal\views\Tests\ViewTestBase;
  */
 class FieldEntityTest extends ViewTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_field_get_entity');
 
   /**
    * Modules to enable.

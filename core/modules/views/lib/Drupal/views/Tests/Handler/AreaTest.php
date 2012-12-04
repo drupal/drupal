@@ -16,6 +16,13 @@ namespace Drupal\views\Tests\Handler;
 class AreaTest extends HandlerTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_example_area');
+
+  /**
    * Modules to enable.
    *
    * @var array

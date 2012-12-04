@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\UI;
  */
 class GroupByTest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_views_groupby_save');
+
   public static function getInfo() {
     return array(
       'name' => 'Group By functionality',

@@ -13,6 +13,13 @@ namespace Drupal\views\Tests\Handler;
 class FilterDateTest extends HandlerTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_filter_date_between');
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -42,13 +49,21 @@ class FilterDateTest extends HandlerTestBase {
   }
 
   /**
+   * Runs other test methods.
+   */
+  protected function testDateFilter() {
+    $this->_testOffset();
+    $this->_testBetween();
+    $this->_testUiValidation();
+  }
+
+  /**
    * Test the general offset functionality.
    */
-  function testOffset() {
-    $saved_view = $this->createViewFromConfig('test_filter_date_between');
+  protected function _testOffset() {
+    $view = views_get_view('test_filter_date_between');
 
     // Test offset for simple operator.
-    $view = $this->getView($saved_view);
     $view->initHandlers();
     $view->filter['created']->operator = '>';
     $view->filter['created']->value['type'] = 'offset';
@@ -58,9 +73,9 @@ class FilterDateTest extends HandlerTestBase {
       array('nid' => $this->nodes[3]->nid),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
 
     // Test offset for between operator.
-    $view = $this->getView($saved_view);
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['type'] = 'offset';
@@ -76,11 +91,10 @@ class FilterDateTest extends HandlerTestBase {
   /**
    * Tests the filter operator between/not between.
    */
-  function testBetween() {
-    $saved_view = $this->createViewFromConfig('test_filter_date_between');
+  protected function _testBetween() {
+    $view = views_get_view('test_filter_date_between');
 
     // Test between with min and max.
-    $view = $this->getView($saved_view);
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
@@ -90,9 +104,9 @@ class FilterDateTest extends HandlerTestBase {
       array('nid' => $this->nodes[1]->nid),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
 
     // Test between with just max.
-    $view = $this->getView($saved_view);
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
@@ -102,9 +116,9 @@ class FilterDateTest extends HandlerTestBase {
       array('nid' => $this->nodes[1]->nid),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
 
     // Test not between with min and max.
-    $view = $this->getView($saved_view);
     $view->initHandlers();
     $view->filter['created']->operator = 'not between';
     $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
@@ -116,9 +130,9 @@ class FilterDateTest extends HandlerTestBase {
       array('nid' => $this->nodes[3]->nid),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
 
     // Test not between with just max.
-    $view = $this->getView($saved_view);
     $view->initHandlers();
     $view->filter['created']->operator = 'not between';
     $view->filter['created']->value['max'] = format_date(150000, 'custom', 'Y-m-d H:s');
@@ -134,9 +148,8 @@ class FilterDateTest extends HandlerTestBase {
   /**
    * Make sure the validation callbacks works.
    */
-  function testUiValidation() {
-    $view = $this->createViewFromConfig('test_filter_date_between');
-    $view->save();
+  protected function _testUiValidation() {
+    $view = views_get_view('test_filter_date_between');
 
     $this->drupalLogin($this->drupalCreateUser(array('administer views', 'administer site configuration')));
     menu_router_rebuild();

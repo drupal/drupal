@@ -14,6 +14,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class ArgumentValidatorTest extends ViewUnitTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view_argument_validate_php', 'test_view_argument_validate_numeric');
+
   public static function getInfo() {
     return array(
       'name' => 'Argument validator',

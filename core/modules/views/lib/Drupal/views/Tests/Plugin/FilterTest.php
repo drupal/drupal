@@ -17,6 +17,13 @@ use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 class FilterTest extends PluginTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_filter');
+
+  /**
    * Modules to enable.
    *
    * @var array

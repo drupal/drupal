@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\Node;
  */
 class FieldTypeTest extends NodeTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_field_type');
+
   public static function getInfo() {
     return array(
       'name' => 'Node: Node Type field',
@@ -31,17 +38,9 @@ class FieldTypeTest extends NodeTestBase {
       'node_type' => 'node_type',
     );
 
-    $view = $this->getView();
-    $view->preview();
+    $view = views_get_view('test_field_type');
     $this->executeView($view);
     $this->assertIdenticalResultset($view, $expected_result, $column_map, 'The correct node type was displayed.');
-  }
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_field_type');
   }
 
 }

@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\UI;
  */
 class PreviewTest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_preview');
+
   public static function getInfo() {
     return array(
       'name' => 'Preview functionality',

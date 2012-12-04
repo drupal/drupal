@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\Plugin;
  */
 class StyleMappingTest extends StyleTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_style_mapping');
+
   public static function getInfo() {
     return array(
       'name' => 'Style: Mapping',
@@ -33,8 +40,8 @@ class StyleMappingTest extends StyleTestBase {
     $view = views_get_view('test_style_mapping');
     $output = $this->mappedOutputHelper($view);
     $this->assertTrue(strpos($output, 'job') === FALSE, 'The job field is added to the view but not in the mapping.');
+    $view->destroy();
 
-    $view = views_get_view('test_style_mapping');
     $view->setDisplay();
     $view->displayHandlers['default']->options['style']['options']['mapping']['name_field'] = 'job';
     $output = $this->mappedOutputHelper($view);

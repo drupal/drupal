@@ -16,6 +16,13 @@ use Drupal\Core\Language\Language;
  */
 class FilterLanguageTest extends LanguageTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Filter: Language',
@@ -28,8 +35,9 @@ class FilterLanguageTest extends LanguageTestBase {
    * Tests the language filter.
    */
   public function testFilter() {
+    $view = views_get_view('test_view');
     foreach (array('en' => 'John', 'xx-lolspeak' => 'George') as $langcode => $name) {
-      $view = $this->getView();
+      $view->setDisplay();
       $view->displayHandlers['default']->overrideOption('filters', array(
         'langcode' => array(
           'id' => 'langcode',

@@ -16,6 +16,13 @@ use Drupal\views\ViewExecutable;
  */
 class CacheTest extends PluginTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view', 'test_cache');
+
   public static function getInfo() {
     return array(
       'name' => 'Cache',
@@ -31,61 +38,14 @@ class CacheTest extends PluginTestBase {
   }
 
   /**
-   * Build and return a basic view of the views_test_data table.
-   *
-   * @return Drupal\views\ViewExecutable
-   */
-  protected function getBasicView() {
-    // Create the basic view.
-    $view = $this->createViewFromConfig('test_view');
-    $view->storage->addDisplay('default');
-    $view->storage->set('base_table', 'views_test_data');
-
-    // Set up the fields we need.
-    $display = $view->storage->newDisplay('default', 'Master', 'default');
-    $display->overrideOption('fields', array(
-      'id' => array(
-        'id' => 'id',
-        'table' => 'views_test_data',
-        'field' => 'id',
-        'relationship' => 'none',
-      ),
-      'name' => array(
-        'id' => 'name',
-        'table' => 'views_test_data',
-        'field' => 'name',
-        'relationship' => 'none',
-      ),
-      'age' => array(
-        'id' => 'age',
-        'table' => 'views_test_data',
-        'field' => 'age',
-        'relationship' => 'none',
-      ),
-    ));
-
-    // Set up the sort order.
-    $display->overrideOption('sorts', array(
-      'id' => array(
-        'order' => 'ASC',
-        'id' => 'id',
-        'table' => 'views_test_data',
-        'field' => 'id',
-        'relationship' => 'none',
-      ),
-    ));
-
-    return $view;
-  }
-
-  /**
    * Tests time based caching.
    *
    * @see views_plugin_cache_time
    */
   function testTimeCaching() {
     // Create a basic result which just 2 results.
-    $view = $this->getView();
+    $view = views_get_view('test_cache');
+    $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'options' => array(
@@ -107,7 +67,8 @@ class CacheTest extends PluginTestBase {
     drupal_write_record('views_test_data', $record);
 
     // The Result should be the same as before, because of the caching.
-    $view = $this->getView();
+    $view = views_get_view('test_cache');
+    $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'options' => array(
@@ -128,7 +89,8 @@ class CacheTest extends PluginTestBase {
    */
   function testNoneCaching() {
     // Create a basic result which just 2 results.
-    $view = $this->getView();
+    $view = views_get_view('test_cache');
+    $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
       'options' => array()
@@ -148,7 +110,8 @@ class CacheTest extends PluginTestBase {
     drupal_write_record('views_test_data', $record);
 
     // The Result changes, because the view is not cached.
-    $view = $this->getView();
+    $view = views_get_view('test_cache');
+    $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
       'options' => array()
@@ -166,7 +129,8 @@ class CacheTest extends PluginTestBase {
     // Create a view with output caching enabled.
     // Some hook_views_pre_render in views_test_data.module adds the test css/js file.
     // so they should be added to the css/js storage.
-    $view = $this->getView();
+    $view = views_get_view('test_view');
+    $view->setDisplay();
     $view->storage->set('name', 'test_cache_header_storage');
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
@@ -179,8 +143,9 @@ class CacheTest extends PluginTestBase {
     unset($view->pre_render_called);
     drupal_static_reset('drupal_add_css');
     drupal_static_reset('drupal_add_js');
+    $view->destroy();
 
-    $view = $this->getView($view);
+    $view->setDisplay();
     $view->preview();
     $css = drupal_add_css();
     $css_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.css';
@@ -199,13 +164,15 @@ class CacheTest extends PluginTestBase {
     drupal_add_css($system_css_path);
     $system_js_path = drupal_get_path('module', 'system') . '/system.cron.js';
     drupal_add_js($system_js_path);
+    $view->destroy();
 
-    $view = $this->getView($view);
+    $view->setDisplay();
     $view->preview();
     drupal_static_reset('drupal_add_css');
     drupal_static_reset('drupal_add_js');
+    $view->destroy();
 
-    $view = $this->getView($view);
+    $view->setDisplay();
     $view->preview();
 
     $css = drupal_add_css();

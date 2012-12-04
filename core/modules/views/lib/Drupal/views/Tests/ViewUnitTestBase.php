@@ -41,8 +41,9 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
       $query->values($record);
     }
     $query->execute();
-  }
 
+    ViewTestData::importTestViews(get_class($this));
+  }
 
   /**
    * Verifies that a result set returned by a View matches expected values.

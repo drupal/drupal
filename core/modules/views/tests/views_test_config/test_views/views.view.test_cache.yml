@@ -1,0 +1,42 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: '0'
+    display_options:
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          relationship: none
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          relationship: none
+        age:
+          id: age
+          table: views_test_data
+          field: age
+          relationship: none
+      defaults:
+        fields: '0'
+        sorts: '0'
+      sorts:
+        id:
+          order: ASC
+          id: id
+          table: views_test_data
+          field: id
+          relationship: none
+human_name: ''
+name: test_cache
+tag: ''
+base_field: nid

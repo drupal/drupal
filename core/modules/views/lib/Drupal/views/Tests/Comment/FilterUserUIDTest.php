@@ -14,6 +14,13 @@ namespace Drupal\views\Tests\Comment;
  */
 class FilterUserUIDTest extends CommentTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_comment_user_uid');
+
   public static function getInfo() {
     return array(
       'name' => 'Comment: User UID Filter',
@@ -23,7 +30,9 @@ class FilterUserUIDTest extends CommentTestBase {
   }
 
   function testCommentUserUIDTest() {
-    $this->view->setItem('default', 'argument', 'uid_touch', NULL);
+    $view = views_get_view('test_comment_user_uid');
+    $view->setDisplay();
+    $view->setItem('default', 'argument', 'uid_touch', NULL);
 
     $options = array(
       'id' => 'uid_touch',
@@ -31,8 +40,8 @@ class FilterUserUIDTest extends CommentTestBase {
       'field' => 'uid_touch',
       'value' => array($this->loggedInUser->uid),
     );
-    $this->view->addItem('default', 'filter', 'node', 'uid_touch', $options);
-    $this->executeView($this->view, array($this->account->uid));
+    $view->addItem('default', 'filter', 'node', 'uid_touch', $options);
+    $this->executeView($view, array($this->account->uid));
     $result_set = array(
       array(
         'nid' => $this->node_user_posted->nid,
@@ -42,7 +51,7 @@ class FilterUserUIDTest extends CommentTestBase {
       ),
     );
     $this->column_map = array('nid' => 'nid');
-    $this->assertIdenticalResultset($this->view, $result_set, $this->column_map);
+    $this->assertIdenticalResultset($view, $result_set, $this->column_map);
   }
 
 }

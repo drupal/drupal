@@ -14,6 +14,13 @@ namespace Drupal\views\Tests\UI;
  */
 class RowUITest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Row: UI',
@@ -26,11 +33,12 @@ class RowUITest extends UITestBase {
    * Tests changing the row plugin and changing some options of a row.
    */
   public function testRowUI() {
-    $view = $this->getView();
-    $view_edit_url = "admin/structure/views/view/{$view->storage->get('name')}/edit";
+    $view_name = 'test_view';
+    $view = views_get_view($view_name);
+    $view_edit_url = "admin/structure/views/view/$view_name/edit";
 
-    $row_plugin_url = "admin/structure/views/nojs/display/{$view->storage->get('name')}/default/row";
-    $row_options_url = "admin/structure/views/nojs/display/{$view->storage->get('name')}/default/row_options";
+    $row_plugin_url = "admin/structure/views/nojs/display/$view_name/default/row";
+    $row_options_url = "admin/structure/views/nojs/display/$view_name/default/row_options";
 
     $this->drupalGet($row_plugin_url);
     $this->assertFieldByName('row', 'fields', 'The default row plugin selected in the UI should be fields.');
@@ -51,7 +59,7 @@ class RowUITest extends UITestBase {
     $this->drupalPost($view_edit_url, array(), t('Save'));
     $this->assertLink(t('Test row plugin'), 0, 'Make sure the test row plugin is shown in the UI');
 
-    $view = views_get_view($view->storage->get('name'));
+    $view = views_get_view($view_name);
     $view->initDisplay();
     $row = $view->display_handler->getOption('row');
     $this->assertEqual($row['type'], 'test_row', 'Make sure that the test_row got saved as used row plugin.');

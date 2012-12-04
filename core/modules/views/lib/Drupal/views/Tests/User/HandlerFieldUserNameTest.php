@@ -14,6 +14,13 @@ namespace Drupal\views\Tests\User;
  */
 class HandlerFieldUserNameTest extends UserTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_views_handler_field_user_name');
+
   public static function getInfo() {
     return array(
       'name' => 'User: Name Field',
@@ -22,8 +29,8 @@ class HandlerFieldUserNameTest extends UserTestBase {
     );
   }
 
-  function testUserName() {
-    $view = $this->getView();
+  public function testUserName() {
+    $view = views_get_view('test_views_handler_field_user_name');
     $this->executeView($view);
 
     $view->row_index = 0;
@@ -51,13 +58,6 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $anon_name = $view->field['name']->options['anonymous_text'] = $this->randomName();
     $render = $view->field['name']->advanced_render($view->result[0]);
     $this->assertIdentical($render, $anon_name , 'For user0 it should use the configured anonymous text if overwrite_anonymous is checked.');
-  }
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_views_handler_field_user_name');
   }
 
 }

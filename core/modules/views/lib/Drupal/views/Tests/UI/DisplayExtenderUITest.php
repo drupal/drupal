@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\UI;
  */
 class DisplayExtenderUITest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Display extender: UI',
@@ -26,7 +33,7 @@ class DisplayExtenderUITest extends UITestBase {
   public function testDisplayExtenderUI() {
     config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
 
-    $view = $this->getView();
+    $view = views_get_view('test_view');
     $view_edit_url = "admin/structure/views/view/{$view->storage->get('name')}/edit";
     $display_option_url = 'admin/structure/views/nojs/display/test_view/default/test_extender_test_option';
 

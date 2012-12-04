@@ -14,6 +14,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class SortDateTest extends ViewUnitTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Sort: Date',

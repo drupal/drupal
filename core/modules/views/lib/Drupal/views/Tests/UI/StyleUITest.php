@@ -14,6 +14,13 @@ namespace Drupal\views\Tests\UI;
  */
 class StyleUITest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Style: UI',
@@ -26,11 +33,12 @@ class StyleUITest extends UITestBase {
    * Tests changing the style plugin and changing some options of a style.
    */
   public function testStyleUI() {
-    $view = $this->getView();
-    $view_edit_url = "admin/structure/views/view/{$view->storage->get('name')}/edit";
+    $view_name = 'test_view';
+    $view = views_get_view($view_name);
+    $view_edit_url = "admin/structure/views/view/$view_name/edit";
 
-    $style_plugin_url = "admin/structure/views/nojs/display/{$view->storage->get('name')}/default/style";
-    $style_options_url = "admin/structure/views/nojs/display/{$view->storage->get('name')}/default/style_options";
+    $style_plugin_url = "admin/structure/views/nojs/display/$view_name/default/style";
+    $style_options_url = "admin/structure/views/nojs/display/$view_name/default/style_options";
 
     $this->drupalGet($style_plugin_url);
     $this->assertFieldByName('style', 'default', 'The default style plugin selected in the UI should be unformatted list.');
@@ -51,7 +59,7 @@ class StyleUITest extends UITestBase {
     $this->drupalPost($view_edit_url, array(), t('Save'));
     $this->assertLink(t('Test style plugin'), 0, 'Make sure the test style plugin is shown in the UI');
 
-    $view = views_get_view($view->storage->get('name'));
+    $view = views_get_view($view_name);
     $view->initDisplay();
     $style = $view->display_handler->getOption('style');
     $this->assertEqual($style['type'], 'test_style', 'Make sure that the test_style got saved as used style plugin.');

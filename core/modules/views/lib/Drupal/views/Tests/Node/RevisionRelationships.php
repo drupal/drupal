@@ -13,6 +13,13 @@ use Drupal\views\Tests\ViewTestBase;
  */
 class RevisionRelationships extends ViewTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_node_revision_nid', 'test_node_revision_vid');
+
   public static function getInfo() {
     return array(
       'name' => 'Node: Revision integration',
@@ -37,7 +44,7 @@ class RevisionRelationships extends ViewTestBase {
     );
 
     // Here should be two rows.
-    $view_nid = $this->createViewFromConfig('test_node_revision_nid');
+    $view_nid = views_get_view('test_node_revision_nid');
     $this->executeView($view_nid, array($node->nid));
     $resultset_nid = array(
       array(
@@ -54,7 +61,7 @@ class RevisionRelationships extends ViewTestBase {
     $this->assertIdenticalResultset($view_nid, $resultset_nid, $column_map);
 
     // There should be only one row with active revision 2.
-    $view_vid = $this->createViewFromConfig('test_node_revision_vid');
+    $view_vid = views_get_view('test_node_revision_vid');
     $this->executeView($view_vid, array($node->nid));
     $resultset_vid = array(
       array(

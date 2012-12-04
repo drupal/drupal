@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\UI;
  */
 class StorageTest extends UITestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
   public static function getInfo() {
     return array(
       'name' => 'Storage properties',
@@ -26,9 +33,10 @@ class StorageTest extends UITestBase {
    * @see views_ui_edit_details_form
    */
   public function testDetails() {
-    $view = $this->getBasicView();
+    $view_name = 'test_view';
+    $view = views_get_view($view_name);
 
-    $path = "admin/structure/views/nojs/edit-details/{$view->storage->get('name')}";
+    $path = "admin/structure/views/nojs/edit-details/$view_name";
     $edit = array(
       'human_name' => $this->randomName(),
       'tag' => $this->randomName(),
@@ -37,8 +45,8 @@ class StorageTest extends UITestBase {
 
     $this->drupalPost($path, $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
-    $view = views_get_view($view->storage->get('name'));
 
+    $view = views_get_view($view_name);
     foreach (array('human_name', 'tag', 'description') as $property) {
       $this->assertEqual($view->storage->get($property), $edit[$property], format_string('Make sure the property @property got probably saved.', array('@property' => $property)));
     }

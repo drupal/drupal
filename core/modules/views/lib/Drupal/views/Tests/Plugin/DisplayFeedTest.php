@@ -15,6 +15,13 @@ namespace Drupal\views\Tests\Plugin;
 class DisplayFeedTest extends PluginTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_feed_display');
+
+  /**
    * Modules to enable.
    *
    * @var array

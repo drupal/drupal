@@ -19,6 +19,13 @@ use Drupal\views_test_data\Plugin\views\style\StyleTest as StyleTestPlugin;
 class StyleTest extends ViewTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view');
+
+  /**
    * Stores the SimpleXML representation of the output.
    *
    * @var \SimpleXMLElement

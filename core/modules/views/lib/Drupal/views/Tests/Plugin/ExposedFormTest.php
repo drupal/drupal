@@ -15,6 +15,13 @@ use Drupal\views\Tests\UI\UITestBase;
 class ExposedFormTest extends UITestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_reset_button', 'test_exposed_admin_ui');
+
+  /**
    * Modules to enable.
    *
    * @var array

@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\User;
  */
 class ArgumentDefaultTest extends UserTestBase {
 
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_plugin_argument_default_current_user');
+
   public static function getInfo() {
     return array(
       'name' => 'User: Argument default',
@@ -31,20 +38,13 @@ class ArgumentDefaultTest extends UserTestBase {
     drupal_save_session(FALSE);
     $user = $account;
 
-    $this->view->preExecute();
-    $this->view->initHandlers();
+    $view = views_get_view('test_plugin_argument_default_current_user');
+    $view->initHandlers();
 
-    $this->assertEqual($this->view->argument['null']->get_default_argument(), $account->uid, 'Uid of the current user is used.');
+    $this->assertEqual($view->argument['null']->get_default_argument(), $account->uid, 'Uid of the current user is used.');
     // Switch back.
     $user = $admin;
     drupal_save_session(TRUE);
-  }
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_plugin_argument_default_current_user');
   }
 
 }

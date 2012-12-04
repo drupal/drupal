@@ -19,6 +19,13 @@ use Drupal\views\Plugin\views\display\Page;
 class ViewExecutableTest extends ViewTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_destroy', 'test_executable_displays');
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -63,13 +70,12 @@ class ViewExecutableTest extends ViewTestBase {
    * Tests the initDisplay() and initHandlers() methods.
    */
   public function testInitMethods() {
-    $view = $this->getBasicView();
+    $view = views_get_view('test_destroy');
     $view->initDisplay();
 
     $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
     $this->assertTrue($view->displayHandlers['default'] instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
 
-    $view = $this->getBasicView();
     $view->destroy();
     $view->initHandlers();
 
@@ -89,24 +95,17 @@ class ViewExecutableTest extends ViewTestBase {
   }
 
   /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    return $this->createViewFromConfig('test_destroy');
-  }
-
-  /**
    * Tests the generation of the executable object.
    */
   public function testConstructing() {
-    $view = $this->getView();
+    views_get_view('test_destroy');
   }
 
   /**
    * Tests the accessing of values on the object.
    */
   public function testProperties() {
-    $view = $this->getView();
+    $view = views_get_view('test_destroy');
     foreach ($this->executableProperties as $property) {
       $this->assertTrue(isset($view->{$property}));
     }
@@ -148,26 +147,17 @@ class ViewExecutableTest extends ViewTestBase {
     $view->setDisplay('page_2');
     $this->assertEqual($view->current_display, 'page_2', 'If setDisplay is called with a valid display id the appropriate display should be used.');
     $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers['page_2']));
-
-
   }
 
   /**
    * Tests the deconstructor to be sure that every kind of heavy objects are removed.
    */
   function testDestroy() {
-    $view = $this->getView();
+    $view = views_get_view('test_destroy');
 
     $view->preview();
     $view->destroy();
 
-    $this->assertViewDestroy($view);
-
-    // Manipulate the display variable to test a previous bug.
-    $view = $this->getView();
-    $view->preview();
-
-    $view->destroy();
     $this->assertViewDestroy($view);
   }
 
@@ -216,11 +206,12 @@ class ViewExecutableTest extends ViewTestBase {
     // Test a view with multiple displays.
     // Validating a view shouldn't change the active display.
     // @todo Create an extra validation view.
-    $this->view->setDisplay('page_1');
+    $view = views_get_view('test_destroy');
+    $view->setDisplay('page_1');
 
-    $this->view->validate();
+    $view->validate();
 
-    $this->assertEqual('page_1', $this->view->current_display, "The display should be constant while validating");
+    $this->assertEqual('page_1', $view->current_display, "The display should be constant while validating");
 
     // @todo Write real tests for the validation.
     // In general the following things could be tested:

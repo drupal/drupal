@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Core\Config\FileStorage;
+
 /**
  * Provides tests view data and the base test schema with sample data records.
  *
@@ -16,6 +18,50 @@ namespace Drupal\views\Tests;
  * @see \Drupal\views\Tests\ViewTestBase.
  */
 class ViewTestData {
+
+  /**
+   * Imports test views from config.
+   *
+   * @param string $class
+   *   The name of the test class.
+   * @param array $modules
+   *   (optional) The module directories to look in for test views.
+   *   The views_test_config module will always be checked.
+   *
+   * @see config_install_default_config()
+   */
+  public static function importTestViews($class, $modules = array()) {
+    $modules[] = 'views_test_config';
+    $views = array();
+    while ($class) {
+      if (property_exists($class, 'testViews')) {
+        $views = array_merge($views, $class::$testViews);
+      }
+      $class = get_parent_class($class);
+    }
+    if (!empty($views)) {
+      $target_storage = drupal_container()->get('config.storage');
+      $config_changes = array(
+        'delete' => array(),
+        'create' => array(),
+        'change' => array(),
+      );
+      foreach ($modules as $module) {
+        $config_dir = drupal_get_path('module', $module) . '/test_views';
+        $source_storage = new FileStorage($config_dir);
+        foreach ($source_storage->listAll() as $config_name) {
+          list(, , $id) = explode('.', $config_name);
+          if (in_array($id, $views)) {
+            $config_changes['create'][] = $config_name;
+          }
+        }
+      }
+      if (!empty($config_changes['create'])) {
+        $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
+        config_sync_changes($remaining_changes, $source_storage, $target_storage);
+      }
+    }
+  }
 
   /**
    * Returns the schema definition.

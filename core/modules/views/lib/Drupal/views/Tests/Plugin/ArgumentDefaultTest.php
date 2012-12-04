@@ -16,18 +16,18 @@ use Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest as 
 class ArgumentDefaultTest extends PluginTestBase {
 
   /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = array('test_view', 'test_argument_default_fixed', 'test_argument_default_current_user');
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
   public static $modules = array('views_ui');
-
-  /**
-   * A random string used in the default views.
-   *
-   * @var string
-   */
-  protected $random;
 
   public static function getInfo() {
     return array(
@@ -38,8 +38,6 @@ class ArgumentDefaultTest extends PluginTestBase {
   }
 
   protected function setUp() {
-    $this->random = $this->randomString();
-
     parent::setUp();
 
     $this->enableViewsTestModule();
@@ -112,16 +110,18 @@ class ArgumentDefaultTest extends PluginTestBase {
    * Tests fixed default argument.
    */
   function testArgumentDefaultFixed() {
-    $view = $this->getView();
-    $view->preExecute();
+    $random = $this->randomName();
+    $view = views_get_view('test_argument_default_fixed');
+    $view->setDisplay();
+    $options = $view->display_handler->getOption('arguments');
+    $options['null']['default_argument_options']['argument'] = $random;
+    $view->display_handler->overrideOption('arguments', $options);
     $view->initHandlers();
 
-    $this->assertEqual($view->argument['null']->get_default_argument(), $this->random, 'Fixed argument should be used by default.');
+    $this->assertEqual($view->argument['null']->get_default_argument(), $random, 'Fixed argument should be used by default.');
 
     // Make sure that a normal argument provided is used
-    $view = $this->getView();
-
-    $random_string = $this->randomString();
+    $random_string = $this->randomName();
     $view->executeDisplay('default', array($random_string));
 
     $this->assertEqual($view->args[0], $random_string, 'Provided argument should be used.');
@@ -136,14 +136,5 @@ class ArgumentDefaultTest extends PluginTestBase {
    * @todo Test node default argument.
    */
   //function testArgumentDefaultNode() {}
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
-   */
-  protected function getBasicView() {
-    $view = $this->createViewFromConfig('test_argument_default_fixed');
-    $view->displayHandlers['default']->display['display_options']['arguments']['null']['default_argument_options']['argument'] = $this->random;
-    return $view;
-  }
 
 }
