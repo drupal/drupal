@@ -47,9 +47,9 @@ class Title extends AreaPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\AreaPluginBase::render().
+   * Overrides Drupal\views\Plugin\views\AreaPluginBase::preRender().
    */
-  function render($empty = FALSE) {
+  public function preRender(array $results) {
     if (!empty($this->options['title'])) {
       $value = $this->globalTokenReplace($this->options['title']);
       $this->view->setTitle($this->sanitizeValue($value, 'xss_admin'), PASS_THROUGH);

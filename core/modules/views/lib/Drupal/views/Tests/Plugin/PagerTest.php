@@ -253,6 +253,7 @@ class PagerTest extends PluginTestBase {
     $view->use_ajax = TRUE; // force the value again here
     $view->pager = NULL;
     $output = $view->render();
+    $output = drupal_render($output);
     $this->assertEqual(preg_match('/<ul class="pager">/', $output), 0, t('The pager is not rendered.'));
   }
 

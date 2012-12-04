@@ -144,8 +144,8 @@ abstract class CachePluginBase extends PluginBase {
         cache($this->table)->set($this->generateResultsKey(), $data, $this->cache_set_expire($type));
         break;
       case 'output':
-        $this->gather_headers();
         $this->storage['output'] = $this->view->display_handler->output;
+        $this->gather_headers();
         cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cache_set_expire($type));
         break;
     }
@@ -222,20 +222,20 @@ abstract class CachePluginBase extends PluginBase {
   function post_render(&$output) { }
 
   /**
-   * Start caching javascript, css and other out of band info.
+   * Start caching the html head.
    *
    * This takes a snapshot of the current system state so that we don't
    * duplicate it. Later on, when gather_headers() is run, this information
    * will be removed so that we don't hold onto it.
+   *
+   * @see drupal_add_html_head()
    */
   function cache_start() {
     $this->storage['head'] = drupal_add_html_head();
-    $this->storage['css'] = drupal_add_css();
-    $this->storage['js'] = drupal_add_js();
   }
 
   /**
-   * Gather out of band data, compare it to what we started with and store the difference.
+   * Gather the JS/CSS from the render array, the html head from the band data.
    */
   function gather_headers() {
     // Simple replacement for head
@@ -246,22 +246,9 @@ abstract class CachePluginBase extends PluginBase {
       $this->storage['head'] = '';
     }
 
-    // Slightly less simple for CSS:
-    $css = drupal_add_css();
-    $css_start = isset($this->storage['css']) ? $this->storage['css'] : array();
-    $this->storage['css'] = array_diff_assoc($css, $css_start);
-
-    // Get javascript after/before views renders.
-    $js = drupal_add_js();
-    $js_start = isset($this->storage['js']) ? $this->storage['js'] : array();
-    // If there are any differences between the old and the new javascript then
-    // store them to be added later.
-    $this->storage['js'] = array_diff_assoc($js, $js_start);
-
-    // Special case the settings key and get the difference of the data.
-    $settings = isset($js['settings']['data']) ? $js['settings']['data'] : array();
-    $settings_start = isset($js_start['settings']['data']) ? $js_start['settings']['data'] : array();
-    $this->storage['js']['settings'] = array_diff_assoc($settings, $settings_start);
+    $attached = drupal_render_collect_attached($this->storage['output']);
+    $this->storage['css'] = $attached['css'];
+    $this->storage['js'] = $attached['js'];
   }
 
   /**
@@ -273,17 +260,17 @@ abstract class CachePluginBase extends PluginBase {
     }
     if (!empty($this->storage['css'])) {
       foreach ($this->storage['css'] as $args) {
-        drupal_add_css($args['data'], $args);
+        $this->view->element['#attached']['css'][] = $args;
       }
     }
     if (!empty($this->storage['js'])) {
       foreach ($this->storage['js'] as $key => $args) {
         if ($key !== 'settings') {
-          drupal_add_js($args['data'], $args);
+          $this->view->element['#attached']['js'][] = $args;
         }
         else {
           foreach ($args as $setting) {
-            drupal_add_js($setting, 'setting');
+            $this->view->element['#attached']['js']['setting'][] = $setting;
           }
         }
       }

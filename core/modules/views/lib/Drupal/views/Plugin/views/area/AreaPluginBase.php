@@ -151,6 +151,15 @@ abstract class AreaPluginBase extends HandlerBase {
   public function query() { }
 
   /**
+   * Performs any operations needed before full rendering.
+   *
+   * @param array $results
+   *  The results of the view.
+   */
+  public function preRender(array $results) {
+  }
+
+  /**
    * Render the area
    */
   function render($empty = FALSE) {

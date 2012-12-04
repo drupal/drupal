@@ -943,7 +943,6 @@ abstract class DisplayPluginBase extends PluginBase {
    * an easy URL to exactly the right section. Don't override this.
    */
   public function optionLink($text, $section, $class = '', $title = '') {
-    views_add_js('ajax');
     if (!empty($class)) {
       $text = '<span>' . $text . '</span>';
     }
@@ -2486,7 +2485,13 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render this display.
    */
   public function render() {
-    return theme($this->themeFunctions(), array('view' => $this->view));
+    $element = array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+    );
+    $element['#attached'] = &$this->view->element['#attached'];
+
+    return $element;
   }
 
   public function renderArea($area, $empty = FALSE) {
@@ -2558,7 +2563,10 @@ abstract class DisplayPluginBase extends PluginBase {
    * Fully render the display for the purposes of a live preview or
    * some other AJAXy reason.
    */
-  function preview() { return $this->view->render(); }
+  function preview() {
+    $element = $this->view->render();
+    return drupal_render($element);
+  }
 
   /**
    * Displays can require a certain type of style plugin. By default, they will

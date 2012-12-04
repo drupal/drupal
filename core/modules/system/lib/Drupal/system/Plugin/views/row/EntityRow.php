@@ -135,6 +135,6 @@ class EntityRow extends RowPluginBase {
    */
   function render($row) {
     $entity_id = $row->{$this->field_alias};
-    return drupal_render($this->build[$entity_id]);
+    return $this->build[$entity_id];
   }
 }

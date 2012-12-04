@@ -398,6 +398,24 @@ class ViewExecutable {
   public $dom_id;
 
   /**
+   * A render array container to store render related information.
+   *
+   * For example you can alter the array and attach some css/js via the
+   * #attached key. This is the required way to add custom css/js.
+   *
+   * @var array
+   *
+   * @see drupal_process_attached
+   */
+  public $element = array(
+    '#attached' => array(
+      'css' => array(),
+      'js' => array(),
+      'library' => array(),
+    ),
+  );
+
+  /**
    * Constructs a new ViewExecutable object.
    *
    * @param Drupal\views\Plugin\Core\Entity\View $storage
@@ -407,6 +425,9 @@ class ViewExecutable {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
+
+    // Add the default css for a view.
+    $this->element['#attached']['css'][] = drupal_get_path('module', 'views') . '/css/views.base.css';
   }
 
   /**
@@ -1273,6 +1294,13 @@ class ViewExecutable {
 
       $this->style_plugin->pre_render($this->result);
 
+      // Let each area handler have access to the result set.
+      foreach (array('header', 'footer', 'empty') as $area) {
+        foreach ($this->{$area} as $handler) {
+          $handler->preRender($this->result);
+        }
+      }
+
       // Let modules modify the view just prior to rendering it.
       foreach (module_implements('views_pre_render') as $module) {
         $function = $module . '_views_pre_render';
@@ -2134,6 +2162,15 @@ class ViewExecutable {
     $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
 
     return isset($fields[$id]) ? $fields[$id] : NULL;
+  }
+
+  /**
+   * Sets the build array used by the view.
+   *
+   * @param array $element
+   */
+  public function setElement(&$element) {
+    $this->element =& $element;
   }
 
   /**

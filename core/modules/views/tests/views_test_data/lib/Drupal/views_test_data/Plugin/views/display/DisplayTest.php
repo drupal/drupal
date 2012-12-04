@@ -114,10 +114,9 @@ class DisplayTest extends DisplayPluginBase {
   public function execute() {
     $this->view->build();
 
+    $render = $this->view->render();
     // Render the test option as the title before the view output.
-    $render = '<h1>' . filter_xss_admin($this->options['test_option']) . '</h1>';
-    // And now render the view.
-    $render .= $this->view->render();
+    $render['#prefix'] = '<h1>' . filter_xss_admin($this->options['test_option']) . '</h1>';
 
     return $render;
   }
@@ -128,7 +127,8 @@ class DisplayTest extends DisplayPluginBase {
    * Override so preview and execute are the same output.
    */
   public function preview() {
-    return $this->execute();
+    $element = $this->execute();
+    return drupal_render($element);
   }
 
 }

@@ -84,11 +84,12 @@ class DefaultSummary extends StylePluginBase {
       $rows[] = $row;
     }
 
-    return theme($this->themeFunctions(), array(
-      'view' => $this->view,
-      'options' => $this->options,
-      'rows' => $rows
-    ));
+    return array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+      '#options' => $this->options,
+      '#rows' => $rows,
+    );
   }
 
 }

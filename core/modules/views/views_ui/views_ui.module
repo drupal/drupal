@@ -286,6 +286,32 @@ function views_ui_theme() {
 }
 
 /**
+ * Implements hook_library_info().
+ */
+function views_ui_library_info() {
+  $libraries = array();
+
+  $libraries['views_ui.admin'] = array(
+    'title' => 'Views UI ADMIN',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'views_ui') . '/js/views-admin.js' => array('group' => JS_DEFAULT),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'jquery.once'),
+      array('system', 'jquery.form'),
+      array('system', 'drupal.ajax'),
+      array('views', 'views.ajax'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Page title callback for the Edit View page.
  */
 function views_ui_edit_page_title(ViewUI $view) {

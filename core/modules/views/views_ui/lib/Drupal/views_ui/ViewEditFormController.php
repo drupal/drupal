@@ -55,14 +55,15 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $form['#attached']['library'][] = array('system', 'jquery.ui.tabs');
     $form['#attached']['library'][] = array('system', 'jquery.ui.dialog');
-    $form['#attached']['library'][] = array('system', 'drupal.ajax');
-    $form['#attached']['library'][] = array('system', 'jquery.form');
     $form['#attached']['library'][] = array('system', 'drupal.states');
     $form['#attached']['library'][] = array('system', 'drupal.tabledrag');
 
+    if (!config('views.settings')->get('no_javascript')) {
+      $form['#attached']['library'][] = array('views_ui', 'views_ui.admin');
+    }
+
     $form['#attached']['css'] = static::getAdminCSS();
 
-    $form['#attached']['js'][] = drupal_get_path('module', 'views_ui') . '/js/views-admin.js';
     $form['#attached']['js'][] = array(
       'data' => array('views' => array('ajax' => array(
         'id' => '#views-ajax-body',

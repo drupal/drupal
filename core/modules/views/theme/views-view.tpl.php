@@ -51,7 +51,7 @@
     </div>
   <?php endif; ?>
 
-  <?php if ($rows): ?>
+  <?php if ($rows = render($rows)): ?>
     <div class="view-content">
       <?php print $rows; ?>
     </div>

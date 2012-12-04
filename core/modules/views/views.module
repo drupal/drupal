@@ -1119,36 +1119,29 @@ function views_hook_info() {
 }
 
 /**
- * Include views .css files.
+ * Implements hook_library_info().
  */
-function views_add_css($file) {
-  // We set preprocess to FALSE because we are adding the files conditionally,
-  // and we don't want to generate duplicate cache files.
-  // TODO: at some point investigate adding some files unconditionally and
-  // allowing preprocess.
-  drupal_add_css(drupal_get_path('module', 'views') . "/css/$file.css", array('preprocess' => FALSE));
-}
+function views_library_info() {
+  $path = drupal_get_path('module', 'views') . '/js';
+  $libraries['views.ajax'] = array(
+    'title' => 'Views AJAX',
+    'version' => VERSION,
+    'js' => array(
+      "$path/base.js" => array('group' => JS_DEFAULT),
+      "$path/ajax.js" => array('group' => JS_DEFAULT),
+      "$path/ajax_view.js" => array('group' => JS_DEFAULT),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'jquery.once'),
+      array('system', 'jquery.form'),
+      array('system', 'drupal.ajax'),
+    ),
+  );
 
-/**
- * Include views .js files.
- */
-function views_add_js($file) {
-  // If javascript has been disabled by the user, never add js files.
-  if (config('views.settings')->get('no_javascript')) {
-    return;
-  }
-  $path = drupal_get_path('module', 'views');
-  static $base = TRUE, $ajax = TRUE;
-  if ($base) {
-    drupal_add_js($path . "/js/base.js");
-    $base = FALSE;
-  }
-  if ($ajax && in_array($file, array('ajax', 'ajax_view'))) {
-    drupal_add_library('system', 'drupal.ajax');
-    drupal_add_library('system', 'jquery.form');
-    $ajax = FALSE;
-  }
-  drupal_add_js($path . "/js/$file.js");
+  return $libraries;
 }
 
 /**
@@ -1859,7 +1852,7 @@ function views_exposed_form($form, &$form_state) {
 
   // If using AJAX, we need the form plugin.
   if ($view->use_ajax) {
-    drupal_add_library('system', 'jquery.form');
+    $form['#attached']['library'][] = array('system', 'jquery.form');
   }
 
   $exposed_form_plugin = $form_state['exposed_form_plugin'];

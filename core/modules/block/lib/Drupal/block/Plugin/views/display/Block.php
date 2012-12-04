@@ -77,7 +77,8 @@ class Block extends DisplayPluginBase {
   public function execute() {
     // Prior to this being called, the $view should already be set to this
     // display, and arguments should be set on the view.
-    $info['content'] = $this->view->render();
+    $element = $this->view->render();
+    $info['content'] = drupal_render($element);
     $info['subject'] = filter_xss_admin($this->view->getTitle());
     if (!empty($this->view->result) || $this->getOption('empty') || !empty($this->view->style_plugin->definition['even empty'])) {
       return $info;

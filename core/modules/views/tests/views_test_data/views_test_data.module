@@ -81,8 +81,9 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
  */
 function views_test_data_views_pre_render(ViewExecutable $view) {
   if ($view->storage->get('name') == 'test_cache_header_storage') {
-    drupal_add_js(drupal_get_path('module', 'views_test_data') . '/views_cache.test.js');
-    drupal_add_css(drupal_get_path('module', 'views_test_data') . '/views_cache.test.css');
+    $path = drupal_get_path('module', 'views_test_data');
+    $view->element['#attached']['js'][] = "$path/views_cache.test.js";
+    $view->element['#attached']['css'][] = "$path/views_cache.test.css";
     $view->build_info['pre_render_called'] = TRUE;
   }
 }

@@ -159,13 +159,13 @@ abstract class RowPluginBase extends PluginBase {
    *   The rendered output of a single row, used by the style plugin.
    */
   function render($row) {
-    return theme($this->themeFunctions(),
-      array(
-        'view' => $this->view,
-        'options' => $this->options,
-        'row' => $row,
-        'field_alias' => isset($this->field_alias) ? $this->field_alias : '',
-      ));
+    return array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+      '#options' => $this->options,
+      '#row' => $row,
+      '#field_alias' => isset($this->field_alias) ? $this->field_alias : '',
+    );
   }
 
 }
