@@ -4728,6 +4728,11 @@ function drupal_get_private_key() {
  *
  * @param $value
  *   An additional value to base the token on.
+ *
+ * @return string
+ *   A 43-character URL-safe token for validation, based on the user session ID,
+ *   the global $drupal_hash_salt variable from settings.php, and the
+ *   'drupal_private_key' configuration variable.
  */
 function drupal_get_token($value = '') {
   return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
