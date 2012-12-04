@@ -28,7 +28,7 @@ define('DRUPAL_ROOT', getcwd());
 define('MAINTENANCE_MODE', 'update');
 
 /**
- * Renders form with a list of available database updates.
+ * Renders a form with a list of available database updates.
  */
 function update_selection_page() {
   drupal_set_title('Drupal database update');
