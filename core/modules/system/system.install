@@ -2293,23 +2293,11 @@ function system_update_8038() {
 }
 
 /**
- * Coverts drupal_weight_select_max variable to config.
- *
- * @ingroup config_upgrade
- */
-function system_update_8039() {
-  $variable_map = array(
-    'drupal_weight_select_max' => 'weight_select_max',
-  );
-  update_variables_to_config('system.site', $variable_map);
-}
-
-/**
  * Converts css and js gzip compression variables to config.
  *
  * @ingroup config_upgrade
  */
-function system_update_8040() {
+function system_update_8039() {
   $variable_map = array(
     'css_gzip_compression' => 'css.gzip',
     'js_gzip_compression' => 'js.gzip'
