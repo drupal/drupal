@@ -3028,8 +3028,8 @@ function node_query_node_access_alter(AlterableInterface $query) {
   }
 
   // If $account can bypass node access, or there are no node access modules,
-  // or the operation is 'view' and the $acount has a global view grant (i.e.,
-  // a view grant for node ID 0), we don't need to alter the query.
+  // or the operation is 'view' and the $account has a global view grant
+  // (such as a view grant for node ID 0), we don't need to alter the query.
   if (user_access('bypass node access', $account)) {
     return;
   }
