@@ -61,7 +61,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
  */
 class Container implements IntrospectableContainerInterface
 {
+    /**
+     * @var ParameterBagInterface
+     */
     protected $parameterBag;
+
     protected $services;
     protected $scopes;
     protected $scopeChildren;
@@ -180,6 +184,9 @@ class Container implements IntrospectableContainerInterface
      * @param object $service The service instance
      * @param string $scope   The scope of the service
      *
+     * @throws \RuntimeException When trying to set a service in an inactive scope
+     * @throws \InvalidArgumentException When trying to set a service in the prototype scope
+     *
      * @api
      */
     public function set($id, $service, $scope = self::SCOPE_CONTAINER)
@@ -229,6 +236,8 @@ class Container implements IntrospectableContainerInterface
      * @return object The associated service
      *
      * @throws InvalidArgumentException if the service is not defined
+     * @throws ServiceCircularReferenceException When a circular reference is detected
+     * @throws ServiceNotFoundException When the service is not defined
      *
      * @see Reference
      *
@@ -253,6 +262,11 @@ class Container implements IntrospectableContainerInterface
                 $service = $this->$method();
             } catch (\Exception $e) {
                 unset($this->loading[$id]);
+
+                if (isset($this->services[$id])) {
+                    unset($this->services[$id]);
+                }
+
                 throw $e;
             }
 
@@ -300,6 +314,9 @@ class Container implements IntrospectableContainerInterface
      * This is called when you enter a scope
      *
      * @param string $name
+     *
+     * @throws RuntimeException         When the parent scope is inactive
+     * @throws InvalidArgumentException When the scope does not exist
      *
      * @api
      */
@@ -383,6 +400,8 @@ class Container implements IntrospectableContainerInterface
      * Adds a scope to the container.
      *
      * @param ScopeInterface $scope
+     *
+     * @throws \InvalidArgumentException When the scope is invalid
      *
      * @api
      */

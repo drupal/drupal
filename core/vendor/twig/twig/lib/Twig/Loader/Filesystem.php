@@ -15,7 +15,7 @@
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Filesystem implements Twig_LoaderInterface
+class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
     protected $paths;
     protected $cache;
@@ -33,36 +33,54 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     /**
      * Returns the paths to the templates.
      *
+     * @param string $namespace A path namespace
+     *
      * @return array The array of paths where to look for templates
      */
-    public function getPaths()
+    public function getPaths($namespace = '__main__')
     {
-        return $this->paths;
+        return isset($this->paths[$namespace]) ? $this->paths[$namespace] : array();
+    }
+
+    /**
+     * Returns the path namespaces.
+     *
+     * The "__main__" namespace is always defined.
+     *
+     * @return array The array of defined namespaces
+     */
+    public function getNamespaces()
+    {
+        return array_keys($this->paths);
     }
 
     /**
      * Sets the paths where templates are stored.
      *
-     * @param string|array $paths A path or an array of paths where to look for templates
+     * @param string|array $paths     A path or an array of paths where to look for templates
+     * @param string       $namespace A path namespace
      */
-    public function setPaths($paths)
+    public function setPaths($paths, $namespace = '__main__')
     {
         if (!is_array($paths)) {
             $paths = array($paths);
         }
 
-        $this->paths = array();
+        $this->paths[$namespace] = array();
         foreach ($paths as $path) {
-            $this->addPath($path);
+            $this->addPath($path, $namespace);
         }
     }
 
     /**
      * Adds a path where templates are stored.
      *
-     * @param string $path A path where to look for templates
+     * @param string $path      A path where to look for templates
+     * @param string $namespace A path name
+     *
+     * @throws Twig_Error_Loader
      */
-    public function addPath($path)
+    public function addPath($path, $namespace = '__main__')
     {
         // invalidate the cache
         $this->cache = array();
@@ -71,15 +89,37 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
             throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
         }
 
-        $this->paths[] = rtrim($path, '/\\');
+        $this->paths[$namespace][] = rtrim($path, '/\\');
     }
 
     /**
-     * Gets the source code of a template, given its name.
+     * Prepends a path where templates are stored.
      *
-     * @param string $name The name of the template to load
+     * @param string $path      A path where to look for templates
+     * @param string $namespace A path name
      *
-     * @return string The template source code
+     * @throws Twig_Error_Loader
+     */
+    public function prependPath($path, $namespace = '__main__')
+    {
+        // invalidate the cache
+        $this->cache = array();
+
+        if (!is_dir($path)) {
+            throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
+        }
+
+        $path = rtrim($path, '/\\');
+
+        if (!isset($this->paths[$namespace])) {
+            $this->paths[$namespace][] = $path;
+        } else {
+            array_unshift($this->paths[$namespace], $path);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getSource($name)
     {
@@ -87,11 +127,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 
     /**
-     * Gets the cache key to use for the cache for a given template name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The cache key
+     * {@inheritdoc}
      */
     public function getCacheKey($name)
     {
@@ -99,10 +135,26 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 
     /**
-     * Returns true if the template is still fresh.
-     *
-     * @param string    $name The template name
-     * @param timestamp $time The last modification time of the cached template
+     * {@inheritdoc}
+     */
+    public function exists($name)
+    {
+        $name = (string) $name;
+        if (isset($this->cache[$name])) {
+            return true;
+        }
+
+        try {
+            $this->findTemplate($name);
+
+            return true;
+        } catch (Twig_Error_Loader $exception) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function isFresh($name, $time)
     {
@@ -111,6 +163,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
 
     protected function findTemplate($name)
     {
+        $name = (string) $name;
+
         // normalize name
         $name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
 
@@ -120,13 +174,28 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
 
         $this->validateName($name);
 
-        foreach ($this->paths as $path) {
+        $namespace = '__main__';
+        if (isset($name[0]) && '@' == $name[0]) {
+            if (false === $pos = strpos($name, '/')) {
+                throw new Twig_Error_Loader(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
+            }
+
+            $namespace = substr($name, 1, $pos - 1);
+
+            $name = substr($name, $pos + 1);
+        }
+
+        if (!isset($this->paths[$namespace])) {
+            throw new Twig_Error_Loader(sprintf('There are no registered paths for namespace "%s".', $namespace));
+        }
+
+        foreach ($this->paths[$namespace] as $path) {
             if (is_file($path.'/'.$name)) {
                 return $this->cache[$name] = $path.'/'.$name;
             }
         }
 
-        throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
+        throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace])));
     }
 
     protected function validateName($name)

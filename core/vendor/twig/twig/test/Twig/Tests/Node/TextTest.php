@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/TestCase.php';
-
-class Twig_Tests_Node_TextTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_TextTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_Text::__construct
      */
     public function testConstructor()
     {
-        $node = new Twig_Node_Text('foo', 0);
+        $node = new Twig_Node_Text('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('data'));
     }
@@ -35,7 +33,7 @@ class Twig_Tests_Node_TextTest extends Twig_Tests_Node_TestCase
     public function getTests()
     {
         $tests = array();
-        $tests[] = array(new Twig_Node_Text('foo', 0), 'echo "foo";');
+        $tests[] = array(new Twig_Node_Text('foo', 1), "// line 1\necho \"foo\";");
 
         return $tests;
     }

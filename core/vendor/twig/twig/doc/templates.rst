@@ -48,14 +48,15 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 
 * *Textmate* via the `Twig bundle`_
 * *Vim* via the `Jinja syntax plugin`_
-* *Netbeans* via the `Twig syntax plugin`_
+* *Netbeans* via the `Twig syntax plugin`_ (until 7.1, native as of 7.2)
 * *PhpStorm* (native as of 2.1)
 * *Eclipse* via the `Twig plugin`_
 * *Sublime Text* via the `Twig bundle`_
 * *GtkSourceView* via the `Twig language definition`_ (used by gedit and other projects)
 * *Coda* and *SubEthaEdit* via the `Twig syntax mode`_
 * *Coda 2* via the `other Twig syntax mode`_
-* *Komodo* and *Komodo Edit* via the Django highlight/syntax check mode
+* *Komodo* and *Komodo Edit* via the Twig highlight/syntax check mode
+* *Notepad++* via the `Notepad++ Twig Highlighter`_
 
 Variables
 ---------
@@ -73,6 +74,15 @@ properties of a PHP object, or items of a PHP array), or the so-called
 
     {{ foo.bar }}
     {{ foo['bar'] }}
+
+When the attribute contains special characters (like ``-`` that would be
+interpreted as the minus operator), use the ``attribute`` function instead to
+access the variable attribute:
+
+.. code-block:: jinja
+
+    {# equivalent to the non-working foo.data-foo #}
+    {{ attribute(foo, 'data-foo') }}
 
 .. note::
 
@@ -317,7 +327,7 @@ A child template might look like this:
     {% block content %}
         <h1>Index</h1>
         <p class="important">
-            Welcome on my awesome homepage.
+            Welcome to my awesome homepage.
         </p>
     {% endblock %}
 
@@ -371,16 +381,24 @@ Twig supports both, automatic escaping is enabled by default.
 Working with Manual Escaping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If manual escaping is enabled it's **your** responsibility to escape variables
-if needed. What to escape? If you have a variable that *may* include any of
-the following chars (``>``, ``<``, ``&``, or ``"``) you **have to** escape it
-unless the variable contains well-formed and trusted HTML. Escaping works by
-piping the variable through the :doc:`escape<filters/escape>` or ``e`` filter:
+If manual escaping is enabled, it is **your** responsibility to escape
+variables if needed. What to escape? Any variable you don't trust.
+
+Escaping works by piping the variable through the
+:doc:`escape<filters/escape>` or ``e`` filter:
 
 .. code-block:: jinja
 
     {{ user.username|e }}
+
+By default, the ``escape`` filter uses the ``html`` strategy, but depending on
+the escaping context, you might want to explicitly use any other available
+strategies:
+
     {{ user.username|e('js') }}
+    {{ user.username|e('css') }}
+    {{ user.username|e('url') }}
+    {{ user.username|e('html_attr') }}
 
 Working with Automatic Escaping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -391,8 +409,18 @@ tag:
 
 .. code-block:: jinja
 
-    {% autoescape true %}
-        Everything will be automatically escaped in this block
+    {% autoescape %}
+        Everything will be automatically escaped in this block (using the HTML strategy)
+    {% endautoescape %}
+
+By default, auto-escaping uses the ``html`` escaping strategy. If you output
+variables in other contexts, you need to explicitly escape them with the
+appropriate escaping strategy:
+
+.. code-block:: jinja
+
+    {% autoescape 'js' %}
+        Everything will be automatically escaped in this block (using the JS strategy)
     {% endautoescape %}
 
 Escaping
@@ -514,6 +542,11 @@ Arrays and hashes can be nested:
 
     {% set foo = [1, {"foo": "bar"}] %}
 
+.. tip::
+
+    Using double-quoted or single-quoted strings has no impact on performance
+    but string interpolation is only supported in double-quoted strings.
+
 Math
 ~~~~
 
@@ -523,7 +556,7 @@ but exists for completeness' sake. The following operators are supported:
 * ``+``: Adds two objects together (the operands are casted to numbers). ``{{
   1 + 1 }}`` is ``2``.
 
-* ``-``: Substracts the second number from the first one. ``{{ 3 - 2 }}`` is
+* ``-``: Subtracts the second number from the first one. ``{{ 3 - 2 }}`` is
   ``1``.
 
 * ``/``: Divides two numbers. The returned value will be a floating point
@@ -650,8 +683,8 @@ String Interpolation
     String interpolation was added in Twig 1.5.
 
 String interpolation (`#{expression}`) allows any valid expression to appear
-within a string. The result of evaluating that expression is inserted into the
-string:
+within a *double-quoted string*. The result of evaluating that expression is
+inserted into the string:
 
 .. code-block:: jinja
 
@@ -717,11 +750,12 @@ If you are looking for new tags, filters, or functions, have a look at the Twig 
 If you want to create your own, read the :ref:`Creating an
 Extension<creating_extensions>` chapter.
 
-.. _`Twig bundle`:              https://github.com/Anomareh/PHP-Twig.tmbundle
-.. _`Jinja syntax plugin`:      http://jinja.pocoo.org/2/documentation/integration
-.. _`Twig syntax plugin`:       http://plugins.netbeans.org/plugin/37069/php-twig
-.. _`Twig plugin`:              https://github.com/pulse00/Twig-Eclipse-Plugin
-.. _`Twig language definition`: https://github.com/gabrielcorpse/gedit-twig-template-language
-.. _`extension repository`:     http://github.com/fabpot/Twig-extensions
-.. _`Twig syntax mode`:         https://github.com/bobthecow/Twig-HTML.mode
-.. _`other Twig syntax mode`:   https://github.com/muxx/Twig-HTML.mode
+.. _`Twig bundle`:                https://github.com/Anomareh/PHP-Twig.tmbundle
+.. _`Jinja syntax plugin`:        http://jinja.pocoo.org/2/documentation/integration
+.. _`Twig syntax plugin`:         http://plugins.netbeans.org/plugin/37069/php-twig
+.. _`Twig plugin`:                https://github.com/pulse00/Twig-Eclipse-Plugin
+.. _`Twig language definition`:   https://github.com/gabrielcorpse/gedit-twig-template-language
+.. _`extension repository`:       http://github.com/fabpot/Twig-extensions
+.. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
+.. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
+.. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig

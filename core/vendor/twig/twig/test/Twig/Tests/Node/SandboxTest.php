@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/TestCase.php';
-
-class Twig_Tests_Node_SandboxTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_SandboxTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_Sandbox::__construct
      */
     public function testConstructor()
     {
-        $body = new Twig_Node_Text('foo', 0);
-        $node = new Twig_Node_Sandbox($body, 0);
+        $body = new Twig_Node_Text('foo', 1);
+        $node = new Twig_Node_Sandbox($body, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
     }
@@ -37,10 +35,11 @@ class Twig_Tests_Node_SandboxTest extends Twig_Tests_Node_TestCase
     {
         $tests = array();
 
-        $body = new Twig_Node_Text('foo', 0);
-        $node = new Twig_Node_Sandbox($body, 0);
+        $body = new Twig_Node_Text('foo', 1);
+        $node = new Twig_Node_Sandbox($body, 1);
 
         $tests[] = array($node, <<<EOF
+// line 1
 \$sandbox = \$this->env->getExtension('sandbox');
 if (!\$alreadySandboxed = \$sandbox->isSandboxed()) {
     \$sandbox->enableSandbox();

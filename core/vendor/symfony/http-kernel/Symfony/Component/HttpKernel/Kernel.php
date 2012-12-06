@@ -46,7 +46,11 @@ use Symfony\Component\ClassLoader\DebugClassLoader;
  */
 abstract class Kernel implements KernelInterface, TerminableInterface
 {
+    /**
+     * @var BundleInterface[]
+     */
     protected $bundles;
+
     protected $bundleMap;
     protected $container;
     protected $rootDir;
@@ -58,12 +62,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $classes;
     protected $errorReportingLevel;
 
-    const VERSION         = '2.1.0-RC2';
+    const VERSION         = '2.2.0-DEV';
     const VERSION_ID      = '20100';
     const MAJOR_VERSION   = '2';
-    const MINOR_VERSION   = '1';
+    const MINOR_VERSION   = '2';
     const RELEASE_VERSION = '0';
-    const EXTRA_VERSION   = 'RC2';
+    const EXTRA_VERSION   = 'DEV';
 
     /**
      * Constructor.
@@ -157,9 +161,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Shutdowns the kernel.
-     *
-     * This method is mainly useful when doing functional testing.
+     * {@inheritdoc}
      *
      * @api
      */
@@ -204,10 +206,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the registered bundle instances.
-     *
-     * @return array An array of registered bundle instances
-     *
+     * {@inheritdoc}
+     * 
      * @api
      */
     public function getBundles()
@@ -216,11 +216,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Checks if a given class name belongs to an active bundle.
-     *
-     * @param string $class A class name
-     *
-     * @return Boolean true if the class belongs to an active bundle, false otherwise
+     * {@inheritdoc}
      *
      * @api
      */
@@ -236,21 +232,14 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Returns a bundle and optionally its descendants by its name.
-     *
-     * @param string  $name  Bundle name
-     * @param Boolean $first Whether to return the first bundle only or together with its descendants
-     *
-     * @return BundleInterface|Array A BundleInterface instance or an array of BundleInterface instances if $first is false
-     *
-     * @throws \InvalidArgumentException when the bundle is not enabled
+     * {@inheritdoc}
      *
      * @api
      */
     public function getBundle($name, $first = true)
     {
         if (!isset($this->bundleMap[$name])) {
-            throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist or it is not enabled. Maybe you forgot to add it in the registerBundles() function of your %s.php file?', $name, get_class($this)));
+            throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist or it is not enabled. Maybe you forgot to add it in the registerBundles() method of your %s.php file?', $name, get_class($this)));
         }
 
         if (true === $first) {
@@ -346,9 +335,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the name of the kernel
-     *
-     * @return string The kernel name
+     * {@inheritdoc}
      *
      * @api
      */
@@ -362,9 +349,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the environment.
-     *
-     * @return string The current environment
+     * {@inheritdoc}
      *
      * @api
      */
@@ -374,9 +359,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Checks if debug mode is enabled.
-     *
-     * @return Boolean true if debug mode is enabled, false otherwise
+     * {@inheritdoc}
      *
      * @api
      */
@@ -386,9 +369,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the application root dir.
-     *
-     * @return string The application root dir
+     * {@inheritdoc}
      *
      * @api
      */
@@ -403,9 +384,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the current container.
-     *
-     * @return ContainerInterface A ContainerInterface instance
+     * {@inheritdoc}
      *
      * @api
      */
@@ -436,9 +415,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the request start time (not available if debug is disabled).
-     *
-     * @return integer The request start timestamp
+     * {@inheritdoc}
      *
      * @api
      */
@@ -448,9 +425,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the cache directory.
-     *
-     * @return string The cache directory
+     * {@inheritdoc}
      *
      * @api
      */
@@ -460,9 +435,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the log directory.
-     *
-     * @return string The log directory
+     * {@inheritdoc}
      *
      * @api
      */
@@ -472,9 +445,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     }
 
     /**
-     * Gets the charset of the application.
-     *
-     * @return string The charset
+     * {@inheritdoc}
      *
      * @api
      */

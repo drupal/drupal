@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/TestCase.php';
-
-class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_SandboxedModuleTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_SandboxedModule::__construct
      */
     public function testConstructor()
     {
-        $body = new Twig_Node_Text('foo', 0);
-        $parent = new Twig_Node_Expression_Constant('layout.twig', 0);
+        $body = new Twig_Node_Text('foo', 1);
+        $parent = new Twig_Node_Expression_Constant('layout.twig', 1);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $traits = new Twig_Node();
@@ -51,7 +49,7 @@ class Twig_Tests_Node_SandboxedModuleTest extends Twig_Tests_Node_TestCase
 
         $tests = array();
 
-        $body = new Twig_Node_Text('foo', 0);
+        $body = new Twig_Node_Text('foo', 1);
         $extends = null;
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
@@ -80,10 +78,12 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
     protected function doDisplay(array \$context, array \$blocks = array())
     {
         \$this->checkSecurity();
+        // line 1
         echo "foo";
     }
 
-    protected function checkSecurity() {
+    protected function checkSecurity()
+    {
         \$this->env->getExtension('sandbox')->checkSecurity(
             array('upper'),
             array('for'),
@@ -98,14 +98,14 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array ();
+        return array (  20 => 1,);
     }
 }
 EOF
         , $twig);
 
         $body = new Twig_Node();
-        $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
+        $extends = new Twig_Node_Expression_Constant('layout.twig', 1);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $traits = new Twig_Node();
@@ -141,7 +141,8 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
-    protected function checkSecurity() {
+    protected function checkSecurity()
+    {
         \$this->env->getExtension('sandbox')->checkSecurity(
             array('upper'),
             array('for'),

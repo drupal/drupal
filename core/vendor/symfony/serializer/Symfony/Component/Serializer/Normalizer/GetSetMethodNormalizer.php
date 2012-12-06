@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Serializer\Normalizer;
 
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\RuntimeException;
 
 /**
@@ -42,12 +43,14 @@ class GetSetMethodNormalizer extends SerializerAwareNormalizer implements Normal
      * Set normalization callbacks
      *
      * @param array $callbacks help normalize the result
+     *
+     * @throws InvalidArgumentException if a non-callable callback is set
      */
     public function setCallbacks(array $callbacks)
     {
         foreach ($callbacks as $attribute => $callback) {
             if (!is_callable($callback)) {
-                throw new \InvalidArgumentException(sprintf('The given callback for attribute "%s" is not callable.', $attribute));
+                throw new InvalidArgumentException(sprintf('The given callback for attribute "%s" is not callable.', $attribute));
             }
         }
         $this->callbacks = $callbacks;
@@ -158,6 +161,7 @@ class GetSetMethodNormalizer extends SerializerAwareNormalizer implements Normal
      * Checks if the given class has any get{Property} method.
      *
      * @param string $class
+     *
      * @return Boolean
      */
     private function supports($class)
@@ -176,7 +180,8 @@ class GetSetMethodNormalizer extends SerializerAwareNormalizer implements Normal
     /**
      * Checks if a method's name is get.* and can be called without parameters.
      *
-     * @param ReflectionMethod $method the method to check
+     * @param \ReflectionMethod $method the method to check
+     *
      * @return Boolean whether the method is a getter.
      */
     private function isGetMethod(\ReflectionMethod $method)

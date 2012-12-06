@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Process;
 
+use Symfony\Component\Process\Exception\RuntimeException;
+
 /**
  * Process is a thin wrapper around proc_* functions to ease
  * start independent PHP processes.
@@ -44,12 +46,15 @@ class Process
     private $stdout;
     private $stderr;
     private $enhanceWindowsCompatibility;
+    private $enhanceSigchildCompatibility;
     private $pipes;
     private $process;
     private $status = self::STATUS_READY;
 
     private $fileHandles;
     private $readBytes;
+
+    private static $sigchild;
 
     /**
      * Exit codes translation table.
@@ -134,6 +139,7 @@ class Process
         $this->stdin = $stdin;
         $this->setTimeout($timeout);
         $this->enhanceWindowsCompatibility = true;
+        $this->enhanceSigchildCompatibility = !defined('PHP_WINDOWS_VERSION_BUILD') && $this->isSigchildEnabled();
         $this->options = array_replace(array('suppress_errors' => true, 'binary_pipes' => true), $options);
     }
 
@@ -216,9 +222,14 @@ class Process
                 array('pipe', 'r'), // stdin
                 array('pipe', 'w'), // stdout
                 array('pipe', 'w'), // stderr
-                array('pipe', 'w')  // last exit code is output on the fourth pipe and caught to work around --enable-sigchild
             );
-            $this->commandline = '('.$this->commandline.') 3>/dev/null; echo $? >&3';
+
+            if ($this->enhanceSigchildCompatibility && $this->isSigchildEnabled()) {
+                // last exit code is output on the fourth pipe and caught to work around --enable-sigchild
+                $descriptors = array_merge($descriptors, array(array('pipe', 'w')));
+
+                $this->commandline = '('.$this->commandline.') 3>/dev/null; code=$?; echo $code >&3; exit $code';
+            }
         }
 
         $commandline = $this->commandline;
@@ -418,10 +429,16 @@ class Process
      *
      * @return integer The exit status code
      *
+     * @throws RuntimeException In case --enable-sigchild is activated and the sigchild compatibility mode is disabled
+     *
      * @api
      */
     public function getExitCode()
     {
+        if ($this->isSigchildEnabled() && !$this->enhanceSigchildCompatibility) {
+            throw new RuntimeException('This PHP has been compiled with --enable-sigchild. You must use setEnhanceSigchildCompatibility() to use this method');
+        }
+
         $this->updateStatus();
 
         return $this->exitcode;
@@ -435,14 +452,16 @@ class Process
      *
      * @return string A string representation for the exit status code
      *
+     * @throws RuntimeException In case --enable-sigchild is activated and the sigchild compatibility mode is disabled
+     *
      * @see http://tldp.org/LDP/abs/html/exitcodes.html
      * @see http://en.wikipedia.org/wiki/Unix_signal
      */
     public function getExitCodeText()
     {
-        $this->updateStatus();
+        $exitcode = $this->getExitCode();
 
-        return isset(self::$exitCodes[$this->exitcode]) ? self::$exitCodes[$this->exitcode] : 'Unknown error';
+        return isset(self::$exitCodes[$exitcode]) ? self::$exitCodes[$exitcode] : 'Unknown error';
     }
 
     /**
@@ -450,13 +469,13 @@ class Process
      *
      * @return Boolean true if the process ended successfully, false otherwise
      *
+     * @throws RuntimeException In case --enable-sigchild is activated and the sigchild compatibility mode is disabled
+     *
      * @api
      */
     public function isSuccessful()
     {
-        $this->updateStatus();
-
-        return 0 == $this->exitcode;
+        return 0 == $this->getExitCode();
     }
 
     /**
@@ -466,10 +485,16 @@ class Process
      *
      * @return Boolean
      *
+     * @throws RuntimeException In case --enable-sigchild is activated
+     *
      * @api
      */
     public function hasBeenSignaled()
     {
+        if ($this->isSigchildEnabled()) {
+            throw new RuntimeException('This PHP has been compiled with --enable-sigchild. Term signal can not be retrieved');
+        }
+
         $this->updateStatus();
 
         return $this->processInformation['signaled'];
@@ -482,10 +507,16 @@ class Process
      *
      * @return integer
      *
+     * @throws RuntimeException In case --enable-sigchild is activated
+     *
      * @api
      */
     public function getTermSignal()
     {
+        if ($this->isSigchildEnabled()) {
+            throw new RuntimeException('This PHP has been compiled with --enable-sigchild. Term signal can not be retrieved');
+        }
+
         $this->updateStatus();
 
         return $this->processInformation['termsig'];
@@ -508,7 +539,7 @@ class Process
     }
 
     /**
-     * Returns the number of the signal that caused the child process to stop its execution
+     * Returns the number of the signal that caused the child process to stop its execution.
      *
      * It is only meaningful if hasBeenStopped() returns true.
      *
@@ -544,7 +575,7 @@ class Process
      *
      * @param float $timeout The timeout in seconds
      *
-     * @return integer The exitcode of the process
+     * @return integer The exit-code of the process
      *
      * @throws \RuntimeException if the process got signaled
      */
@@ -579,26 +610,51 @@ class Process
         return $this->exitcode;
     }
 
+    /**
+     * Adds a line to the STDOUT stream.
+     *
+     * @param string $line The line to append
+     */
     public function addOutput($line)
     {
         $this->stdout .= $line;
     }
 
+    /**
+     * Adds a line to the STDERR stream.
+     *
+     * @param string $line The line to append
+     */
     public function addErrorOutput($line)
     {
         $this->stderr .= $line;
     }
 
+    /**
+     * Gets the command line to be executed.
+     *
+     * @return string The command to execute
+     */
     public function getCommandLine()
     {
         return $this->commandline;
     }
 
+    /**
+     * Sets the command line to be executed.
+     *
+     * @param string $commandline The command to execute
+     */
     public function setCommandLine($commandline)
     {
         $this->commandline = $commandline;
     }
 
+    /**
+     * Gets the process timeout.
+     *
+     * @return integer|null The timeout in seconds or null if it's disabled
+     */
     public function getTimeout()
     {
         return $this->timeout;
@@ -609,7 +665,9 @@ class Process
      *
      * To disable the timeout, set this value to null.
      *
-     * @param integer|null
+     * @param integer|null $timeout The timeout in seconds
+     *
+     * @throws \InvalidArgumentException if the timeout is negative
      */
     public function setTimeout($timeout)
     {
@@ -628,54 +686,130 @@ class Process
         $this->timeout = $timeout;
     }
 
+    /**
+     * Gets the working directory.
+     *
+     * @return string The current working directory
+     */
     public function getWorkingDirectory()
     {
         return $this->cwd;
     }
 
+    /**
+     * Sets the current working directory.
+     *
+     * @param string $cwd The new working directory
+     */
     public function setWorkingDirectory($cwd)
     {
         $this->cwd = $cwd;
     }
 
+    /**
+     * Gets the environment variables.
+     *
+     * @return array The current environment variables
+     */
     public function getEnv()
     {
         return $this->env;
     }
 
+    /**
+     * Sets the environment variables.
+     *
+     * @param array $env The new environment variables
+     */
     public function setEnv(array $env)
     {
         $this->env = $env;
     }
 
+    /**
+     * Gets the contents of STDIN.
+     *
+     * @return string The current contents
+     */
     public function getStdin()
     {
         return $this->stdin;
     }
 
+    /**
+     * Sets the contents of STDIN.
+     *
+     * @param string $stdin The new contents
+     */
     public function setStdin($stdin)
     {
         $this->stdin = $stdin;
     }
 
+    /**
+     * Gets the options for proc_open.
+     *
+     * @return array The current options
+     */
     public function getOptions()
     {
         return $this->options;
     }
 
+    /**
+     * Sets the options for proc_open.
+     *
+     * @param array $options The new options
+     */
     public function setOptions(array $options)
     {
         $this->options = $options;
     }
 
+    /**
+     * Gets whether or not Windows compatibility is enabled
+     *
+     * This is true by default.
+     *
+     * @return Boolean
+     */
     public function getEnhanceWindowsCompatibility()
     {
         return $this->enhanceWindowsCompatibility;
     }
 
+    /**
+     * Sets whether or not Windows compatibility is enabled
+     *
+     * @param Boolean $enhance
+     */
     public function setEnhanceWindowsCompatibility($enhance)
     {
         $this->enhanceWindowsCompatibility = (Boolean) $enhance;
+    }
+
+    /**
+     * Return whether sigchild compatibility mode is activated or not
+     *
+     * @return Boolean
+     */
+    public function getEnhanceSigchildCompatibility()
+    {
+        return $this->enhanceSigchildCompatibility;
+    }
+
+    /**
+     * Activate sigchild compatibility mode
+     *
+     * Sigchild compatibility mode is required to get the exit code and
+     * determine the success of a process when PHP has been compiled with
+     * the --enable-sigchild option
+     *
+     * @param Boolean $enhance
+     */
+    public function setEnhanceSigchildCompatibility($enhance)
+    {
+        $this->enhanceSigchildCompatibility = (Boolean) $enhance;
     }
 
     /**
@@ -741,6 +875,23 @@ class Process
         } elseif (isset($this->pipes[self::STDOUT]) && is_resource($this->pipes[self::STDOUT])) {
             $this->addOutput(stream_get_contents($this->pipes[self::STDOUT]));
         }
+    }
+
+    /**
+     * Return whether PHP has been compiled with the '--enable-sigchild' option or not
+     *
+     * @return Boolean
+     */
+    protected function isSigchildEnabled()
+    {
+        if (null !== self::$sigchild) {
+            return self::$sigchild;
+        }
+
+        ob_start();
+        phpinfo(INFO_GENERAL);
+
+        return self::$sigchild = false !== strpos(ob_get_clean(), '--enable-sigchild');
     }
 
     /**

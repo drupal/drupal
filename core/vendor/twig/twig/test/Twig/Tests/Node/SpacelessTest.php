@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/TestCase.php';
-
-class Twig_Tests_Node_SpacelessTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_SpacelessTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_Spaceless::__construct
      */
     public function testConstructor()
     {
-        $body = new Twig_Node(array(new Twig_Node_Text('<div>   <div>   foo   </div>   </div>', 0)));
-        $node = new Twig_Node_Spaceless($body, 0);
+        $body = new Twig_Node(array(new Twig_Node_Text('<div>   <div>   foo   </div>   </div>', 1)));
+        $node = new Twig_Node_Spaceless($body, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
     }
@@ -35,11 +33,12 @@ class Twig_Tests_Node_SpacelessTest extends Twig_Tests_Node_TestCase
 
     public function getTests()
     {
-        $body = new Twig_Node(array(new Twig_Node_Text('<div>   <div>   foo   </div>   </div>', 0)));
-        $node = new Twig_Node_Spaceless($body, 0);
+        $body = new Twig_Node(array(new Twig_Node_Text('<div>   <div>   foo   </div>   </div>', 1)));
+        $node = new Twig_Node_Spaceless($body, 1);
 
         return array(
             array($node, <<<EOF
+// line 1
 ob_start();
 echo "<div>   <div>   foo   </div>   </div>";
 echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));

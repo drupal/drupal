@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/TestCase.php';
-
-class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_ModuleTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_Module::__construct
      */
     public function testConstructor()
     {
-        $body = new Twig_Node_Text('foo', 0);
-        $parent = new Twig_Node_Expression_Constant('layout.twig', 0);
+        $body = new Twig_Node_Text('foo', 1);
+        $parent = new Twig_Node_Expression_Constant('layout.twig', 1);
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
         $traits = new Twig_Node();
@@ -55,7 +53,7 @@ class Twig_Tests_Node_ModuleTest extends Twig_Tests_Node_TestCase
 
         $tests = array();
 
-        $body = new Twig_Node_Text('foo', 0);
+        $body = new Twig_Node_Text('foo', 1);
         $extends = null;
         $blocks = new Twig_Node();
         $macros = new Twig_Node();
@@ -81,6 +79,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     protected function doDisplay(array \$context, array \$blocks = array())
     {
+        // line 1
         echo "foo";
     }
 
@@ -91,16 +90,16 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array ();
+        return array (  19 => 1,);
     }
 }
 EOF
         , $twig);
 
-        $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 0), new Twig_Node_Expression_AssignName('macro', 0), 0);
+        $import = new Twig_Node_Import(new Twig_Node_Expression_Constant('foo.twig', 1), new Twig_Node_Expression_AssignName('macro', 1), 1);
 
         $body = new Twig_Node(array($import));
-        $extends = new Twig_Node_Expression_Constant('layout.twig', 0);
+        $extends = new Twig_Node_Expression_Constant('layout.twig', 1);
 
         $node = new Twig_Node_Module($body, $extends, $blocks, $macros, $traits, new Twig_Node(array()), $filename);
         $tests[] = array($node, <<<EOF
@@ -126,6 +125,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     protected function doDisplay(array \$context, array \$blocks = array())
     {
+        // line 1
         \$context["macro"] = \$this->env->loadTemplate("foo.twig");
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
@@ -142,7 +142,7 @@ class __TwigTemplate_be925a7b06dda0dfdbd18a1509f7eb34 extends Twig_Template
 
     public function getDebugInfo()
     {
-        return array ();
+        return array (  24 => 1,);
     }
 }
 EOF
@@ -150,9 +150,9 @@ EOF
 
         $body = new Twig_Node();
         $extends = new Twig_Node_Expression_Conditional(
-                        new Twig_Node_Expression_Constant(true, 0),
-                        new Twig_Node_Expression_Constant('foo', 0),
-                        new Twig_Node_Expression_Constant('foo', 0),
+                        new Twig_Node_Expression_Constant(true, 1),
+                        new Twig_Node_Expression_Constant('foo', 1),
+                        new Twig_Node_Expression_Constant('foo', 1),
                         0
                     );
 
