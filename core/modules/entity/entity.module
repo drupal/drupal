@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @file
+ * Manage the entity system.
+ *
+ * The module is mostly an anchor point for configuration items owned by the
+ * entity system.
+ */
