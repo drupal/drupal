@@ -5,6 +5,21 @@
  * Admin page callback file for the user module.
  */
 
+/**
+ * Page callback: Generates the appropriate user administration form.
+ *
+ * This function generates the user registration, multiple user cancellation,
+ * or filtered user list admin form, depending on the argument and the POST
+ * form values.
+ *
+ * @param string $callback_arg
+ *   (optional) Indicates which form to build. Defaults to '', which will
+ *   trigger the user filter form. If the POST value 'op' is present, this
+ *   function uses that value as the callback argument.
+ *
+ * @return string
+ *   A renderable form array for the respective request.
+ */
 function user_admin($callback_arg = '') {
   $op = isset($_POST['op']) ? $_POST['op'] : $callback_arg;
 
