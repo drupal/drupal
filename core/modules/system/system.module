@@ -1854,7 +1854,7 @@ function system_library_info() {
   $libraries['vie.core'] = array(
     'title' => 'VIE.js core (excluding services, views and xdr)',
     'website' => 'http://viejs.org/',
-    'version' => '2.0.0-dev',
+    'version' => '2.1.0alpha2',
     'js' => array(
       'core/misc/vie/vie-core.js' => array('group' => JS_LIBRARY),
     ),

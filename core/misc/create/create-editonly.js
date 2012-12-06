@@ -37,21 +37,21 @@
         }
       }
 
-      widget.options.collection.bind('add', function (model) {
+      widget.options.collection.on('add', function (model) {
         model.primaryCollection = widget.options.collection;
         widget.options.vie.entities.add(model);
         model.collection = widget.options.collection;
       });
 
       // Re-check collection constraints
-      widget.options.collection.bind('add remove reset', widget.checkCollectionConstraints, widget);
+      widget.options.collection.on('add remove reset', widget.checkCollectionConstraints, widget);
 
       widget._bindCollectionView(widget.options.view);
     },
 
     _bindCollectionView: function (view) {
       var widget = this;
-      view.bind('add', function (itemView) {
+      view.on('add', function (itemView) {
         itemView.$el.effect('slide', function () {
           widget._makeEditable(itemView);
         });
@@ -207,12 +207,12 @@
   jQuery.widget('Midgard.midgardCollectionAddBetween', jQuery.Midgard.midgardCollectionAdd, {
     _bindCollectionView: function (view) {
       var widget = this;
-      view.bind('add', function (itemView) {
+      view.on('add', function (itemView) {
         //itemView.el.effect('slide');
         widget._makeEditable(itemView);
         widget._refreshButtons();
       });
-      view.bind('remove', function () {
+      view.on('remove', function () {
         widget._refreshButtons();
       });
     },
@@ -490,6 +490,10 @@
       });
 
       this._trigger('enable', null, this._params());
+
+      if (!this.vie.view || !this.vie.view.Collection) {
+        return;
+      }
 
       _.each(this.domService.views, function (view) {
         if (view instanceof this.vie.view.Collection && this.options.model === view.owner) {
@@ -797,20 +801,20 @@
     // override this function to initialize the property editor widget functions
     _initialize: function () {
       var self = this;
-      this.element.bind('focus', function () {
+      this.element.on('focus', function () {
         if (self.options.disabled) {
           return;
         }
         self.options.activated();
       });
-      this.element.bind('blur', function () {
+      this.element.on('blur', function () {
         if (self.options.disabled) {
           return;
         }
         self.options.deactivated();
       });
       var before = this.element.html();
-      this.element.bind('keyup paste', function (event) {
+      this.element.on('keyup paste', function (event) {
         if (self.options.disabled) {
           return;
         }
@@ -985,18 +989,18 @@
     _initialize: function () {
       jQuery(this.element).hallo(this.getHalloOptions());
       var self = this;
-      jQuery(this.element).bind('halloactivated', function (event, data) {
+      jQuery(this.element).on('halloactivated', function (event, data) {
         self.options.activated();
       });
-      jQuery(this.element).bind('hallodeactivated', function (event, data) {
+      jQuery(this.element).on('hallodeactivated', function (event, data) {
         self.options.deactivated();
       });
-      jQuery(this.element).bind('hallomodified', function (event, data) {
+      jQuery(this.element).on('hallomodified', function (event, data) {
         self.options.changed(data.content);
         data.editable.setUnmodified();
       });
 
-      jQuery(document).bind('midgardtoolbarstatechange', function(event, data) {
+      jQuery(document).on('midgardtoolbarstatechange', function(event, data) {
         // Switch between Hallo configurations when toolbar state changes
         if (data.display === self.options.toolbarState) {
           return;
@@ -1077,12 +1081,12 @@
 
     _initialize: function () {
       var self = this;
-      jQuery(this.element).bind('focus', function (event) {
-        self.options.activated();
+      jQuery(this.element).on('focus', function (event) {
+        self.options.activated(); 
       });
       /*
-      jQuery(this.element).bind('blur', function (event) {
-        self.options.deactivated();
+      jQuery(this.element).on('blur', function (event) {
+        self.options.deactivated(); 
       });
       */
     },
@@ -1151,7 +1155,7 @@
 
       this.vie = this.options.vie;
 
-      this.vie.entities.bind('add', function (model) {
+      this.vie.entities.on('add', function (model) {
         // Add the back-end URL used by Backbone.sync
         model.url = widget.options.url;
         model.toJSON = model.toJSONLD;
@@ -1185,14 +1189,14 @@
 
       var timeout = window.setInterval(doAutoSave, widget.options.autoSaveInterval);
 
-      this.element.bind('startPreventSave', function () {
+      this.element.on('startPreventSave', function () {
         if (timeout) {
           window.clearInterval(timeout);
           timeout = null;
         }
         widget.disableAutoSave();
       });
-      this.element.bind('stopPreventSave', function () {
+      this.element.on('stopPreventSave', function () {
         if (!timeout) {
           timeout = window.setInterval(doAutoSave, widget.options.autoSaveInterval);
         }
@@ -1214,18 +1218,18 @@
       this.restorables = [];
       var restorer;
 
-      widget.element.bind(widget.options.editableNs + 'changed', function (event, options) {
+      widget.element.on(widget.options.editableNs + 'changed', function (event, options) {
         if (_.indexOf(widget.changedModels, options.instance) === -1) {
           widget.changedModels.push(options.instance);
         }
         widget._saveLocal(options.instance);
       });
 
-      widget.element.bind(widget.options.editableNs + 'disable', function (event, options) {
-        widget._restoreLocal(options.instance);
+      widget.element.on(widget.options.editableNs + 'disable', function (event, options) {
+        widget.revertChanges(options.instance);
       });
 
-      widget.element.bind(widget.options.editableNs + 'enable', function (event, options) {
+      widget.element.on(widget.options.editableNs + 'enable', function (event, options) {
         if (!options.instance._originalAttributes) {
           options.instance._originalAttributes = _.clone(options.instance.attributes);
         }
@@ -1242,7 +1246,7 @@
         });*/
       });
 
-      widget.element.bind('midgardcreatestatechange', function (event, options) {
+      widget.element.on('midgardcreatestatechange', function (event, options) {
         if (options.state === 'browse' || widget.restorables.length === 0) {
           widget.restorables = [];
           if (restorer) {
@@ -1253,7 +1257,7 @@
         restorer = widget.checkRestore();
       });
 
-      widget.element.bind('midgardstorageloaded', function (event, options) {
+      widget.element.on('midgardstorageloaded', function (event, options) {
         if (_.indexOf(widget.changedModels, options.instance) === -1) {
           widget.changedModels.push(options.instance);
         }
@@ -1279,7 +1283,7 @@
       }
 
       var doRestore = function (event, notification) {
-        widget.restoreLocal();
+        widget.restoreLocalAll();
         restorer.close();
       };
 
@@ -1333,7 +1337,7 @@
       return restorer;
     },
 
-    restoreLocal: function () {
+    restoreLocalAll: function () {
       _.each(this.restorables, function (instance) {
         this.readLocal(instance);
       }, this);
@@ -1574,7 +1578,7 @@
       collection.add(JSON.parse(local));
     },
 
-    _restoreLocal: function (model) {
+    revertChanges: function (model) {
       var widget = this;
 
       // Remove unsaved collection members
