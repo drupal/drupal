@@ -42,9 +42,9 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
   function testRegisterUserWithEmailVerification() {
     config('user.settings')->set('verify_mail', TRUE)->save();
 
-    config('system.date')
-      ->set('timezone.user.configurable', 1)
-      ->set('timezone.default', 'Europe/Brussels')
+    config('system.timezone')
+      ->set('user.configurable', 1)
+      ->set('default', 'Europe/Brussels')
       ->save();
 
     // Tell openid_test.module to respond with these SREG fields.
@@ -101,9 +101,9 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
   function testRegisterUserWithoutEmailVerification() {
     config('user.settings')->set('verify_mail', FALSE)->save();
 
-    config('system.date')
-      ->set('timezone.user.configurable', 1)
-      ->set('timezone.default', 'Europe/Brussels')
+    config('system.timezone')
+      ->set('user.configurable', 1)
+      ->set('default', 'Europe/Brussels')
       ->save();
 
     // Tell openid_test.module to respond with these SREG fields.
@@ -143,9 +143,9 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    * information (a username that is already taken, and no e-mail address).
    */
   function testRegisterUserWithInvalidSreg() {
-    config('system.date')
-      ->set('timezone.user.configurable', 1)
-      ->set('timezone.default', 'Europe/Brussels')
+    config('system.timezone')
+      ->set('user.configurable', 1)
+      ->set('default', 'Europe/Brussels')
       ->save();
 
     // Tell openid_test.module to respond with these SREG fields.
@@ -233,8 +233,8 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    */
   function testRegisterUserWithAXButNoSREG() {
     config('user.settings')->set('verify_mail', FALSE)->save();
-    config('system.date')
-      ->set('timezone.default', 'Europe/Brussels')
+    config('system.timezone')
+      ->set('default', 'Europe/Brussels')
       ->save();
 
     // Tell openid_test.module to respond with these AX fields.

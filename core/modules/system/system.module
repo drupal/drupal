@@ -2403,7 +2403,7 @@ function system_custom_theme() {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_profile_form_alter(&$form, &$form_state) {
-  if (config('system.date')->get('timezone.user.configurable')) {
+  if (config('system.timezone')->get('user.configurable')) {
     system_user_timezone($form, $form_state);
   }
   return $form;
@@ -2413,8 +2413,8 @@ function system_form_user_profile_form_alter(&$form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_register_form_alter(&$form, &$form_state) {
-  $config = config('system.date');
-  if ($config->get('timezone.user.configurable') && $config->get('timezone.user.default') == DRUPAL_USER_TIMEZONE_SELECT) {
+  $config = config('system.timezone');
+  if ($config->get('user.configurable') && $config->get('user.default') == DRUPAL_USER_TIMEZONE_SELECT) {
     system_user_timezone($form, $form_state);
     return $form;
   }
@@ -2424,9 +2424,9 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
  * Implements hook_user_presave().
  */
 function system_user_presave($account) {
-  $config = config('system.date');
-  if ($config->get('timezone.user.configurable') && empty($account->timezone) && !$config->get('timezone.user.default')) {
-    $account->timezone = $config->get('timezone.default');
+  $config = config('system.timezone');
+  if ($config->get('user.configurable') && empty($account->timezone) && !$config->get('user.default')) {
+    $account->timezone = $config->get('default');
   }
 }
 
@@ -2434,9 +2434,9 @@ function system_user_presave($account) {
  * Implements hook_user_login().
  */
 function system_user_login($edit, $account) {
-  $config = config('system.date');
+  $config = config('system.timezone');
   // If the user has a NULL time zone, notify them to set a time zone.
-  if (!$account->timezone && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
+  if (!$account->timezone && $config->get('user.configurable') && $config->get('user.warn')) {
     drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
   }
 }

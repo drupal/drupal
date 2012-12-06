@@ -2286,9 +2286,12 @@ function system_update_8038() {
     'site_default_country' => 'country.default',
     'date_first_day' => 'first_day',
     'date_default_timezone' => 'timezone.default',
-    'configurable_timezones' => 'timezone.user.configurable',
-    'empty_timezone_message' => 'timezone.user.warn',
-    'user_default_timezone' => 'timezone.user.default',
+  ));
+  update_variables_to_config('system.timezone', array(
+    'date_default_timezone' => 'default',
+    'configurable_timezones' => 'user.configurable',
+    'empty_timezone_message' => 'user.warn',
+    'user_default_timezone' => 'user.default',
   ));
 }
 

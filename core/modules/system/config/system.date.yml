@@ -1,12 +1,6 @@
 first_day: '0'
 country:
   default: ''
-timezone:
-  default: ''
-  user:
-    configurable: '1'
-    default: '0'
-    warn: '0'
 formats:
   long:
     name: 'Default Long Date'

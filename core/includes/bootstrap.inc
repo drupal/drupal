@@ -2195,15 +2195,15 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
  */
 function drupal_get_user_timezone() {
   global $user;
-  $config = config('system.date');
+  $config = config('system.timezone');
 
-  if ($config->get('timezone.user.configurable') && $user->uid && $user->timezone) {
+  if ($config->get('user.configurable') && $user->uid && $user->timezone) {
     return $user->timezone;
   }
   else {
     // Ignore PHP strict notice if time zone has not yet been set in the php.ini
     // configuration.
-    $config_data_default_timezone = $config->get('timezone.default');
+    $config_data_default_timezone = $config->get('default');
     return !empty($config_data_default_timezone) ? $config_data_default_timezone : @date_default_timezone_get();
   }
 }

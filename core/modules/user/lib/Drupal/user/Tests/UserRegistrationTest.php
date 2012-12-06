@@ -157,9 +157,9 @@ class UserRegistrationTest extends WebTestBase {
       ->save();
 
     // Set the default timezone to Brussels.
-    $config_system_date = config('system.date')
-      ->set('timezone.user.configurable', 1)
-      ->set('timezone.default', 'Europe/Brussels')
+    $config_system_timezone = config('system.timezone')
+      ->set('user.configurable', 1)
+      ->set('default', 'Europe/Brussels')
       ->save();
 
     // Check that the account information options are not displayed
@@ -183,7 +183,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertEqual($new_user->signature, '', 'Correct signature field.');
     $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), 'Correct creation time.');
     $this->assertEqual($new_user->status, $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
-    $this->assertEqual($new_user->timezone, $config_system_date->get('timezone.default'), 'Correct time zone field.');
+    $this->assertEqual($new_user->timezone, $config_system_timezone->get('default'), 'Correct time zone field.');
     $this->assertEqual($new_user->langcode, language_default()->langcode, 'Correct language field.');
     $this->assertEqual($new_user->preferred_langcode, language_default()->langcode, 'Correct preferred language field.');
     $this->assertEqual($new_user->init, $mail, 'Correct init field.');

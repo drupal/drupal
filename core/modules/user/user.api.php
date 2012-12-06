@@ -305,9 +305,9 @@ function hook_user_update($account) {
  *   The user object on which the operation was just performed.
  */
 function hook_user_login(&$edit, $account) {
-  $config = config('system.date');
+  $config = config('system.timezone');
   // If the user has a NULL time zone, notify them to set a time zone.
-  if (!$account->timezone && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
+  if (!$account->timezone && $config->get('user.configurable') && $config->get('user.warn')) {
     drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
   }
 }
