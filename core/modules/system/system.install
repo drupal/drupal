@@ -2320,6 +2320,17 @@ function system_update_8040() {
 }
 
 /**
+ * Converts admin_theme variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8041() {
+  update_variables_to_config('system.site', array(
+    'admin_theme' => 'admin_theme'
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

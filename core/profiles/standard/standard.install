@@ -437,6 +437,6 @@ function standard_install() {
 
   // Enable the admin theme.
   theme_enable(array('seven'));
-  variable_set('admin_theme', 'seven');
+  config('system.site')->set('admin_theme', 'seven')->save();
   variable_set('node_admin_theme', '1');
 }

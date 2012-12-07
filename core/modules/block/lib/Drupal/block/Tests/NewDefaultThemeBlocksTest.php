@@ -40,7 +40,7 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
     // Ensure no other theme's blocks are in the block table yet.
     $themes = array();
     $themes['default'] = variable_get('theme_default', 'stark');
-    if ($admin_theme = variable_get('admin_theme')) {
+    if ($admin_theme = config('system.site')->get('admin_theme')) {
       $themes['admin'] = $admin_theme;
     }
     $count = db_query_range('SELECT 1 FROM {block} WHERE theme NOT IN (:themes)', 0, 1, array(':themes' => $themes))->fetchField();

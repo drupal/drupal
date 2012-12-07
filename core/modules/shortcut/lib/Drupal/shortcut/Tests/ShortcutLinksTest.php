@@ -64,7 +64,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   function testShortcutQuickLink() {
     theme_enable(array('seven'));
-    variable_set('admin_theme', 'seven');
+    config('system.site')->set('admin_theme', 'seven')->save();
     variable_set('node_admin_theme', TRUE);
     $this->drupalGet($this->set->links[0]['link_path']);
     $this->assertRaw(t('Remove from %title shortcuts', array('%title' => $this->set->title)), '"Add to shortcuts" link properly switched to "Remove from shortcuts".');

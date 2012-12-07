@@ -38,7 +38,7 @@ class RouterTest extends WebTestBase {
     // and administrative theme that they expect.
     theme_enable(array('bartik'));
     variable_set('theme_default', 'bartik');
-    variable_set('admin_theme', 'seven');
+    config('system.site')->set('admin_theme', 'seven')->save();
     theme_disable(array('stark'));
 
     // Enable navigation menu block.
