@@ -2,23 +2,30 @@
 
 /**
  * @file
- * Definition of Drupal\jsonld\Tests\DrupalJsonldNormalizerTest.
+ * Contains Drupal\jsonld\Tests\NormalizeDenormalizeTest.
  */
 
 namespace Drupal\jsonld\Tests;
 
-use Drupal\config\Tests\ConfigEntityTest;
 use Drupal\Core\Language\Language;
+use Drupal\jsonld\JsonldEncoder;
 use Drupal\jsonld\JsonldEntityNormalizer;
 use Drupal\jsonld\JsonldEntityReferenceNormalizer;
 use Drupal\jsonld\JsonldFieldItemNormalizer;
-use Drupal\jsonld\Tests\JsonldNormalizerTestBase;
+use Drupal\simpletest\WebTestBase;
 use Symfony\Component\Serializer\Serializer;
 
 /**
  * Test the vendor specific JSON-LD normalizer.
  */
-class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
+class NormalizeDenormalizeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'entity_test');
 
   /**
    * The format being tested.
@@ -32,8 +39,8 @@ class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'vnd.drupal.ld+json Normalization',
-      'description' => "Test Drupal's vendor specific JSON-LD normalizer.",
+      'name' => 'Normalize/Denormalize Test',
+      'description' => "Test that entities can be normalized/denormalized in JSON-LD.",
       'group' => 'JSON-LD',
     );
   }
@@ -49,42 +56,21 @@ class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
       'field_item' => new JsonldFieldItemNormalizer(),
       'entity' => new JsonldEntityNormalizer(),
     );
-    $serializer = new Serializer($this->normalizers);
+    $serializer = new Serializer($this->normalizers, array(new JsonldEncoder()));
     $this->normalizers['entity']->setSerializer($serializer);
-  }
 
-  /**
-   * Tests the supportsNormalization function.
-   */
-  public function testSupportsNormalization() {
-    $format = static::$format;
-    $supportedEntity = entity_create('entity_test', array());
-    $unsupportedEntity = new ConfigEntityTest();
-    $field = $supportedEntity->get('uuid');
-    $entityreferenceField = $supportedEntity->get('user_id');
-
-    // Supported entity.
-    $this->assertTrue($this->normalizers['entity']->supportsNormalization($supportedEntity, static::$format), "Entity normalization is supported for $format on content entities.");
-    // Unsupported entity.
-    $this->assertFalse($this->normalizers['entity']->supportsNormalization($unsupportedEntity, static::$format), "Normalization is not supported for other entity types.");
-
-    // Field item.
-    $this->assertTrue($this->normalizers['field_item']->supportsNormalization($field->offsetGet(0), static::$format), "Field item normalization is supported for $format.");
-    // Entity reference field item.
-    $this->assertTrue($this->normalizers['entityreference']->supportsNormalization($entityreferenceField->offsetGet(0), static::$format), "Entity reference field item normalization is supported for $format.");
-  }
-
-  /**
-   * Tests the normalize function.
-   */
-  public function testNormalize() {
     // Add German as a language.
     $language = new Language(array(
       'langcode' => 'de',
       'name' => 'Deutsch',
     ));
     language_save($language);
+  }
 
+  /**
+   * Tests the normalize function.
+   */
+  public function testNormalize() {
     // Create a German entity.
     $values = array(
       'langcode' => 'de',
@@ -157,6 +143,53 @@ class DrupalJsonldNormalizerTest extends JsonldNormalizerTestBase {
     $this->assertEqual($normalized['name'], $expectedArray['name'], 'Translatable field with multiple language values is nested correctly.');
     // Test multi-property untranslatable field.
     $this->assertEqual($normalized['field_test_text'], $expectedArray['field_test_text'], 'Field with properties is nested correctly.');
+  }
+
+  function testDenormalize() {
+    $incomingData = array(
+      '@type' => url('jsonld-test/content-staging/entity_test/entity_test', array('absolute' => TRUE)),
+      'name' => array(
+        'en' => array(
+          array(
+            'value' => $this->randomName(),
+          ),
+        ),
+        'de' => array(
+          array(
+            'value' => $this->randomName(),
+          ),
+        ),
+      ),
+      'field_test_text' => array(
+        'und' => array(
+          array(
+            'value' => $this->randomName(),
+            'format' => 'full_html',
+          ),
+        ),
+      ),
+    );
+
+    $entity = $this->normalizers['entity']->denormalize($incomingData, 'Drupal\Core\Entity\EntityNG', static::$format);
+    $this->assertEqual('entity_test', $entity->bundle(), "Denormalize creates entity with correct bundle.");
+    $this->assertEqual($incomingData['name']['en'], $entity->get('name')->getValue(), "Translatable field denormalized correctly in default language.");
+    $this->assertEqual($incomingData['name']['de'], $entity->getTranslation('de')->get('name')->getValue(), "Translatable field denormalized correctly in translation language.");
+    $this->assertEqual($incomingData['field_test_text']['und'], $entity->get('field_test_text')->getValue(), "Untranslatable field denormalized correctly.");
+  }
+
+  /**
+   * Get the Entity ID.
+   *
+   * @param Drupal\Core\Entity\EntityNG $entity
+   *   Entity to get URI for.
+   *
+   * @return string
+   *   Return the entity URI.
+   */
+  protected function getEntityId($entity) {
+    global $base_url;
+    $uriInfo = $entity->uri();
+    return $base_url . '/' . $uriInfo['path'];
   }
 
 }
