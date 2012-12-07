@@ -102,7 +102,7 @@ class PoDatabaseReader implements PoReaderInterface {
    *   Always, because you cannot set the PO header of a reader.
    */
   function setHeader(PoHeader $header) {
-    throw new Exception('You cannot set the PO header in a reader.');
+    throw new \Exception('You cannot set the PO header in a reader.');
   }
 
   /**

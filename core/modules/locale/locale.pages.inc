@@ -455,11 +455,14 @@ function locale_translate_edit_form_submit($form, &$form_state) {
 function locale_translation_manual_status() {
   module_load_include('compare.inc', 'locale');
 
+  // Check translation status of all translatable project in all languages.
+  // First we clear the cached list of projects. Although not strictly
+  // nescessary, this is helpfull in case the project list is out of sync.
   locale_translation_flush_projects();
-  $projects = locale_translation_get_projects();
-  locale_translation_check_projects($projects);
+  locale_translation_check_projects();
 
-  // Execute a batch if required.
+  // Execute a batch if required. A batch is only used when remote files
+  // are checked.
   if (batch_get()) {
     batch_process('admin/reports/translations');
   }
@@ -467,19 +470,189 @@ function locale_translation_manual_status() {
 }
 
 /**
+ * Page callback: Configuration for interface translation.
+ *
+ * @see locale_menu()
+ */
+function locale_translate_settings($form, &$form_state) {
+  $config = config('locale.settings');
+
+  $form['update_interval_days'] = array(
+    '#type' => 'radios',
+    '#title' => t('Check for updates'),
+    '#default_value' => $config->get('translation.update_interval_days'),
+    '#options' => array(
+      '0' => t('Never (manually)'),
+      '1' => t('Daily'),
+      '7' => t('Weekly'),
+    ),
+    '#description' => t('Select how frequently you want to check for new interface translations for your currently installed modules and themes. <a href="@url">Check updates now</a>.', array('@url' => url('admin/reports/translations/check'))),
+  );
+
+  $form['check_disabled_modules'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Check for updates of disabled modules and themes'),
+    '#default_value' => $config->get('translation.check_disabled_modules'),
+  );
+
+  if ($directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations')) {
+    $description = t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href="@url">File system</a> configuration page.', array('%path' => $directory, '@url' => url('admin/config/media/file-system')));
+  }
+  else {
+    $description = t('Translation files will not be stored locally. Change the Interface translation directory on the <a href="@url">File system configuration</a> page.', array('@url' => url('admin/config/media/file-system')));
+  }
+  $form['#translation_directory'] = $directory;
+  $form['use_source'] = array(
+    '#type' => 'radios',
+    '#title' => t('Translation source'),
+    '#default_value' => $config->get('translation.use_source'),
+    '#options' => array(
+      LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL => t('Drupal translation server and local files'),
+      LOCALE_TRANSLATION_USE_SOURCE_LOCAL => t('Local files only'),
+    ),
+    '#description' => t('The source of translation files for automatic interface translation.') . ' ' . $description,
+  );
+
+  if ($config->get('translation.overwrite_not_customized') == FALSE) {
+    $default = LOCALE_TRANSLATION_OVERWRITE_NONE;
+  }
+  elseif ($config->get('translation.overwrite_customized') == TRUE) {
+    $default = LOCALE_TRANSLATION_OVERWRITE_ALL;
+  }
+  else {
+    $default = LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED;
+  }
+  $form['overwrite'] = array(
+    '#type' => 'radios',
+    '#title' => t('Import behaviour'),
+    '#default_value' => $default,
+    '#options' => array(
+      LOCALE_TRANSLATION_OVERWRITE_NONE => t("Don't overwrite existing translations."),
+      LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED => t('Only overwrite imported translations, customized translations are kept.'),
+      LOCALE_TRANSLATION_OVERWRITE_ALL => t('Overwrite existing translations.'),
+    ),
+    '#description' => t('How to treat existing translations when automatically updating the interface translations.'),
+  );
+
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Form validation handler for locale_translate_settings().
+ *
+ * @see locale_translate_settings()
+ */
+function locale_translate_settings_validate($form, &$form_state) {
+  if (empty($form['#translation_directory']) && $form_state['values']['use_source'] == LOCALE_TRANSLATION_USE_SOURCE_LOCAL) {
+    form_set_error('use_source', t('You have selected local translation source, but no <a href="@url">Interface translation directory</a> was configured.', array('@url' => url('admin/config/media/file-system'))));
+  }
+}
+
+/**
+ * Form submission handler for locale_translate_settings().
+ *
+ * @see locale_translate_settings()
+ */
+function locale_translate_settings_submit($form, &$form_state) {
+  $values = $form_state['values'];
+
+  $config = config('locale.settings');
+  $config->set('translation.update_interval_days', $values['update_interval_days'])->save();
+  $config->set('translation.use_source', $values['use_source'])->save();
+
+  switch ($values['overwrite']) {
+    case LOCALE_TRANSLATION_OVERWRITE_ALL:
+      $config
+        ->set('translation.overwrite_customized', TRUE)
+        ->set('translation.overwrite_not_customized', TRUE);
+      break;
+    case LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED:
+      $config
+        ->set('translation.overwrite_customized', FALSE)
+        ->set('translation.overwrite_not_customized', TRUE);
+      break;
+    case LOCALE_TRANSLATION_OVERWRITE_NONE:
+      $config
+        ->set('translation.overwrite_customized', FALSE)
+        ->set('translation.overwrite_not_customized', FALSE);
+      break;
+  }
+
+  $config
+    ->set('translation.check_disabled_modules', $values['check_disabled_modules'])
+    ->save();
+
+  // Invalidate the cached translation status when the configuration setting of
+  // 'use_source' and 'check_disabled_modules' change.
+  if ($form['use_source']['#default_value'] != $form_state['values']['use_source'] ||
+      $form['check_disabled_modules']['#default_value'] != $form_state['values']['check_disabled_modules']) {
+    locale_translation_clear_status();
+  }
+}
+
+/**
  * Page callback: Display the current translation status.
  *
  * @see locale_menu()
  */
-function locale_translation_status() {
+function locale_translation_status_form($form, &$form_state) {
+  module_load_include('compare.inc', 'locale');
+
   $languages = locale_translatable_language_list();
+  $status = state()->get('locale.translation_status');
+
   if (!$languages) {
     drupal_set_message(t('No translatable languages available. <a href="@add_lanuage">Add language</a> first.', array('@add_lanuage' => url('admin/config/regional/language'))), 'warning');
   }
 
-  // @todo Calculate and display the translation status here. See the follow-up
-  // issue for translation interface: http://drupal.org/node/1804702
-  return 'TODO: Show the translation status here';
+  $last = state()->get('locale.translation_last_checked');
+  $markup = '<div class="locale checked">';
+  $markup .= $last ? t('Last checked: @time ago', array('@time' => format_interval(REQUEST_TIME - $last))) : t('Last checked: never');
+  $markup .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/translations/check', array('query' => drupal_get_destination())) . ')</span>';
+  $markup .= "</div>\n";
+  $form['last_checked'] = array(
+    '#markup' => '<p>' . $markup . '</p>',
+  );
+
+  $form['langcodes'] = array(
+    '#type' => 'value',
+    '#value' => drupal_map_assoc(array_keys($languages)),
+  );
+
+  $form['actions'] = array(
+    '#type' => 'actions'
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Update')
+  );
+  return $form;
+}
+
+/**
+ * Form submission handler for locale_translation_status().
+ */
+function locale_translation_status_form_submit($form, &$form_state) {
+  module_load_include('fetch.inc', 'locale');
+  $langcodes = array_filter($form_state['values']['langcodes']);
+
+  // Set the translation import options. This determines if existing
+  // translations will be overwritten by imported strings.
+  $options = _locale_translation_default_update_options();
+
+  // If the status was updated recently we can immediately start fetching the
+  // translation updates. If the status is expired we clear it an run a batch to
+  // update the status and then fetch the translation updates.
+  $last_checked = state()->get('locale.translation_last_checked');
+  if ($last_checked < REQUEST_TIME - LOCALE_TRANSLATION_STATUS_TTL) {
+    locale_translation_clear_status();
+    $batch = locale_translation_batch_update_build(array(), $langcodes, $options);
+    batch_set($batch);
+  }
+  else {
+    $batch = locale_translation_batch_fetch_build(array(), $langcodes, $options);
+    batch_set($batch);
+  }
 }
 
 /**

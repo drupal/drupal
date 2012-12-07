@@ -53,10 +53,10 @@ class Gettext {
    *
    * @param stdClass $file
    *   File object with an URI property pointing at the file's path.
-   *
+   *   - "langcode": The language the strings will be added to.
+   *   - "uri": File URI.
    * @param array $options
    *   An array with options that can have the following elements:
-   *   - 'langcode': The language code, required.
    *   - 'overwrite_options': Overwrite options array as defined in
    *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
    *   - 'customized': Flag indicating whether the strings imported from $file
@@ -83,7 +83,7 @@ class Gettext {
     );
     // Instantiate and initialize the stream reader for this file.
     $reader = new PoStreamReader();
-    $reader->setLangcode($options['langcode']);
+    $reader->setLangcode($file->langcode);
     $reader->setURI($file->uri);
 
     try {
@@ -100,7 +100,7 @@ class Gettext {
 
     // Initialize the database writer.
     $writer = new PoDatabaseWriter();
-    $writer->setLangcode($options['langcode']);
+    $writer->setLangcode($file->langcode);
     $writer_options = array(
       'overwrite_options' => $options['overwrite_options'],
       'customized' => $options['customized'],

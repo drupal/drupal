@@ -170,7 +170,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
       $this->readHeader();
     }
     else {
-      throw new Exception('Cannot open stream without URI set.');
+      throw new \Exception('Cannot open stream without URI set.');
     }
   }
 
@@ -185,7 +185,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
       fclose($this->_fd);
     }
     else {
-      throw new Exception('Cannot close stream that is not open.');
+      throw new \Exception('Cannot close stream that is not open.');
     }
   }
 
