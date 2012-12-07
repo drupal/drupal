@@ -20,19 +20,16 @@ class RequestHandler extends ContainerAware {
   /**
    * Handles a web API request.
    *
-   * @param string $plugin
-   *   The resource type plugin.
    * @param Symfony\Component\HttpFoundation\Request $request
    *   The HTTP request object.
    * @param mixed $id
    *   The resource ID.
    *
-   * @todo Remove $plugin as argument. After http://drupal.org/node/1793520 is
-   *   committed we would be able to access route object as
-   *   $request->attributes->get('_route'). Then we will get plugin as
-   *   '_plugin' property of route object.
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response object.
    */
-  public function handle($plugin, Request $request, $id = NULL) {
+  public function handle(Request $request, $id = NULL) {
+    $plugin = $request->attributes->get('_route')->getDefault('_plugin');
     $method = strtolower($request->getMethod());
     $resource = $this->container
       ->get('plugin.manager.rest')
