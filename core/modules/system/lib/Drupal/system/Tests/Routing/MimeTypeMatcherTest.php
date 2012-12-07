@@ -7,17 +7,13 @@
 
 namespace Drupal\system\Tests\Routing;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-
-use Drupal\simpletest\UnitTestBase;
+use Drupal\Core\Routing\FirstEntryFinalMatcher;
 use Drupal\Core\Routing\MimeTypeMatcher;
 use Drupal\Core\Routing\NestedMatcher;
-use Drupal\Core\Routing\FirstEntryFinalMatcher;
+use Drupal\simpletest\UnitTestBase;
 
-use Exception;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 /**
  * Basic tests for the MimeTypeMatcher class.
@@ -117,8 +113,8 @@ class MimeTypeMatcherTest extends UnitTestBase {
       $routes = $matcher->matchRequestPartial($request);
       $this->fail(t('No exception was thrown.'));
     }
-    catch (Exception $e) {
-      $this->assertTrue($e instanceof RouteNotFoundException, 'The correct exception was thrown.');
+    catch (UnsupportedMediaTypeHttpException $e) {
+      $this->pass('The correct exception was thrown.');
     }
   }
 
