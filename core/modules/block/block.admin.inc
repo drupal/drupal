@@ -173,6 +173,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save blocks'),
+    '#button_type' => 'primary',
   );
 
   return $form;
@@ -507,6 +508,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save block'),
+    '#button_type' => 'primary',
   );
 
   return $form;

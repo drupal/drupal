@@ -2031,6 +2031,7 @@ function views_ui_admin_settings_advanced() {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
+    '#button_type' => 'primary',
   );
   $form['#submit'][] = 'views_ui_admin_settings_advanced_submit';
 

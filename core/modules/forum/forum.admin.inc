@@ -73,7 +73,7 @@ function forum_form_forum($form, &$form_state, $edit = array()) {
 
   $form['vid'] = array('#type' => 'hidden', '#value' => config('forum.settings')->get('vocabulary'));
   $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#button_type' => 'primary');
   if ($edit['tid']) {
     $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
@@ -187,7 +187,8 @@ function forum_form_container($form, &$form_state, $edit = array()) {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save')
+    '#value' => t('Save'),
+    '#button_type' => 'primary',
   );
   if ($edit['tid']) {
     $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));

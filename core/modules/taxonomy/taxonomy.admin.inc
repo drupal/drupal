@@ -51,7 +51,7 @@ function taxonomy_overview_vocabularies($form) {
   // vocabulary exists.
   if (count($vocabularies) > 1) {
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#button_type' => 'primary');
   }
   elseif (isset($vocabulary)) {
     unset($form[$vocabulary->vid]['weight']);
@@ -312,7 +312,8 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
     $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save')
+      '#value' => t('Save'),
+      '#button_type' => 'primary',
     );
     $form['actions']['reset_alphabetical'] = array(
       '#type' => 'submit',

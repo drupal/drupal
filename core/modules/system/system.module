@@ -3196,6 +3196,7 @@ function system_config_form($form, &$form_state) {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
+    '#button_type' => 'primary',
   );
 
   // Add system_config_form_submit() to output a consistent confirmation
