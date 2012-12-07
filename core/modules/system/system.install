@@ -2309,6 +2309,17 @@ function system_update_8039() {
 }
 
 /**
+ * Moves action_max_stack from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8040() {
+  update_variables_to_config('action.settings', array(
+    'actions_max_stack' => 'recursion_limit',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

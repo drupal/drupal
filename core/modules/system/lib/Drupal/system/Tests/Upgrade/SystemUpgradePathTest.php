@@ -89,6 +89,10 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'fallback_format' => 'plain_text'
     );
 
+    $expected_config['action.settings'] = array(
+      'recursion_limit' => 42,
+    );
+
     foreach ($expected_config as $file => $values) {
       $config = config($file);
       $this->verbose(print_r($config->get(), TRUE));
