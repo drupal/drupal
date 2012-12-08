@@ -1,6 +1,9 @@
 
 Drupal 7.18, xxxx-xx-xx (development version)
 -----------------------
+- Made the default .htaccess rules protocol sensitive to improve security for
+  sites which use HTTPS and redirect between "www" and non-"www" versions of
+  the page.
 
 Drupal 7.17, 2012-11-07
 -----------------------
