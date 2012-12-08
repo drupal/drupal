@@ -683,7 +683,7 @@ select.form-select:focus {
   background-position: 100% -16px;
 }
 a.button.add {
-  background: #1078d8;
+  background: #1078d4;
   background-image: -webkit-linear-gradient(top, #419ff1, #1076d5);
   background-image: -moz-linear-gradient(top, #419ff1, #1076d5);
   background-image: -o-linear-gradient(top, #419ff1, #1076d5);
