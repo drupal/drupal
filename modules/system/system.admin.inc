@@ -1594,6 +1594,7 @@ function system_site_information_settings_validate($form, &$form_state) {
  * @ingroup forms
  */
 function system_cron_settings() {
+  global $base_url;
   $form['description'] = array(
     '#markup' => '<p>' . t('Cron takes care of running periodic tasks like checking for updates and indexing content for search.') . '</p>',
   );
@@ -1606,6 +1607,11 @@ function system_cron_settings() {
   $form['status'] = array(
     '#markup' => $status,
   );
+
+  $form['cron_url'] = array(
+    '#markup' => '<p>' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal')))))) . '</p>',
+  );
+
   $form['cron'] = array(
     '#type' => 'fieldset',
   );
