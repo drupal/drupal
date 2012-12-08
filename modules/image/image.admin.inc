@@ -326,7 +326,7 @@ function image_style_delete_form_submit($form, &$form_state) {
 /**
  * Confirmation form to revert a database style to its default.
  */
-function image_style_revert_form($form, $form_state, $style) {
+function image_style_revert_form($form, &$form_state, $style) {
   $form_state['image_style'] = $style;
 
   return confirm_form(
