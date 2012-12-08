@@ -139,10 +139,10 @@ function update_init() {
       if (!empty($verbose)) {
         if (isset($status[$type]['severity'])) {
           if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
-            drupal_set_message($status[$type]['description'], 'error');
+            drupal_set_message($status[$type]['description'], 'error', FALSE);
           }
           elseif ($status[$type]['severity'] == REQUIREMENT_WARNING) {
-            drupal_set_message($status[$type]['description'], 'warning');
+            drupal_set_message($status[$type]['description'], 'warning', FALSE);
           }
         }
       }
@@ -152,7 +152,7 @@ function update_init() {
         if (isset($status[$type])
             && isset($status[$type]['reason'])
             && $status[$type]['reason'] === UPDATE_NOT_SECURE) {
-          drupal_set_message($status[$type]['description'], 'error');
+          drupal_set_message($status[$type]['description'], 'error', FALSE);
         }
       }
     }
