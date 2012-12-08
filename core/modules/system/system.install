@@ -2331,6 +2331,13 @@ function system_update_8041() {
 }
 
 /**
+ * Enable the new Entity module.
+ */
+function system_update_8042() {
+  update_module_enable(array('entity'));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

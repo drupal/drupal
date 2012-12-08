@@ -80,5 +80,13 @@ class BareMinimalUpgradePathTest extends UpgradePathTestBase {
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
     $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
+
+    // Verify that all required modules are enabled.
+    $enabled = module_list();
+    $required = array_filter(system_rebuild_module_data(), function ($data) {
+      return !empty($data->info['required']);
+    });
+    $this->assertEqual(array_diff_key($required, $enabled), array());
   }
+
 }
