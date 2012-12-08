@@ -11,6 +11,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\Core\Entity\EntityAccessController;
 
 /**
  * Tests the entity access controller.
@@ -81,15 +82,12 @@ class EntityAccessTest extends WebTestBase  {
    * Ensures that the default controller is used as a fallback.
    */
   function testEntityAccessDefaultController() {
-    // Remove the access controller definition from the test entity.
-    state()->set('entity_test.default_access_controller', TRUE);
-
     // Check that the default access controller is used for entities that don't
     // have a specific access controller defined.
-    $controller = entity_access_controller('entity_test');
-    $this->assertTrue($controller instanceof \Drupal\Core\Entity\EntityAccessController, 'The default entity controller is used for the entity_test entity type.');
+    $controller = entity_access_controller('entity_test_default_access');
+    $this->assertTrue($controller instanceof EntityAccessController, 'The default entity controller is used for the entity_test_default_access entity type.');
 
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test_default_access', array());
     $this->assertEntityAccess(array(
       'create' => FALSE,
       'update' => FALSE,

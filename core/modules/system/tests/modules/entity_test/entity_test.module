@@ -16,10 +16,6 @@ function entity_test_entity_info_alter(&$info) {
   if (state()->get('entity_test.translation')) {
     $info['entity_test']['translation']['entity_test'] = TRUE;
   }
-  // Optionally unset the access controller to test the fallback.
-  if (state()->get('entity_test.default_access_controller')) {
-    unset($info['entity_test']['access_controller_class']);
-  }
 }
 
 /**
