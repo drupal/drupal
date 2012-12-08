@@ -3,18 +3,18 @@
   "description": "Drupal is an open source content management platform powering millions of websites and applications.",
   "license": "GPL-2.0+",
   "require": {
-    "symfony/class-loader": "<2.4@dev",
-    "symfony/dependency-injection": "<2.4@dev",
-    "symfony/event-dispatcher": "<2.4@dev",
-    "symfony/http-foundation": "<2.4@dev",
-    "symfony/http-kernel": "<2.4@dev",
-    "symfony/routing": "<2.4@dev",
-    "symfony/serializer": "<2.4@dev",
-    "symfony/yaml": "<2.4@dev",
-    "twig/twig": "1.*",
-    "doctrine/common": "2.3.*",
-    "guzzle/http": "3.*",
-    "kriswallsmith/assetic": "1.1.*"
+    "symfony/class-loader": "<2.4",
+    "symfony/dependency-injection": "<2.4",
+    "symfony/event-dispatcher": "<2.4",
+    "symfony/http-foundation": "<2.4",
+    "symfony/http-kernel": "<2.4",
+    "symfony/routing": "<2.4",
+    "symfony/serializer": "<2.4",
+    "symfony/yaml": "<2.4",
+    "twig/twig": "1.*@stable",
+    "doctrine/common": "2.3.*@stable",
+    "guzzle/http": "*",
+    "kriswallsmith/assetic": "1.1.*@alpha"
   },
-  "minimum-stability": "alpha"
+  "minimum-stability": "dev"
 }

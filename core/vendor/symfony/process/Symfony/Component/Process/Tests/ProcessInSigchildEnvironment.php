@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Component\Process\Exception;
+namespace Symfony\Component\Process\Tests;
 
-/**
- * Marker Interface for the Process Component.
- *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- */
-interface ExceptionInterface
+use Symfony\Component\Process\Process;
+
+class ProcessInSigchildEnvironment extends Process
 {
+    protected function isSigchildEnabled()
+    {
+        return true;
+    }
 }

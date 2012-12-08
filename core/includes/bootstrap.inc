@@ -3096,18 +3096,31 @@ function drupal_classloader() {
       'Drupal\Component' => DRUPAL_ROOT . '/core/lib',
     ));
 
-    // Register namespaces for vendor libraries managed by Composer.
-    $namespaces = require DRUPAL_ROOT . '/core/vendor/composer/autoload_namespaces.php';
+    // Register namespaces and PEAR-like prefixes for vendor libraries managed
+    // by Composer. Composer combines libraries that use PHP 5.3 namespaces and
+    // ones that use PEAR-like class prefixes in a single array, but the Symfony
+    // class loader requires them to be registered separately.
+    $prefixes_and_namespaces = require DRUPAL_ROOT . '/core/vendor/composer/autoload_namespaces.php';
     $prefixes = array();
-    foreach ($namespaces as $namespace => $path) {
-      // Composer combines libraries that use PHP 5.3 namespaces and ones that
-      // use PEAR-style class prefixes in a single array, but the Symfony class
-      // loader requires them to be registered separately. PSR-0 disallows
-      // underscores in namespace names and requires at least one in a
-      // PEAR-style class prefix.
-      if (strpos($namespace, '_') !== FALSE) {
-        $prefixes[$namespace] = $path;
-        unset($namespaces[$namespace]);
+    $namespaces = array();
+    foreach ($prefixes_and_namespaces as $key => $path) {
+      // If the key:
+      // - Contains a namespace separator, we know it's a namespace.
+      // - Doesn't contain a namespace separator and ends in an "_" (e.g.,
+      //   "Twig_"), it's likely intended as a PEAR-like prefix rather than a
+      //   namespace.
+      // - Doesn't contain a namespace separator or end in an "_" (e.g.,
+      //   "Assetic"), then it could be either a namespace or an incomplete
+      //   PEAR-like prefix, but we assume the former, since the only example of
+      //   that currently in Drupal is Assetic.
+      // @todo Switch to a class loader that doesn't require this guessing:
+      //   http://drupal.org/node/1658720.
+      $is_namespace = (strpos($key, '\\') !== FALSE) && (substr($key, -1) !== '_');
+      if ($is_namespace) {
+        $namespaces[rtrim($key, '\\')] = $path;
+      }
+      else {
+        $prefixes[$key] = $path;
       }
     }
     $loader->registerPrefixes($prefixes);

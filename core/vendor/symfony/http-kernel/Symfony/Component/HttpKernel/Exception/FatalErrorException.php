@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Component\Process\Exception;
+namespace Symfony\Component\HttpKernel\Exception;
 
 /**
- * Marker Interface for the Process Component.
+ * Fatal Error Exception.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Konstanton Myakshin <koc-dp@yandex.ru>
  */
-interface ExceptionInterface
+class FatalErrorException extends \ErrorException
 {
+
 }
