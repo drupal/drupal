@@ -380,7 +380,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Allow displays to attach to other views.
    */
-  public function attachTo($display_id) { }
+  public function attachTo(ViewExecutable $view, $display_id) { }
 
   /**
    * Static member function to list which sections are defaultable

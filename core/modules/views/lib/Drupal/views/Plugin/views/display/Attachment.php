@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -230,7 +231,7 @@ class Attachment extends DisplayPluginBase {
   /**
    * Attach to another view.
    */
-  public function attachTo($display_id) {
+  public function attachTo(ViewExecutable $view, $display_id) {
     $displays = $this->getOption('displays');
 
     if (empty($displays[$display_id])) {
@@ -240,10 +241,6 @@ class Attachment extends DisplayPluginBase {
     if (!$this->access()) {
       return;
     }
-
-    // Get a fresh view because our current one has a lot of stuff on it because it's
-    // already been executed.
-    $view = $this->view->cloneView();
 
     $args = $this->getOption('inherit_arguments') ? $this->view->args : array();
     $view->setArguments($args);

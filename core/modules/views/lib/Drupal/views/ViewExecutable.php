@@ -1492,7 +1492,9 @@ class ViewExecutable {
     // Give other displays an opportunity to attach to the view.
     foreach ($this->displayHandlers as $id => $display) {
       if (!empty($this->displayHandlers[$id])) {
-        $this->displayHandlers[$id]->attachTo($this->current_display);
+        // Create a clone for the attachments to manipulate. 'static' refers to the current class name.
+        $cloned_view = new static($this->storage);
+        $this->displayHandlers[$id]->attachTo($cloned_view, $this->current_display);
       }
     }
     $this->is_attachment = FALSE;
@@ -1829,21 +1831,6 @@ class ViewExecutable {
     unset($data['uuid']);
 
     return entity_create('view', $data);
-  }
-
-  /**
-   * Safely clone a view.
-   *
-   * This will completely wipe a view clean so it can be considered fresh.
-   *
-   * @return Drupal\views\ViewExecutable
-   *   The cloned view.
-   */
-  public function cloneView() {
-    $storage = clone $this->storage;
-    $executable = new ViewExecutable($storage);
-    $storage->set('executable', $executable);
-    return $executable;
   }
 
   /**

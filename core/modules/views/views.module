@@ -479,11 +479,6 @@ function views_menu_alter(&$callbacks) {
         $our_paths[$path] = TRUE;
       }
     }
-  }
-
-  // Save memory: Destroy those views.
-  foreach ($views as $data) {
-    list($view, $display_id) = $data;
     $view->destroy();
   }
 }
@@ -1411,21 +1406,12 @@ function views_get_applicable_views($type) {
       continue;
     }
 
-    // Loop on array keys because something seems to muck with $view->display
-    // a bit in PHP4.
-    foreach (array_keys($display) as $id) {
-      $plugin = drupal_container()->get('plugin.manager.views.display')->getDefinition($display[$id]['display_plugin']);
-      if (!empty($plugin[$type])) {
-        // This view uses_hook_menu. Clone it so that different handlers
-        // don't trip over each other, and add it to the list.
-        $v = $view->get('executable')->cloneView();
-        if ($v->setDisplay($id) && $v->display_handler->isEnabled()) {
-          $result[] = array($v, $id);
-        }
-        // In PHP 4.4.7 and presumably earlier, if we do not unset $v
-        // here, we will find that it actually overwrites references
-        // possibly due to shallow copying issues.
-        unset($v);
+    // Check each display to see if it meets the criteria and is enabled.
+    $executable = $view->get('executable');
+    $executable->setDisplay();
+    foreach ($executable->displayHandlers as $id => $handler) {
+      if (!empty($handler->definition[$type]) && $handler->isEnabled()) {
+        $result[] = array($executable, $id);
       }
     }
   }
