@@ -1290,8 +1290,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
     $options['analyze-theme'] = array(
       'category' => 'other',
-      'title' => t('Theme'),
-      'value' => t('Information'),
+      'title' => t('Output'),
+      'value' => t('Templates'),
       'desc' => t('Get information on how to theme this display'),
     );
 
