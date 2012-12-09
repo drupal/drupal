@@ -1,6 +1,8 @@
 
 Drupal 7.18, xxxx-xx-xx (development version)
 -----------------------
+- Added a link to "Install another module" after a module has been successfully
+  downloaded via the Update Manager (UI change).
 - Added an optional "exclusive" flag to installation profile .info files which
   allows Drupal distributions to force a profile to be selected during
   installation (API addition).
