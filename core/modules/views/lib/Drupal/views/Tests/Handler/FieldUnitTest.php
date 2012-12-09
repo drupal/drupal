@@ -201,7 +201,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $random_text = $this->randomName();
     $job_field->setTestValue($random_text);
     $output = $job_field->advanced_render($row);
-    $this->assertSubString($output, $random_text, format_string('Make sure the self token (!value) appears in the output (!output)'. array('!value' => $random_text, '!output' => $output)));
+    $this->assertSubString($output, $random_text, format_string('Make sure the self token (!value) appears in the output (!output)', array('!value' => $random_text, '!output' => $output)));
   }
 
   /**

@@ -164,7 +164,7 @@ class TrackerTest extends WebTestBase {
 
     $node = $this->drupalCreateNode(array(
       'comment' => 2,
-      'title' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(8)))),
+      'title' => $this->randomName(8),
     ));
 
     // Add a comment to the page.

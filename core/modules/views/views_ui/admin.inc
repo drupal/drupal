@@ -1336,7 +1336,9 @@ function views_ui_add_item_form($form, &$form_state) {
   $view->getStandardButtons($form, $form_state, 'views_ui_add_item_form', t('Add and configure @types', array('@types' => $ltitle)));
 
   // Remove the default submit function.
-  $form['buttons']['submit']['#submit'] = array_diff($form['buttons']['submit']['#submit'], array(array($view, 'standardSubmit')));
+  $form['buttons']['submit']['#submit'] = array_filter($form['buttons']['submit']['#submit'], function($var) {
+    return !(is_array($var) && isset($var[1]) && $var[1] == 'standardSubmit');
+  });
   $form['buttons']['submit']['#submit'][] = array($view, 'submitItemAdd');
 
   return $form;
