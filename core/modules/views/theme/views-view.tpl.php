@@ -47,7 +47,7 @@
 
   <?php if ($attachment_before): ?>
     <div class="attachment attachment-before">
-      <?php print $attachment_before; ?>
+      <?php print render($attachment_before); ?>
     </div>
   <?php endif; ?>
 
@@ -67,7 +67,7 @@
 
   <?php if ($attachment_after): ?>
     <div class="attachment attachment-after">
-      <?php print $attachment_after; ?>
+      <?php print render($attachment_after); ?>
     </div>
   <?php endif; ?>
 

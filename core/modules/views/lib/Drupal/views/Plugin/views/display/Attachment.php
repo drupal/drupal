@@ -254,18 +254,17 @@ class Attachment extends DisplayPluginBase {
 
     switch ($this->getOption('attachment_position')) {
       case 'before':
-        $this->view->attachment_before .= $attachment;
+        $this->view->attachment_before[] = $attachment;
         break;
       case 'after':
-        $this->view->attachment_after .= $attachment;
+        $this->view->attachment_after[] = $attachment;
         break;
       case 'both':
-        $this->view->attachment_before .= $attachment;
-        $this->view->attachment_after .= $attachment;
+        $this->view->attachment_before[] = $attachment;
+        $this->view->attachment_after[] = $attachment;
         break;
     }
 
-    $view->destroy();
   }
 
   /**

@@ -92,8 +92,18 @@ function template_preprocess_views_view(&$vars) {
     $vars['pager'] = $view->renderPager($exposed_input);
   }
 
-  $vars['attachment_before'] = !empty($view->attachment_before) ? $view->attachment_before : '';
-  $vars['attachment_after'] = !empty($view->attachment_after) ? $view->attachment_after : '';
+  if (!empty($view->attachment_before)) {
+    $vars['attachment_before'] = $view->attachment_before;
+  }
+  else {
+    $vars['attachment_before'] = array();
+  }
+  if (!empty($view->attachment_after)) {
+    $vars['attachment_after'] = $view->attachment_after;
+  }
+  else {
+    $vars['attachment_after'] = array();
+  }
 
   // Add contextual links to the view. We need to attach them to the dummy
   // $view_array variable, since contextual_preprocess() requires that they be

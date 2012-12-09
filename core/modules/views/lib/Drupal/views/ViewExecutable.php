@@ -109,18 +109,18 @@ class ViewExecutable {
   public $total_rows = NULL;
 
   /**
-   * Rendered attachments to place before the view.
+   * Attachments to place before the view.
    *
-   * @var string
+   * @var array()
    */
-  public $attachment_before = '';
+  public $attachment_before = array();
 
   /**
-   * Rendered attachements to place after the view.
+   * Attachments to place after the view.
    *
-   * @var string
+   * @var array
    */
-  public $attachment_after = '';
+  public $attachment_after = array();
 
   // Exposed widget input
 
