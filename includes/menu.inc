@@ -618,6 +618,7 @@ function _menu_load_objects(&$item, &$map) {
  *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
  */
 function _menu_check_access(&$item, $map) {
+  $item['access'] = FALSE;
   // Determine access callback, which will decide whether or not the current
   // user has access to this path.
   $callback = empty($item['access_callback']) ? 0 : trim($item['access_callback']);
