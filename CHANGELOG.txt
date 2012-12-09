@@ -1,6 +1,9 @@
 
 Drupal 7.18, xxxx-xx-xx (development version)
 -----------------------
+- Added an optional "exclusive" flag to installation profile .info files which
+  allows Drupal distributions to force a profile to be selected during
+  installation (API addition).
 - Fixed a bug which caused the database API to not properly close database
   connections.
 - Added link to the URL for running cron from outside the site to the Cron
