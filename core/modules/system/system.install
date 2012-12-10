@@ -2325,8 +2325,8 @@ function system_update_8040() {
  * @ingroup config_upgrade
  */
 function system_update_8041() {
-  update_variables_to_config('system.site', array(
-    'admin_theme' => 'admin_theme'
+  update_variables_to_config('system.theme', array(
+    'admin_theme' => 'admin'
   ));
 }
 

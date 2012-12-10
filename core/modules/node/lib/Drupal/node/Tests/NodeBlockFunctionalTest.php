@@ -129,7 +129,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $custom_block['types[article]'] = TRUE;
     $custom_block['body[value]'] = $this->randomName(32);
     $custom_block['regions[' . variable_get('theme_default', 'stark') . ']'] = 'content';
-    if ($admin_theme = config('system.site')->get('admin_theme')) {
+    if ($admin_theme = config('system.theme')->get('admin')) {
       $custom_block['regions[' . $admin_theme . ']'] = 'content';
     }
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));

@@ -214,7 +214,7 @@ function system_permission() {
     ),
     'view the administration theme' => array(
       'title' => t('View the administration theme'),
-      'description' => config('system.site')->get('admin_theme') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
+      'description' => config('system.theme')->get('admin') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
     ),
     'access site reports' => array(
       'title' => t('View site reports'),
@@ -2394,7 +2394,7 @@ function system_custom_theme() {
     $request = drupal_container()->get('request');
     $path = $request->attributes->get('system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {
-      return config('system.site')->get('admin_theme');
+      return config('system.theme')->get('admin');
     }
   }
 }
