@@ -175,9 +175,6 @@ class UserStorageController extends DatabaseStorageController {
     db_delete('users_roles')
       ->condition('uid', array_keys($entities), 'IN')
       ->execute();
-    db_delete('authmap')
-      ->condition('uid', array_keys($entities), 'IN')
-      ->execute();
     drupal_container()->get('user.data')->delete(NULL, array_keys($entities));
   }
 }

@@ -221,26 +221,6 @@ function user_field_extra_fields() {
 }
 
 /**
- * Fetches a user object based on an external authentication source.
- *
- * @param string $authname
- *   The external authentication username.
- *
- * @return
- *   A fully-loaded user object if the user is found or FALSE if not found.
- */
-function user_external_load($authname) {
-  $uid = db_query("SELECT uid FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchField();
-
-  if ($uid) {
-    return user_load($uid);
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
  * Loads multiple users based on certain conditions.
  *
  * This function should be used whenever you need to load more than one user
@@ -1413,52 +1393,6 @@ function user_page_title($account) {
 }
 
 /**
- * Discover which external authentication module(s) authenticated a username.
- *
- * @param $authname
- *   A username used by an external authentication module.
- * @return
- *   An associative array with module as key and username as value.
- */
-function user_get_authmaps($authname = NULL) {
-  $authmaps = db_query("SELECT module, authname FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchAllKeyed();
-  return count($authmaps) ? $authmaps : 0;
-}
-
-/**
- * Save mappings of which external authentication module(s) authenticated
- * a user. Maps external usernames to user ids in the users table.
- *
- * @param $account
- *   A user object.
- * @param $authmaps
- *   An associative array with a compound key and the username as the value.
- *   The key is made up of 'authname_' plus the name of the external authentication
- *   module.
- * @see user_external_login_register()
- */
-function user_set_authmaps($account, $authmaps) {
-  foreach ($authmaps as $key => $value) {
-    $module = explode('_', $key, 2);
-    if ($value) {
-      db_merge('authmap')
-        ->key(array(
-          'uid' => $account->uid,
-          'module' => $module[1],
-        ))
-        ->fields(array('authname' => $value))
-        ->execute();
-    }
-    else {
-      db_delete('authmap')
-        ->condition('uid', $account->uid)
-        ->condition('module', $module[1])
-        ->execute();
-    }
-  }
-}
-
-/**
  * Form builder; the main user login form.
  *
  * @ingroup forms
@@ -1694,36 +1628,6 @@ function user_user_logout($account) {
   // Reset static cache of default variables in template_preprocess() to reflect
   // the new user.
   drupal_static_reset('template_preprocess');
-}
-
-/**
- * Helper function for authentication modules. Either logs in or registers
- * the current user, based on username. Either way, the global $user object is
- * populated and login tasks are performed.
- */
-function user_external_login_register($name, $module) {
-  $account = user_external_load($name);
-  if (!$account) {
-    // Register this new user.
-    $account = entity_create('user', array(
-      'name' => $name,
-      'pass' => user_password(),
-      'init' => $name,
-      'status' => 1,
-      'access' => REQUEST_TIME
-    ));
-    $status = $account->save();
-    // Terminate if an error occurred while saving the account.
-    if ($status != SAVED_NEW) {
-      drupal_set_message(t("Error saving user account."), 'error');
-      return;
-    }
-    user_set_authmaps($account, array("authname_$module" => $name));
-  }
-
-  // Log user in.
-  $form_state['uid'] = $account->uid;
-  user_login_form_submit(array(), $form_state);
 }
 
 /**

@@ -149,7 +149,7 @@ function user_schema() {
   );
 
   $schema['authmap'] = array(
-    'description' => 'Stores distributed authentication mapping.',
+    'description' => 'Stores distributed authentication mapping. The authmap is deprecated since Drupal 8 and is kept only in a migration data process in mind. Modules that uses the authmap should move their data in custom tables as it will removed in Drupal 9.',
     'fields' => array(
       'aid' => array(
         'description' => 'Primary Key: Unique authmap ID.',

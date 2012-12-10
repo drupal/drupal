@@ -390,59 +390,6 @@ function user_views_data() {
     ),
   );
 
-  // authmap table
-
-  $data['authmap']['table']['group']  = t('User');
-  $data['authmap']['table']['join'] = array(
-     // Directly links to users table.
-    'users' => array(
-      'left_field' => 'uid',
-      'field' => 'uid',
-    ),
-  );
-
-  $data['authmap']['aid'] = array(
-    'title' => t('Authmap ID'),
-    'help' => t('The Authmap ID.'),
-    'field' => array(
-      'id' => 'numeric',
-    ),
-    'filter' => array(
-      'id' => 'numeric',
-      'numeric' => TRUE,
-    ),
-    'argument' => array(
-      'id' => 'numeric',
-      'numeric' => TRUE,
-    ),
-  );
-  $data['authmap']['authname'] = array(
-    'title' => t('Authentication name'),
-    'help' => t('The unique authentication name.'),
-    'field' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'id' => 'string',
-    ),
-    'argument' => array(
-      'id' => 'numeric',
-    ),
-  );
-  $data['authmap']['module'] = array(
-    'title' => t('Authentication module'),
-    'help' => t('The name of the module managing the authentication entry.'),
-    'field' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'id' => 'string',
-    ),
-    'argument' => array(
-      'id' => 'string',
-    ),
-  );
-
   return $data;
 }
 
