@@ -213,8 +213,8 @@ class OptionsFieldUITest extends FieldTestBase {
       'on' => $on,
       'off' => $off,
     );
-    $this->drupalPost($this->admin_path, $edit, t('Save settings'));
-    $this->assertText("Saved field_options_boolean configuration.", t("The 'On' and 'Off' form fields work for boolean fields."));
+    $this->drupalPost($this->admin_path, $edit, t('Save field settings'));
+    $this->assertRaw(t('Updated field %label field settings.', array('%label' => $this->field_name)));
     // Test the allowed_values on the field settings form.
     $this->drupalGet($this->admin_path);
     $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
@@ -245,7 +245,7 @@ class OptionsFieldUITest extends FieldTestBase {
     );
     field_create_instance($instance);
 
-    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name;
+    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name . '/field-settings';
   }
 
   /**
@@ -262,7 +262,7 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   function assertAllowedValuesInput($input_string, $result, $message) {
     $edit = array('field[settings][allowed_values]' => $input_string);
-    $this->drupalPost($this->admin_path, $edit, t('Save settings'));
+    $this->drupalPost($this->admin_path, $edit, t('Save field settings'));
 
     if (is_string($result)) {
       $this->assertText($result, $message);

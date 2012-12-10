@@ -555,6 +555,9 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
   $bundle = $instance['bundle'];
   $entity_type = $instance['entity_type'];
   $field = field_info_field($instance['field_name']);
+  $form['#field'] = $field;
+  $form['#entity_type'] = $entity_type;
+  $form['#bundle'] = $bundle;
 
   drupal_set_title($instance['label']);
 
@@ -562,9 +565,7 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
 
   // Create a form structure for the field values.
   $form['field'] = array(
-    '#type' => 'details',
-    '#title' => t('Field settings'),
-    '#description' => $description,
+    '#prefix' => $description,
     '#tree' => TRUE,
   );
 
@@ -572,7 +573,42 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
   // If so, prevent changes to the field settings.
   $has_data = field_has_data($field);
   if ($has_data) {
-    $form['field']['#description'] = '<div class="messages error">' . t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#description'];
+    $form['field']['#prefix'] = '<div class="messages error">' . t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#prefix'];
+  }
+
+  // Build the configurable field values.
+  $cardinality = $field['cardinality'];
+  $form['field']['container'] = array(
+    // We can't use the container element because it doesn't support the title
+    // or description properties.
+    '#type' => 'item',
+    '#field_prefix' => '<div class="container-inline">',
+    '#field_suffix' => '</div>',
+    '#title' => t('Maximum number of values users can enter'),
+  );
+  $form['field']['container']['cardinality'] = array(
+    '#type' => 'select',
+    '#options' => drupal_map_assoc(range(1, 5)) + array(FIELD_CARDINALITY_UNLIMITED => t('Unlimited')) + array('other' => t('More')),
+    '#default_value' => ($cardinality < 6) ? $cardinality : 'other',
+  );
+  // @todo Convert when http://drupal.org/node/1207060 gets in.
+  $form['field']['container']['cardinality_other'] = array(
+    '#type' => 'number',
+    '#default_value' => $cardinality > 5 ? $cardinality : 6,
+    '#min' => 1,
+    '#title' => t('Custom value'),
+    '#title_display' => 'invisible',
+    '#states' => array(
+      'visible' => array(
+       ':input[name="field[container][cardinality]"]' => array('value' => 'other'),
+      ),
+    ),
+  );
+  if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
+    $form['field']['container']['#description'] = t('%unlimited will provide an %add-more button so users can add as many values as they like.', array(
+      '%unlimited' => t('Unlimited'),
+      '%add-more' => t('Add another item'),
+    ));
   }
 
   // Build the non-configurable field values.
@@ -584,22 +620,36 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
   // Add settings provided by the field module. The field module is
   // responsible for not returning settings that cannot be changed if
   // the field already has data.
-  $form['field']['settings'] = array();
+  $form['field']['settings'] = array(
+    '#weight' => 10,
+  );
   $additions = module_invoke($field['module'], 'field_settings_form', $field, $instance, $has_data);
   if (is_array($additions)) {
-    $form['field']['settings'] = $additions;
+    $form['field']['settings'] += $additions;
   }
-  if (empty($form['field']['settings'])) {
-    $form['field']['settings'] = array(
+  if (!element_children($form['field']['settings'])) {
+    $form['field']['settings'] += array(
       '#markup' => t('%field has no field settings.', array('%field' => $instance['label'])),
     );
   }
-  $form['#entity_type'] = $entity_type;
-  $form['#bundle'] = $bundle;
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
   return $form;
+}
+
+/**
+ * Form validation handler for field_ui_field_edit_form().
+ *
+ * @see field_ui_field_settings_form_submit().
+ */
+function field_ui_field_settings_form_validate($form, &$form_state) {
+  // Validate field cardinality.
+  $cardinality = $form_state['values']['field']['container']['cardinality'];
+  $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
+  if ($cardinality == 'other' && empty($cardinality_other)) {
+    form_error($form['field']['container']['cardinality_other'], t('Number of values is required.'));
+  }
 }
 
 /**
@@ -608,6 +658,16 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
 function field_ui_field_settings_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
   $field_values = $form_values['field'];
+
+  // Save field cardinality.
+  $cardinality = $field_values['container']['cardinality'];
+  $cardinality_other = $field_values['container']['cardinality_other'];
+  $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
+  if ($cardinality == 'other') {
+    $cardinality = $cardinality_other;
+  }
+  $field_values['cardinality'] = $cardinality;
+  unset($field_values['container']);
 
   // Merge incoming form values into the existing field.
   $field = field_info_field($field_values['field_name']);
@@ -656,8 +716,7 @@ function field_ui_widget_type_form($form, &$form_state, FieldInstance $instance)
   );
 
   $form['basic'] = array(
-    '#type' => 'details',
-    '#title' => t('Change widget'),
+    '#tree' => TRUE,
   );
   $form['basic']['widget_type'] = array(
     '#type' => 'select',
@@ -791,8 +850,12 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   $bundle = $instance['bundle'];
   $entity_type = $instance['entity_type'];
   $field = field_info_field($instance['field_name']);
+  $bundles = field_info_bundles();
 
-  drupal_set_title($instance['label']);
+  drupal_set_title(t('%instance settings for %bundle', array(
+    '%instance' => $instance['label'],
+    '%bundle' => $bundles[$entity_type][$bundle]['label'],
+  )), PASS_THROUGH);
 
   $form['#field'] = $field;
   $form['#instance'] = $instance;
@@ -808,22 +871,11 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     return $form;
   }
 
-  $field_type = field_info_field_types($field['type']);
   $widget_type = field_info_widget_types($instance['widget']['type']);
-  $bundles = field_info_bundles();
 
   // Create a form structure for the instance values.
   $form['instance'] = array(
     '#tree' => TRUE,
-    '#type' => 'details',
-    '#title' => t('%type settings', array('%type' => $bundles[$entity_type][$bundle]['label'])),
-    '#description' => t('These settings apply only to the %field field when used in the %type type.', array(
-      '%field' => $instance['label'],
-      '%type' => $bundles[$entity_type][$bundle]['label'],
-    )),
-    // Ensure field_ui_field_edit_instance_pre_render() gets called in addition
-    // to, not instead of, the #pre_render function(s) needed by all details.
-    '#pre_render' => array_merge(array('field_ui_field_edit_instance_pre_render'), element_info_property('details', '#pre_render', array())),
   );
 
   // Build the non-configurable instance values.
@@ -887,76 +939,17 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   $additions = module_invoke($field['module'], 'field_instance_settings_form', $field, $instance);
   if (is_array($additions)) {
     $form['instance']['settings'] = $additions;
+    $form['instance']['settings']['#weight'] = 10;
   }
 
   // Add widget settings for the widget type.
   $additions = $instance->getWidget()->settingsForm($form, $form_state);
   $form['instance']['widget']['settings'] = $additions ? $additions : array('#type' => 'value', '#value' => array());
+  $form['instance']['widget']['#weight'] = 20;
 
   // Add handling for default value if not provided by any other module.
   if (field_behaviors_widget('default_value', $instance) == FIELD_BEHAVIOR_DEFAULT && empty($instance['default_value_function'])) {
     $form['instance']['default_value_widget'] = field_ui_default_value_widget($field, $instance, $form, $form_state);
-  }
-
-  $has_data = field_has_data($field);
-  if ($has_data) {
-    $description = '<p>' . t('These settings apply to the %field field everywhere it is used. Because the field already has data, some settings can no longer be changed.', array('%field' => $instance['label'])) . '</p>';
-  }
-  else {
-    $description = '<p>' . t('These settings apply to the %field field everywhere it is used.', array('%field' => $instance['label'])) . '</p>';
-  }
-
-  // Create a form structure for the field values.
-  $form['field'] = array(
-    '#type' => 'details',
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#title' => t('Global settings'),
-    '#description' => $description,
-    '#tree' => TRUE,
-  );
-
-  // Build the configurable field values.
-  $description = t('Maximum number of values users can enter for this field.');
-  if (field_behaviors_widget('multiple_values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-    $description .= '<br/>' . t("'Unlimited' will provide an 'Add more' button so the users can add as many values as they like.");
-  }
-
-  $cardinality = $field['cardinality'];
-  $form['field']['container'] = array(
-    // We can't use the container element because it doesn't support the title
-    // or description properties.
-    '#type' => 'item',
-    '#field_prefix' => '<div class="container-inline">',
-    '#field_suffix' => '</div>',
-    '#title' => t('Number of values'),
-    '#description' => $description,
-  );
-  $form['field']['container']['cardinality'] = array(
-    '#type' => 'select',
-    '#options' => array(FIELD_CARDINALITY_UNLIMITED => t('Unlimited')) + drupal_map_assoc(range(1, 5)) + array('other' => t('More')),
-    '#default_value' => ($cardinality < 6) ? $cardinality : 'other',
-  );
-  // @todo Convert when http://drupal.org/node/1207060 gets in.
-  $form['field']['container']['cardinality_other'] = array(
-    '#type' => 'number',
-    '#default_value' => $cardinality > 5 ? $cardinality : 6,
-    '#min' => 1,
-    '#title' => t('Custom value'),
-    '#title_display' => 'invisible',
-    '#states' => array(
-      'visible' => array(
-       ':input[name="field[container][cardinality]"]' => array('value' => 'other'),
-      ),
-    ),
-  );
-
-  // Add additional field type settings. The field type module is
-  // responsible for not returning settings that cannot be changed if
-  // the field already has data.
-  $additions = module_invoke($field['module'], 'field_settings_form', $field, $instance, $has_data);
-  if (is_array($additions)) {
-    $form['field']['settings'] = $additions;
   }
 
   $form['actions'] = array('#type' => 'actions');
@@ -983,36 +976,6 @@ function field_ui_field_edit_form_delete_submit($form, &$form_state) {
   }
   $instance = $form['#instance'];
   $form_state['redirect'] = array('admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'] . '/delete', array('query' => $destination));
-}
-
-/**
- * Render API callback: Merges instance, widget and other settings.
- *
- * Combines the instance, widget, and other settings into a single details so
- * that elements within each group can be shown at different weights as if they
- * all had the same parent.
- *
- * This function is assigned as a #pre_render callback in
- * field_ui_field_edit_form().
- */
-function field_ui_field_edit_instance_pre_render($element) {
-  // Merge the widget settings into the main form.
-  if (isset($element['widget']['settings'])) {
-    foreach (element_children($element['widget']['settings']) as $key) {
-      $element['widget_' . $key] = $element['widget']['settings'][$key];
-    }
-    unset($element['widget']['settings']);
-  }
-
-  // Merge the instance settings into the main form.
-  if (isset($element['settings'])) {
-    foreach (element_children($element['settings']) as $key) {
-      $element['instance_' . $key] = $element['settings'][$key];
-    }
-    unset($element['settings']);
-  }
-
-  return $element;
 }
 
 /**
@@ -1059,13 +1022,6 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
   $field_name = $instance['field_name'];
   $entity = $form['#entity'];
 
-  // Validate field cardinality.
-  $cardinality = $form_state['values']['field']['container']['cardinality'];
-  $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
-  if ($cardinality == 'other' && empty($cardinality_other)) {
-    form_error($form['field']['container']['cardinality_other'], t('Number of values is required.'));
-  }
-
   if (isset($form['instance']['default_value_widget'])) {
     $element = $form['instance']['default_value_widget'];
 
@@ -1105,25 +1061,6 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
   $instance = $form['#instance'];
   $field = $form['#field'];
   $entity = $form['#entity'];
-
-  // Save field cardinality.
-  $cardinality = $form_state['values']['field']['container']['cardinality'];
-  $cardinality_other = $form_state['values']['field']['container']['cardinality_other'];
-  if ($cardinality == 'other') {
-    $cardinality = $cardinality_other;
-  }
-  $form_state['values']['field']['cardinality'] = $cardinality;
-  unset($form_state['values']['field']['container']);
-
-  // Merge incoming values into the field.
-  $field = array_merge($field, $form_state['values']['field']);
-  try {
-    field_update_field($field);
-  }
-  catch (Exception $e) {
-    drupal_set_message(t('Attempt to update field %label failed: %message.', array('%label' => $instance['label'], '%message' => $e->getMessage())), 'error');
-    return;
-  }
 
   // Handle the default value.
   if (isset($form['instance']['default_value_widget'])) {

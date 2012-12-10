@@ -574,14 +574,11 @@ function translation_entity_field_extra_fields() {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function translation_entity_form_field_ui_field_edit_form_alter(array &$form, array &$form_state, $form_id) {
+function translation_entity_form_field_ui_field_settings_form_alter(array &$form, array &$form_state, $form_id) {
   $field = $form['#field'];
   $field_name = $field['field_name'];
   $translatable = $field['translatable'];
-  $label = t('Field translation');
   $title = t('Users may translate this field.');
-
-  $form['field']['#collapsed'] = $translatable;
 
   if (field_has_data($field)) {
     $path = "admin/config/regional/translation_entity/translatable/$field_name";
@@ -589,8 +586,6 @@ function translation_entity_form_field_ui_field_edit_form_alter(array &$form, ar
     $link_title = !$translatable ? t('Enable translation') : t('Disable translation');
 
     $form['field']['translatable'] = array(
-      '#prefix' => '<div class="translatable"><label>' . $label . '</label>',
-      '#suffix' => '</div>',
       'message' => array(
         '#markup' => $status . ' ',
       ),
@@ -605,7 +600,6 @@ function translation_entity_form_field_ui_field_edit_form_alter(array &$form, ar
   }
   else {
     $form['field']['translatable'] = array(
-      '#prefix' => '<label>' . $label . '</label>',
       '#type' => 'checkbox',
       '#title' => $title,
       '#default_value' => $translatable,
