@@ -2049,7 +2049,7 @@ abstract class WebTestBase extends TestBase {
     $this->plainTextContent = FALSE;
     $this->elements = FALSE;
     $this->drupalSettings = array();
-    if (preg_match('/var drupalSettings = (.*?);/', $content, $matches)) {
+    if (preg_match('/var drupalSettings = (.*?);$/m', $content, $matches)) {
       $this->drupalSettings = drupal_json_decode($matches[1]);
     }
   }
