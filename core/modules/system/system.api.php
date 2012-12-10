@@ -3329,37 +3329,12 @@ function hook_system_themes_page_alter(&$theme_groups) {
 }
 
 /**
- * Alters inbound URL requests.
- *
- * @param $path
- *   The path being constructed, which, if a path alias, has been resolved to a
- *   Drupal path by the database, and which also may have been altered by other
- *   modules before this one.
- * @param $original_path
- *   The original path, before being checked for path aliases or altered by any
- *   modules.
- * @param $path_language
- *   The language of the path.
- *
- * @see \Drupal\Core\Path\AliasManager::getSystemPath()
- */
-function hook_url_inbound_alter(&$path, $original_path, $path_language) {
-  // Create the path user/me/edit, which allows a user to edit their account.
-  if (preg_match('|^user/me/edit(/.*)?|', $path, $matches)) {
-    global $user;
-    $path = 'user/' . $user->uid . '/edit' . $matches[1];
-  }
-}
-
-/**
  * Alters outbound URLs.
  *
  * @param $path
  *   The outbound path to alter, not adjusted for path aliases yet. It won't be
- *   adjusted for path aliases until all modules are finished altering it, thus
- *   being consistent with hook_url_inbound_alter(), which adjusts for all path
- *   aliases before allowing modules to alter it. This may have been altered by
- *   other modules before this one.
+ *   adjusted for path aliases until all modules are finished altering it. This
+ *   may have been altered by other modules before this one.
  * @param $options
  *   A set of URL options for the URL so elements such as a fragment or a query
  *   string can be added to the URL.
@@ -3739,7 +3714,7 @@ function hook_countries_alter(&$countries) {
  *   for delivery directly.
  * @param $path
  *   Contains the system path that is going to be loaded. This is read only,
- *   use hook_url_inbound_alter() to change the path.
+ *   use a request listener to change the inbound path.
  */
 function hook_menu_site_status_alter(&$menu_site_status, $path) {
   // Allow access to my_module/authentication even if site is in offline mode.
