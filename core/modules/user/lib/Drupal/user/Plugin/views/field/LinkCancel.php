@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -21,19 +22,17 @@ use Drupal\Core\Annotation\Plugin;
  */
 class LinkCancel extends Link {
 
-  function render_link($data, $values) {
-    $uid = $values->{$this->aliases['uid']};
-
-    // Build a pseudo account object to be able to check the access.
-    $account = entity_create('user', array());
-    $account->uid = $uid;
-
-    if ($uid && user_cancel_access($account)) {
+  /**
+   * Overrides \Drupal\user\Plugin\views\field\Link::render_link().
+   */
+  public function render_link(EntityInterface $entity, \stdClass $values) {
+      if ($entity && user_cancel_access($entity)) {
       $this->options['alter']['make_link'] = TRUE;
 
       $text = !empty($this->options['text']) ? $this->options['text'] : t('cancel');
 
-      $this->options['alter']['path'] = "user/$uid/cancel";
+      $uri = $entity->uri();
+      $this->options['alter']['path'] = $uri['path'] . '/cancel';
       $this->options['alter']['query'] = drupal_get_destination();
 
       return $text;

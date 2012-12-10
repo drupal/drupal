@@ -355,12 +355,15 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Get the entity matching the current row and relationship.
+   * Gets the entity matching the current row and relationship.
    *
-   * @param $values
+   * @param \stdClass $values
    *   An object containing all retrieved values.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   Returns the entity matching the values.
    */
-  function get_entity($values) {
+  public function get_entity(\stdClass $values) {
     $relationship_id = $this->options['relationship'];
     if ($relationship_id == 'none') {
       return $values->_entity;
