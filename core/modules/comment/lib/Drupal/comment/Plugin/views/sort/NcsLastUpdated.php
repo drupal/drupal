@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\sort\NcsLastUpdated.
+ * Definition of Drupal\comment\Plugin\views\sort\StatisticsLastUpdated.
  */
 
 namespace Drupal\comment\Plugin\views\sort;
@@ -16,11 +16,11 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_sort_handlers
  *
  * @Plugin(
- *   id = "ncs_last_updated",
+ *   id = "ces_last_updated",
  *   module = "comment"
  * )
  */
-class NcsLastUpdated extends Date {
+class StatisticsLastUpdated extends Date {
 
   public function query() {
     $this->ensureMyTable();

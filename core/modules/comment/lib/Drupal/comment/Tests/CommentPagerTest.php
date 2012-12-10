@@ -31,7 +31,7 @@ class CommentPagerTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_DISABLED);
 
     // Create a node and three comments.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
     $comments = array();
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
@@ -66,7 +66,7 @@ class CommentPagerTest extends CommentTestBase {
     // Post a reply to the oldest comment and test again.
     $replies = array();
     $oldest_comment = reset($comments);
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $oldest_comment->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $oldest_comment->id);
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     $this->setCommentsPerPage(2);
@@ -107,26 +107,26 @@ class CommentPagerTest extends CommentTestBase {
     $this->setCommentsPerPage(1000);
 
     // Create a node and three comments.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
     $comments = array();
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the second comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[1]->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $comments[1]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the first comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[0]->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $comments[0]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the last comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[2]->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $comments[2]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the second comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[3]->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $comments[3]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // At this point, the comment tree is:
@@ -208,22 +208,22 @@ class CommentPagerTest extends CommentTestBase {
     $this->setCommentsPerPage(1);
 
     // Create a node and three comments.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
     $comments = array();
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the second comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[1]->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $comments[1]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the first comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[0]->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $comments[0]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the last comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[2]->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $comments[2]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // At this point, the comment tree is:
@@ -247,7 +247,7 @@ class CommentPagerTest extends CommentTestBase {
 
     $node = node_load($node->nid);
     foreach ($expected_pages as $new_replies => $expected_page) {
-      $returned = comment_new_page_count($node->comment_count, $new_replies, $node);
+      $returned = comment_new_page_count($node->comment_statistics['comment']->comment_count, $new_replies, $node);
       $returned_page = is_array($returned) ? $returned['page'] : 0;
       $this->assertIdentical($expected_page, $returned_page, format_string('Flat mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
     }
@@ -265,7 +265,7 @@ class CommentPagerTest extends CommentTestBase {
 
     $node = node_load($node->nid);
     foreach ($expected_pages as $new_replies => $expected_page) {
-      $returned = comment_new_page_count($node->comment_count, $new_replies, $node);
+      $returned = comment_new_page_count($node->comment_statistics['comment']->comment_count, $new_replies, $node);
       $returned_page = is_array($returned) ? $returned['page'] : 0;
       $this->assertEqual($expected_page, $returned_page, format_string('Threaded mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
     }

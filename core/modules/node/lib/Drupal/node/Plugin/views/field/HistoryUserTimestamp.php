@@ -33,7 +33,7 @@ class HistoryUserTimestamp extends Node {
       $this->additional_fields['created'] = array('table' => 'node', 'field' => 'created');
       $this->additional_fields['changed'] = array('table' => 'node', 'field' => 'changed');
       if (module_exists('comment') && !empty($this->options['comments'])) {
-        $this->additional_fields['last_comment'] = array('table' => 'node_comment_statistics', 'field' => 'last_comment_timestamp');
+        $this->additional_fields['last_comment'] = array('table' => 'comment_entity_statistics', 'field' => 'last_comment_timestamp');
       }
     }
   }

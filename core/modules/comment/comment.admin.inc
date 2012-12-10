@@ -9,6 +9,58 @@ use Drupal\comment\Plugin\Core\Entity\Comment;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * Page callback: Displays the comment bundle admin overview page.
+ */
+function comment_overview_bundles() {
+  $header = array(
+    t('Field name'),
+    t('Used in'),
+    array(
+      'data' => t('Operations'),
+      'colspan' => (module_exists('field_ui') ? '4' : '2')
+    )
+  );
+  $rows = array();
+
+  foreach (comment_get_comment_fields() as $field_name => $field_info) {
+    foreach ($field_info['bundles'] as $entity_type => $field_bundles) {
+      $bundles = array_intersect_key(field_info_bundles($entity_type), array_flip($field_bundles));
+
+      foreach ($bundles as $bundle => $bundle_info) {
+        if (!isset($rows[$field_name])) {
+          $rows[$field_name]['class'] = $field_info['locked'] ? array('menu-disabled') : array('');
+          $rows[$field_name]['data']['label'] = $field_info['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
+        }
+
+        if (module_exists('field_ui') && $path = field_ui_bundle_admin_path($entity_type, $bundle)) {
+          $rows[$field_name]['data']['usage'][] = l($bundle_info['label'], $path . '/fields');
+        }
+        else {
+          $rows[$field_name]['data']['usage'][] = $bundle_info['label'];
+        }
+
+        if (module_exists('field_ui')) {
+          $name = strtr($field_name, '_', '-');
+          $rows[$field_name]['data']['fields'] = l(t('manage fields'), 'admin/structure/comments/' . $name . '/fields');
+          $rows[$field_name]['data']['display'] = l(t('manage display'), 'admin/structure/comments/' . $name . '/display');
+        }
+      }
+    }
+
+    $rows[$field_name]['data']['usage'] = implode(', ', $rows[$field_name]['data']['usage']);
+  }
+
+  $build['overview'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#empty' => t('No comment bundles available.'),
+  );
+
+  return $build;
+}
+
+/**
  * Page callback: Presents an administrative comment listing.
  *
  * @param $type
@@ -82,23 +134,30 @@ function comment_admin_overview($form, &$form_state, $arg) {
   $query = db_select('comment', 'c')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
-  $query->join('node', 'n', 'n.nid = c.nid');
-  $query->addField('n', 'title', 'node_title');
-  $query->addTag('node_access');
+  if (module_exists('node')) {
+    // Special case to ensure node access works.
+    $query->leftJoin('node', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
+    $query->addTag('node_access');
+  }
   $result = $query
-    ->fields('c', array('cid', 'subject', 'name', 'changed'))
+    ->fields('c', array('cid', 'subject', 'name', 'changed', 'entity_id', 'entity_type', 'field_name'))
     ->condition('c.status', $status)
     ->limit(50)
     ->orderByHeader($header)
     ->execute();
 
   $cids = array();
+  $entity_ids = array();
+  $entities = array();
 
-  // We collect a sorted list of node_titles during the query to attach to the
-  // comments later.
+  // We collect entities grouped by entity_type so we can load them and use
+  // their labels.
   foreach ($result as $row) {
+    $entity_ids[$row->entity_type][] = $row->entity_id;
     $cids[] = $row->cid;
-    $node_titles[] = $row->node_title;
+  }
+  foreach ($entity_ids as $entity_type => $ids) {
+    $entities[$entity_type] = entity_load_multiple($entity_type, $ids);
   }
   $comments = comment_load_multiple($cids);
 
@@ -107,9 +166,10 @@ function comment_admin_overview($form, &$form_state, $arg) {
   $destination = drupal_get_destination();
 
   foreach ($comments as $comment) {
-    // Remove the first node title from the node_titles array and attach to
-    // the comment.
-    $comment->node_title = array_shift($node_titles);
+    // Use the first entity label.
+    $entity = $entities[$comment->entity_type][$comment->entity_id];
+    $comment->entity_title = $entity->label();
+    $comment->entity_uri = $entity->uri();
     $comment_body = field_get_items('comment', $comment, 'comment_body');
     $options[$comment->cid] = array(
       'subject' => array(
@@ -124,8 +184,9 @@ function comment_admin_overview($form, &$form_state, $arg) {
       'posted_in' => array(
         'data' => array(
           '#type' => 'link',
-          '#title' => $comment->node_title,
-          '#href' => 'node/' . $comment->nid,
+          '#title' => $comment->entity_title,
+          '#href' => $comment->entity_uri['path'],
+          '#options' => $comment->entity_uri['options']
         ),
       ),
       'changed' => format_date($comment->changed, 'short'),
@@ -291,10 +352,12 @@ function comment_confirm_delete($form, &$form_state, Comment $comment) {
   $form_state['comment'] = $comment;
   // Always provide entity id in the same form key as in the entity edit form.
   $form['cid'] = array('#type' => 'value', '#value' => $comment->cid);
+  $entity = entity_load($comment->entity_type, $comment->entity_id);
+  $uri = $entity->uri();
   return confirm_form(
     $form,
     t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
-    'node/' . $comment->nid,
+    $uri['path'],
     t('Any replies to this comment will be lost. This action cannot be undone.'),
     t('Delete'),
     t('Cancel'),
@@ -313,5 +376,7 @@ function comment_confirm_delete_submit($form, &$form_state) {
   // Clear the cache so an anonymous user sees that his comment was deleted.
   cache_invalidate_tags(array('content' => TRUE));
 
-  $form_state['redirect'] = "node/$comment->nid";
+  $entity = entity_load($comment->entity_type, $comment->entity_id);
+  $uri = $entity->uri();
+  $form_state['redirect'] = $uri['path'];
 }

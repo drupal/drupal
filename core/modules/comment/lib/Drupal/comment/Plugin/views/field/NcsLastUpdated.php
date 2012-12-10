@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\NcsLastUpdated.
+ * Definition of Drupal\comment\Plugin\views\field\StatisticsLastUpdated.
  */
 
 namespace Drupal\comment\Plugin\views\field;
@@ -16,11 +16,11 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_field_handlers
  *
  * @Plugin(
- *   id = "comment_ncs_last_updated",
+ *   id = "comment_ces_last_updated",
  *   module = "comment"
  * )
  */
-class NcsLastUpdated extends Date {
+class StatisticsLastUpdated extends Date {
 
   public function query() {
     $this->ensureMyTable();

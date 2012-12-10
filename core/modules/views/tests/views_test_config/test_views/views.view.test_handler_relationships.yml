@@ -12,15 +12,15 @@ display:
           table: node
           field: title
       relationships:
-        cid:
-          id: cid
+        comment_cid:
+          id: comment_cid
           table: node
-          field: cid
+          field: comment_cid
         nid:
           id: nid
           table: comment
-          field: nid
-          relationship: cid
+          field: node
+          relationship: comment_cid
     display_plugin: default
     display_title: Master
     id: default

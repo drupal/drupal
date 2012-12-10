@@ -27,6 +27,8 @@ class SearchRankingTest extends SearchTestBase {
   function testRankings() {
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content')));
+    // Add a comment field.
+    comment_add_default_comment_field('node', 'page');
 
     // Build a list of the rankings to test.
     $node_ranks = array('sticky', 'promote', 'relevance', 'recent', 'comments', 'views');
@@ -35,6 +37,9 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($node_ranks as $node_rank) {
       $settings = array(
         'type' => 'page',
+        'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
+          'comment' => COMMENT_HIDDEN
+        ))),
         'title' => 'Drupal rocks',
         'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
       );
@@ -52,7 +57,7 @@ class SearchRankingTest extends SearchTestBase {
               $settings['created'] = REQUEST_TIME + 3600;
               break;
             case 'comments':
-              $settings['comment'] = 2;
+              $settings['comment'][LANGUAGE_NOT_SPECIFIED][0]['comment'] = COMMENT_OPEN;
               break;
           }
         }
@@ -71,7 +76,7 @@ class SearchRankingTest extends SearchTestBase {
     $edit = array();
     $edit['subject'] = 'my comment title';
     $edit['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = 'some random comment';
-    $this->drupalGet('comment/reply/' . $nodes['comments'][1]->nid);
+    $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->nid . '/comment');
     $this->drupalPost(NULL, $edit, t('Preview'));
     $this->drupalPost(NULL, $edit, t('Save'));
 
@@ -122,6 +127,7 @@ class SearchRankingTest extends SearchTestBase {
 
     // Shuffle tags to ensure HTML tags are ranked properly.
     shuffle($shuffled_tags);
+
     $settings = array(
       'type' => 'page',
       'title' => 'Simple node',

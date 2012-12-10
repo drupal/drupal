@@ -429,7 +429,9 @@ function rdf_comment_load($comments) {
     // isn't needed until rdf_preprocess_comment() is called, but set it here
     // to optimize performance for websites that implement an entity cache.
     $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created);
-    $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid);
+    $entity = entity_load($comment->entity_type, $comment->entity_id);
+    $uri = $entity->uri();
+    $comment->rdf_data['entity_uri'] = url($uri['path'], $uri['options']);
     if ($comment->pid) {
       $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid, array('fragment' => 'comment-' . $comment->pid));
     }
@@ -554,19 +556,23 @@ function rdf_preprocess_node(&$variables) {
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
-  if (isset($variables['node']->comment_count) && !empty($variables['node']->rdf_mapping['comment_count']['predicates'])) {
-    // Annotates the 'x comments' link in teaser view.
-    if (isset($variables['content']['links']['comment']['#links']['comment-comments'])) {
-      $comment_count_attributes['property'] = $variables['node']->rdf_mapping['comment_count']['predicates'];
-      $comment_count_attributes['content'] = $variables['node']->comment_count;
-      $comment_count_attributes['datatype'] = $variables['node']->rdf_mapping['comment_count']['datatype'];
-      // According to RDFa parsing rule number 4, a new subject URI is created
-      // from the href attribute if no rel/rev attribute is present. To get the
-      // original node URL from the about attribute of the parent container we
-      // set an empty rel attribute which triggers rule number 5. See
-      // http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
-      $comment_count_attributes['rel'] = '';
-      $variables['content']['links']['comment']['#links']['comment-comments']['attributes'] += $comment_count_attributes;
+  if (isset($variables['node']->comment_statistics) && !empty($variables['node']->rdf_mapping['comment_count']['predicates'])) {
+    $count = 0;
+    foreach ($variables['node']->comment_statistics as $field_name => $statistics) {
+      $count += $statistics->comment_count;
+      // Annotates the 'x comments' link in teaser view.
+      if (isset($variables['content']['links']['comment__' . $field_name]['#links']['comment-comments'])) {
+        $comment_count_attributes['property'] = $variables['node']->rdf_mapping['comment_count']['predicates'];
+        $comment_count_attributes['content'] = $statistics->comment_count;
+        $comment_count_attributes['datatype'] = $variables['node']->rdf_mapping['comment_count']['datatype'];
+        // According to RDFa parsing rule number 4, a new subject URI is created
+        // from the href attribute if no rel/rev attribute is present. To get the
+        // original node URL from the about attribute of the parent container we
+        // set an empty rel attribute which triggers rule number 5. See
+        // http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
+        $comment_count_attributes['rel'] = '';
+        $variables['content']['links']['comment__' . $field_name]['#links']['comment-comments']['attributes'] += $comment_count_attributes;
+      }
     }
     // In full node view, the number of comments is not displayed by
     // node.tpl.php so it is expressed in RDFa in the <head> tag of the HTML
@@ -577,7 +583,7 @@ function rdf_preprocess_node(&$variables) {
         '#attributes' => array(
           'about' => $variables['node_url'],
           'property' => $variables['node']->rdf_mapping['comment_count']['predicates'],
-          'content' => $variables['node']->comment_count,
+          'content' => $count,
           'datatype' => $variables['node']->rdf_mapping['comment_count']['datatype'],
         ),
       );
@@ -743,15 +749,15 @@ function rdf_preprocess_comment(&$variables) {
     $variables['title_attributes']['datatype'] = '';
   }
 
-  // Annotates the parent relationship between the current comment and the node
-  // it belongs to. If available, the parent comment is also annotated.
+  // Annotates the parent relationship between the current comment and the
+  // entity it belongs to. If available, the parent comment is also annotated.
   if (!empty($comment->rdf_mapping['pid'])) {
-    // Adds the relation to the parent node.
-    $parent_node_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
-    // The parent node URI is precomputed as part of the rdf_data so that it can
+    // Adds the relation to the parent entity.
+    $parent_entity_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
+    // The parent entity URI is precomputed as part of the rdf_data so that it can
     // be cached as part of the entity.
-    $parent_node_attributes['resource'] = $comment->rdf_data['nid_uri'];
-    $variables['rdf_metadata_attributes'][] = $parent_node_attributes;
+    $parent_entity_attributes['resource'] = $comment->rdf_data['entity_uri'];
+    $variables['rdf_metadata_attributes'][] = $parent_entity_attributes;
 
     // Adds the relation to parent comment, if it exists.
     if ($comment->pid != 0) {

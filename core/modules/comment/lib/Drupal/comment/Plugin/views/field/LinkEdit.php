@@ -43,7 +43,7 @@ class LinkEdit extends Link {
   function render_link($data, $values) {
     parent::render_link($data, $values);
     // ensure user has access to edit this comment.
-    $comment = $this->get_value($values);
+    $comment = $this->get_entity($values);
     if (!comment_access('edit', $comment)) {
       return;
     }

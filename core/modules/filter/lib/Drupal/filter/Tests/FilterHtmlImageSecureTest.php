@@ -67,7 +67,9 @@ class FilterHtmlImageSecureTest extends WebTestBase {
 
     // Setup a node to comment and test on.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-    $this->node = $this->drupalCreateNode();
+    // Add a comment field.
+    comment_add_default_comment_field('node', 'page');
+    $this->node = $this->drupalCreateNode(array('comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
   }
 
   /**

@@ -2,25 +2,24 @@
 
 /**
  * @file
- * Contains Drupal\comment\Tests\CommentTestBase.
+ * Contains Drupal\comment\Tests\CommentUserTest.
  */
 
 namespace Drupal\comment\Tests;
-
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Provides setup and helper methods for comment tests.
+ * Tests basic comment functionality against a user entity.
  */
-abstract class CommentTestBase extends WebTestBase {
+class CommentUserTest extends WebTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('comment', 'node', 'history');
+  public static $modules = array('comment', 'user');
 
   /**
    * An administrative user with permission to configure comment settings.
@@ -72,8 +71,11 @@ abstract class CommentTestBase extends WebTestBase {
       'access content',
     ));
 
+    // Create comment field on article.
+    comment_add_default_comment_field('node', 'article');
+
     // Create a test node authored by the web user.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
   }
 
   /**
@@ -94,12 +96,13 @@ abstract class CommentTestBase extends WebTestBase {
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
-    $preview_mode = variable_get('comment_preview_article', DRUPAL_OPTIONAL);
-    $subject_mode = variable_get('comment_subject_field_article', 1);
+    $instance = field_info_instance('node', 'comment', 'article');
+    $preview_mode = $instance['settings']['comment']['comment_preview'];
+    $subject_mode = $instance['settings']['comment']['comment_subject_field'];
 
     // Must get the page before we test for fields.
     if ($node !== NULL) {
-      $this->drupalGet('comment/reply/' . $node->nid);
+      $this->drupalGet('comment/reply/node/' . $node->nid . '/comment');
     }
 
     if ($subject_mode == TRUE) {
@@ -152,7 +155,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Checks current page for specified comment.
    *
-   * @param Drupal\comment\Comment $comment
+   * @param Drupal\comment\Plugin\Core\Entity\comment $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -264,7 +267,9 @@ abstract class CommentTestBase extends WebTestBase {
    *   Status message to display.
    */
   function setCommentSettings($name, $value, $message) {
-    variable_set($name . '_article', $value);
+    $instance = field_info_instance('node', 'comment', 'article');
+    $instance['settings']['comment'][$name] = $value;
+    field_update_instance($instance);
     // Display status message.
     $this->pass($message);
   }
@@ -318,6 +323,95 @@ abstract class CommentTestBase extends WebTestBase {
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->drupalGetContent(), $match);
 
     return $match[2];
+  }
+
+  /**
+   * Tests anonymous comment functionality.
+   */
+  function testCommentUser() {
+    $this->drupalLogin($this->admin_user);
+
+    // Post a comment.
+    $comment1 = $this->postComment($this->web_user, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($comment1), 'Comment on web user exists.');
+
+    // Unpublish comment.
+    $this->performCommentOperation($comment1, 'unpublish');
+
+    $this->drupalGet('admin/content/comment/approval');
+    $this->assertRaw('comments[' . $comment1->id . ']', 'Comment was unpublished.');
+
+    // Publish comment.
+    $this->performCommentOperation($comment1, 'publish', TRUE);
+
+    $this->drupalGet('admin/content/comment');
+    $this->assertRaw('comments[' . $comment1->id . ']', 'Comment was published.');
+
+    // Delete comment.
+    $this->performCommentOperation($comment1, 'delete');
+
+    $this->drupalGet('admin/content/comment');
+    $this->assertNoRaw('comments[' . $comment1->id . ']', 'Comment was deleted.');
+
+    // Post another comment.
+    $comment1 = $this->postComment($this->web_user, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($comment1), 'Comment on web user exists.');
+
+    // Check comment was found.
+    $this->drupalGet('admin/content/comment');
+    $this->assertRaw('comments[' . $comment1->id . ']', 'Comment was published.');
+
+    $this->drupalLogout();
+
+    // Reset.
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments' => FALSE,
+      'post comments' => FALSE,
+      'skip comment approval' => FALSE,
+      'access user profiles' => TRUE,
+    ));
+
+    // Attempt to view comments while disallowed.
+    // NOTE: if authenticated user has permission to post comments, then a
+    // "Login or register to post comments" type link may be shown.
+    $this->drupalGet('user/' . $this->web_user->uid);
+    $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
+    $this->assertNoLink('Add new comment', 'Link to add comment was found.');
+
+    // Attempt to view user-comment form while disallowed.
+    $this->drupalGet('comment/reply/user/' . $this->web_user->uid . '/comment');
+    $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
+    $this->assertNoFieldByName('subject', '', 'Subject field not found.');
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', 'Comment field not found.');
+
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments' => TRUE,
+      'post comments' => FALSE,
+      'access user profiles' => TRUE,
+      'skip comment approval' => FALSE,
+    ));
+    // Ensure the page cache is flushed.
+    drupal_flush_all_caches();
+    $this->drupalGet('user/' . $this->web_user->uid);
+    $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
+    $this->assertLink('Log in', 1, 'Link to log in was found.');
+    $this->assertLink('register', 1, 'Link to register was found.');
+
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments' => FALSE,
+      'post comments' => TRUE,
+      'skip comment approval' => TRUE,
+      'access user profiles' => TRUE,
+    ));
+    $this->drupalGet('user/' . $this->web_user->uid);
+    $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
+    $this->assertFieldByName('subject', '', 'Subject field found.');
+    $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
+
+    $this->drupalGet('comment/reply/user/' . $this->web_user->uid . '/comment/' . $comment1->id);
+    $this->assertText('You are not authorized to view comments', 'Error attempting to post reply.');
+    $this->assertNoText($comment1->subject, 'Comment not displayed.');
   }
 
 }

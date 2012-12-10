@@ -34,6 +34,7 @@ class NodeTitleTest extends NodeTestBase {
 
     $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
     $this->drupalLogin($this->admin_user);
+    comment_add_default_comment_field('node', 'page');
   }
 
   /**
@@ -45,6 +46,9 @@ class NodeTitleTest extends NodeTestBase {
     $settings = array(
       'title' => $this->randomName(8),
       'promote' => 1,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      )
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -54,7 +58,7 @@ class NodeTitleTest extends NodeTestBase {
     $this->assertEqual(current($this->xpath($xpath)), $node->label() .' | Drupal', 'Page title is equal to node title.', 'Node');
 
     // Test breadcrumb in comment preview.
-    $this->drupalGet("comment/reply/$node->nid");
+    $this->drupalGet("comment/reply/node/" . $node->nid . "/comment");
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
     $this->assertEqual(current($this->xpath($xpath)), $node->label(), 'Node breadcrumb is equal to node title.', 'Node');
 

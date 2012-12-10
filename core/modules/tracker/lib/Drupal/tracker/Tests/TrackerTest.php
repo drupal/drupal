@@ -51,9 +51,7 @@ class TrackerTest extends WebTestBase {
     $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $this->user = $this->drupalCreateUser($permissions);
     $this->other_user = $this->drupalCreateUser($permissions);
-
-    // Make node preview optional.
-    variable_set('comment_preview_page', 0);
+    comment_add_default_comment_field('node', 'page');
   }
 
   /**
@@ -65,10 +63,16 @@ class TrackerTest extends WebTestBase {
     $unpublished = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
       'status' => 0,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ),
     ));
     $published = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
       'status' => 1,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ),
     ));
 
     $this->drupalGet('tracker');
@@ -92,11 +96,17 @@ class TrackerTest extends WebTestBase {
       'title' => $this->randomName(8),
       'uid' => $this->user->uid,
       'status' => 0,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ),
     ));
     $my_published = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
       'uid' => $this->user->uid,
       'status' => 1,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ),
     ));
     $other_published_no_comment = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
@@ -107,12 +117,15 @@ class TrackerTest extends WebTestBase {
       'title' => $this->randomName(8),
       'uid' => $this->other_user->uid,
       'status' => 1,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ),
     ));
     $comment = array(
       'subject' => $this->randomName(),
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
-    $this->drupalPost('comment/reply/' . $other_published_my_comment->nid, $comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $other_published_my_comment->nid . '/comment', $comment, t('Save'));
 
     $this->drupalGet('user/' . $this->user->uid . '/track');
     $this->assertNoText($unpublished->label(), "Unpublished nodes do not show up in the users's tracker listing.");
@@ -163,7 +176,9 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     $node = $this->drupalCreateNode(array(
-      'comment' => 2,
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
+        'comment' => COMMENT_OPEN
+      ))),
       'title' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(8)))),
     ));
 
@@ -173,7 +188,7 @@ class TrackerTest extends WebTestBase {
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     // The new comment is automatically viewed by the current user.
-    $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $node->nid . '/comment', $comment, t('Save'));
 
     $this->drupalLogin($this->other_user);
     $this->drupalGet('tracker');
@@ -188,7 +203,7 @@ class TrackerTest extends WebTestBase {
     // If the comment is posted in the same second as the last one then Drupal
     // can't tell the difference, so we wait one second here.
     sleep(1);
-    $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $node->nid . '/comment', $comment, t('Save'));
 
     $this->drupalLogin($this->user);
     $this->drupalGet('tracker');
@@ -206,7 +221,9 @@ class TrackerTest extends WebTestBase {
     $nodes = array();
     for ($i = 1; $i <= 3; $i++) {
       $edits[$i] = array(
-        'comment' => 2,
+        'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
+          'comment' => COMMENT_OPEN
+        ))),
         'title' => $this->randomName(),
       );
       $nodes[$i] = $this->drupalCreateNode($edits[$i]);
@@ -218,7 +235,7 @@ class TrackerTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
-    $this->drupalPost('comment/reply/' . $nodes[3]->nid, $comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $nodes[3]->nid . '/comment', $comment, t('Save'));
 
     // Start indexing backwards from node 3.
     variable_set('tracker_index_nid', 3);

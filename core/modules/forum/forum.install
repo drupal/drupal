@@ -16,16 +16,19 @@ function forum_install() {
   // @todo Convert to default module configuration, once Node module's content
   //   types are converted.
   variable_set('node_options_forum', array('status'));
+  // Make sure the comment module is loaded.
+  drupal_load('module', 'comment');
 }
 
 /**
  * Implements hook_enable().
  */
 function forum_enable() {
-  // If we enable forum at the same time as taxonomy we need to call
+  // If we enable forum/comment at the same time as taxonomy we need to call
   // field_associate_fields() as otherwise the field won't be enabled until
   // hook modules_enabled is called which takes place after hook_enable events.
   field_associate_fields('taxonomy');
+  field_associate_fields('comment');
 
   // Create the forum vocabulary if it does not exist.
   // @todo Change Forum module so forum.settings can contain the vocabulary's
@@ -108,6 +111,8 @@ function forum_enable() {
   node_types_rebuild();
   $types = node_type_get_types();
   node_add_body_field($types['forum']);
+  // Add the comment field.
+  comment_add_default_comment_field('node', 'forum', 'comment_node_forum', COMMENT_OPEN);
 }
 
 /**
@@ -120,9 +125,20 @@ function forum_uninstall() {
   variable_del('node_options_forum');
 
   field_delete_field('taxonomy_forums');
-  // Purge field data now to allow taxonomy module to be uninstalled
-  // if this is the only field remaining.
-  field_purge_batch(10);
+
+  // Delete comment field, load comment in case it has been disabled.
+  drupal_load('module', 'comment');
+  // Remove the forum comment field.
+  field_associate_fields('comment');
+  field_delete_field('comment_node_forum');
+
+  // Purge field data now to allow taxonomy and comment modules to be
+  // uninstalled if these were the only fields remaining. We need to call
+  // field_purge_batch at least twice as the instances won't be removed until
+  // all data is gone, both cannot be removed in the same call.
+  foreach (array('data', 'instances', 'fields') as $step) {
+    field_purge_batch(10);
+  }
 }
 
 /**

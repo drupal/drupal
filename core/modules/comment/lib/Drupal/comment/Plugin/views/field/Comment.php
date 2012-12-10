@@ -30,14 +30,15 @@ class Comment extends FieldPluginBase {
     parent::init($view, $options);
     if (!empty($this->options['link_to_comment'])) {
       $this->additional_fields['cid'] = 'cid';
-      $this->additional_fields['nid'] = 'nid';
+      $this->additional_fields['entity_id'] = 'entity_id';
+      $this->additional_fields['entity_type'] = 'entity_type';
     }
   }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['link_to_comment'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['link_to_node'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_entity'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
@@ -52,10 +53,10 @@ class Comment extends FieldPluginBase {
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_comment'],
     );
-    $form['link_to_node'] = array(
-      '#title' => t('Link field to the node if there is no comment.'),
+    $form['link_to_entity'] = array(
+      '#title' => t('Link field to the entity if there is no comment.'),
       '#type' => 'checkbox',
-      '#default_value' => $this->options['link_to_node'],
+      '#default_value' => $this->options['link_to_entity'],
     );
     parent::buildOptionsForm($form, $form_state);
   }
@@ -63,15 +64,18 @@ class Comment extends FieldPluginBase {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_comment'])) {
       $this->options['alter']['make_link'] = TRUE;
-      $nid = $this->get_value($values, 'nid');
       $cid = $this->get_value($values, 'cid');
       if (!empty($cid)) {
         $this->options['alter']['path'] = "comment/" . $cid;
         $this->options['alter']['fragment'] = "comment-" . $cid;
       }
       // If there is no comment link to the node.
-      elseif ($this->options['link_to_node']) {
-        $this->options['alter']['path'] = "node/" . $nid;
+      elseif ($this->options['link_to_entity']) {
+        $entity_id = $this->get_value($values, 'entity_id');
+        $entity_type = $this->get_value($values, 'entity_type');
+        $entity = entity_load($entity_type, $entity_id);
+        $uri = $entity->uri();
+        $this->options['alter']['path'] = $uri['path'];
       }
     }
 

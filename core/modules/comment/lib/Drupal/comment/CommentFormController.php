@@ -22,14 +22,15 @@ class CommentFormController extends EntityFormController {
   public function form(array $form, array &$form_state, EntityInterface $comment) {
     global $user;
 
-    $node = node_load($comment->nid);
-    $form_state['comment']['node'] = $node;
+    $entity = entity_load($comment->entity_type, $comment->entity_id);
+    $instance = field_info_instance($comment->entity_type, $comment->field_name, $entity->bundle());
+    $form_state['comment']['entity'] = $entity;
 
-    // Use #comment-form as unique jump target, regardless of node type.
+    // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = drupal_html_id('comment_form');
-    $form['#theme'] = array('comment_form__node_' . $node->type, 'comment_form');
+    $form['#theme'] = array('comment_form__' . $comment->entity_type . '__' . $entity->bundle() . '__' . $comment->field_name, 'comment_form');
 
-    $anonymous_contact = variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT);
+    $anonymous_contact = $instance['settings']['comment']['comment_anonymous'];
     $is_admin = (!empty($comment->cid) && user_access('administer comments'));
 
     if (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
@@ -38,9 +39,9 @@ class CommentFormController extends EntityFormController {
     }
 
     // If not replying to a comment, use our dedicated page callback for new
-    // comments on nodes.
+    // comments on entities.
     if (empty($comment->cid) && empty($comment->pid)) {
-      $form['#action'] = url('comment/reply/' . $comment->nid);
+      $form['#action'] = url('comment/reply/' . $comment->entity_type . '/' . $comment->entity_id . '/' . $comment->field_name);
     }
 
     if (isset($form_state['comment_preview'])) {
@@ -159,7 +160,7 @@ class CommentFormController extends EntityFormController {
       '#title' => t('Subject'),
       '#maxlength' => 64,
       '#default_value' => $comment->subject,
-      '#access' => variable_get('comment_subject_field_' . $node->type, 1) == 1,
+      '#access' => $instance['settings']['comment']['comment_subject_field'],
     );
 
     // Used for conditional validation of author fields.
@@ -169,13 +170,12 @@ class CommentFormController extends EntityFormController {
     );
 
     // Add internal comment properties.
-    foreach (array('cid', 'pid', 'nid', 'uid') as $key) {
+    foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_name', 'uid') as $key) {
       $form[$key] = array('#type' => 'value', '#value' => $comment->$key);
     }
-    $form['node_type'] = array('#type' => 'value', '#value' => 'comment_node_' . $node->type);
 
-    // Make the comment inherit the current content language unless specifically
-    // set.
+    // Make the comment inherit the entity language unless specifically set.
+    $comment_langcode = $comment->langcode;
     if ($comment->isNew()) {
       $language_content = language(LANGUAGE_TYPE_CONTENT);
       $comment->langcode = $language_content->langcode;
@@ -186,9 +186,6 @@ class CommentFormController extends EntityFormController {
       '#value' => $comment->langcode,
     );
 
-    // Attach fields.
-    $comment->node_type = 'comment_node_' . $node->type;
-
     return parent::form($form, $form_state, $comment);
   }
 
@@ -198,8 +195,9 @@ class CommentFormController extends EntityFormController {
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
     $comment = $this->getEntity($form_state);
-    $node = $form_state['comment']['node'];
-    $preview_mode = variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL);
+    $entity = $form_state['comment']['entity'];
+    $instance = field_info_instance($comment->entity_type, $comment->field_name, $entity->bundle());
+    $preview_mode = $instance['settings']['comment']['comment_preview'];
 
     // No delete action on the comment form.
     unset($element['delete']);
@@ -210,7 +208,6 @@ class CommentFormController extends EntityFormController {
     // Only show the save button if comment previews are optional or if we are
     // already previewing the submission.
     $element['submit']['#access'] = ($comment->cid && user_access('administer comments')) || $preview_mode != DRUPAL_REQUIRED || isset($form_state['comment_preview']);
-
     $element['preview'] = array(
       '#type' => 'submit',
       '#value' => t('Preview'),
@@ -336,10 +333,15 @@ class CommentFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $node = node_load($form_state['values']['nid']);
+    $entity = entity_load($form_state['values']['entity_type'], $form_state['values']['entity_id']);
     $comment = $this->getEntity($form_state);
+    $field_name = $form_state['values']['field_name'];
+    $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
+    $items = field_get_items($entity->entityType(), $entity, $field_name);
+    $status = reset($items);
+    $uri = $entity->uri();
 
-    if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
+    if (user_access('post comments') && (user_access('administer comments') || $status['comment'] == COMMENT_OPEN)) {
       // Save the anonymous user information to a cookie for reuse.
       if (user_is_anonymous()) {
         user_cookie_save(array_intersect_key($form_state['values'], array_flip(array('name', 'mail', 'homepage'))));
@@ -362,18 +364,18 @@ class CommentFormController extends EntityFormController {
       }
       $query = array();
       // Find the current display page for this comment.
-      $page = comment_get_display_page($comment->cid, $node->type);
+      $page = comment_get_display_page($comment->cid, $instance);
       if ($page > 0) {
         $query['page'] = $page;
       }
-      // Redirect to the newly posted comment.
-      $redirect = array('node/' . $node->nid, array('query' => $query, 'fragment' => 'comment-' . $comment->cid));
+      // Redirect to the newly posted comment. @todo up to here.
+      $redirect = array($uri['path'], array('query' => $query, 'fragment' => 'comment-' . $comment->cid) + $uri['options']);
     }
     else {
       watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);
       drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject)), 'error');
-      // Redirect the user to the node they are commenting on.
-      $redirect = 'node/' . $node->nid;
+      // Redirect the user to the entity they are commenting on.
+      $redirect = $uri['path'];
     }
     $form_state['redirect'] = $redirect;
     // Clear the block and page caches so that anonymous users see the comment

@@ -109,7 +109,9 @@ class ForumBlockTest extends WebTestBase {
       // Get the node from the topic title.
       $node = $this->drupalGetNodeByTitle($topics[$index]);
       $comment = entity_create('comment', array(
-        'nid' => $node->nid,
+        'entity_id' => $node->nid,
+        'field_name' => 'comment_node_forum',
+        'entity_type' => 'node',
         'subject' => $this->randomString(20),
         'comment_body' => array(LANGUAGE_NOT_SPECIFIED => $this->randomString(256)),
         'created' => $timestamp + $index,

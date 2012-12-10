@@ -24,9 +24,9 @@ class NodeComment extends InOperator {
 
   function get_value_options() {
     $this->value_options = array(
-      COMMENT_NODE_HIDDEN => t('Hidden'),
-      COMMENT_NODE_CLOSED => t('Closed'),
-      COMMENT_NODE_OPEN => t('Open'),
+      COMMENT_HIDDEN => t('Hidden'),
+      COMMENT_CLOSED => t('Closed'),
+      COMMENT_OPEN => t('Open'),
     );
   }
 

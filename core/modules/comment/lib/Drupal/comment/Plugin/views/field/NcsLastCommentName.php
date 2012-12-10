@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\NcsLastCommentName.
+ * Contains Drupal\comment\Plugin\views\field\StatisticsLastCommentName.
  */
 
 namespace Drupal\comment\Plugin\views\field;
@@ -16,11 +16,11 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_field_handlers
  *
  * @Plugin(
- *   id = "comment_ncs_last_comment_name",
+ *   id = "comment_ces_last_comment_name",
  *   module = "comment"
  * )
  */
-class NcsLastCommentName extends FieldPluginBase {
+class StatisticsLastCommentName extends FieldPluginBase {
 
   public function query() {
     // last_comment_name only contains data if the user is anonymous. So we
@@ -42,9 +42,9 @@ class NcsLastCommentName extends FieldPluginBase {
     );
     $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
-    // ncs_user alias so this can work with the sort handler, below.
+    // nes_user alias so this can work with the sort handler, below.
 //    $this->user_table = $this->query->add_relationship(NULL, $join, 'users', $this->relationship);
-    $this->user_table = $this->query->ensure_table('ncs_users', $this->relationship, $join);
+    $this->user_table = $this->query->ensure_table('ces_users', $this->relationship, $join);
 
     $this->field_alias = $this->query->add_field(NULL, "COALESCE($this->user_table.name, $this->tableAlias.$this->field)", $this->tableAlias . '_' . $this->field);
 

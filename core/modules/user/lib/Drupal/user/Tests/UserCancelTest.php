@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserCancelTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'comment');
+
   public static function getInfo() {
     return array(
       'name' => 'Cancel account',
@@ -22,10 +29,11 @@ class UserCancelTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    comment_add_default_comment_field('node', 'page');
   }
 
   /**
@@ -39,9 +47,17 @@ class UserCancelTest extends WebTestBase {
     $this->drupalLogin($account);
     // Load real user object.
     $account = user_load($account->uid, TRUE);
+    comment_add_default_comment_field('node', 'page');
 
     // Create a node.
-    $node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(
+          array('comment' => COMMENT_CLOSED)
+        )
+      )
+    ));
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->uid . '/edit');
@@ -110,7 +126,10 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a node.
-    $node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
+    ));
 
     // Attempt to cancel account.
     $this->drupalPost('user/' . $account->uid . '/edit', NULL, t('Cancel account'));
@@ -187,7 +206,10 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a node with two revisions.
-    $node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
+    ));
     $settings = get_object_vars($node);
     $settings['revision'] = 1;
     $node = $this->drupalCreateNode($settings);
@@ -231,11 +253,17 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a simple node.
-    $node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
+    ));
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
-    $revision_node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $revision_node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
+    ));
     $revision = $revision_node->vid;
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;
@@ -284,7 +312,14 @@ class UserCancelTest extends WebTestBase {
     $account = user_load($account->uid, TRUE);
 
     // Create a simple node.
-    $node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(
+          array('comment' => COMMENT_OPEN)
+        )
+      )
+    ));
 
     // Create comment.
     $langcode = LANGUAGE_NOT_SPECIFIED;
@@ -292,7 +327,7 @@ class UserCancelTest extends WebTestBase {
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
 
-    $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Preview'));
+    $this->drupalPost('comment/reply/node/' . $node->nid . '/comment', $edit, t('Preview'));
     $this->drupalPost(NULL, array(), t('Save'));
     $this->assertText(t('Your comment has been posted.'));
     $comments = entity_load_multiple_by_properties('comment', array('subject' => $edit['subject']));
@@ -301,7 +336,10 @@ class UserCancelTest extends WebTestBase {
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
-    $revision_node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $revision_node = $this->drupalCreateNode(array(
+      'uid' => $account->uid,
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
+    ));
     $revision = $revision_node->vid;
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;

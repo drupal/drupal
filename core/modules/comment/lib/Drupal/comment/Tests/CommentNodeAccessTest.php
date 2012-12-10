@@ -75,7 +75,7 @@ class CommentNodeAccessTest extends CommentTestBase {
     $this->assertText($comment_text, 'Individual comment body found.');
 
     // Reply to comment, creating second comment.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment->id);
     $reply_text = $this->randomName();
     $reply_subject = $this->randomName();
     $reply = $this->postComment(NULL, $reply_text, $reply_subject, TRUE);

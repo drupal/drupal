@@ -258,15 +258,18 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'fields[_add_new_field][type]' => 'file',
       'fields[_add_new_field][widget_type]' => 'file_generic',
     );
-    $this->drupalPost('admin/structure/types/manage/article/comment/fields', $edit, t('Save'));
+    comment_add_default_comment_field('node', 'article');
+    $this->drupalPost('admin/structure/comments/comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
     $this->drupalPost(NULL, $edit, t('Save field settings'));
     $this->drupalPost(NULL, array(), t('Save settings'));
 
     // Create node.
     $text_file = $this->getTestFile('text');
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array(
       'title' => $this->randomName(),
+      "comment[$langcode][0][comment]" => COMMENT_OPEN
     );
     $this->drupalPost('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title']);

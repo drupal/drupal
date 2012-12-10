@@ -31,10 +31,11 @@ display:
         options:
           items_per_page: 5
       relationships:
-        nid:
-          id: nid
+        node:
+          field: node
+          id: node
+          required: '1'
           table: comment
-          field: nid
       fields:
         subject:
           id: subject
@@ -59,7 +60,7 @@ display:
           id: status_extra
           table: node
           field: status_extra
-          relationship: nid
+          relationship: node
           group: 0
       style:
         type: html_list
@@ -85,7 +86,7 @@ display:
           id: title
           table: node
           field: title
-          relationship: nid
+          relationship: node
           label: 'Reply to'
           link_to_node: 1
         timestamp:

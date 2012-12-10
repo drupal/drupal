@@ -90,7 +90,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Reply to comment #2 creating comment #3 with optional preview and no
     // subject though field enabled.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment->id);
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
@@ -100,7 +100,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.00/', $reply_loaded->thread, 'Thread of reply grows correctly.');
 
     // Second reply to comment #3 creating comment #4.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment->id);
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
@@ -128,27 +128,27 @@ class CommentInterfaceTest extends CommentTestBase {
     // Attempt to reply to an unpublished comment.
     $reply_loaded->status = COMMENT_NOT_PUBLISHED;
     $reply_loaded->save();
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $reply_loaded->cid);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $reply_loaded->cid);
     $this->assertText(t('The comment you are replying to does not exist.'), 'Replying to an unpublished comment');
 
     // Attempt to post to node with comments disabled.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_HIDDEN));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_HIDDEN)))));
     $this->assertTrue($this->node, 'Article node created.');
-    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment');
     $this->assertText('This discussion is closed', 'Posting to node with comments disabled');
     $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with read-only comments.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_CLOSED));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_CLOSED)))));
     $this->assertTrue($this->node, 'Article node created.');
-    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment');
     $this->assertText('This discussion is closed', 'Posting to node with comments read-only');
     $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with comments enabled (check field names etc).
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
     $this->assertTrue($this->node, 'Article node created.');
-    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment');
     $this->assertNoText('This discussion is closed', 'Posting to node with comments enabled');
     $this->assertField('edit-comment-body-' . $langcode . '-0-value', 'Comment body field found.');
 
@@ -178,5 +178,4 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
     $this->setCommentForm(FALSE);
   }
-
 }

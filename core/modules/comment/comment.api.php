@@ -34,7 +34,9 @@ function hook_comment_presave(Drupal\comment\Comment $comment) {
  */
 function hook_comment_insert(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are added.
-  search_touch_node($comment->nid);
+  if ($comment->entity_type == 'node') {
+    search_touch_node($comment->entity_id);
+  }
 }
 
 /**
@@ -45,7 +47,9 @@ function hook_comment_insert(Drupal\comment\Comment $comment) {
  */
 function hook_comment_update(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are updated.
-  search_touch_node($comment->nid);
+  if ($comment->entity_type == 'node') {
+    search_touch_node($comment->entity_id);
+  }
 }
 
 /**
@@ -66,9 +70,9 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
  *
  * @param Drupal\comment\Comment $comment
  *   Passes in the comment the action is being performed on.
- * @param $view_mode
+ * @param string $view_mode
  *   View mode, e.g. 'full', 'teaser'...
- * @param $langcode
+ * @param string $langcode
  *   The language code used for rendering.
  *
  * @see hook_entity_view()
@@ -91,7 +95,7 @@ function hook_comment_view(Drupal\comment\Comment $comment, $view_mode, $langcod
  * comment.tpl.php. See drupal_render() and theme() documentation respectively
  * for details.
  *
- * @param $build
+ * @param array $build
  *   A renderable array representing the comment.
  * @param Drupal\comment\Comment $comment
  *   The comment being rendered.
@@ -99,7 +103,7 @@ function hook_comment_view(Drupal\comment\Comment $comment, $view_mode, $langcod
  * @see comment_view()
  * @see hook_entity_view_alter()
  */
-function hook_comment_view_alter(&$build, Drupal\comment\Comment $comment) {
+function hook_comment_view_alter(array &$build, Drupal\comment\Comment $comment) {
   // Check for the existence of a field added by another module.
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
@@ -167,6 +171,39 @@ function hook_comment_predelete(Drupal\comment\Comment $comment) {
  */
 function hook_comment_delete(Drupal\comment\Comment $comment) {
   drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject)));
+}
+
+/**
+ * Controls access to entity comment forms.
+ *
+ * Used to control access to commenting on an entity where no
+ * {%entity_type}_access function exists for the given entity.
+ *
+ * Modules may implement this hook if they want to have a say in whether or not
+ * the logged in user has access to view an entity in order to reply to a
+ * comment.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to which the comment field is attached.
+ *
+ * @return mixed
+ *   - COMMENT_ACCESS_DENY: if the operation is to be denied.
+ *   - FALSE: to not affect this operation at all.
+ *
+ * @todo replace this with entity access controls once generic access controller
+ *   lands.
+ *
+ * @see http://drupal.org/node/1696660
+ */
+function hook_comment_access(\Drupal\Core\Entity\EntityInterface $entity) {
+  $type = $entity->entityType();
+
+  if ($type == 'comment') {
+    return COMMENT_ACCESS_DENY;
+  }
+
+  // Returning nothing from this function would have the same effect.
+  return FALSE;
 }
 
 /**

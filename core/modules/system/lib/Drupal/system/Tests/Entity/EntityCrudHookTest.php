@@ -69,12 +69,19 @@ class EntityCrudHookTest extends WebTestBase {
    * Tests hook invocations for CRUD operations on comments.
    */
   public function testCommentHooks() {
+    comment_add_default_comment_field('node', 'article', 'comment', COMMENT_OPEN);
     $node = entity_create('node', array(
       'uid' => 1,
       'type' => 'article',
       'title' => 'Test node',
       'status' => 1,
-      'comment' => 2,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(
+          array(
+            'comment' => COMMENT_OPEN
+          )
+        )
+      ),
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LANGUAGE_NOT_SPECIFIED,
@@ -87,7 +94,9 @@ class EntityCrudHookTest extends WebTestBase {
     $comment = entity_create('comment', array(
       'cid' => NULL,
       'pid' => 0,
-      'nid' => $nid,
+      'entity_id' => $nid,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'uid' => 1,
       'subject' => 'Test comment',
       'created' => REQUEST_TIME,

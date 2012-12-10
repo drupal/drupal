@@ -47,6 +47,8 @@ class SearchCommentTest extends SearchTestBase {
     );
     $this->admin_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->admin_user);
+    // Add a comment field.
+    comment_add_default_comment_field('node', 'article');
   }
 
   /**
@@ -55,7 +57,10 @@ class SearchCommentTest extends SearchTestBase {
   function testSearchResultsComment() {
     $comment_body = 'Test comment body';
 
-    variable_set('comment_preview_article', DRUPAL_OPTIONAL);
+    // Make preview optional.
+    $instance = field_info_instance('node', 'comment', 'article');
+    $instance['settings']['comment']['comment_preview'] = DRUPAL_OPTIONAL;
+    field_update_instance($instance);
     // Enable check_plain() for 'Filtered HTML' text format.
     $filtered_html_format_id = 'filtered_html';
     $edit = array(
@@ -71,14 +76,21 @@ class SearchCommentTest extends SearchTestBase {
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
 
     // Create a node.
-    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $node = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(
+          array('comment' => COMMENT_OPEN)
+        )
+      )
+    ));
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = 'Test comment subject';
     $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
     $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][format]'] = $full_html_format_id;
-    $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $node->nid .'/comment', $edit_comment, t('Save'));
 
     // Invoke search index update.
     $this->drupalLogout();
@@ -130,14 +142,24 @@ class SearchCommentTest extends SearchTestBase {
     $this->admin_role = key($this->admin_role);
 
     // Create a node.
-    variable_set('comment_preview_article', DRUPAL_OPTIONAL);
-    $this->node = $this->drupalCreateNode(array('type' => 'article'));
+    // Make preview optional.
+    $instance = field_info_instance('node', 'comment', 'article');
+    $instance['settings']['comment']['comment_preview'] = DRUPAL_OPTIONAL;
+    field_update_instance($instance);
+    $this->node = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(
+          array('comment' => COMMENT_OPEN)
+        )
+      )
+    ));
 
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = $this->comment_subject;
     $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
-    $this->drupalPost('comment/reply/' . $this->node->nid, $edit_comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $this->node->nid . '/comment', $edit_comment, t('Save'));
 
     $this->drupalLogout();
     $this->setRolePermissions(DRUPAL_ANONYMOUS_RID);
@@ -155,6 +177,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->setRolePermissions($this->admin_role);
     $this->assertCommentAccess(FALSE, 'Admin user has search permission but no access comments permission, comments should not be indexed');
 
+    $this->drupalGet('node/' . $this->node->nid);
     $this->setRolePermissions($this->admin_role, TRUE);
     $this->assertCommentAccess(TRUE, 'Admin user has search permission and access comments permission, comments should be indexed');
 
@@ -222,6 +245,11 @@ class SearchCommentTest extends SearchTestBase {
       'type' => 'article',
       'title' => 'short title',
       'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'short body text'))),
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(
+          array('comment' => COMMENT_OPEN)
+        )
+      )
     );
 
     $user = $this->drupalCreateUser(array('search content', 'create article content', 'access content'));

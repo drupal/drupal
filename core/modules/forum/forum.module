@@ -491,7 +491,9 @@ function forum_taxonomy_term_delete(Term $term) {
  * comment_save() calls hook_comment_publish() for all published comments.
  */
 function forum_comment_publish($comment) {
-  _forum_update_forum_index($comment->nid);
+  if ($comment->entity_type == 'node') {
+    _forum_update_forum_index($comment->entity_id);
+  }
 }
 
 /**
@@ -503,8 +505,8 @@ function forum_comment_publish($comment) {
 function forum_comment_update($comment) {
   // comment_save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
-  if (!$comment->status) {
-    _forum_update_forum_index($comment->nid);
+  if (!$comment->status && $comment->entity_type == 'node') {
+    _forum_update_forum_index($comment->entity_id);
   }
 }
 
@@ -512,14 +514,18 @@ function forum_comment_update($comment) {
  * Implements hook_comment_unpublish().
  */
 function forum_comment_unpublish($comment) {
-  _forum_update_forum_index($comment->nid);
+  if ($comment->entity_type == 'node') {
+    _forum_update_forum_index($comment->entity_id);
+  }
 }
 
 /**
  * Implements hook_comment_delete().
  */
 function forum_comment_delete($comment) {
-  _forum_update_forum_index($comment->nid);
+  if ($comment->entity_type == 'node') {
+    _forum_update_forum_index($comment->entity_id);
+  }
 }
 
 /**
@@ -807,10 +813,10 @@ function forum_forum_load($tid = NULL) {
 
   if (count($_forums)) {
     $query = db_select('node', 'n');
-    $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
+    $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.entity_type = 'node' AND ces.field_name = 'comment_node_forum'");
     $query->join('forum', 'f', 'n.vid = f.vid');
     $query->addExpression('COUNT(n.nid)', 'topic_count');
-    $query->addExpression('SUM(ncs.comment_count)', 'comment_count');
+    $query->addExpression('SUM(ces.comment_count)', 'comment_count');
     $counts = $query
       ->fields('f', array('tid'))
       ->condition('n.status', 1)
@@ -839,12 +845,12 @@ function forum_forum_load($tid = NULL) {
     // Query "Last Post" information for this forum.
     $query = db_select('node', 'n');
     $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $forum->tid));
-    $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-    $query->join('users', 'u', 'ncs.last_comment_uid = u.uid');
-    $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u.name END', 'last_comment_name');
+    $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.entity_type = 'node' AND ces.field_name = 'comment_node_forum'");
+    $query->join('users', 'u', 'ces.last_comment_uid = u.uid');
+    $query->addExpression('CASE ces.last_comment_uid WHEN 0 THEN ces.last_comment_name ELSE u.name END', 'last_comment_name');
 
     $topic = $query
-      ->fields('ncs', array('last_comment_timestamp', 'last_comment_uid'))
+      ->fields('ces', array('last_comment_timestamp', 'last_comment_uid'))
       ->condition('n.status', 1)
       ->orderBy('last_comment_timestamp', 'DESC')
       ->range(0, 1)
@@ -961,18 +967,18 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       ->extend('Drupal\Core\Database\Query\TableSortExtender');
     $query->fields('n', array('nid'));
 
-    $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-    $query->fields('ncs', array('cid', 'last_comment_uid', 'last_comment_timestamp', 'comment_count'));
+    $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.entity_type = 'node' AND ces.field_name = 'comment_node_forum'");
+    $query->fields('ces', array('cid', 'last_comment_uid', 'last_comment_timestamp', 'comment_count'));
 
-    $query->join('forum_index', 'f', 'f.nid = ncs.nid');
+    $query->join('forum_index', 'f', 'f.nid = ces.entity_id');
     $query->addField('f', 'tid', 'forum_tid');
 
     $query->join('users', 'u', 'n.uid = u.uid');
     $query->addField('u', 'name');
 
-    $query->join('users', 'u2', 'ncs.last_comment_uid = u2.uid');
+    $query->join('users', 'u2', 'ces.last_comment_uid = u2.uid');
 
-    $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u2.name END', 'last_comment_name');
+    $query->addExpression('CASE ces.last_comment_uid WHEN 0 THEN ces.last_comment_name ELSE u2.name END', 'last_comment_name');
 
     $query
       ->orderBy('f.sticky', 'DESC')
@@ -982,7 +988,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     $result = array();
     foreach ($query->execute() as $row) {
       $topic = $nodes[$row->nid];
-      $topic->comment_mode = $topic->comment;
+      $topic->comment_mode = !empty($topic->comment_node_forum[LANGUAGE_NOT_SPECIFIED][0]['comment']) ? $topic->comment_node_forum[LANGUAGE_NOT_SPECIFIED][0]['comment'] : COMMENT_HIDDEN;
 
       foreach ($row as $key => $value) {
         $topic->{$key} = $value;
@@ -1005,7 +1011,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       }
       else {
         $history = _forum_user_last_visit($topic->nid);
-        $topic->new_replies = comment_num_new($topic->nid, $history);
+        $topic->new_replies = comment_num_new('node', $topic->nid, 'comment_node_forum', $history);
         $topic->new = $topic->new_replies || ($topic->last_comment_timestamp > $history);
       }
     }
@@ -1231,7 +1237,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->new_url = '';
       if ($topic->new_replies) {
         $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="element-invisible"> in topic %title</span>', '@count new posts<span class="element-invisible"> in topic %title</span>', array('%title' => $original_title));
-        $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic), 'fragment' => 'new'));
+        $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic, 'comment_node_forum'), 'fragment' => 'new'));
       }
 
     }
@@ -1273,7 +1279,7 @@ function template_preprocess_forum_icon(&$variables) {
     $variables['icon_title'] = $variables['new_posts'] ? t('New comments') : t('Normal topic');
   }
 
-  if ($variables['comment_mode'] == COMMENT_NODE_CLOSED || $variables['comment_mode'] == COMMENT_NODE_HIDDEN) {
+  if ($variables['comment_mode'] == COMMENT_CLOSED || $variables['comment_mode'] == COMMENT_HIDDEN) {
     $variables['icon_class'] = 'closed';
     $variables['icon_title'] = t('Closed topic');
   }
@@ -1364,14 +1370,14 @@ function _forum_get_topic_order($sortby) {
  *   The ID of the node to update.
  */
 function _forum_update_forum_index($nid) {
-  $count = db_query('SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.nid = i.nid WHERE c.nid = :nid AND c.status = :status', array(
+  $count = db_query("SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.entity_id = i.nid AND c.entity_type = 'node' AND c.field_name = 'comment_node_forum' WHERE c.entity_id = :nid AND c.status = :status", array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
   ))->fetchField();
 
   if ($count > 0) {
     // Comments exist.
-    $last_reply = db_query_range('SELECT cid, name, created, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
+    $last_reply = db_query_range("SELECT cid, name, created, uid FROM {comment} WHERE entity_type = 'node' AND field_name = 'comment_node_forum' AND entity_id = :nid AND status = :status ORDER BY cid DESC", 0, 1, array(
       ':nid' => $nid,
       ':status' => COMMENT_PUBLISHED,
     ))->fetchObject();

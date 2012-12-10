@@ -68,20 +68,28 @@ class DefaultViewRecentComments extends ViewTestBase {
     // Create a new content type
     $content_type = $this->drupalCreateContentType();
 
+    $language_not_specified = LANGUAGE_NOT_SPECIFIED;
     // Add a node of the new content type.
     $node_data = array(
       'type' => $content_type->type,
+      "comment[$language_not_specified][0][comment]" => COMMENT_OPEN
     );
 
+    comment_add_default_comment_field('node', $content_type->type);
     $this->node = $this->drupalCreateNode($node_data);
+
+    views_invalidate_cache();
 
     // Create some comments and attach them to the created node.
     for ($i = 0; $i < $this->masterDisplayResults; $i++) {
       $comment = entity_create('comment', array());
       $comment->uid = 0;
-      $comment->nid = $this->node->nid;
+      $comment->entity_type = 'node';
+      // Stagger the comments so the timestamp sorting works.
+      $comment->created = REQUEST_TIME - $i;
+      $comment->field_name = 'comment';
+      $comment->entity_id = $this->node->nid;
       $comment->subject = 'Test comment ' . $i;
-      $comment->node_type = 'comment_node_' . $this->node->type;
       $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['value'] = 'Test body ' . $i;
       $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['format'] = 'full_html';
 
@@ -101,14 +109,14 @@ class DefaultViewRecentComments extends ViewTestBase {
     $this->executeView($view);
 
     $map = array(
-      'comment_nid' => 'nid',
+      'comment_entity_id' => 'entity_id',
       'comment_subject' => 'subject',
       'cid' => 'cid',
       'comment_changed' => 'changed'
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['nid'] = $comment->nid;
+      $expected_result[$key]['entity_id'] = $comment->entity_id;
       $expected_result[$key]['subject'] = $comment->subject;
       $expected_result[$key]['cid'] = $comment->cid;
       $expected_result[$key]['changed'] = $comment->changed;
@@ -132,7 +140,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     $this->executeView($view);
 
     $map = array(
-      'comment_nid' => 'nid',
+      'comment_entity_id' => 'entity_id',
       'comment_subject' => 'subject',
       'comment_changed' => 'changed',
       'comment_changed' => 'created',
@@ -140,7 +148,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['nid'] = $comment->nid;
+      $expected_result[$key]['entity_id'] = $comment->entity_id;
       $expected_result[$key]['subject'] = $comment->subject;
       $expected_result[$key]['changed'] = $comment->changed;
       $expected_result[$key]['created'] = $comment->created;

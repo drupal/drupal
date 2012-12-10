@@ -19,7 +19,7 @@ class CommentRenderController extends EntityRenderController {
    * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
    *
    * In addition to modifying the content key on entities, this implementation
-   * will also set the node key which all comments carry.
+   * will also set the comment entity key which all comments carry.
    */
   public function buildContent(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $return = array();
@@ -33,12 +33,12 @@ class CommentRenderController extends EntityRenderController {
     parent::buildContent($entities, $view_mode, $langcode);
 
     foreach ($entities as $entity) {
-      $node = node_load($entity->nid);
-      if (!$node) {
-        throw new \InvalidArgumentException(t('Invalid node for comment.'));
+      $comment_entity = entity_load($entity->entity_type, $entity->entity_id);
+      if (!$comment_entity) {
+        throw new \InvalidArgumentException(t('Invalid entity for comment.'));
       }
-      $entity->content['#node'] = $node;
-      $entity->content['#theme'] = 'comment__node_' . $node->bundle();
+      $entity->content['#entity'] = $entity;
+      $entity->content['#theme'] = 'comment__' . $entity->entity_type . '__' . $comment_entity->bundle() . '__' . $entity->field_name;
       $entity->content['links'] = array(
         '#theme' => 'links__comment',
         '#pre_render' => array('drupal_pre_render_links'),
@@ -47,8 +47,8 @@ class CommentRenderController extends EntityRenderController {
       if (empty($entity->in_preview)) {
         $entity->content['links'][$this->entityType] = array(
           '#theme' => 'links__comment__comment',
-          // The "node" property is specified to be present, so no need to check.
-          '#links' => comment_links($entity, $node),
+          // The "entity" property is specified to be present, so no need to check.
+          '#links' => comment_links($entity, $comment_entity, $entity->field_name),
           '#attributes' => array('class' => array('links', 'inline')),
         );
       }
@@ -62,8 +62,10 @@ class CommentRenderController extends EntityRenderController {
     parent::alterBuild($build, $comment, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
+      $comment_entity = entity_load($comment->entity_type, $comment->entity_id);
+      $instance = field_info_instance($comment_entity->entityType(), $comment->field_name, $comment_entity->bundle());
       $is_threaded = isset($comment->divs)
-        && variable_get('comment_default_mode_' . $comment->bundle(), COMMENT_MODE_THREADED) == COMMENT_MODE_THREADED;
+        && $instance['settings']['comment']['comment_default_mode'] == COMMENT_MODE_THREADED;
 
       // Add 'new' anchor if needed.
       if (!empty($comment->first_new)) {

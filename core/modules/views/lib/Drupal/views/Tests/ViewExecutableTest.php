@@ -95,6 +95,14 @@ class ViewExecutableTest extends ViewTestBase {
   }
 
   /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    comment_add_default_comment_field('node', 'page');
+    return $this->createViewFromConfig('test_destroy');
+  }
+
+  /**
    * Tests the generation of the executable object.
    */
   public function testConstructing() {

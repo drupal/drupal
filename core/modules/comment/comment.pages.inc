@@ -5,6 +5,7 @@
  * User page callbacks for the Comment module.
  */
 
+use Drupal\core\Entity\Entity;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -14,40 +15,49 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * There are several cases that have to be handled, including:
  *   - replies to comments
- *   - replies to nodes
- *   - attempts to reply to nodes that can no longer accept comments
+ *   - replies to entities
+ *   - attempts to reply to entities that can no longer accept comments
  *   - respecting access permissions ('access comments', 'post comments', etc.)
  *
- * The node or comment that is being replied to must appear above the comment
+ * The entity or comment that is being replied to must appear above the comment
  * form to provide the user context while authoring the comment.
  *
- * @param Drupal\node\Node $node
- *   Every comment belongs to a node. This is that node.
- * @param $pid
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   Every comment belongs to an entity. This is that entity.
+ * @param string $field_name
+ *   The field_name to which the commment belongs.
+ * @param int $pid
  *   (optional) Some comments are replies to other comments. In those cases,
  *   $pid is the parent comment's comment ID. Defaults to NULL.
  *
  * @return array
  *   An associative array containing:
- *   - An array for rendering the node or parent comment.
- *     - comment_node: If the comment is a reply to the node.
+ *   - An array for rendering the entity or parent comment.
+ *     - comment_entity: If the comment is a reply to the entity.
  *     - comment_parent: If the comment is a reply to another comment.
  *   - comment_form: The comment form as a renderable array.
  */
-function comment_reply(Node $node, $pid = NULL) {
+function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, $pid = NULL) {
+  $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
   // Set the breadcrumb trail.
-  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->label(), 'node/' . $node->nid)));
+  // @todo - test behaviour when entities don't have uris.
+  $uri = $entity->uri();
+  drupal_set_breadcrumb(array(
+    l(t('Home'), NULL),
+    l($entity->label(), $uri['path'], $uri['options']))
+  );
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $build = array();
 
   // The user is previewing a comment prior to submitting it.
   if ($op == t('Preview')) {
     if (user_access('post comments')) {
-      $build['comment_form'] = comment_add($node, $pid);
+      $build['comment_form'] = comment_add($entity, $field_name, $pid);
     }
     else {
       drupal_set_message(t('You are not authorized to post comments.'), 'error');
-      drupal_goto("node/$node->nid");
+      $uri = $entity->uri();
+      drupal_goto($uri['path']);
     }
   }
   else {
@@ -59,43 +69,56 @@ function comment_reply(Node $node, $pid = NULL) {
         if ($comment->status == COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
-          if ($comment->nid != $node->nid) {
-            // Attempting to reply to a comment not belonging to the current nid.
+          if ($comment->entity_id != $entity->id() ||
+              $comment->field_name != $field_name ||
+              $comment->entity_type != $entity->entityType()) {
+            // Attempting to reply to a comment not belonging to the current entity.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
-            drupal_goto("node/$node->nid");
+            drupal_goto($uri['path']);
           }
-          // Display the parent comment
-          $comment->node_type = 'comment_node_' . $node->type;
+          // Display the parent comment.
+          $comment->entity_type = $entity->entityType();
+          $comment->field_name = $field_name;
           field_attach_load('comment', array($comment->cid => $comment));
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
           $build['comment_parent'] = comment_view($comment);
         }
         else {
           drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
-          drupal_goto("node/$node->nid");
+          drupal_goto($uri['path']);
         }
       }
       else {
         drupal_set_message(t('You are not authorized to view comments.'), 'error');
-        drupal_goto("node/$node->nid");
+        drupal_goto($uri['path']);
       }
     }
-    // This is the case where the comment is in response to a node. Display the node.
+    // This is the case where the comment is in response to a entity. Display
+    // the entity.
+    // @todo replace this with entity access controls once generic access
+    // controller lands.
+    // @see http://drupal.org/node/1696660
     elseif (user_access('access content')) {
-      $build['comment_node'] = node_view($node);
+      // We make sure the field value isn't set so we don't end up with a redirect loop.
+      $original = $entity->{$field_name};
+      unset($entity->{$field_name});
+      $build['comment_entity'] = entity_view($entity, 'full');
+      $entity->{$field_name} = $original;
     }
 
     // Should we show the reply box?
-    if ($node->comment != COMMENT_NODE_OPEN) {
+    $items = field_get_items($entity->entityType(), $entity, $field_name);
+    $status = reset($items);
+    if (isset($status['comment']) && $status['comment'] != COMMENT_OPEN) {
       drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
-      drupal_goto("node/$node->nid");
+      drupal_goto($uri['path']);
     }
     elseif (user_access('post comments')) {
-      $build['comment_form'] = comment_add($node, $pid);
+      $build['comment_form'] = comment_add($entity, $field_name, $pid);
     }
     else {
       drupal_set_message(t('You are not authorized to post comments.'), 'error');
-      drupal_goto("node/$node->nid");
+      drupal_goto($uri['path']);
     }
   }
 
@@ -124,7 +147,34 @@ function comment_approve($cid) {
     comment_save($comment);
 
     drupal_set_message(t('Comment approved.'));
-    drupal_goto('node/' . $comment->nid);
+    $entity = entity_load($comment->entity_type, $comment->entity_id);
+    if ($entity) {
+      $uri = $entity->uri();
+      drupal_goto($uri['path']);
+    }
+  }
+  throw new NotFoundHttpException();
+}
+
+/**
+ * Page callback: Legacy handler to redirect old comment reply urls to new url.
+ *
+ * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ *   The node to which the comments are attached.
+ * @param int $pid
+ *   (optional) Some comments are replies to other comments. In those cases,
+ *   $pid is the parent comment's comment ID. Defaults to NULL.
+ *
+ * @throw Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+ *   When there are no comment fields attached to the node.
+ */
+function comment_node_redirect(\Drupal\node\Plugin\Core\Entity\Node $node, $pid = NULL) {
+  $fields = comment_get_comment_fields('node');
+  foreach ($fields as $field_name => $detail) {
+    // Pick the first comment field found on the node.
+    if (in_array($node->bundle(), $detail['bundles']['node'], TRUE)) {
+      drupal_goto('comment/reply/node/' . $node->id() . '/' . $field_name);
+    }
   }
   throw new NotFoundHttpException();
 }

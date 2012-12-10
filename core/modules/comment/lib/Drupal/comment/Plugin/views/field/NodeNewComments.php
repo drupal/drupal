@@ -31,7 +31,7 @@ class NodeNewComments extends Numeric {
 
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['type'] = 'type';
-    $this->additional_fields['comment_count'] = array('table' => 'node_comment_statistics', 'field' => 'comment_count');
+    $this->additional_fields['comment_count'] = array('table' => 'comment_entity_statistics', 'field' => 'comment_count');
   }
 
   protected function defineOptions() {
@@ -80,7 +80,7 @@ class NodeNewComments extends Numeric {
     if ($nids) {
       $query = db_select('node', 'n');
       $query->addField('n', 'nid');
-      $query->innerJoin('comment', 'c', 'n.nid = c.nid');
+      $query->innerJoin('comment', 'c', "n.nid = c.entity_id AND c.entity_type = 'node'");
       $query->addExpression('COUNT(c.cid)', 'num_comments');
       $query->leftJoin('history', 'h', 'h.nid = n.nid');
       $query->condition('n.nid', $nids);

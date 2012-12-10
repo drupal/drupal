@@ -40,7 +40,7 @@ class HandlerTest extends ViewTestBase {
 
   protected function setUp() {
     parent::setUp();
-
+    comment_add_default_comment_field('node', 'page');
     $this->enableViewsTestModule();
   }
 
@@ -275,7 +275,7 @@ class HandlerTest extends ViewTestBase {
     // Setup a broken relationship.
     $view->addItem('default', 'relationship', $this->randomName(), $this->randomName(), array(), 'broken_relationship');
     // Setup a valid relationship.
-    $view->addItem('default', 'relationship', 'comment', 'nid', array('relationship' => 'cid'), 'valid_relationship');
+    $view->addItem('default', 'relationship', 'comment', 'node', array('relationship' => 'cid'), 'valid_relationship');
     $view->initHandlers();
     $field = $view->field['title'];
 

@@ -27,7 +27,6 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // Test if the right links are displayed when no comment is present for the
     // node.
     $this->drupalLogin($this->admin_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
     $this->drupalGet('node');
     $this->assertNoLink(t('@count comments', array('@count' => 0)));
     $this->assertNoLink(t('@count new comments', array('@count' => 0)));
@@ -37,8 +36,9 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // comment settings so use comment_save() to avoid complex setup.
     $comment = entity_create('comment', array(
       'cid' => NULL,
-      'nid' => $this->node->nid,
-      'node_type' => $this->node->type,
+      'entity_id' => $this->node->nid,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'pid' => 0,
       'uid' => $this->loggedInUser->uid,
       'status' => COMMENT_PUBLISHED,

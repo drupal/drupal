@@ -16,13 +16,14 @@ function comment_token_info() {
   );
 
   // Comment-related tokens for nodes
-  $node['comment-count'] = array(
+  // @todo make this work per field.
+  $entity['comment-count'] = array(
     'name' => t("Comment count"),
-    'description' => t("The number of comments posted on a node."),
+    'description' => t("The number of comments posted on an entity."),
   );
-  $node['comment-count-new'] = array(
+  $entity['comment-count-new'] = array(
     'name' => t("New comment count"),
-    'description' => t("The number of comments posted on a node since the reader last viewed it."),
+    'description' => t("The number of comments posted on an entity since the reader last viewed it."),
   );
 
   // Core comment tokens
@@ -79,9 +80,15 @@ function comment_token_info() {
     'description' => t("The comment's parent, if comment threading is active."),
     'type' => 'comment',
   );
+  $comment['entity'] = array(
+    'name' => t("Entity"),
+    'description' => t("The entity the comment was posted to."),
+    'type' => 'entity',
+  );
+  // Provide for backwards compatability as no upgrade path available.
   $comment['node'] = array(
     'name' => t("Node"),
-    'description' => t("The node the comment was posted to."),
+    'description' => t("The Node the comment was posted to."),
     'type' => 'node',
   );
   $comment['author'] = array(
@@ -93,7 +100,7 @@ function comment_token_info() {
   return array(
     'types' => array('comment' => $type),
     'tokens' => array(
-      'node' => $node,
+      'entity' => $entity,
       'comment' => $comment,
     ),
   );
@@ -193,17 +200,33 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           $replacements[$original] = format_date($comment->changed, 'medium', '', NULL, $langcode);
           break;
 
-        case 'node':
-          $node = node_load($comment->nid);
-          $title = $node->label();
+        case 'entity':
+          $entity = entity_load($comment->entity_type, $comment->entity_id);
+          $title = $entity->label();
           $replacements[$original] = $sanitize ? filter_xss($title) : $title;
+          break;
+
+        case 'node':
+          if ($comment->entity_type== 'node') {
+            $entity = entity_load($comment->entity_type, $comment->entity_id);
+            $title = $entity->label();
+            $replacements[$original] = $sanitize ? filter_xss($title) : $title;
+          }
+          else {
+            $replacements[$original] = NULL;
+          }
           break;
       }
     }
 
     // Chained token relationships.
-    if ($node_tokens = token_find_with_prefix($tokens, 'node')) {
-      $node = node_load($comment->nid);
+    if ($entity_tokens = token_find_with_prefix($tokens, 'entity')) {
+      $entity = entity_load($comment->entity_type, $comment->entity_id);
+      $replacements += token_generate($comment->entity_type, $entity_tokens, array($comment->entity_type => $entity), $options);
+    }
+
+    if (($node_tokens = token_find_with_prefix($tokens, 'node')) && $comment->entity_type == 'node') {
+      $node = node_load($comment->entity_id);
       $replacements += token_generate('node', $node_tokens, array('node' => $node), $options);
     }
 
@@ -223,17 +246,21 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
       $replacements += token_generate('user', $author_tokens, array('user' => $account), $options);
     }
   }
-  elseif ($type == 'node' & !empty($data['node'])) {
-    $node = $data['node'];
+  elseif ($type == 'entity' & !empty($data['entity'])) {
+    $entity = $data['entity'];
 
     foreach ($tokens as $name => $original) {
       switch($name) {
         case 'comment-count':
-          $replacements[$original] = $node->comment_count;
+          $count = 0;
+          foreach ($entity->comment_statistics as $field_name => $statistics) {
+            $count += $statistics->comment_count;
+          }
+          $replacements[$original] = $count;
           break;
 
         case 'comment-count-new':
-          $replacements[$original] = comment_num_new($node->nid);
+          $replacements[$original] = comment_num_new($entity->id(), $entity->entityType());
           break;
       }
     }

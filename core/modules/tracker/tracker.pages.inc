@@ -50,7 +50,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
   $rows = array();
   if (!empty($nodes)) {
     // Now, get the data and put into the placeholder array.
-    $result = db_query('SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids)', array(':nids' => array_keys($nodes)), array('target' => 'slave'));
+    $result = db_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {comment_entity_statistics} l ON n.nid = l.entity_id AND l.entity_type = 'node' INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids) GROUP BY 1, 2, 3, 4, 5, 6", array(':nids' => array_keys($nodes)), array('target' => 'slave'));
     foreach ($result as $node) {
       $node->last_activity = $nodes[$node->nid]->changed;
       $nodes[$node->nid] = $node;
@@ -63,7 +63,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
       if ($node->comment_count) {
         $comments = $node->comment_count;
 
-        if ($new = comment_num_new($node->nid)) {
+        if ($new = comment_num_new($node->nid, 'node')) {
           $comments .= '<br />';
           $comments .= l(format_plural($new, '1 new', '@count new'), 'node/' . $node->nid, array('fragment' => 'new'));
         }

@@ -88,12 +88,15 @@ class DefaultViewsTest extends WebTestBase {
     // Create a time in the past for the archive.
     $time = time() - 3600;
 
+    comment_add_default_comment_field('node', 'page');
+
     for ($i = 0; $i <= 10; $i++) {
       $user = $this->drupalCreateUser();
       $term = $this->createTerm($this->vocabulary);
 
       $values = array('created' => $time, 'type' => 'page');
       $values[$this->field_name][LANGUAGE_NOT_SPECIFIED][]['tid'] = $term->tid;
+      $values['comment'][LANGUAGE_NOT_SPECIFIED][]['comment'] = COMMENT_OPEN;
 
       // Make every other node promoted.
       if ($i % 2) {
@@ -107,7 +110,9 @@ class DefaultViewsTest extends WebTestBase {
 
       $comment = array(
         'uid' => $user->uid,
-        'nid' => $node->nid,
+        'entity_id' => $node->nid,
+        'entity_type' => 'node',
+        'field_name' => 'comment'
       );
       entity_create('comment', $comment)->save();
     }

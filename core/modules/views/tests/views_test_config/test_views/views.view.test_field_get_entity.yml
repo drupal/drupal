@@ -21,7 +21,7 @@ display:
           field: nid
           id: nid
           table: node
-          relationship: nid
+          relationship: node
         uid:
           field: uid
           id: uid
@@ -36,9 +36,9 @@ display:
       query:
         type: views_query
       relationships:
-        nid:
-          field: nid
-          id: nid
+        node:
+          field: node
+          id: node
           required: '1'
           table: comment
         uid:
@@ -47,7 +47,7 @@ display:
           group_type: group
           id: uid
           label: author
-          relationship: nid
+          relationship: node
           required: '0'
           table: node
       sorts: {  }

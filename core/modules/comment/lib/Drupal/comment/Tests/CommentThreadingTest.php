@@ -34,7 +34,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Create a node.
     $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
 
     // Post comment #1.
     $this->drupalLogin($this->web_user);
@@ -50,7 +50,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #1 creating comment #2.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment1->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment1->id);
     $comment2 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $comment2_loaded = comment_load($comment2->id);
@@ -60,7 +60,7 @@ class CommentThreadingTest extends CommentTestBase {
     $this->assertParentLink($comment2->id, $comment1->id);
 
     // Reply to comment #2 creating comment #3.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment2->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment2->id);
     $comment3 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
     $comment3_loaded = comment_load($comment3->id);
@@ -71,7 +71,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #1 creating comment #4.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment1->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment1->id);
     $comment4 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $comment4_loaded = comment_load($comment4->id);
@@ -94,7 +94,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #5 creating comment #6.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment5->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment5->id);
     $comment6 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $comment6_loaded = comment_load($comment6->id);
@@ -104,7 +104,7 @@ class CommentThreadingTest extends CommentTestBase {
     $this->assertParentLink($comment6->id, $comment5->id);
 
     // Reply to comment #6 creating comment #7.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment6->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment6->id);
     $comment7 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
     $comment7_loaded = comment_load($comment7->id);
@@ -115,7 +115,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #5 creating comment #8.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment5->id);
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment5->id);
     $comment8 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $comment8_loaded = comment_load($comment8->id);

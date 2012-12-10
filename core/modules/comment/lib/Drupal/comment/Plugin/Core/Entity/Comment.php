@@ -60,6 +60,27 @@ class Comment extends Entity implements ContentEntityInterface {
   public $uuid;
 
   /**
+   * The entity ID to which this comment is attached.
+   *
+   * @var integer
+   */
+  public $entity_id;
+
+  /**
+   * The entity type to which this comment is attached.
+   *
+   * @var string
+   */
+  public $entity_type;
+
+  /**
+   * The field to which this comment is attached.
+   *
+   * @var string
+   */
+  public $field_name = 'comment';
+
+  /**
    * The parent comment ID if this is a reply to a comment.
    *
    * @var integer
@@ -121,6 +142,13 @@ class Comment extends Entity implements ContentEntityInterface {
   public $homepage;
 
   /**
+   * The entity which this comment is attached.
+   *
+   * @var Drupal\Core\Entity\EntityInterface
+   */
+  protected $entity;
+
+  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
@@ -131,6 +159,6 @@ class Comment extends Entity implements ContentEntityInterface {
    * Implements Drupal\Core\Entity\EntityInterface::bundle().
    */
   public function bundle() {
-    return $this->node_type;
+    return $this->field_name;
   }
 }

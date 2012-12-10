@@ -102,6 +102,7 @@ class CommentLanguageTest extends WebTestBase {
         "title" => $title,
         "body[$langcode_not_specified][0][value]" => $this->randomName(),
         "langcode" => $node_langcode,
+         "comment[$langcode_not_specified][0][comment]" => COMMENT_OPEN,
       );
       $this->drupalPost("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
@@ -121,7 +122,9 @@ class CommentLanguageTest extends WebTestBase {
         // Check that comment language matches the current content language.
         $cid = db_select('comment', 'c')
           ->fields('c', array('cid'))
-          ->condition('nid', $node->nid)
+          ->condition('entity_id', $node->nid)
+          ->condition('entity_type', 'node')
+          ->condition('field_name', 'comment')
           ->orderBy('cid', 'DESC')
           ->range(0, 1)
           ->execute()

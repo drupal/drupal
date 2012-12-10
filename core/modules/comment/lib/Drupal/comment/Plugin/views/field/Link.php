@@ -25,7 +25,7 @@ class Link extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['text'] = array('default' => '', 'translatable' => TRUE);
-    $options['link_to_node'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_entity'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
@@ -35,10 +35,10 @@ class Link extends FieldPluginBase {
       '#title' => t('Text to display'),
       '#default_value' => $this->options['text'],
     );
-    $form['link_to_node'] = array(
-      '#title' => t('Link field to the node if there is no comment.'),
+    $form['link_to_entity'] = array(
+      '#title' => t('Link field to the entity if there is no comment.'),
       '#type' => 'checkbox',
-      '#default_value' => $this->options['link_to_node'],
+      '#default_value' => $this->options['link_to_entity'],
     );
     parent::buildOptionsForm($form, $form_state);
   }
@@ -53,7 +53,6 @@ class Link extends FieldPluginBase {
   function render_link($data, $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $comment = $data;
-    $nid = $comment->nid;
     $cid = $comment->id();
 
     $this->options['alter']['make_link'] = TRUE;
@@ -65,7 +64,11 @@ class Link extends FieldPluginBase {
     }
     // If there is no comment link to the node.
     elseif ($this->options['link_to_node']) {
-      $this->options['alter']['path'] = "node/" . $nid;
+      $entity_id = $comment->entity_id;
+      $entity_type = $comment->entity_type;
+      $entity = entity_load($entity_type, $entity_id);
+      $uri = $entity->uri();
+      $this->options['alter']['path'] = $uri['path'];
     }
 
     return $text;

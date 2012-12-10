@@ -37,6 +37,8 @@ class UserSignatureTest extends WebTestBase {
 
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    // Add a comment field.
+    comment_add_default_comment_field('node', 'page');
 
     // Prefetch and create text formats.
     $this->plain_text_format = filter_format_load('plain_text');
@@ -75,8 +77,8 @@ class UserSignatureTest extends WebTestBase {
    * upon display.
    */
   function testUserSignature() {
-    // Create a new node with comments on.
-    $node = $this->drupalCreateNode(array('comment' => COMMENT_NODE_OPEN));
+    // Create a new node with comments on (default).
+    $node = $this->drupalCreateNode(array('comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
 
     // Verify that user signature field is not displayed on registration form.
     $this->drupalGet('user/register');
@@ -100,7 +102,7 @@ class UserSignatureTest extends WebTestBase {
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
-    $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Preview'));
+    $this->drupalPost('comment/reply/node/' . $node->nid .'/comment', $edit, t('Preview'));
     $this->drupalPost(NULL, array(), t('Save'));
 
     // Get the comment ID. (This technique is the same one used in the Comment

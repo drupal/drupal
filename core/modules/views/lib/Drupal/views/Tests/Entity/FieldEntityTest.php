@@ -45,9 +45,21 @@ class FieldEntityTest extends ViewTestBase {
 
     $account = entity_create('user', array('name' => $this->randomName(), 'bundle' => 'user'));
     $account->save();
-    $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page'));
+    comment_add_default_comment_field('node', 'page');
+    $node = entity_create('node', array(
+      'uid' => $account->id(),
+      'type' => 'page',
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ),
+    ));
     $node->save();
-    $comment = entity_create('comment', array('uid' => $account->id(), 'nid' => $node->id(), 'node_type' => 'comment_node_page'));
+    $comment = entity_create('comment', array(
+      'uid' => $account->id(),
+      'entity_id' => $node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment'
+    ));
     $comment->save();
 
     $view = views_get_view('test_field_get_entity');

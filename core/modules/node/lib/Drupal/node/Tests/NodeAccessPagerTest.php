@@ -33,6 +33,7 @@ class NodeAccessPagerTest extends WebTestBase {
     parent::setUp();
 
     node_access_rebuild();
+    comment_add_default_comment_field('node', 'page');
     $this->web_user = $this->drupalCreateUser(array('access content', 'access comments', 'node test view'));
   }
 
@@ -41,12 +42,18 @@ class NodeAccessPagerTest extends WebTestBase {
    */
   public function testCommentPager() {
     // Create a node.
-    $node = $this->drupalCreateNode();
+    $node = $this->drupalCreateNode(
+      array('comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ))
+    );
 
     // Create 60 comments.
     for ($i = 0; $i < 60; $i++) {
       $comment = entity_create('comment', array(
-        'nid' => $node->nid,
+        'entity_id' => $node->nid,
+        'entity_type' => 'node',
+        'field_name' => 'comment',
         'subject' => $this->randomName(),
         'comment_body' => array(
           LANGUAGE_NOT_SPECIFIED => array(

@@ -5,7 +5,7 @@
  * Provides an HTML container for comments.
  *
  * Available variables:
- * - $content: The array of content-related elements for the node. Use
+ * - $content: The array of content-related elements for the entity. Use
  *   render($content) to print them all, or
  *   print a subset such as render($content['comment_form']).
  * - $attributes: An instance of Attributes class that can be manipulated as an
@@ -20,7 +20,7 @@
  *   the template.
  *
  * The following variables are provided for contextual information.
- * - $node: Node entity the comments are attached to.
+ * - $entity: Entity the comments are attached to.
  * The constants below the variables show the possible values and should be
  * used for comparison.
  * - $display_mode
@@ -33,7 +33,7 @@
  */
 ?>
 <section id="comments" <?php print $attributes; ?>>
-  <?php if ($content['comments'] && $node->type != 'forum'): ?>
+  <?php if ($content['comments'] && ($entity->entityType() != 'node' || $entity->bundle() != 'forum')): ?>
     <?php print render($title_prefix); ?>
     <h2 class="title"><?php print t('Comments'); ?></h2>
     <?php print render($title_suffix); ?>

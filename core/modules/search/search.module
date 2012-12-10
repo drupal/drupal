@@ -278,7 +278,12 @@ function search_get_info($all = FALSE) {
   }
 
   // Return only modules that are set to active in search settings.
-  return array_intersect_key($search_hooks, array_flip(config('search.settings')->get('active_modules')));
+  $active = config('search.settings')->get('active_modules');
+  if (empty($active)) {
+    // No active search modules.
+    return array();
+  }
+  return array_intersect_key($search_hooks, array_flip($active));
 }
 
 /**
@@ -832,7 +837,9 @@ function search_node_update(Node $node) {
  */
 function search_comment_insert($comment) {
   // Reindex the node when comments are added.
-  search_touch_node($comment->nid);
+  if ($comment->entity_type == 'node') {
+    search_touch_node($comment->entity_id);
+  }
 }
 
 /**
@@ -840,7 +847,9 @@ function search_comment_insert($comment) {
  */
 function search_comment_update($comment) {
   // Reindex the node when comments are changed.
-  search_touch_node($comment->nid);
+  if ($comment->entity_type == 'node') {
+    search_touch_node($comment->entity_id);
+  }
 }
 
 /**
@@ -848,7 +857,9 @@ function search_comment_update($comment) {
  */
 function search_comment_delete($comment) {
   // Reindex the node when comments are deleted.
-  search_touch_node($comment->nid);
+  if ($comment->entity_type == 'node') {
+    search_touch_node($comment->entity_id);
+  }
 }
 
 /**
@@ -856,7 +867,9 @@ function search_comment_delete($comment) {
  */
 function search_comment_publish($comment) {
   // Reindex the node when comments are published.
-  search_touch_node($comment->nid);
+  if ($comment->entity_type == 'node') {
+    search_touch_node($comment->entity_id);
+  }
 }
 
 /**
@@ -864,7 +877,9 @@ function search_comment_publish($comment) {
  */
 function search_comment_unpublish($comment) {
   // Reindex the node when comments are unpublished.
-  search_touch_node($comment->nid);
+  if ($comment->entity_type == 'node') {
+    search_touch_node($comment->entity_id);
+  }
 }
 
 /**

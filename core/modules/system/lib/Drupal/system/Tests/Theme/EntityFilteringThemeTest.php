@@ -97,6 +97,8 @@ class EntityFilteringThemeTest extends WebTestBase {
     ));
     taxonomy_term_save($this->term);
 
+    // Add a comment field.
+    comment_add_default_comment_field('node', 'article', 'comment', COMMENT_OPEN);
     // Create a test node tagged with the test term.
     $this->node = $this->drupalCreateNode(array(
       'title' => $this->xss_label,
@@ -107,8 +109,9 @@ class EntityFilteringThemeTest extends WebTestBase {
 
     // Create a test comment on the test node.
     $this->comment = entity_create('comment', array(
-      'nid' => $this->node->nid,
-      'node_type' => $this->node->type,
+      'entity_id' => $this->node->nid,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->xss_label,
       'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),

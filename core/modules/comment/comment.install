@@ -1,9 +1,12 @@
 <?php
-
 /**
  * @file
  * Install, update and uninstall functions for the Comment module.
  */
+use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\comment\Plugin\Core\Entity\Comment;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\CoreBundle;
 
 /**
  * Implements hook_uninstall().
@@ -14,18 +17,15 @@ function comment_uninstall() {
 
   // Remove variables.
   variable_del('comment_block_count');
-  $node_types = array_keys(node_type_get_types());
-  foreach ($node_types as $node_type) {
-    field_attach_delete_bundle('comment', 'comment_node_' . $node_type);
-    variable_del('comment_' . $node_type);
-    variable_del('comment_anonymous_' . $node_type);
-    variable_del('comment_controls_' . $node_type);
-    variable_del('comment_default_mode_' . $node_type);
-    variable_del('comment_default_order_' . $node_type);
-    variable_del('comment_default_per_page_' . $node_type);
-    variable_del('comment_form_location_' . $node_type);
-    variable_del('comment_preview_' . $node_type);
-    variable_del('comment_subject_field_' . $node_type);
+  // We cannot use comment_get_comment_fields because comment.module is
+  // disabled.
+  $comment_fields = array_filter(field_info_fields(), function ($value) {
+    if ($value['type']  == 'comment') {
+      return TRUE;
+    }
+  });
+  foreach ($comment_fields as $field_name => $field) {
+    field_attach_delete_bundle('comment', $field_name);
   }
 
   // Remove states.
@@ -36,50 +36,52 @@ function comment_uninstall() {
  * Implements hook_enable().
  */
 function comment_enable() {
-  // Insert records into the node_comment_statistics for nodes that are missing.
-  $query = db_select('node', 'n');
-  $query->leftJoin('node_comment_statistics', 'ncs', 'ncs.nid = n.nid');
-  $query->addField('n', 'created', 'last_comment_timestamp');
-  $query->addField('n', 'uid', 'last_comment_uid');
-  $query->addField('n', 'nid');
-  $query->addExpression('0', 'comment_count');
-  $query->addExpression('NULL', 'last_comment_name');
-  $query->isNull('ncs.comment_count');
+  $comment_fields = comment_get_comment_fields();
+  $entity_info = entity_get_info();
+  foreach ($comment_fields as $field_name => $info) {
+    foreach ($info['bundles'] as $entity_type => $bundles) {
+      foreach ($bundles as $bundle) {
+        $entity_detail = $entity_info[$entity_type];
+        if (!empty($entity_detail['base_table']) &&
+            !empty($entity_detail['entity_keys']['id'])) {
+          $table = $entity_detail['base_table'];
+          $schema = drupal_get_schema($table);
+          // Insert records into the comment_entity_statistics for entities that
+          // are missing.
+          $query = db_select($table, 'e');
+          // Filter by bundle.
+          $query->condition($entity_detail['entity_keys']['bundle'], $bundle);
+          $query->leftJoin('comment_entity_statistics', 'ces', 'ces.entity_id = e.' . $entity_detail['entity_keys']['id'] . " AND ces.entity_type = '$entity_type'");
+          if (!empty($schema[$table]['fields']['created'])) {
+            $query->addField('e', 'created', 'last_comment_timestamp');
+          }
+          else {
+            // No created field for this entity type, default to now.
+            $query->addExpression(REQUEST_TIME, 'last_comment_timestamp');
+          }
+          if (!empty($schema[$table]['fields']['uid'])) {
+            $query->addField('e', 'uid', 'last_comment_uid');
+          }
+          else {
+            // No uid field for this entity type, default to anonymous.
+            $query->addExpression(0, 'last_comment_uid');
+          }
+          $query->addField('e', $entity_detail['entity_keys']['id'], 'entity_id');
+          $query->addExpression("'$entity_type'", 'entity_type');
+          $query->addExpression("'$field_name'", 'field_name');
+          $query->addExpression('0', 'comment_count');
+          $query->addExpression('NULL', 'last_comment_name');
+          $query->isNull('ces.comment_count');
 
-  db_insert('node_comment_statistics')
-    ->from($query)
-    ->execute();
-}
-
-/**
- * Implements hook_modules_enabled().
- *
- * Creates comment body fields for node types existing before the Comment module
- * is enabled. We use hook_modules_enabled() rather than hook_enable() so we can
- * react to node types of existing modules, and those of modules being enabled
- * both before and after the Comment module in the loop of module_enable().
- *
- * There is a separate comment bundle for each node type to allow for
- * per-node-type customization of comment fields. Each one of these bundles
- * needs a comment body field instance. A comment bundle is needed even for
- * node types whose comments are disabled by default, because individual nodes
- * may override that default.
- *
- * @see comment_node_type_insert()
- */
-function comment_modules_enabled($modules) {
-  // Only react if the Comment module is one of the modules being enabled.
-  // hook_node_type_insert() is used to create body fields while the comment
-  // module is enabled.
-  if (in_array('comment', $modules)) {
-    // Ensure that the list of node types reflects newly enabled modules.
-    node_types_rebuild();
-
-    // Create comment body fields for each node type, if needed.
-    foreach (node_type_get_types() as $type => $info) {
-      _comment_body_field_create($info);
+          db_insert('comment_entity_statistics')
+            ->from($query)
+            ->execute();
+        }
+      }
     }
   }
+  // Set default value of comment.maintain_entity_statistics.
+  state()->set('comment.maintain_entity_statistics', TRUE);
 }
 
 /**
@@ -106,12 +108,26 @@ function comment_schema() {
         'default' => 0,
         'description' => 'The {comment}.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.',
       ),
-      'nid' => array(
+      'entity_id' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {node}.nid to which this comment is a reply.',
+        'description' => 'The entity_id to which this comment is a reply.',
+      ),
+      'entity_type' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'default' => 'node',
+        'length' => 255,
+        'description' => 'The entity_type to which this comment is a reply.',
+      ),
+      'field_name' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'default' => 'comment',
+        'length' => 255,
+        'description' => 'The field_name through which this comment was added.',
       ),
       'uid' => array(
         'type' => 'int',
@@ -188,9 +204,22 @@ function comment_schema() {
     ),
     'indexes' => array(
       'comment_status_pid' => array('pid', 'status'),
-      'comment_num_new' => array('nid', 'status', 'created', 'cid', 'thread'),
+      'comment_num_new' => array(
+        'entity_id',
+        'entity_type',
+        'field_name',
+        'status',
+        'created',
+        'cid',
+        'thread'
+      ),
       'comment_uid' => array('uid'),
-      'comment_nid_langcode' => array('nid', 'langcode'),
+      'comment_entity_langcode' => array(
+        'entity_id',
+        'entity_type',
+        'field_name',
+        'langcode'
+      ),
       'comment_created' => array('created'),
     ),
     'primary key' => array('cid'),
@@ -198,10 +227,6 @@ function comment_schema() {
       'uuid' => array('uuid'),
     ),
     'foreign keys' => array(
-      'comment_node' => array(
-        'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
       'comment_author' => array(
         'table' => 'users',
         'columns' => array('uid' => 'uid'),
@@ -209,15 +234,29 @@ function comment_schema() {
     ),
   );
 
-  $schema['node_comment_statistics'] = array(
-    'description' => 'Maintains statistics of node and comments posts to show "new" and "updated" flags.',
+  $schema['comment_entity_statistics'] = array(
+    'description' => 'Maintains statistics of entity and comments posts to show "new" and "updated" flags.',
     'fields' => array(
-      'nid' => array(
+      'entity_id' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {node}.nid for which the statistics are compiled.',
+        'description' => 'The entity_id for which the statistics are compiled.',
+      ),
+      'entity_type' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'default' => 'node',
+        'length' => 255,
+        'description' => 'The entity_type to which this comment is a reply.',
+      ),
+      'field_name' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'default' => 'comment',
+        'length' => 255,
+        'description' => 'The field_name through which this comment was added.',
       ),
       'cid' => array(
         'type' => 'int',
@@ -252,17 +291,13 @@ function comment_schema() {
         'description' => 'The total number of comments on this node.',
       ),
     ),
-    'primary key' => array('nid'),
+    'primary key' => array('entity_id', 'entity_type', 'field_name'),
     'indexes' => array(
       'node_comment_timestamp' => array('last_comment_timestamp'),
       'comment_count' => array('comment_count'),
       'last_comment_uid' => array('last_comment_uid'),
     ),
     'foreign keys' => array(
-      'statistics_node' => array(
-        'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
       'last_comment_author' => array(
         'table' => 'users',
         'columns' => array(
@@ -273,6 +308,26 @@ function comment_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function comment_field_schema($field) {
+  $columns = array();
+  if ($field['type'] == 'comment') {
+    $columns += array(
+      'comment' => array(
+        'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    );
+  }
+  return array(
+    'columns' => $columns,
+  );
 }
 
 /**
@@ -392,6 +447,278 @@ function comment_update_8004() {
     'node_cron_comments_scale' => 'comment.node_comment_statistics_scale',
   ));
 }
+
+/**
+ * Updates the comment_node_statistics and comment tables to new structure.
+ */
+function comment_update_8005(&$sandbox) {
+  // Remove the comment_node foreign key.
+  db_drop_index('comment', 'comment_node');
+  // Remove the comment_nid_langcode index.
+  db_drop_index('comment', 'comment_nid_langcode');
+  // Add the entity_type and field_name columns to comment.
+  db_add_field('comment', 'entity_type', array(
+    'type' => 'varchar',
+    'not null' => TRUE,
+    'default' => 'node',
+    'length' => 255,
+    'description' => 'The entity_type to which this comment is a reply.',
+  ));
+  db_add_field('comment', 'field_name', array(
+    'type' => 'varchar',
+    'not null' => TRUE,
+    'default' => 'comment',
+    'length' => 255,
+    'description' => 'The field_name to which this comment is a reply.',
+  ));
+  // Rename the nid column to entity_id.
+  db_change_field('comment', 'nid', 'entity_id', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The entity_id to which this comment is a reply.',
+  ));
+  // Add the comment_entity_langcode index.
+  db_add_index('comment', 'comment_entity_langcode', array(
+    'entity_id',
+    'entity_type',
+    'field_name',
+    'langcode'
+  ));
+  // Rename node_comment_statistics to comment_entity_statistics.
+  db_rename_table('node_comment_statistics', 'comment_entity_statistics');
+  // Remove the statistics_node foreign key from entity_comment_statistics.
+  // Add the entity_type and field_name columns to comment_entity_statistics.
+  db_add_field('comment_entity_statistics', 'entity_type', array(
+    'type' => 'varchar',
+    'not null' => TRUE,
+    'default' => 'node',
+    'length' => 255,
+    'description' => 'The entity_type to which this comment is a reply.',
+  ));
+  db_add_field('comment_entity_statistics', 'field_name', array(
+    'type' => 'varchar',
+    'not null' => TRUE,
+    'default' => 'comment',
+    'length' => 255,
+    'description' => 'The field_name to which this comment is a reply.',
+  ));
+  // Rename the nid column in entity_comment_statistics to entity_id.
+  db_change_field('comment_entity_statistics', 'nid', 'entity_id', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The entity_id to which this comment is a reply.',
+  ));
+  $t = get_t();
+  return $t('Updated database to reflect new comment structure');
+}
+
+/**
+ * Adds new field_api fields.
+ */
+function comment_update_8006(&$sandbox) {
+  // Loop over defined node_types.
+  $node_types = array_keys(_update_7000_node_get_types());
+  foreach ($node_types as $node_type) {
+    // Add a default comment field for existing node comments.
+    $field = array(
+      'cardinality' => '1',
+      // We need one per node type to match the existing bundles.
+      'field_name' => 'comment_node_' . $node_type,
+      'module' => 'comment',
+      'settings' => array(),
+      'translatable' => '0',
+      'type' => 'comment',
+    );
+    // Make sure field doesn't already exist.
+    if (!_update_7000_field_read_fields(array('field_name' => 'comment_node_' . $node_type))) {
+      // Create the field.
+      _update_7000_field_create_field($field);
+    }
+    // Add the comment field, setting the instance settings to match those for the
+    // give node_type.
+    $instance = array(
+      'bundle' => $node_type,
+      'default_value' => array(
+        0 => array(
+          'comment' => variable_get('comment_' . $node_type, 0),
+        )
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'comment',
+          'settings' => array(),
+          'type' => 'comment_default',
+          'weight' => '1',
+        ),
+        'rss' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'teaser' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'search_index' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'search_result' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'comment_node_' . $node_type,
+      'label' => 'Comment settings',
+      'required' => 1,
+      'settings' => array(
+        'comment' => array(
+          'comment' => variable_get('comment_' . $node_type, 0),
+          'comment_default_mode' => variable_get('comment_default_mode_' . $node_type, 1),
+          'comment_default_per_page' => variable_get('comment_default_per_page_' . $node_type, 50),
+          'comment_anonymous' => variable_get('comment_anonymous_' . $node_type, 0),
+          'comment_subject_field' => variable_get('comment_subject_field_' . $node_type, 1),
+          'comment_form_location' => variable_get('comment_form_location_' . $node_type, 1),
+          'comment_preview' => variable_get('comment_preview_' . $node_type, 1)
+        )
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'comment',
+        'settings' => array(),
+        'type' => 'comment_default',
+        'weight' => '50',
+      ),
+    );
+    _update_7000_field_create_instance($field, $instance);
+    // Rename the comment bundle for this node type.
+    // Clean up old variables.
+    variable_del('comment_' . $node_type);
+    variable_del('comment_default_mode_' . $node_type);
+    variable_del('comment_default_per_page_' . $node_type);
+    variable_del('comment_anonymous_' . $node_type);
+    variable_del('comment_subject_field_' . $node_type);
+    variable_del('comment_form_location_' . $node_type);
+    variable_del('comment_preview_' . $node_type);
+  }
+  $t = get_t();
+  return $t('Created required fields for each comment bundle');
+}
+
+/**
+ * Updates existing values.
+ */
+function comment_update_8007(&$sandbox) {
+
+  $types = array_keys(_update_7000_node_get_types());
+   // Load each node type in batch and initialize field values for comment field.
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_nid'] = 0;
+    // We track all node types here.
+    $sandbox['node_types'] = $types;
+    // We start with this node type.
+    $sandbox['node_type'] = array_shift($sandbox['node_types']);
+    $sandbox['#finished'] = 1;
+    $sandbox['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
+  }
+
+  // Set the initial values of comment fields for existing nodes. Note that
+  // contrib modules will need to handle the upgrade path on their own, as
+  // they are disabled during core upgrade.
+
+  // Node table will always exist up until here because in 7.x comment
+  // depends on node.
+  $nodes = db_select('node', 'n')
+    ->fields('n', array('nid', 'comment', 'vid', 'langcode'))
+    ->condition('type', $sandbox['node_type'])
+    ->condition('nid', $sandbox['current_nid'], '>')
+    ->range(0, 50)
+    ->orderBy('nid', 'ASC')
+    ->execute()
+    ->fetchAllAssoc('nid');
+
+  if (count($nodes) > 0) {
+    $insert = db_insert('field_data_comment_node_' . $sandbox['node_type'])->
+      fields(array(
+        'entity_type',
+        'bundle',
+        'entity_id',
+        'revision_id',
+        'langcode',
+        'delta',
+        'comment_node_' . $sandbox['node_type'] . '_comment',
+      ));
+      $revision = db_insert('field_revision_comment_node_' . $sandbox['node_type'])->
+      fields(array(
+        'entity_type',
+        'bundle',
+        'entity_id',
+        'revision_id',
+        'langcode',
+        'delta',
+        'comment_node_' . $sandbox['node_type'] . '_comment',
+      ));
+
+    // Update the field name to match the node type.
+    db_update('comment')->fields(
+      array('field_name' => 'comment_node_' . $sandbox['node_type'])
+    )->condition('entity_id', array_keys($nodes))
+    ->execute();
+    foreach ($nodes as $nid => $node) {
+      $insert->values(array(
+        'entity_type' => 'node',
+        'bundle' => $sandbox['node_type'],
+        'entity_id' => $nid,
+        'revision_id' => $node->vid,
+        'langcode' => $node->langcode,
+        'delta' => 0,
+        'comment_node_' . $sandbox['node_type'] . '_comment' => $node->comment,
+      ));
+      $revision->values(array(
+        'entity_type' => 'node',
+        'bundle' => $sandbox['node_type'],
+        'entity_id' => $nid,
+        'revision_id' => $node->vid,
+        'langcode' => $node->langcode,
+        'delta' => 0,
+        'comment_node_' . $sandbox['node_type'] . '_comment' => $node->comment,
+      ));
+      $sandbox['progress']++;
+      $sandbox['current_nid'] = $nid;
+    }
+    $insert->execute();
+    $revision->execute();
+  }
+  else {
+    // Move to the next node type.
+    $sandbox['node_type'] = array_shift($sandbox['node_types']);
+    // Reset the current nid pointer.
+    $sandbox['current_nid'] = 0;
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+  $t = get_t();
+  return $t('Migrated existing node comment settings to field api.');
+}
+
+/**
+ * Removes the existing fields.
+ */
+function comment_update_8008(&$sandbox) {
+  // Remove the {node}.comment field.
+  db_drop_field('node', 'comment');
+  // Remove the {node_revision}.comment field.
+  db_drop_field('node_revision', 'comment');
+  $t = get_t();
+  return $t('Removed old fields.');
+}
+
 
 /**
  * @} End of "addtogroup updates-7.x-to-8.x".

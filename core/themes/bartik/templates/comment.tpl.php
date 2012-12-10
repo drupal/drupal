@@ -29,7 +29,8 @@
  *    It includes the 'class' information, which includes:
  *   - comment: The current template type; e.g., 'theming hook'.
  *   - by-anonymous: Comment by an unregistered user.
- *   - by-node-author: Comment by the author of the parent node.
+ *   - by-{entity-type}-author: Comment by the author of the parent entity.
+ *   eg. by-node-author.
  *   - preview: When previewing a new or edited comment.
  *   The following applies only to viewers who are registered users:
  *   - unpublished: An unpublished comment visible only to administrators.
@@ -58,7 +59,7 @@
  *
  * These two variables are provided for context:
  * - $comment: Full comment object.
- * - $node: Node entity the comments are attached to.
+ * - $entity: Entity the comments are attached to.
  *
  * @see template_preprocess()
  * @see template_preprocess_comment()

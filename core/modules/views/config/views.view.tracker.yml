@@ -51,12 +51,12 @@ display:
           label: Author
         comment_count:
           id: comment_count
-          table: node_comment_statistics
+          table: comment_entity_statistics
           field: comment_count
           label: Replies
         last_comment_timestamp:
           id: last_comment_timestamp
-          table: node_comment_statistics
+          table: comment_entity_statistics
           field: last_comment_timestamp
           label: 'Last Post'
         timestamp:
@@ -77,7 +77,7 @@ display:
       sorts:
         last_comment_timestamp:
           id: last_comment_timestamp
-          table: node_comment_statistics
+          table: comment_entity_statistics
           field: last_comment_timestamp
       arguments:
         uid_touch:

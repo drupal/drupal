@@ -40,7 +40,7 @@ class CommentTranslationUITest extends EntityTranslationUITest {
   function setUp() {
     $this->entityType = 'comment';
     $this->nodeBundle = 'article';
-    $this->bundle = 'comment_node_' . $this->nodeBundle;
+    $this->bundle = 'comment';
     $this->testLanguageSelector = FALSE;
     $this->subject = $this->randomName();
     parent::setUp();
@@ -52,6 +52,14 @@ class CommentTranslationUITest extends EntityTranslationUITest {
   function setupBundle() {
     parent::setupBundle();
     $this->drupalCreateContentType(array('type' => $this->nodeBundle, 'name' => $this->nodeBundle));
+    // Add a comment field to the article content type.
+    comment_add_default_comment_field('node', 'article');
+    // Mark this bundle as translatable.
+    translation_entity_set_config('comment', 'comment', 'enabled', TRUE);
+    // Refresh entity info.
+    entity_info_cache_clear();
+    // Flush the permissions after adding the translatable comment bundle.
+    $this->checkPermissions(array(), TRUE);
   }
 
   /**
@@ -74,14 +82,21 @@ class CommentTranslationUITest extends EntityTranslationUITest {
   /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::createEntity().
    */
-  protected function createEntity($values, $langcode, $node_bundle = NULL) {
-    if (!isset($node_bundle)) {
-      $node_bundle = $this->nodeBundle;
+  protected function createEntity($values, $langcode, $bundle_name = NULL) {
+    if (!isset($bundle_name)) {
+      $bundle_name = $this->nodeBundle;
     }
-    $node = $this->drupalCreateNode(array('type' => $node_bundle));
-    $values['nid'] = $node->nid;
+    $node = $this->drupalCreateNode(array(
+      'type' => $bundle_name,
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(
+        array('comment' => COMMENT_OPEN)
+      ))
+    ));
+    $values['entity_id'] = $node->nid;
+    $values['entity_type'] = 'node';
+    $values['field_name'] = 'comment';
     $values['uid'] = $node->uid;
-    return parent::createEntity($values, $langcode);
+    return parent::createEntity($values, $langcode, $bundle_name);
   }
 
   /**

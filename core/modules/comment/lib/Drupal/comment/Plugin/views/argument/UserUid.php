@@ -57,16 +57,28 @@ class UserUid extends ArgumentPluginBase {
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
 
-    $subselect = db_select('comment', 'c');
-    $subselect->addField('c', 'cid');
-    $subselect->condition('c.uid', $this->argument);
-    $subselect->where("c.nid = $this->tableAlias.nid");
+    // Load the table information to get the entity information to finally
+    // be able to join to filter by the original entity type this join is
+    // attached to.
+    if ($this->table != 'comment') {
+      $table_info = views_fetch_data($this->table);
+      $entity_info = entity_get_info($table_info['table']['entity type']);
 
-    $condition = db_or()
-      ->condition("$this->tableAlias.uid", $this->argument, '=')
-      ->exists($subselect);
+      $subselect = db_select('comment', 'c');
+      $subselect->addField('c', 'cid');
+      $subselect->condition('c.uid', $this->argument);
 
-    $this->query->add_where(0, $condition);
+      $entity_id = $this->definition['entity_id'];
+      $entity_type = $this->definition['entity_type'];
+      $subselect->where("c.entity_id = $this->tableAlias.$entity_id");
+      $subselect->condition('c.entity_type', $entity_type);
+
+      $condition = db_or()
+        ->condition("$this->tableAlias.uid", $this->argument, '=')
+        ->exists($subselect);
+
+      $this->query->add_where(0, $condition);
+    }
   }
 
   function get_sort_name() {

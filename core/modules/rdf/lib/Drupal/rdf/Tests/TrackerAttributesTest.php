@@ -42,6 +42,8 @@ class TrackerAttributesTest extends WebTestBase {
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
     ));
+    // Create comment field on article.
+    comment_add_default_comment_field('node', 'article');
   }
 
   /**
@@ -52,9 +54,9 @@ class TrackerAttributesTest extends WebTestBase {
    */
   function testAttributesInTracker() {
     // Create node as anonymous user.
-    $node_anon = $this->drupalCreateNode(array('type' => 'article', 'uid' => 0));
+    $node_anon = $this->drupalCreateNode(array('type' => 'article', 'uid' => 0, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
     // Create node as admin user.
-    $node_admin = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1));
+    $node_admin = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
 
     // Pass both the anonymously posted node and the administrator posted node
     // through to test for the RDF attributes.
@@ -119,7 +121,7 @@ class TrackerAttributesTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(),
     );
-    $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $node->nid .'/comment', $comment, t('Save'));
     $this->drupalGet('tracker');
 
     // Tests whether the property has been set for number of comments.

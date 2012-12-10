@@ -35,11 +35,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $this->setCommentSubject(TRUE);
 
     // Create a node and a comment.
-    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $node = $this->drupalCreateNode(array('type' => 'article', 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
     $parent_comment = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $parent_comment->id);
+    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $parent_comment->id);
     $child_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $comment = comment_load($child_comment->id);
     $comment->homepage = 'http://example.org/';
@@ -63,7 +63,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language_interface->langcode);
     $tests['[comment:parent:cid]'] = $comment->pid;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject);
-    $tests['[comment:node:nid]'] = $comment->nid;
+    $tests['[comment:node:nid]'] = $comment->entity_id;
     $tests['[comment:node:title]'] = check_plain($node->title);
     $tests['[comment:author:uid]'] = $comment->uid;
     $tests['[comment:author:name]'] = check_plain($this->admin_user->name);
@@ -97,11 +97,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     // Generate comment tokens for the node (it has 2 comments, both new).
     $tests = array();
-    $tests['[node:comment-count]'] = 2;
-    $tests['[node:comment-count-new]'] = 2;
+    $tests['[entity:comment-count]'] = 2;
+    $tests['[entity:comment-count-new]'] = 2;
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
+      $output = token_replace($input, array('entity' => $node), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, format_string('Node comment token %token replaced.', array('%token' => $input)));
     }
   }

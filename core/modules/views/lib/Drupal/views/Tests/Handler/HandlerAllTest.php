@@ -52,6 +52,7 @@ class HandlerAllTest extends HandlerTestBase {
    * Tests most of the handlers.
    */
   public function testHandlers() {
+    comment_add_default_comment_field('node', 'page');
     $object_types = array_keys(ViewExecutable::viewsHandlerTypes());
     foreach (views_fetch_data() as $base_table => $info) {
       if (!isset($info['table']['base'])) {
@@ -66,7 +67,7 @@ class HandlerAllTest extends HandlerTestBase {
       $exclude[] = 'taxonomy_term_data:tid_representative';
       $exclude[] = 'users:uid_representative';
 
-      // Go through all fields and there through all handler types.
+      // Go through all fields and then through all handler types.
       foreach ($info as $field => $field_info) {
         // Table is a reserved key for the metainformation.
         if ($field != 'table' && !in_array("$base_table:$field", $exclude)) {

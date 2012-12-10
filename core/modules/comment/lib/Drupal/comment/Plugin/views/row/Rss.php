@@ -151,7 +151,7 @@ class Rss extends RowPluginBase {
       $item_text .= drupal_render($build);
     }
 
-    $item = new stdClass();
+    $item = new \stdClass();
     $item->description = $item_text;
     $item->title = $comment->label();
     $item->link = $comment->link;

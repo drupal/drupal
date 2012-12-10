@@ -50,6 +50,10 @@ class CommentAttributesTest extends CommentTestBase {
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
     ));
+
+    // Create comment field on article.
+    comment_add_default_comment_field('node', 'article');
+
     // Allows anonymous to leave their contact information.
     $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
@@ -59,8 +63,8 @@ class CommentAttributesTest extends CommentTestBase {
 
     // Creates the nodes on which the test comments will be posted.
     $this->drupalLogin($this->web_user);
-    $this->node1 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $this->node2 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $this->node1 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
+    $this->node2 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
     $this->drupalLogout();
   }
 
@@ -156,7 +160,7 @@ class CommentAttributesTest extends CommentTestBase {
     $this->assertFalse($result, 'No RDFa markup referring to the comment itself is present.');
 
     // Posts a reply to the first comment.
-    $this->drupalGet('comment/reply/' . $this->node1->nid . '/' . $comments[0]->id);
+    $this->drupalGet('comment/reply/node/' . $this->node1->nid . '/comment/' . $comments[0]->id);
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Tests the reply_of relationship of a second level comment.

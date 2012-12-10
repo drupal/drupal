@@ -28,11 +28,10 @@ class LinkReply extends Link {
 
   function render_link($data, $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('reply');
-    $nid =  $this->get_value($values, 'nid');
-    $cid =  $this->get_value($values, 'cid');
+    $comment = $this->get_entity($values);
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "comment/reply/" . $nid . '/' . $cid;
+    $this->options['alter']['path'] = "comment/reply/{$comment->entity_type}/{$comment->entity_id}/{$comment->field_name}/{$comment->id()}";
 
     return $text;
   }

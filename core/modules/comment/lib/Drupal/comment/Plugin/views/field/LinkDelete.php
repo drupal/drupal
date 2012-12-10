@@ -28,10 +28,10 @@ class LinkDelete extends Link {
 
   function render_link($data, $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
-    $cid =  $this->get_value($values, 'cid');
+    $comment = $this->get_entity($values);
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "comment/" . $cid . "/delete";
+    $this->options['alter']['path'] = "comment/" . $comment->id(). "/delete";
     $this->options['alter']['query'] = drupal_get_destination();
 
     return $text;

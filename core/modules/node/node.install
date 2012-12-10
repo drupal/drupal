@@ -79,12 +79,6 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'promote' => array(
         'description' => 'Boolean indicating whether the node should be displayed on the front page.',
         'type' => 'int',
@@ -244,12 +238,6 @@ function node_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
-      ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
       ),
       'promote' => array(
         'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',

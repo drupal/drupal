@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\sort\NcsLastCommentName.
+ * Definition of Drupal\comment\Plugin\views\sort\StatisticsLastCommentName.
  */
 
 namespace Drupal\comment\Plugin\views\sort;
@@ -17,11 +17,11 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_sort_handlers
  *
  * @Plugin(
- *   id = "comment_ncs_last_comment_name",
+ *   id = "comment_ces_last_comment_name",
  *   module = "comment"
  * )
  */
-class NcsLastCommentName extends SortPluginBase {
+class StatisticsLastCommentName extends SortPluginBase {
 
   public function query() {
     $this->ensureMyTable();
