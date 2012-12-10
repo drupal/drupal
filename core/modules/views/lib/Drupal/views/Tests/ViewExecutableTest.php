@@ -66,6 +66,11 @@ class ViewExecutableTest extends ViewTestBase {
     );
   }
 
+  protected function setUp() {
+    parent::setUp();
+    comment_add_default_comment_field('node', 'page');
+  }
+
   /**
    * Tests the initDisplay() and initHandlers() methods.
    */
@@ -98,7 +103,6 @@ class ViewExecutableTest extends ViewTestBase {
    * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
    */
   protected function getBasicView() {
-    comment_add_default_comment_field('node', 'page');
     return $this->createViewFromConfig('test_destroy');
   }
 

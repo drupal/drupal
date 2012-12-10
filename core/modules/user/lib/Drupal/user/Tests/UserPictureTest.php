@@ -42,6 +42,7 @@ class UserPictureTest extends WebTestBase {
       'skip comment approval',
     ));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    comment_add_default_comment_field('node', 'article');
 
     // @see standard.install
     module_load_install('user');
@@ -102,7 +103,12 @@ class UserPictureTest extends WebTestBase {
     $image = current($this->drupalGetTestFiles('image'));
     $file = $this->saveUserPicture($image);
 
-    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $node = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
+        'comment' => COMMENT_OPEN
+      ))),
+    ));
 
     // Enable user pictures on nodes.
     variable_set('theme_settings', array('toggle_node_user_picture' => TRUE));
@@ -117,7 +123,7 @@ class UserPictureTest extends WebTestBase {
     $edit = array(
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomString(),
     );
-    $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $node->nid . '/comment', $edit, t('Save'));
     $this->assertRaw(file_uri_target($file->uri), 'User picture found on comment.');
   }
 

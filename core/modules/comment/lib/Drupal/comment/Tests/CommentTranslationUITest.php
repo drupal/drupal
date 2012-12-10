@@ -40,7 +40,7 @@ class CommentTranslationUITest extends EntityTranslationUITest {
   function setUp() {
     $this->entityType = 'comment';
     $this->nodeBundle = 'article';
-    $this->bundle = 'comment';
+    $this->bundle = 'comment_article';
     $this->testLanguageSelector = FALSE;
     $this->subject = $this->randomName();
     parent::setUp();
@@ -53,9 +53,11 @@ class CommentTranslationUITest extends EntityTranslationUITest {
     parent::setupBundle();
     $this->drupalCreateContentType(array('type' => $this->nodeBundle, 'name' => $this->nodeBundle));
     // Add a comment field to the article content type.
-    comment_add_default_comment_field('node', 'article');
+    comment_add_default_comment_field('node', 'article', 'comment_article');
+    // Add another comment field with new bundle to page content type.
+    comment_add_default_comment_field('node', 'page');
     // Mark this bundle as translatable.
-    translation_entity_set_config('comment', 'comment', 'enabled', TRUE);
+    translation_entity_set_config('comment', 'comment_article', 'enabled', TRUE);
     // Refresh entity info.
     entity_info_cache_clear();
     // Flush the permissions after adding the translatable comment bundle.
@@ -82,19 +84,24 @@ class CommentTranslationUITest extends EntityTranslationUITest {
   /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::createEntity().
    */
-  protected function createEntity($values, $langcode, $bundle_name = NULL) {
-    if (!isset($bundle_name)) {
-      $bundle_name = $this->nodeBundle;
+  protected function createEntity($values, $langcode, $bundle_name = 'comment_article') {
+    if ($bundle_name == 'comment_article') {
+      $node_type = 'article';
+      $field_name = $bundle_name;
+    }
+    else {
+      $node_type = 'page';
+      $field_name = 'comment';
     }
     $node = $this->drupalCreateNode(array(
-      'type' => $bundle_name,
-      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(
+      'type' => $node_type,
+      $field_name => array(LANGUAGE_NOT_SPECIFIED => array(
         array('comment' => COMMENT_OPEN)
       ))
     ));
     $values['entity_id'] = $node->nid;
     $values['entity_type'] = 'node';
-    $values['field_name'] = 'comment';
+    $values['field_name'] = $bundle_name;
     $values['uid'] = $node->uid;
     return parent::createEntity($values, $langcode, $bundle_name);
   }
@@ -117,8 +124,8 @@ class CommentTranslationUITest extends EntityTranslationUITest {
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer comments', 'translate any entity'));
     $this->drupalLogin($this->admin_user);
 
-    $cid_translatable = $this->createEntity(array(), $this->langcodes[0], $this->nodeBundle);
-    $cid_untranslatable = $this->createEntity(array(), $this->langcodes[0], 'page');
+    $cid_translatable = $this->createEntity(array(), $this->langcodes[0]);
+    $cid_untranslatable = $this->createEntity(array(), $this->langcodes[0], 'comment');
 
     // Verify translation links.
     $this->drupalGet('admin/content/comment');
