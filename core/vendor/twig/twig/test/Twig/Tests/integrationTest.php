@@ -16,128 +16,23 @@ function html()
     return 'foo';
 }
 
-class Twig_Tests_IntegrationTest extends PHPUnit_Framework_TestCase
+class Twig_Tests_IntegrationTest extends Twig_Test_IntegrationTestCase
 {
-    public function getTests()
+    public function getExtensions()
     {
-        $fixturesDir = realpath(dirname(__FILE__).'/Fixtures/');
-        $tests = array();
+        $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(), array(), array());
 
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fixturesDir), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
-            if (!preg_match('/\.test$/', $file)) {
-                continue;
-            }
-
-            $test = file_get_contents($file->getRealpath());
-
-            if (preg_match('/
-                    --TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*))+)\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
-                $message = $match[1];
-                $condition = $match[2];
-                $templates = $this->parseTemplates($match[3]);
-                $exception = $match[4];
-                $outputs = array(null, array(), null, '');
-            } elseif (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)--DATA--.*?--EXPECT--.*/s', $test, $match)) {
-                $message = $match[1];
-                $condition = $match[2];
-                $templates = $this->parseTemplates($match[3]);
-                $exception = false;
-                preg_match_all('/--DATA--(.*?)(?:--CONFIG--(.*?))?--EXPECT--(.*?)(?=\-\-DATA\-\-|$)/s', $test, $outputs, PREG_SET_ORDER);
-            } else {
-                throw new InvalidArgumentException(sprintf('Test "%s" is not valid.', str_replace($fixturesDir.'/', '', $file)));
-            }
-
-            $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
-        }
-
-        return $tests;
+        return array(
+            new Twig_Extension_Debug(),
+            new Twig_Extension_Sandbox($policy, false),
+            new Twig_Extension_StringLoader(),
+            new TwigTestExtension(),
+        );
     }
 
-    /**
-     * @dataProvider getTests
-     */
-    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs)
+    public function getFixturesDir()
     {
-        if ($condition) {
-            eval('$ret = '.$condition.';');
-            if (!$ret) {
-                $this->markTestSkipped($condition);
-            }
-        }
-
-        $loader = new Twig_Loader_Array($templates);
-
-        foreach ($outputs as $match) {
-            $config = array_merge(array(
-                'cache' => false,
-                'strict_variables' => true,
-            ), $match[2] ? eval($match[2].';') : array());
-            $twig = new Twig_Environment($loader, $config);
-            $twig->addExtension(new TestExtension());
-            $twig->addExtension(new Twig_Extension_Debug());
-            $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(), array(), array());
-            $twig->addExtension(new Twig_Extension_Sandbox($policy, false));
-            $twig->addGlobal('global', 'global');
-
-            try {
-                $template = $twig->loadTemplate('index.twig');
-            } catch (Exception $e) {
-                if (false !== $exception) {
-                    $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
-
-                    return;
-                }
-
-                if ($e instanceof Twig_Error_Syntax) {
-                    $e->setTemplateFile($file);
-
-                    throw $e;
-                }
-
-                throw new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
-            }
-
-            try {
-                $output = trim($template->render(eval($match[1].';')), "\n ");
-            } catch (Exception $e) {
-                if (false !== $exception) {
-                    $this->assertEquals(trim($exception), trim(sprintf('%s: %s', get_class($e), $e->getMessage())));
-
-                    return;
-                }
-
-                if ($e instanceof Twig_Error_Syntax) {
-                    $e->setTemplateFile($file);
-                } else {
-                    $e = new Twig_Error(sprintf('%s: %s', get_class($e), $e->getMessage()), -1, $file, $e);
-                }
-
-                $output = trim(sprintf('%s: %s', get_class($e), $e->getMessage()));
-            }
-            $expected = trim($match[3], "\n ");
-
-            if ($expected != $output)  {
-                echo 'Compiled template that failed:';
-
-                foreach (array_keys($templates) as $name)  {
-                    echo "Template: $name\n";
-                    $source = $loader->getSource($name);
-                    echo $twig->compile($twig->parse($twig->tokenize($source, $name)));
-                }
-            }
-            $this->assertEquals($expected, $output, $message.' (in '.$file.')');
-        }
-    }
-
-    protected function parseTemplates($test)
-    {
-        $templates = array();
-        preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $test, $matches, PREG_SET_ORDER);
-        foreach ($matches as $match) {
-            $templates[($match[1] ? $match[1] : 'index.twig')] = $match[2];
-        }
-
-        return $templates;
+        return dirname(__FILE__).'/Fixtures/';
     }
 }
 
@@ -146,7 +41,7 @@ function test_foo($value = 'foo')
     return $value;
 }
 
-class Foo implements Iterator
+class TwigTestFoo implements Iterator
 {
     const BAR_NAME = 'bar';
 
@@ -214,7 +109,7 @@ class Foo implements Iterator
     }
 }
 
-class TestTokenParser_☃ extends Twig_TokenParser
+class TwigTestTokenParser_☃ extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {
@@ -229,12 +124,12 @@ class TestTokenParser_☃ extends Twig_TokenParser
     }
 }
 
-class TestExtension extends Twig_Extension
+class TwigTestExtension extends Twig_Extension
 {
     public function getTokenParsers()
     {
         return array(
-            new TestTokenParser_☃(),
+            new TwigTestTokenParser_☃(),
         );
     }
 

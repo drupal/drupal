@@ -87,7 +87,8 @@ class RouteBuilder {
           foreach ($routes as $name => $route_info) {
             $defaults = isset($route_info['defaults']) ? $route_info['defaults'] : array();
             $requirements = isset($route_info['requirements']) ? $route_info['requirements'] : array();
-            $route = new Route($route_info['pattern'], $defaults, $requirements);
+            $options = isset($route_info['options']) ? $route_info['options'] : array();
+            $route = new Route($route_info['pattern'], $defaults, $requirements, $options);
             $collection->add($name, $route);
           }
         }

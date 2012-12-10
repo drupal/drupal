@@ -15,6 +15,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 /**
  * The Router class is an example of the integration of all pieces of the
@@ -24,13 +26,44 @@ use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
  */
 class Router implements RouterInterface
 {
+    /**
+     * @var UrlMatcherInterface|null
+     */
     protected $matcher;
+
+    /**
+     * @var UrlGeneratorInterface|null
+     */
     protected $generator;
+
+    /**
+     * @var RequestContext
+     */
     protected $context;
+
+    /**
+     * @var LoaderInterface
+     */
     protected $loader;
+
+    /**
+     * @var RouteCollection|null
+     */
     protected $collection;
+
+    /**
+     * @var mixed
+     */
     protected $resource;
-    protected $options;
+
+    /**
+     * @var array
+     */
+    protected $options = array();
+
+    /**
+     * @var LoggerInterface|null
+     */
     protected $logger;
 
     /**
@@ -83,17 +116,15 @@ class Router implements RouterInterface
 
         // check option names and live merge, if errors are encountered Exception will be thrown
         $invalid = array();
-        $isInvalid = false;
         foreach ($options as $key => $value) {
             if (array_key_exists($key, $this->options)) {
                 $this->options[$key] = $value;
             } else {
-                $isInvalid = true;
                 $invalid[] = $key;
             }
         }
 
-        if ($isInvalid) {
+        if ($invalid) {
             throw new \InvalidArgumentException(sprintf('The Router does not support the following options: "%s".', implode('\', \'', $invalid)));
         }
     }
@@ -152,8 +183,12 @@ class Router implements RouterInterface
     {
         $this->context = $context;
 
-        $this->getMatcher()->setContext($context);
-        $this->getGenerator()->setContext($context);
+        if (null !== $this->matcher) {
+            $this->getMatcher()->setContext($context);
+        }
+        if (null !== $this->generator) {
+            $this->getGenerator()->setContext($context);
+        }
     }
 
     /**

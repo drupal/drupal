@@ -231,9 +231,8 @@ class EntityManager extends PluginManagerBase {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
     $this->discovery = new AnnotatedClassDiscovery('Core', 'Entity');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
-    $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    // @todo Run process before altering, see http://drupal.org/node/1848964.
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
+    $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->factory = new DefaultFactory($this);
 
     // Entity type plugins includes translated strings, so each language is
@@ -260,9 +259,7 @@ class EntityManager extends PluginManagerBase {
       return $cache->data;
     }
     else {
-      // @todo Remove array_filter() once http://drupal.org/node/1780396 is
-      //   resolved.
-      $definitions = array_filter(parent::getDefinitions());
+      $definitions = parent::getDefinitions();
       cache($this->cacheBin)->set($this->cacheKey, $definitions, $this->cacheExpire, $this->cacheTags);
       return $definitions;
     }

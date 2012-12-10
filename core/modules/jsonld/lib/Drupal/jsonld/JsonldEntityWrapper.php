@@ -11,6 +11,13 @@ use Drupal\Core\Entity\Entity;
 
 /**
  * Provide an interface for JsonldNormalizer to get required properties.
+ *
+ * @todo Eventually, this class should be removed. It allows both the
+ * EntityNormalizer and the EntityReferenceNormalizer to have access to the
+ * same functions. If an $options parameter is added to the serialize
+ * signature, as requested in https://github.com/symfony/symfony/pull/4938,
+ * then the EntityReferenceNormalizer could simply call
+ * EntityNormalizer::normalize(), passing in the referenced entity.
  */
 class JsonldEntityWrapper {
 
@@ -60,6 +67,18 @@ class JsonldEntityWrapper {
   public function getId() {
     $uri_info = $this->entity->uri();
     return url($uri_info['path'], array('absolute' => TRUE));
+  }
+
+  /**
+   * Get the type URI.
+   *
+   * @todo update or remove this method once the schema dependency to RDF module
+   * is sorted out.
+   */
+  public function getTypeUri() {
+    $entity_type = $this->entity->entityType();
+    $bundle = $this->entity->bundle();
+    return url('site-schema/content-staging/' . $entity_type . '/' . $bundle, array('absolute' => TRUE));
   }
 
   /**

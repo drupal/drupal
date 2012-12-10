@@ -160,14 +160,14 @@ class PoDatabaseWriter implements PoWriterInterface {
     // Check for options.
     $options = $this->getOptions();
     if (empty($options)) {
-      throw new Exception("Options should be set before assigning a PoHeader.");
+      throw new \Exception('Options should be set before assigning a PoHeader.');
     }
     $overwrite_options = $options['overwrite_options'];
 
     // Check for langcode.
     $langcode = $this->_langcode;
     if (empty($langcode)) {
-      throw new Exception("Langcode should be set before assigning a PoHeader.");
+      throw new \Exception('Langcode should be set before assigning a PoHeader.');
     }
 
     if (array_sum($overwrite_options) || empty($locale_plurals[$langcode]['plurals'])) {

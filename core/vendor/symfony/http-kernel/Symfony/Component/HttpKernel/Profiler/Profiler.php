@@ -24,10 +24,25 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
  */
 class Profiler
 {
+    /**
+     * @var ProfilerStorageInterface
+     */
     private $storage;
-    private $collectors;
+
+    /**
+     * @var DataCollectorInterface[]
+     */
+    private $collectors = array();
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
-    private $enabled;
+
+    /**
+     * @var Boolean
+     */
+    private $enabled = true;
 
     /**
      * Constructor.
@@ -39,8 +54,6 @@ class Profiler
     {
         $this->storage = $storage;
         $this->logger = $logger;
-        $this->collectors = array();
-        $this->enabled = true;
     }
 
     /**
@@ -49,6 +62,14 @@ class Profiler
     public function disable()
     {
         $this->enabled = false;
+    }
+
+    /**
+     * Enables the profiler.
+     */
+    public function enable()
+    {
+        $this->enabled = true;
     }
 
     /**
@@ -168,7 +189,7 @@ class Profiler
         $profile = new Profile(uniqid());
         $profile->setTime(time());
         $profile->setUrl($request->getUri());
-        $profile->setIp($request->server->get('REMOTE_ADDR'));
+        $profile->setIp($request->getClientIp());
         $profile->setMethod($request->getMethod());
 
         $response->headers->set('X-Debug-Token', $profile->getToken());
@@ -196,7 +217,7 @@ class Profiler
     /**
      * Sets the Collectors associated with this profiler.
      *
-     * @param array $collectors An array of collectors
+     * @param DataCollectorInterface[] $collectors An array of collectors
      */
     public function set(array $collectors = array())
     {

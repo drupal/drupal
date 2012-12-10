@@ -36,8 +36,10 @@ class FormatDateTest extends WebTestBase {
 
   function setUp() {
     parent::setUp('language');
+    config('system.timezone')
+      ->set('user.configurable', 1)
+      ->save();
     config('system.date')
-      ->set('timezone.user.configurable', 1)
       ->set('formats.long.pattern.php', 'l, j. F Y - G:i')
       ->set('formats.medium.pattern.php', 'j. F Y - G:i')
       ->set('formats.short.pattern.php', 'Y M j - g:ia')

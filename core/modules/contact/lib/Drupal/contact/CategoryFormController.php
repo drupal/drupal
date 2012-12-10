@@ -97,13 +97,14 @@ class CategoryFormController extends EntityFormController {
     $category = $this->getEntity($form_state);
     $status = $category->save();
 
+    $uri = $category->uri();
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Category %label has been updated.', array('%label' => $category->label())));
-      watchdog('contact', 'Category %label has been updated.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), $category->uri() . '/edit'));
+      watchdog('contact', 'Category %label has been updated.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
     }
     else {
       drupal_set_message(t('Category %label has been added.', array('%label' => $category->label())));
-      watchdog('contact', 'Category %label has been added.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), $category->uri() . '/edit'));
+      watchdog('contact', 'Category %label has been added.', array('%label' => $category->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
     }
 
     // Update the default category.

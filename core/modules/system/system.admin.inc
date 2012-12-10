@@ -120,7 +120,7 @@ function system_themes_page() {
 
   $theme_default = variable_get('theme_default', 'stark');
   $theme_groups  = array();
-  $admin_theme = variable_get('admin_theme', 0);
+  $admin_theme = config('system.site')->get('admin_theme');
 
   foreach ($themes as &$theme) {
     if (!empty($theme->info['hidden'])) {
@@ -257,7 +257,7 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
     '#options' => array(0 => t('Default theme')) + $theme_options,
     '#title' => t('Administration theme'),
     '#description' => t('Choose "Default theme" to always use the same theme as the rest of the site.'),
-    '#default_value' => variable_get('admin_theme', 0),
+    '#default_value' => config('system.site')->get('admin_theme'),
   );
   $form['admin_theme']['actions'] = array('#type' => 'actions');
   $form['admin_theme']['actions']['submit'] = array(
@@ -272,7 +272,7 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
  */
 function system_themes_admin_form_submit($form, &$form_state) {
   drupal_set_message(t('The configuration options have been saved.'));
-  variable_set('admin_theme', $form_state['values']['admin_theme']);
+  config('system.site')->set('admin_theme', $form_state['values']['admin_theme'])->save();
 }
 
 /**
@@ -309,7 +309,7 @@ function system_theme_disable() {
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
       // Do not disable the default or admin theme.
-      if ($theme == variable_get('theme_default', 'stark') || $theme == variable_get('admin_theme', 0)) {
+      if ($theme == variable_get('theme_default', 'stark') || $theme == config('system.site')->get('admin_theme')) {
         drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
       }
       else {
@@ -353,7 +353,7 @@ function system_theme_default() {
 
       // The status message depends on whether an admin theme is currently in use:
       // a value of 0 means the admin theme is set to be the default theme.
-      $admin_theme = variable_get('admin_theme', 0);
+      $admin_theme = config('system.site')->get('admin_theme');
       if ($admin_theme != 0 && $admin_theme != $theme) {
         drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
           '%admin_theme' => $themes[$admin_theme]->info['name'],
@@ -1866,7 +1866,7 @@ function system_rss_feeds_settings_submit($form, &$form_state) {
  */
 function system_regional_settings($form, &$form_state) {
   $countries = country_get_list();
-  $system_date = config('system.date');
+  $system_timezone = config('system.timezone');
   $system_date = config('system.date');
 
   // Date settings:
@@ -1898,16 +1898,14 @@ function system_regional_settings($form, &$form_state) {
     '#title' => t('Time zones'),
   );
 
-  $date_default_timezone = $system_date->get('timezone.default');
-  $date_default_timezone = $system_date->get('timezone.default');
   $form['timezone']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => t('Default time zone'),
-    '#default_value' => isset($date_default_timezone) ? $date_default_timezone : date_default_timezone_get(),
+    '#default_value' => $system_timezone->get('default') ?: date_default_timezone_get(),
     '#options' => $zones,
   );
 
-  $configurable_timezones = $system_date->get('timezone.user.configurable');
+  $configurable_timezones = $system_timezone->get('user.configurable');
   $form['timezone']['configurable_timezones'] = array(
     '#type' => 'checkbox',
     '#title' => t('Users may set their own time zone.'),
@@ -1927,14 +1925,14 @@ function system_regional_settings($form, &$form_state) {
   $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = array(
     '#type' => 'checkbox',
     '#title' => t('Remind users at login if their time zone is not set.'),
-    '#default_value' => $system_date->get('timezone.user.warn'),
+    '#default_value' => $system_timezone->get('user.warn'),
     '#description' => t('Only applied if users may set their own time zone.')
   );
 
   $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = array(
     '#type' => 'radios',
     '#title' => t('Time zone for new users'),
-    '#default_value' => $system_date->get('timezone.user.default'),
+    '#default_value' => $system_timezone->get('user.default'),
     '#options' => array(
       DRUPAL_USER_TIMEZONE_DEFAULT => t('Default time zone.'),
       DRUPAL_USER_TIMEZONE_EMPTY   => t('Empty time zone.'),
@@ -1956,10 +1954,12 @@ function system_regional_settings_submit($form, &$form_state) {
   config('system.date')
     ->set('country.default', $form_state['values']['site_default_country'])
     ->set('first_day', $form_state['values']['date_first_day'])
-    ->set('timezone.default', $form_state['values']['date_default_timezone'])
-    ->set('timezone.user.configurable', $form_state['values']['configurable_timezones'])
-    ->set('timezone.user.warn', $form_state['values']['empty_timezone_message'])
-    ->set('timezone.user.default', $form_state['values']['user_default_timezone'])
+    ->save();
+  config('system.timezone')
+    ->set('default', $form_state['values']['date_default_timezone'])
+    ->set('user.configurable', $form_state['values']['configurable_timezones'])
+    ->set('user.warn', $form_state['values']['empty_timezone_message'])
+    ->set('user.default', $form_state['values']['user_default_timezone'])
     ->save();
 }
 

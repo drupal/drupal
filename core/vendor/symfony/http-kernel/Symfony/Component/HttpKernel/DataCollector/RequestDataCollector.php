@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\HttpKernel\DataCollector;
 
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,14 +50,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
 
         $attributes = array();
         foreach ($request->attributes->all() as $key => $value) {
-            if (is_object($value)) {
-                $attributes[$key] = sprintf('Object(%s)', get_class($value));
-                if (is_callable(array($value, '__toString'))) {
-                    $attributes[$key] .= sprintf(' = %s', (string) $value);
-                }
-            } else {
-                $attributes[$key] = $value;
-            }
+            $attributes[$key] = $this->varToString($value);
         }
 
         $content = null;
@@ -100,18 +92,31 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             'flashes'            => $flashes,
             'path_info'          => $request->getPathInfo(),
             'controller'         => 'n/a',
+            'locale'             => $request->getLocale(),
         );
 
         if (isset($this->controllers[$request])) {
             $controller = $this->controllers[$request];
             if (is_array($controller)) {
-                $r = new \ReflectionMethod($controller[0], $controller[1]);
-                $this->data['controller'] = array(
-                    'class'  => get_class($controller[0]),
-                    'method' => $controller[1],
-                    'file'   => $r->getFilename(),
-                    'line'   => $r->getStartLine(),
-                );
+                try {
+                    $r = new \ReflectionMethod($controller[0], $controller[1]);
+                    $this->data['controller'] = array(
+                        'class'  => is_object($controller[0]) ? get_class($controller[0]) : $controller[0],
+                        'method' => $controller[1],
+                        'file'   => $r->getFilename(),
+                        'line'   => $r->getStartLine(),
+                    );
+                } catch (\ReflectionException $re) {
+                    if (is_callable($controller)) {
+                        // using __call or  __callStatic
+                        $this->data['controller'] = array(
+                            'class'  => is_object($controller[0]) ? get_class($controller[0]) : $controller[0],
+                            'method' => $controller[1],
+                            'file'   => 'n/a',
+                            'line'   => 'n/a',
+                        );
+                    }
+                }
             } elseif ($controller instanceof \Closure) {
                 $this->data['controller'] = 'Closure';
             } else {
@@ -194,6 +199,11 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
     public function getFormat()
     {
         return $this->data['format'];
+    }
+
+    public function getLocale()
+    {
+        return $this->data['locale'];
     }
 
     /**

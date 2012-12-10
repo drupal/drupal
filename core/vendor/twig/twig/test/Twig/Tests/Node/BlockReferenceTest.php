@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/TestCase.php';
-
-class Twig_Tests_Node_BlockReferenceTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_BlockReferenceTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_BlockReference::__construct
      */
     public function testConstructor()
     {
-        $node = new Twig_Node_BlockReference('foo', 0);
+        $node = new Twig_Node_BlockReference('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
@@ -35,7 +33,11 @@ class Twig_Tests_Node_BlockReferenceTest extends Twig_Tests_Node_TestCase
     public function getTests()
     {
         return array(
-            array(new Twig_Node_BlockReference('foo', 0), '$this->displayBlock(\'foo\', $context, $blocks);'),
+            array(new Twig_Node_BlockReference('foo', 1), <<<EOF
+// line 1
+\$this->displayBlock('foo', \$context, \$blocks);
+EOF
+            ),
         );
     }
 }

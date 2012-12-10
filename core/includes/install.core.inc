@@ -2006,8 +2006,11 @@ function install_configure_form_submit($form, &$form_state) {
     ->set('mail', $form_state['values']['site_mail'])
     ->save();
 
+  config('system.timezone')
+    ->set('default', $form_state['values']['date_default_timezone'])
+    ->save();
+
   config('system.date')
-    ->set('timezone.default', $form_state['values']['date_default_timezone'])
     ->set('country.default', $form_state['values']['site_default_country'])
     ->save();
 

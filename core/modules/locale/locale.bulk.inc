@@ -124,6 +124,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
       'overwrite_options' => $form_state['values']['overwrite_options'],
       'customized' => $form_state['values']['customized'] ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED,
     );
+    $file = locale_translate_file_attach_properties($file, $options);
     $batch = locale_translate_batch_build(array($file->uri => $file), $options);
     batch_set($batch);
   }
@@ -265,34 +266,6 @@ function locale_translate_export_form_submit($form, &$form_state) {
 }
 
 /**
- * Sets a batch for a newly-added language.
- *
- * @param array $options
- *   An array with options that can have the following elements:
- *   - 'langcode': The language code, required.
- *   - 'overwrite_options': Overwrite options array as defined in
- *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
- *   - 'customized': Flag indicating whether the strings imported from $file
- *     are customized translations or come from a community source. Use
- *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
- *     LOCALE_NOT_CUSTOMIZED.
- *   - 'finish_feedback': Whether or not to give feedback to the user when the
- *     batch is finished. Optional, defaults to TRUE.
- */
-function locale_translate_add_language_set_batch($options) {
-  $options += array(
-    'overwrite_options' => array(),
-    'customized' => LOCALE_NOT_CUSTOMIZED,
-    'finish_feedback' => TRUE,
-  );
-  // See if we have language files to import for the newly added language,
-  // collect and import them.
-  if ($batch = locale_translate_batch_import_files($options)) {
-    batch_set($batch);
-  }
-}
-
-/**
  * Prepare a batch to import all translations.
  *
  * @param array $options
@@ -322,7 +295,7 @@ function locale_translate_batch_import_files($options, $force = FALSE) {
     'customized' => LOCALE_NOT_CUSTOMIZED,
     'finish_feedback' => TRUE,
   );
-  $files = array();
+
   if (!empty($options['langcode'])) {
     $langcodes = array($options['langcode']);
   }
@@ -331,9 +304,9 @@ function locale_translate_batch_import_files($options, $force = FALSE) {
     // languages we have enabled.
     $langcodes = array_keys(language_list());
   }
-  foreach ($langcodes as $langcode) {
-    $files = array_merge($files, locale_translate_get_interface_translation_files($langcode));
-  }
+
+  $files = locale_translate_get_interface_translation_files(array(), $langcodes);
+
   if (!$force) {
     $result = db_select('locale_file', 'lf')
       ->fields('lf', array('langcode', 'uri', 'timestamp'))
@@ -352,25 +325,42 @@ function locale_translate_batch_import_files($options, $force = FALSE) {
 }
 
 /**
- * Get an array of available interface translation file.
+ * Get interface translation files present in the translations directory.
  *
- * @param $langcode
- *   The langcode for the interface translation files. Pass NULL to get all
- *   available interface translation files.
+ * @param array $projects
+ *   Project names from which to get the translation files and history.
+ *   Defaults to all projects.
+ * @param array $langcodes
+ *   Language codes from which to  get the translation files and history.
+ *   Defaults to all languagues
  *
  * @return array
- *   An array of interface translation files.
+ *   An array of interface translation files keyed by their URI.
  */
-function locale_translate_get_interface_translation_files($langcode = NULL) {
-  $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
-  $return = file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE));
+function locale_translate_get_interface_translation_files($projects = array(), $langcodes = array()) {
+  module_load_include('compare.inc', 'locale');
+  $files = array();
+  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
-  foreach ($return as $filepath => $file) {
-    $file->uri = 'translations://' . $file->filename;
-    $return[$file->uri] = $file;
-    unset($return[$filepath]);
+  // Scan the translations directory for files matching a name pattern
+  // containing a project name and language code: {project}.{langcode}.po or
+  // {project}-{version}.{langcode}.po.
+  // Only files of known projects and languages will be returned.
+  if ($directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations')) {
+    $result = file_scan_directory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', array('recurse' => FALSE));
+
+    foreach ($result as $filepath => $file) {
+      // Update the file object with project name and version from the file name.
+      $file = locale_translate_file_attach_properties($file);
+      if (in_array($file->project, $projects)) {
+        if (in_array($file->langcode, $langcodes)) {
+          $files[$file->uri] = $file;
+        }
+      }
+    }
   }
-  return $return;
+  return $files;
 }
 
 /**
@@ -406,8 +396,11 @@ function locale_translate_batch_build($files, $options) {
     $operations = array();
     foreach ($files as $file) {
       // We call locale_translate_batch_import for every batch operation.
-      $operations[] = array('locale_translate_batch_import', array($file->uri, $options));
+      $operations[] = array('locale_translate_batch_import', array($file, $options));
     }
+    // Save the translation status of all files.
+    $operations[] =  array('locale_translate_batch_import_save', array());
+
     $batch = array(
       'operations'    => $operations,
       'title'         => $t('Importing interface translations'),
@@ -426,42 +419,34 @@ function locale_translate_batch_build($files, $options) {
 /**
  * Perform interface translation import as a batch step.
  *
- * The given filepath is matched against ending with '{langcode}.po'. When
- * matched the filepath is added to batch context.
- *
- * @param $filepath
- *   Path to a file to import.
+ * @param object $file
+ *   A file object of the gettext file to be imported. The file object must
+ *   contain a language parameter (other than LANGUAGE_NOT_SPECIFIED). This
+ *   is used as the language of the import.
  *
  * @param array $options
  *   An array with options that can have the following elements:
- *   - 'langcode': The language code, required.
+ *   - 'langcode': The language code.
  *   - 'overwrite_options': Overwrite options array as defined in
  *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
  *   - 'customized': Flag indicating whether the strings imported from $file
  *     are customized translations or come from a community source. Use
  *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
  *     LOCALE_NOT_CUSTOMIZED.
+ *   - 'message': Alternative message to display during import.
  *
  * @param $context
  *   Contains a list of files imported.
  */
-function locale_translate_batch_import($filepath, $options, &$context) {
+function locale_translate_batch_import($file, $options, &$context) {
   // Merge the default values in the $options array.
   $options += array(
     'overwrite_options' => array(),
     'customized' => LOCALE_NOT_CUSTOMIZED,
   );
-  // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
-  // we can extract the language code to use for the import from the end.
-  if (isset($options['langcode']) && $options['langcode'] ||
-      preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $matches)) {
-    $basename = drupal_basename($filepath);
-    $file = entity_create('file', array('filename' => $basename, 'uri' => 'translations://'. $basename));
-    // We need only the last match, but only if the langcode is not explicitly
-    // specified in the $options array.
-    if (!$options['langcode'] && is_array($matches)) {
-      $options['langcode'] = array_pop($matches);
-    }
+
+  if (isset($file->langcode) && $file->langcode != LANGUAGE_NOT_SPECIFIED) {
+
     try {
       if (empty($context['sandbox'])) {
         $context['sandbox']['parse_state'] = array(
@@ -477,41 +462,75 @@ function locale_translate_batch_import($filepath, $options, &$context) {
       // If not yet finished with reading, mark progress based on size and
       // position.
       if ($report['seek'] < filesize($file->uri)) {
+
         $context['sandbox']['parse_state']['seek'] = $report['seek'];
         // Maximize the progress bar at 95% before completion, the batch API
         // could trigger the end of the operation before file reading is done,
         // because of floating point inaccuracies. See
         // http://drupal.org/node/1089472
         $context['finished'] = min(0.95, $report['seek'] / filesize($file->uri));
-        $context['message'] = t('Importing file: %filename (@percent%)', array('%filename' => $file->filename, '@percent' => (int) ($context['finished'] * 100)));
+        if (isset($options['message'])) {
+          $context['message'] = t('@message (@percent%).', array('@message' => $options['message'], '@percent' => (int) ($context['finished'] * 100)));
+        }
+        else {
+          $context['message'] = t('Importing translation file: %filename (@percent%).', array('%filename' => $file->filename, '@percent' => (int) ($context['finished'] * 100)));
+        }
       }
       else {
         // We are finished here.
         $context['finished'] = 1;
-        $file->langcode = $options['langcode'];
+
+        // Store the file data for processing by the next batch operation.
         $file->timestamp = filemtime($file->uri);
-        locale_translate_update_file_history($file);
-        $context['results']['files'][$filepath] = $filepath;
-        $context['results']['languages'][$filepath] = $file->langcode;
+        $context['results']['files'][$file->uri] = $file;
+        $context['results']['languages'][$file->uri] = $file->langcode;
       }
-      // Add the values from the report to the stats for this file.
-      if (!isset($context['results']['stats']) || !isset($context['results']['stats'][$filepath])) {
-        $context['results']['stats'][$filepath] = array();
+
+      // Add the reported values to the statistics for this file.
+      // Each import iteration reports statistics in an array. The results of
+      // each iteration are added and merged here and stored per file.
+      if (!isset($context['results']['stats']) || !isset($context['results']['stats'][$file->uri])) {
+        $context['results']['stats'][$file->uri] = array();
       }
       foreach ($report as $key => $value) {
-        if (is_numeric($value)) {
-          $context['results']['stats'][$filepath] += array($key => 0);
-          $context['results']['stats'][$filepath][$key] += $value;
+        if (is_numeric($report[$key])) {
+          if (!isset($context['results']['stats'][$file->uri][$key])) {
+            $context['results']['stats'][$file->uri][$key] = 0;
+          }
+          $context['results']['stats'][$file->uri][$key] += $report[$key];
         }
         elseif (is_array($value)) {
-          $context['results']['stats'][$filepath] += array($key => array());
-          $context['results']['stats'][$filepath][$key] = array_merge($context['results']['stats'][$filepath][$key], $value);
+          $context['results']['stats'][$file->uri] += array($key => array());
+          $context['results']['stats'][$file->uri][$key] = array_merge($context['results']['stats'][$file->uri][$key], $value);
         }
       }
     }
     catch (Exception $exception) {
-      $context['results']['files'][$filepath] = $filepath;
-      $context['results']['failed_files'][$filepath] = $filepath;
+      // Import failed. Store the data of the failing file.
+      $context['results']['failed_files'][] = $file;
+      watchdog('locale', 'Unable to import translations file: @file', array('@file' => $file->uri));
+    }
+  }
+}
+
+/**
+ * Batch callback: Save data of imported files.
+ *
+ * @param $context
+ *   Contains a list of imported files.
+ */
+function locale_translate_batch_import_save($context) {
+  if (isset($context['results']['files'])) {
+    foreach ($context['results']['files'] as $file) {
+      // Update the file history if both project and version are known. This
+      // table is used by the automated translation update function which tracks
+      // translation status of module and themes in the system. Other
+      // translation files are not tracked and are therefore not stored in this
+      // table.
+      if ($file->project && $file->version) {
+        $file->last_checked = REQUEST_TIME;
+        locale_translation_update_file_history($file);
+      }
     }
   }
 }
@@ -523,41 +542,56 @@ function locale_translate_batch_finished($success, $results) {
   if ($success) {
     $additions = $updates = $deletes = $skips = 0;
     $strings = $langcodes = array();
-    drupal_set_message(format_plural(count($results['files']), 'One translation file imported.', '@count translation files imported.'));
-    $skipped_files = array();
-    // If there are no results and/or no stats (eg. coping with an empty .po
-    // file), simply do nothing.
-    if ($results && isset($results['stats'])) {
-      foreach ($results['stats'] as $filepath => $report) {
-        $additions += $report['additions'];
-        $updates += $report['updates'];
-        $deletes += $report['deletes'];
-        $skips += $report['skips'];
-        if ($report['skips'] > 0) {
-          $skipped_files[] = $filepath;
+    if (isset($results['failed_files'])) {
+        if (module_exists('dblog')) {
+          $message = format_plural(count($results['failed_files']), 'One translation file could not be imported. <a href="@url">See the log</a> for details.', '@count translation files could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
         }
-        $strings = array_merge($strings, $report['strings']);
-      }
-      // Get list of unique string identifiers and language codes updated.
-      $strings = array_unique($strings);
-      $langcodes = array_unique(array_values($results['languages']));
+        else {
+          $message = format_plural(count($results['failed_files']), 'One translation files could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
+        }
+        drupal_set_message($message, 'error');
     }
-    drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
-    watchdog('locale', 'The translation was succesfully imported. %number new strings added, %update updated and %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
-    if ($skips) {
-      if (module_exists('dblog')) {
-        $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+    if (isset($results['files'])) {
+      $skipped_files = array();
+      // If there are no results and/or no stats (eg. coping with an empty .po
+      // file), simply do nothing.
+      if ($results && isset($results['stats'])) {
+        foreach ($results['stats'] as $filepath => $report) {
+          $additions += $report['additions'];
+          $updates += $report['updates'];
+          $deletes += $report['deletes'];
+          $skips += $report['skips'];
+          if ($report['skips'] > 0) {
+            $skipped_files[] = $filepath;
+          }
+          $strings = array_merge($strings, $report['strings']);
+        }
+        // Get list of unique string identifiers and language codes updated.
+        $strings = array_unique($strings);
+        $langcodes = array_unique(array_values($results['languages']));
       }
-      else {
-        $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
-      }
-      drupal_set_message($skip_message, 'error');
-      watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
-    }
+      drupal_set_message(format_plural(count($results['files']),
+        'One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
+        '@count translation files imported. %number translations were added, %update translations were updated and %delete translations were removed.',
+        array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)
+      ));
+      watchdog('locale', 'Translations imported: %number added, %update updated, %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
 
-    if ($strings) {
-      // Clear cache and force refresh of JavaScript translations.
-      _locale_refresh_translations($langcodes, $strings);
+      if ($skips) {
+        if (module_exists('dblog')) {
+          $message = format_plural($skips, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+        }
+        else {
+          $message = format_plural($skips, 'One translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
+        }
+        drupal_set_message($message, 'warning');
+        watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
+      }
+
+      if ($strings) {
+        // Clear cache and force refresh of JavaScript translations.
+        _locale_refresh_translations($langcodes, $strings);
+      }
     }
   }
 }
@@ -580,50 +614,77 @@ function locale_translate_file_create($filepath) {
 }
 
 /**
- * Update the {locale_file} table.
+ * Generate file properties from filename and options.
  *
- * @param $file
- *   Object representing the file just imported.
+ * An attempt is made to determine the translation language, project name and
+ * project version from the file name. Supported file name patterns are:
+ * {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po.
+ * Alternatively the translation language can be set using the $options.
  *
- * @return integer
- *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
+ * @param object $file
+ *   A file object of the gettext file to be imported.
+ * @param array $options
+ *   An array with options:
+ *   - 'langcode': The language code. Overrides the file language.
  *
- * @see drupal_write_record()
+ * @return object
+ *   Modified file object.
  */
-function locale_translate_update_file_history($file) {
-  // Update or write new record.
-  if (db_query("SELECT uri FROM {locale_file} WHERE uri = :uri AND langcode = :langcode", array(':uri' => $file->uri, ':langcode' => $file->langcode))->fetchField()) {
-    $update = array('uri', 'langcode');
+function locale_translate_file_attach_properties($file, $options = array()) {
+  // Extract project, verion and language code from the file name. Supported:
+  // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po
+  preg_match('!
+    (                       # project OR project and version OR emtpy (group 1)
+      ([a-z_]+)             # project name (group 2)
+      \.                    # .
+      |                     # OR
+      ([a-z_]+)             # project name (group 3)
+      \-                    # -
+      ([0-9a-z\.\-\+]+)     # version (group 4)
+      \.                    # .
+      |                     # OR
+    )                       # (empty)
+    ([^\./]+)               # language code (group 5)
+    \.                      # .
+    po                      # po extension
+    $!x', $file->filename, $matches);
+  if (isset($matches[5])) {
+    $file->project = $matches[2] . $matches[3];
+    $file->version = $matches[4];
+    $file->langcode = isset($options['langcode']) ? $options['langcode'] : $matches[5];
   }
   else {
-    $update = array();
+    $file->langcode = LANGUAGE_NOT_SPECIFIED;
   }
-  return drupal_write_record('locale_file', $file, $update);
+  return $file;
 }
 
 /**
- * Deletes all interface translation files depending on the langcode.
+ * Deletes interface translation files and translation history records.
  *
- * @param $langcode
- *   A langcode or NULL. Pass NULL to delete all interface translation files.
+ * @param array $projects
+ *   Project names from which to delete the translation files and history.
+ *   Defaults to all projects.
+ * @param array $langcodes
+ *   Language codes from which to delete the translation files and history.
+ *   Defaults to all languagues
+ *
+ * @return boolean
+ *   TRUE if files are removed sucessfully. FALSE if one or more files could
+ *   not be deleted.
  */
-function locale_translate_delete_translation_files($langcode) {
-  $files = locale_translate_get_interface_translation_files($langcode);
-  $return = TRUE;
-  if (!empty($files)) {
+function locale_translate_delete_translation_files($projects = array(), $langcodes = array()) {
+  $fail = FALSE;
+  locale_translation_file_history_delete($projects, $langcodes);
+
+  // Delete all translation files from the translations directory.
+  if ($files = locale_translate_get_interface_translation_files($projects, $langcodes)) {
     foreach ($files as $file) {
       $success = file_unmanaged_delete($file->uri);
       if (!$success) {
-        $return = FALSE;
-      }
-      else {
-        // Remove the registered translation file if any.
-        db_delete('locale_file')
-          ->condition('langcode', $langcode)
-          ->condition('uri', $file->uri)
-          ->execute();
+        $fail = TRUE;
       }
     }
   }
-  return $return;
+  return !$fail;
 }

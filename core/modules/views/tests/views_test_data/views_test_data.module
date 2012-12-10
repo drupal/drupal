@@ -78,6 +78,9 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
 
 /**
  * Implements hook_views_pre_render().
+ *
+ * @see \Drupal\views\Tests\Plugin\CacheTest
+ * @see \Drupal\views\Tests\Plugin\RenderTest
  */
 function views_test_data_views_pre_render(ViewExecutable $view) {
   if ($view->storage->get('name') == 'test_cache_header_storage') {
@@ -85,6 +88,16 @@ function views_test_data_views_pre_render(ViewExecutable $view) {
     $view->element['#attached']['js'][] = "$path/views_cache.test.js";
     $view->element['#attached']['css'][] = "$path/views_cache.test.css";
     $view->build_info['pre_render_called'] = TRUE;
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views-view-table.tpl.php.
+ */
+function views_test_data_preprocess_views_view_table(&$variables) {
+  if ($variables['view']->storage->get('name') == 'test_view_render') {
+    $GLOBALS['views_render.test']++;
   }
 }
 

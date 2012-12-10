@@ -6,40 +6,11 @@
  */
 
 /**
- * Build a batch to get the status of remote and local translation files.
- *
- * The batch process fetches the state of both remote and (if configured) local
- * translation files. The data of the most recent translation is stored per
- * per project and per language. This data is stored in a state variable
- * 'locale_translation_status'. The timestamp it was last updated is stored
- * in the state variable 'locale_translation_status_last_update'.
- *
- * @param array $sources
- *   Array of translation source objects for which to check the state of
- *   translation source files.
+ * Load the common translation API.
  */
-function locale_translation_batch_status_build($sources) {
-  $operations = array();
-
-  // Set the batch processes for remote sources.
-  foreach ($sources as $source) {
-    $operations[] = array('locale_translation_batch_status_fetch_remote', array($source));
-  }
-
-  // Check for local sources, compare the results of local and remote and store
-  // the most recent.
-  $operations[] = array('locale_translation_batch_status_fetch_local', array($sources));
-  $operations[] = array('locale_translation_batch_status_compare', array());
-
-  $batch = array(
-    'operations' => $operations,
-    'title' => t('Checking available translations'),
-    'finished' => 'locale_translation_batch_status_finished',
-    'error_message' => t('Error checking available interface translation updates.'),
-    'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
-  );
-  return $batch;
-}
+// @todo Combine functions differently in files to avoid unnecessary includes.
+// Follow-up issue http://drupal.org/node/1834298
+require_once DRUPAL_ROOT . '/core/modules/locale/locale.translation.inc';
 
 /**
  * Batch operation callback: Check the availability of a remote po file.
@@ -58,20 +29,32 @@ function locale_translation_batch_status_build($sources) {
  * @see locale_translation_batch_status_compare()
 */
 function locale_translation_batch_status_fetch_remote($source, &$context) {
+  $t = get_t();
   // Check the translation file at the remote server and update the source
   // data with the remote status.
-  if (isset($source->files['remote'])) {
-    $remote_file = $source->files['remote'];
-    $result = locale_translation_http_check($remote_file->url);
+  if (isset($source->files[LOCALE_TRANSLATION_REMOTE])) {
+    $remote_file = $source->files[LOCALE_TRANSLATION_REMOTE];
+    $result = locale_translation_http_check($remote_file->uri);
 
-    // Update the file object with the result data. In case of a redirect we
-    // store the resulting url.
-    if ($result && !empty($result->updated)) {
-      $remote_file->url = isset($result->redirect_url) ? $result->redirect_url : $remote_file->url;
-      $remote_file->timestamp = $result->updated;
-      $source->files['remote'] = $remote_file;
+    if ($result) {
+      // Update the file object with the result data. In case of a redirect we
+      // store the resulting uri. If a file is not found we don't update the
+      // file object, and store it unchanged.
+      if (isset($result->updated)) {
+        $remote_file->uri = isset($result->redirect_uri) ? $result->redirect_uri : $remote_file->uri;
+        $remote_file->timestamp = $result->updated;
+        $source->files[LOCALE_TRANSLATION_REMOTE] = $remote_file;
+      }
+      // Record success.
+      $context['results']['files'][$source->name] = $source->name;
     }
-    $context['results'][$source->name][$source->language] = $source;
+    else {
+      // An error occured when checking the file. Record the failure for
+      // reporting at the end of the batch.
+      $context['results']['failed_files'][] = $source->name;
+    }
+    $context['results']['sources'][$source->name][$source->langcode] = $source;
+    $context['message'] = $t('Checked translation file: %name.', array('%name' => $source->name));
   }
 }
 
@@ -92,22 +75,25 @@ function locale_translation_batch_status_fetch_remote($source, &$context) {
  * @see locale_translation_batch_status_compare()
  */
 function locale_translation_batch_status_fetch_local($sources, &$context) {
-  module_load_include('compare.inc', 'locale');
-
+  $t = get_t();
   // Get the status of local translation files and store the result data in the
   // batch results for later processing.
   foreach ($sources as $source) {
-    if (isset($source->files['local'])) {
+    if (isset($source->files[LOCALE_TRANSLATION_LOCAL])) {
       locale_translation_source_check_file($source);
 
       // If remote data was collected before, we merge it into the newly
       // collected result.
-      if (isset($context['results'][$source->name][$source->language])) {
-        $source->files['remote'] = $context['results'][$source->name][$source->language]->files['remote'];
+      if (isset($context['results']['sources'][$source->name][$source->langcode])) {
+        $source->files[LOCALE_TRANSLATION_REMOTE] = $context['results']['sources'][$source->name][$source->langcode]->files[LOCALE_TRANSLATION_REMOTE];
       }
-      $context['results'][$source->name][$source->language] = $source;
+
+      // Record success and store the updated source data.
+      $context['results']['files'][$source->name] = $source->name;
+      $context['results']['sources'][$source->name][$source->langcode] = $source;
     }
   }
+  $context['message'] = $t('Checked translation files.');
 }
 
 /**
@@ -116,7 +102,7 @@ function locale_translation_batch_status_fetch_local($sources, &$context) {
  * In the preceding batch processes data of remote and local translation sources
  * is collected. Here we compare the collected results and update the source
  * object with the data of the most recent translation file. The end result is
- * stored in the 'locale_translation_status' state variable. Other
+ * stored in the 'locale.translation_status' state variable. Other
  * processes can collect this data after the batch process is completed.
  *
  * @param array $context
@@ -127,27 +113,51 @@ function locale_translation_batch_status_fetch_local($sources, &$context) {
  * @see locale_translation_batch_status_fetch_local()
  */
 function locale_translation_batch_status_compare(&$context) {
-  module_load_include('compare.inc', 'locale');
+  $history = locale_translation_get_file_history();
   $results = array();
 
-  foreach ($context['results'] as $project => $langcodes) {
-    foreach ($langcodes as $langcode => $source) {
-      $local = isset($source->files['local']) ? $source->files['local'] : NULL;
-      $remote = isset($source->files['remote']) ? $source->files['remote'] : NULL;
+  if (isset($context['results']['sources'])) {
+    foreach ($context['results']['sources'] as $project => $langcodes) {
+      foreach ($langcodes as $langcode => $source) {
+        $local = isset($source->files[LOCALE_TRANSLATION_LOCAL]) ? $source->files[LOCALE_TRANSLATION_LOCAL] : NULL;
+        $remote = isset($source->files[LOCALE_TRANSLATION_REMOTE]) ? $source->files[LOCALE_TRANSLATION_REMOTE] : NULL;
 
-      // The available translation files are compare and data of the most recent
-      // file is used to update the source object.
-      $file = _locale_translation_source_compare($local, $remote) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $remote : $local;
-      if (isset($file->timestamp)) {
-        $source->type = $file->type;
-        $source->timestamp = $file->timestamp;
+        // The available translation files are compared and data of the most
+        // recent file is used to update the source object.
+        $file = _locale_translation_source_compare($local, $remote) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $remote : $local;
+        if (isset($file->timestamp)) {
+          $source->type = $file->type;
+          $source->timestamp = $file->timestamp;
+        }
+
+        // Compare the available translation with the current translations
+        // status. If the project/language was translated before and it is more
+        // recent than the most recent translation, the translation is up to
+        // date. Which is marked in the source object with type "current".
+        if (isset($history[$source->project][$source->langcode])) {
+          $current = $history[$source->project][$source->langcode];
+          // Add the current translation to the source object to save it in
+          // the status cache.
+          $source->files[LOCALE_TRANSLATION_CURRENT] = $current;
+
+          if (isset($source->type)) {
+            $available = $source->files[$source->type];
+            $result = _locale_translation_source_compare($current, $available) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $available : $current;
+            $source->type = $result->type;
+            $source->timestamp = $result->timestamp;
+          }
+          else {
+            $source->type = $current->type;
+            $source->timestamp = $current->timestamp;
+          }
+        }
+
         $results[$project][$langcode] = $source;
       }
     }
   }
 
-  state()->set('locale_translation_status', $results);
-  state()->set('locale_translation_status_last_update', REQUEST_TIME);
+  locale_translation_status_save($results);
 }
 
 /**
@@ -160,13 +170,25 @@ function locale_translation_batch_status_compare(&$context) {
  */
 function locale_translation_batch_status_finished($success, $results) {
   $t = get_t();
-  if($success) {
-    if ($results) {
+  if ($success) {
+    if (isset($results['failed_files'])) {
+        if (module_exists('dblog')) {
+          $message = format_plural(count($results['failed_files']), 'One translation file could not be checked. <a href="@url">See the log</a> for details.', '@count translation files could not be checked. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+        }
+        else {
+          $message = format_plural(count($results['failed_files']), 'One translation files could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
+        }
+        drupal_set_message($message, 'error');
+    }
+    if (isset($results['files'])) {
       drupal_set_message(format_plural(
-        count($results),
+        count($results['sources']),
         'Checked available interface translation updates for one project.',
         'Checked available interface translation updates for @count projects.'
       ));
+    }
+    if (!isset($results['failed_files']) && !isset($results['files'])) {
+      drupal_set_message(t('Nothing to check.'));
     }
   }
   else {
@@ -175,20 +197,305 @@ function locale_translation_batch_status_finished($success, $results) {
 }
 
 /**
+ * Loads translation source data for the projects to be updated.
+ *
+ * Source data is loaded from cache and stored in the context results array.
+ * Source data contains the translations status per project / per language
+ * and whether translation updates are available and where the updates can be
+ * retrieved from. The data is stored in the $context['results'] parameter
+ * so that other batch operations can take this data as input for their
+ * operation.
+ *
+ * @see locale_translation_batch_fetch_download()
+ * @see locale_translation_batch_fetch_import()
+ * @see locale_translation_batch_fetch_update_status()
+ * @see locale_translation_batch_status_compare()
+ */
+function locale_translation_batch_fetch_sources($projects, $langcodes, &$context) {
+  $context['results']['input'] = locale_translation_load_sources($projects, $langcodes);
+
+  // If this batch operation is preceded by the status check operations, the
+  // results of those operation are stored in the context. We remove them here
+  // to keep the result records clean.
+  unset($context['results']['files']);
+  unset($context['results']['failed_files']);
+}
+
+/**
+ * Batch operation: Download a remote translation file.
+ *
+ * This operation downloads a remote gettext file and saves it in the temporary
+ * directory. The remote file URL is taken from the input data in
+ * $context['results']['input']. The result of the operation is stored in
+ * $context['results']['sources'] and contains the URL of the temporary file.
+ *
+ * @param object $project
+ *   Source object of the translatable project.
+ * @param string $langcode
+ *   Language code.
+ * @param $context
+ *   Batch context array.
+ *
+ * @see locale_translation_batch_fetch_sources()
+ * @see locale_translation_batch_fetch_import()
+ * @see locale_translation_batch_fetch_update_status()
+ * @see locale_translation_batch_status_compare()
+ */
+function locale_translation_batch_fetch_download($project, $langcode, &$context) {
+  $sources = $context['results']['input'];
+  if (isset($sources[$project . ':' . $langcode])) {
+    $source = $sources[$project . ':' . $langcode];
+    if (isset($source->type) && $source->type == LOCALE_TRANSLATION_REMOTE) {
+      $t = get_t();
+      if ($file = locale_translation_download_source($source->files[LOCALE_TRANSLATION_REMOTE])) {
+        $context['message'] = $t('Imported translation file: %name.', array('%name' => $file->filename));
+        $source->files[LOCALE_TRANSLATION_DOWNLOADED] = $file;
+      }
+      else {
+        $context['results']['failed_files'][] = $source->files[LOCALE_TRANSLATION_REMOTE];
+      }
+      $context['results']['sources'][$project][$langcode] = $source;
+    }
+  }
+}
+
+/**
+ * Batch process: Import translation file.
+ *
+ * This batch operation imports either a local gettext file or a downloaded
+ * remote gettext file. In case of a downloaded file the location of the
+ * temporary file is found in the $context['results']['sources']. The temporary
+ * file will be deleted after importing or will be moved to the local
+ * translations directory. In case of a local file the file will just be
+ * imported.
+ *
+ * @param object $project
+ *   Source object of the translatable project.
+ * @param string $langcode
+ *   Language code.
+ * @param array $options
+ *   Array of import options.
+ * @param $context
+ *   Batch context array.
+ *
+ * @see locale_translate_batch_import_files()
+ * @see locale_translation_batch_fetch_sources()
+ * @see locale_translation_batch_fetch_download()
+ * @see locale_translation_batch_fetch_update_status()
+ * @see locale_translation_batch_status_compare()
+ */
+function locale_translation_batch_fetch_import($project, $langcode, $options, &$context) {
+  $sources = $context['results']['input'];
+  if (isset($sources[$project . ':' . $langcode])) {
+    $source = $sources[$project . ':' . $langcode];
+    if (isset($source->type)) {
+      if ($source->type == LOCALE_TRANSLATION_REMOTE || $source->type == LOCALE_TRANSLATION_LOCAL) {
+
+        $t = get_t();
+        // If we are working on a remote file we will import the downloaded
+        // file. If the file was local just mark the result as such.
+        if ($source->type == LOCALE_TRANSLATION_REMOTE) {
+          if (isset($context['results']['sources'][$source->project][$source->langcode]->files[LOCALE_TRANSLATION_DOWNLOADED])) {
+            $import_type = LOCALE_TRANSLATION_DOWNLOADED;
+            $source_result = $context['results']['sources'][$source->project][$source->langcode];
+          }
+        }
+        else {
+          $import_type = LOCALE_TRANSLATION_LOCAL;
+          $source_result = $source;
+        }
+
+        $file = $source_result->files[$import_type];
+        module_load_include('bulk.inc', 'locale');
+        $options += array(
+          'message' => $t('Importing translation file: %name', array('%name' => $file->filename)),
+        );
+        // Import the translation file. For large files the batch operations is
+        // progressive and will be called repeatedly untill finished.
+        locale_translate_batch_import($file, $options, $context);
+
+        // The import is finished.
+        if (isset($context['finished']) && $context['finished'] == 1) {
+          // The import is successfull.
+          if (isset($context['results']['files'][$file->uri])) {
+            $context['message'] = $t('Imported translation file: %name.', array('%name' => $file->filename));
+
+            // Keep the data of imported source. In the following batch
+            // operation it will be saved in the {locale_file} table.
+            $source_result->files[LOCALE_TRANSLATION_IMPORTED] = $source_result->files[$source->type];
+
+            // Downloaded files are stored in the temporary files directory. If
+            // files should be kept locally, they will be moved to the local
+            // translations after successfull import. Otherwise the temporary
+            // file is deleted after being imported.
+            if ($import_type == LOCALE_TRANSLATION_DOWNLOADED && variable_get('locale_translate_file_directory', conf_path() . '/files/translations') && isset($source_result->files[LOCALE_TRANSLATION_LOCAL])) {
+              if (file_unmanaged_move($file->uri, $source_result->files[LOCALE_TRANSLATION_LOCAL]->uri, FILE_EXISTS_REPLACE)) {
+                // The downloaded file is now moved to the local file location.
+                // From this point forward we can treat it as if we imported a
+                // local file.
+                $import_type = LOCALE_TRANSLATION_LOCAL;
+              }
+            }
+            // The downloaded file is imported but will not be stored locally.
+            // Store the timestamp and delete the file.
+            if ($import_type == LOCALE_TRANSLATION_DOWNLOADED) {
+              $timestamp = filemtime($source_result->files[$import_type]->uri);
+              $source_result->files[LOCALE_TRANSLATION_IMPORTED]->timestamp = $timestamp;
+              $source_result->files[LOCALE_TRANSLATION_IMPORTED]->last_checked = REQUEST_TIME;
+              file_unmanaged_delete($file->uri);
+            }
+            // If the translation file is stored in the local directory. The
+            // timestamp of the file is stored.
+            if ($import_type == LOCALE_TRANSLATION_LOCAL) {
+              $timestamp = filemtime($source_result->files[$import_type]->uri);
+              $source_result->files[LOCALE_TRANSLATION_LOCAL]->timestamp = $timestamp;
+              $source_result->files[LOCALE_TRANSLATION_IMPORTED]->timestamp = $timestamp;
+              $source_result->files[LOCALE_TRANSLATION_IMPORTED]->last_checked = REQUEST_TIME;
+
+            }
+          }
+          else {
+            // File import failed. We can delete the temporary file.
+            if ($import_type == LOCALE_TRANSLATION_DOWNLOADED) {
+              file_unmanaged_delete($file->uri);
+            }
+          }
+        }
+        $context['results']['sources'][$source->project][$source->langcode] = $source_result;
+      }
+    }
+  }
+}
+
+/**
+ * Batch process: Update the download history table.
+ *
+ * This batch process updates the {local_file} table with the data of imported
+ * gettext files. Import data is taken from $context['results']['sources'].
+ *
+ * @param $context
+ *   Batch context array.
+ *
+ * @see locale_translation_batch_fetch_sources()
+ * @see locale_translation_batch_fetch_download()
+ * @see locale_translation_batch_fetch_import()
+ * @see locale_translation_batch_status_compare()
+ */
+function locale_translation_batch_fetch_update_status(&$context) {
+  $t = get_t();
+  $results = array();
+
+  if (isset($context['results']['sources'])) {
+    foreach ($context['results']['sources'] as $project => $langcodes) {
+      foreach ($langcodes as $langcode => $source) {
+
+        // Store the state of the imported translations in {locale_file} table.
+        // During the batch execution the data of the imported files is
+        // temporary stored in $context['results']['sources']. Now it will be
+        // stored in the database. Afterwards the temporary import and download
+        // data can be deleted.
+        if (isset($source->files[LOCALE_TRANSLATION_IMPORTED])) {
+          $file = $source->files[LOCALE_TRANSLATION_IMPORTED];
+          locale_translation_update_file_history($file);
+          unset($source->files[LOCALE_TRANSLATION_IMPORTED]);
+        }
+        unset($source->files[LOCALE_TRANSLATION_DOWNLOADED]);
+
+        // The source data is now up to date. Data of local and/or remote source
+        // file is up to date including an updated time stamp. In a next batch
+        // operation this can be used to update the translation status.
+        $context['results']['sources'][$project][$langcode] = $source;
+      }
+    }
+    $context['message'] = $t('Updated translations.');
+
+    // The file history has changed, flush the static cache now.
+    drupal_static_reset('locale_translation_get_file_history');
+  }
+}
+
+/**
+ * Batch finished callback: Set result message.
+ *
+ * @param boolean $success
+ *   TRUE if batch succesfully completed.
+ * @param array
+ *   Batch results.
+ */
+function locale_translation_batch_fetch_finished($success, $results) {
+  module_load_include('bulk.inc', 'locale');
+  return locale_translate_batch_finished($success, $results);
+}
+
+/**
  * Check if remote file exists and when it was last updated.
  *
- * @param string $url
- *   URL of remote file.
+ * @param string $uri
+ *   URI of remote file.
  * @param array $headers
  *   HTTP request headers.
  * @return stdClass
  *   Result object containing the HTTP request headers, response code, headers,
  *   data, redirect status and updated timestamp.
+ *   TRUE if the file is not found.
+ *   FALSE if a fault occured.
  */
-function locale_translation_http_check($url, $headers = array()) {
-  $result = drupal_http_request($url, array('headers' => $headers, 'method' => 'HEAD'));
-  if ($result && $result->code == '200') {
-    $result->updated = isset($result->headers['last-modified']) ? strtotime($result->headers['last-modified']) : 0;
+function locale_translation_http_check($uri, $headers = array()) {
+  $result = drupal_http_request($uri, array('headers' => $headers, 'method' => 'HEAD'));
+  if (!isset($result->error)) {
+    if ($result->code == 200) {
+      $result->updated = isset($result->headers['last-modified']) ? strtotime($result->headers['last-modified']) : 0;
+    }
+    return $result;
   }
-  return $result;
+  else {
+    switch ($result->code) {
+      case 404:
+        // File not found occurs when a translation file is not yet available
+        // at the translation server. But also if a custom module or custom
+        // theme does not define the location of a translation file. By default
+        // the file is checked at the translation server, but it will not be
+        // found there.
+        watchdog('locale', 'File not found: @uri.', array('@uri' => $uri));
+        return TRUE;
+      case 0:
+        watchdog('locale', 'Error occurred when trying to check @remote: @errormessage.', array('@errormessage' => $result->error, '@remote' => $uri), WATCHDOG_ERROR);
+        break;
+      default:
+        watchdog('locale', 'HTTP error @errorcode occurred when trying to check @remote.', array('@errorcode' => $result->code, '@remote' => $uri), WATCHDOG_ERROR);
+        break;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Downloads source file from a remote server.
+ *
+ * The downloaded file is stored in the temporary files directory.
+ *
+ * @param object $source_file
+ *   Source file object with at least:
+ *   - "uri": uri to download the file from.
+ *   - "project": Project name.
+ *   - "langcode": Translation language.
+ *   - "version": Project version.
+ *   - "filename": File name.
+ *
+ * @return object
+ *   File object if download was successful. FALSE on failure.
+ */
+function locale_translation_download_source($source_file) {
+  if ($uri = system_retrieve_file($source_file->uri, 'temporary://')) {
+    $file = new stdClass();
+    $file->project = $source_file->project;
+    $file->langcode = $source_file->langcode;
+    $file->version = $source_file->version;
+    $file->type = LOCALE_TRANSLATION_DOWNLOADED;
+    $file->uri = $uri;
+    $file->filename = $source_file->filename;
+    return $file;
+  }
+  watchdog('locale', 'Unable to download translation file @uri.', array('@uri' => $source->files[LOCALE_TRANSLATION_REMOTE]->uri), WATCHDOG_ERROR);
+  return FALSE;
 }

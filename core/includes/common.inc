@@ -4927,8 +4927,6 @@ function drupal_cron_run() {
         queue($queue_name)->createQueue();
       }
     }
-    // Register shutdown callback.
-    drupal_register_shutdown_function('drupal_cron_cleanup');
 
     // Iterate through the modules calling their cron handlers (if any):
     foreach (module_implements('cron') as $module) {
@@ -4968,22 +4966,6 @@ function drupal_cron_run() {
   drupal_save_session($original_session_saving);
 
   return $return;
-}
-
-/**
- * Shutdown function: Performs cron cleanup.
- *
- * @see drupal_cron_run()
- * @see drupal_register_shutdown_function()
- */
-function drupal_cron_cleanup() {
-  // See if the semaphore is still locked.
-  if (variable_get('cron_semaphore', FALSE)) {
-    watchdog('cron', 'Cron run exceeded the time limit and was aborted.', array(), WATCHDOG_WARNING);
-
-    // Release cron semaphore.
-    variable_del('cron_semaphore');
-  }
 }
 
 /**

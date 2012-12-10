@@ -244,7 +244,7 @@ class Feed extends PathPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::attachTo().
    */
-  public function attachTo($display_id) {
+  public function attachTo(ViewExecutable $clone, $display_id) {
     $displays = $this->getOption('displays');
     if (empty($displays[$display_id])) {
       return;
@@ -254,7 +254,6 @@ class Feed extends PathPluginBase {
     // attach a feed icon.
     $plugin = $this->getPlugin('style');
     if ($plugin) {
-      $clone = $this->view->cloneView();
       $clone->setDisplay($this->display['id']);
       $clone->buildTitle();
       $plugin->attach_to($display_id, $this->getPath(), $clone->getTitle());

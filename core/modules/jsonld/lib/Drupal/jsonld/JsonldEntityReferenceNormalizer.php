@@ -7,14 +7,23 @@
 
 namespace Drupal\jsonld;
 
-use Drupal\Core\Entity\Field\Type\EntityReferenceItem;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\jsonld\JsonldNormalizerBase;
+use ReflectionClass;
 use Symfony\Component\Serializer\Exception\RuntimeException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
  * Converts an EntityReferenceItem to a JSON-LD array structure.
  */
-class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase {
+class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase implements DenormalizerInterface {
+
+  /**
+   * The interface or class that this Normalizer supports.
+   *
+   * @var string
+   */
+  protected static $supportedInterfaceOrClass = 'Drupal\Core\Entity\Field\Type\EntityReferenceItem';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
@@ -32,10 +41,19 @@ class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase {
   }
 
   /**
-   * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::supportsNormalization()
+   * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
    */
-  public function supportsNormalization($data, $format = NULL) {
-    return parent::supportsNormalization($data, $format) && ($data instanceof EntityReferenceItem);
+  public function denormalize($data, $class, $format = null) {
+    // @todo Support denormalization for Entity Reference.
+    return array();
+  }
+
+  /**
+   * Overrides \Drupal\jsonld\JsonldNormalizerBase::supportsDenormalization()
+   */
+  public function supportsDenormalization($data, $type, $format = NULL) {
+    $reflection = new ReflectionClass($type);
+    return in_array($format, static::$format) && ($reflection->getName() == static::$supportedInterfaceOrClass || $reflection->isSubclassOf(static::$supportedInterfaceOrClass));
   }
 
 }

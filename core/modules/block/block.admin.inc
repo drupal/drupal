@@ -173,6 +173,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save blocks'),
+    '#button_type' => 'primary',
   );
 
   return $form;
@@ -311,7 +312,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   );
 
   $theme_default = variable_get('theme_default', 'stark');
-  $admin_theme = variable_get('admin_theme');
+  $admin_theme = config('system.site')->get('admin_theme');
   foreach (list_themes() as $key => $theme) {
     // Only display enabled themes
     if ($theme->status) {
@@ -507,6 +508,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save block'),
+    '#button_type' => 'primary',
   );
 
   return $form;

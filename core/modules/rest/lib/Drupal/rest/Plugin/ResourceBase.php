@@ -62,11 +62,8 @@ abstract class ResourceBase extends PluginBase {
         $prefix = strtr($this->plugin_id, ':', '/');
         $route = new Route("/$prefix/{id}", array(
           '_controller' => 'Drupal\rest\RequestHandler::handle',
-          // @todo Once http://drupal.org/node/1793520 is committed we will have
-          // route object avaialble in the controller so 'plugin' property
-          // should be changed to '_plugin'.
-          // @see RequestHandler::handle().
-          'plugin' => $this->plugin_id,
+          // Pass the resource plugin ID along as default property.
+          '_plugin' => $this->plugin_id,
         ), array(
           // The HTTP method is a requirement for this route.
           '_method' => $method,

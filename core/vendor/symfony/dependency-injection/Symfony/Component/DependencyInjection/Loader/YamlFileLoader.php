@@ -119,6 +119,8 @@ class YamlFileLoader extends FileLoader
      * @param string $id
      * @param array  $service
      * @param string $file
+     *
+     * @throws InvalidArgumentException When tags are invalid
      */
     private function parseDefinition($id, $service, $file)
     {
@@ -231,7 +233,7 @@ class YamlFileLoader extends FileLoader
      *
      * @return array The file content
      */
-    private function loadFile($file)
+    protected function loadFile($file)
     {
         return $this->validate(Yaml::parse($file), $file);
     }

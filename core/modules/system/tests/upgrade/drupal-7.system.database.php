@@ -103,6 +103,10 @@ db_insert('variable')->fields(array(
     'name' => 'password_count_log2',
     'value' => 'i:42;',
 ))
+->values(array(
+    'name' => 'actions_max_stack',
+    'value' => 'i:42;',
+  ))
 ->execute();
 
 db_update('variable')

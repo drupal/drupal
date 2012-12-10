@@ -179,7 +179,7 @@ class TrackerTest extends WebTestBase {
       'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array(
         'comment' => COMMENT_OPEN
       ))),
-      'title' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(8)))),
+      'title' => $this->randomName(8),
     ));
 
     // Add a comment to the page.

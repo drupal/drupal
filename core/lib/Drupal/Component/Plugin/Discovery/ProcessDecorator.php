@@ -64,7 +64,8 @@ class ProcessDecorator implements DiscoveryInterface {
     foreach ($definitions as $plugin_id => &$definition) {
       call_user_func_array($this->processCallback, array(&$definition, $plugin_id));
     }
-    return $definitions;
+    // Allow process callbacks to unset definitions.
+    return array_filter($definitions);
   }
 
   /**

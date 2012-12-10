@@ -58,7 +58,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $this->assertRaw(t('The language %language has been created.', array('%language' => 'French')), t('The language has been automatically created.'));
 
     // The import should have created 8 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 8, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 8, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
 
     // This import should have saved plural forms to have 2 variants.
     $locale_plurals = variable_get('locale_translation_plurals', array());
@@ -74,8 +74,9 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     // The import should have created 1 string and rejected 2.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
-    $skip_message = format_plural(2, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+
+    $skip_message = format_plural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
     $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
 
     // Try importing a zero byte sized .po file.
@@ -84,7 +85,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     // The import should have created 0 string and rejected 0.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 0, '%delete' => 0)), 'The empty translation file was successfully imported.');
+    $this->assertRaw(t('One translation file could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog'))), 'The empty translation file was successfully imported.');
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomName(16);
@@ -103,7 +104,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     // The import should have created 1 string.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
     // Ensure string wasn't overwritten.
     $search = array(
       'string' => 'Montag',
@@ -125,7 +126,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     // The import should have updated 2 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 2, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 0, '%update' => 2, '%delete' => 0)), t('The translation file was successfully imported.'));
     // Ensure string was overwritten.
     $search = array(
       'string' => 'Montag',
@@ -145,7 +146,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     // The import should have created 6 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 6, '%update' => 0, '%delete' => 0)), t('The customized translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 6, '%update' => 0, '%delete' => 0)), t('The customized translation file was successfully imported.'));
 
     // The database should now contain 6 customized strings (two imported
     // strings are not translated).
@@ -161,7 +162,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     // The import should have created 1 string.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The customized translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The customized translation file was successfully imported.'));
     // Ensure string wasn't overwritten.
     $search = array(
       'string' => 'januari',
@@ -180,7 +181,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     ));
 
     // The import should have updated 2 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 2, '%delete' => 0)), t('The customized translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 0, '%update' => 2, '%delete' => 0)), t('The customized translation file was successfully imported.'));
     // Ensure string was overwritten.
     $search = array(
       'string' => 'januari',
@@ -190,60 +191,6 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('Customized string overwritten by imported string.'));
 
-  }
-
-  /**
-   * Test automatic import of a module's translation files.
-   */
-  function testAutomaticModuleTranslationImportLanguageEnable() {
-    // Code for the language - manually set to match the test translation file.
-    $langcode = 'xx';
-    // The English name for the language.
-    $name = $this->randomName(16);
-
-    // Create a custom language.
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $langcode,
-      'name' => $name,
-      'direction' => '0',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
-
-    // Ensure the translation file was automatically imported when language was
-    // added.
-    $this->assertText(t('One translation file imported.'), t('Language file automatically imported.'));
-    $this->assertText(t('A translation string was skipped because of disallowed or malformed HTML'), t('Language file automatically imported.'));
-
-    // Ensure strings were successfully imported.
-    $search = array(
-      'string' => 'lundi',
-      'langcode' => $langcode,
-      'translation' => 'translated',
-    );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('String successfully imported.'));
-
-    // Ensure multiline string was imported.
-    $search = array(
-      'string' => 'Source string for multiline translation',
-      'langcode' => $langcode,
-      'translation' => 'all',
-    );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText('Multiline translation string to make sure that import works with it.', t('String successfully imported.'));
-
-    // Ensure 'Allowed HTML source string' was imported but the translation for
-    // 'Another allowed HTML source string' was not because it contains invalid
-    // HTML.
-    $search = array(
-      'string' => 'HTML source string',
-      'langcode' => $langcode,
-      'translation' => 'all',
-    );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText('Allowed HTML source string', t('String successfully imported.'));
-    $this->assertNoText('Another allowed HTML source string', t('String with disallowed translation not imported.'));
   }
 
   /**
@@ -270,7 +217,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => $langcode,
     ));
 
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
     $this->assertIdentical(t('Operations', array(), array('langcode' => $langcode)), 'Műveletek', t('String imported and translated.'));
 
     // Try importing a .po file.
@@ -278,7 +225,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => $langcode,
       'overwrite_options[not_customized]' => TRUE,
     ));
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 0, '%delete' => 1)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', array('%number' => 0, '%update' => 0, '%delete' => 1)), t('The translation file was successfully imported.'));
 
     $str = "Operations";
     $search = array(

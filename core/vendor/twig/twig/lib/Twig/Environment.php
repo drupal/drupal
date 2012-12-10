@@ -17,7 +17,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.8.3';
+    const VERSION = '1.11.1';
 
     protected $charset;
     protected $loader;
@@ -711,7 +711,7 @@ class Twig_Environment
                     } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
                         $this->parsers->addTokenParserBroker($parser);
                     } else {
-                        throw new Twig_Error_Runtime('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
+                        throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
                     }
                 }
             }
@@ -1100,6 +1100,6 @@ class Twig_Environment
             }
         }
 
-        throw new Twig_Error_Runtime(sprintf('Failed to write cache file "%s".', $file));
+        throw new RuntimeException(sprintf('Failed to write cache file "%s".', $file));
     }
 }

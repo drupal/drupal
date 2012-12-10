@@ -11,7 +11,7 @@
 
 class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
 {
-    static protected $params, $templates;
+    protected static $params, $templates;
 
     public function setUp()
     {
@@ -156,10 +156,13 @@ class Twig_Tests_Extension_SandboxTest extends PHPUnit_Framework_TestCase
     public function testMacrosInASandbox()
     {
         $twig = $this->getEnvironment(true, array('autoescape' => true), array('index' => <<<EOF
-{% macro test(text) %}<p>{{ text }}</p>{% endmacro %}
-{{ _self.test('username') }}
+{%- import _self as macros %}
+
+{%- macro test(text) %}<p>{{ text }}</p>{% endmacro %}
+
+{{- macros.test('username') }}
 EOF
-        ), array('macro'), array('escape'));
+        ), array('macro', 'import'), array('escape'));
 
         $this->assertEquals('<p>username</p>', $twig->loadTemplate('index')->render(array()));
     }
@@ -177,11 +180,11 @@ EOF
 
 class FooObject
 {
-    static public $called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
+    public static $called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
 
     public $bar = 'bar';
 
-    static public function reset()
+    public static function reset()
     {
         self::$called = array('__toString' => 0, 'foo' => 0, 'getFooBar' => 0);
     }

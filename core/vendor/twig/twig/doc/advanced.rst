@@ -61,7 +61,8 @@ Now, let's use a ``lipsum`` *filter*:
 
 Again, it works, but it looks weird. A filter transforms the passed value to
 something else but here we use the value to indicate the number of words to
-generate.
+generate (so, ``40`` is an argument of the filter, not the value we want to
+transform).
 
 Next, let's use a ``lipsum`` *function*:
 
@@ -243,8 +244,10 @@ case, set the ``is_safe`` option::
 
     $filter = new Twig_Filter_Function('nl2br', array('is_safe' => array('html')));
 
-Some filters may have to work on already escaped or safe values. In such a
-case, set the ``pre_escape`` option::
+Some filters may need to work on input that is already escaped or safe, for
+example when adding (safe) html tags to originally unsafe output. In such a
+case, set the ``pre_escape`` option to escape the input data before it is run
+through your filter::
 
     $filter = new Twig_Filter_Function('somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
 
@@ -829,5 +832,59 @@ The ``getTests()`` methods allows to add new test functions::
         // ...
     }
 
+Testing an Extension
+--------------------
+
+.. versionadded:: 1.10
+    Support for functional tests was added in Twig 1.10.
+
+Functional Tests
+~~~~~~~~~~~~~~~~
+
+You can create functional tests for extensions simply by creating the
+following file structure in your test directory::
+
+    Fixtures/
+        filters/
+            foo.test
+            bar.test
+        functions/
+            foo.test
+            bar.test
+        tags/
+            foo.test
+            bar.test
+    IntegrationTest.php
+
+The ``IntegrationTest.php`` file should look like this::
+
+    class Project_Tests_IntegrationTest extends Twig_Test_IntegrationTestCase
+    {
+        public function getExtensions()
+        {
+            return array(
+                new Project_Twig_Extension1(),
+                new Project_Twig_Extension2(),
+            );
+        }
+
+        public function getFixturesDir()
+        {
+            return dirname(__FILE__).'/Fixtures/';
+        }
+    }
+
+Fixtures examples can be found within the Twig repository
+`tests/Twig/Fixtures`_ directory.
+
+Node Tests
+~~~~~~~~~~
+
+Testing the node visitors can be complex, so extend your test cases from
+``Twig_Test_NodeTestCase``. Examples can be found in the Twig repository
+`tests/Twig/Node`_ directory.
+
 .. _`spl_autoload_register()`: http://www.php.net/spl_autoload_register
-.. _`rot13`: http://www.php.net/manual/en/function.str-rot13.php
+.. _`rot13`:                   http://www.php.net/manual/en/function.str-rot13.php
+.. _`tests/Twig/Fixtures`:     https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Fixtures
+.. _`tests/Twig/Node`:         https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Node

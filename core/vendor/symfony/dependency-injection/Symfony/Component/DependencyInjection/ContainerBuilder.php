@@ -31,12 +31,36 @@ use Symfony\Component\Config\Resource\ResourceInterface;
  */
 class ContainerBuilder extends Container implements TaggedContainerInterface
 {
-    private $extensions       = array();
-    private $extensionsByNs   = array();
-    private $definitions      = array();
-    private $aliases          = array();
-    private $resources        = array();
+    /**
+     * @var ExtensionInterface[]
+     */
+    private $extensions = array();
+
+    /**
+     * @var ExtensionInterface[]
+     */
+    private $extensionsByNs = array();
+
+    /**
+     * @var Definition[]
+     */
+    private $definitions = array();
+
+    /**
+     * @var Alias[]
+     */
+    private $aliases = array();
+
+    /**
+     * @var ResourceInterface[]
+     */
+    private $resources = array();
+
     private $extensionConfigs = array();
+
+    /**
+     * @var Compiler
+     */
     private $compiler;
 
     /**
@@ -62,6 +86,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @return ExtensionInterface An extension instance
      *
+     * @throws \LogicException if the extension is not registered
+     *
      * @api
      */
     public function getExtension($name)
@@ -80,7 +106,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Returns all registered extensions.
      *
-     * @return array An array of ExtensionInterface
+     * @return ExtensionInterface[] An array of ExtensionInterface
      *
      * @api
      */
@@ -131,6 +157,15 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         return $this;
     }
 
+    /**
+     * Sets the resources for this configuration.
+     * 
+     * @param ResourceInterface[] $resources An array of resources
+     * 
+     * @return ContainerBuilder The current instance
+     * 
+     * @api
+     */
     public function setResources(array $resources)
     {
         $this->resources = $resources;
@@ -143,6 +178,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param object $object An object instance
      *
+     * @return ContainerBuilder The current instance
+     *
      * @api
      */
     public function addObjectResource($object)
@@ -151,6 +188,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         do {
             $this->addResource(new FileResource($parent->getFileName()));
         } while ($parent = $parent->getParentClass());
+
+        return $this;
     }
 
     /**
@@ -161,6 +200,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @return ContainerBuilder The current instance
      * @throws BadMethodCallException When this ContainerBuilder is frozen
+     *
+     * @throws \LogicException if the container is frozen
      *
      * @api
      */
@@ -183,6 +224,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @param CompilerPassInterface $pass A compiler pass
      * @param string                $type The type of compiler pass
      *
+     * @return ContainerBuilder The current instance
+     *
      * @api
      */
     public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION)
@@ -194,6 +237,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         $this->compiler->addPass($pass, $type);
 
         $this->addObjectResource($pass);
+
+        return $this;
     }
 
     /**
@@ -480,7 +525,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Sets the service aliases.
      *
-     * @param array $aliases An array of service definitions
+     * @param array $aliases An array of aliases
      *
      * @api
      */
@@ -493,8 +538,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Sets an alias for an existing service.
      *
-     * @param string $alias The alias to create
-     * @param mixed  $id    The service to alias
+     * @param string        $alias The alias to create
+     * @param string|Alias  $id    The service to alias
+     *
+     * @throws \InvalidArgumentException if the id is not a string or an Alias
+     * @throws \InvalidArgumentException if the alias is for itself
      *
      * @api
      */
@@ -546,7 +594,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Gets all defined aliases.
      *
-     * @return array An array of aliases
+     * @return Alias[] An array of aliases
      *
      * @api
      */
@@ -612,7 +660,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Sets the service definitions.
      *
-     * @param array $definitions An array of service definitions
+     * @param Definition[] $definitions An array of service definitions
      *
      * @api
      */
@@ -625,7 +673,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Gets all service definitions.
      *
-     * @return array An array of Definition instances
+     * @return Definition[] An array of Definition instances
      *
      * @api
      */
@@ -639,6 +687,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param string     $id         The service identifier
      * @param Definition $definition A Definition instance
+     *
+     * @return Definition the service definition
      *
      * @throws BadMethodCallException When this ContainerBuilder is frozen
      *
@@ -721,9 +771,10 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @param Definition $definition A service definition instance
      * @param string     $id         The service identifier
      *
-     * @return object              The service described by the service definition
+     * @return object The service described by the service definition
      *
-     * @throws RuntimeException         When factory specification is incomplete or scope is inactive
+     * @throws RuntimeException When the scope is inactive
+     * @throws RuntimeException When the factory definition is incomplete
      * @throws InvalidArgumentException When configure callable is not callable
      */
     private function createService(Definition $definition, $id)
@@ -788,10 +839,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         }
 
         if ($callable = $definition->getConfigurator()) {
-            if (is_array($callable) && is_object($callable[0]) && $callable[0] instanceof Reference) {
-                $callable[0] = $this->get((string) $callable[0]);
-            } elseif (is_array($callable)) {
-                $callable[0] = $parameterBag->resolveValue($callable[0]);
+            if (is_array($callable)) {
+                $callable[0] = $callable[0] instanceof Reference ? $this->get((string) $callable[0]) : $parameterBag->resolveValue($callable[0]);
             }
 
             if (!is_callable($callable)) {
@@ -817,9 +866,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             foreach ($value as &$v) {
                 $v = $this->resolveServices($v);
             }
-        } elseif (is_object($value) && $value instanceof Reference) {
+        } elseif ($value instanceof Reference) {
             $value = $this->get((string) $value, $value->getInvalidBehavior());
-        } elseif (is_object($value) && $value instanceof Definition) {
+        } elseif ($value instanceof Definition) {
             $value = $this->createService($value, null);
         }
 
@@ -848,6 +897,21 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     }
 
     /**
+     * Returns all tags the defined services use.
+     *
+     * @return array An array of tags
+     */
+    public function findTags()
+    {
+        $tags = array();
+        foreach ($this->getDefinitions() as $id => $definition) {
+            $tags = array_merge(array_keys($definition->getTags()), $tags);
+        }
+
+        return array_unique($tags);
+    }
+
+    /**
      * Returns the Service Conditionals.
      *
      * @param mixed $value An array of conditionals to return.
@@ -862,7 +926,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             foreach ($value as $v) {
                 $services = array_unique(array_merge($services, self::getServiceConditionals($v)));
             }
-        } elseif (is_object($value) && $value instanceof Reference && $value->getInvalidBehavior() === ContainerInterface::IGNORE_ON_INVALID_REFERENCE) {
+        } elseif ($value instanceof Reference && $value->getInvalidBehavior() === ContainerInterface::IGNORE_ON_INVALID_REFERENCE) {
             $services[] = (string) $value;
         }
 

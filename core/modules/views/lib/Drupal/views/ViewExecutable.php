@@ -109,18 +109,18 @@ class ViewExecutable {
   public $total_rows = NULL;
 
   /**
-   * Rendered attachments to place before the view.
+   * Attachments to place before the view.
    *
-   * @var string
+   * @var array()
    */
-  public $attachment_before = '';
+  public $attachment_before = array();
 
   /**
-   * Rendered attachements to place after the view.
+   * Attachments to place after the view.
    *
-   * @var string
+   * @var array
    */
-  public $attachment_after = '';
+  public $attachment_after = array();
 
   // Exposed widget input
 
@@ -1492,7 +1492,9 @@ class ViewExecutable {
     // Give other displays an opportunity to attach to the view.
     foreach ($this->displayHandlers as $id => $display) {
       if (!empty($this->displayHandlers[$id])) {
-        $this->displayHandlers[$id]->attachTo($this->current_display);
+        // Create a clone for the attachments to manipulate. 'static' refers to the current class name.
+        $cloned_view = new static($this->storage);
+        $this->displayHandlers[$id]->attachTo($cloned_view, $this->current_display);
       }
     }
     $this->is_attachment = FALSE;
@@ -1829,21 +1831,6 @@ class ViewExecutable {
     unset($data['uuid']);
 
     return entity_create('view', $data);
-  }
-
-  /**
-   * Safely clone a view.
-   *
-   * This will completely wipe a view clean so it can be considered fresh.
-   *
-   * @return Drupal\views\ViewExecutable
-   *   The cloned view.
-   */
-  public function cloneView() {
-    $storage = clone $this->storage;
-    $executable = new ViewExecutable($storage);
-    $storage->set('executable', $executable);
-    return $executable;
   }
 
   /**

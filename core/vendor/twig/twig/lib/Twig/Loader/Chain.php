@@ -15,8 +15,9 @@
  * @package twig
  * @author  Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Loader_Chain implements Twig_LoaderInterface
+class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
+    private $hasSourceCache = array();
     protected $loaders;
 
     /**
@@ -40,61 +41,96 @@ class Twig_Loader_Chain implements Twig_LoaderInterface
     public function addLoader(Twig_LoaderInterface $loader)
     {
         $this->loaders[] = $loader;
+        $this->hasSourceCache = array();
     }
 
     /**
-     * Gets the source code of a template, given its name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The template source code
+     * {@inheritdoc}
      */
     public function getSource($name)
     {
+        $exceptions = array();
         foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExistsLoaderInterface && !$loader->exists($name)) {
+                continue;
+            }
+
             try {
                 return $loader->getSource($name);
             } catch (Twig_Error_Loader $e) {
+                $exceptions[] = $e->getMessage();
             }
         }
 
-        throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+        throw new Twig_Error_Loader(sprintf('Template "%s" is not defined (%s).', $name, implode(', ', $exceptions)));
     }
 
     /**
-     * Gets the cache key to use for the cache for a given template name.
-     *
-     * @param string $name The name of the template to load
-     *
-     * @return string The cache key
+     * {@inheritdoc}
+     */
+    public function exists($name)
+    {
+        $name = (string) $name;
+
+        if (isset($this->hasSourceCache[$name])) {
+            return $this->hasSourceCache[$name];
+        }
+
+        foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExistsLoaderInterface && $loader->exists($name)) {
+                return $this->hasSourceCache[$name] = true;
+            }
+
+            try {
+                $loader->getSource($name);
+
+                return $this->hasSourceCache[$name] = true;
+            } catch (Twig_Error_Loader $e) {
+            }
+        }
+
+        return $this->hasSourceCache[$name] = false;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getCacheKey($name)
     {
+        $exceptions = array();
         foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExistsLoaderInterface && !$loader->exists($name)) {
+                continue;
+            }
+
             try {
                 return $loader->getCacheKey($name);
             } catch (Twig_Error_Loader $e) {
+                $exceptions[] = get_class($loader).': '.$e->getMessage();
             }
         }
 
-        throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+        throw new Twig_Error_Loader(sprintf('Template "%s" is not defined (%s).', $name, implode(' ', $exceptions)));
     }
 
     /**
-     * Returns true if the template is still fresh.
-     *
-     * @param string    $name The template name
-     * @param timestamp $time The last modification time of the cached template
+     * {@inheritdoc}
      */
     public function isFresh($name, $time)
     {
+        $exceptions = array();
         foreach ($this->loaders as $loader) {
+            if ($loader instanceof Twig_ExistsLoaderInterface && !$loader->exists($name)) {
+                continue;
+            }
+
             try {
                 return $loader->isFresh($name, $time);
             } catch (Twig_Error_Loader $e) {
+                $exceptions[] = get_class($loader).': '.$e->getMessage();
             }
         }
 
-        throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
+        throw new Twig_Error_Loader(sprintf('Template "%s" is not defined (%s).', $name, implode(' ', $exceptions)));
     }
 }

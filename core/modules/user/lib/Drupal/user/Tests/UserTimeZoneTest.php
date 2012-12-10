@@ -26,9 +26,11 @@ class UserTimeZoneTest extends WebTestBase {
    */
   function testUserTimeZone() {
     // Setup date/time settings for Los Angeles time.
-    $config = config('system.date')
-      ->set('timezone.user.configurable', 1)
-      ->set('timezone.default', 'America/Los_Angeles')
+    config('system.timezone')
+      ->set('user.configurable', 1)
+      ->set('default', 'America/Los_Angeles')
+      ->save();
+    config('system.date')
       ->set('formats.medium.pattern.php', 'Y-m-d H:i T')
       ->save();
 

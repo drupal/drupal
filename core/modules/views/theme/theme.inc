@@ -72,11 +72,7 @@ function template_preprocess_views_view(&$vars) {
     $vars['attributes']['class'][] = $vars['css_class'];
   }
 
-  // Render the rows render array to check for contents.
-  $rows = $vars['rows'];
-  $rows = drupal_render($rows);
-  $empty = empty($rows);
-
+  $empty = empty($view->result);
   $vars['header'] = $view->display_handler->renderArea('header', $empty);
   $vars['footer'] = $view->display_handler->renderArea('footer', $empty);
   $vars['empty'] = $empty ? $view->display_handler->renderArea('empty', $empty) : FALSE;
@@ -96,8 +92,18 @@ function template_preprocess_views_view(&$vars) {
     $vars['pager'] = $view->renderPager($exposed_input);
   }
 
-  $vars['attachment_before'] = !empty($view->attachment_before) ? $view->attachment_before : '';
-  $vars['attachment_after'] = !empty($view->attachment_after) ? $view->attachment_after : '';
+  if (!empty($view->attachment_before)) {
+    $vars['attachment_before'] = $view->attachment_before;
+  }
+  else {
+    $vars['attachment_before'] = array();
+  }
+  if (!empty($view->attachment_after)) {
+    $vars['attachment_after'] = $view->attachment_after;
+  }
+  else {
+    $vars['attachment_after'] = array();
+  }
 
   // Add contextual links to the view. We need to attach them to the dummy
   // $view_array variable, since contextual_preprocess() requires that they be
@@ -149,6 +155,9 @@ function template_preprocess_views_view(&$vars) {
 
   // If form fields were found in the View, reformat the View output as a form.
   if (views_view_has_form_elements($view)) {
+    // Copy the rows so as not to modify them by reference when rendering.
+    $rows = $vars['rows'];
+    $rows = drupal_render($rows);
     $output = !empty($rows) ? $rows : $vars['empty'];
     $form = drupal_get_form(views_form_id($view), $view, $output);
     // The form is requesting that all non-essential views elements be hidden,

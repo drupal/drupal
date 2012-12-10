@@ -8,8 +8,8 @@
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * This class filters routes based on the media type in HTTP Accept headers.
@@ -46,9 +46,7 @@ class MimeTypeMatcher extends PartialMatcher {
     }
 
     if (!count($collection)) {
-      // @todo update with UnsupportedMediaTypeException when available
-      // @see http://drupal.org/node/1831074
-      throw new RouteNotFoundException();
+      throw new UnsupportedMediaTypeHttpException();
     }
 
     return $collection;

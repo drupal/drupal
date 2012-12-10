@@ -12,7 +12,7 @@
 /**
  * Store the open menu tray.
  */
-var activeItem = JSON.parse(localStorage.getItem('Drupal.toolbar.menu.activeItem'));
+var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
 
   $.fn.toolbarMenu = function () {
 
@@ -36,12 +36,6 @@ var activeItem = JSON.parse(localStorage.getItem('Drupal.toolbar.menu.activeItem
       toggleList($openItems, false);
       // Save link of the closest open item through a unique selector.
       var href = $toggle.siblings('a[href]').attr('href');
-      if ($toggle.hasClass('open')) {
-        localStorage.setItem('Drupal.toolbar.menu.activeItem', JSON.stringify(href));
-      }
-      else {
-        localStorage.removeItem('Drupal.toolbar.menu.activeItem');
-      }
     }
     /**
      * Toggle the open/close state of a list is a menu.
@@ -136,25 +130,9 @@ var activeItem = JSON.parse(localStorage.getItem('Drupal.toolbar.menu.activeItem
         toggleList($activeTrail, true);
       }
     }
-    /**
-     * Store the last-clicked menu item to decorate the active menu trail.
-     *
-     * @param {jQuery} event
-     *   A jQuery click event.
-     */
-    function storeActiveItem (event) {
-      var href = $(event.target).attr('href');
-      if (href) {
-        localStorage.setItem('Drupal.toolbar.menu.activeItem', JSON.stringify(href));
-      }
-      else {
-        localStorage.removeItem('Drupal.toolbar.menu.activeItem');
-      }
-    }
     // Bind event handlers.
     $(document)
-      .on('click.toolbar', '.handle', toggleClickHandler)
-      .on('click.toolbar', 'li > .box > a', storeActiveItem);
+      .on('click.toolbar', '.handle', toggleClickHandler);
     // Return the jQuery object.
     return this.each(function (selector) {
       var $menu = $(this).once('toolbar-menu');

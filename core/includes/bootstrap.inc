@@ -1246,10 +1246,11 @@ function _drupal_set_preferred_header_name($name = NULL) {
  * Headers are set in drupal_add_http_header(). Default headers are not set
  * if they have been replaced or unset using drupal_add_http_header().
  *
- * @param $default_headers
- *   An array of headers as name/value pairs.
- * @param $single
- *   If TRUE and headers have already be sent, send only the specified header.
+ * @param array $default_headers
+ *   (optional) An array of headers as name/value pairs.
+ * @param bool $only_default
+ *   (optional) If TRUE and headers have already been sent, send only the
+ *   specified headers.
  */
 function drupal_send_headers($default_headers = array(), $only_default = FALSE) {
   $headers_sent = &drupal_static(__FUNCTION__, FALSE);
@@ -2195,15 +2196,15 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
  */
 function drupal_get_user_timezone() {
   global $user;
-  $config = config('system.date');
+  $config = config('system.timezone');
 
-  if ($config->get('timezone.user.configurable') && $user->uid && $user->timezone) {
+  if ($config->get('user.configurable') && $user->uid && $user->timezone) {
     return $user->timezone;
   }
   else {
     // Ignore PHP strict notice if time zone has not yet been set in the php.ini
     // configuration.
-    $config_data_default_timezone = $config->get('timezone.default');
+    $config_data_default_timezone = $config->get('default');
     return !empty($config_data_default_timezone) ? $config_data_default_timezone : @date_default_timezone_get();
   }
 }
@@ -3095,18 +3096,31 @@ function drupal_classloader() {
       'Drupal\Component' => DRUPAL_ROOT . '/core/lib',
     ));
 
-    // Register namespaces for vendor libraries managed by Composer.
-    $namespaces = require DRUPAL_ROOT . '/core/vendor/composer/autoload_namespaces.php';
+    // Register namespaces and PEAR-like prefixes for vendor libraries managed
+    // by Composer. Composer combines libraries that use PHP 5.3 namespaces and
+    // ones that use PEAR-like class prefixes in a single array, but the Symfony
+    // class loader requires them to be registered separately.
+    $prefixes_and_namespaces = require DRUPAL_ROOT . '/core/vendor/composer/autoload_namespaces.php';
     $prefixes = array();
-    foreach ($namespaces as $namespace => $path) {
-      // Composer combines libraries that use PHP 5.3 namespaces and ones that
-      // use PEAR-style class prefixes in a single array, but the Symfony class
-      // loader requires them to be registered separately. PSR-0 disallows
-      // underscores in namespace names and requires at least one in a
-      // PEAR-style class prefix.
-      if (strpos($namespace, '_') !== FALSE) {
-        $prefixes[$namespace] = $path;
-        unset($namespaces[$namespace]);
+    $namespaces = array();
+    foreach ($prefixes_and_namespaces as $key => $path) {
+      // If the key:
+      // - Contains a namespace separator, we know it's a namespace.
+      // - Doesn't contain a namespace separator and ends in an "_" (e.g.,
+      //   "Twig_"), it's likely intended as a PEAR-like prefix rather than a
+      //   namespace.
+      // - Doesn't contain a namespace separator or end in an "_" (e.g.,
+      //   "Assetic"), then it could be either a namespace or an incomplete
+      //   PEAR-like prefix, but we assume the former, since the only example of
+      //   that currently in Drupal is Assetic.
+      // @todo Switch to a class loader that doesn't require this guessing:
+      //   http://drupal.org/node/1658720.
+      $is_namespace = (strpos($key, '\\') !== FALSE) && (substr($key, -1) !== '_');
+      if ($is_namespace) {
+        $namespaces[rtrim($key, '\\')] = $path;
+      }
+      else {
+        $prefixes[$key] = $path;
       }
     }
     $loader->registerPrefixes($prefixes);

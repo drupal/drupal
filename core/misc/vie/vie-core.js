@@ -1169,7 +1169,7 @@ VIE.Util = {
 
             for (var i = 0; i < ancestors.length; i++) {
                 var supertype = (vie.types.get(ancestors[i]))? vie.types.get(ancestors[i]) :
-                    typeHelper.call(vie, SchemaOrg.types[ancestors[i]].supertypes, ancestors[i], typeProps.call(vie, ancestors[i]));
+                    typeHelper.call(vie, SchemaOrg.types[ancestors[i]].supertypes, ancestors[i], typeProps.call(vie, ancestors[i]), metadataHelper(SchemaOrg.types[ancestors[i]]));
                 type.inherit(supertype);
             }
             if (id === "Thing" && !type.isof("owl:Thing")) {
@@ -1777,7 +1777,12 @@ VIE.prototype.Entity = function(attrs, opts) {
                    }
                }
             }, this);
-            return Backbone.Model.prototype.set.call(this, attrs, options);
+            var ret = Backbone.Model.prototype.set.call(this, attrs, options);
+            if (options && options.ignoreChanges) {
+                this.changed = {};
+                this._previousAttributes = _.clone(this.attributes);
+            }
+            return ret;
         },
 
         // **`.unset(attr, opts)` ** removes an attribute from the entity.
@@ -2815,10 +2820,10 @@ VIE.prototype.Types = function () {
 // helps first of all to list all attributes of an entity type, but furthermore fully supports
 // inheritance of attributes from the type-class to inherit from.
 if (VIE.prototype.Attribute) {
-  throw new Error("ERROR: VIE.Attribute is already defined. Please check your VIE installation!");
+	throw new Error("ERROR: VIE.Attribute is already defined. Please check your VIE installation!");
 }
 if (VIE.prototype.Attributes) {
-  throw new Error("ERROR: VIE.Attributes is already defined. Please check your VIE installation!");
+	throw new Error("ERROR: VIE.Attributes is already defined. Please check your VIE installation!");
 }
 
 // ### VIE.Attribute(id, range, domain, minCount, maxCount, metadata)
@@ -3679,4 +3684,36 @@ VIE.prototype.Namespaces.prototype.uri = function (curie) {
 //     namespaces.isUri(uri);   // --> true
 //     namespaces.isUri(curie); // --> false
 VIE.prototype.Namespaces.prototype.isUri = VIE.Util.isUri;
+/*global VIE:false Backbone:false _:false */
+if (!VIE.prototype.view) {
+    VIE.prototype.view = {};
+}
+
+VIE.prototype.view.Entity = Backbone.View.extend({
+    initialize: function(options) {
+        this.service = options.service ? options.service : 'rdfa';
+        this.vie = options.vie;
+
+        // Ensure view gets updated when properties of the Entity change.
+        _.bindAll(this, 'render', 'renderAbout');
+        this.model.on('change', this.render);
+        this.model.on('change:@subject', this.renderAbout);
+    },
+
+    // Rendering a view means writing the properties of the Entity back to
+    // the element containing our RDFa annotations.
+    render: function() {
+        this.vie.save({
+                element: this.el,
+                entity: this.model
+            }).
+            to(this.service).
+            execute();
+        return this;
+    },
+
+    renderAbout: function () {
+        this.vie.service(this.service).setElementSubject(this.model.getSubjectUri(), this.el);
+    }
+});
 })();

@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/../../TestCase.php';
-
-class Twig_Tests_Node_Expression_Unary_NegTest extends Twig_Tests_Node_TestCase
+class Twig_Tests_Node_Expression_Unary_NegTest extends Twig_Test_NodeTestCase
 {
     /**
      * @covers Twig_Node_Expression_Unary_Neg::__construct
      */
     public function testConstructor()
     {
-        $expr = new Twig_Node_Expression_Constant(1, 0);
-        $node = new Twig_Node_Expression_Unary_Neg($expr, 0);
+        $expr = new Twig_Node_Expression_Constant(1, 1);
+        $node = new Twig_Node_Expression_Unary_Neg($expr, 1);
 
         $this->assertEquals($expr, $node->getNode('node'));
     }
@@ -36,8 +34,8 @@ class Twig_Tests_Node_Expression_Unary_NegTest extends Twig_Tests_Node_TestCase
 
     public function getTests()
     {
-        $node = new Twig_Node_Expression_Constant(1, 0);
-        $node = new Twig_Node_Expression_Unary_Neg($node, 0);
+        $node = new Twig_Node_Expression_Constant(1, 1);
+        $node = new Twig_Node_Expression_Unary_Neg($node, 1);
 
         return array(
             array($node, '(-1)'),

@@ -37,7 +37,7 @@ class PageTest extends WebTestBase {
     // is using a different theme than would normally be used by the batch API.
     variable_set('theme_default', 'bartik');
     theme_enable(array('seven'));
-    variable_set('admin_theme', 'seven');
+    config('system.site')->set('admin_theme', 'seven')->save();
     // Log in as an administrator who can see the administrative theme.
     $admin_user = $this->drupalCreateUser(array('view the administration theme'));
     $this->drupalLogin($admin_user);

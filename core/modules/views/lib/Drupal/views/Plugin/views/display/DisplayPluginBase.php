@@ -380,7 +380,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Allow displays to attach to other views.
    */
-  public function attachTo($display_id) { }
+  public function attachTo(ViewExecutable $view, $display_id) { }
 
   /**
    * Static member function to list which sections are defaultable
@@ -1290,8 +1290,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
     $options['analyze-theme'] = array(
       'category' => 'other',
-      'title' => t('Theme'),
-      'value' => t('Information'),
+      'title' => t('Output'),
+      'value' => t('Templates'),
       'desc' => t('Get information on how to theme this display'),
     );
 

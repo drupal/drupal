@@ -7,7 +7,6 @@
 
 namespace Drupal\jsonld;
 
-use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 /**
@@ -15,7 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
  *
  * Simply respond to JSON-LD requests using the JSON encoder.
  */
-class JsonldEncoder extends JsonEncoder implements EncoderInterface {
+class JsonldEncoder extends JsonEncoder {
 
   /**
    * The formats that this Encoder supports.
@@ -25,15 +24,17 @@ class JsonldEncoder extends JsonEncoder implements EncoderInterface {
   static protected $format = array('jsonld', 'drupal_jsonld');
 
   /**
-   * Check whether the request is for JSON-LD.
-   *
-   * @param string $format
-   *   The short name of the format returned by ContentNegotiation.
-   *
-   * @return bool
-   *   Returns TRUE if the encoder can handle the request.
+   * Overrides \Symfony\Component\Serializer\Encoder\JsonEncoder::supportsEncoding()
    */
   public function supportsEncoding($format) {
     return in_array($format, static::$format);
   }
+
+  /**
+   * Overrides \Symfony\Component\Serializer\Encoder\JsonEncoder::supportsDecoding()
+   */
+  public function supportsDecoding($format) {
+    return in_array($format, static::$format);
+  }
+
 }

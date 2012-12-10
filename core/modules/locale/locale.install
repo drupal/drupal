@@ -6,6 +6,15 @@
  */
 
 /**
+ * Implements hook_install().
+ */
+function locale_install() {
+  // Create the interface translations directory and ensure it's writable.
+  $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+}
+
+/**
  * Implements hook_uninstall().
  */
 function locale_uninstall() {
@@ -171,34 +180,55 @@ function locale_schema() {
   $schema['locale_file'] = array(
     'description' => 'File import status information for interface translation files.',
     'fields' => array(
+      'project' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'A unique short name to identify the project the file belongs to.',
+      ),
       'langcode' => array(
-        'description' => 'Reference to the {languages}.langcode for this translation.',
         'type' => 'varchar',
         'length' => '12',
         'not null' => TRUE,
+        'default' => '',
+        'description' => 'Language code of this translation. References {language}.langcode.',
       ),
       'filename' => array(
-        'description' => 'Filename for importing the file.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'description' => 'Filename of the imported file.',
+      ),
+      'version' => array(
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Version tag of the imported file.',
       ),
       'uri' => array(
-        'description' => 'File system path for importing the file.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'description' => 'URI of the remote file, the resulting local file or the locally imported file.',
       ),
       'timestamp' => array(
-        'description' => 'Unix timestamp of the file itself from the point when it was last imported.',
         'type' => 'int',
         'not null' => FALSE,
         'default' => 0,
+        'description' => 'Unix timestamp of the imported file.',
+      ),
+      'last_checked' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the last time this translation was confirmed to be the most recent release available.',
       ),
     ),
-    'primary key' => array('uri', 'langcode'),
+    'primary key' => array('project', 'langcode'),
   );
 
   $schema['locale_project'] = array(
@@ -687,7 +717,6 @@ function locale_update_8010() {
         'default' => '',
       ),
       'uri' => array(
-        'description' => 'File system path for importing the file.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -785,6 +814,70 @@ function locale_update_8013() {
  */
 function locale_update_8014() {
   db_drop_field('locales_source', 'location');
+}
+
+/**
+ * Build a new {locale_file} table.
+ */
+function locale_update_8015() {
+  // The existing table has a primary key on uri and langcode. The new key
+  // is on project and langcode. There is no project data in the existing table,
+  // and it may not be possible to generate this reliably. Therefore we drop
+  // the table and build it again.
+  db_drop_table('locale_file');
+
+  $table = array(
+    'description' => 'File import status information for interface translation files.',
+    'fields' => array(
+      'project' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'A unique short name to identify the project the file belongs to.',
+      ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => '12',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Language code of this translation. References {language}.langcode.',
+      ),
+      'filename' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Filename of the imported file.',
+      ),
+      'version' => array(
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Version tag of the imported file.',
+      ),
+      'uri' => array(
+        'description' => 'File system path for importing the file.',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the imported file.',
+      ),
+      'last_checked' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the last time this translation was confirmed to be the most recent release available.',
+      ),
+    ),
+    'primary key' => array('project', 'langcode'),
+  );
+  db_create_table('locale_file', $table);
 }
 
 /**

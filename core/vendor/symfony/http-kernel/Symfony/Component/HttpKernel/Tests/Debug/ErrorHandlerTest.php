@@ -12,7 +12,6 @@
 namespace Symfony\Component\HttpKernel\Tests\Debug;
 
 use Symfony\Component\HttpKernel\Debug\ErrorHandler;
-use Symfony\Component\HttpKernel\Debug\ErrorException;
 
 /**
  * ErrorHandlerTest
@@ -48,13 +47,35 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 
         $handler = ErrorHandler::register(3);
         try {
-            $handler->handle(1, 'foo', 'foo.php', 12, 'foo');
+            $handler->handle(111, 'foo', 'foo.php', 12, 'foo');
         } catch (\ErrorException $e) {
-            $this->assertSame('1: foo in foo.php line 12', $e->getMessage());
-            $this->assertSame(1, $e->getSeverity());
+            $this->assertSame('111: foo in foo.php line 12', $e->getMessage());
+            $this->assertSame(111, $e->getSeverity());
             $this->assertSame('foo.php', $e->getFile());
             $this->assertSame(12, $e->getLine());
         }
+
+        restore_error_handler();
+
+        $handler = ErrorHandler::register(E_USER_DEPRECATED);
+        $this->assertTrue($handler->handle(E_USER_DEPRECATED, 'foo', 'foo.php', 12, 'foo'));
+
+        restore_error_handler();
+
+        $handler = ErrorHandler::register(E_DEPRECATED);
+        $this->assertTrue($handler->handle(E_DEPRECATED, 'foo', 'foo.php', 12, 'foo'));
+
+        restore_error_handler();
+
+        $logger = $this->getMock('Symfony\Component\HttpKernel\Log\LoggerInterface');
+        $logger->expects($this->once())->method('warn')->with(
+            $this->equalTo('foo'),
+            $this->equalTo(array('type' => 'deprecation', 'file' => 'foo.php', 'line' => '12'))
+        );
+
+        $handler = ErrorHandler::register(E_USER_DEPRECATED);
+        $handler->setLogger($logger);
+        $handler->handle(E_USER_DEPRECATED, 'foo', 'foo.php', 12, 'foo');
 
         restore_error_handler();
     }
