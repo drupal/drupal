@@ -180,19 +180,6 @@ abstract class PluginBase extends ComponentPluginBase {
   }
 
   /**
-   * Provide a list of additional theme functions for the theme information page
-   */
-  public function additionalThemeFunctions() {
-    $funcs = array();
-    if (!empty($this->definition['additional themes'])) {
-      foreach ($this->definition['additional themes'] as $theme => $type) {
-        $funcs[] = views_theme_functions($theme, $this->view, $this->view->display_handler->display);
-      }
-    }
-    return $funcs;
-  }
-
-  /**
    * Validate that the plugin is correct and can be saved.
    *
    * @return

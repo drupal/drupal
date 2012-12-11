@@ -30,22 +30,8 @@ class PluginManager extends PluginManagerBase {
       'parent' => 'parent',
       'plugin_type' => $type,
       'module' => 'views',
+      'register_theme' => TRUE,
     );
-  }
-
-  /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::processDefinition().
-   */
-  public function processDefinition(&$definition, $plugin_id) {
-    parent::processDefinition($definition, $plugin_id);
-
-    // Setup automatic path/file finding for theme registration.
-    if ($definition['module'] == 'views' || isset($definition['theme'])) {
-      $definition += array(
-        'theme path' => drupal_get_path('module', 'views') . '/theme',
-        'theme file' => 'theme.inc',
-      );
-    }
   }
 
 }

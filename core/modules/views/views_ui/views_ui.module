@@ -197,55 +197,45 @@ function views_ui_menu() {
  * Implements hook_theme().
  */
 function views_ui_theme() {
-  $path = drupal_get_path('module', 'views_ui');
-
   return array(
     // edit a view
     'views_ui_display_tab_setting' => array(
       'variables' => array('description' => '', 'link' => '', 'settings_links' => array(), 'overridden' => FALSE, 'defaulted' => FALSE, 'description_separator' => TRUE, 'class' => array()),
       'template' => 'views-ui-display-tab-setting',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
     'views_ui_display_tab_bucket' => array(
       'render element' => 'element',
       'template' => 'views-ui-display-tab-bucket',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
     'views_ui_edit_item' => array(
       'variables' => array('type' => NULL, 'view' => NULL, 'display' => NULL, 'no_fields' => FALSE),
       'template' => 'views-ui-edit-item',
-      'path' => "$path/theme",
     ),
     'views_ui_rearrange_form' => array(
       'render element' => 'form',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
     'views_ui_rearrange_filter_form' => array(
       'render element' => 'form',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
     'views_ui_expose_filter_form' => array(
       'render element' => 'form',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
 
     // list views
     'views_ui_view_info' => array(
       'variables' => array('view' => NULL, 'base' => NULL),
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
 
     // Group of filters.
     'views_ui_build_group_filter_form' => array(
       'render element' => 'form',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
 
     // tab themes
@@ -257,30 +247,26 @@ function views_ui_theme() {
     ),
     'views_ui_reorder_displays_form' => array(
       'render element' => 'form',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
 
     // On behalf of a plugin
     'views_ui_style_plugin_table' => array(
       'render element' => 'form',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
 
     // When previewing a view.
     'views_ui_view_preview_section' => array(
       'variables' => array('view' => NULL, 'section' => NULL, 'content' => NULL, 'links' => ''),
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
 
     // Generic container wrapper, to use instead of theme_container when an id
     // is not desired.
     'views_ui_container' => array(
       'render element' => 'element',
-      'path' => "$path/theme",
-      'file' => 'theme.inc',
+      'file' => 'views_ui.theme.inc',
     ),
   );
 }

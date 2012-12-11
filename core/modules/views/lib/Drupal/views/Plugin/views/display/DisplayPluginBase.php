@@ -1762,34 +1762,16 @@ abstract class DisplayPluginBase extends PluginBase {
         // delegates to the style.
         if (!empty($this->definition['theme'])) {
           $funcs[] = $this->optionLink(t('Display output'), 'analyze-theme-display') . ': '  . $this->formatThemes($this->themeFunctions());
-          $themes = $this->additionalThemeFunctions();
-          if ($themes) {
-            foreach ($themes as $theme) {
-              $funcs[] = $this->optionLink(t('Alternative display output'), 'analyze-theme-display') . ': '  . $this->formatThemes($theme);
-            }
-          }
         }
 
         $plugin = $this->getPlugin('style');
         if ($plugin) {
-          $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->themeFunctions(), $plugin->additionalThemeFunctions());
-          $themes = $plugin->additionalThemeFunctions();
-          if ($themes) {
-            foreach ($themes as $theme) {
-              $funcs[] = $this->optionLink(t('Alternative style'), 'analyze-theme-style') . ': '  . $this->formatThemes($theme);
-            }
-          }
+          $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->themeFunctions());
 
           if ($plugin->usesRowPlugin()) {
             $row_plugin = $this->getPlugin('row');
             if ($row_plugin) {
               $funcs[] = $this->optionLink(t('Row style output'), 'analyze-theme-row') . ': ' . $this->formatThemes($row_plugin->themeFunctions());
-              $themes = $row_plugin->additionalThemeFunctions();
-              if ($themes) {
-                foreach ($themes as $theme) {
-                  $funcs[] = $this->optionLink(t('Alternative row style'), 'analyze-theme-row') . ': '  . $this->formatThemes($theme);
-                }
-              }
             }
           }
 
@@ -1863,14 +1845,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $output .= '<p>' . t('This is the default theme template used for this display.') . '</p>';
-          $output .= '<pre>' . check_plain(file_get_contents('./' . $this->definition['theme path'] . '/' . strtr($this->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
-        }
-
-        if (!empty($this->definition['additional themes'])) {
-          foreach ($this->definition['additional themes'] as $theme => $type) {
-            $output .= '<p>' . t('This is an alternative template for this display.') . '</p>';
-            $output .= '<pre>' . check_plain(file_get_contents('./' . $this->definition['theme path'] . '/' . strtr($theme, '_', '-') . '.tpl.php')) . '</pre>';
-          }
+          $output .= '<pre>' . check_plain(file_get_contents('./' . $this->definition['theme_path'] . '/' . strtr($this->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
         }
 
         $form['analysis'] = array(
@@ -1890,14 +1865,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $output .= '<p>' . t('This is the default theme template used for this style.') . '</p>';
-          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
-        }
-
-        if (!empty($plugin->definition['additional themes'])) {
-          foreach ($plugin->definition['additional themes'] as $theme => $type) {
-            $output .= '<p>' . t('This is an alternative template for this style.') . '</p>';
-            $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($theme, '_', '-') . '.tpl.php')) . '</pre>';
-          }
+          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme_path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
         }
 
         $form['analysis'] = array(
@@ -1917,14 +1885,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $output .= '<p>' . t('This is the default theme template used for this row style.') . '</p>';
-          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
-        }
-
-        if (!empty($plugin->definition['additional themes'])) {
-          foreach ($plugin->definition['additional themes'] as $theme => $type) {
-            $output .= '<p>' . t('This is an alternative template for this row style.') . '</p>';
-            $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($theme, '_', '-') . '.tpl.php')) . '</pre>';
-          }
+          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme_path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
         }
 
         $form['analysis'] = array(
@@ -1941,7 +1902,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
         // Field templates aren't registered the normal way...and they're always
         // this one, anyhow.
-        $output .= '<pre>' . check_plain(file_get_contents(drupal_get_path('module', 'views') . '/theme/views-view-field.tpl.php')) . '</pre>';
+        $output .= '<pre>' . check_plain(file_get_contents(drupal_get_path('module', 'views') . '/templates/views-view-field.tpl.php')) . '</pre>';
 
         $form['analysis'] = array(
           '#markup' => '<div class="form-item">' . $output . '</div>',

@@ -95,13 +95,11 @@ function views_config_import_create($name, $new_config, $old_config) {
  * Implement hook_theme(). Register views theming functions.
  */
 function views_theme($existing, $type, $theme, $path) {
-  $path = drupal_get_path('module', 'views');
-  module_load_include('inc', 'views', 'theme/theme');
+  module_load_include('inc', 'views', 'views.theme');
 
   // Some quasi clever array merging here.
   $base = array(
-    'file' => 'theme.inc',
-    'path' => $path . '/theme',
+    'file' => 'views.theme.inc',
   );
 
   // Our extra version of pager from pager.inc
@@ -139,41 +137,38 @@ function views_theme($existing, $type, $theme, $path) {
   // Register theme functions for all style plugins
   foreach ($plugins as $type => $info) {
     foreach ($info as $plugin => $def) {
-      if (isset($def['theme']) && (!isset($def['register theme']) || !empty($def['register theme']))) {
-        $hooks[$def['theme']] = array(
-          'pattern' => $def['theme'] . '__',
-          'file' => $def['theme file'],
-          'path' => $def['theme path'],
-          'variables' => $variables[$type],
-        );
+      // Not all plugins have theme functions, and they can also explicitly
+      // prevent a theme function from being registered automatically.
+      if (!isset($def['theme']) || empty($def['register_theme'])) {
+        continue;
+      }
 
-        $include = DRUPAL_ROOT . '/' . $def['theme path'] . '/' . $def['theme file'];
-        if (file_exists($include)) {
+      $hooks[$def['theme']] = array(
+        'pattern' => $def['theme'] . '__',
+        'variables' => $variables[$type],
+      );
+
+      if ($def['module'] == 'views') {
+        $def['theme_file'] = 'views.theme.inc';
+      }
+      elseif (isset($def['theme_file'])) {
+        $def['theme_path'] = drupal_get_path('module', $def['module']);
+      }
+
+      if (isset($def['theme_path'])) {
+        $hooks[$def['theme']]['path'] = $def['theme_path'];
+      }
+      if (isset($def['theme_file'])) {
+        $hooks[$def['theme']]['file'] = $def['theme_file'];
+      }
+      if (isset($def['theme_path']) && isset($def['theme_file'])) {
+        $include = DRUPAL_ROOT . '/' . $def['theme_path'] . '/' . $def['theme_file'];
+        if (is_file($include)) {
           require_once $include;
         }
-
-        if (!function_exists('theme_' . $def['theme'])) {
-          $hooks[$def['theme']]['template'] = drupal_clean_css_identifier($def['theme']);
-        }
       }
-      if (isset($def['additional themes'])) {
-        foreach ($def['additional themes'] as $theme => $theme_type) {
-          if (empty($theme_type)) {
-            $theme = $theme_type;
-            $theme_type = $type;
-          }
-
-          $hooks[$theme] = array(
-            'pattern' => $theme . '__',
-            'file' => $def['theme file'],
-            'path' => $def['theme path'],
-            'variables' => $variables[$theme_type],
-          );
-
-          if (!function_exists('theme_' . $theme)) {
-            $hooks[$theme]['template'] = drupal_clean_css_identifier($theme);
-          }
-        }
+      if (!function_exists('theme_' . $def['theme'])) {
+        $hooks[$def['theme']]['template'] = drupal_clean_css_identifier($def['theme']);
       }
     }
   }
@@ -1931,7 +1926,7 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
  * Build a list of theme function names for use most everywhere.
  */
 function views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
-  module_load_include('inc', 'views', 'theme/theme');
+  module_load_include('inc', 'views', 'views.theme');
   return _views_theme_functions($hook, $view, $display);
 }
 
