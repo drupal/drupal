@@ -969,6 +969,13 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
+   * Implements \Drupal\Core\Entity\EntityInterface::getExportProperties().
+   */
+  public function getExportProperties() {
+    return $this->__call(__FUNCTION__, func_get_args());
+  }
+
+  /**
    * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslation().
    */
   public function getTranslation($langcode, $strict = TRUE) {

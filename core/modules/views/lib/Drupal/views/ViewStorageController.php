@@ -99,29 +99,4 @@ class ViewStorageController extends ConfigStorageController {
     }
   }
 
-  /**
-   * Overrides Drupal\config\ConfigStorageController::getProperties();
-   */
-  protected function getProperties(EntityInterface $entity) {
-    $names = array(
-      'api_version',
-      'base_field',
-      'base_table',
-      'core',
-      'description',
-      'disabled',
-      'display',
-      'human_name',
-      'module',
-      'name',
-      'tag',
-      'uuid',
-    );
-    $properties = array();
-    foreach ($names as $name) {
-      $properties[$name] = $entity->get($name);
-    }
-    return $properties;
-  }
-
 }

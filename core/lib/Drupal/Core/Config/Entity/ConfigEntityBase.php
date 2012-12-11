@@ -110,4 +110,20 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     }
     return ($a_weight < $b_weight) ? -1 : 1;
   }
+
+  /**
+   * Overrides \Drupal\Core\Entity\Entity::getExportProperties().
+   */
+  public function getExportProperties() {
+    // Configuration objects do not have a schema. Extract all key names from
+    // class properties.
+    $class_info = new \ReflectionClass($this);
+    $properties = array();
+    foreach ($class_info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+      $name = $property->getName();
+      $properties[$name] = $this->get($name);
+    }
+    return $properties;
+  }
+
 }

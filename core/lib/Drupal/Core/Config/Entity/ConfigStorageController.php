@@ -299,7 +299,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     $this->invokeHook('presave', $entity);
 
     // Retrieve the desired properties and set them in config.
-    foreach ($this->getProperties($entity) as $key => $value) {
+    foreach ($entity->getExportProperties() as $key => $value) {
       $config->set($key, $value);
     }
 
@@ -333,29 +333,6 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     unset($entity->original);
 
     return $return;
-  }
-
-  /**
-   * Retrieves the exportable properties of an entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being saved.
-   *
-   * @return array
-   *   An array of exportable properties and their values.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigStorageController::save()
-   */
-  protected function getProperties(EntityInterface $entity) {
-    // Configuration objects do not have a schema. Extract all key names from
-    // class properties.
-    $class_info = new \ReflectionClass($entity);
-    $properties = array();
-    foreach ($class_info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
-      $name = $property->getName();
-      $properties[$name] = $entity->$name;
-    }
-    return $properties;
   }
 
   /**

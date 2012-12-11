@@ -371,4 +371,29 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     return array_unique($all_paths);
   }
 
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::getExportProperties();
+   */
+  public function getExportProperties() {
+    $names = array(
+      'api_version',
+      'base_field',
+      'base_table',
+      'core',
+      'description',
+      'disabled',
+      'display',
+      'human_name',
+      'module',
+      'name',
+      'tag',
+      'uuid',
+    );
+    $properties = array();
+    foreach ($names as $name) {
+      $properties[$name] = $this->get($name);
+    }
+    return $properties;
+  }
+
 }

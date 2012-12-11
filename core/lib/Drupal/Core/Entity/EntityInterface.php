@@ -181,4 +181,13 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
    *   $new_value was passed, the previous value is returned.
    */
   public function isDefaultRevision($new_value = NULL);
+
+  /**
+   * Retrieves the exportable properties of the entity.
+   *
+   * @return array
+   *   An array of exportable properties and their values.
+   */
+  public function getExportProperties();
+
 }
