@@ -1650,8 +1650,16 @@ function template_preprocess_comment(&$variables) {
   $variables['comment'] = $comment;
   $variables['node'] = $node;
   $variables['author'] = theme('username', array('account' => $comment));
+
   $variables['created'] = format_date($comment->created);
-  $variables['changed'] = format_date($comment->changed);
+
+  // Avoid calling format_date() twice on the same timestamp.
+  if ($comment->changed == $comment->created) {
+    $variables['changed'] = $variables['created'];
+  }
+  else {
+    $variables['changed'] = format_date($comment->changed);
+  }
 
   $variables['new'] = !empty($comment->new) ? t('new') : '';
   if (theme_get_setting('toggle_comment_user_picture')) {
@@ -1677,7 +1685,13 @@ function template_preprocess_comment(&$variables) {
     $variables['parent_comment'] = $comment_parent;
     $variables['parent_author'] = theme('username', array('account' => $comment_parent));
     $variables['parent_created'] = format_date($comment_parent->created);
-    $variables['parent_changed'] = format_date($comment_parent->changed);
+    // Avoid calling format_date() twice on the same timestamp.
+    if ($comment_parent->changed == $comment_parent->created) {
+      $variables['parent_changed'] = $variables['parent_created'];
+    }
+    else {
+      $variables['parent_changed'] = format_date($comment_parent->changed);
+    }
     $uri_parent = $comment_parent->uri();
     $uri_parent['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
     $variables['parent_title'] = l($comment_parent->subject, $uri_parent['path'], $uri_parent['options']);
