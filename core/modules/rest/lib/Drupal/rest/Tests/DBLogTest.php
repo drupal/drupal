@@ -52,7 +52,7 @@ class DBLogTest extends RESTTestBase {
 
     $response = $this->httpRequest("dblog/$id", 'GET', NULL, 'application/json');
     $this->assertResponse(200);
-    $this->assertHeader('Content-Type', 'application/json');
+    $this->assertHeader('content-type', 'application/json');
     $log = drupal_json_decode($response);
     $this->assertEqual($log['wid'], $id, 'Log ID is correct.');
     $this->assertEqual($log['type'], 'rest_test', 'Type of log message is correct.');

@@ -85,7 +85,9 @@ abstract class RESTTestBase extends WebTestBase {
     $header_lines = explode("\r\n", $header);
     foreach ($header_lines as $line) {
       $parts = explode(':', $line, 2);
-      $this->responseHeaders[$parts[0]] = isset($parts[1]) ? trim($parts[1]) : '';
+      // Store the header keys lower cased to be more robust. Headers are case
+      // insensitive according to RFC 2616.
+      $this->responseHeaders[strtolower($parts[0])] = isset($parts[1]) ? trim($parts[1]) : '';
     }
 
     $this->verbose($method . ' request to: ' . $url .
@@ -99,25 +101,38 @@ abstract class RESTTestBase extends WebTestBase {
   /**
    * Creates entity objects based on their types.
    *
-   * Required properties differ from entity type to entity type, so we keep a
-   * minimum mapping here.
-   *
    * @param string $entity_type
-   *   The type of the entity that should be created..
+   *   The type of the entity that should be created.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   The new entity object.
    */
   protected function entityCreate($entity_type) {
+    return entity_create($entity_type, $this->entityValues($entity_type));
+  }
+
+  /**
+   * Provides an array of suitable property values for an entity type.
+   *
+   * Required properties differ from entity type to entity type, so we keep a
+   * minimum mapping here.
+   *
+   * @param string $entity_type
+   *   The type of the entity that should be created.
+   *
+   * @return array
+   *   An array of values keyed by property name.
+   */
+  protected function entityValues($entity_type) {
     switch ($entity_type) {
       case 'entity_test':
-        return entity_create('entity_test', array('name' => $this->randomName(), 'user_id' => 1));
+        return array('name' => $this->randomName(), 'user_id' => 1);
       case 'node':
-        return entity_create('node', array('title' => $this->randomString()));
+        return array('title' => $this->randomString());
       case 'user':
-        return entity_create('user', array('name' => $this->randomName()));
+        return array('name' => $this->randomName());
       default:
-        return entity_create($entity_type, array());
+        return array();
     }
   }
 

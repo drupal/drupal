@@ -34,19 +34,30 @@ class RequestHandler extends ContainerAware {
     $resource = $this->container
       ->get('plugin.manager.rest')
       ->getInstance(array('id' => $plugin));
+
+    // Deserialze incoming data if available.
+    $serializer = $this->container->get('serializer');
     $received = $request->getContent();
-    // @todo De-serialization should happen here if the request is supposed
-    // to carry incoming data.
+    $unserialized = NULL;
+    if (!empty($received)) {
+      $definition = $resource->getDefinition();
+      $class = $definition['serialization_class'];
+      // @todo Replace the format here with something we get from the HTTP
+      //   Content-type header. See http://drupal.org/node/1850704
+      $unserialized = $serializer->deserialize($received, $class, 'drupal_jsonld');
+    }
+
+    // Invoke the operation on the resource plugin.
     try {
-      $response = $resource->{$method}($id, $received);
+      $response = $resource->{$method}($id, $unserialized, $request);
     }
     catch (HttpException $e) {
       return new Response($e->getMessage(), $e->getStatusCode(), $e->getHeaders());
     }
+
+    // Serialize the outgoing data for the response, if available.
     $data = $response->getResponseData();
     if ($data != NULL) {
-      // Serialize the response data.
-      $serializer = $this->container->get('serializer');
       // @todo Replace the format here with something we get from the HTTP
       //   Accept headers. See http://drupal.org/node/1833440
       $output = $serializer->serialize($data, 'drupal_jsonld');

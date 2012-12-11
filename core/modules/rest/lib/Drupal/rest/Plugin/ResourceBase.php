@@ -53,24 +53,36 @@ abstract class ResourceBase extends PluginBase {
    */
   public function routes() {
     $collection = new RouteCollection();
-
+    $name = strtr($this->plugin_id, ':', '.');
+    $prefix = strtr($this->plugin_id, ':', '/');
     $methods = $this->requestMethods();
     foreach ($methods as $method) {
       $lower_method = strtolower($method);
       // Only expose routes where the HTTP request method exists on the plugin.
       if (method_exists($this, $lower_method)) {
-        $prefix = strtr($this->plugin_id, ':', '/');
-        $route = new Route("/$prefix/{id}", array(
-          '_controller' => 'Drupal\rest\RequestHandler::handle',
-          // Pass the resource plugin ID along as default property.
-          '_plugin' => $this->plugin_id,
-        ), array(
-          // The HTTP method is a requirement for this route.
-          '_method' => $method,
-          '_permission' => "restful $lower_method $this->plugin_id",
-        ));
-
-        $name = strtr($this->plugin_id, ':', '.');
+        // Special case for resource creation via POST: Add a route that does
+        // not require an ID.
+        if ($method == 'POST') {
+          $route = new Route("/$prefix", array(
+            '_controller' => 'Drupal\rest\RequestHandler::handle',
+            '_plugin' => $this->plugin_id,
+            'id' => NULL,
+          ), array(
+            // The HTTP method is a requirement for this route.
+            '_method' => $method,
+            '_permission' => "restful $lower_method $this->plugin_id",
+          ));
+        }
+        else {
+          $route = new Route("/$prefix/{id}", array(
+            '_controller' => 'Drupal\rest\RequestHandler::handle',
+            '_plugin' => $this->plugin_id,
+          ), array(
+            // The HTTP method is a requirement for this route.
+            '_method' => $method,
+            '_permission' => "restful $lower_method $this->plugin_id",
+          ));
+        }
         $collection->add("$name.$method", $route);
       }
     }

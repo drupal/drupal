@@ -53,7 +53,7 @@ class ReadTest extends RESTTestBase {
       // Read it over the web API.
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, 'application/vnd.drupal.ld+json');
       $this->assertResponse('200', 'HTTP response code is correct.');
-      $this->assertHeader('Content-Type', 'application/vnd.drupal.ld+json');
+      $this->assertHeader('content-type', 'application/vnd.drupal.ld+json');
       $data = drupal_json_decode($response);
       // Only assert one example property here, other properties should be
       // checked in serialization tests.
