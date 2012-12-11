@@ -45,15 +45,7 @@ class UserPictureTest extends WebTestBase {
 
     // @see standard.install
     module_load_install('user');
-    _user_install_picture_field();
-
-    // Remove 'summary' pseudo-field from compact view mode on the User entity.
-    $bundle_settings = field_bundle_settings('user', 'user');
-    $bundle_settings['extra_fields']['display']['member_for']['compact'] = array(
-      'visible' => FALSE,
-      'weight' => 10,
-    );
-    field_bundle_settings('user', 'user', $bundle_settings);
+    user_install_picture_field();
   }
 
   /**

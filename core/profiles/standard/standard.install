@@ -379,14 +379,7 @@ function standard_install() {
 
   // Create user picture field.
   module_load_install('user');
-  _user_install_picture_field();
-  // Remove 'summary' pseudo-field from compact view mode on the User entity.
-  $bundle_settings = field_bundle_settings('user', 'user');
-  $bundle_settings['extra_fields']['display']['member_for']['compact'] = array(
-    'visible' => FALSE,
-    'weight' => 10,
-  );
-  field_bundle_settings('user', 'user', $bundle_settings);
+  user_install_picture_field();
 
   // Enable default permissions for system roles.
   $filtered_html_permission = filter_permission_name($filtered_html_format);

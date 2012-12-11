@@ -379,6 +379,89 @@ function user_install() {
 }
 
 /**
+ * Creates a user picture image field for the User entity.
+ *
+ * This is only used in core's standard.install, but is kept as a separate
+ * helper function so that other install profiles can reuse it.
+ */
+function user_install_picture_field() {
+  $t = get_t();
+
+  $field = array(
+    'field_name' => 'user_picture',
+    'module' => 'image',
+    'type' => 'image',
+    'cardinality' => 1,
+    'locked' => FALSE,
+    'indexes' => array('fid' => array('fid')),
+    'settings' => array(
+      'uri_scheme' => 'public',
+      'default_image' => FALSE,
+    ),
+    'storage' => array(
+      'type' => 'field_sql_storage',
+      'settings' => array(),
+    ),
+  );
+  $field = field_create_field($field);
+
+  $instance = array(
+    'field_name' => 'user_picture',
+    'entity_type' => 'user',
+    'label' => 'Picture',
+    'bundle' => 'user',
+    'description' => $t('Your virtual face or picture.'),
+    'required' => FALSE,
+    'settings' => array(
+      'file_extensions' => 'png gif jpg jpeg',
+      'file_directory' => 'pictures',
+      'max_filesize' => '30 KB',
+      'alt_field' => 0,
+      'title_field' => 0,
+      'max_resolution' => '85x85',
+      'min_resolution' => '',
+      'default_image' => 0,
+    ),
+    'widget' => array(
+      'module' => 'image',
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => -1,
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array(
+          'image_style' => 'thumbnail',
+          'image_link' => 'content',
+        ),
+      ),
+      'compact' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array(
+          'image_style' => 'thumbnail',
+          'image_link' => 'content',
+        ),
+      ),
+    ),
+  );
+  field_create_instance($instance);
+
+  // Remove 'summary' pseudo-field from compact view mode on the User entity.
+  $bundle_settings = field_bundle_settings('user', 'user');
+  $bundle_settings['extra_fields']['display']['member_for']['compact'] = array(
+    'visible' => FALSE,
+    'weight' => 10,
+  );
+  field_bundle_settings('user', 'user', $bundle_settings);
+}
+
+/**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */
@@ -701,25 +784,80 @@ function user_update_8011() {
       ->execute();
     $default_image_fid = db_query('SELECT fid FROM {file_managed} WHERE uri = :uri', array(':uri' => $destination))->fetchField();
   }
-  $settings = array(
-    // In D7, user pictures did not require Image module to work. Image module
-    // only allowed usage of an image style to format user pictures in the
-    // output. The 'user_pictures' variable had a global effect on the
-    // presence of the user picture functionality before. The new user picture
-    // image field is created regardless of that global setting, which means
-    // the field appears on the user account form after migration, even if
-    // user pictures were disabled previously. The picture is only hidden in
-    // the output.
-    'formatter' => update_variable_get('user_pictures', 0) ? 'image' : 'hidden',
-    'file_directory' => update_variable_get('user_picture_path', 'pictures'),
-    'default_image' => !empty($default_image_fid) ? $default_image_fid : 0,
-    'image_style' => update_variable_get('user_picture_style', ''),
-    'max_resolution' => update_variable_get('user_picture_dimensions', '85x85'),
-    'max_filesize' => update_variable_get('user_picture_file_size', '30') . ' KB',
-    'description' => update_variable_get('user_picture_guidelines', ''),
-  );
 
-  $field = _user_install_picture_field($settings);
+  // Create the field and instance.
+  $field = array(
+    'field_name' => 'user_picture',
+    'module' => 'image',
+    'type' => 'image',
+    'cardinality' => 1,
+    'locked' => FALSE,
+    'indexes' => array('fid' => array('fid')),
+    'settings' => array(
+      'uri_scheme' => 'public',
+      'default_image' => FALSE,
+    ),
+    'storage' => array(
+      'type' => 'field_sql_storage',
+      'settings' => array(),
+    ),
+  );
+  _update_7000_field_create_field($field);
+
+  // In D7, user pictures did not require Image module to work. Image module
+  // only allowed usage of an image style to format user pictures in the
+  // output. The 'user_pictures' variable had a global effect on the presence
+  // of the user picture functionality before. The new user picture image field
+  // is created regardless of that global setting, which means the field
+  // appears on the user account form after migration, even if user pictures
+  // were disabled previously. The picture is only hidden in the output.
+  $formatter = update_variable_get('user_pictures', 0) ? 'image' : 'hidden';
+  $instance = array(
+    'field_name' => 'user_picture',
+    'entity_type' => 'user',
+    'label' => 'Picture',
+    'bundle' => 'user',
+    'description' => update_variable_get('user_picture_guidelines', ''),
+    'required' => FALSE,
+    'settings' => array(
+      'file_extensions' => 'png gif jpg jpeg',
+      'file_directory' => update_variable_get('user_picture_path', 'pictures'),
+      'max_filesize' => update_variable_get('user_picture_file_size', '30') . ' KB',
+      'alt_field' => 0,
+      'title_field' => 0,
+      'max_resolution' => update_variable_get('user_picture_dimensions', '85x85'),
+      'min_resolution' => '',
+      'default_image' => !empty($default_image_fid) ? $default_image_fid : 0,
+    ),
+    'widget' => array(
+      'module' => 'image',
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => -1,
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => $formatter,
+        'settings' => array(
+          'image_style' => 'thumbnail',
+          'image_link' => 'content',
+        ),
+      ),
+      'compact' => array(
+        'label' => 'hidden',
+        'type' => $formatter,
+        'settings' => array(
+          'image_style' => update_variable_get('user_picture_style', ''),
+          'image_link' => 'content',
+        ),
+      ),
+    ),
+  );
+  _update_7000_field_create_instance($field, $instance);
 
   // Add file usage for the default field.
   if (!empty($default_image_fid)) {
@@ -966,79 +1104,3 @@ function user_update_8016() {
 /**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */
-
-/**
- * Creates a user picture image field for the User entity.
- */
-function _user_install_picture_field(array $settings = array()) {
-  $t = get_t();
-  $settings += array(
-    'formatter' => 'image',
-    'file_directory' => 'pictures',
-    'default_image' => 0,
-    'image_style' => 'thumbnail',
-    'max_resolution' => '85x85',
-    'max_filesize' => '30 KB',
-    'description' => $t('Your virtual face or picture.'),
-  );
-
-  $field = array(
-    'field_name' => 'user_picture',
-    'module' => 'image',
-    'type' => 'image',
-    'cardinality' => 1,
-    'locked' => FALSE,
-    'indexes' => array('fid' => array('fid')),
-    'settings' => array(
-      'uri_scheme' => 'public',
-      'default_image' => FALSE,
-    ),
-    'storage' => array(
-      'type' => 'field_sql_storage',
-      'settings' => array(),
-    ),
-  );
-  _update_7000_field_create_field($field);
-
-  $instance = array(
-    'field_name' => 'user_picture',
-    'entity_type' => 'user',
-    'label' => 'Picture',
-    'bundle' => 'user',
-    'description' => $settings['description'],
-    'required' => FALSE,
-    'settings' => array(
-      'file_extensions' => 'png gif jpg jpeg',
-      'file_directory' => $settings['file_directory'],
-      'max_filesize' => $settings['max_filesize'],
-      'alt_field' => 0,
-      'title_field' => 0,
-      'max_resolution' => $settings['max_resolution'],
-      'min_resolution' => '',
-      'default_image' => $settings['default_image'],
-    ),
-    'widget' => array(
-      'module' => 'image',
-      'type' => 'image_image',
-      'settings' => array(
-        'progress_indicator' => 'throbber',
-        'preview_image_style' => 'thumbnail',
-      ),
-      'weight' => -1,
-    ),
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'type' => $settings['formatter'],
-        'settings' => array('image_style' => 'thumbnail', 'image_link' => 'content'),
-      ),
-      'compact' => array(
-        'label' => 'hidden',
-        'type' => $settings['formatter'],
-        'settings' => array('image_style' => $settings['image_style'], 'image_link' => 'content'),
-      ),
-    ),
-  );
-  _update_7000_field_create_instance($field, $instance);
-  return $field;
-}
