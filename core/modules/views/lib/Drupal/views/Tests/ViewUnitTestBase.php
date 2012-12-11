@@ -42,7 +42,7 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
     }
     $query->execute();
 
-    ViewTestData::importTestViews(get_class($this));
+    ViewTestData::importTestViews(get_class($this), array('views_test_config'));
   }
 
   /**

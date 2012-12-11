@@ -31,7 +31,7 @@ abstract class ViewTestBase extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::importTestViews(get_class($this));
+    ViewTestData::importTestViews(get_class($this), array('views_test_config'));
   }
 
   /**
