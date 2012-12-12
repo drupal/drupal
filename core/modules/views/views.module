@@ -1311,21 +1311,6 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
 }
 
 /**
- * Get an instance of a plugin.
- *
- * @param string $type
- *   The plugin type, e.g., 'access' or 'display'.
- * @param string $plugin_id
- *   The name of the plugin, e.g., 'standard'.
- *
- * @return Drupal\views\Plugin\view\PluginBase
- *   The created plugin instance.
- */
-function views_get_plugin($type, $plugin_id) {
-  return drupal_container()->get("plugin.manager.views.$type")->createInstance($plugin_id);
-}
-
-/**
  * Gets all the views plugin definitions.
  *
  * @return array
