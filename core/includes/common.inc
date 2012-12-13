@@ -2237,7 +2237,7 @@ function l($text, $path, array $options = array()) {
   if (!isset($use_theme) && function_exists('theme')) {
     // Allow edge cases to prevent theme initialization and force inline link
     // rendering.
-    if (variable_get('theme_link', TRUE)) {
+    if (config('system.performance')->get('theme_link')) {
       drupal_theme_initialize();
       $registry = theme_get_registry(FALSE);
       // We don't want to duplicate functionality that's in theme(), so any

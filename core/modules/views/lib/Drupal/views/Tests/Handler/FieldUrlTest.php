@@ -29,6 +29,11 @@ class FieldUrlTest extends ViewUnitTestBase {
     );
   }
 
+  public function setup() {
+    parent::setup();
+    $this->enableModules(array('system'));
+  }
+
   function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['field']['id'] = 'url';

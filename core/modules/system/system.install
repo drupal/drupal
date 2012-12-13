@@ -2338,6 +2338,17 @@ function system_update_8042() {
 }
 
 /**
+ * Moves system theme settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8042() {
+  update_variables_to_config('system.performance', array(
+    'theme_link' => 'theme_link',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
