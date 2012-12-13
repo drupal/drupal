@@ -86,12 +86,11 @@ function dblog_menu() {
 }
 
 /**
- * Implements hook_init().
+ * Implements hook_page_build().
  */
-function dblog_init() {
+function dblog_page_build(&$page) {
   if (arg(0) == 'admin' && arg(1) == 'reports') {
-    // Add the CSS for this module
-    drupal_add_css(drupal_get_path('module', 'dblog') . '/dblog.css');
+    $page['#attached']['css'][] = drupal_get_path('module', 'dblog') . '/dblog.css';
   }
 }
 

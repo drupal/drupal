@@ -5450,8 +5450,23 @@ function drupal_render(&$elements) {
     $elements['#children'] = $elements['#markup'] . $elements['#children'];
   }
 
+  // Add any JavaScript state information associated with the element.
+  if (!empty($elements['#states'])) {
+    drupal_process_states($elements);
+  }
+
+  // Add additional libraries, CSS, JavaScript an other custom
+  // attached data associated with this element.
+  if (!empty($elements['#attached'])) {
+    drupal_process_attached($elements);
+  }
+
   // Let the theme functions in #theme_wrappers add markup around the rendered
   // children.
+  // #states and #attached have to be processed before #theme_wrappers, because
+  // the #type 'page' render array from drupal_render_page() would render the
+  // $page and wrap it into the html.tpl.php template without the attached
+  // assets otherwise.
   if (isset($elements['#theme_wrappers'])) {
     foreach ($elements['#theme_wrappers'] as $theme_wrapper) {
       $elements['#children'] = theme($theme_wrapper, $elements);
@@ -5465,17 +5480,6 @@ function drupal_render(&$elements) {
     foreach ($elements['#post_render'] as $function) {
       $elements['#children'] = $function($elements['#children'], $elements);
     }
-  }
-
-  // Add any JavaScript state information associated with the element.
-  if (!empty($elements['#states'])) {
-    drupal_process_states($elements);
-  }
-
-  // Add additional libraries, CSS, JavaScript an other custom
-  // attached data associated with this element.
-  if (!empty($elements['#attached'])) {
-    drupal_process_attached($elements);
   }
 
   $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';

@@ -523,9 +523,20 @@ function hook_ajax_render_alter($commands) {
  * @see drupal_render_page()
  */
 function hook_page_build(&$page) {
+  $path = drupal_get_path('module', 'foo');
+  // Add JavaScript/CSS assets to all pages.
+  // @see drupal_process_attached()
+  $page['#attached']['js'][$path . '/foo.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/foo.base.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/foo.theme.css'] = array('every_page' => TRUE);
+
+  // Add a special CSS file to a certain page only.
+  if (drupal_is_front_page()) {
+    $page['#attached']['css'][] = $path . '/foo.front.css';
+  }
+
+  // Append a standard disclaimer to the content region on a node detail page.
   if (menu_get_object('node', 1)) {
-    // We are on a node detail page. Append a standard disclaimer to the
-    // content region.
     $page['content']['disclaimer'] = array(
       '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
       '#weight' => 25,
@@ -1482,17 +1493,14 @@ function hook_boot() {
  *
  * This hook is not run on cached pages.
  *
- * To add CSS or JS that should be present on all pages, modules should not
- * implement this hook, but declare these files in their .info file.
- *
  * @see hook_boot()
+ * @see hook_exit()
+ *
+ * Do not use this hook to add CSS/JS to pages, use hook_page_build() instead.
+ *
+ * @see hook_page_build()
  */
 function hook_init() {
-  // Since this file should only be loaded on the front page, it cannot be
-  // declared in the info file.
-  if (drupal_is_front_page()) {
-    drupal_add_css(drupal_get_path('module', 'foo') . '/foo.css');
-  }
 }
 
 /**

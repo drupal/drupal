@@ -2313,15 +2313,6 @@ function system_filetransfer_info() {
  * Implements hook_init().
  */
 function system_init() {
-  $path = drupal_get_path('module', 'system');
-  // Add the CSS for this module. These aren't in system.info, because they
-  // need to be in the CSS_SYSTEM group rather than the CSS_DEFAULT group.
-  drupal_add_css($path . '/system.base.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
-  if (path_is_admin(current_path())) {
-    drupal_add_css($path . '/system.admin.css', array('group' => CSS_SYSTEM));
-  }
-  drupal_add_css($path . '/system.theme.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
-
   // Ignore slave database servers for this request.
   //
   // In Drupal's distributed database structure, new data is written to the master
@@ -2343,9 +2334,22 @@ function system_init() {
       unset($_SESSION['ignore_slave_server']);
     }
   }
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function system_page_build(&$page) {
+  $path = drupal_get_path('module', 'system');
+  // Use the CSS_SYSTEM group to load these early.
+  $page['#attached']['css'][$path . '/system.base.css'] = array('group' => CSS_SYSTEM, 'every_page' => TRUE);
+  if (path_is_admin(current_path())) {
+    $page['#attached']['css'][$path . '/system.admin.css'] = array('group' => CSS_SYSTEM);
+  }
+  $page['#attached']['css'][$path . '/system.theme.css'] = array('group' => CSS_SYSTEM, 'every_page' => TRUE);
 
   // Add CSS/JS files from module .info files.
-  system_add_module_assets();
+  system_add_module_assets($page);
 }
 
 /**
@@ -2371,17 +2375,17 @@ function system_get_localized_date_format($languages) {
 /**
  * Adds CSS and JavaScript files declared in module .info files.
  */
-function system_add_module_assets() {
+function system_add_module_assets(&$page) {
   foreach (system_get_module_info('stylesheets') as $module => $value) {
     foreach ($value as $media => $stylesheets) {
       foreach ($stylesheets as $stylesheet) {
-        drupal_add_css($stylesheet, array('every_page' => TRUE, 'media' => $media));
+        $page['#attached']['css'][$stylesheet] = array('every_page' => TRUE, 'media' => $media);
       }
     }
   }
   foreach (system_get_module_info('scripts') as $module => $scripts) {
     foreach ($scripts as $script) {
-      drupal_add_js($script, array('every_page' => TRUE));
+      $page['#attached']['js'][$script] = array('every_page' => TRUE);
     }
   }
 }
