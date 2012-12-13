@@ -151,7 +151,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   $form['#parent_fields'] = FALSE;
 
   $page            = isset($_GET['page']) ? $_GET['page'] : 0;
-  $page_increment  = variable_get('taxonomy_terms_per_page_admin', 100);  // Number of terms per page.
+  $page_increment  = config('taxonomy.settings')->get('terms_per_page_admin');  // Number of terms per page.
   $page_entries    = 0;   // Elements shown on this page.
   $before_entries  = 0;   // Elements at the root level before this page.
   $after_entries   = 0;   // Elements at the root level after this page.

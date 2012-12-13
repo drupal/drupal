@@ -96,6 +96,18 @@ db_insert('variable')->fields(array(
   'value' => 's:20:"user_cancel_reassign"',
   ))
 ->values(array(
+    'name' => 'taxonomy_override_selector',
+    'value' => 'i:1;',
+  ))
+->values(array(
+    'name' => 'taxonomy_terms_per_page_admin',
+    'value' => 'i:32;',
+  ))
+->values(array(
+    'name' => 'taxonomy_maintain_index_table',
+    'value' => 'i:0;',
+ ))
+->values(array(
   'name' => 'filter_allowed_protocols',
   'value' => 'a:4:{i:0;s:4:"http";i:1;s:5:"https";i:2;s:3:"ftp";i:3;s:6:"mailto";}',
   ))
@@ -121,4 +133,3 @@ db_update('variable')
   ->fields(array('value' => 's:10:"plain_text";'))
   ->condition('name', 'filter_fallback_format')
   ->execute();
-

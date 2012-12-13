@@ -9,9 +9,6 @@
  * Implements hook_uninstall().
  */
 function taxonomy_uninstall() {
-  // Remove variables.
-  variable_del('taxonomy_override_selector');
-  variable_del('taxonomy_terms_per_page_admin');
   // Remove taxonomy_term bundles.
   $vocabularies = db_query("SELECT machine_name FROM {taxonomy_vocabulary}")->fetchCol();
   foreach ($vocabularies as $vocabulary) {
@@ -349,3 +346,15 @@ function taxonomy_update_8003(&$sandbox) {
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 }
+
+/**
+ * Moves taxonomy settings from variable to config.
+ */
+function taxonomy_update_8004() {
+  update_variables_to_config('taxonomy.settings', array(
+    'taxonomy_override_selector' => 'override_selector',
+    'taxonomy_terms_per_page_admin' => 'terms_per_page_count',
+    'taxonomy_maintain_index_table' => 'maintain_index_table',
+  ));
+}
+

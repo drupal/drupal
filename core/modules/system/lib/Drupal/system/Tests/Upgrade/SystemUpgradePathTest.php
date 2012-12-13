@@ -85,6 +85,12 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       'protocols.3' => 'mailto',
     );
 
+    $expected_config['taxonomy.settings'] = array(
+      'override_selector' => '1',
+      'terms_per_page_count' => '32',
+      'maintain_index_table' => '0',
+    );
+
     $expected_config['filter.settings'] = array(
       'fallback_format' => 'plain_text'
     );

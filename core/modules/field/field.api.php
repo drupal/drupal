@@ -455,7 +455,7 @@ function hook_field_presave($entity_type, $entity, $field, $instance, $langcode,
  * @see hook_field_delete()
  */
 function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node' && $entity->status) {
+  if (config('taxonomy.settings')->get('maintain_index_table') && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node' && $entity->status) {
     $query = db_insert('taxonomy_index')->fields(array('nid', 'tid', 'sticky', 'created', ));
     foreach ($items as $item) {
       $query->values(array(
@@ -496,7 +496,7 @@ function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, 
  * @see hook_field_delete()
  */
 function hook_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node') {
+  if (config('taxonomy.settings')->get('maintain_index_table') && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node') {
     $first_call = &drupal_static(__FUNCTION__, array());
 
     // We don't maintain data for old revisions, so clear all previous values
