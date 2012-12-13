@@ -2342,7 +2342,7 @@ function system_update_8042() {
  *
  * @ingroup config_upgrade
  */
-function system_update_8042() {
+function system_update_8043() {
   update_variables_to_config('system.performance', array(
     'theme_link' => 'theme_link',
   ));
