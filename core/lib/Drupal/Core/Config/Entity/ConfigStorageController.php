@@ -137,6 +137,16 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
+   * Returns the config prefix used by the configuration entity type.
+   *
+   * @return string
+   *   The full configuration prefix, for example 'views.view.'.
+   */
+  public function getConfigPrefix() {
+    return $this->entityInfo['config_prefix'] . '.';
+  }
+
+  /**
    * Builds the query to load the entity.
    *
    * This has full revision support. For entities requiring special queries,
@@ -159,7 +169,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $config_class = $this->entityInfo['class'];
-    $prefix = $this->entityInfo['config_prefix'] . '.';
+    $prefix = $this->getConfigPrefix();
 
     // Load all of the configuration entities.
     if ($ids === NULL) {
@@ -251,7 +261,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     }
 
     foreach ($entities as $id => $entity) {
-      $config = config($this->entityInfo['config_prefix'] . '.' . $entity->id());
+      $config = config($this->getConfigPrefix() . $entity->id());
       $config->delete();
 
       // Remove the entity from the manifest file.
@@ -273,7 +283,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    *   When attempting to save a configuration entity that has no ID.
    */
   public function save(EntityInterface $entity) {
-    $prefix = $this->entityInfo['config_prefix'] . '.';
+    $prefix = $this->getConfigPrefix();
 
     // Configuration entity IDs are strings, and '0' is a valid ID.
     $id = $entity->id();
@@ -323,9 +333,9 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     // Add this entity to the manifest file if necessary.
     $config = config('manifest.' . $this->entityInfo['config_prefix']);
     $manifest = $config->get();
-    if (!in_array($this->entityInfo['config_prefix'] . '.' . $entity->id(), $manifest)) {
+    if (!in_array($this->getConfigPrefix() . $entity->id(), $manifest)) {
       $manifest[$entity->id()] = array(
-        'name' => $this->entityInfo['config_prefix'] . '.' . $entity->id(),
+        'name' => $this->getConfigPrefix() . $entity->id(),
       );
       $config->setData($manifest)->save();
     }
