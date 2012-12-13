@@ -148,49 +148,6 @@ function user_schema() {
     ),
   );
 
-  $schema['authmap'] = array(
-    'description' => 'Stores distributed authentication mapping. The authmap is deprecated since Drupal 8 and is kept only in a migration data process in mind. Modules that uses the authmap should move their data in custom tables as it will removed in Drupal 9.',
-    'fields' => array(
-      'aid' => array(
-        'description' => 'Primary Key: Unique authmap ID.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => "User's {users}.uid.",
-      ),
-      'authname' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Unique authentication name.',
-      ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Module which is controlling the authentication.',
-      ),
-    ),
-    'unique keys' => array(
-      'authname' => array('authname'),
-    ),
-    'primary key' => array('aid'),
-    'foreign keys' => array(
-      'user' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
   $schema['role'] = array(
     'description' => 'Stores user roles.',
     'fields' => array(
