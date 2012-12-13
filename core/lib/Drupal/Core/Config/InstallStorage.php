@@ -92,4 +92,14 @@ class InstallStorage extends FileStorage {
   public function listAll($prefix = '') {
     throw new StorageException('List operation is not allowed during install.');
   }
+
+  /**
+   * Overrides Drupal\Core\Config\FileStorage::deleteAll().
+   *
+   * @throws Drupal\Core\Config\StorageException
+   */
+  public function deleteAll($prefix = '') {
+    throw new StorageException('Delete operation is not allowed during install.');
+  }
+
 }

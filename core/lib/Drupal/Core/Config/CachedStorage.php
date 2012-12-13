@@ -141,4 +141,18 @@ class CachedStorage implements StorageInterface {
   public function listAll($prefix = '') {
     return $this->storage->listAll($prefix);
   }
+
+  /**
+   * Implements Drupal\Core\Config\StorageInterface::deleteAll().
+   */
+  public function deleteAll($prefix = '') {
+    // If the cache was the first to be deleted, another process might start
+    // rebuilding the cache before the storage is renamed.
+    $cids = $this->storage->listAll($prefix);
+    if ($this->storage->deleteAll($prefix)) {
+      $this->cache->deleteMultiple($cids);
+      return TRUE;
+    }
+    return FALSE;
+  }
 }

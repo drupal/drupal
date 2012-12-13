@@ -196,4 +196,19 @@ class FileStorage implements StorageInterface {
     };
     return array_map($clean_name, $files);
   }
+
+  /**
+   * Implements Drupal\Core\Config\StorageInterface::deleteAll().
+   */
+  public function deleteAll($prefix = '') {
+    $success = TRUE;
+    $files = $this->listAll($prefix);
+    foreach ($files as $name) {
+      if (!$this->delete($name) && $success) {
+        $success = FALSE;
+      }
+    }
+
+    return $success;
+  }
 }

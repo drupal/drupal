@@ -121,4 +121,24 @@ interface StorageInterface {
    *   An array containing matching configuration object names.
    */
   public function listAll($prefix = '');
+
+  /**
+   * Deletes configuration objects whose names start with a given prefix.
+   *
+   * Given the following configuration object names:
+   * - node.type.article
+   * - node.type.page
+   *
+   * Passing the prefix 'node.type.' will delete the above configuration
+   * objects.
+   *
+   * @param string $prefix
+   *   (optional) The prefix to search for. If omitted, all configuration
+   *   objects that exist will be deleted.
+   *
+   * @return boolean
+   *   TRUE on success, FALSE otherwise.
+   */
+  public function deleteAll($prefix = '');
+
 }

@@ -92,8 +92,24 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
     $this->assertIdentical($result, FALSE);
 
     // Reading from a non-existing storage bin returns FALSE.
-    $data = $this->invalidStorage->read($name);
-    $this->assertIdentical($data, FALSE);
+    $result = $this->invalidStorage->read($name);
+    $this->assertIdentical($result, FALSE);
+
+    // Deleting all names with prefix deletes the appropriate data and returns
+    // TRUE.
+    $files = array(
+      'config_test.test.biff',
+      'config_test.test.bang',
+      'config_test.test.pow',
+    );
+    foreach ($files as $name) {
+      $this->storage->write($name, $data);
+    }
+
+    $result = $this->storage->deleteAll('config_test.');
+    $names = $this->storage->listAll('config_test.');
+    $this->assertIdentical($result, TRUE);
+    $this->assertIdentical($names, array());
 
     // Writing to a non-existing storage bin throws an exception.
     try {
