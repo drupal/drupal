@@ -1859,11 +1859,11 @@ function hook_theme($existing, $type, $theme, $path) {
  *
  * For example:
  * @code
- * $theme_registry['user_profile'] = array(
+ * $theme_registry['user'] = array(
  *   'variables' => array(
  *     'account' => NULL,
  *   ),
- *   'template' => 'core/modules/user/user-profile',
+ *   'template' => 'core/modules/user/user',
  *   'file' => 'core/modules/user/user.pages.inc',
  *   'type' => 'module',
  *   'theme path' => 'core/modules/user',

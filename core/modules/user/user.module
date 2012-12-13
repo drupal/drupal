@@ -85,9 +85,9 @@ function user_help($path, $arg) {
  */
 function user_theme() {
   return array(
-    'user_profile' => array(
+    'user' => array(
       'render element' => 'elements',
-      'template' => 'user-profile',
+      'template' => 'user',
       'file' => 'user.pages.inc',
     ),
     'user_admin_permissions' => array(
@@ -1848,10 +1848,10 @@ function user_view_page($account) {
  *
  * - $page['content']['member_for']:
  *   Contains the default "Member for" profile data for a user.
- * - $page['content']['#account']:
+ * - $page['content']['#user']:
  *   The user account of the profile being viewed.
  *
- * To theme user profiles, copy modules/user/user-profile.tpl.php
+ * To theme user profiles, copy modules/user/user.tpl.php
  * to your theme directory, and edit it as instructed in that file's comments.
  *
  * @param $account

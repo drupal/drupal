@@ -2,19 +2,18 @@
 
 /**
  * @file
- * Default theme implementation to present all user profile data.
+ * Default theme implementation to present all user data.
  *
- * This template is used when viewing a registered member's profile page,
+ * This template is used when viewing a registered user's page,
  * e.g., example.com/user/123. 123 being the users ID.
  *
- * Use render($user_profile) to print all profile items, or print a subset
+ * Use render($content) to print all content, or print a subset
  * such as render($content['field_example']).
- * If the item is a category, it will contain all its profile items. By default,
- * $user_profile['summary'] is provided, which contains data on the user's
- * history. Other data can be included by modules.
+ * By default, $user_profile['summary'] is provided, which contains data on the
+ * user's history. Other data can be included by modules.
  *
  * Available variables:
- *   - $user_profile: An array of profile items. Use render() to print them.
+ *   - $content: An array of content items. Use render() to print them.
  *   - Field variables: for each field instance attached to the user a
  *     corresponding variable is defined; e.g., $account->field_example has a
  *     variable $field_example defined. When needing to access a field's raw
@@ -23,11 +22,11 @@
  *     field language, e.g. $account->field_example['en'], thus overriding any
  *     language negotiation rule that was previously applied.
  *
- * @see template_preprocess_user_profile()
+ * @see template_preprocess_user()
  *
  * @ingroup themeable
  */
 ?>
 <article class="profile"<?php print $attributes; ?>>
-  <?php print render($user_profile); ?>
+  <?php print render($content); ?>
 </article>

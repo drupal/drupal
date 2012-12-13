@@ -615,10 +615,10 @@ function rdf_preprocess_field(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for user-profile.tpl.php.
+ * Implements hook_preprocess_HOOK() for user.tpl.php.
  */
-function rdf_preprocess_user_profile(&$variables) {
-  $account = $variables['elements']['#account'];
+function rdf_preprocess_user(&$variables) {
+  $account = $variables['elements']['#user'];
   $uri = $account->uri();
 
   // Adds RDFa markup to the user profile page. Fields displayed in this page
