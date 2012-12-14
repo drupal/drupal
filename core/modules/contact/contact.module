@@ -74,6 +74,8 @@ function contact_menu() {
   );
   $items['admin/structure/contact/manage/%contact_category'] = array(
     'title' => 'Edit contact category',
+    'title callback' => 'entity_page_label',
+    'title arguments' => array(4),
     'page callback' => 'contact_category_edit',
     'page arguments' => array(4),
     'access arguments' => array('administer contact forms'),
@@ -90,21 +92,32 @@ function contact_menu() {
     'page arguments' => array('contact_category_delete_form', 4),
     'access arguments' => array('administer contact forms'),
     'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
     'file' => 'contact.admin.inc',
   );
+
   $items['contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('contact_site_form'),
+    'page callback' => 'contact_site_page',
     'access arguments' => array('access site-wide contact form'),
     'menu_name' => 'footer',
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'contact.pages.inc',
   );
+  $items['contact/%contact_category'] = array(
+    'title' => 'Contact category form',
+    'title callback' => 'entity_page_label',
+    'title arguments' => array(1),
+    'page callback' => 'contact_site_page',
+    'page arguments' => array(1),
+    'access arguments' => array('access site-wide contact form'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'file' => 'contact.pages.inc',
+  );
   $items['user/%user/contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('contact_personal_form', 1),
+    'page callback' => 'contact_personal_page',
+    'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'access callback' => '_contact_personal_tab_access',
     'access arguments' => array(1),
@@ -211,6 +224,72 @@ function contact_config_import_delete($name, $new_config, $old_config) {
 }
 
 /**
+ * Implements hook_entity_info().
+ */
+function contact_entity_info(&$types) {
+  foreach (config_get_storage_names_with_prefix('contact.category.') as $config_name) {
+    $config = config($config_name);
+    $types['contact_message']['bundles'][$config->get('id')] = array(
+      'label' => $config->get('label'),
+      'admin' => array(
+        'path' => 'admin/structure/contact/manage/%contact_category',
+        'real path' => 'admin/structure/contact/manage/' . $config->get('id'),
+        'bundle argument' => 4,
+        'access arguments' => array('administer contact forms'),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function contact_field_extra_fields() {
+  $fields = array();
+  $entity_info = entity_get_info('contact_message');
+  foreach (array_keys($entity_info['bundles']) as $bundle) {
+    $fields['contact_message'][$bundle]['form']['name'] = array(
+      'label' => t('Sender name'),
+      'description' => t('Text'),
+      'weight' => -50,
+    );
+    $fields['contact_message'][$bundle]['form']['mail'] = array(
+      'label' => t('Sender e-mail'),
+      'description' => t('E-mail'),
+      'weight' => -40,
+    );
+    // @todo Recipient only makes sense if user contact form is a bundle/category.
+    $fields['contact_message'][$bundle]['form']['recipient'] = array(
+      'label' => t('Recipient user name'),
+      'description' => t('User'),
+      'weight' => -30,
+    );
+    $fields['contact_message'][$bundle]['form']['subject'] = array(
+      'label' => t('Subject'),
+      'description' => t('Text'),
+      'weight' => -10,
+    );
+    $fields['contact_message'][$bundle]['form']['message'] = array(
+      'label' => t('Message'),
+      'description' => t('Long text'),
+      'weight' => 0,
+    );
+    $fields['contact_message'][$bundle]['form']['copy'] = array(
+      'label' => t('Send copy to sender'),
+      'description' => t('Option'),
+      'weight' => 50,
+    );
+
+    $fields['contact_message'][$bundle]['display']['message'] = array(
+      'label' => t('Message'),
+      'description' => t('The main contact message'),
+      'weight' => 0,
+    );
+  }
+  return $fields;
+}
+
+/**
  * Loads a contact category.
  *
  * @param $id
@@ -242,27 +321,39 @@ function contact_category_uri(Category $category) {
  * Implements hook_mail().
  */
 function contact_mail($key, &$message, $params) {
+  $contact_message = $params['contact_message'];
+  $sender = $params['sender'];
   $language = language_load($message['langcode']);
+
   $variables = array(
     '!site-name' => config('system.site')->get('name'),
-    '!subject' => $params['subject'],
-    '!category' => isset($params['category']) ? $params['category']->label() : '',
+    '!subject' => $contact_message->subject,
+    '!category' => isset($params['contact_category']) ? $params['contact_category']->label() : NULL,
     '!form-url' => url(current_path(), array('absolute' => TRUE, 'language' => $language)),
-    '!sender-name' => user_format_name($params['sender']),
-    '!sender-url' => $params['sender']->uid ? url('user/' . $params['sender']->uid, array('absolute' => TRUE, 'language' => $language)) : $params['sender']->mail,
+    '!sender-name' => user_format_name($sender),
   );
+  if (!empty($sender->uid)) {
+    $sender_uri = $sender->uri();
+    $variables['!sender-url'] = url($sender_uri['path'], array('absolute' => TRUE, 'language' => $language) + $sender_uri['options']);
+  }
+  else {
+    $variables['!sender-url'] = $params['sender']->mail;
+  }
+
+  $options = array('langcode' => $language->langcode);
 
   switch ($key) {
     case 'page_mail':
     case 'page_copy':
-      $message['subject'] .= t('[!category] !subject', $variables, array('langcode' => $language->langcode));
-      $message['body'][] = t("!sender-name (!sender-url) sent a message using the contact form at !form-url.", $variables, array('langcode' => $language->langcode));
-      $message['body'][] = $params['message'];
+      $message['subject'] .= t('[!category] !subject', $variables, $options);
+      $message['body'][] = t("!sender-name (!sender-url) sent a message using the contact form at !form-url.", $variables, $options);
+      $build = entity_view($contact_message, 'mail', $language->langcode);
+      $message['body'][] = drupal_render($build);
       break;
 
     case 'page_autoreply':
-      $message['subject'] .= t('[!category] !subject', $variables, array('langcode' => $language->langcode));
-      $message['body'][] = $params['category']->reply;
+      $message['subject'] .= t('[!category] !subject', $variables, $options);
+      $message['body'][] = $params['contact_category']->reply;
       break;
 
     case 'user_mail':
@@ -271,12 +362,12 @@ function contact_mail($key, &$message, $params) {
         '!recipient-name' => user_format_name($params['recipient']),
         '!recipient-edit-url' => url('user/' . $params['recipient']->uid . '/edit', array('absolute' => TRUE, 'language' => $language)),
       );
-      $message['subject'] .= t('[!site-name] !subject', $variables, array('langcode' => $language->langcode));
-      $message['body'][] = t('Hello !recipient-name,', $variables, array('langcode' => $language->langcode));
-      $message['body'][] = t("!sender-name (!sender-url) has sent you a message via your contact form at !site-name.", $variables, array('langcode' => $language->langcode));
-      $message['body'][] = t("If you don't want to receive such e-mails, you can change your settings at !recipient-edit-url.", $variables, array('langcode' => $language->langcode));
-      $message['body'][] = t('Message:', array(), array('langcode' => $language->langcode));
-      $message['body'][] = $params['message'];
+      $message['subject'] .= t('[!site-name] !subject', $variables, $options);
+      $message['body'][] = t('Hello !recipient-name,', $variables, $options);
+      $message['body'][] = t("!sender-name (!sender-url) has sent you a message via your contact form at !site-name.", $variables, $options);
+      $message['body'][] = t("If you don't want to receive such e-mails, you can change your settings at !recipient-edit-url.", $variables, $options);
+      $message['body'][] = t('Message:', array(), $options);
+      $message['body'][] = $contact_message->message;
       break;
   }
 }

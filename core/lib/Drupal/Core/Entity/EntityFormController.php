@@ -184,6 +184,9 @@ class EntityFormController implements EntityFormControllerInterface {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function submit(array $form, array &$form_state) {
+    // Remove button and internal Form API values from submitted values.
+    form_state_values_clean($form_state);
+
     $this->submitEntityLanguage($form, $form_state);
     $entity = $this->buildEntity($form, $form_state);
     $this->setEntity($entity, $form_state);

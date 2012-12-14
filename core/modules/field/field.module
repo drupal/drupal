@@ -1019,6 +1019,11 @@ function field_has_data($field) {
   $columns = array_keys($field['columns']);
   $factory = drupal_container()->get('entity.query');
   foreach ($field['bundles'] as $entity_type => $bundle) {
+    // Entity Query throws an exception if there is no base table.
+    $entity_info = entity_get_info($entity_type);
+    if (!isset($entity_info['base_table'])) {
+      continue;
+    }
     $query = $factory->get($entity_type);
     $group = $query->orConditionGroup();
     foreach ($columns as $column) {
@@ -1278,7 +1283,9 @@ function theme_field($variables) {
 function _field_create_entity_from_ids($ids) {
   $id_properties = array();
   $info = entity_get_info($ids->entity_type);
-  $id_properties[$info['entity_keys']['id']] = $ids->entity_id;
+  if (isset($info['entity_keys']['id'])) {
+    $id_properties[$info['entity_keys']['id']] = $ids->entity_id;
+  }
   if (!empty($info['entity_keys']['revision']) && isset($ids->revision_id)) {
     $id_properties[$info['entity_keys']['revision']] = $ids->revision_id;
   }

@@ -117,7 +117,14 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     $this->entityInfo = entity_get_info($entityType);
     $this->entityCache = array();
     $this->hookLoadArguments = array();
-    $this->idKey = $this->entityInfo['entity_keys']['id'];
+
+    // Check if the entity type supports IDs.
+    if (isset($this->entityInfo['entity_keys']['id'])) {
+      $this->idKey = $this->entityInfo['entity_keys']['id'];
+    }
+    else {
+      $this->idKey = FALSE;
+    }
 
     // Check if the entity type supports UUIDs.
     if (!empty($this->entityInfo['entity_keys']['uuid'])) {

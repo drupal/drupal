@@ -57,6 +57,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertResponse(404);
+
     $this->drupalLogin($admin_user);
     $this->drupalGet('contact');
     $this->assertResponse(200);
@@ -92,6 +93,9 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual($config['reply'], $reply);
     $this->assertNotEqual($id, config('contact.settings')->get('default_category'));
     $this->assertRaw(t('Category %label has been updated.', array('%label' => $label)));
+
+    // Reset the category back to be the default category.
+    config('contact.settings')->set('default_category', $id)->save();
 
     // Ensure that the contact form is shown without a category selection input.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
@@ -153,11 +157,13 @@ class ContactSitewideTest extends WebTestBase {
       ->set('default_category', '')
       ->save();
     $this->drupalGet('contact');
-    $this->assertRaw(t('- Select -'));
+    $this->assertResponse(404);
 
-    // Submit contact form with invalid category id (cid 0).
-    $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), 0, '');
-    $this->assertText(t('Category field is required.'));
+    // Try to access contact form with non-existing category IDs.
+    $this->drupalGet('contact/0');
+    $this->assertResponse(404);
+    $this->drupalGet('contact/' . $this->randomName());
+    $this->assertResponse(404);
 
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
@@ -199,7 +205,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->submitContact($this->randomName(16), $email, $subject, 'foo', $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one e-mail going to the sender.
-    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'foo@example.com'));
+    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($foo_autoreply));
 
@@ -208,14 +214,14 @@ class ContactSitewideTest extends WebTestBase {
     $this->submitContact($this->randomName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
     // Auto-reply for category 'bar' should result in one auto-reply e-mail to the sender.
-    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'bar@example.com'));
+    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual($captured_emails[0]['body'], drupal_html_to_text($bar_autoreply));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomName(32) . '@example.com';
     $this->submitContact($this->randomName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
-    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email, 'from' => 'no_autoreply@example.com'));
+    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 0);
   }
 
@@ -287,9 +293,13 @@ class ContactSitewideTest extends WebTestBase {
     $edit['name'] = $name;
     $edit['mail'] = $mail;
     $edit['subject'] = $subject;
-    $edit['category'] = $id;
     $edit['message'] = $message;
-    $this->drupalPost('contact', $edit, t('Send message'));
+    if ($id == config('contact.settings')->get('default_category')) {
+      $this->drupalPost('contact', $edit, t('Send message'));
+    }
+    else {
+      $this->drupalPost('contact/' . $id, $edit, t('Send message'));
+    }
   }
 
   /**
