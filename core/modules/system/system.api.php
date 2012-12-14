@@ -834,6 +834,10 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     same weight are ordered alphabetically.
  *   - "menu_name": Optional. Set this to a custom menu if you don't want your
  *     item to be placed in the default Tools menu.
+ *   - "expanded": Optional. If set to TRUE, and if a menu link is provided for
+ *     this menu item (as a result of other properties), then the menu link is
+ *     always expanded, equivalent to its 'always expanded' checkbox being set
+ *     in the UI.
  *   - "context": (optional) Defines the context a tab may appear in. By
  *     default, all tabs are only displayed as local tasks when being rendered
  *     in a page context. All tabs that should be accessible as contextual links
