@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\jsonld\Tests\SerializationTest.
+ * Definition of Drupal\system\Tests\Serialization\SerializationTest.
  */
 
 namespace Drupal\system\Tests\Serialization;
