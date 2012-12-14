@@ -55,7 +55,8 @@ class CoreBundle extends Bundle {
       ->addMethodCall('addSubscriber', array(new Reference('config.subscriber.globalconf')));
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('dispatcher'));
+      ->addArgument(new Reference('dispatcher'))
+      ->addTag('persist');
 
     // Register staging configuration storage.
     $container

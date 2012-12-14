@@ -298,3 +298,16 @@ function field_test_field_extra_fields_alter(&$info) {
   // Remove all extra fields from the 'no_fields' content type;
   unset($info['node']['no_fields']);
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function field_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'entity_info_alter' && isset($implementations['field_test']) && isset($implementations['rdf'])) {
+    foreach (array('field_test', 'rdf') as $module) {
+      $group = $implementations[$module];
+      unset($implementations[$module]);
+      $implementations[$module] = $group;
+    }
+  }
+}

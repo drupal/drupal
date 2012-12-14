@@ -102,7 +102,7 @@ function config_get_storage_names_with_prefix($prefix = '') {
  *   A configuration object.
  */
 function config($name) {
-  return drupal_container()->get('config.factory')->get($name)->load();
+  return drupal_container()->get('config.factory')->get($name);
 }
 
 /**
@@ -141,11 +141,11 @@ function config_sync_get_changes(StorageInterface $source_storage, StorageInterf
     'delete' => array(),
   );
 
-  foreach (array_diff_assoc($target_config_data, $source_config_data) as $name => $value) {
+  foreach (array_diff_key($target_config_data, $source_config_data) as $name => $value) {
     $config_changes['delete'][] = $value['name'];
   }
 
-  foreach (array_diff_assoc($source_config_data, $target_config_data) as $name => $value) {
+  foreach (array_diff_key($source_config_data, $target_config_data) as $name => $value) {
     $config_changes['create'][] = $value['name'];
   }
 
@@ -179,6 +179,7 @@ function config_sync_get_changes(StorageInterface $source_storage, StorageInterf
  *   The storage to synchronize configuration to.
  */
 function config_sync_changes(array $config_changes, StorageInterface $source_storage, StorageInterface $target_storage) {
+  $factory = drupal_container()->get('config.factory');
   foreach (array('delete', 'create', 'change') as $op) {
     foreach ($config_changes[$op] as $name) {
       if ($op == 'delete') {
@@ -188,6 +189,7 @@ function config_sync_changes(array $config_changes, StorageInterface $source_sto
         $data = $source_storage->read($name);
         $target_storage->write($name, $data);
       }
+      $factory->reset($name);
     }
   }
 }
