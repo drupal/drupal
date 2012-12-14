@@ -493,6 +493,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
   $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
   $module_config = config('system.module');
   $disabled_config = config('system.module.disabled');
+  $module_filenames = drupal_container()->getParameter('container.modules');
   foreach ($module_list as $module) {
     // Only process modules that are not already enabled.
     $enabled = $module_config->get("enabled.$module") !== NULL;
@@ -516,11 +517,12 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       system_list_reset();
       module_implements_reset();
       _system_update_bootstrap_status();
+      $module_filenames[$module] = drupal_get_filename('module', $module);
       // Update the kernel to include it.
       // @todo The if statement is here because install_begin_request() creates
       //   a container without a kernel. It probably shouldn't.
       if ($kernel = drupal_container()->get('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
-        $kernel->updateModules(module_list(), array($module => drupal_get_filename('module', $module)));
+        $kernel->updateModules(module_list(), $module_filenames);
       }
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);

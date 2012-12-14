@@ -41,7 +41,8 @@ abstract class RESTTestBase extends WebTestBase {
         $curl_options = array(
           CURLOPT_HTTPGET => TRUE,
           CURLOPT_URL => url($url, $options),
-          CURLOPT_NOBODY => FALSE
+          CURLOPT_NOBODY => FALSE,
+          CURLOPT_HTTPHEADER => array('Accept: ' . $format),
         );
         break;
 

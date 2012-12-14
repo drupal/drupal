@@ -50,16 +50,16 @@ class DBLogTest extends RESTTestBase {
     $account = $this->drupalCreateUser(array('restful get dblog'));
     $this->drupalLogin($account);
 
-    $response = $this->httpRequest("dblog/$id", 'GET', NULL, 'application/json');
+    $response = $this->httpRequest("dblog/$id", 'GET', NULL, 'application/vnd.drupal.ld+json');
     $this->assertResponse(200);
-    $this->assertHeader('content-type', 'application/json');
+    $this->assertHeader('content-type', 'application/vnd.drupal.ld+json');
     $log = drupal_json_decode($response);
     $this->assertEqual($log['wid'], $id, 'Log ID is correct.');
     $this->assertEqual($log['type'], 'rest_test', 'Type of log message is correct.');
     $this->assertEqual($log['message'], 'Test message', 'Log message text is correct.');
 
     // Request an unknown log entry.
-    $response = $this->httpRequest("dblog/9999", 'GET', NULL, 'application/json');
+    $response = $this->httpRequest("dblog/9999", 'GET', NULL, 'application/vnd.drupal.ld+json');
     $this->assertResponse(404);
     $this->assertEqual($response, 'Not Found', 'Response message is correct.');
   }

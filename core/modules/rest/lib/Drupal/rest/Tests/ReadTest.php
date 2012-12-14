@@ -59,8 +59,12 @@ class ReadTest extends RESTTestBase {
       // checked in serialization tests.
       $this->assertEqual($data['uuid'][LANGUAGE_DEFAULT][0]['value'], $entity->uuid(), 'Entity UUID is correct');
 
+      // Try to read the entity with an unsupported media format.
+      $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, 'application/wrongformat');
+      $this->assertResponse(415);
+
       // Try to read an entity that does not exist.
-      $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'GET', NULL, 'application/ld+json');
+      $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'GET', NULL, 'application/vnd.drupal.ld+json');
       $this->assertResponse(404);
       $this->assertEqual($response, 'Entity with ID 9999 not found', 'Response message is correct.');
 
