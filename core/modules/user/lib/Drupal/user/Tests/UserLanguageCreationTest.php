@@ -29,11 +29,6 @@ class UserLanguageCreationTest extends WebTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
-  }
-
   /**
    * Functional test for language handling during user creation.
    */

@@ -69,7 +69,6 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->assertEqual($node->comment_count, 1, 'The value of node comment_count is 1.');
 
     // Prepare for anonymous comment submission (comment approval enabled).
-    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
     $this->drupalLogin($this->admin_user);
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,

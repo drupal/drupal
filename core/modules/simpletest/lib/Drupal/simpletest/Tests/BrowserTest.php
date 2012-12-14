@@ -21,11 +21,6 @@ class BrowserTest extends WebTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
-  }
-
   /**
    * Test Drupal\simpletest\WebTestBase::getAbsoluteUrl().
    */
