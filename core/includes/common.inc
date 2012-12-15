@@ -1085,7 +1085,8 @@ function _drupal_http_use_proxy($host) {
 /**
  * Verifies the syntax of the given e-mail address.
  *
- * See @link http://tools.ietf.org/html/rfc5321 RFC 5321 @endlink for details.
+ * This uses the
+ * @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
  *
  * @param $mail
  *   A string containing an e-mail address.
