@@ -1213,6 +1213,7 @@ function views_ui_add_item_form($form, &$form_state) {
   $type = $form_state['type'];
 
   $form = array(
+    'override' => array(),
     'options' => array(
       '#theme_wrappers' => array('container'),
       '#attributes' => array('class' => array('scroll')),
@@ -1244,20 +1245,20 @@ function views_ui_add_item_form($form, &$form_state) {
   $options = views_fetch_fields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state['type']);
 
   if (!empty($options)) {
-    $form['options']['controls'] = array(
+    $form['override']['controls'] = array(
       '#theme_wrappers' => array('container'),
       '#id' => 'views-filterable-options-controls',
       '#attributes' => array('class' => array('container-inline')),
     );
-    $form['options']['controls']['options_search'] = array(
+    $form['override']['controls']['options_search'] = array(
       '#type' => 'textfield',
       '#title' => t('Search'),
     );
 
     $groups = array('all' => t('- All -'));
-    $form['options']['controls']['group'] = array(
+    $form['override']['controls']['group'] = array(
       '#type' => 'select',
-      '#title' => t('Filter'),
+      '#title' => t('Type'),
       '#options' => array(),
     );
 
@@ -1306,10 +1307,10 @@ function views_ui_add_item_form($form, &$form_state) {
           '#states' => array(
             'visible' => array(
               array(
-                ':input[name="group"]' => array('value' => 'all'),
+                ':input[name="override[controls][group]"]' => array('value' => 'all'),
               ),
               array(
-                ':input[name="group"]' => array('value' => $group),
+                ':input[name="override[controls][group]"]' => array('value' => $group),
               ),
             )
           )
@@ -1318,7 +1319,7 @@ function views_ui_add_item_form($form, &$form_state) {
       }
     }
 
-    $form['options']['controls']['group']['#options'] = $groups;
+    $form['override']['controls']['group']['#options'] = $groups;
   }
   else {
     $form['options']['markup'] = array(

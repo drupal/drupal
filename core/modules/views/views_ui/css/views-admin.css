@@ -280,7 +280,7 @@
 }
 
 .views-ui-dialog #views-filterable-options-controls {
-  display: block;
+  display: inline;
 }
 
 /* Don't let the messages overwhelm the modal */
