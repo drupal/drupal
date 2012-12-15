@@ -65,14 +65,33 @@ class CacheDecorator implements CachedDiscoveryInterface {
    * Implements Drupal\Component\Plugin\Discovery\DicoveryInterface::getDefinition().
    */
   public function getDefinition($plugin_id) {
+    // Optimize for fast access to definitions if they are already in memory.
+    if (isset($this->definitions)) {
+      // Avoid using a ternary that would create a copy of the array.
+      if (isset($this->definitions[$plugin_id])) {
+        return $this->definitions[$plugin_id];
+      }
+      else {
+        return;
+      }
+    }
+
     $definitions = $this->getDefinitions();
-    return isset($definitions[$plugin_id]) ? $definitions[$plugin_id] : NULL;
+    // Avoid using a ternary that would create a copy of the array.
+    if (isset($definitions[$plugin_id])) {
+      return $definitions[$plugin_id];
+    }
   }
 
   /**
    * Implements Drupal\Component\Plugin\Discovery\DicoveryInterface::getDefinitions().
    */
   public function getDefinitions() {
+    // Optimize for fast access to definitions if they are already in memory.
+    if (isset($this->definitions)) {
+      return $this->definitions;
+    }
+
     $definitions = $this->getCachedDefinitions();
     if (!isset($definitions)) {
       $definitions = $this->decorated->getDefinitions();

@@ -64,7 +64,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get('404'), $expected_original_data['404']);
 
     // Reload the configuration object.
-    $config = config('config_test.system');
+    $config->init();
 
     // Verify that it contains the overridden data from $conf.
     $this->assertIdentical($config->get('foo'), $conf['config_test.system']['foo']);
@@ -97,7 +97,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     unset($conf['config_test.system']);
 
     // Reload it and verify that it still contains the original data.
-    $config = config('config_test.system');
+    $config->init();
     $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
     $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
     $this->assertIdentical($config->get('404'), $expected_original_data['404']);

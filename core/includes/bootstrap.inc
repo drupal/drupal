@@ -2624,6 +2624,8 @@ function drupal_language_initialize() {
     // Allow modules to react on language system initialization in multilingual
     // environments.
     bootstrap_invoke_all('language_init');
+    // @todo D8: Remove after http://drupal.org/node/1859110.
+    drupal_container()->get('config.factory')->reset();
   }
 }
 

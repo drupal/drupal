@@ -39,6 +39,13 @@ class ConfigFactory {
   protected $eventDispatcher;
 
   /**
+   * Cached configuration objects.
+   *
+   * @var array
+   */
+  protected $cache = array();
+
+  /**
    * Constructs the Config factory.
    *
    * @param Drupal\Core\Config\StorageInterface $storage
@@ -64,26 +71,53 @@ class ConfigFactory {
   public function get($name) {
     global $conf;
 
-    // @todo Caching the instantiated objects per name might cut off a fair
-    //   amount of CPU time and memory. Only the data within the configuration
-    //   object changes, so the additional cost of instantiating duplicate
-    //   objects could possibly be avoided. It is not uncommon for a
-    //   configuration object to be retrieved many times during a single
-    //   request; e.g., 'system.performance' alone is retrieved around 10-20
-    //   times within a single page request. Sub-requests via HttpKernel will
-    //   most likely only increase these counts.
-    // @todo Benchmarks were performed with a script that essentially retained
-    //   all instantiated configuration objects in memory until script execution
-    //   ended. A variant of that script called config() within a helper
-    //   function only, which inherently meant that PHP destroyed all
-    //   configuration objects after leaving the function. Consequently,
-    //   benchmark results looked entirely different. Profiling should probably
-    //   redone under more realistic conditions; e.g., actual HTTP requests.
-    // @todo The decrease of CPU time is interesting, since that means that
-    //   ContainerBuilder involves plenty of function calls (which are known to
-    //   be slow in PHP).
-    $config = new Config($name, $this->storage, $this->eventDispatcher);
-    return $config->init();
+    if (isset($this->cache[$name])) {
+      return $this->cache[$name];
+    }
+
+    $this->cache[$name] = new Config($name, $this->storage, $this->eventDispatcher);
+    return $this->cache[$name]->init();
   }
 
+  /**
+   * Resets and re-initializes configuration objects. Internal use only.
+   *
+   * @param string $name
+   *   (optional) The name of the configuration object to reset. If omitted, all
+   *   configuration objects are reset.
+   */
+  public function reset($name = NULL) {
+    if ($name) {
+      if (isset($this->cache[$name])) {
+        $this->cache[$name]->init();
+      }
+    }
+    else {
+      foreach ($this->cache as $config) {
+        $config->init();
+      }
+    }
+  }
+
+  /**
+   * Renames a configuration object in the cache.
+   *
+   * @param string $old_name
+   *   The old name of the configuration object.
+   * @param string $new_name
+   *   The new name of the configuration object.
+   *
+   * @todo D8: Remove after http://drupal.org/node/1865206.
+   */
+  public function rename($old_name, $new_name) {
+    if (isset($this->cache[$old_name])) {
+      $config = $this->cache[$old_name];
+      // Clone the object into the existing slot.
+      $this->cache[$old_name] = clone $config;
+
+      // Change the object's name and re-initialize it.
+      $config->setName($new_name)->init();
+      $this->cache[$new_name] = $config;
+    }
+  }
 }

@@ -26,7 +26,7 @@ class LinkCancel extends Link {
    * Overrides \Drupal\user\Plugin\views\field\Link::render_link().
    */
   public function render_link(EntityInterface $entity, \stdClass $values) {
-      if ($entity && user_cancel_access($entity)) {
+    if ($entity && user_cancel_access($entity)) {
       $this->options['alter']['make_link'] = TRUE;
 
       $text = !empty($this->options['text']) ? $this->options['text'] : t('cancel');

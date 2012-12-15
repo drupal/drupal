@@ -808,6 +808,7 @@ abstract class WebTestBase extends TestBase {
     global $conf;
     cache('bootstrap')->delete('variables');
     $conf = variable_initialize();
+    drupal_container()->get('config.factory')->reset();
   }
 
   /**
