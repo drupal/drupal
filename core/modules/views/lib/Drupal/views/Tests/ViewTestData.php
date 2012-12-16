@@ -26,12 +26,11 @@ class ViewTestData {
    *   The name of the test class.
    * @param array $modules
    *   (optional) The module directories to look in for test views.
-   *   The views_test_config module will always be checked.
+   *   Defaults to an empty array.
    *
    * @see config_install_default_config()
    */
   public static function importTestViews($class, $modules = array()) {
-    $modules[] = 'views_test_config';
     $views = array();
     while ($class) {
       if (property_exists($class, 'testViews')) {
@@ -48,6 +47,10 @@ class ViewTestData {
       );
       foreach ($modules as $module) {
         $config_dir = drupal_get_path('module', $module) . '/test_views';
+        if (!is_dir($config_dir) || !module_exists($module)) {
+          continue;
+        }
+
         $source_storage = new FileStorage($config_dir);
         foreach ($source_storage->listAll() as $config_name) {
           list(, , $id) = explode('.', $config_name);

@@ -1128,7 +1128,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $pager_plugin = $this->getPlugin('pager');
     if (!$pager_plugin) {
       // default to the no pager plugin.
-      $pager_plugin = views_get_plugin('pager', 'none');
+      $pager_plugin = drupal_container()->get('plugin.manager.views.pager')->createInstance('none');
     }
 
     $pager_str = $pager_plugin->summaryTitle();
@@ -1194,7 +1194,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $access_plugin = $this->getPlugin('access');
     if (!$access_plugin) {
       // default to the no access control plugin.
-      $access_plugin = views_get_plugin('access', 'none');
+      $access_plugin = drupal_container()->get('plugin.manager.views.access')->createInstance('none');
     }
 
     $access_str = $access_plugin->summaryTitle();
@@ -1214,7 +1214,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $cache_plugin = $this->getPlugin('cache');
     if (!$cache_plugin) {
       // default to the no cache control plugin.
-      $cache_plugin = views_get_plugin('cache', 'none');
+      $cache_plugin = drupal_container()->get('plugin.manager.views.cache')->createInstance('none');
     }
 
     $cache_str = $cache_plugin->summaryTitle();
@@ -1259,7 +1259,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $exposed_form_plugin = $this->getPlugin('exposed_form');
     if (!$exposed_form_plugin) {
       // default to the no cache control plugin.
-      $exposed_form_plugin = views_get_plugin('exposed_form', 'basic');
+      $exposed_form_plugin = drupal_container()->get('plugin.manager.views.exposed_form')->createInstance('basic');
     }
 
     $exposed_form_str = $exposed_form_plugin->summaryTitle();
@@ -1762,34 +1762,16 @@ abstract class DisplayPluginBase extends PluginBase {
         // delegates to the style.
         if (!empty($this->definition['theme'])) {
           $funcs[] = $this->optionLink(t('Display output'), 'analyze-theme-display') . ': '  . $this->formatThemes($this->themeFunctions());
-          $themes = $this->additionalThemeFunctions();
-          if ($themes) {
-            foreach ($themes as $theme) {
-              $funcs[] = $this->optionLink(t('Alternative display output'), 'analyze-theme-display') . ': '  . $this->formatThemes($theme);
-            }
-          }
         }
 
         $plugin = $this->getPlugin('style');
         if ($plugin) {
-          $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->themeFunctions(), $plugin->additionalThemeFunctions());
-          $themes = $plugin->additionalThemeFunctions();
-          if ($themes) {
-            foreach ($themes as $theme) {
-              $funcs[] = $this->optionLink(t('Alternative style'), 'analyze-theme-style') . ': '  . $this->formatThemes($theme);
-            }
-          }
+          $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->themeFunctions());
 
           if ($plugin->usesRowPlugin()) {
             $row_plugin = $this->getPlugin('row');
             if ($row_plugin) {
               $funcs[] = $this->optionLink(t('Row style output'), 'analyze-theme-row') . ': ' . $this->formatThemes($row_plugin->themeFunctions());
-              $themes = $row_plugin->additionalThemeFunctions();
-              if ($themes) {
-                foreach ($themes as $theme) {
-                  $funcs[] = $this->optionLink(t('Alternative row style'), 'analyze-theme-row') . ': '  . $this->formatThemes($theme);
-                }
-              }
             }
           }
 
@@ -1863,14 +1845,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $output .= '<p>' . t('This is the default theme template used for this display.') . '</p>';
-          $output .= '<pre>' . check_plain(file_get_contents('./' . $this->definition['theme path'] . '/' . strtr($this->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
-        }
-
-        if (!empty($this->definition['additional themes'])) {
-          foreach ($this->definition['additional themes'] as $theme => $type) {
-            $output .= '<p>' . t('This is an alternative template for this display.') . '</p>';
-            $output .= '<pre>' . check_plain(file_get_contents('./' . $this->definition['theme path'] . '/' . strtr($theme, '_', '-') . '.tpl.php')) . '</pre>';
-          }
+          $output .= '<pre>' . check_plain(file_get_contents('./' . $this->definition['theme_path'] . '/' . strtr($this->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
         }
 
         $form['analysis'] = array(
@@ -1890,14 +1865,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $output .= '<p>' . t('This is the default theme template used for this style.') . '</p>';
-          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
-        }
-
-        if (!empty($plugin->definition['additional themes'])) {
-          foreach ($plugin->definition['additional themes'] as $theme => $type) {
-            $output .= '<p>' . t('This is an alternative template for this style.') . '</p>';
-            $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($theme, '_', '-') . '.tpl.php')) . '</pre>';
-          }
+          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme_path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
         }
 
         $form['analysis'] = array(
@@ -1917,14 +1885,7 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $output .= '<p>' . t('This is the default theme template used for this row style.') . '</p>';
-          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
-        }
-
-        if (!empty($plugin->definition['additional themes'])) {
-          foreach ($plugin->definition['additional themes'] as $theme => $type) {
-            $output .= '<p>' . t('This is an alternative template for this row style.') . '</p>';
-            $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme path'] . '/' . strtr($theme, '_', '-') . '.tpl.php')) . '</pre>';
-          }
+          $output .= '<pre>' . check_plain(file_get_contents('./' . $plugin->definition['theme_path'] . '/' . strtr($plugin->definition['theme'], '_', '-') . '.tpl.php')) . '</pre>';
         }
 
         $form['analysis'] = array(
@@ -1941,7 +1902,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
         // Field templates aren't registered the normal way...and they're always
         // this one, anyhow.
-        $output .= '<pre>' . check_plain(file_get_contents(drupal_get_path('module', 'views') . '/theme/views-view-field.tpl.php')) . '</pre>';
+        $output .= '<pre>' . check_plain(file_get_contents(drupal_get_path('module', 'views') . '/templates/views-view-field.tpl.php')) . '</pre>';
 
         $form['analysis'] = array(
           '#markup' => '<div class="form-item">' . $output . '</div>',
@@ -2163,7 +2124,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'access':
         $access = $this->getOption('access');
         if ($access['type'] != $form_state['values']['access']['type']) {
-          $plugin = views_get_plugin('access', $form_state['values']['access']['type']);
+          $plugin = drupal_container()->get('plugin.manager.views.access')->createInstance($form_state['values']['access']['type']);
           if ($plugin) {
             $access = array('type' => $form_state['values']['access']['type']);
             $this->setOption('access', $access);
@@ -2186,7 +2147,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'cache':
         $cache = $this->getOption('cache');
         if ($cache['type'] != $form_state['values']['cache']['type']) {
-          $plugin = views_get_plugin('cache', $form_state['values']['cache']['type']);
+          $plugin = drupal_container()->get('plugin.manager.views.cache')->createInstance($form_state['values']['cache']['type']);
           if ($plugin) {
             $cache = array('type' => $form_state['values']['cache']['type']);
             $this->setOption('cache', $cache);
@@ -2245,7 +2206,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // the plugin.
         $row = $this->getOption('row');
         if ($row['type'] != $form_state['values'][$section]) {
-          $plugin = views_get_plugin('row', $form_state['values'][$section]);
+          $plugin = drupal_container()->get('plugin.manager.views.row')->createInstance($form_state['values'][$section]);
           if ($plugin) {
             $row = array('type' => $form_state['values'][$section]);
             $this->setOption($section, $row);
@@ -2262,7 +2223,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // the plugin.
         $style = $this->getOption('style');
         if ($style['type'] != $form_state['values'][$section]) {
-          $plugin = views_get_plugin('style', $form_state['values'][$section]);
+          $plugin = drupal_container()->get('plugin.manager.views.style')->createInstance($form_state['values'][$section]);
           if ($plugin) {
             $row = array('type' => $form_state['values'][$section]);
             $this->setOption($section, $row);
@@ -2297,7 +2258,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'exposed_form':
         $exposed_form = $this->getOption('exposed_form');
         if ($exposed_form['type'] != $form_state['values']['exposed_form']['type']) {
-          $plugin = views_get_plugin('exposed_form', $form_state['values']['exposed_form']['type']);
+          $plugin = drupal_container()->get('plugin.manager.views.exposed_form')->createInstance($form_state['values']['exposed_form']['type']);
           if ($plugin) {
             $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
             $this->setOption('exposed_form', $exposed_form);
@@ -2320,7 +2281,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'pager':
         $pager = $this->getOption('pager');
         if ($pager['type'] != $form_state['values']['pager']['type']) {
-          $plugin = views_get_plugin('pager', $form_state['values']['pager']['type']);
+          $plugin = drupal_container()->get('plugin.manager.views.pager')->createInstance($form_state['values']['pager']['type']);
           if ($plugin) {
             // Because pagers have very similar options, let's allow pagers to
             // try to carry the options over.

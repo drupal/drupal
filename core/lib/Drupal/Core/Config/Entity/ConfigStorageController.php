@@ -137,6 +137,16 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
+   * Returns the config prefix used by the configuration entity type.
+   *
+   * @return string
+   *   The full configuration prefix, for example 'views.view.'.
+   */
+  public function getConfigPrefix() {
+    return $this->entityInfo['config_prefix'] . '.';
+  }
+
+  /**
    * Builds the query to load the entity.
    *
    * This has full revision support. For entities requiring special queries,
@@ -159,7 +169,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $config_class = $this->entityInfo['class'];
-    $prefix = $this->entityInfo['config_prefix'] . '.';
+    $prefix = $this->getConfigPrefix();
 
     // Load all of the configuration entities.
     if ($ids === NULL) {
@@ -251,7 +261,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     }
 
     foreach ($entities as $id => $entity) {
-      $config = config($this->entityInfo['config_prefix'] . '.' . $entity->id());
+      $config = config($this->getConfigPrefix() . $entity->id());
       $config->delete();
 
       // Remove the entity from the manifest file.
@@ -273,7 +283,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
    *   When attempting to save a configuration entity that has no ID.
    */
   public function save(EntityInterface $entity) {
-    $prefix = $this->entityInfo['config_prefix'] . '.';
+    $prefix = $this->getConfigPrefix();
 
     // Configuration entity IDs are strings, and '0' is a valid ID.
     $id = $entity->id();
@@ -287,9 +297,17 @@ class ConfigStorageController implements EntityStorageControllerInterface {
       $id = $entity->getOriginalID();
     }
     $config = config($prefix . $id);
-    $config->setName($prefix . $entity->id());
+    $is_new = $config->isNew();
 
-    if (!$config->isNew() && !isset($entity->original)) {
+    if ($id !== $entity->id()) {
+      // Renaming a config object needs to cater for:
+      // - Storage controller needs to access the original object.
+      // - The object needs to be renamed/copied in ConfigFactory and reloaded.
+      // - All instances of the object need to be renamed.
+      drupal_container()->get('config.factory')->rename($prefix . $id, $prefix . $entity->id());
+    }
+
+    if (!$is_new && !isset($entity->original)) {
       $this->resetCache(array($id));
       $result = $this->load(array($id));
       $entity->original = reset($result);
@@ -299,11 +317,11 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     $this->invokeHook('presave', $entity);
 
     // Retrieve the desired properties and set them in config.
-    foreach ($this->getProperties($entity) as $key => $value) {
+    foreach ($entity->getExportProperties() as $key => $value) {
       $config->set($key, $value);
     }
 
-    if (!$config->isNew()) {
+    if (!$is_new) {
       $return = SAVED_UPDATED;
       $config->save();
       $this->postSave($entity, TRUE);
@@ -323,9 +341,9 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     // Add this entity to the manifest file if necessary.
     $config = config('manifest.' . $this->entityInfo['config_prefix']);
     $manifest = $config->get();
-    if (!in_array($this->entityInfo['config_prefix'] . '.' . $entity->id(), $manifest)) {
+    if (!in_array($this->getConfigPrefix() . $entity->id(), $manifest)) {
       $manifest[$entity->id()] = array(
-        'name' => $this->entityInfo['config_prefix'] . '.' . $entity->id(),
+        'name' => $this->getConfigPrefix() . $entity->id(),
       );
       $config->setData($manifest)->save();
     }
@@ -333,29 +351,6 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     unset($entity->original);
 
     return $return;
-  }
-
-  /**
-   * Retrieves the exportable properties of an entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being saved.
-   *
-   * @return array
-   *   An array of exportable properties and their values.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigStorageController::save()
-   */
-  protected function getProperties(EntityInterface $entity) {
-    // Configuration objects do not have a schema. Extract all key names from
-    // class properties.
-    $class_info = new \ReflectionClass($entity);
-    $properties = array();
-    foreach ($class_info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
-      $name = $property->getName();
-      $properties[$name] = $entity->$name;
-    }
-    return $properties;
   }
 
   /**

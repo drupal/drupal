@@ -17,7 +17,7 @@ use Drupal\user\Plugin\Core\Entity\User;
 class EntityTestAccessController implements EntityAccessControllerInterface {
 
   /**
-   * Implements EntityAccessControllerInterface::view().
+   * Implements EntityAccessControllerInterface::viewAccess().
    */
   public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     if ($langcode != LANGUAGE_DEFAULT) {
@@ -27,21 +27,21 @@ class EntityTestAccessController implements EntityAccessControllerInterface {
   }
 
   /**
-   * Implements EntityAccessControllerInterface::create().
+   * Implements EntityAccessControllerInterface::createAccess().
    */
   public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     return TRUE;
   }
 
   /**
-   * Implements EntityAccessControllerInterface::update().
+   * Implements EntityAccessControllerInterface::updateAccess().
    */
   public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     return TRUE;
   }
 
   /**
-   * Implements EntityAccessControllerInterface::delete().
+   * Implements EntityAccessControllerInterface::deleteAccess().
    */
   public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     return TRUE;

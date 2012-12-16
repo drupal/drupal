@@ -11,3 +11,5 @@ js:
 response:
   gzip: '0'
 stale_file_threshold: '2592000'
+theme_link: '1'
+

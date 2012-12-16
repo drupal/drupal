@@ -222,7 +222,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'files[field_settings_default_image]' => drupal_realpath($images[0]->uri),
     );
-    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    $this->drupalPost("admin/structure/types/manage/article/fields/$field_name/field-settings", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
@@ -250,7 +250,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'field[settings][default_image][fid]' => 0,
     );
-    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    $this->drupalPost("admin/structure/types/manage/article/fields/$field_name/field-settings", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
@@ -263,7 +263,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'files[field_settings_default_image]' => drupal_realpath($images[1]->uri),
     );
-    $this->drupalPost('admin/structure/types/manage/article/fields/' . $private_field_name, $edit, t('Save settings'));
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $private_field_name . '/field-settings', $edit, t('Save field settings'));
     $private_field = field_info_field($private_field_name);
     $image = file_load($private_field['settings']['default_image']);
     $this->assertEqual('private', file_uri_scheme($image->uri), 'Default image uses private:// scheme.');

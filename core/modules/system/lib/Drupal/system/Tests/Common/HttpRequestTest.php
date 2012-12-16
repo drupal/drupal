@@ -51,6 +51,10 @@ class HttpRequestTest extends WebTestBase {
     $this->drupalSetContent($result->data);
     $this->assertTitle(t('Test page | @site-name', array('@site-name' => config('system.site')->get('name'))));
 
+    // Test that Drupal.settings is properly parsed.
+    $settings = $this->drupalGetSettings();
+    $this->assertIdentical($settings['test-setting'], 'azAZ09();.,\\\/-_{}');
+
     // Test that code and status message is returned.
     $result = drupal_http_request(url('pagedoesnotexist', array('absolute' => TRUE)));
     $this->assertTrue(!empty($result->protocol), 'Result protocol is returned.');

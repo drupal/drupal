@@ -70,9 +70,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     field_create_instance($instance2);
     $instance2 = field_info_instance('node', $field_name, 'page');
 
-
-    // Confirm the defaults are present on the article field admin form.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_name");
+    // Confirm the defaults are present on the article field settings form.
+    $this->drupalGet("admin/structure/types/manage/article/fields/$field_name/field-settings");
     $this->assertFieldByXpath(
       '//input[@name="field[settings][default_image][fid]"]',
       $default_images['field']->fid,
@@ -81,6 +80,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
         array('@fid' => $default_images['field']->fid)
       )
     );
+    // Confirm the defaults are present on the article field edit form.
+    $this->drupalGet("admin/structure/types/manage/article/fields/$field_name");
     $this->assertFieldByXpath(
       '//input[@name="instance[settings][default_image][fid]"]',
       $default_images['instance']->fid,
@@ -90,8 +91,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       )
     );
 
-    // Confirm the defaults are present on the page field admin form.
-    $this->drupalGet("admin/structure/types/manage/page/fields/$field_name");
+    // Confirm the defaults are present on the page field settings form.
+    $this->drupalGet("admin/structure/types/manage/page/fields/$field_name/field-settings");
     $this->assertFieldByXpath(
       '//input[@name="field[settings][default_image][fid]"]',
       $default_images['field']->fid,
@@ -100,6 +101,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
         array('@fid' => $default_images['field']->fid)
       )
     );
+    // Confirm the defaults are present on the page field edit form.
+    $this->drupalGet("admin/structure/types/manage/page/fields/$field_name");
     $this->assertFieldByXpath(
       '//input[@name="instance[settings][default_image][fid]"]',
       $default_images['instance2']->fid,
@@ -137,8 +140,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field['settings']['default_image'] = $default_images['field_new']->fid;
     field_update_field($field);
 
-    // Confirm that the new field default is used on the article admin form.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_name");
+    // Confirm that the new default is used on the article field settings form.
+    $this->drupalGet("admin/structure/types/manage/article/fields/$field_name/field-settings");
     $this->assertFieldByXpath(
       '//input[@name="field[settings][default_image][fid]"]',
       $default_images['field_new']->fid,

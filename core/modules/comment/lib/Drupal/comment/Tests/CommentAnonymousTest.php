@@ -22,7 +22,6 @@ class CommentAnonymousTest extends CommentTestBase {
 
   function setUp() {
     parent::setUp();
-    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
 
     // Enable anonymous and authenticated user comments.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(

@@ -92,7 +92,9 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   will be {$module}_{$key}.
  * @param $to
  *   The e-mail address or addresses where the message will be sent to. The
- *   formatting of this string must comply with RFC 2822. Some examples are:
+ *   formatting of this string will be validated with the
+ *   @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
+ *   Some examples are:
  *   - user@example.com
  *   - user@example.com, anotheruser@example.com
  *   - User <user@example.com>

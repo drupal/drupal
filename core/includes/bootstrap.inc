@@ -899,7 +899,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // Verify that we have an keyvalue service before using it. This is required
     // because this function is called during installation.
     // @todo Inject database connection into KeyValueStore\DatabaseStorage.
-    if (drupal_container()->has('keyvalue') && function_exists('db_query')) {
+    if (($container = drupal_container()) && $container->has('keyvalue') && function_exists('db_query')) {
       try {
         $file_list = state()->get('system.' . $type . '.files');
         if ($file_list && isset($file_list[$name]) && file_exists(DRUPAL_ROOT . '/' . $file_list[$name])) {
@@ -2624,6 +2624,8 @@ function drupal_language_initialize() {
     // Allow modules to react on language system initialization in multilingual
     // environments.
     bootstrap_invoke_all('language_init');
+    // @todo D8: Remove after http://drupal.org/node/1859110.
+    drupal_container()->get('config.factory')->reset();
   }
 }
 

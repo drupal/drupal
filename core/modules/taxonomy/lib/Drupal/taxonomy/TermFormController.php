@@ -63,11 +63,11 @@ class TermFormController extends EntityFormController {
       '#weight' => 10,
     );
 
-    // taxonomy_get_tree and taxonomy_term_load_parents may contain large numbers of
-    // items so we check for taxonomy_override_selector before loading the
-    // full vocabulary. Contrib modules can then intercept before
-    // hook_form_alter to provide scalable alternatives.
-    if (!variable_get('taxonomy_override_selector', FALSE)) {
+    // taxonomy_get_tree and taxonomy_term_load_parents may contain large
+    // numbers of items so we check for taxonomy.settings:override_selector
+    // before loading the full vocabulary. Contrib modules can then intercept
+    // before hook_form_alter to provide scalable alternatives.
+    if (!config('taxonomy.settings')->get('override_selector')) {
       $parent = array_keys(taxonomy_term_load_parents($term->tid));
       $children = taxonomy_get_tree($vocabulary->vid, $term->tid);
 

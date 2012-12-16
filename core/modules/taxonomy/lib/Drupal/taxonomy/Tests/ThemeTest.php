@@ -27,7 +27,7 @@ class ThemeTest extends TaxonomyTestBase {
     // the duration of these tests.
     variable_set('theme_default', 'bartik');
     theme_enable(array('seven'));
-    config('system.site')->set('admin_theme', 'seven')->save();
+    config('system.theme')->set('admin', 'seven')->save();
 
     // Create and log in as a user who has permission to add and edit taxonomy
     // terms and view the administrative theme.

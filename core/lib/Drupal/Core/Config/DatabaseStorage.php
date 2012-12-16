@@ -160,4 +160,18 @@ class DatabaseStorage implements StorageInterface {
       ':name' => db_like($prefix) . '%',
     ), $this->options)->fetchCol();
   }
+
+  /**
+   * Implements Drupal\Core\Config\StorageInterface::deleteAll().
+   *
+   * @throws PDOException
+   * @throws Drupal\Core\Database\DatabaseExceptionWrapper
+   *   Only thrown in case $this->options['throw_exception'] is TRUE.
+   */
+  public function deleteAll($prefix = '') {
+    $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
+    return (bool) $this->connection->delete($this->table, $options)
+      ->condition('name', $prefix . '%', 'LIKE')
+      ->execute();
+  }
 }

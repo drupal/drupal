@@ -65,6 +65,13 @@ class Config {
   protected $eventDispatcher;
 
   /**
+   * Whether the config object has already been loaded.
+   *
+   * @var bool
+   */
+  protected $isLoaded = FALSE;
+
+  /**
    * Constructs a configuration object.
    *
    * @param string $name
@@ -88,6 +95,8 @@ class Config {
    *   The configuration object.
    */
   public function init() {
+    $this->isLoaded = FALSE;
+    $this->overrides = array();
     $this->notify('init');
     return $this;
   }
@@ -120,6 +129,9 @@ class Config {
    *   TRUE if this config object does not exist in storage.
    */
   public function isNew() {
+    if (!$this->isLoaded) {
+      $this->load();
+    }
     return $this->isNew;
   }
 
@@ -151,6 +163,9 @@ class Config {
    *   The data that was requested.
    */
   public function get($key = '') {
+    if (!$this->isLoaded) {
+      $this->load();
+    }
     if (!isset($this->overriddenData)) {
       $this->setOverriddenData();
     }
@@ -179,6 +194,26 @@ class Config {
    *   The configuration object.
    */
   public function setData(array $data) {
+    $this->replaceData($data);
+    // A load would destroy the data just set (for example on import).
+    $this->isLoaded = TRUE;
+    return $this;
+  }
+
+  /**
+   * Replaces the data of this configuration object.
+   *
+   * This function is separate from setData() to avoid load() state tracking.
+   * A load() would destroy the replaced data (for example on import). Do not
+   * call set() when inside load().
+   *
+   * @param array $data
+   *   The new configuration data.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
+   */
+  protected function replaceData(array $data) {
     $this->data = $data;
     $this->resetOverriddenData();
     return $this;
@@ -243,6 +278,9 @@ class Config {
    *   The configuration object.
    */
   public function set($key, $value) {
+    if (!$this->isLoaded) {
+      $this->load();
+    }
     // Type-cast value into a string.
     $value = $this->castValue($value);
 
@@ -309,6 +347,9 @@ class Config {
    *   The configuration object.
    */
   public function clear($key) {
+    if (!$this->isLoaded) {
+      $this->load();
+    }
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       unset($this->data[$key]);
@@ -327,16 +368,18 @@ class Config {
    *   The configuration object.
    */
   public function load() {
+    $this->isLoaded = FALSE;
     $data = $this->storage->read($this->name);
     if ($data === FALSE) {
       $this->isNew = TRUE;
-      $this->setData(array());
+      $this->replaceData(array());
     }
     else {
       $this->isNew = FALSE;
-      $this->setData($data);
+      $this->replaceData($data);
     }
     $this->notify('load');
+    $this->isLoaded = TRUE;
     return $this;
   }
 
@@ -347,6 +390,9 @@ class Config {
    *   The configuration object.
    */
   public function save() {
+    if (!$this->isLoaded) {
+      $this->load();
+    }
     $this->storage->write($this->name, $this->data);
     $this->isNew = FALSE;
     $this->notify('save');
@@ -412,8 +458,11 @@ class Config {
    *   The configuration object.
    */
   public function merge(array $data_to_merge) {
+    if (!$this->isLoaded) {
+      $this->load();
+    }
     // Preserve integer keys so that config keys are not changed.
-    $this->data = NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE);
+    $this->replaceData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
     return $this;
   }
 }

@@ -462,7 +462,7 @@ function menu_test_theme_page_callback($inherited = FALSE) {
 function menu_test_theme_callback($argument) {
   // Test using the variable administrative theme.
   if ($argument == 'use-admin-theme') {
-    return config('system.site')->get('admin_theme');
+    return config('system.theme')->get('admin');
   }
   // Test using a theme that exists, but may or may not be enabled.
   elseif ($argument == 'use-stark-theme') {

@@ -31,11 +31,6 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
-  }
-
   /**
    * Test OpenID auto-registration with e-mail verification enabled.
    */

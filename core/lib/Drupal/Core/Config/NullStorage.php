@@ -78,4 +78,11 @@ class NullStorage implements StorageInterface {
   public function listAll($prefix = '') {
     return array();
   }
+
+  /**
+   * Implements Drupal\Core\Config\StorageInterface::deleteAll().
+   */
+  public function deleteAll($prefix = '') {
+    return FALSE;
+  }
 }

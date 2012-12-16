@@ -523,9 +523,20 @@ function hook_ajax_render_alter($commands) {
  * @see drupal_render_page()
  */
 function hook_page_build(&$page) {
+  $path = drupal_get_path('module', 'foo');
+  // Add JavaScript/CSS assets to all pages.
+  // @see drupal_process_attached()
+  $page['#attached']['js'][$path . '/foo.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/foo.base.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/foo.theme.css'] = array('every_page' => TRUE);
+
+  // Add a special CSS file to a certain page only.
+  if (drupal_is_front_page()) {
+    $page['#attached']['css'][] = $path . '/foo.front.css';
+  }
+
+  // Append a standard disclaimer to the content region on a node detail page.
   if (menu_get_object('node', 1)) {
-    // We are on a node detail page. Append a standard disclaimer to the
-    // content region.
     $page['content']['disclaimer'] = array(
       '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
       '#weight' => 25,
@@ -823,6 +834,10 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     same weight are ordered alphabetically.
  *   - "menu_name": Optional. Set this to a custom menu if you don't want your
  *     item to be placed in the default Tools menu.
+ *   - "expanded": Optional. If set to TRUE, and if a menu link is provided for
+ *     this menu item (as a result of other properties), then the menu link is
+ *     always expanded, equivalent to its 'always expanded' checkbox being set
+ *     in the UI.
  *   - "context": (optional) Defines the context a tab may appear in. By
  *     default, all tabs are only displayed as local tasks when being rendered
  *     in a page context. All tabs that should be accessible as contextual links
@@ -1482,17 +1497,14 @@ function hook_boot() {
  *
  * This hook is not run on cached pages.
  *
- * To add CSS or JS that should be present on all pages, modules should not
- * implement this hook, but declare these files in their .info file.
- *
  * @see hook_boot()
+ * @see hook_exit()
+ *
+ * Do not use this hook to add CSS/JS to pages, use hook_page_build() instead.
+ *
+ * @see hook_page_build()
  */
 function hook_init() {
-  // Since this file should only be loaded on the front page, it cannot be
-  // declared in the info file.
-  if (drupal_is_front_page()) {
-    drupal_add_css(drupal_get_path('module', 'foo') . '/foo.css');
-  }
 }
 
 /**
@@ -1859,11 +1871,11 @@ function hook_theme($existing, $type, $theme, $path) {
  *
  * For example:
  * @code
- * $theme_registry['user_profile'] = array(
+ * $theme_registry['user'] = array(
  *   'variables' => array(
  *     'account' => NULL,
  *   ),
- *   'template' => 'core/modules/user/user-profile',
+ *   'template' => 'core/modules/user/user',
  *   'file' => 'core/modules/user/user.pages.inc',
  *   'type' => 'module',
  *   'theme path' => 'core/modules/user',
@@ -2736,8 +2748,7 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  * a hook_update_N() is added to the module, this function needs to be updated
  * to reflect the current version of the database schema.
  *
- * See the Schema API documentation at
- * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
+ * See the @link http://drupal.org/node/146843 Schema API documentation @endlink
  * for details on hook_schema and how database tables are defined.
  *
  * Note that since this function is called from a full bootstrap, all functions
@@ -3329,37 +3340,12 @@ function hook_system_themes_page_alter(&$theme_groups) {
 }
 
 /**
- * Alters inbound URL requests.
- *
- * @param $path
- *   The path being constructed, which, if a path alias, has been resolved to a
- *   Drupal path by the database, and which also may have been altered by other
- *   modules before this one.
- * @param $original_path
- *   The original path, before being checked for path aliases or altered by any
- *   modules.
- * @param $path_language
- *   The language of the path.
- *
- * @see \Drupal\Core\Path\AliasManager::getSystemPath()
- */
-function hook_url_inbound_alter(&$path, $original_path, $path_language) {
-  // Create the path user/me/edit, which allows a user to edit their account.
-  if (preg_match('|^user/me/edit(/.*)?|', $path, $matches)) {
-    global $user;
-    $path = 'user/' . $user->uid . '/edit' . $matches[1];
-  }
-}
-
-/**
  * Alters outbound URLs.
  *
  * @param $path
  *   The outbound path to alter, not adjusted for path aliases yet. It won't be
- *   adjusted for path aliases until all modules are finished altering it, thus
- *   being consistent with hook_url_inbound_alter(), which adjusts for all path
- *   aliases before allowing modules to alter it. This may have been altered by
- *   other modules before this one.
+ *   adjusted for path aliases until all modules are finished altering it. This
+ *   may have been altered by other modules before this one.
  * @param $options
  *   A set of URL options for the URL so elements such as a fragment or a query
  *   string can be added to the URL.
@@ -3739,7 +3725,7 @@ function hook_countries_alter(&$countries) {
  *   for delivery directly.
  * @param $path
  *   Contains the system path that is going to be loaded. This is read only,
- *   use hook_url_inbound_alter() to change the path.
+ *   use a request listener to change the inbound path.
  */
 function hook_menu_site_status_alter(&$menu_site_status, $path) {
   // Allow access to my_module/authentication even if site is in offline mode.

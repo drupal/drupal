@@ -810,6 +810,7 @@ abstract class WebTestBase extends TestBase {
     global $conf;
     cache('bootstrap')->delete('variables');
     $conf = variable_initialize();
+    drupal_container()->get('config.factory')->reset();
   }
 
   /**
@@ -2051,7 +2052,7 @@ abstract class WebTestBase extends TestBase {
     $this->plainTextContent = FALSE;
     $this->elements = FALSE;
     $this->drupalSettings = array();
-    if (preg_match('/var drupalSettings = (.*?);/', $content, $matches)) {
+    if (preg_match('/var drupalSettings = (.*?);$/m', $content, $matches)) {
       $this->drupalSettings = drupal_json_decode($matches[1]);
     }
   }

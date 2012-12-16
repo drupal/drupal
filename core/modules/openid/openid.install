@@ -54,6 +54,41 @@ function openid_schema() {
     'primary key' => array('assoc_handle'),
   );
 
+  $schema['openid_identities'] = array(
+    'description' => 'Stores OpenID authentication mapping.',
+    'fields' => array(
+      'aid' => array(
+        'description' => 'Primary Key: Unique authmap ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "User's {users}.uid.",
+      ),
+      'identifier' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Unique OpenID identifier.',
+      ),
+    ),
+    'unique keys' => array(
+      'identifier' => array('identifier'),
+    ),
+    'primary key' => array('aid'),
+    'foreign keys' => array(
+      'user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
   $schema['openid_nonce'] = array(
     'description' => 'Stores received openid.response_nonce per OpenID endpoint URL to prevent replay attacks.',
     'fields' => array(
@@ -124,6 +159,11 @@ function openid_update_last_removed() {
 }
 
 /**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
  * Moves xri_proxy_resolver settings from variable to config.
  *
  * @ingroup config_upgrade
@@ -133,3 +173,62 @@ function openid_update_8001() {
     'xri_proxy_resolver' => 'xri_proxy_resolver',
   ));
 }
+/**
+ * Move authentication mapping to an OpenID managed table.
+ */
+function openid_update_8002() {
+  $schema['openid_identities'] = array(
+    'description' => 'Stores OpenID authentication mapping.',
+    'fields' => array(
+      'aid' => array(
+        'description' => 'Primary Key: Unique authmap ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "User's {users}.uid.",
+      ),
+      'identifier' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Unique OpenID identifier.',
+      ),
+    ),
+    'unique keys' => array(
+      'identifier' => array('identifier'),
+    ),
+    'primary key' => array('aid'),
+    'foreign keys' => array(
+      'user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  db_create_table('openid_identities', $schema['openid_identities']);
+
+  // Migrate entries from {authmap} to {openid_identities}.
+  $query = db_select('authmap', 'a')
+    ->condition('module', 'openid');
+  $query->addField('a', 'uid');
+  $query->addField('a', 'authname', 'identifier');
+  db_insert('openid_identities')
+    ->from($query)
+    ->execute();
+
+  // Remove old entries in {authmap}.
+  db_delete('authmap')
+    ->condition('module', 'openid')
+    ->execute();
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-8.x".
+ */

@@ -88,6 +88,32 @@ function openid_help($path, $arg) {
 }
 
 /**
+ * Fetch a user object by OpenID identifier.
+ *
+ * @param $identifier
+ *   The OpenID identifier.
+ *
+ * @return
+ *   A fully-loaded user object if the user is found or FALSE if not found.
+ */
+function openid_external_load($identifier) {
+  $uid = db_query("SELECT uid FROM {openid_identities} WHERE identifier = :identifier", array(':identifier' => $identifier))->fetchField();
+  if ($uid) {
+    return user_load($uid);
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function openid_user_delete($account) {
+  db_delete('openid_identities')
+    ->condition('uid', $account->uid)
+    ->execute();
+}
+
+/**
  * Implements hook_user_insert().
  */
 function openid_user_insert($account) {
@@ -96,7 +122,12 @@ function openid_user_insert($account) {
     if (config('user.settings')->get('verify_mail')) {
       drupal_set_message(t('Once you have verified your e-mail address, you may log in via OpenID.'));
     }
-    user_set_authmaps($account, array('authname_openid' => $account->openid_claimed_id));
+    db_insert('openid_identities')
+      ->fields(array(
+        'uid' => $account->uid,
+        'identifier' => $account->openid_claimed_id,
+      ))
+      ->execute();
     unset($_SESSION['openid']);
     unset($account->openid_claimed_id);
   }
@@ -720,7 +751,7 @@ function openid_association($op_endpoint) {
 function openid_authentication($response) {
   $identity = $response['openid.claimed_id'];
 
-  $account = user_external_load($identity);
+  $account = openid_external_load($identity);
   if (isset($account->uid)) {
     if (!config('user.settings')->get('verify_mail') || $account->login) {
       // Check if user is blocked.

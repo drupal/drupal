@@ -58,5 +58,8 @@ class JsonldBundle extends Bundle {
       $container->register("serializer.encoder.{$format}", $encoder_class)
         ->addTag('encoder', array('priority' => $priority));
     }
+
+    $container->register('jsonld.subscriber', 'Drupal\jsonld\EventSubscriber\JsonldSubscriber')
+      ->addTag('event_subscriber');
   }
 }

@@ -120,7 +120,7 @@ function system_themes_page() {
 
   $theme_default = variable_get('theme_default', 'stark');
   $theme_groups  = array();
-  $admin_theme = config('system.site')->get('admin_theme');
+  $admin_theme = config('system.theme')->get('admin');
 
   foreach ($themes as &$theme) {
     if (!empty($theme->info['hidden'])) {
@@ -257,7 +257,7 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
     '#options' => array(0 => t('Default theme')) + $theme_options,
     '#title' => t('Administration theme'),
     '#description' => t('Choose "Default theme" to always use the same theme as the rest of the site.'),
-    '#default_value' => config('system.site')->get('admin_theme'),
+    '#default_value' => config('system.theme')->get('admin'),
   );
   $form['admin_theme']['actions'] = array('#type' => 'actions');
   $form['admin_theme']['actions']['submit'] = array(
@@ -272,7 +272,7 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
  */
 function system_themes_admin_form_submit($form, &$form_state) {
   drupal_set_message(t('The configuration options have been saved.'));
-  config('system.site')->set('admin_theme', $form_state['values']['admin_theme'])->save();
+  config('system.theme')->set('admin', $form_state['values']['admin_theme'])->save();
 }
 
 /**
@@ -309,7 +309,7 @@ function system_theme_disable() {
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
       // Do not disable the default or admin theme.
-      if ($theme == variable_get('theme_default', 'stark') || $theme == config('system.site')->get('admin_theme')) {
+      if ($theme == variable_get('theme_default', 'stark') || $theme == config('system.theme')->get('admin')) {
         drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
       }
       else {
@@ -353,7 +353,7 @@ function system_theme_default() {
 
       // The status message depends on whether an admin theme is currently in use:
       // a value of 0 means the admin theme is set to be the default theme.
-      $admin_theme = config('system.site')->get('admin_theme');
+      $admin_theme = config('system.theme')->get('admin');
       if ($admin_theme != 0 && $admin_theme != $theme) {
         drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
           '%admin_theme' => $themes[$admin_theme]->info['name'],

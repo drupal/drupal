@@ -185,7 +185,7 @@ function taxonomy_field_extra_fields() {
  *   An array of nids matching the query.
  */
 function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = array('t.sticky' => 'DESC', 't.created' => 'DESC')) {
-  if (!variable_get('taxonomy_maintain_index_table', TRUE)) {
+  if (!config('taxonomy.settings')->get('maintain_index_table')) {
     return array();
   }
   $query = db_select('taxonomy_index', 't');
@@ -1390,8 +1390,8 @@ function taxonomy_rdf_mapping() {
  * published nodes and common sort criteria such as sticky and created.
  * This is used as a lookup table by taxonomy_select_nodes(). When using other
  * field storage engines or alternative methods of denormalizing this data
- * you should set the variable 'taxonomy_maintain_index_table' to FALSE
- * to avoid unnecessary writes in SQL.
+ * you should set the taxonomy.settings:maintain_index_table to '0' to avoid
+ * unnecessary writes in SQL.
  */
 
 /**
@@ -1432,7 +1432,7 @@ function taxonomy_build_node_index($node) {
   // We maintain a denormalized table of term/node relationships, containing
   // only data for current, published nodes.
   $status = NULL;
-  if (variable_get('taxonomy_maintain_index_table', TRUE)) {
+  if (config('taxonomy.settings')->get('maintain_index_table')) {
     // If a node property is not set in the node object when node_save() is
     // called, the old value from $node->original is used.
     if (!empty($node->original)) {
@@ -1512,7 +1512,7 @@ function taxonomy_node_predelete(Node $node) {
  *   The node entity.
  */
 function taxonomy_delete_node_index(Node $node) {
-  if (variable_get('taxonomy_maintain_index_table', TRUE)) {
+  if (config('taxonomy.settings')->get('maintain_index_table')) {
     db_delete('taxonomy_index')->condition('nid', $node->nid)->execute();
   }
 }
@@ -1521,7 +1521,7 @@ function taxonomy_delete_node_index(Node $node) {
  * Implements hook_taxonomy_term_delete().
  */
 function taxonomy_taxonomy_term_delete(Term $term) {
-  if (variable_get('taxonomy_maintain_index_table', TRUE)) {
+  if (config('taxonomy.settings')->get('maintain_index_table')) {
     // Clean up the {taxonomy_index} table when terms are deleted.
     db_delete('taxonomy_index')->condition('tid', $term->tid)->execute();
   }

@@ -586,6 +586,8 @@ class FieldOverview extends OverviewBase {
         field_create_field($field);
         field_create_instance($instance);
 
+        // Always show the field settings step, as the cardinality needs to be
+        // configured for new fields.
         $destinations[] = $this->adminPath. '/fields/' . $field['field_name'] . '/field-settings';
         $destinations[] = $this->adminPath . '/fields/' . $field['field_name'];
 
@@ -618,7 +620,7 @@ class FieldOverview extends OverviewBase {
 
         try {
           field_create_instance($instance);
-          $destinations[] = $this->adminPath . '/fields/' . $instance['field_name'] . '/edit';
+          $destinations[] = $this->adminPath . '/fields/' . $instance['field_name'];
           // Store new field information for any additional submit handlers.
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }

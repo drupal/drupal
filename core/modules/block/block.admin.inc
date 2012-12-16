@@ -312,7 +312,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   );
 
   $theme_default = variable_get('theme_default', 'stark');
-  $admin_theme = config('system.site')->get('admin_theme');
+  $admin_theme = config('system.theme')->get('admin');
   foreach (list_themes() as $key => $theme) {
     // Only display enabled themes
     if ($theme->status) {

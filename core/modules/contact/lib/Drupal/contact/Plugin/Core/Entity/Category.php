@@ -16,9 +16,9 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "contact_category",
- *   label = @Translation("Category"),
+ *   label = @Translation("Contact category"),
  *   module = "contact",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controller_class = "Drupal\contact\CategoryStorageController",
  *   list_controller_class = "Drupal\contact\CategoryListController",
  *   form_controller_class = {
  *     "default" = "Drupal\contact\CategoryFormController"

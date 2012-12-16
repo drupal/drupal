@@ -371,4 +371,12 @@ class Entity implements IteratorAggregate, EntityInterface {
     }
     return $return;
   }
+
+  /**
+   * Implements Drupal\Core\Entity\EntityInterface::getExportProperties().
+   */
+  public function getExportProperties() {
+    return array();
+  }
+
 }

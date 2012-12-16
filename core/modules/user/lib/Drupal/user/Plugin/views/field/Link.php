@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -57,16 +58,29 @@ class Link extends FieldPluginBase {
     $this->add_additional_fields();
   }
 
+  /**
+   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
+   */
   function render($values) {
-    $value = $this->get_value($values, 'uid');
-    return $this->render_link($this->sanitizeValue($value), $values);
+    return $this->render_link($this->get_entity($values), $values);
   }
 
-  function render_link($data, $values) {
+  /**
+   * Alters the field to render a link.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \stdClass $values
+   *   The current row of the views result.
+   *
+   * @return string
+   *   The acutal rendered text (without the link) of this field.
+   */
+  public function render_link(EntityInterface $entity, \stdClass $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "user/" . $data;
+    $uri = $entity->uri();
+    $this->options['alter']['path'] = $uri['path'];
 
     return $text;
   }

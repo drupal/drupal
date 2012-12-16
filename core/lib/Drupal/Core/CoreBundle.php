@@ -55,7 +55,8 @@ class CoreBundle extends Bundle {
       ->addMethodCall('addSubscriber', array(new Reference('config.subscriber.globalconf')));
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('dispatcher'));
+      ->addArgument(new Reference('dispatcher'))
+      ->addTag('persist');
 
     // Register staging configuration storage.
     $container
@@ -232,6 +233,11 @@ class CoreBundle extends Bundle {
     $container->register('serializer', 'Symfony\Component\Serializer\Serializer')
       ->addArgument(array())
       ->addArgument(array());
+
+    $container->register('serializer.normalizer.complex_data', 'Drupal\Core\Serialization\ComplexDataNormalizer')->addTag('normalizer');
+    $container->register('serializer.normalizer.list', 'Drupal\Core\Serialization\ListNormalizer')->addTag('normalizer');
+    $container->register('serializer.normalizer.typed_data', 'Drupal\Core\Serialization\TypedDataNormalizer')->addTag('normalizer');
+    $container->register('serializer.encoder.json', 'Drupal\Core\Serialization\JsonEncoder')->addTag('encoder');
 
     $container->register('flood', 'Drupal\Core\Flood\DatabaseBackend')
       ->addArgument(new Reference('database'));

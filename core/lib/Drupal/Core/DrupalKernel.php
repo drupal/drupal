@@ -160,6 +160,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $bundles = array(
       new CoreBundle(),
     );
+    $this->bundleClasses = array('Drupal\Core\CoreBundle');
 
     // Ensure we know what modules are enabled and that their namespaces are
     // registered.
@@ -259,6 +260,12 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * Initializes the service container.
    */
   protected function initializeContainer() {
+    $persist = array();
+    if (isset($this->container)) {
+      foreach ($this->container->getParameter('persistIds') as $id) {
+        $persist[$id] = $this->container->get($id);
+      }
+    }
     $this->container = NULL;
     $class = $this->getClassName();
     $cache_file = $class . '.php';
@@ -285,6 +292,9 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     // Second, check if some other request -- for example on another web
     // frontend or during the installer -- changed the list of enabled modules.
     if (isset($this->container)) {
+      foreach ($persist as $id => $object) {
+        $this->container->set($id, $object);
+      }
       // All namespaces must be registered before we attempt to use any service
       // from the container.
       $container_modules = $this->container->getParameter('container.modules');
@@ -309,6 +319,9 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
 
     if (!isset($this->container)) {
       $this->container = $this->buildContainer();
+      foreach ($persist as $id => $object) {
+        $this->container->set($id, $object);
+      }
       if ($this->allowDumping) {
         $this->containerNeedsDumping = TRUE;
       }
@@ -336,6 +349,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     foreach ($this->bundles as $bundle) {
       $bundle->build($container);
     }
+    $container->setParameter('persistIds', array_keys($container->findTaggedServiceIds('persist')));
     $container->compile();
     return $container;
   }

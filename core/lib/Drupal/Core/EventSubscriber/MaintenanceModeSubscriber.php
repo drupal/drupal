@@ -27,11 +27,9 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     // Check if the site is offline.
     $status = _menu_site_is_offline() ? MENU_SITE_OFFLINE : MENU_SITE_ONLINE;
 
-    // Allow other modules to change the site status but not the path because
-    // that would not change the global variable. hook_url_inbound_alter() can
-    // be used to change the path. Code later will not use the $read_only_path
-    // variable.
-    $read_only_path = !empty($path) ? $path : $event->getRequest()->attributes->get('system_path');
+    // Allow other modules to change the site status but not the path. The path
+    // can be changed using a request listener.
+    $read_only_path = $event->getRequest()->attributes->get('system_path');
     drupal_alter('menu_site_status', $status, $read_only_path);
 
     // Only continue if the site is online.

@@ -124,12 +124,18 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function updateField() {
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name);
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name . '/field-settings');
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
     $edit = array(
       'field[settings][test_field_setting]' => $string,
+    );
+    $this->drupalPost(NULL, $edit, t('Save field settings'));
+
+    // Go to the field instance edit page.
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name);
+    $edit = array(
       'instance[settings][test_instance_setting]' => $string,
       'instance[widget][settings][test_widget_setting]' => $string,
     );
@@ -139,7 +145,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertFieldSettings($this->type, $this->field_name, $string);
 
     // Assert redirection back to the "manage fields" page.
-    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), 'Redirected to "Manage fields" page.');
+    $this->assertUrl('admin/structure/types/manage/' . $this->type . '/fields');
   }
 
   /**
@@ -170,7 +176,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    * numeric value. That is tested already in FormTest::testNumber().
    */
   function cardinalitySettings() {
-    $field_edit_path = 'admin/structure/types/manage/article/fields/body';
+    $field_edit_path = 'admin/structure/types/manage/article/fields/body/field-settings';
 
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to other.
@@ -178,7 +184,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'field[container][cardinality]' => 'other',
       'field[container][cardinality_other]' => '',
     );
-    $this->drupalPost($field_edit_path, $edit, t('Save settings'));
+    $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Number of values is required.');
 
     // Assert the cardinality field is set to 'Other' when the value is greater
@@ -187,8 +193,8 @@ class ManageFieldsTest extends FieldUiTestBase {
       'field[container][cardinality]' => 'other',
       'field[container][cardinality_other]' => 16,
     );
-    $this->drupalPost($field_edit_path, $edit, t('Save settings'));
-    $this->assertText('Saved Body configuration.');
+    $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
+    $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 'other');
     $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 16);
@@ -199,8 +205,8 @@ class ManageFieldsTest extends FieldUiTestBase {
       'field[container][cardinality]' => 3,
       'field[container][cardinality_other]' => 16,
     );
-    $this->drupalPost($field_edit_path, $edit, t('Save settings'));
-    $this->assertText('Saved Body configuration.');
+    $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
+    $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertFieldByXPath("//select[@name='field[container][cardinality]']", 3);
     $this->assertFieldByXPath("//input[@name='field[container][cardinality_other]']", 6);

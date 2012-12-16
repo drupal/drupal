@@ -37,7 +37,6 @@ class LocaleConfigOverride extends WebTestBase {
     // Spoof multilingual.
     $GLOBALS['conf']['language_count'] = 2;
     drupal_language_initialize();
-    $config = config($name);
     $this->assertIdentical($config->get('foo'), 'en bar');
   }
 }
