@@ -1818,19 +1818,13 @@ class ViewExecutable {
   }
 
   /**
-   * Overrides Drupal\entity\Entity::createDuplicate().
+   * Creates a duplicate ViewExecutable object.
    *
    * Makes a copy of this view that has been sanitized of handlers, any runtime
-   *  data, ID, and UUID.
+   * data, ID, and UUID.
    */
   public function createDuplicate() {
-    $data = config('views.view.' . $this->storage->id())->get();
-
-    // Reset the name and UUID.
-    unset($data['name']);
-    unset($data['uuid']);
-
-    return entity_create('view', $data);
+    return $this->storage->createDuplicate()->get('executable');
   }
 
   /**

@@ -52,7 +52,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var string
    */
-  public $name = '';
+  public $name = NULL;
 
   /**
    * The description of the view, which is used only in the interface.
@@ -166,6 +166,15 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function id() {
     return $this->get('name');
+  }
+
+  /**
+   * Overrides Drupal\Core\Config\Entity\ConfigEntityBase::createDuplicate().
+   */
+  public function createDuplicate() {
+    $duplicate = parent::createDuplicate();
+    unset($duplicate->executable);
+    return $duplicate;
   }
 
   /**
