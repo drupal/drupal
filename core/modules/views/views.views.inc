@@ -98,5 +98,13 @@ function views_views_data() {
     ),
   );
 
+  $data['views']['dropbutton'] = array(
+    'title' => t('Dropbutton'),
+    'help' => t('Display fields in a dropbutton.'),
+    'field' => array(
+      'id' => 'dropbutton',
+    ),
+  );
+
   return $data;
 }

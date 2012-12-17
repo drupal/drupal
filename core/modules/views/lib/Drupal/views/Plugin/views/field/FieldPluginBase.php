@@ -844,14 +844,13 @@ abstract class FieldPluginBase extends HandlerBase {
 
 
       // Get a list of the available fields and arguments for token replacement.
-      $options = array();
-      foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
-        $options[t('Fields')]["[$field]"] = $handler->adminLabel();
-        // We only use fields up to (and including) this one.
-        if ($field == $this->options['id']) {
-          break;
-        }
+
+      // Setup the tokens for fields.
+      $previous = $this->getPreviousFieldLabels();
+      foreach ($previous as $id => $label) {
+        $options[t('Fields')]["[$id]"] = $label;
       }
+
       $count = 0; // This lets us prepare the key as we want it printed.
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
         $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->adminLabel()));
@@ -1070,6 +1069,18 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       '#description' => t('Do not display rewritten content if this field is empty.'),
       '#fieldset' => 'empty_field_behavior',
     );
+  }
+
+  /**
+   * Returns all field lables of fields before this field.
+   *
+   * @return array
+   *   An array of field labels keyed by their field IDs.
+   */
+  protected function getPreviousFieldLabels() {
+    $all_fields = $this->view->display_handler->getFieldLabels();
+    $field_options = array_slice($all_fields, 0, array_search($this->options['id'], array_keys($all_fields)));
+    return $field_options;
   }
 
   /**
