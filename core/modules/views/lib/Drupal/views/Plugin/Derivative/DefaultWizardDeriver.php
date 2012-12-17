@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\Type\DefaultWizardDeriver.
+ * Contains \Drupal\views\Plugin\Derivative\DefaultWizardDeriver.
  */
 
-namespace Drupal\views\Plugin\Type;
+namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeInterface;
 
