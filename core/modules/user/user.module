@@ -959,15 +959,33 @@ function theme_username($variables) {
   return $output;
 }
 
+/**
+ * Determines if the current user is anonymous.
+ *
+ * @return bool
+ *   TRUE if the user is anonymous, FALSE if the user is authenticated.
+ */
 function user_is_anonymous() {
   // Menu administrators can see items for anonymous when administering.
   return !$GLOBALS['user']->uid || !empty($GLOBALS['menu_admin']);
 }
 
+/**
+ * Determines if the current user is logged in.
+ *
+ * @return bool
+ *   TRUE if the user is logged in, FALSE if the user is anonymous.
+ */
 function user_is_logged_in() {
   return (bool) $GLOBALS['user']->uid;
 }
 
+/**
+ * Determines if the current user has access to the user registration page.
+ *
+ * @return bool
+ *   TRUE if the user is not already logged in and can register for an account.
+ */
 function user_register_access() {
   return user_is_anonymous() && (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
 }
