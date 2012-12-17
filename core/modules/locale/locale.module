@@ -944,16 +944,16 @@ function locale_translation_status_save($data) {
  *   Language code(s) to be deleted from the cache.
  */
 function locale_translation_status_delete_languages($langcodes) {
-  $status = state()->get('locale.translation_status');
-
-  foreach ($status as $project => $languages) {
-    foreach ($languages as $langcode => $source) {
-      if (in_array($langcode, $langcodes)) {
-        unset($status[$project][$langcode]);
+  if ($status = state()->get('locale.translation_status')) {
+    foreach ($status as $project => $languages) {
+      foreach ($languages as $langcode => $source) {
+        if (in_array($langcode, $langcodes)) {
+          unset($status[$project][$langcode]);
+        }
       }
     }
+    state()->set('locale.translation_status', $status);
   }
-  state()->set('locale.translation_status', $status);
 }
 
 /**
