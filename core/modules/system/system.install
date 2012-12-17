@@ -2349,6 +2349,19 @@ function system_update_8043() {
 }
 
 /**
+ * Moves system fast 404 settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8044() {
+  update_variables_to_config('system.fast_404', array(
+    '404_fast_html' => 'html',
+    '404_fast_paths' => 'paths',
+    '404_fast_paths_exclude' => 'exclude_paths',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
