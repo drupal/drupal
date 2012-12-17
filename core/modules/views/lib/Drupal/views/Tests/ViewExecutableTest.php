@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\DisplayArray;
 use Drupal\views\Plugin\views\display\DefaultDisplay;
 use Drupal\views\Plugin\views\display\Page;
 
@@ -119,8 +120,7 @@ class ViewExecutableTest extends ViewTestBase {
 
     // Tests Drupal\views\ViewExecutable::initDisplay().
     $view->initDisplay();
-    $count = count($view->displayHandlers);
-    $this->assertEqual($count, 3, format_string('Make sure all display handlers got instantiated (@count of @count_expected)', array('@count' => $count, '@count_expected' => 3)));
+    $this->assertTrue($view->displayHandlers instanceof DisplayArray, 'The displayHandlers property has the right class.');
     // Tests the classes of the instances.
     $this->assertTrue($view->displayHandlers['default'] instanceof DefaultDisplay);
     $this->assertTrue($view->displayHandlers['page'] instanceof Page);

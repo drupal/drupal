@@ -62,7 +62,8 @@ class DisplayTest extends UITestBase {
     // Delete the page, so we can test the undo process.
     $this->drupalPost($path_prefix . '/page_1', array(), 'delete Page');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
-    $this->assertTrue($this->xpath('//a[contains(@class, :class)]', array(':class' => 'views-display-deleted-link')), 'Make sure the display link is marked as to be deleted.');
+    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
+    $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
     // Undo the deleting of the display.
     $this->drupalPost($path_prefix . '/page_1', array(), 'undo delete of Page');

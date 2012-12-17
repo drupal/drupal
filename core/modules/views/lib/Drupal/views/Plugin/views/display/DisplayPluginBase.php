@@ -680,6 +680,29 @@ abstract class DisplayPluginBase extends PluginBase {
   public function usesExposedFormInBlock() { return $this->hasPath(); }
 
   /**
+   * Find out all displays which are attached to this display.
+   *
+   * The method is just using the pure storage object to avoid loading of the
+   * sub displays which would kill lazy loading.
+   */
+  public function getAttachedDisplays() {
+    $current_display_id = $this->display['id'];
+    $attached_displays = array();
+
+    // Go through all displays and search displays which link to this one.
+    foreach ($this->view->storage->get('display') as $display_id => $display) {
+      if (isset($display['display_options']['displays'])) {
+        $displays = $display['display_options']['displays'];
+        if (isset($displays[$current_display_id])) {
+          $attached_displays[] = $display_id;
+        }
+      }
+    }
+
+    return $attached_displays;
+  }
+
+  /**
    * Check to see which display to use when creating links within
    * a view using this display.
    */

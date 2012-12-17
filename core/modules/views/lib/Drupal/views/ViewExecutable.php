@@ -596,22 +596,8 @@ class ViewExecutable {
       return TRUE;
     }
 
-    // Instantiate all displays
-    foreach ($this->storage->get('display') as $id => $display) {
-      $this->displayHandlers[$id] = drupal_container()->get("plugin.manager.views.display")->createInstance($display['display_plugin']);
-      if (!empty($this->displayHandlers[$id])) {
-        // Initialize the new display handler with data.
-        // @todo Refactor display to not need the handler data by reference.
-        $this->displayHandlers[$id]->init($this, $this->storage->getDisplay($id));
-        // If this is NOT the default display handler, let it know which is
-        // since it may well utilize some data from the default.
-        // This assumes that the 'default' handler is always first. It always
-        // is. Make sure of it.
-        if ($id != 'default') {
-          $this->displayHandlers[$id]->default_display =& $this->displayHandlers['default'];
-        }
-      }
-    }
+    // Initialize the display cache array.
+    $this->displayHandlers = new DisplayArray($this);
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers['default'];
@@ -1489,13 +1475,11 @@ class ViewExecutable {
     }
 
     $this->is_attachment = TRUE;
-    // Give other displays an opportunity to attach to the view.
-    foreach ($this->displayHandlers as $id => $display) {
-      if (!empty($this->displayHandlers[$id])) {
-        // Create a clone for the attachments to manipulate. 'static' refers to the current class name.
-        $cloned_view = new static($this->storage);
-        $this->displayHandlers[$id]->attachTo($cloned_view, $this->current_display);
-      }
+    // Find out which other displays attach to the current one.
+    foreach ($this->display_handler->getAttachedDisplays() as $id) {
+      // Create a clone for the attachments to manipulate. 'static' refers to the current class name.
+      $cloned_view = new static($this->storage);
+      $this->displayHandlers[$id]->attachTo($cloned_view, $this->current_display);
     }
     $this->is_attachment = FALSE;
   }
@@ -1832,12 +1816,7 @@ class ViewExecutable {
    * collected.
    */
   public function destroy() {
-    foreach (array_keys($this->displayHandlers) as $display_id) {
-      if (isset($this->displayHandlers[$display_id])) {
-        $this->displayHandlers[$display_id]->destroy();
-        unset($this->displayHandlers[$display_id]);
-      }
-    }
+    unset($this->displayHandlers);
 
     foreach ($this::viewsHandlerTypes() as $type => $info) {
       if (isset($this->$type)) {
@@ -2219,10 +2198,10 @@ class ViewExecutable {
    * @param string $id
    *   The ID for the display being added.
    *
-   * @return Drupal\views\Plugin\views\display\DisplayPluginBase
-   *   A reference to the new handler object.
+   * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
+   *   A new display plugin instance.
    */
-  public function &newDisplay($id) {
+  public function newDisplay($id) {
     // Create a handler.
     $display = $this->storage->get('display');
     $manager = drupal_container()->get("plugin.manager.views.display");
