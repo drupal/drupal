@@ -118,6 +118,16 @@ class FieldInfoTest extends FieldTestBase {
     $this->assertIdentical($instances, $expected, format_string("field_info_instances('user') returns %expected.", array('%expected' => var_export($expected, TRUE))));
     $instances = field_info_instances('user', 'user');
     $this->assertIdentical($instances, array(), "field_info_instances('user', 'user') returns an empty array.");
+
+    // Test that querying for invalid entity types does not add entries in the
+    // list returned by field_info_instances().
+    field_info_cache_clear();
+    field_info_instances('invalid_entity', 'invalid_bundle');
+    // Simulate new request by clearing static caches.
+    drupal_static_reset();
+    field_info_instances('invalid_entity', 'invalid_bundle');
+    $instances = field_info_instances();
+    $this->assertFalse(isset($instances['invalid_entity']), 'field_info_instances() does not contain entries for the invalid entity type that was queried before');
   }
 
   /**

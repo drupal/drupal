@@ -364,9 +364,15 @@ class FieldInfo {
       }
       unset($info['fields']);
 
-      // Save in the "static" cache.
-      $this->bundleInstances[$entity_type][$bundle] = $info['instances'];
-
+      // Store the instance definitions in the "static" cache'. Empty (or
+      // non-existent) bundles are stored separately, so that they do not
+      // pollute the global list returned by getInstances().
+      if ($info['instances']) {
+        $this->bundleInstances[$entity_type][$bundle] = $info['instances'];
+      }
+      else {
+        $this->emptyBundles[$entity_type][$bundle] = TRUE;
+      }
       return $info['instances'];
     }
 
