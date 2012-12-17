@@ -306,6 +306,7 @@ function locale_translation_batch_status_build($projects = array(), $langcodes =
   $batch = array(
     'operations' => $operations,
     'title' => $t('Checking translations'),
+    'progress_message' => '',
     'finished' => 'locale_translation_batch_status_finished',
     'error_message' => $t('Error checking translation updates.'),
     'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',

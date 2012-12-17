@@ -404,7 +404,7 @@ function locale_translate_batch_build($files, $options) {
     $batch = array(
       'operations'    => $operations,
       'title'         => $t('Importing interface translations'),
-      'init_message'  => $t('Starting import'),
+      'progress_message' => '',
       'error_message' => $t('Error importing interface translations'),
       'file'          => drupal_get_path('module', 'locale') . '/locale.bulk.inc',
     );
@@ -433,7 +433,8 @@ function locale_translate_batch_build($files, $options) {
  *     are customized translations or come from a community source. Use
  *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
  *     LOCALE_NOT_CUSTOMIZED.
- *   - 'message': Alternative message to display during import.
+ *   - 'message': Alternative message to display during import. Note, this must
+ *     be sanitized text.
  *
  * @param $context
  *   Contains a list of files imported.
@@ -470,7 +471,7 @@ function locale_translate_batch_import($file, $options, &$context) {
         // http://drupal.org/node/1089472
         $context['finished'] = min(0.95, $report['seek'] / filesize($file->uri));
         if (isset($options['message'])) {
-          $context['message'] = t('@message (@percent%).', array('@message' => $options['message'], '@percent' => (int) ($context['finished'] * 100)));
+          $context['message'] = t('!message (@percent%).', array('!message' => $options['message'], '@percent' => (int) ($context['finished'] * 100)));
         }
         else {
           $context['message'] = t('Importing translation file: %filename (@percent%).', array('%filename' => $file->filename, '@percent' => (int) ($context['finished'] * 100)));
@@ -532,6 +533,7 @@ function locale_translate_batch_import_save($context) {
         locale_translation_update_file_history($file);
       }
     }
+    $context['message'] = t('Translations imported.');
   }
 }
 

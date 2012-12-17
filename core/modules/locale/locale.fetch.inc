@@ -38,7 +38,7 @@ function locale_translation_batch_update_build($projects = array(), $langcodes =
   $batch = array(
     'operations' => $operations,
     'title' => $t('Updating translations'),
-    'init_message' => $t('Downloading and importing translation files.'),
+    'progress_message' => '',
     'error_message' => $t('Error importing translation files'),
     'finished' => 'locale_translation_batch_fetch_finished',
     'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
@@ -68,7 +68,7 @@ function locale_translation_batch_fetch_build($projects = array(), $langcodes = 
   $batch = array(
     'operations' => _locale_translation_fetch_operations($projects, $langcodes, $options),
     'title' => $t('Updating translations.'),
-    'init_message' => $t('Downloading and importing translation files.'),
+    'progress_message' => '',
     'error_message' => $t('Error importing translation files'),
     'finished' => 'locale_translation_batch_fetch_finished',
     'file' => drupal_get_path('module', 'locale') . '/locale.batch.inc',
