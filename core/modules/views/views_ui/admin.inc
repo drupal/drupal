@@ -5,6 +5,7 @@
  * Provides the Views' administrative interface.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\views_ui\ViewUI;
@@ -150,7 +151,7 @@ function views_ui_add_limited_validation($element, &$form_state) {
   $array_parents = $element['#array_parents'];
   array_pop($array_parents);
   $array_parents[] = $element['#views_ui_ajax_data']['trigger_key'];
-  $ajax_triggering_element = drupal_array_get_nested_value($form_state['complete_form'], $array_parents);
+  $ajax_triggering_element = NestedArray::getValue($form_state['complete_form'], $array_parents);
 
   // Limit this button's validation to the AJAX triggering element, so it can
   // update the form for that change without requiring that the rest of the
@@ -188,7 +189,7 @@ function views_ui_add_ajax_wrapper($element, &$form_state) {
     // This was earlier stored in a property on the element.
     $complete_form = &$form_state['complete_form'];
     $refresh_parents = $element['#views_ui_ajax_data']['refresh_parents'];
-    $refresh_element = drupal_array_get_nested_value($complete_form, $refresh_parents);
+    $refresh_element = NestedArray::getValue($complete_form, $refresh_parents);
 
     // The HTML ID that AJAX expects was also stored in a property on the
     // element, so use that information to insert the wrapper <div> here.
@@ -202,7 +203,7 @@ function views_ui_add_ajax_wrapper($element, &$form_state) {
 
     // Copy the element that needs to be refreshed back into the form, with our
     // modifications to it.
-    drupal_array_set_nested_value($complete_form, $refresh_parents, $refresh_element);
+    NestedArray::setValue($complete_form, $refresh_parents, $refresh_element);
   }
 
   return $element;
@@ -218,7 +219,7 @@ function views_ui_ajax_update_form($form, $form_state) {
   // The region that needs to be updated was stored in a property of the
   // triggering element by views_ui_add_ajax_trigger(), so all we have to do is
   // retrieve that here.
-  return drupal_array_get_nested_value($form, $form_state['triggering_element']['#views_ui_ajax_data']['refresh_parents']);
+  return NestedArray::getValue($form, $form_state['triggering_element']['#views_ui_ajax_data']['refresh_parents']);
 }
 
 /**

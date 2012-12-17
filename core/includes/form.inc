@@ -5,6 +5,7 @@
  * Functions for form and batch generation and processing.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Utility\Color;
 use Drupal\Core\Template\Attribute;
 
@@ -1160,9 +1161,9 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
       // If the section exists within $form_state['values'], even if the value
       // is NULL, copy it to $values.
       $section_exists = NULL;
-      $value = drupal_array_get_nested_value($form_state['values'], $section, $section_exists);
+      $value = NestedArray::getValue($form_state['values'], $section, $section_exists);
       if ($section_exists) {
-        drupal_array_set_nested_value($values, $section, $value);
+        NestedArray::setValue($values, $section, $value);
       }
     }
     // A button's #value does not require validation, so for convenience we
@@ -1176,8 +1177,8 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
       // dictated by #parents. If it is, copy it to $values, but do not override
       // what may already be in $values.
       $parents = $form_state['triggering_element']['#parents'];
-      if (!drupal_array_nested_key_exists($values, $parents) && drupal_array_get_nested_value($form_state['values'], $parents) === $button_value) {
-        drupal_array_set_nested_value($values, $parents, $button_value);
+      if (!NestedArray::keyExists($values, $parents) && NestedArray::getValue($form_state['values'], $parents) === $button_value) {
+        NestedArray::setValue($values, $parents, $button_value);
       }
 
       // Additionally, form_builder() places the button value in
@@ -2024,7 +2025,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       // Get the input for the current element. NULL values in the input need to
       // be explicitly distinguished from missing input. (see below)
       $input_exists = NULL;
-      $input = drupal_array_get_nested_value($form_state['input'], $element['#parents'], $input_exists);
+      $input = NestedArray::getValue($form_state['input'], $element['#parents'], $input_exists);
       // For browser-submitted forms, the submitted values do not contain values
       // for certain elements (empty multiple select, unchecked checkbox).
       // During initial form processing, we add explicit NULL values for such
@@ -2037,7 +2038,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       if (!$input_exists && !$form_state['rebuild'] && !$form_state['programmed']) {
         // Add the necessary parent keys to $form_state['input'] and sets the
         // element's input value to NULL.
-        drupal_array_set_nested_value($form_state['input'], $element['#parents'], NULL);
+        NestedArray::setValue($form_state['input'], $element['#parents'], NULL);
         $input_exists = TRUE;
       }
       // If we have input for the current element, assign it to the #value
@@ -2096,7 +2097,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
 
   // Set the element's value in $form_state['values'], but only, if its key
   // does not exist yet (a #value_callback may have already populated it).
-  if (!drupal_array_nested_key_exists($form_state['values'], $element['#parents'])) {
+  if (!NestedArray::keyExists($form_state['values'], $element['#parents'])) {
     form_set_value($element, $element['#value'], $form_state);
   }
 }
@@ -2209,7 +2210,7 @@ function form_state_values_clean(&$form_state) {
     $parents = $button['#parents'];
     $last_parent = array_pop($parents);
     $key_exists = NULL;
-    $values = &drupal_array_get_nested_value($form_state['values'], $parents, $key_exists);
+    $values = &NestedArray::getValue($form_state['values'], $parents, $key_exists);
     if ($key_exists && is_array($values)) {
       unset($values[$last_parent]);
     }
@@ -2550,7 +2551,7 @@ function form_type_token_value($element, $input = FALSE) {
  *   Form state array where the value change should be recorded.
  */
 function form_set_value($element, $value, &$form_state) {
-  drupal_array_set_nested_value($form_state['values'], $element['#parents'], $value, TRUE);
+  NestedArray::setValue($form_state['values'], $element['#parents'], $value, TRUE);
 }
 
 /**
@@ -3637,7 +3638,7 @@ function form_process_machine_name($element, &$form_state) {
   // complete form in $form_state. By reference, because we may need to append
   // a #field_suffix that will hold the live preview.
   $key_exists = NULL;
-  $source = drupal_array_get_nested_value($form_state['complete_form'], $element['#machine_name']['source'], $key_exists);
+  $source = NestedArray::getValue($form_state['complete_form'], $element['#machine_name']['source'], $key_exists);
   if (!$key_exists) {
     return $element;
   }
@@ -3655,7 +3656,7 @@ function form_process_machine_name($element, &$form_state) {
     $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
 
     $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
-    drupal_array_set_nested_value($form_state['complete_form'], $parents, $source['#field_suffix']);
+    NestedArray::setValue($form_state['complete_form'], $parents, $source['#field_suffix']);
   }
 
   $js_settings = array(

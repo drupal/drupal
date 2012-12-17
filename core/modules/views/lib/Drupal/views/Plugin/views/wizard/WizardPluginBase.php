@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -475,7 +476,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // do for a highly dynamic and extensible form. This method is much simpler.
     if (!empty($form_state['input'])) {
       $key_exists = NULL;
-      $submitted = drupal_array_get_nested_value($form_state['input'], $parents, $key_exists);
+      $submitted = NestedArray::getValue($form_state['input'], $parents, $key_exists);
       // Check that the user-submitted value is one of the allowed options before
       // returning it. This is not a substitute for actual form validation;
       // rather it is necessary because, for example, the same select element

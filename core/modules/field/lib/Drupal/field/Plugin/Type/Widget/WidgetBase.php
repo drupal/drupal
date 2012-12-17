@@ -8,6 +8,7 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
 use Drupal\field\FieldInstance;
@@ -319,7 +320,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // Extract the values from $form_state['values'].
     $path = array_merge($form['#parents'], array($field_name, $langcode));
     $key_exists = NULL;
-    $values = drupal_array_get_nested_value($form_state['values'], $path, $key_exists);
+    $values = NestedArray::getValue($form_state['values'], $path, $key_exists);
 
     if ($key_exists) {
       // Remove the 'value' of the 'add more' button.
@@ -371,7 +372,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
 
     if (!empty($field_state['errors'])) {
       // Locate the correct element in the the form.
-      $element = drupal_array_get_nested_value($form_state['complete_form'], $field_state['array_parents']);
+      $element = NestedArray::getValue($form_state['complete_form'], $field_state['array_parents']);
 
       // Only set errors if the element is accessible.
       if (!isset($element['#access']) || $element['#access']) {

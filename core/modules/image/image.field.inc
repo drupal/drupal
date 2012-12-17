@@ -5,6 +5,8 @@
  * Implement an image field, based on the file module's file field.
  */
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Implements hook_field_info().
  */
@@ -384,7 +386,7 @@ function _image_field_required_fields_validate($element, &$form_state) {
     // If the image is not there, we do not check for empty values.
     $parents = $element['#parents'];
     $field = array_pop($parents);
-    $image_field = drupal_array_get_nested_value($form_state['input'], $parents);
+    $image_field = NestedArray::getValue($form_state['input'], $parents);
     // We check for the array key, so that it can be NULL (like if the user
     // submits the form without using the "upload" button).
     if (!array_key_exists($field, $image_field)) {

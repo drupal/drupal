@@ -5,6 +5,8 @@
  * Field forms management.
  */
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Returns HTML for an individual form element.
  *
@@ -124,7 +126,7 @@ function field_add_more_submit($form, &$form_state) {
   $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
-  $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
+  $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
   $field_name = $element['#field_name'];
   $langcode = $element['#language'];
   $parents = $element['#field_parents'];
@@ -149,7 +151,7 @@ function field_add_more_js($form, $form_state) {
   $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
-  $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
+  $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
   $field_name = $element['#field_name'];
   $langcode = $element['#language'];
   $parents = $element['#field_parents'];
@@ -195,7 +197,7 @@ function field_add_more_js($form, $form_state) {
  */
 function field_form_get_state($parents, $field_name, $langcode, &$form_state) {
   $form_state_parents = _field_form_state_parents($parents, $field_name, $langcode);
-  return drupal_array_get_nested_value($form_state, $form_state_parents);
+  return NestedArray::getValue($form_state, $form_state_parents);
 }
 
 /**
@@ -217,7 +219,7 @@ function field_form_get_state($parents, $field_name, $langcode, &$form_state) {
  */
 function field_form_set_state($parents, $field_name, $langcode, &$form_state, $field_state) {
   $form_state_parents = _field_form_state_parents($parents, $field_name, $langcode);
-  drupal_array_set_nested_value($form_state, $form_state_parents, $field_state);
+  NestedArray::setValue($form_state, $form_state_parents, $field_state);
 }
 
 /**

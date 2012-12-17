@@ -5,6 +5,7 @@
  * @{
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\field\FieldUpdateForbiddenException;
 
 /**
@@ -970,7 +971,7 @@ function hook_field_attach_validate($entity_type, $entity, &$errors) {
 function hook_field_attach_submit($entity_type, $entity, $form, &$form_state) {
   // Sample case of an 'Empty the field' checkbox added on the form, allowing
   // a given field to be emptied.
-  $values = drupal_array_get_nested_value($form_state['values'], $form['#parents']);
+  $values = NestedArray::getValue($form_state['values'], $form['#parents']);
   if (!empty($values['empty_field_foo'])) {
     unset($entity->field_foo);
   }

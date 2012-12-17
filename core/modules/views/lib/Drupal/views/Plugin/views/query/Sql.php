@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\query;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -254,7 +255,7 @@ class Sql extends QueryPluginBase {
    */
   public function submitOptionsForm(&$form, &$form_state) {
     $element = array('#parents' => array('query', 'options', 'query_tags'));
-    $value = explode(',', drupal_array_get_nested_value($form_state['values'], $element['#parents']));
+    $value = explode(',', NestedArray::getValue($form_state['values'], $element['#parents']));
     $value = array_filter(array_map('trim', $value));
     form_set_value($element, $value, $form_state);
   }

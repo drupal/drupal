@@ -7,6 +7,8 @@
  * @ingroup views_module_handlers
  */
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Implements hook_views_data().
  *
@@ -29,7 +31,7 @@ function field_views_data() {
     drupal_alter('field_views_data', $result, $field, $module);
 
     if (is_array($result)) {
-      $data = drupal_array_merge_deep($result, $data);
+      $data = NestedArray::mergeDeep($result, $data);
     }
   }
 

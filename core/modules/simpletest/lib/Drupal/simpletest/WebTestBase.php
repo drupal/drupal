@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
@@ -1369,7 +1370,7 @@ abstract class WebTestBase extends TestBase {
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
-            $drupal_settings = drupal_array_merge_deep($drupal_settings, $command['settings']);
+            $drupal_settings = NestedArray::mergeDeep($drupal_settings, $command['settings']);
             break;
 
           case 'insert':
