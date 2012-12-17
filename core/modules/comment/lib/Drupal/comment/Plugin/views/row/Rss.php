@@ -65,10 +65,8 @@ class Rss extends RowPluginBase {
     $this->comments = comment_load_multiple($cids);
     foreach ($this->comments as &$comment) {
       $comment->depth = count(explode('.', $comment->thread)) - 1;
-      $nids[] = $comment->nid;
     }
 
-    $this->nodes = node_load_multiple($nids);
   }
 
   /**
@@ -106,7 +104,7 @@ class Rss extends RowPluginBase {
 
     // Load the specified comment and its associated node:
     $comment = $this->comments[$cid];
-    if (empty($comment) || empty($this->nodes[$comment->nid])) {
+    if (empty($comment)) {
       return;
     }
 
@@ -133,7 +131,7 @@ class Rss extends RowPluginBase {
 
     // The comment gets built and modules add to or modify
     // $comment->rss_elements and $comment->rss_namespaces.
-    $build = comment_view($comment, $this->nodes[$comment->nid], 'rss');
+    $build = comment_view($comment, 'rss');
     unset($build['#theme']);
 
     if (!empty($comment->rss_namespaces)) {
@@ -151,7 +149,7 @@ class Rss extends RowPluginBase {
       $item_text .= drupal_render($build);
     }
 
-    $item = new stdClass();
+    $item = new \stdClass();
     $item->description = $item_text;
     $item->title = $comment->label();
     $item->link = $comment->link;

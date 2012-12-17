@@ -22,6 +22,13 @@ abstract class CommentTestBase extends ViewTestBase {
    */
   public static $modules = array('comment', 'comment_test_views');
 
+  /**
+   * Stores a comment used by the tests.
+   *
+   * @var \Drupal\comment\Plugin\Core\Entity\Comment
+   */
+  public $comment;
+
   function setUp() {
     parent::setUp();
 
@@ -42,7 +49,8 @@ abstract class CommentTestBase extends ViewTestBase {
       'cid' => '',
       'pid' => '',
     );
-    entity_create('comment', $comment)->save();
+    $this->comment = entity_create('comment', $comment);
+    $this->comment->save();
   }
 
 }
