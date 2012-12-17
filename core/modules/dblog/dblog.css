@@ -5,22 +5,15 @@
 
 .form-item-type,
 .form-item-severity {
-  float: left; /* LTR */
-  padding-right: .8em; /* LTR */
-  margin: 0.1em;
-  /**
-   * In Opera 9, DOM elements with the property of "overflow: auto"
-   * will partially hide its contents with unnecessary scrollbars when
-   * its immediate child is floated without an explicit width set.
-   */
-  width: 15em;
-}
-#dblog-filter-form .form-type-select select {
-  width: 100%;
+  display: inline-block;
+  margin-right: 1em; /* LTR */
+  margin-top: 0;
+  max-width: 30%;
 }
 #dblog-filter-form .form-actions {
-  float: left;
-  padding: 3ex 0 0 1em;
+  display: inline-block;
+  padding: 3ex 0 0;
+  vertical-align: top;
 }
 
 tr.dblog-user {
