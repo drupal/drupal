@@ -965,7 +965,7 @@ function template_preprocess_views_exposed_form(&$vars) {
       $checkboxes .= drupal_render($form[$info['value']]);
       continue;
     }
-    $widget = new stdClass;
+    $widget = new stdClass();
     // set up defaults so that there's always something there.
     $widget->label = $widget->operator = $widget->widget = $widget->description = NULL;
 
@@ -989,7 +989,7 @@ function template_preprocess_views_exposed_form(&$vars) {
 
   // Wrap up all the checkboxes we set aside into a widget.
   if ($checkboxes) {
-    $widget = new stdClass;
+    $widget = new stdClass();
     // set up defaults so that there's always something there.
     $widget->label = $widget->operator = $widget->widget = NULL;
     $widget->id = 'checkboxes';
