@@ -301,6 +301,10 @@ function field_test_field_extra_fields_alter(&$info) {
 
 /**
  * Implements hook_module_implements_alter().
+ *
+ * field_test_entity_info_alter() adds the bundles for its entities, and thus
+ * needs to run before rdf_entity_info_alter().
+ * @todo Remove when http://drupal.org/node/1822458 is fixed.
  */
 function field_test_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'entity_info_alter' && isset($implementations['field_test']) && isset($implementations['rdf'])) {
