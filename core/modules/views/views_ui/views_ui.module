@@ -394,7 +394,7 @@ function views_ui_clone_title(ViewUI $view) {
  */
 function views_ui_preprocess_views_view(&$vars) {
   $view = $vars['view'];
-  if (!empty($view->views_ui_context) && module_exists('contextual')) {
+  if (!empty($view->live_preview) && module_exists('contextual')) {
     $view->hide_admin_links = TRUE;
     foreach (array('title', 'header', 'exposed', 'rows', 'pager', 'more', 'footer', 'empty', 'attachment_after', 'attachment_before') as $section) {
       if (!empty($vars[$section])) {
@@ -422,9 +422,9 @@ function views_ui_preprocess_views_view(&$vars) {
  * @param $title
  *   Add a bolded title of this section.
  */
-function views_ui_view_preview_section_handler_links(ViewUI $view, $type, $title = FALSE) {
-  $display = $view->executable->display_handler->display;
-  $handlers = $view->executable->display_handler->getHandlers($type);
+function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type, $title = FALSE) {
+  $display = $view->display_handler->display;
+  $handlers = $view->display_handler->getHandlers($type);
   $links = array();
 
   $types = ViewExecutable::viewsHandlerTypes();
@@ -438,13 +438,13 @@ function views_ui_view_preview_section_handler_links(ViewUI $view, $type, $title
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
-      'href' => "admin/structure/views/nojs/config-item/{$view->get('name')}/{$display['id']}/$type/$id",
+      'href' => "admin/structure/views/nojs/config-item/{$view->storage->get('name')}/{$display['id']}/$type/$id",
       'attributes' => array('class' => array('views-ajax-link')),
     );
   }
   $links[$type . '-add'] = array(
     'title' => t('Add new'),
-    'href' => "admin/structure/views/nojs/add-item/{$view->get('name')}/{$display['id']}/$type",
+    'href' => "admin/structure/views/nojs/add-item/{$view->storage->get('name')}/{$display['id']}/$type",
     'attributes' => array('class' => array('views-ajax-link')),
   );
 
@@ -454,12 +454,12 @@ function views_ui_view_preview_section_handler_links(ViewUI $view, $type, $title
 /**
  * Returns a link to editing a certain display setting.
  */
-function views_ui_view_preview_section_display_category_links(ViewUI $view, $type, $title) {
+function views_ui_view_preview_section_display_category_links(ViewExecutable $view, $type, $title) {
   $display = $view->display_handler->display;
   $links = array(
     $type . '-edit' => array(
       'title' => t('Edit @section', array('@section' => $title)),
-      'href' => "admin/structure/views/nojs/display/{$view->get('name')}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/display/{$view->storage->get('name')}/{$display['id']}/$type",
       'attributes' => array('class' => array('views-ajax-link')),
     ),
   );
@@ -470,8 +470,8 @@ function views_ui_view_preview_section_display_category_links(ViewUI $view, $typ
 /**
  * Returns all contextual links for the main content part of the view.
  */
-function views_ui_view_preview_section_rows_links(ViewUI $view) {
-  $display = $view->executable->display_handler->display;
+function views_ui_view_preview_section_rows_links(ViewExecutable $view) {
+  $display = $view->display_handler->display;
   $links = array();
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'filter', TRUE));
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'field', TRUE));

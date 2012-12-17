@@ -503,7 +503,7 @@ function template_preprocess_views_ui_view_preview_section(&$vars) {
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
       '#attached' => array(
-        'library' => array(array('contextual', 'contextual-links')),
+        'library' => array(array('contextual', 'drupal.contextual-links')),
       ),
     );
     $vars['links'] = drupal_render($build);

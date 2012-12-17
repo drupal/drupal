@@ -28,6 +28,19 @@ class PreviewTest extends UITestBase {
   }
 
   /**
+   * Tests contextual links in the preview form.
+   */
+  protected function testPreviewContextual() {
+    module_enable(array('contextual'));
+    $this->drupalGet('admin/structure/views/view/test_preview/edit');
+    $this->assertResponse(200);
+    $this->drupalPost(NULL, $edit = array(), t('Update preview'));
+
+    $elements = $this->xpath('//div[@id="views-live-preview"]//ul[contains(@class, :ul-class)]/li[contains(@class, :li-class)]', array(':ul-class' => 'contextual-links', ':li-class' => 'filter-add'));
+    $this->assertEqual(count($elements), 1, 'The contextual link to add a new field is shown.');
+  }
+
+  /**
    * Tests arguments in the preview form.
    */
   function testPreviewUI() {
