@@ -69,8 +69,18 @@ class FormatDateTest extends WebTestBase {
     );
     $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
+    // Add a second date format with a different case than the first.
+    $edit = array(
+      'date_format_id' => 'example_style_uppercase',
+      'date_format_name' => 'Example Style Uppercase',
+      'date_format_pattern' => 'j M Y',
+    );
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->assertText(t('Custom date format updated.'));
+
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07', 'Test format_date() using an admin-defined date type.');
+    $this->assertIdentical(format_date($timestamp, 'example_style_uppercase', '', 'America/Los_Angeles'), '9 Mar 2007', 'Test format_date() using an admin-defined date type with different case.');
     $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'medium'), 'Test format_date() defaulting to medium when $type not found.');
   }
 
