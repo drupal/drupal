@@ -194,22 +194,18 @@ function template_preprocess_views_view_fields(&$vars) {
 
       $object->element_type = $object->handler->element_type(TRUE, !$vars['options']['default_field_elements'], $object->inline);
       if ($object->element_type) {
-        $class = '';
+        $attributes = array();
         if ($object->handler->options['element_default_classes']) {
-          $class = 'field-content';
+          $attributes['class'][] = 'field-content';
         }
 
         if ($classes = $object->handler->element_classes($view->row_index)) {
-          if ($class) {
-            $class .= ' ';
-          }
-          $class .=  $classes;
+          $attributes['class'][] = $classes;
         }
+        $attributes = new Attribute($attributes);
 
         $pre = '<' . $object->element_type;
-        if ($class) {
-          $pre .= ' class="' . $class . '"';
-        }
+        $pre .= $attributes;
         $field_output = $pre . '>' . $field_output . '</' . $object->element_type . '>';
       }
 
@@ -244,22 +240,19 @@ function template_preprocess_views_view_fields(&$vars) {
       $object->wrapper_suffix = '';
 
       if ($object->inline_html) {
-        $class = '';
+        $attributes = array();
         if ($object->handler->options['element_default_classes']) {
-          $class = "views-field views-field-" . $object->class;
+          $attributes['class'][] = 'views-field';
+          $attributes['class'][] = 'views-field-' . $object->class;
         }
 
         if ($classes = $object->handler->element_wrapper_classes($view->row_index)) {
-          if ($class) {
-            $class .= ' ';
-          }
-          $class .= $classes;
+          $attributes['class'][] = $classes;
         }
+        $attributes = new Attribute($attributes);
 
         $object->wrapper_prefix = '<' . $object->inline_html;
-        if ($class) {
-          $object->wrapper_prefix .= ' class="' . $class . '"';
-        }
+        $object->wrapper_prefix .= $attributes;
         $object->wrapper_prefix .= '>';
         $object->wrapper_suffix = '</' . $object->inline_html . '>';
       }
@@ -276,24 +269,20 @@ function template_preprocess_views_view_fields(&$vars) {
 
         $object->element_label_type = $object->handler->element_label_type(TRUE, !$vars['options']['default_field_elements']);
         if ($object->element_label_type) {
-          $class = '';
+          $attributes = array();
           if ($object->handler->options['element_default_classes']) {
-            $class = 'views-label views-label-' . $object->class;
+            $attributes['class'][] = 'views-label';
+            $attributes['class'][] = 'views-label-' . $object->class;
           }
 
           $element_label_class = $object->handler->element_label_classes($view->row_index);
           if ($element_label_class) {
-            if ($class) {
-              $class .= ' ';
-            }
-
-            $class .= $element_label_class;
+            $attributes['class'][] = $element_label_class;
           }
+          $attributes = new Attribute($attributes);
 
           $pre = '<' . $object->element_label_type;
-          if ($class) {
-            $pre .= ' class="' . $class . '"';
-          }
+          $pre .= $attributes;
           $pre .= '>';
 
           $object->label_html = $pre . $object->label_html . '</' . $object->element_label_type . '>';
@@ -383,7 +372,6 @@ function template_preprocess_views_view_summary(&$vars) {
   $argument->process_summary_arguments($row_args);
 
   foreach ($vars['rows'] as $id => $row) {
-    $vars['row_classes'][$id] = '';
 
     $vars['rows'][$id]->link = $argument->summary_name($row);
     $args = $view->args;
@@ -395,9 +383,12 @@ function template_preprocess_views_view_summary(&$vars) {
     }
     $vars['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $vars['rows'][$id]->count = intval($row->{$argument->count_alias});
+
+    $vars['row_classes'][$id] = array();
     if (isset($active_urls[$vars['rows'][$id]->url])) {
-      $vars['row_classes'][$id] = 'active';
+      $vars['row_classes'][$id]['class'][] = 'active';
     }
+    $vars['row_classes'][$id] = new Attribute($vars['row_classes'][$id]);
   }
 }
 
@@ -445,9 +436,11 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
     }
     $vars['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $vars['rows'][$id]->count = intval($row->{$argument->count_alias});
+    $vars['row_classes'][$id] = array();
     if (isset($active_urls[$vars['rows'][$id]->url])) {
-      $vars['row_classes'][$id] = 'active';
+      $vars['row_classes'][$id]['class'][] = 'active';
     }
+    $vars['row_classes'][$id] = new Attribute($vars['row_classes'][$id]);
   }
 }
 
@@ -527,26 +520,25 @@ function template_preprocess_views_view_table(&$vars) {
         $vars['header'][$field] = l($label, current_path(), $link_options);
       }
 
-      $vars['header_classes'][$field] = '';
       // Set up the header label class.
+      $vars['header_classes'][$field] = array();
       if ($fields[$field]->options['element_default_classes']) {
-        $vars['header_classes'][$field] .= "views-field views-field-" . $vars['fields'][$field];
+        $vars['header_classes'][$field]['class'][] = 'views-field';
+        $vars['header_classes'][$field]['class'][] = 'views-field-' . $vars['fields'][$field];
       }
+      $vars['header_classes'][$field] = new Attribute($vars['header_classes'][$field]);
       $class = $fields[$field]->element_label_classes(0);
       if ($class) {
-        if ($vars['header_classes'][$field]) {
-          $vars['header_classes'][$field] .= ' ';
-        }
-        $vars['header_classes'][$field] .= $class;
+        $vars['header_classes'][$field]['class'][] = $class;
       }
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
-        $vars['header_classes'][$field] .= ' ' . $options['info'][$field]['responsive'];
+        $vars['header_classes'][$field]['class'][] = $options['info'][$field]['responsive'];
         $responsive = TRUE;
       }
       // Add a CSS align class to each field if one was set
       if (!empty($options['info'][$field]['align'])) {
-        $vars['header_classes'][$field] .= ' ' . drupal_clean_css_identifier($options['info'][$field]['align']);
+        $vars['header_classes'][$field]['class'][] = drupal_clean_css_identifier($options['info'][$field]['align']);
       }
 
       // Add a header label wrapper if one was selected.
@@ -567,23 +559,20 @@ function template_preprocess_views_view_table(&$vars) {
     // Render each field into its appropriate column.
     foreach ($result as $num => $row) {
       // Add field classes
-      $vars['field_classes'][$field][$num] = '';
+      $vars['field_classes'][$field][$num] = array();
       if ($fields[$field]->options['element_default_classes']) {
-        $vars['field_classes'][$field][$num] = "views-field views-field-" . $vars['fields'][$field];
+        $vars['field_classes'][$field][$num]['class'][] = 'views-field';
+        $vars['field_classes'][$field][$num]['class'][] = 'views-field-' . $vars['fields'][$field];
       }
-      if ($classes = $fields[$field]->element_classes($num)) {
-        if ($vars['field_classes'][$field][$num]) {
-          $vars['field_classes'][$field][$num] .= ' ';
-        }
+      $vars['field_classes'][$field][$num] = new Attribute($vars['field_classes'][$field][$num]);
 
-        $vars['field_classes'][$field][$num] .= $classes;
+      if ($classes = $fields[$field]->element_classes($num)) {
+        $vars['field_classes'][$field][$num]['class'][] = $classes;
       }
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
-        $vars['field_classes'][$field][$num] .= ' ' . $options['info'][$field]['responsive'];
+        $vars['field_classes'][$field][$num]['class'][] = $options['info'][$field]['responsive'];
       }
-
-      $vars['field_attributes'][$field][$num] = array();
 
       if (!empty($fields[$field]) && empty($fields[$field]->options['exclude'])) {
         $field_output = $renders[$num][$field];
@@ -635,31 +624,35 @@ function template_preprocess_views_view_table(&$vars) {
   foreach ($vars['rows'] as $num => $row) {
     $vars['row_classes'][$num] = array();
     if ($row_class_special) {
-      $vars['row_classes'][$num][] = ($count++ % 2 == 0) ? 'odd' : 'even';
+      $vars['row_classes'][$num]['class'][] = ($count++ % 2 == 0) ? 'odd' : 'even';
+      if ($num === 0) {
+        $vars['row_classes'][$num]['class'][] = 'views-row-first';
+      }
+      elseif ($num === (count($vars['rows']) - 1)) {
+        $vars['row_classes'][$num]['class'][] = 'views-row-last';
+      }
     }
     if ($row_class = $handler->get_row_class($num)) {
-      $vars['row_classes'][$num][] = $row_class;
+      $vars['row_classes'][$num]['class'][] = $row_class;
     }
+    $vars['row_classes'][$num] = new Attribute($vars['row_classes'][$num]);
   }
 
-  if ($row_class_special) {
-    $vars['row_classes'][0][] = 'views-row-first';
-    $vars['row_classes'][count($vars['row_classes']) - 1][] = 'views-row-last';
-  }
-
-  $vars['attributes']['class'] = array('views-table');
+  $vars['attributes']['class'][] = 'views-table';
   if (empty($vars['rows']) && !empty($options['empty_table'])) {
     $vars['rows'][0][0] = $view->display_handler->renderArea('empty');
     // Calculate the amounts of rows with output.
-    $vars['field_attributes'][0][0]['colspan'] = count($vars['header']);
-    $vars['field_classes'][0][0] = 'views-empty';
+    $vars['field_classes'][0][0] = new Attribute(array(
+      'colspan' => count($vars['header']),
+      'class' => 'views-empty',
+    ));
   }
 
   if (!empty($options['sticky'])) {
     $vars['view']->element['#attached']['library'][] = array('system', 'drupal.tableheader');
     $vars['attributes']['class'][] = "sticky-enabled";
   }
-  $vars['attributes']['class'][] = 'cols-'. count($vars['header']);
+  $vars['attributes']['class'][] = 'cols-' . count($vars['header']);
 
   if (!empty($handler->options['summary'])) {
     $vars['attributes_array'] = array('summary' => $handler->options['summary']);
@@ -752,34 +745,35 @@ function template_preprocess_views_view_grid(&$vars) {
   foreach ($rows as $row_number => $row) {
     $row_classes = array();
     if ($default_row_class) {
-      $row_classes[] =  'row-' . ($row_number + 1);
+      $row_classes['class'][] = 'row-' . ($row_number + 1);
     }
     if ($row_class_special) {
       if ($row_number == 0) {
-        $row_classes[] =  'row-first';
+        $row_classes['class'][] = 'row-first';
       }
       if (count($rows) == ($row_number + 1)) {
-        $row_classes[] =  'row-last';
+        $row_classes['class'][] = 'row-last';
       }
     }
-    $vars['row_classes'][$row_number] = implode(' ', $row_classes);
+    $row_classes = new Attribute($row_classes);
+
     foreach ($rows[$row_number] as $column_number => $item) {
-      $column_classes = array();
+      $vars['column_classes'][$row_number][$column_number] = array();
       if ($default_row_class) {
-        $column_classes[] = 'col-'. ($column_number + 1);
+        $vars['column_classes'][$row_number][$column_number]['class'][] = 'col-' . ($column_number + 1);
       }
       if ($row_class_special) {
         if ($column_number == 0) {
-          $column_classes[] = 'col-first';
+          $vars['column_classes'][$row_number][$column_number]['class'][] = 'col-first';
         }
         elseif (count($rows[$row_number]) == ($column_number + 1)) {
-          $column_classes[] = 'col-last';
+          $vars['column_classes'][$row_number][$column_number]['class'][] = 'col-last';
         }
       }
       if (isset($row_indexes[$row_number][$column_number]) && $column_class = $view->style_plugin->get_row_class($row_indexes[$row_number][$column_number])) {
-        $column_classes[] = $column_class;
+        $vars['column_classes'][$row_number][$column_number]['class'][] = $column_class;
       }
-      $vars['column_classes'][$row_number][$column_number] = implode(' ', $column_classes);
+      $vars['column_classes'][$row_number][$column_number] = new Attribute($vars['column_classes'][$row_number][$column_number]);
     }
   }
   $vars['rows'] = $rows;
@@ -814,27 +808,26 @@ function template_preprocess_views_view_unformatted(&$vars) {
   $count = 0;
   $max = count($rows);
   foreach ($rows as $id => $row) {
+    $vars['row_classes'][$id] = array();
     $count++;
     if ($default_row_class) {
-      $vars['classes'][$id][] = 'views-row';
-      $vars['classes'][$id][] = 'views-row-' . $count;
+      $vars['row_classes'][$id]['class'][] = 'views-row';
+      $vars['row_classes'][$id]['class'][] = 'views-row-' . $count;
     }
     if ($row_class_special) {
-      $vars['classes'][$id][] = 'views-row-' . ($count % 2 ? 'odd' : 'even');
+      $vars['row_classes'][$id]['class'][] = 'views-row-' . ($count % 2 ? 'odd' : 'even');
       if ($count == 1) {
-        $vars['classes'][$id][] = 'views-row-first';
+        $vars['row_classes'][$id]['class'][] = 'views-row-first';
       }
       if ($count == $max) {
-        $vars['classes'][$id][] = 'views-row-last';
+        $vars['row_classes'][$id]['class'][] = 'views-row-last';
       }
     }
 
     if ($row_class = $view->style_plugin->get_row_class($id)) {
-      $vars['classes'][$id][] = $row_class;
+      $vars['row_classes'][$id]['class'][] = $row_class;
     }
-
-    // Flatten the classes to a string for each row for the template file.
-    $vars['row_classes'][$id] = isset($vars['classes'][$id]) ? implode(' ', $vars['classes'][$id]) : '';
+    $vars['row_classes'][$id] = new Attribute($vars['row_classes'][$id]);
   }
 }
 
@@ -844,26 +837,27 @@ function template_preprocess_views_view_unformatted(&$vars) {
 function template_preprocess_views_view_list(&$vars) {
   $handler  = $vars['view']->style_plugin;
 
+  // Fetch classes from handler options.
   $class = explode(' ', $handler->options['class']);
   $class = array_map('drupal_clean_css_identifier', $class);
 
+  // Fetch wrapper classes from handler options.
   $wrapper_class = explode(' ', $handler->options['wrapper_class']);
   $wrapper_class = array_map('drupal_clean_css_identifier', $wrapper_class);
 
-  $vars['class'] = implode(' ', $class);
-  $vars['wrapper_class'] = implode(' ', $wrapper_class);
-  $vars['wrapper_prefix'] = '';
-  $vars['wrapper_suffix'] = '';
-  $vars['list_type_prefix'] = '<' . $handler->options['type'] . '>';
-  $vars['list_type_suffix'] = '</' . $handler->options['type'] . '>';
-  if ($vars['wrapper_class']) {
-    $vars['wrapper_prefix'] = '<div class="' . $vars['wrapper_class'] . '">';
+  // Initialize a new attribute class for $class.
+  $attributes = new Attribute(array('class' => $class));
+
+  // Initialize a new attribute class for $wrapper_class.
+  if ($wrapper_class) {
+    $wrapper_class = new Attribute(array('class' => $wrapper_class));
+    $vars['wrapper_prefix'] = '<div' . $wrapper_class . '>';
     $vars['wrapper_suffix'] = '</div>';
   }
 
-  if ($vars['class']) {
-    $vars['list_type_prefix'] = '<' . $handler->options['type'] . ' class="' . $vars['class'] . '">';
-  }
+  $vars['list_type_prefix'] = '<' . $handler->options['type'] . $attributes . '>';
+  $vars['list_type_suffix'] = '</' . $handler->options['type'] . '>';
+
   template_preprocess_views_view_unformatted($vars);
 }
 

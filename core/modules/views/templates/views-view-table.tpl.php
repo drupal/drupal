@@ -18,8 +18,6 @@
  * @ingroup views_templates
  */
 
-use Drupal\Core\Template\Attribute;
-
 ?>
 <table <?php print $attributes; ?>>
   <?php if (!empty($title)) : ?>
@@ -29,7 +27,7 @@ use Drupal\Core\Template\Attribute;
     <thead>
       <tr>
         <?php foreach ($header as $field => $label): ?>
-          <th <?php if ($header_classes[$field]) { print 'class="'. $header_classes[$field] . '" '; } ?> scope="col">
+          <th <?php print $header_classes[$field]; ?> scope="col">
             <?php print $label; ?>
           </th>
         <?php endforeach; ?>
@@ -38,9 +36,9 @@ use Drupal\Core\Template\Attribute;
   <?php endif; ?>
   <tbody>
     <?php foreach ($rows as $row_count => $row): ?>
-      <tr <?php if ($row_classes[$row_count]) { print 'class="' . implode(' ', $row_classes[$row_count]) .'"';  } ?>>
+      <tr <?php print $row_classes[$row_count]; ?>>
         <?php foreach ($row as $field => $content): ?>
-          <td <?php if ($field_classes[$field][$row_count]) { print 'class="'. $field_classes[$field][$row_count] . '" '; } ?><?php print new Attribute($field_attributes[$field][$row_count]); ?>>
+          <td <?php print $field_classes[$field][$row_count]; ?>>
             <?php print $content; ?>
           </td>
         <?php endforeach; ?>

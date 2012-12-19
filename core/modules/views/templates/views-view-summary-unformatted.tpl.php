@@ -11,8 +11,8 @@
 ?>
 <?php foreach ($rows as $id => $row): ?>
   <?php print (!empty($options['inline']) ? '<span' : '<div') . ' class="views-summary views-summary-unformatted">'; ?>
-    <?php if (!empty($row->separator)) { print $row->separator; } ?>
-    <a href="<?php print $row->url; ?>"<?php print !empty($row_classes[$id]) ? ' class="' . $row_classes[$id] . '"' : ''; ?>><?php print $row->link; ?></a>
+    <?php if (!empty($row->separator)): ?><? print $row->separator; ?><?php endif; ?>
+    <a href="<?php print $row->url; ?>"<?php print $row_classes[$id]; ?>><?php print $row->link; ?></a>
     <?php if (!empty($options['count'])): ?>
       (<?php print $row->count; ?>)
     <?php endif; ?>
