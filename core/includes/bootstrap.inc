@@ -217,18 +217,6 @@ const LANGUAGE_NOT_SPECIFIED = 'und';
 const LANGUAGE_NOT_APPLICABLE = 'zxx';
 
 /**
- * The language code used when multiple languages could be applied.
- *
- * Should be used when individual parts of the data cannot be marked with
- * language, but we know there are multiple languages involved. Such as a
- * PDF file for an electronic appliance, which has usage manuals in 8
- * languages but is uploaded as one file in Drupal.
- *
- * Defined by ISO639-2 for "Multiple languages".
- */
-const LANGUAGE_MULTIPLE = 'mul';
-
-/**
  * Language code referring to the default language of data, e.g. of an entity.
  *
  * @todo: Change value to differ from LANGUAGE_NOT_SPECIFIED once field API
@@ -2761,11 +2749,6 @@ function language_default_locked_languages($weight = 0) {
   $languages[LANGUAGE_NOT_APPLICABLE] = new Language(array(
     'langcode' => LANGUAGE_NOT_APPLICABLE,
     'name' => t('Not applicable'),
-    'weight' => ++$weight,
-  ) + $locked_language);
-  $languages[LANGUAGE_MULTIPLE] = new Language(array(
-    'langcode' => LANGUAGE_MULTIPLE,
-    'name' => t('Multiple'),
     'weight' => ++$weight,
   ) + $locked_language);
   return $languages;

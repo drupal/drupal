@@ -40,9 +40,6 @@ function language_admin_overview_form($form, &$form_state) {
       case LANGUAGE_NOT_SPECIFIED:
         $description = t('Use this when the language is not (yet) known.');
         break;
-      case LANGUAGE_MULTIPLE:
-        $description = t('Use this when multiple languages can be assigned, such as a multilingual PDF.');
-        break;
     }
     if (!empty($description)) {
       $title .= '<div class="description">' . $description . '</div>';

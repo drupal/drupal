@@ -177,8 +177,8 @@ class LanguageListTest extends WebTestBase {
     language_save(new Language(array('name' => $this->randomName(), 'langcode' => 'l2', 'locked' => TRUE)));
     language_save(new Language(array('name' => $this->randomName(), 'langcode' => 'l3')));
     language_save(new Language(array('name' => $this->randomName(), 'langcode' => 'l4', 'locked' => TRUE)));
-    $expected_locked_languages = array('l4' => 'l4', 'l2' => 'l2', 'und' => 'und', 'zxx' => 'zxx', 'mul' => 'mul');
-    $expected_all_languages = array('l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx', 'mul' => 'mul');
+    $expected_locked_languages = array('l4' => 'l4', 'l2' => 'l2', 'und' => 'und', 'zxx' => 'zxx');
+    $expected_all_languages = array('l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx');
     $expected_conf_languages = array('l3' => 'l3', 'l1' => 'l1', 'en' => 'en');
 
     $locked_languages = language_list(LANGUAGE_LOCKED);
