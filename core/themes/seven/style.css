@@ -1006,23 +1006,29 @@ div.add-or-remove-shortcuts {
 #system-modules .fieldset-wrapper {
   padding: 0;
 }
-#system-modules table {
+#system-modules table,
+#locale-translation-status-form table {
   border: 0;
 }
 #system-modules tr.even,
-#system-modules tr.odd {
+#system-modules tr.odd,
+#locale-translation-status-form tr.even,
+#locale-translation-status-form tr.odd {
   background: #f3f4ee;
   border: 0;
   border-bottom: 10px solid #fff;
 }
-#system-modules tr td:last-child {
+#system-modules tr td:last-child,
+#locale-translation-status-form tr td:last-child {
   border: 0;
 }
-#system-modules table th {
+#system-modules table th,
+#locale-translation-status-form table th {
   border: 0;
   border-bottom: 10px solid #fff;
 }
-#system-modules .sticky-header th {
+#system-modules .sticky-header th,
+#locale-translation-status-form .sticky-header th {
   border: 0;
 }
 /* Recent content block */

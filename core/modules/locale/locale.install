@@ -283,6 +283,70 @@ function locale_schema() {
 }
 
 /**
+ * Implements hook_requirements().
+ */
+function locale_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    $available_updates = array();
+    $updates_not_found = array();
+    $languages = locale_translatable_language_list();
+
+    if ($languages) {
+      // Determine the status of the translation updates per lanuage.
+      $status = state()->get('locale.translation_status');
+      if ($status) {
+        foreach ($status as $project_id => $project) {
+          foreach ($project as $langcode => $project_info) {
+            if (!isset($project_info->type)) {
+              $updates_not_found[$langcode] = $languages[$langcode]->name;
+            }
+            elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
+              $available_updates[$langcode] = $languages[$langcode]->name;
+            }
+          }
+        }
+
+        if ($available_updates || $updates_not_found) {
+          if ($available_updates) {
+            $requirements['locale_translation'] = array(
+              'title' => 'Translation update status',
+              'value' => l(t('Updates available'), 'admin/reports/translations'),
+              'severity' => REQUIREMENT_WARNING,
+              'description' => t('Updates available for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $available_updates), '@updates' => url('admin/reports/translations'))),
+            );
+          }
+          else {
+            $requirements['locale_translation'] = array(
+              'title' => 'Translation update status',
+              'value' => t('Missing translations'),
+              'severity' => REQUIREMENT_INFO,
+              'description' => t('Missing translations for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => implode(', ', $updates_not_found), '@updates' => url('admin/reports/translations'))),
+            );
+          }
+        }
+        else {
+          $requirements['locale_translation'] = array(
+            'title' => 'Translation update status',
+            'value' => t('Up to date'),
+            'severity' => REQUIREMENT_OK,
+          );
+        }
+      }
+      else {
+        $requirements['locale_translation'] = array(
+          'title' => 'Translation update status',
+          'value' => l(t('Can not determine status'), 'admin/reports/translations'),
+          'severity' => REQUIREMENT_WARNING,
+          'description' => t('No translation status is available. See the <a href="@updates">Available translation updates</a> page for more information.', array('@updates' => url('admin/reports/translations'))),
+        );
+      }
+    }
+  }
+  return $requirements;
+}
+
+/**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */

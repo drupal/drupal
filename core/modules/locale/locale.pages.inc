@@ -596,41 +596,125 @@ function locale_translate_settings_submit($form, &$form_state) {
  * @see locale_menu()
  */
 function locale_translation_status_form($form, &$form_state) {
+  module_load_include('translation.inc', 'locale');
   module_load_include('compare.inc', 'locale');
+  $updates = $options = array();
+  $languages_update = $languages_not_found = array();
 
+  // @todo Calling locale_translation_build_projects() is an expensive way to
+  //   get a module name. In follow-up issue http://drupal.org/node/1842362
+  //   the project name will be stored to display use, like here.
+  $project_data = locale_translation_build_projects();
   $languages = locale_translatable_language_list();
+  $projects = locale_translation_get_projects();
   $status = state()->get('locale.translation_status');
 
-  if (!$languages) {
-    drupal_set_message(t('No translatable languages available. <a href="@add_lanuage">Add language</a> first.', array('@add_lanuage' => url('admin/config/regional/language'))), 'warning');
+  // Prepare information about projects which have available translation
+  // updates.
+  if ($languages && $status) {
+    foreach ($status as $project_id => $project) {
+      foreach ($project as $langcode => $project_info) {
+        // No translation file found for this project-language combination.
+        if (!isset($project_info->type)) {
+          $updates[$langcode]['not_found'][] = array(
+            'name' => $project_info->name == 'drupal' ? t('Drupal core') : $project_data[$project_info->name]->info['name'],
+            'version' => $project_info->version,
+            'info' => _locale_translation_status_debug_info($project_info),
+          );
+          $languages_not_found[$langcode] = $langcode;
+        }
+        // Translation update found for this project-language combination.
+        elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE ) {
+          $local = isset($project_info->files[LOCALE_TRANSLATION_LOCAL]) ? $project_info->files[LOCALE_TRANSLATION_LOCAL] : NULL;
+          $remote = isset($project_info->files[LOCALE_TRANSLATION_REMOTE]) ? $project_info->files[LOCALE_TRANSLATION_REMOTE] : NULL;
+          $recent = _locale_translation_source_compare($local, $remote) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $remote : $local;
+          $updates[$langcode]['updates'][] = array(
+            'name' => $project_data[$project_info->name]->info['name'],
+            'version' => $project_info->version,
+            'timestamp' => $recent->timestamp,
+          );
+          $languages_update[$langcode] = $langcode;
+        }
+      }
+    }
+    $languages_not_found = array_diff($languages_not_found, $languages_update);
+
+    // Build data options for the select table.
+    foreach($updates as $langcode => $update) {
+      $options[$langcode] = array(
+        'title' => check_plain($languages[$langcode]->name),
+        'status' => array('class' => array('description', 'expand', 'priority-low'), 'data' => theme('locale_translation_update_info', $update)),
+      );
+    }
+    // Sort the table data on language name.
+    uasort($options, 'drupal_sort_title');
   }
 
-  $last = state()->get('locale.translation_last_checked');
-  $markup = '<div class="locale checked">';
-  $markup .= $last ? t('Last checked: @time ago', array('@time' => format_interval(REQUEST_TIME - $last))) : t('Last checked: never');
-  $markup .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/translations/check', array('query' => drupal_get_destination())) . ')</span>';
-  $markup .= "</div>\n";
+  $last_checked = state()->get('locale.translation_last_checked');
   $form['last_checked'] = array(
-    '#markup' => '<p>' . $markup . '</p>',
+    '#markup' => '<p>' . theme('locale_translation_last_check', array('last' => $last_checked)) . '</p>',
   );
+
+  $header = array(
+    'title' => array(
+      'data' => t('Language'),
+      'class' => array('title'),
+    ),
+    'status' => array(
+      'data' => t('Status'),
+      'class' => array('status', 'priority-low'),
+    ),
+  );
+
+  if (!$languages) {
+    $empty = t('No translatable languages available. <a href="@add_language">Add a language</a> first.', array('@add_language' => url('admin/config/regional/language')));
+  }
+  elseif ($status) {
+    $empty = t('All translations up to date.');
+  }
+  else  {
+    $empty = t('No translation status available. <a href="@check">Check manually</a>.', array('@check' => url('admin/reports/translations/check')));
+  }
 
   $form['langcodes'] = array(
-    '#type' => 'value',
-    '#value' => drupal_map_assoc(array_keys($languages)),
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#default_value' => $languages_update,
+    '#empty' => $empty,
+    '#js_select' => TRUE,
+    '#multiple' => TRUE,
+    '#required' => TRUE,
+    '#not_found' => $languages_not_found,
+    '#after_build' => array('locale_translation_language_table'),
   );
 
-  $form['actions'] = array(
-    '#type' => 'actions'
-  );
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Update')
-  );
+  $form['#attached']['library'][] = array('locale', 'drupal.locale.admin');
+  $form['#attached']['css'] = array(drupal_get_path('module', 'locale') . '/locale.admin.css');
+
+  $form['actions'] = array('#type' => 'actions');
+  if ($languages_update) {
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Update translations'),
+    );
+  }
+
   return $form;
 }
 
 /**
- * Form submission handler for locale_translation_status().
+ * Form validation handler for locale_translation_status_form().
+ */
+function locale_translation_status_form_validate($form, &$form_state) {
+  // Check if a language has been selected. 'tableselect' doesn't.
+  if (!array_filter($form_state['values']['langcodes'])) {
+    form_set_error('', t('Select a language to update.'));
+  }
+}
+
+/**
+ * Form submission handler for locale_translation_status_form().
  */
 function locale_translation_status_form_submit($form, &$form_state) {
   module_load_include('fetch.inc', 'locale');
@@ -656,7 +740,74 @@ function locale_translation_status_form_submit($form, &$form_state) {
 }
 
 /**
- * Default theme function for translation edit form.
+ * Form element callback: After build changes to the language update table.
+ *
+ * Adds labels to the languages and removes checkboxes from languages from which
+ * translation files could not be found.
+ */
+function locale_translation_language_table($form_element) {
+  // Add labels to Language names.
+  foreach ($form_element['#options'] as $langcode => $option) {
+    $id = $form_element[$langcode]['#id'];
+    $title = $option['title'];
+    $form_element['#options'][$langcode]['title'] = '<label for="' . $form_element[$langcode]['#id'] . '" class="language-name">' . $title . '</label>';
+  }
+
+  // Remove checkboxes of languages without updates.
+  if ($form_element['#not_found']) {
+    foreach ($form_element['#not_found'] as $langcode) {
+      $form_element[$langcode] = array();
+    }
+  }
+  return $form_element;
+}
+
+/**
+ * Provides debug info for projects in case translation files are not found.
+ *
+ * Translations files are being fetched either from Drupal translation server
+ * and local files or only from the local filesystem depending on the
+ * "Translation source" setting at admin/config/regional/translate/settings.
+ * This method will produce debug information including the respective path(s)
+ * based on this setting.
+ *
+ * Translations for development versions are never fetched, so the debug info
+ * for that is a fixed message.
+ *
+ * @param array $source
+ *   An array which is the project information of the source.
+ *
+ * @return string
+ *   The string which contains debug information.
+ */
+function _locale_translation_status_debug_info($source) {
+  $remote_path = isset($source->files['remote']->uri) ? $source->files['remote']->uri : '';
+  $local_path = isset($source->files['local']->uri) ? $source->files['local']->uri : '';
+
+  if (strpos($source->version, 'dev') !== FALSE) {
+    return t('No translation files are provided for development releases.');
+  }
+  if (locale_translation_use_remote_source() && $remote_path && $local_path) {
+    return t('File not found at %remote_path nor at %local_path', array(
+      '%remote_path' => $remote_path,
+      '%local_path' => $local_path,
+    ));
+  }
+  elseif ($local_path) {
+    return t('File not found at %local_path', array('%local_path' => $local_path));
+  }
+  return t('Translation file location could not be determined.');
+}
+
+/**
+ * Returns HTML for translation edit form.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: The form that contains the language information.
+ *
+ * @see locale_translate_edit_form()
+ * @ingroup themeable
  */
 function theme_locale_translate_edit_form_strings($variables) {
   $output = '';
@@ -687,5 +838,80 @@ function theme_locale_translate_edit_form_strings($variables) {
     'attributes' => array('class' => array('locale-translate-edit-table')),
   ));
   $output .= theme('pager');
+  return $output;
+}
+
+/**
+ * Returns HTML for translation status information per language.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - updates: The projects which have updates.
+ *   - not_found: The projects which updates are not found.
+ *
+ * @see locale_translation_status_form()
+ * @ingroup themeable
+ */
+function theme_locale_translation_update_info($variables) {
+  $description = $details = '';
+
+  // Build output for available updates.
+  if (isset($variables['updates'])) {
+    if ($variables['updates']) {
+      $releases = array();
+      foreach ($variables['updates'] as $update) {
+        $modules[] = $update['name'];
+        $releases[] = t('@module (@date)', array('@module' => $update['name'], '@date' => format_date($update['timestamp'], 'html_date')));
+      }
+    }
+    $description = '<span class="text">' . t('Updates for: @modules', array('@modules' => implode(', ', $modules))) . '</span>';
+    $details = theme('item_list', array('items' => $releases));
+  }
+
+  // Build output for updates not found.
+  if (isset($variables['not_found'])) {
+    if (empty($description)) {
+      $description = '<span class="text">' . format_plural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects') . '</span>';
+    }
+    if ($variables['not_found']) {
+      $releases = array();
+      foreach ($variables['not_found'] as $update) {
+        $version = $update['version'] ? $update['version'] : t('no version');
+        $releases[] = t('@module (@version).', array('@module' => $update['name'], '@version' => $version)) . ' ' . $update['info'];
+      }
+    }
+    if ($details) {
+      $details .= t('Missing translations for:');
+    }
+    $details .= theme('item_list', array('items' => $releases));
+  }
+
+  $output = '<div class="inner" tabindex="0" role="button">';
+  $output .= '<span class="update-description-prefix element-invisible">Show description</span>' . $description;
+  $output .= $details ? '<div class="details">' . $details . '</div>' : '';
+  $output .= '</div>';
+  return $output;
+}
+
+/**
+ * Returns HTML for the last time we checked for update data.
+ *
+ * In addition to properly formatting the given timestamp, this function also
+ * provides a "Check manually" link that refreshes the available update and
+ * redirects back to the same page.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - last: The timestamp when the site last checked for available updates.
+ *
+ * @see locale_translation_status_form()
+ * @ingroup themeable
+ */
+function theme_locale_translation_last_check($variables) {
+  $last = $variables['last'];
+  $output = '<div class="locale checked">';
+  $output .= $last ? t('Last checked: @time ago', array('@time' => format_interval(REQUEST_TIME - $last))) : t('Last checked: never');
+  $output .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/translations/check', array('query' => drupal_get_destination())) . ')</span>';
+  $output .= "</div>\n";
   return $output;
 }
