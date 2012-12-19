@@ -25,7 +25,7 @@ class DependencyTest extends ModuleTestBase {
   function testEnableWithoutDependency() {
     // Attempt to enable Entity Translation without Language enabled.
     $edit = array();
-    $edit['modules[Core][translation_entity][enable]'] = 'translation_entity';
+    $edit['modules[Multilingual][translation_entity][enable]'] = 'translation_entity';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), 'Dependency required.');
 
