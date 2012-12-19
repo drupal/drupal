@@ -314,10 +314,10 @@ function upload_nodeapi(&$node, $op, $teaser = NULL) {
       break;
 
     case 'search result':
-      return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
+      return isset($node->files) && is_array($node->files) && user_access('view uploaded files') ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
 
     case 'rss item':
-      if (is_array($node->files)) {
+      if (is_array($node->files) && user_access('view uploaded files')) {
         $files = array();
         foreach ($node->files as $file) {
           if ($file->list) {

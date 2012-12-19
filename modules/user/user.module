@@ -599,14 +599,17 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
         // Replace wildcards with MySQL/PostgreSQL wildcards.
         $keys = preg_replace('!\*+!', '%', $keys);
         if (user_access('administer users')) {
-          // Administrators can also search in the otherwise private email field.
+          // Administrators can also search in the otherwise private email
+          // field, and they don't need to be restricted to only active users.
           $result = pager_query("SELECT name, uid, mail FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%') OR LOWER(mail) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys, $keys);
           while ($account = db_fetch_object($result)) {
             $find[] = array('title' => $account->name .' ('. $account->mail .')', 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));
           }
         }
         else {
-          $result = pager_query("SELECT name, uid FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
+          // Regular users can only search via user names, and we do not show
+          // them blocked accounts.
+          $result = pager_query("SELECT name, uid FROM {users} WHERE status = 1 AND LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
           while ($account = db_fetch_object($result)) {
             $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));
           }

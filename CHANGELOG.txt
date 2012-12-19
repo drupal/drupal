@@ -1,6 +1,7 @@
 
-Drupal 6.27-dev, xxxx-xx-xx (development release)
+Drupal 6.27, 2012-12-19
 ----------------------
+- Fixed security issues (multiple vulnerabilities), see SA-CORE-2012-004.
 
 Drupal 6.26, 2012-05-02
 ----------------------
