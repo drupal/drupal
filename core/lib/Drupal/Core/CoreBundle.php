@@ -152,6 +152,25 @@ class CoreBundle extends Bundle {
     $container->register('nested_matcher', 'Drupal\Core\Routing\NestedMatcher')
       ->addTag('chained_matcher', array('priority' => 5));
 
+    $container->register('router.request_context', 'Symfony\Component\Routing\RequestContext')
+            ->addMethodCall('fromRequest', array(new Reference('request')));
+    $container->register('router.route_provider', 'Drupal\Core\Routing\RouteProvider')
+      ->addArgument(new Reference('database'));
+    $container->register('router.matcher.final_matcher', 'Drupal\Core\Routing\UrlMatcher')
+      ->addArgument(NULL)
+      ->addArgument(NULL);
+    $container->register('router.matcher', 'Symfony\Cmf\Routing\NestedMatcher\NestedMatcher')
+      ->addArgument(new Reference('router.route_provider'))
+      ->addMethodCall('setFinalMatcher', array(new Reference('router.matcher.final_matcher')));
+    $container->register('router.generator', 'Symfony\Cmf\Routing\ProviderBasedGenerator')
+      ->addArgument(new Reference('router.route_provider'));
+    $container->register('router.dynamic', 'Symfony\Cmf\Routing\DynamicRouter')
+      ->addArgument(new Reference('router.request_context'))
+      ->addArgument(new Reference('router.matcher'))
+      ->addArgument(new Reference('router.generator'));
+    $container->register('router', 'Symfony\Cmf\Routing\ChainRouter')
+      ->addMethodCall('add', array(new Reference('router.dynamic')));
+
     $container
       ->register('cache.path', 'Drupal\Core\Cache\CacheBackendInterface')
       ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
