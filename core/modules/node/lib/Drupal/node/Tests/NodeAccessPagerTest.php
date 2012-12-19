@@ -88,7 +88,7 @@ class NodeAccessPagerTest extends WebTestBase {
         'type' => 'forum',
         'taxonomy_forums' => array(
           LANGUAGE_NOT_SPECIFIED => array(
-            array('tid' => $tid, 'vid' => $vid, 'vocabulary_machine_name' => 'forums'),
+            array('tid' => $tid, 'vid' => $vid),
           ),
         ),
       ));

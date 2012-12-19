@@ -28,13 +28,13 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->langcode = LANGUAGE_NOT_SPECIFIED;
 
     $field = array(
-      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'field_name' => 'taxonomy_' . $this->vocabulary->id(),
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $this->vocabulary->machine_name,
+            'vocabulary' => $this->vocabulary->id(),
             'parent' => 0,
           ),
         ),
@@ -43,7 +43,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     field_create_field($field);
 
     $this->instance = array(
-      'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,
+      'field_name' => 'taxonomy_' . $this->vocabulary->id(),
       'bundle' => 'article',
       'entity_type' => 'node',
       'widget' => array(
@@ -128,7 +128,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
 
     // Generate and test sanitized tokens.
     $tests = array();
-    $tests['[vocabulary:vid]'] = $this->vocabulary->vid;
+    $tests['[vocabulary:vid]'] = $this->vocabulary->id();
     $tests['[vocabulary:name]'] = check_plain($this->vocabulary->name);
     $tests['[vocabulary:description]'] = filter_xss($this->vocabulary->description);
     $tests['[vocabulary:node-count]'] = 1;

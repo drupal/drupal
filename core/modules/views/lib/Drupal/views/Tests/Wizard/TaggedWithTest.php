@@ -48,7 +48,7 @@ class TaggedWithTest extends WizardTestBase {
     // Create the vocabulary for the tag field.
     $this->tag_vocabulary = entity_create('taxonomy_vocabulary',  array(
       'name' => 'Views testing tags',
-      'machine_name' => 'views_testing_tags',
+      'vid' => 'views_testing_tags',
     ));
     $this->tag_vocabulary->save();
 
@@ -60,7 +60,7 @@ class TaggedWithTest extends WizardTestBase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $this->tag_vocabulary->machine_name,
+            'vocabulary' => $this->tag_vocabulary->id(),
             'parent' => 0,
           ),
         ),

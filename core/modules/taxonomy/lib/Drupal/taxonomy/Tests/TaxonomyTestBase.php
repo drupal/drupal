@@ -38,13 +38,12 @@ abstract class TaxonomyTestBase extends WebTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'description' => $this->randomName(),
-      'machine_name' => drupal_strtolower($this->randomName()),
+      'vid' => drupal_strtolower($this->randomName()),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'help' => '',
-      'nodes' => array('article' => 'article'),
       'weight' => mt_rand(0, 10),
     ));
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
     return $vocabulary;
   }
 
@@ -57,7 +56,7 @@ abstract class TaxonomyTestBase extends WebTestBase {
       'description' => $this->randomName(),
       // Use the first available text format.
       'format' => db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField(),
-      'vid' => $vocabulary->vid,
+      'vid' => $vocabulary->id(),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
     taxonomy_term_save($term);

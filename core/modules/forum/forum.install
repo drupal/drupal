@@ -37,12 +37,12 @@ function forum_enable() {
   if (!$vocabulary) {
     // If the module was installed and uninstalled previously, the vocabulary
     // with machine name 'forums' might still exist.
-    $vocabulary = taxonomy_vocabulary_machine_name_load('forums');
+    $vocabulary = taxonomy_vocabulary_load('forums');
     if (!$vocabulary) {
       // Otherwise, installing from scratch; create the vocabulary.
       $vocabulary = entity_create('taxonomy_vocabulary', array(
         'name' => t('Forums'),
-        'machine_name' => 'forums',
+        'vid' => 'forums',
         'langcode' => language_default()->langcode,
         'description' => t('Forum navigation vocabulary'),
         'hierarchy' => 1,
@@ -51,7 +51,7 @@ function forum_enable() {
       ));
       taxonomy_vocabulary_save($vocabulary);
     }
-    $config->set('vocabulary', $vocabulary->vid)->save();
+    $config->set('vocabulary', $vocabulary->id())->save();
   }
 
   // Create the 'taxonomy_forums' field if it doesn't already exist.
@@ -62,7 +62,7 @@ function forum_enable() {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $vocabulary->machine_name,
+            'vocabulary' => $vocabulary->id(),
             'parent' => 0,
           ),
         ),
@@ -76,7 +76,7 @@ function forum_enable() {
       'langcode' => language_default()->langcode,
       'description' => '',
       'parent' => array(0),
-      'vid' => $vocabulary->vid,
+      'vid' => $vocabulary->id(),
     ));
     taxonomy_term_save($term);
 

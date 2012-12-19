@@ -220,17 +220,8 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 function forum_entity_info_alter(&$info) {
   // Take over URI construction for taxonomy terms that are forums.
   if ($vid = config('forum.settings')->get('vocabulary')) {
-    // Within hook_entity_info_alter(), we can't invoke entity_load() as that
-    // would cause infinite recursion, so we call taxonomy_vocabulary_get_names()
-    // instead of taxonomy_vocabulary_load(). All we need is the machine name
-    // of $vid, so retrieving and iterating all the vocabulary names is somewhat
-    // inefficient, but entity info is cached across page requests, and an
-    // iteration of all vocabularies once per cache clearing isn't a big deal,
-    // and is done as part of taxonomy_entity_info() anyway.
-    foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
-      if ($vid == $vocabulary->vid) {
-        $info['taxonomy_term']['bundles'][$machine_name]['uri_callback'] = 'forum_uri';
-      }
+    if (isset($info['taxonomy_term']['bundles'][$vid])) {
+      $info['taxonomy_term']['bundles'][$vid]['uri_callback'] = 'forum_uri';
     }
   }
 }
@@ -309,7 +300,7 @@ function forum_node_validate(Node $node, $form) {
         }
         $used = db_query_range('SELECT 1 FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid', 0, 1, array(
           ':tid' => $term->tid,
-          ':vid' => $term->vid,
+          ':vid' => $term->bundle(),
         ))->fetchField();
         if ($used && in_array($term->tid, $containers)) {
           form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->label())));
@@ -596,7 +587,8 @@ function forum_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
  */
 function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
   $vid = config('forum.settings')->get('vocabulary');
-  if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
+  $vocabulary = $form_state['controller']->getEntity($form_state);
+  if ($vid == $vocabulary->id()) {
     $form['help_forum_vocab'] = array(
       '#markup' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
       '#weight' => -1,
@@ -607,6 +599,8 @@ function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_i
     $form['hierarchy']['#value'] = TAXONOMY_HIERARCHY_SINGLE;
     // Do not allow to delete forum's vocabulary.
     $form['actions']['delete']['#access'] = FALSE;
+    // Do not allow to change a vid of forum's vocabulary.
+    $form['vid']['#disabled'] = TRUE;
   }
 }
 
@@ -782,7 +776,7 @@ function forum_forum_load($tid = NULL) {
   // Load and validate the parent term.
   if ($tid) {
     $forum_term = taxonomy_term_load($tid);
-    if (!$forum_term || ($forum_term->vid != $vid)) {
+    if (!$forum_term || ($forum_term->bundle() != $vid)) {
       return $cache[$tid] = FALSE;
     }
   }

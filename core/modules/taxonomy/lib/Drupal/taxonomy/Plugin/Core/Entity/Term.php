@@ -30,12 +30,12 @@ use Drupal\Core\Annotation\Translation;
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "tid",
- *     "bundle" = "vocabulary_machine_name",
+ *     "bundle" = "vid",
  *     "label" = "name",
  *     "uuid" = "uuid"
  *   },
  *   bundle_keys = {
- *     "bundle" = "machine_name"
+ *     "bundle" = "vid"
  *   },
  *   view_modes = {
  *     "full" = {
@@ -115,16 +115,6 @@ class Term extends Entity implements ContentEntityInterface {
   public $parent;
 
   /**
-   * The machine name of the vocabulary the term is assigned to.
-   *
-   * If not given, this value will be set automatically by loading the
-   * vocabulary based on the $entity->vid property.
-   *
-   * @var string
-   */
-  public $vocabulary_machine_name;
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
@@ -135,6 +125,6 @@ class Term extends Entity implements ContentEntityInterface {
    * Implements Drupal\Core\Entity\EntityInterface::bundle().
    */
   public function bundle() {
-    return $this->vocabulary_machine_name;
+    return $this->vid;
   }
 }

@@ -48,11 +48,11 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $this->vocabulary1->machine_name,
+            'vocabulary' => $this->vocabulary1->id(),
             'parent' => '0',
           ),
           array(
-            'vocabulary' => $this->vocabulary2->machine_name,
+            'vocabulary' => $this->vocabulary2->id(),
             'parent' => '0',
           ),
         ),
@@ -105,7 +105,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->assertText($term2->name, 'Term 2 name is displayed.');
 
     // Delete vocabulary 2.
-    taxonomy_vocabulary_delete($this->vocabulary2->vid);
+    taxonomy_vocabulary_delete($this->vocabulary2->id());
 
     // Re-render the content.
     $entity = field_test_entity_test_load($id);

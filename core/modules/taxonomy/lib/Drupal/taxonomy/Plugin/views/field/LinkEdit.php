@@ -31,10 +31,6 @@ class LinkEdit extends FieldPluginBase {
 
     $this->additional_fields['tid'] = 'tid';
     $this->additional_fields['vid'] = 'vid';
-    $this->additional_fields['vocabulary_machine_name'] = array(
-      'table' => 'taxonomy_vocabulary',
-      'field' => 'machine_name',
-    );
   }
 
   protected function defineOptions() {
@@ -67,7 +63,6 @@ class LinkEdit extends FieldPluginBase {
       // access checks. See http://drupal.org/node/995156
       $term = entity_create('taxonomy_term', array(
         'vid' => $values->{$this->aliases['vid']},
-        'vocabulary_machine_name' => $values->{$this->aliases['vocabulary_machine_name']},
       ));
       if (taxonomy_term_access('edit', $term)) {
         $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');

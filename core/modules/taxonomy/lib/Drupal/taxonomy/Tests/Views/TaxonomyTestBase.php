@@ -77,18 +77,18 @@ abstract class TaxonomyTestBase extends ViewTestBase {
     // Create the vocabulary for the tag field.
     $this->vocabulary = entity_create('taxonomy_vocabulary',  array(
       'name' => 'Views testing tags',
-      'machine_name' => 'views_testing_tags',
+      'vid' => 'views_testing_tags',
     ));
     $this->vocabulary->save();
     $field = array(
-      'field_name' => 'field_' . $this->vocabulary->machine_name,
+      'field_name' => 'field_' . $this->vocabulary->id(),
       'type' => 'taxonomy_term_reference',
       // Set cardinality to unlimited for tagging.
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $this->vocabulary->machine_name,
+            'vocabulary' => $this->vocabulary->id(),
             'parent' => 0,
           ),
         ),
@@ -96,7 +96,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
     );
     field_create_field($field);
     $instance = array(
-      'field_name' => 'field_' . $this->vocabulary->machine_name,
+      'field_name' => 'field_' . $this->vocabulary->id(),
       'entity_type' => 'node',
       'label' => 'Tags',
       'bundle' => 'article',
@@ -130,7 +130,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
       'description' => $this->randomName(),
       // Use the first available text format.
       'format' => db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField(),
-      'vid' => $this->vocabulary->vid,
+      'vid' => $this->vocabulary->id(),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
     $term->save();

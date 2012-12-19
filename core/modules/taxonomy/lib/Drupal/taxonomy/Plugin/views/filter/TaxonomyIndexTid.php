@@ -29,16 +29,7 @@ class TaxonomyIndexTid extends ManyToOne {
   public function init(ViewExecutable $view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['vocabulary'])) {
-      $this->options['vocabulary'] = $this->definition['vocabulary'];
-    }
-
-    // Convert legacy vid option to machine name vocabulary.
-    if (isset($this->options['vid']) && !empty($this->options['vid']) & empty($this->options['vocabulary'])) {
-      $vocabularies = taxonomy_vocabulary_get_names();
-      $vid = $this->options['vid'];
-      if (isset($vocabularies[$vid], $vocabularies[$vid]->machine_name)) {
-        $this->options['vocabulary'] = $vocabularies[$vid]->machine_name;
-      }
+      $this->options['vid'] = $this->definition['vocabulary'];
     }
   }
 
@@ -51,7 +42,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     $options['type'] = array('default' => 'textfield');
     $options['limit'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['vocabulary'] = array('default' => 0);
+    $options['vid'] = array('default' => '');
     $options['hierarchy'] = array('default' => 0);
     $options['error_message'] = array('default' => TRUE, 'bool' => TRUE);
 
@@ -59,26 +50,26 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   public function buildExtraOptionsForm(&$form, &$form_state) {
-    $vocabularies = taxonomy_vocabulary_get_names();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $options = array();
     foreach ($vocabularies as $voc) {
-      $options[$voc->machine_name] = check_plain($voc->name);
+      $options[$voc->id()] = $voc->label();
     }
 
     if ($this->options['limit']) {
       // We only do this when the form is displayed.
-      if (empty($this->options['vocabulary'])) {
+      if (empty($this->options['vid'])) {
         $first_vocabulary = reset($vocabularies);
-        $this->options['vocabulary'] = $first_vocabulary->machine_name;
+        $this->options['vid'] = $first_vocabulary->id();
       }
 
       if (empty($this->definition['vocabulary'])) {
-        $form['vocabulary'] = array(
+        $form['vid'] = array(
           '#type' => 'radios',
           '#title' => t('Vocabulary'),
           '#options' => $options,
           '#description' => t('Select which vocabulary to show terms for in the regular options.'),
-          '#default_value' => $this->options['vocabulary'],
+          '#default_value' => $this->options['vid'],
         );
       }
     }
@@ -103,7 +94,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   function value_form(&$form, &$form_state) {
-    $vocabulary = taxonomy_vocabulary_machine_name_load($this->options['vocabulary']);
+    $vocabulary = entity_load('taxonomy_vocabulary', $this->options['vid']);
     if (empty($vocabulary) && $this->options['limit']) {
       $form['markup'] = array(
         '#markup' => '<div class="form-item">' . t('An invalid vocabulary is selected. Please change it in the options.') . '</div>',
@@ -127,18 +118,18 @@ class TaxonomyIndexTid extends ManyToOne {
       }
 
       $form['value'] = array(
-        '#title' => $this->options['limit'] ? t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->name)) : t('Select terms'),
+        '#title' => $this->options['limit'] ? t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->label())) : t('Select terms'),
         '#type' => 'textfield',
         '#default_value' => $default,
       );
 
       if ($this->options['limit']) {
-        $form['value']['#autocomplete_path'] = 'admin/views/ajax/autocomplete/taxonomy/' . $vocabulary->vid;
+        $form['value']['#autocomplete_path'] = 'admin/views/ajax/autocomplete/taxonomy/' . $vocabulary->id();
       }
     }
     else {
       if (!empty($this->options['hierarchy']) && $this->options['limit']) {
-        $tree = taxonomy_get_tree($vocabulary->vid);
+        $tree = taxonomy_get_tree($vocabulary->id());
         $options = array();
 
         if ($tree) {
@@ -152,15 +143,13 @@ class TaxonomyIndexTid extends ManyToOne {
       else {
         $options = array();
         $query = db_select('taxonomy_term_data', 'td');
-        $query->innerJoin('taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
         $query->fields('td');
-        $query->orderby('tv.weight');
-        $query->orderby('tv.name');
+        // @todo Sorting on vocabulary properties http://drupal.org/node/1821274
         $query->orderby('td.weight');
         $query->orderby('td.name');
         $query->addTag('term_access');
         if ($this->options['limit']) {
-          $query->condition('tv.machine_name', $vocabulary->machine_name);
+          $query->condition('td.vid', $vocabulary->id());
         }
         $result = $query->execute();
         foreach ($result as $term) {
@@ -202,7 +191,7 @@ class TaxonomyIndexTid extends ManyToOne {
       }
       $form['value'] = array(
         '#type' => 'select',
-        '#title' => $this->options['limit'] ? t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->name)) : t('Select terms'),
+        '#title' => $this->options['limit'] ? t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->label())) : t('Select terms'),
         '#multiple' => TRUE,
         '#options' => $options,
         '#size' => min(9, count($options)),
@@ -319,10 +308,9 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     $query = db_select('taxonomy_term_data', 'td');
-    $query->innerJoin('taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
     $query->fields('td');
     $query->condition('td.name', $names);
-    $query->condition('tv.machine_name', $this->options['vocabulary']);
+    $query->condition('td.vid', $this->options['vid']);
     $query->addTag('term_access');
     $result = $query->execute();
     foreach ($result as $term) {

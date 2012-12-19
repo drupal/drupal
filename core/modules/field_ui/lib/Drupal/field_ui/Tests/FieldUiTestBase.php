@@ -37,14 +37,14 @@ abstract class FieldUiTestBase extends WebTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'description' => $this->randomName(),
-      'machine_name' => drupal_strtolower($this->randomName()),
+      'vid' => drupal_strtolower($this->randomName()),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => array('article' => 'article'),
       'weight' => mt_rand(0, 10),
     ));
-    taxonomy_vocabulary_save($vocabulary);
-    $this->vocabulary = $vocabulary->machine_name;
+    $vocabulary->save();
+    $this->vocabulary = $vocabulary->id();
   }
 
   /**

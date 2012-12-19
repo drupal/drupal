@@ -28,9 +28,9 @@ class VocabularyVid extends InOperator {
     }
 
     $this->value_options = array();
-    $vocabularies = taxonomy_vocabulary_get_names();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     foreach ($vocabularies as $voc) {
-      $this->value_options[$voc->vid] = $voc->name;
+      $this->value_options[$voc->id()] = $voc->label();
     }
   }
 

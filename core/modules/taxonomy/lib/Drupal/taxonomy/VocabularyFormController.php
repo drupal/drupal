@@ -31,12 +31,12 @@ class VocabularyFormController extends EntityFormController {
       '#maxlength' => 255,
       '#required' => TRUE,
     );
-    $form['machine_name'] = array(
+    $form['vid'] = array(
       '#type' => 'machine_name',
-      '#default_value' => $vocabulary->machine_name,
+      '#default_value' => $vocabulary->id(),
       '#maxlength' => 255,
       '#machine_name' => array(
-        'exists' => 'taxonomy_vocabulary_machine_name_load',
+        'exists' => 'taxonomy_vocabulary_load',
         'source' => array('name'),
       ),
     );
@@ -65,9 +65,9 @@ class VocabularyFormController extends EntityFormController {
         '#type' => 'language_configuration',
         '#entity_information' => array(
           'entity_type' => 'taxonomy_term',
-          'bundle' => $vocabulary->machine_name,
+          'bundle' => $vocabulary->id(),
         ),
-        '#default_value' => language_get_default_configuration('taxonomy_term', $vocabulary->machine_name),
+        '#default_value' => language_get_default_configuration('taxonomy_term', $vocabulary->id()),
       );
     }
     // Set the hierarchy to "multiple parents" by default. This simplifies the
@@ -76,10 +76,6 @@ class VocabularyFormController extends EntityFormController {
       '#type' => 'value',
       '#value' => '0',
     );
-
-    if (isset($vocabulary->vid)) {
-      $form['vid'] = array('#type' => 'value', '#value' => $vocabulary->vid);
-    }
 
     return parent::form($form, $form_state, $vocabulary);
   }
@@ -120,13 +116,13 @@ class VocabularyFormController extends EntityFormController {
     // Make sure that the machine name of the vocabulary is not in the
     // disallowed list (names that conflict with menu items, such as 'list'
     // and 'add').
-    // During the deletion there is no 'machine_name' key.
-    if (isset($form_state['values']['machine_name'])) {
+    // During the deletion there is no 'vid' key.
+    if (isset($form_state['values']['vid'])) {
       // Do not allow machine names to conflict with taxonomy path arguments.
-      $machine_name = $form_state['values']['machine_name'];
+      $vid = $form_state['values']['vid'];
       $disallowed = array('add', 'list');
-      if (in_array($machine_name, $disallowed)) {
-        form_set_error('machine_name', t('The machine-readable name cannot be "add" or "list".'));
+      if (in_array($vid, $disallowed)) {
+        form_set_error('vid', t('The machine-readable name cannot be "add" or "list".'));
       }
     }
   }
@@ -138,13 +134,13 @@ class VocabularyFormController extends EntityFormController {
     $vocabulary = $this->getEntity($form_state);
     // Delete the old language settings for the vocabulary, if the machine name
     // is changed.
-    if ($vocabulary && isset($vocabulary->machine_name) && $vocabulary->machine_name != $form_state['values']['machine_name']) {
-      language_clear_default_configuration('taxonomy_term', $vocabulary->machine_name);
+    if ($vocabulary && $vocabulary->id() && $vocabulary->id() != $form_state['values']['vid']) {
+      language_clear_default_configuration('taxonomy_term', $vocabulary->id());
     }
     // Since the machine name is not known yet, and it can be changed anytime,
     // we have to also update the bundle property for the default language
     // configuration in order to have the correct bundle value.
-    $form_state['language']['default_language']['bundle'] = $form_state['values']['machine_name'];
+    $form_state['language']['default_language']['bundle'] = $form_state['values']['vid'];
   }
 
   /**
@@ -176,18 +172,18 @@ class VocabularyFormController extends EntityFormController {
     switch (taxonomy_vocabulary_save($vocabulary)) {
       case SAVED_NEW:
         drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->machine_name . '/edit'));
-        $form_state['redirect'] = 'admin/structure/taxonomy/' . $vocabulary->machine_name;
+        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->id() . '/edit'));
+        $form_state['redirect'] = 'admin/structure/taxonomy/' . $vocabulary->id();
         break;
 
       case SAVED_UPDATED:
         drupal_set_message(t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->machine_name . '/edit'));
+        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->id() . '/edit'));
         $form_state['redirect'] = 'admin/structure/taxonomy';
         break;
     }
 
-    $form_state['values']['vid'] = $vocabulary->vid;
-    $form_state['vid'] = $vocabulary->vid;
+    $form_state['values']['vid'] = $vocabulary->id();
+    $form_state['vid'] = $vocabulary->id();
   }
 }

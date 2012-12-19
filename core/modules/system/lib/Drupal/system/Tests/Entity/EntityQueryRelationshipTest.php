@@ -74,7 +74,7 @@ class EntityQueryRelationshipTest extends WebTestBase  {
     // We want a taxonomy term reference field. It needs a vocabulary, terms,
     // a field and an instance. First, create the vocabulary.
     $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'machine_name' => strtolower($this->randomName()),
+      'vid' => drupal_strtolower($this->randomName()),
     ));
     $vocabulary->save();
     // Second, create the field.
@@ -83,7 +83,7 @@ class EntityQueryRelationshipTest extends WebTestBase  {
       'field_name' => $this->fieldName,
       'type' => 'taxonomy_term_reference',
     );
-    $field['settings']['allowed_values']['vocabulary'] = $vocabulary->machine_name;
+    $field['settings']['allowed_values']['vocabulary'] = $vocabulary->id();
     field_create_field($field);
     // Third, create the instance.
     $instance = array(
@@ -96,7 +96,7 @@ class EntityQueryRelationshipTest extends WebTestBase  {
     for ($i = 0; $i <= 1; $i++) {
       $term = entity_create('taxonomy_term', array(
         'name' => $this->randomName(),
-        'vid' => $vocabulary->vid,
+        'vid' => $vocabulary->id(),
       ));
       $term->save();
       $this->terms[] = $term;

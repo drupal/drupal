@@ -50,7 +50,7 @@ class HooksTest extends TaxonomyTestBase {
       'name' => $this->randomName(),
       'antonym' => 'Long',
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->id() . '/add', $edit, t('Save'));
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
     $term = reset($terms);
     $this->assertEqual($term->antonym, $edit['antonym'], 'Antonym was loaded into the term object.');

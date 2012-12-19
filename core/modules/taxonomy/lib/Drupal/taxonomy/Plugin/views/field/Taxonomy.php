@@ -37,10 +37,6 @@ class Taxonomy extends FieldPluginBase {
 
     $this->additional_fields['vid'] = 'vid';
     $this->additional_fields['tid'] = 'tid';
-    $this->additional_fields['vocabulary_machine_name'] = array(
-      'table' => 'taxonomy_vocabulary',
-      'field' => 'machine_name',
-    );
   }
 
   protected function defineOptions() {
@@ -80,7 +76,6 @@ class Taxonomy extends FieldPluginBase {
       $term = entity_create('taxonomy_term', array(
         'tid' => $tid,
         'vid' => $this->get_value($values, 'vid'),
-        'vocabulary_machine_name' => $values->{$this->aliases['vocabulary_machine_name']},
       ));
       $this->options['alter']['make_link'] = TRUE;
       $uri = $term->uri();

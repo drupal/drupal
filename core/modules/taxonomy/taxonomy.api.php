@@ -23,7 +23,7 @@ use Drupal\Core\Entity\EntityInterface;
  */
 function hook_taxonomy_vocabulary_load(array $vocabularies) {
   foreach ($vocabularies as $vocabulary) {
-    $vocabulary->synonyms = variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE);
+    $vocabulary->synonyms = variable_get('taxonomy_' . $vocabulary->id() . '_synonyms', FALSE);
   }
 }
 
@@ -52,7 +52,7 @@ function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Plugin\Core\Entity\Voc
  */
 function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   if ($vocabulary->synonyms) {
-    variable_set('taxonomy_' . $vocabulary->vid . '_synonyms', TRUE);
+    variable_set('taxonomy_' . $vocabulary->id() . '_synonyms', TRUE);
   }
 }
 
@@ -67,7 +67,7 @@ function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Plugin\Core\Entity\Voca
 function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   $status = $vocabulary->synonyms ? TRUE : FALSE;
   if ($vocabulary->synonyms) {
-    variable_set('taxonomy_' . $vocabulary->vid . '_synonyms', $status);
+    variable_set('taxonomy_' . $vocabulary->id() . '_synonyms', $status);
   }
 }
 
@@ -85,8 +85,8 @@ function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Voca
  * @see taxonomy_vocabulary_delete()
  */
 function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
-  if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
-    variable_del('taxonomy_' . $vocabulary->vid . '_synonyms');
+  if (variable_get('taxonomy_' . $vocabulary->id() . '_synonyms', FALSE)) {
+    variable_del('taxonomy_' . $vocabulary->id() . '_synonyms');
   }
 }
 
@@ -104,8 +104,8 @@ function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\V
  * @see taxonomy_vocabulary_delete()
  */
 function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
-  if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
-    variable_del('taxonomy_' . $vocabulary->vid . '_synonyms');
+  if (variable_get('taxonomy_' . $vocabulary->id() . '_synonyms', FALSE)) {
+    variable_del('taxonomy_' . $vocabulary->id() . '_synonyms');
   }
 }
 

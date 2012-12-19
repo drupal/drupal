@@ -78,8 +78,8 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
 
     // Collect candidate vocabularies.
     foreach ($field['settings']['allowed_values'] as $tree) {
-      if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {
-        $vocabularies[$vocabulary->vid] = $vocabulary;
+      if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
+        $vocabularies[$vocabulary->id()] = $vocabulary;
       }
     }
 
@@ -94,9 +94,8 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
         $vocabulary = reset($vocabularies);
         $term = array(
           'tid' => 'autocreate',
-          'vid' => $vocabulary->vid,
+          'vid' => $vocabulary->id(),
           'name' => $value,
-          'vocabulary_machine_name' => $vocabulary->machine_name,
         );
       }
       $terms[] = (array)$term;

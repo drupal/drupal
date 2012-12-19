@@ -5,14 +5,17 @@
  * Install, update and uninstall functions for the taxonomy module.
  */
 
+use Drupal\Component\Uuid\Uuid;
+
 /**
  * Implements hook_uninstall().
  */
 function taxonomy_uninstall() {
   // Remove taxonomy_term bundles.
-  $vocabularies = db_query("SELECT machine_name FROM {taxonomy_vocabulary}")->fetchCol();
-  foreach ($vocabularies as $vocabulary) {
-    field_attach_delete_bundle('taxonomy_term', $vocabulary);
+  $config_names = config_get_storage_names_with_prefix('taxonomy.vocabulary.');
+  foreach ($config_names as $config_name) {
+    $vid = substr($config_name, strlen('taxonomy.vocabulary.'));
+    field_attach_delete_bundle('taxonomy_term', $vid);
   }
 }
 
@@ -20,68 +23,6 @@ function taxonomy_uninstall() {
  * Implements hook_schema().
  */
 function taxonomy_schema() {
-  $schema['taxonomy_vocabulary'] = array(
-    'description' => 'Stores vocabulary information.',
-    'fields' => array(
-      'vid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique vocabulary ID.',
-      ),
-      'langcode' => array(
-        'description' => 'The {language}.langcode of this vocabulary.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Name of the vocabulary.',
-        'translatable' => TRUE,
-      ),
-      'machine_name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The vocabulary machine name.',
-      ),
-      'description' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'description' => 'Description of the vocabulary.',
-        'translatable' => TRUE,
-      ),
-      'hierarchy' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The weight of this vocabulary in relation to other vocabularies.',
-      ),
-    ),
-    'primary key' => array('vid'),
-    'indexes' => array(
-      'list' => array('weight', 'name'),
-    ),
-    'unique keys' => array(
-      'machine_name' => array('machine_name'),
-    ),
-  );
-
   $schema['taxonomy_term_data'] = array(
     'description' => 'Stores term information.',
     'fields' => array(
@@ -98,11 +39,11 @@ function taxonomy_schema() {
         'not null' => FALSE,
       ),
       'vid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {taxonomy_vocabulary}.vid of the vocabulary to which the term is assigned.',
+        'default' => '',
+        'description' => 'The ID of the vocabulary to which the term is assigned.',
       ),
       'langcode' => array(
         'description' => 'The {language}.langcode of this term.',
@@ -142,12 +83,6 @@ function taxonomy_schema() {
     'primary key' => array('tid'),
     'unique keys' => array(
       'uuid' => array('uuid'),
-    ),
-    'foreign keys' => array(
-      'vocabulary' => array(
-        'table' => 'taxonomy_vocabulary',
-        'columns' => array('vid' => 'vid'),
-      ),
     ),
     'indexes' => array(
       'taxonomy_tree' => array('vid', 'weight', 'name'),
@@ -358,3 +293,42 @@ function taxonomy_update_8004() {
   ));
 }
 
+/**
+ * Convert vocabularies into configuration.
+ */
+function taxonomy_update_8005() {
+  $uuid = new Uuid();
+
+  $result = db_query('SELECT * FROM {taxonomy_vocabulary}');
+  foreach ($result as $vocabulary) {
+    $config = config('taxonomy.vocabulary.' . $vocabulary->machine_name)
+      ->set('vid', $vocabulary->machine_name)
+      ->set('name', $vocabulary->name)
+      ->set('uuid', !empty($vocabulary->uuid) ? $vocabulary->uuid : $uuid->generate())
+      ->set('description', $vocabulary->description)
+      ->set('hierarchy', $vocabulary->hierarchy)
+      ->set('weight', $vocabulary->weight)
+      ->set('langcode', $vocabulary->langcode)
+      ->save();
+  }
+}
+
+/**
+ * Change {taxonomy_term_data}.vid into a string holding the vocabulary machine name.
+ */
+function taxonomy_update_8006() {
+  db_change_field('taxonomy_term_data', 'vid', 'vid', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The ID of the vocabulary to which the term is assigned.',
+  ));
+  $map = db_query('SELECT vid, machine_name FROM {taxonomy_vocabulary}')->fetchAllKeyed();
+  foreach ($map as $vid => $machine_name) {
+    db_update('taxonomy_term_data')
+      ->condition('vid', $vid)
+      ->fields(array('vid' => $machine_name))
+      ->execute();
+  }
+}

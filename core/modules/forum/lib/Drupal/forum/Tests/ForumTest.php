@@ -300,7 +300,7 @@ class ForumTest extends WebTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Tags',
       'description' => $description,
-      'machine_name' => 'tags',
+      'vid' => 'tags',
       'langcode' => language_default()->langcode,
       'help' => $help,
     ));
@@ -332,11 +332,10 @@ class ForumTest extends WebTestBase {
     $edit = array(
       'name' => $title,
       'description' => $description,
-      'machine_name' => drupal_strtolower(drupal_substr($this->randomName(), 3, 9)),
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/structure/taxonomy/' . $original_settings->machine_name . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $original_settings->id() . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), 'Vocabulary was edited');
 

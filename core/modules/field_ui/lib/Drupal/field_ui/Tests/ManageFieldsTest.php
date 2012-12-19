@@ -34,19 +34,19 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Create a vocabulary named "Tags".
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Tags',
-      'machine_name' => 'tags',
+      'vid' => 'tags',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary->save();
 
     $field = array(
-      'field_name' => 'field_' . $vocabulary->machine_name,
+      'field_name' => 'field_' . $vocabulary->id(),
       'type' => 'taxonomy_term_reference',
     );
     field_create_field($field);
 
     $instance = array(
-      'field_name' => 'field_' . $vocabulary->machine_name,
+      'field_name' => 'field_' . $vocabulary->id(),
       'entity_type' => 'node',
       'label' => 'Tags',
       'bundle' => 'article',
@@ -114,8 +114,8 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Assert the field appears in the "re-use existing field" section for
     // different entity types; e.g. if a field was added in a node entity, it
     // should also appear in the 'taxonomy term' entity.
-    $vocabulary = taxonomy_vocabulary_load(1);
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->machine_name . '/fields');
+    $vocabulary = taxonomy_vocabulary_load('tags');
+    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/fields');
     $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in account settings.');
   }
 

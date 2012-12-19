@@ -61,7 +61,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->bundle,
       'description' => $this->randomName(),
-      'machine_name' => $this->bundle,
+      'vid' => $this->bundle,
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'help' => '',
       'weight' => mt_rand(0, 10),
@@ -74,21 +74,6 @@ class TermTranslationUITest extends EntityTranslationUITest {
    */
   function getTranslatorPermissions() {
     return array('administer taxonomy', "translate $this->entityType entities", 'edit original values');
-  }
-
-  /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::createEntity().
-   */
-  protected function createEntity($values, $langcode, $bundle_name = NULL) {
-    if (isset($bundle_name)) {
-      $vocabulary = taxonomy_vocabulary_machine_name_load($bundle_name);
-    }
-    else {
-      $vocabulary = $this->vocabulary;
-    }
-    // Term needs vid to be saved.
-    $values['vid'] = $vocabulary->id();
-    return parent::createEntity($values, $langcode, $bundle_name);
   }
 
   /**
@@ -120,30 +105,28 @@ class TermTranslationUITest extends EntityTranslationUITest {
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer taxonomy', 'translate any entity'));
     $this->drupalLogin($this->admin_user);
 
-    $translatable_vocabulary_name = $this->vocabulary->name;
-    $translatable_tid = $this->createEntity(array(), $this->langcodes[0]);
+    $translatable_tid = $this->createEntity(array(), $this->langcodes[0], $this->vocabulary->id());
 
     // Create an untranslatable vocabulary.
     $untranslatable_vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'untranslatable_voc',
       'description' => $this->randomName(),
-      'machine_name' => 'untranslatable_voc',
+      'vid' => 'untranslatable_voc',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'help' => '',
       'weight' => mt_rand(0, 10),
     ));
     $untranslatable_vocabulary->save();
 
-    $untranslatable_vocabulary_name = $untranslatable_vocabulary->name;
-    $untranslatable_tid = $this->createEntity(array(), $this->langcodes[0], $untranslatable_vocabulary_name);
+    $untranslatable_tid = $this->createEntity(array(), $this->langcodes[0], $untranslatable_vocabulary->id());
 
     // Verify translation links.
-    $this->drupalGet('admin/structure/taxonomy/' . $translatable_vocabulary_name);
+    $this->drupalGet('admin/structure/taxonomy/' .  $this->vocabulary->id());
     $this->assertResponse(200);
     $this->assertLinkByHref('term/' . $translatable_tid . '/translations');
     $this->assertLinkByHref('term/' . $translatable_tid . '/edit');
 
-    $this->drupalGet('admin/structure/taxonomy/' . $untranslatable_vocabulary_name);
+    $this->drupalGet('admin/structure/taxonomy/' . $untranslatable_vocabulary->id());
     $this->assertResponse(200);
     $this->assertLinkByHref('term/' . $untranslatable_tid . '/edit');
     $this->assertNoLinkByHref('term/' . $untranslatable_tid . '/translations');
