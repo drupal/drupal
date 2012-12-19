@@ -1,5 +1,6 @@
-Drupal 7.18, xxxx-xx-xx (development version)
+Drupal 7.18, 2012-12-19
 -----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2012-004.
 
 Drupal 7.17, 2012-11-07
 -----------------------
