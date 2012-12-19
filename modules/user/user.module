@@ -933,14 +933,18 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
   $query = db_select('users')->extend('PagerDefault');
   $query->fields('users', array('uid'));
   if (user_access('administer users')) {
-    // Administrators can also search in the otherwise private email field.
+    // Administrators can also search in the otherwise private email field,
+    // and they don't need to be restricted to only active users.
     $query->fields('users', array('mail'));
     $query->condition(db_or()->
       condition('name', '%' . db_like($keys) . '%', 'LIKE')->
       condition('mail', '%' . db_like($keys) . '%', 'LIKE'));
   }
   else {
-    $query->condition('name', '%' . db_like($keys) . '%', 'LIKE');
+    // Regular users can only search via usernames, and we do not show them
+    // blocked accounts.
+    $query->condition('name', '%' . db_like($keys) . '%', 'LIKE')
+      ->condition('status', 1);
   }
   $uids = $query
     ->limit(15)

@@ -1,5 +1,5 @@
 
-Drupal 7.18, xxxx-xx-xx (development version)
+Drupal 7.19, xxxx-xx-xx (development version)
 -----------------------
 - Added an assertThemeOutput() method to Simpletest to allow tests to check
   that themed output matches an expected HTML string (API addition).
@@ -16,6 +16,10 @@ Drupal 7.18, xxxx-xx-xx (development version)
 - Made the default .htaccess rules protocol sensitive to improve security for
   sites which use HTTPS and redirect between "www" and non-"www" versions of
   the page.
+
+Drupal 7.18, 2012-12-19
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2012-004.
 
 Drupal 7.17, 2012-11-07
 -----------------------
