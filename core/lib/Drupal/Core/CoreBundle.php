@@ -168,8 +168,18 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('router.request_context'))
       ->addArgument(new Reference('router.matcher'))
       ->addArgument(new Reference('router.generator'));
+
+    $container->register('legacy_generator', 'Drupal\Core\Routing\NullGenerator');
+    $container->register('legacy_router', 'Symfony\Cmf\Routing\DynamicRouter')
+            ->addArgument(new Reference('router.request_context'))
+            ->addArgument(new Reference('legacy_url_matcher'))
+            ->addArgument(new Reference('legacy_generator'));
+
     $container->register('router', 'Symfony\Cmf\Routing\ChainRouter')
+      ->addMethodCall('add', array(new Reference('legacy_router')))
       ->addMethodCall('add', array(new Reference('router.dynamic')));
+
+
 
     $container
       ->register('cache.path', 'Drupal\Core\Cache\CacheBackendInterface')
