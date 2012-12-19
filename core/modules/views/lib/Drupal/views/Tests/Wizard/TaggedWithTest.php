@@ -128,11 +128,11 @@ class TaggedWithTest extends WizardTestBase {
     $view1['page[create]'] = 1;
     $view1['page[title]'] = $this->randomName(16);
     $view1['page[path]'] = $this->randomName(16);
-    $this->drupalPost(NULL, $view1, t('Save & exit'));
-    $this->assertResponse(200);
+    $this->drupalPost(NULL, $view1, t('Save and edit'));
     // Visit the page and check that the nodes we expect are present and the
     // ones we don't expect are absent.
     $this->drupalGet($view1['page[path]']);
+    $this->assertResponse(200);
     $this->assertText($node_tag1_title);
     $this->assertText($node_tag1_tag2_title);
     $this->assertNoText($node_no_tags_title);
@@ -150,7 +150,7 @@ class TaggedWithTest extends WizardTestBase {
     $view2['page[create]'] = 1;
     $view2['page[title]'] = $this->randomName(16);
     $view2['page[path]'] = $this->randomName(16);
-    $this->drupalPost(NULL, $view2, t('Save & exit'));
+    $this->drupalPost(NULL, $view2, t('Save and edit'));
     $this->assertResponse(200);
     $this->drupalGet($view2['page[path]']);
     $this->assertNoText($node_tag1_title);

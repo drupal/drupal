@@ -45,7 +45,7 @@ class WizardTest extends WizardTestBase {
 
     // Just triggering the saving should automatically choose a proper row
     // plugin.
-    $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
+    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertUrl('admin/structure/views/view/' . $view['name'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
 
     // If we update the type first we should get a selection of comment valid
@@ -66,9 +66,10 @@ class WizardTest extends WizardTestBase {
     }
     $expected_options = array('comment', 'fields');
     $this->assertEqual($options, $expected_options);
-    $this->drupalPost(NULL, $view, t('Continue & edit'));
+
+    $view['name'] = strtolower($this->randomName(16));
+    $this->drupalPost(NULL, $view, t('Save and edit'));
     $this->assertUrl('admin/structure/views/view/' . $view['name'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
-    $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view($view['name']);
     $view->initHandlers();
