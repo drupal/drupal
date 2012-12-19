@@ -86,6 +86,49 @@ class EntityResource extends ResourceBase {
   }
 
   /**
+   * Responds to entity PATCH requests.
+   *
+   * @param mixed $id
+   *   The entity ID.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
+   *
+   * @return \Drupal\rest\ResourceResponse
+   *   The HTTP response object.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+   */
+  public function patch($id, EntityInterface $entity) {
+    if (empty($id)) {
+      throw new NotFoundHttpException();
+    }
+    $definition = $this->getDefinition();
+    if ($entity->entityType() != $definition['entity_type']) {
+      throw new BadRequestHttpException('Invalid entity type');
+    }
+    $original_entity = entity_load($definition['entity_type'], $id);
+    // We don't support creating entities with PATCH, so we throw an error if
+    // there is no existing entity.
+    if ($original_entity == FALSE) {
+      throw new NotFoundHttpException();
+    }
+    // Overwrite the received properties.
+    foreach ($entity->getProperties() as $name => $property) {
+      if (isset($entity->{$name})) {
+        $original_entity->{$name} = $property;
+      }
+    }
+    try {
+      $original_entity->save();
+      // Update responses have an empty body.
+      return new ResourceResponse(NULL, 204);
+    }
+    catch (EntityStorageException $e) {
+      throw new HttpException(500, 'Internal Server Error', $e);
+    }
+  }
+
+  /**
    * Responds to entity DELETE requests.
    *
    * @param mixed $id

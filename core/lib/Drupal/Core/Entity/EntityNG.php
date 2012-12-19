@@ -368,7 +368,7 @@ class EntityNG extends Entity {
       return isset($this->values[$name]);
     }
     elseif ($this->getPropertyDefinition($name)) {
-      return (bool) count($this->get($name));
+      return $this->get($name)->valueIsSet();
     }
   }
 
@@ -380,7 +380,7 @@ class EntityNG extends Entity {
       unset($this->values[$name]);
     }
     elseif ($this->getPropertyDefinition($name)) {
-      $this->get($name)->setValue(array());
+      $this->get($name)->unsetValue();
     }
   }
 

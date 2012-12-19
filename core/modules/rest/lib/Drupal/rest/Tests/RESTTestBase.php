@@ -68,6 +68,17 @@ abstract class RESTTestBase extends WebTestBase {
         );
         break;
 
+      case 'PATCH':
+        $curl_options = array(
+          CURLOPT_HTTPGET => FALSE,
+          CURLOPT_CUSTOMREQUEST => 'PATCH',
+          CURLOPT_POSTFIELDS => $body,
+          CURLOPT_URL => url($url, array('absolute' => TRUE)),
+          CURLOPT_NOBODY => FALSE,
+          CURLOPT_HTTPHEADER => array('Content-Type: ' . $format),
+        );
+        break;
+
       case 'DELETE':
         $curl_options = array(
           CURLOPT_HTTPGET => FALSE,
@@ -127,7 +138,11 @@ abstract class RESTTestBase extends WebTestBase {
   protected function entityValues($entity_type) {
     switch ($entity_type) {
       case 'entity_test':
-        return array('name' => $this->randomName(), 'user_id' => 1);
+        return array(
+          'name' => $this->randomName(),
+          'user_id' => 1,
+          'field_test_text' => array(0 => array('value' => $this->randomString())),
+        );
       case 'node':
         return array('title' => $this->randomString());
       case 'user':

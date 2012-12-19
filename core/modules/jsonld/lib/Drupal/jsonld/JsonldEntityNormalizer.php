@@ -79,11 +79,17 @@ class JsonldEntityNormalizer extends JsonldNormalizerBase implements Denormalize
       if ($fieldName[0] === '@') {
         continue;
       }
+      // If the incoming value is an empty array we set the property to mark it
+      // for deletion.
+      if (empty($incomingFieldValues) && is_array($incomingFieldValues)) {
+        $entity->{$fieldName} = array();
+      }
 
       // Figure out the designated class for this field type, which is used by
       // the Serializer to determine which Denormalizer to use.
       // @todo Is there a better way to get the field type's associated class?
       $fieldItemClass = get_class($entity->get($fieldName)->offsetGet(0));
+
       // Iterate through the language keyed values and add them to the entity.
       // The vnd.drupal.ld+json mime type will always use language keys, per
       // http://drupal.org/node/1838700.
