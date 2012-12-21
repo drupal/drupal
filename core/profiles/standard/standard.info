@@ -11,6 +11,7 @@ dependencies[] = config
 dependencies[] = comment
 dependencies[] = contextual
 dependencies[] = contact
+dependencies[] = edit
 dependencies[] = help
 dependencies[] = image
 dependencies[] = menu

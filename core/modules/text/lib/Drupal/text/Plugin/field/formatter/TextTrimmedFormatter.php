@@ -31,6 +31,9 @@ use Drupal\Core\Entity\EntityInterface;
  *   },
  *   settings = {
  *     "trim_length" = "600"
+ *   },
+ *   edit = {
+ *     "editor" = "form"
  *   }
  * )
  */

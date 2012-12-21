@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * @file
+ * Provides in-place content editing functionality for fields.
+ *
+ * The Edit module makes content editable in-place. Rather than having to visit
+ * a separate page to edit content, it may be edited in-place.
+ *
+ * Technically, this module adds classes and data- attributes to fields and
+ * entities, enabling them for in-place editing.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\edit\Form\EditFieldForm;
+
+/**
+ * Implements hook_custom_theme().
+ *
+ * @todo Add an event subscriber to the Ajax system to automatically set the
+ *   base page theme for all Ajax requests, and then remove this one off.
+ */
+function edit_custom_theme() {
+  if (substr(current_path(), 0, 5) === 'edit/') {
+    return ajax_base_page_theme();
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function edit_permission() {
+  return array(
+    'access in-place editing' => array(
+      'title' => t('Access in-place editing'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function edit_toolbar() {
+  if (!user_access('access in-place editing')) {
+    return;
+  }
+
+  $tab['edit'] = array(
+    'tab' => array(
+      'title' => t('Edit'),
+      'href' => '',
+      'html' => FALSE,
+      'attributes' => array(
+        'class' => array('icon', 'icon-edit', 'edit-nothing-editable-hidden'),
+      ),
+    ),
+    'tray' => array(
+      '#attached' => array(
+        'library' => array(
+          array('edit', 'edit'),
+        ),
+      ),
+    ),
+  );
+
+  // Include the attachments and settings for all available editors.
+  $attachments = drupal_container()->get('edit.editor.selector')->getAllEditorAttachments();
+  $tab['edit']['tray']['#attached'] = array_merge_recursive($tab['edit']['tray']['#attached'], $attachments);
+
+  return $tab;
+}
+
+/**
+ * Implements hook_library().
+ */
+function edit_library_info() {
+  $path = drupal_get_path('module', 'edit');
+  $options = array(
+    'scope' => 'footer',
+    'attributes' => array('defer' => TRUE),
+  );
+  $libraries['edit'] = array(
+    'title' => 'Edit: in-place editing',
+    'website' => 'http://drupal.org/project/edit',
+    'version' => VERSION,
+    'js' => array(
+      // Core.
+      $path . '/js/edit.js' => $options,
+      $path . '/js/app.js' => $options,
+      // Routers.
+      $path . '/js/routers/edit-router.js' => $options,
+      // Models.
+      $path . '/js/models/edit-app-model.js' => $options,
+      // Views.
+      $path . '/js/views/propertyeditordecoration-view.js' => $options,
+      $path . '/js/views/menu-view.js' => $options,
+      $path . '/js/views/modal-view.js' => $options,
+      $path . '/js/views/overlay-view.js' => $options,
+      $path . '/js/views/toolbar-view.js' => $options,
+      // Backbone.sync implementation on top of Drupal forms.
+      $path . '/js/backbone.drupalform.js' => $options,
+      // VIE service.
+      $path . '/js/viejs/EditService.js' => $options,
+      // Create.js subclasses.
+      $path . '/js/createjs/editable.js' => $options,
+      $path . '/js/createjs/storage.js' => $options,
+      $path . '/js/createjs/editingWidgets/formwidget.js' => $options,
+      $path . '/js/createjs/editingWidgets/drupalcontenteditablewidget.js' => $options,
+      // Other.
+      $path . '/js/util.js' => $options,
+      $path . '/js/theme.js' => $options,
+      // Basic settings.
+      array(
+        'data' => array('edit' => array(
+          'metadataURL' => url('edit/metadata'),
+          'fieldFormURL' => url('edit/form/!entity_type/!id/!field_name/!langcode/!view_mode'),
+          'rerenderProcessedTextURL' => url('edit/text/!entity_type/!id/!field_name/!langcode/!view_mode'),
+          'context' => 'body',
+        )),
+        'type' => 'setting',
+      ),
+    ),
+    'css' => array(
+      $path . '/css/edit.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'underscore'),
+      array('system', 'backbone'),
+      array('system', 'vie.core'),
+      array('system', 'create.editonly'),
+      array('system', 'jquery.form'),
+      array('system', 'drupal.form'),
+      array('system', 'drupal.ajax'),
+      array('system', 'drupalSettings'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field.tpl.php.
+ */
+function edit_preprocess_field(&$variables) {
+  $element = $variables['element'];
+  $entity = $element['#object'];
+  $variables['attributes']['data-edit-id'] = $entity->entityType() . ':' . $entity->id() . ':' . $element['#field_name'] . ':' . $element['#language'] . ':' . $element['#view_mode'];
+}
+
+/**
+ * Form constructor for the field editing form.
+ *
+ * @ingroup forms
+ */
+function edit_field_form(array $form, array &$form_state, EntityInterface $entity, $field_name) {
+  $form_handler = new EditFieldForm();
+  return $form_handler->build($form, $form_state, $entity, $field_name);
+}

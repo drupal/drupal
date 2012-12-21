@@ -1,0 +1,22 @@
+edit_metadata:
+  pattern: '/edit/metadata'
+  defaults:
+    _controller: '\Drupal\edit\EditController::metadata'
+  requirements:
+    _permission: 'access in-place editing'
+
+edit_field_form:
+  pattern: '/edit/form/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode}'
+  defaults:
+    _controller: '\Drupal\edit\EditController::fieldForm'
+  requirements:
+    _permission: 'access in-place editing'
+    _access_edit_entity_field: 'TRUE'
+
+edit_text:
+  pattern: '/edit/text/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode}'
+  defaults:
+    _controller: '\Drupal\edit\EditController::getUntransformedText'
+  requirements:
+    _permission: 'access in-place editing'
+    _access_edit_entity_field: 'TRUE'

@@ -22,6 +22,9 @@ use Drupal\Core\Annotation\Translation;
  *   },
  *   settings = {
  *     "trim_length" = "600"
+ *   },
+ *   edit = {
+ *     "editor" = "form"
  *   }
  * )
  */

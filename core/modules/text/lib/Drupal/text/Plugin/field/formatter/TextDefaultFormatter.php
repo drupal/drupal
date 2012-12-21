@@ -23,6 +23,9 @@ use Drupal\Core\Entity\EntityInterface;
  *     "text",
  *     "text_long",
  *     "text_with_summary"
+ *   },
+ *   edit = {
+ *     "editor" = "direct"
  *   }
  * )
  */
