@@ -7,8 +7,10 @@
 
 namespace Drupal\jsonld;
 
+use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\jsonld\JsonldNormalizerBase;
+use Drupal\rdf\SiteSchema\SiteSchemaManager;
 use ReflectionClass;
 use Symfony\Component\Serializer\Exception\RuntimeException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -34,9 +36,9 @@ class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase implements De
     // of creating the array of properties, we could simply call normalize and
     // pass in the referenced entity with a flag that ensures it is rendered as
     // a node reference and not a node definition.
-    $entityWrapper = new JsonldEntityWrapper($object->entity, $format, $this->serializer);
+    $entity_wrapper = new JsonldEntityWrapper($object->entity, $format, $this->serializer, $this->siteSchemaManager);
     return array(
-      '@id' => $entityWrapper->getId(),
+      '@id' => $entity_wrapper->getId(),
     );
   }
 

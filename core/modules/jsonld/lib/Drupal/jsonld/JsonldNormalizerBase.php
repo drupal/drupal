@@ -8,6 +8,8 @@
 namespace Drupal\jsonld;
 
 use ReflectionClass;
+use Drupal\rdf\RdfMappingManager;
+use Drupal\rdf\SiteSchema\SiteSchemaManager;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
 
@@ -29,6 +31,33 @@ abstract class JsonldNormalizerBase extends SerializerAwareNormalizer implements
    * @var array
    */
   static protected $format = array('jsonld', 'drupal_jsonld');
+
+  /**
+   * The site schema manager.
+   *
+   * @var \Drupal\rdf\SiteSchema\SiteSchemaManager
+   */
+  protected $siteSchemaManager;
+
+  /**
+   * The RDF mapping manager.
+   *
+   * @var \Drupal\rdf\RdfMappingManager
+   */
+  protected $rdfMappingManager;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\rdf\SiteSchema\SiteSchemaManager $site_schema_manager
+   *   The site schema manager.
+   * @param \Drupal\rdf\RdfMappingManager $rdf_mapping_manager
+   *   The RDF mapping manager.
+   */
+  public function __construct(SiteSchemaManager $site_schema_manager, RdfMappingManager $rdf_mapping_manager) {
+    $this->siteSchemaManager = $site_schema_manager;
+    $this->rdfMappingManager = $rdf_mapping_manager;
+  }
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()

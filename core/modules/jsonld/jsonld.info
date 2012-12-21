@@ -2,3 +2,4 @@ name = JSON-LD
 description = Serializes entities using JSON-LD format.
 package = Core
 core = 8.x
+dependencies[] = rdf

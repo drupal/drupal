@@ -8,15 +8,15 @@
 namespace Drupal\jsonld\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\jsonld\JsonldEncoder;
-use Drupal\jsonld\JsonldEntityNormalizer;
-use Drupal\jsonld\JsonldEntityReferenceNormalizer;
-use Drupal\jsonld\JsonldFieldItemNormalizer;
+use Drupal\rdf\SiteSchema\SiteSchema;
 use Drupal\simpletest\WebTestBase;
-use Symfony\Component\Serializer\Serializer;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
  * Test the vendor specific JSON-LD normalizer.
+ *
+ * This is implemented as a WebTest because it requires use of the Entity API.
  */
 class NormalizeDenormalizeTest extends WebTestBase {
 
@@ -25,7 +25,7 @@ class NormalizeDenormalizeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'entity_test');
+  public static $modules = array('entity_test', 'jsonld', 'language', 'rdf');
 
   /**
    * The format being tested.
@@ -51,13 +51,8 @@ class NormalizeDenormalizeTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->normalizers = array(
-      'entityreference' => new JsonldEntityReferenceNormalizer(),
-      'field_item' => new JsonldFieldItemNormalizer(),
-      'entity' => new JsonldEntityNormalizer(),
-    );
-    $serializer = new Serializer($this->normalizers, array(new JsonldEncoder()));
-    $this->normalizers['entity']->setSerializer($serializer);
+    $setup_helper = new JsonldTestSetupHelper();
+    $this->normalizers = $setup_helper->getNormalizers();
 
     // Add German as a language.
     $language = new Language(array(
@@ -146,8 +141,10 @@ class NormalizeDenormalizeTest extends WebTestBase {
   }
 
   function testDenormalize() {
-    $incomingData = array(
-      '@type' => url('jsonld-test/content-staging/entity_test/entity_test', array('absolute' => TRUE)),
+    $schema = new SiteSchema(SiteSchema::CONTENT_DEPLOYMENT);
+    $bundle_uri = $schema->bundle('entity_test', 'entity_test')->getUri();
+    $incoming_data = array(
+      '@type' => $bundle_uri,
       'name' => array(
         'en' => array(
           array(
@@ -170,17 +167,38 @@ class NormalizeDenormalizeTest extends WebTestBase {
       ),
     );
 
-    $entity = $this->normalizers['entity']->denormalize($incomingData, 'Drupal\Core\Entity\EntityNG', static::$format);
+    // Test valid request.
+    $entity = $this->normalizers['entity']->denormalize($incoming_data, 'Drupal\Core\Entity\EntityNG', static::$format);
     $this->assertEqual('entity_test', $entity->bundle(), "Denormalize creates entity with correct bundle.");
-    $this->assertEqual($incomingData['name']['en'], $entity->get('name')->getValue(), "Translatable field denormalized correctly in default language.");
-    $this->assertEqual($incomingData['name']['de'], $entity->getTranslation('de')->get('name')->getValue(), "Translatable field denormalized correctly in translation language.");
-    $this->assertEqual($incomingData['field_test_text']['und'], $entity->get('field_test_text')->getValue(), "Untranslatable field denormalized correctly.");
+    $this->assertEqual($incoming_data['name']['en'], $entity->get('name')->getValue(), "Translatable field denormalized correctly in default language.");
+    $this->assertEqual($incoming_data['name']['de'], $entity->getTranslation('de')->get('name')->getValue(), "Translatable field denormalized correctly in translation language.");
+    $this->assertEqual($incoming_data['field_test_text']['und'], $entity->get('field_test_text')->getValue(), "Untranslatable field denormalized correctly.");
+
+    // Test request without @type.
+    unset($incoming_data['@type']);
+    try {
+      $this->normalizers['entity']->denormalize($incoming_data, 'Drupal\Core\Entity\EntityNG', static::$format);
+      $this->fail('Trying to denormalize entity data without @type results in exception.');
+    }
+    catch (UnexpectedValueException $e) {
+      $this->pass('Trying to denormalize entity data without @type results in exception.');
+    }
+
+    // Test request with @type that has no valid mapping.
+    $incoming_data['@type'] = 'http://failing-uri.com/type';
+    try {
+      $this->normalizers['entity']->denormalize($incoming_data, 'Drupal\Core\Entity\EntityNG', static::$format);
+      $this->fail('Trying to denormalize entity data with unrecognized @type results in exception.');
+    }
+    catch (UnexpectedValueException $e) {
+      $this->pass('Trying to denormalize entity data with unrecognized @type results in exception.');
+    }
   }
 
   /**
    * Get the Entity ID.
    *
-   * @param Drupal\Core\Entity\EntityNG $entity
+   * @param \Drupal\Core\Entity\EntityNG $entity
    *   Entity to get URI for.
    *
    * @return string

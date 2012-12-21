@@ -8,6 +8,8 @@
 namespace Drupal\jsonld;
 
 use Drupal\jsonld\JsonldNormalizerBase;
+use Drupal\rdf\RdfMappingException;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
@@ -26,36 +28,44 @@ class JsonldEntityNormalizer extends JsonldNormalizerBase implements Denormalize
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
   public function normalize($entity, $format = NULL) {
-    $entityWrapper = new JsonldEntityWrapper($entity, $format, $this->serializer);
+    $entity_wrapper = new JsonldEntityWrapper($entity, $format, $this->serializer, $this->siteSchemaManager);
 
-    $attributes = $entityWrapper->getProperties();
+    $attributes = $entity_wrapper->getProperties();
     $attributes = array(
-      '@id' => $entityWrapper->getId(),
-      '@type' => $entityWrapper->getTypeUri(),
+      '@id' => $entity_wrapper->getId(),
+      '@type' => $entity_wrapper->getTypeUri(),
     ) + $attributes;
     return $attributes;
   }
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
+   *
+   * @throws \Symfony\Component\Serializer\Exception\UnexpectedValueException
    */
   public function denormalize($data, $class, $format = null) {
     if (!isset($data['@type'])) {
-      // @todo Throw an exception?
+      throw new UnexpectedValueException('JSON-LD @type parameter must be included.');
     }
 
-    // Every bundle has a type, identified by URI. A schema which provides more
-    // information about the type can be requested from that URI. From that
-    // schema, the entity type and bundle name are extracted.
-    $typeUri = is_array($data['@type']) ? $data['@type'][0] : $data['@type'];
-    // @todo Instead of manually parsing the URI use an approach as discussed in
-    // http://drupal.org/node/1852812
-    $parts = explode('/', $typeUri);
-    $bundle = array_pop($parts);
-    $entity_type = array_pop($parts);
+    // Every bundle has a type, identified by URI. The incoming data should
+    // either include a type URI from this site's schema, or one of the type
+    // URIs in the incoming data must map to a site schema URI when passed
+    // through the RDF mapping manager.
+    $type_uris = is_array($data['@type']) ? $data['@type'] : array($data['@type']);
+    // If the RDF mapping manager can find a match to a site schema URI, it
+    // will return the corresponding Typed Data ids. Otherwise, throw an
+    // exception.
+    // @todo The @types might be CURIEs or aliases. Expand before trying to map.
+    try {
+      $typed_data_ids = $this->rdfMappingManager->getTypedDataIdsFromTypeUris($type_uris);
+    }
+    catch (RdfMappingException $e) {
+      throw new UnexpectedValueException($e->getMessage(), 0, $e);
+    }
 
     $values = array(
-      'type' => $bundle,
+      'type' => $typed_data_ids['bundle'],
     );
     // If the data specifies a default language, use it to create the entity.
     if (isset($data['langcode'])) {
@@ -68,7 +78,7 @@ class JsonldEntityNormalizer extends JsonldNormalizerBase implements Denormalize
     else if ($this->containsTranslation($data)) {
       $values['langcode'] = language(LANGUAGE_TYPE_CONTENT)->langcode;
     }
-    $entity = entity_create($entity_type, $values);
+    $entity = entity_create($typed_data_ids['entity_type'], $values);
 
     // For each attribute in the JSON-LD, add the values as fields to the newly
     // created entity. It is assumed that the JSON attribute names are the same
