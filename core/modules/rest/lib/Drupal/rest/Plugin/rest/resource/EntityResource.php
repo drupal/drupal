@@ -191,4 +191,18 @@ class EntityResource extends ResourceBase {
     }
     throw new NotFoundHttpException(t('Entity with ID @id not found', array('@id' => $id)));
   }
+
+  /**
+   * Overrides ResourceBase::permissions().
+   */
+  public function permissions() {
+    $permissions = parent::permissions();
+    // Mark all items as administrative permissions for now.
+    // @todo Remove this restriction once proper entity access control is
+    // implemented. See http://drupal.org/node/1866908
+    foreach ($permissions as $name => $permission) {
+      $permissions[$name]['restrict access'] = TRUE;
+    }
+    return $permissions;
+  }
 }
