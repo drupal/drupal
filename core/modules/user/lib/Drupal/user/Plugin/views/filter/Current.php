@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
 
@@ -26,8 +27,8 @@ class Current extends BooleanOperator {
   /**
    * Overrides Drupal\views\Plugin\views\filter\BooleanOperator::init().
    */
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     $this->value_value = t('Is the logged in user');
   }

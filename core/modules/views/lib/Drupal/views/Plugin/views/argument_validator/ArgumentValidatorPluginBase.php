@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument_validator;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
@@ -22,15 +23,20 @@ use Drupal\views\Plugin\views\PluginBase;
 abstract class ArgumentValidatorPluginBase extends PluginBase {
 
   /**
-   * Initialize this plugin with the view and the argument
-   * it is linked to.
+   * The argument handler instance associated with this plugin.
+   *
+   * @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase
    */
-  public function init(ViewExecutable $view, &$argument, $options) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
-    $this->argument = &$argument;
+  protected $argument;
 
-    $this->unpackOptions($this->options, $options);
+  /**
+   * Sets the parent argument this plugin is associated with.
+   *
+   * @param \Drupal\views\Plugin\views\argument\ArgumentPluginBase $argument
+   *   The parent argument to set.
+   */
+  public function setArgument(ArgumentPluginBase $argument) {
+    $this->argument = $argument;
   }
 
   /**

@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -34,10 +35,10 @@ class InOperator extends FilterPluginBase {
   var $value_options = NULL;
 
   /**
-   * Overrides Drupal\views\Plugin\views\filter\FilterPluginBase::init().
+   * Overrides \Drupal\views\Plugin\views\filter\FilterPluginBase::init().
    */
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     $this->value_title = t('Options');
     $this->value_options = NULL;

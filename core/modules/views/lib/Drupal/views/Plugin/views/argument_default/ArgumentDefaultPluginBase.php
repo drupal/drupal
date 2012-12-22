@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument_default;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
@@ -22,6 +23,13 @@ use Drupal\views\Plugin\views\PluginBase;
 abstract class ArgumentDefaultPluginBase extends PluginBase {
 
   /**
+   * The argument handler instance associated with this plugin.
+   *
+   * @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase
+   */
+  protected $argument;
+
+  /**
    * Return the default argument.
    *
    * This needs to be overridden by every default argument handler to properly do what is needed.
@@ -29,15 +37,13 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   function get_argument() { }
 
   /**
-   * Initialize this plugin with the view and the argument
-   * it is linked to.
+   * Sets the parent argument this plugin is associated with.
+   *
+   * @param \Drupal\views\Plugin\views\argument\ArgumentPluginBase $argument
+   *   The parent argument to set.
    */
-  public function init(ViewExecutable $view, &$argument, $options) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
-    $this->argument = &$argument;
-
-    $this->unpackOptions($this->options, $options);
+  public function setArgument(ArgumentPluginBase $argument) {
+    $this->argument = $argument;
   }
 
   /**

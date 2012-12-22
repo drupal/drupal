@@ -8,6 +8,7 @@
 namespace Drupal\field\Plugin\views\relationship;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -23,8 +24,11 @@ use Drupal\Core\Annotation\Plugin;
  */
 class EntityReverse extends RelationshipPluginBase  {
 
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  /**
+   * Overrides \Drupal\views\Plugin\views\relationship\RelationshipPluginBase::init().
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     $this->field_info = field_info_field($this->definition['field_name']);
   }

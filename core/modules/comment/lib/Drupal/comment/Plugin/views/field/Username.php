@@ -8,6 +8,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -24,10 +25,13 @@ use Drupal\Core\Annotation\Plugin;
 class Username extends FieldPluginBase {
 
   /**
-   * Override init function to add uid and homepage fields.
+   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   *
+   * Add uid and homepage fields.
    */
-  public function init(ViewExecutable $view, &$data) {
-    parent::init($view, $data);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     $this->additional_fields['uid'] = 'uid';
     $this->additional_fields['homepage'] = 'homepage';
   }

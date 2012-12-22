@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\exposed_form;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
@@ -27,22 +28,6 @@ abstract class ExposedFormPluginBase extends PluginBase {
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
    */
   protected $usesOptions = TRUE;
-
-  /**
-   * Initialize the plugin.
-   *
-   * @param $view
-   *   The view object.
-   * @param $display
-   *   The display handler.
-   */
-  public function init(ViewExecutable $view, &$display, $options = array()) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
-    $this->displayHandler = &$display;
-
-    $this->unpackOptions($this->options, $options);
-  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();

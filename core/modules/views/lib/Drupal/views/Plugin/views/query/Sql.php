@@ -115,10 +115,11 @@ class Sql extends QueryPluginBase {
   var $no_distinct;
 
   /**
-   * Overrides Drupal\views\Plugin\views\query\QueryPluginBase::init().
+   * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array $options = array()) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
+
     $base_table = $this->view->storage->get('base_table');
     $base_field = $this->view->storage->get('base_field');
     $this->relationships[$base_table] = array(

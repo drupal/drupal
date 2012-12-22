@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 
@@ -70,8 +71,8 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Overrides Drupal\views\Plugin\views\HandlerBase::init().
    */
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     $this->additional_fields = array();
     if (!empty($this->definition['additional fields'])) {

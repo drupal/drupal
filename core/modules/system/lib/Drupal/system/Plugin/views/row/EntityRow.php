@@ -8,6 +8,7 @@
 namespace Drupal\system\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\RowPluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -51,12 +52,12 @@ class EntityRow extends RowPluginBase {
   protected $build = array();
 
   /**
-   * Overrides Drupal\views\Plugin\views\row\RowPluginBase::init().
+   * Overrides Drupal\views\Plugin\views\PluginBase::init().
    */
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
-    $this->entityType = $this->definition['entity_type'];
 
+    $this->entityType = $this->definition['entity_type'];
     $this->entityInfo = entity_get_info($this->entityType);
     $this->base_table = $this->entityInfo['base_table'];
     $this->base_field = $this->entityInfo['entity_keys']['id'];

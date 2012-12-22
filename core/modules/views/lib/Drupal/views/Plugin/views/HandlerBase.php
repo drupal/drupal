@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
@@ -80,17 +81,11 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Init the handler with necessary data.
-   *
-   * @param Drupal\views\ViewExecutable $view
-   *   The $view object this handler is attached to.
-   * @param array $options
-   *   The item from the database; the actual contents of this will vary
-   *   based upon the type of handler.
+   * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    */
-  public function init(ViewExecutable $view, &$options) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     $display_id = $this->view->current_display;
     // Check to see if this handler type is defaulted. Note that
     // we have to do a lookup because the type is singular but the

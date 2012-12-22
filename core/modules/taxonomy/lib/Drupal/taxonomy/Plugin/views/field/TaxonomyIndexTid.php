@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\PrerenderList;
 use Drupal\Core\Annotation\Plugin;
 
@@ -23,8 +24,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class TaxonomyIndexTid extends PrerenderList {
 
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  /**
+   * Overrides \Drupal\views\Plugin\views\field\PrerenderList::init().
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?
     if ($view->storage->get('base_table') == 'node_revision') {
       $this->additional_fields['nid'] = array('table' => 'node_revision', 'field' => 'nid');

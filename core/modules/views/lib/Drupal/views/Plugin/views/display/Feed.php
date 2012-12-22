@@ -42,8 +42,11 @@ class Feed extends PathPluginBase {
    */
   protected $usesPager = FALSE;
 
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
-    parent::init($view, $display, $options);
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::initDisplay().
+   */
+  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
+    parent::initDisplay($view, $display, $options);
 
     // Set the default row style. Ideally this would be part of the option
     // definition, but in this case it's dependent on the view's base table,

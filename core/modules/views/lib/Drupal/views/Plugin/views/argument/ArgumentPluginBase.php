@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 
@@ -64,8 +65,8 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Overrides Drupal\views\Plugin\views\HandlerBase:init().
    */
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     if (!empty($this->definition['name field'])) {
       $this->name_field = $this->definition['name field'];
@@ -339,6 +340,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
                 ),
               ),
               '#id' => 'edit-options-validate-options-' . $id,
+              '#default_value' => array(),
             );
             $plugin->buildOptionsForm($form['validate']['options'][$id], $form_state);
             $validate_types[$id] = $info['title'];
@@ -544,6 +546,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
                 ':input[name="options[default_argument_type]"]' => array('value' => $id),
               ),
             ),
+            '#default_value' => array(),
           );
           $options[$id] = $info['title'];
           $plugin->buildOptionsForm($form['argument_default'][$id], $form_state);
@@ -631,6 +634,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
               ':input[name="options[summary][format]"]' => array('value' => $id),
             ),
           ),
+          '#default_value' => array(),
         );
         $options[$id] = $info['title'];
         $plugin->buildOptionsForm($form['summary']['options'][$id], $form_state);
@@ -1055,12 +1059,11 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     $plugin = drupal_container()->get("plugin.manager.views.$type")->createInstance($name);
     if ($plugin) {
-      // Style plugins expects different parameters as argument related plugins.
-      if ($type == 'style') {
-        $plugin->init($this->view, $this->view->display_handler->display, $options);
-      }
-      else {
-        $plugin->init($this->view, $this, $options);
+      $plugin->init($this->view, $this->displayHandler, $options);
+
+      if ($type !== 'style') {
+        // It's an argument_default/argument_validate plugin, so set the argument.
+        $plugin->setArgument($this);
       }
       return $plugin;
     }

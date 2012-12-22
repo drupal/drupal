@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -19,12 +20,15 @@ use Drupal\views\ViewExecutable;
  */
 class GroupByNumeric extends SortPluginBase {
 
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  /**
+   * Overrides \Drupal\views\Plugin\views\HandlerBase::init().
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     // Initialize the original handler.
     $this->handler = views_get_handler($options['table'], $options['field'], 'sort');
-    $this->handler->init($view, $options);
+    $this->handler->init($view, $display, $options);
   }
 
   /**

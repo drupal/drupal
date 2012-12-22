@@ -96,9 +96,9 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   protected $usesAreas = TRUE;
 
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
+  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
+    $this->view = $view;
     $this->display = &$display;
 
     // Load extenders as soon as possible.
@@ -882,7 +882,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $handler->handler_type = $type;
           }
 
-          $handler->init($this->view, $info);
+          $handler->init($this->view, $this, $info);
           $this->handlers[$type][$id] = &$handler;
         }
 
@@ -2308,7 +2308,7 @@ abstract class DisplayPluginBase extends PluginBase {
           if ($plugin) {
             // Because pagers have very similar options, let's allow pagers to
             // try to carry the options over.
-            $plugin->init($this->view, $this->display, $pager['options']);
+            $plugin->init($this->view, $this, $pager['options']);
 
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->setOption('pager', $pager);

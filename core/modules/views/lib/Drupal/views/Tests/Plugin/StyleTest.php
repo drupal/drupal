@@ -79,7 +79,7 @@ class StyleTest extends ViewTestBase {
     $view->initStyle();
     $view->style_plugin->setUsesRowPlugin(TRUE);
     // Reinitialize the style as it supports row plugins now.
-    $view->style_plugin->init($view, $view->display_handler, array());
+    $view->style_plugin->init($view, $view->display_handler);
     $this->assertTrue($view->style_plugin->row_plugin instanceof RowTest, 'Make sure the right row plugin class is loaded.');
 
     $random_text = $this->randomName();

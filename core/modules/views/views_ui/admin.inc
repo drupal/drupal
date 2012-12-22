@@ -1445,7 +1445,7 @@ function views_ui_config_item_form($form, &$form_state) {
         $base = $data[$relationship['field']]['relationship']['base'];
         $base_fields = views_fetch_fields($base, $form_state['type'], $executable->display_handler->useGroupBy());
         if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
-          $relationship_handler->init($executable, $relationship);
+          $relationship_handler->init($executable, $executable->display_handler, $relationship);
           $relationship_options[$relationship['id']] = $relationship_handler->label();
         }
       }
@@ -1557,7 +1557,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Create a new handler and unpack the options from the form onto it. We
   // can use that for storage.
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
-  $handler->init($executable, $item);
+  $handler->init($executable, $executable->display_handler, $item);
 
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
@@ -1612,7 +1612,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // Create a new handler and unpack the options from the form onto it. We
   // can use that for storage.
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
-  $handler->init($executable, $item);
+  $handler->init($executable, $executable->display_handler, $item);
 
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
@@ -1665,7 +1665,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $handler->init($view, $item);
+      $handler->init($executable, $executable->display_handler, $item);
       $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
@@ -1688,12 +1688,13 @@ function views_ui_config_item_group_form_submit($form, &$form_state) {
   $id = $form_state['id'];
 
   $handler = views_get_handler($item['table'], $item['field'], $type);
-  $handler->init($form_state['view']->get('executable'), $item);
+  $executable = $form_state['view']->get('executable');
+  $handler->init($executable, $executable->display_handler, $item);
 
   $handler->submitGroupByForm($form, $form_state);
 
   // Store the item back on the view
-  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $executable->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -1767,7 +1768,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $handler->init($view, $item);
+      $handler->init($executable, $executable->display_handler, $item);
       $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));

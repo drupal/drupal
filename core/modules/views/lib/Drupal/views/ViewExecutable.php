@@ -2214,7 +2214,7 @@ class ViewExecutable {
 
     if (!empty($this->displayHandlers[$id])) {
       // Initialize the new display handler with data.
-      $this->displayHandlers[$id]->init($this, $display[$id]);
+      $this->displayHandlers[$id]->initDisplay($this, $display[$id]);
       // If this is NOT the default display handler, let it know which is
       if ($id != 'default') {
         // @todo is the '&' still required in php5?

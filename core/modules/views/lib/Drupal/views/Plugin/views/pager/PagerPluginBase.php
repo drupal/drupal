@@ -34,22 +34,6 @@ abstract class PagerPluginBase extends PluginBase {
   protected $usesOptions = TRUE;
 
   /**
-   * Initialize the plugin.
-   *
-   * @param $view
-   *   The view object.
-   * @param $display
-   *   The display handler.
-   */
-  public function init(ViewExecutable $view, &$display, $options = array()) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
-    $this->displayHandler = &$display;
-
-    $this->unpackOptions($this->options, $options);
-  }
-
-  /**
    * Get how many items per page this pager will display.
    *
    * All but the leanest pagers should probably return a value here, so

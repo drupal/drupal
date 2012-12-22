@@ -8,6 +8,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -24,10 +25,13 @@ use Drupal\Core\Annotation\Plugin;
 class Comment extends FieldPluginBase {
 
   /**
-   * Override init function to provide generic option to link to comment.
+   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   *
+   * Provide generic option to link to comment.
    */
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     if (!empty($this->options['link_to_comment'])) {
       $this->additional_fields['cid'] = 'cid';
       $this->additional_fields['nid'] = 'nid';

@@ -38,18 +38,6 @@ abstract class RowPluginBase extends PluginBase {
   protected $usesFields = FALSE;
 
   /**
-   * Initialize the row plugin.
-   */
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
-    $this->displayHandler = &$display;
-
-    // Overlay incoming options on top of defaults
-    $this->unpackOptions($this->options, $options);
-  }
-
-  /**
    * Returns the usesFields property.
    *
    * @return bool

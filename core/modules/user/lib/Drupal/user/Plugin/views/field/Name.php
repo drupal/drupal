@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\user\Plugin\views\field\User;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\ViewExecutable;
 
@@ -24,10 +25,13 @@ use Drupal\views\ViewExecutable;
 class Name extends User {
 
   /**
+   * Overrides \Drupal\user\Plugin\views\field\User::init().
+   *
    * Add uid in the query so we can test for anonymous if needed.
    */
-  public function init(ViewExecutable $view, &$data) {
-    parent::init($view, $data);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     if (!empty($this->options['overwrite_anonymous']) || !empty($this->options['format_username'])) {
       $this->additional_fields['uid'] = 'uid';
     }

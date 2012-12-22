@@ -80,7 +80,7 @@ class DisplayArray implements \ArrayAccess, \Iterator, \Countable {
       $this->displayHandlers[$display_id] = drupal_container()->get("plugin.manager.views.display")->createInstance('default');
     }
 
-    $this->displayHandlers[$display_id]->init($this->view, $display);
+    $this->displayHandlers[$display_id]->initDisplay($this->view, $display);
     // If this is not the default display handler, let it know which is since
     // it may well utilize some data from the default.
     if ($display_id != 'default') {
