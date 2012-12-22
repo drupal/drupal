@@ -1744,35 +1744,54 @@ function system_update_8006() {
 }
 
 /**
+ * Adds tags, checksum_invalidations, checksum_deletions to a cache table.
+ *
+ * @param string $table
+ *   Name of the cache table.
+ */
+function system_update_8007_add_tag_column($table) {
+  if (db_table_exists($table)) {
+    db_add_field($table, 'tags', array(
+      'description' => 'Space-separated list of cache tags for this entry.',
+      'type' => 'text',
+      'size' => 'big',
+      'not null' => FALSE,
+    ));
+    db_add_field($table, 'checksum_invalidations', array(
+      'description' => 'The tag invalidation sum when this entry was saved.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+    db_add_field($table, 'checksum_deletions', array(
+      'description' => 'The tag deletion sum when this entry was saved.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+  }
+}
+
+/**
  * Modifies existing cache tables, adding support for cache tags.
  */
 function system_update_8007() {
-  // Find all potential cache tables.
-  $tables = db_find_tables(Database::getConnection()->prefixTables('{cache}') . '%');
+  $tables = array(
+    'cache',
+    'cache_bootstrap',
+    'cache_form',
+    'cache_page',
+    'cache_menu',
+    'cache_path',
+    'cache_filter',
+    'cache_image',
+    'cache_update',
+    'cache_block',
+    'cache_field',
+  );
 
   foreach ($tables as $table) {
-    // Assume we have a valid cache table if there is both 'cid' and 'data'
-    // columns.
-    if (db_field_exists($table, 'cid') && db_field_exists($table, 'data') && !db_field_exists($table, 'tags')) {
-      db_add_field($table, 'tags', array(
-        'description' => 'Space-separated list of cache tags for this entry.',
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => FALSE,
-      ));
-      db_add_field($table, 'checksum_invalidations', array(
-        'description' => 'The tag invalidation sum when this entry was saved.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ));
-      db_add_field($table, 'checksum_deletions', array(
-        'description' => 'The tag deletion sum when this entry was saved.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ));
-    }
+    system_update_8007_add_tag_column($table);
   }
 }
 
