@@ -53,7 +53,7 @@ class HandlerAllTest extends HandlerTestBase {
    */
   public function testHandlers() {
     $object_types = array_keys(ViewExecutable::viewsHandlerTypes());
-    foreach (views_fetch_data() as $base_table => $info) {
+    foreach (drupal_container()->get('views.views_data')->get() as $base_table => $info) {
       if (!isset($info['table']['base'])) {
         continue;
       }

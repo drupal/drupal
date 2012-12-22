@@ -1441,7 +1441,7 @@ function views_ui_config_item_form($form, &$form_state) {
         }
 
         // If this relationship is valid for this type, add it to the list.
-        $data = views_fetch_data($relationship['table']);
+        $data = drupal_container()->get('views.views_data')->get($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
         $base_fields = views_fetch_fields($base, $form_state['type'], $executable->display_handler->useGroupBy());
         if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
@@ -2156,7 +2156,7 @@ function _views_sort_types($a, $b) {
 function views_fetch_fields($base, $type, $grouping = FALSE, $sub_type = NULL) {
   static $fields = array();
   if (empty($fields)) {
-    $data = views_fetch_data();
+    $data = drupal_container()->get('views.views_data')->get();
     $start = microtime(TRUE);
     // This constructs this ginormous multi dimensional array to
     // collect the important data about fields. In the end,
@@ -2288,6 +2288,7 @@ function views_ui_form_button_was_clicked($element, &$form_state) {
  */
 function views_ui_field_list() {
   $views = views_get_all_views();
+  $data = drupal_container()->get('views.views_data');
 
   // Fetch all fieldapi fields which are used in views
   // Therefore search in all views, displays and handler-types.
@@ -2300,12 +2301,12 @@ function views_ui_field_list() {
       if ($executable->setDisplay($display_id)) {
         foreach ($handler_types as $type => $info) {
           foreach ($executable->getItems($type, $display_id) as $item) {
-            $data = views_fetch_data($item['table']);
-            if (isset($data[$item['field']]) && isset($data[$item['field']][$type])
-              && $data = $data[$item['field']][$type]) {
+            $table_data = $data->get($item['table']);
+            if (isset($table_data[$item['field']]) && isset($table_data[$item['field']][$type])
+              && $field_data = $table_data[$item['field']][$type]) {
               // The final check that we have a fieldapi field now.
-              if (isset($data['field_name'])) {
-                $fields[$data['field_name']][$view->get('name')] = $view->get('name');
+              if (isset($field_data['field_name'])) {
+                $fields[$field_data['field_name']][$view->get('name')] = $view->get('name');
               }
             }
           }

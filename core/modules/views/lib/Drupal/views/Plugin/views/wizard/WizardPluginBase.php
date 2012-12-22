@@ -755,7 +755,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Add a least one field so the view validates and the user has a preview.
     // The base field can provide a default in its base settings; otherwise,
     // choose the first field with a field handler.
-    $data = views_fetch_data($this->base_table);
+    $data = drupal_container()->get('views.views_data')->get($this->base_table);
     if (isset($data['table']['base']['defaults']['field'])) {
       $field = $data['table']['base']['defaults']['field'];
     }
@@ -836,7 +836,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           }
         }
       }
-      $table_data = views_fetch_data($table);
+      $table_data = drupal_container()->get('views.views_data')->get($table);
       // If the 'in' operator is being used, map the values to an array.
       $handler = $table_data[$bundle_key]['filter']['id'];
       $handler_definition = drupal_container()->get('plugin.manager.views.filter')->getDefinition($handler);
@@ -922,7 +922,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // created from node, but the wizard type is another base table, make
       // sure it is not added. This usually don't happen if you have js
       // enabled.
-      $data = views_fetch_data($table);
+      $data = drupal_container()->get('views.views_data')->get($table);
       if (isset($data[$column]['sort'])) {
         $sorts[$column] = array(
           'id' => $column,

@@ -101,7 +101,7 @@
  * Describe data tables (or the equivalent) to Views.
  *
  * The data described with this hook is fetched and retrieved by
- * views_fetch_data().
+ * drupal_container()->get('views.views_data')->get().
  *
  * @return array
  *   An associative array describing the data structure. Primary key is the

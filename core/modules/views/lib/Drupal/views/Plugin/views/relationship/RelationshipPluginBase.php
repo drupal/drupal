@@ -119,7 +119,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
    */
   public function query() {
     // Figure out what base table this relationship brings to the party.
-    $table_data = views_fetch_data($this->definition['base']);
+    $table_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
 
     $this->ensureMyTable();

@@ -74,14 +74,4 @@ abstract class FieldTestBase extends ViewTestBase {
     }
   }
 
-  /**
-   * Clear all views caches and static caches which are required for the patch.
-   */
-  function clearViewsCaches() {
-    // Reset views data cache.
-    drupal_static_reset('_views_fetch_data_cache');
-    drupal_static_reset('_views_fetch_data_recursion_protected');
-    drupal_static_reset('_views_fetch_data_fully_loaded');
-  }
-
 }

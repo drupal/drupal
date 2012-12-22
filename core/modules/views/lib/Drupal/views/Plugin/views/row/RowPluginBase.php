@@ -73,7 +73,7 @@ abstract class RowPluginBase extends PluginBase {
         $relationship_handler = views_get_handler($relationship['table'], $relationship['field'], 'relationship');
 
         // If this relationship is valid for this type, add it to the list.
-        $data = views_fetch_data($relationship['table']);
+        $data = drupal_container()->get('views.views_data')->get($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
         if ($base == $this->base_table) {
           $relationship_handler->init($executable, $relationship);

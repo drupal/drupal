@@ -127,7 +127,6 @@ abstract class DisplayPluginBase extends PluginBase {
       unset($options['defaults']);
     }
 
-    views_include('cache');
     // Cache for unpackOptions, but not if we are in the ui.
     static $unpack_options = array();
     if (empty($view->editing)) {
@@ -799,7 +798,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     // Query plugins allow specifying a specific query class per base table.
     if ($type == 'query') {
-      $views_data = views_fetch_data($this->view->storage->get('base_table'));
+      $views_data = drupal_container()->get('views.views_data')->get($this->view->storage->get('base_table'));
       $name = isset($views_data['table']['base']['query_id']) ? $views_data['table']['base']['query_id'] : 'views_query';
     }
 

@@ -9,6 +9,7 @@ namespace Drupal\views;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\Reference;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -24,6 +25,16 @@ class ViewsBundle extends Bundle {
       $container->register("plugin.manager.views.$type", 'Drupal\views\Plugin\ViewsPluginManager')
         ->addArgument($type);
     }
+
+    $container
+      ->register('cache.views_info', 'Drupal\Core\Cache\CacheBackendInterface')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('views_info');
+
+    $container->register('views.views_data', 'Drupal\views\ViewsDataCache')
+      ->addArgument(new Reference('cache.views_info'))
+      ->addArgument(new Reference('config.factory'));
   }
 
 }

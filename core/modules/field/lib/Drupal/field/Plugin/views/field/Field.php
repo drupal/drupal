@@ -128,7 +128,7 @@ class Field extends FieldPluginBase {
         $relationships = $this->view->display_handler->getOption('relationships');
         if (!empty($relationships[$this->options['relationship']])) {
           $options = $relationships[$this->options['relationship']];
-          $data = views_fetch_data($options['table']);
+          $data = drupal_container()->get('views.views_data')->get($options['table']);
           $this->base_table = $data[$options['field']]['relationship']['base'];
         }
       }

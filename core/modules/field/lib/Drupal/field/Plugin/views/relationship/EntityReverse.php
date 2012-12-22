@@ -40,7 +40,7 @@ class EntityReverse extends RelationshipPluginBase  {
     $this->ensureMyTable();
     // First, relate our base table to the current base table to the
     // field, using the base table's id field to the field's column.
-    $views_data = views_fetch_data($this->table);
+    $views_data = drupal_container()->get('views.views_data')->get($this->table);
     $left_field = $views_data['table']['base']['field'];
 
     $first = array(

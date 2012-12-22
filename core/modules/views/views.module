@@ -614,7 +614,6 @@ function views_contextual_links_view_alter(&$element, $items) {
  */
 function views_block_info() {
   // Try to avoid instantiating all the views just to get the blocks info.
-  views_include('cache');
   $cache = views_cache_get('views_block_items', TRUE);
   if ($cache && is_array($cache->data)) {
     return $cache->data;
@@ -1154,8 +1153,8 @@ function views_library_info() {
 function views_get_handler($table, $field, $type, $override = NULL) {
   // Get the plugin manager for this type.
   $manager = drupal_container()->get("plugin.manager.views.$type");
+  $data = drupal_container()->get('views.views_data')->get($table);
 
-  $data = views_fetch_data($table);
   if (isset($data[$field][$type])) {
     $definition = $data[$field][$type];
     foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table') as $key) {
@@ -1194,27 +1193,6 @@ function views_get_handler($table, $field, $type, $override = NULL) {
 }
 
 /**
- * Fetch Views' data from the cache
- *
- * $param string|null $table
- *   (optional) The name of the table for which to fetch Views' data. If
- *   NULL, data for all tables will be retrieved
- * @param bool $reset
- *   (optional) Whether to rebuild the cache. Defaults to FALSE.
- *
- * @return array
- *   An associative array of views data for the given table. If $table is
- *   NULL, the array will be keyed by table name, with each key corresponding
- *   to the data array for that table.
- *
- * @see hook_views_data()
- */
-function views_fetch_data($table = NULL, $reset = FALSE) {
-  views_include('cache');
-  return _views_fetch_data($table, $reset);
-}
-
-/**
  * Fetch a list of all base tables available
  *
  * @return array
@@ -1224,7 +1202,7 @@ function views_fetch_base_tables() {
   static $base_tables = array();
   if (empty($base_tables)) {
     $tables = array();
-    $data = views_fetch_data();
+    $data = drupal_container()->get('views.views_data')->get();
     foreach ($data as $table => $info) {
       if (!empty($info['table']['base'])) {
         $tables[$table] = array(
@@ -2207,4 +2185,52 @@ function views_config_import_delete($name, $new_config, $old_config) {
   $view = entity_load('view', $id);
   entity_delete($view);
   return TRUE;
+}
+
+/**
+ * Set a cached item in the views cache.
+ *
+ * This is just a convenience wrapper around cache_set().
+ *
+ * @param $cid
+ *   The cache ID of the data to store.
+ * @param $data
+ *   The data to store in the cache. Complex data types will be automatically serialized before insertion.
+ *   Strings will be stored as plain text and not serialized.
+ * @param $use_language
+ *   If TRUE, the data will be cached specific to the currently active language.
+ */
+function views_cache_set($cid, $data, $use_language = FALSE) {
+  if (config('views.settings')->get('skip_cache')) {
+    return;
+  }
+  if ($use_language) {
+    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  }
+
+  cache('views_info')->set($cid, $data);
+}
+
+/**
+ * Return data from the persistent views cache.
+ *
+ * This is just a convenience wrapper around cache_get().
+ *
+ * @param int $cid
+ *   The cache ID of the data to retrieve.
+ * @param bool $use_language
+ *   If TRUE, the data will be requested specific to the currently active language.
+ *
+ * @return stdClass|bool
+ *   The cache or FALSE on failure.
+ */
+function views_cache_get($cid, $use_language = FALSE) {
+  if (config('views.settings')->get('skip_cache')) {
+    return FALSE;
+  }
+  if ($use_language) {
+    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  }
+
+  return cache('views_info')->get($cid);
 }

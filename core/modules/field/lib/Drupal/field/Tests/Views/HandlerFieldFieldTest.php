@@ -52,8 +52,6 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     $this->setUpInstances();
 
-    $this->clearViewsCaches();
-
     // Create some nodes.
     $this->nodes = array();
     for ($i = 0; $i < 3; $i++) {

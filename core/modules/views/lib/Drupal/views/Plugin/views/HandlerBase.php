@@ -770,7 +770,7 @@ abstract class HandlerBase extends PluginBase {
    * @return Drupal\views\Plugin\views\join\JoinPluginBase
    */
   public static function getTableJoin($table, $base_table) {
-    $data = views_fetch_data($table);
+    $data = drupal_container()->get('views.views_data')->get($table);
     if (isset($data['table']['join'][$base_table])) {
       $join_info = $data['table']['join'][$base_table];
       if (!empty($join_info['join_id'])) {
@@ -815,10 +815,10 @@ abstract class HandlerBase extends PluginBase {
     // If the user has configured a relationship on the handler take that into
     // account.
     if (!empty($this->options['relationship']) && $this->options['relationship'] != 'none') {
-      $views_data = views_fetch_data($this->view->relationship->table);
+      $views_data = drupal_container()->get('views.views_data')->get($this->view->relationship->table);
     }
     else {
-      $views_data = views_fetch_data($this->view->storage->get('base_table'));
+      $views_data = drupal_container()->get('views.views_data')->get($this->view->storage->get('base_table'));
     }
 
     if (isset($views_data['table']['entity type'])) {

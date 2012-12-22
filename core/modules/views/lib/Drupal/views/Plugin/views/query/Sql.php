@@ -1444,7 +1444,7 @@ class Sql extends QueryPluginBase {
     $count_query->addMetaData('view', $view);
 
     if (empty($this->options['disable_sql_rewrite'])) {
-      $base_table_data = views_fetch_data($this->view->storage->get('base_table'));
+      $base_table_data = drupal_container()->get('views.views_data')->get($this->view->storage->get('base_table'));
       if (isset($base_table_data['table']['base']['access query tag'])) {
         $access_tag = $base_table_data['table']['base']['access query tag'];
         $query->addTag($access_tag);
@@ -1542,7 +1542,8 @@ class Sql extends QueryPluginBase {
   function get_entity_tables() {
     // Start with the base table.
     $entity_tables = array();
-    $base_table_data = views_fetch_data($this->view->storage->get('base_table'));
+    $views_data = drupal_container()->get('views.views_data');
+    $base_table_data = $views_data->get($this->view->storage->get('base_table'));
     if (isset($base_table_data['table']['entity type'])) {
       $entity_tables[$this->view->storage->get('base_table')] = array(
         'base' => $this->view->storage->get('base_table'),
@@ -1553,7 +1554,7 @@ class Sql extends QueryPluginBase {
     }
     // Include all relationships.
     foreach ($this->view->relationship as $relationship_id => $relationship) {
-      $table_data = views_fetch_data($relationship->definition['base']);
+      $table_data = $views_data->get($relationship->definition['base']);
       if (isset($table_data['table']['entity type'])) {
         $entity_tables[$relationship->alias] = array(
           'base' => $relationship->definition['base'],
