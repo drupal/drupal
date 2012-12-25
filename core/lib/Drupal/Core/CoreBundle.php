@@ -156,26 +156,25 @@ class CoreBundle extends Bundle {
             ->addMethodCall('fromRequest', array(new Reference('request')));
     $container->register('router.route_provider', 'Drupal\Core\Routing\RouteProvider')
       ->addArgument(new Reference('database'));
-    $container->register('router.matcher.final_matcher', 'Drupal\Core\Routing\UrlMatcher')
-      ->addArgument(NULL)
-      ->addArgument(NULL);
-    $container->register('router.matcher', 'Symfony\Cmf\Routing\NestedMatcher\NestedMatcher')
+    $container->register('router.matcher.final_matcher', 'Drupal\Core\Routing\UrlMatcher');
+    $container->register('router.matcher', 'Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher')
       ->addArgument(new Reference('router.route_provider'))
       ->addMethodCall('setFinalMatcher', array(new Reference('router.matcher.final_matcher')));
-    $container->register('router.generator', 'Symfony\Cmf\Routing\ProviderBasedGenerator')
+    $container->register('router.generator', 'Symfony\Cmf\Component\Routing\ProviderBasedGenerator')
       ->addArgument(new Reference('router.route_provider'));
-    $container->register('router.dynamic', 'Symfony\Cmf\Routing\DynamicRouter')
+    $container->register('router.dynamic', 'Symfony\Cmf\Component\Routing\DynamicRouter')
       ->addArgument(new Reference('router.request_context'))
       ->addArgument(new Reference('router.matcher'))
       ->addArgument(new Reference('router.generator'));
 
     $container->register('legacy_generator', 'Drupal\Core\Routing\NullGenerator');
-    $container->register('legacy_router', 'Symfony\Cmf\Routing\DynamicRouter')
+    $container->register('legacy_router', 'Symfony\Cmf\Component\Routing\DynamicRouter')
             ->addArgument(new Reference('router.request_context'))
             ->addArgument(new Reference('legacy_url_matcher'))
             ->addArgument(new Reference('legacy_generator'));
 
-    $container->register('router', 'Symfony\Cmf\Routing\ChainRouter')
+    $container->register('router', 'Symfony\Cmf\Component\Routing\ChainRouter')
+       ->addMethodCall('setContext', array(new Reference('router.request_context')))
       ->addMethodCall('add', array(new Reference('legacy_router')))
       ->addMethodCall('add', array(new Reference('router.dynamic')));
 
@@ -223,7 +222,7 @@ class CoreBundle extends Bundle {
     $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
       ->addTag('event_subscriber');
     $container->register('router_listener', 'Symfony\Component\HttpKernel\EventListener\RouterListener')
-      ->addArgument(new Reference('matcher'))
+      ->addArgument(new Reference('router'))
       ->addTag('event_subscriber');
     $container->register('content_negotiation', 'Drupal\Core\ContentNegotiation');
     $container->register('view_subscriber', 'Drupal\Core\EventSubscriber\ViewSubscriber')
