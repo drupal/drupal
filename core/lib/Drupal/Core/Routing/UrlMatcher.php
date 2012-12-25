@@ -21,7 +21,7 @@ class UrlMatcher extends BaseUrlMatcher {
     $context = new RequestContext();
     $context->fromRequest($request);
     $this->setContext($context);
-    return $this->match($request->attributes->get('system_path'));
+    return $this->match('/' . $request->attributes->get('system_path'));
   }
 
 }
