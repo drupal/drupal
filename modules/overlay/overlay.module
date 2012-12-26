@@ -704,7 +704,7 @@ function overlay_overlay_child_initialize() {
 }
 
 /**
- * Requests that the overlay overlay closes when the page is displayed.
+ * Requests that the overlay closes when the page is displayed.
  *
  * @param $redirect
  *   (optional) The path that should open in the parent window after the
