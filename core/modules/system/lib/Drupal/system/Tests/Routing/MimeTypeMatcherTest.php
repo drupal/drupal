@@ -75,24 +75,6 @@ class MimeTypeMatcherTest extends UnitTestBase {
   }
 
   /**
-   * Confirms we can nest multiple partial matchers.
-   */
-  public function testNestedMatcher() {
-
-    $matcher = new NestedMatcher();
-
-    $matcher->setInitialMatcher(new MockPathMatcher($this->fixtures->sampleRouteCollection()));
-    $matcher->addPartialMatcher(new MimeTypeMatcher());
-    $matcher->setFinalMatcher(new FirstEntryFinalMatcher());
-
-    $request = Request::create('/path/two', 'GET');
-    $request->headers->set('Accept', 'text/html, text/xml;q=0.9');
-
-    $attributes = $matcher->matchRequest($request);
-    $this->assertEqual($attributes['_route']->getOption('_name'), 'route_e', 'The correct matching route was found.');
-  }
-
-  /**
    * Confirms that the MimeTypeMatcher matcher throws an exception for no-route.
    */
   public function testNoRouteFound() {

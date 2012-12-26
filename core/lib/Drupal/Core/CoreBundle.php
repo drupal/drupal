@@ -145,15 +145,8 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('lock'))
       ->addArgument(new Reference('event_dispatcher'));
 
-
-    $container->register('matcher', 'Drupal\Core\Routing\ChainMatcher');
-    $container->register('legacy_url_matcher', 'Drupal\Core\LegacyUrlMatcher')
-      ->addTag('chained_matcher');
-    $container->register('nested_matcher', 'Drupal\Core\Routing\NestedMatcher')
-      ->addTag('chained_matcher', array('priority' => 5));
-
     $container->register('router.request_context', 'Symfony\Component\Routing\RequestContext')
-            ->addMethodCall('fromRequest', array(new Reference('request')));
+      ->addMethodCall('fromRequest', array(new Reference('request')));
     $container->register('router.route_provider', 'Drupal\Core\Routing\RouteProvider')
       ->addArgument(new Reference('database'));
     $container->register('router.matcher.final_matcher', 'Drupal\Core\Routing\UrlMatcher');
@@ -168,6 +161,7 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('router.generator'));
 
     $container->register('legacy_generator', 'Drupal\Core\Routing\NullGenerator');
+    $container->register('legacy_url_matcher', 'Drupal\Core\LegacyUrlMatcher');
     $container->register('legacy_router', 'Symfony\Cmf\Component\Routing\DynamicRouter')
             ->addArgument(new Reference('router.request_context'))
             ->addArgument(new Reference('legacy_url_matcher'))
@@ -177,8 +171,6 @@ class CoreBundle extends Bundle {
        ->addMethodCall('setContext', array(new Reference('router.request_context')))
       ->addMethodCall('add', array(new Reference('legacy_router')))
       ->addMethodCall('add', array(new Reference('router.dynamic')));
-
-
 
     $container
       ->register('cache.path', 'Drupal\Core\Cache\CacheBackendInterface')
