@@ -184,7 +184,8 @@ class ModuleApiTest extends WebTestBase {
     module_disable(array('php'));
     $this->assertTrue(!module_exists('forum') && !module_exists('poll'), 'Depedency chain was disabled by module_disable().');
     $this->assertFalse(module_exists('php'), 'Disabling a module with unlisted dependents succeeded.');
-    $this->assertEqual(variable_get('test_module_disable_order', array()), array('forum', 'poll', 'php'), 'Modules were disabled in the correct order by module_disable().');
+    $disabled_modules = state()->get('module_test.disable_order') ?: array();
+    $this->assertEqual($disabled_modules, array('forum', 'poll', 'php'), 'Modules were disabled in the correct order by module_disable().');
 
     // Disable a module that is listed as a dependency by the installation
     // profile. Make sure that the profile itself is not on the list of
@@ -195,7 +196,7 @@ class ModuleApiTest extends WebTestBase {
     $this->assertTrue(module_exists('comment'), 'Comment module is enabled.');
     module_disable(array('comment'));
     $this->assertFalse(module_exists('comment'), 'Comment module was disabled.');
-    $disabled_modules = variable_get('test_module_disable_order', array());
+    $disabled_modules = state()->get('module_test.disable_order') ?: array();
     $this->assertTrue(in_array('comment', $disabled_modules), 'Comment module is in the list of disabled modules.');
     $this->assertFalse(in_array($profile, $disabled_modules), 'The installation profile is not in the list of disabled modules.');
 
@@ -216,14 +217,15 @@ class ModuleApiTest extends WebTestBase {
     foreach (array('forum', 'poll', 'php') as $module) {
       $this->assertEqual(drupal_get_installed_schema_version($module), SCHEMA_UNINSTALLED, format_string('The @module module was uninstalled.', array('@module' => $module)));
     }
-    $this->assertEqual(variable_get('test_module_uninstall_order', array()), array('forum', 'poll', 'php'), 'Modules were uninstalled in the correct order by module_uninstall().');
+    $uninstalled_modules = state()->get('module_test.uninstall_order') ?: array();
+    $this->assertEqual($uninstalled_modules, array('forum', 'poll', 'php'), 'Modules were uninstalled in the correct order by module_uninstall().');
 
     // Uninstall the profile module from above, and make sure that the profile
     // itself is not on the list of dependent modules to be uninstalled.
     $result = module_uninstall(array('comment'));
     $this->assertTrue($result, 'module_uninstall() returns the correct value.');
     $this->assertEqual(drupal_get_installed_schema_version('comment'), SCHEMA_UNINSTALLED, 'Comment module was uninstalled.');
-    $uninstalled_modules = variable_get('test_module_uninstall_order', array());
+    $uninstalled_modules = state()->get('module_test.uninstall_order') ?: array();
     $this->assertTrue(in_array('comment', $uninstalled_modules), 'Comment module is in the list of uninstalled modules.');
     $this->assertFalse(in_array($profile, $uninstalled_modules), 'The installation profile is not in the list of uninstalled modules.');
 
