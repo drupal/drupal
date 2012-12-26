@@ -1743,7 +1743,8 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
 
     // Call the logging hooks to log/process the message
     foreach (module_implements('watchdog') as $module) {
-      module_invoke($module, 'watchdog', $log_entry);
+      $function = $module . '_watchdog'
+      $function($log_entry);
     }
 
     // It is critical that the semaphore is only cleared here, in the parent
