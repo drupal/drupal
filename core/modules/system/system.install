@@ -678,95 +678,6 @@ function system_schema() {
   $schema['cache_path'] = $schema['cache'];
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
 
-  $schema['date_format_type'] = array(
-    'description' => 'Stores configured date format types.',
-    'fields' => array(
-      'type' => array(
-        'description' => 'The date format type, e.g. medium.',
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-      ),
-      'title' => array(
-        'description' => 'The human readable name of the format type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'locked' => array(
-        'description' => 'Whether or not this is a system provided format.',
-        'type' => 'int',
-        'size' => 'tiny',
-        'default' => 0,
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('type'),
-    'indexes' => array(
-      'title' => array('title'),
-    ),
-  );
-
-  // This table's name is plural as some versions of MySQL can't create a
-  // table named 'date_format'.
-  $schema['date_formats'] = array(
-    'description' => 'Stores configured date formats.',
-    'fields' => array(
-      'dfid' => array(
-        'description' => 'The date format identifier.',
-        'type' => 'serial',
-        'not null' => TRUE,
-        'unsigned' => TRUE,
-      ),
-      'format' => array(
-        'description' => 'The date format string.',
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-      ),
-      'type' => array(
-        'description' => 'The date format type, e.g. medium.',
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-      ),
-      'locked' => array(
-        'description' => 'Whether or not this format can be modified.',
-        'type' => 'int',
-        'size' => 'tiny',
-        'default' => 0,
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('dfid'),
-    'unique keys' => array('formats' => array('format', 'type')),
-  );
-
-  $schema['date_format_locale'] = array(
-    'description' => 'Stores configured date formats for each locale.',
-    'fields' => array(
-      'format' => array(
-        'description' => 'The date format string.',
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-      ),
-      'type' => array(
-        'description' => 'The date format type, e.g. medium.',
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-      ),
-      'language' => array(
-        'description' => 'A {language}.langcode for this format to be used with.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('type', 'language'),
-  );
-
   $schema['flood'] = array(
     'description' => 'Flood controls the threshold of events, such as the number of contact attempts.',
     'fields' => array(
@@ -2378,6 +2289,38 @@ function system_update_8044() {
     '404_fast_paths' => 'paths',
     '404_fast_paths_exclude' => 'exclude_paths',
   ));
+}
+
+/**
+ * Converts existing date formats to the new config system.
+ */
+function system_update_8045() {
+  // Get the date config object.
+  $config = config('system.date');
+
+  // Fetch all date types from {date_format_type}.
+  $date_formats = db_query('SELECT * FROM {date_format_type}')->fetchAllAssoc('type', PDO::FETCH_ASSOC);
+  if (!empty($date_formats)) {
+    foreach ($date_formats as $type => $format) {
+      // Set name and locked properties.
+      $config->set("formats.{$type}.name", $format['title']);
+      $config->set("formats.{$type}.locked", $format['locked']);
+
+      // Get the default date format for this type.
+      $variable_name = 'date_format_' . $type;
+      $default_format = update_variable_get($variable_name, NULL);
+      if ($default_format) {
+        // In Drupal 7 we only used PHP date types.
+        $config->set("formats.{$type}.pattern.php", $default_format);
+
+        // Delete the migrated variables.
+        update_variable_del($variable_name);
+      }
+    }
+
+    // Save the date configuration object.
+    $config->save();
+  }
 }
 
 /**
