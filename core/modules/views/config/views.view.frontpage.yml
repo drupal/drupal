@@ -38,13 +38,11 @@ display:
           table: node
           field: sticky
           order: DESC
-          plugin_id: standard
         created:
           id: created
           table: node
           field: created
           order: DESC
-          plugin_id: date
       filters:
         promote:
           id: promote
@@ -54,7 +52,6 @@ display:
           group: 0
           expose:
             operator: false
-          plugin_id: boolean
         status:
           id: status
           table: node
@@ -63,7 +60,6 @@ display:
           group: 0
           expose:
             operator: false
-          plugin_id: boolean
   page_1:
     id: page_1
     display_title: Page

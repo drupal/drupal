@@ -11,19 +11,16 @@ display:
           id: title
           table: node
           field: title
-          plugin_id: node
       relationships:
         cid:
           id: cid
           table: node
           field: cid
-          plugin_id: standard
         nid:
           id: nid
           table: comment
           field: nid
           relationship: cid
-          plugin_id: standard
     display_plugin: default
     display_title: Master
     id: default

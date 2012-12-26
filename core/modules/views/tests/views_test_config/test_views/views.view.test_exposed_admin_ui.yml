@@ -23,7 +23,6 @@ display:
           field: type
           id: type
           table: node
-          plugin_id: node_type
       pager:
         type: full
       sorts:
@@ -31,7 +30,6 @@ display:
           field: created
           id: created
           table: node
-          plugin_id: date
       style:
         type: default
       row:

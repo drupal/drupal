@@ -45,7 +45,6 @@ display:
           field: title
           id: title
           table: node
-          plugin_id: node
       filters:
         status:
           field: status
@@ -53,7 +52,6 @@ display:
           id: status
           table: node
           value: '1'
-          plugin_id: boolean
       pager:
         options:
           items_per_page: '10'
@@ -71,7 +69,6 @@ display:
           id: created
           order: DESC
           table: node
-          plugin_id: date
       style_plugin: default
       title: 'Test Display'
     display_plugin: default

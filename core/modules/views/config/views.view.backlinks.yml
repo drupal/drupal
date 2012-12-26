@@ -36,7 +36,6 @@ display:
           empty: false
           content: 'No backlinks found.'
           format: '1'
-          plugin_id: text
       fields:
         title:
           id: title
@@ -44,7 +43,6 @@ display:
           field: title
           label: ''
           link_to_node: 1
-          plugin_id: node
       arguments:
         nid:
           id: nid
@@ -68,7 +66,6 @@ display:
           group: 0
           expose:
             operator: false
-          plugin_id: boolean
       style:
         type: html_list
         options:

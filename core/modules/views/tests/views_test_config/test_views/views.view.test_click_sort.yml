@@ -11,17 +11,14 @@ display:
           id: id
           table: views_test_data
           field: id
-          plugin_id: numeric
         name:
           id: name
           table: views_test_data
           field: name
-          plugin_id: string
         created:
           id: created
           table: views_test_data
           field: created
-          plugin_id: date
       display_options:
         access:
           type: none

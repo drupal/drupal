@@ -19,13 +19,11 @@ display:
           field: name
           id: name
           table: users
-          plugin_id: user_name
         nid:
           field: nid
           id: nid
           relationship: uid_representative
           table: node
-          plugin_id: node
       filters:
         status:
           expose:
@@ -35,7 +33,6 @@ display:
           id: status
           table: users
           value: '1'
-          plugin_id: boolean
       pager:
         options:
           items_per_page: '10'
@@ -57,7 +54,6 @@ display:
           subquery_sort: node.nid
           subquery_view: ''
           table: users
-          plugin_id: groupwise_max
       row:
         type: fields
       sorts:
@@ -66,7 +62,6 @@ display:
           id: created
           order: DESC
           table: users
-          plugin_id: date
       style:
         type: default
       title: test_groupwise_user

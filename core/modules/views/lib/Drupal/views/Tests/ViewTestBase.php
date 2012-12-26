@@ -60,35 +60,6 @@ abstract class ViewTestBase extends WebTestBase {
   }
 
   /**
-   * Asserts that two arrays are the same, but not checking the order of it.
-   *
-   * @param array $first
-   *   The first value to check.
-   * @param array $second
-   *   The second value to check.
-   * @param string $message
-   *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use format_string() to embed variables in the message text, not
-   *   t(). If left blank, a default message will be displayed.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
-   *   this default.
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
-   */
-  protected function assertArrayEqual(array $first, array $second, $message = '', $group = 'Other') {
-    $diff = array_diff($first, $second);
-    if (empty($diff)) {
-      $this->assert(TRUE, $message ? $message : format_string('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
-    }
-    else {
-      $this->assert(FALSE, $message ? $message : format_string('The first value differs from the second by @diff.', array('@diff' => var_export($diff, TRUE))));
-    }
-  }
-
-  /**
    * Verifies that a result set returned by a View matches expected values.
    *
    * The comparison is done on the string representation of the columns of the

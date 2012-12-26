@@ -32,7 +32,6 @@ display:
           link_to_user: '1'
           overwrite_anonymous: '0'
           table: users
-          plugin_id: user_name
       filters:
         uid_raw:
           admin_label: ''
@@ -72,7 +71,6 @@ display:
             max: ''
             min: ''
             value: '1'
-          plugin_id: numeric
       pager:
         type: full
       query:

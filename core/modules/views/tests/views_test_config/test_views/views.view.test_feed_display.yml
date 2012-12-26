@@ -30,7 +30,6 @@ display:
           label: ''
           link_to_node: '1'
           table: node
-          plugin_id: node
       filters:
         status:
           expose:
@@ -40,7 +39,6 @@ display:
           id: status
           table: node
           value: '1'
-          plugin_id: boolean
       pager:
         options:
           items_per_page: '10'
@@ -59,7 +57,6 @@ display:
           id: created
           order: DESC
           table: node
-          plugin_id: date
       style:
         type: default
       title: test_feed_display
@@ -69,7 +66,7 @@ display:
     position: '0'
   feed:
     display_options:
-      displays: {  }
+      displays: {}
       pager:
         type: some
       path: test-feed-display.xml

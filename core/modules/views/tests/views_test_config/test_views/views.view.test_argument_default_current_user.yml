@@ -14,7 +14,6 @@ display:
           field: uid
           id: uid
           table: node
-          plugin_id: numeric
       cache:
         type: none
       exposed_form:
@@ -35,7 +34,6 @@ display:
           id: title
           link_to_node: '0'
           table: node
-          plugin_id: node
       pager:
         options:
           id: '0'

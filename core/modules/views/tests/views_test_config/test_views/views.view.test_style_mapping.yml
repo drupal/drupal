@@ -17,19 +17,16 @@ display:
           id: age
           relationship: none
           table: views_test_data
-          plugin_id: numeric
         job:
           field: job
           id: job
           relationship: none
           table: views_test_data
-          plugin_id: string
         name:
           field: name
           id: name
           relationship: none
           table: views_test_data
-          plugin_id: string
       pager:
         options:
           offset: '0'
@@ -42,7 +39,6 @@ display:
           order: ASC
           relationship: none
           table: views_test_data
-          plugin_id: numeric
       style:
         type: mapping_test
         options:

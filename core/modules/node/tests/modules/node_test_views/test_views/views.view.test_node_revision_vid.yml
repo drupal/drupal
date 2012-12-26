@@ -10,31 +10,26 @@ display:
           id: vid
           table: node_revision
           field: vid
-          required: true
-          plugin_id: standard
+          required: TRUE
       fields:
         vid:
           id: vid
           table: node_revision
           field: vid
-          plugin_id: standard
         nid_1:
           id: nid_1
           table: node_revision
           field: nid
-          plugin_id: standard
         nid:
           id: nid
           table: node
           field: nid
           relationship: vid
-          plugin_id: node
       arguments:
         nid:
-          id: nid
+          id: nid:
           table: node_revision
           field: nid
-          plugin_id: node_nid
     display_plugin: default
     display_title: Master
     id: default

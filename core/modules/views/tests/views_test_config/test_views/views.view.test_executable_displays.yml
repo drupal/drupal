@@ -16,7 +16,7 @@ display:
     position: '1'
   page_2:
     display_plugin: page
-    display_title: 'Page 2'
+    display_title: Page 2
     id: page_2
     position: '2'
 human_name: ''

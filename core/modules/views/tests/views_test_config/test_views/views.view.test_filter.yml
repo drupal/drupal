@@ -20,13 +20,11 @@ display:
           id: name
           label: ''
           table: views_test_data
-          plugin_id: string
       filters:
         type:
           field: name
           id: test_filter
           table: views_test_data
-          plugin_id: string
       query:
         type: views_query
       use_more_always: '0'

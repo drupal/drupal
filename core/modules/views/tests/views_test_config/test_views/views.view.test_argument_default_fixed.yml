@@ -17,7 +17,6 @@ display:
           must_not_be: '0'
           style_plugin: default_summary
           table: views
-          plugin_id: 'null'
       cache:
         type: none
       exposed_form:
@@ -38,7 +37,6 @@ display:
           id: title
           link_to_node: '0'
           table: node
-          plugin_id: node
       pager:
         options:
           id: '0'

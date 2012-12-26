@@ -118,7 +118,7 @@ class EntityRow extends RowPluginBase {
     parent::pre_render($result);
 
     if ($result) {
-      // Get all entities which will be used to render in rows.c
+      // Get all entities which will be used to render in rows.
       $entities = array();
       foreach ($result as $row) {
         $entity = $row->_entity;

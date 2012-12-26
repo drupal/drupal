@@ -35,7 +35,6 @@ display:
           id: nid
           table: comment
           field: nid
-          plugin_id: standard
       fields:
         subject:
           id: subject
@@ -43,21 +42,18 @@ display:
           field: subject
           label: ''
           link_to_comment: 1
-          plugin_id: comment
         timestamp:
           id: timestamp
           table: comment
           field: changed
           label: ''
           date_format: 'time ago'
-          plugin_id: date
       sorts:
         timestamp:
           id: timestamp
           table: comment
           field: changed
           order: DESC
-          plugin_id: date
       filters:
         status_extra:
           id: status_extra
@@ -65,7 +61,6 @@ display:
           field: status_extra
           relationship: nid
           group: 0
-          plugin_id: node_status
       style:
         type: html_list
       row:
@@ -93,27 +88,23 @@ display:
           relationship: nid
           label: 'Reply to'
           link_to_node: 1
-          plugin_id: node
         timestamp:
           id: timestamp
           table: comment
           field: changed
           label: ''
           date_format: 'time ago'
-          plugin_id: date
         subject:
           id: subject
           table: comment
           field: subject
           label: ''
           link_to_comment: 1
-          plugin_id: comment
         comment:
           id: comment
           table: field_data_comment_body
           field: comment_body
           label: ''
-          plugin_id: field
       path: comments/recent
       style:
         type: html_list
