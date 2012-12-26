@@ -221,7 +221,7 @@ class TrackerTest extends WebTestBase {
     $this->drupalPost('comment/reply/' . $nodes[3]->nid, $comment, t('Save'));
 
     // Start indexing backwards from node 3.
-    variable_set('tracker_index_nid', 3);
+    state()->set('tracker.index_nid', 3);
 
     // Clear the current tracker tables and rebuild them.
     db_delete('tracker_node')

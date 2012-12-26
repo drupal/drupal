@@ -20,6 +20,10 @@ db_merge('variable')
   ->fields(array('value' => serialize(1352070595)))
   ->execute();
 db_merge('variable')
+  ->key(array('name' => 'tracker_index_nid'))
+  ->fields(array('value' => serialize(0)))
+  ->execute();
+db_merge('variable')
   ->key(array('name' => 'update_last_check'))
   ->fields(array('value' => serialize(1304208000)))
   ->execute();
