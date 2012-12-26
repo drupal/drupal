@@ -17,16 +17,19 @@ display:
           field: cid
           id: cid
           table: comment
+          plugin_id: comment
         nid:
           field: nid
           id: nid
           table: node
           relationship: nid
+          plugin_id: node
         uid:
           field: uid
           id: uid
           table: users
           relationship: uid
+          plugin_id: user
       filter_groups:
         groups: {  }
         operator: AND
@@ -41,6 +44,7 @@ display:
           id: nid
           required: '1'
           table: comment
+          plugin_id: standard
         uid:
           admin_label: ''
           field: uid
@@ -50,6 +54,7 @@ display:
           relationship: nid
           required: '0'
           table: node
+          plugin_id: standard
       sorts: {  }
       style:
         type: default

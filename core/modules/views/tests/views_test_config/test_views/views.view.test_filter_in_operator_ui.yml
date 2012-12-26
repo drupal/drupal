@@ -24,6 +24,7 @@ display:
           field: type
           id: type
           table: node
+          plugin_id: string
       pager:
         type: full
       style:

@@ -20,6 +20,7 @@ display:
           summary_options:
             items_per_page: '25'
           table: node
+          plugin_id: argument_comment_user_uid
       cache:
         type: none
       exposed_form:
@@ -29,6 +30,7 @@ display:
           field: nid
           id: nid
           table: node
+          plugin_id: node
       pager:
         type: full
       query:

@@ -38,6 +38,7 @@ display:
           admin_label: ''
           label: Name
           exclude: '0'
+          plugin_id: standard
       filters: {  }
       sorts: {  }
       filter_groups:
@@ -55,6 +56,7 @@ display:
           default_action: ignore
           title_enable: '0'
           title: ''
+          plugin_id: numeric
 human_name: test_preview
 module: views
 name: test_preview

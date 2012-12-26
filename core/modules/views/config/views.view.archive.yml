@@ -33,6 +33,7 @@ display:
           table: node
           field: created
           order: DESC
+          plugin_id: date
       arguments:
         created_year_month:
           id: created_year_month
@@ -51,6 +52,7 @@ display:
             override: true
             items_per_page: '30'
           specify_validation: 1
+          plugin_id: node_created_year_month
       filters:
         status:
           id: status
@@ -60,6 +62,7 @@ display:
           group: 0
           expose:
             operator: false
+          plugin_id: boolean
       style:
         type: default
       row:
@@ -101,3 +104,4 @@ display:
           summary_options:
             items_per_page: '30'
           specify_validation: 1
+          plugin_id: node_created_year_month

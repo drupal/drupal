@@ -37,6 +37,7 @@ display:
           link_to_user: '1'
           overwrite_anonymous: '0'
           table: users
+          plugin_id: user_name
         title:
           alter:
             absolute: '0'
@@ -54,6 +55,7 @@ display:
           label: ''
           link_to_node: '1'
           table: node
+          plugin_id: node
         uid:
           alter:
             absolute: '0'
@@ -77,6 +79,7 @@ display:
           id: uid
           link_to_user: '1'
           table: users
+          plugin_id: user
       pager:
         options:
           items_per_page: '10'

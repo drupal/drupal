@@ -68,6 +68,12 @@ class ViewStorageTest extends ViewTestBase {
     );
   }
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
+  }
+
   /**
    * Tests CRUD operations.
    */
@@ -345,9 +351,10 @@ class ViewStorageTest extends ViewTestBase {
     $expected_items[$id1] = $expected_item = array(
       'id' => 'id',
       'table' => 'views_test_data',
-      'field' => 'id'
+      'field' => 'id',
+      'plugin_id' => 'numeric',
     );
-    $this->assertEqual($item1, $expected_item);
+    $this->assertArrayEqual($item1, $expected_item);
 
     $options = array(
       'alter' => array(
@@ -359,12 +366,13 @@ class ViewStorageTest extends ViewTestBase {
     $expected_items[$id2] = $expected_item = array(
       'id' => 'name',
       'table' => 'views_test_data',
-      'field' => 'name'
+      'field' => 'name',
+      'plugin_id' => 'standard',
     ) + $options;
-    $this->assertEqual($item2, $expected_item);
+    $this->assertArrayEqual($item2, $expected_item);
 
     // Tests the expected fields from the previous additions.
-    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+    $this->assertArrayEqual($view->getItems('field', $display_id), $expected_items);
 
     // Alter an existing item via setItem and check the result via getItem
     // and getItems.
@@ -375,8 +383,8 @@ class ViewStorageTest extends ViewTestBase {
     ) + $item1;
     $expected_items[$id1] = $item;
     $view->setItem($display_id, 'field', $id1, $item);
-    $this->assertEqual($view->getItem($display_id, 'field', 'id'), $item);
-    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+    $this->assertArrayEqual($view->getItem($display_id, 'field', 'id'), $item);
+    $this->assertArrayEqual($view->getItems('field', $display_id), $expected_items);
   }
 
   /**

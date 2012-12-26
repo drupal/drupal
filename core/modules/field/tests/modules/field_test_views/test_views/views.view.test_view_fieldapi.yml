@@ -13,6 +13,7 @@ display:
           field: nid
           id: nid
           table: node
+          plugin_id: node
       cache:
         type: none
       exposed_form:

@@ -11,6 +11,7 @@ display:
           id: uid
           table: users
           field: uid
+          plugin_id: user
       arguments:
         uid:
           id: uid
@@ -18,6 +19,7 @@ display:
           field: uid
           title_enable: true
           title: %1
+          plugin_id: user_uid
     display_plugin: default
     display_title: Master
     id: default
