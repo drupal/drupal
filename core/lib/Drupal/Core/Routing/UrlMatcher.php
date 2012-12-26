@@ -8,9 +8,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher as BaseUrlMatcher;
 
 /**
- * Description of UrlMatcher
- *
- * @author crell
+ * Drupal-specific URL Matcher; handles the Drupal "system path" mapping.
  */
 class UrlMatcher extends BaseUrlMatcher {
 

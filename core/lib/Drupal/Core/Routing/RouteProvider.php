@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ * Contains Drupal\Core\Routing\RouteProvider.
+ */
 
 namespace Drupal\Core\Routing;
 
@@ -11,7 +15,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use \Drupal\Core\Database\Connection;
 
 /**
- *
+ * A Route Provider front-end for all Drupal-stored routes.
  */
 class RouteProvider implements RouteProviderInterface {
 
