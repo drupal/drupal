@@ -58,8 +58,7 @@ class HandlerAllTest extends HandlerTestBase {
         continue;
       }
 
-      $view = views_new_view();
-      $view->set('base_table', $base_table);
+      $view = entity_create('view', array('base_table' => $base_table));
       $view = new ViewExecutable($view);
 
       // @todo The groupwise relationship is currently broken.

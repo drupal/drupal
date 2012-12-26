@@ -1314,27 +1314,6 @@ function views_get_enabled_display_extenders() {
 }
 
 /**
- * Create an empty view to work with.
- *
- * @return Drupal\views\Plugin\Core\Entity\View
- *   A fully formed, empty $view object. This object must be populated before
- *   it can be successfully saved.
- */
-function views_new_view() {
-  return entity_create('view', array());
-}
-
-/**
- * Creates a view from an array of values.
- *
- * @return Drupal\views\Plugin\Core\Entity\View
- *   A fully formed $view object with properties from the values passed in.
- */
-function views_create_view(array $values = array()) {
-  return entity_create('view', $values);
-}
-
-/**
  * Return a list of all views and display IDs that have a particular
  * setting in their display's plugin settings.
  *

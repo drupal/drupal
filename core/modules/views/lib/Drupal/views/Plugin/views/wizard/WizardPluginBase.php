@@ -633,7 +633,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       'base_table' => $this->base_table,
     );
 
-    $view = views_create_view($values);
+    $view = entity_create('view', $values);
 
     // Build all display options for this view.
     $display_options = $this->build_display_options($form, $form_state);
