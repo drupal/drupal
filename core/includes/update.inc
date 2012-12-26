@@ -1255,6 +1255,26 @@ function update_variables_to_config($config_name, array $variable_map) {
 }
 
 /**
+ * Adds entries in a configuration entity manifest file during updates.
+ *
+ * @param string $config_prefix
+ *   The configuration entity prefix from the annotation.
+ * @param array $ids
+ *   An array of configuration entities to add to the manifest.
+ */
+function update_config_manifest_add($config_prefix, array $ids) {
+  $manifest = config('manifest.' . $config_prefix);
+
+  foreach ($ids as $id) {
+    // Add record to manifest for each config entity.
+    $manifest->set($id, array('name' => $config_prefix . '.' . $id));
+  }
+
+  // Write manifest to disk.
+  $manifest->save();
+}
+
+/**
  * Updates 7.x variables to state records.
  *
  * Provides a generalized method to migrate variables from 7.x to 8.x's
