@@ -10,7 +10,7 @@ namespace Drupal\Core;
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
-use Drupal\Core\DependencyInjection\Compiler\RegisterNestedMatchersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -195,21 +195,10 @@ class CoreBundle extends Bundle {
     $container->register('password', 'Drupal\Core\Password\PhpassHashedPassword')
       ->addArgument(16);
 
-    // The following services are tagged as 'nested_matcher' services and are
-    // processed in the RegisterNestedMatchersPass compiler pass. Each one
-    // needs to be set on the matcher using a different method, so we use a
-    // tag attribute, 'method', which can be retrieved and passed to the
-    // addMethodCall() method that gets called on the matcher service in the
-    // compiler pass.
-    $container->register('path_matcher', 'Drupal\Core\Routing\PathMatcher')
-      ->addArgument(new Reference('database'))
-      ->addTag('nested_matcher', array('method' => 'setInitialMatcher'));
-    $container->register('http_method_matcher', 'Drupal\Core\Routing\HttpMethodMatcher')
-      ->addTag('nested_matcher', array('method' => 'addPartialMatcher'));
+    // The following services are tagged as 'route_filter' services and are
+    // processed in the RegisterRouteFiltersPass compiler pass.
     $container->register('mime_type_matcher', 'Drupal\Core\Routing\MimeTypeMatcher')
-      ->addTag('nested_matcher', array('method' => 'addPartialMatcher'));
-    $container->register('first_entry_final_matcher', 'Drupal\Core\Routing\FirstEntryFinalMatcher')
-      ->addTag('nested_matcher', array('method' => 'setFinalMatcher'));
+      ->addTag('route_filter');
 
     $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
       ->addTag('event_subscriber');
@@ -274,7 +263,9 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('database'));
 
     $container->addCompilerPass(new RegisterMatchersPass());
-    $container->addCompilerPass(new RegisterNestedMatchersPass());
+    $container->addCompilerPass(new RegisterRouteFiltersPass());
+    // Add a compiler pass for registering event subscribers.
+    $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     // Add a compiler pass for adding Normalizers and Encoders to Serializer.
     $container->addCompilerPass(new RegisterSerializationClassesPass());
     // Add a compiler pass for registering event subscribers.

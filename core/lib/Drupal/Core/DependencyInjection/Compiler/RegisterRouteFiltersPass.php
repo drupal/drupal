@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 /**
  * Adds services tagged 'nested_matcher' to the tagged_matcher service.
  */
-class RegisterNestedMatchersPass implements CompilerPassInterface {
+class RegisterRouteFiltersPass implements CompilerPassInterface {
 
   /**
    * Adds services tagged 'nested_matcher' to the tagged_matcher service.
@@ -23,13 +23,12 @@ class RegisterNestedMatchersPass implements CompilerPassInterface {
    *   The container to process.
    */
   public function process(ContainerBuilder $container) {
-    if (!$container->hasDefinition('nested_matcher')) {
+    if (!$container->hasDefinition('router.matcher')) {
       return;
     }
-    $nested = $container->getDefinition('nested_matcher');
-    foreach ($container->findTaggedServiceIds('nested_matcher') as $id => $attributes) {
-      $method = $attributes[0]['method'];
-      $nested->addMethodCall($method, array(new Reference($id)));
+    $nested = $container->getDefinition('router.matcher');
+    foreach ($container->findTaggedServiceIds('router_filter') as $id => $attributes) {
+      $nested->addMethodCall('addRouteFilter', array(new Reference($id)));
     }
   }
 }
