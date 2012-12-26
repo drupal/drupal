@@ -42,15 +42,6 @@ abstract class SystemConfigFormBase extends WebTestBase {
    */
   protected $values;
 
-  public function setUp() {
-    $this->values = array();
-    parent::setUp();
-
-    $this->setUpSystemConfigForm();
-  }
-
-  abstract function setUpSystemConfigForm();
-
   /**
    * Submit the system_config_form ensure the configuration has expected values.
    */
