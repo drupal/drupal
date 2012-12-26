@@ -32,9 +32,18 @@ class CommentRenderController extends EntityRenderController {
 
     parent::buildContent($entities, $view_mode, $langcode);
 
+    // Load all nodes of all comments at once.
+    $nids = array();
     foreach ($entities as $entity) {
-      $node = node_load($entity->nid);
-      if (!$node) {
+      $nids[$entity->nid] = $entity->nid;
+    }
+    $nodes = node_load_multiple($nids);
+
+    foreach ($entities as $entity) {
+      if (isset($nodes[$entity->nid])) {
+        $node = $nodes[$entity->nid];
+      }
+      else {
         throw new \InvalidArgumentException(t('Invalid node for comment.'));
       }
       $entity->content['#node'] = $node;
