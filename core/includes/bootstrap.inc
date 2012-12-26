@@ -1743,7 +1743,7 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
 
     // Call the logging hooks to log/process the message
     foreach (module_implements('watchdog') as $module) {
-      $function = $module . '_watchdog'
+      $function = $module . '_watchdog';
       $function($log_entry);
     }
 
