@@ -557,6 +557,30 @@ function system_element_info() {
     '#theme' => 'hidden',
   );
 
+  $types['table'] = array(
+    '#header' => array(),
+    '#rows' => array(),
+    '#empty' => '',
+    // Properties for tableselect support.
+    '#input' => TRUE,
+    '#tree' => TRUE,
+    '#tableselect' => FALSE,
+    '#multiple' => TRUE,
+    '#js_select' => TRUE,
+    '#value_callback' => 'form_type_table_value',
+    '#process' => array('form_process_table'),
+    '#element_validate' => array('form_validate_table'),
+    // Properties for tabledrag support.
+    // The value is a list of arrays that are passed to drupal_add_tabledrag().
+    // drupal_pre_render_table() prepends the HTML ID of the table to each set
+    // of arguments.
+    // @see drupal_add_tabledrag()
+    '#tabledrag' => array(),
+    // Render properties.
+    '#pre_render' => array('drupal_pre_render_table'),
+    '#theme' => 'table',
+  );
+
   return $types;
 }
 

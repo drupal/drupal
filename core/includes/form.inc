@@ -2348,6 +2348,36 @@ function form_type_checkboxes_value($element, $input = FALSE) {
 }
 
 /**
+ * Determines the value of a table form element.
+ *
+ * @param array $element
+ *   The form element whose value is being populated.
+ * @param array|false $input
+ *   The incoming input to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
+ *
+ * @return array
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
+ */
+function form_type_table_value(array $element, $input = FALSE) {
+  // If #multiple is FALSE, the regular default value of radio buttons is used.
+  if (!empty($element['#tableselect']) && !empty($element['#multiple'])) {
+    // Contrary to #type 'checkboxes', the default value of checkboxes in a
+    // table is built from the array keys (instead of array values) of the
+    // #default_value property.
+    // @todo D8: Remove this inconsistency.
+    if ($input === FALSE) {
+      $element += array('#default_value' => array());
+      return drupal_map_assoc(array_keys(array_filter($element['#default_value'])));
+    }
+    else {
+      return is_array($input) ? drupal_map_assoc($input) : array();
+    }
+  }
+}
+
+/**
  * Form value callback: Determines the value for a #type radios form element.
  *
  * @param $element
@@ -3564,6 +3594,128 @@ function form_process_tableselect($element) {
     $element['#value'] = array();
   }
   return $element;
+}
+
+/**
+ * #process callback for #type 'table' to add tableselect support.
+ *
+ * @param array $element
+ *   An associative array containing the properties and children of the
+ *   table element.
+ * @param array $form_state
+ *   The current state of the form.
+ *
+ * @return array
+ *   The processed element.
+ *
+ * @see form_process_tableselect()
+ * @see theme_tableselect()
+ */
+function form_process_table($element, &$form_state) {
+  if ($element['#tableselect']) {
+    if ($element['#multiple']) {
+      $value = is_array($element['#value']) ? $element['#value'] : array();
+    }
+    // Advanced selection behaviour makes no sense for radios.
+    else {
+      $element['#js_select'] = FALSE;
+    }
+    // Add a "Select all" checkbox column to the header.
+    // @todo D8: Rename into #select_all?
+    if ($element['#js_select']) {
+      $element['#attached']['library'][] = array('system', 'drupal.tableselect');
+      array_unshift($element['#header'], array('class' => array('select-all')));
+    }
+    // Add an empty header column for radio buttons or when a "Select all"
+    // checkbox is not desired.
+    else {
+      array_unshift($element['#header'], '');
+    }
+
+    if (!isset($element['#default_value']) || $element['#default_value'] === 0) {
+      $element['#default_value'] = array();
+    }
+    // Create a checkbox or radio for each row in a way that the value of the
+    // tableselect element behaves as if it had been of #type checkboxes or
+    // radios.
+    foreach (element_children($element) as $key) {
+      // Do not overwrite manually created children.
+      if (!isset($element[$key]['select'])) {
+        // Determine option label; either an assumed 'title' column, or the
+        // first available column containing a #title or #markup.
+        // @todo Consider to add an optional $element[$key]['#title_key']
+        //   defaulting to 'title'?
+        $title = '';
+        if (!empty($element[$key]['title']['#title'])) {
+          $title = $element[$key]['title']['#title'];
+        }
+        else {
+          foreach (element_children($element[$key]) as $column) {
+            if (isset($element[$key][$column]['#title'])) {
+              $title = $element[$key][$column]['#title'];
+              break;
+            }
+            if (isset($element[$key][$column]['#markup'])) {
+              $title = $element[$key][$column]['#markup'];
+              break;
+            }
+          }
+        }
+        if ($title !== '') {
+          $title = t('Update !title', array('!title' => $title));
+        }
+
+        // Prepend the select column to existing columns.
+        $element[$key] = array('select' => array()) + $element[$key];
+        $element[$key]['select'] += array(
+          '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
+          '#title' => $title,
+          '#title_display' => 'invisible',
+          // @todo If rows happen to use numeric indexes instead of string keys,
+          //   this results in a first row with $key === 0, which is always FALSE.
+          '#return_value' => $key,
+          '#attributes' => $element['#attributes'],
+        );
+        $element_parents = array_merge($element['#parents'], array($key));
+        if ($element['#multiple']) {
+          $element[$key]['select']['#default_value'] = isset($value[$key]) ? $key : NULL;
+          $element[$key]['select']['#parents'] = $element_parents;
+        }
+        else {
+          $element[$key]['select']['#default_value'] = ($element['#default_value'] == $key ? $key : NULL);
+          $element[$key]['select']['#parents'] = $element['#parents'];
+          $element[$key]['select']['#id'] = drupal_html_id('edit-' . implode('-', $element_parents));
+        }
+      }
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * #element_validate callback for #type 'table'.
+ *
+ * @param array $element
+ *   An associative array containing the properties and children of the
+ *   table element.
+ * @param array $form_state
+ *   The current state of the form.
+ */
+function form_validate_table($element, &$form_state) {
+  // Skip this validation if the button to submit the form does not require
+  // selected table row data.
+  if (empty($form_state['triggering_element']['#tableselect'])) {
+    return;
+  }
+  if ($element['#multiple']) {
+    if (!is_array($element['#value']) || !count(array_filter($element['#value']))) {
+      form_error($element, t('No items selected.'));
+    }
+  }
+  elseif (!isset($element['#value']) || $element['#value'] === '') {
+    form_error($element, t('No item selected.'));
+  }
 }
 
 /**

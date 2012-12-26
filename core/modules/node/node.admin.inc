@@ -418,7 +418,6 @@ function node_admin_content($form, $form_state) {
  * Returns the admin form object to node_admin_content().
  *
  * @see node_admin_nodes_submit()
- * @see node_admin_nodes_validate()
  * @see node_filter_form()
  * @see node_filter_form_submit()
  * @see node_multiple_delete_confirm()
@@ -453,7 +452,7 @@ function node_admin_nodes() {
   $form['options']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
-    '#validate' => array('node_admin_nodes_validate'),
+    '#tableselect' => TRUE,
     '#submit' => array('node_admin_nodes_submit'),
   );
 
@@ -523,27 +522,39 @@ function node_admin_nodes() {
   // Prepare the list of nodes.
   $languages = language_list(LANGUAGE_ALL);
   $destination = drupal_get_destination();
-  $options = array();
+  $form['nodes'] = array(
+    '#type' => 'table',
+    '#header' => $header,
+    '#empty' => t('No content available.'),
+  );
   foreach ($nodes as $node) {
     $l_options = $node->langcode != LANGUAGE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
-    $options[$node->nid] = array(
-      'title' => array(
-        'data' => array(
-          '#type' => 'link',
-          '#title' => $node->label(),
-          '#href' => 'node/' . $node->nid,
-          '#options' => $l_options,
-          '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
-        ),
-      ),
-      'type' => check_plain(node_get_type_label($node)),
-      'author' => theme('username', array('account' => $node)),
-      'status' => $node->status ? t('published') : t('not published'),
-      'changed' => format_date($node->changed, 'short'),
+    $form['nodes'][$node->nid]['title'] = array(
+      '#type' => 'link',
+      '#title' => $node->label(),
+      '#href' => 'node/' . $node->nid,
+      '#options' => $l_options,
+      '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
+    );
+    $form['nodes'][$node->nid]['type'] = array(
+      '#markup' => check_plain(node_get_type_label($node)),
+    );
+    $form['nodes'][$node->nid]['author'] = array(
+      '#theme' => 'username',
+      '#account' => $node,
+    );
+    $form['nodes'][$node->nid]['status'] = array(
+      '#markup' => $node->status ? t('published') : t('not published'),
+    );
+    $form['nodes'][$node->nid]['changed'] = array(
+      '#markup' => format_date($node->changed, 'short'),
     );
     if ($multilingual) {
-      $options[$node->nid]['language_name'] = language_name($node->langcode);
+      $form['nodes'][$node->nid]['language_name'] = array(
+        '#markup' => language_name($node->langcode),
+      );
     }
+
     // Build a list of all the accessible operations for the current node.
     $operations = array();
     if (node_access('update', $node)) {
@@ -567,27 +578,23 @@ function node_admin_nodes() {
         'query' => $destination,
       );
     }
-    $options[$node->nid]['operations'] = array();
+    $form['nodes'][$node->nid]['operations'] = array();
     if (count($operations) > 1) {
       // Render an unordered list of operations links.
-      $options[$node->nid]['operations'] = array(
-        'data' => array(
-          '#type' => 'operations',
-          '#subtype' => 'node',
-          '#links' => $operations,
-        ),
+      $form['nodes'][$node->nid]['operations'] = array(
+        '#type' => 'operations',
+        '#subtype' => 'node',
+        '#links' => $operations,
       );
     }
     elseif (!empty($operations)) {
       // Render the first and only operation as a link.
       $link = reset($operations);
-      $options[$node->nid]['operations'] = array(
-        'data' => array(
-          '#type' => 'link',
-          '#title' => $link['title'],
-          '#href' => $link['href'],
-          '#options' => array('query' => $link['query']),
-        ),
+      $form['nodes'][$node->nid]['operations'] = array(
+        '#type' => 'link',
+        '#title' => $link['title'],
+        '#href' => $link['href'],
+        '#options' => array('query' => $link['query']),
       );
     }
   }
@@ -595,45 +602,11 @@ function node_admin_nodes() {
   // Only use a tableselect when the current user is able to perform any
   // operations.
   if ($admin_access) {
-    $form['nodes'] = array(
-      '#type' => 'tableselect',
-      '#header' => $header,
-      '#options' => $options,
-      '#empty' => t('No content available.'),
-    );
-  }
-  // Otherwise, use a simple table.
-  else {
-    $form['nodes'] = array(
-      '#theme' => 'table',
-      '#header' => $header,
-      '#rows' => $options,
-      '#empty' => t('No content available.'),
-    );
+    $form['nodes']['#tableselect'] = TRUE;
   }
 
-  $form['pager'] = array('#markup' => theme('pager'));
+  $form['pager'] = array('#theme' => 'pager');
   return $form;
-}
-
-/**
- * Form validation handler for node_admin_nodes().
- *
- * Checks whether any nodes have been selected to perform the chosen 'Update
- * option' on.
- *
- * @see node_admin_nodes()
- * @see node_admin_nodes_submit()
- * @see node_filter_form()
- * @see node_filter_form_submit()
- * @see node_multiple_delete_confirm()
- * @see node_multiple_delete_confirm_submit()
- */
-function node_admin_nodes_validate($form, &$form_state) {
-  // Error if there are no items to select.
-  if (!is_array($form_state['values']['nodes']) || !count(array_filter($form_state['values']['nodes']))) {
-    form_set_error('', t('No items selected.'));
-  }
 }
 
 /**
