@@ -1872,6 +1872,7 @@ function system_update_8017() {
     'page_compression' => 'response.gzip',
     'preprocess_css' => 'css.preprocess',
     'preprocess_js' => 'js.preprocess',
+    'omit_vary_cookie' => 'omit_vary_cookie',
     'stale_file_threshold' => 'stale_file_threshold',
   ));
 }

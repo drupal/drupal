@@ -1391,7 +1391,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // response to reply to a subsequent request for a given URL without
   // revalidation. If a Vary header has been set in hook_boot(), it is assumed
   // that the module knows how to cache the page.
-  if (!isset($hook_boot_headers['vary']) && !variable_get('omit_vary_cookie')) {
+  if (!isset($hook_boot_headers['vary']) && !config('system.performance')->get('cache.page.omit_vary_cookie')) {
     header('Vary: Cookie');
   }
 

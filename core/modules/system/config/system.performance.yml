@@ -1,6 +1,7 @@
 cache:
   page:
     enabled: '0'
+    omit_vary_cookie: ''
     max_age: '0'
 css:
   preprocess: '0'
