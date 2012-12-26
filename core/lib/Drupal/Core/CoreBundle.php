@@ -49,13 +49,9 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('config.cachedstorage.storage'))
       ->addArgument(new Reference('cache.config'));
 
-    // Register configuration object factory.
-    $container->register('config.subscriber.globalconf', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
-    $container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher')
-      ->addMethodCall('addSubscriber', array(new Reference('config.subscriber.globalconf')));
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('dispatcher'))
+      ->addArgument(new Reference('event_dispatcher'))
       ->addTag('persist');
 
     // Register staging configuration storage.
@@ -100,12 +96,12 @@ class CoreBundle extends Bundle {
     $container->register('request', 'Symfony\Component\HttpFoundation\Request')
       ->setSynthetic(TRUE);
 
-    $container->register('dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
+    $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));
     $container->register('resolver', 'Drupal\Core\ControllerResolver')
       ->addArgument(new Reference('service_container'));
     $container->register('http_kernel', 'Drupal\Core\HttpKernel')
-      ->addArgument(new Reference('dispatcher'))
+      ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('service_container'))
       ->addArgument(new Reference('resolver'));
     $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
@@ -134,7 +130,7 @@ class CoreBundle extends Bundle {
     $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
       ->addArgument(new Reference('router.dumper'))
       ->addArgument(new Reference('lock'))
-      ->addArgument(new Reference('dispatcher'));
+      ->addArgument(new Reference('event_dispatcher'));
 
 
     $container->register('matcher', 'Drupal\Core\Routing\ChainMatcher');

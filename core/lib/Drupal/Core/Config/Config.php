@@ -85,7 +85,7 @@ class Config {
   public function __construct($name, StorageInterface $storage, EventDispatcher $event_dispatcher = NULL) {
     $this->name = $name;
     $this->storage = $storage;
-    $this->eventDispatcher = $event_dispatcher ? $event_dispatcher : drupal_container()->get('dispatcher');
+    $this->eventDispatcher = $event_dispatcher ? $event_dispatcher : drupal_container()->get('event_dispatcher');
   }
 
   /**

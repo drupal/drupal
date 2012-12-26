@@ -14,11 +14,11 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 class RegisterKernelListenersPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container) {
-    if (!$container->hasDefinition('dispatcher')) {
+    if (!$container->hasDefinition('event_dispatcher')) {
       return;
     }
 
-    $definition = $container->getDefinition('dispatcher');
+    $definition = $container->getDefinition('event_dispatcher');
 
     foreach ($container->findTaggedServiceIds('event_subscriber') as $id => $attributes) {
 

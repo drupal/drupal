@@ -31,7 +31,7 @@ class RdfBundle extends Bundle {
       ->addArgument(new Reference('cache.rdf.site_schema.types'));
     // Mapping manager service.
     $container->register('rdf.mapping_manager', 'Drupal\rdf\RdfMappingManager')
-      ->addArgument(new Reference('dispatcher'))
+      ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('rdf.site_schema_manager'));
 
     // Mapping subscriber.
