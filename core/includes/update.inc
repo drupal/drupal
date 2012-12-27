@@ -1265,10 +1265,13 @@ function update_variables_to_config($config_name, array $variable_map) {
 function update_config_manifest_add($config_prefix, array $ids) {
   $manifest = config('manifest.' . $config_prefix);
 
+  // Add record to manifest for each config entity. Operate on the data array
+  // as a whole, because $manifest->get() would treat dots in ids as nesting.
+  $data = $manifest->get();
   foreach ($ids as $id) {
-    // Add record to manifest for each config entity.
-    $manifest->set($id, array('name' => $config_prefix . '.' . $id));
+    $data[$id] = array('name' => $config_prefix . '.' . $id);
   }
+  $manifest->setData($data);
 
   // Write manifest to disk.
   $manifest->save();
