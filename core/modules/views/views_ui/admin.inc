@@ -1990,32 +1990,6 @@ function views_ui_admin_settings_advanced() {
     '#default_value' => $config->get('no_javascript'),
   );
 
-  $form['debug']['debug_output'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable views performance statistics/debug messages via the Devel module'),
-    '#description' => t("Check this to enable some Views query and performance statistics/debug messages <em>if Devel is installed</em>."),
-    '#default_value' => $config->get('debug.output'),
-  );
-
-  $regions = array();
-  $regions['watchdog'] = t('Watchdog');
-  if (module_exists('devel')) {
-    $regions['message'] = t('Devel message(dpm)');
-    $regions['drupal_debug'] = t('Devel logging (tmp://drupal_debug.txt)');
-  }
-
-  $form['debug']['debug_region'] = array(
-    '#type' => 'select',
-    '#title' => t('Page region to output performance statistics/debug messages'),
-    '#default_value' => $config->get('debug.region'),
-    '#options' => $regions,
-    '#states' => array(
-      'visible' => array(
-        ':input[name="views_devel_output"]' => array('checked' => TRUE),
-      ),
-    ),
-  );
-
   $options = views_fetch_plugin_names('display_extender');
   if (!empty($options)) {
     $form['extenders'] = array(
@@ -2052,8 +2026,6 @@ function views_ui_admin_settings_advanced_submit(&$form, &$form_state) {
     ->set('skip_cache', $form_state['values']['skip_cache'])
     ->set('sql_signature', $form_state['values']['sql_signature'])
     ->set('no_javascript', $form_state['values']['no_javascript'])
-    ->set('debug.output', $form_state['values']['debug_output'])
-    ->set('debug.region', $form_state['values']['debug_region'])
     ->set('display_extenders', isset($form_state['values']['display_extenders']) ? $form_state['values']['display_extenders'] : array())
     ->save();
 }
