@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Tests\UI\HandlerTest.
+ * Contains \Drupal\views\Tests\UI\HandlerTest.
  */
 
 namespace Drupal\views\Tests\UI;

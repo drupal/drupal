@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Plugin\views\display\Feed.
+ * Contains \Drupal\views\Plugin\views\display\Feed.
  */
 
 namespace Drupal\views\Plugin\views\display;
@@ -130,7 +130,7 @@ class Feed extends PathPluginBase {
 
     $options['displays'] = array('default' => array());
 
-    // Overrides for standard stuff:
+    // Overrides for standard stuff.
     $options['style']['contains']['type']['default'] = 'rss';
     $options['style']['contains']['options']['default']  = array('description' => '');
     $options['sitename_title']['default'] = FALSE;
@@ -261,7 +261,7 @@ class Feed extends PathPluginBase {
       $clone->buildTitle();
       $plugin->attach_to($display_id, $this->getPath(), $clone->getTitle());
 
-      // Clean up
+      // Clean up.
       $clone->destroy();
       unset($clone);
     }

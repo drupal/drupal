@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Plugin\views\display\Page.
+ * Contains \Drupal\views\Plugin\views\display\Page.
  */
 
 namespace Drupal\views\Plugin\views\display;
@@ -125,7 +125,8 @@ class Page extends PathPluginBase {
       'value' => views_ui_truncate($menu_str, 24),
     );
 
-    // This adds a 'Settings' link to the style_options setting if the style has options.
+    // This adds a 'Settings' link to the style_options setting if the style
+    // has options.
     if ($menu['type'] == 'default tab') {
       $options['menu']['setting'] = t('Parent menu item');
       $options['menu']['links']['tab_options'] = t('Change settings for the parent menu');
