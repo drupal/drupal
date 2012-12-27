@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Annotation\AnnotationInterface.
+ * Contains Drupal\Component\Annotation\AnnotationInterface.
  */
 
-namespace Drupal\Core\Annotation;
+namespace Drupal\Component\Annotation;
 
 /**
  * Defines a common interface for classed annotations.
