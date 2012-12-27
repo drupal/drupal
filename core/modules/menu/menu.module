@@ -505,8 +505,10 @@ function menu_block_view_alter(&$data, $block) {
   // Add contextual links for system menu blocks.
   if ($block->module == 'system' && !empty($data['content'])) {
     $system_menus = menu_list_system_menus();
-    if (isset($system_menus[$block->delta])) {
-      $data['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($block->delta));
+    // Strip off 'menu-' prefix from block delta.
+    $menu_name = substr($block->delta, 5);
+    if (isset($system_menus[$menu_name])) {
+      $data['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($menu_name));
     }
   }
 }
