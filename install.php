@@ -12,10 +12,6 @@ define('DRUPAL_ROOT', getcwd());
 
 /**
  * Global flag to indicate the site is in installation mode.
- *
- * The constant is defined using define() instead of const so that PHP
- * versions prior to 5.3 can display proper PHP requirements instead of causing
- * a fatal error.
  */
 define('MAINTENANCE_MODE', 'install');
 
