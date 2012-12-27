@@ -1765,6 +1765,7 @@ function system_update_8012() {
     'site_frontpage' => 'page.front',
     'site_403' => 'page.403',
     'site_404' => 'page.404',
+    'drupal_weight_select_max' => 'weight_select_max',
   ));
 }
 
