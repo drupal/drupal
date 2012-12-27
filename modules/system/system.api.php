@@ -1929,8 +1929,9 @@ function hook_image_toolkits() {
  *     The drupal_mail() id of the message. Look at module source code or
  *     drupal_mail() for possible id values.
  *  - 'to':
- *     The address or addresses the message will be sent to. The
- *     formatting of this string must comply with RFC 2822.
+ *     The address or addresses the message will be sent to. The formatting of
+ *     this string will be validated with the
+ *     @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
  *  - 'from':
  *     The address the message will be marked as being from, which is
  *     either a custom address or the site-wide default email address.
@@ -2478,8 +2479,9 @@ function hook_watchdog(array $log_entry) {
  *   An array to be filled in. Elements in this array include:
  *   - id: An ID to identify the mail sent. Look at module source code
  *     or drupal_mail() for possible id values.
- *   - to: The address or addresses the message will be sent to. The
- *     formatting of this string must comply with RFC 2822.
+ *   - to: The address or addresses the message will be sent to. The formatting
+ *     of this string will be validated with the
+ *     @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
  *   - subject: Subject of the e-mail to be sent. This must not contain any
  *     newline characters, or the mail may not be sent properly. drupal_mail()
  *     sets this to an empty string when the hook is invoked.
