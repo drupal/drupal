@@ -288,7 +288,7 @@ function taxonomy_update_8003(&$sandbox) {
 function taxonomy_update_8004() {
   update_variables_to_config('taxonomy.settings', array(
     'taxonomy_override_selector' => 'override_selector',
-    'taxonomy_terms_per_page_admin' => 'terms_per_page_count',
+    'taxonomy_terms_per_page_admin' => 'terms_per_page_admin',
     'taxonomy_maintain_index_table' => 'maintain_index_table',
   ));
 }
