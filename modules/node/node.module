@@ -2546,7 +2546,8 @@ function node_block_list_alter(&$blocks) {
  * @param $channel
  *   An associative array containing title, link, description and other keys,
  *   to be parsed by format_rss_channel() and format_xml_elements().
- *   A list of channel elements can be found at the @link http://cyber.law.harvard.edu/rss/rss.html RSS 2.0 Specification. @endlink
+ *   A list of channel elements can be found at the
+ *   @link http://cyber.law.harvard.edu/rss/rss.html RSS 2.0 Specification. @endlink
  *   The link should be an absolute URL.
  */
 function node_feed($nids = FALSE, $channel = array()) {
