@@ -27,7 +27,7 @@ class RegisterRouteFiltersPass implements CompilerPassInterface {
       return;
     }
     $nested = $container->getDefinition('router.matcher');
-    foreach ($container->findTaggedServiceIds('router_filter') as $id => $attributes) {
+    foreach ($container->findTaggedServiceIds('route_filter') as $id => $attributes) {
       $nested->addMethodCall('addRouteFilter', array(new Reference($id)));
     }
   }
