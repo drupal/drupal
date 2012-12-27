@@ -89,7 +89,7 @@ define('FILE_STATUS_PERMANENT', 1);
  * wrappers that are appropriate for particular usage. For example, this returns
  * only stream wrappers that use local file storage:
  * @code
- *   $local_stream_wrappers = file_get_stream_wrappers(STEAM_WRAPPERS_LOCAL);
+ *   $local_stream_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
  * @endcode
  *
  * The $filter parameter can only filter to types containing a particular flag.
@@ -99,7 +99,7 @@ define('FILE_STATUS_PERMANENT', 1);
  * array_diff_key() function can be used to help with this. For example, this
  * returns only stream wrappers that do not use local file storage:
  * @code
- *   $remote_stream_wrappers = array_diff_key(file_get_stream_wrappers(STREAM_WRAPPERS_ALL), file_get_stream_wrappers(STEAM_WRAPPERS_LOCAL));
+ *   $remote_stream_wrappers = array_diff_key(file_get_stream_wrappers(STREAM_WRAPPERS_ALL), file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL));
  * @endcode
  *
  * @param $filter
