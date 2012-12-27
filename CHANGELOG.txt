@@ -1,7 +1,8 @@
 
 Drupal 7.19, xxxx-xx-xx (development version)
 -----------------------
-- Fixed broken support for translatable comment fields.
+- Fixed broken support for translatable comment fields (API change:
+  http://drupal.org/node/1874724).
 - Added an assertThemeOutput() method to Simpletest to allow tests to check
   that themed output matches an expected HTML string (API addition).
 - Added a link to "Install another module" after a module has been successfully
