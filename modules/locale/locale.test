@@ -2758,7 +2758,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     parent::setUp('locale', 'locale_test');
 
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'create article content'));
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'administer comments', 'create article content'));
     $this->drupalLogin($admin_user);
 
     // Add language.
@@ -2787,6 +2787,12 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     // French no matter what path prefix the URLs have.
     $edit = array('language' => 'fr');
     $this->drupalPost("user/{$admin_user->uid}/edit", $edit, t('Save'));
+
+    // Make comment body translatable.
+    $field = field_info_field('comment_body');
+    $field['translatable'] = TRUE;
+    field_update_field($field);
+    $this->assertTrue(field_is_translatable('comment', $field), 'Comment body is translatable.');
   }
 
   /**
@@ -2817,22 +2823,46 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
       foreach (language_list() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($language->prefix) ? '' : $language->prefix . '/';
-        $edit = array("comment_body[$language_none][0][value]" => $this->randomName());
-        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Save'));
+        $comment_values[$node_langcode][$langcode] = $this->randomName();
+        // Initially field form widgets have no language.
+        $edit = array(
+          'subject' => $this->randomName(),
+          "comment_body[$language_none][0][value]" => $comment_values[$node_langcode][$langcode],
+        );
+        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Preview'));
+        // After the first submit the submitted entity language is taken into
+        // account.
+        $edit = array(
+          'subject' => $edit['subject'],
+          "comment_body[$langcode][0][value]" => $comment_values[$node_langcode][$langcode],
+        );
+        $this->drupalPost(NULL, $edit, t('Save'));
 
         // Check that comment language matches the current content language.
-        $comment = db_select('comment', 'c')
-          ->fields('c')
+        $cid = db_select('comment', 'c')
+          ->fields('c', array('cid'))
           ->condition('nid', $node->nid)
           ->orderBy('cid', 'DESC')
+          ->range(0, 1)
           ->execute()
-          ->fetchObject();
+          ->fetchField();
+        $comment = comment_load($cid);
         $comment_langcode = entity_language('comment', $comment);
         $args = array('%node_language' => $node_langcode, '%comment_language' => $comment_langcode, '%langcode' => $langcode);
         $this->assertEqual($comment_langcode, $langcode, t('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEqual($comment->comment_body[$langcode][0]['value'], $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
+      }
+    }
+
+    // Check that comment bodies appear in the administration UI.
+    $this->drupalGet('admin/content/comment');
+    foreach ($comment_values as $node_values) {
+      foreach ($node_values as $value) {
+        $this->assertRaw($value);
       }
     }
   }
+
 }
 
 /**

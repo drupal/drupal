@@ -2041,7 +2041,8 @@ function comment_form($form, &$form_state, $comment) {
 
   // Attach fields.
   $comment->node_type = 'comment_node_' . $node->type;
-  field_attach_form('comment', $comment, $form, $form_state);
+  $langcode = entity_language('comment', $comment);
+  field_attach_form('comment', $comment, $form, $form_state, $langcode);
 
   return $form;
 }
@@ -2066,7 +2067,8 @@ function comment_preview($comment) {
   $node = node_load($comment->nid);
 
   if (!form_get_errors()) {
-    $comment->format = $comment->comment_body[LANGUAGE_NONE][0]['format'];
+    $comment_body = field_get_items('comment', $comment, 'comment_body');
+    $comment->format = $comment_body[0]['format'];
     // Attach the user and time information.
     if (!empty($comment->name)) {
       $account = user_load_by_name($comment->name);
@@ -2190,7 +2192,9 @@ function comment_submit($comment) {
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
-    $comment_body = $comment->comment_body[LANGUAGE_NONE][0];
+    $field = field_info_field('comment_body');
+    $langcode = field_is_translatable('comment', $field) ? entity_language('comment', $comment) : LANGUAGE_NONE;
+    $comment_body = $comment->comment_body[$langcode][0];
     if (isset($comment_body['format'])) {
       $comment_text = check_markup($comment_body['value'], $comment_body['format']);
     }
