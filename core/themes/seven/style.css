@@ -1130,10 +1130,6 @@ details.fieldset-no-legend {
   font-size: 1em;
 }
 
-#views-ui-preview-form .form-submit {
-  margin-top: 3px;
-}
-
 .views-admin input.form-submit,
 .views-ui-dialog input.form-submit,
 .views-admin a.button,
