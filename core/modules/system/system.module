@@ -2377,9 +2377,6 @@ function system_page_build(&$page) {
     $page['#attached']['css'][$path . '/system.admin.css'] = array('group' => CSS_SYSTEM);
   }
   $page['#attached']['css'][$path . '/system.theme.css'] = array('group' => CSS_SYSTEM, 'every_page' => TRUE);
-
-  // Add CSS/JS files from module .info files.
-  system_add_module_assets($page);
 }
 
 /**
@@ -2400,24 +2397,6 @@ function system_get_localized_date_format($languages) {
     }
   }
   return array();
-}
-
-/**
- * Adds CSS and JavaScript files declared in module .info files.
- */
-function system_add_module_assets(&$page) {
-  foreach (system_get_module_info('stylesheets') as $module => $value) {
-    foreach ($value as $media => $stylesheets) {
-      foreach ($stylesheets as $stylesheet) {
-        $page['#attached']['css'][$stylesheet] = array('every_page' => TRUE, 'media' => $media);
-      }
-    }
-  }
-  foreach (system_get_module_info('scripts') as $module => $scripts) {
-    foreach ($scripts as $script) {
-      $page['#attached']['js'][$script] = array('every_page' => TRUE);
-    }
-  }
 }
 
 /**
@@ -2811,15 +2790,6 @@ function _system_rebuild_module_data() {
 
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
-
-    // Prefix stylesheets and scripts with module path.
-    $path = dirname($module->uri);
-    if (isset($module->info['stylesheets'])) {
-      $module->info['stylesheets'] = _system_info_add_path($module->info['stylesheets'], $path);
-    }
-    if (isset($module->info['scripts'])) {
-      $module->info['scripts'] = _system_info_add_path($module->info['scripts'], $path);
-    }
 
     // Installation profiles are hidden by default, unless explicitly specified
     // otherwise in the .info file.

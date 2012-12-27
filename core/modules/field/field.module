@@ -1104,6 +1104,14 @@ function field_extract_bundle($entity_type, $bundle) {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function field_page_build(&$page) {
+  $path = drupal_get_path('module', 'field');
+  $page['#attached']['css'][$path . '/theme/field.css'] = array('every_page' => TRUE);
+}
+
+/**
  * Theme preprocess function for theme_field() and field.tpl.php.
  *
  * @see theme_field()

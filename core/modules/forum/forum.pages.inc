@@ -34,5 +34,18 @@ function forum_page($forum_term = NULL) {
     $topics = '';
   }
 
-  return theme('forums', array('forums' => $forum_term->forums, 'topics' => $topics, 'parents' => $forum_term->parents, 'tid' => $forum_term->tid, 'sortby' => $sortby, 'forums_per_page' => $forum_per_page));
+  $build = array(
+    '#theme' => 'forums',
+    '#forums' => $forum_term->forums,
+    '#topics' => $topics,
+    '#parents' => $forum_term->parents,
+    '#tid' => $forum_term->tid,
+    '#sortby' => $sortby,
+    '#forums_per_page' => $forum_per_page,
+  );
+  $build['#attached']['css'][] = drupal_get_path('module', 'forum') . '/forum.css';
+  // @todo Returning a render array causes template_preprocess_forums() to be
+  //   invoked too late and the breadcrumb is rendered before that callback
+  //   adjusted it.
+  return drupal_render($build);
 }

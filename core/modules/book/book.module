@@ -1082,6 +1082,7 @@ function template_preprocess_book_all_books_block(&$variables) {
  * @see book-navigation.tpl.php
  */
 function template_preprocess_book_navigation(&$variables) {
+  drupal_add_css(drupal_get_path('module', 'book') . '/book.theme.css');
   $book_link = $variables['book_link'];
 
   // Provide extra variables for themers. Not needed by default.

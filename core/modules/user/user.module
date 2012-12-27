@@ -112,6 +112,14 @@ function user_theme() {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function user_page_build(&$page) {
+  $path = drupal_get_path('module', 'user');
+  $page['#attached']['css'][$path . '/user.css'] = array('every_page' => TRUE);
+}
+
+/**
  * Entity URI callback.
  */
 function user_uri($user) {

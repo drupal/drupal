@@ -578,7 +578,7 @@ class ForumTest extends WebTestBase {
     // View forum page.
     $this->drupalGet('forum/' . $forum['tid']);
     $this->assertResponse(200);
-    $this->assertTitle($forum['name'] . ' | Drupal', 'Forum name was displayed');
+    $this->assertTitle($forum['name'] . ' | Drupal');
 
     $breadcrumb = array(
       l(t('Home'), NULL),
@@ -588,7 +588,7 @@ class ForumTest extends WebTestBase {
       $breadcrumb[] = l($parent['name'], 'forum/' . $parent['tid']);
     }
 
-    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), 'Breadcrumbs were displayed');
+    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)));
   }
 
   /**

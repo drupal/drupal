@@ -6,4 +6,3 @@ core = 8.x
 dependencies[] = node
 dependencies[] = text
 configure = admin/content/comment
-stylesheets[all][] = comment.theme.css

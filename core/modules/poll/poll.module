@@ -119,6 +119,15 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function poll_page_build(&$page) {
+  $path = drupal_get_path('module', 'poll');
+  $page['#attached']['css'][$path . '/poll.base.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/poll.theme.css'] = array('every_page' => TRUE);
+}
+
+/**
  * Implements hook_block_info().
  */
 function poll_block_info() {
