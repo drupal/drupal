@@ -35,9 +35,6 @@ function taxonomy_term_page(Term $term) {
   drupal_set_breadcrumb($breadcrumb);
   drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->label());
 
-  // If there is a menu link to this term, the link becomes the last part
-  // of the active trail, and the link name becomes the page title.
-  // Thus, we must explicitly set the page title to be the node title.
   $uri = $term->uri();
 
   // Set the term path as the canonical URL to prevent duplicate content.

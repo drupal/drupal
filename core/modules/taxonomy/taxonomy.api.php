@@ -227,9 +227,9 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
 /**
  * Act on a taxonomy term that is being assembled before rendering.
  *
- * The module may add elements to $term->content prior to rendering. This hook
- * will be called after hook_view(). The structure of $term->content is a
- * renderable array as expected by drupal_render().
+ * The module may add elements to $term->content prior to rendering. The
+ * structure of $term->content is a renderable array as expected by
+ * drupal_render().
  *
  * @param $term
  *   The term that is being assembled for rendering.
