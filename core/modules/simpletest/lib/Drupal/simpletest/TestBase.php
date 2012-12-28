@@ -883,11 +883,6 @@ abstract class TestBase {
     unset($GLOBALS['theme_key']);
     unset($GLOBALS['theme']);
 
-    // Re-initialize the theme to ensure that tests do not see an inconsistent
-    // behavior when calling functions that would initialize the theme if it has
-    // not been initialized yet.
-    drupal_theme_initialize();
-
     // Log fatal errors.
     ini_set('log_errors', 1);
     ini_set('error_log', $this->public_files_directory . '/error.log');

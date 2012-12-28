@@ -8,6 +8,7 @@
 namespace Drupal\simpletest;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Symfony\Component\DependencyInjection\Reference;
 use Drupal\Core\Database\Database;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,6 +67,13 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   private $themeData;
 
   /**
+   * A KeyValueMemoryFactory instance to use when building the container.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory.
+   */
+  protected $keyValueFactory;
+
+  /**
    * Sets up Drupal unit test environment.
    *
    * @see DrupalUnitTestBase::$modules
@@ -78,6 +86,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       $this->themeFiles = state()->get('system.theme.files') ?: array();
       $this->themeData = state()->get('system.theme.data') ?: array();
     }
+
+    $this->keyValueFactory = new KeyValueMemoryFactory();
 
     parent::setUp();
     // Build a minimal, partially mocked environment for unit tests.
@@ -128,8 +138,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')
       ->addArgument($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
     $conf['keyvalue_default'] = 'keyvalue.memory';
-    $container
-      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
+    $container->set('keyvalue.memory', $this->keyValueFactory);
     if (!$container->has('keyvalue')) {
       // TestBase::setUp puts a completely empty container in
       // drupal_container() which is somewhat the mirror of the empty
