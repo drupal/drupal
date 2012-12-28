@@ -62,7 +62,6 @@ class FieldInstanceCrudTest extends FieldTestBase {
 
     $field_type = field_info_field_types($this->field['type']);
     $widget_type = field_info_widget_types($field_type['default_widget']);
-    $formatter_type = field_info_formatter_types($field_type['default_formatter']);
 
     // Check that the ID key is filled in.
     $this->assertIdentical($record['id'], $this->instance_definition['id'], 'The instance id is filled in');
@@ -72,13 +71,10 @@ class FieldInstanceCrudTest extends FieldTestBase {
     $this->assertIdentical($record['data']['label'], $this->instance_definition['field_name'], 'Label defaults to field name.');
     $this->assertIdentical($record['data']['description'], '', 'Description defaults to empty string.');
     $this->assertIdentical($record['data']['widget']['type'], $field_type['default_widget'], 'Default widget has been written.');
-    $this->assertTrue(isset($record['data']['display']['default']), 'Display for "full" view_mode has been written.');
-    $this->assertIdentical($record['data']['display']['default']['type'], $field_type['default_formatter'], 'Default formatter for "full" view_mode has been written.');
 
     // Check that default settings are set.
     $this->assertIdentical($record['data']['settings'], $field_type['instance_settings'] , 'Default instance settings have been written.');
     $this->assertIdentical($record['data']['widget']['settings'], $widget_type['settings'] , 'Default widget settings have been written.');
-    $this->assertIdentical($record['data']['display']['default']['settings'], $formatter_type['settings'], 'Default formatter settings for "full" view_mode have been written.');
 
     // Guarantee that the field/bundle combination is unique.
     try {
@@ -151,7 +147,6 @@ class FieldInstanceCrudTest extends FieldTestBase {
    */
   function testUpdateFieldInstance() {
     field_create_instance($this->instance_definition);
-    $field_type = field_info_field_types($this->field['type']);
 
     // Check that basic changes are saved.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -161,8 +156,6 @@ class FieldInstanceCrudTest extends FieldTestBase {
     $instance['settings']['test_instance_setting'] = $this->randomName();
     $instance['widget']['settings']['test_widget_setting'] =$this->randomName();
     $instance['widget']['weight']++;
-    $instance['display']['default']['settings']['test_formatter_setting'] = $this->randomName();
-    $instance['display']['default']['weight']++;
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -171,35 +164,16 @@ class FieldInstanceCrudTest extends FieldTestBase {
     $this->assertEqual($instance['description'], $instance_new['description'], '"description" change is saved');
     $this->assertEqual($instance['widget']['settings']['test_widget_setting'], $instance_new['widget']['settings']['test_widget_setting'], 'Widget setting change is saved');
     $this->assertEqual($instance['widget']['weight'], $instance_new['widget']['weight'], 'Widget weight change is saved');
-    $this->assertEqual($instance['display']['default']['settings']['test_formatter_setting'], $instance_new['display']['default']['settings']['test_formatter_setting'], 'Formatter setting change is saved');
-    $this->assertEqual($instance['display']['default']['weight'], $instance_new['display']['default']['weight'], 'Widget weight change is saved');
 
-    // Check that changing widget and formatter types updates the default settings.
+    // Check that changing the widget type updates the default settings.
     $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $instance['widget']['type'] = 'test_field_widget_multiple';
-    $instance['display']['default']['type'] = 'field_test_multiple';
     field_update_instance($instance);
 
     $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertEqual($instance['widget']['type'], $instance_new['widget']['type'] , 'Widget type change is saved.');
     $settings = field_info_widget_settings($instance_new['widget']['type']);
     $this->assertIdentical($settings, array_intersect_key($instance_new['widget']['settings'], $settings) , 'Widget type change updates default settings.');
-    $this->assertEqual($instance['display']['default']['type'], $instance_new['display']['default']['type'] , 'Formatter type change is saved.');
-    $info = field_info_formatter_types($instance_new['display']['default']['type']);
-    $settings = $info['settings'];
-    $this->assertIdentical($settings, array_intersect_key($instance_new['display']['default']['settings'], $settings) , 'Changing formatter type updates default settings.');
-
-    // Check that adding a new view mode is saved and gets default settings.
-    $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $instance['display']['teaser'] = array();
-    field_update_instance($instance);
-
-    $instance_new = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue(isset($instance_new['display']['teaser']), 'Display for the new view_mode has been written.');
-    $this->assertIdentical($instance_new['display']['teaser']['type'], $field_type['default_formatter'], 'Default formatter for the new view_mode has been written.');
-    $info = field_info_formatter_types($instance_new['display']['teaser']['type']);
-    $settings = $info['settings'];
-    $this->assertIdentical($settings, $instance_new['display']['teaser']['settings'] , 'Default formatter settings for the new view_mode have been written.');
 
     // TODO: test failures.
   }

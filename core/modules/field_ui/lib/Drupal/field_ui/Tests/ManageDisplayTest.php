@@ -44,12 +44,12 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->fieldUIAddNewField($manage_fields, $edit);
 
     // Clear the test-side cache and get the saved field instance.
-    field_info_cache_clear();
-    $instance = field_info_instance('node', 'field_test', $this->type);
-    $format = $instance['display']['default']['type'];
+    $display = entity_get_display('node', $this->type, 'default');
+    $display_options = $display->getComponent('field_test');
+    $format = $display_options['type'];
     $default_settings = field_info_formatter_settings($format);
     $setting_name = key($default_settings);
-    $setting_value = $instance['display']['default']['settings'][$setting_name];
+    $setting_value = $display_options['settings'][$setting_name];
 
     // Display the "Manage display" screen and check that the expected formatter is
     // selected.
@@ -67,12 +67,12 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
     $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
 
-    // Submit the form and check that the instance is updated.
+    // Submit the form and check that the display is updated.
     $this->drupalPost(NULL, array(), t('Save'));
-    field_info_cache_clear();
-    $instance = field_info_instance('node', 'field_test', $this->type);
-    $current_format = $instance['display']['default']['type'];
-    $current_setting_value = $instance['display']['default']['settings'][$setting_name];
+    $display = entity_get_display('node', $this->type, 'default');
+    $display_options = $display->getComponent('field_test');
+    $current_format = $display_options['type'];
+    $current_setting_value = $display_options['settings'][$setting_name];
     $this->assertEqual($current_format, $format, 'The formatter was updated.');
     $this->assertEqual($current_setting_value, $setting_value, 'The setting was updated.');
 

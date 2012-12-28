@@ -49,13 +49,13 @@ class TokenReplaceTest extends TaxonomyTestBase {
       'widget' => array(
         'type' => 'options_select',
       ),
-      'display' => array(
-        'default' => array(
-          'type' => 'taxonomy_term_reference_link',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_display('node', 'article', 'default')
+      ->setComponent('taxonomy_' . $this->vocabulary->id(), array(
+        'type' => 'taxonomy_term_reference_link',
+      ))
+      ->save();
   }
 
   /**

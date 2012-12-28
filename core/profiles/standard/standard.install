@@ -295,19 +295,22 @@ function standard_install() {
       'type' => 'taxonomy_autocomplete',
       'weight' => -4,
     ),
-    'display' => array(
-      'default' => array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ),
-      'teaser' => array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ),
-    ),
   );
   field_create_instance($instance);
 
+  // Assign display settings for the 'default' and 'teaser' view modes.
+  entity_get_display('node', 'article', 'default')
+    ->setComponent($instance['field_name'], array(
+      'type' => 'taxonomy_term_reference_link',
+      'weight' => 10,
+    ))
+    ->save();
+  entity_get_display('node', 'article', 'teaser')
+    ->setComponent($instance['field_name'], array(
+      'type' => 'taxonomy_term_reference_link',
+      'weight' => 10,
+    ))
+    ->save();
 
   // Create an image field named "Image", enabled for the 'article' content type.
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
@@ -359,23 +362,26 @@ function standard_install() {
       ),
       'weight' => -1,
     ),
-
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'type' => 'image',
-        'settings' => array('image_style' => 'large', 'image_link' => ''),
-        'weight' => -1,
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'type' => 'image',
-        'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
-        'weight' => -1,
-      ),
-    ),
   );
   field_create_instance($instance);
+
+  // Assign display settings for the 'default' and 'teaser' view modes.
+  entity_get_display('node', 'article', 'default')
+    ->setComponent($instance['field_name'], array(
+      'label' => 'hidden',
+      'type' => 'image',
+      'settings' => array('image_style' => 'large', 'image_link' => ''),
+      'weight' => -1,
+    ))
+    ->save();
+  entity_get_display('node', 'article', 'teaser')
+    ->setComponent($instance['field_name'], array(
+      'label' => 'hidden',
+      'type' => 'image',
+      'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
+      'weight' => -1,
+    ))
+    ->save();
 
   // Create user picture field.
   module_load_install('user');

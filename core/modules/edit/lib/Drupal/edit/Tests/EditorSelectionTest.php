@@ -29,7 +29,7 @@ class EditorSelectionTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'field_test', 'field', 'number', 'text', 'edit', 'edit_test');
+  public static $modules = array('system', 'entity', 'field_test', 'field', 'number', 'text', 'edit', 'edit_test');
 
   public static function getInfo() {
     return array(
@@ -103,24 +103,26 @@ class EditorSelectionTest extends DrupalUnitTestBase {
         'label' => $label,
         'settings' => $widget_settings,
       ),
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'type' => $formatter_type,
-          'settings' => $formatter_settings
-        ),
-      ),
     );
     field_create_instance($this->$instance);
+
+    entity_get_display('test_entity', 'test_bundle', 'default')
+      ->setComponent($field_name, array(
+        'label' => 'above',
+        'type' => $formatter_type,
+        'settings' => $formatter_settings
+      ))
+      ->save();
   }
 
   /**
    * Retrieves the FieldInstance object for the given field and returns the
    * editor that Edit selects.
    */
-  function getSelectedEditor($items, $field_name, $display = 'default') {
+  function getSelectedEditor($items, $field_name, $view_mode = 'default') {
+    $options = entity_get_display('test_entity', 'test_bundle', $view_mode)->getComponent($field_name);
     $field_instance = field_info_instance('test_entity', $field_name, 'test_bundle');
-    return $this->editorSelector->getEditor($field_instance['display'][$display]['type'], $field_instance, $items);
+    return $this->editorSelector->getEditor($options['type'], $field_instance, $items);
   }
 
   /**

@@ -49,6 +49,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   function _testImageFieldFormatters($scheme) {
     $field_name = strtolower($this->randomName());
     $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
+
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
@@ -65,10 +66,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Test the image linked to file formatter.
-    $instance = field_info_instance('node', $field_name, 'article');
-    $instance['display']['default']['type'] = 'image';
-    $instance['display']['default']['settings']['image_link'] = 'file';
-    field_update_instance($instance);
+    $display_options = array(
+      'type' => 'image',
+      'settings' => array('image_link' => 'file'),
+    );
+    $display = entity_get_display('node', $node->type, 'default');
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
     $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
@@ -91,16 +96,19 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     }
 
     // Test the image linked to content formatter.
-    $instance['display']['default']['settings']['image_link'] = 'content';
-    field_update_instance($instance);
+    $display_options['settings']['image_link'] = 'content';
+    $display->setComponent($field_name, $display_options)
+      ->save();
     $default_output = l(theme('image', $image_info), 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image linked to content formatter displaying correctly on full node view.');
 
     // Test the image style 'thumbnail' formatter.
-    $instance['display']['default']['settings']['image_link'] = '';
-    $instance['display']['default']['settings']['image_style'] = 'thumbnail';
-    field_update_instance($instance);
+    $display_options['settings']['image_link'] = '';
+    $display_options['settings']['image_style'] = 'thumbnail';
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
     $this->drupalGet(image_style_url('thumbnail', $image_uri));
@@ -264,6 +272,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'files[field_settings_default_image]' => drupal_realpath($images[1]->uri),
     );
     $this->drupalPost('admin/structure/types/manage/article/fields/' . $private_field_name . '/field-settings', $edit, t('Save field settings'));
+    // Clear field info cache so the new default image is detected.
+    field_info_cache_clear();
+
     $private_field = field_info_field($private_field_name);
     $image = file_load($private_field['settings']['default_image']);
     $this->assertEqual('private', file_uri_scheme($image->uri), 'Default image uses private:// scheme.');

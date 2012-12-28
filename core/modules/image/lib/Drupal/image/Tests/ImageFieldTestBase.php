@@ -93,7 +93,15 @@ abstract class ImageFieldTestBase extends WebTestBase {
     );
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
     $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
-    return field_create_instance($instance);
+
+    $field_instance = field_create_instance($instance);
+
+    entity_get_display('node', $type_name, 'default')
+      ->setComponent($field['field_name'])
+      ->save();
+
+    return $field_instance;
+
   }
 
   /**

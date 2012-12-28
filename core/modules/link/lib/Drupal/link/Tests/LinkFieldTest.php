@@ -62,13 +62,14 @@ class LinkFieldTest extends WebTestBase {
           'placeholder_url' => 'http://example.com',
         ),
       ),
-      'display' => array(
-        'full' => array(
-          'type' => 'link',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_display('test_entity', 'test_bundle', 'full')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'link',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
@@ -130,14 +131,15 @@ class LinkFieldTest extends WebTestBase {
           'placeholder_title' => 'Enter a title for this link',
         ),
       ),
-      'display' => array(
-        'full' => array(
-          'type' => 'link',
-          'label' => 'hidden',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_display('test_entity', 'test_bundle', 'full')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'link',
+        'label' => 'hidden',
+      ))
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Verify that the title field works according to the field setting.
@@ -235,14 +237,16 @@ class LinkFieldTest extends WebTestBase {
       'widget' => array(
         'type' => 'link_default',
       ),
-      'display' => array(
-        'full' => array(
-          'type' => 'link',
-          'label' => 'hidden',
-        ),
-      ),
+    );
+    $display_options = array(
+      'type' => 'link',
+      'label' => 'hidden',
     );
     field_create_instance($this->instance);
+    entity_get_display('test_entity', 'test_bundle', 'full')
+      ->setComponent($this->field['field_name'], $display_options)
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity with two link field values:
@@ -288,12 +292,14 @@ class LinkFieldTest extends WebTestBase {
       foreach ($values as $new_value) {
         // Update the field formatter settings.
         if (!is_array($new_value)) {
-          $this->instance['display']['full']['settings'] = array($setting => $new_value);
+          $display_options['settings'] = array($setting => $new_value);
         }
         else {
-          $this->instance['display']['full']['settings'] = $new_value;
+          $display_options['settings'] = $new_value;
         }
-        field_update_instance($this->instance);
+        entity_get_display('test_entity', 'test_bundle', 'full')
+          ->setComponent($this->field['field_name'], $display_options)
+          ->save();
 
         $this->renderTestEntity($id);
         switch ($setting) {
@@ -367,14 +373,16 @@ class LinkFieldTest extends WebTestBase {
       'widget' => array(
         'type' => 'link_default',
       ),
-      'display' => array(
-        'full' => array(
-          'type' => 'link_separate',
-          'label' => 'hidden',
-        ),
-      ),
+    );
+    $display_options = array(
+      'type' => 'link_separate',
+      'label' => 'hidden',
     );
     field_create_instance($this->instance);
+    entity_get_display('test_entity', 'test_bundle', 'full')
+      ->setComponent($this->field['field_name'], $display_options)
+      ->save();
+
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity with two link field values:
@@ -406,8 +414,10 @@ class LinkFieldTest extends WebTestBase {
     foreach ($options as $setting => $values) {
       foreach ($values as $new_value) {
         // Update the field formatter settings.
-        $this->instance['display']['full']['settings'] = array($setting => $new_value);
-        field_update_instance($this->instance);
+        $display_options['settings'] = array($setting => $new_value);
+        entity_get_display('test_entity', 'test_bundle', 'full')
+          ->setComponent($this->field['field_name'], $display_options)
+          ->save();
 
         $this->renderTestEntity($id);
         switch ($setting) {
@@ -461,8 +471,9 @@ class LinkFieldTest extends WebTestBase {
       entity_get_controller('test_entity')->resetCache(array($id));
     }
     $entity = field_test_entity_test_load($id);
-    field_attach_prepare_view('test_entity', array($entity->id() => $entity), $view_mode);
-    $entity->content = field_attach_view('test_entity', $entity, $view_mode);
+    $display = entity_get_display($entity->entityType(), $entity->bundle(), $view_mode);
+    field_attach_prepare_view('test_entity', array($entity->id() => $entity), array($entity->bundle() => $display));
+    $entity->content = field_attach_view('test_entity', $entity, $display);
 
     $output = drupal_render($entity->content);
     $this->drupalSetContent($output);

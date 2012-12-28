@@ -19,6 +19,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Denotes that the node is not published.
@@ -212,12 +213,17 @@ function node_entity_info(&$info) {
 }
 
 /**
- * Implements hook_field_display_ENTITY_TYPE_alter().
+ * Implements hook_entity_display_alter().
  */
-function node_field_display_node_alter(&$display, $context) {
+function node_entity_display_alter(EntityDisplay $display, $context) {
   // Hide field labels in search index.
-  if ($context['view_mode'] == 'search_index') {
-    $display['label'] = 'hidden';
+  if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
+    foreach ($display->getComponents() as $name => $options) {
+      if (isset($options['label'])) {
+        $options['label'] = 'hidden';
+        $display->setComponent($name, $options);
+      }
+    }
   }
 }
 
@@ -559,19 +565,24 @@ function node_add_body_field($type, $label = 'Body') {
       'label' => $label,
       'widget' => array('type' => 'text_textarea_with_summary'),
       'settings' => array('display_summary' => TRUE),
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'type' => 'text_default',
-        ),
-        'teaser' => array(
-          'label' => 'hidden',
-          'type' => 'text_summary_or_trimmed',
-        ),
-      ),
     );
     $instance = field_create_instance($instance);
+
+    // Assign display settings for the 'default' and 'teaser' view modes.
+    entity_get_display('node', $type->type, 'default')
+      ->setComponent($field['field_name'], array(
+        'label' => 'hidden',
+        'type' => 'text_default',
+      ))
+      ->save();
+    entity_get_display('node', $type->type, 'teaser')
+      ->setComponent($field['field_name'], array(
+        'label' => 'hidden',
+        'type' => 'text_summary_or_trimmed',
+      ))
+      ->save();
   }
+
   return $instance;
 }
 

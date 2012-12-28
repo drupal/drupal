@@ -49,6 +49,7 @@ class DisplayOverview extends OverviewBase {
     $instances = field_info_instances($this->entity_type, $this->bundle);
     $field_types = field_info_field_types();
     $extra_fields = field_info_extra_fields($this->entity_type, $this->bundle, 'display');
+    $entity_display = entity_get_display($this->entity_type, $this->bundle, $this->view_mode);
 
     $form_state += array(
       'formatter_settings_edit' => NULL,
@@ -94,24 +95,14 @@ class DisplayOverview extends OverviewBase {
       'hidden' => t('<Hidden>'),
     );
     $extra_visibility_options = array(
-      'content' => t('Visible'),
+      'visible' => t('Visible'),
       'hidden' => t('Hidden'),
     );
 
     // Field rows.
     foreach ($instances as $name => $instance) {
-      $field = field_info_field($instance['field_name']);
-
-      if (isset($instance['display'][$this->view_mode])) {
-        $display = $instance['display'][$this->view_mode];
-      }
-      else {
-        $display = array(
-          'type' => 'hidden',
-          'label' => 'above',
-          'weight' => 0,
-        );
-      }
+      $field = field_info_field($name);
+      $display_options = $entity_display->getComponent($name);
 
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
@@ -128,7 +119,7 @@ class DisplayOverview extends OverviewBase {
           '#type' => 'textfield',
           '#title' => t('Weight for @title', array('@title' => $instance['label'])),
           '#title_display' => 'invisible',
-          '#default_value' => $display['weight'],
+          '#default_value' => $display_options ? $display_options['weight'] : '0',
           '#size' => 3,
           '#attributes' => array('class' => array('field-weight')),
         ),
@@ -153,7 +144,7 @@ class DisplayOverview extends OverviewBase {
           '#title' => t('Label display for @title', array('@title' => $instance['label'])),
           '#title_display' => 'invisible',
           '#options' => $field_label_options,
-          '#default_value' => $display['label'],
+          '#default_value' => $display_options ? $display_options['label'] : 'above',
         ),
       );
 
@@ -165,7 +156,7 @@ class DisplayOverview extends OverviewBase {
           '#title' => t('Formatter for @title', array('@title' => $instance['label'])),
           '#title_display' => 'invisible',
           '#options' => $formatter_options,
-          '#default_value' => $display['type'],
+          '#default_value' => $display_options ? $display_options['type'] : 'hidden',
           '#parents' => array('fields', $name, 'type'),
           '#attributes' => array('class' => array('field-formatter-type')),
         ),
@@ -175,12 +166,23 @@ class DisplayOverview extends OverviewBase {
       // Check the currently selected formatter, and merge persisted values for
       // formatter settings.
       if (isset($form_state['values']['fields'][$name]['type'])) {
-        $display['type'] = $form_state['values']['fields'][$name]['type'];
+        $display_options['type'] = $form_state['values']['fields'][$name]['type'];
       }
       if (isset($form_state['formatter_settings'][$name])) {
-        $display['settings'] = $form_state['formatter_settings'][$name];
+        $display_options['settings'] = $form_state['formatter_settings'][$name];
       }
-      $formatter = $instance->getFormatter($display);
+
+      // Get the corresponding formatter object.
+      if ($display_options && $display_options['type'] != 'hidden') {
+        $formatter = drupal_container()->get('plugin.manager.field.formatter')->getInstance(array(
+          'instance' => $instance,
+          'view_mode' => $this->view_mode,
+          'configuration' => $display_options
+        ));
+      }
+      else {
+        $formatter = NULL;
+      }
 
       // Base button element for the various formatter settings actions.
       $base_button = array(
@@ -287,7 +289,8 @@ class DisplayOverview extends OverviewBase {
 
     // Non-field elements.
     foreach ($extra_fields as $name => $extra_field) {
-      $display = $extra_field['display'][$this->view_mode];
+      $display_options = $entity_display->getComponent($name);
+
       $table[$name] = array(
         '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
         '#row_type' => 'extra_field',
@@ -300,7 +303,7 @@ class DisplayOverview extends OverviewBase {
           '#type' => 'textfield',
           '#title' => t('Weight for @title', array('@title' => $extra_field['label'])),
           '#title_display' => 'invisible',
-          '#default_value' => $display['weight'],
+          '#default_value' => $display_options ? $display_options['weight'] : 0,
           '#size' => 3,
           '#attributes' => array('class' => array('field-weight')),
         ),
@@ -329,7 +332,7 @@ class DisplayOverview extends OverviewBase {
             '#title' => t('Visibility for @title', array('@title' => $extra_field['label'])),
             '#title_display' => 'invisible',
             '#options' => $extra_visibility_options,
-            '#default_value' => $display['visible'] ? 'content' : 'hidden',
+            '#default_value' => $display_options ? 'visible' : 'hidden',
             '#parents' => array('fields', $name, 'type'),
             '#attributes' => array('class' => array('field-formatter-type')),
           ),
@@ -418,73 +421,86 @@ class DisplayOverview extends OverviewBase {
    */
   public function submit(array $form, array &$form_state) {
     $form_values = $form_state['values'];
+    $display = entity_get_display($this->entity_type, $this->bundle, $this->view_mode);
 
-    // Save data for 'regular' fields.
+    // Collect data for 'regular' fields.
     foreach ($form['#fields'] as $field_name) {
       // Retrieve the stored instance settings to merge with the incoming
       // values.
-      $instance = field_read_instance($this->entity_type, $field_name, $this->bundle);
       $values = $form_values['fields'][$field_name];
-      // Get formatter settings. They lie either directly in submitted form
-      // values (if the whole form was submitted while some formatter
-      // settings were being edited), or have been persisted in
-      // $form_state.
-      $settings = array();
-      if (isset($values['settings_edit_form']['settings'])) {
-        $settings = $values['settings_edit_form']['settings'];
-      }
-      elseif (isset($form_state['formatter_settings'][$field_name])) {
-        $settings = $form_state['formatter_settings'][$field_name];
-      }
-      elseif (isset($instance['display'][$this->view_mode]['settings'])) {
-        $settings = $instance['display'][$this->view_mode]['settings'];
-      }
 
-      // Only save settings actually used by the selected formatter.
-      $default_settings = field_info_formatter_settings($values['type']);
-      $settings = array_intersect_key($settings, $default_settings);
+      if ($values['type'] == 'hidden') {
+        $display->removeComponent($field_name);
+      }
+      else {
+        // Get formatter settings. They lie either directly in submitted form
+        // values (if the whole form was submitted while some formatter
+        // settings were being edited), or have been persisted in $form_state.
+        $settings = array();
+        if (isset($values['settings_edit_form']['settings'])) {
+          $settings = $values['settings_edit_form']['settings'];
+        }
+        elseif (isset($form_state['formatter_settings'][$field_name])) {
+          $settings = $form_state['formatter_settings'][$field_name];
+        }
+        elseif ($current_options = $display->getComponent($field_name)) {
+          $settings = $current_options['settings'];
+        }
 
-      $instance['display'][$this->view_mode] = array(
-        'label' => $values['label'],
-        'type' => $values['type'],
-        'weight' => $values['weight'],
-        'settings' => $settings,
-      );
-      field_update_instance($instance);
+        // Only save settings actually used by the selected formatter.
+        $default_settings = field_info_formatter_settings($values['type']);
+        $settings = array_intersect_key($settings, $default_settings);
+
+        $display->setComponent($field_name, array(
+          'label' => $values['label'],
+          'type' => $values['type'],
+          'weight' => $values['weight'],
+          'settings' => $settings,
+        ));
+      }
     }
 
-    // Get current bundle settings.
-    $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);
-
-    // Save data for 'extra' fields.
+    // Collect data for 'extra' fields.
     foreach ($form['#extra'] as $name) {
-      $bundle_settings['extra_fields']['display'][$name][$this->view_mode] = array(
-        'weight' => $form_values['fields'][$name]['weight'],
-        'visible' => $form_values['fields'][$name]['type'] == 'content',
-      );
+      if ($form_values['fields'][$name]['type'] == 'hidden') {
+        $display->removeComponent($name);
+      }
+      else {
+        $display->setComponent($name, array(
+          'weight' => $form_values['fields'][$name]['weight'],
+        ));
+      }
     }
 
-    // Save view modes data.
+    // Save the display.
+    $display->save();
+
+    // Handle the 'view modes' checkboxes if present.
     if ($this->view_mode == 'default' && !empty($form_values['view_modes_custom'])) {
       $entity_info = entity_get_info($this->entity_type);
-      foreach ($form_values['view_modes_custom'] as $view_mode_name => $value) {
-        // Display a message for each view mode newly configured to use custom
-        // settings.
-        $view_mode_settings = field_view_mode_settings($this->entity_type, $this->bundle);
-        if (!empty($value) && empty($view_mode_settings[$view_mode_name]['custom_settings'])) {
-          $view_mode_label = $entity_info['view_modes'][$view_mode_name]['label'];
-          $path = field_ui_bundle_admin_path($this->entity_type, $this->bundle) . "/display/$view_mode_name";
-          drupal_set_message(t('The %view_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%view_mode' => $view_mode_label, '@url' => url($path))));
-          // Initialize the newly customized view mode with the display settings
-          // from the default view mode.
-          _field_ui_add_default_view_mode_settings($this->entity_type, $this->bundle, $view_mode_name, $bundle_settings);
-        }
-        $bundle_settings['view_modes'][$view_mode_name]['custom_settings'] = !empty($value);
-      }
-    }
+      $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);
+      $view_mode_settings = field_view_mode_settings($this->entity_type, $this->bundle);
 
-    // Save updated bundle settings.
-    field_bundle_settings($this->entity_type, $this->bundle, $bundle_settings);
+      foreach ($form_values['view_modes_custom'] as $view_mode => $value) {
+        if (!empty($value) && empty($view_mode_settings[$view_mode]['custom_settings'])) {
+          // If no display exists for the newly enabled view mode, initialize
+          // it with those from the 'default' view mode, which were used so
+          // far.
+          if (!entity_load('entity_display', $this->entity_type . '.' . $this->bundle . '.' . $view_mode)) {
+            $display = entity_get_display($this->entity_type, $this->bundle, 'default')->createCopy($view_mode);
+            $display->save();
+          }
+
+          $view_mode_label = $entity_info['view_modes'][$view_mode]['label'];
+          $path = field_ui_bundle_admin_path($this->entity_type, $this->bundle) . "/display/$view_mode";
+          drupal_set_message(t('The %view_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%view_mode' => $view_mode_label, '@url' => url($path))));
+        }
+        $bundle_settings['view_modes'][$view_mode]['custom_settings'] = !empty($value);
+      }
+
+      // Save updated bundle settings.
+      field_bundle_settings($this->entity_type, $this->bundle, $bundle_settings);
+    }
 
     drupal_set_message(t('Your settings have been saved.'));
   }

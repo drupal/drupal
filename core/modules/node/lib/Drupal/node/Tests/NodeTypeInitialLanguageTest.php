@@ -118,11 +118,11 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
 
     // Changes Language field visibility to true and check if it is saved.
     $edit = array(
-      'fields[language][type]' => 'content',
+      'fields[language][type]' => 'visible',
     );
     $this->drupalPost('admin/structure/types/manage/article/display', $edit, t('Save'));
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->assertOptionSelected('edit-fields-language-type', 'content', 'Language field has been set to visible.');
+    $this->assertOptionSelected('edit-fields-language-type', 'visible', 'Language field has been set to visible.');
 
     // Loads node page and check if Language field is shown.
     $this->drupalGet('node/' . $node->nid);

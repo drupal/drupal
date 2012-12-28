@@ -376,15 +376,15 @@ function _comment_body_field_create($info) {
       'bundle' => 'comment_node_' . $info->type,
       'settings' => array('text_processing' => 1),
       'required' => TRUE,
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'type' => 'text_default',
-          'weight' => 0,
-        ),
-      ),
     );
     field_create_instance($instance);
+    entity_get_display('comment', 'comment_node_' . $info->type, 'default')
+      ->setComponent('comment_body', array(
+        'label' => 'hidden',
+        'type' => 'text_default',
+        'weight' => 0,
+      ))
+      ->save();
   }
 }
 
