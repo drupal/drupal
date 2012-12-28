@@ -57,9 +57,7 @@ class UserPictureUpgradePathTest extends UpgradePathTestBase {
     $this->assertEqual($instance['settings']['max_filesize'], '700 KB', 'User picture maximum filesize has been migrated.');
     $this->assertEqual($instance['description'], 'These are user picture guidelines.', 'User picture guidelines are now the user picture field description.');
     $this->assertEqual($instance['settings']['file_directory'], 'user_pictures_dir', 'User picture directory path has been migrated.');
-
-    $display_options = entity_get_display('user', 'user', 'default')->getComponent('user_picture');
-    $this->assertEqual($display_options['settings']['image_style'], 'thumbnail', 'User picture image style setting has been migrated.');
+    $this->assertEqual($instance['display']['default']['settings']['image_style'], 'thumbnail', 'User picture image style setting has been migrated.');
 
     // Verify compact view mode default settings.
     $this->drupalGet('admin/config/people/accounts/display/compact');

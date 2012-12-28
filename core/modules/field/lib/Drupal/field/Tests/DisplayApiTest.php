@@ -42,33 +42,23 @@ class DisplayApiTest extends FieldTestBase {
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
       'label' => $this->label,
-    );
-
-    $this->display_options = array(
-      'default' => array(
-        'type' => 'field_test_default',
-        'settings' => array(
-          'test_formatter_setting' => $this->randomName(),
+      'display' => array(
+        'default' => array(
+          'type' => 'field_test_default',
+          'settings' => array(
+            'test_formatter_setting' => $this->randomName(),
+          ),
+        ),
+        'teaser' => array(
+          'type' => 'field_test_default',
+          'settings' => array(
+            'test_formatter_setting' => $this->randomName(),
+          ),
         ),
       ),
-      'teaser' => array(
-        'type' => 'field_test_default',
-        'settings' => array(
-          'test_formatter_setting' => $this->randomName(),
-        ),
-      ),
     );
-
     field_create_field($this->field);
     field_create_instance($this->instance);
-    // Create a display for the default view mode.
-    entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->field_name, $this->display_options['default'])
-      ->save();
-    // Create a display for the teaser view mode.
-    entity_get_display($this->instance['entity_type'], $this->instance['bundle'], 'teaser')
-      ->setComponent($this->field_name, $this->display_options['teaser'])
-      ->save();
 
     // Create an entity with values.
     $this->values = $this->_generateTestFieldValues($this->cardinality);
@@ -130,11 +120,11 @@ class DisplayApiTest extends FieldTestBase {
       $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
-    // View mode: check that display settings specified in the display object
-    // are used.
+    // View mode: check that display settings specified in the instance are
+    // used.
     $output = field_view_field('test_entity', $this->entity, $this->field_name, 'teaser');
     $this->drupalSetContent(drupal_render($output));
-    $setting = $this->display_options['teaser']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['teaser']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -144,7 +134,7 @@ class DisplayApiTest extends FieldTestBase {
     // are used.
     $output = field_view_field('test_entity', $this->entity, $this->field_name, 'unknown_view_mode');
     $this->drupalSetContent(drupal_render($output));
-    $setting = $this->display_options['default']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['default']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -199,7 +189,7 @@ class DisplayApiTest extends FieldTestBase {
 
     // View mode: check that display settings specified in the instance are
     // used.
-    $setting = $this->display_options['teaser']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['teaser']['settings']['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'teaser');
@@ -209,7 +199,7 @@ class DisplayApiTest extends FieldTestBase {
 
     // Unknown view mode: check that display settings for 'default' view mode
     // are used.
-    $setting = $this->display_options['default']['settings']['test_formatter_setting'];
+    $setting = $this->instance['display']['default']['settings']['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[LANGUAGE_NOT_SPECIFIED][$delta];
       $output = field_view_value('test_entity', $this->entity, $this->field_name, $item, 'unknown_view_mode');

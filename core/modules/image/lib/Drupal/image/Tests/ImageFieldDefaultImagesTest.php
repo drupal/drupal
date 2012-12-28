@@ -69,9 +69,6 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
     field_create_instance($instance2);
     $instance2 = field_info_instance('node', $field_name, 'page');
-    entity_get_display('node', 'page', 'default')
-      ->setComponent($field['field_name'])
-      ->save();
 
     // Confirm the defaults are present on the article field settings form.
     $this->drupalGet("admin/structure/types/manage/article/fields/$field_name/field-settings");

@@ -46,11 +46,9 @@ class SummaryLengthTest extends NodeTestBase {
     $this->assertRaw($expected);
 
     // Change the teaser length for "Basic page" content type.
-    $display = entity_get_display('node', $node->type, 'teaser');
-    $display_options = $display->getComponent('body');
-    $display_options['settings']['trim_length'] = 200;
-    $display->setComponent('body', $display_options)
-      ->save();
+    $instance = field_info_instance('node', 'body', $node->type);
+    $instance['display']['teaser']['settings']['trim_length'] = 200;
+    field_update_instance($instance);
 
     // Render the node as a teaser again and check that the summary is now only
     // 200 characters in length and so does not include 'What is a Drupalism?'.

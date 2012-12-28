@@ -1105,13 +1105,12 @@ function hook_field_attach_purge($entity_type, $entity, $field, $instance) {
  *   - entity_type: The type of $entity; for example, 'node' or 'user'.
  *   - entity: The entity with fields to render.
  *   - view_mode: View mode; for example, 'full' or 'teaser'.
- *   - display_options: Either a view mode string or an array of display
- *     options. If this hook is being invoked from field_attach_view(), the
- *     'display_options' element is set to the view mode string. If this hook
- *     is being invoked from field_view_field(), this element is set to the
- *     $display_options argument and the view_mode element is set to '_custom'.
- *     See field_view_field() for more information on what its $display_options
- *     argument contains.
+ *   - display: Either a view mode string or an array of display settings. If
+ *     this hook is being invoked from field_attach_view(), the 'display'
+ *     element is set to the view mode string. If this hook is being invoked
+ *     from field_view_field(), this element is set to the $display argument and
+ *     the view_mode element is set to '_custom'. See field_view_field() for
+ *     more information on what its $display argument contains.
  *   - language: The language code used for rendering.
  */
 function hook_field_attach_view_alter(&$output, $context) {
@@ -1941,6 +1940,94 @@ function hook_field_info_max_weight($entity_type, $bundle, $context) {
   }
 
   return $weights ? max($weights) : NULL;
+}
+
+/**
+ * Alters the display settings of a field before it is displayed.
+ *
+ * Note that instead of hook_field_display_alter(), which is called for all
+ * fields on all entity types, hook_field_display_ENTITY_TYPE_alter() may be
+ * used to alter display settings for fields on a specific entity type only.
+ *
+ * This hook is called once per field per displayed entity. If the result of the
+ * hook involves reading from the database, it is highly recommended to
+ * statically cache the information.
+ *
+ * @param array $display_properties
+ *   The display settings that will be used to display the field values, as
+ *   found in the 'display' key of $instance definitions.
+ * @param array $context
+ *   An associative array containing:
+ *   - entity_type: The entity type, e.g., 'node' or 'user'.
+ *   - bundle: The bundle, e.g., 'page' or 'article'.
+ *   - field: The field being rendered.
+ *   - instance: The instance being rendered.
+ *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ *
+ * @see hook_field_display_ENTITY_TYPE_alter()
+ */
+function hook_field_display_alter(array &$display_properties, array $context) {
+  // Leave field labels out of the search index.
+  // Note: The check against $context['entity_type'] == 'node' could be avoided
+  // by using hook_field_display_node_alter() instead of
+  // hook_field_display_alter(), resulting in less function calls when
+  // rendering non-node entities.
+  if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
+    $display_properties['label'] = 'hidden';
+  }
+}
+
+/**
+ * Alters the display settings of a field before it is displayed.
+ *
+ * Modules can implement hook_field_display_ENTITY_TYPE_alter() to alter display
+ * settings for fields on a specific entity type, rather than implementing
+ * hook_field_display_alter().
+ *
+ * This hook is called once per field per displayed entity. If the result of the
+ * hook involves reading from the database, it is highly recommended to
+ * statically cache the information.
+ *
+ * @param array $display_properties
+ *   The display settings that will be used to display the field values, as
+ *   found in the 'display' key of $instance definitions.
+ * @param array $context
+ *   An associative array containing:
+ *   - entity_type: The entity type, e.g., 'node' or 'user'.
+ *   - bundle: The bundle, e.g., 'page' or 'article'.
+ *   - field: The field being rendered.
+ *   - instance: The instance being rendered.
+ *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ *
+ * @see hook_field_display_alter()
+ */
+function hook_field_display_ENTITY_TYPE_alter(array &$display_properties, array $context) {
+  // Leave field labels out of the search index.
+  if ($context['view_mode'] == 'search_index') {
+    $display_properties['label'] = 'hidden';
+  }
+}
+
+/**
+ * Alters the display settings of pseudo-fields before an entity is displayed.
+ *
+ * This hook is called once per displayed entity. If the result of the hook
+ * involves reading from the database, it is highly recommended to statically
+ * cache the information.
+ *
+ * @param $displays
+ *   An array of display settings for the pseudo-fields in the entity, keyed by
+ *   pseudo-field names.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The entity type; e.g., 'node' or 'user'.
+ *   - bundle: The bundle name.
+ *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ */
+function hook_field_extra_fields_display_alter(&$displays, $context) {
+  if ($context['entity_type'] == 'taxonomy_term' && $context['view_mode'] == 'full') {
+    $displays['description']['visible'] = FALSE;
+  }
 }
 
 /**

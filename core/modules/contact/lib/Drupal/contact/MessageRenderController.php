@@ -23,8 +23,9 @@ class MessageRenderController extends EntityRenderController {
 
     foreach ($entities as $entity) {
       // Add the message extra field, if enabled.
+      $bundle = $entity->bundle();
       $entity_view_mode = $entity->content['#view_mode'];
-      $fields = field_extra_fields_get_display($entity, $entity_view_mode);
+      $fields = field_extra_fields_get_display($this->entityType, $bundle, $entity_view_mode);
       if (!empty($entity->message) && !empty($fields['message']['visible'])) {
         $entity->content['message'] = array(
           '#type' => 'item',

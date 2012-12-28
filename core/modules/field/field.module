@@ -682,6 +682,7 @@ function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
     );
     $settings['extra_fields'] += array(
       'form' => array(),
+      'display' => array(),
     );
 
     return $settings;
@@ -724,30 +725,39 @@ function field_view_mode_settings($entity_type, $bundle) {
 }
 
 /**
- * Returns the display options to use for pseudo-fields in a given view mode.
+ * Returns the display settings to use for pseudo-fields in a given view mode.
  *
- * @todo Remove when all steps in the view callstack receive the
- * entity_display.
- *
- * @param $entity
- *   The entity.
+ * @param $entity_type
+ *   The type of $entity; e.g., 'node' or 'user'.
+ * @param $bundle
+ *   The bundle name.
  * @param $view_mode
  *   The view mode.
  *
  * @return
- *   The display options to be used when viewing the entity's pseudo-fields in
- *   the view mode.
+ *   The display settings to be used when viewing the bundle's pseudo-fields.
  */
-function field_extra_fields_get_display($entity, $view_mode) {
-  $entity_display = entity_get_render_display($entity, $view_mode);
-  $extra_fields = field_info_extra_fields($entity->entityType(), $entity->bundle(), 'display');
+function field_extra_fields_get_display($entity_type, $bundle, $view_mode) {
+  // Check whether the view mode uses custom display settings or the 'default'
+  // mode.
+  $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
+  $actual_mode = (!empty($view_mode_settings[$view_mode]['custom_settings'])) ? $view_mode : 'default';
+  $extra_fields = field_info_extra_fields($entity_type, $bundle, 'display');
 
-  $options = array();
+  $displays = array();
   foreach ($extra_fields as $name => $value) {
-    $options[$name] = $entity_display->getComponent($name);
+    $displays[$name] = $extra_fields[$name]['display'][$actual_mode];
   }
 
-  return $options;
+  // Let modules alter the display settings.
+  $context = array(
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+    'view_mode' => $view_mode,
+  );
+  drupal_alter('field_extra_fields_display', $displays, $context);
+
+  return $displays;
 }
 
 /**
@@ -757,10 +767,23 @@ function _field_extra_fields_pre_render($elements) {
   $entity_type = $elements['#entity_type'];
   $bundle = $elements['#bundle'];
 
-  $extra_fields = field_info_extra_fields($entity_type, $bundle, 'form');
-  foreach ($extra_fields as $name => $settings) {
-    if (isset($elements[$name])) {
-      $elements[$name]['#weight'] = $settings['weight'];
+  if (isset($elements['#type']) && $elements['#type'] == 'form') {
+    $extra_fields = field_info_extra_fields($entity_type, $bundle, 'form');
+    foreach ($extra_fields as $name => $settings) {
+      if (isset($elements[$name])) {
+        $elements[$name]['#weight'] = $settings['weight'];
+      }
+    }
+  }
+  elseif (isset($elements['#view_mode'])) {
+    $view_mode = $elements['#view_mode'];
+    $extra_fields = field_extra_fields_get_display($entity_type, $bundle, $view_mode);
+    foreach ($extra_fields as $name => $settings) {
+      if (isset($elements[$name])) {
+        $elements[$name]['#weight'] = $settings['weight'];
+        // Visibility: make sure we do not accidentally show a hidden element.
+        $elements[$name]['#access'] = isset($elements[$name]['#access']) ? ($elements[$name]['#access'] && $settings['visible']) : $settings['visible'];
+      }
     }
   }
 
@@ -879,14 +902,15 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  *   key and the field data to display.
  * @param $field_name
  *   The name of the field to display.
- * @param $display_options
+ * @param $display
  *   Can be either:
  *   - The name of a view mode. The field will be displayed according to the
  *     display settings specified for this view mode in the $instance
  *     definition for the field in the entity's bundle. If no display settings
  *     are found for the view mode, the settings for the 'default' view mode
  *     will be used.
- *   - An array of display options. The following key/value pairs are allowed:
+ *   - An array of display settings, as found in the 'display' entry of
+ *     $instance definitions. The following key/value pairs are allowed:
  *     - label: (string) Position of the label. The default 'field' theme
  *       implementation supports the values 'inline', 'above' and 'hidden'.
  *       Defaults to 'above'.
@@ -909,70 +933,51 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  *
  * @see field_view_value()
  */
-function field_view_field($entity_type, $entity, $field_name, $display_options = array(), $langcode = NULL) {
+function field_view_field($entity_type, $entity, $field_name, $display = array(), $langcode = NULL) {
   $output = array();
-  $bundle = $entity->bundle();
 
-  // Return nothing if the field doesn't exist.
-  $instance = field_info_instance($entity_type, $field_name, $bundle);
-  if (!$instance) {
-    return $output;
-  }
-
-  // Get the formatter object.
-  if (is_string($display_options)) {
-    $view_mode = $display_options;
-    $formatter = entity_get_render_display($entity, $view_mode)->getFormatter($field_name);
-  }
-  else {
-    $view_mode = '_custom';
-    // hook_field_attach_display_alter() needs to receive the 'prepared'
-    // $display_options, so we cannot let preparation happen internally.
-    $field = field_info_field($field_name);
-    $formatter_manager = drupal_container()->get('plugin.manager.field.formatter');
-    $display_options = $formatter_manager->prepareConfiguration($field['type'], $display_options);
-    $formatter = $formatter_manager->getInstance(array(
-      'instance' => $instance,
-      'view_mode' => $view_mode,
-      'prepare' => FALSE,
-      'configuration' => $display_options,
-    ));
-  }
-
-  if ($formatter) {
-    $display_langcode = field_language($entity_type, $entity, $field_name, $langcode);
-    $items = $entity->{$field_name}[$display_langcode];
-
-    // Invoke prepare_view steps if needed.
-    if (empty($entity->_field_view_prepared)) {
-      $id = $entity->id();
-
-      // First let the field types do their preparation.
-      $options = array('field_name' => $field_name, 'langcode' => $display_langcode);
-      $null = NULL;
-      _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $null, $null, $options);
-
-      // Then let the formatter do its own specific massaging.
-      $items_multi = array($id => $entity->{$field_name}[$display_langcode]);
-      $formatter->prepareView(array($id => $entity), $display_langcode, $items_multi);
-      $items = $items_multi[$id];
+  if ($instance = field_info_instance($entity_type, $field_name, $entity->bundle())) {
+    if (is_array($display) && empty($display['type'])) {
+      $field = field_info_field($instance['field_name']);
+      $field_type_info = field_info_field_types($field['type']);
+      $display['type'] = $field_type_info['default_formatter'];
     }
+    if ($formatter = $instance->getFormatter($display)) {
+      $display_langcode = field_language($entity_type, $entity, $field_name, $langcode);
+      $items = $entity->{$field_name}[$display_langcode];
 
-    // Build the renderable array.
-    $result = $formatter->view($entity, $display_langcode, $items);
+      // Invoke prepare_view steps if needed.
+      if (empty($entity->_field_view_prepared)) {
+        $id = $entity->id();
 
-    // Invoke hook_field_attach_view_alter() to let other modules alter the
-    // renderable array, as in a full field_attach_view() execution.
-    $context = array(
-      'entity_type' => $entity_type,
-      'entity' => $entity,
-      'view_mode' => $view_mode,
-      'display_options' => $display_options,
-    );
-    drupal_alter('field_attach_view', $result, $context);
+        // First let the field types do their preparation.
+        // @todo invoke hook_field_prepare_view() directly ?
+        $options = array('field_name' => $field_name, 'langcode' => $display_langcode);
+        $null = NULL;
+        _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);
 
-    if (isset($result[$field_name])) {
-      $output = $result[$field_name];
+        // Then let the formatters do their own specific massaging.
+        $items_multi = array($id => $entity->{$field_name}[$display_langcode]);
+        $formatter->prepareView(array($id => $entity), $display_langcode, $items_multi);
+        $items = $items_multi[$id];
+      }
+
+      // Build the renderable array.
+      $result = $formatter->view($entity, $display_langcode, $items);
+
+      // Invoke hook_field_attach_view_alter() to let other modules alter the
+      // renderable array, as in a full field_attach_view() execution.
+      $context = array(
+        'entity_type' => $entity_type,
+        'entity' => $entity,
+        'view_mode' => '_custom',
+        'display' => $display,
+      );
+      drupal_alter('field_attach_view', $result, $context);
+
+      if (isset($result[$field_name])) {
+        $output = $result[$field_name];
+      }
     }
   }
 

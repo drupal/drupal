@@ -60,14 +60,13 @@ class EmailFieldTest extends WebTestBase {
           'placeholder' => 'example@example.com',
         ),
       ),
+      'display' => array(
+        'full' => array(
+          'type' => 'email_mailto',
+        ),
+      ),
     );
     field_create_instance($this->instance);
-    // Create a display for the full view mode.
-    entity_get_display('test_entity', 'test_bundle', 'full')
-      ->setComponent($this->field['field_name'], array(
-        'type' => 'email_mailto',
-      ))
-      ->save();
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');
@@ -88,8 +87,7 @@ class EmailFieldTest extends WebTestBase {
 
     // Verify that a mailto link is displayed.
     $entity = field_test_entity_test_load($id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view('test_entity', $entity, $display);
+    $entity->content = field_attach_view('test_entity', $entity, 'full');
     $this->drupalSetContent(drupal_render($entity->content));
     $this->assertLinkByHref('mailto:test@example.com');
   }

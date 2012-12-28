@@ -77,21 +77,18 @@ class TaggedWithTest extends WizardTestBase {
       'widget' => array(
         'type' => 'taxonomy_autocomplete',
       ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+        'teaser' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+      ),
     );
     field_create_instance($this->tag_instance);
-
-    entity_get_display('node', $this->node_type_with_tags->type, 'default')
-      ->setComponent('field_views_testing_tags', array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ))
-      ->save();
-    entity_get_display('node', $this->node_type_with_tags->type, 'teaser')
-      ->setComponent('field_views_testing_tags', array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ))
-      ->save();
   }
 
   /**

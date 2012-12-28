@@ -144,6 +144,8 @@ function node_preview(Node $node) {
     }
 
     $node->changed = REQUEST_TIME;
+    $nodes = array($node->nid => $node);
+    field_attach_prepare_view('node', $nodes, 'full');
 
     // Display a preview of the node.
     if (!form_get_errors()) {
@@ -173,7 +175,9 @@ function theme_node_preview($variables) {
 
   $output = '';
 
-  $elements = node_view($node, 'teaser');
+  $preview_trimmed_version = FALSE;
+
+  $elements = node_view(clone $node, 'teaser');
   $elements['#attached']['library'][] = array('node', 'drupal.node.preview');
   $trimmed = drupal_render($elements);
   $elements = node_view($node, 'full');

@@ -357,6 +357,15 @@ function _update_7000_field_create_instance($field, &$instance) {
     'deleted' => 0,
   );
 
+  // Merge in display defaults.
+  if (isset($instance['display'])) {
+    foreach ($instance['display'] as &$display) {
+      $display += array(
+        'weight' => 0,
+      );
+    }
+  }
+
   // The serialized 'data' column contains everything from $instance that does
   // not have its own column and is not automatically populated when the
   // instance is read.
@@ -394,97 +403,6 @@ function field_update_8001() {
 }
 
 /**
- * Migrate all instance display settings to configuration.
- *
- * @ingroup config_upgrade
- */
-function field_update_8002() {
-  $displays = array();
-  module_load_install('entity');
-
-  $query = db_select('field_config_instance', 'fc')->fields('fc');
-  foreach ($query->execute() as $record) {
-    // Unserialize the data array and start investigating the display key
-    // which holds the configuration of this instance for all view modes.
-    $data = unserialize($record->data);
-
-    // Skip field instances that were created directly with the new API earlier
-    // in the upgrade path.
-    if (!isset($data['display'])) {
-      continue;
-    }
-
-    foreach ($data['display'] as $view_mode => $display_options) {
-      // Determine name and create initial entry in the $displays array if it
-      // does not exist yet.
-      $display_id = $record->entity_type . '.' . $record->bundle . '.' . $view_mode;
-      if (!isset($displays[$display_id])) {
-        $displays[$display_id] = _update_8000_entity_get_display($record->entity_type, $record->bundle, $view_mode);
-      }
-
-      // The display object does not store hidden fields.
-      if ($display_options['type'] != 'hidden') {
-        // We do not need the 'module' key anymore.
-        unset($display_options['module']);
-        $displays[$display_id]->set("content.$record->field_name", $display_options);
-      }
-    }
-
-    // Remove the 'display' key and save the record back into the table.
-    unset($data['display']);
-    db_update('field_config_instance')
-      ->condition('id', $record->id)
-      ->fields(array(
-        'data' => serialize($data),
-      ))
-      ->execute();
-  }
-
-  // Migration of 'extra_fields' display settings. Avoid calling
-  // entity_get_info() by fetching the relevant variables directly in the
-  // cariables table.
-  $variables = array_map('unserialize', db_query("SELECT name, value FROM {variable} WHERE name LIKE '%field_bundle_settings_%'")->fetchAllKeyed());
-  foreach ($variables as $variable_name => $variable_value) {
-    if (preg_match('/field_bundle_settings_(.*)__(.*)/', $variable_name, $matches)) {
-      $entity_type = $matches[1];
-      $bundle = $matches[2];
-      if (isset($variable_value['extra_fields']['display'])) {
-        foreach ($variable_value['extra_fields']['display'] as $field_name => $field_settings) {
-          foreach ($field_settings as $view_mode => $display_options) {
-            // Determine name and create initial entry in the $displays array
-            // if it does not exist yet.
-            $display_id =  $entity_type . '.' . $bundle . '.' . $view_mode;
-            if (!isset($displays[$display_id])) {
-              $displays[$display_id] = _update_8000_entity_get_display($entity_type, $bundle, $view_mode);
-            }
-
-            // Set options in the display.
-            $new_options = array('visible' => $display_options['visible']);
-            // The display object only stores the weight for 'visible' extra
-            // fields.
-            if ($display_options['visible']) {
-              $new_options['weight'] = $display_options['weight'];
-            }
-            $displays[$display_id]->set("content.$field_name", $new_options);
-
-            // Remove the old entry.
-            unset($variable_value['extra_fields']['display']);
-            variable_set($variable_name, $variable_value);
-          }
-        }
-      }
-    }
-  }
-
-  // Save the displays to configuration.
-  foreach ($displays as $config) {
-    $config->save();
-  }
-  update_config_manifest_add('entity.display', array_keys($displays));
-}
-
-/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
-

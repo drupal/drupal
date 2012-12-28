@@ -65,12 +65,13 @@ class TextFieldTest extends WebTestBase {
       'widget' => array(
         'type' => 'text_textfield',
       ),
+      'display' => array(
+        'default' => array(
+          'type' => 'text_default',
+        ),
+      ),
     );
     field_create_instance($this->instance);
-    entity_get_display('test_entity', 'test_bundle', 'default')
-      ->setComponent($this->field['field_name'])
-      ->save();
-
     // Test valid and invalid values with field_attach_validate().
     $entity = field_test_create_entity();
     $langcode = LANGUAGE_NOT_SPECIFIED;
@@ -117,12 +118,13 @@ class TextFieldTest extends WebTestBase {
           'placeholder' => 'A placeholder on ' . $widget_type,
         ),
       ),
+      'display' => array(
+        'full' => array(
+          'type' => 'text_default',
+        ),
+      ),
     );
     field_create_instance($this->instance);
-    entity_get_display('test_entity', 'test_bundle', 'full')
-      ->setComponent($this->field_name)
-      ->save();
-
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
@@ -143,8 +145,7 @@ class TextFieldTest extends WebTestBase {
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertText($value, 'Filtered tags are not displayed');
   }
@@ -177,12 +178,13 @@ class TextFieldTest extends WebTestBase {
       'widget' => array(
         'type' => $widget_type,
       ),
+      'display' => array(
+        'full' => array(
+          'type' => 'text_default',
+        ),
+      ),
     );
     field_create_instance($this->instance);
-    entity_get_display('test_entity', 'test_bundle', 'full')
-      ->setComponent($this->field_name)
-      ->save();
-
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Disable all text formats besides the plain text fallback format.
@@ -212,8 +214,7 @@ class TextFieldTest extends WebTestBase {
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertNoRaw($value, 'HTML tags are not displayed.');
     $this->assertRaw(check_plain($value), 'Escaped HTML is displayed correctly.');
@@ -253,8 +254,7 @@ class TextFieldTest extends WebTestBase {
     // Display the entity.
     entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertRaw($value, 'Value is displayed unfiltered');
   }

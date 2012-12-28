@@ -279,29 +279,6 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
 }
 
 /**
- * Alters the settings used for displaying an entity.
- *
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
- *   The entity_display object that will be used to display the entity
- *   components.
- * @param array $context
- *   An associative array containing:
- *   - entity_type: The entity type, e.g., 'node' or 'user'.
- *   - bundle: The bundle, e.g., 'page' or 'article'.
- *   - view_mode: The view mode, e.g. 'full', 'teaser'...
- */
-function hook_entity_display_alter(Drupal\field\Plugin\Core\Entity\EntityDisplay $display, array $context) {
-  // Leave field labels out of the search index.
-  if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
-    foreach ($display->content as $name => &$properties) {
-      if (isset($properties['label'])) {
-        $properties['label'] = 'hidden';
-      }
-    }
-  }
-}
-
-/**
  * Define custom entity properties.
  *
  * @param string $entity_type

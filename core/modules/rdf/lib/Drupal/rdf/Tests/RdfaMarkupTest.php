@@ -115,13 +115,13 @@ class RdfaMarkupTest extends WebTestBase {
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => $bundle_name,
+      'display' => array(
+        'teaser' => array(
+          'type' => 'file_default',
+        ),
+      ),
     );
     field_create_instance($instance);
-    entity_get_display('node', $bundle_name, 'teaser')
-      ->setComponent($field_name, array(
-        'type' => 'file_default',
-      ))
-      ->save();
 
     // Set the RDF mapping for the new field.
     $rdf_mapping = rdf_mapping_load('node', $bundle_name);

@@ -149,19 +149,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
               // A summary was requested.
               if ($name == 'summary') {
                 // Generate an optionally trimmed summary of the body field.
-
-                // Get the 'trim_length' size used for the 'teaser' mode, if
-                // present, or use the default trim_length size.
-                $display_options = entity_get_display('node', $node->type, 'teaser')->getComponent('body');
-                if (isset($display_options['settings']['trim_length'])) {
-                  $length = $display_options['settings']['trim_length'];
-                }
-                else {
-                  $settings = field_info_formatter_settings('text_summary_or_trimmed');
-                  $length = $settings['trim_length'];
-                }
-
-                $output = text_summary($output, $instance['settings']['text_processing'] ? $items[0]['format'] : NULL, $length);
+                $output = text_summary($output, $instance['settings']['text_processing'] ? $items[0]['format'] : NULL, $instance['display']['teaser']['settings']['trim_length']);
               }
             }
             $replacements[$original] = $output;

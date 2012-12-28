@@ -178,13 +178,15 @@ class FieldInfoTest extends FieldTestBase {
     field_create_instance($instance_definition);
 
     // Simulate a stored instance definition missing various settings (e.g. a
-    // third-party module adding instance or widget settings has been enabled,
-    // but existing instances do not know the new settings).
+    // third-party module adding instance, widget or display settings has been
+    // enabled, but existing instances do not know the new settings).
     $data = db_query('SELECT data FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle', array(':field_name' => $instance_definition['field_name'], ':bundle' => $instance_definition['bundle']))->fetchField();
     $data = unserialize($data);
     $data['settings'] = array();
     $data['widget']['settings'] = 'unavailable_widget';
     $data['widget']['settings'] = array();
+    $data['display']['default']['type'] = 'unavailable_formatter';
+    $data['display']['default']['settings'] = array();
     db_update('field_config_instance')
       ->fields(array('data' => serialize($data)))
       ->condition('field_name', $instance_definition['field_name'])
@@ -205,6 +207,13 @@ class FieldInfoTest extends FieldTestBase {
     $this->assertIdentical($widget->getPluginId(), $field_type['default_widget'], 'Unavailable widget replaced with default widget.');
     $widget_type = $widget->getDefinition();
     $this->assertIdentical($widget->getSettings(), $widget_type['settings'] , 'All expected widget settings are present.');
+
+    // Check that display settings are set for the 'default' mode.
+    $formatter = $instance->getFormatter('default');
+    $this->assertIdentical($formatter->getPluginId(), $field_type['default_formatter'], "Formatter is set for the 'default' view mode");
+    $formatter_type = $formatter->getDefinition();
+    $this->assertIdentical($formatter->getSettings(), $formatter_type['settings'] , "Formatter settings are set for the 'default' view mode");
+
   }
 
   /**

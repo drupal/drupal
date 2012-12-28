@@ -52,13 +52,13 @@ class TermIndexTest extends TaxonomyTestBase {
       'widget' => array(
         'type' => 'options_select',
       ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
     );
     field_create_instance($this->instance_1);
-    entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name_1, array(
-        'type' => 'taxonomy_term_reference_link',
-      ))
-      ->save();
 
     $this->field_name_2 = drupal_strtolower($this->randomName());
     $this->field_2 = array(
@@ -82,13 +82,13 @@ class TermIndexTest extends TaxonomyTestBase {
       'widget' => array(
         'type' => 'options_select',
       ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
     );
     field_create_instance($this->instance_2);
-    entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name_2, array(
-        'type' => 'taxonomy_term_reference_link',
-      ))
-      ->save();
   }
 
   /**

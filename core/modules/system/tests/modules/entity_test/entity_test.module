@@ -19,32 +19,6 @@ function entity_test_entity_info_alter(&$info) {
 }
 
 /**
- * Implements hook_field_extra_fields().
- */
-function entity_test_field_extra_fields() {
-  $extra['entity_test']['entity_test'] = array(
-    'display' => array(
-      // Note: those extra fields do not currently display anything, they are
-      // just used in \Drupal\entity\Tests\EntityDisplayTest to test the
-      // behavior of entity display objects,
-      'display_extra_field' => array(
-        'label' => t('Display extra field'),
-        'description' => t('An extra field on the display side.'),
-        'weight' => 5,
-        'visible' => TRUE,
-      ),
-      'display_extra_field_hidden' => array(
-        'label' => t('Display extra field (hidden)'),
-        'description' => t('An extra field on the display side, hidden by default.'),
-        'visible' => FALSE,
-      ),
-    )
-  );
-
-  return $extra;
-}
-
-/**
  * Implements hook_permission().
  */
 function entity_test_permission() {

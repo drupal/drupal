@@ -30,64 +30,37 @@ class EntityRenderController implements EntityRenderControllerInterface {
     // Allow modules to change the view mode.
     $context = array('langcode' => $langcode);
 
-    $view_modes = array();
-    $displays = array();
-
-    foreach ($entities as $entity) {
+    $prepare = array();
+    foreach ($entities as $key => $entity) {
       // Remove previously built content, if exists.
       $entity->content = array();
 
       drupal_alter('entity_view_mode', $view_mode, $entity, $context);
       $entity->content['#view_mode'] = $view_mode;
-      $view_modes[$view_mode][$entity->id()] = $entity;
-
-      $bundle = $entity->bundle();
-
-      // Load the corresponding display settings if not stored yet.
-      if (!isset($displays[$view_mode][$bundle])) {
-        // Get the display object to use for rendering the entity..
-        $display = entity_get_render_display($entity, $view_mode);
-
-        // Let modules alter the display.
-        // Note: if config entities get a static cache at some point, the
-        // objects should be cloned before running drupal_alter().
-        $display_context = array(
-          'entity_type' => $this->entityType,
-          'bundle' => $bundle,
-          'view_mode' => $view_mode,
-        );
-        drupal_alter('entity_display', $display, $display_context);
-
-        $displays[$view_mode][$bundle] = $display;
-      }
-
-      // Assigning weights to 'extra fields' is done in a pre_render callback.
-      $entity->content['#pre_render'] = array('_entity_view_pre_render');
-      $entity->content['#entity_display'] = $displays[$view_mode][$bundle];
+      $prepare[$view_mode][$key] = $entity;
     }
 
     // Prepare and build field content, grouped by view mode.
-    foreach ($view_modes as $view_mode => $view_mode_entities) {
-      $call_prepare = array();
+    foreach ($prepare as $view_mode => $prepare_entities) {
+      $call = array();
       // To ensure hooks are only run once per entity, check for an
-      // entity_view_prepared flag and only process relevant entities.
-      foreach ($view_mode_entities as $entity) {
-        if (empty($entity->entity_view_prepared) || $entity->entity_view_prepared != $view_mode) {
+      // entity_view_prepared flag and only process items without it.
+      foreach ($prepare_entities as $entity) {
+        if (empty($entity->entity_view_prepared)) {
           // Add this entity to the items to be prepared.
-          $call_prepare[$entity->id()] = $entity;
+          $call[$entity->id()] = $entity;
 
-          // Mark this item as prepared for this view mode.
-          $entity->entity_view_prepared = $view_mode;
+          // Mark this item as prepared.
+          $entity->entity_view_prepared = TRUE;
         }
       }
 
-      if (!empty($call_prepare)) {
-        field_attach_prepare_view($this->entityType, $call_prepare, $displays[$view_mode], $langcode);
-        module_invoke_all('entity_prepare_view', $call_prepare, $this->entityType);
+      if (!empty($call)) {
+        field_attach_prepare_view($this->entityType, $call, $view_mode, $langcode);
+        module_invoke_all('entity_prepare_view', $call, $this->entityType);
       }
-
-      foreach ($view_mode_entities as $entity) {
-        $entity->content += field_attach_view($this->entityType, $entity, $displays[$view_mode][$entity->bundle()], $langcode);
+      foreach ($entities as $entity) {
+        $entity->content += field_attach_view($this->entityType, $entity, $view_mode, $langcode);
       }
     }
   }

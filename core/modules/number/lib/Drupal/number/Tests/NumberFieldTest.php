@@ -70,9 +70,6 @@ class NumberFieldTest extends WebTestBase {
       ),
     );
     field_create_instance($this->instance);
-    entity_get_display('test_entity', 'test_bundle', 'default')
-      ->setComponent($this->field['field_name'])
-      ->save();
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test_bundle');

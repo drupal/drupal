@@ -586,13 +586,6 @@ class FieldOverview extends OverviewBase {
         field_create_field($field);
         field_create_instance($instance);
 
-        // Make sure the field is displayed in the 'default' view mode (using
-        // default formatter and settings). It stays hidden for other view
-        // modes until it is explicitly configured.
-        entity_get_display($this->entity_type, $this->bundle, 'default')
-          ->setComponent($field['field_name'])
-          ->save();
-
         // Always show the field settings step, as the cardinality needs to be
         // configured for new fields.
         $destinations[] = $this->adminPath. '/fields/' . $field['field_name'] . '/field-settings';
@@ -627,14 +620,6 @@ class FieldOverview extends OverviewBase {
 
         try {
           field_create_instance($instance);
-
-          // Make sure the field is displayed in the 'default' view mode (using
-          // default formatter and settings). It stays hidden for other view
-          // modes until it is explicitly configured.
-          entity_get_display($this->entity_type, $this->bundle, 'default')
-            ->setComponent($field['field_name'])
-            ->save();
-
           $destinations[] = $this->adminPath . '/fields/' . $instance['field_name'];
           // Store new field information for any additional submit handlers.
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];

@@ -90,22 +90,18 @@ function forum_enable() {
       'widget' => array(
         'type' => 'options_select',
       ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+        'teaser' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+      ),
     );
     field_create_instance($instance);
-
-    // Assign display settings for the 'default' and 'teaser' view modes.
-    entity_get_display('node', 'forum', 'default')
-      ->setComponent('taxonomy_forums', array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ))
-      ->save();
-    entity_get_display('node', 'forum', 'teaser')
-      ->setComponent('taxonomy_forums', array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ))
-      ->save();
   }
 
   // Ensure the forum node type is available.

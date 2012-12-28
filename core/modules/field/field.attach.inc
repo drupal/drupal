@@ -7,7 +7,6 @@
 
 use Drupal\field\FieldValidationException;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * @defgroup field_storage Field Storage API
@@ -716,6 +715,26 @@ function _field_invoke_widget_target() {
 }
 
 /**
+ * Defines a 'target function' for field_invoke_method().
+ *
+ * Used to invoke methods on an instance's formatter.
+ *
+ * @param mixed $display
+ *   Can be either:
+ *   - The name of a view mode.
+ *   - An array of display properties, as found in
+ *     $instance['display'][$view_mode].
+ *
+ * @return callable $target_function
+ *   A 'target function' for field_invoke_method().
+ */
+function _field_invoke_formatter_target($display) {
+  return function ($instance) use ($display) {
+    return $instance->getFormatter($display);
+  };
+}
+
+/**
  * Adds form elements for all fields for an entity to a form structure.
  *
  * The form elements for the entity's fields are added by reference as direct
@@ -1342,10 +1361,10 @@ function field_attach_delete_revision($entity_type, $entity) {
  *
  * @param $entity_type
  *   The type of entities in $entities; e.g. 'node' or 'user'.
- * @param array $entities
+ * @param $entities
  *   An array of entities, keyed by entity ID.
- * @param array $displays
- *   An array of entity display objects, keyed by bundle name.
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  * @param $langcode
  *   (Optional) The language the field values are to be shown in. If no language
  *   is provided the current language is used.
@@ -1353,7 +1372,7 @@ function field_attach_delete_revision($entity_type, $entity) {
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
  */
-function field_attach_prepare_view($entity_type, array $entities, array $displays, $langcode = NULL, array $options = array()) {
+function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcode = NULL, array $options = array()) {
   $options['langcode'] = array();
 
   // To ensure hooks are only run once per entity, only process items without
@@ -1377,15 +1396,8 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   $null = NULL;
   // First let the field types do their preparation.
   _field_invoke_multiple('prepare_view', $entity_type, $prepare, $null, $null, $options);
-  // Then let the formatters do their own specific massaging. For each
-  // instance, call the prepareView() method on the formatter object handed by
-  // the entity display.
-  $target_function = function ($instance) use ($displays) {
-    if (isset($displays[$instance['bundle']])) {
-      return $displays[$instance['bundle']]->getFormatter($instance['field_name']);
-    }
-  };
-  field_invoke_method_multiple('prepareView', $target_function, $prepare, $null, $null, $options);
+  // Then let the formatters do their own specific massaging.
+  field_invoke_method_multiple('prepareView', _field_invoke_formatter_target($view_mode), $prepare, $view_mode, $null, $options);
 }
 
 /**
@@ -1425,38 +1437,37 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to render.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
- *   The entity display object.
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
  * @param $langcode
  *   The language the field values are to be shown in. If no language is
  *   provided the current language is used.
  * @param array $options
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
-
- * @return array
+ * @return
  *   A renderable array for the field values.
  */
-function field_attach_view($entity_type, EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
+function field_attach_view($entity_type, EntityInterface $entity, $view_mode, $langcode = NULL, array $options = array()) {
   // Determine the actual language code to display for each field, given the
   // language codes available in the field data.
   $options['langcode'] = field_language($entity_type, $entity, NULL, $langcode);
 
-  // For each instance, call the view() method on the formatter object handed
-  // by the entity display.
-  $target_function = function ($instance) use ($display) {
-    return $display->getFormatter($instance['field_name']);
-  };
+  // Invoke field_default_view().
   $null = NULL;
-  $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);
+  $output = field_invoke_method('view', _field_invoke_formatter_target($view_mode), $entity, $view_mode, $null, $options);
+
+  // Add custom weight handling.
+  $output['#pre_render'][] = '_field_extra_fields_pre_render';
+  $output['#entity_type'] = $entity_type;
+  $output['#bundle'] = $entity->bundle();
 
   // Let other modules alter the renderable array.
-  $view_mode = $display->originalViewMode;
   $context = array(
     'entity_type' => $entity_type,
     'entity' => $entity,
     'view_mode' => $view_mode,
-    'display_options' => $view_mode,
+    'display' => $view_mode,
     'langcode' => $langcode,
   );
   drupal_alter('field_attach_view', $output, $context);

@@ -66,13 +66,13 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
       'widget' => array(
         'type' => 'options_select',
       ),
+      'display' => array(
+        'full' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
     );
     field_create_instance($this->instance);
-    entity_get_display('test_entity', 'test_bundle', 'full')
-      ->setComponent($this->field_name, array(
-        'type' => 'taxonomy_term_reference_link',
-      ))
-      ->save();
   }
 
   /**
@@ -98,9 +98,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     // Render the entity.
     $entity = field_test_entity_test_load($id);
     $entities = array($id => $entity);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view('test_entity', $entity, $display);
+    field_attach_prepare_view('test_entity', $entities, 'full');
+    $entity->content = field_attach_view('test_entity', $entity, 'full');
     $this->content = drupal_render($entity->content);
     $this->assertText($term1->name, 'Term 1 name is displayed.');
     $this->assertText($term2->name, 'Term 2 name is displayed.');
@@ -111,9 +110,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     // Re-render the content.
     $entity = field_test_entity_test_load($id);
     $entities = array($id => $entity);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view('test_entity', $entity, $display);
+    field_attach_prepare_view('test_entity', $entities, 'full');
+    $entity->content = field_attach_view('test_entity', $entity, 'full');
     $this->plainTextContent = FALSE;
     $this->content = drupal_render($entity->content);
 

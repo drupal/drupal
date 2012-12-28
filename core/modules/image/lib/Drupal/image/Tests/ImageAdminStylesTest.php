@@ -253,12 +253,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create an image field that uses the new style.
     $field_name = strtolower($this->randomName(10));
     $this->createImageField($field_name, 'article');
-    entity_get_display('node', 'article', 'default')
-      ->setComponent($field_name, array(
-        'type' => 'image',
-        'settings' => array('image_style' => $style_name),
-      ))
-      ->save();
+    $instance = field_info_instance('node', $field_name, 'article');
+    $instance['display']['default']['type'] = 'image';
+    $instance['display']['default']['settings']['image_style'] = $style_name;
+    field_update_instance($instance);
 
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));

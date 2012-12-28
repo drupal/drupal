@@ -45,9 +45,6 @@ class NodeAccessFieldTest extends NodeTestBase {
       'bundle' => 'page',
     );
     $this->instance = field_create_instance($instance);
-    entity_get_display('node', 'page', 'default')
-      ->setComponent($this->field_name)
-      ->save();
   }
 
   /**
