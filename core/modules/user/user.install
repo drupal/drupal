@@ -388,34 +388,32 @@ function user_install_picture_field() {
       ),
       'weight' => -1,
     ),
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'type' => 'image',
-        'settings' => array(
-          'image_style' => 'thumbnail',
-          'image_link' => 'content',
-        ),
-      ),
-      'compact' => array(
-        'label' => 'hidden',
-        'type' => 'image',
-        'settings' => array(
-          'image_style' => 'thumbnail',
-          'image_link' => 'content',
-        ),
-      ),
-    ),
   );
   field_create_instance($instance);
 
-  // Remove 'summary' pseudo-field from compact view mode on the User entity.
-  $bundle_settings = field_bundle_settings('user', 'user');
-  $bundle_settings['extra_fields']['display']['member_for']['compact'] = array(
-    'visible' => FALSE,
-    'weight' => 10,
-  );
-  field_bundle_settings('user', 'user', $bundle_settings);
+  // Assign display settings for the 'default' and 'compact' view modes.
+  entity_get_display('user', 'user', 'default')
+    ->setComponent('user_picture', array(
+      'label' => 'hidden',
+      'type' => 'image',
+      'settings' => array(
+        'image_style' => 'thumbnail',
+        'image_link' => 'content',
+      ),
+    ))
+    ->save();
+  entity_get_display('user', 'user', 'compact')
+    ->setComponent('user_picture', array(
+      'label' => 'hidden',
+      'type' => 'image',
+      'settings' => array(
+        'image_style' => 'thumbnail',
+        'image_link' => 'content',
+      ),
+    ))
+    // Additionally, hide 'summary' pseudo-field from compact view mode..
+    ->removeComponent('member_for')
+    ->save();
 }
 
 /**
@@ -761,14 +759,6 @@ function user_update_8011() {
   );
   _update_7000_field_create_field($field);
 
-  // In D7, user pictures did not require Image module to work. Image module
-  // only allowed usage of an image style to format user pictures in the
-  // output. The 'user_pictures' variable had a global effect on the presence
-  // of the user picture functionality before. The new user picture image field
-  // is created regardless of that global setting, which means the field
-  // appears on the user account form after migration, even if user pictures
-  // were disabled previously. The picture is only hidden in the output.
-  $formatter = update_variable_get('user_pictures', 0) ? 'image' : 'hidden';
   $instance = array(
     'field_name' => 'user_picture',
     'entity_type' => 'user',
@@ -795,26 +785,45 @@ function user_update_8011() {
       ),
       'weight' => -1,
     ),
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'type' => $formatter,
-        'settings' => array(
-          'image_style' => 'thumbnail',
-          'image_link' => 'content',
-        ),
-      ),
-      'compact' => array(
-        'label' => 'hidden',
-        'type' => $formatter,
-        'settings' => array(
-          'image_style' => update_variable_get('user_picture_style', ''),
-          'image_link' => 'content',
-        ),
-      ),
-    ),
   );
   _update_7000_field_create_instance($field, $instance);
+
+  // Assign display settings for the 'default' and 'compact' view modes. In D7,
+  // user pictures did not require Image module to work. Image module only
+  // allowed usage of an image style to format user pictures in the output.
+  // The 'user_pictures' variable had a global effect on the presence of the
+  // user picture functionality before. The new user picture image field is
+  // created regardless of that global setting, which means the field appears
+  // on the user account form after migration, even if user pictures were
+  // disabled previously. The picture is only hidden in the output.
+  $formatter = update_variable_get('user_pictures', 0) ? 'image' : 'hidden';
+  module_load_install('entity');
+
+  $display = _update_8000_entity_get_display('user', 'user', 'default');
+  $display->set('content.user_picture', array(
+      'label' => 'hidden',
+      'type' => $formatter,
+      'settings' => array(
+        'image_style' => 'thumbnail',
+        'image_link' => 'content',
+      ),
+      'weight' => 0,
+    ))
+    ->save();
+  update_config_manifest_add('entity.display', array($display->get('id')));
+
+  $display = _update_8000_entity_get_display('user', 'user', 'compact');
+  $display->set('content.user_picture', array(
+      'label' => 'hidden',
+      'type' => $formatter,
+      'settings' => array(
+        'image_style' => update_variable_get('user_picture_style', ''),
+        'image_link' => 'content',
+      ),
+      'weight' => 0,
+    ))
+    ->save();
+  update_config_manifest_add('entity.display', array($display->get('id')));
 
   // Add file usage for the default field.
   if (!empty($default_image_fid)) {

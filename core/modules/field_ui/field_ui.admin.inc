@@ -374,51 +374,6 @@ function field_ui_display_overview($entity_type, $bundle, $view_mode) {
 }
 
 /**
- * Populates display settings for a new view mode from the default view mode.
- *
- * When an administrator decides to use custom display settings for a view mode,
- * that view mode needs to be initialized with the display settings for the
- * 'default' view mode, which it was previously using. This helper function
- * adds the new custom display settings to this bundle's instances, and saves
- * them. It also modifies the passed-in $settings array, which the caller can
- * then save using field_bundle_settings().
- *
- * @param $entity_type
- *   The bundle's entity type.
- * @param $bundle
- *   The bundle whose view mode is being customized.
- * @param $view_mode
- *   The view mode that the administrator has set to use custom settings.
- * @param $settings
- *   An associative array of bundle settings, as expected by
- *   field_bundle_settings().
- *
- * @see Drupal\field_ui\DisplayOverview::submit().
- * @see field_bundle_settings()
- */
-function _field_ui_add_default_view_mode_settings($entity_type, $bundle, $view_mode, &$settings) {
-  // Update display settings for field instances.
-  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle));
-  foreach ($instances as $instance) {
-    // If this field instance has display settings defined for this view mode,
-    // respect those settings.
-    if (!isset($instance['display'][$view_mode])) {
-      // The instance doesn't specify anything for this view mode, so use the
-      // default display settings.
-      $instance['display'][$view_mode] = $instance['display']['default'];
-      field_update_instance($instance);
-    }
-  }
-
-  // Update display settings for 'extra fields'.
-  foreach (array_keys($settings['extra_fields']['display']) as $name) {
-    if (!isset($settings['extra_fields']['display'][$name][$view_mode])) {
-      $settings['extra_fields']['display'][$name][$view_mode] = $settings['extra_fields']['display'][$name]['default'];
-    }
-  }
-}
-
-/**
  * Returns an array of field_type options.
  */
 function field_ui_field_type_options() {

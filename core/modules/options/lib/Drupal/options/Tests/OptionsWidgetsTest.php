@@ -489,9 +489,9 @@ class OptionsWidgetsTest extends FieldTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
       'widget' => array(
-            'type' => 'options_onoff',
-            'module' => 'options',
-        ),
+        'type' => 'options_onoff',
+        'module' => 'options',
+      ),
     );
     field_create_instance($instance);
 

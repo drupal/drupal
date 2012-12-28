@@ -40,31 +40,32 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
 
     // Simple formatter, label displayed.
     $entity = clone($entity_init);
+    $display = entity_get_display($entity_type, $entity->bundle(), 'full');
+    $displays = array($entity->bundle() => $display);
+
     $formatter_setting = $this->randomName();
-    $this->instance['display'] = array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'field_test_default',
-        'settings' => array(
-          'test_formatter_setting' => $formatter_setting,
-        )
+    $display_options = array(
+      'label' => 'above',
+      'type' => 'field_test_default',
+      'settings' => array(
+        'test_formatter_setting' => $formatter_setting,
       ),
     );
-    field_update_instance($this->instance);
+    $display->setComponent($this->field['field_name'], $display_options);
+
     $formatter_setting_2 = $this->randomName();
-    $this->instance_2['display'] = array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'field_test_default',
-        'settings' => array(
-          'test_formatter_setting' => $formatter_setting_2,
-        )
+    $display_options_2 = array(
+      'label' => 'above',
+      'type' => 'field_test_default',
+      'settings' => array(
+        'test_formatter_setting' => $formatter_setting_2,
       ),
     );
-    field_update_instance($this->instance_2);
+    $display->setComponent($this->field_2['field_name'], $display_options_2);
+
     // View all fields.
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, 'full');
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    $entity->content = field_attach_view($entity_type, $entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertRaw($this->instance['label'], "First field's label is displayed.");
@@ -78,8 +79,8 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
       $this->assertRaw("$formatter_setting_2|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
     }
     // View single field (the second field).
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full', $langcode, $options);
-    $entity->content = field_attach_view($entity_type, $entity, 'full', $langcode, $options);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays, $langcode, $options);
+    $entity->content = field_attach_view($entity_type, $entity, $display, $langcode, $options);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "First field's label is not displayed.");
@@ -95,25 +96,19 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
 
     // Label hidden.
     $entity = clone($entity_init);
-    $this->instance['display']['full']['label'] = 'hidden';
-    field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, 'full');
+    $display_options['label'] = 'hidden';
+    $display->setComponent($this->field['field_name'], $display_options);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    $entity->content = field_attach_view($entity_type, $entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden label: label is not displayed.");
 
     // Field hidden.
     $entity = clone($entity_init);
-    $this->instance['display'] = array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'hidden',
-      ),
-    );
-    field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, 'full');
+    $display->removeComponent($this->field['field_name']);
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    $entity->content = field_attach_view($entity_type, $entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden field: label is not displayed.");
@@ -124,45 +119,38 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // Multiple formatter.
     $entity = clone($entity_init);
     $formatter_setting = $this->randomName();
-    $this->instance['display'] = array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'field_test_multiple',
-        'settings' => array(
-          'test_formatter_setting_multiple' => $formatter_setting,
-        )
+    $display->setComponent($this->field['field_name'], array(
+      'label' => 'above',
+      'type' => 'field_test_multiple',
+      'settings' => array(
+        'test_formatter_setting_multiple' => $formatter_setting,
       ),
-    );
-    field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, 'full');
+    ));
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    $entity->content = field_attach_view($entity_type, $entity, $display);
     $output = drupal_render($entity->content);
-    $display = $formatter_setting;
+    $expected_output = $formatter_setting;
     foreach ($values as $delta => $value) {
-      $display .= "|$delta:{$value['value']}";
+      $expected_output .= "|$delta:{$value['value']}";
     }
     $this->content = $output;
-    $this->assertRaw($display, "Multiple formatter: all values are displayed, formatter settings are applied.");
+    $this->assertRaw($expected_output, "Multiple formatter: all values are displayed, formatter settings are applied.");
 
     // Test a formatter that uses hook_field_formatter_prepare_view().
     $entity = clone($entity_init);
     $formatter_setting = $this->randomName();
-    $this->instance['display'] = array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'field_test_with_prepare_view',
-        'settings' => array(
-          'test_formatter_setting_additional' => $formatter_setting,
-        )
+    $display->setComponent($this->field['field_name'], array(
+      'label' => 'above',
+      'type' => 'field_test_with_prepare_view',
+      'settings' => array(
+        'test_formatter_setting_additional' => $formatter_setting,
       ),
-    );
-    field_update_instance($this->instance);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, 'full');
+    ));
+    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    $entity->content = field_attach_view($entity_type, $entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     foreach ($values as $delta => $value) {
-      $this->content = $output;
       $expected = $formatter_setting . '|' . $value['value'] . '|' . ($value['value'] + 1);
       $this->assertRaw($expected, "Value $delta is displayed, formatter settings are applied.");
     }
@@ -191,8 +179,8 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Set the instance to be hidden.
-    $this->instance['display']['full']['type'] = 'hidden';
-    field_update_instance($this->instance);
+    $display = entity_get_display('test_entity', 'test_bundle', 'full')
+      ->removeComponent($this->field['field_name']);
 
     // Set up a second instance on another bundle, with a formatter that uses
     // hook_field_formatter_prepare_view().
@@ -200,13 +188,17 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $formatter_setting = $this->randomName();
     $this->instance2 = $this->instance;
     $this->instance2['bundle'] = 'test_bundle_2';
-    $this->instance2['display']['full'] = array(
-      'type' => 'field_test_with_prepare_view',
-      'settings' => array(
-        'test_formatter_setting_additional' => $formatter_setting,
-      )
-    );
     field_create_instance($this->instance2);
+
+    $display_2 = entity_get_display('test_entity', 'test_bundle_2', 'full')
+      ->setComponent($this->field['field_name'], array(
+        'type' => 'field_test_with_prepare_view',
+        'settings' => array(
+          'test_formatter_setting_additional' => $formatter_setting,
+        ),
+      ));
+
+    $displays = array('test_bundle' => $display, 'test_bundle_2' => $display_2);
 
     // Create one entity in each bundle.
     $entity1_init = field_test_create_entity(1, 1, 'test_bundle');
@@ -220,14 +212,16 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // Run prepare_view, and check that the entities come out as expected.
     $entity1 = clone($entity1_init);
     $entity2 = clone($entity2_init);
-    field_attach_prepare_view($entity_type, array($entity1->ftid => $entity1, $entity2->ftid => $entity2), 'full');
+    $entities = array($entity1->ftid => $entity1, $entity2->ftid => $entity2);
+    field_attach_prepare_view($entity_type, $entities, $displays);
     $this->assertFalse(isset($entity1->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 1 did not run through the prepare_view hook.');
     $this->assertTrue(isset($entity2->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 2 ran through the prepare_view hook.');
 
     // Same thing, reversed order.
     $entity1 = clone($entity1_init);
     $entity2 = clone($entity2_init);
-    field_attach_prepare_view($entity_type, array($entity2->ftid => $entity2, $entity1->ftid => $entity1), 'full');
+    $entities = array($entity1->ftid => $entity1, $entity2->ftid => $entity2);
+    field_attach_prepare_view($entity_type, $entities, $displays);
     $this->assertFalse(isset($entity1->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 1 did not run through the prepare_view hook.');
     $this->assertTrue(isset($entity2->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 2 ran through the prepare_view hook.');
   }

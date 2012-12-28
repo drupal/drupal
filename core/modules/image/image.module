@@ -334,21 +334,23 @@ function image_image_style_save($style) {
     // Loop through all fields searching for image fields.
     foreach ($instances as $instance) {
       if ($instance['widget']['module'] == 'image') {
-        $instance_changed = FALSE;
-        foreach ($instance['display'] as $view_mode => $display) {
+        $entity_info = entity_get_info($instance['entity_type']);
+        $view_modes = array('default') + array_keys($entity_info['view_modes']);
+        foreach ($view_modes as $view_mode) {
+          $display = entity_get_display($instance['entity_type'], $instance['bundle'], $view_mode);
+          $display_options = $display->getComponent($instance['field_name']);
+
           // Check if the formatter involves an image style.
-          if ($display['type'] == 'image' && $display['settings']['image_style'] == $style->getOriginalID()) {
+          if ($display_options && $display_options['type'] == 'image' && $display_options['settings']['image_style'] == $style->getOriginalID()) {
             // Update display information for any instance using the image
             // style that was just deleted.
-            $instance['display'][$view_mode]['settings']['image_style'] = $style->id();
-            $instance_changed = TRUE;
+            $display_options['settings']['image_style'] = $style->id();
+            $display->setComponent($instance['field_name'], $display_options)
+              ->save();
           }
         }
         if ($instance['widget']['settings']['preview_image_style'] == $style->getOriginalID()) {
           $instance['widget']['settings']['preview_image_style'] = $style->id();
-          $instance_changed = TRUE;
-        }
-        if ($instance_changed) {
           field_update_instance($instance);
         }
       }

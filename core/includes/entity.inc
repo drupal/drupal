@@ -564,6 +564,128 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL) {
 }
 
 /**
+ * Returns the entity_display object associated to a bundle and view mode.
+ *
+ * Use this function when assigning suggested display options for a component
+ * in a given view mode. Note that they will only be actually used at render
+ * time if the view mode itself is configured to use dedicated display settings
+ * for the bundle; if not, the 'default' display is used instead.
+ *
+ * The function reads the entity_display object from the current configuration,
+ * or returns a ready-to-use empty one if configuration entry exists yet for
+ * this bundle and view mode. This streamlines manipulation of display objects
+ * by always returning a consistent object that reflects the current state of
+ * the configuration.
+ *
+ * Example usage:
+ * - Set the 'body' field to be displayed and the 'field_image' field to be
+ *   hidden on article nodes in the 'default' display.
+ * @code
+ * entity_get_display('article', 'node', 'default')
+ *   ->setComponent('body', array(
+ *     'type' => 'text_summary_or_trimmed',
+ *     'settings' => array('trim_length' => '200')
+ *     'weight' => 1,
+ *   ))
+ *   ->removeComponent('field_image')
+ *   ->save();
+ * @endcode
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param string $bundle
+ *   The bundle.
+ * @param string $view_mode
+ *   The view mode, or 'default' to retrieve the 'default' display object for
+ *   this bundle.
+ *
+ * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
+ *   The display object associated to the view mode.
+ */
+function entity_get_display($entity_type, $bundle, $view_mode) {
+  // Try loading the display from configuration.
+  $display = entity_load('entity_display', $entity_type . '.' . $bundle . '.' . $view_mode);
+
+  // If not found, create a fresh display object. We do not preemptively create
+  // new entity_display configuration entries for each existing entity type and
+  // bundle whenever a new view mode becomes available. Instead, configuration
+  // entries are only created when a display object is explicitly configured
+  // and saved.
+  if (!$display) {
+    $display = entity_create('entity_display', array(
+      'targetEntityType' => $entity_type,
+      'bundle' => $bundle,
+      'viewMode' => $view_mode,
+    ));
+  }
+
+  return $display;
+}
+
+/**
+ * Returns the entity_display object used to render an entity.
+ *
+ * Depending on the configuration of the view mode for the bundle, this can be
+ * either the display object associated to the view mode, or the 'default'
+ * display.
+ *
+ * This function should only be used internally when rendering an entity. When
+ * assigning suggested display options for a component in a given view mode,
+ * entity_get_display() should be used instead, in order to avoid inadvertently
+ * modifying the output of other view modes that might happen to use the
+ * 'default' display too. Those options will then be effectively applied only
+ * if the view mode is configured to use them.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity being rendered.
+ * @param string $view_mode
+ *  The view mode being rendered.
+ *
+ * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
+ *   The display object that should be used to render the entity.
+ *
+ * @see entity_get_render_display().
+ */
+function entity_get_render_display(EntityInterface $entity, $view_mode) {
+  $entity_type = $entity->entityType();
+  $bundle = $entity->bundle();
+
+  // Determine the display to use for rendering this entity. Depending on the
+  // configuration of the view mode for this bundle, this will be either the
+  // display associated to the view mode, or the 'default' display.
+  $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
+  $render_view_mode = !empty($view_mode_settings[$view_mode]['custom_settings']) ? $view_mode : 'default';
+
+  $display = entity_get_display($entity_type, $bundle, $render_view_mode);
+  $display->originalViewMode = $view_mode;
+
+  return $display;
+}
+
+/**
+ * Adjusts weights and visibility of components in displayed entities.
+ *
+ * This is used as a #pre_render callback.
+ */
+function _entity_view_pre_render($elements) {
+  $display = $elements['#entity_display'];
+
+  $extra_fields = field_info_extra_fields($display->targetEntityType, $display->bundle, 'display');
+  foreach (array_keys($extra_fields) as $name) {
+    if (isset($elements[$name]) && (!isset($elements[$name]['#access']) || $elements[$name]['#access'])) {
+      if ($options = $display->getComponent($name)) {
+        $elements[$name]['#weight'] = $options['weight'];
+      }
+      else {
+        $elements[$name]['#access'] = FALSE;
+      }
+    }
+  }
+
+  return $elements;
+}
+
+/**
  * Returns the entity query object for this entity type.
  *
  * @param $entity_type

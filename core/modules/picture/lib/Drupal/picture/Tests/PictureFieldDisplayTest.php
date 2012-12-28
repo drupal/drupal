@@ -120,11 +120,6 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $node = node_load($nid, TRUE);
 
-    // Use the picture formatter.
-    $instance = field_info_instance('node', $field_name, 'article');
-    $instance['display']['default']['type'] = 'picture';
-    $instance['display']['default']['module'] = 'picture';
-
     // Test that the default formatter is being used.
     $image_uri = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri;
     $image_info = array(
@@ -136,11 +131,15 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Use the picture formatter linked to file formatter.
-    $instance = field_info_instance('node', $field_name, 'article');
-    $instance['display']['default']['type'] = 'picture';
-    $instance['display']['default']['module'] = 'picture';
-    $instance['display']['default']['settings']['image_link'] = 'file';
-    field_update_instance($instance);
+    $display_options = array(
+      'type' => 'picture',
+      'module' => 'picture',
+      'settings' => array('image_link' => 'file'),
+    );
+    $display = entity_get_display('node', 'article', 'default');
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
     $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
@@ -163,8 +162,10 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     }
 
     // Use the picture formatter with a picture mapping.
-    $instance['display']['default']['settings']['picture_mapping'] = 'mapping_one';
-    field_update_instance($instance);
+    $display_options['settings']['picture_mapping'] = 'mapping_one';
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
     // Output should contain all image styles and all breakpoints.
     $this->drupalGet('node/' . $nid);
     $this->assertRaw('/styles/thumbnail/');
@@ -175,9 +176,10 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw('media="(min-width: 600px)"');
 
     // Test the fallback image style.
-    $instance['display']['default']['settings']['image_link'] = '';
-    $instance['display']['default']['settings']['fallback_image_style'] = 'large';
-    field_update_instance($instance);
+    $display_options['settings']['image_link'] = '';
+    $display_options['settings']['fallback_image_style'] = 'large';
+    $display->setComponent($field_name, $display_options)
+      ->save();
 
     $this->drupalGet(image_style_url('large', $image_uri));
     $image_info['uri'] = $image_uri;

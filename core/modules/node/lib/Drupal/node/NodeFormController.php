@@ -398,4 +398,19 @@ class NodeFormController extends EntityFormController {
     $node = $this->getEntity($form_state);
     $form_state['redirect'] = array('node/' . $node->nid . '/delete', array('query' => $destination));
   }
+
+  /**
+   * Overrides \Drupal\Core\Entity\EntityFormController::buildEntity().
+   */
+  public function buildEntity(array $form, array &$form_state) {
+    $node = parent::buildEntity($form, $form_state);
+    // If the node went through 'Preview', it got stored back in $form_state
+    // with values out of the 'prepare_view' steps, and with the
+    // entity_view_prepared flag set. Since buildEntity() resets the values to
+    // those in the form submission, the entity_view_prepared flag needs to be
+    // reset too so that the next 'Preview' can work on a consistent $node.
+    unset($node->entity_view_prepared);
+    return $node;
+  }
+
 }

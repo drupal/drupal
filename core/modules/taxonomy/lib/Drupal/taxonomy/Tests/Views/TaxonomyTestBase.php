@@ -104,18 +104,21 @@ abstract class TaxonomyTestBase extends ViewTestBase {
         'type' => 'taxonomy_autocomplete',
         'weight' => -4,
       ),
-      'display' => array(
-        'default' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-        'teaser' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-      ),
     );
     field_create_instance($instance);
+
+    entity_get_display('node', 'article', 'default')
+      ->setComponent($instance['field_name'], array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ))
+      ->save();
+    entity_get_display('node', 'article', 'teaser')
+      ->setComponent($instance['field_name'], array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ))
+      ->save();
   }
 
   /**

@@ -206,7 +206,7 @@ function field_test_entity_label_callback($entity_type, $entity, $langcode = NUL
  * Implements hook_field_attach_view_alter().
  */
 function field_test_field_attach_view_alter(&$output, $context) {
-  if (!empty($context['display']['settings']['alter'])) {
+  if (!empty($context['display_options']['settings']['alter'])) {
     $output['test_field'][] = array('#markup' => 'field_test_field_attach_view_alter');
   }
 }

@@ -549,25 +549,7 @@ class FieldInfo {
     }
 
     // Extra fields in displayed entities.
-    $data = $extra_fields['display'];
-    foreach ($extra_fields['display'] as $name => $field_data) {
-      $settings = isset($bundle_settings['extra_fields']['display'][$name]) ? $bundle_settings['extra_fields']['display'][$name] : array();
-      $view_modes = array_merge(array('default'), array_keys($entity_type_info['view_modes']));
-      foreach ($view_modes as $view_mode) {
-        if (isset($settings[$view_mode])) {
-          $field_data['display'][$view_mode] = $settings[$view_mode];
-        }
-        else {
-          $field_data['display'][$view_mode] = array(
-            'weight' => $field_data['weight'],
-            'visible' => isset($field_data['visible']) ? $field_data['visible'] : TRUE,
-          );
-        }
-      }
-      unset($field_data['weight']);
-      unset($field_data['visible']);
-      $result['display'][$name] = $field_data;
-    }
+    $result['display'] = $extra_fields['display'];
 
     return $result;
   }
