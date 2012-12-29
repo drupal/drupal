@@ -149,6 +149,10 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
   // We work it this way so that we can have child themes override parent
   // theme stylesheets easily.
   $final_stylesheets = array();
+  // CSS file basenames to override, pointing to the final, overridden filepath.
+  $theme->stylesheets_override = array();
+  // CSS file basenames to remove.
+  $theme->stylesheets_remove = array();
 
   // Grab stylesheets from base theme
   foreach ($base_theme as $base) {
@@ -159,6 +163,18 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
         }
       }
     }
+    $base_theme_path = dirname($base->filename);
+    if (!empty($base->info['stylesheets-remove'])) {
+      foreach ($base->info['stylesheets-remove'] as $basename) {
+        $theme->stylesheets_remove[$basename] = $base_theme_path . '/' . $basename;
+      }
+    }
+    if (!empty($base->info['stylesheets-override'])) {
+      foreach ($base->info['stylesheets-override'] as $name) {
+        $basename = drupal_basename($name);
+        $theme->stylesheets_override[$basename] = $base_theme_path . '/' . $name;
+      }
+    }
   }
 
   // Add stylesheets used by this theme.
@@ -166,6 +182,25 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
     foreach ($theme->stylesheets as $media => $stylesheets) {
       foreach ($stylesheets as $name => $stylesheet) {
         $final_stylesheets[$media][$name] = $stylesheet;
+      }
+    }
+  }
+  if (!empty($theme->info['stylesheets-remove'])) {
+    foreach ($theme->info['stylesheets-remove'] as $basename) {
+      $theme->stylesheets_remove[$basename] = $theme_path . '/' . $basename;
+
+      if (isset($theme->stylesheets_override[$basename])) {
+        unset($theme->stylesheets_override[$basename]);
+      }
+    }
+  }
+  if (!empty($theme->info['stylesheets-override'])) {
+    foreach ($theme->info['stylesheets-override'] as $name) {
+      $basename = drupal_basename($name);
+      $theme->stylesheets_override[$basename] = $theme_path . '/' . $name;
+
+      if (isset($theme->stylesheets_remove[$basename])) {
+        unset($theme->stylesheets_remove[$basename]);
       }
     }
   }

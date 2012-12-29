@@ -59,6 +59,11 @@ function theme_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['theme-test/info/stylesheets'] = array(
+    'page callback' => 'theme_test_info_stylesheets',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -104,6 +109,25 @@ function theme_test_hook_init_page_callback() {
  */
 function theme_test_template_test_page_callback() {
   return theme('theme_test_template_test');
+}
+
+/**
+ * Page callback; Adds stylesheets to test theme .info property processing.
+ *
+ * @see test_basetheme.info
+ * @see test_subtheme.info
+ * @see \Drupal\system\Tests\Theme\ThemeInfoStylesTest
+ * @see http://drupal.org/node/967266#comment-3689670
+ */
+function theme_test_info_stylesheets() {
+  $path = drupal_get_path('module', 'theme_test');
+  drupal_add_css("$path/css/base-override.css");
+  drupal_add_css("$path/css/base-override.sub-remove.css");
+  drupal_add_css("$path/css/base-remove.css");
+  drupal_add_css("$path/css/base-remove.sub-override.css");
+  drupal_add_css("$path/css/sub-override.css");
+  drupal_add_css("$path/css/sub-remove.css");
+  return '';
 }
 
 /**

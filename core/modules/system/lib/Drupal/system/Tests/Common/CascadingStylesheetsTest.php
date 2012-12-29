@@ -48,7 +48,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   function testAddFile() {
     $path = drupal_get_path('module', 'simpletest') . '/simpletest.css';
     $css = drupal_add_css($path);
-    $this->assertEqual($css[$path]['data'], $path, 'Adding a CSS file caches it properly.');
+    $this->assertEqual($css['simpletest.css']['data'], $path);
   }
 
   /**

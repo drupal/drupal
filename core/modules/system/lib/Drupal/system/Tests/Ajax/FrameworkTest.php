@@ -78,8 +78,11 @@ class FrameworkTest extends AjaxTestBase {
       'css' => drupal_get_path('module', 'system') . '/system.admin.css',
       'js' => drupal_get_path('module', 'system') . '/system.js',
     );
+    // CSS files are stored by basename, see drupal_add_css().
+    $expected_css_basename = drupal_basename($expected['css']);
+
     // @todo D8: Add a drupal_css_defaults() helper function.
-    $expected_css_html = drupal_get_css(array($expected['css'] => array(
+    $expected_css_html = drupal_get_css(array($expected_css_basename => array(
       'type' => 'file',
       'group' => CSS_DEFAULT,
       'weight' => 0,
@@ -135,7 +138,7 @@ class FrameworkTest extends AjaxTestBase {
 
     // Verify the expected CSS file was added, both to Drupal.settings, and as
     // an Ajax command for inclusion into the HTML.
-    $this->assertEqual($new_css, $original_css + array($expected['css'] => 1), format_string('Page state now has the %css file.', array('%css' => $expected['css'])));
+    $this->assertEqual($new_css, $original_css + array($expected_css_basename => 1), format_string('Page state now has the %css file.', array('%css' => $expected['css'])));
     $this->assertCommand($commands, array('data' => $expected_css_html), format_string('Page now has the %css file.', array('%css' => $expected['css'])));
 
     // Verify the expected JS file was added, both to Drupal.settings, and as

@@ -3,8 +3,14 @@ description = A simple one-column, tableless, fluid width administration theme.
 package = Core
 version = VERSION
 core = 8.x
+
 stylesheets[screen][] = style.css
+stylesheets-override[] = vertical-tabs.css
+stylesheets-override[] = vertical-tabs-rtl.css
+stylesheets-override[] = jquery.ui.theme.css
+
 settings[shortcut_module_link] = 1
+
 regions[content] = Content
 regions[help] = Help
 regions[page_top] = Page top
