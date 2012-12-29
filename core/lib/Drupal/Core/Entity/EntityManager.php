@@ -44,6 +44,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *   multiple entity forms when the forms are similar. Defaults to
  *   Drupal\Core\Entity\EntityFormController.
  * - label: The human-readable name of the type.
+ * - bundle_label: The human-readable name of the entity bundles, e.g.
+ *   Vocabulary.
  * - label_callback: (optional) A function taking an entity and optional
  *   langcode argument, and returning the label of the entity. If langcode is
  *   omitted, the entity's default language is used.

@@ -1027,3 +1027,171 @@ function language_negotiation_configure_browser_delete_form_submit($form, &$form
   }
   $form_state['redirect'] = 'admin/config/regional/language/detection/browser';
 }
+
+/**
+ * Returns the content language settings form.
+ */
+function language_content_settings_page() {
+  return drupal_get_form('language_content_settings_form', language_entity_supported());
+}
+
+/**
+ * Form constructor for the content language settings form.
+ *
+ * @param array $supported
+ *   Entity types with language support.
+ *
+ * @see language_content_settings_form_submit()
+ *
+ * @ingroup forms
+ */
+function language_content_settings_form(array $form, array $form_state, array $supported) {
+  $entity_info = entity_get_info();
+  $labels = array();
+  $default = array();
+
+  foreach ($supported as $entity_type) {
+    $labels[$entity_type] = isset($entity_info[$entity_type]['label']) ? $entity_info[$entity_type]['label'] : $entity_type;
+    $default[$entity_type] = FALSE;
+
+    // Check whether we have any custom setting.
+    foreach (entity_get_bundles($entity_type) as $bundle) {
+      $conf = language_get_default_configuration($entity_type, $bundle);
+      if (empty($conf['language_hidden']) || $conf['langcode'] != 'site_default') {
+        $default[$entity_type] = $entity_type;
+      }
+      $language_configuration[$entity_type][$bundle] = $conf;
+    }
+  }
+
+  $path = drupal_get_path('module', 'language');
+  $form = array(
+    '#labels' => $labels,
+    '#attached' => array(
+      'css' => array($path . '/language.admin.css'),
+    ),
+  );
+
+  $form['entity_types'] = array(
+    '#title' => t('Custom language settings'),
+    '#type' => 'checkboxes',
+    '#options' => $labels,
+    '#default_value' => $default,
+  );
+
+  $form['settings'] = array('#tree' => TRUE);
+
+  foreach ($supported as $entity_type) {
+    $info = $entity_info[$entity_type];
+
+    $form['settings'][$entity_type] = array(
+      '#title' => $labels[$entity_type],
+      '#type' => 'container',
+      '#theme' => 'language_content_settings_table',
+      '#bundle_label' => isset($info['bundle_label']) ? $info['bundle_label'] : $labels[$entity_type],
+      '#states' => array(
+        'visible' => array(
+          ':input[name="entity_types[' . $entity_type . ']"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
+
+    foreach (entity_get_bundles($entity_type) as $bundle) {
+      $form['settings'][$entity_type][$bundle]['settings'] = array(
+        '#type' => 'item',
+        '#label' => isset($info['bundles'][$bundle]) ? $info['bundles'][$bundle]['label'] : $labels[$entity_type],
+        'language' => array(
+          '#type' => 'language_configuration',
+          '#entity_information' => array(
+            'entity_type' => $entity_type,
+            'bundle' => $bundle,
+          ),
+          '#default_value' => $language_configuration[$entity_type][$bundle],
+        ),
+      );
+    }
+  }
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_language_content_settings_table().
+ */
+function template_preprocess_language_content_settings_table(&$variables) {
+  // Add a render element representing the bundle language settings table.
+  $element = $variables['element'];
+
+  $header = array(
+    array(
+      'data' => $element['#bundle_label'],
+      'class' => array('bundle'),
+    ),
+    array(
+      'data' => t('Configuration'),
+      'class' => array('operations'),
+    ),
+  );
+
+  $rows = array();
+  foreach (element_children($element) as $bundle) {
+    $rows[$bundle] = array(
+      'data' => array(
+        array(
+          'data' => array(
+            '#prefix' => '<label>',
+            '#suffix' => '</label>',
+            '#markup' => check_plain($element[$bundle]['settings']['#label']),
+          ),
+          'class' => array('bundle'),
+        ),
+        array(
+          'data' => $element[$bundle]['settings'],
+          'class' => array('operations'),
+        ),
+      ),
+      'class' => array('bundle-settings'),
+    );
+  }
+
+  $variables['build'] = array(
+    '#title' => $element['#title'],
+    '#header' => $header,
+    '#rows' => $rows,
+    '#theme' => 'table',
+  );
+}
+
+/**
+ * Returns HTML for an administration settings table.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - build: A render element representing a table of bundle content language
+ *     settings for a particular entity type.
+ *
+ * @ingroup themable
+ */
+function theme_language_content_settings_table($variables) {
+  return '<h4>' . $variables['build']['#title'] . '</h4>' . drupal_render($variables['build']);
+}
+
+/**
+ * Form submission handler for language_content_settings_form().
+ */
+function language_content_settings_form_submit(array $form, array &$form_state) {
+  $entity_types = $form_state['values']['entity_types'];
+  $settings = &$form_state['values']['settings'];
+  foreach ($settings as $entity_type => $entity_settings) {
+    foreach ($entity_settings as $bundle => $bundle_settings) {
+      language_save_default_configuration($entity_type, $bundle, $bundle_settings['settings']['language']);
+    }
+  }
+  drupal_set_message(t('Settings successfully updated.'));
+}

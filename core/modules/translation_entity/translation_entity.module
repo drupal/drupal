@@ -23,12 +23,7 @@ function translation_entity_help($path, $arg) {
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
       $output .= '<dd><p>' . t('Before you can translate content, there must be at least two non-system languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language'))) . '</p>';
-      $output .= '<p>' . t('After adding languages, enable translation for any content you wish to translate:') . '</p>';
-      $output .= '<ul><li>' . t('<strong>Content types</strong>: Enable translation of <a href="@content_types_url">content types</a> by clicking edit for to the appropriate type. Then, under Language settings, uncheck <em>Hide language selector</em> and check <em>Enable translation</em>. This allows selecting the language as part of creating or editing the content.', array('@content_types_url' => url('admin/structure/types'))) . '</li>';
-      $output .= '<li>' . t('<strong>Comments</strong>: Switch to the Comment settings in the content type edit page and check <em>Enable translation</em>.</li>');
-      $output .= '<li>' . t('<strong>Taxonomy terms</strong>: Enable translation of <a href="@vocabularies_url">taxonomy</a> terms by editing the Vocabulary and checking <em>Enable translation</em> under Terms language.', array('@vocabularies_url' => url('admin/structure/taxonomy'))) . '</li>';
-      $output .= '<li>' . t('<strong>User accounts</strong>: Enable translation of user accounts on the <a href="@account_url">account settings page</a>, by checking <em>Enable translation</em> under Language settings.', array('@account_url' => url('admin/config/people/accounts'))) . '</li></ul>';
-      $output .= '<p>' . t('Finally, under the <em>Manage fields</em> tab, <em>edit</em> each field you wish to be translatable, and enable translation under <em>Global settings</em>.') . '</p></dd>';
+      $output .= '<p>' . t('After adding languages, <a href="!url">configure translation</a>.', array('!url' => url('admin/config/regional/content-language'))) . '</p>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
       $output .= '<dd>' . t('After enabling translation you can create a new piece of content, or edit existing content and assign it a language. Then, you will see a <em>Translations</em> tab or link that will gives an overview of the translation status for the current content. From there, you can add translations and edit or delete existing translations. This process is similar for every translatable element on your site, such as taxonomy terms, comments or user accounts.') . '</dd>';
       $output .= '<dt>' . t('Changing source language') . '</dt>';
@@ -38,6 +33,13 @@ function translation_entity_help($path, $arg) {
       $output .= '<dt>' . t('Translation permissions') . '</dt>';
       $output .= '<dd>' . t('The Entity Translation module makes a basic set of permissions available. Additional <a href="@permissions">permissions</a> are made available after translation is enabled for each translatable element.', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-translation_entity')))) . '</dd>';
       $output .= '</dl>';
+      return $output;
+
+    case 'admin/config/regional/content-language':
+      $output = '';
+      if (!language_multilingual()) {
+        $output .= '<br/>' . t('Before you can translate content, there must be at least two non-system languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language')));
+      }
       return $output;
   }
 }
@@ -163,7 +165,7 @@ function translation_entity_menu() {
     'description' => 'Confirm page for changing field translatability.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('translation_entity_translatable_form', 5),
-    'access arguments' => array('toggle field translatability'),
+    'access arguments' => array('administer entity translation'),
     'file' => 'translation_entity.admin.inc',
   );
 
@@ -395,9 +397,9 @@ function translation_entity_permission() {
       'title' => t('Edit original values'),
       'description' => t('Access the entity form in the original language.'),
     ),
-    'toggle field translatability' => array(
-      'title' => t('Toggle field translatability'),
-      'description' => t('Toggle translatability of fields performing a bulk update.'),
+    'administer entity translation' => array(
+      'title' => t('Administer entity translation'),
+      'description' => t('Configure translatability of entities and fields.'),
     ),
     'translate any entity' => array(
       'title' => t('Translate any entity'),
@@ -594,7 +596,7 @@ function translation_entity_form_field_ui_field_settings_form_alter(array &$form
         '#title' => $link_title,
         '#href' => $path,
         '#options' => array('query' => drupal_get_destination()),
-        '#access' => user_access('toggle field translatability'),
+        '#access' => user_access('administer entity translation'),
       ),
     );
   }
@@ -653,19 +655,20 @@ function translation_entity_enable_widget($entity_type, $bundle, array &$form, a
  *   Processed language configuration element.
  */
 function translation_entity_language_configuration_element_process(array $element, array &$form_state, array &$form) {
-  $form_state['translation_entity']['key'] = $element['#name'];
-  $context = $form_state['language'][$element['#name']];
+  if (empty($element['#translation_entity_skip_alter']) && user_access('administer entity translation')) {
+    $form_state['translation_entity']['key'] = $element['#name'];
+    $context = $form_state['language'][$element['#name']];
 
-  $element['translation_entity'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable translation'),
-    '#default_value' => translation_entity_enabled($context['entity_type'], $context['bundle']),
-    '#element_validate' => array('translation_entity_language_configuration_element_validate'),
-    '#prefix' => '<label>' . t('Translation') . '</label>',
-  );
+    $element['translation_entity'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable translation'),
+      '#default_value' => translation_entity_enabled($context['entity_type'], $context['bundle']),
+      '#element_validate' => array('translation_entity_language_configuration_element_validate'),
+      '#prefix' => '<label>' . t('Translation') . '</label>',
+    );
 
-  $form['#submit'][] = 'translation_entity_language_configuration_element_submit';
-
+    $form['#submit'][] = 'translation_entity_language_configuration_element_submit';
+  }
   return $element;
 }
 
@@ -709,4 +712,102 @@ function translation_entity_language_configuration_element_submit(array $form, a
     entity_info_cache_clear();
     menu_router_rebuild();
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for language_content_settings_form().
+ */
+function translation_entity_form_language_content_settings_form_alter(array &$form, array &$form_state) {
+  module_load_include('inc', 'translation_entity', 'translation_entity.admin');
+  _translation_entity_form_language_content_settings_form_alter($form, $form_state);
+}
+
+/**
+ * Stores entity translation settings.
+ *
+ * @param array $settings
+ *   An associative array of settings keyed by entity type and bundle. At bundle
+ *   level the following keys are available:
+ *   - translatable: The bundle translatability status, which is a bool.
+ *   - settings: An array of language configuration settings as defined by
+ *     language_save_default_configuration().
+ *   - fields: An associative array with field names as keys and a boolean as
+ *     value, indicating field translatability.
+ */
+function translation_entity_save_settings($settings) {
+  foreach ($settings as $entity_type => $entity_settings) {
+    foreach ($entity_settings as $bundle => $bundle_settings) {
+      translation_entity_set_config($entity_type, $bundle, 'enabled', $bundle_settings['translatable']);
+    }
+  }
+  // Ensure entity and menu router information are correctly rebuilt.
+  entity_info_cache_clear();
+  menu_router_rebuild();
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_language_content_settings_table().
+ */
+function translation_entity_preprocess_language_content_settings_table(&$variables) {
+  // Alter the 'build' variable injecting the translation settings if the user
+  // has the required permission.
+  if (!user_access('administer entity translation')) {
+    return;
+  }
+
+  $element = $variables['element'];
+  $build = &$variables['build'];
+
+  array_unshift($build['#header'], array('data' => t('Translatable'), 'class' => array('translatable')));
+  $rows = array();
+
+  foreach (element_children($element) as $bundle) {
+    $field_names = !empty($element[$bundle]['fields']) ? element_children($element[$bundle]['fields']) : array();
+    $checkbox_id = $element[$bundle]['translatable']['#id'];
+    $rows[$bundle] = $build['#rows'][$bundle];
+
+    $translatable = array(
+      'data' => $element[$bundle]['translatable'],
+      'class' => array('translatable'),
+    );
+    array_unshift($rows[$bundle]['data'], $translatable);
+
+    $rows[$bundle]['data'][1]['data']['#prefix'] = '<label for="' . $checkbox_id . '">';
+
+    foreach ($field_names as $field_name) {
+      $field = $element[$bundle]['fields'][$field_name];
+      $checkbox_id = $field['#id'];
+
+      $rows[] = array(
+        'data' => array(
+          array(
+            'data' => drupal_render($field),
+            'class' => array('translatable'),
+          ),
+          array(
+            'data' => array(
+              '#prefix' => '<label for="' . $checkbox_id . '">',
+              '#suffix' => '</label>',
+              'bundle' => array(
+                '#prefix' => '<span class="element-invisible">',
+                '#suffix' => '</span> ',
+                '#markup' => check_plain($element[$bundle]['settings']['#label']),
+              ),
+              'field' => array(
+                '#markup' => check_plain($field['#label']),
+              ),
+            ),
+            'class' => array('field'),
+          ),
+          array(
+            'data' => '',
+            'class' => array('operations'),
+          ),
+        ),
+        'class' => array('field-settings'),
+      );
+    }
+  }
+
+  $build['#rows'] = $rows;
 }
