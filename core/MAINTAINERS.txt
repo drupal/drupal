@@ -201,6 +201,9 @@ Contextual module
 Database Logging module
 - Khalid Baheyeldin 'kbahey' http://drupal.org/user/4063
 
+Edit module
+- Wim Leers 'Wim Leers' http://drupal.org/user/99777
+
 Field module
 - Yves Chedemois 'yched' http://drupal.org/user/39567
 - Barry Jaspan 'bjaspan' http://drupal.org/user/46413
