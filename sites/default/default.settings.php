@@ -247,6 +247,20 @@ $update_free_access = FALSE;
 $drupal_hash_salt = '';
 
 /**
+ * Class Loader.
+ *
+ * By default, Drupal uses the Symfony UniversalClassLoader which is best for
+ * development, as it does not break when code is moved on the file system.
+ * The APC classloader provides better performance and is recommended for
+ * production sites.
+ *
+ * Examples:
+ *  $class_loader = 'apc'
+ *  $class_loader = 'default'
+ */
+# $class_loader = 'apc';
+
+/**
  * Location of the site configuration files.
  *
  * By default, Drupal configuration files are stored in a randomly named
