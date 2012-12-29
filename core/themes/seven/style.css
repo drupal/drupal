@@ -873,7 +873,6 @@ body.in-maintenance #content {
   width: 72%;
 }
 body.in-maintenance #page {
-  overflow: auto;
   max-width: 770px;
   margin: 0 auto;
   padding-top: 2em;
@@ -903,7 +902,7 @@ body.in-maintenance #logo {
 @media all and (max-width: 768px) {
   body.in-maintenance #sidebar-first,
   body.in-maintenance #content {
-    float: left;
+    float: none;
     max-width: none;
     width: auto;
   }
@@ -926,9 +925,21 @@ ol.task-list li.done {
   background: transparent url(images/task-check.png) no-repeat 0 50%;
   color: green;
 }
+body.in-maintenance #branding .step-indicator {
+  display: none;
+}
 @media all and (max-width: 768px) {
-  ol.task-list li {
+  ol.task-list,
+  body.in-maintenance #logo {
+    display: none;
+  }
+  body.in-maintenance #branding h1 {
     float: left;
+    width: auto;
+  }
+  body.in-maintenance #branding .step-indicator {
+    display: block;
+    float: right;
   }
 }
 

@@ -121,3 +121,10 @@ function seven_css_alter(&$css) {
     $css['core/misc/ui/themes/base/jquery.ui.theme.css']['data'] = drupal_get_path('theme', 'seven') . '/jquery.ui.theme.css';
   }
 }
+
+/**
+ * Implements hook_preprocess_install_page().
+ */
+function seven_preprocess_install_page(&$variables) {
+  drupal_add_js(drupal_get_path('theme', 'seven') . '/js/mobile.install.js');
+}
