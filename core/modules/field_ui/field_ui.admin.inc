@@ -659,8 +659,6 @@ function field_ui_widget_type_form($form, &$form_state, FieldInstance $instance)
   $field_name = $instance['field_name'];
 
   $field = field_info_field($field_name);
-  $field_type = field_info_field_types($field['type']);
-  $widget_definition = $instance->getWidget()->getDefinition();
   $bundles = field_info_bundles();
   $bundle_label = $bundles[$entity_type][$bundle]['label'];
 
@@ -670,10 +668,7 @@ function field_ui_widget_type_form($form, &$form_state, FieldInstance $instance)
     '#field_name' => $field_name,
   );
 
-  $form['basic'] = array(
-    '#tree' => TRUE,
-  );
-  $form['basic']['widget_type'] = array(
+  $form['widget_type'] = array(
     '#type' => 'select',
     '#title' => t('Widget type'),
     '#required' => TRUE,

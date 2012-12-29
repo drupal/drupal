@@ -406,4 +406,48 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
     $this->assertUrl($url, array(), 'Stayed on the same page.');
   }
+
+  /**
+   * Tests changing the widget used by a field.
+   */
+  function testWidgetChange() {
+    $url_fields = 'admin/structure/types/manage/article/fields';
+    $url_tags_widget = $url_fields . '/field_tags/widget-type';
+
+    // Check that the field_tags field currently uses the 'options_select'
+    // widget.
+    $instance = field_info_instance('node', 'field_tags', 'article');
+    $this->assertEqual($instance['widget']['type'], 'options_select');
+
+    // Check that the "Manage fields" page shows the correct widget type.
+    $this->drupalGet($url_fields);
+    $link = current($this->xpath('//a[contains(@href, :href)]', array(':href' => $url_tags_widget)));
+    $this->assertEqual((string) $link, 'Select list');
+
+    // Go to the 'Widget type' form and check that the correct widget is
+    // selected.
+    $this->drupalGet($url_tags_widget);
+    $this->assertFieldByXPath("//select[@name='widget_type']", 'options_select');
+
+    // Change the widget type.
+    $edit = array(
+      'widget_type' => 'options_buttons',
+    );
+    $this->drupalPost(NULL, $edit, t('Continue'));
+
+    // Check that the "Manage fields" page shows the correct widget type.
+    $link = current($this->xpath('//a[contains(@href, :href)]', array(':href' => $url_tags_widget)));
+    $this->assertEqual((string) $link, 'Check boxes/radio buttons');
+
+    // Check that the field uses the newly set widget.
+    field_cache_clear();
+    $instance = field_info_instance('node', 'field_tags', 'article');
+    $this->assertEqual($instance['widget']['type'], 'options_buttons');
+
+    // Go to the 'Widget type' form and check that the correct widget is
+    // selected.
+    $this->drupalGet($url_tags_widget);
+    $this->assertFieldByXPath("//select[@name='widget_type']", 'options_buttons');
+  }
+
 }
