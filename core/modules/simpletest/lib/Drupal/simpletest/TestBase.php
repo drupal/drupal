@@ -1073,7 +1073,9 @@ abstract class TestBase {
       'file' => $exception->getFile(),
     ));
     // The exception message is run through check_plain() by _drupal_decode_exception().
-    $message = format_string('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', _drupal_decode_exception($exception) + array(
+    $decoded_exception = _drupal_decode_exception($exception);
+    unset($decoded_exception['backtrace']);
+    $message = format_string('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', $decoded_exception + array(
       '!backtrace' => format_backtrace($verbose_backtrace),
     ));
     $this->error($message, 'Uncaught exception', _drupal_get_last_caller($backtrace));

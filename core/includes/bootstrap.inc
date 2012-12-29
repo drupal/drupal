@@ -1673,7 +1673,7 @@ function request_uri($omit_query_string = FALSE) {
  *   A link to associate with the message.
  *
  * @see watchdog()
- * @see drupal_decode_exception()
+ * @see _drupal_decode_exception()
  */
 function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
 

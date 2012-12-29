@@ -613,6 +613,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
       require_once DRUPAL_ROOT . '/core/includes/errors.inc';
       $variables = _drupal_decode_exception($e);
+      unset($variables['backtrace']);
       // The exception message is run through check_plain() by _drupal_decode_exception().
       $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
     }
