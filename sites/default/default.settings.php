@@ -458,8 +458,8 @@ ini_set('session.cookie_lifetime', 2000000);
  * configured to cache and compress these files itself you may want to uncomment
  * one or both of the below lines, which will prevent gzip files being stored.
  */
-# $conf['system.performance']['css.gzip'] = FALSE;
-# $conf['system.performance']['js.gzip'] = FALSE;
+# $conf['system.performance']['css']['gzip'] = FALSE;
+# $conf['system.performance']['js']['gzip'] = FALSE;
 
 /**
  * String overrides:
