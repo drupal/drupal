@@ -15,6 +15,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -117,9 +118,8 @@ class CoreBundle extends Bundle {
     $container->register('user.tempstore', 'Drupal\user\TempStoreFactory')
       ->addArgument(new Reference('database'))
       ->addArgument(new Reference('lock'));
-    $container->register('twig', 'Drupal\Core\Template\TwigEnvironment')
-      ->setFactoryClass('Drupal\Core\Template\TwigFactory')
-      ->setFactoryMethod('get');
+
+    $this->registerTwig($container);
 
     // Add the entity query factory.
     $container->register('entity.query', 'Drupal\Core\Entity\Query\QueryFactory')
@@ -249,4 +249,36 @@ class CoreBundle extends Bundle {
     $container->addCompilerPass(new RegisterAccessChecksPass());
   }
 
+  /**
+   * Registers Twig services.
+   */
+  protected function registerTwig(ContainerBuilder $container) {
+    $container->register('twig.loader.filesystem', 'Twig_Loader_Filesystem')
+      ->addArgument(DRUPAL_ROOT);
+    $container->setAlias('twig.loader', 'twig.loader.filesystem');
+
+    $container->register('twig', 'Drupal\Core\Template\TwigEnvironment')
+      ->addArgument(new Reference('twig.loader'))
+      ->addArgument(array(
+        // This is saved / loaded via drupal_php_storage().
+        // All files can be refreshed by clearing caches.
+        // @todo ensure garbage collection of expired files.
+        'cache' => TRUE,
+        'base_template_class' => 'Drupal\Core\Template\TwigTemplate',
+        // @todo Remove in followup issue
+        // @see http://drupal.org/node/1712444.
+        'autoescape' => FALSE,
+        // @todo Remove in followup issue
+        // @see http://drupal.org/node/1806538.
+        'strict_variables' => FALSE,
+        // @todo Maybe make debug mode dependent on "production mode" setting.
+        'debug' => TRUE,
+        // @todo Make auto reload mode dependent on "production mode" setting.
+        'auto_reload' => FALSE,
+      ))
+      ->addMethodCall('addExtension', array(new Definition('Drupal\Core\Template\TwigExtension')))
+      // @todo Figure out what to do about debugging functions.
+      // @see http://drupal.org/node/1804998
+      ->addMethodCall('addExtension', array(new Definition('Twig_Extension_Debug')));
+  }
 }
