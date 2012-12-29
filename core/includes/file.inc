@@ -284,14 +284,7 @@ function file_uri_scheme($uri) {
  *   or FALSE if the scheme does not have a registered handler.
  */
 function file_stream_wrapper_valid_scheme($scheme) {
-  // Does the scheme have a registered handler that is callable?
-  $class = file_stream_wrapper_get_class($scheme);
-  if (class_exists($class)) {
-    return TRUE;
-  }
-  else {
-    return FALSE;
-  }
+  return $scheme && class_exists(file_stream_wrapper_get_class($scheme));
 }
 
 
@@ -343,7 +336,7 @@ function file_default_scheme() {
 function file_stream_wrapper_uri_normalize($uri) {
   $scheme = file_uri_scheme($uri);
 
-  if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
+  if (file_stream_wrapper_valid_scheme($scheme)) {
     $target = file_uri_target($uri);
 
     if ($target !== FALSE) {
@@ -593,7 +586,7 @@ function file_save_htaccess($directory, $private = TRUE) {
 function file_valid_uri($uri) {
   // Assert that the URI has an allowed scheme. Barepaths are not allowed.
   $uri_scheme = file_uri_scheme($uri);
-  if (empty($uri_scheme) || !file_stream_wrapper_valid_scheme($uri_scheme)) {
+  if (!file_stream_wrapper_valid_scheme($uri_scheme)) {
     return FALSE;
   }
   return TRUE;
@@ -1171,7 +1164,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
 
   // Assert that the destination contains a valid stream.
   $destination_scheme = file_uri_scheme($destination);
-  if (!$destination_scheme || !file_stream_wrapper_valid_scheme($destination_scheme)) {
+  if (!file_stream_wrapper_valid_scheme($destination_scheme)) {
     drupal_set_message(t('The file could not be uploaded because the destination %destination is invalid.', array('%destination' => $destination)), 'error');
     return FALSE;
   }
@@ -1598,7 +1591,7 @@ function drupal_chmod($uri, $mode = NULL) {
  */
 function drupal_unlink($uri, $context = NULL) {
   $scheme = file_uri_scheme($uri);
-  if ((!$scheme || !file_stream_wrapper_valid_scheme($scheme)) && (substr(PHP_OS, 0, 3) == 'WIN')) {
+  if (!file_stream_wrapper_valid_scheme($scheme) && (substr(PHP_OS, 0, 3) == 'WIN')) {
     chmod($uri, 0600);
   }
   if ($context) {
@@ -1671,7 +1664,7 @@ function drupal_realpath($uri) {
 function drupal_dirname($uri) {
   $scheme = file_uri_scheme($uri);
 
-  if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
+  if (file_stream_wrapper_valid_scheme($scheme)) {
     return file_stream_wrapper_get_instance_by_scheme($scheme)->dirname($uri);
   }
   else {
@@ -1764,7 +1757,7 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
  */
 function drupal_rmdir($uri, $context = NULL) {
   $scheme = file_uri_scheme($uri);
-  if ((!$scheme || !file_stream_wrapper_valid_scheme($scheme)) && (substr(PHP_OS, 0, 3) == 'WIN')) {
+  if (!file_stream_wrapper_valid_scheme($scheme) && (substr(PHP_OS, 0, 3) == 'WIN')) {
     chmod($uri, 0700);
   }
   if ($context) {
@@ -1800,7 +1793,7 @@ function drupal_rmdir($uri, $context = NULL) {
 function drupal_tempnam($directory, $prefix) {
   $scheme = file_uri_scheme($directory);
 
-  if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
+  if (file_stream_wrapper_valid_scheme($scheme)) {
     $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
 
     if ($filename = tempnam($wrapper->getDirectoryPath(), $prefix)) {

@@ -279,7 +279,7 @@ function image_gd_load(stdClass $image) {
 function image_gd_save(stdClass $image, $destination) {
   $scheme = file_uri_scheme($destination);
   // Work around lack of stream wrapper support in imagejpeg() and imagepng().
-  if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
+  if (file_stream_wrapper_valid_scheme($scheme)) {
     // If destination is not local, save image to temporary local file.
     $local_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
     if (!isset($local_wrappers[$scheme])) {
