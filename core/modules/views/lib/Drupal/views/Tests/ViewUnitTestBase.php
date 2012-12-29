@@ -28,8 +28,8 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
     parent::setUp();
 
     // Define the schema and views data variable before enabling the test module.
-    $GLOBALS['views_test_data_schema'] = $this->schemaDefinition();
-    $GLOBALS['views_test_data_views_data'] = $this->viewsData();
+    state()->set('views_test_data_schema', $this->schemaDefinition());
+    state()->set('views_test_data_views_data', $this->viewsData());
 
     $this->enableModules(array('views', 'views_test_config', 'views_test_data'));
 

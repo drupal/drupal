@@ -37,12 +37,13 @@ class ViewRenderTest extends ViewTestBase {
    * Tests render functionality.
    */
   public function testRender() {
-    $GLOBALS['views_render.test'] = 0;
+    state()->set('views_render.test', 0);
+
     // Make sure that the rendering just calls the preprocess function once.
     $view = views_get_view('test_view_render');
     $view->preview();
 
-    $this->assertEqual($GLOBALS['views_render.test'], 1);
+    $this->assertEqual(state()->get('views_render.test'), 1);
   }
 
 }
