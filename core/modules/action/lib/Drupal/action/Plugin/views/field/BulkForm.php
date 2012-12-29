@@ -51,21 +51,22 @@ class BulkForm extends FieldPluginBase {
     $form['#attached']['library'][] = array('system', 'drupal.tableselect');
 
     // Render checkboxes for all rows.
+    $form[$this->options['id']]['#tree'] = TRUE;
     foreach ($this->view->result as $row_index => $row) {
-      $entity_id = $this->get_value($row);
-
       $form[$this->options['id']][$row_index] = array(
         '#type' => 'checkbox',
-        '#default_value' => FALSE,
+        // We are not able to determine a main "title" for each row, so we can
+        // only output a generic label.
+        '#title' => t('Update this item'),
+        '#title_display' => 'invisible',
+        '#default_value' => !empty($form_state['values'][$this->options['id']][$row_index]) ? 1 : NULL,
       );
     }
-
-    $form[$this->options['id']]['#tree'] = TRUE;
 
     // Get all available actions.
     $actions = action_get_all_actions();
     $entity_type = $this->getEntityType();
-    // Filter actions by the entity type and build options for the form.
+    // Filter actions by entity type and build select options.
     $actions = array_filter($actions, function($action) use ($entity_type) {
       return $action['type'] == $entity_type && empty($action['configurable']);
     });
@@ -73,22 +74,28 @@ class BulkForm extends FieldPluginBase {
       return $action['label'];
     }, $actions);
 
-    $form['action'] = array(
-      '#type' => 'select',
-      '#title' => t('Action'),
-      '#options' => $options,
-      '#description' => t('Select the action you want to execute on the content entitites.'),
+    // Replace the form submit button label.
+    $form['actions']['submit']['#value'] = t('Apply');
+
+    // Ensure a consistent container for filters/operations in the view header.
+    $form['header'] = array(
+      '#type' => 'container',
+      '#weight' => -100,
     );
 
-    // Move the submit button beside the selection.
-    $form['actions']['#weight'] = 1;
+    // Build the bulk operations action widget for the header.
+    // Allow themes to apply .container-inline on this separate container.
+    $form['header'][$this->options['id']] = array(
+      '#type' => 'container',
+    );
+    $form['header'][$this->options['id']]['action'] = array(
+      '#type' => 'select',
+      '#title' => t('With selection'),
+      '#options' => $options,
+    );
 
-      // Replace the text with Update.
-    $form['actions']['submit']['#value'] = t('Update');
-
-    // Put the submit button both at the top and bottom.
-    $form['actions_bottom'] = $form['actions'];
-    $form['actions_bottom']['#weight'] = 100;
+    // Duplicate the form actions into the action container in the header.
+    $form['header'][$this->options['id']]['actions'] = $form['actions'];
   }
 
   /**
@@ -113,7 +120,9 @@ class BulkForm extends FieldPluginBase {
       }
 
       if ($count) {
-        drupal_set_message(t('%action action performed on %count item(s).', array('%action' => $action->label, '%count' => $count)));
+        drupal_set_message(format_plural($count, '%action was applied to @count item.', '%action was applied to @count items.', array(
+          '%action' => $action->label,
+        )));
       }
     }
   }
