@@ -223,9 +223,9 @@ tr .ajax-progress-throbber .throbber {
 .element-invisible {
   position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
-  left: 0;
   overflow: hidden;
   height: 1px;
+  width: 1px;
 }
 
 /**
