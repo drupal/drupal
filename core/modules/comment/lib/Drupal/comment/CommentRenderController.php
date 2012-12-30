@@ -32,9 +32,22 @@ class CommentRenderController extends EntityRenderController {
 
     parent::buildContent($entities, $view_mode, $langcode);
 
+    // Load all entities of all comments at once.
+    $comment_entity_ids = array();
+    $comment_entities = array();
     foreach ($entities as $entity) {
-      $comment_entity = entity_load($entity->entity_type, $entity->entity_id);
-      if (!$comment_entity) {
+      $comment_entity_ids[$entity->entity_type][] = $entity->entity_id;
+    }
+    // Load entities in bulk.
+    foreach ($comment_entity_ids as $entity_type => $entity_ids) {
+      $comment_entities[$entity_type] = entity_load_multiple($entity_type, $entity_ids);
+    }
+
+    foreach ($entities as $entity) {
+      if (isset($comment_entities[$entity->entity_type][$entity->entity_id])) {
+        $comment_entity = $comment_entities[$entity->entity_type][$entity->entity_id];
+      }
+      else {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));
       }
       $entity->content['#entity'] = $entity;
