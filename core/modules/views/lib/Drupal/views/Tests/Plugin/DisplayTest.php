@@ -19,7 +19,7 @@ class DisplayTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_groups');
+  public static $testViews = array('test_filter_groups', 'test_get_attach_displays');
 
   /**
    * Modules to enable.
@@ -125,6 +125,20 @@ class DisplayTest extends PluginTestBase {
     $view->displayHandlers['page']->setOverride('filter_groups', FALSE);
     $this->assertFalse($view->displayHandlers['page']->isDefaulted('filter_groups'), "Take sure that 'filter_groups' is marked as overridden.");
     $this->assertFalse($view->displayHandlers['page']->isDefaulted('filters'), "Take sure that 'filters'' is marked as overridden.");
+  }
+
+  /**
+   * Tests the getAttachedDisplays method.
+   */
+  public function testGetAttachedDisplays() {
+    $view = views_get_view('test_get_attach_displays');
+
+    // Both the feed_1 and the feed_2 display are attached to the page display.
+    $view->setDisplay('page_1');
+    $this->assertEqual($view->display_handler->getAttachedDisplays(), array('feed_1', 'feed_2'));
+
+    $view->setDisplay('feed_1');
+    $this->assertEqual($view->display_handler->getAttachedDisplays(), array());
   }
 
 }

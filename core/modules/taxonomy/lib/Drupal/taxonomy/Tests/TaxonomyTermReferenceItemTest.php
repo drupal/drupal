@@ -36,7 +36,7 @@ class TaxonomyTermReferenceItemTest extends WebTestBase {
     parent::setUp();
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
-      'machine_name' => drupal_strtolower($this->randomName()),
+      'vid' => drupal_strtolower($this->randomName()),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
@@ -47,7 +47,7 @@ class TaxonomyTermReferenceItemTest extends WebTestBase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $vocabulary->machine_name,
+            'vocabulary' => $vocabulary->id(),
             'parent' => 0,
           ),
         ),
@@ -65,7 +65,7 @@ class TaxonomyTermReferenceItemTest extends WebTestBase {
     field_create_instance($instance);
     $this->term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vid' => $vocabulary->vid,
+      'vid' => $vocabulary->id(),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
     $this->term->save();

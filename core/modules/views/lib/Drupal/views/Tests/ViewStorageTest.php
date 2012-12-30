@@ -384,16 +384,16 @@ class ViewStorageTest extends ViewTestBase {
    */
   public function testCreateDuplicate() {
     $view = views_get_view('archive');
-    $copy = $view->createDuplicate();
+    $copy = $view->storage->createDuplicate();
 
     $this->assertTrue($copy instanceof View, 'The copied object is a View.');
 
     // Check that the original view and the copy have different UUIDs.
     $this->assertNotIdentical($view->storage->uuid(), $copy->uuid(), 'The copied view has a new UUID.');
 
-    // Check the 'name' (ID) is using the View objects default value ('') as it
+    // Check the 'name' (ID) is using the View objects default value (NULL) as it
     // gets unset.
-    $this->assertIdentical($copy->id(), '', 'The ID has been reset.');
+    $this->assertIdentical($copy->id(), NULL, 'The ID has been reset.');
 
     // Check the other properties.
     // @todo Create a reusable property on the base test class for these?

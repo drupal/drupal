@@ -588,7 +588,6 @@ function _field_write_instance(&$instance, $update = FALSE) {
   // Set defaults.
   $instance += array(
     'settings' => array(),
-    'display' => array(),
     'widget' => array(),
     'required' => FALSE,
     'label' => $instance['field_name'],
@@ -614,30 +613,6 @@ function _field_write_instance(&$instance, $update = FALSE) {
   $widget_type = field_info_widget_types($instance['widget']['type']);
   $instance['widget']['module'] = $widget_type['module'];
   $instance['widget']['settings'] += field_info_widget_settings($instance['widget']['type']);
-
-  // Make sure there are at least display settings for the 'default' view mode,
-  // and fill in defaults for each view mode specified in the definition.
-  $instance['display'] += array(
-    'default' => array(),
-  );
-  foreach ($instance['display'] as $view_mode => $display) {
-    $display += array(
-      'label' => 'above',
-      'type' => isset($field_type['default_formatter']) ? $field_type['default_formatter'] : 'hidden',
-      'settings' => array(),
-    );
-    if ($display['type'] != 'hidden') {
-      $formatter_type = field_info_formatter_types($display['type']);
-      $display['module'] = $formatter_type['module'];
-      $display['settings'] += field_info_formatter_settings($display['type']);
-    }
-    // If no weight specified, make sure the field sinks at the bottom.
-    if (!isset($display['weight'])) {
-      $max_weight = field_info_max_weight($instance['entity_type'], $instance['bundle'], $view_mode);
-      $display['weight'] = isset($max_weight) ? $max_weight + 1 : 0;
-    }
-    $instance['display'][$view_mode] = $display;
-  }
 
   // The serialized 'data' column contains everything from $instance that does
   // not have its own column and is not automatically populated when the

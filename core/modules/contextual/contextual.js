@@ -26,11 +26,13 @@ Drupal.behaviors.contextualLinks = {
           $wrapper.toggleClass('contextual-active');
         }
       );
-      // Attach hover behavior to trigger and ul.contextual-links.
-      $trigger.add($links).hover(
-        function () { $region.addClass('contextual-region-active'); },
-        function () { $region.removeClass('contextual-region-active'); }
-      );
+      // Attach hover behavior to trigger and ul.contextual-links, for non touch devices only.
+      if(!Modernizr.touch) {
+        $trigger.add($links).hover(
+          function () { $region.addClass('contextual-region-active'); },
+          function () { $region.removeClass('contextual-region-active'); }
+        );
+      }
       // Hide the contextual links when user clicks a link or rolls out of the .contextual-region.
       $region.bind('mouseleave click', Drupal.contextualLinks.mouseleave);
       $region.hover(

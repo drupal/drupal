@@ -11,8 +11,8 @@ namespace Drupal\Core\Template;
  * Provides a Twig_NodeVisitor to change the generated parse-tree.
  *
  * This is used to ensure that everything that is printed is wrapped via
- * twig_render() function so that we can write for example just {{ content }}
- * in templates instead of having to write {{ render(content) }}.
+ * twig_render_var() function so that we can write for example just {{ content }}
+ * in templates instead of having to write {{ render_var(content) }}.
  *
  * @see twig_render
  */
@@ -45,7 +45,7 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
       }
     }
     if ($node instanceof \Twig_Node_Print) {
-       // Our injected render needs arguments passed by reference -- in case of render array
+       // Our injected render_var needs arguments passed by reference -- in case of render array
       $this->isReference = TRUE;
     }
 
@@ -55,7 +55,7 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
   /**
    * Implements Twig_NodeVisitorInterface::leaveNode().
    *
-   * We use this to inject a call to render -> twig_render()
+   * We use this to inject a call to render_var -> twig_render_var()
    * before anything is printed.
    *
    * @see twig_render
@@ -66,7 +66,7 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
 
       $class = get_class($node);
       return new $class(
-        new \Twig_Node_Expression_Function('render', new \Twig_Node(array($node->getNode('expr'))), $node->getLine()),
+        new \Twig_Node_Expression_Function('render_var', new \Twig_Node(array($node->getNode('expr'))), $node->getLine()),
         $node->getLine()
       );
     }

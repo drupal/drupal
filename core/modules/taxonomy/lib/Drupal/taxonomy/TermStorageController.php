@@ -25,15 +25,6 @@ class TermStorageController extends DatabaseStorageController {
    */
   public function create(array $values) {
     $entity = parent::create($values);
-    // Ensure the vocabulary machine name is initialized as it is used as the
-    // bundle key. Only attempt to do this if a vocabulary ID is available,
-    // which might not be the case when creating partial entity structures.
-    // @todo Move to Term::bundle() once field API has been converted
-    //   to make use of it.
-    if (!isset($entity->vocabulary_machine_name) && isset($entity->vid)) {
-      $vocabulary = taxonomy_vocabulary_load($entity->vid);
-      $entity->vocabulary_machine_name = $vocabulary->machine_name;
-    }
     // Save new terms with no parents by default.
     if (!isset($entity->parent)) {
       $entity->parent = array(0);
@@ -48,10 +39,6 @@ class TermStorageController extends DatabaseStorageController {
     $query = parent::buildQuery($ids, $revision_id);
     $query->addTag('translatable');
     $query->addTag('term_access');
-
-    // Add the machine name field from the {taxonomy_vocabulary} table.
-    $query->innerJoin('taxonomy_vocabulary', 'v', 'base.vid = v.vid');
-    $query->addField('v', 'machine_name', 'vocabulary_machine_name');
     return $query;
   }
 

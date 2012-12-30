@@ -31,15 +31,11 @@ class ViewsDataTest extends ViewUnitTestBase {
     $table_name = 'views_test_data';
     $expected_data = $this->viewsData();
 
-    $data = views_fetch_data($table_name);
+    $data = drupal_container()->get('views.views_data')->get($table_name);
     $this->assertEqual($data, $expected_data[$table_name], 'Make sure fetching views data by table works as expected.');
 
-    $data = views_fetch_data();
+    $data = drupal_container()->get('views.views_data')->get();
     $this->assertTrue(isset($data[$table_name]), 'Make sure the views_test_data info appears in the total views data.');
-    $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
-
-    $data = views_fetch_data(NULL, TRUE);
-    $this->assertTrue(isset($data[$table_name]), 'Make sure the views_fetch_data appears in the total views data with reset = TRUE.');
     $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
   }
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\Core\Entity;
 
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Translation;
  *   form_controller_class = {
  *     "default" = "Drupal\taxonomy\VocabularyFormController"
  *   },
- *   base_table = "taxonomy_vocabulary",
+ *   config_prefix = "taxonomy.vocabulary",
  *   entity_keys = {
  *     "id" = "vid",
  *     "label" = "name"
@@ -35,12 +35,12 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Vocabulary extends Entity {
+class Vocabulary extends ConfigEntityBase {
 
   /**
    * The taxonomy vocabulary ID.
    *
-   * @var integer
+   * @var string
    */
   public $vid;
 
@@ -50,13 +50,6 @@ class Vocabulary extends Entity {
    * @var string
    */
   public $name;
-
-  /**
-   * The vocabulary machine name.
-   *
-   * @var string
-   */
-  public $machine_name;
 
   /**
    * Description of the vocabulary.

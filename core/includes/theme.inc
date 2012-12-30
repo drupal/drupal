@@ -149,6 +149,10 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
   // We work it this way so that we can have child themes override parent
   // theme stylesheets easily.
   $final_stylesheets = array();
+  // CSS file basenames to override, pointing to the final, overridden filepath.
+  $theme->stylesheets_override = array();
+  // CSS file basenames to remove.
+  $theme->stylesheets_remove = array();
 
   // Grab stylesheets from base theme
   foreach ($base_theme as $base) {
@@ -159,6 +163,18 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
         }
       }
     }
+    $base_theme_path = dirname($base->filename);
+    if (!empty($base->info['stylesheets-remove'])) {
+      foreach ($base->info['stylesheets-remove'] as $basename) {
+        $theme->stylesheets_remove[$basename] = $base_theme_path . '/' . $basename;
+      }
+    }
+    if (!empty($base->info['stylesheets-override'])) {
+      foreach ($base->info['stylesheets-override'] as $name) {
+        $basename = drupal_basename($name);
+        $theme->stylesheets_override[$basename] = $base_theme_path . '/' . $name;
+      }
+    }
   }
 
   // Add stylesheets used by this theme.
@@ -166,6 +182,25 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
     foreach ($theme->stylesheets as $media => $stylesheets) {
       foreach ($stylesheets as $name => $stylesheet) {
         $final_stylesheets[$media][$name] = $stylesheet;
+      }
+    }
+  }
+  if (!empty($theme->info['stylesheets-remove'])) {
+    foreach ($theme->info['stylesheets-remove'] as $basename) {
+      $theme->stylesheets_remove[$basename] = $theme_path . '/' . $basename;
+
+      if (isset($theme->stylesheets_override[$basename])) {
+        unset($theme->stylesheets_override[$basename]);
+      }
+    }
+  }
+  if (!empty($theme->info['stylesheets-override'])) {
+    foreach ($theme->info['stylesheets-override'] as $name) {
+      $basename = drupal_basename($name);
+      $theme->stylesheets_override[$basename] = $theme_path . '/' . $name;
+
+      if (isset($theme->stylesheets_remove[$basename])) {
+        unset($theme->stylesheets_remove[$basename]);
       }
     }
   }
@@ -1850,6 +1885,99 @@ function theme_breadcrumb($variables) {
     $output .= '</nav>';
   }
   return $output;
+}
+
+/**
+ * #pre_render callback to transform children of an element into #rows suitable for theme_table().
+ *
+ * This function converts sub-elements of an element of #type 'table' to be
+ * suitable for theme_table():
+ * - The first level of sub-elements are table rows. Only the #attributes
+ *   property is taken into account.
+ * - The second level of sub-elements is converted into columns for the
+ *   corresponding first-level table row.
+ *
+ * Simple example usage:
+ * @code
+ * $form['table'] = array(
+ *   '#type' => 'table',
+ *   '#header' => array(t('Title'), array('data' => t('Operations'), 'colspan' => '1')),
+ *   // Optionally, to add tableDrag support:
+ *   '#tabledrag' => array(
+ *     array('order', 'sibling', 'thing-weight'),
+ *   ),
+ * );
+ * foreach ($things as $row => $thing) {
+ *   $form['table'][$row]['#weight'] = $thing['weight'];
+ *
+ *   $form['table'][$row]['title'] = array(
+ *     '#type' => 'textfield',
+ *     '#default_value' => $thing['title'],
+ *   );
+ *
+ *   // Optionally, to add tableDrag support:
+ *   $form['table'][$row]['#attributes']['class'][] = 'draggable';
+ *   $form['table'][$row]['weight'] = array(
+ *     '#type' => 'textfield',
+ *     '#title' => t('Weight for @title', array('@title' => $thing['title'])),
+ *     '#title_display' => 'invisible',
+ *     '#size' => 4,
+ *     '#default_value' => $thing['weight'],
+ *     '#attributes' => array('class' => array('thing-weight')),
+ *   );
+ *
+ *   // The amount of link columns should be identical to the 'colspan'
+ *   // attribute in #header above.
+ *   $form['table'][$row]['edit'] = array(
+ *     '#type' => 'link',
+ *     '#title' => t('Edit'),
+ *     '#href' => 'thing/' . $row . '/edit',
+ *   );
+ * }
+ * @endcode
+ *
+ * @param array $element
+ *   A structured array containing two sub-levels of elements. Properties used:
+ *   - #tabledrag: The value is a list of arrays that are passed to
+ *     drupal_add_tabledrag(). The HTML ID of the table is prepended to each set
+ *     of arguments.
+ *
+ * @see system_element_info()
+ * @see theme_table()
+ * @see drupal_process_attached()
+ * @see drupal_add_tabledrag()
+ */
+function drupal_pre_render_table(array $element) {
+  foreach (element_children($element) as $first) {
+    $row = array('data' => array());
+    // Apply attributes of first-level elements as table row attributes.
+    if (isset($element[$first]['#attributes'])) {
+      $row += $element[$first]['#attributes'];
+    }
+    // Turn second-level elements into table row columns.
+    // @todo Do not render a cell for children of #type 'value'.
+    // @see http://drupal.org/node/1248940
+    foreach (element_children($element[$first]) as $second) {
+      // Assign the element by reference, so any potential changes to the
+      // original element are taken over.
+      $row['data'][] = array('data' => &$element[$first][$second]);
+    }
+    $element['#rows'][] = $row;
+  }
+
+  // Take over $element['#id'] as HTML ID attribute, if not already set.
+  element_set_attributes($element, array('id'));
+
+  // If the custom #tabledrag is set and there is a HTML ID, inject the table's
+  // HTML ID as first callback argument and attach the behavior.
+  if (!empty($element['#tabledrag']) && isset($element['#attributes']['id'])) {
+    foreach ($element['#tabledrag'] as &$args) {
+      array_unshift($args, $element['#attributes']['id']);
+    }
+    $element['#attached']['drupal_add_tabledrag'] = $element['#tabledrag'];
+  }
+
+  return $element;
 }
 
 /**

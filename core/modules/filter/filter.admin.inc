@@ -18,7 +18,17 @@ function filter_admin_overview($form) {
   $fallback_format = filter_fallback_format();
 
   $form['#tree'] = TRUE;
+  $form['formats'] = array(
+    '#type' => 'table',
+    '#header' => array(t('Name'), t('Roles'), t('Weight'), t('Operations')),
+    '#tabledrag' => array(
+      array('order', 'sibling', 'text-format-order-weight'),
+    ),
+  );
   foreach ($formats as $id => $format) {
+    $form['formats'][$id]['#attributes']['class'][] = 'draggable';
+    $form['formats'][$id]['#weight'] = $format->weight;
+
     $links = array();
     $links['configure'] = array(
       'title' => t('configure'),
@@ -40,16 +50,20 @@ function filter_admin_overview($form) {
         'href' => "admin/config/content/formats/$id/disable",
       );
     }
+
     $form['formats'][$id]['roles'] = array('#markup' => $roles_markup);
-    $form['formats'][$id]['operations'] = array(
-      '#type' => 'operations',
-      '#links' => $links,
-    );
+
     $form['formats'][$id]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight for @title', array('@title' => $format->name)),
       '#title_display' => 'invisible',
       '#default_value' => $format->weight,
+      '#attributes' => array('class' => array('text-format-order-weight')),
+    );
+
+    $form['formats'][$id]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
     );
   }
   $form['actions'] = array('#type' => 'actions');
@@ -72,41 +86,6 @@ function filter_admin_overview_submit($form, &$form_state) {
   }
   filter_formats_reset();
   drupal_set_message(t('The text format ordering has been saved.'));
-}
-
-/**
- * Returns HTML for the text format administration overview form.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_filter_admin_overview($variables) {
-  $form = $variables['form'];
-
-  $rows = array();
-  foreach (element_children($form['formats']) as $id) {
-    $form['formats'][$id]['weight']['#attributes']['class'] = array('text-format-order-weight');
-    $row = array(
-      'data' => array(
-        drupal_render($form['formats'][$id]['name']),
-        drupal_render($form['formats'][$id]['roles']),
-        drupal_render($form['formats'][$id]['weight']),
-        drupal_render($form['formats'][$id]['operations']),
-      ),
-      'class' => array('draggable'),
-    );
-    $rows[] = $row;
-  }
-  $header = array(t('Name'), t('Roles'), t('Weight'), t('Operations'));
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'text-format-order')));
-  $output .= drupal_render_children($form);
-
-  drupal_add_tabledrag('text-format-order', 'order', 'sibling', 'text-format-order-weight');
-
-  return $output;
 }
 
 /**

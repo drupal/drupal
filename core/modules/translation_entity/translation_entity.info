@@ -1,6 +1,7 @@
-name = Entity Translation
-description =  Allows entities to be translated into different languages.
+name = Content Translation
+description =  Allows users to translate content entities.
 dependencies[] = language
-package = Core
+package = Multilingual
 version = VERSION
 core = 8.x
+configure = admin/config/regional/content-language

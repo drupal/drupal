@@ -52,6 +52,9 @@ function language_help($path, $arg) {
         return '<p>' . t('With multiple languages enabled, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;
+
+    case 'admin/config/regional/content-language':
+      return t('Change language settings for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>user profiles</em>, or any other supported element on your site. By default, language settings hide the language selector and the language is the site\'s default language.');
   }
 }
 
@@ -150,6 +153,15 @@ function language_menu() {
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
+  // Content language settings.
+  $items['admin/config/regional/content-language'] = array(
+    'title' => 'Content language settings',
+    'description' => 'Configure content language support for any multilingual element.',
+    'page callback' => 'language_content_settings_page',
+    'access arguments' => array('administer languages'),
+    'file' => 'language.admin.inc',
+  );
+
   return $items;
 }
 
@@ -187,7 +199,31 @@ function language_theme() {
       'render element' => 'form',
       'file' => 'language.admin.inc',
     ),
+    'language_content_settings_table' => array(
+      'render element' => 'element',
+      'file' => 'language.admin.inc',
+    ),
   );
+}
+
+/**
+ * Returns a list of supported entity types.
+ *
+ * @return array
+ *   An array of entity type names.
+ */
+function language_entity_supported() {
+  $supported = array();
+  foreach (entity_get_info() as $entity_type => $info) {
+    // @todo Revisit this once all core entities are migrated to the Entity
+    //   Field API and language support for configuration entities has been
+    //   sorted out.
+    $entity_class = new ReflectionClass($info['class']);
+    if ($info['fieldable'] && !$entity_class->implementsInterface('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+      $supported[$entity_type] = $entity_type;
+    }
+  }
+  return $supported;
 }
 
 /**

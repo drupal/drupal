@@ -17,11 +17,12 @@ use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
  */
 function taxonomy_overview_vocabularies($form) {
   $vocabularies = taxonomy_vocabulary_load_multiple();
+  taxonomy_vocabulary_sort($vocabularies);
   $form['#tree'] = TRUE;
   foreach ($vocabularies as $vocabulary) {
-    $form[$vocabulary->vid]['#vocabulary'] = $vocabulary;
-    $form[$vocabulary->vid]['name'] = array('#markup' => check_plain($vocabulary->name));
-    $form[$vocabulary->vid]['weight'] = array(
+    $form[$vocabulary->id()]['#vocabulary'] = $vocabulary;
+    $form[$vocabulary->id()]['name'] = array('#markup' => check_plain($vocabulary->name));
+    $form[$vocabulary->id()]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight for @title', array('@title' => $vocabulary->name)),
       '#title_display' => 'invisible',
@@ -31,17 +32,17 @@ function taxonomy_overview_vocabularies($form) {
     $links = array();
     $links['edit'] = array(
       'title' => t('edit vocabulary'),
-      'href' => "admin/structure/taxonomy/$vocabulary->machine_name/edit",
+      'href' => "admin/structure/taxonomy/{$vocabulary->id()}/edit",
     );
     $links['list'] = array(
       'title' => t('list terms'),
-      'href' => "admin/structure/taxonomy/$vocabulary->machine_name",
+      'href' => "admin/structure/taxonomy/{$vocabulary->id()}",
     );
     $links['add'] = array(
       'title' => t('add terms'),
-      'href' => "admin/structure/taxonomy/$vocabulary->machine_name/add",
+      'href' => "admin/structure/taxonomy/{$vocabulary->id()}/add",
     );
-    $form[$vocabulary->vid]['operations'] = array(
+    $form[$vocabulary->id()]['operations'] = array(
       '#type' => 'operations',
       '#links' => $links,
     );
@@ -54,7 +55,7 @@ function taxonomy_overview_vocabularies($form) {
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#button_type' => 'primary');
   }
   elseif (isset($vocabulary)) {
-    unset($form[$vocabulary->vid]['weight']);
+    unset($form[$vocabulary->id()]['weight']);
   }
   return $form;
 }
@@ -66,7 +67,7 @@ function taxonomy_overview_vocabularies($form) {
  */
 function taxonomy_overview_vocabularies_submit($form, &$form_state) {
   foreach ($form_state['values'] as $vid => $vocabulary) {
-    if (is_numeric($vid) && $form[$vid]['#vocabulary']->weight != $form_state['values'][$vid]['weight']) {
+    if (isset($form[$vid]['#vocabulary']) && $form[$vid]['#vocabulary']->weight != $form_state['values'][$vid]['weight']) {
       $form[$vid]['#vocabulary']->weight = $form_state['values'][$vid]['weight'];
       taxonomy_vocabulary_save($form[$vid]['#vocabulary']);
     }
@@ -143,7 +144,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
 
   // Check for confirmation forms.
   if (isset($form_state['confirm_reset_alphabetical'])) {
-    return taxonomy_vocabulary_confirm_reset_alphabetical($form, $form_state, $vocabulary->vid);
+    return taxonomy_vocabulary_confirm_reset_alphabetical($form, $form_state, $vocabulary->id());
   }
 
   $form_state['taxonomy']['vocabulary'] = $vocabulary;
@@ -168,7 +169,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
 
   $delta = 0;
   $term_deltas = array();
-  $tree = taxonomy_get_tree($vocabulary->vid, 0, NULL, TRUE);
+  $tree = taxonomy_get_tree($vocabulary->id(), 0, NULL, TRUE);
   $term = current($tree);
   do {
     // In case this tree is completely empty.
@@ -306,7 +307,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   $form['#page_entries'] = $page_entries;
   $form['#back_step'] = $back_step;
   $form['#forward_step'] = $forward_step;
-  $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add')));
+  $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/structure/taxonomy/' . $vocabulary->id() . '/add')));
 
   if ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
     $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);
@@ -360,7 +361,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
 
   $changed_terms = array();
-  $tree = taxonomy_get_tree($vocabulary->vid);
+  $tree = taxonomy_get_tree($vocabulary->id());
 
   if (empty($tree)) {
     return;
@@ -539,9 +540,9 @@ function theme_taxonomy_overview_terms($variables) {
  * Returns a rendered edit form to create a new term associated to the given vocabulary.
  */
 function taxonomy_term_add($vocabulary) {
-  $term = entity_create('taxonomy_term', array('vid' => $vocabulary->vid, 'vocabulary_machine_name' => $vocabulary->machine_name));
+  $term = entity_create('taxonomy_term', array('vid' => $vocabulary->id()));
   if (module_exists('language')) {
-    $term->langcode = language_get_default_langcode('taxonomy_term', $vocabulary->machine_name);
+    $term->langcode = language_get_default_langcode('taxonomy_term', $vocabulary->id());
   }
   return entity_get_form($term);
 }
@@ -556,14 +557,14 @@ function taxonomy_term_confirm_delete($form, &$form_state, Term $term) {
   // Always provide entity id in the same form key as in the entity edit form.
   $form['tid'] = array('#type' => 'value', '#value' => $term->tid);
 
-  $form_state['taxonomy']['vocabulary'] = taxonomy_vocabulary_load($term->vid);;
+  $form_state['taxonomy']['vocabulary'] = taxonomy_vocabulary_load($term->bundle());;
   $form['type'] = array('#type' => 'value', '#value' => 'term');
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
-  $form['vocabulary_machine_name'] = array('#type' => 'value', '#value' => $term->vocabulary_machine_name);
+  $form['vid'] = array('#type' => 'value', '#value' => $term->bundle());
   $form['delete'] = array('#type' => 'value', '#value' => TRUE);
   return confirm_form($form,
     t('Are you sure you want to delete the term %title?',
-    array('%title' => $term->label())),
+      array('%title' => $term->label())),
     'admin/structure/taxonomy',
     t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
     t('Delete'),
@@ -606,7 +607,7 @@ function taxonomy_vocabulary_confirm_delete($form, &$form_state, $vid) {
   $form['#submit'] = array('taxonomy_vocabulary_confirm_delete_submit');
   return confirm_form($form,
     t('Are you sure you want to delete the vocabulary %title?',
-    array('%title' => $vocabulary->name)),
+      array('%title' => $vocabulary->label())),
     'admin/structure/taxonomy',
     t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
     t('Delete'),
@@ -638,16 +639,15 @@ function taxonomy_vocabulary_confirm_reset_alphabetical($form, &$form_state, $vi
 
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');
   $form['vid'] = array('#type' => 'value', '#value' => $vid);
-  $form['machine_name'] = array('#type' => 'value', '#value' => $vocabulary->machine_name);
   $form['name'] = array('#type' => 'value', '#value' => $vocabulary->name);
   $form['reset_alphabetical'] = array('#type' => 'value', '#value' => TRUE);
   return confirm_form($form,
-                  t('Are you sure you want to reset the vocabulary %title to alphabetical order?',
-                  array('%title' => $vocabulary->name)),
-                  'admin/structure/taxonomy/' . $vocabulary->machine_name,
-                  t('Resetting a vocabulary will discard all custom ordering and sort items alphabetically.'),
-                  t('Reset to alphabetical'),
-                  t('Cancel'));
+    t('Are you sure you want to reset the vocabulary %title to alphabetical order?',
+      array('%title' => $vocabulary->label())),
+    'admin/structure/taxonomy/' . $vocabulary->id(),
+    t('Resetting a vocabulary will discard all custom ordering and sort items alphabetically.'),
+    t('Reset to alphabetical'),
+    t('Cancel'));
 }
 
 /**
@@ -662,5 +662,5 @@ function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_sta
     ->execute();
   drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
-  $form_state['redirect'] = 'admin/structure/taxonomy/' . $form_state['values']['machine_name'];
+  $form_state['redirect'] = 'admin/structure/taxonomy/' . $form_state['values']['vid'];
 }

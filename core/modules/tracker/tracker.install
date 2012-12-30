@@ -9,7 +9,7 @@
  * Implements hook_uninstall().
  */
 function tracker_uninstall() {
-  variable_del('tracker_index_nid');
+  state()->delete('tracker.index_nid');
 }
 
 /**
@@ -18,7 +18,7 @@ function tracker_uninstall() {
 function tracker_enable() {
   $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
   if ($max_nid != 0) {
-    variable_set('tracker_index_nid', $max_nid);
+    state()->set('tracker.index_nid', $max_nid);
     // To avoid timing out while attempting to do a complete indexing, we
     // simply call our cron job to remove stale records and begin the process.
     tracker_cron();
@@ -152,6 +152,15 @@ function tracker_update_8001() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-to-8.x".
+ * Convert tracker_index_nid variable to state system.
+ *
+ * @ingroup state_upgrade
+ */
+function tracker_update_8002() {
+  update_variables_to_state(array('tracker_index_nid' => 'tracker.index_nid'));
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

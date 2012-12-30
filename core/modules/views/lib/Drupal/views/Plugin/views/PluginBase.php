@@ -8,7 +8,9 @@
 namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
+use Drupal\views\ViewExecutable;
 
 abstract class PluginBase extends ComponentPluginBase {
 
@@ -59,6 +61,24 @@ abstract class PluginBase extends ComponentPluginBase {
     parent::__construct($configuration, $plugin_id, $discovery);
 
     $this->definition = $this->discovery->getDefinition($plugin_id) + $configuration;
+  }
+
+  /**
+   * Initialize the plugin.
+   *
+   * @param \Drupal\views\ViewExecutable $view
+   *   The view object.
+   * @param \Drupal\views\Plugin\views\display\DisplayPluginBase $display
+   *   The display handler.
+   * @param array $options
+   *   The options configured for this plugin.
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
+    $this->view = $view;
+    $this->displayHandler = $display;
+
+    $this->unpackOptions($this->options, $options);
   }
 
   /**

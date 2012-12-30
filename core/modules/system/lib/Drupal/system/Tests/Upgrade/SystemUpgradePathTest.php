@@ -87,7 +87,7 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
 
     $expected_config['taxonomy.settings'] = array(
       'override_selector' => '1',
-      'terms_per_page_count' => '32',
+      'terms_per_page_admin' => '32',
       'maintain_index_table' => '0',
     );
 

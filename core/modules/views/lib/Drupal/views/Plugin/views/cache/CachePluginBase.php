@@ -58,22 +58,6 @@ abstract class CachePluginBase extends PluginBase {
   protected $outputKey;
 
   /**
-   * Initialize the plugin.
-   *
-   * @param $view
-   *   The view object.
-   * @param $display
-   *   The display handler.
-   */
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
-    $this->displayHandler = &$display;
-
-    $this->unpackOptions($this->options, $options);
-  }
-
-  /**
    * Returns the outputKey property.
    *
    * @return string

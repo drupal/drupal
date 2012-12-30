@@ -1,6 +1,3 @@
-debug:
-  output: '0'
-  region: 'footer'
 display_extenders: { }
 no_javascript: '0'
 skip_cache: '0'

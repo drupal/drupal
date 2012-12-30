@@ -5,6 +5,7 @@
  * Functions for form and batch generation and processing.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Utility\Color;
 use Drupal\Core\Template\Attribute;
 
@@ -1160,9 +1161,9 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
       // If the section exists within $form_state['values'], even if the value
       // is NULL, copy it to $values.
       $section_exists = NULL;
-      $value = drupal_array_get_nested_value($form_state['values'], $section, $section_exists);
+      $value = NestedArray::getValue($form_state['values'], $section, $section_exists);
       if ($section_exists) {
-        drupal_array_set_nested_value($values, $section, $value);
+        NestedArray::setValue($values, $section, $value);
       }
     }
     // A button's #value does not require validation, so for convenience we
@@ -1176,8 +1177,8 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
       // dictated by #parents. If it is, copy it to $values, but do not override
       // what may already be in $values.
       $parents = $form_state['triggering_element']['#parents'];
-      if (!drupal_array_nested_key_exists($values, $parents) && drupal_array_get_nested_value($form_state['values'], $parents) === $button_value) {
-        drupal_array_set_nested_value($values, $parents, $button_value);
+      if (!NestedArray::keyExists($values, $parents) && NestedArray::getValue($form_state['values'], $parents) === $button_value) {
+        NestedArray::setValue($values, $parents, $button_value);
       }
 
       // Additionally, form_builder() places the button value in
@@ -2024,7 +2025,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       // Get the input for the current element. NULL values in the input need to
       // be explicitly distinguished from missing input. (see below)
       $input_exists = NULL;
-      $input = drupal_array_get_nested_value($form_state['input'], $element['#parents'], $input_exists);
+      $input = NestedArray::getValue($form_state['input'], $element['#parents'], $input_exists);
       // For browser-submitted forms, the submitted values do not contain values
       // for certain elements (empty multiple select, unchecked checkbox).
       // During initial form processing, we add explicit NULL values for such
@@ -2037,7 +2038,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       if (!$input_exists && !$form_state['rebuild'] && !$form_state['programmed']) {
         // Add the necessary parent keys to $form_state['input'] and sets the
         // element's input value to NULL.
-        drupal_array_set_nested_value($form_state['input'], $element['#parents'], NULL);
+        NestedArray::setValue($form_state['input'], $element['#parents'], NULL);
         $input_exists = TRUE;
       }
       // If we have input for the current element, assign it to the #value
@@ -2096,7 +2097,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
 
   // Set the element's value in $form_state['values'], but only, if its key
   // does not exist yet (a #value_callback may have already populated it).
-  if (!drupal_array_nested_key_exists($form_state['values'], $element['#parents'])) {
+  if (!NestedArray::keyExists($form_state['values'], $element['#parents'])) {
     form_set_value($element, $element['#value'], $form_state);
   }
 }
@@ -2209,7 +2210,7 @@ function form_state_values_clean(&$form_state) {
     $parents = $button['#parents'];
     $last_parent = array_pop($parents);
     $key_exists = NULL;
-    $values = &drupal_array_get_nested_value($form_state['values'], $parents, $key_exists);
+    $values = &NestedArray::getValue($form_state['values'], $parents, $key_exists);
     if ($key_exists && is_array($values)) {
       unset($values[$last_parent]);
     }
@@ -2343,6 +2344,36 @@ function form_type_checkboxes_value($element, $input = FALSE) {
   }
   else {
     return array();
+  }
+}
+
+/**
+ * Determines the value of a table form element.
+ *
+ * @param array $element
+ *   The form element whose value is being populated.
+ * @param array|false $input
+ *   The incoming input to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
+ *
+ * @return array
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
+ */
+function form_type_table_value(array $element, $input = FALSE) {
+  // If #multiple is FALSE, the regular default value of radio buttons is used.
+  if (!empty($element['#tableselect']) && !empty($element['#multiple'])) {
+    // Contrary to #type 'checkboxes', the default value of checkboxes in a
+    // table is built from the array keys (instead of array values) of the
+    // #default_value property.
+    // @todo D8: Remove this inconsistency.
+    if ($input === FALSE) {
+      $element += array('#default_value' => array());
+      return drupal_map_assoc(array_keys(array_filter($element['#default_value'])));
+    }
+    else {
+      return is_array($input) ? drupal_map_assoc($input) : array();
+    }
   }
 }
 
@@ -2550,7 +2581,7 @@ function form_type_token_value($element, $input = FALSE) {
  *   Form state array where the value change should be recorded.
  */
 function form_set_value($element, $value, &$form_state) {
-  drupal_array_set_nested_value($form_state['values'], $element['#parents'], $value, TRUE);
+  NestedArray::setValue($form_state['values'], $element['#parents'], $value, TRUE);
 }
 
 /**
@@ -3566,6 +3597,128 @@ function form_process_tableselect($element) {
 }
 
 /**
+ * #process callback for #type 'table' to add tableselect support.
+ *
+ * @param array $element
+ *   An associative array containing the properties and children of the
+ *   table element.
+ * @param array $form_state
+ *   The current state of the form.
+ *
+ * @return array
+ *   The processed element.
+ *
+ * @see form_process_tableselect()
+ * @see theme_tableselect()
+ */
+function form_process_table($element, &$form_state) {
+  if ($element['#tableselect']) {
+    if ($element['#multiple']) {
+      $value = is_array($element['#value']) ? $element['#value'] : array();
+    }
+    // Advanced selection behaviour makes no sense for radios.
+    else {
+      $element['#js_select'] = FALSE;
+    }
+    // Add a "Select all" checkbox column to the header.
+    // @todo D8: Rename into #select_all?
+    if ($element['#js_select']) {
+      $element['#attached']['library'][] = array('system', 'drupal.tableselect');
+      array_unshift($element['#header'], array('class' => array('select-all')));
+    }
+    // Add an empty header column for radio buttons or when a "Select all"
+    // checkbox is not desired.
+    else {
+      array_unshift($element['#header'], '');
+    }
+
+    if (!isset($element['#default_value']) || $element['#default_value'] === 0) {
+      $element['#default_value'] = array();
+    }
+    // Create a checkbox or radio for each row in a way that the value of the
+    // tableselect element behaves as if it had been of #type checkboxes or
+    // radios.
+    foreach (element_children($element) as $key) {
+      // Do not overwrite manually created children.
+      if (!isset($element[$key]['select'])) {
+        // Determine option label; either an assumed 'title' column, or the
+        // first available column containing a #title or #markup.
+        // @todo Consider to add an optional $element[$key]['#title_key']
+        //   defaulting to 'title'?
+        $title = '';
+        if (!empty($element[$key]['title']['#title'])) {
+          $title = $element[$key]['title']['#title'];
+        }
+        else {
+          foreach (element_children($element[$key]) as $column) {
+            if (isset($element[$key][$column]['#title'])) {
+              $title = $element[$key][$column]['#title'];
+              break;
+            }
+            if (isset($element[$key][$column]['#markup'])) {
+              $title = $element[$key][$column]['#markup'];
+              break;
+            }
+          }
+        }
+        if ($title !== '') {
+          $title = t('Update !title', array('!title' => $title));
+        }
+
+        // Prepend the select column to existing columns.
+        $element[$key] = array('select' => array()) + $element[$key];
+        $element[$key]['select'] += array(
+          '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
+          '#title' => $title,
+          '#title_display' => 'invisible',
+          // @todo If rows happen to use numeric indexes instead of string keys,
+          //   this results in a first row with $key === 0, which is always FALSE.
+          '#return_value' => $key,
+          '#attributes' => $element['#attributes'],
+        );
+        $element_parents = array_merge($element['#parents'], array($key));
+        if ($element['#multiple']) {
+          $element[$key]['select']['#default_value'] = isset($value[$key]) ? $key : NULL;
+          $element[$key]['select']['#parents'] = $element_parents;
+        }
+        else {
+          $element[$key]['select']['#default_value'] = ($element['#default_value'] == $key ? $key : NULL);
+          $element[$key]['select']['#parents'] = $element['#parents'];
+          $element[$key]['select']['#id'] = drupal_html_id('edit-' . implode('-', $element_parents));
+        }
+      }
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * #element_validate callback for #type 'table'.
+ *
+ * @param array $element
+ *   An associative array containing the properties and children of the
+ *   table element.
+ * @param array $form_state
+ *   The current state of the form.
+ */
+function form_validate_table($element, &$form_state) {
+  // Skip this validation if the button to submit the form does not require
+  // selected table row data.
+  if (empty($form_state['triggering_element']['#tableselect'])) {
+    return;
+  }
+  if ($element['#multiple']) {
+    if (!is_array($element['#value']) || !count(array_filter($element['#value']))) {
+      form_error($element, t('No items selected.'));
+    }
+  }
+  elseif (!isset($element['#value']) || $element['#value'] === '') {
+    form_error($element, t('No item selected.'));
+  }
+}
+
+/**
  * Processes a machine-readable name form element.
  *
  * @param $element
@@ -3637,7 +3790,7 @@ function form_process_machine_name($element, &$form_state) {
   // complete form in $form_state. By reference, because we may need to append
   // a #field_suffix that will hold the live preview.
   $key_exists = NULL;
-  $source = drupal_array_get_nested_value($form_state['complete_form'], $element['#machine_name']['source'], $key_exists);
+  $source = NestedArray::getValue($form_state['complete_form'], $element['#machine_name']['source'], $key_exists);
   if (!$key_exists) {
     return $element;
   }
@@ -3655,7 +3808,7 @@ function form_process_machine_name($element, &$form_state) {
     $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
 
     $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
-    drupal_array_set_nested_value($form_state['complete_form'], $parents, $source['#field_suffix']);
+    NestedArray::setValue($form_state['complete_form'], $parents, $source['#field_suffix']);
   }
 
   $js_settings = array(

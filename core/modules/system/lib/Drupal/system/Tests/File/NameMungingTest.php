@@ -38,6 +38,15 @@ class NameMungingTest extends FileTestBase {
   }
 
   /**
+   * Tests munging with a null byte in the filename.
+   */
+  function testMungeNullByte() {
+    $prefix = $this->randomName();
+    $filename = $prefix . '.' . $this->bad_extension . "\0.txt";
+    $this->assertEqual(file_munge_filename($filename, ''), $prefix . '.' . $this->bad_extension . '_.txt', 'A filename with a null byte is correctly munged to remove the null byte.');
+  }
+
+  /**
    * If the allow_insecure_uploads variable evaluates to true, the file should
    * come out untouched, no matter how evil the filename.
    */

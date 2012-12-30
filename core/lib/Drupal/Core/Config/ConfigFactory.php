@@ -69,8 +69,6 @@ class ConfigFactory {
    *   A configuration object with the given $name.
    */
   public function get($name) {
-    global $conf;
-
     if (isset($this->cache[$name])) {
       return $this->cache[$name];
     }

@@ -49,13 +49,15 @@ class FieldAccessTest extends FieldTestBase {
       'widget' => array(
         'type' => 'text_textfield',
       ),
-      'display' => array(
-        'default' => array(
-          'type' => 'text_default',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+
+    // Assign display properties for the 'default' and 'teaser' view modes.
+    foreach (array('default', 'teaser') as $view_mode) {
+      entity_get_display('node', $this->content_type, $view_mode)
+        ->setComponent($this->field['field_name'])
+        ->save();
+    }
 
     // Create test node.
     $this->test_view_field_value = 'This is some text';

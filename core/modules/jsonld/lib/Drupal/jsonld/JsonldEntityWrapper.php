@@ -8,6 +8,9 @@
 namespace Drupal\jsonld;
 
 use Drupal\Core\Entity\Entity;
+use Drupal\rdf\SiteSchema\SiteSchema;
+use Drupal\rdf\SiteSchema\SiteSchemaManager;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Provide an interface for JsonldNormalizer to get required properties.
@@ -24,7 +27,7 @@ class JsonldEntityWrapper {
   /**
    * The entity that this object wraps.
    *
-   * @var Drupal\Core\Entity\EntityNG
+   * @var \Drupal\Core\Entity\EntityNG
    */
   protected $entity;
 
@@ -43,19 +46,29 @@ class JsonldEntityWrapper {
   protected $serializer;
 
   /**
+   * The site schema manager.
+   *
+   * @var \Drupal\rdf\SiteSchema\SiteSchemaManager
+   */
+  protected $siteSchemaManager;
+
+  /**
    * Constructor.
    *
-   * @param string $entity
+   * @param \Drupal\Core\Entity\EntityNG $entity
    *   The Entity API entity
    * @param string $format.
    *   The format.
    * @param \Symfony\Component\Serializer\Serializer $serializer
    *   The serializer, provided by the SerializerAwareNormaizer.
+   * @param \Drupal\rdf\SiteSchema\SiteSchemaManager $site_schema_manager
+   *   The site schema manager.
    */
-  public function __construct(Entity $entity, $format, $serializer) {
+  public function __construct(Entity $entity, $format, Serializer $serializer, SiteSchemaManager $site_schema_manager) {
     $this->entity = $entity;
     $this->format = $format;
     $this->serializer = $serializer;
+    $this->siteSchemaManager = $site_schema_manager;
   }
 
   /**
@@ -72,13 +85,21 @@ class JsonldEntityWrapper {
   /**
    * Get the type URI.
    *
-   * @todo update or remove this method once the schema dependency to RDF module
-   * is sorted out.
+   * @todo Once RdfMappingManager has a mapOutputTypes event, use that instead
+   * of simply returning the site schema URI.
    */
   public function getTypeUri() {
     $entity_type = $this->entity->entityType();
     $bundle = $this->entity->bundle();
-    return url('site-schema/content-staging/' . $entity_type . '/' . $bundle, array('absolute' => TRUE));
+    switch ($this->format) {
+      case 'drupal_jsonld':
+        $schema_path = SiteSchema::CONTENT_DEPLOYMENT;
+        break;
+      case 'jsonld':
+        $schema_path = SiteSchema::SYNDICATION;
+    }
+    $schema = $this->siteSchemaManager->getSchema($schema_path);
+    return $schema->bundle($entity_type, $bundle)->getUri();
   }
 
   /**

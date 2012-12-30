@@ -19,7 +19,7 @@ class TermFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $term) {
-    $vocabulary = taxonomy_vocabulary_load($term->vid);
+    $vocabulary = taxonomy_vocabulary_load($term->bundle());
 
     $parent = array_keys(taxonomy_term_load_parents($term->tid));
     $form_state['taxonomy']['parent'] = $parent;
@@ -41,18 +41,13 @@ class TermFormController extends EntityFormController {
       '#format' => $term->format,
       '#weight' => 0,
     );
-    $language_configuration = module_invoke('language', 'get_default_configuration', 'taxonomy_term', $vocabulary->machine_name);
+    $language_configuration = module_invoke('language', 'get_default_configuration', 'taxonomy_term', $vocabulary->id());
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),
       '#languages' => LANGUAGE_ALL,
       '#default_value' => $term->langcode,
       '#access' => !is_null($language_configuration['language_hidden']) && !$language_configuration['language_hidden'],
-    );
-
-    $form['vocabulary_machine_name'] = array(
-      '#type' => 'value',
-      '#value' => isset($term->vocabulary_machine_name) ? $term->vocabulary_machine_name : $vocabulary->name,
     );
 
     $form['relations'] = array(
@@ -69,7 +64,7 @@ class TermFormController extends EntityFormController {
     // before hook_form_alter to provide scalable alternatives.
     if (!config('taxonomy.settings')->get('override_selector')) {
       $parent = array_keys(taxonomy_term_load_parents($term->tid));
-      $children = taxonomy_get_tree($vocabulary->vid, $term->tid);
+      $children = taxonomy_get_tree($vocabulary->id(), $term->tid);
 
       // A term can't be the child of itself, nor of its children.
       foreach ($children as $child) {
@@ -77,7 +72,7 @@ class TermFormController extends EntityFormController {
       }
       $exclude[] = $term->tid;
 
-      $tree = taxonomy_get_tree($vocabulary->vid);
+      $tree = taxonomy_get_tree($vocabulary->id());
       $options = array('<' . t('root') . '>');
       if (empty($parent)) {
         $parent = array(0);
@@ -108,7 +103,7 @@ class TermFormController extends EntityFormController {
 
     $form['vid'] = array(
       '#type' => 'value',
-      '#value' => $vocabulary->vid,
+      '#value' => $vocabulary->id(),
     );
 
     $form['tid'] = array(

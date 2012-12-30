@@ -1,0 +1,6 @@
+name = Edit test
+description = Support module for the Edit module tests.
+core = 8.x
+package = Testing
+version = VERSION
+hidden = TRUE

@@ -5,6 +5,7 @@
  * Provides the Views' administrative interface.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\views_ui\ViewUI;
@@ -150,7 +151,7 @@ function views_ui_add_limited_validation($element, &$form_state) {
   $array_parents = $element['#array_parents'];
   array_pop($array_parents);
   $array_parents[] = $element['#views_ui_ajax_data']['trigger_key'];
-  $ajax_triggering_element = drupal_array_get_nested_value($form_state['complete_form'], $array_parents);
+  $ajax_triggering_element = NestedArray::getValue($form_state['complete_form'], $array_parents);
 
   // Limit this button's validation to the AJAX triggering element, so it can
   // update the form for that change without requiring that the rest of the
@@ -188,7 +189,7 @@ function views_ui_add_ajax_wrapper($element, &$form_state) {
     // This was earlier stored in a property on the element.
     $complete_form = &$form_state['complete_form'];
     $refresh_parents = $element['#views_ui_ajax_data']['refresh_parents'];
-    $refresh_element = drupal_array_get_nested_value($complete_form, $refresh_parents);
+    $refresh_element = NestedArray::getValue($complete_form, $refresh_parents);
 
     // The HTML ID that AJAX expects was also stored in a property on the
     // element, so use that information to insert the wrapper <div> here.
@@ -202,7 +203,7 @@ function views_ui_add_ajax_wrapper($element, &$form_state) {
 
     // Copy the element that needs to be refreshed back into the form, with our
     // modifications to it.
-    drupal_array_set_nested_value($complete_form, $refresh_parents, $refresh_element);
+    NestedArray::setValue($complete_form, $refresh_parents, $refresh_element);
   }
 
   return $element;
@@ -218,7 +219,7 @@ function views_ui_ajax_update_form($form, $form_state) {
   // The region that needs to be updated was stored in a property of the
   // triggering element by views_ui_add_ajax_trigger(), so all we have to do is
   // retrieve that here.
-  return drupal_array_get_nested_value($form, $form_state['triggering_element']['#views_ui_ajax_data']['refresh_parents']);
+  return NestedArray::getValue($form, $form_state['triggering_element']['#views_ui_ajax_data']['refresh_parents']);
 }
 
 /**
@@ -251,8 +252,8 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
     $vocabularies = array();
     if (!empty($field['settings']['allowed_values'])) {
       foreach ($field['settings']['allowed_values'] as $tree) {
-        if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {
-          $vocabularies[$vocabulary->vid] = $tree['vocabulary'];
+        if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
+          $vocabularies[$vocabulary->id()] = $tree['vocabulary'];
         }
       }
     }
@@ -1440,11 +1441,11 @@ function views_ui_config_item_form($form, &$form_state) {
         }
 
         // If this relationship is valid for this type, add it to the list.
-        $data = views_fetch_data($relationship['table']);
+        $data = drupal_container()->get('views.views_data')->get($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
         $base_fields = views_fetch_fields($base, $form_state['type'], $executable->display_handler->useGroupBy());
         if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
-          $relationship_handler->init($executable, $relationship);
+          $relationship_handler->init($executable, $executable->display_handler, $relationship);
           $relationship_options[$relationship['id']] = $relationship_handler->label();
         }
       }
@@ -1556,7 +1557,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Create a new handler and unpack the options from the form onto it. We
   // can use that for storage.
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
-  $handler->init($executable, $item);
+  $handler->init($executable, $executable->display_handler, $item);
 
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
@@ -1611,7 +1612,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // Create a new handler and unpack the options from the form onto it. We
   // can use that for storage.
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
-  $handler->init($executable, $item);
+  $handler->init($executable, $executable->display_handler, $item);
 
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
@@ -1664,7 +1665,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $handler->init($view, $item);
+      $handler->init($executable, $executable->display_handler, $item);
       $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
@@ -1687,12 +1688,13 @@ function views_ui_config_item_group_form_submit($form, &$form_state) {
   $id = $form_state['id'];
 
   $handler = views_get_handler($item['table'], $item['field'], $type);
-  $handler->init($form_state['view']->get('executable'), $item);
+  $executable = $form_state['view']->get('executable');
+  $handler->init($executable, $executable->display_handler, $item);
 
   $handler->submitGroupByForm($form, $form_state);
 
   // Store the item back on the view
-  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $executable->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -1766,7 +1768,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $handler->init($view, $item);
+      $handler->init($executable, $executable->display_handler, $item);
       $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
@@ -1988,32 +1990,6 @@ function views_ui_admin_settings_advanced() {
     '#default_value' => $config->get('no_javascript'),
   );
 
-  $form['debug']['debug_output'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable views performance statistics/debug messages via the Devel module'),
-    '#description' => t("Check this to enable some Views query and performance statistics/debug messages <em>if Devel is installed</em>."),
-    '#default_value' => $config->get('debug.output'),
-  );
-
-  $regions = array();
-  $regions['watchdog'] = t('Watchdog');
-  if (module_exists('devel')) {
-    $regions['message'] = t('Devel message(dpm)');
-    $regions['drupal_debug'] = t('Devel logging (tmp://drupal_debug.txt)');
-  }
-
-  $form['debug']['debug_region'] = array(
-    '#type' => 'select',
-    '#title' => t('Page region to output performance statistics/debug messages'),
-    '#default_value' => $config->get('debug.region'),
-    '#options' => $regions,
-    '#states' => array(
-      'visible' => array(
-        ':input[name="views_devel_output"]' => array('checked' => TRUE),
-      ),
-    ),
-  );
-
   $options = views_fetch_plugin_names('display_extender');
   if (!empty($options)) {
     $form['extenders'] = array(
@@ -2050,8 +2026,6 @@ function views_ui_admin_settings_advanced_submit(&$form, &$form_state) {
     ->set('skip_cache', $form_state['values']['skip_cache'])
     ->set('sql_signature', $form_state['values']['sql_signature'])
     ->set('no_javascript', $form_state['values']['no_javascript'])
-    ->set('debug.output', $form_state['values']['debug_output'])
-    ->set('debug.region', $form_state['values']['debug_region'])
     ->set('display_extenders', isset($form_state['values']['display_extenders']) ? $form_state['values']['display_extenders'] : array())
     ->save();
 }
@@ -2154,7 +2128,7 @@ function _views_sort_types($a, $b) {
 function views_fetch_fields($base, $type, $grouping = FALSE, $sub_type = NULL) {
   static $fields = array();
   if (empty($fields)) {
-    $data = views_fetch_data();
+    $data = drupal_container()->get('views.views_data')->get();
     $start = microtime(TRUE);
     // This constructs this ginormous multi dimensional array to
     // collect the important data about fields. In the end,
@@ -2286,6 +2260,7 @@ function views_ui_form_button_was_clicked($element, &$form_state) {
  */
 function views_ui_field_list() {
   $views = views_get_all_views();
+  $data = drupal_container()->get('views.views_data');
 
   // Fetch all fieldapi fields which are used in views
   // Therefore search in all views, displays and handler-types.
@@ -2298,12 +2273,12 @@ function views_ui_field_list() {
       if ($executable->setDisplay($display_id)) {
         foreach ($handler_types as $type => $info) {
           foreach ($executable->getItems($type, $display_id) as $item) {
-            $data = views_fetch_data($item['table']);
-            if (isset($data[$item['field']]) && isset($data[$item['field']][$type])
-              && $data = $data[$item['field']][$type]) {
+            $table_data = $data->get($item['table']);
+            if (isset($table_data[$item['field']]) && isset($table_data[$item['field']][$type])
+              && $field_data = $table_data[$item['field']][$type]) {
               // The final check that we have a fieldapi field now.
-              if (isset($data['field_name'])) {
-                $fields[$data['field_name']][$view->get('name')] = $view->get('name');
+              if (isset($field_data['field_name'])) {
+                $fields[$field_data['field_name']][$view->get('name')] = $view->get('name');
               }
             }
           }

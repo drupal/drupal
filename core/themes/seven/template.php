@@ -106,18 +106,8 @@ function seven_tablesort_indicator($variables) {
 }
 
 /**
- * Implements hook_css_alter().
+ * Implements hook_preprocess_install_page().
  */
-function seven_css_alter(&$css) {
-  // Use Seven's vertical tabs style instead of the default one.
-  if (isset($css['core/misc/vertical-tabs.css'])) {
-    $css['core/misc/vertical-tabs.css']['data'] = drupal_get_path('theme', 'seven') . '/vertical-tabs.css';
-  }
-  if (isset($css['core/misc/vertical-tabs-rtl.css'])) {
-    $css['core/misc/vertical-tabs-rtl.css']['data'] = drupal_get_path('theme', 'seven') . '/vertical-tabs-rtl.css';
-  }
-  // Use Seven's jQuery UI theme style instead of the default one.
-  if (isset($css['core/misc/ui/themes/base/jquery.ui.theme.css'])) {
-    $css['core/misc/ui/themes/base/jquery.ui.theme.css']['data'] = drupal_get_path('theme', 'seven') . '/jquery.ui.theme.css';
-  }
+function seven_preprocess_install_page(&$variables) {
+  drupal_add_js(drupal_get_path('theme', 'seven') . '/js/mobile.install.js');
 }

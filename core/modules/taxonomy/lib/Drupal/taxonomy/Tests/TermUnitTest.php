@@ -25,7 +25,7 @@ class TermUnitTest extends TaxonomyTestBase {
     $valid_term = $this->createTerm($vocabulary);
     // Delete a valid term.
     taxonomy_term_delete($valid_term->tid);
-    $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->vid));
+    $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->id()));
     $this->assertTrue(empty($terms), 'Vocabulary is empty after deletion');
 
     // Delete an invalid term. Should not throw any notices.
@@ -65,11 +65,11 @@ class TermUnitTest extends TaxonomyTestBase {
      * ------ term[3] | depth: 3
      */
     // Count $term[1] parents with $max_depth = 1.
-    $tree = taxonomy_get_tree($vocabulary->vid, $term[1]->tid, 1);
+    $tree = taxonomy_get_tree($vocabulary->id(), $term[1]->tid, 1);
     $this->assertEqual(1, count($tree), 'We have one parent with depth 1.');
 
     // Count all vocabulary tree elements.
-    $tree = taxonomy_get_tree($vocabulary->vid);
+    $tree = taxonomy_get_tree($vocabulary->id());
     $this->assertEqual(8, count($tree), 'We have all vocabulary tree elements.');
 
     // Count elements in every tree depth.

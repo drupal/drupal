@@ -43,33 +43,12 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   /**
-   * Tests that stylesheets in module .info files are loaded.
-   */
-  function testModuleInfo() {
-    $this->drupalGet('');
-
-    // Verify common_test.css in a STYLE media="all" tag.
-    $elements = $this->xpath('//style[@media=:media and contains(text(), :filename)]', array(
-      ':media' => 'all',
-      ':filename' => 'tests/modules/common_test/common_test.css',
-    ));
-    $this->assertTrue(count($elements), "Stylesheet with media 'all' in module .info file found.");
-
-    // Verify common_test.print.css in a STYLE media="print" tag.
-    $elements = $this->xpath('//style[@media=:media and contains(text(), :filename)]', array(
-      ':media' => 'print',
-      ':filename' => 'tests/modules/common_test/common_test.print.css',
-    ));
-    $this->assertTrue(count($elements), "Stylesheet with media 'print' in module .info file found.");
-  }
-
-  /**
    * Tests adding a file stylesheet.
    */
   function testAddFile() {
     $path = drupal_get_path('module', 'simpletest') . '/simpletest.css';
     $css = drupal_add_css($path);
-    $this->assertEqual($css[$path]['data'], $path, 'Adding a CSS file caches it properly.');
+    $this->assertEqual($css['simpletest.css']['data'], $path);
   }
 
   /**

@@ -1,2 +1,3 @@
 main_links: main
 secondary_links: account
+override_parent_selector: '0'

@@ -219,7 +219,7 @@ class ModuleTest extends ViewUnitTestBase {
    * Ensure that a certain handler is a instance of a certain table/field.
    */
   function assertInstanceHandler($handler, $table, $field, $id) {
-    $table_data = views_fetch_data($table);
+    $table_data = drupal_container()->get('views.views_data')->get($table);
     $field_data = $table_data[$field][$id];
 
     $this->assertEqual($field_data['id'], $handler->getPluginId());

@@ -13,88 +13,6 @@
 function taxonomy_views_data() {
   $data = array();
 
-  // taxonomy_vocabulary table
-
-  $data['taxonomy_vocabulary']['table']['group']  = t('Taxonomy vocabulary');
-
-  $data['taxonomy_vocabulary']['table']['join'] = array(
-    // vocabulary links to taxonomy_term_data directly via vid.
-    'taxonomy_term_data' => array(
-      'left_field' => 'vid',
-      'field' => 'vid',
-    ),
-  );
-
-  // vocabulary name
-  $data['taxonomy_vocabulary']['name'] = array(
-    'title' => t('Name'), // The item it appears as on the UI,
-    'field' => array(
-      'help' => t('Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the "Taxonomy: Term" field is; and can similarly cause duplicates.'),
-      'id' => 'standard',
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'id' => 'standard',
-      'help' => t('The taxonomy vocabulary name'),
-    ),
-  );
-  $data['taxonomy_vocabulary']['machine_name'] = array(
-    'title' => t('Machine name'), // The item it appears as on the UI,
-    'field' => array(
-      'help' => t('Machine-Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the "Taxonomy: Term" field is; and can similarly cause duplicates.'),
-      'id' => 'standard',
-      'click sortable' => TRUE,
-    ),
-    'filter' => array(
-      'help' => t('Filter the results of "Taxonomy: Term" to a particular vocabulary.'),
-      'id' => 'vocabulary_machine_name',
-    ),
-    'argument' => array(
-      'help' => t('Filter the results of "Taxonomy: Term" to a particular vocabulary.'),
-      'id' => 'vocabulary_machine_name',
-    ),
-  );
-  $data['taxonomy_vocabulary']['vid'] = array(
-    'title' => t('Vocabulary ID'), // The item it appears as on the UI,
-    'help' => t('The taxonomy vocabulary ID'),
-    'field' => array(
-      'id' => 'numeric',
-      'click sortable' => TRUE,
-    ),
-    'argument' => array(
-      'id' => 'vocabulary_vid',
-      'name field' => 'name',
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-  );
-  $data['taxonomy_vocabulary']['description'] = array(
-    'title' => t('Description'), // The item it appears as on the UI,
-    'help' => t('The taxonomy vocabulary description'),
-    'field' => array(
-      'id' => 'standard',
-    ),
-  );
-  $data['taxonomy_vocabulary']['weight'] = array(
-    'title' => t('Weight'),
-    'help' => t('The taxonomy vocabulary weight'),
-    'field' => array(
-      'id' => 'numeric',
-      'click sortable' => TRUE,
-    ),
-    'argument' => array(
-      'id' => 'numeric',
-      'name field' => 'weight',
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'id' => 'numeric',
-    ),
-  );
-
  // taxonomy_term_data table
 
   $data['taxonomy_term_data']['table']['group']  = t('Taxonomy term');
@@ -110,10 +28,6 @@ function taxonomy_views_data() {
 
   // The term data table
   $data['taxonomy_term_data']['table']['join'] = array(
-    'taxonomy_vocabulary' => array(
-      'field' => 'vid',
-      'left_field' => 'vid',
-    ),
     // This is provided for many_to_one argument
     'taxonomy_index' => array(
       'field' => 'tid',

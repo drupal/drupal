@@ -93,7 +93,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     foreach ($sorts as $sort_id => $sort) {
       $sort_options[$sort_id] = "$sort[group]: $sort[title]";
     }
-    $base_table_data = views_fetch_data($this->definition['base']);
+    $base_table_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
 
     $form['subquery_sort'] = array(
       '#type' => 'select',
@@ -219,7 +219,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     $temp_view->args[] = '**CORRELATED**';
 
     // Add the base table ID field.
-    $views_data = views_fetch_data($this->definition['base']);
+    $views_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
     $base_field = $views_data['table']['base']['field'];
     $temp_view->addItem('default', 'field', $this->definition['base'], $this->definition['field']);
 
@@ -341,7 +341,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    */
   public function query() {
     // Figure out what base table this relationship brings to the party.
-    $table_data = views_fetch_data($this->definition['base']);
+    $table_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
 
     $this->ensureMyTable();

@@ -51,6 +51,13 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
   protected $list = array();
 
   /**
+   * Flag to indicate if this field has been set.
+   *
+   * @var bool
+   */
+  protected $isset = FALSE;
+
+  /**
    * Implements TypedDataInterface::getValue().
    */
   public function getValue() {
@@ -68,6 +75,7 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    *   An array of values of the field items.
    */
   public function setValue($values) {
+    $this->isset = TRUE;
     if (isset($values) && $values !== array()) {
       // Support passing in only the value of the first item.
       if (!is_array($values) || !is_numeric(current(array_keys($values)))) {
@@ -98,6 +106,14 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
     else {
       $this->list = array();
     }
+  }
+
+  /**
+   * Mark this field as not set.
+   */
+  public function unsetValue() {
+    $this->list = array();
+    $this->isset = FALSE;
   }
 
   /**
@@ -256,13 +272,14 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    */
   public function __set($property_name, $value) {
     $this->offsetGet(0)->__set($property_name, $value);
+    $this->isset = TRUE;
   }
 
   /**
    * Delegate.
    */
   public function __isset($property_name) {
-    return $this->offsetGet(0)->__isset($property_name);
+    return $this->isset && $this->offsetGet(0)->__isset($property_name);
   }
 
   /**
@@ -282,6 +299,15 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
       }
     }
     return TRUE;
+  }
+
+  /**
+   * Determines if this field has been set.
+   *
+   * @return bool
+   */
+  public function valueIsSet() {
+    return $this->isset;
   }
 
   /**

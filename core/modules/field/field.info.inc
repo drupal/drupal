@@ -522,7 +522,7 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
 }
 
 /**
- * Returns the maximum weight of all the components in an entity.
+ * Returns the maximum weight of all the components in a form entity.
  *
  * This includes fields, 'extra_fields', and other components added by
  * third-party modules (e.g. field_group).
@@ -531,33 +531,25 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
  *   The type of entity; e.g. 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
- * @param $context
- *   The context for which the maximum weight is requested. Either 'form', or
- *   the name of a view mode.
  *
  * @return
  *   The maximum weight of the entity's components, or NULL if no components
  *   were found.
  */
-function field_info_max_weight($entity_type, $bundle, $context) {
+function field_info_max_weight($entity_type, $bundle) {
   $weights = array();
 
   // Collect weights for fields.
   foreach (field_info_instances($entity_type, $bundle) as $instance) {
-    if ($context == 'form') {
-      $weights[] = $instance['widget']['weight'];
-    }
-    elseif (isset($instance['display'][$context]['weight'])) {
-      $weights[] = $instance['display'][$context]['weight'];
-    }
+    $weights[] = $instance['widget']['weight'];
   }
   // Collect weights for extra fields.
-  foreach (field_info_extra_fields($entity_type, $bundle, $context) as $extra) {
+  foreach (field_info_extra_fields($entity_type, $bundle, 'form') as $extra) {
     $weights[] = $extra['weight'];
   }
 
   // Let other modules feedback about their own additions.
-  $weights = array_merge($weights, module_invoke_all('field_info_max_weight', $entity_type, $bundle, $context));
+  $weights = array_merge($weights, module_invoke_all('field_info_max_weight', $entity_type, $bundle, 'form'));
   $max_weight = $weights ? max($weights) : NULL;
 
   return $max_weight;

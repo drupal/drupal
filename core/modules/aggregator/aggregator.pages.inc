@@ -310,6 +310,7 @@ function theme_aggregator_summary_item($variables) {
  * @see aggregator-wrapper.tpl.php
  */
 function template_preprocess_aggregator_wrapper(&$variables) {
+  drupal_add_css(drupal_get_path('module', 'aggregator') . '/aggregator.theme.css');
   $variables['pager'] = theme('pager');
 }
 

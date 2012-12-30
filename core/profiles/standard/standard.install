@@ -265,21 +265,21 @@ function standard_install() {
   $vocabulary = entity_create('taxonomy_vocabulary', array(
     'name' => st('Tags'),
     'description' => $description,
-    'machine_name' => 'tags',
+    'vid' => 'tags',
     'langcode' => language_default()->langcode,
     'help' => $help,
   ));
   taxonomy_vocabulary_save($vocabulary);
 
   $field = array(
-    'field_name' => 'field_' . $vocabulary->machine_name,
+    'field_name' => 'field_' . $vocabulary->id(),
     'type' => 'taxonomy_term_reference',
     // Set cardinality to unlimited for tagging.
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'settings' => array(
       'allowed_values' => array(
         array(
-          'vocabulary' => $vocabulary->machine_name,
+          'vocabulary' => $vocabulary->id(),
           'parent' => 0,
         ),
       ),
@@ -288,7 +288,7 @@ function standard_install() {
   field_create_field($field);
 
   $instance = array(
-    'field_name' => 'field_' . $vocabulary->machine_name,
+    'field_name' => 'field_' . $vocabulary->id(),
     'entity_type' => 'node',
     'label' => 'Tags',
     'bundle' => 'article',
@@ -297,19 +297,22 @@ function standard_install() {
       'type' => 'taxonomy_autocomplete',
       'weight' => -4,
     ),
-    'display' => array(
-      'default' => array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ),
-      'teaser' => array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ),
-    ),
   );
   field_create_instance($instance);
 
+  // Assign display settings for the 'default' and 'teaser' view modes.
+  entity_get_display('node', 'article', 'default')
+    ->setComponent($instance['field_name'], array(
+      'type' => 'taxonomy_term_reference_link',
+      'weight' => 10,
+    ))
+    ->save();
+  entity_get_display('node', 'article', 'teaser')
+    ->setComponent($instance['field_name'], array(
+      'type' => 'taxonomy_term_reference_link',
+      'weight' => 10,
+    ))
+    ->save();
 
   // Create an image field named "Image", enabled for the 'article' content type.
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
@@ -361,23 +364,26 @@ function standard_install() {
       ),
       'weight' => -1,
     ),
-
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'type' => 'image',
-        'settings' => array('image_style' => 'large', 'image_link' => ''),
-        'weight' => -1,
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'type' => 'image',
-        'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
-        'weight' => -1,
-      ),
-    ),
   );
   field_create_instance($instance);
+
+  // Assign display settings for the 'default' and 'teaser' view modes.
+  entity_get_display('node', 'article', 'default')
+    ->setComponent($instance['field_name'], array(
+      'label' => 'hidden',
+      'type' => 'image',
+      'settings' => array('image_style' => 'large', 'image_link' => ''),
+      'weight' => -1,
+    ))
+    ->save();
+  entity_get_display('node', 'article', 'teaser')
+    ->setComponent($instance['field_name'], array(
+      'label' => 'hidden',
+      'type' => 'image',
+      'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
+      'weight' => -1,
+    ))
+    ->save();
 
   // Create user picture field.
   module_load_install('user');

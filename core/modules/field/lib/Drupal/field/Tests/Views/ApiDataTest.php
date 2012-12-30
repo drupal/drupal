@@ -71,9 +71,6 @@ class ApiDataTest extends FieldTestBase {
       );
       $this->nodes[] = $this->drupalCreateNode($edit);
     }
-
-    // Reset views data cache.
-    $this->clearViewsCaches();
   }
 
   /**
@@ -82,7 +79,7 @@ class ApiDataTest extends FieldTestBase {
    * We check data structure for both node and node revision tables.
    */
   function testViewsData() {
-    $data = views_fetch_data();
+    $data = drupal_container()->get('views.views_data')->get();
 
     // Check the table and the joins of the first field.
     // Attached to node only.

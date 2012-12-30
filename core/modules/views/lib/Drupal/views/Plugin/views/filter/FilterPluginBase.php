@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\ViewExecutable;
 
@@ -74,13 +75,15 @@ abstract class FilterPluginBase extends HandlerBase {
   var $always_required = FALSE;
 
   /**
+   * Overrides \Drupal\views\Plugin\views\HandlerBase::init().
+   *
    * Provide some extra help to get the operator/value easier to use.
    *
    * This likely has to be overridden by filters which are more complex
    * than simple operator/value.
    */
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     $this->operator = $this->options['operator'];
     $this->value = $this->options['value'];

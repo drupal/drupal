@@ -9,6 +9,7 @@ namespace Drupal\views;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\Reference;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -21,17 +22,19 @@ class ViewsBundle extends Bundle {
    */
   public function build(ContainerBuilder $container) {
     foreach (ViewExecutable::getPluginTypes() as $type) {
-      if ($type == 'join') {
-        $container->register('plugin.manager.views.join', 'Drupal\views\Plugin\Type\JoinManager');
-      }
-      elseif ($type == 'wizard') {
-        $container->register('plugin.manager.views.wizard', 'Drupal\views\Plugin\Type\WizardManager');
-      }
-      else {
-        $container->register("plugin.manager.views.$type", 'Drupal\views\Plugin\Type\PluginManager')
-          ->addArgument($type);
-      }
+      $container->register("plugin.manager.views.$type", 'Drupal\views\Plugin\ViewsPluginManager')
+        ->addArgument($type);
     }
+
+    $container
+      ->register('cache.views_info', 'Drupal\Core\Cache\CacheBackendInterface')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('views_info');
+
+    $container->register('views.views_data', 'Drupal\views\ViewsDataCache')
+      ->addArgument(new Reference('cache.views_info'))
+      ->addArgument(new Reference('config.factory'));
   }
 
 }

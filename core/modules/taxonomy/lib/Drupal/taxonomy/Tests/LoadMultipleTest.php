@@ -41,7 +41,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
       $this->createTerm($vocabulary);
     }
     // Load the terms from the vocabulary.
-    $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->vid));
+    $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->id()));
     $count = count($terms);
     $this->assertEqual($count, 5, format_string('Correct number of terms were loaded. !count terms.', array('!count' => $count)));
 
@@ -57,7 +57,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
     $this->assertFalse($deleted_term);
 
     // Load terms from the vocabulary by vid.
-    $terms3 = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->vid));
+    $terms3 = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->id()));
     $this->assertEqual(count($terms3), 4, 'Correct number of terms were loaded.');
     $this->assertFalse(isset($terms3[$deleted->tid]));
 

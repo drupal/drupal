@@ -2564,9 +2564,20 @@ function drupal_add_css($data = NULL, $options = NULL) {
         // key as $data could be a very long string of CSS.
         $css[] = $options;
         break;
+
+      case 'file':
+        // Local CSS files are keyed by basename; if a file with the same
+        // basename is added more than once, it gets overridden.
+        // By default, take over the filename as basename.
+        if (!isset($options['basename'])) {
+          $options['basename'] = drupal_basename($data);
+        }
+        $css[$options['basename']] = $options;
+        break;
+
       default:
-        // Local and external files must keep their name as the associative key
-        // so the same CSS file is not be added twice.
+        // External files are keyed by their full URI, so the same CSS file is
+        // not added twice.
         $css[$data] = $options;
     }
   }
@@ -2604,6 +2615,8 @@ function drupal_add_css($data = NULL, $options = NULL) {
  * @see drupal_add_css()
  */
 function drupal_get_css($css = NULL, $skip_alter = FALSE) {
+  global $theme_info;
+
   if (!isset($css)) {
     $css = drupal_add_css();
   }
@@ -2616,17 +2629,20 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   // Sort CSS items, so that they appear in the correct order.
   uasort($css, 'drupal_sort_css_js');
 
-  // Remove the overridden CSS files. Later CSS files override former ones.
-  $previous_item = array();
-  foreach ($css as $key => $item) {
-    if ($item['type'] == 'file') {
-      // If defined, force a unique basename for this file.
-      $basename = isset($item['basename']) ? $item['basename'] : drupal_basename($item['data']);
-      if (isset($previous_item[$basename])) {
-        // Remove the previous item that shared the same base name.
-        unset($css[$previous_item[$basename]]);
+  // Allow themes to remove CSS files by basename.
+  if (!empty($theme_info->stylesheets_remove)) {
+    foreach ($css as $key => $options) {
+      if (isset($options['basename']) && isset($theme_info->stylesheets_remove[$options['basename']])) {
+        unset($css[$key]);
       }
-      $previous_item[$basename] = $key;
+    }
+  }
+  // Allow themes to conditionally override CSS files by basename.
+  if (!empty($theme_info->stylesheets_override)) {
+    foreach ($css as $key => $options) {
+      if (isset($options['basename']) && isset($theme_info->stylesheets_override[$options['basename']])) {
+        $css[$key]['data'] = $theme_info->stylesheets_override[$options['basename']];
+      }
     }
   }
 
@@ -2967,24 +2983,11 @@ function drupal_pre_render_styles($elements) {
         elseif ($group['preprocess']) {
           $import = array();
           foreach ($group['items'] as $item) {
-            // A theme's .info file may have an entry for a file that doesn't
-            // exist as a way of overriding a module or base theme CSS file from
-            // being added to the page. Normally, file_exists() calls that need
-            // to run for every page request should be minimized, but this one
-            // is okay, because it only runs when CSS aggregation is disabled.
-            // On a server under heavy enough load that file_exists() calls need
-            // to be minimized, CSS aggregation should be enabled, in which case
-            // this code is not run. When aggregation is enabled,
-            // drupal_load_stylesheet() checks file_exists(), but only when
-            // building the aggregate file, which is then reused for many page
-            // requests.
-            if (file_exists($item['data'])) {
-              // The dummy query string needs to be added to the URL to control
-              // browser-caching. IE7 does not support a media type on the
-              // @import statement, so we instead specify the media for the
-              // group on the STYLE tag.
-              $import[] = '@import url("' . check_plain(file_create_url($item['data']) . '?' . $query_string) . '");';
-            }
+            // The dummy query string needs to be added to the URL to control
+            // browser-caching. IE7 does not support a media type on the
+            // @import statement, so we instead specify the media for the
+            // group on the STYLE tag.
+            $import[] = '@import url("' . check_plain(file_create_url($item['data']) . '?' . $query_string) . '");';
           }
           // In addition to IE's limit of 31 total CSS inclusion tags, it also
           // has a limit of 31 @import statements per STYLE tag.
@@ -3007,14 +3010,6 @@ function drupal_pre_render_styles($elements) {
         else {
           foreach ($group['items'] as $item) {
             $element = $link_element_defaults;
-            // We do not check file_exists() here, because this code runs for
-            // files whose 'preprocess' is set to FALSE, and therefore, even
-            // when aggregation is enabled, and we want to avoid needlessly
-            // taxing a server that may be under heavy load. The file_exists()
-            // performed above for files whose 'preprocess' is TRUE is done for
-            // the benefit of theme .info files, but code that deals with files
-            // whose 'preprocess' is FALSE is responsible for ensuring the file
-            // exists.
             // The dummy query string needs to be added to the URL to control
             // browser-caching.
             $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
@@ -3954,7 +3949,7 @@ function drupal_pre_render_scripts($elements) {
         switch ($item['type']) {
           case 'setting':
             $element['#value_prefix'] = $embed_prefix;
-            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ";";
+            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(NestedArray::mergeDeepArray($item['data'])) . ";";
             $element['#value_suffix'] = $embed_suffix;
             break;
 
@@ -6085,225 +6080,6 @@ function element_set_attributes(array &$element, array $map) {
       $element['#attributes'][$attribute] = $element[$property];
     }
   }
-}
-
-/**
- * Retrieves a value from a nested array with variable depth.
- *
- * This helper function should be used when the depth of the array element being
- * retrieved may vary (that is, the number of parent keys is variable). It is
- * primarily used for form structures and renderable arrays.
- *
- * Without this helper function the only way to get a nested array value with
- * variable depth in one line would be using eval(), which should be avoided:
- * @code
- * // Do not do this! Avoid eval().
- * // May also throw a PHP notice, if the variable array keys do not exist.
- * eval('$value = $array[\'' . implode("']['", $parents) . "'];");
- * @endcode
- *
- * Instead, use this helper function:
- * @code
- * $value = drupal_array_get_nested_value($form, $parents);
- * @endcode
- *
- * The return value will be NULL, regardless of whether the actual value is NULL
- * or whether the requested key does not exist. If it is required to know
- * whether the nested array key actually exists, pass a third argument that is
- * altered by reference:
- * @code
- * $key_exists = NULL;
- * $value = drupal_array_get_nested_value($form, $parents, $key_exists);
- * if ($key_exists) {
- *   // ... do something with $value ...
- * }
- * @endcode
- *
- * However if the number of array parent keys is static, the value should always
- * be retrieved directly rather than calling this function. For instance:
- * @code
- * $value = $form['signature_settings']['signature'];
- * @endcode
- *
- * @param $array
- *   The array from which to get the value.
- * @param $parents
- *   An array of parent keys of the value, starting with the outermost key.
- * @param $key_exists
- *   (optional) If given, an already defined variable that is altered by
- *   reference.
- *
- * @return
- *   The requested nested value. Possibly NULL if the value is NULL or not all
- *   nested parent keys exist. $key_exists is altered by reference and is a
- *   Boolean that indicates whether all nested parent keys exist (TRUE) or not
- *   (FALSE). This allows to distinguish between the two possibilities when NULL
- *   is returned.
- *
- * @see drupal_array_set_nested_value()
- * @see drupal_array_unset_nested_value()
- */
-function &drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
-  return NestedArray::getValue($array, $parents, $key_exists);
-}
-
-/**
- * Sets a value in a nested array with variable depth.
- *
- * This helper function should be used when the depth of the array element you
- * are changing may vary (that is, the number of parent keys is variable). It
- * is primarily used for form structures and renderable arrays.
- *
- * Example:
- * @code
- * // Assume you have a 'signature' element somewhere in a form. It might be:
- * $form['signature_settings']['signature'] = array(
- *   '#type' => 'text_format',
- *   '#title' => t('Signature'),
- * );
- * // Or, it might be further nested:
- * $form['signature_settings']['user']['signature'] = array(
- *   '#type' => 'text_format',
- *   '#title' => t('Signature'),
- * );
- * @endcode
- *
- * To deal with the situation, the code needs to figure out the route to the
- * element, given an array of parents that is either
- * @code array('signature_settings', 'signature') @endcode in the first case or
- * @code array('signature_settings', 'user', 'signature') @endcode in the second
- * case.
- *
- * Without this helper function the only way to set the signature element in one
- * line would be using eval(), which should be avoided:
- * @code
- * // Do not do this! Avoid eval().
- * eval('$form[\'' . implode("']['", $parents) . '\'] = $element;');
- * @endcode
- *
- * Instead, use this helper function:
- * @code
- * drupal_array_set_nested_value($form, $parents, $element);
- * @endcode
- *
- * However if the number of array parent keys is static, the value should always
- * be set directly rather than calling this function. For instance, for the
- * first example we could just do:
- * @code
- * $form['signature_settings']['signature'] = $element;
- * @endcode
- *
- * @param $array
- *   A reference to the array to modify.
- * @param $parents
- *   An array of parent keys, starting with the outermost key.
- * @param $value
- *   The value to set.
- * @param $force
- *   (Optional) If TRUE, the value is forced into the structure even if it
- *   requires the deletion of an already existing non-array parent value. If
- *   FALSE, PHP throws an error if trying to add into a value that is not an
- *   array. Defaults to FALSE.
- *
- * @see drupal_array_unset_nested_value()
- * @see drupal_array_get_nested_value()
- */
-function drupal_array_set_nested_value(array &$array, array $parents, $value, $force = FALSE) {
-  NestedArray::setValue($array, $parents, $value, $force);
-}
-
-/**
- * Unsets a value in a nested array with variable depth.
- *
- * This helper function should be used when the depth of the array element you
- * are changing may vary (that is, the number of parent keys is variable). It
- * is primarily used for form structures and renderable arrays.
- *
- * Example:
- * @code
- * // Assume you have a 'signature' element somewhere in a form. It might be:
- * $form['signature_settings']['signature'] = array(
- *   '#type' => 'text_format',
- *   '#title' => t('Signature'),
- * );
- * // Or, it might be further nested:
- * $form['signature_settings']['user']['signature'] = array(
- *   '#type' => 'text_format',
- *   '#title' => t('Signature'),
- * );
- * @endcode
- *
- * To deal with the situation, the code needs to figure out the route to the
- * element, given an array of parents that is either
- * @code array('signature_settings', 'signature') @endcode in the first case or
- * @code array('signature_settings', 'user', 'signature') @endcode in the second
- * case.
- *
- * Without this helper function the only way to unset the signature element in
- * one line would be using eval(), which should be avoided:
- * @code
- * // Do not do this! Avoid eval().
- * eval('unset($form[\'' . implode("']['", $parents) . '\']);');
- * @endcode
- *
- * Instead, use this helper function:
- * @code
- * drupal_array_unset_nested_value($form, $parents, $element);
- * @endcode
- *
- * However if the number of array parent keys is static, the value should always
- * be set directly rather than calling this function. For instance, for the
- * first example we could just do:
- * @code
- * unset($form['signature_settings']['signature']);
- * @endcode
- *
- * @param $array
- *   A reference to the array to modify.
- * @param $parents
- *   An array of parent keys, starting with the outermost key and including the
- *   key to be unset.
- * @param $key_existed
- *   (optional) If given, an already defined variable that is altered by
- *   reference.
- *
- * @see drupal_array_set_nested_value()
- * @see drupal_array_get_nested_value()
- */
-function drupal_array_unset_nested_value(array &$array, array $parents, &$key_existed = NULL) {
-  NestedArray::unsetValue($array, $parents, $key_existed);
-}
-
-/**
- * Determines whether a nested array contains the requested keys.
- *
- * This helper function should be used when the depth of the array element to be
- * checked may vary (that is, the number of parent keys is variable). See
- * drupal_array_set_nested_value() for details. It is primarily used for form
- * structures and renderable arrays.
- *
- * If it is required to also get the value of the checked nested key, use
- * drupal_array_get_nested_value() instead.
- *
- * If the number of array parent keys is static, this helper function is
- * unnecessary and the following code can be used instead:
- * @code
- * $value_exists = isset($form['signature_settings']['signature']);
- * $key_exists = array_key_exists('signature', $form['signature_settings']);
- * @endcode
- *
- * @param $array
- *   The array with the value to check for.
- * @param $parents
- *   An array of parent keys of the value, starting with the outermost key.
- *
- * @return
- *   TRUE if all the parent keys exist, FALSE otherwise.
- *
- * @see drupal_array_get_nested_value()
- */
-function drupal_array_nested_key_exists(array $array, array $parents) {
-  return NestedArray::keyExists($array, $parents);
 }
 
 /**

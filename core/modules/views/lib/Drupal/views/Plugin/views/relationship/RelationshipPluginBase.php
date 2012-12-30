@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Join;
 use Drupal\Core\Annotation\Plugin;
@@ -45,12 +46,14 @@ use Drupal\Core\Annotation\Plugin;
 abstract class RelationshipPluginBase extends HandlerBase {
 
   /**
+   * Overrides \Drupal\views\Plugin\views\HandlerBase::init().
+   *
    * Init handler to let relationships live on tables other than
    * the table they operate on.
    */
-  public function init(ViewExecutable $view, &$options) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     if (isset($this->definition['relationship table'])) {
       $this->table = $this->definition['relationship table'];
     }
@@ -116,7 +119,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
    */
   public function query() {
     // Figure out what base table this relationship brings to the party.
-    $table_data = views_fetch_data($this->definition['base']);
+    $table_data = drupal_container()->get('views.views_data')->get($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
 
     $this->ensureMyTable();

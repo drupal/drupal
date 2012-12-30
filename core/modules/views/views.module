@@ -193,84 +193,6 @@ function views_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Scans a directory of a module for template files.
- *
- * @param $cache
- *   The existing cache of theme hooks to test against.
- * @param $path
- *   The path to search.
- *
- * @see drupal_find_theme_templates()
- */
-function _views_find_module_templates($cache, $path) {
-  $templates = array();
-  $regex = '/' . '\.tpl\.php' . '$' . '/';
-
-  // @todo Remove this once #1626580 is committed. For now, We need to remove
-  //   the sites/* part of the path because drupal_system_listing() is already
-  //   adding that.
-  $path = preg_replace('/^sites\/all\//', '', $path);
-  $config = str_replace('/', '\/', conf_path());
-  $path = preg_replace('/^' . $config . '\//', '', $path);
-
-  // Because drupal_system_listing works the way it does, we check for real
-  // templates separately from checking for patterns.
-  $files = drupal_system_listing($regex, $path, 'name', 0);
-  foreach ($files as $template => $file) {
-    // Chop off the remaining extensions if there are any. $template already
-    // has the rightmost extension removed, but there might still be more,
-    // such as with .tpl.php, which still has .tpl in $template at this point.
-    if (($pos = strpos($template, '.')) !== FALSE) {
-      $template = substr($template, 0, $pos);
-    }
-    // Transform - in filenames to _ to match function naming scheme
-    // for the purposes of searching.
-    $hook = strtr($template, '-', '_');
-    if (isset($cache[$hook])) {
-      $templates[$hook] = array(
-        'template' => $template,
-        'path' => dirname($file->filename),
-        'includes' => isset($cache[$hook]['includes']) ? $cache[$hook]['includes'] : NULL,
-      );
-    }
-    // Ensure that the pattern is maintained from base themes to its sub-themes.
-    // Each sub-theme will have their templates scanned so the pattern must be
-    // held for subsequent runs.
-    if (isset($cache[$hook]['pattern'])) {
-      $templates[$hook]['pattern'] = $cache[$hook]['pattern'];
-    }
-  }
-
-  $patterns = array_keys($files);
-
-  foreach ($cache as $hook => $info) {
-    if (!empty($info['pattern'])) {
-      // Transform _ in pattern to - to match file naming scheme
-      // for the purposes of searching.
-      $pattern = strtr($info['pattern'], '_', '-');
-
-      $matches = preg_grep('/^'. $pattern .'/', $patterns);
-      if ($matches) {
-        foreach ($matches as $match) {
-          $file = substr($match, 0, strpos($match, '.'));
-          // Put the underscores back in for the hook name and register this pattern.
-          $templates[strtr($file, '-', '_')] = array(
-            'template' => $file,
-            'path' => dirname($files[$match]->uri),
-            'variables' => isset($info['variables']) ? $info['variables'] : NULL,
-            'render element' => isset($info['render element']) ? $info['render element'] : NULL,
-            'base hook' => $hook,
-            'includes' => isset($info['includes']) ? $info['includes'] : NULL,
-          );
-        }
-      }
-    }
-  }
-
-  return $templates;
-}
-
-/**
  * Returns a list of plugins and metadata about them.
  *
  * @return array
@@ -614,7 +536,6 @@ function views_contextual_links_view_alter(&$element, $items) {
  */
 function views_block_info() {
   // Try to avoid instantiating all the views just to get the blocks info.
-  views_include('cache');
   $cache = views_cache_get('views_block_items', TRUE);
   if ($cache && is_array($cache->data)) {
     return $cache->data;
@@ -1154,8 +1075,8 @@ function views_library_info() {
 function views_get_handler($table, $field, $type, $override = NULL) {
   // Get the plugin manager for this type.
   $manager = drupal_container()->get("plugin.manager.views.$type");
+  $data = drupal_container()->get('views.views_data')->get($table);
 
-  $data = views_fetch_data($table);
   if (isset($data[$field][$type])) {
     $definition = $data[$field][$type];
     foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table') as $key) {
@@ -1194,27 +1115,6 @@ function views_get_handler($table, $field, $type, $override = NULL) {
 }
 
 /**
- * Fetch Views' data from the cache
- *
- * $param string|null $table
- *   (optional) The name of the table for which to fetch Views' data. If
- *   NULL, data for all tables will be retrieved
- * @param bool $reset
- *   (optional) Whether to rebuild the cache. Defaults to FALSE.
- *
- * @return array
- *   An associative array of views data for the given table. If $table is
- *   NULL, the array will be keyed by table name, with each key corresponding
- *   to the data array for that table.
- *
- * @see hook_views_data()
- */
-function views_fetch_data($table = NULL, $reset = FALSE) {
-  views_include('cache');
-  return _views_fetch_data($table, $reset);
-}
-
-/**
  * Fetch a list of all base tables available
  *
  * @return array
@@ -1224,7 +1124,7 @@ function views_fetch_base_tables() {
   static $base_tables = array();
   if (empty($base_tables)) {
     $tables = array();
-    $data = views_fetch_data();
+    $data = drupal_container()->get('views.views_data')->get();
     foreach ($data as $table => $info) {
       if (!empty($info['table']['base'])) {
         $tables[$table] = array(
@@ -1333,27 +1233,6 @@ function views_get_enabled_display_extenders() {
   $enabled = array_filter((array) config('views.settings')->get('display_extenders'));
 
   return drupal_map_assoc($enabled);
-}
-
-/**
- * Create an empty view to work with.
- *
- * @return Drupal\views\Plugin\Core\Entity\View
- *   A fully formed, empty $view object. This object must be populated before
- *   it can be successfully saved.
- */
-function views_new_view() {
-  return entity_create('view', array());
-}
-
-/**
- * Creates a view from an array of values.
- *
- * @return Drupal\views\Plugin\Core\Entity\View
- *   A fully formed $view object with properties from the values passed in.
- */
-function views_create_view(array $values = array()) {
-  return entity_create('view', $values);
 }
 
 /**
@@ -2207,4 +2086,52 @@ function views_config_import_delete($name, $new_config, $old_config) {
   $view = entity_load('view', $id);
   entity_delete($view);
   return TRUE;
+}
+
+/**
+ * Set a cached item in the views cache.
+ *
+ * This is just a convenience wrapper around cache_set().
+ *
+ * @param $cid
+ *   The cache ID of the data to store.
+ * @param $data
+ *   The data to store in the cache. Complex data types will be automatically serialized before insertion.
+ *   Strings will be stored as plain text and not serialized.
+ * @param $use_language
+ *   If TRUE, the data will be cached specific to the currently active language.
+ */
+function views_cache_set($cid, $data, $use_language = FALSE) {
+  if (config('views.settings')->get('skip_cache')) {
+    return;
+  }
+  if ($use_language) {
+    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  }
+
+  cache('views_info')->set($cid, $data);
+}
+
+/**
+ * Return data from the persistent views cache.
+ *
+ * This is just a convenience wrapper around cache_get().
+ *
+ * @param int $cid
+ *   The cache ID of the data to retrieve.
+ * @param bool $use_language
+ *   If TRUE, the data will be requested specific to the currently active language.
+ *
+ * @return stdClass|bool
+ *   The cache or FALSE on failure.
+ */
+function views_cache_get($cid, $use_language = FALSE) {
+  if (config('views.settings')->get('skip_cache')) {
+    return FALSE;
+  }
+  if ($use_language) {
+    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
+  }
+
+  return cache('views_info')->get($cid);
 }

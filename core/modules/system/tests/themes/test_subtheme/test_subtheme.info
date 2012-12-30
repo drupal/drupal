@@ -4,4 +4,17 @@ core = 8.x
 base theme = test_basetheme
 hidden = TRUE
 
+; Unlike test_basetheme (and the original module CSS), this subtheme decides to
+; put all of its CSS into a ./css subdirectory. All overrides and removals are
+; expected to be based on a file's basename and should work nevertheless.
+stylesheets[all][] = css/sub-add.css
+
+stylesheets-override[] = css/sub-override.css
+stylesheets-override[] = css/base-add.sub-override.css
+stylesheets-override[] = css/base-remove.sub-override.css
+
+stylesheets-remove[] = sub-remove.css
+stylesheets-remove[] = base-add.sub-remove.css
+stylesheets-remove[] = base-override.sub-remove.css
+
 settings[subtheme_override] = subtheme value

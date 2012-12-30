@@ -40,6 +40,41 @@ Drupal.behaviors.localeTranslateDirty = {
   }
 };
 
+/**
+ * Show/hide the description details on Available translation updates page.
+ */
+Drupal.behaviors.hideUpdateInformation = {
+  attach: function (context, settings) {
+    var $table = $('#locale-translation-status-form').once('expand-updates');
+    var effect = settings.hideUpdates;
+    if ($table.length) {
+      var $tbodies = $table.find('tbody');
+
+      // Open/close the description details by toggling a tr class.
+      $tbodies.on('click keydown', '.description', function (e) {
+        if (e.keyCode && (e.keyCode !== 13 && e.keyCode !== 32)) {
+          return;
+        }
+        e.preventDefault();
+        var $tr = $(this).closest('tr');
+
+        $tr.toggleClass('expanded');
+
+        // Change screen reader text.
+        $tr.find('.update-description-prefix').text(function () {
+          if ($tr.hasClass('expanded')) {
+            return Drupal.t('Hide description');
+          }
+          else {
+            return Drupal.t('Show description');
+          }
+        });
+      });
+    }
+    $table.find('.requirements, .links').hide();
+  }
+};
+
 $.extend(Drupal.theme, {
   localeTranslateChangedMarker: function () {
     return '<abbr class="warning ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr>';

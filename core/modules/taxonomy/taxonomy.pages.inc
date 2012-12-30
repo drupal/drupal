@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Menu callback; displays all nodes associated with a term.
  *
- * @param Drupal\taxonomy\Term $term
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
  *   The taxonomy term entity.
  */
 function taxonomy_term_page(Term $term) {
@@ -35,9 +35,6 @@ function taxonomy_term_page(Term $term) {
   drupal_set_breadcrumb($breadcrumb);
   drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->label());
 
-  // If there is a menu link to this term, the link becomes the last part
-  // of the active trail, and the link name becomes the page title.
-  // Thus, we must explicitly set the page title to be the node title.
   $uri = $term->uri();
 
   // Set the term path as the canonical URL to prevent duplicate content.
@@ -67,7 +64,7 @@ function taxonomy_term_page(Term $term) {
 /**
  * Generate the content feed for a taxonomy term.
  *
- * @param Drupal\taxonomy\Term $term
+ * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
  *   The taxonomy term entity.
  */
 function taxonomy_term_feed(Term $term) {
@@ -128,9 +125,8 @@ function taxonomy_autocomplete($field_name) {
 
     // Part of the criteria for the query come from the field's own settings.
     $vids = array();
-    $vocabularies = taxonomy_vocabulary_get_names();
     foreach ($field['settings']['allowed_values'] as $tree) {
-      $vids[] = $vocabularies[$tree['vocabulary']]->vid;
+      $vids[] = $tree['vocabulary'];
     }
 
     $query = db_select('taxonomy_term_data', 't');

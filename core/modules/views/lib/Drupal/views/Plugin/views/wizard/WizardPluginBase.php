@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -475,7 +476,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // do for a highly dynamic and extensible form. This method is much simpler.
     if (!empty($form_state['input'])) {
       $key_exists = NULL;
-      $submitted = drupal_array_get_nested_value($form_state['input'], $parents, $key_exists);
+      $submitted = NestedArray::getValue($form_state['input'], $parents, $key_exists);
       // Check that the user-submitted value is one of the allowed options before
       // returning it. This is not a substitute for actual form validation;
       // rather it is necessary because, for example, the same select element
@@ -632,7 +633,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       'base_table' => $this->base_table,
     );
 
-    $view = views_create_view($values);
+    $view = entity_create('view', $values);
 
     // Build all display options for this view.
     $display_options = $this->build_display_options($form, $form_state);
@@ -754,7 +755,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Add a least one field so the view validates and the user has a preview.
     // The base field can provide a default in its base settings; otherwise,
     // choose the first field with a field handler.
-    $data = views_fetch_data($this->base_table);
+    $data = drupal_container()->get('views.views_data')->get($this->base_table);
     if (isset($data['table']['base']['defaults']['field'])) {
       $field = $data['table']['base']['defaults']['field'];
     }
@@ -835,7 +836,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           }
         }
       }
-      $table_data = views_fetch_data($table);
+      $table_data = drupal_container()->get('views.views_data')->get($table);
       // If the 'in' operator is being used, map the values to an array.
       $handler = $table_data[$bundle_key]['filter']['id'];
       $handler_definition = drupal_container()->get('plugin.manager.views.filter')->getDefinition($handler);
@@ -921,7 +922,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // created from node, but the wizard type is another base table, make
       // sure it is not added. This usually don't happen if you have js
       // enabled.
-      $data = views_fetch_data($table);
+      $data = drupal_container()->get('views.views_data')->get($table);
       if (isset($data[$column]['sort'])) {
         $sorts[$column] = array(
           'id' => $column,

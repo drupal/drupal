@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\field\widget;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
@@ -73,7 +74,7 @@ class LegacyWidget extends WidgetBase {
 
     if (!empty($field_state['errors'])) {
       // Locate the correct element in the form.
-      $element = drupal_array_get_nested_value($form_state['complete_form'], $field_state['array_parents']);
+      $element = NestedArray::getValue($form_state['complete_form'], $field_state['array_parents']);
       // Only set errors if the element is accessible.
       if (!isset($element['#access']) || $element['#access']) {
         $definition = $this->getDefinition();

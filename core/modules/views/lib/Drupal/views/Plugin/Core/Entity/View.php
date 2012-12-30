@@ -52,7 +52,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var string
    */
-  public $name = '';
+  public $name = NULL;
 
   /**
    * The description of the view, which is used only in the interface.
@@ -166,6 +166,15 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function id() {
     return $this->get('name');
+  }
+
+  /**
+   * Overrides Drupal\Core\Config\Entity\ConfigEntityBase::createDuplicate().
+   */
+  public function createDuplicate() {
+    $duplicate = parent::createDuplicate();
+    unset($duplicate->executable);
+    return $duplicate;
   }
 
   /**
@@ -302,10 +311,10 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *   (optional) The ID to use, e.g., 'default', 'page_1', 'block_2'. Defaults
    *   to NULL.
    *
-   * @return Drupal\views\Plugin\views\display\DisplayPluginBase
-   *   A reference to the new handler object.
+   * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
+   *   A new display plugin instance.
    */
-  public function &newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
+  public function newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
     $id = $this->addDisplay($plugin_id, $title, $id);
     return $this->get('executable')->newDisplay($id);
   }

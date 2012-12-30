@@ -12,7 +12,7 @@ use Drupal\Core\Annotation\Plugin;
 /**
  * @Plugin(
  *   id = "standard",
- *   derivative = "Drupal\views\Plugin\Type\DefaultWizardDeriver"
+ *   derivative = "Drupal\views\Plugin\Derivative\DefaultWizardDeriver"
  * )
  */
 class Standard extends WizardPluginBase {

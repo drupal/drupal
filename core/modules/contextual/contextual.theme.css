@@ -29,7 +29,7 @@
   text-indent: 34px;
   width: 28px;
 }
-.contextual .trigger:hover,
+.no-touch .contextual .trigger:hover,
 .contextual-active .trigger {
   background-position: 2px -18px;
 }
@@ -75,13 +75,13 @@
   padding: 0.4em 0.8em 0.4em 0.6em; /* LTR */
 }
 .contextual-region .contextual .contextual-links a,
-.contextual-region .contextual .contextual-links a:hover,
+.no-touch .contextual-region .contextual .contextual-links a:hover,
 .contextual-region .contextual .contextual-links a:active,
 .contextual-region .contextual .contextual-links a:focus {
   background-color: #fff;
   color: #333;
   text-decoration: none;
 }
-.contextual-region .contextual .contextual-links li a:hover {
+.no-touch .contextual-region .contextual .contextual-links li a:hover {
   background-color: #bfdcee;
 }

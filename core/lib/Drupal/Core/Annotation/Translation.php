@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Annotation;
 
-use Drupal\Core\Annotation\AnnotationInterface;
+use Drupal\Component\Annotation\AnnotationInterface;
 
 /**
  * Defines a translatable annotation object.

@@ -47,7 +47,7 @@ class TermFieldTest extends TaxonomyTestBase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $this->vocabulary->machine_name,
+            'vocabulary' => $this->vocabulary->id(),
             'parent' => '0',
           ),
         ),
@@ -61,13 +61,13 @@ class TermFieldTest extends TaxonomyTestBase {
       'widget' => array(
         'type' => 'options_select',
       ),
-      'display' => array(
-        'full' => array(
-          'type' => 'taxonomy_term_reference_link',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_display('test_entity', 'test_bundle', 'full')
+      ->setComponent($this->field_name, array(
+        'type' => 'taxonomy_term_reference_link',
+      ))
+      ->save();
   }
 
   /**
@@ -123,13 +123,14 @@ class TermFieldTest extends TaxonomyTestBase {
     // Display the object.
     $entity = field_test_entity_test_load($id);
     $entities = array($id => $entity);
-    field_attach_prepare_view('test_entity', $entities, 'full');
-    $entity->content = field_attach_view('test_entity', $entity, 'full');
+    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
+    field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
+    $entity->content = field_attach_view('test_entity', $entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertText($term->label(), 'Term label is displayed.');
 
     // Delete the vocabulary and verify that the widget is gone.
-    taxonomy_vocabulary_delete($this->vocabulary->vid);
+    taxonomy_vocabulary_delete($this->vocabulary->id());
     $this->drupalGet('test-entity/add/test_bundle');
     $this->assertNoFieldByName("{$this->field_name}[$langcode]", '', 'Widget is not displayed');
   }
@@ -142,11 +143,11 @@ class TermFieldTest extends TaxonomyTestBase {
     // they all get updated.
     $this->field['settings']['allowed_values'] = array(
       array(
-        'vocabulary' => $this->vocabulary->machine_name,
+        'vocabulary' => $this->vocabulary->id(),
         'parent' => '0',
       ),
       array(
-        'vocabulary' => $this->vocabulary->machine_name,
+        'vocabulary' => $this->vocabulary->id(),
         'parent' => '0',
       ),
       array(
@@ -157,7 +158,7 @@ class TermFieldTest extends TaxonomyTestBase {
     field_update_field($this->field);
     // Change the machine name.
     $new_name = drupal_strtolower($this->randomName());
-    $this->vocabulary->machine_name = $new_name;
+    $this->vocabulary->vid = $new_name;
     taxonomy_vocabulary_save($this->vocabulary);
 
     // Check that the field instance is still attached to the vocabulary.

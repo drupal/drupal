@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleCompareTest.
+ * Contains Drupal\locale\Tests\LocaleUpdateTest.
  */
 
 namespace Drupal\locale\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\locale\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for comparing status of existing project translations with available translations.
+ * Tests for update translations.
  */
 class LocaleUpdateTest extends WebTestBase {
 
@@ -51,24 +51,21 @@ class LocaleUpdateTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Update Interface translations',
+      'name' => 'Update translations',
       'description' => 'Tests for updating the interface translations of projects.',
       'group' => 'Locale',
     );
   }
 
-  /**
-   * Setup the test environment.
-   *
-   * We use German as default test language. Due to hardcoded configurations in
-   * the locale_test module, the language can not be chosen randomly.
-   */
   function setUp() {
     parent::setUp();
     module_load_include('compare.inc', 'locale');
     module_load_include('fetch.inc', 'locale');
     $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'translate interface'));
     $this->drupalLogin($admin_user);
+    // We use German as test language. This language must match the translation
+    // file that come with the locale_test module (test.de.po) and can therefore
+    // not be chosen randomly.
     $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'de'), t('Add language'));
 
     // Setup timestamps to identify old and new translation sources.
@@ -429,9 +426,18 @@ EOF;
     );
     $this->drupalPost('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
-    // Execute the translation update.
+    // Get the translation status.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update'));
+
+    // Check the status on the Available translation status page.
+    $this->assertRaw('<label for="edit-langcodes-de" class="language-name">German</label>', 'German language found');
+    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
+    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
+    $this->assertText('Contributed module one (' . format_date($this->timestamp_now, 'html_date') . ')', 'Updates for Contrib module one');
+    $this->assertText('Contributed module two (' . format_date($this->timestamp_new, 'html_date') . ')', 'Updates for Contrib module two');
+
+    // Execute the translation update.
+    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
 
     // Check if the translation has been updated, using the status cache.
     $status = state()->get('locale.translation_status');
@@ -486,7 +492,7 @@ EOF;
 
     // Execute the translation update.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update'));
+    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
 
     // Check if the translation has been updated, using the status cache.
     $status = state()->get('locale.translation_status');
@@ -542,7 +548,7 @@ EOF;
 
     // Execute the translation update.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update'));
+    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
 
     // Check if the translation has been updated, using the status cache.
     $status = state()->get('locale.translation_status');
@@ -597,7 +603,7 @@ EOF;
 
     // Execute translation update.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update'));
+    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
 
     // Check whether existing translations have (not) been overwritten.
     $this->assertEqual(t('January', array(), array('langcode' => 'de')), 'Januar_customized', 'Translation of January');
@@ -635,7 +641,7 @@ EOF;
 
     // Execute translation update.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update'));
+    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
 
     // Check whether existing translations have (not) been overwritten.
     $this->assertTranslation('January', 'Januar_customized', 'de');
@@ -794,4 +800,5 @@ EOF;
     $this->assertText('Allowed HTML source string', t('String successfully imported.'));
     $this->assertNoText('Another allowed HTML source string', t('String with disallowed translation not imported.'));
   }
+
 }

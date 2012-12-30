@@ -1,6 +1,6 @@
 name = Language
-description = Lets you configure a number of languages to be used on your website and provides language negotiation functionality.
-package = Core
+description = Allows users to configure languages and apply them to content.
+package = Multilingual
 version = VERSION
 core = 8.x
 configure = admin/config/regional/language

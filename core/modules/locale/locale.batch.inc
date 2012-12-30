@@ -54,7 +54,7 @@ function locale_translation_batch_status_fetch_remote($source, &$context) {
       $context['results']['failed_files'][] = $source->name;
     }
     $context['results']['sources'][$source->name][$source->langcode] = $source;
-    $context['message'] = $t('Checked translation file: %name.', array('%name' => $source->name));
+    $context['message'] = $t('Checked translation for %project.', array('%project' => $source->project));
   }
 }
 
@@ -93,7 +93,7 @@ function locale_translation_batch_status_fetch_local($sources, &$context) {
       $context['results']['sources'][$source->name][$source->langcode] = $source;
     }
   }
-  $context['message'] = $t('Checked translation files.');
+  $context['message'] = $t('Checked all translations.');
 }
 
 /**
@@ -113,6 +113,7 @@ function locale_translation_batch_status_fetch_local($sources, &$context) {
  * @see locale_translation_batch_status_fetch_local()
  */
 function locale_translation_batch_status_compare(&$context) {
+  $t = get_t();
   $history = locale_translation_get_file_history();
   $results = array();
 
@@ -155,8 +156,8 @@ function locale_translation_batch_status_compare(&$context) {
         $results[$project][$langcode] = $source;
       }
     }
+    $context['message'] = $t('Updated translation status.');
   }
-
   locale_translation_status_save($results);
 }
 
@@ -248,7 +249,7 @@ function locale_translation_batch_fetch_download($project, $langcode, &$context)
     if (isset($source->type) && $source->type == LOCALE_TRANSLATION_REMOTE) {
       $t = get_t();
       if ($file = locale_translation_download_source($source->files[LOCALE_TRANSLATION_REMOTE])) {
-        $context['message'] = $t('Imported translation file: %name.', array('%name' => $file->filename));
+        $context['message'] = $t('Downloaded translation for %project.', array('%project' => $source->project));
         $source->files[LOCALE_TRANSLATION_DOWNLOADED] = $file;
       }
       else {
@@ -308,7 +309,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
         $file = $source_result->files[$import_type];
         module_load_include('bulk.inc', 'locale');
         $options += array(
-          'message' => $t('Importing translation file: %name', array('%name' => $file->filename)),
+          'message' => $t('Importing translation for %project.', array('%project' => $source->project)),
         );
         // Import the translation file. For large files the batch operations is
         // progressive and will be called repeatedly untill finished.
@@ -318,7 +319,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
         if (isset($context['finished']) && $context['finished'] == 1) {
           // The import is successfull.
           if (isset($context['results']['files'][$file->uri])) {
-            $context['message'] = $t('Imported translation file: %name.', array('%name' => $file->filename));
+            $context['message'] = $t('Imported translation for %project.', array('%project' => $source->project));
 
             // Keep the data of imported source. In the following batch
             // operation it will be saved in the {locale_file} table.

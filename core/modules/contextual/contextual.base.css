@@ -12,8 +12,10 @@
 .contextual .trigger {
   display: none;
 }
-.contextual-region:hover .contextual,
-.contextual-region:hover .contextual-links-trigger-active,
+.touch .contextual,
+.touch .contextual .trigger,
+.no-touch .contextual-region:hover .contextual,
+.no-touch .contextual-region:hover .contextual-links-trigger-active,
 .contextual-active .contextual-links {
   display: block;
 }

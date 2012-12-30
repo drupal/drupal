@@ -48,7 +48,7 @@ class TaggedWithTest extends WizardTestBase {
     // Create the vocabulary for the tag field.
     $this->tag_vocabulary = entity_create('taxonomy_vocabulary',  array(
       'name' => 'Views testing tags',
-      'machine_name' => 'views_testing_tags',
+      'vid' => 'views_testing_tags',
     ));
     $this->tag_vocabulary->save();
 
@@ -60,7 +60,7 @@ class TaggedWithTest extends WizardTestBase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $this->tag_vocabulary->machine_name,
+            'vocabulary' => $this->tag_vocabulary->id(),
             'parent' => 0,
           ),
         ),
@@ -77,18 +77,21 @@ class TaggedWithTest extends WizardTestBase {
       'widget' => array(
         'type' => 'taxonomy_autocomplete',
       ),
-      'display' => array(
-        'default' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-        'teaser' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-      ),
     );
     field_create_instance($this->tag_instance);
+
+    entity_get_display('node', $this->node_type_with_tags->type, 'default')
+      ->setComponent('field_views_testing_tags', array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ))
+      ->save();
+    entity_get_display('node', $this->node_type_with_tags->type, 'teaser')
+      ->setComponent('field_views_testing_tags', array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ))
+      ->save();
   }
 
   /**
@@ -128,11 +131,11 @@ class TaggedWithTest extends WizardTestBase {
     $view1['page[create]'] = 1;
     $view1['page[title]'] = $this->randomName(16);
     $view1['page[path]'] = $this->randomName(16);
-    $this->drupalPost(NULL, $view1, t('Save & exit'));
-    $this->assertResponse(200);
+    $this->drupalPost(NULL, $view1, t('Save and edit'));
     // Visit the page and check that the nodes we expect are present and the
     // ones we don't expect are absent.
     $this->drupalGet($view1['page[path]']);
+    $this->assertResponse(200);
     $this->assertText($node_tag1_title);
     $this->assertText($node_tag1_tag2_title);
     $this->assertNoText($node_no_tags_title);
@@ -150,7 +153,7 @@ class TaggedWithTest extends WizardTestBase {
     $view2['page[create]'] = 1;
     $view2['page[title]'] = $this->randomName(16);
     $view2['page[path]'] = $this->randomName(16);
-    $this->drupalPost(NULL, $view2, t('Save & exit'));
+    $this->drupalPost(NULL, $view2, t('Save and edit'));
     $this->assertResponse(200);
     $this->drupalGet($view2['page[path]']);
     $this->assertNoText($node_tag1_title);

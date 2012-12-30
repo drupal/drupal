@@ -613,6 +613,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
       require_once DRUPAL_ROOT . '/core/includes/errors.inc';
       $variables = _drupal_decode_exception($e);
+      unset($variables['backtrace']);
       // The exception message is run through check_plain() by _drupal_decode_exception().
       $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
     }
@@ -1252,6 +1253,29 @@ function update_variables_to_config($config_name, array $variable_map) {
 
   // Delete the migrated variables.
   db_delete('variable')->condition('name', array_keys($variable_map), 'IN')->execute();
+}
+
+/**
+ * Adds entries in a configuration entity manifest file during updates.
+ *
+ * @param string $config_prefix
+ *   The configuration entity prefix from the annotation.
+ * @param array $ids
+ *   An array of configuration entities to add to the manifest.
+ */
+function update_config_manifest_add($config_prefix, array $ids) {
+  $manifest = config('manifest.' . $config_prefix);
+
+  // Add record to manifest for each config entity. Operate on the data array
+  // as a whole, because $manifest->get() would treat dots in ids as nesting.
+  $data = $manifest->get();
+  foreach ($ids as $id) {
+    $data[$id] = array('name' => $config_prefix . '.' . $id);
+  }
+  $manifest->setData($data);
+
+  // Write manifest to disk.
+  $manifest->save();
 }
 
 /**

@@ -42,7 +42,7 @@ class ThemeTest extends TaxonomyTestBase {
     // Adding a term to a vocabulary is considered an administrative action and
     // should use the administrative theme.
     $vocabulary = $this->createVocabulary();
-    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add');
+    $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/add');
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page for adding a taxonomy term."));
 
     // Viewing a taxonomy term should use the default theme.

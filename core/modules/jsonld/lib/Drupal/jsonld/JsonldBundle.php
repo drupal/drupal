@@ -8,6 +8,7 @@
 namespace Drupal\jsonld;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Serializer\Serializer;
 
@@ -38,6 +39,10 @@ class JsonldBundle extends Bundle {
       'entity' => array(
         'jsonld' => 'Drupal\jsonld\JsonldEntityNormalizer',
       ),
+      // RDF Schema.
+      'rdf_schema' => array(
+        'jsonld' => 'Drupal\jsonld\JsonldRdfSchemaNormalizer',
+      ),
     );
     // Encoders can only specify which format they support in
     // Encoder::supportsEncoding().
@@ -49,6 +54,8 @@ class JsonldBundle extends Bundle {
     foreach ($normalizers as $supported_class => $formats) {
       foreach ($formats as $format => $normalizer_class) {
         $container->register("serializer.normalizer.{$supported_class}.{$format}", $normalizer_class)
+          ->addArgument(new Reference('rdf.site_schema_manager'))
+          ->addArgument(new Reference('rdf.mapping_manager'))
           ->addTag('normalizer', array('priority' => $priority));
       }
     }

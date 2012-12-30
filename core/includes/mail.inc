@@ -520,10 +520,36 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
  * Wraps words on a single line.
  *
  * Callback for array_walk() winthin drupal_wrap_mail().
+ *
+ * Note that we are skipping MIME content header lines, because attached files,
+ * especially applications, could have long MIME types or long filenames which
+ * result in line length longer than the 77 characters limit and wrapping that
+ * line will break the e-mail format. E.g., the attached file hello_drupal.docx
+ * will produce the following Content-Type:
+ * Content-Type:
+ * application/vnd.openxmlformats-officedocument.wordprocessingml.document;
+ * name="hello_drupal.docx"
  */
 function _drupal_wrap_mail_line(&$line, $key, $values) {
-  // Use soft-breaks only for purely quoted or unindented text.
-  $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? "  \n" : "\n");
+  $line_is_mime_header = FALSE;
+  $mime_headers = array(
+    'Content-Type',
+    'Content-Transfer-Encoding',
+    'Content-Disposition',
+    'Content-Description',
+  );
+
+  // Do not break MIME headers which could be longer than 77 characters.
+  foreach ($mime_headers as $header) {
+    if (strpos($line, $header . ': ') === 0) {
+      $line_is_mime_header = TRUE;
+      break;
+    }
+  }
+  if (!$line_is_mime_header) {
+    // Use soft-breaks only for purely quoted or unindented text.
+    $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? "  \n" : "\n");
+  }
   // Break really long words at the maximum width allowed.
   $line = wordwrap($line, 996 - $values['length'], $values['soft'] ? " \n" : "\n");
 }

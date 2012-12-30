@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\argument_default;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
@@ -23,9 +24,13 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  */
 class Tid extends ArgumentDefaultPluginBase {
 
-  public function init(ViewExecutable $view, &$argument, $options) {
-    parent::init($view, $argument, $options);
+  /**
+   * Overrides \Drupal\views\Plugin\views\Plugin\views\PluginBase::init().
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
+    // @todo Remove the legacy code.
     // Convert legacy vids option to machine name vocabularies.
     if (!empty($this->options['vids'])) {
       $vocabularies = taxonomy_vocabulary_get_names();
@@ -44,7 +49,7 @@ class Tid extends ArgumentDefaultPluginBase {
     $options['node'] = array('default' => FALSE, 'bool' => TRUE);
     $options['anyall'] = array('default' => ',');
     $options['limit'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['vocabularies'] = array('default' => array());
+    $options['vids'] = array('default' => array());
 
     return $options;
   }
@@ -73,16 +78,16 @@ class Tid extends ArgumentDefaultPluginBase {
     );
 
     $options = array();
-    $vocabularies = taxonomy_vocabulary_get_names();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     foreach ($vocabularies as $voc) {
-      $options[$voc->machine_name] = check_plain($voc->name);
+      $options[$voc->id()] = $voc->label();
     }
 
-    $form['vocabularies'] = array(
+    $form['vids'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Vocabularies'),
       '#options' => $options,
-      '#default_value' => $this->options['vocabularies'],
+      '#default_value' => $this->options['vids'],
       '#states' => array(
         'visible' => array(
           ':input[name="options[argument_default][taxonomy_tid][limit]"]' => array('checked' => TRUE),
@@ -109,7 +114,7 @@ class Tid extends ArgumentDefaultPluginBase {
 
   public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
     // Filter unselected items so we don't unnecessarily store giant arrays.
-    $options['vocabularies'] = array_filter($options['vocabularies']);
+    $options['vids'] = array_filter($options['vids']);
   }
 
   function get_argument() {
@@ -146,7 +151,7 @@ class Tid extends ArgumentDefaultPluginBase {
           $tids = array();
           // filter by vocabulary
           foreach ($taxonomy as $tid => $vocab) {
-            if (!empty($this->options['vocabularies'][$vocab])) {
+            if (!empty($this->options['vids'][$vocab])) {
               $tids[] = $tid;
             }
           }

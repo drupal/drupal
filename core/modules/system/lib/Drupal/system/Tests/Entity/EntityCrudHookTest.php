@@ -263,7 +263,7 @@ class EntityCrudHookTest extends WebTestBase {
   public function testTaxonomyTermHooks() {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
-      'machine_name' => 'test',
+      'vid' => 'test',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
@@ -271,7 +271,7 @@ class EntityCrudHookTest extends WebTestBase {
     taxonomy_vocabulary_save($vocabulary);
 
     $term = entity_create('taxonomy_term', array(
-      'vid' => $vocabulary->vid,
+      'vid' => $vocabulary->id(),
       'name' => 'Test term',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
@@ -323,7 +323,7 @@ class EntityCrudHookTest extends WebTestBase {
   public function testTaxonomyVocabularyHooks() {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
-      'machine_name' => 'test',
+      'vid' => 'test',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
@@ -339,7 +339,7 @@ class EntityCrudHookTest extends WebTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $vocabulary = taxonomy_vocabulary_load($vocabulary->vid);
+    $vocabulary = taxonomy_vocabulary_load($vocabulary->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type taxonomy_vocabulary',
@@ -358,7 +358,7 @@ class EntityCrudHookTest extends WebTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    taxonomy_vocabulary_delete($vocabulary->vid);
+    taxonomy_vocabulary_delete($vocabulary->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_taxonomy_vocabulary_predelete called',

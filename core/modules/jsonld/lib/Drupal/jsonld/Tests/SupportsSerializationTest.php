@@ -8,11 +8,7 @@
 namespace Drupal\jsonld\Tests;
 
 use Drupal\config\Tests\ConfigEntityTest;
-use Drupal\jsonld\JsonldEntityNormalizer;
-use Drupal\jsonld\JsonldEntityReferenceNormalizer;
-use Drupal\jsonld\JsonldFieldItemNormalizer;
 use Drupal\simpletest\WebTestBase;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Test the vendor specific JSON-LD normalizer.
@@ -24,7 +20,7 @@ class SupportsSerializationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('entity_test', 'jsonld');
 
   /**
    * The format being tested.
@@ -50,13 +46,8 @@ class SupportsSerializationTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->normalizers = array(
-      'entityreference' => new JsonldEntityReferenceNormalizer(),
-      'field_item' => new JsonldFieldItemNormalizer(),
-      'entity' => new JsonldEntityNormalizer(),
-    );
-    $serializer = new Serializer($this->normalizers);
-    $this->normalizers['entity']->setSerializer($serializer);
+    $setup_helper = new JsonldTestSetupHelper();
+    $this->normalizers = $setup_helper->getNormalizers();
   }
 
   /**

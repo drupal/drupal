@@ -217,18 +217,6 @@ const LANGUAGE_NOT_SPECIFIED = 'und';
 const LANGUAGE_NOT_APPLICABLE = 'zxx';
 
 /**
- * The language code used when multiple languages could be applied.
- *
- * Should be used when individual parts of the data cannot be marked with
- * language, but we know there are multiple languages involved. Such as a
- * PDF file for an electronic appliance, which has usage manuals in 8
- * languages but is uploaded as one file in Drupal.
- *
- * Defined by ISO639-2 for "Multiple languages".
- */
-const LANGUAGE_MULTIPLE = 'mul';
-
-/**
  * Language code referring to the default language of data, e.g. of an entity.
  *
  * @todo: Change value to differ from LANGUAGE_NOT_SPECIFIED once field API
@@ -731,7 +719,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
   // Export these settings.php variables to the global namespace.
-  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
+  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $class_loader, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
   $conf = array();
 
   // Make conf_path() available as local variable in settings.php.
@@ -1403,7 +1391,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // response to reply to a subsequent request for a given URL without
   // revalidation. If a Vary header has been set in hook_boot(), it is assumed
   // that the module knows how to cache the page.
-  if (!isset($hook_boot_headers['vary']) && !variable_get('omit_vary_cookie')) {
+  if (!isset($hook_boot_headers['vary']) && !config('system.performance')->get('cache.page.omit_vary_cookie')) {
     header('Vary: Cookie');
   }
 
@@ -1527,21 +1515,33 @@ function t($string, array $args = array(), array $options = array()) {
 }
 
 /**
- * Replaces placeholders with sanitized values in a string.
+ * Formats a string for HTML display by replacing variable placeholders.
+ *
+ * This function replaces variable placeholders in a string with the requested
+ * values and escapes the values so they can be safely displayed as HTML. It
+ * should be used on any unknown text that is intended to be printed to an HTML
+ * page (especially text that may have come from untrusted users, since in that
+ * case it prevents cross-site scripting and other security problems).
+ *
+ * In most cases, you should use t() rather than this function, since it will
+ * translate the text (on non-English-only sites) in addition to formatting it.
  *
  * @param $string
  *   A string containing placeholders.
  * @param $args
  *   An associative array of replacements to make. Occurrences in $string of
- *   any key in $args are replaced with the corresponding value, after
- *   sanitization. The sanitization function depends on the first character of
- *   the key:
- *   - !variable: Inserted as is. Use this for text that has already been
- *     sanitized.
- *   - @variable: Escaped to HTML using check_plain(). Use this for anything
- *     displayed on a page on the site.
- *   - %variable: Escaped as a placeholder for user-submitted content using
- *     drupal_placeholder(), which shows up as <em>emphasized</em> text.
+ *   any key in $args are replaced with the corresponding value, after optional
+ *   sanitization and formatting. The type of sanitization and formatting
+ *   depends on the first character of the key:
+ *   - @variable: Escaped to HTML using check_plain(). Use this as the default
+ *     choice for anything displayed on a page on the site.
+ *   - %variable: Escaped to HTML and formatted using drupal_placeholder(),
+ *     which makes it display as <em>emphasized</em> text.
+ *   - !variable: Inserted as is, with no sanitization or formatting. Only use
+ *     this for text that has already been prepared for HTML display (for
+ *     example, user-supplied text that has already been run through
+ *     check_plain() previously, or is expected to contain some limited HTML
+ *     tags and has already been run through filter_xss() previously).
  *
  * @see t()
  * @ingroup sanitization
@@ -1673,7 +1673,7 @@ function request_uri($omit_query_string = FALSE) {
  *   A link to associate with the message.
  *
  * @see watchdog()
- * @see drupal_decode_exception()
+ * @see _drupal_decode_exception()
  */
 function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
 
@@ -1755,7 +1755,8 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
 
     // Call the logging hooks to log/process the message
     foreach (module_implements('watchdog') as $module) {
-      module_invoke($module, 'watchdog', $log_entry);
+      $function = $module . '_watchdog';
+      $function($log_entry);
     }
 
     // It is critical that the semaphore is only cleared here, in the parent
@@ -2011,58 +2012,6 @@ function drupal_hash_base64($data) {
 function drupal_get_hash_salt() {
   global $drupal_hash_salt;
   return !empty($drupal_hash_salt) ? $drupal_hash_salt : '';
-}
-
-/**
- * Merges multiple arrays, recursively, and returns the merged array.
- *
- * This function is similar to PHP's array_merge_recursive() function, but it
- * handles non-array values differently. When merging values that are not both
- * arrays, the latter value replaces the former rather than merging with it.
- *
- * Example:
- * @code
- * $link_options_1 = array('fragment' => 'x', 'attributes' => array('title' => t('X'), 'class' => array('a', 'b')));
- * $link_options_2 = array('fragment' => 'y', 'attributes' => array('title' => t('Y'), 'class' => array('c', 'd')));
- *
- * // This results in array('fragment' => array('x', 'y'), 'attributes' => array('title' => array(t('X'), t('Y')), 'class' => array('a', 'b', 'c', 'd'))).
- * $incorrect = array_merge_recursive($link_options_1, $link_options_2);
- *
- * // This results in array('fragment' => 'y', 'attributes' => array('title' => t('Y'), 'class' => array('a', 'b', 'c', 'd'))).
- * $correct = drupal_array_merge_deep($link_options_1, $link_options_2);
- * @endcode
- *
- * @param ...
- *   Arrays to merge.
- *
- * @return
- *   The merged array.
- *
- * @see drupal_array_merge_deep_array()
- */
-function drupal_array_merge_deep() {
-  return drupal_array_merge_deep_array(func_get_args());
-}
-
-/**
- * Merges multiple arrays, recursively, and returns the merged array.
- *
- * This function is equivalent to drupal_array_merge_deep(), except the
- * input arrays are passed as a single array parameter rather than a variable
- * parameter list.
- *
- * The following are equivalent:
- * - drupal_array_merge_deep($a, $b);
- * - drupal_array_merge_deep_array(array($a, $b));
- *
- * The following are also equivalent:
- * - call_user_func_array('drupal_array_merge_deep', $arrays_to_merge);
- * - drupal_array_merge_deep_array($arrays_to_merge);
- *
- * @see drupal_array_merge_deep()
- */
-function drupal_array_merge_deep_array($arrays) {
-  return NestedArray::mergeDeepArray($arrays);
 }
 
 /**
@@ -2815,11 +2764,6 @@ function language_default_locked_languages($weight = 0) {
     'name' => t('Not applicable'),
     'weight' => ++$weight,
   ) + $locked_language);
-  $languages[LANGUAGE_MULTIPLE] = new Language(array(
-    'langcode' => LANGUAGE_MULTIPLE,
-    'name' => t('Multiple'),
-    'weight' => ++$weight,
-  ) + $locked_language);
   return $languages;
 }
 
@@ -3055,9 +2999,8 @@ function ip_address() {
  * Initializes and returns the class loader.
  *
  * The class loader is responsible for lazy-loading all PSR-0 compatible
- * classes, interfaces, and traits (PHP 5.4 and later). Its only dependencies
- * are DRUPAL_ROOT and variable_get(). Otherwise it may be called as early as
- * possible.
+ * classes, interfaces, and traits (PHP 5.4 and later). It's only dependency
+ * is DRUPAL_ROOT. Otherwise it may be called as early as possible.
  *
  * @return Symfony\Component\ClassLoader\UniversalClassLoader
  *   A UniversalClassLoader class instance (or extension thereof).
@@ -3069,11 +3012,12 @@ function drupal_classloader() {
   static $loader;
 
   if (!isset($loader)) {
+    global $class_loader;
+
     // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
     require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
-    // @todo Use a cleaner way than variable_get() to switch autoloaders.
-    switch (variable_get('autoloader_mode', 'default')) {
+    switch ($class_loader) {
       case 'apc':
         if (function_exists('apc_store')) {
           require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';

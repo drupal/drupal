@@ -32,7 +32,7 @@ class OverrideDisplaysTest extends UITestBase {
     $view['page[path]'] = $this->randomName(16);
     $view['block[create]'] = 1;
     $view_path = $view['page[path]'];
-    $this->drupalPost('admin/structure/views/add', $view, t('Save & exit'));
+    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
     // Configure its title. Since the page and block both started off with the
     // same (empty) title in the views wizard, we expect the wizard to have set
@@ -100,7 +100,7 @@ class OverrideDisplaysTest extends UITestBase {
     $view['page[feed_properties][path]'] = $this->randomName(16);
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view, t('Save & exit'));
+    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
     // Put the block into the first sidebar region, and make sure it will not
     // display on the view's page display (since we will be searching for the
@@ -186,7 +186,7 @@ class OverrideDisplaysTest extends UITestBase {
     $view['page[path]'] = $this->randomName(16);
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
+    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
     // Revert the title of the block back to the default ones, but submit some
     // new values to be sure that the new value is not stored.

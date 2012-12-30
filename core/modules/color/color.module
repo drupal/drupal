@@ -77,7 +77,7 @@ function _color_html_alter(&$vars) {
         if (drupal_basename($old_path) == drupal_basename($color_path)) {
           // Replace the path to the new css file.
           // This keeps the order of the stylesheets intact.
-          $vars['css'][$old_path]['data'] = $color_path;
+          $vars['css'][drupal_basename($old_path)]['data'] = $color_path;
         }
       }
     }

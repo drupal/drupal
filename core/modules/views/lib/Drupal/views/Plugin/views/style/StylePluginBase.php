@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
@@ -80,20 +81,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $usesFields = FALSE;
 
   /**
-   * Initialize a style plugin.
+   * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    *
-   * @param $view
-   * @param $display
-   * @param $options
-   *   The style options might come externally as the style can be sourced
-   *   from at least two locations. If it's not included, look on the display.
+   * The style options might come externally as the style can be sourced from at
+   * least two locations. If it's not included, look on the display.
    */
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
-    $this->displayHandler = &$display;
-
-    $this->unpackOptions($this->options, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     if ($this->usesRowPlugin() && $display->getOption('row')) {
       $this->row_plugin = $display->getPlugin('row');

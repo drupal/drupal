@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\node\Plugin\views\field\Node;
 use Drupal\Core\Annotation\Plugin;
 
@@ -23,8 +24,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Revision extends Node {
 
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  /**
+   * Overrides \Drupal\node\Plugin\views\field\Node::init().
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     if (!empty($this->options['link_to_node_revision'])) {
       $this->additional_fields['vid'] = 'vid';
       $this->additional_fields['nid'] = 'nid';

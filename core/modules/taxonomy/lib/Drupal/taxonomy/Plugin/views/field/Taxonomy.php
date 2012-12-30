@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Annotation\Plugin;
 
@@ -32,15 +33,11 @@ class Taxonomy extends FieldPluginBase {
    * This method assumes the taxonomy_term_data table. If using another table,
    * we'll need to be more specific.
    */
-  public function init(ViewExecutable $view, &$options) {
-    parent::init($view, $options);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
 
     $this->additional_fields['vid'] = 'vid';
     $this->additional_fields['tid'] = 'tid';
-    $this->additional_fields['vocabulary_machine_name'] = array(
-      'table' => 'taxonomy_vocabulary',
-      'field' => 'machine_name',
-    );
   }
 
   protected function defineOptions() {
@@ -80,7 +77,6 @@ class Taxonomy extends FieldPluginBase {
       $term = entity_create('taxonomy_term', array(
         'tid' => $tid,
         'vid' => $this->get_value($values, 'vid'),
-        'vocabulary_machine_name' => $values->{$this->aliases['vocabulary_machine_name']},
       ));
       $this->options['alter']['make_link'] = TRUE;
       $uri = $term->uri();

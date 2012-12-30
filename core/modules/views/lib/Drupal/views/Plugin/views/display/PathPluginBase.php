@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Plugin\views\display\PathPluginBase.
+ * Contains \Drupal\views\Plugin\views\display\PathPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\display;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * The base display plugin for path/callbacks. This is used for pages, feeds.
+ * The base display plugin for path/callbacks. This is used for pages and feeds.
  */
 abstract class PathPluginBase extends DisplayPluginBase {
 
@@ -38,7 +38,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
   public function executeHookMenu($callbacks) {
     $items = array();
     // Replace % with the link to our standard views argument loader
-    // views_arg_load -- which lives in views.module
+    // views_arg_load -- which lives in views.module.
 
     $bits = explode('/', $this->getOption('path'));
     $page_arguments = array($this->view->storage->name, $this->display['id']);
@@ -64,7 +64,8 @@ abstract class PathPluginBase extends DisplayPluginBase {
       $access_plugin = drupal_container()->get("plugin.manager.views.access")->createInstance('none');
     }
 
-    // Get access callback might return an array of the callback + the dynamic arguments.
+    // Get access callback might return an array of the callback + the dynamic
+    // arguments.
     $access_plugin_callback = $access_plugin->get_access_callback();
 
     if (is_array($access_plugin_callback)) {
@@ -95,13 +96,13 @@ abstract class PathPluginBase extends DisplayPluginBase {
 
     if ($path) {
       $items[$path] = array(
-        // default views page entry
+        // Default views page entry.
         'page callback' => 'views_page',
         'page arguments' => $page_arguments,
-        // Default access check (per display)
+        // Default access check (per display).
         'access callback' => 'views_access',
         'access arguments' => $access_arguments,
-        // Identify URL embedded arguments and correlate them to a handler
+        // Identify URL embedded arguments and correlate them to a handler.
         'load arguments'  => array($this->view->storage->name, $this->display['id'], '%index'),
       );
       $menu = $this->getOption('menu');
@@ -125,7 +126,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
           break;
         case 'normal':
           $items[$path]['type'] = MENU_NORMAL_ITEM;
-          // Insert item into the proper menu
+          // Insert item into the proper menu.
           $items[$path]['menu_name'] = $menu['name'];
           break;
         case 'tab':
@@ -142,7 +143,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
         $items[$path]['context'] = MENU_CONTEXT_INLINE;
       }
 
-      // If this is a 'default' tab, check to see if we have to create teh
+      // If this is a 'default' tab, check to see if we have to create the
       // parent menu item.
       if ($menu['type'] == 'default tab') {
         $tab_options = $this->getOption('tab_options');
@@ -156,13 +157,14 @@ abstract class PathPluginBase extends DisplayPluginBase {
           if ($bit != '%views_arg' && !empty($bits)) {
             $default_path = implode('/', $bits);
             $items[$default_path] = array(
-              // default views page entry
+              // Default views page entry.
               'page callback' => 'views_page',
               'page arguments' => $page_arguments,
-              // Default access check (per display)
+              // Default access check (per display).
               'access callback' => 'views_access',
               'access arguments' => $access_arguments,
-              // Identify URL embedded arguments and correlate them to a handler
+              // Identify URL embedded arguments and correlate them to a
+              // handler.
               'load arguments'  => array($this->view->storage->name, $this->display['id'], '%index'),
               'title' => $tab_options['title'],
               'description' => $tab_options['description'],
@@ -236,7 +238,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::buildOptionsForm()..
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::buildOptionsForm().
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);

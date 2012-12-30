@@ -1,0 +1,29 @@
+/**
+ * @file
+ * Styles for the content language administration page.
+ */
+
+#language-content-settings-form table .bundle {
+  width: 24%;
+}
+
+#language-content-settings-form table td.bundle {
+  font-weight: bold;
+}
+
+#language-content-settings-form table .field {
+  width: 24%;
+  padding-left: 3em;
+}
+
+#language-content-settings-form table .field label {
+  font-weight: normal;
+}
+
+#language-content-settings-form table .translatable {
+  width: 1%;
+}
+
+#language-content-settings-form table .operations {
+  width: 75%;
+}

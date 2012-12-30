@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
@@ -80,17 +81,11 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Init the handler with necessary data.
-   *
-   * @param Drupal\views\ViewExecutable $view
-   *   The $view object this handler is attached to.
-   * @param array $options
-   *   The item from the database; the actual contents of this will vary
-   *   based upon the type of handler.
+   * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    */
-  public function init(ViewExecutable $view, &$options) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
     $display_id = $this->view->current_display;
     // Check to see if this handler type is defaulted. Note that
     // we have to do a lookup because the type is singular but the
@@ -775,7 +770,7 @@ abstract class HandlerBase extends PluginBase {
    * @return Drupal\views\Plugin\views\join\JoinPluginBase
    */
   public static function getTableJoin($table, $base_table) {
-    $data = views_fetch_data($table);
+    $data = drupal_container()->get('views.views_data')->get($table);
     if (isset($data['table']['join'][$base_table])) {
       $join_info = $data['table']['join'][$base_table];
       if (!empty($join_info['join_id'])) {
@@ -820,10 +815,10 @@ abstract class HandlerBase extends PluginBase {
     // If the user has configured a relationship on the handler take that into
     // account.
     if (!empty($this->options['relationship']) && $this->options['relationship'] != 'none') {
-      $views_data = views_fetch_data($this->view->relationship->table);
+      $views_data = drupal_container()->get('views.views_data')->get($this->view->relationship->table);
     }
     else {
-      $views_data = views_fetch_data($this->view->storage->get('base_table'));
+      $views_data = drupal_container()->get('views.views_data')->get($this->view->storage->get('base_table'));
     }
 
     if (isset($views_data['table']['entity type'])) {

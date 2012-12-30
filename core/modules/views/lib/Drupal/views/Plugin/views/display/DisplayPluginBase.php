@@ -96,9 +96,9 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   protected $usesAreas = TRUE;
 
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
+  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->view = &$view;
+    $this->view = $view;
     $this->display = &$display;
 
     // Load extenders as soon as possible.
@@ -127,7 +127,6 @@ abstract class DisplayPluginBase extends PluginBase {
       unset($options['defaults']);
     }
 
-    views_include('cache');
     // Cache for unpackOptions, but not if we are in the ui.
     static $unpack_options = array();
     if (empty($view->editing)) {
@@ -680,6 +679,29 @@ abstract class DisplayPluginBase extends PluginBase {
   public function usesExposedFormInBlock() { return $this->hasPath(); }
 
   /**
+   * Find out all displays which are attached to this display.
+   *
+   * The method is just using the pure storage object to avoid loading of the
+   * sub displays which would kill lazy loading.
+   */
+  public function getAttachedDisplays() {
+    $current_display_id = $this->display['id'];
+    $attached_displays = array();
+
+    // Go through all displays and search displays which link to this one.
+    foreach ($this->view->storage->get('display') as $display_id => $display) {
+      if (isset($display['display_options']['displays'])) {
+        $displays = $display['display_options']['displays'];
+        if (isset($displays[$current_display_id])) {
+          $attached_displays[] = $display_id;
+        }
+      }
+    }
+
+    return $attached_displays;
+  }
+
+  /**
    * Check to see which display to use when creating links within
    * a view using this display.
    */
@@ -776,7 +798,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     // Query plugins allow specifying a specific query class per base table.
     if ($type == 'query') {
-      $views_data = views_fetch_data($this->view->storage->get('base_table'));
+      $views_data = drupal_container()->get('views.views_data')->get($this->view->storage->get('base_table'));
       $name = isset($views_data['table']['base']['query_id']) ? $views_data['table']['base']['query_id'] : 'views_query';
     }
 
@@ -859,7 +881,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $handler->handler_type = $type;
           }
 
-          $handler->init($this->view, $info);
+          $handler->init($this->view, $this, $info);
           $this->handlers[$type][$id] = &$handler;
         }
 
@@ -2285,7 +2307,7 @@ abstract class DisplayPluginBase extends PluginBase {
           if ($plugin) {
             // Because pagers have very similar options, let's allow pagers to
             // try to carry the options over.
-            $plugin->init($this->view, $this->display, $pager['options']);
+            $plugin->init($this->view, $this, $pager['options']);
 
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->setOption('pager', $pager);

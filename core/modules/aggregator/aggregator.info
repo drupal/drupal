@@ -4,5 +4,4 @@ package = Core
 version = VERSION
 core = 8.x
 configure = admin/config/services/aggregator/settings
-stylesheets[all][] = aggregator.theme.css
 dependencies[] = file

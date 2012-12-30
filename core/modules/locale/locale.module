@@ -263,6 +263,14 @@ function locale_theme() {
       'render element' => 'form',
       'file' => 'locale.pages.inc',
     ),
+    'locale_translation_last_check' => array(
+      'variables' => array('last' => NULL),
+      'file' => 'locale.pages.inc',
+    ),
+    'locale_translation_update_info' => array(
+      'arguments' => array('updates' => array(), 'not_found' => array()),
+      'file' => 'locale.pages.inc',
+    ),
   );
 }
 
@@ -944,16 +952,16 @@ function locale_translation_status_save($data) {
  *   Language code(s) to be deleted from the cache.
  */
 function locale_translation_status_delete_languages($langcodes) {
-  $status = state()->get('locale.translation_status');
-
-  foreach ($status as $project => $languages) {
-    foreach ($languages as $langcode => $source) {
-      if (in_array($langcode, $langcodes)) {
-        unset($status[$project][$langcode]);
+  if ($status = state()->get('locale.translation_status')) {
+    foreach ($status as $project => $languages) {
+      foreach ($languages as $langcode => $source) {
+        if (in_array($langcode, $langcodes)) {
+          unset($status[$project][$langcode]);
+        }
       }
     }
+    state()->set('locale.translation_status', $status);
   }
-  state()->set('locale.translation_status', $status);
 }
 
 /**
@@ -1299,5 +1307,5 @@ function _locale_rebuild_js($langcode = NULL) {
  */
 function locale_language_init() {
   // Add locale helper to configuration subscribers.
-  drupal_container()->get('dispatcher')->addSubscriber(new LocaleConfigSubscriber());
+  drupal_container()->get('event_dispatcher')->addSubscriber(new LocaleConfigSubscriber());
 }

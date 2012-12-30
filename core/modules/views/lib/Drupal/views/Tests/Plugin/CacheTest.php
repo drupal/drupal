@@ -152,7 +152,7 @@ class CacheTest extends PluginTestBase {
     $js_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.js';
     $js = drupal_add_js();
 
-    $this->assertTrue(isset($css[$css_path]), 'Make sure the css is added for cached views.');
+    $this->assertTrue(isset($css[basename($css_path)]), 'Make sure the css is added for cached views.');
     $this->assertTrue(isset($js[$js_path]), 'Make sure the js is added for cached views.');
     $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
 
@@ -178,7 +178,7 @@ class CacheTest extends PluginTestBase {
     $css = drupal_add_css();
     $js = drupal_add_js();
 
-    $this->assertFalse(isset($css[$system_css_path]), 'Make sure that unrelated css is not added.');
+    $this->assertFalse(isset($css[basename($system_css_path)]), 'Make sure that unrelated css is not added.');
     $this->assertFalse(isset($js[$system_js_path]), 'Make sure that unrelated js is not added.');
   }
 

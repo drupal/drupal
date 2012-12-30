@@ -89,7 +89,7 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
 
     // A langcode property was added to vocabularies and terms. Check that
     // existing vocabularies and terms got assigned the site default language.
-    $vocabulary = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE vid = :vid', array(':vid' => 1))->fetchObject();
+    $vocabulary = taxonomy_vocabulary_load('tags');
     $this->assertEqual($vocabulary->langcode, 'ca');
     $term = db_query('SELECT * FROM {taxonomy_term_data} WHERE tid = :tid', array(':tid' => 1))->fetchObject();
     $this->assertEqual($term->langcode, 'ca');

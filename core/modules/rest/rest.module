@@ -63,10 +63,9 @@ function rest_help($path, $arg) {
       return $output;
 
     case 'admin/config/services/rest':
-      global $base_url;
       return '<p>' . t('This page allows you to expose resources as RESTful web API. That enables external third parties to interact with your Drupal installation via a machine readable interface. All entity types are available for such operations while contributed modules can provide more.') . '</p>' .
-        '<p>' . t('Example: when enabled, the node resource is avialable at the path <code>/entity/node/{id}</code> and a HTTP DELETE request can be used to delete a node. Testing on the command line with cURL (deletes node 5, make sure to replace the node ID accordingly):') . '</p>' .
-        '<p><code>curl --include --request DELETE --cookie ' . session_name() . '=' . session_id() . ' ' . $base_url . base_path() . 'entity/node/5</code>' .
+        '<p>' . t('Example: when enabled, the node resource is available at the path <code>/entity/node/{id}</code> and a HTTP DELETE request can be used to delete a node. Testing on the command line with cURL (deletes node 5, make sure to replace the node ID accordingly):') . '</p>' .
+        '<p><code>curl --include --request DELETE --cookie ' . session_name() . '=' . session_id() . ' ' . url('entity/node/5', array('absolute' => TRUE)) . '</code>' .
         '<p>' . t('Note: Session information of the current user is shown here, make sure that you have the <a href="@permissions">permission to use the web API</a> to delete nodes.', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</p>';
   }
 }

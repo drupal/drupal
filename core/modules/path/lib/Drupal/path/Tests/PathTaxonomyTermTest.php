@@ -33,7 +33,7 @@ class PathTaxonomyTermTest extends PathTestBase {
     // Create a Tags vocabulary for the Article node type.
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => t('Tags'),
-      'machine_name' => 'tags',
+      'vid' => 'tags',
     ));
     $vocabulary->save();
 
@@ -47,13 +47,14 @@ class PathTaxonomyTermTest extends PathTestBase {
    */
   function testTermAlias() {
     // Create a term in the default 'Tags' vocabulary with URL alias.
-    $vocabulary = taxonomy_vocabulary_load(1);
+    $vocabulary = taxonomy_vocabulary_load('tags');
     $description = $this->randomName();;
-    $edit = array();
-    $edit['name'] = $this->randomName();
-    $edit['description[value]'] = $description;
-    $edit['path[alias]'] = $this->randomName();
-    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add', $edit, t('Save'));
+    $edit = array(
+      'name' => $this->randomName(),
+      'description[value]' => $description,
+      'path[alias]' => $this->randomName(),
+    );
+    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->id() . '/add', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\views\Plugin\views\display\Feed.
+ * Contains \Drupal\views\Plugin\views\display\Feed.
  */
 
 namespace Drupal\views\Plugin\views\display;
@@ -42,8 +42,11 @@ class Feed extends PathPluginBase {
    */
   protected $usesPager = FALSE;
 
-  public function init(ViewExecutable $view, &$display, $options = NULL) {
-    parent::init($view, $display, $options);
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::initDisplay().
+   */
+  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
+    parent::initDisplay($view, $display, $options);
 
     // Set the default row style. Ideally this would be part of the option
     // definition, but in this case it's dependent on the view's base table,
@@ -127,7 +130,7 @@ class Feed extends PathPluginBase {
 
     $options['displays'] = array('default' => array());
 
-    // Overrides for standard stuff:
+    // Overrides for standard stuff.
     $options['style']['contains']['type']['default'] = 'rss';
     $options['style']['contains']['options']['default']  = array('description' => '');
     $options['sitename_title']['default'] = FALSE;
@@ -258,7 +261,7 @@ class Feed extends PathPluginBase {
       $clone->buildTitle();
       $plugin->attach_to($display_id, $this->getPath(), $clone->getTitle());
 
-      // Clean up
+      // Clean up.
       $clone->destroy();
       unset($clone);
     }

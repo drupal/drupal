@@ -6,6 +6,7 @@
  */
 
 use Drupal\field\FieldUpdateForbiddenException;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
@@ -215,8 +216,8 @@ function options_field_settings_form_validate_allowed_values($element, &$form_st
 * Form element #value_callback: assembles the allowed values for 'boolean' fields.
 */
 function options_field_settings_form_value_boolean_allowed_values($element, $input, $form_state) {
-  $on = drupal_array_get_nested_value($form_state['input'], $element['#on_parents']);
-  $off = drupal_array_get_nested_value($form_state['input'], $element['#off_parents']);
+  $on = NestedArray::getValue($form_state['input'], $element['#on_parents']);
+  $off = NestedArray::getValue($form_state['input'], $element['#off_parents']);
   return array($off, $on);
 }
 

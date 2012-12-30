@@ -41,7 +41,7 @@ class DisplayTest extends UITestBase {
 
     $view += $default;
 
-    $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
+    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
     return $default;
   }
@@ -62,7 +62,8 @@ class DisplayTest extends UITestBase {
     // Delete the page, so we can test the undo process.
     $this->drupalPost($path_prefix . '/page_1', array(), 'delete Page');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
-    $this->assertTrue($this->xpath('//a[contains(@class, :class)]', array(':class' => 'views-display-deleted-link')), 'Make sure the display link is marked as to be deleted.');
+    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
+    $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
     // Undo the deleting of the display.
     $this->drupalPost($path_prefix . '/page_1', array(), 'undo delete of Page');
@@ -88,7 +89,6 @@ class DisplayTest extends UITestBase {
 
     $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
     $this->drupalGet($path_prefix);
-    $this->drupalPost(NULL, array(), t('Save'));
 
     // Add a new display.
     $this->drupalPost(NULL, array(), 'Add Page');
@@ -108,8 +108,6 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView($view);
     $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
 
-    $edit = array();
-    $this->drupalPost($path_prefix, $edit, t('Save'));
     $this->clickLink(t('reorder displays'));
     $this->assertTrue($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
     $this->assertTrue($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');

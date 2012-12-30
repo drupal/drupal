@@ -9,6 +9,7 @@ namespace Drupal\views_ui;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
+use Drupal\views\Plugin\views\wizard\WizardException;
 
 /**
  * Form controller for the Views edit form.
@@ -117,16 +118,7 @@ class ViewAddFormController extends ViewFormControllerBase {
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save & exit');
-    $actions['continueAndEdit'] = array(
-      '#value' => t('Continue & edit'),
-      '#validate' => array(
-        array($this, 'validate'),
-      ),
-      '#submit' => array(
-        array($this, 'continueAndEdit'),
-      ),
-    );
+    $actions['submit']['#value'] = t('Save and edit');
 
     $actions['cancel'] = array(
       '#value' => t('Cancel'),
@@ -160,6 +152,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     try {
       $view = $form_state['wizard_instance']->create_view($form, $form_state);
     }
+    // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {
       drupal_set_message($e->getMessage(), 'error');
       $form_state['redirect'] = 'admin/structure/views';
@@ -167,50 +160,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     }
     $view->save();
 
-    $form_state['redirect'] = 'admin/structure/views';
-    if (!empty($view->get('executable')->displayHandlers['page_1'])) {
-      $display = $view->get('executable')->displayHandlers['page_1'];
-      if ($display->hasPath()) {
-        $one_path = $display->getOption('path');
-        if (strpos($one_path, '%') === FALSE) {
-          $form_state['redirect'] = $one_path;  // PATH TO THE VIEW IF IT HAS ONE
-          return;
-        }
-      }
-    }
-    drupal_set_message(t('Your view was saved. You may edit it from the list below.'));
-  }
-
-  /**
-   * Form submission handler for the 'continue' action.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
-   */
-  public function continueAndEdit(array $form, array &$form_state) {
-    try {
-      $view = $form_state['wizard_instance']->create_view($form, $form_state);
-    }
-    catch (WizardException $e) {
-      drupal_set_message($e->getMessage(), 'error');
-      $form_state['redirect'] = 'admin/structure/views';
-      return;
-    }
-    // Just cache it temporarily to edit it.
-    views_ui_cache_set($view);
-
-    // If there is a destination query, ensure we still redirect the user to the
-    // edit view page, and then redirect the user to the destination.
-    // @todo: Revisit this when http://drupal.org/node/1668866 is in.
-    $destination = array();
-    $query = drupal_container()->get('request')->query;
-    if ($query->has('destination')) {
-      $destination = drupal_get_destination();
-      $query->remove('destination');
-    }
-    $form_state['redirect'] = array('admin/structure/views/view/' . $view->get('name'), array('query' => $destination));
+    $form_state['redirect'] = array('admin/structure/views/view/' . $view->get('name'));
   }
 
   /**

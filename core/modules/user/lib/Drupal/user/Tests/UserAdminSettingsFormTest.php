@@ -19,7 +19,8 @@ class UserAdminSettingsFormTest extends SystemConfigFormBase {
     );
   }
 
-  function setUpSystemConfigForm () {
+  public function setUp() {
+    parent::setUp();
     module_load_include('admin.inc', 'user');
     $this->form_id = 'user_admin_settings';
     $this->values = array(

@@ -48,7 +48,7 @@ class CreateTest extends RESTTestBase {
     $entity = entity_create($entity_type, $entity_values);
     $serialized = $serializer->serialize($entity, 'drupal_jsonld');
     // Create the entity over the web API.
-    $response = $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
+    $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse('201', 'HTTP response code is correct.');
 
     // Get the new entity ID from the location header and try to read it from
@@ -63,13 +63,14 @@ class CreateTest extends RESTTestBase {
     // entity references is implemented.
     unset($entity_values['user_id']);
     foreach ($entity_values as $property => $value) {
-      $actual_value = $loaded_entity->get($property);
-      $this->assertEqual($value, $actual_value->value, 'Created property ' . $property . ' expected: ' . $value . ', actual: ' . $actual_value->value);
+      $actual_value = $loaded_entity->get($property)->value;
+      $send_value = $entity->get($property)->value;
+      $this->assertEqual($send_value, $actual_value, 'Created property ' . $property . ' expected: ' . $send_value . ', actual: ' . $actual_value);
     }
 
     // Try to create an entity without proper permissions.
     $this->drupalLogout();
-    $response = $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
+    $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(403);
 
     // Try to create a resource which is not web API enabled.

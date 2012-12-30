@@ -73,10 +73,6 @@ function filter_help($path, $arg) {
  */
 function filter_theme() {
   return array(
-    'filter_admin_overview' => array(
-      'render element' => 'form',
-      'file' => 'filter.admin.inc',
-    ),
     'filter_admin_format_filter_order' => array(
       'render element' => 'element',
       'file' => 'filter.admin.inc',

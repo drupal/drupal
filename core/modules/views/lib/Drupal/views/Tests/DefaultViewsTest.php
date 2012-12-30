@@ -47,13 +47,13 @@ class DefaultViewsTest extends WebTestBase {
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'description' => $this->randomName(),
-      'machine_name' => drupal_strtolower($this->randomName()),
+      'vid' => drupal_strtolower($this->randomName()),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => array('page' => 'page'),
       'weight' => mt_rand(0, 10),
     ));
-    taxonomy_vocabulary_save($this->vocabulary);
+    $this->vocabulary->save();
 
     // Setup a field and instance.
     $this->field_name = drupal_strtolower($this->randomName());
@@ -63,7 +63,7 @@ class DefaultViewsTest extends WebTestBase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $this->vocabulary->machine_name,
+            'vocabulary' => $this->vocabulary->id(),
             'parent' => '0',
           ),
         ),
@@ -77,13 +77,13 @@ class DefaultViewsTest extends WebTestBase {
       'widget' => array(
         'type' => 'options_select',
       ),
-      'display' => array(
-        'full' => array(
-          'type' => 'taxonomy_term_reference_link',
-        ),
-      ),
     );
     field_create_instance($this->instance);
+    entity_get_display('node', 'page', 'full')
+      ->setComponent($this->field_name, array(
+        'type' => 'taxonomy_term_reference_link',
+      ))
+      ->save();
 
     // Create a time in the past for the archive.
     $time = time() - 3600;
@@ -159,7 +159,7 @@ class DefaultViewsTest extends WebTestBase {
       'description' => $this->randomName(),
       // Use the first available text format.
       'format' => db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField(),
-      'vid' => $vocabulary->vid,
+      'vid' => $vocabulary->id(),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));
     taxonomy_term_save($term);

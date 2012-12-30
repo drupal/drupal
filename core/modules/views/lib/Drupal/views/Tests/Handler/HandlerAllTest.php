@@ -54,13 +54,12 @@ class HandlerAllTest extends HandlerTestBase {
   public function testHandlers() {
     comment_add_default_comment_field('node', 'page');
     $object_types = array_keys(ViewExecutable::viewsHandlerTypes());
-    foreach (views_fetch_data() as $base_table => $info) {
+    foreach (drupal_container()->get('views.views_data')->get() as $base_table => $info) {
       if (!isset($info['table']['base'])) {
         continue;
       }
 
-      $view = views_new_view();
-      $view->set('base_table', $base_table);
+      $view = entity_create('view', array('base_table' => $base_table));
       $view = new ViewExecutable($view);
 
       // @todo The groupwise relationship is currently broken.

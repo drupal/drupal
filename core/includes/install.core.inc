@@ -324,12 +324,12 @@ function install_begin_request(&$install_state) {
     // @todo Move into a proper Drupal\Core\DependencyInjection\InstallContainerBuilder.
     $container = new ContainerBuilder();
 
-    $container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
+    $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
 
     $container->register('config.storage', 'Drupal\Core\Config\InstallStorage');
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('dispatcher'));
+      ->addArgument(new Reference('event_dispatcher'));
     drupal_container($container);
   }
 

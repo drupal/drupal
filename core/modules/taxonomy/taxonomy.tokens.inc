@@ -123,7 +123,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'vocabulary':
-          $vocabulary = taxonomy_vocabulary_load($term->vid);
+          $vocabulary = taxonomy_vocabulary_load($term->bundle());
           $replacements[$original] = check_plain($vocabulary->name);
           break;
 
@@ -137,7 +137,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
     }
 
     if ($vocabulary_tokens = token_find_with_prefix($tokens, 'vocabulary')) {
-      $vocabulary = taxonomy_vocabulary_load($term->vid);
+      $vocabulary = taxonomy_vocabulary_load($term->bundle());
       $replacements += token_generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options);
     }
 
@@ -153,7 +153,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'vid':
-          $replacements[$original] = $vocabulary->vid;
+          $replacements[$original] = $vocabulary->id();
           break;
 
         case 'name':
@@ -166,7 +166,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
 
         case 'term-count':
           $query = db_select('taxonomy_term_data');
-          $query->condition('vid', $vocabulary->vid);
+          $query->condition('vid', $vocabulary->id());
           $query->addTag('vocabulary_term_count');
           $count = $query->countQuery()->execute()->fetchField();
           $replacements[$original] = $count;
@@ -176,7 +176,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           $query = db_select('taxonomy_index', 'ti');
           $query->addExpression('COUNT(DISTINCT ti.nid)');
           $query->leftJoin('taxonomy_term_data', 'td', 'ti.tid = td.tid');
-          $query->condition('td.vid', $vocabulary->vid);
+          $query->condition('td.vid', $vocabulary->id());
           $query->addTag('vocabulary_node_count');
           $count = $query->execute()->fetchField();
           $replacements[$original] = $count;

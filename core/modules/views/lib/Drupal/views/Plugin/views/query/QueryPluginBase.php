@@ -24,17 +24,6 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   var $pager = NULL;
 
   /**
-   * Overrides Drupal\views\Plugin\views\PluginBase::init().
-   */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array $options = array()) {
-    $this->view = $view;
-    $this->displayHandler = $display;
-
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->unpackOptions($this->options, $options);
-  }
-
-  /**
    * Generate a query and a countquery from all of the information supplied
    * to the object.
    *

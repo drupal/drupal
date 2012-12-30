@@ -5,4 +5,3 @@ version = VERSION
 core = 8.x
 dependencies[] = text
 configure = admin/content/comment
-stylesheets[all][] = comment.theme.css

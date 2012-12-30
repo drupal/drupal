@@ -115,3 +115,14 @@ function menu_update_8002() {
     ->execute();
 }
 
+/**
+ * Moves menu_override_parent_selector from variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function menu_update_8003() {
+  update_variables_to_config('menu.settings', array(
+    'menu_override_parent_selector' => 'override_parent_selector',
+  ));
+}
+
