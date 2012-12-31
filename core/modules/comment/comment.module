@@ -530,7 +530,7 @@ function _comment_body_field_create($entity_type, $bundle, $field_name) {
       'required' => TRUE,
     );
     field_create_instance($instance);
-    entity_get_display('comment', $bundle, 'default')
+    entity_get_display('comment', $field_name, 'default')
       ->setComponent('comment_body', array(
         'label' => 'hidden',
         'type' => 'text_default',
