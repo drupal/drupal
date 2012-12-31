@@ -119,7 +119,8 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   accepted at php-level, which still doesn't guarantee it to be delivered.)
  */
 function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = NULL, $send = TRUE) {
-  $site_mail = config('system.site')->get('mail');
+  $site_config = config('system.site');
+  $site_mail = $site_config->get('mail');
   if (empty($site_mail)) {
     $site_mail = ini_get('sendmail_from');
   }
@@ -150,9 +151,10 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = N
     // To prevent e-mail from looking like spam, the addresses in the Sender and
     // Return-Path headers should have a domain authorized to use the originating
     // SMTP server.
-    $headers['From'] = $headers['Sender'] = $headers['Return-Path'] = $default_from;
+    $headers['Sender'] = $headers['Return-Path'] = $default_from;
+    $headers['From'] = $site_config->get('name') . ' <' . $default_from . '>';
   }
-  if ($from) {
+  if ($from && $from != $default_from) {
     $headers['From'] = $from;
   }
   $message['headers'] = $headers;
