@@ -2275,9 +2275,5 @@ function comment_field_delete_instance($instance) {
   $field = field_info_field($instance['field_name']);
   if ($field['type'] == 'comment') {
     cache()->delete('comment_entity_info');
-    if (module_exists('views')) {
-      // Refresh views data.
-      views_fetch_data('comment');
-    }
   }
 }
