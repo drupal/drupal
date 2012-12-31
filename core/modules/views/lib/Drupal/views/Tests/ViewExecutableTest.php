@@ -78,7 +78,16 @@ class ViewExecutableTest extends ViewUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->enableModules(array('node', 'comment', 'user', 'filter'));
+    $this->enableModules(array(
+      'entity',
+      'field',
+      'field_sql_storage',
+      'text',
+      'node',
+      'comment',
+      'user',
+      'filter'
+    ));
     comment_add_default_comment_field('node', 'page');
   }
 
