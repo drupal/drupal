@@ -290,12 +290,13 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
  *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
  */
-function hook_entity_display_alter(Drupal\field\Plugin\Core\Entity\EntityDisplay $display, array $context) {
+function hook_entity_display_alter(\Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, array $context) {
   // Leave field labels out of the search index.
   if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
-    foreach ($display->content as $name => &$properties) {
-      if (isset($properties['label'])) {
-        $properties['label'] = 'hidden';
+    foreach ($display->getComponents() as $name => $options) {
+      if (isset($options['label'])) {
+        $options['label'] = 'hidden';
+        $display->setComponent($name, $options);
       }
     }
   }

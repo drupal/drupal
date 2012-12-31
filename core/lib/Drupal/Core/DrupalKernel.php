@@ -260,12 +260,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * Initializes the service container.
    */
   protected function initializeContainer() {
-    $persist = array();
-    if (isset($this->container)) {
-      foreach ($this->container->getParameter('persistIds') as $id) {
-        $persist[$id] = $this->container->get($id);
-      }
-    }
+    $persist = $this->getServicesToPersist();
     $this->container = NULL;
     $class = $this->getClassName();
     $cache_file = $class . '.php';
@@ -279,6 +274,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       if (class_exists($class, FALSE)) {
         $fully_qualified_class_name = '\\' . $class;
         $this->container = new $fully_qualified_class_name;
+        $this->persistServices($persist);
       }
     }
     // First check whether the list of modules changed in this request.
@@ -292,9 +288,6 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     // Second, check if some other request -- for example on another web
     // frontend or during the installer -- changed the list of enabled modules.
     if (isset($this->container)) {
-      foreach ($persist as $id => $object) {
-        $this->container->set($id, $object);
-      }
       // All namespaces must be registered before we attempt to use any service
       // from the container.
       $container_modules = $this->container->getParameter('container.modules');
@@ -306,6 +299,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
         $this->moduleList = $this->container->get('config.factory')->get('system.module')->load()->get('enabled');
       }
       if (array_keys($this->moduleList) !== array_keys($container_modules)) {
+        $persist = $this->getServicesToPersist();
         unset($this->container);
         // Revert the class loader to its prior state. However,
         // registerNamespaces() performs a merge rather than replace, so to
@@ -319,9 +313,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
 
     if (!isset($this->container)) {
       $this->container = $this->buildContainer();
-      foreach ($persist as $id => $object) {
-        $this->container->set($id, $object);
-      }
+      $this->persistServices($persist);
       if ($this->allowDumping) {
         $this->containerNeedsDumping = TRUE;
       }
@@ -332,6 +324,35 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $this->container->set('class_loader', $this->classLoader);
 
     drupal_container($this->container);
+  }
+
+  /**
+   * Returns service instances to persist from an old container to a new one.
+   */
+  protected function getServicesToPersist() {
+    $persist = array();
+    if (isset($this->container)) {
+      foreach ($this->container->getParameter('persistIds') as $id) {
+        // It's pointless to persist services not yet initialized.
+        if ($this->container->initialized($id)) {
+          $persist[$id] = $this->container->get($id);
+        }
+      }
+    }
+    return $persist;
+  }
+
+  /**
+   * Moves persistent service instances into a new container.
+   */
+  protected function persistServices(array $persist) {
+    foreach ($persist as $id => $object) {
+      // Do not override services already set() on the new container, for
+      // example 'service_container'.
+      if (!$this->container->initialized($id)) {
+        $this->container->set($id, $object);
+      }
+    }
   }
 
   /**

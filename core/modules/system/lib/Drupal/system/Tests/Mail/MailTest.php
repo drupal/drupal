@@ -77,6 +77,27 @@ class MailTest extends WebTestBase implements MailInterface {
   }
 
   /**
+   * Checks for the site name in an auto-generated From: header.
+   */
+  function testFromHeader() {
+    global $language;
+
+    // Reset the class variable holding a copy of the last sent message.
+    self::$sent_message = NULL;
+    // Send an e-mail with a sender address specified.
+    $from_email = 'someone_else@example.com';
+    drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $from_email);
+    // Test that the from e-mail is just the e-mail and not the site name and
+    // default sender e-mail.
+    $this->assertEqual($from_email, self::$sent_message['headers']['From']);
+
+    self::$sent_message = NULL;
+    // Send an e-mail and check that the From-header contains the site name.
+    drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    $this->assertEqual('Drupal <simpletest@example.com>', self::$sent_message['headers']['From']);
+  }
+
+  /**
    * Concatenate and wrap the e-mail body for plain-text mails.
    *
    * @see Drupal\Core\Mail\PhpMail

@@ -581,7 +581,7 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL) {
  * - Set the 'body' field to be displayed and the 'field_image' field to be
  *   hidden on article nodes in the 'default' display.
  * @code
- * entity_get_display('article', 'node', 'default')
+ * entity_get_display('node', 'article', 'default')
  *   ->setComponent('body', array(
  *     'type' => 'text_summary_or_trimmed',
  *     'settings' => array('trim_length' => '200')

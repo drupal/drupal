@@ -30,6 +30,7 @@ class HandlerAllTest extends HandlerTestBase {
     'field',
     'filter',
     'file',
+    'history',
     'language',
     'locale',
     'node',
