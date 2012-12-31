@@ -85,7 +85,7 @@ class NodeNewComments extends Numeric {
       $query->addExpression('COUNT(c.cid)', 'num_comments');
       $query->leftJoin('history', 'h', 'h.nid = n.nid');
       $query->condition('n.nid', $nids);
-      $query->where('c.changed > GREATEST(COALESCE(h.timestamp, :timestamp), :timestamp)', array(':timestamp' => NODE_NEW_LIMIT));
+      $query->where('c.changed > GREATEST(COALESCE(h.timestamp, :timestamp), :timestamp)', array(':timestamp' => HISTORY_READ_LIMIT));
       $query->condition('c.status', COMMENT_PUBLISHED);
       $query->groupBy('n.nid');
       $result = $query->execute();

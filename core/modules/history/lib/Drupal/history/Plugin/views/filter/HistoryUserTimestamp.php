@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugin\views\filter\HistoryUserTimestamp.
+ * Contains \Drupal\history\Plugin\views\filter\HistoryUserTimestamp.
  */
 
-namespace Drupal\node\Plugin\views\filter;
+namespace Drupal\history\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -13,14 +13,14 @@ use Drupal\Core\Annotation\Plugin;
 /**
  * Filter for new content.
  *
- * The handler is named history_user, because of compability reasons, the table
- * is history.
+ * The handler is named history_user, because of compatibility reasons, the
+ * table is history.
  *
  * @ingroup views_filter_handlers
  *
  * @Plugin(
- *   id = "node_history_user_timestamp",
- *   module = "node"
+ *   id = "history_user_timestamp",
+ *   module = "history"
  * )
  */
 class HistoryUserTimestamp extends FilterPluginBase {
@@ -68,9 +68,9 @@ class HistoryUserTimestamp extends FilterPluginBase {
     }
 
     // Hey, Drupal kills old history, so nodes that haven't been updated
-    // since NODE_NEW_LIMIT are bzzzzzzzt outta here!
+    // since HISTORY_READ_LIMIT are bzzzzzzzt outta here!
 
-    $limit = REQUEST_TIME - NODE_NEW_LIMIT;
+    $limit = REQUEST_TIME - HISTORY_READ_LIMIT;
 
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
