@@ -3827,7 +3827,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
 
       // Provide the page with information about the individual JavaScript files
       // used, information not otherwise available when aggregation is enabled.
-      $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
+      $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($javascript), 1);
       unset($setting['ajaxPageState']['js']['settings']);
 
       // Provide the page with information about the individual CSS files used,
