@@ -597,7 +597,7 @@ class ViewExecutable {
     }
 
     // Initialize the display cache array.
-    $this->displayHandlers = new DisplayArray($this);
+    $this->displayHandlers = new DisplayBag($this);
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers['default'];
