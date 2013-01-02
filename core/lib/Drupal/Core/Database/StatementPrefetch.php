@@ -13,7 +13,7 @@ use PDO;
 use PDOException;
 
 /**
- * An implementation of DatabaseStatementInterface that prefetches all data.
+ * An implementation of StatementInterface that prefetches all data.
  *
  * This class behaves very similar to a PDOStatement but as it always fetches
  * every row it is possible to manipulate those results.
@@ -342,7 +342,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
     return isset($this->currentRow);
   }
 
-  /* Implementations of DatabaseStatementInterface. */
+  /* Implementations of StatementInterface. */
 
   public function rowCount() {
     return $this->rowCount;
