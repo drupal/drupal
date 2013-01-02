@@ -255,6 +255,30 @@ function translation_entity_add_access(EntityInterface $entity, Language $source
 }
 
 /**
+ * Implements hook_library_info().
+ */
+function translation_entity_library_info() {
+  $path = drupal_get_path('module', 'translation_entity');
+  $libraries['drupal.translation_entity.admin'] = array(
+    'title' => 'Translation entity UI',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/translation_entity.admin.js' => array(),
+    ),
+    'css' => array(
+      $path . '/translation_entity.admin.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Returns the key name used to store the configuration item.
  *
  * Based on the entity type and bundle, the variables used to store the
