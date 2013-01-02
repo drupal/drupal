@@ -2141,6 +2141,53 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
 }
 
 /**
+ * Handles an entire PHP request.
+ *
+ * This function may be called by PHP scripts (e.g., Drupal's index.php) that
+ * want Drupal to take over the entire PHP processing of the request. The only
+ * expectation is that PHP's superglobals are initialized as desired (PHP does
+ * this automatically, but some scripts might want to alter them) and that the
+ * DRUPAL_ROOT constant is defined and set to the absolute server directory of
+ * Drupal's codebase.
+ *
+ * Scripts and applications that want to invoke multiple Drupal requests within
+ * a single PHP request, or Drupal request handling within some larger workflow,
+ * should not call this function, but instead instantiate and use
+ * \Drupal\Core\DrupalKernel as needed.
+ *
+ * @param boolean $test_only
+ *   Whether to restrict handling to only requests invoked by SimpleTest.
+ *
+ * @see index.php
+ */
+function drupal_handle_request($test_only = FALSE) {
+  // Initialize the environment, load settings.php, and activate a PSR-0 class
+  // autoloader with required namespaces registered.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  // Exit if we should be in a test environment but aren't.
+  if ($test_only && !drupal_valid_test_ua()) {
+    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+    exit;
+  }
+
+  // @todo Figure out how best to handle the Kernel constructor parameters.
+  $kernel = new DrupalKernel('prod', FALSE, drupal_classloader(), !$test_only);
+
+  // @todo Remove this once everything in the bootstrap has been
+  //   converted to services in the DIC.
+  $kernel->boot();
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
+
+  // Create a request object from the HttpFoundation.
+  $request = Request::createFromGlobals();
+  $response = $kernel->handle($request)->prepare($request)->send();
+
+  $kernel->terminate($request, $response);
+  exit;
+}
+
+/**
  * Returns the time zone of the current user.
  */
 function drupal_get_user_timezone() {
