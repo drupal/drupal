@@ -4110,9 +4110,9 @@ function theme_button($variables) {
   $element['#attributes']['type'] = 'submit';
   element_set_attributes($element, array('id', 'name', 'value'));
 
-  $element['#attributes']['class'][] = 'form-button';
+  $element['#attributes']['class'][] = 'button';
   if (!empty($element['#button_type'])) {
-    $element['#attributes']['class'][] = 'form-button-' . $element['#button_type'];
+    $element['#attributes']['class'][] = 'button-' . $element['#button_type'];
   }
   // @todo Various JavaScript depends on this button class.
   $element['#attributes']['class'][] = 'form-submit';

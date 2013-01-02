@@ -133,6 +133,16 @@ abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
 .form-item select.error {
   border: 2px solid red;
 }
+.button,
+.image-button {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.button:first-child,
+.image-button:first-child {
+  margin-left: 0;
+  margin-right: 0;
+}
 
 /**
  * Inline items.
@@ -384,13 +394,13 @@ ul.tabs {
 .action-links li:first-child {
   margin-left: 0; /* LTR */
 }
-a.button {
+.button-action {
   display: inline-block;
   line-height: 160%;
   padding: 0.2em 0.5em 0.3em;
   text-decoration: none;
 }
-a.button.add:before {
+.button-action:before {
   content: '+';
   font-weight: 900;
   margin-left: -0.1em; /* LTR */

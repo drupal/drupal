@@ -2322,10 +2322,14 @@ function form_test_html_id($form, &$form_state) {
  */
 function form_test_button_class($form, &$form_state) {
   $form['button'] = array(
-    '#value' => 'test',
     '#type' => 'button',
+    '#value' => 'test',
     '#button_type' => 'foo',
   );
-
+  $form['delete'] = array(
+    '#type' => 'button',
+    '#value' => 'Delete',
+    '#button_type' => 'danger',
+  );
   return $form;
 }

@@ -23,14 +23,14 @@ function contact_help($path, $arg) {
       $output .= '<dt>' . t('Site-wide contact forms') . '</dt>';
       $output .= '<dd>' . t('The <a href="@contact">Contact page</a> provides a simple form for users with the <em>Use the site-wide contact form</em> permission to send comments, feedback, or other requests. You can create categories for directing the contact form messages to a set of defined recipients. Common categories for a business site, for example, might include "Website feedback" (messages are forwarded to website administrators) and "Product information" (messages are forwarded to members of the sales department). E-mail addresses defined within a category are not displayed publicly.', array('@contact' => url('contact'))) . '</p>';
       $output .= '<dt>' . t('Navigation') . '</dt>';
-      $output .= '<dd>' . t('When the site-wide contact form is enabled, a link in the <em>Main navigation</em> menu is created, but the link is disabled by default. This menu link can be enabled on the <a href="@menu">Menus administration page</a>.', array('@menu' => url('admin/structure/menu'))) . '</dd>';
+      $output .= '<dd>' . t('When the site-wide contact form is enabled, a link in the <em>Footer</em> menu is created, which you can modify on the <a href="@menu">Menus administration page</a>.', array('@menu' => url('admin/structure/menu'))) . '</dd>';
       $output .= '<dt>' . t('Customization') . '</dt>';
       $output .= '<dd>' . t('If you would like additional text to appear on the site-wide or personal contact page, use a block. You can create and edit blocks on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/structure/contact':
       $output = '<p>' . t('Add one or more categories on this page to set up your site-wide <a href="@form">contact form</a>.', array('@form' => url('contact'))) . '</p>';
-      $output .= '<p>' . t('A <em>Contact</em> menu item (disabled by default) is added to the Tools menu, which you can modify on the <a href="@menu-settings">Menus administration page</a>.', array('@menu-settings' => url('admin/structure/menu'))) . '</p>';
+      $output .= '<p>' . t('A <em>Contact</em> menu item is added to the <em>Footer</em> menu, which you can modify on the <a href="@menu-settings">Menus administration page</a>.', array('@menu-settings' => url('admin/structure/menu'))) . '</p>';
       $output .= '<p>' . t('If you would like additional text to appear on the site-wide contact page, use a block. You can create and edit blocks on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
       return $output;
   }

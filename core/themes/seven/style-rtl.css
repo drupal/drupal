@@ -108,21 +108,6 @@ body div.form-type-checkbox div.description {
   margin-left: 0;
   margin-right: 1.5em;
 }
-a.button,
-.form-button,
-.image-button {
-  margin-left: 1em;
-  margin-right: 0;
-}
-ul.action-links li {
-  float: right;
-  margin: 0 0 0 1em;
-}
-ul.action-links a {
-  padding-left: 0;
-  padding-right: 15px;
-  background-position: right center;
-}
 
 /* Update options. */
 div.admin-options label,
