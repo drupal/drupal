@@ -8,12 +8,12 @@
 namespace Drupal\text\Type;
 
 /**
- * Defines the 'text_with_summary' entity field item.
+ * Defines the 'text_with_summary_field' entity field item.
  */
 class TextSummaryItem extends TextItem {
 
   /**
-   * Field definitions of the contained properties.
+   * Definitions of the contained properties.
    *
    * @see self::getPropertyDefinitions()
    *

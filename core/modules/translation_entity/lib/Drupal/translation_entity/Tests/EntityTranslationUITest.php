@@ -292,7 +292,7 @@ abstract class EntityTranslationUITest extends WebTestBase {
    *   The translation object to act on.
    */
   protected function getTranslation(EntityInterface $entity, $langcode) {
-    return $entity instanceof EntityNG ? $entity->getTranslation($langcode) : $entity;
+    return $entity instanceof EntityNG ? $entity->getTranslation($langcode, FALSE) : $entity;
   }
 
   /**

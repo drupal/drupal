@@ -221,10 +221,12 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertIdentical(count($entity->name), 0, 'Name field contains no items.');
     $this->assertIdentical($entity->name->getValue(), array(), 'Name field value is an empty array.');
 
+    $entity->name->value = 'foo';
+    $this->assertTrue($entity->name->value, 'foo', 'Name field set.');
     // Test removing all list items by setting it to NULL.
     $entity->name = NULL;
     $this->assertIdentical(count($entity->name), 0, 'Name field contains no items.');
-    $this->assertIdentical($entity->name->getValue(), array(), 'Name field value is an empty array.');
+    $this->assertNull($entity->name->getValue(), 'Name field value is NULL.');
 
     // Test get and set field values.
     $entity->name = 'foo';
@@ -319,6 +321,30 @@ class EntityFieldTest extends WebTestBase  {
 
     // @todo: Once the user entity has definitions, continue testing getting
     // them from the $userref_values['entity'] property.
+
+    // Make sure provided contextual information is right.
+    $this->assertIdentical($entity->getRoot(), $entity, 'Entity is root object.');
+    $this->assertEqual($entity->getPropertyPath(), '');
+    $this->assertEqual($entity->getName(), '');
+    $this->assertEqual($entity->getParent(), NULL);
+
+    $field = $entity->user_id;
+    $this->assertIdentical($field->getRoot(), $entity, 'Entity is root object.');
+    $this->assertEqual($field->getPropertyPath(), 'user_id');
+    $this->assertEqual($field->getName(), 'user_id');
+    $this->assertIdentical($field->getParent(), $entity, 'Parent object matches.');
+
+    $field_item = $field[0];
+    $this->assertIdentical($field_item->getRoot(), $entity, 'Entity is root object.');
+    $this->assertEqual($field_item->getPropertyPath(), 'user_id.0');
+    $this->assertEqual($field_item->getName(), '0');
+    $this->assertIdentical($field_item->getParent(), $field, 'Parent object matches.');
+
+    $item_value = $field_item->get('entity');
+    $this->assertIdentical($item_value->getRoot(), $entity, 'Entity is root object.');
+    $this->assertEqual($item_value->getPropertyPath(), 'user_id.0.entity');
+    $this->assertEqual($item_value->getName(), 'entity');
+    $this->assertIdentical($item_value->getParent(), $field_item, 'Parent object matches.');
   }
 
   /**

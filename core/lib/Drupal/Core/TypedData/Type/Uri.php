@@ -7,14 +7,14 @@
 
 namespace Drupal\Core\TypedData\Type;
 
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedData;
 
 /**
  * The URI data type.
  *
  * The plain value of a URI is an absolute URI represented as PHP string.
  */
-class Uri extends TypedData implements TypedDataInterface {
+class Uri extends TypedData {
 
   /**
    * The data value.

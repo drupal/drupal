@@ -8,7 +8,7 @@
 namespace Drupal\text;
 
 use Drupal\Core\TypedData\ContextAwareInterface;
-use Drupal\Core\TypedData\Type\String;
+use Drupal\Core\TypedData\ContextAwareTypedData;
 use Drupal\Core\TypedData\ReadOnlyException;
 use InvalidArgumentException;
 
@@ -18,7 +18,7 @@ use InvalidArgumentException;
  * Required settings (below the definition's 'settings' key) are:
  *  - text source: The text property containing the to be processed text.
  */
-class TextProcessed extends String implements ContextAwareInterface {
+class TextProcessed extends ContextAwareTypedData {
 
   /**
    * The text property.
@@ -35,24 +35,10 @@ class TextProcessed extends String implements ContextAwareInterface {
   protected $format;
 
   /**
-   * The name.
-   *
-   * @var string
+   * Overrides ContextAwareTypedData::__construct().
    */
-  protected $name;
-
-  /**
-   * The parent data structure.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldItemInterface
-   */
-  protected $parent;
-
-  /**
-   * Implements TypedDataInterface::__construct().
-   */
-  public function __construct(array $definition) {
-    $this->definition = $definition;
+  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
 
     if (!isset($definition['settings']['text source'])) {
       throw new InvalidArgumentException("The definition's 'source' key has to specify the name of the text property to be processed.");
@@ -60,39 +46,18 @@ class TextProcessed extends String implements ContextAwareInterface {
   }
 
   /**
-   * Implements ContextAwareInterface::getName().
+   * Overrides ContextAwareTypedData::setContext().
    */
-  public function getName() {
-    return $this->name;
+  public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
+    parent::setContext($name, $parent);
+    if (isset($parent)) {
+      $this->text = $parent->get($this->definition['settings']['text source']);
+      $this->format = $parent->get('format');
+    }
   }
 
   /**
-   * Implements ContextAwareInterface::setName().
-   */
-  public function setName($name) {
-    $this->name = $name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::getParent().
-   *
-   * @return \Drupal\Core\Entity\Field\FieldItemInterface
-   */
-  public function getParent() {
-    return $this->parent;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setParent().
-   */
-  public function setParent($parent) {
-    $this->parent = $parent;
-    $this->text = $parent->get($this->definition['settings']['text source']);
-    $this->format = $parent->get('format');
-  }
-
-  /**
-   * Implements TypedDataInterface::getValue().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().
    */
   public function getValue($langcode = NULL) {
 
@@ -104,21 +69,28 @@ class TextProcessed extends String implements ContextAwareInterface {
     $entity = $field->getParent();
     $instance = field_info_instance($entity->entityType(), $field->getName(), $entity->bundle());
 
-    if (!empty($instance['settings']['text_processing']) && $this->format->value) {
-      return check_markup($this->text->value, $this->format->value, $entity->language()->langcode);
+    if (!empty($instance['settings']['text_processing']) && $this->format->getValue()) {
+      return check_markup($this->text->getValue(), $this->format->getValue(), $entity->language()->langcode);
     }
     else {
       // If no format is available, still make sure to sanitize the text.
-      return check_plain($this->text->value);
+      return check_plain($this->text->getValue());
     }
   }
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
    */
   public function setValue($value) {
     if (isset($value)) {
       throw new ReadOnlyException('Unable to set a computed property.');
     }
+  }
+
+  /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::validate().
+   */
+  public function validate() {
+    // @todo: Implement.
   }
 }

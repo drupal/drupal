@@ -15,7 +15,7 @@ use Drupal\Core\Entity\Field\FieldItemBase;
 class DateItem extends FieldItemBase {
 
   /**
-   * Field definitions of the contained properties.
+   * Definitions of the contained properties.
    *
    * @see self::getPropertyDefinitions()
    *

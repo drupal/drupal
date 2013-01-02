@@ -10,12 +10,12 @@ namespace Drupal\text\Type;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'text_item' and 'text_long_item' entity field items.
+ * Defines the 'text_field' and 'text_long_field' entity field items.
  */
 class TextItem extends FieldItemBase {
 
   /**
-   * Field definitions of the contained properties.
+   * Definitions of the contained properties.
    *
    * @see self::getPropertyDefinitions()
    *

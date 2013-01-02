@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\ListInterface.
+ * Contains \Drupal\Core\TypedData\ListInterface.
  */
 
 namespace Drupal\Core\TypedData;
@@ -29,4 +29,12 @@ interface ListInterface extends ArrayAccess, Countable, Traversable {
    *   TRUE if the list is empty, FALSE otherwise.
    */
   public function isEmpty();
+
+  /**
+   * Gets the definition of a contained item.
+   *
+   * @return array
+   *   The data definition of contained items.
+   */
+  public function getItemDefinition();
 }

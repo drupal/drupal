@@ -2,12 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\Type\TypedData.
+ * Contains \Drupal\Core\TypedData\TypedData.
  */
 
-namespace Drupal\Core\TypedData\Type;
-
-use Drupal\Core\TypedData\TypedDataInterface;
+namespace Drupal\Core\TypedData;
 
 /**
  * The abstract base class for typed data.

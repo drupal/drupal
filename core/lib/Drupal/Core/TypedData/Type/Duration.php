@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\TypedData\Type;
 
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedData;
 use DateInterval;
 use InvalidArgumentException;
 
@@ -19,7 +19,7 @@ use InvalidArgumentException;
  * supported by DateInterval::__construct, or an integer in seconds may be
  * passed.
  */
-class Duration extends TypedData implements TypedDataInterface {
+class Duration extends TypedData {
 
   /**
    * The data value.

@@ -2076,9 +2076,9 @@ abstract class WebTestBase extends TestBase {
     // Assert the definition of the wrapper.
     $this->assertTrue($data instanceof \Drupal\Core\TypedData\TypedDataInterface, 'Typed data object is an instance of the typed data interface.');
     $definition = $data->getDefinition();
-    $this->assertTrue(!empty($definition['label']), $definition['label'] . ' data definition was returned.');
+    $this->assertTrue(!empty($definition['type']), format_string('!type data definition was returned.', array('!type' => $definition['type'])));
     // Assert that the correct type was constructed.
-    $this->assertEqual($data->getType(), $type, $definition['label'] . ' object returned type.');
+    $this->assertEqual($data->getType(), $type, format_string('!type object returned type.', array('!type' => $definition['type'])));
     return $data;
   }
 

@@ -7,8 +7,7 @@
 
 namespace Drupal\Core\Entity\Field;
 
-use Drupal\Core\TypedData\Type\TypedData;
-use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\ContextAwareTypedData;
 use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\user;
@@ -24,21 +23,7 @@ use InvalidArgumentException;
  *
  * @see \Drupal\Core\Entity\Field\FieldItemInterface
  */
-abstract class FieldItemBase extends TypedData implements IteratorAggregate, FieldItemInterface {
-
-  /**
-   * The item delta or name.
-   *
-   * @var integer
-   */
-  protected $name;
-
-  /**
-   * The parent entity field.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  protected $parent;
+abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAggregate, FieldItemInterface {
 
   /**
    * The array of properties.
@@ -52,10 +37,10 @@ abstract class FieldItemBase extends TypedData implements IteratorAggregate, Fie
   protected $properties = array();
 
   /**
-   * Implements TypedDataInterface::__construct().
+   * Overrides ContextAwareTypedData::__construct().
    */
-  public function __construct(array $definition) {
-    $this->definition = $definition;
+  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
 
     // Initialize all property objects, but postpone the creating of computed
     // properties to a second step. That way computed properties can safely get
@@ -63,17 +48,15 @@ abstract class FieldItemBase extends TypedData implements IteratorAggregate, Fie
     $step2 = array();
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
       if (empty($definition['computed'])) {
-        $context = array('name' => $name, 'parent' => $this);
-        $this->properties[$name] = typed_data()->create($definition, NULL, $context);
+        $this->properties[$name] = typed_data()->getPropertyInstance($this, $name);
       }
       else {
-        $step2[$name] = $definition;
+        $step2[] = $name;
       }
     }
 
-    foreach ($step2 as $name => $definition) {
-      $context = array('name' => $name, 'parent' => $this);
-      $this->properties[$name] = typed_data()->create($definition, NULL, $context);
+    foreach ($step2 as $name) {
+      $this->properties[$name] = typed_data()->getPropertyInstance($this, $name);
     }
   }
 
@@ -96,14 +79,19 @@ abstract class FieldItemBase extends TypedData implements IteratorAggregate, Fie
    */
   public function setValue($values) {
     // Treat the values as property value of the first property, if no array is
-    // given and we only have one property.
-    if (!is_array($values) && count($this->properties) == 1) {
+    // given.
+    if (!is_array($values)) {
       $keys = array_keys($this->properties);
       $values = array($keys[0] => $values);
     }
 
     foreach ($this->properties as $name => $property) {
-      $property->setValue(isset($values[$name]) ? $values[$name] : NULL);
+      if (isset($values[$name])) {
+        $property->setValue($values[$name]);
+      }
+      else {
+        $property->setValue(NULL);
+      }
     }
     // @todo: Throw an exception for invalid values once conversion is
     // totally completed.
@@ -178,35 +166,6 @@ abstract class FieldItemBase extends TypedData implements IteratorAggregate, Fie
     }
   }
 
-  /**
-   * Implements ContextAwareInterface::getName().
-   */
-  public function getName() {
-    return $this->name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setName().
-   */
-  public function setName($name) {
-    $this->name = $name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::getParent().
-   *
-   * @return \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public function getParent() {
-    return $this->parent;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setParent().
-   */
-  public function setParent($parent) {
-    $this->parent = $parent;
-  }
 
   /**
    * Implements ComplexDataInterface::getProperties().
@@ -249,7 +208,12 @@ abstract class FieldItemBase extends TypedData implements IteratorAggregate, Fie
    */
   public function getPropertyDefinition($name) {
     $definitions = $this->getPropertyDefinitions();
-    return isset($definitions[$name]) ? $definitions[$name] : FALSE;
+    if (isset($definitions[$name])) {
+      return $definitions[$name];
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -271,7 +235,7 @@ abstract class FieldItemBase extends TypedData implements IteratorAggregate, Fie
     foreach ($this->properties as $name => $property) {
       $this->properties[$name] = clone $property;
       if ($property instanceof ContextAwareInterface) {
-        $this->properties[$name]->setParent($this);
+        $this->properties[$name]->setContext($name, $this);
       }
     }
   }

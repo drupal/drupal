@@ -79,6 +79,14 @@ class JsonldEntityNormalizer extends JsonldNormalizerBase implements Denormalize
       $values['langcode'] = language(LANGUAGE_TYPE_CONTENT)->langcode;
     }
     $entity = entity_create($typed_data_ids['entity_type'], $values);
+    // Make sure all empty entity fields default to NULL, so that afterwards it
+    // is possible to determine which fields were part of the data (even if they
+    // are empty).
+    foreach ($entity as $name => $field) {
+      if ($field->isEmpty()) {
+        $field->setValue(NULL);
+      }
+    }
 
     // For each attribute in the JSON-LD, add the values as fields to the newly
     // created entity. It is assumed that the JSON attribute names are the same

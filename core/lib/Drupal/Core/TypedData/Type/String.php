@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\TypedData\Type;
 
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedData;
 
 /**
  * The string data type.
@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * The plain value of a string is a regular PHP string. For setting the value
  * any PHP variable that casts to a string may be passed.
  */
-class String extends TypedData implements TypedDataInterface {
+class String extends TypedData {
 
   /**
    * The data value.

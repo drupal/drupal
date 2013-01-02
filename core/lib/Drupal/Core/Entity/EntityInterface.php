@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\TypedData\AccessibleInterface;
+use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 
@@ -17,7 +18,7 @@ use Drupal\Core\TypedData\TranslatableInterface;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  */
-interface EntityInterface extends ComplexDataInterface, AccessibleInterface, TranslatableInterface {
+interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, AccessibleInterface, TranslatableInterface {
 
   /**
    * Returns the entity identifier (the entity's machine name or numeric ID).
@@ -190,4 +191,23 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
    */
   public function getExportProperties();
 
+  /**
+   * Gets a backward compatibility decorator entity.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The backward compatible entity.
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::getOriginalEntity()
+   */
+  public function getBCEntity();
+
+  /**
+   * Removes any possible (backward compatibility) decorator in use.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The original, not backward compatible entity object.
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::getBCEntity()
+   */
+  public function getOriginalEntity();
 }

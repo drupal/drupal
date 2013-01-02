@@ -2,21 +2,20 @@
 
 /**
  * @file
- * Definition of Drupal\translation_entity\EntityTranslationController.
+ * Contains \Drupal\translation_entity\EntityTranslationControllerNG.
  */
 
-namespace Drupal\entity_test;
+namespace Drupal\translation_entity;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\translation_entity\EntityTranslationController;
 
 /**
  * Test entity translation controller.
  */
-class EntityTestTranslationController extends EntityTranslationController {
+class EntityTranslationControllerNG extends EntityTranslationController {
 
   /**
-   * Overrides EntityTranslationControllerInterface::removeTranslation().
+   * Overrides EntityTranslationController::removeTranslation().
    */
   public function removeTranslation(EntityInterface $entity, $langcode) {
     $translation = $entity->getTranslation($langcode);
@@ -24,5 +23,4 @@ class EntityTestTranslationController extends EntityTranslationController {
       $translation->$property_name = array();
     }
   }
-
 }

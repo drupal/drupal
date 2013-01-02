@@ -8,9 +8,9 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\TypedData\Type\TypedData;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ContextAwareInterface;
+use Drupal\Core\TypedData\ContextAwareTypedData;
 use Drupal\Core\TypedData\TypedDataInterface;
 use ArrayIterator;
 use IteratorAggregate;
@@ -36,21 +36,7 @@ use InvalidArgumentException;
  *  - id source: If used as computed property, the ID property used to load
  *    the entity object.
  */
-class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataInterface, ContextAwareInterface {
-
-  /**
-   * The name.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
-   * The parent data structure.
-   *
-   * @var mixed
-   */
-  protected $parent;
+class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, ComplexDataInterface {
 
   /**
    * The referenced entity type.
@@ -67,10 +53,10 @@ class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataI
   protected $id;
 
   /**
-   * Implements TypedDataInterface::__construct().
+   * Overrides ContextAwareTypedData::__construct().
    */
-  public function __construct(array $definition) {
-    $this->definition = $definition + array('constraints' => array());
+  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
     $this->entityType = isset($this->definition['constraints']['entity type']) ? $this->definition['constraints']['entity type'] : NULL;
   }
 
@@ -120,8 +106,10 @@ class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataI
    * Implements TypedDataInterface::getString().
    */
   public function getString() {
-    $entity = $this->getValue();
-    return $entity ? $entity->label() : '';
+    if ($entity = $this->getValue()) {
+      return $entity->label();
+    }
+    return '';
   }
 
   /**
@@ -135,17 +123,20 @@ class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataI
    * Implements IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    $entity = $this->getValue();
-    return $entity ? $entity->getIterator() : new ArrayIterator(array());
+    if ($entity = $this->getValue()) {
+      return $entity->getIterator();
+    }
+    return new ArrayIterator(array());
   }
 
   /**
    * Implements ComplexDataInterface::get().
    */
   public function get($property_name) {
-    $entity = $this->getValue();
     // @todo: Allow navigating through the tree without data as well.
-    return $entity ? $entity->get($property_name) : NULL;
+    if ($entity = $this->getValue()) {
+      return $entity->get($property_name);
+    }
   }
 
   /**
@@ -156,39 +147,13 @@ class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataI
   }
 
   /**
-   * Implements ContextAwareInterface::getName().
-   */
-  public function getName() {
-    return $this->name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setName().
-   */
-  public function setName($name) {
-    $this->name = $name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::getParent().
-   */
-  public function getParent() {
-    return $this->parent;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setParent().
-   */
-  public function setParent($parent) {
-    $this->parent = $parent;
-  }
-
-  /**
    * Implements ComplexDataInterface::getProperties().
    */
   public function getProperties($include_computed = FALSE) {
-    $entity = $this->getValue();
-    return $entity ? $entity->getProperties($include_computed) : array();
+    if ($entity = $this->getValue()) {
+      return $entity->getProperties($include_computed);
+    }
+    return array();
   }
 
   /**
@@ -196,7 +161,12 @@ class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataI
    */
   public function getPropertyDefinition($name) {
     $definitions = $this->getPropertyDefinitions();
-    return isset($definitions[$name]) ? $definitions[$name] : FALSE;
+    if (isset($definitions[$name])) {
+      return $definitions[$name];
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -211,8 +181,10 @@ class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataI
    * Implements ComplexDataInterface::getPropertyValues().
    */
   public function getPropertyValues() {
-    $entity = $this->getValue();
-    return $entity ? $entity->getPropertyValues() : array();
+    if ($entity = $this->getValue()) {
+      return $entity->getPropertyValues();
+    }
+    return array();
   }
 
   /**

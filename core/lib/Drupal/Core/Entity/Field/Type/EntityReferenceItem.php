@@ -13,13 +13,13 @@ use InvalidArgumentException;
 /**
  * Defines the 'entityreference_field' entity field item.
  *
- * Required settings (below the definition's 'settings' key) are:
- *  - entity type: The entity type to reference.
+ * Available settings (below the definition's 'settings' key) are:
+ *   - entity type: (required) The entity type to reference.
  */
 class EntityReferenceItem extends FieldItemBase {
 
   /**
-   * Field definitions of the contained properties.
+   * Definitions of the contained properties.
    *
    * @see self::getPropertyDefinitions()
    *
@@ -71,8 +71,11 @@ class EntityReferenceItem extends FieldItemBase {
     if (isset($values['value'])) {
       $this->properties['value']->setValue($values['value']);
     }
+    elseif (isset($values['entity'])) {
+      $this->properties['entity']->setValue($values['entity']);
+    }
     else {
-      $this->properties['entity']->setValue(isset($values['entity']) ? $values['entity'] : NULL);
+      $this->properties['entity']->setValue(NULL);
     }
     unset($values['entity'], $values['value']);
     if ($values) {
