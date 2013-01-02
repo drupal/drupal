@@ -949,7 +949,7 @@ function user_update_8014() {
       'module' => array(
         'description' => 'The name of the module declaring the variable.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 204,
         'not null' => TRUE,
         'default' => '',
       ),
