@@ -16,7 +16,8 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "test_processed_editor",
- *   title = @Translation("Test Processed Editor")
+ *   title = @Translation("Test Processed Editor"),
+ *   module = "edit_test"
  * )
  */
 class TestProcessedEditor extends ProcessedTextEditorBase {
