@@ -3949,7 +3949,7 @@ function drupal_pre_render_scripts($elements) {
         switch ($item['type']) {
           case 'setting':
             $element['#value_prefix'] = $embed_prefix;
-            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(NestedArray::mergeDeepArray($item['data'])) . ";";
+            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(NestedArray::mergeDeepArray($item['data'], TRUE)) . ";";
             $element['#value_suffix'] = $embed_suffix;
             break;
 
