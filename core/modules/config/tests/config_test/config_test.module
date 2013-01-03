@@ -10,68 +10,6 @@ use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
 /**
- * Implements hook_config_import_create().
- */
-function config_test_config_import_create($name, $new_config, $old_config) {
-  if (strpos($name, 'config_test.dynamic.') !== 0) {
-    return FALSE;
-  }
-  // Set a global value we can check in test code.
-  $GLOBALS['hook_config_import'] = __FUNCTION__;
-
-  $config_test = entity_create('config_test', $new_config->get());
-  $config_test->save();
-  return TRUE;
-}
-
-/**
- * Implements hook_config_import_change().
- */
-function config_test_config_import_change($name, $new_config, $old_config) {
-  if (strpos($name, 'config_test.dynamic.') !== 0) {
-    return FALSE;
-  }
-  // Set a global value we can check in test code.
-  $GLOBALS['hook_config_import'] = __FUNCTION__;
-
-  // @todo Make this less ugly.
-  list(, , $id) = explode('.', $name);
-  $config_test = entity_load('config_test', $id);
-
-  // Store the original config, and iterate through each property to store it.
-  $config_test->original = clone $config_test;
-  foreach ($old_config->get() as $property => $value) {
-    $config_test->original->$property = $value;
-  }
-
-  // Iterate through each property of the new config, copying it to the test
-  // object.
-  foreach ($new_config->get() as $property => $value) {
-    $config_test->$property = $value;
-  }
-
-  $config_test->save();
-  return TRUE;
-}
-
-/**
- * Implements hook_config_import_delete().
- */
-function config_test_config_import_delete($name, $new_config, $old_config) {
-  if (strpos($name, 'config_test.dynamic.') !== 0) {
-    return FALSE;
-  }
-  // Set a global value we can check in test code.
-  $GLOBALS['hook_config_import'] = __FUNCTION__;
-
-  // @todo Make this less ugly.
-  list(, , $id) = explode('.', $name);
-  $config_test = entity_load('config_test', $id);
-  $config_test->delete();
-  return TRUE;
-}
-
-/**
  * Entity URI callback.
  *
  * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test

@@ -503,65 +503,6 @@ function image_path_flush($path) {
 }
 
 /**
- * Implements hook_config_import_create().
- */
-function image_config_import_create($name, $new_config, $old_config) {
-  // Only image styles require custom handling. Any other module settings can be
-  // synchronized directly.
-  if (strpos($name, 'image.style.') !== 0) {
-    return FALSE;
-  }
-  $style = entity_create('image_style', $new_config->get());
-  $style->save();
-  return TRUE;
-}
-
-/**
- * Implements hook_config_import_change().
- */
-function image_config_import_change($name, $new_config, $old_config) {
-  // Only image styles require custom handling. Any other module settings can be
-  // synchronized directly.
-  if (strpos($name, 'image.style.') !== 0) {
-    return FALSE;
-  }
-
-  list(, , $id) = explode('.', $name);
-  $style = entity_load('image_style', $id);
-
-  $style->original = clone $style;
-  foreach ($old_config->get() as $property => $value) {
-    $style->original->$property = $value;
-  }
-
-  foreach ($new_config->get() as $property => $value) {
-    $style->$property = $value;
-  }
-
-  $style->save();
-  return TRUE;
-}
-
-/**
- * Implements MODULE_config_import_delete().
- */
-function image_config_import_delete($name, $new_config, $old_config) {
-  // Only image styles require custom handling. Any other module settings can be
-  // synchronized directly.
-  if (strpos($name, 'image.style.') !== 0) {
-    return FALSE;
-  }
-  // @todo image_style_delete() supports the notion of a "replacement style"
-  //   to be used by other modules instead of the deleted style. Essential!
-  //   But that is impossible currently, since the config system only knows
-  //   about deleted and added changes. Introduce an 'old_ID' key within
-  //   config objects as a standard?
-  list(, , $id) = explode('.', $name);
-  $style = entity_load('image_style', $id);
-  return image_style_delete($style);
-}
-
-/**
  * Loads an ImageStyle object.
  *
  * @param string $name

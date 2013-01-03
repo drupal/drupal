@@ -11,6 +11,7 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Config\Config;
 
 /**
  * Defines the storage controller class for configuration entities.
@@ -425,4 +426,76 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   public function getQueryServicename() {
     throw new \LogicException('Querying configuration entities is not supported.');
   }
+
+  /**
+   * Create configuration upon synchronizing configuration changes.
+   *
+   * This callback is invoked when configuration is synchronized between storages
+   * and allows a module to take over the synchronization of configuration data.
+   *
+   * @param string $name
+   *   The name of the configuration object.
+   * @param \Drupal\Core\Config\Config $new_config
+   *   A configuration object containing the new configuration data.
+   * @param \Drupal\Core\Config\Config $old_config
+   *   A configuration object containing the old configuration data.
+   */
+  public function importCreate($name, Config $new_config, Config $old_config) {
+    $entity = $this->create($new_config->get());
+    $entity->save();
+    return TRUE;
+  }
+
+  /**
+   * Update configuration upon synchronizing configuration changes.
+   *
+   * This callback is invoked when configuration is synchronized between storages
+   * and allows a module to take over the synchronization of configuration data.
+   *
+   * @param string $name
+   *   The name of the configuration object.
+   * @param \Drupal\Core\Config\Config $new_config
+   *   A configuration object containing the new configuration data.
+   * @param \Drupal\Core\Config\Config $old_config
+   *   A configuration object containing the old configuration data.
+   */
+  public function importChange($name, Config $new_config, Config $old_config) {
+    list(, , $id) = explode('.', $name);
+    $entities = $this->load(array($id));
+    $entity = $entities[$id];
+    $entity->original = clone $entity;
+
+    foreach ($old_config->get() as $property => $value) {
+      $entity->original->$property = $value;
+    }
+
+    foreach ($new_config->get() as $property => $value) {
+      $entity->$property = $value;
+    }
+
+    $entity->save();
+    return TRUE;
+  }
+
+  /**
+   * Delete configuration upon synchronizing configuration changes.
+   *
+   * This callback is invoked when configuration is synchronized between storages
+   * and allows a module to take over the synchronization of configuration data.
+   *
+   * @param string $name
+   *   The name of the configuration object.
+   * @param \Drupal\Core\Config\Config $new_config
+   *   A configuration object containing the new configuration data.
+   * @param \Drupal\Core\Config\Config $old_config
+   *   A configuration object containing the old configuration data.
+   */
+  public function importDelete($name, Config $new_config, Config $old_config) {
+    list(, , $id) = explode('.', $name);
+    $entities = $this->load(array($id));
+    $entity = $entities[$id];
+    $entity->delete();
+    return TRUE;
+  }
+
 }

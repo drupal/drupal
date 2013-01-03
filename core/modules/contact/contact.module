@@ -174,56 +174,6 @@ function _contact_personal_tab_access($account) {
 }
 
 /**
- * Implements MODULE_config_import_create().
- */
-function contact_config_import_create($name, $new_config, $old_config) {
-  if (strpos($name, 'contact.category.') !== 0) {
-    return FALSE;
-  }
-
-  $category = entity_create('contact_category', $new_config->get());
-  $category->save();
-  return TRUE;
-}
-
-/**
- * Implements MODULE_config_import_change().
- */
-function contact_config_import_change($name, $new_config, $old_config) {
-  if (strpos($name, 'contact.category.') !== 0) {
-    return FALSE;
-  }
-
-  list(, , $id) = explode('.', $name);
-  $category = entity_load('contact_category', $id);
-
-  $category->original = clone $category;
-  foreach ($old_config->get() as $property => $value) {
-    $category->original->$property = $value;
-  }
-
-  foreach ($new_config->get() as $property => $value) {
-    $category->$property = $value;
-  }
-
-  $category->save();
-  return TRUE;
-}
-
-/**
- * Implements MODULE_config_import_delete().
- */
-function contact_config_import_delete($name, $new_config, $old_config) {
-  if (strpos($name, 'contact.category.') !== 0) {
-    return FALSE;
-  }
-
-  list(, , $id) = explode('.', $name);
-  entity_delete_multiple('contact_category', array($id));
-  return TRUE;
-}
-
-/**
  * Implements hook_entity_info().
  */
 function contact_entity_info(&$types) {
