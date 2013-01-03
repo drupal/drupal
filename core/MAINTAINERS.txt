@@ -264,6 +264,10 @@ RDF module
 - Stéphane Corlosquet 'scor' http://drupal.org/user/52142
 - Lin Clark 'linclark' http://drupal.org/user/396253
 
+REST module
+- Klaus Purer 'klausi' http://drupal.org/user/262198
+- Larry Garfield 'Crell' http://drupal.org/user/26398
+
 Search module
 - Doug Green 'douggreen' http://drupal.org/user/29191
 
