@@ -2869,7 +2869,15 @@ function theme_details($variables) {
 
   $output = '<details' . new Attribute($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
-    $output .= '<summary>' . $element['#title'] . '</summary>';
+    $summary_attributes = new Attribute(array(
+      'role' => 'button',
+    ));
+    if (!empty($element['#attributes']['id'])) {
+      $summary_attributes['aria-controls'] = $element['#attributes']['id'];
+    }
+    $summary_attributes['aria-expanded'] = empty($element['#attributes']['open']) ? FALSE : TRUE;
+    $summary_attributes['aria-pressed'] = $summary_attributes['aria-expanded'];
+    $output .= '<summary' . $summary_attributes . '>' . $element['#title'] . '</summary>';
   }
   $output .= '<div class="details-wrapper">';
   if (!empty($element['#description'])) {
