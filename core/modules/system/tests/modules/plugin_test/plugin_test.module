@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\plugin_test\Plugin\CachedMockBlockManager;
+
 /**
  * @file
  * Helper module for the plugin tests.
@@ -13,4 +15,34 @@ function plugin_test_plugin_test_alter(&$definitions) {
     $definition['altered'] = TRUE;
   }
   $definitions['user_login']['altered_single'] = TRUE;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function plugin_test_menu() {
+  $items = array();
+  $items['plugin_definition_test'] = array(
+    'access callback' => TRUE,
+    'page callback' => 'plugin_test_definitions',
+  );
+  return $items;
+}
+
+/**
+ * A simple page callback that prints plugin labels for testing.
+ *
+ * @return array
+ *   A simple renderable array of plugin labels.
+ */
+function plugin_test_definitions() {
+  $manager = new CachedMockBlockManager();
+  $output = array();
+  foreach($manager->getDefinitions() as $plugin_id => $definition) {
+    $output[$plugin_id] = array(
+      '#type' => 'markup',
+      '#markup' => $definition['label'],
+    );
+  }
+  return $output;
 }

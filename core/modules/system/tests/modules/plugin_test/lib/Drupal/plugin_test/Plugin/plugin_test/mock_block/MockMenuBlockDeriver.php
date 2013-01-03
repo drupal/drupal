@@ -41,10 +41,10 @@ class MockMenuBlockDeriver implements DerivativeInterface {
     // Drupal's configuration to find out which menus actually exist.
     $derivatives = array(
       'main_menu' => array(
-        'label' => 'Main menu',
+        'label' => t('Main menu'),
       ) + $base_plugin_definition,
       'navigation' => array(
-        'label' => 'Navigation',
+        'label' => t('Navigation'),
       ) + $base_plugin_definition,
     );
 
