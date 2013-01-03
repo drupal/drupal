@@ -108,7 +108,6 @@ Mail system
 - ?
 
 Markup
-- Jacine Luisi 'Jacine' http://drupal.org/user/88931
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 
 Menu system
@@ -344,9 +343,6 @@ Configuration management
 
 Design
 - Jeff Burns 'Jeff Burnz' http://drupal.org/user/61393
-
-HTML 5
-- Jacine Luisi 'Jacine' http://drupal.org/user/88931
 
 Mobile
 - John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
