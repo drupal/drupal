@@ -58,8 +58,7 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
     this._loaderVisibleStart = 0;
 
     // Generate a DOM-compatible ID for the toolbar DOM element.
-    var propertyID = Drupal.edit.util.calcPropertyID(this.entity, this.predicate);
-    this._id = 'edit-toolbar-for-' + propertyID.replace(/\//g, '_');
+    this._id = Drupal.edit.util.calcPropertyID(this.entity, this.predicate).replace(/\//g, '_');
   },
 
   /**
@@ -345,19 +344,21 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
     this.$el
       .find('.edit-toolbar')
       .append(Drupal.theme('editToolgroup', {
-        classes: 'wysiwyg-tabs',
+        id: this.getFloatedWysiwygToolgroupId(),
+        classes: 'wysiwyg-floated',
         buttons: []
       }))
       .append(Drupal.theme('editToolgroup', {
-        classes: 'wysiwyg',
+        id: this.getMainWysiwygToolgroupId(),
+        classes: 'wysiwyg-main',
         buttons: []
       }));
 
     // Animate the toolgroups into visibility.
     var that = this;
     setTimeout(function () {
-      that.show('wysiwyg-tabs');
-      that.show('wysiwyg');
+      that.show('wysiwyg-floated');
+      that.show('wysiwyg-main');
     }, 0);
   },
 
@@ -410,15 +411,39 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
   },
 
   /**
-   * Calculates the ID for this toolbar container.
+   * Retrieves the ID for this toolbar's container.
    *
    * Only used to make sane hovering behavior possible.
    *
    * @return string
-   *   A string that can be used as the ID for this toolbar container.
+   *   A string that can be used as the ID for this toolbar's container.
    */
-  getId: function() {
-    return this._id;
+  getId: function () {
+    return 'edit-toolbar-for-' + this._id;
+  },
+
+  /**
+   * Retrieves the ID for this toolbar's floating WYSIWYG toolgroup.
+   *
+   * Used to provide an abstraction for any WYSIWYG editor to plug in.
+   *
+   * @return string
+   *   A string that can be used as the ID.
+   */
+  getFloatedWysiwygToolgroupId: function () {
+    return 'edit-wysiwyg-floated-toolgroup-for-' + this._id;
+  },
+
+  /**
+   * Retrieves the ID for this toolbar's main WYSIWYG toolgroup.
+   *
+   * Used to provide an abstraction for any WYSIWYG editor to plug in.
+   *
+   * @return string
+   *   A string that can be used as the ID.
+   */
+  getMainWysiwygToolgroupId: function () {
+    return 'edit-wysiwyg-main-toolgroup-for-' + this._id;
   },
 
   /**

@@ -79,6 +79,7 @@ Drupal.theme.editToolbarContainer = function(settings) {
  *
  * @param settings
  *   An object with the following keys:
+ *   - id: (optional) the id of the toolgroup
  *   - classes: the class of the toolgroup.
  *   - buttons: @see Drupal.theme.prototype.editButtons().
  * @return
@@ -87,7 +88,11 @@ Drupal.theme.editToolbarContainer = function(settings) {
 Drupal.theme.editToolgroup = function(settings) {
   var classes = 'edit-toolgroup edit-animate-slow edit-animate-invisible edit-animate-delay-veryfast';
   var html = '';
-  html += '<div class="' + classes + ' ' + settings.classes + '">';
+  html += '<div class="' + classes + ' ' + settings.classes + '"';
+  if (settings.id) {
+    html += ' id="' + settings.id + '"';
+  }
+  html += '>';
   html += Drupal.theme('editButtons', { buttons: settings.buttons });
   html += '</div>';
   return html;
