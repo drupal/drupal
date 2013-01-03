@@ -23,11 +23,15 @@ class EnableDisableTest extends ModuleTestBase {
    * Tests that all core modules can be enabled, disabled and uninstalled.
    */
   function testEnableDisable() {
-    // Try to enable, disable and uninstall all core modules, unless they are
-    // hidden or required.
     $modules = system_rebuild_module_data();
     foreach ($modules as $name => $module) {
-      if ($module->info['package'] != 'Core' || !empty($module->info['hidden']) || !empty($module->info['required'])) {
+      // Filters all modules under core directory.
+      $in_core_path = (strpos($module->uri, 'core/modules') === 0);
+      // Filters test modules under Testing package.
+      $in_testing_package = ($module->info['package'] == 'Testing');
+      // Try to enable, disable and uninstall all core modules, unless they are
+      // hidden or required or system test modules.
+      if (!$in_core_path || isset($module->info['hidden']) || isset($module->info['required']) || $in_testing_package) {
         unset($modules[$name]);
       }
     }
@@ -88,7 +92,8 @@ class EnableDisableTest extends ModuleTestBase {
 
         // Install and enable the module.
         $edit = array();
-        $edit['modules[Core][' . $name . '][enable]'] = $name;
+        $package = $module->info['package'];
+        $edit['modules[' . $package . '][' . $name . '][enable]'] = $name;
         $this->drupalPost('admin/modules', $edit, t('Save configuration'));
         // Handle the case where modules were installed along with this one and
         // where we therefore hit a confirmation screen.
@@ -117,7 +122,7 @@ class EnableDisableTest extends ModuleTestBase {
         // for the dblog module, because that is needed for the test; we'll go
         // back and do that one at the end also.
         if ($name != 'dblog') {
-          $this->assertSuccessfulDisableAndUninstall($name);
+          $this->assertSuccessfulDisableAndUninstall($name, $package);
         }
       }
     }
@@ -127,13 +132,15 @@ class EnableDisableTest extends ModuleTestBase {
     while (!empty($automatically_enabled)) {
       $initial_count = count($automatically_enabled);
       foreach (array_keys($automatically_enabled) as $name) {
+        $module = $modules[$name];
+        $package = $module->info['package'];
         // If the module can't be disabled due to dependencies, skip it and try
         // again the next time. Otherwise, try to disable it.
         $this->drupalGet('admin/modules');
-        $disabled_checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Core][' . $name . '][enable]"]');
+        $disabled_checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[' . $package . '][' . $name . '][enable]"]');
         if (empty($disabled_checkbox) && $name != 'dblog') {
           unset($automatically_enabled[$name]);
-          $this->assertSuccessfulDisableAndUninstall($name);
+          $this->assertSuccessfulDisableAndUninstall($name, $package);
         }
       }
       $final_count = count($automatically_enabled);
@@ -158,8 +165,8 @@ class EnableDisableTest extends ModuleTestBase {
     // - That enabling more than one module at the same time does not lead to
     //   any errors.
     $edit = array();
-    foreach (array_keys($modules) as $name) {
-      $edit['modules[Core][' . $name . '][enable]'] = $name;
+    foreach ($modules as $name => $module) {
+      $edit['modules[' . $module->info['package'] . '][' . $name . '][enable]'] = $name;
     }
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
@@ -170,11 +177,14 @@ class EnableDisableTest extends ModuleTestBase {
    *
    * @param string $module
    *   The name of the module to disable and uninstall.
+   * @param string $package
+   *   (optional) The package of the module to disable and uninstall. Defaults
+   *   to 'Core'.
    */
-  function assertSuccessfulDisableAndUninstall($module) {
+  function assertSuccessfulDisableAndUninstall($module, $package = 'Core') {
     // Disable the module.
     $edit = array();
-    $edit['modules[Core][' . $module . '][enable]'] = FALSE;
+    $edit['modules[' . $package . '][' . $module . '][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->assertModules(array($module), FALSE);
