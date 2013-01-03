@@ -46,10 +46,10 @@ var mql = {
 Drupal.behaviors.toolbar = {
   attach: function(context) {
     var options = $.extend(this.options, drupalSettings.toolbar);
-    var $onceCheck = $(context).find('#toolbar-administration').once('toolbar');
-    if ($onceCheck.length) {
-      // Assign $onceCheck to $toolbar in the closure.
-      $toolbar = $onceCheck;
+    var $toolbarOnce = $(context).find('#toolbar-administration').once('toolbar');
+    if ($toolbarOnce.length) {
+      // Assign the $toolbar variable in the closure.
+      $toolbar = $toolbarOnce;
       // Add subtrees.
       // @todo Optimize this to delay adding each subtree to the DOM until it is
       //   needed; however, take into account screen readers for determining
