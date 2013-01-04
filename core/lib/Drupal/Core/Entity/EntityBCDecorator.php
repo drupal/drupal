@@ -125,7 +125,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
    * Forwards the call to the decorated entity.
    */
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
-    return $this->decorated->access($account);
+    return $this->decorated->access($operation, $account);
   }
 
   /**
