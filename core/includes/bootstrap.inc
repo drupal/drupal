@@ -1523,8 +1523,9 @@ function t($string, array $args = array(), array $options = array()) {
  * page (especially text that may have come from untrusted users, since in that
  * case it prevents cross-site scripting and other security problems).
  *
- * In most cases, you should use t() rather than this function, since it will
- * translate the text (on non-English-only sites) in addition to formatting it.
+ * In most cases, you should use t() rather than calling this function
+ * directly, since it will translate the text (on non-English-only sites) in
+ * addition to formatting it.
  *
  * @param $string
  *   A string containing placeholders.
