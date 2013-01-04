@@ -161,7 +161,7 @@ abstract class RESTTestBase extends WebTestBase {
    */
   protected function enableService($resource_type) {
     // Enable web API for this entity type.
-    $config = config('rest');
+    $config = config('rest.settings');
     if ($resource_type) {
       $config->set('resources', array(
         $resource_type => $resource_type,
