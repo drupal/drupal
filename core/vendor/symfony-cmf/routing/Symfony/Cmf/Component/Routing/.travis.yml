@@ -1,0 +1,15 @@
+language: php
+
+env:
+  - SYMFONY_VERSION=2.1.*
+  - SYMFONY_VERSION=dev-master
+
+before_script:
+  - composer require symfony/routing:${SYMFONY_VERSION}
+  - composer install --dev
+
+script: phpunit --coverage-text
+
+notifications:
+  irc: "irc.freenode.org#symfony-cmf"
+  email: "symfony-cmf-devs@googlegroups.com"

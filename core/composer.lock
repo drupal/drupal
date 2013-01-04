@@ -1,5 +1,5 @@
 {
-    "hash": "5d17aee0bd24c24563c2c864600fc5bd",
+    "hash": "27b5fb7194e0d492c69d372d8ba17b2b",
     "packages": [
         {
             "name": "doctrine/common",
@@ -307,6 +307,56 @@
                 "assets",
                 "compression",
                 "minification"
+            ]
+        },
+        {
+            "name": "symfony-cmf/routing",
+            "version": "dev-master",
+            "target-dir": "Symfony/Cmf/Component/Routing",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony-cmf/Routing",
+                "reference": "1.0.0-alpha3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony-cmf/Routing/archive/1.0.0-alpha3.zip",
+                "reference": "1.0.0-alpha3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/routing": ">=2.1,<2.3-dev",
+                "symfony/http-kernel": ">=2.1,<2.3-dev"
+            },
+            "time": "2012-12-16 17:52:57",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Cmf\\Component\\Routing": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony CMF Community",
+                    "homepage": "https://github.com/symfony-cmf/Routing/contributors"
+                }
+            ],
+            "description": "Extends the Symfony2 routing component for dynamic routes and chaining several routers",
+            "homepage": "http://cmf.symfony.com",
+            "keywords": [
+                "database",
+                "routing"
             ]
         },
         {
@@ -848,6 +898,7 @@
     "stability-flags": {
         "twig/twig": 0,
         "doctrine/common": 0,
-        "kriswallsmith/assetic": 15
+        "kriswallsmith/assetic": 15,
+        "symfony-cmf/routing": 20
     }
 }
