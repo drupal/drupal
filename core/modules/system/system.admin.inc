@@ -2336,7 +2336,7 @@ function theme_system_modules_details($variables) {
     $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
 
     // Add the module label and expand/collapse functionalty.
-    $col2 = '<label for="' . $module['enable']['#id'] . '" class="module-name">' . drupal_render($module['name']) . '</label>';
+    $col2 = '<label id="' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name">' . drupal_render($module['name']) . '</label>';
     $row[] = array('class' => array('module'), 'data' => $col2);
 
     // Add the description, along with any modules it requires.
