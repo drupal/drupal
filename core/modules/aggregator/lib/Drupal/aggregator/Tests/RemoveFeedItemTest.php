@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests functionality of removing a feed item in the Aggregator module.
+ */
 class RemoveFeedItemTest extends AggregatorTestBase {
   public static function getInfo() {
     return array(
@@ -17,7 +20,7 @@ class RemoveFeedItemTest extends AggregatorTestBase {
   }
 
   /**
-   * Test running "remove items" from the 'admin/config/services/aggregator' page.
+   * Tests running "remove items" from 'admin/config/services/aggregator' page.
    */
   function testRemoveFeedItem() {
     // Create a bunch of test feeds.

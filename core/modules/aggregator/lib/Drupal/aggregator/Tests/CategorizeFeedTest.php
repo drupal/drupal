@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests the categorize feed functionality in the Aggregator module.
+ */
 class CategorizeFeedTest extends AggregatorTestBase {
   public static function getInfo() {
     return array(
@@ -17,7 +20,7 @@ class CategorizeFeedTest extends AggregatorTestBase {
   }
 
   /**
-   * Create a feed and make sure you can add more than one category to it.
+   * Creates a feed and makes sure you can add more than one category to it.
    */
   function testCategorizeFeed() {
 

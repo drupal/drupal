@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests for feed parsing.
+ * Tests feed parsing in the Aggregator module.
  */
 class FeedParserTest extends AggregatorTestBase {
   public static function getInfo() {
@@ -28,7 +28,7 @@ class FeedParserTest extends AggregatorTestBase {
   }
 
   /**
-   * Test a feed that uses the RSS 0.91 format.
+   * Tests a feed that uses the RSS 0.91 format.
    */
   function testRSS091Sample() {
     $feed = $this->createFeed($this->getRSS091Sample());
@@ -50,7 +50,7 @@ class FeedParserTest extends AggregatorTestBase {
   }
 
   /**
-   * Test a feed that uses the Atom format.
+   * Tests a feed that uses the Atom format.
    */
   function testAtomSample() {
     $feed = $this->createFeed($this->getAtomSample());

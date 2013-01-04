@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests importing feeds from OPML functionality for the Aggregator module.
+ */
 class ImportOpmlTest extends AggregatorTestBase {
 
   /**
@@ -32,7 +35,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   }
 
   /**
-   * Open OPML import form.
+   * Opens OPML import form.
    */
   function openImportForm() {
     db_delete('aggregator_category')->execute();
@@ -65,7 +68,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   }
 
   /**
-   * Submit form filled with invalid fields.
+   * Submits form filled with invalid fields.
    */
   function validateImportFormFields() {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -91,7 +94,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   }
 
   /**
-   * Submit form with invalid, empty and valid OPML files.
+   * Submits form with invalid, empty, and valid OPML files.
    */
   function submitImportForm() {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -150,6 +153,9 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertTrue($category, 'Categories are correct.');
   }
 
+  /**
+   * Tests the import of an OPML file.
+   */
   function testOpmlImport() {
     $this->openImportForm();
     $this->validateImportFormFields();

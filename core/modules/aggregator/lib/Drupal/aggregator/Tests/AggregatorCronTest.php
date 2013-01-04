@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests functionality of the cron process in the Aggregator module.
+ */
 class AggregatorCronTest extends AggregatorTestBase {
   public static function getInfo() {
     return array(
@@ -17,7 +20,7 @@ class AggregatorCronTest extends AggregatorTestBase {
   }
 
   /**
-   * Add feeds update them on cron.
+   * Adds feeds and updates them via cron process.
    */
   public function testCron() {
     // Create feed and test basic updating on cron.

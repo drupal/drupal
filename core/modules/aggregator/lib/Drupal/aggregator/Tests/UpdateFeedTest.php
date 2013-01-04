@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests functionality of updating the feed in the Aggregator module.
+ */
 class UpdateFeedTest extends AggregatorTestBase {
   public static function getInfo() {
     return array(
@@ -17,7 +20,7 @@ class UpdateFeedTest extends AggregatorTestBase {
   }
 
   /**
-   * Create a feed and attempt to update it.
+   * Creates a feed and attempts to update it.
    */
   function testUpdateFeed() {
     $remamining_fields = array('title', 'url', '');

@@ -10,7 +10,7 @@ namespace Drupal\aggregator\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Defines a base class for testing aggregator.module.
+ * Defines a base class for testing the Aggregator module.
  */
 abstract class AggregatorTestBase extends WebTestBase {
 
@@ -34,10 +34,15 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Create an aggregator feed (simulate form submission on admin/config/services/aggregator/add/feed).
+   * Creates an aggregator feed.
+   *
+   * This method simulates the form submission on path
+   * admin/config/services/aggregator/add/feed.
    *
    * @param $feed_url
-   *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
+   *   (optional) If given, feed will be created with this URL, otherwise
+   *   /rss.xml will be used. Defaults to NULL.
+   *
    * @return $feed
    *   Full feed object if possible.
    *
@@ -54,7 +59,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Delete an aggregator feed.
+   * Deletes an aggregator feed.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -65,10 +70,12 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Return a randomly generated feed edit array.
+   * Returns a randomly generated feed edit array.
    *
    * @param $feed_url
-   *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
+   *   (optional) If given, feed will be created with this URL, otherwise
+   *   /rss.xml will be used. Defaults to NULL.
+   *
    * @return
    *   A feed array.
    */
@@ -89,7 +96,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Return the count of the randomly created feed array.
+   * Returns the count of the randomly created feed array.
    *
    * @return
    *   Number of feed items on default feed created by createFeed().
@@ -101,10 +108,13 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Update feed items (simulate click to admin/config/services/aggregator/update/$fid).
+   * Updates the feed items.
+   *
+   * This method simulates a click to
+   * admin/config/services/aggregator/update/$fid.
    *
    * @param $feed
-   *   Feed object representing the feed.
+   *   Feed object representing the feed, passed by reference.
    * @param $expected_count
    *   Expected number of feed items.
    */
@@ -133,7 +143,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Confirm item removal from a feed.
+   * Confirms an item removal from a feed.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -144,7 +154,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Add and remove feed items and ensure that the count is zero.
+   * Adds and removes feed items and ensure that the count is zero.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -161,7 +171,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Pull feed categories from aggregator_category_feed table.
+   * Pulls feed categories from {aggregator_category_feed} table.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -175,7 +185,11 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Pull categories from aggregator_category table.
+   * Pulls categories from {aggregator_category} table.
+   *
+   * @return array
+   *   An associative array keyed by category ID and values are set to the
+   *   category names.
    */
   function getCategories() {
     $categories = array();
@@ -186,14 +200,14 @@ abstract class AggregatorTestBase extends WebTestBase {
     return $categories;
   }
 
-
   /**
-   * Check if the feed name and url is unique.
+   * Checks whether the feed name and URL are unique.
    *
    * @param $feed_name
    *   String containing the feed name to check.
    * @param $feed_url
    *   String containing the feed url to check.
+   *
    * @return
    *   TRUE if feed is unique.
    */
@@ -203,10 +217,11 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Create a valid OPML file from an array of feeds.
+   * Creates a valid OPML file from an array of feeds.
    *
    * @param $feeds
    *   An array of feeds.
+   *
    * @return
    *   Path to valid OPML file.
    */
@@ -244,7 +259,7 @@ EOF;
   }
 
   /**
-   * Create an invalid OPML file.
+   * Creates an invalid OPML file.
    *
    * @return
    *   Path to invalid OPML file.
@@ -261,7 +276,7 @@ EOF;
   }
 
   /**
-   * Create a valid but empty OPML file.
+   * Creates a valid but empty OPML file.
    *
    * @return
    *   Path to empty OPML file.
@@ -300,7 +315,7 @@ EOF;
    * Creates sample article nodes.
    *
    * @param $count
-   *   (optional) The number of nodes to generate.
+   *   (optional) The number of nodes to generate. Defaults to five.
    */
   function createSampleNodes($count = 5) {
     $langcode = LANGUAGE_NOT_SPECIFIED;

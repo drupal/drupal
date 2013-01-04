@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Admin page callbacks for the aggregator module.
+ * Administration page callbacks for the Aggregator module.
  */
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -10,6 +10,9 @@ use Drupal\aggregator\Plugin\FetcherManager;
 
 /**
  * Page callback: Displays the aggregator administration page.
+ *
+ * @return string
+ *   A HTML-formatted string with administration page content.
  *
  * @see aggregator_menu()
  */
@@ -92,8 +95,8 @@ function aggregator_view() {
  * Form constructor for adding and editing feed sources.
  *
  * @param $feed
- *   If editing a feed, the feed to edit as a PHP stdClass value; if adding a
- *   new feed, NULL.
+ *   (optional) If editing a feed, the feed to edit as a PHP stdClass value; if
+ *   adding a new feed, NULL. Defaults to NULL.
  *
  * @ingroup forms
  * @see aggregator_menu()
@@ -199,6 +202,7 @@ function aggregator_form_feed_validate($form, &$form_state) {
  * Form submission handler for aggregator_form_feed().
  *
  * @see aggregator_form_feed_validate()
+ *
  * @todo Add delete confirmation dialog.
  */
 function aggregator_form_feed_submit($form, &$form_state) {
@@ -641,6 +645,7 @@ function aggregator_form_category_validate($form, &$form_state) {
  * Form submission handler for aggregator_form_category().
  *
  * @see aggregator_form_category_validate()
+ *
  * @todo Add delete confirmation dialog.
  */
 function aggregator_form_category_submit($form, &$form_state) {

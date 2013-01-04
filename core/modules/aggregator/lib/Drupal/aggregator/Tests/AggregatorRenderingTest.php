@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests rendering functionality in the Aggregator module.
+ */
 class AggregatorRenderingTest extends AggregatorTestBase {
 
   /**
@@ -25,9 +28,9 @@ class AggregatorRenderingTest extends AggregatorTestBase {
   }
 
   /**
-   * Add a feed block to the page and checks its links.
+   * Adds a feed block to the page and checks its links.
    *
-   * TODO: Test the category block as well.
+   * @todo Test the category block as well.
    */
   public function testBlockLinks() {
     // Create feed.
@@ -79,7 +82,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
   }
 
   /**
-   * Create a feed and check that feed's page.
+   * Creates a feed and checks that feed's page.
    */
   public function testFeedPage() {
     // Increase the number of items published in the rss.xml feed so we have

@@ -2,11 +2,14 @@
 
 /**
  * @file
- * User page callbacks for the aggregator module.
+ * User page callbacks for the Aggregator module.
  */
 
 /**
  * Page callback: Displays the most recent items gathered from any feed.
+ *
+ * @return string
+ *   The rendered list of items for the feed.
  *
  * @see aggregator_menu()
  */
@@ -19,10 +22,13 @@ function aggregator_page_last() {
 }
 
 /**
- * Page callback: Displays all the items captured from a particular feed.
+ * Page callback: Displays all the items captured from the particular feed.
  *
  * @param $feed
  *   The feed for which to display all items.
+ *
+ * @return string
+ *   The rendered list of items for the feed.
  *
  * @see aggregator_menu()
  */
@@ -41,7 +47,10 @@ function aggregator_page_source($feed) {
  * Form constructor to show all items captured from a feed.
  *
  * @param $feed
- *   The feed for which to list all the aggregated items.
+ *   The feed for which to list all of the aggregated items.
+ *
+ * @return string
+ *   The rendered list of items for the feed.
  *
  * @see aggregator_menu()
  * @see aggregator_page_source()
@@ -55,7 +64,10 @@ function aggregator_page_source_form($form, $form_state, $feed) {
  * Form constructor to list items aggregated in a category.
  *
  * @param $category
- *   The category for which to list all the aggregated items.
+ *   The category for which to list all of the aggregated items.
+ *
+ * @return string
+ *   The rendered list of items for the feed.
  *
  * @see aggregator_menu()
  * @ingroup forms
@@ -74,7 +86,10 @@ function aggregator_page_category($category) {
  * Form constructor to list items aggregated in a category.
  *
  * @param $category
- *   The category for which to list all the aggregated items.
+ *   The category for which to list all of the aggregated items.
+ *
+ * @return string
+ *   The rendered list of items for the feed.
  *
  * @see aggregator_menu()
  * @see aggregator_page_category()
@@ -162,7 +177,7 @@ function aggregator_load_feed_items($type, $data = NULL) {
  *   The feed source URL.
  *
  * @return
- *   The rendered list of items for a feed.
+ *   The rendered list of items for the feed.
  */
 function _aggregator_page_list($items, $op, $feed_source = '') {
   if (user_access('administer news feeds') && ($op == 'categorize')) {
@@ -184,13 +199,17 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
 /**
  * Form constructor to build the page list form.
  *
- * @param $items
+ * @param array $items
  *   An array of the feed items.
- * @param $feed_source
- *   The feed source URL.
+ * @param string $feed_source
+ *   (optional) The feed source URL. Defaults to an empty string.
  *
- * @ingroup forms
+ * @return array
+ *   An array of FAPI elements.
+ *
  * @see aggregator_categorize_items_submit()
+ * @see theme_aggregator_categorize_items()
+ * @ingroup forms
  */
 function aggregator_categorize_items($items, $feed_source = '') {
   $form['#submit'][] = 'aggregator_categorize_items_submit';
@@ -346,7 +365,10 @@ function template_preprocess_aggregator_item(&$variables) {
 }
 
 /**
- * Page callback: Displays all the feeds used by the aggregator.
+ * Page callback: Displays all the feeds used by the Aggregator module.
+ *
+ * @return string
+ *   An HTML-formatted string.
  *
  * @see aggregator_menu()
  */
@@ -373,7 +395,10 @@ function aggregator_page_sources() {
 }
 
 /**
- * Page callback: Displays all the categories used by the aggregator.
+ * Page callback: Displays all the categories used by the Aggregator module.
+ *
+ * @return string
+ *   An HTML formatted string.
  *
  * @see aggregator_menu()
  */
@@ -399,6 +424,9 @@ function aggregator_page_categories() {
 
 /**
  * Page callback: Generates an RSS 0.92 feed of aggregator items or categories.
+ *
+ * @return string
+ *   An HTML formatted string.
  *
  * @see aggregator_menu()
  */
@@ -472,8 +500,11 @@ function theme_aggregator_page_rss($variables) {
  * Page callback: Generates an OPML representation of all feeds.
  *
  * @param $cid
- *   If set, feeds are exported only from a category with this ID. Otherwise,
- *   all feeds are exported.
+ *   (optional) If set, feeds are exported only from a category with this ID.
+ *   Otherwise, all feeds are exported. Defaults to NULL.
+ *
+ * @return string
+ *   An OPML formatted string.
  *
  * @see aggregator_menu()
  */
@@ -490,13 +521,11 @@ function aggregator_page_opml($cid = NULL) {
 }
 
 /**
- * Prints the OPML page for a feed.
+ * Prints the OPML page for the feed.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - feeds: An array of the feeds to theme.
- *
- * @return void
  *
  * @ingroup themeable
  */
