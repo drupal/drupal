@@ -12,6 +12,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Page callback: Prints a listing of all books.
  *
+ * @return string
+ *   A HTML-formatted string with the listing of all books content.
+ *
  * @see book_menu()
  */
 function book_render() {
@@ -42,6 +45,8 @@ function book_render() {
  * @return
  *   A string representing the node and its children in the book hierarchy in a
  *   format determined by the $type parameter.
+ *
+ * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
  *
  * @see book_menu()
  */
@@ -75,6 +80,9 @@ function book_export($type, $nid) {
  * @return
  *   A string containing HTML representing the node and its children in
  *   the book hierarchy.
+ *
+ * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+ * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
  */
 function book_export_html($nid) {
   if (user_access('access printer-friendly version')) {
@@ -99,6 +107,9 @@ function book_export_html($nid) {
  *
  * @param Drupal\node\Node $node
  *   The book node for which to show the outline.
+ *
+ * @return string
+ *   A HTML-formatted string with the outline form for a single node.
  *
  * @see book_menu()
  */
