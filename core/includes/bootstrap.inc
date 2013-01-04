@@ -1452,8 +1452,9 @@ function bootstrap_hooks() {
  * Basically, you can put variables like @name into your string, and t() will
  * substitute their sanitized values at translation time. (See the
  * Localization API pages referenced above and the documentation of
- * format_string() for details.) Translators can then rearrange the string as
- * necessary for the language (e.g., in Spanish, it might be "blog de @name").
+ * format_string() for details about how to define variables in your string.)
+ * Translators can then rearrange the string as necessary for the language
+ * (e.g., in Spanish, it might be "blog de @name").
  *
  * During the Drupal installation phase, some resources used by t() wil not be
  * available to code that needs localization. See st() and get_t() for
