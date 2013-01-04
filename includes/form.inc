@@ -302,7 +302,7 @@ function drupal_execute($form_id, &$form_state) {
 
   // Make sure $form_state is passed around by reference.
   $args[1] = &$form_state;
-  
+
   $form = call_user_func_array('drupal_retrieve_form', $args);
   $form['#post'] = $form_state['values'];
 
@@ -773,8 +773,8 @@ function form_execute_handlers($type, &$form, &$form_state) {
 
   foreach ($handlers as $function) {
     if (function_exists($function))  {
-      // Check to see if a previous _submit handler has set a batch, but 
-      // make sure we do not react to a batch that is already being processed 
+      // Check to see if a previous _submit handler has set a batch, but
+      // make sure we do not react to a batch that is already being processed
       // (for instance if a batch operation performs a drupal_execute()).
       if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['current_set'])) {
         // Some previous _submit handler has set a batch. We store the call
@@ -2425,8 +2425,8 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *   - 'init_message': Message displayed while the processing is initialized.
  *     Defaults to t('Initializing.').
  *   - 'progress_message': Message displayed while processing the batch.
- *     Available placeholders are @current, @remaining, @total, @percentage,
- *     @estimate and @elapsed. Defaults to t('Completed @current of @total.').
+ *     Available placeholders are @current, @remaining, @total, and
+ *     @percentage. Defaults to t('Completed @current of @total.').
  *   - 'error_message': Message displayed if an error occurred while processing
  *     the batch. Defaults to t('An error has occurred.').
  *   - 'finished': Name of a function to be executed after the batch has
