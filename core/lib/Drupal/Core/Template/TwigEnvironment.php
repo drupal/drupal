@@ -105,7 +105,7 @@ class TwigEnvironment extends \Twig_Environment {
    */
   protected function storage() {
     if (!isset($this->storage)) {
-      $this->storage = PhpStorageFactory::get('service_container');
+      $this->storage = PhpStorageFactory::get('twig');
     }
     return $this->storage;
   }
