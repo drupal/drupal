@@ -28,24 +28,6 @@ class ExceptionController extends ContainerAware {
   protected $negotiation;
 
   /**
-   * Instantiates a new exception listener.
-   *
-   * Factory method for getting an Exception Listener. Since this needs to be
-   * instanciated with a controller callable, i.e. an ExceptionConroller object
-   * and the name of the method to call, we can't just register it to the DIC
-   * the regular way.
-   *
-   * @todo This probably doesn't belong here, but I'm not sure where would be a
-   *   better place to put it... in a class of its own?
-   */
-  public static function getExceptionListener(Container $container) {
-    $negotiation = $container->get('content_negotiation');
-    $exceptionController = new self($negotiation);
-    $exceptionController->setContainer($container);
-    return new ExceptionListener(array($exceptionController, 'execute'));
-  }
-
-  /**
    * Constructor.
    *
    * @param Drupal\Core\ContentNegotiation $negotiation
