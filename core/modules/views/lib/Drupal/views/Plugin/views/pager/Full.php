@@ -108,36 +108,31 @@ class Full extends PagerPluginBase {
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
       '#tree' => TRUE,
-      '#title' => t('Tags'),
+      '#title' => t('Pager link labels'),
       '#input' => TRUE,
-      '#description' => t('A lists of labels for the controls in the pager'),
     );
 
     $form['tags']['first'] = array(
       '#type' => 'textfield',
-      '#title' => t('Text for "first"-link'),
-      '#description' => t('Text for "first"-link'),
+      '#title' => t('First page link text'),
       '#default_value' => $this->options['tags']['first'],
     );
 
     $form['tags']['previous'] = array(
       '#type' => 'textfield',
-      '#title' => t('Text for "previous"-link'),
-      '#description' => t('Text for "previous"-link'),
+      '#title' => t('Previous page link text'),
       '#default_value' => $this->options['tags']['previous'],
     );
 
     $form['tags']['next'] = array(
       '#type' => 'textfield',
-      '#title' => t('Text for "next"-link'),
-      '#description' => t('Text for "next"-link'),
+      '#title' => t('Next page link text'),
       '#default_value' => $this->options['tags']['next'],
     );
 
     $form['tags']['last'] = array(
       '#type' => 'textfield',
-      '#title' => t('Text for "last"-link'),
-      '#description' => t('Text for "last"-link'),
+      '#title' => t('Last page link text'),
       '#default_value' => $this->options['tags']['last'],
     );
 
