@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Allows the creaation of custom blocks through the user interface.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function custom_block_menu() {
+  $items = array();
+  // Add an "Add custom block" action link for each theme.
+  foreach (drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinitions() as $plugin_id => $plugin) {
+    // Only add the link for block plugin UI derivatives (that is, per-theme
+    // block instance configuration).
+    if (strpos($plugin_id, 'block_plugin_ui') === 0) {
+      list(, $theme) = explode(':', $plugin_id);
+      $items['admin/structure/block/list/' . $plugin_id . '/add/custom_blocks'] = array(
+        'title' => 'Add custom block',
+        'description' => 'Create a block with custom content and settings.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('block_admin_configure', 'custom_block:custom_block', $theme),
+        'access callback' => TRUE,
+        'type' => MENU_LOCAL_ACTION,
+        'file' => 'block.admin.inc',
+        'file path' => drupal_get_path('module', 'block'),
+      );
+    }
+  }
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function custom_block_theme($existing, $type, $theme, $path) {
+  return array(
+    'custom_block_block' => array(
+      'variables' => array('body' => NULL, 'format' => NULL),
+    ),
+  );
+}
+
+/**
+ * Returns HTML for a custom block.
+ *
+ * @ingroup themeable
+ */
+function theme_custom_block_block($variables) {
+  $body = $variables['body'];
+  $format = $variables['format'];
+
+  return check_markup($body, $format);
+}

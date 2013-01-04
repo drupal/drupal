@@ -70,6 +70,10 @@ class StatisticsReportsTest extends StatisticsTestBase {
    * Tests the "popular content" block.
    */
   function testPopularContentBlock() {
+    // Clear the block cache to load the Statistics module's block definitions.
+    $manager = $this->container->get('plugin.manager.block');
+    $manager->clearCachedDefinitions();
+
     // Visit a node to have something show up in the block.
     $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blocking_user->uid));
     $this->drupalGet('node/' . $node->nid);
@@ -82,16 +86,16 @@ class StatisticsReportsTest extends StatisticsTestBase {
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     // Configure and save the block.
-    $block = block_load('statistics', 'popular');
-    $block->theme = variable_get('theme_default', 'stark');
-    $block->status = 1;
-    $block->pages = '';
-    $block->region = 'sidebar_first';
-    $block->cache = -1;
-    $block->visibility = 0;
-    $edit = array('statistics_block_popular_top_day_limit' => 3, 'statistics_block_popular_top_all_limit' => 3, 'statistics_block_popular_top_recent_limit' => 3);
-    module_invoke('statistics', 'block_save', 'popular', $edit);
-    drupal_write_record('block', $block);
+    $block_id = 'statistics_popular_block';
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+      'statistics_block_top_day_num' => 3,
+      'statistics_block_top_all_num' => 3,
+      'statistics_block_top_last_num' => 3,
+    );
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
 
     // Get some page and check if the block is displayed.
     $this->drupalGet('user');

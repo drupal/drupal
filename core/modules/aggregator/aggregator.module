@@ -347,95 +347,6 @@ function aggregator_queue_info() {
 }
 
 /**
- * Implements hook_block_info().
- */
-function aggregator_block_info() {
-  $blocks = array();
-  $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
-  foreach ($result as $category) {
-    $blocks['category-' . $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
-  }
-  $result = db_query('SELECT fid, title FROM {aggregator_feed} WHERE block <> 0 ORDER BY fid');
-  foreach ($result as $feed) {
-    $blocks['feed-' . $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
-  }
-  return $blocks;
-}
-
-/**
- * Implements hook_block_configure().
- */
-function aggregator_block_configure($delta = '') {
-  list($type, $id) = explode('-', $delta);
-  if ($type == 'category') {
-    $value = db_query('SELECT block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchField();
-    $form['block'] = array(
-      '#type' => 'select',
-      '#title' => t('Number of news items in block'),
-      '#default_value' => $value,
-      '#options' => drupal_map_assoc(range(2, 20)),
-    );
-    return $form;
-  }
-}
-
-/**
- * Implements hook_block_save().
- */
-function aggregator_block_save($delta = '', $edit = array()) {
-  list($type, $id) = explode('-', $delta);
-  if ($type == 'category') {
-    db_update('aggregator_category')
-      ->fields(array('block' => $edit['block']))
-      ->condition('cid', $id)
-      ->execute();
-  }
-}
-
-/**
- * Implements hook_block_view().
- *
- * Generates blocks for the latest news items in each category and feed.
- */
-function aggregator_block_view($delta = '') {
-  if (user_access('access news feeds')) {
-    $block = array();
-    list($type, $id) = explode('-', $delta);
-    $result = FALSE;
-    switch ($type) {
-      case 'feed':
-        if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
-          $block['subject'] = check_plain($feed->title);
-          $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", 0, $feed->block, array(':fid' => $id));
-          $read_more = theme('more_link', array('url' => 'aggregator/sources/' . $feed->fid, 'title' => t("View this feed's recent news.")));
-        }
-        break;
-
-      case 'category':
-        if ($category = db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchObject()) {
-          $block['subject'] = check_plain($category->title);
-          $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', 0, $category->block, array(':cid' => $category->cid));
-          $read_more = theme('more_link', array('url' => 'aggregator/categories/' . $category->cid, 'title' => t("View this category's recent news.")));
-        }
-        break;
-    }
-
-    $items = array();
-    if (!empty($result)) {
-      foreach ($result as $item) {
-        $items[] = theme('aggregator_block_item', array('item' => $item));
-      }
-    }
-
-    // Only display the block if there are items to show.
-    if (count($items) > 0) {
-      $block['content'] = theme('item_list', array('items' => $items)) . $read_more;
-    }
-    return $block;
-  }
-}
-
-/**
  * Adds/edits/deletes aggregator categories.
  *
  * @param $edit
@@ -460,11 +371,12 @@ function aggregator_save_category($edit) {
         ->condition('cid', $edit['cid'])
         ->execute();
       // Make sure there is no active block for this category.
-      if (module_exists('block')) {
-        db_delete('block')
-          ->condition('module', 'aggregator')
-          ->condition('delta', 'category-' . $edit['cid'])
-          ->execute();
+      $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
+      foreach ($block_configs as $config_id) {
+        $config = config($config_id);
+        if ($config->get('id') == 'aggregator_category_block:' . $edit['cid']) {
+          $config->delete();
+        }
       }
       $edit['title'] = '';
       $op = 'delete';
@@ -527,11 +439,12 @@ function aggregator_save_feed($edit) {
       ->condition('fid', $edit['fid'])
       ->execute();
     // Make sure there is no active block for this feed.
-    if (module_exists('block')) {
-      db_delete('block')
-        ->condition('module', 'aggregator')
-        ->condition('delta', 'feed-' . $edit['fid'])
-        ->execute();
+    $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
+    foreach ($block_configs as $config_id) {
+      $config = config($config_id);
+      if ($config->get('id') == 'aggregator_feed_block:' . $edit['fid']) {
+        $config->delete();
+      }
     }
   }
   elseif (!empty($edit['title'])) {

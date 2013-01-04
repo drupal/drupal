@@ -49,8 +49,12 @@ class BlockCacheTest extends WebTestBase {
     $this->normal_user_alt->save();
 
     // Enable our test block.
-    $edit['blocks[block_test_test_cache][region]'] = 'sidebar_first';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->theme = variable_get('theme_default', 'stark');
+    $block = array();
+    $block['machine_name'] = $this->randomName(8);
+    $block['region'] = 'sidebar_first';
+    $this->block = $block;
+    $this->drupalPost('admin/structure/block/manage/test_cache/' . $this->theme,  $block, t('Save block'));
   }
 
   /**
@@ -192,14 +196,17 @@ class BlockCacheTest extends WebTestBase {
    * Private helper method to set the test block's cache mode.
    */
   private function setCacheMode($cache_mode) {
-    db_update('block')
-      ->fields(array('cache' => $cache_mode))
-      ->condition('module', 'block_test')
-      ->execute();
+    $block = $this->block;
+    $block['config_id'] = 'plugin.core.block.' . $this->theme . '.' . $block['machine_name'];
+    $block_config = config($block['config_id']);
+    $block_config->set('cache', $cache_mode);
+    $block_config->save();
 
-    $current_mode = db_query("SELECT cache FROM {block} WHERE module = 'block_test'")->fetchField();
-    if ($current_mode != $cache_mode) {
-      $this->fail(t('Unable to set cache mode to %mode. Current mode: %current_mode', array('%mode' => $cache_mode, '%current_mode' => $current_mode)));
+    $instance = block_load($block['config_id']);
+    $config = $instance->getConfig();
+    if ($config['cache'] != $cache_mode) {
+      $this->fail(t('Unable to set cache mode to %mode. Current mode: %current_mode', array('%mode' => $cache_mode, '%current_mode' => $config['cache'])));
     }
+    $this->assertEqual($config['cache'], $cache_mode, t("Test block's database entry updated to DRUPAL_NO_CACHE."));
   }
 }

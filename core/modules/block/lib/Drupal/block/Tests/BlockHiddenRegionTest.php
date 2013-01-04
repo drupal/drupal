@@ -15,6 +15,11 @@ use Drupal\simpletest\WebTestBase;
 class BlockHiddenRegionTest extends WebTestBase {
 
   /**
+   * An administrative user to configure the test environment.
+   */
+  protected $adminUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -32,30 +37,31 @@ class BlockHiddenRegionTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    // Enable Search block in default theme.
-    db_merge('block')
-      ->key(array(
-        'module' => 'search',
-        'delta' => 'form',
-        'theme' => variable_get('theme_default', 'stark'),
-      ))
-      ->fields(array(
-        'status' => 1,
-        'weight' => -1,
-        'region' => 'sidebar_first',
-        'pages' => '',
-        'cache' => -1,
-      ))
-      ->execute();
+    // Create administrative user.
+    $this->adminUser = $this->drupalCreateUser(array(
+      'administer blocks',
+      'administer themes',
+      'search content',
+      )
+    );
+
+    $this->drupalLogin($this->adminUser);
+
+    $default_theme = variable_get('theme_default', 'stark');
+
+    $block['machine_name'] = $this->randomName();
+    $block['region'] = 'sidebar_first';
+    $block['title'] = $this->randomName();
+    $this->drupalPost('admin/structure/block/manage/search_form_block/' . $default_theme, $block, t('Save block'));
+    $this->assertText('The block configuration has been saved.', 'Block was saved');
   }
 
   /**
    * Tests that hidden regions do not inherit blocks when a theme is enabled.
    */
-  function testBlockNotInHiddenRegion() {
-    // Create administrative user.
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer themes', 'search content'));
-    $this->drupalLogin($admin_user);
+  public function testBlockNotInHiddenRegion() {
+
+    $this->drupalLogin($this->adminUser);
 
     // Ensure that the search form block is displayed.
     $this->drupalGet('');

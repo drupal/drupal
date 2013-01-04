@@ -19,7 +19,7 @@ class UserAccountLinksTests extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu');
+  public static $modules = array('menu', 'block');
 
   public static function getInfo() {
     return array(

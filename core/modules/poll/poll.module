@@ -128,47 +128,6 @@ function poll_page_build(&$page) {
 }
 
 /**
- * Implements hook_block_info().
- */
-function poll_block_info() {
-  $blocks['recent']['info'] = t('Most recent poll');
-  $blocks['recent']['properties']['administrative'] = TRUE;
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- *
- * Generates a block containing the latest poll.
- *
- * @see poll_block_latest_poll_view()
- */
-function poll_block_view($delta = '') {
-  if (user_access('access content')) {
-    // Retrieve the latest poll.
-    $select = db_select('node', 'n');
-    $select->join('poll', 'p', 'p.nid = n.nid');
-    $select->fields('n', array('nid'))
-      ->condition('n.status', 1)
-      ->condition('p.active', 1)
-      ->orderBy('n.created', 'DESC')
-      ->range(0, 1)
-      ->addTag('node_access');
-
-    $record = $select->execute()->fetchObject();
-    if ($record) {
-      $poll = node_load($record->nid);
-      if ($poll->nid) {
-        $poll = poll_block_latest_poll_view($poll);
-        $block['subject'] = t('Poll');
-        $block['content'] = $poll->content;
-        return $block;
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_cron().
  *
  * Closes polls that have exceeded their allowed runtime.

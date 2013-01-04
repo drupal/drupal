@@ -75,19 +75,26 @@ class ForumNodeAccessTest extends WebTestBase {
     $public_node = $this->drupalGetNodeByTitle($public_node_title);
     $this->assertTrue(!empty($public_node), 'New public forum node found in database.');
 
+    $default_theme = variable_get('theme_default', 'stark');
     // Enable the active forum block.
-    $edit = array();
-    $edit['blocks[forum_active][region]'] = 'sidebar_second';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), 'Active forum topics forum block was enabled');
+    $block_id = 'forum_active_block';
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_second',
+    );
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Active forum topics block enabled');
 
     // Enable the new forum block.
-    $edit = array();
-    $edit['blocks[forum_new][region]'] = 'sidebar_second';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), '[New forum topics] Forum block was enabled');
+    $block_id = 'forum_new_block';
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_second',
+    );
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'New forum topics block enabled');
 
     // Test for $access_user.
     $this->drupalLogin($access_user);

@@ -304,79 +304,6 @@ function statistics_get($nid) {
 }
 
 /**
- * Implements hook_block_info().
- */
-function statistics_block_info() {
-  $blocks = array();
-
-  $statistics_count_content_views = config('statistics.settings')->get('count_content_views');
-  if (!empty($statistics_count_content_views)) {
-    $blocks['popular']['info'] = t('Popular content');
-    // Too dynamic to cache.
-    $blocks['popular']['cache'] = DRUPAL_NO_CACHE;
-  }
-  return $blocks;
-}
-
-/**
- * Implements hook_block_configure().
- */
-function statistics_block_configure($delta = '') {
-  $config = config('statistics.settings');
-  // Popular content block settings
-  $numbers = array('0' => t('Disabled')) + drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40));
-  $form['statistics_block_popular_top_day_limit'] = array('#type' => 'select', '#title' => t("Number of day's top views to display"), '#default_value' => $config->get('block.popular.top_day_limit'), '#options' => $numbers, '#description' => t('How many content items to display in "day" list.'));
-  $form['statistics_block_popular_top_all_limit'] = array('#type' => 'select', '#title' => t('Number of all time views to display'), '#default_value' => $config->get('block.popular.top_all_limit'), '#options' => $numbers, '#description' => t('How many content items to display in "all time" list.'));
-  $form['statistics_block_popular_top_recent_limit'] = array('#type' => 'select', '#title' => t('Number of most recent views to display'), '#default_value' => $config->get('block.popular.top_recent_limit'), '#options' => $numbers, '#description' => t('How many content items to display in "recently viewed" list.'));
-  return $form;
-}
-
-/**
- * Implements hook_block_save().
- */
-function statistics_block_save($delta = '', $edit = array()) {
-  config('statistics.settings')
-    ->set('block.popular.top_day_limit', $edit['statistics_block_popular_top_day_limit'])
-    ->set('block.popular.top_all_limit', $edit['statistics_block_popular_top_all_limit'])
-    ->set('block.popular.top_recent_limit', $edit['statistics_block_popular_top_recent_limit'])
-    ->save();
-}
-
-/**
- * Implements hook_block_view().
- */
-function statistics_block_view($delta = '') {
-  if (user_access('access content')) {
-    $content = array();
-
-    $config = config('statistics.settings');
-    $daytop = $config->get('block.popular.top_day_limit');
-    if ($daytop && ($result = statistics_title_list('daycount', $daytop)) && ($node_title_list = node_title_list($result, t("Today's:")))) {
-      $content['top_day'] = $node_title_list;
-      $content['top_day']['#suffix'] = '<br />';
-    }
-
-    $alltimetop = $config->get('block.popular.top_all_limit');
-    if ($alltimetop && ($result = statistics_title_list('totalcount', $alltimetop)) && ($node_title_list = node_title_list($result, t('All time:')))) {
-      $content['top_all'] = $node_title_list;
-      $content['top_all']['#suffix'] = '<br />';
-    }
-
-    $lasttop = $config->get('block.popular.top_recent_limit');
-    if ($lasttop && ($result = statistics_title_list('timestamp', $lasttop)) && ($node_title_list = node_title_list($result, t('Last viewed:')))) {
-      $content['top_last'] = $node_title_list;
-      $content['top_last']['#suffix'] = '<br />';
-    }
-
-    if (count($content)) {
-      $block['content'] = $content;
-      $block['subject'] = t('Popular content');
-      return $block;
-    }
-  }
-}
-
-/**
  * Generates a link to a path, truncating the displayed text to a given width.
  *
  * @param string $path
@@ -479,4 +406,17 @@ function statistics_library_info() {
   );
 
   return $libraries;
+}
+
+/**
+ * Implements hook_block_alter().
+ *
+ * Removes the "popular" block from display if the module is not configured
+ * to count content views.
+ */
+function statistics_block_alter(&$definitions) {
+  $statistics_count_content_views = config('statistics.settings')->get('count_content_views');
+  if (empty($statistics_count_content_views)) {
+    unset($definitions['statistics_popular_block']);
+  }
 }

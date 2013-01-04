@@ -41,7 +41,11 @@
  * @ingroup themeable
  */
 ?>
-<div id="<?php print $block_html_id; ?>" <?php print $attributes; ?>>
+<?php if (isset($block_html_id)): ?>
+  <div id="<?php print $block_html_id; ?>" <?php print $attributes; ?>>
+<?php else: ?>
+  <div <?php print $attributes; ?>>
+<?php endif; ?>
 
   <?php print render($title_prefix); ?>
 <?php if ($block->subject): ?>

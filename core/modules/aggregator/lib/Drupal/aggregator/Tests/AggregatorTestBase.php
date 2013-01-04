@@ -19,7 +19,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block', 'aggregator', 'aggregator_test');
+  public static $modules = array('node', 'aggregator', 'aggregator_test');
 
   function setUp() {
     parent::setUp();

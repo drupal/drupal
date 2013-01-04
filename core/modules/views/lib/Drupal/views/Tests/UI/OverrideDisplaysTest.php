@@ -44,31 +44,31 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPost("admin/structure/views/nojs/display/{$view['name']}/page_1/title", $edit, t('Apply'));
     $this->drupalPost("admin/structure/views/view/{$view['name']}/edit/page_1", array(), t('Save'));
 
-    // Put the block into the first sidebar region, and make sure it will not
-    // display on the view's page display (since we will be searching for the
-    // presence/absence of the view's title in both the page and the block).
-    $this->drupalGet('admin/structure/block');
-    $edit = array();
-    $edit["blocks[views_{$view['name']}-block_1][region]"] = 'sidebar_first';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $edit = array();
-    $edit['visibility'] = BLOCK_VISIBILITY_NOTLISTED;
-    $edit['pages'] = $view_path;
-    $this->drupalPost("admin/structure/block/manage/views/{$view['name']}-block_1/configure", $edit, t('Save block'));
-
     // Add a node that will appear in the view, so that the block will actually
     // be displayed.
     $this->drupalCreateNode();
 
-    // Make sure the title appears in both the page and the block.
+    // Make sure the title appears in the page.
     $this->drupalGet($view_path);
     $this->assertResponse(200);
     $this->assertText($original_title);
+
+    // Put the block into the first sidebar region.
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
+    $this->assertText('View: ' . $view['human_name']);
+    $block = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost("admin/structure/block/manage/views_block:{$view['name']}-block_1/{$default_theme}", $block, t('Save block'));
+
+    // Make sure the title appears in the block.
     $this->drupalGet('');
     $this->assertText($original_title);
 
-    // Change the title for the page display only, and make sure that is the
-    // only one that is changed.
+    // Change the title for the page display only, and make sure that the
+    // original title still appears on the page.
     $edit = array();
     $edit['title'] = $new_title = $this->randomName(16);
     $edit['override[dropdown]'] = 'page_1';
@@ -77,10 +77,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view_path);
     $this->assertResponse(200);
     $this->assertText($new_title);
-    $this->assertNoText($original_title);
-    $this->drupalGet('');
     $this->assertText($original_title);
-    $this->assertNoText($new_title);
   }
 
   /**
@@ -102,17 +99,6 @@ class OverrideDisplaysTest extends UITestBase {
     $view['block[title]'] = $this->randomName(16);
     $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
-    // Put the block into the first sidebar region, and make sure it will not
-    // display on the view's page display (since we will be searching for the
-    // presence/absence of the view's title in both the page and the block).
-    $this->drupalGet('admin/structure/block');
-    $edit = array();
-    $edit["blocks[views_{$view['name']}-block_1][region]"] = 'sidebar_first';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $edit = array();
-    $edit['visibility'] = BLOCK_VISIBILITY_NOTLISTED;
-    $edit['pages'] = $view['page[path]'];
-    $this->drupalPost("admin/structure/block/manage/views/{$view['name']}-block_1/configure", $edit, t('Save block'));
 
     // Add a node that will appear in the view, so that the block will actually
     // be displayed.
@@ -128,6 +114,16 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertResponse(200);
     $this->assertText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
+
+    // Put the block into the first sidebar region.
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
+    $this->assertText('View: ' . $view['human_name']);
+    $block = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost("admin/structure/block/manage/views_block:{$view['name']}-block_1/{$default_theme}", $block, t('Save block'));
     $this->drupalGet('');
     $this->assertText($view['block[title]']);
     $this->assertNoText($view['page[title]']);
@@ -142,7 +138,6 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertResponse(200);
     $this->assertText($new_default_title);
     $this->assertNoText($view['page[title]']);
-    $this->assertNoText($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertResponse(200);
     $this->assertText($new_default_title);
@@ -162,7 +157,6 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view['page[path]']);
     $this->assertResponse(200);
     $this->assertText($new_default_title);
-    $this->assertNoText($new_block_title);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertResponse(200);
     $this->assertText($new_default_title);

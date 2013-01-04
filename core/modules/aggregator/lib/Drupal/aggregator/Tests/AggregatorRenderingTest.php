@@ -8,6 +8,14 @@
 namespace Drupal\aggregator\Tests;
 
 class AggregatorRenderingTest extends AggregatorTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'Checks display of aggregator items',
@@ -27,31 +35,26 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $feed = $this->createFeed();
     $this->updateFeedItems($feed, $this->getDefaultFeedItemCount());
 
-    // Place block on page (@see block.test:moveBlockToRegion())
     // Need admin user to be able to access block admin.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser(array(
       'administer blocks',
       'access administration pages',
       'administer news feeds',
       'access news feeds',
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($admin_user);
 
-    // Prepare to use the block admin form.
+    $current_theme = variable_get('theme_default', 'stark');
+    $machine_name = 'test_aggregator_feed_block';
     $block = array(
-      'module' => 'aggregator',
-      'delta' => 'feed-' . $feed->fid,
-      'title' => $feed->title,
+      'machine_name' => $machine_name,
+      'region' => 'footer',
+      'title' => 'feed-' . $feed->title,
+      'block_count' => 2,
     );
-    $region = 'footer';
-    $edit = array();
-    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $region;
-    // Check the feed block is available in the block list form.
-    $this->drupalGet('admin/structure/block');
-    $this->assertFieldByName('blocks[' . $block['module'] . '_' . $block['delta'] . '][region]', '', 'Aggregator feed block is available for positioning.');
-    // Position it.
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), format_string('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
+    $this->drupalPost("admin/structure/block/manage/aggregator_feed_block:{$feed->fid}/$current_theme", $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block was saved.');
+
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('node');
     $this->assertText(t($block['title']), 'Feed block is displayed on the page.');
@@ -70,8 +73,6 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     // up.
     $feed->block = 0;
     aggregator_save_feed((array) $feed);
-    // It is nescessary to flush the cache after saving the number of items.
-    $this->resetAll();
     // Check that the block is no longer displayed.
     $this->drupalGet('node');
     $this->assertNoText(t($block['title']), 'Feed block is not displayed on the page when number of items is set to 0.');

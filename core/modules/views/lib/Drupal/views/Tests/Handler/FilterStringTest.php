@@ -37,7 +37,6 @@ class FilterStringTest extends ViewUnitTestBase {
     parent::setUp();
 
     $this->enableModules(array('system'));
-    $this->enableModules(array('menu'));
   }
 
   function viewsData() {

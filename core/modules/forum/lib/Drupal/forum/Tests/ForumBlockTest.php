@@ -49,20 +49,27 @@ class ForumBlockTest extends WebTestBase {
   }
 
   /**
-   * Tests disabling and re-enabling the Forum module.
+   * Tests the "New forum topics" block.
    */
-  function testNewForumTopicsBlock() {
+  public function testNewForumTopicsBlock() {
     $this->drupalLogin($this->adminUser);
 
     // Create 5 forum topics.
     $topics = $this->createForumTopics();
 
-    // Enable the new forum block.
-    $edit = array();
-    $edit['blocks[forum_new][region]'] = 'sidebar_second';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), '"New forum topics" block was enabled');
+    $block_id = 'forum_new_block';
+    $default_theme = variable_get('theme_default', 'stark');
+
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_second',
+    );
+
+    // Enable the new forum topics block.
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), '"New forum topics" block was enabled');
+
     $this->assertLink(t('More'), 0, 'New forum topics block has a "more"-link.');
     $this->assertLinkByHref('forum', 0, 'New forum topics block has a "more"-link.');
 
@@ -71,12 +78,13 @@ class ForumBlockTest extends WebTestBase {
       $this->assertLink($topic, 0, format_string('Forum topic @topic found in the "New forum topics" block.', array('@topic' => $topic)));
     }
 
-    // Configure the new forum block to only show 2 topics.
-    $edit = array();
-    $edit['block_new_limit'] = 2;
-    $this->drupalPost('admin/structure/block/manage/forum/new/configure', $edit, t('Save block'));
-    $this->assertResponse(200);
+    // Configure the new forum topics block to only show 2 topics.
+    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
+    $config = config($block['config_id']);
+    $config->set('block_count', 2);
+    $config->save();
 
+    $this->drupalGet('');
     // We expect only the 2 most recent forum topics to appear in the "New forum
     // topics" block.
     for ($index = 0; $index < 5; $index++) {
@@ -87,16 +95,12 @@ class ForumBlockTest extends WebTestBase {
         $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "New forum topics" block.', array('@topic' => $topics[$index])));
       }
     }
-
-    // Disable the "New forum topics" block again.
-    $edit = array();
-    $edit['blocks[forum_new][region]'] = BLOCK_REGION_NONE;
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), '"New forum topics" block was disabled');
   }
 
-  function testActiveForumTopicsBlock() {
+  /**
+   * Tests the "Active forum topics" block.
+   */
+  public function testActiveForumTopicsBlock() {
     $this->drupalLogin($this->adminUser);
 
     // Create 10 forum topics.
@@ -117,12 +121,20 @@ class ForumBlockTest extends WebTestBase {
       comment_save($comment);
     }
 
+    // Enable the block.
+    $block_id = 'forum_active_block';
+    $default_theme = variable_get('theme_default', 'stark');
+
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_second',
+    );
+
     // Enable the active forum block.
-    $edit = array();
-    $edit['blocks[forum_active][region]'] = 'sidebar_second';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), 'Active forum topics forum block was enabled');
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Active forum topics forum block was enabled');
+
     $this->assertLink(t('More'), 0, 'Active forum topics block has a "more"-link.');
     $this->assertLinkByHref('forum', 0, 'Active forum topics block has a "more"-link.');
 
@@ -139,10 +151,12 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Configure the active forum block to only show 2 topics.
-    $edit = array();
-    $edit['block_active_limit'] = 2;
-    $this->drupalPost('admin/structure/block/manage/forum/active/configure', $edit, t('Save block'));
-    $this->assertResponse(200);
+    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
+    $config = config($block['config_id']);
+    $config->set('block_count', 2);
+    $config->save();
+
+    $this->drupalGet('');
 
     // We expect only the 2 forum topics with most recent comments to appear in
     // the "Active forum topics" block.
@@ -154,22 +168,15 @@ class ForumBlockTest extends WebTestBase {
         $this->assertNoText($topics[$index], 'Forum topic not found in the "Active forum topics" block.');
       }
     }
-
-    // Disable the "Active forum topics" block again.
-    $edit = array();
-    $edit['blocks[forum_active][region]'] = BLOCK_REGION_NONE;
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), '"Active forum topics" block was disabled');
   }
 
   /**
    * Creates a forum topic.
    *
-   * @return
+   * @return string
    *   The title of the newly generated topic.
    */
-  private function createForumTopics($count = 5) {
+  protected function createForumTopics($count = 5) {
     $topics = array();
     $timestamp = time() - 24 * 60 * 60;
 

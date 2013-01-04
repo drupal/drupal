@@ -279,27 +279,27 @@ class BookTest extends WebTestBase {
   function testBookNavigationBlock() {
     $this->drupalLogin($this->admin_user);
 
-    // Set block title to confirm that the interface is available.
-    $block_title = $this->randomName(16);
-    $this->drupalPost('admin/structure/block/manage/book/navigation/configure', array('title' => $block_title), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
+    $block_id = 'book_navigation';
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'footer',
+    );
+    // Enable the block.
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
 
-    // Set the block to a region to confirm block is available.
+    // Give anonymous users the permission 'node test view'.
     $edit = array();
-    $edit['blocks[book_navigation][region]'] = 'footer';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
-
-     // Give anonymous users the permission 'node test view'.
-     $edit = array();
-     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-     $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
-     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
+    $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
+    $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Test correct display of the block.
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
-    $this->assertText($block_title, 'Book navigation block is displayed.');
+    $this->assertText($block['title'], 'Book navigation block is displayed.');
     $this->assertText($this->book->label(), format_string('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->label())));
     $this->assertNoText($nodes[0]->label(), 'No links to individual book pages are displayed.');
   }
@@ -307,44 +307,39 @@ class BookTest extends WebTestBase {
   /**
    * Test the book navigation block when an access module is enabled.
    */
-   function testNavigationBlockOnAccessModuleEnabled() {
-     $this->drupalLogin($this->admin_user);
-     $edit = array();
+  function testNavigationBlockOnAccessModuleEnabled() {
+    $this->drupalLogin($this->admin_user);
+    $block_id = 'book_navigation';
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'footer',
+      'book_block_mode' => 'book pages',
+    );
+    // Enable the block.
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
 
-     // Set the block title.
-     $block_title = $this->randomName(16);
-     $edit['title'] = $block_title;
+    // Give anonymous users the permission 'node test view'.
+    $edit = array();
+    $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
+    $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
-     // Set block display to 'Show block only on book pages'.
-     $edit['book_block_mode'] = 'book pages';
-     $this->drupalPost('admin/structure/block/manage/book/navigation/configure', $edit, t('Save block'));
-     $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
+    // Create a book.
+    $this->createBook();
 
-     // Set the block to a region to confirm block is available.
-     $edit = array();
-     $edit['blocks[book_navigation][region]'] = 'footer';
-     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-     $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
+    // Test correct display of the block to registered users.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/' . $this->book->nid);
+    $this->assertText($block['title'], 'Book navigation block is displayed to registered users.');
+    $this->drupalLogout();
 
-     // Give anonymous users the permission 'node test view'.
-     $edit = array();
-     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-     $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
-     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
-
-     // Create a book.
-     $this->createBook();
-
-     // Test correct display of the block to registered users.
-     $this->drupalLogin($this->web_user);
-     $this->drupalGet('node/' . $this->book->nid);
-     $this->assertText($block_title, 'Book navigation block is displayed to registered users.');
-     $this->drupalLogout();
-
-     // Test correct display of the block to anonymous users.
-     $this->drupalGet('node/' . $this->book->nid);
-     $this->assertText($block_title, 'Book navigation block is displayed to anonymous users.');
-   }
+    // Test correct display of the block to anonymous users.
+    $this->drupalGet('node/' . $this->book->nid);
+    $this->assertText($block['title'], 'Book navigation block is displayed to anonymous users.');
+  }
 
   /**
    * Tests the access for deleting top-level book nodes.

@@ -8,12 +8,27 @@
 namespace Drupal\aggregator\Tests;
 
 class ImportOpmlTest extends AggregatorTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'Import feeds from OPML functionality',
       'description' => 'Test OPML import.',
       'group' => 'Aggregator',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $admin_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content', 'administer blocks'));
+    $this->drupalLogin($admin_user);
   }
 
   /**
@@ -29,6 +44,17 @@ class ImportOpmlTest extends AggregatorTestBase {
         'description' => '',
       ))
       ->execute();
+
+    // Enable the help block.
+    $block_id = 'system_help_block';
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'help',
+    );
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), '"Help" block enabled');
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->assertText('A single OPML document may contain a collection of many feeds.', 'Found OPML help text.');

@@ -519,126 +519,6 @@ function views_contextual_links_view_alter(&$element, $items) {
 }
 
 /**
- * Implement hook_block_info().
- */
-function views_block_info() {
-  // Try to avoid instantiating all the views just to get the blocks info.
-  $cache = views_cache_get('views_block_items', TRUE);
-  if ($cache && is_array($cache->data)) {
-    return $cache->data;
-  }
-
-  $items = array();
-  $views = views_get_all_views();
-  foreach ($views as $view) {
-    // disabled views get nothing.
-    if (!$view->isEnabled()) {
-      continue;
-    }
-
-    $executable = $view->get('executable');
-    $executable->initDisplay();
-    foreach ($executable->displayHandlers as $display) {
-
-      if (isset($display) && !empty($display->definition['uses_hook_block'])) {
-        $result = $display->executeHookBlockList();
-        if (is_array($result)) {
-          $items = array_merge($items, $result);
-        }
-      }
-
-      if (isset($display) && $display->getOption('exposed_block')) {
-        $result = $display->getSpecialBlocks();
-        if (is_array($result)) {
-          $items = array_merge($items, $result);
-        }
-      }
-    }
-  }
-
-  // block.module has a delta length limit of 32, but our deltas can
-  // unfortunately be longer because view names can be 32 and display IDs
-  // can also be 32. So for very long deltas, change to md5 hashes.
-  $hashes = array();
-
-  // get the keys because we're modifying the array and we don't want to
-  // confuse PHP too much.
-  $keys = array_keys($items);
-  foreach ($keys as $delta) {
-    if (strlen($delta) >= 32) {
-      $hash = md5($delta);
-      $hashes[$hash] = $delta;
-      $items[$hash] = $items[$delta];
-      unset($items[$delta]);
-    }
-  }
-
-  // Only save hashes if they have changed.
-  $old_hashes = state()->get('views_block_hashes');
-  if ($hashes != $old_hashes) {
-    state()->set('views_block_hashes', $hashes);
-  }
-
-  views_cache_set('views_block_items', $items, TRUE);
-
-  return $items;
-}
-
-/**
- * Implement hook_block_view().
- */
-function views_block_view($delta) {
-  $start = microtime(TRUE);
-  // if this is 32, this should be an md5 hash.
-  if (strlen($delta) == 32) {
-    $hashes = state()->get('views_block_hashes');
-    if (!empty($hashes[$delta])) {
-      $delta = $hashes[$delta];
-    }
-  }
-
-  // This indicates it's a special one.
-  if (substr($delta, 0, 1) == '-') {
-    list($nothing, $type, $name, $display_id) = explode('-', $delta);
-    // Put the - back on.
-    $type = '-' . $type;
-    if ($view = views_get_view($name)) {
-      if ($view->access($display_id)) {
-        $view->setDisplay($display_id);
-        if (isset($view->display_handler)) {
-          $output = $view->display_handler->viewSpecialBlocks($type);
-          // Before returning the block output, convert it to a renderable
-          // array with contextual links.
-          views_add_block_contextual_links($output, $view, $display_id, 'special_block_' . $type);
-          $view->destroy();
-          return $output;
-        }
-      }
-      $view->destroy();
-    }
-  }
-
-  // If the delta doesn't contain valid data return nothing.
-  $explode = explode('-', $delta);
-  if (count($explode) != 2) {
-    return;
-  }
-  list($name, $display_id) = $explode;
-  // Load the view
-  if ($view = views_get_view($name)) {
-    if ($view->access($display_id)) {
-      $output = $view->executeDisplay($display_id);
-      // Before returning the block output, convert it to a renderable array
-      // with contextual links.
-      views_add_block_contextual_links($output, $view, $display_id);
-      $view->destroy();
-      return $output;
-    }
-    $view->destroy();
-  }
-}
-
-/**
  * Converts Views block content to a renderable array with contextual links.
  *
  * @param $block
@@ -658,15 +538,15 @@ function views_block_view($delta) {
  */
 function views_add_block_contextual_links(&$block, ViewExecutable $view, $display_id, $block_type = 'block') {
   // Do not add contextual links to an empty block.
-  if (!empty($block['content'])) {
+  if (!empty($block)) {
     // Contextual links only work on blocks whose content is a renderable
     // array, so if the block contains a string of already-rendered markup,
     // convert it to an array.
-    if (is_string($block['content'])) {
-      $block['content'] = array('#markup' => $block['content']);
+    if (is_string($block)) {
+      $block = array('#markup' => $block);
     }
     // Add the contextual links.
-    views_add_contextual_links($block['content'], $block_type, $view, $display_id);
+    views_add_contextual_links($block, $block_type, $view, $display_id);
   }
 }
 
@@ -861,6 +741,11 @@ function views_invalidate_cache() {
 
   // Set the menu as needed to be rebuilt.
   state()->set('menu_rebuild_needed', TRUE);
+
+  // Invalidate the block cache to update views block derivatives.
+  if (module_exists('block')) {
+    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+  }
 
   // Allow modules to respond to the Views cache being cleared.
   module_invoke_all('views_invalidate_cache');

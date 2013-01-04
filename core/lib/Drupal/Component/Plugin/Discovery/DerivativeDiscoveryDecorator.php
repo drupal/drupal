@@ -65,6 +65,11 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
   protected function getDerivatives(array $base_plugin_definitions) {
     $plugin_definitions = array();
     foreach ($base_plugin_definitions as $base_plugin_id => $plugin_definition) {
+      // @todo Remove this check once http://drupal.org/node/1780396 is resolved.
+      if (isset($plugin_definition['module']) && !module_exists($plugin_definition['module'])) {
+        continue;
+      }
+
       $derivative_fetcher = $this->getDerivativeFetcher($base_plugin_id, $plugin_definition);
       if ($derivative_fetcher) {
         $derivative_definitions = $derivative_fetcher->getDerivativeDefinitions($plugin_definition);

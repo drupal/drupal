@@ -372,4 +372,9 @@ function statistics_settings_form_submit($form, &$form_state) {
     ->set('access_log.max_lifetime', $form_state['values']['statistics_flush_accesslog_timer'])
     ->set('count_content_views', $form_state['values']['statistics_count_content_views'])
     ->save();
+  // The popular statistics block is dependent on these settings, so clear the
+  // block plugin definitions cache.
+  if (module_exists('block')) {
+    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+  }
 }

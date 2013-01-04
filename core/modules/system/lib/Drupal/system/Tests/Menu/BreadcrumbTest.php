@@ -38,16 +38,15 @@ class BreadcrumbTest extends MenuTestBase {
 
     // This test puts menu links in the Tools menu and then tests for their
     // presence on the page, so we need to ensure that the Tools block will be
-    // displayed in all active themes.
-    db_update('block')
-      ->fields(array(
-        // Use a region that is valid for all themes.
-        'region' => 'content',
-        'status' => 1,
-      ))
-      ->condition('module', 'system')
-      ->condition('delta', 'menu-tools')
-      ->execute();
+    // displayed in the default theme and admin theme.
+    $default_theme = variable_get('theme_default', 'stark');
+    $admin_theme = variable_get('admin_theme', 'seven');
+    $edit = array(
+      'machine_name' => 'system_menu_tools',
+      'region' => 'content',
+    );
+    $this->drupalPost("admin/structure/block/manage/system_menu_block:menu-tools/{$default_theme}", $edit, t('Save block'));
+    $this->drupalPost("admin/structure/block/manage/system_menu_block:menu-tools/{$admin_theme}", $edit, t('Save block'));
   }
 
   /**

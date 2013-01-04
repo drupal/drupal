@@ -1093,11 +1093,11 @@ function node_is_page(Node $node) {
  */
 function node_preprocess_block(&$variables) {
   if ($variables['block']->module == 'node') {
-    switch ($variables['block']->delta) {
-      case 'syndicate':
+    switch ($variables['block']->id) {
+      case 'node_syndicate_block':
         $variables['attributes']['role'] = 'complementary';
         break;
-      case 'recent':
+      case 'node_recent_block':
         $variables['attributes']['role'] = 'navigation';
         break;
     }
@@ -1878,78 +1878,6 @@ function node_revision_list(Node $node) {
 }
 
 /**
- * Implements hook_block_info().
- */
-function node_block_info() {
-  $blocks['syndicate']['info'] = t('Syndicate');
-  // Not worth caching.
-  $blocks['syndicate']['cache'] = DRUPAL_NO_CACHE;
-
-  $blocks['recent']['info'] = t('Recent content');
-  $blocks['recent']['properties']['administrative'] = TRUE;
-
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- */
-function node_block_view($delta = '') {
-  $block = array();
-
-  switch ($delta) {
-    case 'syndicate':
-      $block['subject'] = t('Syndicate');
-      $block['content'] = array(
-        '#theme' => 'feed_icon',
-        '#url' => 'rss.xml',
-        '#title' => t('Syndicate'),
-      );
-      break;
-
-    case 'recent':
-      if (user_access('access content')) {
-        $block['subject'] = t('Recent content');
-        if ($nodes = node_get_recent(variable_get('node_recent_block_count', 10))) {
-          $block['content'] = array(
-            '#theme' => 'node_recent_block',
-            '#nodes' => $nodes,
-          );
-        } else {
-          $block['content'] = t('No content available.');
-        }
-      }
-      break;
-  }
-  return $block;
-}
-
-/**
- * Implements hook_block_configure().
- */
-function node_block_configure($delta = '') {
-  $form = array();
-  if ($delta == 'recent') {
-    $form['node_recent_block_count'] = array(
-      '#type' => 'select',
-      '#title' => t('Number of recent content items to display'),
-      '#default_value' => variable_get('node_recent_block_count', 10),
-      '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
-    );
-  }
-  return $form;
-}
-
-/**
- * Implements hook_block_save().
- */
-function node_block_save($delta = '', $edit = array()) {
-  if ($delta == 'recent') {
-    variable_set('node_recent_block_count', $edit['node_recent_block_count']);
-  }
-}
-
-/**
  * Finds the most recently changed nodes that are available to the current user.
  *
  * @param $number
@@ -2058,15 +1986,6 @@ function theme_node_recent_content($variables) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for block_add_block_form().
- *
- * Adds node-type specific visibility options to add block form.
- */
-function node_form_block_add_block_form_alter(&$form, &$form_state) {
-  node_form_block_admin_configure_alter($form, $form_state);
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for block_admin_configure().
  *
  * Adds node-type specific visibility options to block configuration form.
@@ -2074,10 +1993,7 @@ function node_form_block_add_block_form_alter(&$form, &$form_state) {
  * @see node_form_block_admin_configure_submit()
  */
 function node_form_block_admin_configure_alter(&$form, &$form_state) {
-  $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
-    ':module' => $form['module']['#value'],
-    ':delta' => $form['delta']['#value'],
-  ))->fetchCol();
+  $config = $form['#instance']->getConfig();
   $form['visibility']['node_type'] = array(
     '#type' => 'details',
     '#title' => t('Content types'),
@@ -2089,51 +2005,10 @@ function node_form_block_admin_configure_alter(&$form, &$form_state) {
   $form['visibility']['node_type']['types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Show block for specific content types'),
-    '#default_value' => $default_type_options,
+    '#default_value' => !empty($config['visibility']['node_type']['types']) ? $config['visibility']['node_type']['types'] : array(),
     '#options' => node_type_get_names(),
     '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
   );
-  $form['#submit'][] = 'node_form_block_admin_configure_submit';
-}
-
-/**
- * Form submission handler for node_form_block_admin_configure_alter().
- */
-function node_form_block_admin_configure_submit($form, &$form_state) {
-  db_delete('block_node_type')
-    ->condition('module', $form_state['values']['module'])
-    ->condition('delta', $form_state['values']['delta'])
-    ->execute();
-  $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
-  foreach (array_filter($form_state['values']['types']) as $type) {
-    $query->values(array(
-      'type' => $type,
-      'module' => $form_state['values']['module'],
-      'delta' => $form_state['values']['delta'],
-    ));
-  }
-  $query->execute();
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for block_custom_block_delete().
- *
- * Adds node specific submit handler to delete custom block form.
- *
- * @see node_form_block_custom_block_delete_submit()
- */
-function node_form_block_custom_block_delete_alter(&$form, &$form_state) {
-  $form['#submit'][] = 'node_form_block_custom_block_delete_submit';
-}
-
-/**
- * Form submission handler for node_form_block_custom_block_delete_alter().
- */
-function node_form_block_custom_block_delete_submit($form, &$form_state) {
-  db_delete('block_node_type')
-    ->condition('module', 'block')
-    ->condition('delta', $form_state['values']['bid'])
-    ->execute();
 }
 
 /**
@@ -2142,62 +2017,51 @@ function node_form_block_custom_block_delete_submit($form, &$form_state) {
  * Cleans up the {block_node_type} table from modules' blocks.
  */
 function node_modules_uninstalled($modules) {
-  db_delete('block_node_type')
-    ->condition('module', $modules, 'IN')
-    ->execute();
+  // Remove the block visibility settings for all node types.
+  $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
+  foreach ($block_configs as $config_id) {
+    $config = config($config_id);
+    $node_types = $config->get('visibility.node_type.types');
+    if (!empty($node_types)) {
+      $config->clear('visibility.node_type.types');
+    }
+  }
 }
 
 /**
- * Implements hook_block_list_alter().
+ * Implements hook_block_access().
  *
  * Checks the content type specific visibility settings and removes the block
  * if the visibility conditions are not met.
  */
-function node_block_list_alter(&$blocks) {
-  global $theme_key;
-
-  // Build an array of node types for each block.
-  $block_node_types = array();
-  $result = db_query('SELECT module, delta, type FROM {block_node_type}');
-  foreach ($result as $record) {
-    $block_node_types[$record->module][$record->delta][$record->type] = TRUE;
-  }
-
-  $node = menu_get_object();
-  $node_types = node_type_get_types();
-  if (arg(0) == 'node' && arg(1) == 'add' && arg(2)) {
-    $node_add_arg = strtr(arg(2), '-', '_');
-  }
-  foreach ($blocks as $key => $block) {
-    if (!isset($block->theme) || !isset($block->status) || $block->theme != $theme_key || $block->status != 1) {
-      // This block was added by a contrib module, leave it in the list.
-      continue;
+function node_block_access($block) {
+  $configuration = $block->getConfig();
+  if (!empty($configuration['visibility'])) {
+    $visibility = $configuration['visibility'];
+    $allowed_types = array();
+    $node = menu_get_object();
+    $node_types = node_type_get_types();
+    if (arg(0) == 'node' && arg(1) == 'add' && arg(2)) {
+      $node_add_arg = strtr(arg(2), '-', '_');
     }
-
+    if (!empty($visibility['node_type']['types'])) {
+      $allowed_types = array_filter($visibility['node_type']['types']);
+    }
     // If a block has no node types associated, it is displayed for every type.
-    // For blocks with node types associated, if the node type does not match
-    // the settings from this block, remove it from the block list.
-    if (isset($block_node_types[$block->module][$block->delta])) {
+    // For blocks with node types associated, if the node type does not match the
+    // settings from this block, deny access to it.
+    if ($allowed_types) {
       if (!empty($node)) {
         // This is a node or node edit page.
-        if (!isset($block_node_types[$block->module][$block->delta][$node->type])) {
-          // This block should not be displayed for this node type.
-          unset($blocks[$key]);
-          continue;
-        }
+        return in_array($node->type, $allowed_types);
       }
       elseif (isset($node_add_arg) && isset($node_types[$node_add_arg])) {
         // This is a node creation page
-        if (!isset($block_node_types[$block->module][$block->delta][$node_add_arg])) {
-          // This block should not be displayed for this node type.
-          unset($blocks[$key]);
-          continue;
-        }
+        return in_array($node_add_arg, $allowed_types);
       }
       else {
         // This is not a node page, remove the block.
-        unset($blocks[$key]);
-        continue;
+        return FALSE;
       }
     }
   }

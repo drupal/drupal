@@ -176,11 +176,15 @@ class MenuTest extends WebTestBase {
 
     // Enable the custom menu block.
     $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
-    $edit = array();
-    $edit['blocks[menu_' . $menu_name . '][region]'] = 'sidebar_first';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
+    $this->assertText($title);
+    $block = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost("admin/structure/block/manage/menu_menu_block:$menu_name/$default_theme", $block, t('Save block'));
     $this->assertResponse(200);
-    $this->assertText(t('The block settings have been updated.'), 'Custom menu block was enabled');
 
     return menu_load($menu_name);
   }

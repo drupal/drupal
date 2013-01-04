@@ -15,6 +15,11 @@ use Drupal\simpletest\WebTestBase;
 class BlockHtmlIdTest extends WebTestBase {
 
   /**
+   * An administrative user to configure the test environment.
+   */
+  protected $adminUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -33,23 +38,26 @@ class BlockHtmlIdTest extends WebTestBase {
     parent::setUp();
 
     // Create an admin user, log in and enable test blocks.
-    $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
+    $this->drupalLogin($this->adminUser);
 
-    // Enable our test block.
-    $edit['blocks[block_test_test_html_id][region]'] = 'sidebar_first';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-
-    // Make sure the block has some content so it will appear
+    // Make sure the block has some content so it will appear.
     $current_content = $this->randomName();
     state()->set('block_test.content', $current_content);
+
+    // Enable our test block.
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array();
+    $block['machine_name'] = 'test_id_block';
+    $block['region'] = 'sidebar_first';
+    $this->drupalPost('admin/structure/block/manage/test_html_id' . '/' . $default_theme, array('machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
   }
 
   /**
-   * Test valid HTML id.
+   * Tests for a valid HTML ID for a block.
    */
   function testHtmlId() {
     $this->drupalGet('');
-    $this->assertRaw('block-block-test-test-html-id', 'HTML id for test block is valid.');
+    $this->assertRaw('id="block-test-id-block"', 'HTML ID for test block is valid.');
   }
 }

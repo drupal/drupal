@@ -51,9 +51,11 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     search_update_totals();
 
     // Enable the search block.
-    $edit = array();
-    $edit['blocks[search_form][region]'] = 'content';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $edit = array(
+      'machine_name' => 'search',
+      'region' => 'content',
+    );
+    $this->drupalPost('admin/structure/block/manage/search_form_block/stark', $edit, t('Save block'));
   }
 
   /**

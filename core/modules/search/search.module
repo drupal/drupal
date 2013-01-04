@@ -134,32 +134,10 @@ function search_permission() {
 }
 
 /**
- * Implements hook_block_info().
- */
-function search_block_info() {
-  $blocks['form']['info'] = t('Search form');
-  // Not worth caching.
-  $blocks['form']['cache'] = DRUPAL_NO_CACHE;
-  $blocks['form']['properties']['administrative'] = TRUE;
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- */
-function search_block_view($delta = '') {
-  if (user_access('search content')) {
-    $block['subject'] = t('Search');
-    $block['content'] = drupal_get_form('search_block_form');
-    return $block;
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK() for block.tpl.php.
+ * Implements hook_preprocess_block().
  */
 function search_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'search' && $variables['block']->delta == 'form') {
+  if ($variables['block']->id == 'search_form_block') {
     $variables['attributes']['role'] = 'search';
     $variables['content_attributes']['class'][] = 'container-inline';
   }

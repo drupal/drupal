@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\BlockTest.
+ * Contains \Drupal\block\Tests\BlockTest.
  */
 
 namespace Drupal\block\Tests;
@@ -16,15 +16,15 @@ class BlockTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'test_page_test');
+  public static $modules = array('block', 'custom_block', 'test_page_test');
 
   protected $regions;
-  protected $admin_user;
+  protected $adminUser;
 
   public static function getInfo() {
     return array(
       'name' => 'Block functionality',
-      'description' => 'Add, edit and delete custom block. Configure and move a module-defined block.',
+      'description' => 'Custom block functionality.',
       'group' => 'Block',
     );
   }
@@ -46,14 +46,14 @@ class BlockTest extends WebTestBase {
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'administer blocks',
       filter_permission_name($full_html_format),
       'access administration pages',
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
-    // Define the existing regions
+    // Define the existing regions.
     $this->regions = array();
     $this->regions[] = 'header';
     $this->regions[] = 'sidebar_first';
@@ -63,19 +63,34 @@ class BlockTest extends WebTestBase {
   }
 
   /**
+   * Removes default blocks to avoid conflicts in the Block UI.
+   */
+  protected function removeDefaultBlocks() {
+    $default_theme = variable_get('theme_default', 'stark');
+    $manager = $this->container->get('plugin.manager.block');
+    $instances = config_get_storage_names_with_prefix('plugin.core.block.' . $default_theme);
+    foreach ($instances as $plugin_id) {
+      config($plugin_id)->delete();
+    }
+  }
+
+  /**
    * Test creating custom block, moving it to a specific region and then deleting it.
    */
-  function testCustomBlock() {
+  public function testCustomBlock() {
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->removeDefaultBlocks();
+
+    // Clear the block cache to load the Custom Block module's block definitions.
+    $manager = $this->container->get('plugin.manager.block');
+    $manager->clearCachedDefinitions();
+
     // Enable a second theme.
     theme_enable(array('seven'));
 
     // Confirm that the add block link appears on block overview pages.
-    $this->drupalGet('admin/structure/block');
-    $this->assertLink(t('Add block'));
-    $this->assertLinkByHref('admin/structure/block/add');
-    $this->drupalGet('admin/structure/block/list/seven');
-    $this->assertLink(t('Add block'));
-    $this->assertLinkByHref('admin/structure/block/list/seven/add');
+    $this->drupalGet("admin/structure/block/list/block_plugin_ui:$default_theme/add");
+    $this->assertLink(t('Add custom block'));
 
     // Confirm that hidden regions are not shown as options for block placement
     // when adding a new block.
@@ -92,68 +107,70 @@ class BlockTest extends WebTestBase {
     }
 
     // Add a new custom block by filling out the input form on the admin/structure/block/add page.
-    $custom_block = array();
-    $custom_block['info'] = $this->randomName(8);
+    $info = strtolower($this->randomName(8));
+    $custom_block['machine_name'] = $info;
+    $custom_block['info'] = $info;
     $custom_block['title'] = $this->randomName(8);
     $custom_block['body[value]'] = $this->randomName(32);
-    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
+    $custom_block['region'] = $this->regions[0];
+    $this->drupalPost("admin/structure/block/list/block_plugin_ui:$default_theme/add/custom_blocks", $custom_block, t('Save block'));
+    $plugin_id = "plugin.core.block.$default_theme.$info";
+    $block = $manager->getInstance(array('config' => $plugin_id));
+    $config = $block->getConfig();
 
     // Confirm that the custom block has been created, and then query the created bid.
-    $this->assertText(t('The block has been created.'), 'Custom block successfully created.');
-    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-
-    // Check to see if the custom block was created by checking that it's in the database.
-    $this->assertNotNull($bid, 'Custom block found in database');
+    $this->assertText(t('The block configuration has been saved.'), 'Custom block successfully created.');
 
     // Check that block_block_view() returns the correct title and content.
-    $data = block_block_view($bid);
-    $format = db_query("SELECT format FROM {block_custom} WHERE bid = :bid", array(':bid' => $bid))->fetchField();
-    $this->assertTrue(array_key_exists('subject', $data) && empty($data['subject']), 'block_block_view() provides an empty block subject, since custom blocks do not have default titles.');
-    $this->assertEqual(check_markup($custom_block['body[value]'], $format), $data['content'], 'block_block_view() provides correct block content.');
+    $data = $block->build();
+    $format = $config['format'];
+    $this->assertEqual(check_markup($custom_block['body[value]'], $format), render($data), 'BlockInterface::build() provides correct block content.');
 
     // Check whether the block can be moved to all available regions.
     $custom_block['module'] = 'block';
-    $custom_block['delta'] = $bid;
     foreach ($this->regions as $region) {
       $this->moveBlockToRegion($custom_block, $region);
     }
 
     // Verify presence of configure and delete links for custom block.
     $this->drupalGet('admin/structure/block');
-    $this->assertLinkByHref('admin/structure/block/manage/block/' . $bid . '/configure', 0, 'Custom block configure link found.');
-    $this->assertLinkByHref('admin/structure/block/manage/block/' . $bid . '/delete', 0, 'Custom block delete link found.');
+    $config_block_id = "admin/structure/block/manage/plugin.core.block.$default_theme.$info/$default_theme";
+    $this->assertLinkByHref("$config_block_id/configure", 0, 'Custom block configure link found.');
+    $this->assertLinkByHref("$config_block_id/delete", 0, 'Custom block delete link found.');
 
     // Set visibility only for authenticated users, to verify delete functionality.
     $edit = array();
-    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
-    $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', $edit, t('Save block'));
+    $edit['visibility[role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
+    $this->drupalPost("$config_block_id/configure", $edit, t('Save block'));
 
     // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
     $this->clickLink(t('delete'));
-    $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/delete', array(), t('Delete'));
-    $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['info'])), 'Custom block successfully deleted.');
+    $this->drupalPost("$config_block_id/delete", array(), t('Delete'));
+    $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['title'])), 'Custom block successfully deleted.');
+    $this->drupalGet(NULL);
     $this->assertNoText(t($custom_block['title']), 'Custom block no longer appears on page.');
-    $count = db_query("SELECT 1 FROM {block_role} WHERE module = :module AND delta = :delta", array(':module' => $custom_block['module'], ':delta' => $custom_block['delta']))->fetchField();
-    $this->assertFalse($count, 'Table block_role being cleaned.');
   }
 
   /**
    * Test creating custom block using Full HTML.
    */
-  function testCustomBlockFormat() {
+  public function testCustomBlockFormat() {
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->removeDefaultBlocks();
+
     // Add a new custom block by filling out the input form on the admin/structure/block/add page.
-    $custom_block = array();
-    $custom_block['info'] = $this->randomName(8);
+    $info = $this->randomName(8);
+    $custom_block['machine_name'] = $info;
+    $custom_block['info'] = $info;
     $custom_block['title'] = $this->randomName(8);
     $custom_block['body[value]'] = '<h1>Full HTML</h1>';
     $full_html_format = filter_format_load('full_html');
     $custom_block['body[format]'] = $full_html_format->format;
-    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
+    $custom_block['region'] = $this->regions[0];
+    $this->drupalPost("admin/structure/block/list/block_plugin_ui:$default_theme/add/custom_blocks", $custom_block, t('Save block'));
 
     // Set the created custom block to a specific region.
-    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-    $edit = array();
-    $edit['blocks[block_' . $bid . '][region]'] = $this->regions[1];
+    $edit['blocks[0][region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the custom block is being displayed using configured text format.
@@ -163,10 +180,11 @@ class BlockTest extends WebTestBase {
     // Confirm that a user without access to Full HTML can not see the body field,
     // but can still submit the form without errors.
     $block_admin = $this->drupalCreateUser(array('administer blocks'));
+    $config_block_id = "admin/structure/block/manage/plugin.core.block.$default_theme.$info/$default_theme";
     $this->drupalLogin($block_admin);
-    $this->drupalGet('admin/structure/block/manage/block/' . $bid . '/configure');
+    $this->drupalGet("$config_block_id/configure");
     $this->assertFieldByXPath("//textarea[@name='body[value]' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Body field contains denied message');
-    $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', array(), t('Save block'));
+    $this->drupalPost("$config_block_id/configure", array(), t('Save block'));
     $this->assertNoText(t('Ensure that each block description is unique.'));
 
     // Confirm that the custom block is still being displayed using configured text format.
@@ -178,32 +196,22 @@ class BlockTest extends WebTestBase {
    * Test block visibility.
    */
   function testBlockVisibility() {
-    $block = array();
-
-    // Create a random title for the block
+    $block_name = 'system_powered_by_block';
+    // Create a random title for the block.
     $title = $this->randomName(8);
-
-    // Create the custom block
-    $custom_block = array();
-    $custom_block['info'] = $this->randomName(8);
-    $custom_block['title'] = $title;
-    $custom_block['body[value]'] = $this->randomName(32);
-    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
-
-    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-    $block['module'] = 'block';
-    $block['delta'] = $bid;
-    $block['title'] = $title;
-
+    // Enable a standard block.
+    $default_theme = variable_get('theme_default', 'stark');
+    $edit = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+      'title' => $title,
+    );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $edit = array();
-    $edit['pages'] = 'user*';
-    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
-    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
-
-    // Move block to the first sidebar.
-    $this->moveBlockToRegion($block, $this->regions[1]);
+    $edit['visibility[path][pages]'] = 'user*';
+    $edit['visibility[role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
+    $this->drupalPost('admin/structure/block/manage/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('');
     $this->assertText($title, 'Block was displayed on the front page.');
@@ -211,7 +219,7 @@ class BlockTest extends WebTestBase {
     $this->drupalGet('user');
     $this->assertNoText($title, 'Block was not displayed according to block visibility rules.');
 
-    $this->drupalGet('USER/' . $this->admin_user->uid);
+    $this->drupalGet('USER/' . $this->adminUser->uid);
     $this->assertNoText($title, 'Block was not displayed according to block visibility rules regardless of path case.');
 
     // Confirm that the block is not displayed to anonymous users.
@@ -220,7 +228,7 @@ class BlockTest extends WebTestBase {
     $this->assertNoText($title, 'Block was not displayed to anonymous users.');
 
     // Confirm that an empty block is not displayed.
-    $this->assertNoRaw('block-system-help', 'Empty block not displayed.');
+    $this->assertNoText('Powered by Drupal', 'Empty block not displayed.');
   }
 
   /**
@@ -228,31 +236,21 @@ class BlockTest extends WebTestBase {
    * "pages" textarea empty
    */
   function testBlockVisibilityListedEmpty() {
-    $block = array();
-
-    // Create a random title for the block
+    $block_name = 'system_powered_by_block';
+    // Create a random title for the block.
     $title = $this->randomName(8);
-
-    // Create the custom block
-    $custom_block = array();
-    $custom_block['info'] = $this->randomName(8);
-    $custom_block['title'] = $title;
-    $custom_block['body[value]'] = $this->randomName(32);
-    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
-
-    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-    $block['module'] = 'block';
-    $block['delta'] = $bid;
-    $block['title'] = $title;
-
-    // Move block to the first sidebar.
-    $this->moveBlockToRegion($block, $this->regions[1]);
-
+    // Enable a standard block.
+    $default_theme = variable_get('theme_default', 'stark');
+    $edit = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+      'title' => $title,
+      'visibility[path][visibility]' => BLOCK_VISIBILITY_LISTED,
+    );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $edit = array();
-    $edit['visibility'] = BLOCK_VISIBILITY_LISTED;
-    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('user');
     $this->assertNoText($title, 'Block was not displayed according to block visibility rules.');
@@ -267,76 +265,27 @@ class BlockTest extends WebTestBase {
   }
 
   /**
-   * Test user customization of block visibility.
-   */
-  function testBlockVisibilityPerUser() {
-    $block = array();
-
-    // Create a random title for the block.
-    $title = $this->randomName(8);
-
-    // Create our custom test block.
-    $custom_block = array();
-    $custom_block['info'] = $this->randomName(8);
-    $custom_block['title'] = $title;
-    $custom_block['body[value]'] = $this->randomName(32);
-    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
-
-    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-    $block['module'] = 'block';
-    $block['delta'] = $bid;
-    $block['title'] = $title;
-
-    // Move block to the first sidebar.
-    $this->moveBlockToRegion($block, $this->regions[1]);
-
-    // Set the block to be customizable per user, visible by default.
-    $edit = array();
-    $edit['custom'] = BLOCK_CUSTOM_ENABLED;
-    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
-
-    // Disable block visibility for the admin user.
-    $edit = array();
-    $edit['block[' . $block['module'] . '][' . $block['delta'] . ']'] = FALSE;
-    $this->drupalPost('user/' . $this->admin_user->uid . '/edit', $edit, t('Save'));
-
-    $this->drupalGet('user');
-    $this->assertNoText($block['title'], 'Block was not displayed according to per user block visibility setting.');
-
-    // Set the block to be customizable per user, hidden by default.
-    $edit = array();
-    $edit['custom'] = BLOCK_CUSTOM_DISABLED;
-    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
-
-    // Enable block visibility for the admin user.
-    $edit = array();
-    $edit['block[' . $block['module'] . '][' . $block['delta'] . ']'] = TRUE;
-    $this->drupalPost('user/' . $this->admin_user->uid . '/edit', $edit, t('Save'));
-
-    $this->drupalGet('user');
-    $this->assertText($block['title'], 'Block was displayed according to per user block visibility setting.');
-  }
-
-  /**
    * Test configuring and moving a module-define block to specific regions.
    */
   function testBlock() {
-    // Select the Administration menu block to be configured and moved.
+    $this->removeDefaultBlocks();
+    // Select the 'Powered by Drupal' block to be configured and moved.
     $block = array();
-    $block['module'] = 'system';
-    $block['delta'] = 'menu-admin';
+    $block['id'] = 'system_powered_by_block';
     $block['title'] = $this->randomName(8);
+    $block['machine_name'] = $this->randomName(8);
+    $block['theme'] = variable_get('theme_default', 'stark');
+    $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', array('title' => $block['title']), t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $block['id'] . '/' . $block['theme'], array('title' => $block['title'], 'machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
-    $bid = db_query("SELECT bid FROM {block} WHERE module = :module AND delta = :delta", array(
-      ':module' => $block['module'],
-      ':delta' => $block['delta'],
-    ))->fetchField();
+    // Check to see if the block was created by checking its configuration.
+    $block['config_id'] = 'plugin.core.block.' . $block['theme'] . '.' . $block['machine_name'];
+    $instance = block_load($block['config_id']);
+    $config = $instance->getConfig();
 
-    // Check to see if the block was created by checking that it's in the database.
-    $this->assertNotNull($bid, 'Block found in database');
+    $this->assertEqual($config['subject'], $block['title'], 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -345,25 +294,19 @@ class BlockTest extends WebTestBase {
 
     // Set the block to the disabled region.
     $edit = array();
-    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = '-1';
+    $edit['blocks[0][region]'] = -1;
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
-    // Confirm that the block was moved to the proper region.
+    // Confirm that the block is now listed as disabled.
     $this->assertText(t('The block settings have been updated.'), 'Block successfully move to disabled region.');
-    $this->assertNoText(t($block['title']), 'Block no longer appears on page.');
 
-    // Confirm that the region's xpath is not available.
-    $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-block-' . $bid));
-    $this->assertNoFieldByXPath($xpath, FALSE, 'Custom block found in no regions.');
-
-    // For convenience of developers, put the Administration menu block back.
-    $edit = array();
-    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $this->regions[1];
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to first sidebar region.');
-
-    $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', array('title' => 'Tools'), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
+    // Confirm that the block instance title and markup are not displayed.
+    $this->drupalGet('node');
+    $this->assertNoText(t($block['title']));
+    // Check for <div id="block-my-block-instance-name"> if the machine name
+    // is my_block_instance_name.
+    $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-' . strtr(strtolower($block['machine_name']), '-', '_')));
+    $this->assertNoFieldByXPath($xpath, FALSE, 'Block found in no regions.');
   }
 
   /**
@@ -381,7 +324,7 @@ class BlockTest extends WebTestBase {
   function moveBlockToRegion(array $block, $region) {
     // Set the created block to a specific region.
     $edit = array();
-    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $region;
+    $edit['blocks[0][region]'] = $region;
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
@@ -393,10 +336,10 @@ class BlockTest extends WebTestBase {
 
     // Confirm that the custom block was found at the proper region.
     $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
-      ':region-class' => 'region region-' . str_replace('_', '-', $region),
-      ':block-id' => 'block-' . $block['module'] . '-' . $block['delta'],
+      ':region-class' => 'region region-' . drupal_html_class($region),
+      ':block-id' => 'block-' . strtr(strtolower($block['machine_name']), '-', '_'),
     ));
-    $this->assertFieldByXPath($xpath, NULL, format_string('Custom block found in %region_name region.', array('%region_name' => $region)));
+    $this->assertFieldByXPath($xpath, NULL, t('Block found in %region_name region.', array('%region_name' => drupal_html_class($region))));
   }
 
   /**
@@ -406,19 +349,34 @@ class BlockTest extends WebTestBase {
     module_enable(array('block_test'));
     $this->assertTrue(module_exists('block_test'), 'Test block module enabled.');
 
-    // Our new block should be inserted in the database when we visit the
-    // block management page.
-    $this->drupalGet('admin/structure/block');
+    // Clear the block cache to load the block_test module's block definitions.
+    $manager = $this->container->get('plugin.manager.block');
+    $manager->clearCachedDefinitions();
+
+    // Add a test block.
+    $plugin = $manager->getDefinition('test_cache');
+    $block = array();
+    $block['id'] = 'test_cache';
+    $block['machine_name'] = $this->randomName(8);
+    $block['theme'] = variable_get('theme_default', 'stark');
+    $block['region'] = 'header';
+    $this->drupalPost('admin/structure/block/manage/' . $block['id'] . '/' . $block['theme'], array('machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
+
     // Our test block's caching should default to DRUPAL_CACHE_PER_ROLE.
-    $current_caching = db_query("SELECT cache FROM {block} WHERE module = 'block_test' AND delta = 'test_cache'")->fetchField();
-    $this->assertEqual($current_caching, DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
+    $block['config_id'] = 'plugin.core.block.' . $block['theme'] . '.' . $block['machine_name'];
+    $instance = block_load($block['config_id']);
+    $config = $instance->getConfig();
+    $this->assertEqual($config['cache'], DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
 
     // Disable caching for this block.
-    state()->set('block_test.caching', DRUPAL_NO_CACHE);
+    $block_config = config($block['config_id']);
+    $block_config->set('cache', DRUPAL_NO_CACHE);
+    $block_config->save();
     // Flushing all caches should call _block_rehash().
     $this->resetAll();
-    // Verify that the database is updated with the new caching mode.
-    $current_caching = db_query("SELECT cache FROM {block} WHERE module = 'block_test' AND delta = 'test_cache'")->fetchField();
-    $this->assertEqual($current_caching, DRUPAL_NO_CACHE, "Test block's database entry updated to DRUPAL_NO_CACHE.");
+    // Verify that block is updated with the new caching mode.
+    $instance = block_load($block['config_id']);
+    $config = $instance->getConfig();
+    $this->assertEqual($config['cache'], DRUPAL_NO_CACHE, "Test block's database entry updated to DRUPAL_NO_CACHE.");
   }
 }

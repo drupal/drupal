@@ -54,9 +54,8 @@ class MenuNodeTest extends WebTestBase {
       'menu_options[tools]' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    // Change default parent item to Tools menu, so we can assert more easily.
     $edit = array(
-      'menu_parent' => 'tools:0',
+      'menu_parent' => 'main:0',
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
 

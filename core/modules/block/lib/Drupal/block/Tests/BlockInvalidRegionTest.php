@@ -32,7 +32,11 @@ class BlockInvalidRegionTest extends WebTestBase {
   function setUp() {
     parent::setUp();
     // Create an admin user.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
+    $admin_user = $this->drupalCreateUser(array(
+      'administer site configuration',
+      'access administration pages',
+      'administer blocks',
+    ));
     $this->drupalLogin($admin_user);
   }
 
@@ -41,20 +45,21 @@ class BlockInvalidRegionTest extends WebTestBase {
    */
   function testBlockInInvalidRegion() {
     // Enable a test block in the default theme and place it in an invalid region.
-    db_merge('block')
-      ->key(array(
-        'module' => 'block_test',
-        'delta' => 'test_html_id',
-        'theme' => variable_get('theme_default', 'stark'),
-      ))
-      ->fields(array(
-        'status' => 1,
-        'region' => 'invalid_region',
-        'cache' => DRUPAL_NO_CACHE,
-      ))
-      ->execute();
+    $current_theme = variable_get('default_theme', 'stark');
+    $machine_name = 'test_html_id';
+    $block = array(
+      'machine_name' => $machine_name,
+      'region' => 'footer',
+    );
+    $this->drupalPost("admin/structure/block/manage/test_html_id/$current_theme", $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block was saved.');
 
-    $warning_message = t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => t('Test block html id'), '%region' => 'invalid_region'));
+    $machine_name = 'plugin.core.block.' . $current_theme . '.' . $machine_name;
+    $config = config($machine_name);
+    $config->set('region', 'invalid_region');
+    $config->save();
+
+    $warning_message = t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $config->get('id'), '%region' => 'invalid_region'));
 
     // Clearing the cache should disable the test block placed in the invalid region.
     $this->drupalPost('admin/config/development/performance', array(), 'Clear all caches');
@@ -65,17 +70,9 @@ class BlockInvalidRegionTest extends WebTestBase {
     $this->assertNoRaw($warning_message, 'Disabled block in the invalid region will not trigger the warning.');
 
     // Place disabled test block in the invalid region of the default theme.
-    db_merge('block')
-      ->key(array(
-        'module' => 'block_test',
-        'delta' => 'test_html_id',
-        'theme' => variable_get('theme_default', 'stark'),
-      ))
-      ->fields(array(
-        'region' => 'invalid_region',
-        'cache' => DRUPAL_NO_CACHE,
-      ))
-      ->execute();
+    $config = config($machine_name);
+    $config->set('region', 'invalid_region');
+    $config->save();
 
     // Clear the cache to check if the warning message is not triggered.
     $this->drupalPost('admin/config/development/performance', array(), 'Clear all caches');

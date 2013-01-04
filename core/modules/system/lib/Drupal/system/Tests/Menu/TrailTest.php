@@ -30,34 +30,27 @@ class TrailTest extends MenuTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'administer blocks'));
     $this->drupalLogin($this->admin_user);
 
     // This test puts menu links in the Tools menu and then tests for their
     // presence on the page, so we need to ensure that the Tools block will be
-    // displayed in all active themes.
-    db_update('block')
-      ->fields(array(
-        // Use a region that is valid for all themes.
-        'region' => 'content',
-        'status' => 1,
-      ))
-      ->condition('module', 'system')
-      ->condition('delta', 'menu-tools')
-      ->execute();
+    // displayed in the default theme.
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost("admin/structure/block/manage/system_menu_block:menu-tools/{$default_theme}", $block, t('Save block'));
 
     // This test puts menu links in the Administration menu and then tests for
     // their presence on the page, so we need to ensure that the Administration
-    // block will be displayed in all active themes.
-    db_update('block')
-      ->fields(array(
-        // Use a region that is valid for all themes.
-        'region' => 'content',
-        'status' => 1,
-      ))
-      ->condition('module', 'system')
-      ->condition('delta', 'menu-admin')
-      ->execute();
+    // block will be displayed in the default theme.
+    $block = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost("admin/structure/block/manage/system_menu_block:menu-admin/{$default_theme}", $block, t('Save block'));
   }
 
   /**
