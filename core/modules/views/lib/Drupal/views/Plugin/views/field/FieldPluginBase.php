@@ -495,7 +495,6 @@ abstract class FieldPluginBase extends HandlerBase {
     $form['custom_label'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create a label'),
-      '#description' => t('Enable to create a label for this field.'),
       '#default_value' => $label !== '',
       '#weight' => -103,
     );
