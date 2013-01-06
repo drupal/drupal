@@ -16,7 +16,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class NullGenerator implements UrlGeneratorInterface {
 
   public function generate($name, $parameters = array(), $absolute = FALSE) {
-    return '';
     throw new RouteNotFoundException();
   }
 
