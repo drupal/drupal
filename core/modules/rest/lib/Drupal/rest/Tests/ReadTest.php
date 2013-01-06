@@ -59,9 +59,13 @@ class ReadTest extends RESTTestBase {
       // checked in serialization tests.
       $this->assertEqual($data['uuid'][LANGUAGE_DEFAULT][0]['value'], $entity->uuid(), 'Entity UUID is correct');
 
-      // Try to read the entity with an unsupported media format.
+      // Try to read the entity with an unsupported mime format.
+      // Because the matcher checks mime type first, then method, this will hit
+      // zero viable routes on the method.  If the mime matcher wasn't working,
+      // we would still find an existing GET route with the wrong format. That
+      // means this is a valid functional test for mime-matching.
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, 'application/wrongformat');
-      $this->assertResponse(415);
+      $this->assertResponse(405);
 
       // Try to read an entity that does not exist.
       $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'GET', NULL, 'application/vnd.drupal.ld+json');
