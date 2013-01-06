@@ -1,0 +1,29 @@
+{
+    "name": "symfony-cmf/routing",
+    "type": "library",
+    "description": "Extends the Symfony2 routing component for dynamic routes and chaining several routers",
+    "keywords": ["routing", "database"],
+    "homepage": "http://cmf.symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Symfony CMF Community",
+            "homepage": "https://github.com/symfony-cmf/Routing/contributors"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/routing": ">=2.1,<2.3-dev",
+        "symfony/http-kernel": ">=2.1,<2.3-dev"
+    },
+    "autoload": {
+        "psr-0": { "Symfony\\Cmf\\Component\\Routing": "" }
+    },
+    "target-dir": "Symfony/Cmf/Component/Routing",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

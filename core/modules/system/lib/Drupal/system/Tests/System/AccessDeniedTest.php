@@ -55,15 +55,16 @@ class AccessDeniedTest extends WebTestBase {
 
     // Enable the user login block.
     $edit = array(
-      'blocks[user_login][region]' => 'sidebar_first',
+      'machine_name' => 'login',
+      'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block/manage/user_login_block/stark', $edit, t('Save block'));
 
     // Logout and check that the user login block is shown on custom 403 pages.
     $this->drupalLogout();
     $this->drupalGet('admin');
     $this->assertText($this->admin_user->name, 'Found the custom 403 page');
-    $this->assertText(t('User login'), 'Blocks are shown on the custom 403 page');
+    $this->assertText(t('Username'), 'Blocks are shown on the custom 403 page');
 
     // Log back in and remove the custom 403 page.
     $this->drupalLogin($this->admin_user);
@@ -77,12 +78,15 @@ class AccessDeniedTest extends WebTestBase {
     $this->drupalGet('admin');
     $this->assertText(t('Access denied'), 'Found the default 403 page');
     $this->assertResponse(403);
-    $this->assertText(t('User login'), 'Blocks are shown on the default 403 page');
+    $this->assertText(t('Username'), 'Blocks are shown on the default 403 page');
 
     // Log back in, set the custom 403 page to /user and remove the block
     $this->drupalLogin($this->admin_user);
     config('system.site')->set('page.403', 'user')->save();
-    $this->drupalPost('admin/structure/block', array('blocks[user_login][region]' => '-1'), t('Save blocks'));
+    $edit = array(
+      'region' => -1,
+    );
+    $this->drupalPost('admin/structure/block/manage/plugin.core.block.stark.login/stark/configure', $edit, t('Save block'));
 
     // Check that we can log in from the 403 page.
     $this->drupalLogout();

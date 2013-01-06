@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  *   module = "comment",
  *   title = @Translation("Comment"),
  *   help = @Translation("Display the comment with standard comment view."),
- *   theme = "views_view_row_comment",
  *   base = {"comment"},
  *   entity_type = "comment",
  *   type = "normal"

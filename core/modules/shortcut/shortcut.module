@@ -184,29 +184,6 @@ function shortcut_theme() {
 }
 
 /**
- * Implements hook_block_info().
- */
-function shortcut_block_info() {
-  $blocks['shortcuts']['info'] = t('Shortcuts');
-  // Shortcut blocks can't be cached because each menu item can have a custom
-  // access callback. menu.inc manages its own caching.
-  $blocks['shortcuts']['cache'] = DRUPAL_NO_CACHE;
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- */
-function shortcut_block_view($delta = '') {
-  if ($delta == 'shortcuts') {
-    $shortcut_set = shortcut_current_displayed_set();
-    $data['subject'] = t('@shortcut_set shortcuts', array('@shortcut_set' => $shortcut_set->title));
-    $data['content'] = shortcut_renderable_links($shortcut_set);
-    return $data;
-  }
-}
-
-/**
  * Access callback for editing a shortcut set.
  *
  * @param object $shortcut_set

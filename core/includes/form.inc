@@ -2869,7 +2869,15 @@ function theme_details($variables) {
 
   $output = '<details' . new Attribute($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
-    $output .= '<summary>' . $element['#title'] . '</summary>';
+    $summary_attributes = new Attribute(array(
+      'role' => 'button',
+    ));
+    if (!empty($element['#attributes']['id'])) {
+      $summary_attributes['aria-controls'] = $element['#attributes']['id'];
+    }
+    $summary_attributes['aria-expanded'] = empty($element['#attributes']['open']) ? FALSE : TRUE;
+    $summary_attributes['aria-pressed'] = $summary_attributes['aria-expanded'];
+    $output .= '<summary' . $summary_attributes . '>' . $element['#title'] . '</summary>';
   }
   $output .= '<div class="details-wrapper">';
   if (!empty($element['#description'])) {
@@ -4110,9 +4118,9 @@ function theme_button($variables) {
   $element['#attributes']['type'] = 'submit';
   element_set_attributes($element, array('id', 'name', 'value'));
 
-  $element['#attributes']['class'][] = 'form-button';
+  $element['#attributes']['class'][] = 'button';
   if (!empty($element['#button_type'])) {
-    $element['#attributes']['class'][] = 'form-button-' . $element['#button_type'];
+    $element['#attributes']['class'][] = 'button-' . $element['#button_type'];
   }
   // @todo Various JavaScript depends on this button class.
   $element['#attributes']['class'][] = 'form-submit';

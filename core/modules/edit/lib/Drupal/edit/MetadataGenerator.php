@@ -9,7 +9,6 @@ namespace Drupal\edit;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldInstance;
-
 use Drupal\edit\Access\EditEntityFieldAccessCheckInterface;
 
 
@@ -58,7 +57,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     }
 
     $label = $instance['label'];
-    $formatter_id = $instance->getFormatter($view_mode)->getPluginId();
+    $formatter_id = entity_get_render_display($entity, $view_mode)->getFormatter($instance['field_name'])->getPluginId();
     $items = $entity->get($field_name);
     $items = $items[$langcode];
     $editor = $this->editorSelector->getEditor($formatter_id, $instance, $items);

@@ -253,12 +253,10 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
   // handle dependencies correctly.
   foreach (array('delete', 'create', 'change') as $op) {
     foreach ($config_changes[$op] as $key => $name) {
-      // Extract owner from configuration object name.
-      $module = strtok($name, '.');
-      // Check whether the module implements hook_config_import() and ask it to
-      // handle the configuration change.
+      // Call to the configuration entity's storage controller to handle the
+      // configuration change.
       $handled_by_module = FALSE;
-      if (module_exists($module) && module_hook($module, 'config_import_' . $op)) {
+      if ($entity_type = config_get_entity_type_by_name($name)) {
         $old_config = new Config($name, $target_storage);
         $old_config->load();
 
@@ -268,7 +266,8 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
           $new_config->setData($data);
         }
 
-        $handled_by_module = module_invoke($module, 'config_import_' . $op, $name, $new_config, $old_config);
+        $method = 'import' . ucfirst($op);
+        $handled_by_module = entity_get_controller($entity_type)->$method($name, $new_config, $old_config);
       }
       if (!empty($handled_by_module)) {
         unset($config_changes[$op][$key]);
@@ -296,4 +295,20 @@ function config_get_module_config_entities($module) {
   return array_filter($info, function($entity_info) use ($module) {
     return ($entity_info['module'] == $module) && is_subclass_of($entity_info['class'], 'Drupal\Core\Config\Entity\ConfigEntityInterface');
   });
+}
+
+/**
+ * Returns the entity type of a configuration object.
+ *
+ * @param string $name
+ *   The configuration object name.
+ *
+ * @return string|null
+ *   Either the entity type name, or NULL if none match.
+ */
+function config_get_entity_type_by_name($name) {
+  $entities = array_filter(entity_get_info(), function($entity_info) use ($name) {
+    return (isset($entity_info['config_prefix']) && strpos($name, $entity_info['config_prefix'] . '.') === 0);
+  });
+  return key($entities);
 }

@@ -12,25 +12,3 @@ function block_test_system_theme_info() {
   $themes['block_test_theme'] = drupal_get_path('module', 'block_test') . '/themes/block_test_theme/block_test_theme.info';
   return $themes;
 }
-
-/**
- * Implements hook_block_info().
- */
-function block_test_block_info() {
-  $blocks['test_cache'] = array(
-    'info' => t('Test block caching'),
-    'cache' => state()->get('block_test.caching') ?: DRUPAL_CACHE_PER_ROLE,
-  );
-
-  $blocks['test_html_id'] = array(
-    'info' => t('Test block html id'),
-  );
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- */
-function block_test_block_view($delta = 0) {
-  return array('content' => state()->get('block_test.content'));
-}

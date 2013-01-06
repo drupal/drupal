@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\TypedData\Type;
 
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedData;
 use InvalidArgumentException;
 
 /**
@@ -17,7 +17,7 @@ use InvalidArgumentException;
  * http://php.net/manual/en/language.types.resource.php. For setting the value
  * a PHP file resource or a (absolute) stream resource URI may be passed.
  */
-class Binary extends TypedData implements TypedDataInterface {
+class Binary extends TypedData {
 
   /**
    * The file resource URI.

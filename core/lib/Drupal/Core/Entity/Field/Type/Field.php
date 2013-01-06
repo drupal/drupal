@@ -8,9 +8,10 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\Core\TypedData\Type\TypedData;
 use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\Core\TypedData\ContextAwareInterface;
+use Drupal\Core\TypedData\ContextAwareTypedData;
+use Drupal\Core\TypedData\TypedDataInterface;
 use ArrayIterator;
 use IteratorAggregate;
 use InvalidArgumentException;
@@ -26,21 +27,7 @@ use InvalidArgumentException;
  *
  * @see \Drupal\Core\Entity\Field\FieldInterface
  */
-class Field extends TypedData implements IteratorAggregate, FieldInterface {
-
-  /**
-   * The entity field name.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
-   * The parent entity.
-   *
-   * @var \Drupal\Core\Entity\EntityInterface
-   */
-  protected $parent;
+class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInterface {
 
   /**
    * Numerically indexed array of field items, implementing the
@@ -51,21 +38,33 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
   protected $list = array();
 
   /**
-   * Flag to indicate if this field has been set.
-   *
-   * @var bool
+   * Overrides ContextAwareTypedData::__construct().
    */
-  protected $isset = FALSE;
+  public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
+    // Always initialize one empty item as usually that will be needed. That
+    // way prototypes created by
+    // \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance() will
+    // already have one field item ready for use after cloning.
+    $this->list[0] = $this->createItem(0);
+  }
 
   /**
    * Implements TypedDataInterface::getValue().
    */
   public function getValue() {
-    $values = array();
-    foreach ($this->list as $delta => $item) {
-      $values[$delta] = !$item->isEmpty() ? $item->getValue() : NULL;
+    if (isset($this->list)) {
+      $values = array();
+      foreach ($this->list as $delta => $item) {
+        if (!$item->isEmpty()) {
+          $values[$delta] = $item->getValue();
+        }
+        else {
+          $values[$delta] = NULL;
+        }
+      }
+      return $values;
     }
-    return $values;
   }
 
   /**
@@ -75,19 +74,18 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    *   An array of values of the field items.
    */
   public function setValue($values) {
-    $this->isset = TRUE;
-    if (isset($values) && $values !== array()) {
+    if (!isset($values) || $values === array()) {
+      $this->list = $values;
+    }
+    else {
       // Support passing in only the value of the first item.
       if (!is_array($values) || !is_numeric(current(array_keys($values)))) {
         $values = array(0 => $values);
       }
 
-      if (!is_array($values)) {
-        throw new InvalidArgumentException("An entity field requires a numerically indexed array of items as value.");
-      }
       // Clear the values of properties for which no value has been passed.
-      foreach (array_diff_key($this->list, $values) as $delta => $item) {
-        unset($this->list[$delta]);
+      if (isset($this->list)) {
+        $this->list = array_intersect_key($this->list, $values);
       }
 
       // Set the values.
@@ -96,24 +94,13 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
           throw new InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
         }
         elseif (!isset($this->list[$delta])) {
-          $this->list[$delta] = $this->createItem($value);
+          $this->list[$delta] = $this->createItem($delta, $value);
         }
         else {
           $this->list[$delta]->setValue($value);
         }
       }
     }
-    else {
-      $this->list = array();
-    }
-  }
-
-  /**
-   * Mark this field as not set.
-   */
-  public function unsetValue() {
-    $this->list = array();
-    $this->isset = FALSE;
   }
 
   /**
@@ -123,10 +110,12 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    */
   public function getString() {
     $strings = array();
-    foreach ($this->list() as $item) {
-      $strings[] = $item->getString();
+    if (isset($this->list)) {
+      foreach ($this->list() as $item) {
+        $strings[] = $item->getString();
+      }
+      return implode(', ', array_filter($strings));
     }
-    return implode(', ', array_filter($strings));
   }
 
   /**
@@ -140,14 +129,16 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    * Implements ArrayAccess::offsetExists().
    */
   public function offsetExists($offset) {
-    return array_key_exists($offset, $this->list);
+    return isset($this->list) && array_key_exists($offset, $this->list);
   }
 
   /**
    * Implements ArrayAccess::offsetUnset().
    */
   public function offsetUnset($offset) {
-    unset($this->list[$offset]);
+    if (isset($this->list)) {
+      unset($this->list[$offset]);
+    }
   }
 
   /**
@@ -160,7 +151,7 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
     // Allow getting not yet existing items as well.
     // @todo: Maybe add a public createItem() method in addition?
     elseif (!isset($this->list[$offset])) {
-      $this->list[$offset] = $this->createItem();
+      $this->list[$offset] = $this->createItem($offset);
     }
     return $this->list[$offset];
   }
@@ -170,9 +161,15 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
-  protected function createItem($value = NULL) {
-    $context = array('parent' => $this);
-    return typed_data()->create(array('list' => FALSE) + $this->definition, $value, $context);
+  protected function createItem($offset = 0, $value = NULL) {
+    return typed_data()->getPropertyInstance($this, $offset, $value);
+  }
+
+  /**
+   * Implements ListInterface::getItemDefinition().
+   */
+  public function getItemDefinition() {
+    return array('list' => FALSE) + $this->definition;
   }
 
   /**
@@ -199,44 +196,17 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    * Implements IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    return new ArrayIterator($this->list);
+    if (isset($this->list)) {
+      return new ArrayIterator($this->list);
+    }
+    return new ArrayIterator(array());
   }
 
   /**
    * Implements Countable::count().
    */
   public function count() {
-    return count($this->list);
-  }
-
-  /**
-   * Implements ContextAwareInterface::getName().
-   */
-  public function getName() {
-    return $this->name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setName().
-   */
-  public function setName($name) {
-    $this->name = $name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::getParent().
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   */
-  public function getParent() {
-    return $this->parent;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setParent().
-   */
-  public function setParent($parent) {
-    $this->parent = $parent;
+    return isset($this->list) ? count($this->list) : 0;
   }
 
   /**
@@ -257,7 +227,7 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    * Delegate.
    */
   public function __get($property_name) {
-    return $this->offsetGet(0)->__get($property_name);
+    return $this->offsetGet(0)->get($property_name)->getValue();
   }
 
   /**
@@ -272,14 +242,13 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    */
   public function __set($property_name, $value) {
     $this->offsetGet(0)->__set($property_name, $value);
-    $this->isset = TRUE;
   }
 
   /**
    * Delegate.
    */
   public function __isset($property_name) {
-    return $this->isset && $this->offsetGet(0)->__isset($property_name);
+    return $this->offsetGet(0)->__isset($property_name);
   }
 
   /**
@@ -293,29 +262,27 @@ class Field extends TypedData implements IteratorAggregate, FieldInterface {
    * Implements ListInterface::isEmpty().
    */
   public function isEmpty() {
-    foreach ($this->list as $item) {
-      if (!$item->isEmpty()) {
-        return FALSE;
+    if (isset($this->list)) {
+      foreach ($this->list as $item) {
+        if (!$item->isEmpty()) {
+          return FALSE;
+        }
       }
     }
     return TRUE;
   }
 
   /**
-   * Determines if this field has been set.
-   *
-   * @return bool
-   */
-  public function valueIsSet() {
-    return $this->isset;
-  }
-
-  /**
    * Implements a deep clone.
    */
   public function __clone() {
-    foreach ($this->list as $delta => $property) {
-      $this->list[$delta] = clone $property;
+    if (isset($this->list)) {
+      foreach ($this->list as $delta => $property) {
+        $this->list[$delta] = clone $property;
+        if ($property instanceof ContextAwareInterface) {
+          $this->list[$delta]->setContext($delta, $this);
+        }
+      }
     }
   }
 

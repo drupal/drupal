@@ -3080,6 +3080,9 @@ function hook_disable() {
  * inspect later. It is important to remove any temporary variables using
  * variable_del() before your last task has completed and control is handed
  * back to the installer.
+ * 
+ * @param array $install_state
+ *   An array of information about the current installation state.
  *
  * @return
  *   A keyed array of tasks the profile will perform during the final stage of
@@ -3138,7 +3141,7 @@ function hook_disable() {
  * @see install_state_defaults()
  * @see batch_set()
  */
-function hook_install_tasks() {
+function hook_install_tasks(&$install_state) {
   // Here, we define a variable to allow tasks to indicate that a particular,
   // processor-intensive batch process needs to be triggered later on in the
   // installation.

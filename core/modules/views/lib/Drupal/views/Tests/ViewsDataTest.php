@@ -23,9 +23,9 @@ class ViewsDataTest extends ViewUnitTestBase {
   }
 
   /**
-   * Tests the views_fetch_data function.
+   * Tests the views.views_data service.
    *
-   * @see views_fetch_data
+   * @see \Drupal\views\ViewsDataCache
    */
   public function testViewsFetchData() {
     $table_name = 'views_test_data';

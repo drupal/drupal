@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the custom block module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function custom_block_schema() {
+  $schema = array();
+  $schema['block_custom'] = array(
+    'description' => 'Stores contents of custom-made blocks.',
+    'fields' => array(
+      'bid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "The block's {block}.bid.",
+      ),
+      'body' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Block contents.',
+        'translatable' => TRUE,
+      ),
+      'info' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Block description.',
+      ),
+      'format' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The {filter_format}.format of the block body.',
+      ),
+    ),
+    'unique keys' => array(
+      'info' => array('info'),
+    ),
+    'primary key' => array('bid'),
+  );
+  return $schema;
+}

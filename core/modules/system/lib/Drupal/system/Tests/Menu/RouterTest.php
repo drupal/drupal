@@ -22,6 +22,27 @@ class RouterTest extends WebTestBase {
    */
   public static $modules = array('block', 'menu_test', 'test_page_test');
 
+  /**
+   * Name of the administrative theme to use for tests.
+   *
+   * @var string
+   */
+  protected $admin_theme;
+
+  /**
+   * Name of the default theme to use for tests.
+   *
+   * @var string
+   */
+  protected $default_theme;
+
+  /**
+   * Name of an alternate theme to use for tests.
+   *
+   * @var string
+   */
+  protected $alternate_theme;
+
   public static function getInfo() {
     return array(
       'name' => 'Menu router',
@@ -34,28 +55,15 @@ class RouterTest extends WebTestBase {
     // Enable dummy module that implements hook_menu.
     parent::setUp();
 
-    // Make the tests below more robust by explicitly setting the default theme
-    // and administrative theme that they expect.
-    theme_enable(array('bartik'));
-    variable_set('theme_default', 'bartik');
-    config('system.theme')->set('admin', 'seven')->save();
-    theme_disable(array('stark'));
+    // Explicitly set the default and admin themes.
+    $this->default_theme = 'bartik';
+    $this->admin_theme = 'seven';
+    $this->alternate_theme = 'stark';
+    theme_enable(array($this->default_theme));
+    variable_set('theme_default', $this->default_theme);
+    config('system.theme')->set('admin', $this->admin_theme)->save();
+    theme_disable(array($this->alternate_theme));
 
-    // Enable navigation menu block.
-    db_merge('block')
-      ->key(array(
-        'module' => 'system',
-        'delta' => 'menu-tools',
-        'theme' => 'bartik',
-      ))
-      ->fields(array(
-        'status' => 1,
-        'weight' => 0,
-        'region' => 'sidebar_first',
-        'pages' => '',
-        'cache' => -1,
-      ))
-      ->execute();
   }
 
   /**
@@ -93,7 +101,7 @@ class RouterTest extends WebTestBase {
    * Test the theme callback when it is set to use an administrative theme.
    */
   function testThemeCallbackAdministrative() {
-    theme_enable(array('seven'));
+    theme_enable(array($this->admin_theme));
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Custom theme: seven. Actual theme: seven.', 'The administrative theme can be correctly set in a theme callback.');
     $this->assertRaw('seven/style.css', "The administrative theme's CSS appears on the page.");
@@ -103,7 +111,7 @@ class RouterTest extends WebTestBase {
    * Test that the theme callback is properly inherited.
    */
   function testThemeCallbackInheritance() {
-    theme_enable(array('seven'));
+    theme_enable(array($this->admin_theme));
     $this->drupalGet('menu-test/theme-callback/use-admin-theme/inheritance');
     $this->assertText('Custom theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', 'Theme callback inheritance correctly uses the administrative theme.');
     $this->assertRaw('seven/style.css', "The administrative theme's CSS appears on the page.");
@@ -134,7 +142,7 @@ class RouterTest extends WebTestBase {
    */
   function testThemeCallbackMaintenanceMode() {
     config('system.maintenance')->set('enabled', 1)->save();
-    theme_enable(array('seven'));
+    theme_enable(array($this->admin_theme));
 
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
@@ -195,7 +203,7 @@ class RouterTest extends WebTestBase {
     $this->assertRaw('bartik/css/style.css', "The default theme's CSS appears on the page.");
 
     // Now enable the theme and request it again.
-    theme_enable(array('stark'));
+    theme_enable(array($this->alternate_theme));
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
     $this->assertText('Custom theme: stark. Actual theme: stark.', 'The theme callback system uses an optional theme once it has been enabled.');
     $this->assertRaw('stark/css/layout.css', "The optional theme's CSS appears on the page.");
@@ -225,8 +233,8 @@ class RouterTest extends WebTestBase {
   function testHookCustomTheme() {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
-    state()->set('menu_test.hook_custom_theme_name', 'stark');
-    theme_enable(array('stark', 'seven'));
+    state()->set('menu_test.hook_custom_theme_name', $this->alternate_theme);
+    theme_enable(array($this->alternate_theme, $this->admin_theme));
 
     // Visit a page that does not implement a theme callback. The above request
     // should be honored.
@@ -241,8 +249,8 @@ class RouterTest extends WebTestBase {
   function testThemeCallbackHookCustomTheme() {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
-    state()->set('menu_test.hook_custom_theme_name', 'stark');
-    theme_enable(array('stark', 'seven'));
+    state()->set('menu_test.hook_custom_theme_name', $this->alternate_theme);
+    theme_enable(array($this->alternate_theme, $this->admin_theme));
 
     // The menu "theme callback" should take precedence over a value set in
     // hook_custom_theme().

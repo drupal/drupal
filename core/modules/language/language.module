@@ -774,45 +774,6 @@ function language_language_delete($language) {
 }
 
 /**
- * Implements hook_block_info().
- */
-function language_block_info() {
-  include_once DRUPAL_ROOT . '/core/includes/language.inc';
-  $block = array();
-  $info = language_types_info();
-  foreach (language_types_get_configurable(FALSE) as $type) {
-    $block[$type] = array(
-      // We do not need to escape the language type name since the block 'info'
-      // value is supposed not to be sanitized. It is escaped later, if needed.
-      'info' => t('Language switcher (!type)', array('!type' => $info[$type]['name'])),
-      // Not worth caching.
-      'cache' => DRUPAL_NO_CACHE,
-    );
-  }
-  return $block;
-}
-
-/**
- * Implements hook_block_view().
- *
- * Displays a language switcher. Only show if we have at least two languages.
- */
-function language_block_view($type) {
-  if (language_multilingual()) {
-    $path = drupal_is_front_page() ? '<front>' : current_path();
-    $links = language_negotiation_get_switch_links($type, $path);
-
-    if (isset($links->links)) {
-      $class = "language-switcher-{$links->method_id}";
-      $variables = array('links' => $links->links, 'attributes' => array('class' => array($class)));
-      $block['content'] = theme('links__language_block', $variables);
-      $block['subject'] = t('Languages');
-      return $block;
-    }
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function language_preprocess_block(&$variables) {

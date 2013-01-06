@@ -144,14 +144,6 @@ ul.tips {
   clear: right;
 }
 
-/* ----------------- Buttons ------------------ */
-
-.form-button,
-a.button {
-  margin-right: 0;
-  margin-left: 0.6em;
-}
-
 /* --------------- Search Form ---------------- */
 
 #search-form input#edit-keys,
@@ -202,11 +194,6 @@ a.button {
 }
 .tabs ul.secondary li:last-child {
   border-left: none;
-}
-ul.action-links li a {
-  background-position: right center;
-  padding-left: 0;
-  padding-right: 15px;
 }
 
 /* -------------- Form Elements   ------------- */

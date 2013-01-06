@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\TypedData;
 
+use InvalidArgumentException;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\Exception\PluginException;
 
@@ -25,28 +26,35 @@ class TypedDataFactory extends DefaultFactory {
    *   The id of a plugin, i.e. the data type.
    * @param array $configuration
    *   The plugin configuration, i.e. the data definition.
+   * @param string $name
+   *   (optional) If a property or list item is to be created, the name of the
+   *   property or the delta of the list item.
+   * @param mixed $parent
+   *   (optional) If a property or list item is to be created, the parent typed
+   *   data object implementing either the ListInterface or the
+   *   ComplexDataInterface.
    *
-   * @return Drupal\Core\TypedData\TypedDataInterface
+   * @return \Drupal\Core\TypedData\TypedDataInterface
    */
-  public function createInstance($plugin_id, array $configuration) {
+  public function createInstance($plugin_id, array $configuration, $name = NULL, $parent = NULL) {
     $type_definition = $this->discovery->getDefinition($plugin_id);
 
-    // Allow per-data definition overrides of the used classes and generally
-    // default to the data type definition.
-    $definition = $configuration + $type_definition;
+    if (!isset($type_definition)) {
+      throw new InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
+    }
 
-    if (empty($definition['list'])) {
-      if (empty($definition['class'])) {
-        throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $plugin_id));
-      }
-      $plugin_class = $definition['class'];
+    // Allow per-data definition overrides of the used classes.
+    $key = empty($configuration['list']) ? 'class' : 'list class';
+    if (isset($configuration[$key])) {
+      $class = $configuration[$key];
     }
-    else {
-      if (empty($definition['list class'])) {
-        throw new PluginException(sprintf('The plugin (%s) did not specify a list instance class.', $plugin_id));
-      }
-      $plugin_class = $definition['list class'];
+    elseif (isset($type_definition[$key])) {
+      $class = $type_definition[$key];
     }
-    return new $plugin_class($definition, $plugin_id, $this->discovery);
+
+    if (!isset($class)) {
+      throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $plugin_id));
+    }
+    return new $class($configuration, $name, $parent);
   }
 }

@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "config_test",
  *   label = @Translation("Test configuration"),
  *   module = "config_test",
- *   controller_class = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *   controller_class = "Drupal\config_test\ConfigTestStorageController",
  *   list_controller_class = "Drupal\Core\Config\Entity\ConfigEntityListController",
  *   form_controller_class = {
  *     "default" = "Drupal\config_test\ConfigTestFormController"

@@ -46,21 +46,16 @@ class CommentBlockTest extends CommentTestBase {
    */
   function testRecentCommentBlock() {
     $this->drupalLogin($this->admin_user);
-
-    // Set the block to a region to confirm block is available.
+    $current_theme = variable_get('default_theme', 'stark');
+    $machine_name = 'test_recent_comments';
     $edit = array(
-      'blocks[comment_recent][region]' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), 'Block saved to first sidebar region.');
-
-    // Set block title and variables.
-    $block = array(
+      'machine_name' => $machine_name,
+      'region' => 'sidebar_first',
       'title' => $this->randomName(),
-      'comment_block_count' => 2,
+      'block_count' => 2,
     );
-    $this->drupalPost('admin/structure/block/manage/comment/recent/configure', $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block saved.');
+    $this->drupalPost('admin/structure/block/manage/recent_comments/' . $current_theme, $edit, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block was saved.');
 
     // Add some test comments, one without a subject.
     $comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
@@ -75,14 +70,14 @@ class CommentBlockTest extends CommentTestBase {
     // posting a node from a node form.
     cache_invalidate_tags(array('content' => TRUE));
     $this->drupalGet('');
-    $this->assertNoText($block['title'], 'Block was not found.');
+    $this->assertNoText($edit['title'], 'Block was not found.');
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
 
     // Test that a user with the 'access comments' permission can see the
     // block.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('');
-    $this->assertText($block['title'], 'Block was found.');
+    $this->assertText($edit['title'], 'Block was found.');
 
     // Test the only the 2 latest comments are shown and in the proper order.
     $this->assertNoText($comment1->subject, 'Comment not found in block.');
@@ -94,9 +89,10 @@ class CommentBlockTest extends CommentTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
     $block = array(
-      'comment_block_count' => 10,
+      'block_count' => 10,
     );
-    $this->drupalPost('admin/structure/block/manage/comment/recent/configure', $block, t('Save block'));
+
+    $this->drupalPost("admin/structure/block/manage/plugin.core.block.$current_theme.$machine_name/$current_theme/configure", $block, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block saved.');
 
     // Post an additional comment.

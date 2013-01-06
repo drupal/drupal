@@ -78,10 +78,8 @@ class Block extends DisplayPluginBase {
     // Prior to this being called, the $view should already be set to this
     // display, and arguments should be set on the view.
     $element = $this->view->render();
-    $info['content'] = drupal_render($element);
-    $info['subject'] = filter_xss_admin($this->view->getTitle());
     if (!empty($this->view->result) || $this->getOption('empty') || !empty($this->view->style_plugin->definition['even empty'])) {
-      return $info;
+      return drupal_render($element);
     }
   }
 
@@ -139,7 +137,7 @@ class Block extends DisplayPluginBase {
    * Provide a single method to figure caching type, keeping a sensible default
    * for when it's unset.
    */
-  protected function getCacheType() {
+  public function getCacheType() {
     $cache_type = $this->getOption('block_caching');
     if (empty($cache_type)) {
       $cache_type = DRUPAL_NO_CACHE;

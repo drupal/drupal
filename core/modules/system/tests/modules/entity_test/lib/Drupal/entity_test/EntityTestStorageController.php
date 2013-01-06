@@ -48,30 +48,38 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
    *   An array of entity objects implementing the EntityInterface.
    */
   protected function mapFromStorageRecords(array $records, $load_revision = FALSE) {
-    $records = parent::mapFromStorageRecords($records, $load_revision);
+    $property_values = $this->getPropertyValues($records, $load_revision);
 
-    // Load data of translatable properties.
-    $this->attachPropertyData($records, $load_revision);
+    foreach ($records as $id => $record) {
+      $values = isset($property_values[$id]) ? $property_values[$id] : array();
+
+      foreach ($record as $name => $value) {
+        $values[$name][LANGUAGE_DEFAULT][0]['value'] = $value;
+      }
+      $entity = new $this->entityClass($values, $this->entityType);
+      $records[$id] = $entity;
+    }
     return $records;
   }
 
   /**
    * Attaches property data in all languages for translatable properties.
    */
-  protected function attachPropertyData(&$queried_entities, $load_revision = FALSE) {
+  protected function getPropertyValues($records, $load_revision = FALSE) {
     $query = db_select('entity_test_property_data', 'data', array('fetch' => PDO::FETCH_ASSOC))
       ->fields('data')
-      ->condition('id', array_keys($queried_entities))
+      ->condition('id', array_keys($records))
       ->orderBy('data.id');
     if ($load_revision) {
       // Get revision id's.
       $revision_ids = array();
-      foreach ($queried_entities as $id => $entity) {
-        $revision_ids[] = $entity->get('revision_id')->value;
+      foreach ($records as $record) {
+        $revision_ids[] = $record->revision_id;
       }
       $query->condition('revision_id', $revision_ids);
     }
     $data = $query->execute();
+    $property_values = array();
 
     foreach ($data as $values) {
       $id = $values['id'];
@@ -79,9 +87,10 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
       // LANGUAGE_DEFAULT as key.
       $langcode = empty($values['default_langcode']) ? $values['langcode'] : LANGUAGE_DEFAULT;
 
-      $queried_entities[$id]->name[$langcode][0]['value'] = $values['name'];
-      $queried_entities[$id]->user_id[$langcode][0]['value'] = $values['user_id'];
+      $property_values[$id]['name'][$langcode][0]['value'] = $values['name'];
+      $property_values[$id]['user_id'][$langcode][0]['value'] = $values['user_id'];
     }
+    return $property_values;
   }
 
   /**

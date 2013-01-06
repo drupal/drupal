@@ -46,7 +46,7 @@ class MockLayoutBlockDeriver implements DerivativeInterface {
       // customized one, but in a real implementation, this would be fetched
       // from some config() object.
       'foo' => array(
-        'label' => 'Layout Foo',
+        'label' => t('Layout Foo'),
       ) + $base_plugin_definition,
     );
 

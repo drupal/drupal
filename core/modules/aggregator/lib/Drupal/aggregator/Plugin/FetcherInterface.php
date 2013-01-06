@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Definition of Drupal\aggregator\Plugin\FetcherInterface.

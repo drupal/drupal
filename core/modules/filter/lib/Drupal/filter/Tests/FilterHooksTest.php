@@ -19,7 +19,7 @@ class FilterHooksTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'filter_test');
+  public static $modules = array('node', 'filter_test');
 
   public static function getInfo() {
     return array(
@@ -31,8 +31,6 @@ class FilterHooksTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer filters', 'administer blocks'));
-    $this->drupalLogin($admin_user);
   }
 
   /**
@@ -42,6 +40,14 @@ class FilterHooksTest extends WebTestBase {
    * format.
    */
   function testFilterHooks() {
+    // Create content type, with underscores.
+    $type_name = 'test_' . strtolower($this->randomName());
+    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $node_permission = "create $type_name content";
+
+    $admin_user = $this->drupalCreateUser(array('administer filters', 'administer nodes', $node_permission));
+    $this->drupalLogin($admin_user);
+
     // Add a text format.
     $name = $this->randomName();
     $edit = array();
@@ -61,19 +67,16 @@ class FilterHooksTest extends WebTestBase {
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)), 'Format successfully updated.');
     $this->assertText('hook_filter_format_update invoked.', 'hook_filter_format_update() was invoked.');
 
-    // Add a new custom block.
-    $custom_block = array();
-    $custom_block['info'] = $this->randomName(8);
-    $custom_block['title'] = $this->randomName(8);
-    $custom_block['body[value]'] = $this->randomName(32);
     // Use the format created.
-    $custom_block['body[format]'] = $format_id;
-    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
-    $this->assertText(t('The block has been created.'), 'New block successfully created.');
-
-    // Verify the new block is in the database.
-    $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-    $this->assertNotNull($bid, 'New block found in database');
+    $language_not_specified = LANGUAGE_NOT_SPECIFIED;
+    $title = $this->randomName(8);
+    $edit = array(
+      "title" => $title,
+      "body[$language_not_specified][0][value]" => $this->randomName(32),
+      "body[$language_not_specified][0][format]" => $format_id,
+    );
+    $this->drupalPost("node/add/{$type->type}", $edit, t('Save'));
+    $this->assertText(t('@type @title has been created.', array('@type' => $type_name, '@title' => $title)), 'New node successfully created.');
 
     // Disable the text format.
     $this->drupalPost('admin/config/content/formats/' . $format_id . '/disable', array(), t('Disable'));

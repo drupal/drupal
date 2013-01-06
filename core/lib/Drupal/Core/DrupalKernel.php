@@ -365,8 +365,10 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $container = $this->getContainerBuilder();
     $container->setParameter('container.bundles', $this->bundleClasses);
     $container->setParameter('container.modules', $this->getModuleFileNames());
-    // Register the class loader as a synthetic service.
+    // Register synthetic services.
     $container->register('class_loader', 'Symfony\Component\ClassLoader\UniversalClassLoader')->setSynthetic(TRUE);
+    $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
+    $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
     foreach ($this->bundles as $bundle) {
       $bundle->build($container);
     }

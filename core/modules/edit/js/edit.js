@@ -1,6 +1,6 @@
 /**
  * @file
- * Behaviors for Edit, including the one that initializes Edit's EditAppView.
+ * Attaches behavior for the Edit module.
  */
 (function ($, _, Backbone, Drupal, drupalSettings) {
 

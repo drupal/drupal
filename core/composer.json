@@ -14,7 +14,8 @@
     "twig/twig": "1.*@stable",
     "doctrine/common": "2.3.*@stable",
     "guzzle/http": "*",
-    "kriswallsmith/assetic": "1.1.*@alpha"
+    "kriswallsmith/assetic": "1.1.*@alpha",
+    "symfony-cmf/routing": "1.0.*@dev"
   },
   "minimum-stability": "dev"
 }

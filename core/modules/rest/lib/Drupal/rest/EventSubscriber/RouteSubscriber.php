@@ -55,7 +55,7 @@ class RouteSubscriber implements EventSubscriberInterface {
 
     $collection = $event->getRouteCollection();
 
-    $resources = $this->config->get('rest')->load()->get('resources');
+    $resources = $this->config->get('rest.settings')->load()->get('resources');
     if ($resources && $enabled = array_intersect_key($this->manager->getDefinitions(), $resources)) {
       foreach ($enabled as $key => $resource) {
         $plugin = $this->manager->getInstance(array('id' => $key));

@@ -366,16 +366,15 @@ function file_stream_wrapper_uri_normalize($uri) {
  *   (Drupal\Core\StreamWrapper\PrivateStream).
  */
 function file_stream_wrapper_get_instance_by_uri($uri) {
-  $scheme = file_uri_scheme($uri);
-  $class = file_stream_wrapper_get_class($scheme);
-  if (class_exists($class)) {
-    $instance = new $class();
-    $instance->setUri($uri);
-    return $instance;
+  if ($scheme = file_uri_scheme($uri)) {
+    $class = file_stream_wrapper_get_class($scheme);
+    if (class_exists($class)) {
+      $instance = new $class();
+      $instance->setUri($uri);
+      return $instance;
+    }
   }
-  else {
-    return FALSE;
-  }
+  return FALSE;
 }
 
 /**

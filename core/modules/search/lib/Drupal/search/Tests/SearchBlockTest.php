@@ -9,6 +9,8 @@ namespace Drupal\search\Tests;
 
 class SearchBlockTest extends SearchTestBase {
 
+  protected $adminUser;
+
   /**
    * Modules to enable.
    *
@@ -27,31 +29,28 @@ class SearchBlockTest extends SearchTestBase {
   function setUp() {
     parent::setUp();
 
-    // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'search content'));
-    $this->drupalLogin($admin_user);
-  }
-
-  function testSearchFormBlock() {
-    // Set block title to confirm that the interface is available.
-    $this->drupalPost('admin/structure/block/manage/search/form/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
-
-    // Set the block to a region to confirm block is available.
-    $edit = array();
-    $edit['blocks[search_form][region]'] = 'footer';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
+    // Create and login user.
+    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'search content'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
-   * Test that the search block form works correctly.
+   * Test that the search form block can be placed and works.
    */
-  function testBlock() {
-    // Enable the block, and place it in the 'content' region so that it isn't
-    // hidden on 404 pages.
-    $edit = array('blocks[search_form][region]' => 'content');
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+  protected function testSearchFormBlock() {
+    $block_id = 'search_form_block';
+    $default_theme = variable_get('theme_default', 'stark');
+
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'content',
+    );
+
+    // Enable the search block.
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), '"Search form" block enabled');
+    $this->assertText($block['title'], 'Block title was found.');
 
     // Test a normal search via the block form, from the front page.
     $terms = array('search_block_form' => 'test');
@@ -65,9 +64,11 @@ class SearchBlockTest extends SearchTestBase {
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
-    // Test a search from the block when it doesn't appear on the search page.
-    $edit = array('pages' => 'search');
-    $this->drupalPost('admin/structure/block/manage/search/form/configure', $edit, t('Save block'));
+    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
+    $config = config($block['config_id']);
+    $config->set('visibility.path.pages', 'search');
+    $config->save();
+
     $this->drupalPost('node', $terms, t('Search'));
     $this->assertText('Your search yielded no results');
 
@@ -83,7 +84,8 @@ class SearchBlockTest extends SearchTestBase {
     $this->drupalPost('node', $terms, t('Search'));
     $this->assertText('Please enter some keywords');
 
-    // Confirm that the user is redirected to the search page, when form is submitted empty.
+    // Confirm that the user is redirected to the search page, when form is
+    // submitted empty.
     $this->assertEqual(
       $this->getUrl(),
       url('search/node/', array('absolute' => TRUE)),

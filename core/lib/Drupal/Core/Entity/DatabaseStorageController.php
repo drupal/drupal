@@ -56,6 +56,13 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   protected $entityFieldInfo;
 
   /**
+   * Static cache of field definitions per bundle.
+   *
+   * @var array
+   */
+  protected $fieldDefinitions;
+
+  /**
    * Additional arguments to pass to hook_TYPE_load().
    *
    * Set before calling Drupal\Core\Entity\DatabaseStorageController::attachLoad().
@@ -687,15 +694,17 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       }
     }
 
-    $definitions = $this->entityFieldInfo['definitions'];
+    $bundle = !empty($constraints['bundle']) ? $constraints['bundle'] : FALSE;
 
     // Add in per-bundle properties.
-    // @todo: Should this be statically cached as well?
-    if (!empty($constraints['bundle']) && isset($this->entityFieldInfo['bundle map'][$constraints['bundle']])) {
-      $definitions += array_intersect_key($this->entityFieldInfo['optional'], array_flip($this->entityFieldInfo['bundle map'][$constraints['bundle']]));
-    }
+    if (!isset($this->fieldDefinitions[$bundle])) {
+      $this->fieldDefinitions[$bundle] = $this->entityFieldInfo['definitions'];
 
-    return $definitions;
+      if ($bundle && isset($this->entityFieldInfo['bundle map'][$constraints['bundle']])) {
+        $this->fieldDefinitions[$bundle] += array_intersect_key($this->entityFieldInfo['optional'], array_flip($this->entityFieldInfo['bundle map'][$constraints['bundle']]));
+      }
+    }
+    return $this->fieldDefinitions[$bundle];
   }
 
   /**

@@ -77,20 +77,17 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *   A new entity object.
    */
   public function create(array $values) {
-    $entity = new $this->entityClass(array(), $this->entityType);
+    // We have to determine the bundle first.
+    $bundle = $this->bundleKey ? $values[$this->bundleKey] : FALSE;
+    $entity = new $this->entityClass(array(), $this->entityType, $bundle);
 
-    // Make sure to set the bundle first.
-    if ($this->bundleKey) {
-      $entity->{$this->bundleKey} = $values[$this->bundleKey];
-      unset($values[$this->bundleKey]);
-    }
     // Set all other given values.
     foreach ($values as $name => $value) {
       $entity->$name = $value;
     }
 
     // Assign a new UUID if there is none yet.
-    if ($this->uuidKey && !isset($entity->{$this->uuidKey})) {
+    if ($this->uuidKey && !isset($entity->{$this->uuidKey}->value)) {
       $uuid = new Uuid();
       $entity->{$this->uuidKey}->value = $uuid->generate();
     }
@@ -109,17 +106,18 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
     // Attach fields.
     if ($this->entityInfo['fieldable']) {
+      // Prepare BC compatible entities for field API.
+      $bc_entities = array();
+      foreach ($queried_entities as $key => $entity) {
+        $bc_entities[$key] = $entity->getBCEntity();
+      }
+
       if ($load_revision) {
-        field_attach_load_revision($this->entityType, $queried_entities);
+        field_attach_load_revision($this->entityType, $bc_entities);
       }
       else {
-        field_attach_load($this->entityType, $queried_entities);
+        field_attach_load($this->entityType, $bc_entities);
       }
-    }
-
-    // Loading is finished, so disable compatibility mode now.
-    foreach ($queried_entities as $entity) {
-      $entity->setCompatibilityMode(FALSE);
     }
 
     // Call hook_entity_load().
@@ -150,13 +148,14 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   protected function mapFromStorageRecords(array $records, $load_revision = FALSE) {
 
     foreach ($records as $id => $record) {
-      $entity = new $this->entityClass(array(), $this->entityType);
-      $entity->setCompatibilityMode(TRUE);
-
+      $values = array();
       foreach ($record as $name => $value) {
-        $entity->{$name}[LANGUAGE_DEFAULT][0]['value'] = $value;
+        // Avoid unnecessary array hierarchies to save memory.
+        $values[$name][LANGUAGE_DEFAULT] = $value;
       }
-      $records[$id] = $entity;
+      $bundle = $this->bundleKey ? $record->{$this->bundleKey} : FALSE;
+      // Turn the record into an entity class.
+      $records[$id] = new $this->entityClass($values, $this->entityType, $bundle);
     }
     return $records;
   }
@@ -179,11 +178,6 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
       // Create the storage record to be saved.
       $record = $this->maptoStorageRecord($entity);
-      // Update the original values so that the compatibility mode works with
-      // the update values, what is required by field API attachers.
-      // @todo Once field API has been converted to use the Field API, move
-      // this after insert/update hooks.
-      $entity->updateOriginalValues();
 
       if (!$entity->isNew()) {
         if ($entity->isDefaultRevision()) {
@@ -215,6 +209,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $this->postSave($entity, FALSE);
         $this->invokeHook('insert', $entity);
       }
+      $entity->updateOriginalValues();
 
       // Ignore slave server temporarily.
       db_ignore_slave();
@@ -270,8 +265,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   /**
    * Overrides DatabaseStorageController::invokeHook().
    *
-   * Invokes field API attachers in compatibility mode and disables it
-   * afterwards.
+   * Invokes field API attachers with a BC entity.
    */
   protected function invokeHook($hook, EntityInterface $entity) {
     $function = 'field_attach_' . $hook;
@@ -281,9 +275,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $function = 'field_attach_delete_revision';
     }
     if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $entity->setCompatibilityMode(TRUE);
-      $function($this->entityType, $entity);
-      $entity->setCompatibilityMode(FALSE);
+      $function($this->entityType, $entity->getBCEntity());
     }
 
     // Invoke the hook.
@@ -311,7 +303,6 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     foreach ($this->entityInfo['schema_fields_sql']['revision_table'] as $name) {
       $record->$name = $entity->$name->value;
     }
-
     return $record;
   }
 }

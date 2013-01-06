@@ -39,7 +39,7 @@ class MockBlockManager extends PluginManagerBase {
 
     // A simple plugin: the user login block.
     $this->discovery->setDefinition('user_login', array(
-      'label' => 'User login',
+      'label' => t('User login'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock',
     ));
 
@@ -61,7 +61,7 @@ class MockBlockManager extends PluginManagerBase {
     // MockLayoutBlockDeriver class ensures that both the base plugin and the
     // derivatives are available to the system.
     $this->discovery->setDefinition('layout', array(
-      'label' => 'Layout',
+      'label' => t('Layout'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       'derivative' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlockDeriver',
     ));

@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests aggregator feed adding.
+ * Tests adding aggregator feeds.
  */
 class AddFeedTest extends AggregatorTestBase {
   public static function getInfo() {
@@ -20,7 +20,7 @@ class AddFeedTest extends AggregatorTestBase {
   }
 
   /**
-   * Create a feed, ensure that it is unique, check the source, and delete the feed.
+   * Creates and ensures that a feed is unique, checks source, and deletes feed.
    */
   function testAddFeed() {
     $feed = $this->createFeed();

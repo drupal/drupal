@@ -95,6 +95,9 @@ abstract class AccountFormController extends EntityFormController {
           '#access' => !empty($protected_values),
           '#description' => $current_pass_description,
           '#weight' => -5,
+          // Do not let web browsers remember this password, since we are
+          // trying to confirm that the person submitting the form actually
+          // knows the current one.
           '#attributes' => array('autocomplete' => 'off'),
         );
 

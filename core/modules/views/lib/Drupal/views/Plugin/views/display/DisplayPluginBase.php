@@ -2670,7 +2670,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render any special blocks provided for this display.
    */
   public function viewSpecialBlocks($type) {
-    if ($type == '-exp') {
+    if ($type == 'exp') {
       // avoid interfering with the admin forms.
       if (arg(0) == 'admin' && arg(1) == 'structure' && arg(2) == 'views') {
         return;
@@ -2679,9 +2679,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
       if ($this->usesExposed() && $this->getOption('exposed_block')) {
         $exposed_form = $this->getPlugin('exposed_form');
-        return array(
-          'content' => $exposed_form->render_exposed_form(TRUE),
-        );
+        return $exposed_form->render_exposed_form(TRUE);
       }
     }
   }

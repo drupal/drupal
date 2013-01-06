@@ -9,6 +9,7 @@ namespace Drupal\Core\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Enables static and persistent caching of discovered plugin definitions.
@@ -28,6 +29,20 @@ class CacheDecorator implements CachedDiscoveryInterface {
    * @var string
    */
   protected $cacheBin;
+
+  /**
+   * The timestamp indicating when the definition list cache expires.
+   *
+   * @var int
+   */
+  protected $cacheExpire;
+
+  /**
+   * The cache tags associated with the definition list.
+   *
+   * @var array
+   */
+  protected $cacheTags;
 
   /**
    * The plugin definitions of the decorated discovery class.
@@ -54,11 +69,18 @@ class CacheDecorator implements CachedDiscoveryInterface {
    *   The cache identifier used for storage of the definition list.
    * @param string $cache_bin
    *   The cache bin used for storage and retrieval of the definition list.
+   * @param int $cache_expire
+   *   A Unix timestamp indicating that the definition list will be considered
+   *   invalid after this time.
+   * @param array $cache_tags
+   *   The cache tags associated with the definition list.
    */
-  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'cache') {
+  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'cache', $cache_expire = CacheBackendInterface::CACHE_PERMANENT, array $cache_tags = array()) {
     $this->decorated = $decorated;
     $this->cacheKey = $cache_key;
     $this->cacheBin = $cache_bin;
+    $this->cacheExpire = $cache_expire;
+    $this->cacheTags = $cache_tags;
   }
 
   /**
@@ -124,7 +146,7 @@ class CacheDecorator implements CachedDiscoveryInterface {
    */
   protected function setCachedDefinitions($definitions) {
     if (isset($this->cacheKey)) {
-      cache($this->cacheBin)->set($this->cacheKey, $definitions);
+      cache($this->cacheBin)->set($this->cacheKey, $definitions, $this->cacheExpire, $this->cacheTags);
     }
     $this->definitions = $definitions;
   }
@@ -145,4 +167,5 @@ class CacheDecorator implements CachedDiscoveryInterface {
   public function __call($method, $args) {
     return call_user_func_array(array($this->decorated, $method), $args);
   }
+
 }

@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests functionality of updating a feed item in the Aggregator module.
+ */
 class UpdateFeedItemTest extends AggregatorTestBase {
   public static function getInfo() {
     return array(
@@ -17,7 +20,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
   }
 
   /**
-   * Test running "update items" from the 'admin/config/services/aggregator' page.
+   * Tests running "update items" from 'admin/config/services/aggregator' page.
    */
   function testUpdateFeedItem() {
     $this->createSampleNodes();

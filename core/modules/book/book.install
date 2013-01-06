@@ -88,7 +88,7 @@ function book_schema() {
 }
 
 /**
- * Move book settings from variables to config.
+ * Move the Book module settings from variables to config.
  *
  * @ingroup config_upgrade
  */

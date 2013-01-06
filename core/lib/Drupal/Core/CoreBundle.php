@@ -216,11 +216,13 @@ class CoreBundle extends Bundle {
       ->addTag('event_subscriber');
     $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
       ->addTag('event_subscriber');
+
+    $container->register('exception_controller', 'Drupal\Core\ExceptionController')
+      ->addArgument(new Reference('content_negotiation'))
+      ->addMethodCall('setContainer', array(new Reference('service_container')));
     $container->register('exception_listener', 'Drupal\Core\EventSubscriber\ExceptionListener')
       ->addTag('event_subscriber')
-      ->addArgument(new Reference('service_container'))
-      ->setFactoryClass('Drupal\Core\ExceptionController')
-      ->setFactoryMethod('getExceptionListener');
+      ->addArgument(array(new Reference('exception_controller'), 'execute'));
 
     $container
       ->register('transliteration', 'Drupal\Core\Transliteration\PHPTransliteration');

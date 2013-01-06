@@ -150,28 +150,52 @@ class JavaScriptTest extends WebTestBase {
     // Only the second of these two entries should appear in Drupal.settings.
     drupal_add_js(array('commonTest' => 'commonTestShouldNotAppear'), 'setting');
     drupal_add_js(array('commonTest' => 'commonTestShouldAppear'), 'setting');
-    // All three of these entries should appear in Drupal.settings.
-    drupal_add_js(array('commonTestArray' => array('commonTestValue0')), 'setting');
-    drupal_add_js(array('commonTestArray' => array('commonTestValue1')), 'setting');
-    drupal_add_js(array('commonTestArray' => array('commonTestValue2')), 'setting');
+    // Only the second of these entries should appear in Drupal.settings.
+    drupal_add_js(array('commonTestJsArrayLiteral' => array('commonTestJsArrayLiteralOldValue')), 'setting');
+    drupal_add_js(array('commonTestJsArrayLiteral' => array('commonTestJsArrayLiteralNewValue')), 'setting');
     // Only the second of these two entries should appear in Drupal.settings.
-    drupal_add_js(array('commonTestArray' => array('key' => 'commonTestOldValue')), 'setting');
-    drupal_add_js(array('commonTestArray' => array('key' => 'commonTestNewValue')), 'setting');
+    drupal_add_js(array('commonTestJsObjectLiteral' => array('key' => 'commonTestJsObjectLiteralOldValue')), 'setting');
+    drupal_add_js(array('commonTestJsObjectLiteral' => array('key' => 'commonTestJsObjectLiteralNewValue')), 'setting');
+    // Real world test case: multiple elements in a render array are adding the
+    // same (or nearly the same) JavaScript settings. When merged, they should
+    // contain all settings and not duplicate some settings.
+    $settings_one = array('moduleName' => array('ui' => array('button A', 'button B'), 'magical flag' => 3.14159265359));
+    drupal_add_js(array('commonTestRealWorldIdentical' => $settings_one), 'setting');
+    drupal_add_js(array('commonTestRealWorldIdentical' => $settings_one), 'setting');
+    $settings_two = array('moduleName' => array('ui' => array('button A', 'button B'), 'magical flag' => 3.14159265359, 'thingiesOnPage' => array('id1' => array())));
+    drupal_add_js(array('commonTestRealWorldAlmostIdentical' => $settings_two), 'setting');
+    $settings_two = array('moduleName' => array('ui' => array('button C', 'button D'), 'magical flag' => 3.14, 'thingiesOnPage' => array('id2' => array())));
+    drupal_add_js(array('commonTestRealWorldAlmostIdentical' => $settings_two), 'setting');
 
     $javascript = drupal_get_js('header');
+
     // Test whether drupal_add_js can be used to override a previous setting.
     $this->assertTrue(strpos($javascript, 'commonTestShouldAppear') > 0, 'Rendered JavaScript header returns custom setting.');
     $this->assertTrue(strpos($javascript, 'commonTestShouldNotAppear') === FALSE, 'drupal_add_js() correctly overrides a custom setting.');
 
-    // Test whether drupal_add_js can be used to add numerically indexed values
-    // to an array.
-    $array_values_appear = strpos($javascript, 'commonTestValue0') > 0 && strpos($javascript, 'commonTestValue1') > 0 && strpos($javascript, 'commonTestValue2') > 0;
-    $this->assertTrue($array_values_appear, 'drupal_add_js() correctly adds settings to the end of an indexed array.');
+    // Test whether drupal_add_js can be used to add and override a JavaScript
+    // array literal (an indexed PHP array) values.
+    $array_override = strpos($javascript, 'commonTestJsArrayLiteralNewValue') > 0 && strpos($javascript, 'commonTestJsArrayLiteralOldValue') === FALSE;
+    $this->assertTrue($array_override, 'drupal_add_js() correctly overrides settings within an array literal (indexed array).');
 
-    // Test whether drupal_add_js can be used to override the entry for an
-    // existing key in an associative array.
-    $associative_array_override = strpos($javascript, 'commonTestNewValue') > 0 && strpos($javascript, 'commonTestOldValue') === FALSE;
-    $this->assertTrue($associative_array_override, 'drupal_add_js() correctly overrides settings within an associative array.');
+    // Test whether drupal_add_js can be used to add and override a JavaScript
+    // object literal (an associate PHP array) values.
+    $associative_array_override = strpos($javascript, 'commonTestJsObjectLiteralNewValue') > 0 && strpos($javascript, 'commonTestJsObjectLiteralOldValue') === FALSE;
+    $this->assertTrue($associative_array_override, 'drupal_add_js() correctly overrides settings within an object literal (associative array).');
+
+    // Parse the generated drupalSettings <script> back to a PHP representation.
+    $startToken = 'drupalSettings = ';
+    $endToken = '}';
+    $start = strpos($javascript, $startToken) + strlen($startToken);
+    $end = strrpos($javascript, $endToken);
+    $json  = drupal_substr($javascript, $start, $end - $start + 1);
+    $parsed_settings = drupal_json_decode($json);
+
+    // Test whether the two real world cases are handled correctly.
+    $settings_two['moduleName']['thingiesOnPage']['id1'] = array();
+    $this->assertIdentical($settings_one, $parsed_settings['commonTestRealWorldIdentical'], 'drupal_add_js handled real world test case 1 correctly.');
+    $this->assertEqual($settings_two, $parsed_settings['commonTestRealWorldAlmostIdentical'], 'drupal_add_js handled real world test case 2 correctly.');
+
     // Check in a rendered page.
     $this->drupalGet('common-test/query-string');
     $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');

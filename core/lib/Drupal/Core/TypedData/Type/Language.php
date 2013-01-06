@@ -7,9 +7,8 @@
 
 namespace Drupal\Core\TypedData\Type;
 
-use Drupal\Core\TypedData\ContextAwareInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use InvalidArgumentException;
+use Drupal\Core\TypedData\ContextAwareTypedData;
 
 /**
  * Defines the 'language' data type.
@@ -25,21 +24,7 @@ use InvalidArgumentException;
  *  - langcode source: If used as computed property, the langcode property used
  *    to load the language object.
  */
-class Language extends TypedData implements TypedDataInterface, ContextAwareInterface {
-
-  /**
-   * The name.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
-   * The parent data structure.
-   *
-   * @var mixed
-   */
-  protected $parent;
+class Language extends ContextAwareTypedData {
 
   /**
    * The language code of the language if no 'langcode source' is used.
@@ -49,40 +34,14 @@ class Language extends TypedData implements TypedDataInterface, ContextAwareInte
   protected $langcode;
 
   /**
-   * Implements ContextAwareInterface::getName().
-   */
-  public function getName() {
-    return $this->name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setName().
-   */
-  public function setName($name) {
-    $this->name = $name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::getParent().
-   */
-  public function getParent() {
-    return $this->parent;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setParent().
-   */
-  public function setParent($parent) {
-    $this->parent = $parent;
-  }
-
-  /**
    * Implements TypedDataInterface::getValue().
    */
   public function getValue() {
     $source = $this->getLanguageCodeSource();
     $langcode = $source ? $source->getValue() : $this->langcode;
-    return $langcode ? language_load($langcode) : NULL;
+    if ($langcode) {
+      return language_load($langcode);
+    }
   }
 
   /**

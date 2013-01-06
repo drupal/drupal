@@ -761,7 +761,8 @@ function ajax_command_insert($selector, $html, $settings = NULL) {
  * @return
  *   An array suitable for use with the ajax_render() function.
  *
- * See @link http://docs.jquery.com/Manipulation/replaceWith#content jQuery replaceWith command @endlink
+ * See
+ * @link http://docs.jquery.com/Manipulation/replaceWith#content jQuery replaceWith command @endlink
  */
 function ajax_command_replace($selector, $html, $settings = NULL) {
   return array(

@@ -25,9 +25,7 @@ function _translation_entity_form_language_content_settings_form_alter(array &$f
   }
   $form['entity_types']['#default_value'] = $default;
 
-  $path = drupal_get_path('module', 'translation_entity');
-  $form['#attached']['css'][] = $path . '/translation_entity.admin.css';
-  $form['#attached']['js'][] = $path . '/translation_entity.admin.js';
+  $form['#attached']['library'][] = array('translation_entity', 'drupal.translation_entity.admin');
 
   foreach ($form['#labels'] as $entity_type => $label) {
     foreach (entity_get_bundles($entity_type) as $bundle) {

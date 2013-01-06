@@ -856,24 +856,8 @@ abstract class TestBase {
     file_prepare_directory($this->translation_files_directory, FILE_CREATE_DIRECTORY);
     $this->generatedTestFiles = FALSE;
 
-    // Create and set new configuration directories. The child site
-    // uses drupal_valid_test_ua() to adjust the config directory paths to
-    // a test-prefix-specific directory within the public files directory.
-    // @see config_get_config_directory()
-    $GLOBALS['config_directories'] = array();
-    $this->configDirectories = array();
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
-      // Assign the relative path to the global variable.
-      $path = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
-      $GLOBALS['config_directories'][$type]['path'] = $path;
-      // Ensure the directory can be created and is writeable.
-      if (!install_ensure_config_directory($type)) {
-        return FALSE;
-      }
-      // Provide the already resolved path for tests.
-      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $path;
-    }
+    // Create and set new configuration directories.
+    $this->prepareConfigDirectories();
 
     // Reset and create a new service container.
     $this->container = new ContainerBuilder();
@@ -894,6 +878,32 @@ abstract class TestBase {
 
     // Indicate the environment was set up correctly.
     $this->setupEnvironment = TRUE;
+  }
+
+  /**
+   * Create and set new configuration directories.
+   *
+   * The child site uses drupal_valid_test_ua() to adjust the config directory
+   * paths to a test-prefix-specific directory within the public files
+   * directory.
+   *
+   * @see config_get_config_directory()
+   */
+  protected function prepareConfigDirectories() {
+    $GLOBALS['config_directories'] = array();
+    $this->configDirectories = array();
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
+      // Assign the relative path to the global variable.
+      $path = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
+      $GLOBALS['config_directories'][$type]['path'] = $path;
+      // Ensure the directory can be created and is writeable.
+      if (!install_ensure_config_directory($type)) {
+        return FALSE;
+      }
+      // Provide the already resolved path for tests.
+      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $path;
+    }
   }
 
   /**

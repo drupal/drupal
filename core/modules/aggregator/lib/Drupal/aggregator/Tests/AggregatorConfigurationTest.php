@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests aggregator configuration settings.
+ * Tests functionality of the configuration settings in the Aggregator module.
  */
 class AggregatorConfigurationTest extends AggregatorTestBase {
   public static function getInfo() {

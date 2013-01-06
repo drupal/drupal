@@ -12,6 +12,9 @@ use Traversable;
 /**
  * Interface for complex data; i.e. data containing named and typed properties.
  *
+ * The name of a property has to be a valid PHP variable name, starting with
+ * an alphabetic character.
+ *
  * This is implemented by entities as well as by field item classes of
  * entities.
  *

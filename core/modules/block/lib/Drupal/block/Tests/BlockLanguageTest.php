@@ -15,6 +15,11 @@ use Drupal\simpletest\WebTestBase;
 class BlockLanguageTest extends WebTestBase {
 
   /**
+   * An administrative user to configure the test environment.
+   */
+  protected $adminUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -29,15 +34,12 @@ class BlockLanguageTest extends WebTestBase {
     );
   }
 
-  /**
-   * Tests the visibility settings for the blocks based on language.
-   */
-  public function testLanguageBlockVisibility() {
+  function setUp() {
+    parent::setUp();
+
     // Create a new user, allow him to manage the blocks and the languages.
-    $admin_user = $this->drupalCreateUser(array(
-      'administer languages', 'administer blocks',
-    ));
-    $this->drupalLogin($admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'administer languages'));
+    $this->drupalLogin($this->adminUser);
 
     // Add predefined language.
     $edit = array(
@@ -45,156 +47,71 @@ class BlockLanguageTest extends WebTestBase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('French', 'Language added successfully.');
+  }
 
+  /**
+   * Tests the visibility settings for the blocks based on language.
+   */
+  public function testLanguageBlockVisibility() {
     // Check if the visibility setting is available.
-    $this->drupalGet('admin/structure/block/add');
-    $this->assertField('langcodes[en]', 'Language visibility field is visible.');
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->drupalGet('admin/structure/block/manage/system_powered_by_block' . '/' . $default_theme);
 
-    // Create a new block.
-    $info_name = $this->randomString(10);
-    $body = '';
-    for ($i = 0; $i <= 100; $i++) {
-      $body .= chr(rand(97, 122));
-    }
-    $edit = array(
-      'regions[stark]' => 'sidebar_first',
-      'info' => $info_name,
-      'title' => 'test',
-      'body[value]' => $body,
-    );
-    $this->drupalPost('admin/structure/block/add', $edit, t('Save block'));
+    $this->assertField('visibility[language][langcodes][en]', 'Language visibility field is visible.');
 
-    // Set visibility setting for one language.
+    // Enable a standard block and set the visibility setting for one language.
     $edit = array(
-      'langcodes[en]' => TRUE,
+      'visibility[language][langcodes][en]' => TRUE,
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/structure/block/manage/block/1/configure', $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/system_powered_by_block' . '/' . $default_theme, $edit, t('Save block'));
 
     // Change the default language.
     $edit = array(
       'site_default' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalpost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Reset the static cache of the language list.
     drupal_static_reset('language_list');
 
-    // Check that a page has a block
-    $this->drupalGet('', array('language' => language_load('en')));
-    $this->assertText($body, 'The body of the custom block appears on the page.');
+    // Check that a page has a block.
+    $this->drupalget('', array('language' => language_load('en')));
+    $this->assertText('Powered by Drupal', 'The body of the custom block appears on the page.');
 
-    // Check that a page doesn't has a block for the current language anymore
+    // Check that a page doesn't has a block for the current language anymore.
     $this->drupalGet('', array('language' => language_load('fr')));
-    $this->assertNoText($body, 'The body of the custom block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal', 'The body of the custom block does not appear on the page.');
   }
 
   /**
    * Tests if the visibility settings are removed if the language is deleted.
    */
   public function testLanguageBlockVisibilityLanguageDelete() {
-    // Create a new user, allow him to manage the blocks and the languages.
-    $admin_user = $this->drupalCreateUser(array(
-      'administer languages', 'administer blocks',
-    ));
-    $this->drupalLogin($admin_user);
 
-    // Add predefined language.
+    $default_theme = variable_get('theme_default', 'stark');
+    // Enable a standard block and set the visibility setting for one language.
     $edit = array(
-      'predefined_langcode' => 'fr',
+      'visibility[language][langcodes][fr]' => TRUE,
+      'machine_name' => 'language_block_test',
+      'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('French', 'Language added successfully.');
+    $this->drupalPost('admin/structure/block/manage/system_powered_by_block' . '/' . $default_theme, $edit, t('Save block'));
 
-    // Create a new block.
-    $info_name = $this->randomString(10);
-    $body = '';
-    for ($i = 0; $i <= 100; $i++) {
-      $body .= chr(rand(97, 122));
-    }
-    $edit = array(
-      'regions[stark]' => 'sidebar_first',
-      'info' => $info_name,
-      'title' => 'test',
-      'body[value]' => $body,
-    );
-    $this->drupalPost('admin/structure/block/add', $edit, t('Save block'));
-
-    // Set visibility setting for one language.
-    $edit = array(
-      'langcodes[fr]' => TRUE,
-    );
-    $this->drupalPost('admin/structure/block/manage/block/1/configure', $edit, t('Save block'));
-
-    // Check that we have an entry in the database after saving the setting.
-    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
-      ':module' => 'block',
-      ':delta' => '1'
-    ))->fetchField();
-    $this->assertTrue($count == 1, 'The block language visibility has an entry in the database.');
+    // Check that we have the language in config after saving the setting.
+    $config = config('plugin.core.block.' . $default_theme . '.language_block_test');
+    $setting = $config->get('visibility.language.langcodes.fr');
+    $this->assertTrue('fr' === $setting, 'Language is set in the block configuration.');
 
     // Delete the language.
     $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
 
-    // Check that the setting related to this language has been deleted.
-    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
-      ':module' => 'block',
-      ':delta' => '1'
-    ))->fetchField();
-    $this->assertTrue($count == 0, 'The block language visibility do not have an entry in the database.');
+    // Check that the language is no longer stored in the configuration after
+    // it is deleted.
+    $config = config('plugin.core.block.' . $default_theme . '.language_block_test');
+    $setting = $config->get('visibility.language.langcodes.fr');
+    $this->assertTrue(empty($setting), 'Language is no longer not set in the block configuration after deleting the block.');
   }
 
-  /**
-   * Tests if the visibility settings are removed if the block is deleted.
-   */
-  public function testLanguageBlockVisibilityBlockDelete() {
-    // Create a new user, allow him to manage the blocks and the languages.
-    $admin_user = $this->drupalCreateUser(array(
-      'administer languages', 'administer blocks',
-    ));
-    $this->drupalLogin($admin_user);
-
-    // Add predefined language.
-    $edit = array(
-      'predefined_langcode' => 'fr',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('French', 'Language added successfully.');
-
-    // Create a new block.
-    $info_name = $this->randomString(10);
-    $body = '';
-    for ($i = 0; $i <= 100; $i++) {
-      $body .= chr(rand(97, 122));
-    }
-    $edit = array(
-      'regions[stark]' => 'sidebar_first',
-      'info' => $info_name,
-      'title' => 'test',
-      'body[value]' => $body,
-    );
-    $this->drupalPost('admin/structure/block/add', $edit, t('Save block'));
-
-    // Set visibility setting for one language.
-    $edit = array(
-      'langcodes[fr]' => TRUE,
-    );
-    $this->drupalPost('admin/structure/block/manage/block/1/configure', $edit, t('Save block'));
-
-    // Check that we have an entry in the database after saving the setting.
-    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
-      ':module' => 'block',
-      ':delta' => '1'
-    ))->fetchField();
-    $this->assertTrue($count == 1, 'The block language visibility has an entry in the database.');
-
-    // Delete the custom block.
-    $this->drupalPost('admin/structure/block/manage/block/1/delete', array(), t('Delete'));
-
-    // Check that the setting related to this block has been deleted.
-    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
-      ':module' => 'block',
-      ':delta' => '1'
-    ))->fetchField();
-    $this->assertTrue($count == 0, 'The block language visibility do not have an entry in the database.');
-  }
 }

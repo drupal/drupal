@@ -117,12 +117,21 @@ Drupal.edit.util.form = {
       url: $submit.closest('form').attr('action'),
       setClick: true,
       event: 'click.edit',
-      progress: { type:'throbber' },
+      progress: { type: null },
       submit: { nocssjs : options.nocssjs }
     };
     var base = $submit.attr('id');
 
     Drupal.ajax[base] = new Drupal.ajax(base, $submit[0], element_settings);
+    // Reimplement the success handler to ensure Drupal.attachBehaviors() does
+    // not get called on the form.
+    Drupal.ajax[base].success = function (response, status) {
+      for (var i in response) {
+        if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
+          this.commands[response[i].command](this, response[i], status);
+        }
+      }
+    };
 
     return base;
   },

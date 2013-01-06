@@ -123,11 +123,14 @@ class BasicTest extends WizardTestBase {
     $this->assertLinkByHref(url($view3['page[path]']));
 
     // Put the block into the first sidebar region.
-    $this->drupalGet('admin/structure/block');
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
     $this->assertText('View: ' . $view3['human_name']);
-    $edit = array();
-    $edit["blocks[views_{$view3['name']}-block_1][region]"] = 'sidebar_first';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $block = array(
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost("admin/structure/block/manage/views_block:{$view3['name']}-block_1/{$default_theme}", $block, t('Save block'));
 
     // Visit a random page (not the one that displays the view itself) and look
     // for the expected node title in the block.

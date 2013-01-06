@@ -89,9 +89,9 @@
 ?>
 <div id="page-wrapper"><div id="page">
 
-  <div id="header" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>"><div class="section clearfix">
+  <div id="header" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>" role="banner"><div class="section clearfix">
     <?php if ($secondary_menu): ?>
-      <div id="secondary-menu" class="navigation">
+      <div id="secondary-menu" class="navigation" role="navigation">
         <?php print theme('links__system_secondary_menu', array(
           'links' => $secondary_menu,
           'attributes' => array(
@@ -143,7 +143,7 @@
     <?php print render($page['header']); ?>
 
     <?php if ($main_menu): ?>
-      <div id="main-menu" class="navigation">
+      <div id="main-menu" class="navigation" role="navigation">
         <?php print theme('links__system_main_menu', array(
           'links' => $main_menu,
           'attributes' => array(
@@ -179,7 +179,7 @@
 
     <?php print $breadcrumb; ?>
 
-    <div id="content" class="column"><div class="section">
+    <div id="content" class="column" role="main"><div class="section">
       <?php if ($page['highlighted']): ?><div id="highlighted"><?php print render($page['highlighted']); ?></div><?php endif; ?>
       <a id="main-content"></a>
       <?php print render($title_prefix); ?>

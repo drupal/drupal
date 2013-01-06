@@ -478,9 +478,9 @@ abstract class Connection extends PDO {
    * @param $query
    *   The query to execute. In most cases this will be a string containing
    *   an SQL query with placeholders. An already-prepared instance of
-   *   DatabaseStatementInterface may also be passed in order to allow calling
+   *   StatementInterface may also be passed in order to allow calling
    *   code to manually bind variables to a query. If a
-   *   DatabaseStatementInterface is passed, the $args array will be ignored.
+   *   StatementInterface is passed, the $args array will be ignored.
    *   It is extremely rare that module code will need to pass a statement
    *   object to this method. It is used primarily for database drivers for
    *   databases that require special LOB field handling.
@@ -492,7 +492,7 @@ abstract class Connection extends PDO {
    *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
    *
-   * @return Drupal\Core\Database\StatementInterface
+   * @return \Drupal\Core\Database\StatementInterface
    *   This method will return one of: the executed statement, the number of
    *   rows affected by the query (not the number matched), or the generated
    *   insert ID of the last query, depending on the value of
@@ -502,7 +502,7 @@ abstract class Connection extends PDO {
    *   $options['throw_exception'] is TRUE.
    *
    * @throws PDOException
-   * @throws Drupal\Core\Database\IntegrityConstraintViolationException
+   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
    */
   public function query($query, array $args = array(), $options = array()) {
 
@@ -513,7 +513,7 @@ abstract class Connection extends PDO {
       // We allow either a pre-bound statement object or a literal string.
       // In either case, we want to end up with an executed statement object,
       // which we pass to PDOStatement::execute.
-      if ($query instanceof DatabaseStatementInterface) {
+      if ($query instanceof StatementInterface) {
         $stmt = $query;
         $stmt->execute(NULL, $options);
       }
@@ -544,7 +544,7 @@ abstract class Connection extends PDO {
         // Wrap the exception in another exception, because PHP does not allow
         // overriding Exception::getMessage(). Its message is the extra database
         // debug information.
-        $query_string = ($query instanceof DatabaseStatementInterface) ? $stmt->getQueryString() : $query;
+        $query_string = ($query instanceof StatementInterface) ? $stmt->getQueryString() : $query;
         $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
         // Match all SQLSTATE 23xxx errors.
         if (substr($e->getCode(), -6, -3) == '23') {

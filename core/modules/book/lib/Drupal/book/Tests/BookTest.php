@@ -10,6 +10,9 @@ namespace Drupal\book\Tests;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the functionality of the Book module.
+ */
 class BookTest extends WebTestBase {
 
   /**
@@ -19,13 +22,32 @@ class BookTest extends WebTestBase {
    */
   public static $modules = array('book', 'block', 'node_access_test');
 
+  /**
+   * A book node.
+   *
+   * @var object
+   */
   protected $book;
-  // $book_author is a user with permission to create and edit books.
+
+  /**
+   * A user with permission to create and edit books.
+   *
+   * @var object
+   */
   protected $book_author;
-  // $web_user is a user with permission to view a book
-  // and access the printer-friendly version.
+
+  /**
+   * A user with permission to view a book and access printer-friendly version.
+   *
+   * @var object
+   */
   protected $web_user;
-  // $admin_user is a user with permission to create and edit books and to administer blocks.
+
+  /**
+   * A user with permission to create and edit books and to administer blocks.
+   *
+   * @var object
+   */
   protected $admin_user;
 
   public static function getInfo() {
@@ -49,7 +71,7 @@ class BookTest extends WebTestBase {
   }
 
   /**
-   * Create a new book with a page hierarchy.
+   * Creates a new book with a page hierarchy.
    */
   function createBook() {
     // Create new book.
@@ -80,7 +102,7 @@ class BookTest extends WebTestBase {
   }
 
   /**
-   * Test book functionality through node interfaces.
+   * Tests book functionality through node interfaces.
    */
   function testBook() {
     // Create new book.
@@ -119,19 +141,21 @@ class BookTest extends WebTestBase {
   }
 
   /**
-   * Check the outline of sub-pages; previous, up, and next; and printer friendly version.
+   * Checks the outline of sub-pages; previous, up, and next.
+   *
+   * Also checks the printer friendly version of the outline.
    *
    * @param Drupal\node\Node $node
    *   Node to check.
    * @param $nodes
    *   Nodes that should be in outline.
    * @param $previous
-   *   Previous link node.
+   *   (optional) Previous link node. Defaults to FALSE.
    * @param $up
-   *   Up link node.
+   *   (optional) Up link node. Defaults to FALSE.
    * @param $next
-   *   Next link node.
-   * @param $breadcrumb
+   *   (optional) Next link node. Defaults to FALSE.
+   * @param array $breadcrumb
    *   The nodes that should be displayed in the breadcrumb.
    */
   function checkBookNode(Node $node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
@@ -187,9 +211,13 @@ class BookTest extends WebTestBase {
   }
 
   /**
-   * Create a regular expression to check for the sub-nodes in the outline.
+   * Creates a regular expression to check for the sub-nodes in the outline.
    *
-   * @param array $nodes Nodes to check in outline.
+   * @param array $nodes
+   *   An array of nodes to check in outline.
+   *
+   * @return string
+   *   A regular expression that locates sub-nodes of the outline.
    */
   function generateOutlinePattern($nodes) {
     $outline = '';
@@ -201,10 +229,12 @@ class BookTest extends WebTestBase {
   }
 
   /**
-   * Create book node.
+   * Creates a book node.
    *
-   * @param integer $book_nid Book node id or set to 'new' to create new book.
-   * @param integer $parent Parent book reference id.
+   * @param int|string $book_nid
+   *   A book node ID or set to 'new' to create a new book.
+   * @param int|null $parent
+   *   (optional) Parent book reference ID. Defaults to NULL.
    */
   function createBookNode($book_nid, $parent = NULL) {
     // $number does not use drupal_static as it should not be reset
@@ -279,72 +309,67 @@ class BookTest extends WebTestBase {
   function testBookNavigationBlock() {
     $this->drupalLogin($this->admin_user);
 
-    // Set block title to confirm that the interface is available.
-    $block_title = $this->randomName(16);
-    $this->drupalPost('admin/structure/block/manage/book/navigation/configure', array('title' => $block_title), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
+    $block_id = 'book_navigation';
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'footer',
+    );
+    // Enable the block.
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
 
-    // Set the block to a region to confirm block is available.
+    // Give anonymous users the permission 'node test view'.
     $edit = array();
-    $edit['blocks[book_navigation][region]'] = 'footer';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
-
-     // Give anonymous users the permission 'node test view'.
-     $edit = array();
-     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-     $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
-     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
+    $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
+    $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Test correct display of the block.
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
-    $this->assertText($block_title, 'Book navigation block is displayed.');
+    $this->assertText($block['title'], 'Book navigation block is displayed.');
     $this->assertText($this->book->label(), format_string('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->label())));
     $this->assertNoText($nodes[0]->label(), 'No links to individual book pages are displayed.');
   }
 
   /**
-   * Test the book navigation block when an access module is enabled.
+   * Tests the book navigation block when an access module is enabled.
    */
-   function testNavigationBlockOnAccessModuleEnabled() {
-     $this->drupalLogin($this->admin_user);
-     $edit = array();
+  function testNavigationBlockOnAccessModuleEnabled() {
+    $this->drupalLogin($this->admin_user);
+    $block_id = 'book_navigation';
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'footer',
+      'book_block_mode' => 'book pages',
+    );
+    // Enable the block.
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
 
-     // Set the block title.
-     $block_title = $this->randomName(16);
-     $edit['title'] = $block_title;
+    // Give anonymous users the permission 'node test view'.
+    $edit = array();
+    $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
+    $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
-     // Set block display to 'Show block only on book pages'.
-     $edit['book_block_mode'] = 'book pages';
-     $this->drupalPost('admin/structure/block/manage/book/navigation/configure', $edit, t('Save block'));
-     $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
+    // Create a book.
+    $this->createBook();
 
-     // Set the block to a region to confirm block is available.
-     $edit = array();
-     $edit['blocks[book_navigation][region]'] = 'footer';
-     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-     $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
+    // Test correct display of the block to registered users.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/' . $this->book->nid);
+    $this->assertText($block['title'], 'Book navigation block is displayed to registered users.');
+    $this->drupalLogout();
 
-     // Give anonymous users the permission 'node test view'.
-     $edit = array();
-     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-     $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
-     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
-
-     // Create a book.
-     $this->createBook();
-
-     // Test correct display of the block to registered users.
-     $this->drupalLogin($this->web_user);
-     $this->drupalGet('node/' . $this->book->nid);
-     $this->assertText($block_title, 'Book navigation block is displayed to registered users.');
-     $this->drupalLogout();
-
-     // Test correct display of the block to anonymous users.
-     $this->drupalGet('node/' . $this->book->nid);
-     $this->assertText($block_title, 'Book navigation block is displayed to anonymous users.');
-   }
+    // Test correct display of the block to anonymous users.
+    $this->drupalGet('node/' . $this->book->nid);
+    $this->assertText($block['title'], 'Book navigation block is displayed to anonymous users.');
+  }
 
   /**
    * Tests the access for deleting top-level book nodes.

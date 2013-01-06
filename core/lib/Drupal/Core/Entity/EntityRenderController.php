@@ -68,23 +68,8 @@ class EntityRenderController implements EntityRenderControllerInterface {
 
     // Prepare and build field content, grouped by view mode.
     foreach ($view_modes as $view_mode => $view_mode_entities) {
-      $call_prepare = array();
-      // To ensure hooks are only run once per entity, check for an
-      // entity_view_prepared flag and only process relevant entities.
-      foreach ($view_mode_entities as $entity) {
-        if (empty($entity->entity_view_prepared) || $entity->entity_view_prepared != $view_mode) {
-          // Add this entity to the items to be prepared.
-          $call_prepare[$entity->id()] = $entity;
-
-          // Mark this item as prepared for this view mode.
-          $entity->entity_view_prepared = $view_mode;
-        }
-      }
-
-      if (!empty($call_prepare)) {
-        field_attach_prepare_view($this->entityType, $call_prepare, $displays[$view_mode], $langcode);
-        module_invoke_all('entity_prepare_view', $call_prepare, $this->entityType);
-      }
+      field_attach_prepare_view($this->entityType, $view_mode_entities, $displays[$view_mode], $langcode);
+      module_invoke_all('entity_prepare_view', $view_mode_entities, $this->entityType);
 
       foreach ($view_mode_entities as $entity) {
         $entity->content += field_attach_view($this->entityType, $entity, $displays[$view_mode][$entity->bundle()], $langcode);

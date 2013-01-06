@@ -3827,7 +3827,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
 
       // Provide the page with information about the individual JavaScript files
       // used, information not otherwise available when aggregation is enabled.
-      $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
+      $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($javascript), 1);
       unset($setting['ajaxPageState']['js']['settings']);
 
       // Provide the page with information about the individual CSS files used,
@@ -3949,7 +3949,7 @@ function drupal_pre_render_scripts($elements) {
         switch ($item['type']) {
           case 'setting':
             $element['#value_prefix'] = $embed_prefix;
-            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(NestedArray::mergeDeepArray($item['data'])) . ";";
+            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(NestedArray::mergeDeepArray($item['data'], TRUE)) . ";";
             $element['#value_suffix'] = $embed_suffix;
             break;
 

@@ -13,6 +13,13 @@ namespace Drupal\poll\Tests;
 class PollBlockTest extends PollTestBase {
 
   /**
+   * An administrative user for testing.
+   *
+   * @var Drupal\user\Plugin\Core\Entity\User
+   */
+  protected $adminUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -31,23 +38,26 @@ class PollBlockTest extends PollTestBase {
     parent::setUp();
 
     // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks'));
-    $this->drupalLogin($admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer blocks'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
    * Tests creating, viewing, voting on recent poll block.
    */
   function testRecentBlock() {
-    // Set block title to confirm that the interface is available.
-    $this->drupalPost('admin/structure/block/manage/poll/recent/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
+    $block_id = 'poll_recent_block';
+    $default_theme = variable_get('theme_default', 'stark');
 
-    // Set the block to a region to confirm block is available.
-    $edit = array();
-    $edit['blocks[poll_recent][region]'] = 'footer';
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'footer',
+    );
+
+    // Enable the most recent poll block.
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), '"Most recent poll" block enabled');
 
     // Create a poll which should appear in recent polls block.
     $title = $this->randomName();

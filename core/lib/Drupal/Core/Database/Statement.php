@@ -11,7 +11,7 @@ use PDO;
 use PDOStatement;
 
 /**
- * Default implementation of DatabaseStatementInterface.
+ * Default implementation of StatementInterface.
  *
  * PDO allows us to extend the PDOStatement class to provide additional
  * functionality beyond that offered by default. We do need extra
@@ -32,7 +32,7 @@ class Statement extends PDOStatement implements StatementInterface {
    */
   public $dbh;
 
-  protected function __construct($dbh) {
+  protected function __construct(Connection $dbh) {
     $this->dbh = $dbh;
     $this->setFetchMode(PDO::FETCH_OBJ);
   }

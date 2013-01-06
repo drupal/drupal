@@ -134,8 +134,15 @@ abstract class UpgradePathTestBase extends WebTestBase {
     $this->variable_set('site_mail', 'simpletest@example.com');
 
     drupal_set_time_limit($this->timeLimit);
-    $this->rebuildContainer();
     $this->setup = TRUE;
+  }
+
+  /**
+   * Overrides \Drupal\simpletest\TestBase::prepareConfigDirectories().
+   */
+  protected function prepareConfigDirectories() {
+    // The configuration directories are prepared as part of the first access to
+    // update.php.
   }
 
   /**
@@ -175,7 +182,13 @@ abstract class UpgradePathTestBase extends WebTestBase {
   protected function refreshVariables() {
     // No operation if the child has not been upgraded yet.
     if (!$this->upgradedSite) {
-      return parent::refreshVariables();
+      global $conf;
+      cache('bootstrap')->delete('variables');
+      $conf = variable_initialize();
+      $container = drupal_container();
+      if ($container->has('config.factory')) {
+        $container->get('config.factory')->reset();
+      }
     }
   }
 
@@ -194,6 +207,16 @@ abstract class UpgradePathTestBase extends WebTestBase {
     if (!$this->assertResponse(200)) {
       throw new Exception('Initial GET to update.php did not return HTTP 200 status.');
     }
+
+    // Ensure that the first update screen appeared correctly.
+    if (!$this->assertFieldByXPath('//input[@type="submit"]')) {
+      throw new Exception('An error was encountered during the first access to update.php.');
+    }
+
+    // Initialize config directories and rebuild the service container after
+    // creating them in the first step.
+    parent::prepareConfigDirectories();
+    $this->rebuildContainer();
 
     // Continue.
     $this->drupalPost(NULL, array(), t('Continue'));

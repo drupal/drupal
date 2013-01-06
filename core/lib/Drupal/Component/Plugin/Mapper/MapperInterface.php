@@ -24,9 +24,10 @@ interface MapperInterface {
    *   An array of options that can be used to determine a suitable plugin to
    *   instantiate and how to configure it.
    *
-   * @return object
+   * @return object|false
    *   A fully configured plugin instance. The interface of the plugin instance
-   *   will depends on the plugin type.
+   *   will depends on the plugin type. If no instance can be retrieved, FALSE
+   *   will be returned.
    */
   public function getInstance(array $options);
 

@@ -1659,7 +1659,7 @@ function theme_menu_local_action($variables) {
     'localized_options' => array(),
   );
   $link['localized_options']['attributes']['class'][] = 'button';
-  $link['localized_options']['attributes']['class'][] = 'add';
+  $link['localized_options']['attributes']['class'][] = 'button-action';
 
   $output = '<li>';
   $output .= l($link['title'], $link['href'], $link['localized_options']);

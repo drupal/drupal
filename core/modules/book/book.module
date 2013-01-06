@@ -227,6 +227,9 @@ function _book_outline_remove_access(Node $node) {
  *
  * A node can be removed from a book if it is actually in a book and it either
  * is not a top-level page or is a top-level page with no children.
+ *
+ * @param Drupal\node\Node $node
+ *   The node to remove from the outline.
  */
 function _book_node_is_removable($node) {
   return (!empty($node->book['bid']) && (($node->book['bid'] != $node->nid) || !$node->book['has_children']));
@@ -254,103 +257,6 @@ function book_entity_info(&$info) {
     'label' => t('Print'),
     'custom_settings' => FALSE,
   );
-}
-
-/**
- * Implements hook_block_info().
- */
-function book_block_info() {
-  $block = array();
-  $block['navigation']['info'] = t('Book navigation');
-  $block['navigation']['cache'] = DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE;
-
-  return $block;
-}
-
-/**
- * Implements hook_block_view().
- *
- * Displays the book table of contents in a block when the current page is a
- * single-node view of a book node.
- */
-function book_block_view($delta = '') {
-  $block = array();
-  $current_bid = 0;
-  if ($node = menu_get_object()) {
-    $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
-  }
-
-  if (config('book.settings')->get('block.navigation.mode') == 'all pages') {
-    $block['subject'] = t('Book navigation');
-    $book_menus = array();
-    $pseudo_tree = array(0 => array('below' => FALSE));
-    foreach (book_get_books() as $book_id => $book) {
-      if ($book['bid'] == $current_bid) {
-        // If the current page is a node associated with a book, the menu
-        // needs to be retrieved.
-        $book_menus[$book_id] = menu_tree_output(menu_tree_all_data($node->book['menu_name'], $node->book));
-      }
-      else {
-        // Since we know we will only display a link to the top node, there
-        // is no reason to run an additional menu tree query for each book.
-        $book['in_active_trail'] = FALSE;
-        // Check whether user can access the book link.
-        $book_node = node_load($book['nid']);
-        $book['access'] = node_access('view', $book_node);
-        $pseudo_tree[0]['link'] = $book;
-        $book_menus[$book_id] = menu_tree_output($pseudo_tree);
-      }
-    }
-    if ($block['content'] = $book_menus) {
-      $book_menus['#theme'] = 'book_all_books_block';
-    }
-  }
-  elseif ($current_bid) {
-    // Only display this block when the user is browsing a book.
-  $select = db_select('node', 'n')
-    ->fields('n', array('title'))
-    ->condition('n.nid', $node->book['bid'])
-    ->addTag('node_access');
-    $title = $select->execute()->fetchField();
-    // Only show the block if the user has view access for the top-level node.
-    if ($title) {
-      $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
-      // There should only be one element at the top level.
-      $data = array_shift($tree);
-      $block['subject'] = l($data['link']['title'], $data['link']['href'], $data['link']['options']);
-      $block['content'] = ($data['below']) ? menu_tree_output($data['below']) : '';
-    }
-  }
-
-  return $block;
-}
-
-/**
- * Implements hook_block_configure().
- */
-function book_block_configure($delta = '') {
-  $block = array();
-  $options = array(
-    'all pages' => t('Show block on all pages'),
-    'book pages' => t('Show block only on book pages'),
-  );
-  $form['book_block_mode'] = array(
-    '#type' => 'radios',
-    '#title' => t('Book navigation block display'),
-    '#options' => $options,
-    '#default_value' => config('book.settings')->get('block.navigation.mode'),
-    '#description' => t("If <em>Show block on all pages</em> is selected, the block will contain the automatically generated menus for all of the site's books. If <em>Show block only on book pages</em> is selected, the block will contain only the one menu corresponding to the current page's book. In this case, if the current page is not in a book, no block will be displayed. The <em>Page specific visibility settings</em> or other visibility settings can be used in addition to selectively display this block."),
-    );
-
-  return $form;
-}
-
-/**
- * Implements hook_block_save().
- */
-function book_block_save($delta = '', $edit = array()) {
-  $block = array();
-  config('book.settings')->set('block.navigation.mode', $edit['book_block_mode'])->save();
 }
 
 /**
@@ -726,7 +632,7 @@ function book_get_flat_menu($book_link) {
  * @param $tree
  *   A tree of menu links in an array.
  * @param $flat
- *   A flat array of the menu links from $tree.
+ *   A flat array of the menu links from $tree, passed by reference.
  *
  * @see book_get_flat_menu().
  */
@@ -1059,8 +965,9 @@ function book_preprocess_block(&$variables) {
  * to the structured data but can also simply iterate over all elements and
  * render them (as in the default template).
  *
- * The $variables array contains the following elements:
- * - book_menus
+ * @param array $variables
+ *   An associative array containing the following key:
+ *   - book_menus
  *
  * @see book-all-books-block.tpl.php
  */
@@ -1076,8 +983,9 @@ function template_preprocess_book_all_books_block(&$variables) {
 /**
  * Processes variables for book-navigation.tpl.php.
  *
- * The $variables array contains the following elements:
- * - book_link
+ * @param array $variables
+ *   An associative array containing the following key:
+ *   - book_link
  *
  * @see book-navigation.tpl.php
  */
@@ -1178,8 +1086,9 @@ function _book_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
  * @param $depth_limit
  *   Any link deeper than this value will be excluded (along with its children).
  * @param $exclude
- *   Optional array of menu link ID values. Any link whose menu link ID is in
- *   this array will be excluded (along with its children).
+ *   (optional) An array of menu link ID values. Any link whose menu link ID is
+ *   in this array will be excluded (along with its children). Defaults to an
+ *   empty array.
  *
  * @return
  *   An array of (menu link ID, title) pairs for use as options for selecting a
@@ -1196,10 +1105,11 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
 /**
  * Preprocesses variables for book-export-html.tpl.php.
  *
- * The $variables array contains the following elements:
- * - title
- * - contents
- * - depth
+ * @param array $variables
+ *   An associative array containing the following keys:
+ *   - title
+ *   - contents
+ *   - depth
  *
  * @see book-export-html.tpl.php
  */
@@ -1265,7 +1175,8 @@ function book_export_traverse($tree, $visit_func) {
  * @param Drupal\node\Node $node
  *   The node that will be output.
  * @param $children
- *   All the rendered child nodes within the current node.
+ *   (optional) All the rendered child nodes within the current node. Defaults
+ *   to an empty string.
  *
  * @return
  *   The HTML generated for the given node.
@@ -1284,9 +1195,10 @@ function book_node_export(Node $node, $children = '') {
 /**
  * Processes variables for book-node-export-html.tpl.php.
  *
- * The $variables array contains the following elements:
- * - node
- * - children
+ * @param array $variables
+ *   An associative array containing the following keys:
+ *   - node
+ *   - children
  *
  * @see book-node-export-html.tpl.php
  */
@@ -1298,6 +1210,12 @@ function template_preprocess_book_node_export_html(&$variables) {
 
 /**
  * Determines if a given node type is in the list of types allowed for books.
+ *
+ * @param string $type
+ *   A node type.
+ *
+ * @return bool
+ *   A Boolean TRUE if the node type can be included in books; otherwise, FALSE.
  */
 function book_type_is_allowed($type) {
   return in_array($type, config('book.settings')->get('allowed_types'));
@@ -1342,7 +1260,7 @@ function book_node_type_update($type) {
  *
  * @return
  *   A menu link, with the link translated for rendering and data added from the
- *   {book} table.
+ *   {book} table. FALSE if there is an error.
  */
 function book_link_load($mlid) {
   if ($item = db_query("SELECT * FROM {menu_links} ml INNER JOIN {book} b ON b.mlid = ml.mlid LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = :mlid", array(

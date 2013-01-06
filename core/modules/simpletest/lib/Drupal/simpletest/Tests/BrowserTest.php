@@ -29,18 +29,18 @@ class BrowserTest extends WebTestBase {
 
     $this->drupalGet($url);
     $absolute = url($url, array('absolute' => TRUE));
-    $this->assertEqual($absolute, $this->url, t('Passed and requested URL are equal.'));
-    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), t('Requested and returned absolute URL are equal.'));
+    $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
+    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 
     $this->drupalPost(NULL, array(), t('Log in'));
-    $this->assertEqual($absolute, $this->url, t('Passed and requested URL are equal.'));
-    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), t('Requested and returned absolute URL are equal.'));
+    $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
+    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 
     $this->clickLink('Create new account');
     $url = 'user/register';
     $absolute = url($url, array('absolute' => TRUE));
-    $this->assertEqual($absolute, $this->url, t('Passed and requested URL are equal.'));
-    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), t('Requested and returned absolute URL are equal.'));
+    $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
+    $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
   }
 
   /**

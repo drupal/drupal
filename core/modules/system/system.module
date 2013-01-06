@@ -184,6 +184,10 @@ function system_theme() {
     'system_date_format_localize_form' => array(
       'render element' => 'form',
     ),
+    'system_plugin_ui_form' => array(
+      'template' => 'system-plugin-ui-form',
+      'render element' => 'form',
+    ),
   ));
 }
 
@@ -1052,7 +1056,108 @@ function system_menu() {
     );
   }
 
+  foreach (drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinitions() as $plugin_id => $plugin) {
+    if ($plugin['menu'] === TRUE) {
+      $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix']] = array(
+        'title' => $plugin['title'],
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array($plugin['id'], $plugin_id),
+        'access callback' => 'system_plugin_ui_access',
+        'access arguments' => array($plugin_id),
+        'type' => $plugin['type'],
+      );
+      if (!empty($plugin['default_task'])) {
+        $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix'] . '/' . $plugin['task_suffix']] = array(
+          'title' => $plugin['task_title'],
+          'type' => MENU_DEFAULT_LOCAL_TASK,
+          'weight' => -10,
+        );
+      }
+      $items[$plugin['path'] . '/' . $plugin_id . '/%'] = array(
+        'title' => $plugin['title'],
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array($plugin['id'], $plugin_id, (count(explode('/', $plugin['path'])) + 1)),
+        'access callback' => 'system_plugin_ui_access',
+        'access arguments' => array($plugin_id, (count(explode('/', $plugin['path'])) + 1)),
+        'type' => MENU_CALLBACK,
+      );
+      if (!empty($plugin['file'])) {
+        $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix']]['file'] = $plugin['file'];
+        $items[$plugin['path'] . '/' . $plugin_id . '/%']['file'] = $plugin['file'];
+        if (!empty($plugin['file_path'])) {
+          $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix']]['file path'] = $plugin['file_path'];
+          $items[$plugin['path'] . '/' . $plugin_id . '/%']['file path'] = $plugin['file_path'];
+        }
+      }
+      $items['system/autocomplete/' . $plugin_id] = array(
+        'page callback' => 'system_plugin_autocomplete',
+        'page arguments' => array($plugin_id),
+        'access callback' => 'system_plugin_ui_access',
+        'access arguments' => array($plugin_id),
+        'type' => MENU_CALLBACK,
+      );
+    }
+  }
+
   return $items;
+}
+
+/**
+ * Proxies to the plugin class' form method.
+ *
+ * @todo This needs more explanation, an @see or two, and parameter
+ *   documentation. Also "proxies" is a weird word to use.
+ */
+function system_plugin_ui_form($form, &$form_state, $plugin, $facet = NULL) {
+  $plugin_ui = drupal_container()->get('plugin.manager.system.plugin_ui')->createInstance($plugin);
+  $form = $plugin_ui->form($form, $form_state, $facet);
+  $form['#validate'][] = array($plugin_ui, 'formValidate');
+  $form['#submit'][] = array($plugin_ui, 'formSubmit');
+  return $form;
+}
+
+/**
+ * Page callback: Autocompletes any plugin system tied to a plugin UI plugin.
+ *
+ * @todo This needs more explanation and parameter documentation.
+ */
+function system_plugin_autocomplete($plugin_id, $string = '') {
+  $matches = array();
+  if ($string) {
+    $plugin_ui = drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinition($plugin_id);
+    $manager = new $plugin_ui['manager']();
+    $titles = array();
+    foreach($manager->getDefinitions() as $plugin_id => $plugin) {
+      $titles[$plugin_id] = $plugin[$plugin_ui['title_attribute']];
+    }
+    $matches = preg_grep("/\b". $string . "/i", $titles);
+  }
+
+  return new JsonResponse($matches);
+}
+
+/**
+ * Checks access for a given plugin using the plugin's access() method.
+ *
+ * @todo This needs more explanation, some @see, and parameter documentation.
+ * @todo What the heck kind of parameter name is "facet"?
+ */
+function system_plugin_ui_access($plugin, $facet = NULL) {
+  $plugin_ui = drupal_container()->get('plugin.manager.system.plugin_ui')->createInstance($plugin);
+  return $plugin_ui->access($facet);
+}
+
+/**
+ * Implements hook_forms().
+ */
+function system_forms() {
+  $forms = array();
+  foreach (drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinitions() as $plugin_id => $plugin) {
+    if (empty($forms[$plugin['id']])) {
+      $forms[$plugin['id']]['callback'] = 'system_plugin_ui_form';
+    }
+  }
+  return $forms;
 }
 
 /**
@@ -2482,100 +2587,37 @@ function system_user_timezone(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_block_info().
- */
-function system_block_info() {
-  $blocks['main'] = array(
-    'info' => t('Main page content'),
-    // Cached elsewhere.
-    'cache' => DRUPAL_NO_CACHE,
-    // Auto-enable in 'content' region by default, which always exists.
-    // @see system_themes_page(), drupal_render_page()
-    'region' => 'content',
-    'status' => 1,
-  );
-  $blocks['powered-by'] = array(
-    'info' => t('Powered by Drupal'),
-    'weight' => '10',
-    'cache' => DRUPAL_NO_CACHE,
-  );
-  $blocks['help'] = array(
-    'info' => t('System help'),
-    'weight' => '5',
-    'cache' => DRUPAL_NO_CACHE,
-    // Auto-enable in 'help' region by default, if the theme defines one.
-    'region' => 'help',
-    'status' => 1,
-  );
-  // System-defined menu blocks.
-  // The block deltas need to be prefixed with 'menu-', since the 'main' menu
-  // would otherwise clash with the 'main' page content block defined above.
-  foreach (menu_list_system_menus() as $menu_name => $title) {
-    $blocks['menu-' . $menu_name]['info'] = t($title);
-    // Menu blocks can't be cached because each menu item can have
-    // a custom access callback. menu.inc manages its own caching.
-    $blocks['menu-' . $menu_name]['cache'] = DRUPAL_NO_CACHE;
-  }
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- *
- * Generate a block with a promotional link to Drupal.org and
- * all system menu blocks.
- */
-function system_block_view($delta = '') {
-  $block = array();
-  switch ($delta) {
-    case 'main':
-      $block['subject'] = NULL;
-      $block['content'] = drupal_set_page_content();
-      return $block;
-    case 'powered-by':
-      $block['subject'] = NULL;
-      $block['content'] = theme('system_powered_by');
-      return $block;
-    case 'help':
-      $block['subject'] = NULL;
-      $block['content'] = menu_get_active_help();
-      return $block;
-    default:
-      // Strip off 'menu-' prefix from block delta.
-      $delta = substr($delta, 5);
-      // All system menu blocks.
-      $system_menus = menu_list_system_menus();
-      if (isset($system_menus[$delta])) {
-        $block['subject'] = t($system_menus[$delta]);
-        $block['content'] = menu_tree($delta);
-        return $block;
-      }
-      break;
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function system_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'system') {
+  switch ($variables['block']->id) {
+    case 'system_powered_by_block':
+      $variables['attributes_array']['role'] = 'complementary';
+      break;
+    case 'system_help_block':
+      $variables['attributes_array']['role'] = 'complementary';
+      break;
 
-    switch ($variables['block']->delta) {
-      case 'powered-by':
-        $variables['attributes']['role'] = 'complementary';
-        break;
-      case 'help':
-        $variables['attributes']['role'] = 'complementary';
-        break;
-
-      // System menu blocks should get the same class as menu module blocks.
-      default:
-        if (in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
-          $variables['attributes']['role'] = 'navigation';
-          $variables['attributes']['class'][] = 'block-menu';
-        }
-    }
+    // System menu blocks should get the same class as menu module blocks.
+    default:
+      if ($variables['block']->class == 'Drupal\\system\\Plugin\\block\\block\\SystemMenuBlock') {
+        $variables['attributes_array']['role'] = 'navigation';
+        $variables['classes_array'][] = 'block-menu';
+      }
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for system-plugin-ui-form.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $form
+ */
+function template_preprocess_system_plugin_ui_form(&$variables) {
+  drupal_add_css(drupal_get_path('module', 'system') . '/system.plugin.ui.css');
+  $variables['left'] = drupal_render($variables['form']['left']);
+  $variables['right'] = drupal_render($variables['form']['right']);
+  $variables['form_submit'] = drupal_render_children($variables['form']);
 }
 
 /**

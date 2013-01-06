@@ -8,7 +8,7 @@
 namespace Drupal\Core\TypedData\Type;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedData;
 use InvalidArgumentException;
 
 /**
@@ -19,7 +19,7 @@ use InvalidArgumentException;
  * class will work, including a DateTime object, a timestamp, a string
  * date, or an array of date parts.
  */
-class Date extends TypedData implements TypedDataInterface {
+class Date extends TypedData {
 
   /**
    * The data value.

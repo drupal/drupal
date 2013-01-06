@@ -56,9 +56,8 @@ class TranslationTest extends WebTestBase {
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Enable the language switcher block.
-    $language_type = LANGUAGE_TYPE_INTERFACE;
-    $edit = array("blocks[language_$language_type][region]" => 'sidebar_first');
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $edit = array('machine_name' => 'language_switcher', 'region' => 'sidebar_first');
+    $this->drupalPost('admin/structure/block/manage/language_block:language_interface/bartik', $edit, t('Save block'));
 
     // Reset static caches in our local language environment.
     $this->resetCaches();

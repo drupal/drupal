@@ -16,6 +16,7 @@ return array(
     'Symfony\\Component\\EventDispatcher\\' => $vendorDir . '/symfony/event-dispatcher/',
     'Symfony\\Component\\DependencyInjection\\' => $vendorDir . '/symfony/dependency-injection/',
     'Symfony\\Component\\ClassLoader\\' => $vendorDir . '/symfony/class-loader/',
+    'Symfony\\Cmf\\Component\\Routing' => $vendorDir . '/symfony-cmf/routing/',
     'Guzzle\\Stream' => $vendorDir . '/guzzle/stream/',
     'Guzzle\\Parser' => $vendorDir . '/guzzle/parser/',
     'Guzzle\\Http' => $vendorDir . '/guzzle/http/',

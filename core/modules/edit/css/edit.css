@@ -321,10 +321,10 @@
   margin-left: 5px;
 }
 
-.edit-toolgroup.wysiwyg-tabs {
+.edit-toolgroup.wysiwyg-floated {
   float: right;
 }
-.edit-toolgroup.wysiwyg {
+.edit-toolgroup.wysiwyg-main {
   clear: left;
   width: 100%;
   padding-left: 0;

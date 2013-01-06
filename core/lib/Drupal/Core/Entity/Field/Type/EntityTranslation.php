@@ -7,11 +7,9 @@
 
 namespace Drupal\Core\Entity\Field\Type;
 
-use Drupal\Core\TypedData\Type\TypedData;
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\ContextAwareInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\ContextAwareTypedData;
 use ArrayIterator;
 use IteratorAggregate;
 use InvalidArgumentException;
@@ -19,7 +17,7 @@ use InvalidArgumentException;
 /**
  * Makes translated entity properties available via the Field API.
  */
-class EntityTranslation extends TypedData implements IteratorAggregate, AccessibleInterface, ComplexDataInterface, ContextAwareInterface {
+class EntityTranslation extends ContextAwareTypedData implements IteratorAggregate, AccessibleInterface, ComplexDataInterface {
 
   /**
    * The array of translated properties, each being an instance of
@@ -28,20 +26,6 @@ class EntityTranslation extends TypedData implements IteratorAggregate, Accessib
    * @var array
    */
   protected $properties = array();
-
-  /**
-   * The language code of the translation.
-   *
-   * @var string
-   */
-  protected $langcode;
-
-  /**
-   * The parent entity.
-   *
-   * @var \Drupal\Core\Entity\EntityInterface
-   */
-  protected $parent;
 
   /**
    * Whether the entity translation acts in strict mode.
@@ -72,37 +56,6 @@ class EntityTranslation extends TypedData implements IteratorAggregate, Accessib
     $this->strict = $strict;
   }
 
-  /**
-   * Implements ContextAwareInterface::getName().
-   */
-  public function getName() {
-    // The name of the translation is the language code.
-    return $this->langcode;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setName().
-   */
-  public function setName($name) {
-    // The name of the translation is the language code.
-    $this->langcode = $name;
-  }
-
-  /**
-   * Implements ContextAwareInterface::getParent().
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   */
-  public function getParent() {
-    return $this->parent;
-  }
-
-  /**
-   * Implements ContextAwareInterface::setParent().
-   */
-  public function setParent($parent) {
-    $this->parent = $parent;
-  }
   /**
    * Implements TypedDataInterface::getValue().
    */
@@ -186,7 +139,12 @@ class EntityTranslation extends TypedData implements IteratorAggregate, Accessib
    */
   public function getPropertyDefinition($name) {
     $definitions = $this->getPropertyDefinitions();
-    return isset($definitions[$name]) ? $definitions[$name] : FALSE;
+    if (isset($definitions[$name])) {
+      return $definitions[$name];
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -235,7 +193,10 @@ class EntityTranslation extends TypedData implements IteratorAggregate, Accessib
    */
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
     $method = $operation . 'Access';
-    return entity_access_controller($this->parent->entityType())->$method($this->parent, $this->langcode, $account);
+    // @todo Add a way to set and get the langcode so that's more obvious what
+    // we're doing here.
+    $langocde = substr($this->getName(), 1);
+    return entity_access_controller($this->parent->entityType())->$method($this->parent, $langocde, $account);
   }
 
   /**

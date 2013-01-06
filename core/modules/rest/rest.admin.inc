@@ -26,7 +26,7 @@ function rest_admin_form($form, &$form_state) {
   }
   asort($entity_resources);
   asort($other_resources);
-  $enabled_resources = config('rest')->get('resources') ?: array();
+  $enabled_resources = config('rest.settings')->get('resources') ?: array();
 
   $form['entity_resources'] = array(
     '#type' => 'checkboxes',
@@ -55,7 +55,7 @@ function rest_admin_form_submit($form, &$form_state) {
     $resources += array_filter($form_state['values']['other_resources']);
   }
 
-  $config = config('rest');
+  $config = config('rest.settings');
   $config->set('resources', $resources);
   $config->save();
 

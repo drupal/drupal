@@ -7,6 +7,9 @@
 
 namespace Drupal\aggregator\Tests;
 
+/**
+ * Tests categorization functionality in the Aggregator module.
+ */
 class CategorizeFeedItemTest extends AggregatorTestBase {
   public static function getInfo() {
     return array(
@@ -17,6 +20,8 @@ class CategorizeFeedItemTest extends AggregatorTestBase {
   }
 
   /**
+   * Checks that children of a feed inherit a defined category.
+   *
    * If a feed has a category, make sure that the children inherit that
    * categorization.
    */

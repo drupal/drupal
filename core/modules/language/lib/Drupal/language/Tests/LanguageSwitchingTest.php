@@ -43,10 +43,15 @@ class LanguageSwitchingTest extends WebTestBase {
   function testLanguageBlock() {
     // Enable the language switching block.
     $language_type = LANGUAGE_TYPE_INTERFACE;
-    $edit = array(
-      "blocks[language_{$language_type}][region]" => 'sidebar_first',
+    $block_id = 'language_block:' . $language_type;
+    $default_theme = variable_get('theme_default', 'stark');
+    $block = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
 
     // Add language.
     $edit = array(
@@ -60,10 +65,10 @@ class LanguageSwitchingTest extends WebTestBase {
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertText(t('Languages'), 'Language switcher block found.');
+    $this->assertText($block['title'], 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-language-' . str_replace('_', '-', $language_type)));
+    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-' . strtolower($block['machine_name'])));
     $links = array(
       'active' => array(),
       'inactive' => array(),

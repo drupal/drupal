@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\TypedDataManager.
+ * Contains \Drupal\Core\TypedData\TypedDataManager.
  */
 
 namespace Drupal\Core\TypedData;
 
+use InvalidArgumentException;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\HookDiscovery;
@@ -15,6 +16,13 @@ use Drupal\Core\Plugin\Discovery\HookDiscovery;
  * Manages data type plugins.
  */
 class TypedDataManager extends PluginManagerBase {
+
+  /**
+   * An array of typed data property prototypes.
+   *
+   * @var array
+   */
+  protected $prototypes = array();
 
   public function __construct() {
     $this->discovery = new CacheDecorator(new HookDiscovery('data_type_info'), 'typed_data:types');
@@ -28,11 +36,18 @@ class TypedDataManager extends PluginManagerBase {
    *   The id of a plugin, i.e. the data type.
    * @param array $configuration
    *   The plugin configuration, i.e. the data definition.
+   * @param string $name
+   *   (optional) If a property or list item is to be created, the name of the
+   *   property or the delta of the list item.
+   * @param mixed $parent
+   *   (optional) If a property or list item is to be created, the parent typed
+   *   data object implementing either the ListInterface or the
+   *   ComplexDataInterface.
    *
-   * @return Drupal\Core\TypedData\TypedDataInterface
+   * @return \Drupal\Core\TypedData\TypedDataInterface
    */
-  public function createInstance($plugin_id, array $configuration) {
-    return $this->factory->createInstance($plugin_id, $configuration);
+  public function createInstance($plugin_id, array $configuration, $name = NULL, $parent = NULL) {
+    return $this->factory->createInstance($plugin_id, $configuration, $name, $parent);
   }
 
   /**
@@ -70,42 +85,126 @@ class TypedDataManager extends PluginManagerBase {
    * @param mixed $value
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type format as documented for the data type classes.
-   * @param array $context
-   *   (optional) An array describing the context of the data object, e.g. its
-   *   name or parent data structure. The context should be passed if a typed
-   *   data object is created as part of a data structure. The following keys
-   *   are supported:
-   *   - name: The name associated with the data.
-   *   - parent: The parent object containing the data. Must be an instance of
-   *     Drupal\Core\TypedData\ComplexDataInterface or
-   *     Drupal\Core\TypedData\ListInterface.
+   * @param string $name
+   *   (optional) If a property or list item is to be created, the name of the
+   *   property or the delta of the list item.
+   * @param mixed $parent
+   *   (optional) If a property or list item is to be created, the parent typed
+   *   data object implementing either the ListInterface or the
+   *   ComplexDataInterface.
    *
-   * @return Drupal\Core\TypedData\TypedDataInterface
+   * @return \Drupal\Core\TypedData\TypedDataInterface
    *
    * @see typed_data()
-   * @see Drupal\Core\TypedData\Type\Integer
-   * @see Drupal\Core\TypedData\Type\Float
-   * @see Drupal\Core\TypedData\Type\String
-   * @see Drupal\Core\TypedData\Type\Boolean
-   * @see Drupal\Core\TypedData\Type\Duration
-   * @see Drupal\Core\TypedData\Type\Date
-   * @see Drupal\Core\TypedData\Type\Uri
-   * @see Drupal\Core\TypedData\Type\Binary
-   * @see Drupal\Core\Entity\Field\EntityWrapper
+   * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
+   * @see \Drupal\Core\TypedData\Type\Integer
+   * @see \Drupal\Core\TypedData\Type\Float
+   * @see \Drupal\Core\TypedData\Type\String
+   * @see \Drupal\Core\TypedData\Type\Boolean
+   * @see \Drupal\Core\TypedData\Type\Duration
+   * @see \Drupal\Core\TypedData\Type\Date
+   * @see \Drupal\Core\TypedData\Type\Uri
+   * @see \Drupal\Core\TypedData\Type\Binary
+   * @see \Drupal\Core\Entity\Field\EntityWrapper
    */
-  function create(array $definition, $value = NULL, array $context = array()) {
-    $wrapper = $this->createInstance($definition['type'], $definition);
+  public function create(array $definition, $value = NULL, $name = NULL, $parent = NULL) {
+    $wrapper = $this->factory->createInstance($definition['type'], $definition, $name, $parent);
     if (isset($value)) {
       $wrapper->setValue($value);
     }
-    if ($wrapper instanceof ContextAwareInterface) {
-      if (isset($context['name'])) {
-        $wrapper->setName($context['name']);
-      }
-      if (isset($context['parent'])) {
-        $wrapper->setParent($context['parent']);
-      }
-    }
     return $wrapper;
+  }
+
+  /**
+   * Implements \Drupal\Component\Plugin\PluginManagerInterface::getInstance().
+   *
+   * @param array $options
+   *   An array of options with the following keys:
+   *   - object: The parent typed data object, implementing the
+   *     ContextAwareInterface and either the ListInterface or the
+   *     ComplexDataInterface.
+   *   - property: The name of the property to instantiate, or the delta of the
+   *     the list item to instantiate.
+   *   - value: The value to set. If set, it has to match one of the supported
+   *     data type formats as documented by the data type classes.
+   *
+   * @throws \InvalidArgumentException
+   *   If the given property is not known, or the passed object does not
+   *   implement the ListInterface or the ComplexDataInterface.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The new property instance.
+   *
+   * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
+   */
+  public function getInstance(array $options) {
+    return $this->getPropertyInstance($options['object'], $options['property'], $options['value']);
+  }
+
+  /**
+   * Get a typed data instance for a property of a given typed data object.
+   *
+   * This method will use prototyping for fast and efficient instantiation of
+   * many property objects with the same property path; e.g.,
+   * when multiple comments are used comment_body.0.value needs to be
+   * instantiated very often.
+   * Prototyping is done by the root object's data type and the given
+   * property path, i.e. all property instances having the same property path
+   * and inheriting from the same data type are prototyped.
+   *
+   * @param \Drupal\Core\TypedData\ContextAwareInterface $object
+   *   The parent typed data object, implementing the ContextAwareInterface and
+   *   either the ListInterface or the ComplexDataInterface.
+   * @param string $property_name
+   *   The name of the property to instantiate, or the delta of an list item.
+   * @param mixed $value
+   *   (optional) The data value. If set, it has to match one of the supported
+   *   data type formats as documented by the data type classes.
+   *
+   * @throws \InvalidArgumentException
+   *   If the given property is not known, or the passed object does not
+   *   implement the ListInterface or the ComplexDataInterface.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The new property instance.
+   *
+   * @see \Drupal\Core\TypedData\TypedDataManager::create()
+   */
+  public function getPropertyInstance(ContextAwareInterface $object, $property_name, $value = NULL) {
+    $key = $object->getRoot()->getType() . ':' . $object->getPropertyPath() . '.';
+    // If we are creating list items, we always use 0 in the key as all list
+    // items look the same.
+    $key .= is_numeric($property_name) ? 0 : $property_name;
+
+    // Make sure we have a prototype. Then, clone the prototype and set object
+    // specific values, i.e. the value and the context.
+    if (!isset($this->prototypes[$key])) {
+      if ($object instanceof ComplexDataInterface) {
+        $definition = $object->getPropertyDefinition($property_name);
+      }
+      elseif ($object instanceof ListInterface) {
+        $definition = $object->getItemDefinition();
+      }
+      else {
+        throw new InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
+      }
+      // Make sure we have got a valid definition.
+      if (!$definition) {
+        throw new InvalidArgumentException('Property ' . check_plain($property_name) . ' is unknown.');
+      }
+
+      $this->prototypes[$key] = $this->create($definition, NULL, $property_name, $object);
+    }
+
+    $property = clone $this->prototypes[$key];
+    // Update the parent relationship if necessary.
+    if ($property instanceof ContextAwareInterface) {
+      $property->setContext($property_name, $object);
+    }
+    // Set the passed data value.
+    if (isset($value)) {
+      $property->setValue($value);
+    }
+    return $property;
   }
 }
