@@ -42,6 +42,11 @@ function file_test_stream_wrappers() {
       'class' => 'Drupal\file_test\DummyRemoteStreamWrapper',
       'description' => t('Dummy wrapper for simpletest (remote).'),
     ),
+    'dummy-readonly' => array(
+      'name' => t('Dummy files (readonly)'),
+      'class' => 'Drupal\file_test\DummyReadOnlyStreamWrapper',
+      'description' => t('Dummy wrapper for simpletest (readonly).'),
+    ),
   );
 }
 
