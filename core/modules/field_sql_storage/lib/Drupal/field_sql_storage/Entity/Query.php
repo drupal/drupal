@@ -48,15 +48,32 @@ class Query extends QueryBase {
     $entity_type = $this->entityType;
     $entity_info = entity_get_info($entity_type);
     if (!isset($entity_info['base_table'])) {
-      throw new QueryException("No base table, invalid query.");
+      throw new QueryException("No base table, nothing to query.");
     }
+    $configurable_fields = array_map(function ($data) use ($entity_type) {
+      return isset($data['bundles'][$entity_type]);
+    }, field_info_field_map());
     $base_table = $entity_info['base_table'];
+    // Assemble a list of entity tables, primarily for use in
+    // \Drupal\field_sql_storage\Entity\Tables::ensureEntityTable().
+    $entity_tables = array();
     $simple_query = TRUE;
+    // ensureEntityTable() decides whether an entity property will be queried
+    // from the data table or the base table based on where it finds the
+    // property first. The data table is prefered, which is why it gets added
+    // before the base table.
     if (isset($entity_info['data_table'])) {
+      $entity_tables[$entity_info['data_table']] = drupal_get_schema($entity_info['data_table']);
       $simple_query = FALSE;
     }
+    $entity_tables[$base_table] = drupal_get_schema($base_table);
     $sqlQuery = $this->connection->select($base_table, 'base_table', array('conjunction' => $this->conjunction));
+    $sqlQuery->addMetaData('configurable_fields', $configurable_fields);
     $sqlQuery->addMetaData('entity_type', $entity_type);
+    // Determines the key of the column to join on. This is either the entity
+    // id key or the revision id key, depending on whether the entity type
+    // supports revisions.
+    $id_key = 'id';
     $id_field = $entity_info['entity_keys']['id'];
     $fields[$id_field] = TRUE;
     if (empty($entity_info['entity_keys']['revision'])) {
@@ -70,6 +87,10 @@ class Query extends QueryBase {
       $revision_field = $entity_info['entity_keys']['revision'];
       $fields[$revision_field] = TRUE;
       $sqlQuery->addField('base_table', $revision_field);
+      // Now revision id is column 0 and the value column is 1.
+      if ($this->age == FIELD_LOAD_CURRENT) {
+        $id_key = 'revision';
+      }
     }
     // Now add the value column for fetchAllKeyed(). This is always the
     // entity id.
@@ -95,7 +116,14 @@ class Query extends QueryBase {
     }
     // This now contains first the table containing entity properties and
     // last the entity base table. They might be the same.
+    $sqlQuery->addMetaData('entity_tables', $entity_tables);
     $sqlQuery->addMetaData('age', $this->age);
+    // This contains the relevant SQL field to be used when joining entity
+    // tables.
+    $sqlQuery->addMetaData('entity_id_field', $entity_info['entity_keys'][$id_key]);
+    // This contains the relevant SQL field to be used when joining field
+    // tables.
+    $sqlQuery->addMetaData('field_id_field', $id_key == 'id' ? 'entity_id' : 'revision_id');
     $sqlQuery->addMetaData('simple_query', $simple_query);
     $this->condition->compile($sqlQuery);
     if ($this->count) {
