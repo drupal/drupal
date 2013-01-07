@@ -46,16 +46,7 @@ class CommentBlockTest extends CommentTestBase {
    */
   function testRecentCommentBlock() {
     $this->drupalLogin($this->admin_user);
-    $current_theme = variable_get('default_theme', 'stark');
-    $machine_name = 'test_recent_comments';
-    $edit = array(
-      'machine_name' => $machine_name,
-      'region' => 'sidebar_first',
-      'title' => $this->randomName(),
-      'block_count' => 2,
-    );
-    $this->drupalPost('admin/structure/block/manage/recent_comments/' . $current_theme, $edit, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block was saved.');
+    $block = $this->drupalPlaceBlock('recent_comments', array('block_count' => 2));
 
     // Add some test comments, one without a subject.
     $comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
@@ -70,14 +61,14 @@ class CommentBlockTest extends CommentTestBase {
     // posting a node from a node form.
     cache_invalidate_tags(array('content' => TRUE));
     $this->drupalGet('');
-    $this->assertNoText($edit['title'], 'Block was not found.');
+    $this->assertNoText($block['subject'], 'Block was not found.');
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
 
     // Test that a user with the 'access comments' permission can see the
     // block.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('');
-    $this->assertText($edit['title'], 'Block was found.');
+    $this->assertText($block['subject'], 'Block was found.');
 
     // Test the only the 2 latest comments are shown and in the proper order.
     $this->assertNoText($comment1->subject, 'Comment not found in block.');
@@ -88,11 +79,12 @@ class CommentBlockTest extends CommentTestBase {
     // Set the number of recent comments to show to 10.
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
-    $block = array(
+    $edit = array(
       'block_count' => 10,
     );
+    $current_theme = variable_get('theme_default', 'stark');
 
-    $this->drupalPost("admin/structure/block/manage/plugin.core.block.$current_theme.$machine_name/$current_theme/configure", $block, t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $block['config_id'] . '/' . variable_get('theme_default', 'stark') . '/configure', $edit, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block saved.');
 
     // Post an additional comment.
@@ -118,4 +110,5 @@ class CommentBlockTest extends CommentTestBase {
     // rel="canonical" is added to the head of the document.
     $this->assertRaw('<link rel="canonical"', 'Canonical URL was found in the HTML head');
   }
+
 }

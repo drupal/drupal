@@ -44,18 +44,9 @@ class BlockInvalidRegionTest extends WebTestBase {
    * Tests that blocks assigned to invalid regions work correctly.
    */
   function testBlockInInvalidRegion() {
-    // Enable a test block in the default theme and place it in an invalid region.
-    $current_theme = variable_get('default_theme', 'stark');
-    $machine_name = 'test_html_id';
-    $block = array(
-      'machine_name' => $machine_name,
-      'region' => 'footer',
-    );
-    $this->drupalPost("admin/structure/block/manage/test_html_id/$current_theme", $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block was saved.');
-
-    $machine_name = 'plugin.core.block.' . $current_theme . '.' . $machine_name;
-    $config = config($machine_name);
+    // Enable a test block and place it in an invalid region.
+    $block = $this->drupalPlaceBlock('test_html_id');
+    $config = config($block['config_id']);
     $config->set('region', 'invalid_region');
     $config->save();
 
@@ -70,7 +61,6 @@ class BlockInvalidRegionTest extends WebTestBase {
     $this->assertNoRaw($warning_message, 'Disabled block in the invalid region will not trigger the warning.');
 
     // Place disabled test block in the invalid region of the default theme.
-    $config = config($machine_name);
     $config->set('region', 'invalid_region');
     $config->save();
 

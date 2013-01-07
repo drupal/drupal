@@ -74,17 +74,12 @@ class ItemsPerPageTest extends WizardTestBase {
     $pos2 = strpos($content, $node2->label());
     $this->assertTrue($pos5 < $pos4 && $pos4 < $pos3 && $pos3 < $pos2, t('The nodes appear in the expected order in the page display.'));
 
-    $default_theme = variable_get('theme_default', 'stark');
-    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
+    // Confirm that the block is listed in the block administration UI.
+    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . variable_get('theme_default', 'stark') . '/add');
     $this->assertText('View: ' . $view['human_name']);
-    // Put the block into the first sidebar region, visit a page that displays
-    // the block, and check that the nodes we expect appear in the correct
-    // order.
-    $block = array(
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost("admin/structure/block/manage/views_block:{$view['name']}-block_1/{$default_theme}", $block, t('Save block'));
+    // Place the block, visit a page that displays the block, and check that the
+    // nodes we expect appear in the correct order.
+    $this->drupalPlaceBlock("views_block:{$view['name']}-block_1");
 
     $this->drupalGet('user');
     $content = $this->drupalGetContent();

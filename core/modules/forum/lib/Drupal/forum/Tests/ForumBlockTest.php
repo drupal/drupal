@@ -57,17 +57,8 @@ class ForumBlockTest extends WebTestBase {
     // Create 5 forum topics.
     $topics = $this->createForumTopics();
 
-    $block_id = 'forum_new_block';
-    $default_theme = variable_get('theme_default', 'stark');
-
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_second',
-    );
-
     // Enable the new forum topics block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    $block = $this->drupalPlaceBlock('forum_new_block');
     $this->assertText(t('The block configuration has been saved.'), '"New forum topics" block was enabled');
 
     $this->assertLink(t('More'), 0, 'New forum topics block has a "more"-link.');
@@ -79,7 +70,6 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Configure the new forum topics block to only show 2 topics.
-    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
     $config = config($block['config_id']);
     $config->set('block_count', 2);
     $config->save();
@@ -122,19 +112,7 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Enable the block.
-    $block_id = 'forum_active_block';
-    $default_theme = variable_get('theme_default', 'stark');
-
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_second',
-    );
-
-    // Enable the active forum block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Active forum topics forum block was enabled');
-
+    $block = $this->drupalPlaceBlock('forum_active_block');
     $this->assertLink(t('More'), 0, 'Active forum topics block has a "more"-link.');
     $this->assertLinkByHref('forum', 0, 'Active forum topics block has a "more"-link.');
 
@@ -151,7 +129,6 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Configure the active forum block to only show 2 topics.
-    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
     $config = config($block['config_id']);
     $config->set('block_count', 2);
     $config->save();

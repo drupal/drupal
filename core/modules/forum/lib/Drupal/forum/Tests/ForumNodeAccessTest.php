@@ -75,26 +75,10 @@ class ForumNodeAccessTest extends WebTestBase {
     $public_node = $this->drupalGetNodeByTitle($public_node_title);
     $this->assertTrue(!empty($public_node), 'New public forum node found in database.');
 
-    $default_theme = variable_get('theme_default', 'stark');
-    // Enable the active forum block.
-    $block_id = 'forum_active_block';
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_second',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Active forum topics block enabled');
 
-    // Enable the new forum block.
-    $block_id = 'forum_new_block';
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_second',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'New forum topics block enabled');
+    // Enable the new and active forum blocks.
+    $this->drupalPlaceBlock('forum_active_block');
+    $this->drupalPlaceBlock('forum_new_block');
 
     // Test for $access_user.
     $this->drupalLogin($access_user);
@@ -112,4 +96,5 @@ class ForumNodeAccessTest extends WebTestBase {
     $this->assertNoText($private_node->title, 'Private node not found in block by $no_access_user');
     $this->assertText($public_node->title, 'Public node found in block by $no_access_user');
   }
+
 }

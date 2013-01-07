@@ -11,6 +11,7 @@ namespace Drupal\statistics\Tests;
  * Tests that report pages render properly, and that access logging works.
  */
 class StatisticsReportsTest extends StatisticsTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Statistics reports tests',
@@ -86,16 +87,12 @@ class StatisticsReportsTest extends StatisticsTestBase {
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     // Configure and save the block.
-    $block_id = 'statistics_popular_block';
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array(
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
+    $this->drupalPlaceBlock('statistics_popular_block', array(
+      'title' => 'Popular content',
       'statistics_block_top_day_num' => 3,
       'statistics_block_top_all_num' => 3,
       'statistics_block_top_last_num' => 3,
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
+    ));
 
     // Get some page and check if the block is displayed.
     $this->drupalGet('user');
@@ -106,4 +103,5 @@ class StatisticsReportsTest extends StatisticsTestBase {
 
     $this->assertRaw(l($node->label(), 'node/' . $node->nid), 'Found link to visited node.');
   }
+
 }

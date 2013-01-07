@@ -49,12 +49,8 @@ class BlockCacheTest extends WebTestBase {
     $this->normal_user_alt->save();
 
     // Enable our test block.
-    $this->theme = variable_get('theme_default', 'stark');
-    $block = array();
-    $block['machine_name'] = $this->randomName(8);
-    $block['region'] = 'sidebar_first';
-    $this->block = $block;
-    $this->drupalPost('admin/structure/block/manage/test_cache/' . $this->theme,  $block, t('Save block'));
+   $block = $this->drupalPlaceBlock('test_cache');
+   $this->block_config_id = $block['config_id'];
   }
 
   /**
@@ -196,13 +192,11 @@ class BlockCacheTest extends WebTestBase {
    * Private helper method to set the test block's cache mode.
    */
   private function setCacheMode($cache_mode) {
-    $block = $this->block;
-    $block['config_id'] = 'plugin.core.block.' . $this->theme . '.' . $block['machine_name'];
-    $block_config = config($block['config_id']);
+    $block_config = config($this->block_config_id);
     $block_config->set('cache', $cache_mode);
     $block_config->save();
 
-    $instance = block_load($block['config_id']);
+    $instance = block_load($this->block_config_id);
     $config = $instance->getConfig();
     if ($config['cache'] != $cache_mode) {
       $this->fail(t('Unable to set cache mode to %mode. Current mode: %current_mode', array('%mode' => $cache_mode, '%current_mode' => $config['cache'])));

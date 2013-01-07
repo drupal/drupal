@@ -16,7 +16,7 @@ class MenuTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu');
+  public static $modules = array('menu', 'block');
 
   protected $profile = 'standard';
 
@@ -138,7 +138,6 @@ class MenuTest extends WebTestBase {
    * Add custom menu.
    */
   function addCustomMenu() {
-    // Add custom menu.
 
     // Try adding a menu using a menu_name that is too long.
     $this->drupalGet('admin/structure/menu/add');
@@ -176,16 +175,12 @@ class MenuTest extends WebTestBase {
 
     // Enable the custom menu block.
     $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
-    $default_theme = variable_get('theme_default', 'stark');
-    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
+    // Confirm that the custom menu block is available.
+    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . variable_get('theme_default', 'stark') . '/add');
     $this->assertText($title);
-    $block = array(
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost("admin/structure/block/manage/menu_menu_block:$menu_name/$default_theme", $block, t('Save block'));
-    $this->assertResponse(200);
 
+    // Enable the block.
+    $this->drupalPlaceBlock('menu_menu_block:' . $menu_name);
     return menu_load($menu_name);
   }
 

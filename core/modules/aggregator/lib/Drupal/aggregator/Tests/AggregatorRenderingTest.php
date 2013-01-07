@@ -38,6 +38,10 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $feed = $this->createFeed();
     $this->updateFeedItems($feed, $this->getDefaultFeedItemCount());
 
+    // Clear the block cache to load the new block definitions.
+    $manager = $this->container->get('plugin.manager.block');
+    $manager->clearCachedDefinitions();
+
     // Need admin user to be able to access block admin.
     $admin_user = $this->drupalCreateUser(array(
       'administer blocks',
@@ -47,16 +51,11 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     ));
     $this->drupalLogin($admin_user);
 
-    $current_theme = variable_get('theme_default', 'stark');
-    $machine_name = 'test_aggregator_feed_block';
     $block = array(
-      'machine_name' => $machine_name,
-      'region' => 'footer',
       'title' => 'feed-' . $feed->title,
       'block_count' => 2,
     );
-    $this->drupalPost("admin/structure/block/manage/aggregator_feed_block:{$feed->fid}/$current_theme", $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block was saved.');
+    $this->drupalPlaceBlock("aggregator_feed_block:{$feed->fid}", $block);
 
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('node');

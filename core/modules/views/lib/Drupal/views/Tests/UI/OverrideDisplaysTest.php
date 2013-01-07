@@ -53,15 +53,12 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertResponse(200);
     $this->assertText($original_title);
 
-    // Put the block into the first sidebar region.
-    $default_theme = variable_get('theme_default', 'stark');
-    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
+    // Confirm that the view block is available in the block administration UI.
+    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . variable_get('theme_default', 'stark') . '/add');
     $this->assertText('View: ' . $view['human_name']);
-    $block = array(
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost("admin/structure/block/manage/views_block:{$view['name']}-block_1/{$default_theme}", $block, t('Save block'));
+
+    // Place the block.
+    $this->drupalPlaceBlock("views_block:{$view['name']}-block_1");
 
     // Make sure the title appears in the block.
     $this->drupalGet('');
@@ -115,15 +112,12 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
 
-    // Put the block into the first sidebar region.
-    $default_theme = variable_get('theme_default', 'stark');
-    $this->drupalGet("admin/structure/block/list/block_plugin_ui:{$default_theme}/add");
+    // Confirm that the block is available in the block administration UI.
+    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . variable_get('theme_default', 'stark') . '/add');
     $this->assertText('View: ' . $view['human_name']);
-    $block = array(
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost("admin/structure/block/manage/views_block:{$view['name']}-block_1/{$default_theme}", $block, t('Save block'));
+
+    // Place the block.
+    $this->drupalPlaceBlock("views_block:{$view['name']}-block_1");
     $this->drupalGet('');
     $this->assertText($view['block[title]']);
     $this->assertNoText($view['page[title]']);

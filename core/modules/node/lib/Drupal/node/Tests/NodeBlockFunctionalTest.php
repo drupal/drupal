@@ -60,22 +60,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
       'access content' => FALSE,
     ));
 
-    // Enable the recent content block.
-    $block_id = 'node_recent_block';
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Node enabled.');
-
-    // Set the number of recent posts to 2.
-    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
-    $config = config($block['config_id']);
-    $config->set('block_count', 2);
-    $config->save();
+    // Enable the recent content block with two items.
+    $block = $this->drupalPlaceBlock('node_recent_block', array('machine_name' => 'test_block', 'block_count' => 2));
 
     // Test that block is not visible without nodes.
     $this->drupalGet('');
@@ -105,7 +91,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // see the block.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($block['title'], 'Block was not found.');
+    $this->assertNoText($block['subject'], 'Block was not found.');
 
     // Test that only the 2 latest nodes are shown.
     $this->drupalLogin($this->webUser);
@@ -114,7 +100,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText($node3->label(), 'Node found in block.');
 
     // Check to make sure nodes are in the right order.
-    $this->assertTrue($this->xpath('//div[@id="block-' . strtolower($block['machine_name']) . '"]/div/table/tbody/tr[position() = 1]/td/div/a[text() = "' . $node3->label() . '"]'), 'Nodes were ordered correctly in block.');
+    $this->assertTrue($this->xpath('//div[@id="block-test-block"]/div/table/tbody/tr[position() = 1]/td/div/a[text() = "' . $node3->label() . '"]'), 'Nodes were ordered correctly in block.');
 
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
@@ -137,21 +123,10 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText($node3->label(), 'Node found in block.');
     $this->assertText($node4->label(), 'Node found in block.');
 
-    // Enable the "Powered by Drupal" block and test the visibility by node
-    // type functionality.
-    $block_name = 'system_powered_by_block';
-    $block = array(
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-      'title' => $this->randomName(8),
+    // Enable the "Powered by Drupal" block only on article nodes.
+    $block = $this->drupalPlaceBlock('system_powered_by_block', array(
       'visibility[node_type][types][article]' => TRUE,
-    );
-    // Set the block to be shown only on node/xx if node is an article.
-    $this->drupalPost('admin/structure/block/manage/' . $block_name . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText('The block configuration has been saved.', 'Block was saved');
-
-    // Configure the new forum topics block to only show 2 topics.
-    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
+             ));
     $config = config($block['config_id']);
     $node_type_visibility = $config->get('visibility.node_type.types.article');
     $this->assertEqual($node_type_visibility, 'article', 'Visibility settings were saved to configuration');
@@ -161,12 +136,13 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     // Verify visibility rules.
     $this->drupalGet('');
-    $this->assertNoText($block['title'], 'Block was not displayed on the front page.');
+    $this->assertNoText($block['subject'], 'Block was not displayed on the front page.');
     $this->drupalGet('node/add/article');
-    $this->assertText($block['title'], 'Block was displayed on the node/add/article page.');
+    $this->assertText($block['subject'], 'Block was displayed on the node/add/article page.');
     $this->drupalGet('node/' . $node1->nid);
-    $this->assertText($block['title'], 'Block was displayed on the node/N when node is of type article.');
+    $this->assertText($block['subject'], 'Block was displayed on the node/N when node is of type article.');
     $this->drupalGet('node/' . $node5->nid);
-    $this->assertNoText($block['title'], 'Block was not displayed on nodes of type page.');
+    $this->assertNoText($block['subject'], 'Block was not displayed on nodes of type page.');
   }
+
 }

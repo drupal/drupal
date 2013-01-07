@@ -46,18 +46,8 @@ class PollBlockTest extends PollTestBase {
    * Tests creating, viewing, voting on recent poll block.
    */
   function testRecentBlock() {
-    $block_id = 'poll_recent_block';
-    $default_theme = variable_get('theme_default', 'stark');
-
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'footer',
-    );
-
-    // Enable the most recent poll block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), '"Most recent poll" block enabled');
+    // Enable the recent poll block.
+    $this->drupalPlaceBlock('poll_recent_block');
 
     // Create a poll which should appear in recent polls block.
     $title = $this->randomName();

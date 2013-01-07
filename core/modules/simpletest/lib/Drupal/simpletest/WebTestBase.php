@@ -340,6 +340,79 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
+   * Creates a block instance based on default settings.
+   *
+   * Note: Until this can be done programmatically, the active user account
+   * must have permission to administer blocks.
+   *
+   * @param string $plugin_id
+   *   The plugin ID of the block type for this block instance.
+   * @param array $settings
+   *   (optional) An associative array of settings for the block instance.
+   *   Override the defaults by specifying the key and value  in the array, for
+   *   example:
+   *   @code
+   *     $this->drupalPlaceBlock('system_powered_by_block', array(
+   *       'title' => t('Hello, world!'),
+   *     ));
+   *   @endcode
+   *   The following defaults are provided:
+   *   - title: Random string.
+   *   - machine_name: Random string.
+   *   - region: 'sidebar_first'.
+   * @param string $theme
+   *   (optional) The theme for which to add a block instance. Defaults to the
+   *   default theme.
+   *
+   * @return array|false
+   *   The block instance configuration from BlockBase::getConfig(), or FALSE
+   *   on failure.
+   *
+   * @todo
+   *   Create the block programmatically once block instances are configuration
+   *   entities.
+   * @todo
+   *   Add support for creating custom block instances.
+   */
+  protected function drupalPlaceBlock($plugin_id, array $settings = array(), $theme = NULL) {
+    // Confirm that the active user has permission to add the block instance.
+    // @todo Remove this check once it is possible to do this programmatically.
+    if (!empty($this->loggedInUser) && !user_access('administer blocks', $this->loggedInUser)) {
+      $this->fail('The logged in user does not have permission to administer blocks.');
+      return FALSE;
+    }
+
+    // If no theme was specified, use the default theme.
+    $theme = $theme ?: variable_get('theme_default', 'stark');
+
+    // Populate some default block settings.
+    $settings += array(
+      'title' => $this->randomName(8),
+      'machine_name' => strtolower($this->randomName(8)),
+      'region' => 'sidebar_first',
+    );
+
+    // Submit the block instance configuration.
+    $this->drupalPost('admin/structure/block/manage/' . $plugin_id . '/' . $theme, $settings, t('Save block'));
+    $this->assertText(
+      t('The block configuration has been saved.'),
+      format_string(
+        '%plugin block instance added for %theme',
+        array(
+          '%plugin' => $plugin_id,
+          '%theme' => $theme,
+        )
+      )
+    );
+
+    // Return the created block instance.
+    $instance_id = "plugin.core.block.$theme." . $settings['machine_name'];
+    $manager = $this->container->get('plugin.manager.block');
+    $block = $manager->getInstance(array('config' => $instance_id));
+    return $block->getConfig();
+  }
+
+  /**
    * Get a list files that can be used in tests.
    *
    * @param $type
