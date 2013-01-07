@@ -34,6 +34,13 @@ class RouteProvider implements RouteProviderInterface {
   protected $tableName;
 
   /**
+   * A cache of already-loaded routes, keyed by route name.
+   *
+   * @var array
+   */
+  protected $routes;
+
+  /**
    * Constructs a new PathMatcher.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -68,6 +75,8 @@ class RouteProvider implements RouteProviderInterface {
    * @return \Symfony\Component\Routing\RouteCollection with all urls that
    *      could potentially match $request. Empty collection if nothing can
    *      match.
+   *
+   * @todo Should this method's found routes also be included in the cache?
    */
   public function getRouteCollectionForRequest(Request $request) {
 
@@ -151,15 +160,19 @@ class RouteProvider implements RouteProviderInterface {
    *      the names of the $names argument.
    */
   public function getRoutesByNames($names, $parameters = array()) {
-    $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN :names', array(':names' => $names));
+
+    $routes_to_load = array_diff($names, array_keys($this->routes));
+
+    $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN :names', array(':names' => $routes_to_load));
     $routes = $result->fetchAllKeyed();
 
     $return = array();
     foreach ($routes as $name => $route) {
-      $return[$name] = unserialize($route);
+      $this->routes[$name] = unserialize($route);
     }
 
-    return $return;
+    return array_intersect_key($this->routes, $names);
+
   }
 
   /**

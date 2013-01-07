@@ -153,8 +153,9 @@ class CoreBundle extends Bundle {
     $container->register('router.matcher', 'Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher')
       ->addArgument(new Reference('router.route_provider'))
       ->addMethodCall('setFinalMatcher', array(new Reference('router.matcher.final_matcher')));
-    $container->register('router.generator', 'Symfony\Cmf\Component\Routing\ProviderBasedGenerator')
-      ->addArgument(new Reference('router.route_provider'));
+    $container->register('router.generator', 'Drupal\Core\Routing\UrlGenerator')
+      ->addArgument(new Reference('router.route_provider'))
+      ->addArgument(new Reference('path.alias_manager.cached'));
     $container->register('router.dynamic', 'Symfony\Cmf\Component\Routing\DynamicRouter')
       ->addArgument(new Reference('router.request_context'))
       ->addArgument(new Reference('router.matcher'))
