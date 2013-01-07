@@ -105,6 +105,8 @@ class ViewsDataCache {
       if (isset($this->storage[$key])) {
         return $this->storage[$key];
       }
+      // If the key is invalid, return an empty array.
+      return array();
     }
     else {
       if (!$this->fullyLoaded) {
