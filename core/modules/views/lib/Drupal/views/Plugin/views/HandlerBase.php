@@ -100,7 +100,6 @@ abstract class HandlerBase extends PluginBase {
       $options['field'] = $this->actualField;
     }
 
-    $types = ViewExecutable::viewsHandlerTypes();
     $plural = $this->definition['plugin_type'];
     if (isset($types[$plural]['plural'])) {
       $plural = $types[$plural]['plural'];
@@ -321,9 +320,6 @@ abstract class HandlerBase extends PluginBase {
     $types = ViewExecutable::viewsHandlerTypes();
     $type = $form_state['type'];
     $id = $form_state['id'];
-
-    $form['#title'] = check_plain($view->display[$display_id]['display_title']) . ': ';
-    $form['#title'] .= t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $this->adminLabel()));
 
     $form['#section'] = $display_id . '-' . $type . '-' . $id;
 

@@ -1668,7 +1668,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
       $handler->init($executable, $executable->display_handler, $item);
       $types = ViewExecutable::viewsHandlerTypes();
 
-      $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
+      $form['#title'] = t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
       $handler->buildGroupByForm($form['options'], $form_state);
       $form_state['handler'] = &$handler;
