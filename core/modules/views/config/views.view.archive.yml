@@ -2,7 +2,7 @@ disabled: true
 api_version: '3.0'
 module: node
 name: archive
-description: 'Display a list of months that link to content for that month.'
+description: 'A list of months that link to content for that month.'
 tag: default
 base_table: node
 human_name: Archive
