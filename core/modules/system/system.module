@@ -2551,7 +2551,7 @@ function system_user_presave($account) {
 /**
  * Implements hook_user_login().
  */
-function system_user_login($edit, $account) {
+function system_user_login($account) {
   $config = config('system.timezone');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->timezone && $config->get('user.configurable') && $config->get('user.warn')) {

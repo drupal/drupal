@@ -299,12 +299,10 @@ function hook_user_update($account) {
 /**
  * The user just logged in.
  *
- * @param $edit
- *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation was just performed.
  */
-function hook_user_login(&$edit, $account) {
+function hook_user_login($account) {
   $config = config('system.timezone');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->timezone && $config->get('user.configurable') && $config->get('user.warn')) {
