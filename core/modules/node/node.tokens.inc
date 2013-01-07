@@ -135,9 +135,9 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
         case 'summary':
-          if ($items = field_get_items('node', $node, 'body', $langcode)) {
+          if ($items = field_get_items($node, 'body', $langcode)) {
             $instance = field_info_instance('node', 'body', $node->type);
-            $field_langcode = field_language('node', $node, 'body', $langcode);
+            $field_langcode = field_language($node, 'body', $langcode);
 
             // If the summary was requested and is not empty, use it.
             if ($name == 'summary' && !empty($items[0]['summary'])) {

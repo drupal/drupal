@@ -19,9 +19,7 @@
  *   The instance definition. It is recommended to only use instance level
  *   properties to filter out values from a list defined by field level
  *   properties.
- * @param $entity_type
- *   The entity type the field is attached to.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object the field is attached to, or NULL if no entity
  *   exists (e.g. in field settings page).
  *
@@ -34,7 +32,7 @@
  *   widget. The HTML tags defined in _field_filter_xss_allowed_tags() are
  *   allowed, other tags will be filtered.
  */
-function hook_options_list($field, $instance, $entity_type, $entity) {
+function hook_options_list($field, $instance, $entity) {
   // Sample structure.
   $options = array(
     0 => t('Zero'),

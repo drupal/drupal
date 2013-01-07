@@ -5,6 +5,7 @@
  * Field CRUD API, handling field and field instance creation and deletion.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldException;
 
 /**
@@ -883,7 +884,7 @@ function field_purge_batch($batch_size) {
       field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
       foreach ($entities as $entity) {
         // Purge the data for the entity.
-        field_purge_data($entity_type, $entity, $field, $instance);
+        field_purge_data($entity, $field, $instance);
       }
     }
     else {
@@ -909,28 +910,26 @@ function field_purge_batch($batch_size) {
  * a single field. The entity itself is not being deleted, and it is quite
  * possible that other field data will remain attached to it.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The pseudo-entity whose field data is being purged.
  * @param $field
  *   The (possibly deleted) field whose data is being purged.
  * @param $instance
  *   The deleted field instance whose data is being purged.
  */
-function field_purge_data($entity_type, $entity, $field, $instance) {
+function field_purge_data(EntityInterface $entity, $field, $instance) {
   // Each field type's hook_field_delete() only expects to operate on a single
   // field at a time, so we can use it as-is for purging.
   $options = array('field_id' => $instance['field_id'], 'deleted' => TRUE);
-  _field_invoke('delete', $entity_type, $entity, $dummy, $dummy, $options);
+  _field_invoke('delete', $entity, $dummy, $dummy, $options);
 
   // Tell the field storage system to purge the data.
-  module_invoke($field['storage']['module'], 'field_storage_purge', $entity_type, $entity, $field, $instance);
+  module_invoke($field['storage']['module'], 'field_storage_purge', $entity, $field, $instance);
 
   // Let other modules act on purging the data.
   foreach (module_implements('field_attach_purge') as $module) {
     $function = $module . '_field_attach_purge';
-    $function($entity_type, $entity, $field, $instance);
+    $function($entity, $field, $instance);
   }
 }
 

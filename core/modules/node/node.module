@@ -1153,7 +1153,7 @@ function template_preprocess_node(&$variables) {
   }
 
   // Make the field variables available with the appropriate language.
-  field_attach_preprocess('node', $node, $variables['content'], $variables);
+  field_attach_preprocess($node, $variables['content'], $variables);
 
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {

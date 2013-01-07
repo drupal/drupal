@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldUpdateForbiddenException;
 
 /**
@@ -398,10 +399,11 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
 /**
  * Implements hook_field_storage_write().
  */
-function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fields) {
+function field_sql_storage_field_storage_write(EntityInterface $entity, $op, $fields) {
   $vid = $entity->getRevisionId();
   $id = $entity->id();
   $bundle = $entity->bundle();
+  $entity_type = $entity->entityType();
   if (!isset($vid)) {
     $vid = $id;
   }
@@ -493,11 +495,11 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
  *
  * This function deletes data for all fields for an entity from the database.
  */
-function field_sql_storage_field_storage_delete($entity_type, $entity, $fields) {
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+function field_sql_storage_field_storage_delete(EntityInterface $entity, $fields) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
-      field_sql_storage_field_storage_purge($entity_type, $entity, $field, $instance);
+      field_sql_storage_field_storage_purge($entity, $field, $instance);
     }
   }
 }
@@ -508,15 +510,15 @@ function field_sql_storage_field_storage_delete($entity_type, $entity, $fields) 
  * This function deletes data from the database for a single field on
  * an entity.
  */
-function field_sql_storage_field_storage_purge($entity_type, $entity, $field, $instance) {
+function field_sql_storage_field_storage_purge(EntityInterface $entity, $field, $instance) {
   $table_name = _field_sql_storage_tablename($field);
   $revision_name = _field_sql_storage_revision_tablename($field);
   db_delete($table_name)
-    ->condition('entity_type', $entity_type)
+    ->condition('entity_type', $entity->entityType())
     ->condition('entity_id', $entity->id())
     ->execute();
   db_delete($revision_name)
-    ->condition('entity_type', $entity_type)
+    ->condition('entity_type', $entity->entityType())
     ->condition('entity_id', $entity->id())
     ->execute();
 }
@@ -526,14 +528,14 @@ function field_sql_storage_field_storage_purge($entity_type, $entity, $field, $i
  *
  * This function actually deletes the data from the database.
  */
-function field_sql_storage_field_storage_delete_revision($entity_type, $entity, $fields) {
+function field_sql_storage_field_storage_delete_revision(EntityInterface $entity, $fields) {
   $vid = $entity->getRevisionId();
   if (isset($vid)) {
     foreach ($fields as $field_id) {
       $field = field_info_field_by_id($field_id);
       $revision_name = _field_sql_storage_revision_tablename($field);
       db_delete($revision_name)
-        ->condition('entity_type', $entity_type)
+        ->condition('entity_type', $entity->entityType())
         ->condition('entity_id', $entity->id())
         ->condition('revision_id', $vid)
         ->execute();

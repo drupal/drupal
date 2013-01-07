@@ -337,7 +337,7 @@ function translation_node_prepare(Node $node) {
 
     // Add field translations and let other modules module add custom translated
     // fields.
-    field_attach_prepare_translation('node', $node, $node->langcode, $source_node, $source_node->langcode);
+    field_attach_prepare_translation($node, $node->langcode, $source_node, $source_node->langcode);
   }
 }
 

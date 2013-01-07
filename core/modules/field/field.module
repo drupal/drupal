@@ -4,8 +4,8 @@
  * Attach custom data fields to Drupal entities.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Entity\Query\QueryFactory;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -436,12 +436,12 @@ function field_entity_field_info($entity_type) {
  *
  * @param $field_langcodes
  *   A reference to an array of language codes keyed by field name.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to be displayed.
  * @param $langcode
  *   The language code $entity has to be displayed in.
  */
-function field_language_fallback(&$field_langcodes, $entity, $langcode) {
+function field_language_fallback(&$field_langcodes, EntityInterface $entity, $langcode) {
   // Lazily init fallback candidates to avoid unnecessary calls.
   $fallback_candidates = NULL;
 
@@ -546,9 +546,7 @@ function field_associate_fields($module) {
 /**
  * Helper function to get the default value for a field on an entity.
  *
- * @param $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure.
@@ -557,11 +555,11 @@ function field_associate_fields($module) {
  * @param $langcode
  *   The field language to fill-in with the default value.
  */
-function field_get_default_value($entity_type, $entity, $field, $instance, $langcode = NULL) {
+function field_get_default_value(EntityInterface $entity, $field, $instance, $langcode = NULL) {
   $items = array();
   if (!empty($instance['default_value_function'])) {
     $function = $instance['default_value_function'];
-    $items = $function($entity_type, $entity, $field, $instance, $langcode);
+    $items = $function($entity, $field, $instance, $langcode);
   }
   elseif (!empty($instance['default_value'])) {
     $items = $instance['default_value'];
@@ -729,7 +727,7 @@ function field_view_mode_settings($entity_type, $bundle) {
  * @todo Remove when all steps in the view callstack receive the
  * entity_display.
  *
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity.
  * @param $view_mode
  *   The view mode.
@@ -738,7 +736,7 @@ function field_view_mode_settings($entity_type, $bundle) {
  *   The display options to be used when viewing the entity's pseudo-fields in
  *   the view mode.
  */
-function field_extra_fields_get_display($entity, $view_mode) {
+function field_extra_fields_get_display(EntityInterface $entity, $view_mode) {
   $entity_display = entity_get_render_display($entity, $view_mode);
   $extra_fields = field_info_extra_fields($entity->entityType(), $entity->bundle(), 'display');
 
@@ -812,9 +810,7 @@ function _field_filter_xss_display_allowed_tags() {
 /**
  * Returns a renderable array for a single field value.
  *
- * @param $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity containing the field to display. Must at least contain the ID
  *   key and the field data to display.
  * @param $field_name
@@ -832,18 +828,18 @@ function _field_filter_xss_display_allowed_tags() {
  * @return
  *   A renderable array for the field value.
  */
-function field_view_value($entity_type, $entity, $field_name, $item, $display = array(), $langcode = NULL) {
+function field_view_value(EntityInterface $entity, $field_name, $item, $display = array(), $langcode = NULL) {
   $output = array();
 
   if ($field = field_info_field($field_name)) {
     // Determine the langcode that will be used by language fallback.
-    $langcode = field_language($entity_type, $entity, $field_name, $langcode);
+    $langcode = field_language($entity, $field_name, $langcode);
 
     // Push the item as the single value for the field, and defer to
     // field_view_field() to build the render array for the whole field.
     $clone = clone $entity;
     $clone->{$field_name}[$langcode] = array($item);
-    $elements = field_view_field($entity_type, $clone, $field_name, $display, $langcode);
+    $elements = field_view_field($clone, $field_name, $display, $langcode);
 
     // Extract the part of the render array we need.
     $output = isset($elements[0]) ? $elements[0] : array();
@@ -872,11 +868,8 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  * The function takes care of invoking the prepare_view steps. It also respects
  * field access permissions.
  *
- * @param $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
- * @param $entity
- *   The entity containing the field to display. Must at least contain the ID
- *   key and the field data to display.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity containing the field to display.
  * @param $field_name
  *   The name of the field to display.
  * @param $display_options
@@ -909,12 +902,12 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  *
  * @see field_view_value()
  */
-function field_view_field($entity_type, $entity, $field_name, $display_options = array(), $langcode = NULL) {
+function field_view_field(EntityInterface $entity, $field_name, $display_options = array(), $langcode = NULL) {
   $output = array();
   $bundle = $entity->bundle();
 
   // Return nothing if the field doesn't exist.
-  $instance = field_info_instance($entity_type, $field_name, $bundle);
+  $instance = field_info_instance($entity->entityType(), $field_name, $bundle);
   if (!$instance) {
     return $output;
   }
@@ -940,7 +933,7 @@ function field_view_field($entity_type, $entity, $field_name, $display_options =
   }
 
   if ($formatter) {
-    $display_langcode = field_language($entity_type, $entity, $field_name, $langcode);
+    $display_langcode = field_language($entity, $field_name, $langcode);
     $items = $entity->{$field_name}[$display_langcode];
 
     // Invoke prepare_view steps if needed.
@@ -950,7 +943,7 @@ function field_view_field($entity_type, $entity, $field_name, $display_options =
       // First let the field types do their preparation.
       $options = array('field_name' => $field_name, 'langcode' => $display_langcode);
       $null = NULL;
-      _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $null, $null, $options);
+      _field_invoke_multiple('prepare_view', $entity->entityType(), array($id => $entity), $null, $null, $options);
 
       // Then let the formatter do its own specific massaging.
       $items_multi = array($id => $entity->{$field_name}[$display_langcode]);
@@ -964,7 +957,6 @@ function field_view_field($entity_type, $entity, $field_name, $display_options =
     // Invoke hook_field_attach_view_alter() to let other modules alter the
     // renderable array, as in a full field_attach_view() execution.
     $context = array(
-      'entity_type' => $entity_type,
       'entity' => $entity,
       'view_mode' => $view_mode,
       'display_options' => $display_options,
@@ -982,9 +974,7 @@ function field_view_field($entity_type, $entity, $field_name, $display_options =
 /**
  * Returns the field items in the language they currently would be displayed.
  *
- * @param $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity containing the data to be displayed.
  * @param $field_name
  *   The field to be displayed.
@@ -995,8 +985,8 @@ function field_view_field($entity_type, $entity, $field_name, $display_options =
  * @return
  *   An array of field items keyed by delta if available, FALSE otherwise.
  */
-function field_get_items($entity_type, $entity, $field_name, $langcode = NULL) {
-  $langcode = field_language($entity_type, $entity, $field_name, $langcode);
+function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL) {
+  $langcode = field_language($entity, $field_name, $langcode);
   return isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : FALSE;
 }
 
@@ -1048,8 +1038,8 @@ function field_has_data($field) {
  * @param array $field
  *   The full field structure array for the field on which the operation is to
  *   be performed. See field_info_field().
- * @param string $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
+ * @param $entity_type
+ *   The type of $entity; for example, 'node' or 'user'.
  * @param $entity
  *   (optional) The entity for the operation.
  * @param $account

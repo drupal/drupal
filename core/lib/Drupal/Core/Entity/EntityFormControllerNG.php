@@ -23,7 +23,7 @@ class EntityFormControllerNG extends EntityFormController {
     // entity properties.
     $info = $entity->entityInfo();
     if (!empty($info['fieldable'])) {
-      field_attach_form($entity->entityType(), $entity->getBCEntity(), $form, $form_state, $this->getFormLangcode($form_state));
+      field_attach_form($entity->getBCEntity(), $form, $form_state, $this->getFormLangcode($form_state));
     }
     return $form;
   }
@@ -38,7 +38,7 @@ class EntityFormControllerNG extends EntityFormController {
     $info = $entity->entityInfo();
 
     if (!empty($info['fieldable'])) {
-      field_attach_form_validate($entity->entityType(), $entity->getBCEntity(), $form, $form_state);
+      field_attach_form_validate($entity->getBCEntity(), $form, $form_state);
     }
 
     // @todo Remove this.
@@ -78,7 +78,7 @@ class EntityFormControllerNG extends EntityFormController {
 
     // Copy field values to the entity.
     if ($info['fieldable']) {
-      field_attach_submit($entity_type, $entity->getBCEntity(), $form, $form_state);
+      field_attach_submit($entity->getBCEntity(), $form, $form_state);
     }
     return $entity;
   }

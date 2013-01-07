@@ -275,7 +275,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $function = 'field_attach_delete_revision';
     }
     if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($this->entityType, $entity->getBCEntity());
+      $function($entity->getBCEntity());
     }
 
     // Invoke the hook.

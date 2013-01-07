@@ -653,7 +653,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       $function = 'field_attach_delete_revision';
     }
     if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($this->entityType, $entity);
+      $function($entity);
     }
     // Invoke the hook.
     module_invoke_all($this->entityType . '_' . $hook, $entity);

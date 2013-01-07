@@ -19,6 +19,8 @@ use Drupal\Core\Annotation\Translation;
  *   module = "field_test",
  *   controller_class = "Drupal\field_test\TestEntityController",
  *   field_cache = TRUE,
+ *   base_table = "test_entity",
+ *   revision_table = "test_entity_revision",
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "ftid",

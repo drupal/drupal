@@ -5,10 +5,12 @@
  * Helper module for the List module tests.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Allowed values callback.
  */
-function options_test_allowed_values_callback($field, $instance, $entity_type, $entity) {
+function options_test_allowed_values_callback($field, $instance, $entity) {
   $values = array(
     'Group 1' => array(
       0 => 'Zero',
@@ -25,7 +27,7 @@ function options_test_allowed_values_callback($field, $instance, $entity_type, $
 /**
  * An entity-bound allowed values callback.
  */
-function options_test_dynamic_values_callback($field, $instance, $entity_type, $entity, &$cacheable) {
+function options_test_dynamic_values_callback($field, $instance, EntityInterface $entity, &$cacheable) {
   $cacheable = FALSE;
   // We need the values of the entity as keys.
   return drupal_map_assoc(array(

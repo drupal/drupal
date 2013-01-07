@@ -95,7 +95,7 @@ class EditController extends ContainerAware {
       // The form submission took care of saving the updated entity. Return the
       // updated view of the field.
       $entity = $form_state['entity'];
-      $output = field_view_field($entity->entityType(), $entity, $field_name, $view_mode, $langcode);
+      $output = field_view_field($entity, $field_name, $view_mode, $langcode);
 
       $response->addCommand(new FieldFormSavedCommand(drupal_render($output)));
     }
@@ -135,7 +135,7 @@ class EditController extends ContainerAware {
   public function getUntransformedText(EntityInterface $entity, $field_name, $langcode, $view_mode) {
     $response = new AjaxResponse();
 
-    $output = field_view_field($entity->entityType(), $entity, $field_name, $view_mode, $langcode);
+    $output = field_view_field($entity, $field_name, $view_mode, $langcode);
     $langcode = $output['#language'];
     // Direct text editing is only supported for single-valued fields.
     $editable_text = check_markup($output['#items'][0]['value'], $output['#items'][0]['format'], $langcode, FALSE, array(FILTER_TYPE_TRANSFORM_REVERSIBLE, FILTER_TYPE_TRANSFORM_IRREVERSIBLE));

@@ -348,10 +348,8 @@ function field_invoke_method_multiple($method, $target_function, array $entities
  *   - delete revision
  *   - view
  *   - prepare translation
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
- *   The fully formed $entity_type entity.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
  * @param $a
  *   - The $form in the 'form' operation.
  *   - The value of $view_mode in the 'view' operation.
@@ -384,7 +382,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
  *    name. It will be used to narrow down to a single value the available
  *    languages to act on.
  */
-function _field_invoke($op, $entity_type, EntityInterface $entity, &$a = NULL, &$b = NULL, $options = array()) {
+function _field_invoke($op, EntityInterface $entity, &$a = NULL, &$b = NULL, $options = array()) {
   // Merge default options.
   $default_options = array(
     'default' => FALSE,
@@ -394,7 +392,7 @@ function _field_invoke($op, $entity_type, EntityInterface $entity, &$a = NULL, &
   $options += $default_options;
 
   // Determine the list of instances to iterate on.
-  $instances = _field_invoke_get_instances($entity_type, $entity->bundle(), $options);
+  $instances = _field_invoke_get_instances($entity->entityType(), $entity->bundle(), $options);
 
   // Iterate through the instances and collect results.
   $return = array();
@@ -406,12 +404,12 @@ function _field_invoke($op, $entity_type, EntityInterface $entity, &$a = NULL, &
     $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
     if (function_exists($function)) {
       // Determine the list of languages to iterate on.
-      $available_langcodes = field_available_languages($entity_type, $field);
+      $available_langcodes = field_available_languages($entity->entityType(), $field);
       $langcodes = _field_language_suggestion($available_langcodes, $options['langcode'], $field_name);
 
       foreach ($langcodes as $langcode) {
         $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
-        $result = $function($entity_type, $entity, $field, $instance, $langcode, $items, $a, $b);
+        $result = $function($entity, $field, $instance, $langcode, $items, $a, $b);
         if (isset($result)) {
           // For hooks with array results, we merge results together.
           // For hooks with scalar results, we collect results in an array.
@@ -585,9 +583,9 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
  *
  * @see _field_invoke()
  */
-function _field_invoke_default($op, $entity_type, EntityInterface $entity, &$a = NULL, &$b = NULL, $options = array()) {
+function _field_invoke_default($op, EntityInterface $entity, &$a = NULL, &$b = NULL, $options = array()) {
   $options['default'] = TRUE;
-  return _field_invoke($op, $entity_type, $entity, $a, $b, $options);
+  return _field_invoke($op, $entity, $a, $b, $options);
 }
 
 /**
@@ -801,9 +799,7 @@ function _field_invoke_widget_target() {
  * Additionally, some processing data is placed in $form_state, and can be
  * accessed by field_form_get_state() and field_form_set_state().
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for which to load form elements, used to initialize
  *   default form values.
  * @param $form
@@ -824,7 +820,7 @@ function _field_invoke_widget_target() {
  * @see field_form_get_state()
  * @see field_form_set_state()
  */
-function field_attach_form($entity_type, EntityInterface $entity, &$form, &$form_state, $langcode = NULL, array $options = array()) {
+function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langcode = NULL, array $options = array()) {
   // Set #parents to 'top-level' by default.
   $form += array('#parents' => array());
 
@@ -834,14 +830,14 @@ function field_attach_form($entity_type, EntityInterface $entity, &$form, &$form
 
   // Add custom weight handling.
   $form['#pre_render'][] = '_field_extra_fields_pre_render';
-  $form['#entity_type'] = $entity_type;
+  $form['#entity_type'] = $entity->entityType();
   $form['#bundle'] = $entity->bundle();
 
   // Let other modules make changes to the form.
   // Avoid module_invoke_all() to let parameters be taken by reference.
   foreach (module_implements('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
-    $function($entity_type, $entity, $form, $form_state, $langcode);
+    $function($entity, $form, $form_state, $langcode);
   }
 }
 
@@ -1021,9 +1017,7 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  * It is intended to be called during API save operations. Use
  * field_attach_form_validate() to validate form submissions.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to validate.
  * @throws Drupal\field\FieldValidationException
  *   If validation errors are found, a FieldValidationException is thrown. The
@@ -1033,19 +1027,19 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
  */
-function field_attach_validate($entity_type, $entity, array $options = array()) {
+function field_attach_validate(EntityInterface $entity, array $options = array()) {
   $errors = array();
   // Check generic, field-type-agnostic errors first.
   $null = NULL;
-  _field_invoke_default('validate', $entity_type, $entity, $errors, $null, $options);
+  _field_invoke_default('validate', $entity, $errors, $null, $options);
   // Check field-type specific errors.
-  _field_invoke('validate', $entity_type, $entity, $errors, $null, $options);
+  _field_invoke('validate', $entity, $errors, $null, $options);
 
   // Let other modules validate the entity.
   // Avoid module_invoke_all() to let $errors be taken by reference.
   foreach (module_implements('field_attach_validate') as $module) {
     $function = $module . '_field_attach_validate';
-    $function($entity_type, $entity, $errors);
+    $function($entity, $errors);
   }
 
   if ($errors) {
@@ -1070,11 +1064,8 @@ function field_attach_validate($entity_type, $entity, array $options = array()) 
  * elements. Fieldable entity types should call this function during their own
  * form validation function.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
- *   The entity being submitted. The 'bundle', 'id' and (if applicable)
- *   'revision' keys should be present. The actual field values will be read
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity being submitted. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
  *   The form structure where field elements are attached to. This might be a
@@ -1085,10 +1076,10 @@ function field_attach_validate($entity_type, $entity, array $options = array()) 
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
  */
-function field_attach_form_validate($entity_type, EntityInterface $entity, $form, &$form_state, array $options = array()) {
+function field_attach_form_validate(EntityInterface $entity, $form, &$form_state, array $options = array()) {
   // Perform field_level validation.
   try {
-    field_attach_validate($entity_type, $entity, $options);
+    field_attach_validate($entity, $options);
   }
   catch (FieldValidationException $e) {
     // Pass field-level validation errors back to widgets for accurate error
@@ -1110,11 +1101,8 @@ function field_attach_form_validate($entity_type, EntityInterface $entity, $form
  * Currently, this accounts for drag-and-drop reordering of field values, and
  * filtering of empty values.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
- *   The entity being submitted. The 'bundle', 'id' and (if applicable)
- *   'revision' keys should be present. The actual field values will be read
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity being submitted. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
  *   The form structure where field elements are attached to. This might be a
@@ -1125,7 +1113,7 @@ function field_attach_form_validate($entity_type, EntityInterface $entity, $form
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
  */
-function field_attach_submit($entity_type, EntityInterface $entity, $form, &$form_state, array $options = array()) {
+function field_attach_submit(EntityInterface $entity, $form, &$form_state, array $options = array()) {
   // Extract field values from submitted values.
   field_invoke_method('submit', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
 
@@ -1133,7 +1121,7 @@ function field_attach_submit($entity_type, EntityInterface $entity, $form, &$for
   // Avoid module_invoke_all() to let $form_state be taken by reference.
   foreach (module_implements('field_attach_submit') as $module) {
     $function = $module . '_field_attach_submit';
-    $function($entity_type, $entity, $form, $form_state);
+    $function($entity, $form, $form_state);
   }
 }
 
@@ -1143,16 +1131,14 @@ function field_attach_submit($entity_type, EntityInterface $entity, $form, &$for
  * We take no specific action here, we just give other modules the opportunity
  * to act.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to process.
  */
-function field_attach_presave($entity_type, $entity) {
-  _field_invoke('presave', $entity_type, $entity);
+function field_attach_presave($entity) {
+  _field_invoke('presave', $entity);
 
   // Let other modules act on presaving the entity.
-  module_invoke_all('field_attach_presave', $entity_type, $entity);
+  module_invoke_all('field_attach_presave', $entity);
 }
 
 /**
@@ -1163,29 +1149,27 @@ function field_attach_presave($entity_type, $entity) {
  * Default values (if any) will be saved for fields not present in the
  * $entity.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  * @return
  *   Default values (if any) will be added to the $entity parameter for fields
  *   it leaves unspecified.
  */
-function field_attach_insert($entity_type, EntityInterface $entity) {
-  _field_invoke_default('insert', $entity_type, $entity);
-  _field_invoke('insert', $entity_type, $entity);
+function field_attach_insert(EntityInterface $entity) {
+  _field_invoke_default('insert', $entity);
+  _field_invoke('insert', $entity);
 
   // Let any module insert field data before the storage engine, accumulating
   // saved fields along the way.
   $skip_fields = array();
   foreach (module_implements('field_storage_pre_insert') as $module) {
     $function = $module . '_field_storage_pre_insert';
-    $function($entity_type, $entity, $skip_fields);
+    $function($entity, $skip_fields);
   }
 
   // Collect the storage backends used by the remaining fields in the entities.
   $storages = array();
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $field_name = $field['field_name'];
@@ -1200,37 +1184,33 @@ function field_attach_insert($entity_type, EntityInterface $entity) {
   // Field storage backends save any remaining unsaved fields.
   foreach ($storages as $storage => $fields) {
     $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_write', $entity_type, $entity, FIELD_STORAGE_INSERT, $fields);
+    module_invoke($storage_info['module'], 'field_storage_write', $entity, FIELD_STORAGE_INSERT, $fields);
   }
 
   // Let other modules act on inserting the entity.
-  module_invoke_all('field_attach_insert', $entity_type, $entity);
-
-  $entity_info = entity_get_info($entity_type);
+  module_invoke_all('field_attach_insert', $entity);
 }
 
 /**
  * Saves field data for an existing entity.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  */
-function field_attach_update($entity_type, EntityInterface $entity) {
-  _field_invoke('update', $entity_type, $entity);
+function field_attach_update(EntityInterface $entity) {
+  _field_invoke('update', $entity);
 
   // Let any module update field data before the storage engine, accumulating
   // saved fields along the way.
   $skip_fields = array();
   foreach (module_implements('field_storage_pre_update') as $module) {
     $function = $module . '_field_storage_pre_update';
-    $function($entity_type, $entity, $skip_fields);
+    $function($entity, $skip_fields);
   }
 
   // Collect the storage backends used by the remaining fields in the entities.
   $storages = array();
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $field_name = $field['field_name'];
@@ -1249,15 +1229,15 @@ function field_attach_update($entity_type, EntityInterface $entity) {
   // Field storage backends save any remaining unsaved fields.
   foreach ($storages as $storage => $fields) {
     $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_write', $entity_type, $entity, FIELD_STORAGE_UPDATE, $fields);
+    module_invoke($storage_info['module'], 'field_storage_write', $entity, FIELD_STORAGE_UPDATE, $fields);
   }
 
   // Let other modules act on updating the entity.
-  module_invoke_all('field_attach_update', $entity_type, $entity);
+  module_invoke_all('field_attach_update', $entity);
 
-  $entity_info = entity_get_info($entity_type);
+  $entity_info = $entity->entityInfo();
   if ($entity_info['field_cache']) {
-    cache('field')->delete("field:$entity_type:" . $entity->id());
+    cache('field')->delete('field:' . $entity->entityType() . ':' . $entity->id());
   }
 }
 
@@ -1265,17 +1245,15 @@ function field_attach_update($entity_type, EntityInterface $entity) {
  * Deletes field data for an existing entity. This deletes all revisions of
  * field data for the entity.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity whose field data to delete.
  */
-function field_attach_delete($entity_type, $entity) {
-  _field_invoke('delete', $entity_type, $entity);
+function field_attach_delete(EntityInterface $entity) {
+  _field_invoke('delete', $entity);
 
   // Collect the storage backends used by the fields in the entities.
   $storages = array();
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
@@ -1284,15 +1262,15 @@ function field_attach_delete($entity_type, $entity) {
   // Field storage backends delete their data.
   foreach ($storages as $storage => $fields) {
     $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_delete', $entity_type, $entity, $fields);
+    module_invoke($storage_info['module'], 'field_storage_delete', $entity, $fields);
   }
 
   // Let other modules act on deleting the entity.
-  module_invoke_all('field_attach_delete', $entity_type, $entity);
+  module_invoke_all('field_attach_delete', $entity);
 
-  $entity_info = entity_get_info($entity_type);
+  $entity_info = $entity->entityInfo();
   if ($entity_info['field_cache']) {
-    cache('field')->delete("field:$entity_type:" . $entity->id());
+    cache('field')->delete('field:' . $entity->entityType() . ':' . $entity->id());
   }
 }
 
@@ -1300,17 +1278,15 @@ function field_attach_delete($entity_type, $entity) {
  * Delete field data for a single revision of an existing entity. The passed
  * entity must have a revision ID attribute.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  */
-function field_attach_delete_revision($entity_type, $entity) {
-  _field_invoke('delete_revision', $entity_type, $entity);
+function field_attach_delete_revision(EntityInterface $entity) {
+  _field_invoke('delete_revision', $entity);
 
   // Collect the storage backends used by the fields in the entities.
   $storages = array();
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field = field_info_field_by_id($instance['field_id']);
     $field_id = $field['id'];
     $storages[$field['storage']['type']][$field_id] = $field_id;
@@ -1319,11 +1295,11 @@ function field_attach_delete_revision($entity_type, $entity) {
   // Field storage backends delete their data.
   foreach ($storages as $storage => $fields) {
     $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_delete_revision', $entity_type, $entity, $fields);
+    module_invoke($storage_info['module'], 'field_storage_delete_revision', $entity, $fields);
   }
 
   // Let other modules act on deleting the revision.
-  module_invoke_all('field_attach_delete_revision', $entity_type, $entity);
+  module_invoke_all('field_attach_delete_revision', $entity);
 }
 
 /**
@@ -1367,7 +1343,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
 
       // Determine the actual language code to display for each field, given the
       // language codes available in the field data.
-      $options['langcode'][$id] = field_language($entity_type, $entity, NULL, $langcode);
+      $options['langcode'][$id] = field_language($entity, NULL, $langcode);
 
       // Mark this item as prepared.
       $entity->_field_view_prepared = TRUE;
@@ -1421,8 +1397,6 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  * );
  * @endcode
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
  * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to render.
  * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
@@ -1437,10 +1411,10 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  * @return array
  *   A renderable array for the field values.
  */
-function field_attach_view($entity_type, EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
+function field_attach_view(EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
   // Determine the actual language code to display for each field, given the
   // language codes available in the field data.
-  $options['langcode'] = field_language($entity_type, $entity, NULL, $langcode);
+  $options['langcode'] = field_language($entity, NULL, $langcode);
 
   // For each instance, call the view() method on the formatter object handed
   // by the entity display.
@@ -1453,7 +1427,6 @@ function field_attach_view($entity_type, EntityInterface $entity, EntityDisplay 
   // Let other modules alter the renderable array.
   $view_mode = $display->originalViewMode;
   $context = array(
-    'entity_type' => $entity_type,
     'entity' => $entity,
     'view_mode' => $view_mode,
     'display_options' => $view_mode,
@@ -1477,9 +1450,7 @@ function field_attach_view($entity_type, EntityInterface $entity, EntityDisplay 
  * translatable fields the language currently chosen for display will be
  * selected.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to render.
  * @param $element
  *   The structured array containing the values ready for rendering.
@@ -1487,8 +1458,8 @@ function field_attach_view($entity_type, EntityInterface $entity, EntityDisplay 
  *   The variables array is passed by reference and will be populated with field
  *   values.
  */
-function field_attach_preprocess($entity_type, EntityInterface $entity, $element, &$variables) {
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+function field_attach_preprocess(EntityInterface $entity, $element, &$variables) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field_name = $instance['field_name'];
     if (isset($element[$field_name]['#language'])) {
       $langcode = $element[$field_name]['#language'];
@@ -1498,7 +1469,6 @@ function field_attach_preprocess($entity_type, EntityInterface $entity, $element
 
   // Let other modules make changes to the $variables array.
   $context = array(
-    'entity_type' => $entity_type,
     'entity' => $entity,
     'element' => $element,
   );
@@ -1517,9 +1487,7 @@ function field_attach_preprocess($entity_type, EntityInterface $entity, $element
  * implemented only for nodes by translation.module. Other entity types may be
  * supported through contributed modules.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to be prepared for translation.
  * @param $langcode
  *   The language the entity has to be translated in.
@@ -1528,15 +1496,14 @@ function field_attach_preprocess($entity_type, EntityInterface $entity, $element
  * @param $source_langcode
  *   The source language from which translate.
  */
-function field_attach_prepare_translation($entity_type, EntityInterface $entity, $langcode, $source_entity, $source_langcode) {
+function field_attach_prepare_translation(EntityInterface $entity, $langcode, EntityInterface $source_entity, $source_langcode) {
   $options = array('langcode' => $langcode);
   // Copy source field values into the entity to be prepared.
-  _field_invoke_default('prepare_translation', $entity_type, $entity, $source_entity, $source_langcode, $options);
+  _field_invoke_default('prepare_translation', $entity, $source_entity, $source_langcode, $options);
   // Let field types handle their own advanced translation pattern if needed.
-  _field_invoke('prepare_translation', $entity_type, $entity, $source_entity, $source_langcode, $options);
+  _field_invoke('prepare_translation', $entity, $source_entity, $source_langcode, $options);
   // Let other modules alter the entity translation.
   $context = array(
-    'entity_type' => $entity_type,
     'langcode' => $langcode,
     'source_entity' => $source_entity,
     'source_langcode' => $source_langcode,

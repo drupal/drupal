@@ -2188,7 +2188,7 @@ function form_test_form_user_register_form_alter(&$form, &$form_state) {
     $node = entity_create('node', array(
       'type' => 'page',
     ));
-    field_attach_form('node', $node, $form, $form_state);
+    field_attach_form($node, $form, $form_state);
   }
 }
 

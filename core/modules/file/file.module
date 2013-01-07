@@ -1544,7 +1544,7 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
           // the referenced file. This will fail if the usage checked is in a
           // non-current revision because field items are from the current
           // revision.
-          if (!$match && ($field_items = field_get_items($entity_type, $entity, $field_name))) {
+          if (!$match && ($field_items = field_get_items($entity, $field_name))) {
             foreach ($field_items as $item) {
               if ($file->fid == $item[$field_column]) {
                 $match = TRUE;

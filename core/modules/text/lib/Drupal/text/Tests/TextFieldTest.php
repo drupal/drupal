@@ -77,7 +77,7 @@ class TextFieldTest extends WebTestBase {
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$this->field['field_name']}[$langcode][0]['value'] = str_repeat('x', $i);
       try {
-        field_attach_validate('test_entity', $entity);
+        field_attach_validate($entity);
         $this->assertTrue($i <= $max_length, "Length $i does not cause validation error when max_length is $max_length");
       }
       catch (FieldValidationException $e) {
@@ -144,7 +144,7 @@ class TextFieldTest extends WebTestBase {
     // Display the entity.
     $entity = field_test_entity_test_load($id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertText($value, 'Filtered tags are not displayed');
   }
@@ -213,7 +213,7 @@ class TextFieldTest extends WebTestBase {
     // Display the entity.
     $entity = field_test_entity_test_load($id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertNoRaw($value, 'HTML tags are not displayed.');
     $this->assertRaw(check_plain($value), 'Escaped HTML is displayed correctly.');
@@ -254,7 +254,7 @@ class TextFieldTest extends WebTestBase {
     entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertRaw($value, 'Value is displayed unfiltered');
   }

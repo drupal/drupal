@@ -1539,7 +1539,7 @@ function comment_preview(Comment $comment) {
   $preview_build = array();
 
   if (!form_get_errors()) {
-    $comment_body = field_get_items('comment', $comment, 'comment_body');
+    $comment_body = field_get_items($comment, 'comment_body');
     $comment->format = $comment_body[0]['format'];
     // Attach the user and time information.
     if (!empty($comment->name)) {
@@ -1665,7 +1665,7 @@ function template_preprocess_comment(&$variables) {
   }
 
   // Preprocess fields.
-  field_attach_preprocess('comment', $comment, $variables['elements'], $variables);
+  field_attach_preprocess($comment, $variables['elements'], $variables);
 
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {

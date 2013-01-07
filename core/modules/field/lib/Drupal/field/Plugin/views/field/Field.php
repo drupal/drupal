@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\views\field;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -661,9 +662,8 @@ class Field extends FieldPluginBase {
       'views_row_id' => $this->view->row_index,
     );
 
-    $entity_type = $entity->entityType();
-    $langcode = $this->field_langcode($entity_type, $entity);
-    $render_array = field_view_field($entity_type, $entity, $this->definition['field_name'], $display, $langcode);
+    $langcode = $this->field_langcode($entity);
+    $render_array = field_view_field($entity, $this->definition['field_name'], $display, $langcode);
 
     $items = array();
     if ($this->options['field_api_classes']) {
@@ -697,17 +697,15 @@ class Field extends FieldPluginBase {
    * Replaces values with aggregated values if aggregation is enabled.
    * Takes delta settings into account (@todo remove in #1758616).
    *
-   * @param $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be processed.
    *
    * @return
    *   TRUE if the processing completed successfully, otherwise FALSE.
    */
-  function process_entity($entity) {
+  function process_entity(EntityInterface $entity) {
     $processed_entity = clone $entity;
-
-    $entity_type = $entity->entityType();
-    $langcode = $this->field_langcode($entity_type, $processed_entity);
+    $langcode = $this->field_langcode($processed_entity);
     // If we are grouping, copy our group fields into the cloned entity.
     // It's possible this will cause some weirdness, but there's only
     // so much we can hope to do.
@@ -835,8 +833,8 @@ class Field extends FieldPluginBase {
    * Return the language code of the language the field should be displayed in,
    * according to the settings.
    */
-  function field_langcode($entity_type, $entity) {
-    if (field_is_translatable($entity_type, $this->field_info)) {
+  function field_langcode(EntityInterface $entity) {
+    if (field_is_translatable($entity->entityType(), $this->field_info)) {
       $default_langcode = language_default()->langcode;
       $langcode = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
                               array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_langcode),
@@ -846,7 +844,7 @@ class Field extends FieldPluginBase {
       // (or LANGUAGE_NOT_SPECIFIED), in case the field has no data for the selected language.
       // field_view_field() does this as well, but since the returned language code
       // is used before calling it, the fallback needs to happen explicitly.
-      $langcode = field_language($entity_type, $entity, $this->field_info['field_name'], $langcode);
+      $langcode = field_language($entity, $this->field_info['field_name'], $langcode);
 
       return $langcode;
     }

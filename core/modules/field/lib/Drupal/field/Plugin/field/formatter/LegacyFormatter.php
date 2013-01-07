@@ -115,7 +115,7 @@ class LegacyFormatter extends FormatterBase {
         'label' => $this->label,
       );
 
-      return $function($entity->entityType(), $entity, $this->field, $this->instance, $langcode, $items, $display);
+      return $function($entity, $this->field, $this->instance, $langcode, $items, $display);
     }
   }
 

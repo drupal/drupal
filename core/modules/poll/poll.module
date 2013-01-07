@@ -5,6 +5,7 @@
  * Collects votes on different topics in the form of multiple choice questions.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
@@ -436,8 +437,8 @@ function poll_validate($node, $form) {
 /**
  * Implements hook_field_attach_prepare_translation_alter().
  */
-function poll_field_attach_prepare_translation_alter(&$entity, $context) {
-  if ($context['entity_type'] == 'node' && $entity->type == 'poll') {
+function poll_field_attach_prepare_translation_alter(EntityInterface $entity, $context) {
+  if ($entity->entityType() == 'node' && $entity->type == 'poll') {
     $entity->choice = $context['source_entity']->choice;
     foreach ($entity->choice as $i => $choice) {
       $entity->choice[$i]['chvotes'] = 0;

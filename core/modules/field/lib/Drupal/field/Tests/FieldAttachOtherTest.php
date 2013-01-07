@@ -65,7 +65,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
 
     // View all fields.
     field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertRaw($this->instance['label'], "First field's label is displayed.");
@@ -80,7 +80,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     }
     // View single field (the second field).
     field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays, $langcode, $options);
-    $entity->content = field_attach_view($entity_type, $entity, $display, $langcode, $options);
+    $entity->content = field_attach_view($entity, $display, $langcode, $options);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "First field's label is not displayed.");
@@ -99,7 +99,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $display_options['label'] = 'hidden';
     $display->setComponent($this->field['field_name'], $display_options);
     field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden label: label is not displayed.");
@@ -108,7 +108,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $entity = clone($entity_init);
     $display->removeComponent($this->field['field_name']);
     field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden field: label is not displayed.");
@@ -127,7 +127,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
       ),
     ));
     field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $expected_output = $formatter_setting;
     foreach ($values as $delta => $value) {
@@ -147,7 +147,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
       ),
     ));
     field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
-    $entity->content = field_attach_view($entity_type, $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
     foreach ($values as $delta => $value) {
@@ -160,7 +160,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
 
     // Preprocess template.
     $variables = array();
-    field_attach_preprocess($entity_type, $entity, $entity->content, $variables);
+    field_attach_preprocess($entity, $entity->content, $variables);
     $result = TRUE;
     foreach ($values as $delta => $item) {
       if ($variables[$this->field_name][$delta]['value'] !== $item['value']) {
@@ -245,7 +245,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
     $this->assertFalse(cache('field')->get($cid), 'Non-cached: no cache entry on insert');
 
     // Load, and check that no cache entry is present.
@@ -256,6 +256,11 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
 
     // Cacheable entity type.
     $entity_type = 'test_cacheable_entity';
+    $entity_init = entity_create($entity_type, array(
+      'ftid' => 1,
+      'ftvid' => 1,
+      'fttype' => $this->instance['bundle'],
+    ));
     $cid = "field:$entity_type:{$entity_init->ftid}";
     $instance = $this->instance;
     $instance['entity_type'] = $entity_type;
@@ -267,7 +272,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on insert');
 
     // Load a single field, and check that no cache entry is present.
@@ -286,7 +291,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on update');
 
     // Load, and check that a cache entry is present with the expected values.
@@ -296,11 +301,15 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, 'Cached: correct cache entry on load');
 
     // Create a new revision, and check that the cache entry is wiped.
-    $entity_init = field_test_create_entity(1, 2, $this->instance['bundle']);
+    $entity_init = entity_create($entity_type, array(
+      'ftid' => 1,
+      'ftvid' => 2,
+      'fttype' => $this->instance['bundle'],
+    ));
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $cache = cache('field')->get($cid);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on new revision creation');
 
@@ -311,7 +320,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, 'Cached: correct cache entry on load');
 
     // Delete, and check that the cache entry is wiped.
-    field_attach_delete($entity_type, $entity);
+    field_attach_delete($entity);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry after delete');
   }
 
@@ -346,7 +355,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
 
     // Validate all fields.
     try {
-      field_attach_validate($entity_type, $entity);
+      field_attach_validate($entity);
     }
     catch (FieldValidationException $e) {
       $errors = $e->errors;
@@ -373,7 +382,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // Validate a single field.
     $options = array('field_name' => $this->field_name_2);
     try {
-      field_attach_validate($entity_type, $entity, $options);
+      field_attach_validate($entity, $options);
     }
     catch (FieldValidationException $e) {
       $errors = $e->errors;
@@ -391,7 +400,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $entity->{$this->field_name_2}[$langcode] = $this->_generateTestFieldValues($this->field_2['cardinality'] + 1);
     // When validating all fields.
     try {
-      field_attach_validate($entity_type, $entity);
+      field_attach_validate($entity);
     }
     catch (FieldValidationException $e) {
       $errors = $e->errors;
@@ -399,7 +408,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $this->assertEqual($errors[$this->field_name_2][$langcode][0][0]['error'], 'field_cardinality', 'Cardinality validation failed.');
     // When validating a single field (the second field).
     try {
-      field_attach_validate($entity_type, $entity, $options);
+      field_attach_validate($entity, $options);
     }
     catch (FieldValidationException $e) {
       $errors = $e->errors;
@@ -423,7 +432,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // When generating form for all fields.
     $form = array();
     $form_state = form_state_defaults();
-    field_attach_form($entity_type, $entity, $form, $form_state);
+    field_attach_form($entity, $form, $form_state);
 
     $this->assertEqual($form[$this->field_name][$langcode]['#title'], $this->instance['label'], "First field's form title is {$this->instance['label']}");
     $this->assertEqual($form[$this->field_name_2][$langcode]['#title'], $this->instance_2['label'], "Second field's form title is {$this->instance_2['label']}");
@@ -440,7 +449,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $options = array('field_name' => $this->field_name_2);
     $form = array();
     $form_state = form_state_defaults();
-    field_attach_form($entity_type, $entity, $form, $form_state, NULL, $options);
+    field_attach_form($entity, $form, $form_state, NULL, $options);
 
     $this->assertFalse(isset($form[$this->field_name]), 'The first field does not exist in the form');
     $this->assertEqual($form[$this->field_name_2][$langcode]['#title'], $this->instance_2['label'], "Second field's form title is {$this->instance_2['label']}");
@@ -463,7 +472,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // Build the form for all fields.
     $form = array();
     $form_state = form_state_defaults();
-    field_attach_form($entity_type, $entity_init, $form, $form_state);
+    field_attach_form($entity_init, $form, $form_state);
 
     // Simulate incoming values.
     // First field.
@@ -503,7 +512,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
 
     // Call field_attach_submit() for all fields.
     $entity = clone($entity_init);
-    field_attach_submit($entity_type, $entity, $form, $form_state);
+    field_attach_submit($entity, $form, $form_state);
 
     asort($weights);
     asort($weights_2);
@@ -525,7 +534,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     // Call field_attach_submit() for a single field (the second field).
     $options = array('field_name' => $this->field_name_2);
     $entity = clone($entity_init);
-    field_attach_submit($entity_type, $entity, $form, $form_state, $options);
+    field_attach_submit($entity, $form, $form_state, $options);
     $expected_values_2 = array();
     foreach ($weights_2 as $key => $value) {
       if ($key != 1) {

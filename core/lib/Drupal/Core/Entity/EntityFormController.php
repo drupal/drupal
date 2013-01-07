@@ -78,7 +78,7 @@ class EntityFormController implements EntityFormControllerInterface {
     // entity properties.
     $info = $entity->entityInfo();
     if (!empty($info['fieldable'])) {
-      field_attach_form($entity->entityType(), $entity, $form, $form_state, $this->getFormLangcode($form_state));
+      field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
     return $form;
   }
@@ -160,7 +160,7 @@ class EntityFormController implements EntityFormControllerInterface {
     $info = $entity->entityInfo();
 
     if (!empty($info['fieldable'])) {
-      field_attach_form_validate($entity->entityType(), $entity, $form, $form_state);
+      field_attach_form_validate($entity, $form, $form_state);
     }
 
     // @todo Remove this.

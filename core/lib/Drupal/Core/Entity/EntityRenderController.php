@@ -72,7 +72,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
       module_invoke_all('entity_prepare_view', $view_mode_entities, $this->entityType);
 
       foreach ($view_mode_entities as $entity) {
-        $entity->content += field_attach_view($this->entityType, $entity, $displays[$view_mode][$entity->bundle()], $langcode);
+        $entity->content += field_attach_view($entity, $displays[$view_mode][$entity->bundle()], $langcode);
       }
     }
   }

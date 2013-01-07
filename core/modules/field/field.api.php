@@ -365,9 +365,7 @@ function hook_field_prepare_view($entity_type, $entities, $field, $instances, $l
  * If there are validation problems, add to the $errors array (passed by
  * reference). There is no return value.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -385,7 +383,7 @@ function hook_field_prepare_view($entity_type, $entities, $field, $instances, $l
  *   - error: An error code (should be a string prefixed with the module name).
  *   - message: The human-readable message to be displayed.
  */
-function hook_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+function hook_field_validate(\Drupal\Core\Entity\EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
@@ -404,9 +402,7 @@ function hook_field_validate($entity_type, $entity, $field, $instance, $langcode
  * Make changes or additions to field values by altering the $items parameter by
  * reference. There is no return value.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -417,7 +413,7 @@ function hook_field_validate($entity_type, $entity, $field, $instance, $langcode
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function hook_field_presave(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance, $langcode, &$items) {
   if ($field['type'] == 'number_decimal') {
     // Let PHP round the value to ensure consistent behavior across storage
     // backends.
@@ -439,9 +435,7 @@ function hook_field_presave($entity_type, $entity, $field, $instance, $langcode,
  * storing or tracking information outside the standard field storage mechanism
  * need to implement this hook.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -455,8 +449,8 @@ function hook_field_presave($entity_type, $entity, $field, $instance, $langcode,
  * @see hook_field_update()
  * @see hook_field_delete()
  */
-function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (config('taxonomy.settings')->get('maintain_index_table') && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node' && $entity->status) {
+function hook_field_insert(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  if (config('taxonomy.settings')->get('maintain_index_table') && $field['storage']['type'] == 'field_sql_storage' && $entity->entityType() == 'node' && $entity->status) {
     $query = db_insert('taxonomy_index')->fields(array('nid', 'tid', 'sticky', 'created', ));
     foreach ($items as $item) {
       $query->values(array(
@@ -480,9 +474,7 @@ function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, 
  * storing or tracking information outside the standard field storage mechanism
  * need to implement this hook.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -496,8 +488,8 @@ function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, 
  * @see hook_field_insert()
  * @see hook_field_delete()
  */
-function hook_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (config('taxonomy.settings')->get('maintain_index_table') && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node') {
+function hook_field_update(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  if (config('taxonomy.settings')->get('maintain_index_table') && $field['storage']['type'] == 'field_sql_storage' && $entity->entityType() == 'node') {
     $first_call = &drupal_static(__FUNCTION__, array());
 
     // We don't maintain data for old revisions, so clear all previous values
@@ -569,9 +561,7 @@ function hook_field_storage_update_field($field, $prior_field, $has_data) {
  * storing or tracking information outside the standard field storage mechanism
  * need to implement this hook.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -585,15 +575,10 @@ function hook_field_storage_update_field($field, $prior_field, $has_data) {
  * @see hook_field_insert()
  * @see hook_field_update()
  */
-function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function hook_field_delete(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  // Delete all file usages within this entity.
   foreach ($items as $delta => $item) {
-    // For hook_file_references(), remember that this is being deleted.
-    $item['file_field_name'] = $field['field_name'];
-    // Pass in the ID of the object that is being removed so all references can
-    // be counted in hook_file_references().
-    $item['file_field_type'] = $entity_type;
-    $item['file_field_id'] = $entity->id();
-    file_field_delete_file($item, $field, $entity_type, $entity->id());
+    file_usage()->delete(file_load($item['fid']), 'file', $entity->entityType(), $entity->id(), 0);
   }
 }
 
@@ -604,9 +589,7 @@ function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, 
  * field_attach_delete_revision(), and will only be called for fieldable types
  * that are versioned.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -617,22 +600,17 @@ function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, 
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function hook_field_delete_revision(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
-    // For hook_file_references, remember that this file is being deleted.
-    $item['file_field_name'] = $field['field_name'];
-    if (file_field_delete_file($item, $field, $entity_type, $entity->id())) {
-      $items[$delta] = NULL;
-    }
+    // Decrement the file usage count by 1.
+    file_usage()->delete(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
   }
 }
 
 /**
  * Define custom prepare_translation behavior for this module's field types.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -647,7 +625,7 @@ function hook_field_delete_revision($entity_type, $entity, $field, $instance, $l
  * @param $source_langcode
  *   The source language from which field values are being copied.
  */
-function hook_field_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items, $source_entity, $source_langcode) {
+function hook_field_prepare_translation(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance, $langcode, &$items, $source_entity, $source_langcode) {
   // If the translating user is not permitted to use the assigned text format,
   // we must not expose the source values.
   $field_name = $field['field_name'];
@@ -883,9 +861,7 @@ function hook_field_formatter_info_alter(array &$info) {
  * This hook is invoked after the field module has performed the operation.
  * Implementing modules should alter the $form or $form_state parameters.
  *
- * @param $entity_type
- *   The type of $entity; for example, 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for which an edit form is being built.
  * @param $form
  *   The form structure field elements are attached to. This might be a full
@@ -901,7 +877,7 @@ function hook_field_formatter_info_alter(array &$info) {
  *   The language the field values are going to be entered in. If no language is
  *   provided the default site language will be used.
  */
-function hook_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
+function hook_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$form, &$form_state, $langcode) {
   // Add a checkbox allowing a given field to be emptied.
   // See hook_field_attach_submit() for the corresponding processing code.
   $form['empty_field_foo'] = array(
@@ -934,9 +910,7 @@ function hook_field_attach_load($entity_type, $entities, $age, $options) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to validate.
  * @param $errors
  *   The array of errors (keyed by field name, language code, and delta) that
@@ -946,7 +920,7 @@ function hook_field_attach_load($entity_type, $entities, $age, $options) {
  *   - error: An error code (should be a string prefixed with the module name).
  *   - message: The human-readable message to be displayed.
  */
-function hook_field_attach_validate($entity_type, $entity, &$errors) {
+function hook_field_attach_validate(\Drupal\Core\Entity\EntityInterface $entity, &$errors) {
   // @todo Needs function body.
 }
 
@@ -955,9 +929,7 @@ function hook_field_attach_validate($entity_type, $entity, &$errors) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
- *   The type of $entity; for example, 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for which an edit form is being submitted. The incoming form
  *   values have been extracted as field values of the $entity object.
  * @param $form
@@ -968,7 +940,7 @@ function hook_field_attach_validate($entity_type, $entity, &$errors) {
  * @param $form_state
  *   An associative array containing the current state of the form.
  */
-function hook_field_attach_submit($entity_type, $entity, $form, &$form_state) {
+function hook_field_attach_submit(\Drupal\Core\Entity\EntityInterface $entity, $form, &$form_state) {
   // Sample case of an 'Empty the field' checkbox added on the form, allowing
   // a given field to be emptied.
   $values = NestedArray::getValue($form_state['values'], $form['#parents']);
@@ -982,12 +954,10 @@ function hook_field_attach_submit($entity_type, $entity, $form, &$form_state) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   the entity with fields to process.
  */
-function hook_field_attach_presave($entity_type, $entity) {
+function hook_field_attach_presave(\Drupal\Core\Entity\EntityInterface $entity) {
   // @todo Needs function body.
 }
 
@@ -996,12 +966,10 @@ function hook_field_attach_presave($entity_type, $entity) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   the entity with fields to process.
  */
-function hook_field_attach_insert($entity_type, $entity) {
+function hook_field_attach_insert(\Drupal\Core\Entity\EntityInterface $entity) {
   // @todo Needs function body.
 }
 
@@ -1010,12 +978,10 @@ function hook_field_attach_insert($entity_type, $entity) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   the entity with fields to process.
  */
-function hook_field_attach_update($entity_type, $entity) {
+function hook_field_attach_update(\Drupal\Core\Entity\EntityInterface $entity) {
   // @todo Needs function body.
 }
 
@@ -1030,7 +996,6 @@ function hook_field_attach_update($entity_type, $entity) {
  *   values.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The type of $entity; for example, 'node' or 'user'.
  *   - entity: The entity with fields to render.
  *   - element: The structured array containing the values ready for rendering.
  */
@@ -1043,12 +1008,10 @@ function hook_field_attach_preprocess_alter(&$variables, $context) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   the entity with fields to process.
  */
-function hook_field_attach_delete($entity_type, $entity) {
+function hook_field_attach_delete(\Drupal\Core\Entity\EntityInterface $entity) {
   // @todo Needs function body.
 }
 
@@ -1057,12 +1020,10 @@ function hook_field_attach_delete($entity_type, $entity) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   the entity with fields to process.
  */
-function hook_field_attach_delete_revision($entity_type, $entity) {
+function hook_field_attach_delete_revision(\Drupal\Core\Entity\EntityInterface $entity) {
   // @todo Needs function body.
 }
 
@@ -1074,9 +1035,7 @@ function hook_field_attach_delete_revision($entity_type, $entity) {
  * relates data in the field with its own data, it may purge its own data during
  * this process as well.
  *
- * @param $entity_type
- *   The type of $entity; for example, 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The pseudo-entity whose field data is being purged.
  * @param $field
  *   The (possibly deleted) field whose data is being purged.
@@ -1086,9 +1045,9 @@ function hook_field_attach_delete_revision($entity_type, $entity) {
  * @see @link field_purge Field API bulk data deletion @endlink
  * @see field_purge_data()
  */
-function hook_field_attach_purge($entity_type, $entity, $field, $instance) {
+function hook_field_attach_purge(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance) {
   // find the corresponding data in mymodule and purge it
-  if ($entity_type == 'node' && $field->field_name == 'my_field_name') {
+  if ($entity->entityType() == 'node' && $field->field_name == 'my_field_name') {
     mymodule_remove_mydata($entity->nid);
   }
 }
@@ -1102,7 +1061,6 @@ function hook_field_attach_purge($entity_type, $entity, $field, $instance) {
  *   The structured content array tree for all of the entity's fields.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The type of $entity; for example, 'node' or 'user'.
  *   - entity: The entity with fields to render.
  *   - view_mode: View mode; for example, 'full' or 'teaser'.
  *   - display_options: Either a view mode string or an array of display
@@ -1137,17 +1095,16 @@ function hook_field_attach_view_alter(&$output, $context) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity being prepared for translation.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The type of $entity; e.g. 'node' or 'user'.
  *   - langcode: The language the entity will be translated to.
  *   - source_entity: The entity holding the field values to be translated.
  *   - source_langcode: The source language from which to translate.
  */
-function hook_field_attach_prepare_translation_alter(&$entity, $context) {
-  if ($context['entity_type'] == 'custom_entity_type') {
+function hook_field_attach_prepare_translation_alter(\Drupal\Core\Entity\EntityInterface $entity, $context) {
+  if ($entity->entityType() == 'custom_entity_type') {
     $entity->custom_field = $context['source_entity']->custom_field;
   }
 }
@@ -1162,14 +1119,13 @@ function hook_field_attach_prepare_translation_alter(&$entity, $context) {
  *   A reference to an array of language codes keyed by field name.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The type of the entity to be displayed.
  *   - entity: The entity with fields to render.
  *   - langcode: The language code $entity has to be displayed in.
  */
 function hook_field_language_alter(&$display_langcode, $context) {
   // Do not apply core language fallback rules if they are disabled or if Locale
   // is not registered as a translation handler.
-  if (variable_get('field_language_fallback', TRUE) && field_has_translation_handler($context['entity_type'])) {
+  if (variable_get('field_language_fallback', TRUE) && field_has_translation_handler($context['entity']->entityType())) {
     field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }
@@ -1456,9 +1412,7 @@ function hook_field_storage_load($entity_type, $entities, $age, $fields, $option
  * This hook is invoked from field_attach_insert() and field_attach_update(), to
  * ask the field storage module to save field data.
  *
- * @param $entity_type
- *   The entity type of entity, such as 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity on which to operate.
  * @param $op
  *   FIELD_STORAGE_UPDATE when updating an existing entity,
@@ -1467,7 +1421,7 @@ function hook_field_storage_load($entity_type, $entities, $age, $fields, $option
  *   An array listing the fields to be written. The keys and values of the
  *   array are field IDs.
  */
-function hook_field_storage_write($entity_type, $entity, $op, $fields) {
+function hook_field_storage_write(\Drupal\Core\Entity\EntityInterface $entity, $op, $fields) {
   $id = $entity->id();
   $vid = $entity->getRevisionId();
   $bundle = $entity->bundle();
@@ -1481,7 +1435,7 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
     $table_name = _field_sql_storage_tablename($field);
     $revision_name = _field_sql_storage_revision_tablename($field);
 
-    $all_langcodes = field_available_languages($entity_type, $field);
+    $all_langcodes = field_available_languages($entity->entityType(), $field);
     $field_langcodes = array_intersect($all_langcodes, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.
@@ -1491,12 +1445,12 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
       $langcodes = !empty($entity->$field_name) ? $field_langcodes : $all_langcodes;
       if ($langcodes) {
         db_delete($table_name)
-          ->condition('entity_type', $entity_type)
+          ->condition('entity_type', $entity->entityType())
           ->condition('entity_id', $id)
           ->condition('langcode', $langcodes, 'IN')
           ->execute();
         db_delete($revision_name)
-          ->condition('entity_type', $entity_type)
+          ->condition('entity_type', $entity->entityType())
           ->condition('entity_id', $id)
           ->condition('revision_id', $vid)
           ->condition('langcode', $langcodes, 'IN')
@@ -1520,7 +1474,7 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
         // We now know we have someting to insert.
         $do_insert = TRUE;
         $record = array(
-          'entity_type' => $entity_type,
+          'entity_type' => $entity->entityType(),
           'entity_id' => $id,
           'revision_id' => $vid,
           'bundle' => $bundle,
@@ -1555,19 +1509,17 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
  * This hook is invoked from field_attach_delete() to ask the field storage
  * module to delete field data.
  *
- * @param $entity_type
- *   The entity type of entity, such as 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity on which to operate.
  * @param $fields
  *   An array listing the fields to delete. The keys and values of the
  *   array are field IDs.
  */
-function hook_field_storage_delete($entity_type, $entity, $fields) {
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
+function hook_field_storage_delete(\Drupal\Core\Entity\EntityInterface $entity, $fields) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
-      field_sql_storage_field_storage_purge($entity_type, $entity, $field, $instance);
+      field_sql_storage_field_storage_purge($entity, $field, $instance);
     }
   }
 }
@@ -1581,17 +1533,13 @@ function hook_field_storage_delete($entity_type, $entity, $fields) {
  * Deleting the current (most recently written) revision is not
  * allowed as has undefined results.
  *
- * @param $entity_type
- *   The entity type of entity, such as 'node' or 'user'.
- * @param $entity
- *   The entity on which to operate. The revision to delete is
- *   indicated by the entity's revision ID property, as identified by
- *   hook_fieldable_info() for $entity_type.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity on which to operate.
  * @param $fields
  *   An array listing the fields to delete. The keys and values of the
  *   array are field IDs.
  */
-function hook_field_storage_delete_revision($entity_type, $entity, $fields) {
+function hook_field_storage_delete_revision(\Drupal\Core\Entity\EntityInterface $entity, $fields) {
   $vid = $entity->getRevisionId();
   if (isset($vid)) {
     foreach ($fields as $field_id) {
@@ -1833,9 +1781,7 @@ function hook_field_storage_pre_load($entity_type, $entities, $age, &$skip_field
  * This hook allows modules to store data before the Field Storage API,
  * optionally preventing the field storage module from doing so.
  *
- * @param $entity_type
- *   The type of $entity; for example, 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  * @param $skip_fields
  *   An array keyed by field IDs whose data has already been written and
@@ -1844,8 +1790,8 @@ function hook_field_storage_pre_load($entity_type, $entities, $age, &$skip_field
  * @return
  *   Saved field IDs are set set as keys in $skip_fields.
  */
-function hook_field_storage_pre_insert($entity_type, $entity, &$skip_fields) {
-  if ($entity_type == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
+function hook_field_storage_pre_insert(\Drupal\Core\Entity\EntityInterface $entity, &$skip_fields) {
+  if ($entity->entityType() == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
     foreach ($entity->taxonomy_forums as $language) {
       foreach ($language as $delta) {
@@ -1870,9 +1816,7 @@ function hook_field_storage_pre_insert($entity_type, $entity, &$skip_fields) {
  * This hook allows modules to store data before the Field Storage API,
  * optionally preventing the field storage module from doing so.
  *
- * @param $entity_type
- *   The type of $entity; for example, 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  * @param $skip_fields
  *   An array keyed by field IDs whose data has already been written and
@@ -1881,10 +1825,10 @@ function hook_field_storage_pre_insert($entity_type, $entity, &$skip_fields) {
  * @return
  *   Saved field IDs are set set as keys in $skip_fields.
  */
-function hook_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
+function hook_field_storage_pre_update(\Drupal\Core\Entity\EntityInterface $entity, &$skip_fields) {
   $first_call = &drupal_static(__FUNCTION__, array());
 
-  if ($entity_type == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
+  if ($entity->entityType() == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
     // We don't maintain data for old revisions, so clear all previous values
     // from the table. Since this hook runs once per field, per entity, make
     // sure we only wipe values once.
@@ -2204,24 +2148,22 @@ function hook_field_storage_purge_field_instance($instance) {
  * Called from field_purge_data() to allow the field storage module to delete
  * field data information.
  *
- * @param $entity_type
- *   The type of $entity; for example, 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The pseudo-entity whose field data to delete.
  * @param $field
  *   The (possibly deleted) field whose data is being purged.
  * @param $instance
  *   The deleted field instance whose data is being purged.
  */
-function hook_field_storage_purge($entity_type, $entity, $field, $instance) {
+function hook_field_storage_purge(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance) {
   $table_name = _field_sql_storage_tablename($field);
   $revision_name = _field_sql_storage_revision_tablename($field);
   db_delete($table_name)
-    ->condition('entity_type', $entity_type)
+    ->condition('entity_type', $entity->entityType())
     ->condition('entity_id', $entity->id())
     ->execute();
   db_delete($revision_name)
-    ->condition('entity_type', $entity_type)
+    ->condition('entity_type', $entity->entityType())
     ->condition('entity_id', $entity->id())
     ->execute();
 }

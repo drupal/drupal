@@ -200,7 +200,7 @@ function template_preprocess_user(&$variables) {
   }
 
   // Preprocess fields.
-  field_attach_preprocess('user', $account, $variables['elements'], $variables);
+  field_attach_preprocess($account, $variables['elements'], $variables);
 }
 
 /**

@@ -74,7 +74,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::form().
    */
   public function form(EntityInterface $entity, $langcode, array $items, array &$form, array &$form_state, $get_delta = NULL) {
-    $entity_type = $entity->entityType();
     $field = $this->field;
     $instance = $this->instance;
     $field_name = $field['field_name'];
@@ -87,7 +86,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
 
     // Populate widgets with default values when creating a new entity.
     if (empty($items) && ($entity->isNew())) {
-      $items = field_get_default_value($entity_type, $entity, $field, $instance, $langcode);
+      $items = field_get_default_value($entity, $field, $instance, $langcode);
     }
 
     // Store field information in $form_state.
@@ -165,7 +164,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       // when $langcode is unknown.
       '#language' => $langcode,
       $langcode => $elements,
-      '#access' => field_access('edit', $field, $entity_type, $entity),
+      '#access' => field_access('edit', $field, $entity->entityType(), $entity),
     );
 
     return $addition;

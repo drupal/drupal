@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * @file
  * Helper module for the Field API tests.
@@ -78,8 +80,8 @@ function field_test_menu() {
  *
  * This simulates a field operation callback to be invoked by _field_invoke().
  */
-function field_test_field_test_op($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  return array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items))));
+function field_test_field_test_op(EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  return array($langcode => hash('sha256', serialize(array($entity, $field['field_name'], $langcode, $items))));
 }
 
 /**

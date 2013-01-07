@@ -110,7 +110,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     // Remove the first node title from the node_titles array and attach to
     // the comment.
     $comment->node_title = array_shift($node_titles);
-    $comment_body = field_get_items('comment', $comment, 'comment_body');
+    $comment_body = field_get_items($comment, 'comment_body');
     $options[$comment->cid] = array(
       'subject' => array(
         'data' => array(

@@ -487,7 +487,7 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
 
   // Copy field values to the entity.
   if ($info['fieldable']) {
-    field_attach_submit($entity_type, $entity, $form, $form_state);
+    field_attach_submit($entity, $form, $form_state);
   }
 }
 

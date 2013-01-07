@@ -155,9 +155,9 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'body':
-          if ($items = field_get_items('comment', $comment, 'comment_body', $langcode)) {
+          if ($items = field_get_items($comment, 'comment_body', $langcode)) {
             $instance = field_info_instance('comment', 'body', 'comment_body');
-            $field_langcode = field_language('comment', $comment, 'comment_body', $langcode);
+            $field_langcode = field_language($comment, 'comment_body', $langcode);
             $replacements[$original] = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'value') : $items[0]['value'];
           }
           break;
