@@ -45,9 +45,26 @@ function translation_entity_help($path, $arg) {
 }
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function translation_entity_module_implements_alter(&$implementations, $hook) {
+  switch ($hook) {
+    // Move some of our hook implementations to the end of the list.
+    case 'menu_alter':
+    case 'entity_info_alter':
+      $group = $implementations['translation_entity'];
+      unset($implementations['translation_entity']);
+      $implementations['translation_entity'] = $group;
+      break;
+  }
+}
+
+/**
  * Implements hook_language_type_info_alter().
  */
 function translation_entity_language_types_info_alter(array &$language_types) {
+  // Make content language negotiation configurable by removing its predefined
+  // configuration.
   unset($language_types[LANGUAGE_TYPE_CONTENT]['fixed']);
 }
 
@@ -176,30 +193,23 @@ function translation_entity_menu() {
  * Implements hook_menu_alter().
  */
 function translation_entity_menu_alter(array &$items) {
-  // Some menu loaders in the item paths might have been altered: we need to
-  // replace any menu loader with a plain % to check if base paths are still
-  // compatible.
-  $paths = array();
-  $regex = '|%[^/]+|';
-  foreach ($items as $path => $item) {
-    $path = preg_replace($regex, '%', $path);
-    $paths[$path] = $path;
-  }
-
   // Check that the declared menu base paths are actually valid.
   foreach (entity_get_info() as $entity_type => $info) {
     if (translation_entity_enabled($entity_type)) {
       $path = $info['menu_base_path'];
 
-      // If the base path is not defined or is not compatible with any defined
-      // one we cannot provide the translation UI for this entity type.
-      if (!isset($paths[preg_replace($regex, '%', $path)])) {
-        drupal_set_message(t('The entities of type %entity_type do not define a valid base path: it will not be possible to translate them.', array('%entity_type' => $info['label'])), 'warning');
+      // If the base path is not defined we cannot provide the translation UI
+      // for this entity type. In some cases the actual base path might not have
+      // a menu loader associated, hence we need to check also for the plain "%"
+      // variant. See for instance comment_menu().
+      if (!isset($items[$path]) && !isset($items[_translation_entity_menu_strip_loaders($path)])) {
         unset(
           $items["$path/translations"],
-          $items["$path/translations/add/%language"],
+          $items["$path/translations/add/%language/%language"],
           $items["$path/translations/delete/%language"]
         );
+        $t_args = array('@entity_type' => isset($info['label']) ? $info['label'] : $entity_type);
+        watchdog('entity translation', 'The entities of type @entity_type do not define a valid base path: it will not be possible to translate them.', $t_args, WATCHDOG_WARNING);
       }
       else {
         $entity_position = count(explode('/', $path)) - 1;
@@ -223,6 +233,19 @@ function translation_entity_menu_alter(array &$items) {
       }
     }
   }
+}
+
+/**
+ * Strips out menu loaders from the given path.
+ *
+ * @param string $path
+ *   The path to process.
+ *
+ * @return
+ *   The given path where all the menu loaders are replaced with "%".
+ */
+function _translation_entity_menu_strip_loaders($path) {
+  return preg_replace('|%[^/]+|', '%', $path);
 }
 
 /**
@@ -279,10 +302,10 @@ function translation_entity_library_info() {
 }
 
 /**
- * Returns the key name used to store the configuration item.
+ * Returns the key name used to store the configuration setting.
  *
- * Based on the entity type and bundle, the variables used to store the
- * configuration will have a common root name.
+ * Based on the entity type and bundle, the keys used to store configuration
+ * will have a common root name.
  *
  * @param string $entity_type
  *   The type of the entity the setting refers to.
@@ -292,7 +315,7 @@ function translation_entity_library_info() {
  *   The name of the setting.
  *
  * @return string
- *   The key name of the configuration item.
+ *   The key name of the configuration setting.
  *
  * @todo Generalize this logic so that it is available to any module needing
  *   per-bundle configuration.
@@ -366,6 +389,34 @@ function translation_entity_enabled($entity_type, $bundle = NULL, $skip_handler 
   }
 
   return $enabled && ($skip_handler || field_has_translation_handler($entity_type, 'translation_entity'));
+}
+
+/**
+ * Returns all the translatable entity types.
+ *
+ * @return array
+ *   An array of entity types keyed by entity type.
+ */
+function translation_entity_types_translatable() {
+  $entity_types = &drupal_static(__FUNCTION__, array());
+
+  foreach (entity_get_info() as $entity_type => $info) {
+    if (translation_entity_enabled($entity_type)) {
+      // Lazy load router items.
+      if (!isset($items)) {
+        $items = menu_get_router();
+      }
+      // Check whether the required paths are defined. We need to strip out the
+      // menu loader and replace it with a plain "%" as router items have no
+      // menu loader in them.
+      $path = _translation_entity_menu_strip_loaders($info['menu_base_path']);
+      if (!empty($items[$path]) && !empty($items[$path . '/translations'])) {
+        $entity_types[$entity_type] = $entity_type;
+      }
+    }
+  }
+
+  return $entity_types;
 }
 
 /**
@@ -507,12 +558,8 @@ function translation_entity_entity_load(array $entities, $entity_type) {
  *   The type of the entities.
  */
 function translation_entity_load_translation_data(array $entities, $entity_type) {
-  $result = db_select('translation_entity', 'te')
-    ->fields('te', array())
-    ->condition('te.entity_type', $entity_type)
-    ->condition('te.entity_id', array_keys($entities))
-    ->execute();
-
+  $query = 'SELECT * FROM {translation_entity} te WHERE te.entity_type = :entity_type AND te.entity_id IN (:entity_id)';
+  $result = db_query($query, array(':entity_type' => $entity_type, ':entity_id' => array_keys($entities)));
   foreach ($result as $record) {
     $entity = $entities[$record->entity_id];
     // @todo Declare these as entity (translation?) properties.
@@ -604,21 +651,18 @@ function translation_entity_form_field_ui_field_settings_form_alter(array &$form
   $field = $form['#field'];
   $field_name = $field['field_name'];
   $translatable = $field['translatable'];
-  $title = t('Users may translate this field.');
+  $label = t('Field translation');
 
   if (field_has_data($field)) {
-    $path = "admin/config/regional/translation_entity/translatable/$field_name";
-    $status = $translatable ? $title : t('This field has data in existing content.');
-    $link_title = !$translatable ? t('Enable translation') : t('Disable translation');
-
     $form['field']['translatable'] = array(
-      'message' => array(
-        '#markup' => $status . ' ',
-      ),
+      '#type' => 'item',
+      '#title' => $label,
+      '#attributes' => array('class' => 'translatable'),
       'link' => array(
         '#type' => 'link',
-        '#title' => $link_title,
-        '#href' => $path,
+        '#prefix' => t('This field has data in existing content.') . ' ',
+        '#title' => !$translatable ? t('Enable translation') : t('Disable translation'),
+        '#href' => 'admin/config/regional/translation_entity/translatable/' . $field_name,
         '#options' => array('query' => drupal_get_destination()),
         '#access' => user_access('administer entity translation'),
       ),
@@ -627,10 +671,12 @@ function translation_entity_form_field_ui_field_settings_form_alter(array &$form
   else {
     $form['field']['translatable'] = array(
       '#type' => 'checkbox',
-      '#title' => $title,
+      '#title' => t('Users may translate this field.'),
       '#default_value' => $translatable,
     );
   }
+
+  $form['field']['translatable']['#weight'] = 20;
 }
 
 /**

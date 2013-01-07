@@ -56,6 +56,9 @@ function translation_entity_schema() {
  * Implements hook_install().
  */
 function translation_entity_install() {
+  // Assign a fairly low weight to ensure our implementation of
+  // hook_module_implements_alter() is run among the last ones.
+  module_set_weight('translation_entity', 10);
   language_negotiation_include();
   language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
 }
@@ -64,10 +67,14 @@ function translation_entity_install() {
  * Implements hook_enable().
  */
 function translation_entity_enable() {
-  $t_args = array(
-    '!language_url' => url('admin/config/regional/language'),
-    '!settings_url' => url('admin/config/regional/content-language'),
-  );
-  $message = t('Content translation has been enabled. To use content translation, <a href="!language_url">enable at least two languages</a> and <a href="!settings_url">enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
+  // Translation works when at least two languages are enabled.
+  if (count(language_list()) < 2) {
+    $t_args = array('!language_url' => url('admin/config/regional/language'));
+    $message = t('Be sure to <a href="!language_url">enable at least two languages</a> to translate content.', $t_args);
+    drupal_set_message($message, 'warning');
+  }
+  // Point the user to the content translation settings.
+  $t_args = array('!settings_url' => url('admin/config/regional/content-language'));
+  $message = t('<a href="!settings_url">Enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
   drupal_set_message($message, 'warning');
 }
