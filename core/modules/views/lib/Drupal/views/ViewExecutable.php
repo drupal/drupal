@@ -597,7 +597,7 @@ class ViewExecutable {
     }
 
     // Initialize the display cache array.
-    $this->displayHandlers = new DisplayBag($this);
+    $this->displayHandlers = new DisplayBag($this, drupal_container()->get('plugin.manager.views.display'));
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers['default'];
