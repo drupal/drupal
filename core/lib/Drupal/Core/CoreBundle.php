@@ -242,8 +242,6 @@ class CoreBundle extends Bundle {
 
     $container->addCompilerPass(new RegisterMatchersPass());
     $container->addCompilerPass(new RegisterNestedMatchersPass());
-    // Add a compiler pass for registering event subscribers.
-    $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     // Add a compiler pass for adding Normalizers and Encoders to Serializer.
     $container->addCompilerPass(new RegisterSerializationClassesPass());
     // Add a compiler pass for registering event subscribers.
