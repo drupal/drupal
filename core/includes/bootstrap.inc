@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -719,7 +720,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
   // Export these settings.php variables to the global namespace.
-  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $class_loader, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
+  global $databases, $cookie_domain, $conf, $installed_profile, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
   $conf = array();
 
   // Make conf_path() available as local variable in settings.php.
@@ -727,6 +728,8 @@ function drupal_settings_initialize() {
   if (is_readable(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
     include_once DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
   }
+  require_once DRUPAL_ROOT . '/core/lib/Drupal/Component/Utility/Settings.php';
+  new Settings(isset($settings) ? $settings : array());
   $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
 
   if (isset($base_url)) {
@@ -942,6 +945,20 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   if (isset($files[$type][$name])) {
     return $files[$type][$name];
   }
+}
+
+/**
+ * Returns a setting.
+ *
+ * Settings can be set in settings.php in the $settings array and requested
+ * by this function. Settings should be used over configuration for read-only,
+ * possibly low bootstrap configuration that is environment specific.
+ *
+ * @return \Drupal\Component\Utility\Settings
+ *   The settings object.
+ */
+function settings() {
+  return Settings::$singleton;
 }
 
 /**
@@ -1391,7 +1408,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // response to reply to a subsequent request for a given URL without
   // revalidation. If a Vary header has been set in hook_boot(), it is assumed
   // that the module knows how to cache the page.
-  if (!isset($hook_boot_headers['vary']) && !config('system.performance')->get('cache.page.omit_vary_cookie')) {
+  if (!isset($hook_boot_headers['vary']) && !settings()->get('omit_vary_cookie')) {
     header('Vary: Cookie');
   }
 
@@ -2120,7 +2137,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           break;
 
         case DRUPAL_BOOTSTRAP_SESSION:
-          require_once DRUPAL_ROOT . '/' . variable_get('session_inc', 'core/includes/session.inc');
+          require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
           drupal_session_initialize();
           break;
 
@@ -2311,7 +2328,7 @@ function _drupal_bootstrap_page_cache() {
     require_once DRUPAL_ROOT . '/' . $include;
   }
   // Check for a cache mode force from settings.php.
-  if (variable_get('page_cache_without_database')) {
+  if (settings()->get('page_cache_without_database')) {
     $cache_enabled = TRUE;
   }
   else {
@@ -3016,12 +3033,12 @@ function ip_address() {
   if (!isset($ip_address)) {
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
-    if (variable_get('reverse_proxy', 0)) {
-      $reverse_proxy_header = variable_get('reverse_proxy_header', 'HTTP_X_FORWARDED_FOR');
+    if (settings()->get('reverse_proxy', 0)) {
+      $reverse_proxy_header = settings()->get('reverse_proxy_header', 'HTTP_X_FORWARDED_FOR');
       if (!empty($_SERVER[$reverse_proxy_header])) {
         // If an array of known reverse proxy IPs is provided, then trust
         // the XFF header if request really comes from one of them.
-        $reverse_proxy_addresses = variable_get('reverse_proxy_addresses', array());
+        $reverse_proxy_addresses = settings()->get('reverse_proxy_addresses', array());
 
         // Turn XFF header into an array.
         $forwarded = explode(',', $_SERVER[$reverse_proxy_header]);
@@ -3051,20 +3068,27 @@ function ip_address() {
  * classes, interfaces, and traits (PHP 5.4 and later). It's only dependency
  * is DRUPAL_ROOT. Otherwise it may be called as early as possible.
  *
+ * @param $class_loader
+ *   The name of class loader to use. This can be used to change the class
+ *   loader class when calling drupal_classloader() from settings.php. It is
+ *   ignored otherwise.
+ *
  * @return Symfony\Component\ClassLoader\UniversalClassLoader
  *   A UniversalClassLoader class instance (or extension thereof).
  */
-function drupal_classloader() {
+function drupal_classloader($class_loader = NULL) {
   // By default, use the UniversalClassLoader which is best for development,
   // as it does not break when code is moved on the file system. However, as it
   // is slow, allow to use the APC class loader in production.
   static $loader;
 
   if (!isset($loader)) {
-    global $class_loader;
 
     // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
     require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+    if (!isset($class_loader) && class_exists('Drupal\Component\Utility\Settings', FALSE)) {
+      $class_loader = settings()->get('class_loader');
+    }
 
     switch ($class_loader) {
       case 'apc':

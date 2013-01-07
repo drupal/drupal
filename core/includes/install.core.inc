@@ -279,7 +279,7 @@ function install_begin_request(&$install_state) {
   require_once DRUPAL_ROOT . '/core/includes/file.inc';
   require_once DRUPAL_ROOT . '/core/includes/install.inc';
   require_once DRUPAL_ROOT . '/core/includes/schema.inc';
-  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
+  require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
 
   // Load module basics (needed for hook invokes).
   include_once DRUPAL_ROOT . '/core/includes/module.inc';

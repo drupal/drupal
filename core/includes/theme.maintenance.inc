@@ -22,7 +22,7 @@ function _drupal_maintenance_theme() {
     return;
   }
 
-  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
+  require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
   require_once DRUPAL_ROOT . '/core/includes/theme.inc';
   require_once DRUPAL_ROOT . '/core/includes/common.inc';
   require_once DRUPAL_ROOT . '/core/includes/unicode.inc';

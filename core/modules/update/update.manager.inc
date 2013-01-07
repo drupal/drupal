@@ -7,7 +7,7 @@
  * This allows site administrators with the 'administer software updates'
  * permission to either upgrade existing projects, or download and install new
  * ones, so long as the killswitch setting ('allow_authorize_operations') is
- * still TRUE.
+ * not FALSE.
  *
  * To install new code, the administrator is prompted for either the URL of an
  * archive file, or to directly upload the archive file. The archive is loaded

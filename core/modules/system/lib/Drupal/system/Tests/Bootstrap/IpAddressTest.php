@@ -58,14 +58,14 @@ class IpAddressTest extends WebTestBase {
     );
 
     // Proxy forwarding on but no proxy addresses defined.
-    variable_set('reverse_proxy', 1);
+    $this->settingsSet('reverse_proxy',  1);
     $this->assertTrue(
       ip_address() == $this->remote_ip,
       'Proxy forwarding without trusted proxies got remote IP address.'
     );
 
     // Proxy forwarding on and proxy address not trusted.
-    variable_set('reverse_proxy_addresses', array($this->proxy_ip, $this->proxy2_ip));
+    $this->settingsSet('reverse_proxy_addresses', array($this->proxy_ip, $this->proxy2_ip));
     drupal_static_reset('ip_address');
     $_SERVER['REMOTE_ADDR'] = $this->untrusted_ip;
     $this->assertTrue(
@@ -92,7 +92,7 @@ class IpAddressTest extends WebTestBase {
     );
 
     // Custom client-IP header.
-    variable_set('reverse_proxy_header', 'HTTP_X_CLUSTER_CLIENT_IP');
+    $this->settingsSet('reverse_proxy_header', 'HTTP_X_CLUSTER_CLIENT_IP');
     $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] = $this->cluster_ip;
     drupal_static_reset('ip_address');
     $this->assertTrue(

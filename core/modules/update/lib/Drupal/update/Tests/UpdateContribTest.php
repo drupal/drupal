@@ -327,7 +327,6 @@ class UpdateContribTest extends UpdateTestBase {
    * update, then assert if we see the appropriate warnings on the right pages.
    */
   function testHookUpdateStatusAlter() {
-    variable_set('allow_authorize_operations', TRUE);
     $update_test_config = config('update_test.settings');
     $update_admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer software updates'));
     $this->drupalLogin($update_admin_user);

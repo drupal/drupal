@@ -809,7 +809,7 @@ function drupal_http_request($url, array $options = array()) {
   $options['timeout'] = (float) $options['timeout'];
 
   // Use a proxy if one is defined and the host is not on the excluded list.
-  $proxy_server = variable_get('proxy_server', '');
+  $proxy_server = settings()->get('proxy_server', '');
   if ($proxy_server && _drupal_http_use_proxy($uri['host'])) {
     // Set the scheme so we open a socket to the proxy server.
     $uri['scheme'] = 'proxy';
@@ -819,13 +819,13 @@ function drupal_http_request($url, array $options = array()) {
     unset($uri['query']);
 
     // Add in username and password to Proxy-Authorization header if needed.
-    if ($proxy_username = variable_get('proxy_username', '')) {
-      $proxy_password = variable_get('proxy_password', '');
+    if ($proxy_username = settings()->get('proxy_username', '')) {
+      $proxy_password = settings()->get('proxy_password', '');
       $options['headers']['Proxy-Authorization'] = 'Basic ' . base64_encode($proxy_username . (!empty($proxy_password) ? ":" . $proxy_password : ''));
     }
     // Some proxies reject requests with any User-Agent headers, while others
     // require a specific one.
-    $proxy_user_agent = variable_get('proxy_user_agent', '');
+    $proxy_user_agent = settings()->get('proxy_user_agent', '');
     // The default value matches neither condition.
     if ($proxy_user_agent === NULL) {
       unset($options['headers']['User-Agent']);
@@ -838,7 +838,7 @@ function drupal_http_request($url, array $options = array()) {
   switch ($uri['scheme']) {
     case 'proxy':
       // Make the socket connection to a proxy server.
-      $socket = 'tcp://' . $proxy_server . ':' . variable_get('proxy_port', 8080);
+      $socket = 'tcp://' . $proxy_server . ':' . settings()->get('proxy_port', 8080);
       // The Host header still needs to match the real request.
       $options['headers']['Host'] = $uri['host'];
       $options['headers']['Host'] .= isset($uri['port']) && $uri['port'] != 80 ? ':' . $uri['port'] : '';
@@ -1068,7 +1068,7 @@ function drupal_http_request($url, array $options = array()) {
  *   TRUE if a proxy should be used for this host.
  */
 function _drupal_http_use_proxy($host) {
-  $proxy_exceptions = variable_get('proxy_exceptions', array('localhost', '127.0.0.1'));
+  $proxy_exceptions = settings()->get('proxy_exceptions', array('localhost', '127.0.0.1'));
   return !in_array(strtolower($host), $proxy_exceptions, TRUE);
 }
 
@@ -4757,10 +4757,10 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  * Loads code for subsystems and modules, and registers stream wrappers.
  */
 function _drupal_bootstrap_code() {
-  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
+  require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
   require_once DRUPAL_ROOT . '/core/includes/theme.inc';
   require_once DRUPAL_ROOT . '/core/includes/pager.inc';
-  require_once DRUPAL_ROOT . '/' . variable_get('menu_inc', 'core/includes/menu.inc');
+  require_once DRUPAL_ROOT . '/' . settings()->get('menu_inc', 'core/includes/menu.inc');
   require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
   require_once DRUPAL_ROOT . '/core/includes/file.inc';
   require_once DRUPAL_ROOT . '/core/includes/unicode.inc';

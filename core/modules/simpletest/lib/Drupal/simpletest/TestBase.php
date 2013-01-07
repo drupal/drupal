@@ -8,6 +8,7 @@
 namespace Drupal\simpletest;
 
 use Drupal\Core\Database\Database;
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\DrupalKernel;
@@ -136,6 +137,11 @@ abstract class TestBase {
    * @var string
    */
   protected $verboseDirectoryUrl;
+
+  /**
+   * The settings array.
+   */
+  protected $originalSettings;
 
   /**
    * Constructor for Test.
@@ -814,6 +820,7 @@ abstract class TestBase {
     }
 
     // Backup current in-memory configuration.
+    $this->originalSettings = settings()->getAll();
     $this->originalConf = $conf;
 
     // Backup statics and globals.
@@ -1012,6 +1019,7 @@ abstract class TestBase {
 
     // Restore original in-memory configuration.
     $conf = $this->originalConf;
+    new Settings($this->originalSettings);
 
     // Restore original statics and globals.
     drupal_container($this->originalContainer);
@@ -1089,6 +1097,22 @@ abstract class TestBase {
       '!backtrace' => format_backtrace($verbose_backtrace),
     ));
     $this->error($message, 'Uncaught exception', _drupal_get_last_caller($backtrace));
+  }
+
+  /**
+   * Changes in memory settings.
+   *
+   * @param $name
+   *   The name of the setting to return.
+   * @param $value
+   *   The value of the setting.
+   *
+   * @see \Drupal\Component\Utility\Settings::get()
+   */
+  protected function settingsSet($name, $value) {
+    $settings = settings()->getAll();
+    $settings[$name] = $value;
+    new Settings($settings);
   }
 
   /**

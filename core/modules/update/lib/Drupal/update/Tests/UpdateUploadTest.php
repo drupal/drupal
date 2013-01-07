@@ -29,7 +29,6 @@ class UpdateUploadTest extends UpdateTestBase {
 
   public function setUp() {
     parent::setUp();
-    variable_set('allow_authorize_operations', TRUE);
     $admin_user = $this->drupalCreateUser(array('administer software updates', 'administer site configuration'));
     $this->drupalLogin($admin_user);
   }
