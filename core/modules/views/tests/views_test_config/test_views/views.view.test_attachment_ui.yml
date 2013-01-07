@@ -1,0 +1,68 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'views_test_data test permission'
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  attachment_1:
+    display_plugin: attachment
+    display_title: Attachment
+    id: attachment_1
+    position: '1'
+  page_1:
+    display_plugin: page
+    display_title: Page
+    display_options:
+      path: test_attachment_ui
+    id: page_1
+    position: '2'
+  feed_1:
+    display_plugin: feed
+    id: feed_1
+    display_title: Feed
+    position: ''
+    display_options:
+      pager:
+        type: some
+      style:
+        type: rss
+      row:
+        type: rss_fields
+        options:
+          title_field: id
+          link_field: id
+          description_field: id
+          creator_field: id
+          date_field: id
+          guid_field_options:
+            guid_field: id
+            guid_field_is_permalink: '0'
+      path: test_attachment_ui_feed
+    position: '3'
+name: test_attachment_ui
+tag: ''
