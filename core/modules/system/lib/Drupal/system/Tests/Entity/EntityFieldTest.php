@@ -134,6 +134,12 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertFalse(isset($entity->name[0]->value), 'First name item value is not set.');
     $this->assertFalse(isset($entity->name->value), 'Name value is not set.');
 
+    $entity->name = NULL;
+    $this->assertFalse(isset($entity->name), 'Name field is not set.');
+    $this->assertFalse(isset($entity->name[0]), 'Name field item is not set.');
+    $this->assertFalse(isset($entity->name[0]->value), 'First name item value is not set.');
+    $this->assertFalse(isset($entity->name->value), 'Name value is not set.');
+
     $entity->name->value = 'a value';
     $this->assertTrue(isset($entity->name->value), 'Name is set.');
     unset($entity->name);
