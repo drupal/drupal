@@ -18,7 +18,7 @@ class QueryFactory {
     $this->connection = $connection;
   }
 
-  function get($entity_type, $conjunction) {
+  function get($entity_type, $conjunction = 'AND') {
     return new Query($entity_type, $conjunction, $this->connection);
   }
 }
