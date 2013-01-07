@@ -601,12 +601,6 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       $sorts += $available_sorts;
     }
 
-    foreach ($sorts as &$option) {
-      if (is_object($option)) {
-        $option = $option->get();
-      }
-    }
-
     // If there is no sorts option available continue.
     if (!empty($sorts)) {
       $form['displays']['show']['sort'] = array(
