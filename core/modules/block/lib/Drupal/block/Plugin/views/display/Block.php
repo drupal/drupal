@@ -47,31 +47,6 @@ class Block extends DisplayPluginBase {
   }
 
   /**
-   * The default block handler doesn't support configurable items,
-   * but extended block handlers might be able to do interesting
-   * stuff with it.
-   */
-  public function executeHookBlockList($delta = 0, $edit = array()) {
-    $delta = $this->view->storage->get('name') . '-' . $this->display['id'];
-    $desc = $this->getOption('block_description');
-
-    if (empty($desc)) {
-      if ($this->display['display_title'] == $this->definition['title']) {
-        $desc = t('View: !view', array('!view' => $this->view->storage->getHumanName()));
-      }
-      else {
-        $desc = t('View: !view: !display', array('!view' => $this->view->storage->getHumanName(), '!display' => $this->display['display_title']));
-      }
-    }
-    return array(
-      $delta => array(
-        'info' => $desc,
-        'cache' => $this->getCacheType()
-      ),
-    );
-  }
-
-  /**
    * The display block handler returns the structure necessary for a block.
    */
   public function execute() {

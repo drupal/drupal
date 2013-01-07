@@ -2432,11 +2432,6 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * If this display creates a block, implement one of these.
-   */
-  public function hookBlockList($delta = 0, $edit = array()) { return array(); }
-
-  /**
    * If this display creates a page with a menu item, implement it here.
    */
   public function hookMenu() { return array(); }

@@ -1507,24 +1507,6 @@ class ViewExecutable {
   }
 
   /**
-   * Called to get hook_block information from the view and the
-   * named display handler.
-   */
-  public function executeHookBlockList($display_id = NULL) {
-    // Prepare the view with the information we have.
-
-    // This was probably already called, but it's good to be safe.
-    if (!$this->setDisplay($display_id)) {
-      return FALSE;
-    }
-
-    // Execute the view
-    if (isset($this->display_handler)) {
-      return $this->display_handler->executeHookBlockList();
-    }
-  }
-
-  /**
    * Determine if the given user has access to the view. Note that
    * this sets the display handler if it hasn't been.
    */
