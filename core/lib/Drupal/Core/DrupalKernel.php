@@ -150,6 +150,39 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   }
 
   /**
+   * Overrides Kernel::getRootDir().
+   *
+   * It sets the value to the same as DRUPAL_ROOT.
+   */
+  public function getRootDir() {
+    return DRUPAL_ROOT;
+  }
+
+  /**
+   * Overrides Kernel::getCacheDir().
+   *
+   * It sets a sensible default cache directory for Drupal.
+   */
+  public function getCacheDir() {
+    if (!is_dir($dir = variable_get('file_public_path', conf_path() . '/files') . '/cache/' . $this->environment)) {
+      mkdir($dir, 0700, TRUE);
+    }
+    return $dir;
+  }
+
+  /**
+   * Overrides Kernel::getLogDir().
+   *
+   * It sets a sensible default log directory for Drupal.
+   */
+  public function getLogDir() {
+    if (!is_dir($dir = variable_get('file_public_path', conf_path() . '/files') . '/logs/' . $this->environment)) {
+      mkdir($dir, 0700, TRUE);
+    }
+    return $dir;
+  }
+
+  /**
    * Returns an array of available bundles.
    *
    * @return array
