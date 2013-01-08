@@ -722,33 +722,6 @@ function field_view_mode_settings($entity_type, $bundle) {
 }
 
 /**
- * Returns the display options to use for pseudo-fields in a given view mode.
- *
- * @todo Remove when all steps in the view callstack receive the
- * entity_display.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity.
- * @param $view_mode
- *   The view mode.
- *
- * @return
- *   The display options to be used when viewing the entity's pseudo-fields in
- *   the view mode.
- */
-function field_extra_fields_get_display(EntityInterface $entity, $view_mode) {
-  $entity_display = entity_get_render_display($entity, $view_mode);
-  $extra_fields = field_info_extra_fields($entity->entityType(), $entity->bundle(), 'display');
-
-  $options = array();
-  foreach ($extra_fields as $name => $value) {
-    $options[$name] = $entity_display->getComponent($name);
-  }
-
-  return $options;
-}
-
-/**
  * Pre-render callback: Adjusts weights and visibility of non-field elements.
  */
 function _field_extra_fields_pre_render($elements) {

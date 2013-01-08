@@ -663,29 +663,6 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
 }
 
 /**
- * Adjusts weights and visibility of components in displayed entities.
- *
- * This is used as a #pre_render callback.
- */
-function _entity_view_pre_render($elements) {
-  $display = $elements['#entity_display'];
-
-  $extra_fields = field_info_extra_fields($display->targetEntityType, $display->bundle, 'display');
-  foreach (array_keys($extra_fields) as $name) {
-    if (isset($elements[$name]) && (!isset($elements[$name]['#access']) || $elements[$name]['#access'])) {
-      if ($options = $display->getComponent($name)) {
-        $elements[$name]['#weight'] = $options['weight'];
-      }
-      else {
-        $elements[$name]['#access'] = FALSE;
-      }
-    }
-  }
-
-  return $elements;
-}
-
-/**
  * Returns the entity query object for this entity type.
  *
  * @param $entity_type

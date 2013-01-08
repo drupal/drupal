@@ -2,7 +2,10 @@
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\comment\Plugin\Core\Entity\Comment;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -151,7 +154,8 @@ function user_label($entity_type, $entity) {
 /**
  * Populates $entity->account for each prepared entity.
  *
- * Called by hook_entity_prepare_view() implementations.
+ * Called by Drupal\Core\Entity\EntityRenderControllerInterface::buildContent()
+ * implementations.
  *
  * @param array $entities
  *   The entities keyed by entity ID.
@@ -583,13 +587,14 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
 /**
  * Implements hook_user_view().
  */
-function user_user_view($account) {
-  $account->content['member_for'] = array(
-    '#type' => 'item',
-    '#title' => t('Member for'),
-    '#markup' => format_interval(REQUEST_TIME - $account->created),
-    '#weight' => 5,
-  );
+function user_user_view(User $account, EntityDisplay $display) {
+  if ($display->getComponent('member_for')) {
+    $account->content['member_for'] = array(
+      '#type' => 'item',
+      '#title' => t('Member for'),
+      '#markup' => format_interval(REQUEST_TIME - $account->created),
+    );
+  }
 }
 
 /**
@@ -2381,7 +2386,7 @@ function user_build_filter_query(SelectInterface $query) {
 /**
  * Implements hook_comment_view().
  */
-function user_comment_view($comment) {
+function user_comment_view(Comment $comment, EntityDisplay $display) {
   if (config('user.settings')->get('signatures') && !empty($comment->signature)) {
     // @todo This alters and replaces the original object value, so a
     //   hypothetical process of loading, viewing, and saving will hijack the

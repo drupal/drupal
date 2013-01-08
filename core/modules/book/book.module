@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -776,7 +777,7 @@ function book_node_load($nodes, $types) {
 /**
  * Implements hook_node_view().
  */
-function book_node_view(Node $node, $view_mode) {
+function book_node_view(Node $node, EntityDisplay $display, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $node->content['book_navigation'] = array(

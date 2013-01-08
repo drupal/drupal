@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRenderController;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Render controller for comments.
@@ -21,7 +22,7 @@ class CommentRenderController extends EntityRenderController {
    * In addition to modifying the content key on entities, this implementation
    * will also set the node key which all comments carry.
    */
-  public function buildContent(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
+  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     $return = array();
     if (empty($entities)) {
       return $return;
@@ -30,7 +31,7 @@ class CommentRenderController extends EntityRenderController {
     // Attach user account.
     user_attach_accounts($entities);
 
-    parent::buildContent($entities, $view_mode, $langcode);
+    parent::buildContent($entities, $displays, $view_mode, $langcode);
 
     // Load all nodes of all comments at once.
     $nids = array();
@@ -67,8 +68,8 @@ class CommentRenderController extends EntityRenderController {
   /**
    * Overrides Drupal\Core\Entity\EntityRenderController::alterBuild().
    */
-  protected function alterBuild(array &$build, EntityInterface $comment, $view_mode, $langcode = NULL) {
-    parent::alterBuild($build, $comment, $view_mode, $langcode);
+  protected function alterBuild(array &$build, EntityInterface $comment, EntityDisplay $display, $view_mode, $langcode = NULL) {
+    parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
       $is_threaded = isset($comment->divs)
@@ -95,4 +96,5 @@ class CommentRenderController extends EntityRenderController {
       }
     }
   }
+
 }

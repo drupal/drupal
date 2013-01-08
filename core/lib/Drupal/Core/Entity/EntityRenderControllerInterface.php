@@ -11,13 +11,17 @@ namespace Drupal\Core\Entity;
  * Defines a common interface for entity view controller classes.
  */
 interface EntityRenderControllerInterface {
+
   /**
    * Build the structured $content property on the entity.
    *
    * @param array $entities
    *   The entities, implementing EntityInterface, whose content is being built.
+   * @param array $displays
+   *   The array of entity_display objects holding the display options
+   *   configured for the entity components, keyed by bundle name.
    * @param string $view_mode
-   *   (optional) The view mode that should be used to build the entity.
+   *   The view mode in which the entity is being viewed.
    * @param string $langcode
    *   (optional) For which language the entity should be build, defaults to
    *   the current content language.
@@ -25,7 +29,7 @@ interface EntityRenderControllerInterface {
    * @return array
    *   The content array.
    */
-  public function buildContent(array $entities = array(), $view_mode = 'full', $langcode = NULL);
+  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL);
 
   /**
    * Returns the render array for the provided entity.

@@ -9,6 +9,7 @@
  */
 
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Implements hook_node_load().
@@ -29,7 +30,7 @@ function node_test_node_load($nodes, $types) {
 /**
  * Implements hook_node_view().
  */
-function node_test_node_view(Node $node, $view_mode) {
+function node_test_node_view(Node $node, EntityDisplay $display, $view_mode) {
   if ($view_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(

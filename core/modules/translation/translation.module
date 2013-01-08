@@ -20,6 +20,7 @@
  */
 
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Implements hook_help().
@@ -248,7 +249,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
  * translation set. If no language provider is enabled, "fall back" to simple
  * links built through the result of translation_node_get_translations().
  */
-function translation_node_view(Node $node, $view_mode) {
+function translation_node_view(Node $node, EntityDisplay $display, $view_mode) {
   // If the site has no translations or is not multilingual we have no content
   // translation links to display.
   if (isset($node->tnid) && language_multilingual() && $translations = translation_node_get_translations($node->tnid)) {

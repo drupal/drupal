@@ -39,13 +39,6 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   protected $settings;
 
   /**
-   * The formatter weight.
-   *
-   * @var int
-   */
-  protected $weight;
-
-  /**
    * The label display setting.
    *
    * @var string
@@ -71,20 +64,17 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    *   The field instance to which the formatter is associated.
    * @param array $settings
    *   The formatter settings.
-   * @param int $weight
-   *   The formatter weight.
    * @param string $label
    *   The formatter label display setting.
    * @param string $view_mode
    *   The view mode.
    */
-  public function __construct($plugin_id, DiscoveryInterface $discovery, $instance, array $settings, $weight, $label, $view_mode) {
+  public function __construct($plugin_id, DiscoveryInterface $discovery, $instance, array $settings, $label, $view_mode) {
     parent::__construct(array(), $plugin_id, $discovery);
 
     $this->instance = $instance;
     $this->field = field_info_field($instance['field_name']);
     $this->settings = $settings;
-    $this->weight = $weight;
     $this->label = $label;
     $this->viewMode = $view_mode;
   }
@@ -103,7 +93,6 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
       $entity_type = $entity->entityType();
       $info = array(
         '#theme' => 'field',
-        '#weight' => $this->weight,
         '#title' => $instance['label'],
         '#access' => field_access('view', $field, $entity->entityType(), $entity),
         '#label_display' => $this->label,

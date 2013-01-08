@@ -62,8 +62,6 @@ class FormatterPluginManager extends PluginManagerBase {
    *       requested formatter is not available.
    *     - settings: (array) Settings specific to the formatter. Each setting
    *       defaults to the default value specified in the formatter definition.
-   *     - weight: (float) The weight to assign to the renderable element.
-   *       Defaults to 0.
    *
    * @return \Drupal\field\Plugin\Type\Formatter\FormatterInterface
    *   A formatter object.
@@ -113,7 +111,6 @@ class FormatterPluginManager extends PluginManagerBase {
     $configuration += array(
       'label' => 'above',
       'settings' => array(),
-      'weight' => 0,
     );
     // If no formatter is specified, use the default formatter.
     if (!isset($configuration['type'])) {

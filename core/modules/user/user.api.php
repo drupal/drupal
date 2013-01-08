@@ -331,8 +331,11 @@ function hook_user_logout($account) {
  * The module should format its custom additions for display and add them to the
  * $account->content array.
  *
- * @param $account
+ * @param \Drupal\user\Plugin\Core\Entity\User $account
  *   The user object on which the operation is being performed.
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   user components.
  * @param $view_mode
  *   View mode, e.g. 'full'.
  * @param $langcode
@@ -341,21 +344,16 @@ function hook_user_logout($account) {
  * @see hook_user_view_alter()
  * @see hook_entity_view()
  */
-function hook_user_view($account, $view_mode, $langcode) {
-  if (!isset($account->content['summary'])) {
-    $account->content['summary'] = array();
+function hook_user_view(\Drupal\user\Plugin\Core\Entity\User $account, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a 'mymodule_addition' extra field has been defined for the
+  // user entity type in hook_field_extra_fields().
+  if ($display->getComponent('mymodule_addition')) {
+    $account->content['mymodule_addition'] = array(
+      '#markup' => mymodule_addition($account),
+      '#theme' => 'mymodule_my_additional_field',
+    );
   }
-  $account->content['summary'] += array(
-    '#type' => 'user_profile_category',
-    '#title' => t('History'),
-    '#attributes' => array('class' => array('user-member')),
-    '#weight' => 5,
-  );
-  $account->content['summary']['member_for'] = array(
-    '#type' => 'user_profile_item',
-    '#title' => t('Member for'),
-    '#markup' => format_interval(REQUEST_TIME - $account->created),
-  );
 }
 
 /**
@@ -373,13 +371,16 @@ function hook_user_view($account, $view_mode, $langcode) {
  *
  * @param $build
  *   A renderable array representing the user.
- * @param Drupal\user\User $account
+ * @param \Drupal\user\Plugin\Core\Entity\User $account
  *   The user account being rendered.
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   user components.
  *
  * @see user_view()
  * @see hook_entity_view_alter()
  */
-function hook_user_view_alter(&$build, Drupal\user\User $account) {
+function hook_user_view_alter(&$build, \Drupal\user\Plugin\Core\Entity\User $account, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
   // Check for the existence of a field added by another module.
   if (isset($build['an_additional_field'])) {
     // Change its weight.

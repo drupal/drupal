@@ -9,6 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRenderController;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Render controller for taxonomy terms.
@@ -18,17 +19,15 @@ class TermRenderController extends EntityRenderController {
   /**
    * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
    */
-  public function buildContent(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
-    parent::buildContent($entities, $view_mode, $langcode);
+  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
+    parent::buildContent($entities, $displays, $view_mode, $langcode);
 
     foreach ($entities as $entity) {
       // Add the description if enabled.
-      $entity_view_mode = $entity->content['#view_mode'];
-      $display = field_extra_fields_get_display($entity, $entity_view_mode);
-      if (!empty($entity->description) && !empty($display['description'])) {
+      $display = $displays[$entity->bundle()];
+      if (!empty($entity->description) && $display->getComponent('description')) {
         $entity->content['description'] = array(
           '#markup' => check_markup($entity->description, $entity->format, '', TRUE),
-          '#weight' => $display['description']['weight'],
           '#prefix' => '<div class="taxonomy-term-description">',
           '#suffix' => '</div>',
         );
@@ -36,6 +35,9 @@ class TermRenderController extends EntityRenderController {
     }
   }
 
+  /**
+   * Overrides \Drupal\Core\Entity\EntityRenderController::getBuildDefaults().
+   */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
     $return = parent::getBuildDefaults($entity, $view_mode, $langcode);
 
@@ -46,8 +48,12 @@ class TermRenderController extends EntityRenderController {
     return $return;
   }
 
-  protected function alterBuild(array &$build, EntityInterface $entity, $view_mode, $langcode = NULL) {
-    parent::alterBuild($build, $entity, $view_mode, $langcode);
+  /**
+   * Overrides \Drupal\Core\Entity\EntityRenderController::alterBuild().
+   */
+  protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
+    parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
     $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/taxonomy.css';
   }
+
 }

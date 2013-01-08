@@ -831,11 +831,14 @@ function hook_node_submit(Drupal\node\Node $node, $form, &$form_state) {
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\node\Plugin\Core\Entity\Node $node
  *   The node that is being assembled for rendering.
- * @param $view_mode
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   node components.
+ * @param string $view_mode
  *   The $view_mode parameter from node_view().
- * @param $langcode
+ * @param string $langcode
  *   The language code used for rendering.
  *
  * @see forum_node_view()
@@ -844,12 +847,16 @@ function hook_node_submit(Drupal\node\Node $node, $form, &$form_state) {
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view(Drupal\node\Node $node, $view_mode, $langcode) {
-  $node->content['my_additional_field'] = array(
-    '#markup' => $additional_field,
-    '#weight' => 10,
-    '#theme' => 'mymodule_my_additional_field',
-  );
+function hook_node_view(\Drupal\node\Plugin\Core\Entity\Node $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a 'mymodule_addition' extra field has been defined for the
+  // node type in hook_field_extra_fields().
+  if ($display->getComponent('mymodule_addition')) {
+    $node->content['mymodule_addition'] = array(
+      '#markup' => mymodule_addition($node),
+      '#theme' => 'mymodule_my_additional_field',
+    );
+  }
 }
 
 /**
@@ -867,15 +874,18 @@ function hook_node_view(Drupal\node\Node $node, $view_mode, $langcode) {
  *
  * @param $build
  *   A renderable array representing the node content.
- * @param Drupal\node\Node $node
+ * @param \Drupal\node\Plugin\Core\Entity\Node $node
  *   The node being rendered.
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   node components.
  *
  * @see node_view()
  * @see hook_entity_view_alter()
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view_alter(&$build, Drupal\node\Node $node) {
+function hook_node_view_alter(&$build, \Drupal\node\Plugin\Core\Entity\Node $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -1279,8 +1289,11 @@ function hook_validate(Drupal\node\Node $node, $form, &$form_state) {
  * that the node type module can define a custom method for display, or add to
  * the default display.
  *
- * @param Drupal\node\Node $node
+ * @param \Drupal\node\Plugin\Core\Entity\Node $node
  *   The node to be displayed, as returned by node_load().
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   node components.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser', ...
  *
@@ -1297,7 +1310,7 @@ function hook_validate(Drupal\node\Node $node, $form, &$form_state) {
  *
  * @ingroup node_api_hooks
  */
-function hook_view(Drupal\node\Node $node, $view_mode) {
+function hook_view(\Drupal\node\Plugin\Core\Entity\Node $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode) {
   if ($view_mode == 'full' && node_is_page($node)) {
     $breadcrumb = array();
     $breadcrumb[] = l(t('Home'), NULL);
@@ -1306,10 +1319,15 @@ function hook_view(Drupal\node\Node $node, $view_mode) {
     drupal_set_breadcrumb($breadcrumb);
   }
 
-  $node->content['myfield'] = array(
-    '#markup' => theme('mymodule_myfield', $node->myfield),
-    '#weight' => 1,
-  );
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a 'mymodule_addition' extra field has been defined for the
+  // node type in hook_field_extra_fields().
+  if ($display->getComponent('mymodule_addition')) {
+    $node->content['mymodule_addition'] = array(
+      '#markup' => mymodule_addition($node),
+      '#theme' => 'mymodule_my_additional_field',
+    );
+  }
 
   return $node;
 }

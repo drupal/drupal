@@ -180,8 +180,11 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
 /**
  * Act on entities being assembled before rendering.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   entity components.
  * @param $view_mode
  *   The view mode the entity is rendered in.
  * @param $langcode
@@ -196,12 +199,16 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
  * @see hook_node_view()
  * @see hook_user_view()
  */
-function hook_entity_view(Drupal\Core\Entity\EntityInterface $entity, $view_mode, $langcode) {
-  $entity->content['my_additional_field'] = array(
-    '#markup' => $additional_field,
-    '#weight' => 10,
-    '#theme' => 'mymodule_my_additional_field',
-  );
+function hook_entity_view(\Drupal\Core\Entity\EntityInterface $entity, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a 'mymodule_addition' extra field has been defined for the
+  // entity bundle in hook_field_extra_fields().
+  if ($display->getComponent('mymodule_addition')) {
+    $entity->content['mymodule_addition'] = array(
+      '#markup' => mymodule_addition($entity),
+      '#theme' => 'mymodule_my_additional_field',
+    );
+  }
 }
 
 /**
@@ -221,6 +228,9 @@ function hook_entity_view(Drupal\Core\Entity\EntityInterface $entity, $view_mode
  *   A renderable array representing the entity content.
  * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity object being rendered.
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   entity components.
  *
  * @see hook_entity_view()
  * @see hook_comment_view_alter()
@@ -228,7 +238,7 @@ function hook_entity_view(Drupal\Core\Entity\EntityInterface $entity, $view_mode
  * @see hook_taxonomy_term_view_alter()
  * @see hook_user_view_alter()
  */
-function hook_entity_view_alter(&$build, Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_view_alter(&$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -245,17 +255,33 @@ function hook_entity_view_alter(&$build, Drupal\Core\Entity\EntityInterface $ent
  * view. Only use this if attaching the data during the entity loading phase
  * is not appropriate, for example when attaching other 'entity' style objects.
  *
- * @param array $entities
- *   The entities keyed by entity ID.
  * @param string $entity_type
  *   The type of entities being viewed (i.e. node, user, comment).
+ * @param array $entities
+ *   The entities keyed by entity ID.
+ * @param array $display
+ *   The array of entity_display objects holding the display options configured
+ *   for the entity components, keyed by bundle name.
+ * @param string $view_mode
+ *   The view mode.
  */
-function hook_entity_prepare_view($entities, $entity_type) {
+function hook_entity_prepare_view($entity_type, array $entities, array $displays, $view_mode) {
   // Load a specific node into the user object for later theming.
   if (!empty($entities) && $entity_type == 'user') {
-    $nodes = mymodule_get_user_nodes(array_keys($entities));
-    foreach ($entities as $uid => $entity) {
-      $entity->user_node = $nodes[$uid];
+    // Only do the extra work if the component is configured to be
+    // displayed. This assumes a 'mymodule_addition' extra field has been
+    // defined for the entity bundle in hook_field_extra_fields().
+    $ids = array();
+    foreach ($entities as $id => $entity) {
+      if ($displays[$entity->bundle()]->getComponent('mymodule_addition')) {
+        $ids[] = $id;
+      }
+    }
+    if ($ids) {
+      $nodes = mymodule_get_user_nodes($ids);
+      foreach ($ids as $id) {
+        $entities[$id]->user_node = $nodes[$id];
+      }
     }
   }
 }

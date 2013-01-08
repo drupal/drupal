@@ -8,6 +8,7 @@
  */
 
 use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Implements hook_taxonomy_term_load().
@@ -61,7 +62,7 @@ function taxonomy_test_taxonomy_term_delete(Term $term) {
 /**
  * Implements hook_taxonomy_term_view().
  */
-function taxonomy_test_taxonomy_term_view($term, $view_mode, $langcode) {
+function taxonomy_test_taxonomy_term_view(Term $term, EntityDisplay $display, $view_mode, $langcode) {
   if ($view_mode == 'full') {
     $term->content['taxonomy_test_term_view_check'] = array(
       '#prefix' => '<div>',
@@ -75,7 +76,7 @@ function taxonomy_test_taxonomy_term_view($term, $view_mode, $langcode) {
 /**
  * Implements hook_entity_view().
  */
-function taxonomy_test_entity_view($entity, $view_mode, $langcode) {
+function taxonomy_test_entity_view($entity, EntityDisplay $display, $view_mode, $langcode) {
   if ($entity->entityType() == 'taxonomy_term' && $view_mode == 'full') {
     $entity->content['taxonomy_test_entity_view_check'] = array(
       '#prefix' => '<div>',

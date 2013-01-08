@@ -38,7 +38,6 @@ class LegacyFormatter extends FormatterBase {
     $instance['display'][$this->viewMode] = array(
       'type' => $this->getPluginId(),
       'settings' => $this->getSettings(),
-      'weight' => $this->weight,
       'label' => $this->label,
     );
 
@@ -62,7 +61,6 @@ class LegacyFormatter extends FormatterBase {
     $instance['display'][$this->viewMode] = array(
       'type' => $this->getPluginId(),
       'settings' => $this->getSettings(),
-      'weight' => $this->weight,
       'label' => $this->label,
     );
 
@@ -88,7 +86,6 @@ class LegacyFormatter extends FormatterBase {
       $display = array(
         'type' => $this->getPluginId(),
         'settings' => $this->getSettings(),
-        'weight' => $this->weight,
         'label' => $this->label,
       );
       $displays = array();
@@ -111,7 +108,6 @@ class LegacyFormatter extends FormatterBase {
       $display = array(
         'type' => $this->getPluginId(),
         'settings' => $this->getSettings(),
-        'weight' => $this->weight,
         'label' => $this->label,
       );
 

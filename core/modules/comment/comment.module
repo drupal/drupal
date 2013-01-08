@@ -10,6 +10,7 @@
  */
 
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -566,7 +567,7 @@ function theme_comment_block($variables) {
 /**
  * Implements hook_node_view().
  */
-function comment_node_view(Node $node, $view_mode) {
+function comment_node_view(Node $node, EntityDisplay $display, $view_mode) {
   $links = array();
 
   if ($node->comment != COMMENT_NODE_HIDDEN) {
