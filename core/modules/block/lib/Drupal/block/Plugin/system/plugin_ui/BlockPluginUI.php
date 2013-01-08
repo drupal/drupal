@@ -44,10 +44,19 @@ class BlockPluginUI extends PluginUIBase {
    */
   public function form($form, &$form_state, $facet = NULL) {
     // @todo Add an inline comment here.
+    list($plugin, $theme) = explode(':', $this->getPluginId());
     $plugin_definition = $this->getDefinition();
     $manager = new $plugin_definition['manager']();
     $plugins = $manager->getDefinitions();
     $form['#theme'] = 'system_plugin_ui_form';
+    $form['theme'] = array(
+      '#type' => 'value',
+      '#value' => $theme,
+    );
+    $form['manager'] = array(
+      '#type' => 'value',
+      '#value' => $manager,
+    );
     $form['instance'] = array(
       '#type' => 'value',
       '#value' => $this,
@@ -91,6 +100,16 @@ class BlockPluginUI extends PluginUIBase {
       );
     }
     return $form;
+  }
+
+  /**
+   * Overrides \Drupal\system\Plugin\PluginUIBase::formValidate().
+   */
+  public function formValidate($form, &$form_state) {
+    $definitions = $form_state['values']['manager']->getDefinitions();
+    if (!isset($definitions[$form_state['values']['block']])) {
+      form_set_error('block', t('You must select a valid block.'));
+    }
   }
 
   /**

@@ -1119,9 +1119,20 @@ function system_plugin_ui_form($form, &$form_state, $plugin, $facet = NULL) {
 /**
  * Page callback: Autocompletes any plugin system tied to a plugin UI plugin.
  *
- * @todo This needs more explanation and parameter documentation.
+ * The passed plugin_id indicates the specific plugin_ui plugin that is in use
+ * here. The documentation within the annotation of that plugin will contain a
+ * manager for the plugins that need to be autocompleted allowing this function
+ * to autocomplete plugins for any plugin type.
+ *
+ * @param $plugin_id
+ *   The plugin id for the calling plugin.
+ *
+ * @return object JsonResponse
  */
-function system_plugin_autocomplete($plugin_id, $string = '') {
+function system_plugin_autocomplete($plugin_id) {
+  $string_typed = drupal_container()->get('request')->query->get('q');
+  $string_typed = drupal_explode_tags($string_typed);
+  $string = drupal_strtolower(array_pop($string_typed));
   $matches = array();
   if ($string) {
     $plugin_ui = drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinition($plugin_id);
