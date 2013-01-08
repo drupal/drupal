@@ -15,4 +15,4 @@ visibility:
 subject: 'Search'
 module: search
 region: sidebar_first
-weight: '0'
+weight: '-1'

@@ -15,4 +15,4 @@ visibility:
 subject: ''
 module: system
 region: footer
-weight: '0'
+weight: '10'
