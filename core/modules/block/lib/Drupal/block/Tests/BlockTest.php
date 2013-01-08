@@ -379,4 +379,101 @@ class BlockTest extends WebTestBase {
     $config = $instance->getConfig();
     $this->assertEqual($config['cache'], DRUPAL_NO_CACHE, "Test block's database entry updated to DRUPAL_NO_CACHE.");
   }
+
+  /**
+   * Tests blocks belonging to disabled modules.
+   */
+  function testBlockModuleDisable() {
+    module_enable(array('block_test'));
+    $this->assertTrue(module_exists('block_test'), 'Test block module enabled.');
+
+    // Clear the block cache to load the block_test module's block definitions.
+    $manager = $this->container->get('plugin.manager.block');
+    $manager->clearCachedDefinitions();
+
+    // Add test blocks in different regions and confirm they are displayed.
+    $blocks = array();
+    $regions = array('sidebar_first', 'content', 'footer');
+    foreach ($regions as $region) {
+      $blocks[$region] = $this->drupalPlaceBlock('test_cache', array('region' => $region));
+    }
+    $this->drupalGet('');
+    foreach ($regions as $region) {
+      $this->assertText($blocks[$region]['subject']);
+    }
+
+    // Disable the block test module and refresh the definitions cache.
+    module_disable(array('block_test'), FALSE);
+    $this->assertFalse(module_exists('block_test'), 'Test block module disabled.');
+    $manager->clearCachedDefinitions();
+
+    // Ensure that the block administration page still functions as expected.
+    $this->drupalGet('admin/structure/block');
+    $this->assertResponse(200);
+    // A 200 response is possible with a fatal error, so check the title too.
+    $this->assertTitle(t('Blocks | Drupal'));
+
+    // Ensure that the disabled module's block instance is not listed.
+    foreach ($regions as $region) {
+      $this->assertNoText($blocks[$region]['subject']);
+    }
+
+    // Ensure that the disabled module's block plugin is no longer available.
+    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . variable_get('theme_default', 'stark') . '/add');
+    $this->assertNoText(t('Test block caching'));
+
+    // Confirm that the block is no longer displayed on the front page.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+    foreach ($regions as $region) {
+      $this->assertNoText($blocks[$region]['subject']);
+    }
+
+    // Confirm that a different block instance can still be enabled by
+    // submitting the block library form.
+    // Emulate a POST submission rather than using drupalPlaceBlock() to ensure
+    // that the form still functions as expected.
+    $edit = array(
+      'title' => $this->randomName(8),
+      'machine_name' => $this->randomName(8),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost('admin/structure/block/manage/system_powered_by_block/stark', $edit, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'));
+    $this->assertText($edit['title']);
+
+    // Update the weight of a block.
+    $edit = array('blocks[0][weight]' => -1);
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'));
+
+    // Re-enable the module and refresh the definitions cache.
+    module_enable(array('block_test'), FALSE);
+    $this->assertTrue(module_exists('block_test'), 'Test block module re-enabled.');
+    $manager->clearCachedDefinitions();
+
+    // Reload the admin page and confirm the block can again be configured.
+    $this->drupalGet('admin/structure/block');
+    foreach ($regions as $region) {
+      $this->assertLinkByHref(url('admin/structure/block/manage/' . $blocks[$region]['config_id'] . '/stark/config'));
+    }
+
+    // Confirm that the blocks are again displayed on the front page in the
+    // correct regions.
+    $this->drupalGet('');
+    foreach ($regions as $region) {
+      // @todo Use a proper method for this.
+      $name_pieces = explode('.', $blocks[$region]['config_id']);
+      $machine_name = array_pop($name_pieces);
+      $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
+        ':region-class' => 'region region-' . drupal_html_class($region),
+        ':block-id' => 'block-' . strtr(strtolower($machine_name), '-', '_'),
+    ));
+      $this->assertFieldByXPath($xpath, NULL, format_string('Block %name found in the %region region.', array(
+        '%name' => $blocks[$region]['subject'],
+        '%region' => $region,
+      )));
+    }
+  }
+
 }

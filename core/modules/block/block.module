@@ -5,6 +5,8 @@
  * Controls the visual building blocks a page is constructed with.
  */
 
+use Drupal\Component\Plugin\Exception\PluginException;
+
 /**
  * Denotes that a block is not enabled in any region and should not be shown.
  */
@@ -361,7 +363,11 @@ function _block_rehash($theme = NULL) {
   $block_configs = config_get_storage_names_with_prefix('plugin.core.block.' . $theme);
   $regions = system_region_list($theme);
   foreach ($block_configs as $config) {
-    $blocks[$config] = block_load($config);
+    // Only list valid block instances.
+    if (!$block = block_load($config)) {
+      continue;
+    }
+    $blocks[$config] = $block;
     $config = config($config);
     $region = $config->get('region');
     $status = $config->get('status');
@@ -472,11 +478,25 @@ function block_list($region) {
  *
  * @return
  *   A block object.
+ *
+ * @todo Add block_load_multiple() and make this function a single-value wrapper.
  */
 function block_load($plugin_id, array $conf = array()) {
   $manager = drupal_container()->get('plugin.manager.block');
   if (!$block = $manager->getInstance(array('config' => $plugin_id))) {
-    $block = $manager->createInstance($plugin_id, $conf);
+    // If the block instance does not exist, try to create it.
+    try {
+      $block = $manager->createInstance($plugin_id, $conf);
+    }
+    catch (PluginException $e) {
+      $config = config($plugin_id)->get();
+      // Ignore blocks belonging to disabled modules, but re-throw valid
+      // exceptions when the module is enabled and the plugin is misconfigured.
+      if (empty($config['module']) || module_exists($config['module'])) {
+        throw $e;
+      }
+      return FALSE;
+    }
   }
   return $block;
 }
@@ -486,6 +506,8 @@ function block_load($plugin_id, array $conf = array()) {
  *
  * @return
  *   An array of blocks grouped by region.
+ *
+ * @todo Remove this function, and replace it with a block_load_multiple().
  */
 function _block_load_blocks() {
   global $theme;
@@ -493,9 +515,10 @@ function _block_load_blocks() {
   $instances = config_get_storage_names_with_prefix('plugin.core.block.' . $theme);
   $manager = drupal_container()->get('plugin.manager.block');
   foreach ($instances as $plugin_id) {
-    $block = $manager->getInstance(array('config' => $plugin_id));
-    $config = $block->getConfig();
-    $blocks[$config['region']]["$plugin_id"] = $block;
+    if ($block = block_load($plugin_id)) {
+      $config = $block->getConfig();
+      $blocks[$config['region']]["$plugin_id"] = $block;
+    }
   }
   return $blocks;
 }
