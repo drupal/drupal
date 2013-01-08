@@ -898,9 +898,10 @@ function drupal_required_modules() {
  * hook_TYPE_alter() implementations in modules. It ensures a consistent
  * interface for all altering operations.
  *
- * A maximum of 2 alterable arguments is supported. In case more arguments need
- * to be passed and alterable, modules provide additional variables assigned by
- * reference in the last $context argument:
+ * A maximum of 2 alterable arguments is supported (a third is supported for
+ * legacy reasons, but should not be used in new code). In case more arguments
+ * need to be passed and alterable, modules provide additional variables
+ * assigned by reference in the last $context argument:
  * @code
  *   $context = array(
  *     'alterable' => &$alterable,
@@ -939,8 +940,14 @@ function drupal_required_modules() {
  *   (optional) An additional variable that is passed by reference. If more
  *   context needs to be provided to implementations, then this should be an
  *   associative array as described above.
+ * @param $context3
+ *   (optional) An additional variable that is passed by reference. This
+ *   parameter is deprecated and will not exist in Drupal 8; consequently, it
+ *   should not be used for new Drupal 7 code either. It is here only for
+ *   backwards compatibility with older code that passed additional arguments
+ *   to drupal_alter().
  */
-function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
+function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL, &$context3 = NULL) {
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
@@ -1053,6 +1060,6 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
   }
 
   foreach ($functions[$cid] as $function) {
-    $function($data, $context1, $context2);
+    $function($data, $context1, $context2, $context3);
   }
 }

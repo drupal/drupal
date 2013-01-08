@@ -1,6 +1,10 @@
 
 Drupal 7.19, xxxx-xx-xx (development version)
 -----------------------
+- Fixed entity argument not being passed to implementations of
+  hook_file_download_access_alter(). The fix adds an additional context
+  parameter that can be passed when calling drupal_alter() for any hook (API
+  change: http://drupal.org/node/1882722).
 - Fixed broken support for translatable comment fields (API change:
   http://drupal.org/node/1874724).
 - Added an assertThemeOutput() method to Simpletest to allow tests to check
