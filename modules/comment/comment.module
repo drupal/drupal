@@ -2288,8 +2288,16 @@ function template_preprocess_comment(&$variables) {
   $variables['comment']   = $comment;
   $variables['node']      = $node;
   $variables['author']    = theme('username', array('account' => $comment));
+
   $variables['created']   = format_date($comment->created);
-  $variables['changed']   = format_date($comment->changed);
+
+  // Avoid calling format_date() twice on the same timestamp.
+  if ($comment->changed == $comment->created) {
+    $variables['changed'] = $variables['created'];
+  }
+  else {
+    $variables['changed'] = format_date($comment->changed);
+  }
 
   $variables['new']       = !empty($comment->new) ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
