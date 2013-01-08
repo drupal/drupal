@@ -27,24 +27,6 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
   const REGEX_DELIMITER = '#';
 
   /**
-   * Compiler for the Symfony route compilation data.
-   *
-   * @var \Symfony\Component\Routing\RouteCompiler
-   */
-  protected $symfonyCompiler;
-
-  /**
-   * Constructs a new RouteCompiler.
-   *
-   * Normally putting a dependent object in here like this would be a no-no,
-   * but Symfony's route compiler insists on class injection rather than object
-   * injection so we are given no choice.
-   */
-  public function __construct() {
-    //$this->symfonyCompiler = new SymfonyRouteCompiler();
-  }
-
-  /**
    * Compiles the current route instance.
    *
    * Because so much of the parent class is private, we need to call the parent
