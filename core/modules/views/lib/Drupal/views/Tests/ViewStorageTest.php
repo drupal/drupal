@@ -381,6 +381,11 @@ class ViewStorageTest extends ViewTestBase {
     $view->setItem($display_id, 'field', $id1, $item);
     $this->assertEqual($view->getItem($display_id, 'field', 'id'), $item);
     $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+
+    // Test removeItem method.
+    unset($expected_items[$id2]);
+    $view->removeItem($display_id, 'field', $id2);
+    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
   }
 
   /**

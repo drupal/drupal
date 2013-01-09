@@ -2076,7 +2076,7 @@ class ViewExecutable {
     }
 
     // Get info about the types so we can get the right data.
-    $types = $this::viewsHandlerTypes();
+    $types = static::viewsHandlerTypes();
     return $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
   }
 
@@ -2096,7 +2096,7 @@ class ViewExecutable {
    */
   public function getItem($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
-    $types = $this::viewsHandlerTypes();
+    $types = static::viewsHandlerTypes();
     // Initialize the display
     $this->setDisplay($display_id);
 
@@ -2131,7 +2131,7 @@ class ViewExecutable {
    */
   public function setItem($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
-    $types = $this::viewsHandlerTypes();
+    $types = static::viewsHandlerTypes();
     // Initialize the display.
     $this->setDisplay($display_id);
 
@@ -2140,9 +2140,31 @@ class ViewExecutable {
     if (isset($item)) {
       $fields[$id] = $item;
     }
-    else {
-      unset($fields[$id]);
-    }
+
+    // Store.
+    $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
+  }
+
+  /**
+   * Removes configuration for a handler instance on a given display.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being removed.
+   * @param string $id
+   *   The ID of the handler being removed.
+   */
+  public function removeItem($display_id, $type, $id) {
+    // Get info about the types so we can get the right data.
+    $types = static::viewsHandlerTypes();
+    // Initialize the display.
+    $this->setDisplay($display_id);
+
+    // Get the existing configuration.
+    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    // Unset the item.
+    unset($fields[$id]);
 
     // Store.
     $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);

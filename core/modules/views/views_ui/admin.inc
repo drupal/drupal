@@ -1711,7 +1711,7 @@ function views_ui_config_item_form_remove($form, &$form_state) {
     $display =& $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
     $display->optionsOverride($form, $form_state);
   }
-  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], NULL);
+  $form_state['view']->get('executable')->removeItem($form_state['display_id'], $form_state['type'], $form_state['id']);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
