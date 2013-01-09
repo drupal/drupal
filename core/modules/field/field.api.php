@@ -1157,10 +1157,10 @@ function hook_field_available_languages_alter(&$langcodes, $context) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param $entity_type
+ * @param string $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
- *   the entity with fields to process.
+ * @param string $bundle
+ *   The name of the bundle.
  */
 function hook_field_attach_create_bundle($entity_type, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add the
