@@ -1567,8 +1567,9 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // extra stuff on the form is not sent through.
   $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
-  // Store the item back on the view
-  $form_state['view']->temporary_options[$type][$form_state['id']] = $handler->options;
+  // Store the item back on the view.
+  $executable = $form_state['view']->get('executable');
+  $executable->temporary_options[$type][$form_state['id']] = $handler->options;
 
   // @todo: Figure out whether views_ui_ajax_form is perhaps the better place to fix the issue.
   // views_ui_ajax_form() drops the current form from the stack, even if it's an #ajax.

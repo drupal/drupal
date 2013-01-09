@@ -385,17 +385,26 @@ class Field extends FieldPluginBase {
     // Get the currently selected formatter.
     $format = $this->options['type'];
 
-    $formatter = field_info_formatter_types($format);
     $settings = $this->options['settings'] + field_info_formatter_settings($format);
 
     // Provide an instance array for hook_field_formatter_settings_form().
     $this->instance = $this->fakeFieldInstance($format, $settings);
 
+    $options = array(
+      'instance' => $this->instance,
+      'configuration' => array(
+        'type' => $format,
+        'settings' => $settings,
+        'label' => '',
+        'weight' => 0,
+      ),
+      'view_mode' => '_custom',
+    );
+
     // Get the settings form.
     $settings_form = array('#value' => array());
-    $function = $formatter['module'] . '_field_formatter_settings_form';
-    if (function_exists($function)) {
-      $settings_form = $function($field, $this->instance, '_custom', $form, $form_state);
+    if ($formatter = drupal_container()->get('plugin.manager.field.formatter')->getInstance($options)) {
+      $settings_form = $formatter->settingsForm($form, $form_state);
     }
     $form['settings'] = $settings_form;
   }
