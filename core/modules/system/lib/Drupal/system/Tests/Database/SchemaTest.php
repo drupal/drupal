@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\SchemaTest.
+ * Contains Drupal\system\Tests\Database\SchemaTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
 
 use Exception;
 
 /**
  * Tests the Schema API.
  */
-class SchemaTest extends WebTestBase {
+class SchemaTest extends UnitTestBase {
 
   /**
    * A global counter for table and field creation.

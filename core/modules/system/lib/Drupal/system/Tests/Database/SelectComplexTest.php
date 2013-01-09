@@ -337,8 +337,14 @@ class SelectComplexTest extends DatabaseTestBase {
    * Tests that we can join on a query.
    */
   function testJoinSubquery() {
-    $acct = $this->drupalCreateUser();
-    $this->drupalLogin($acct);
+    $this->enableModules(array('system'), FALSE);
+    $this->installSchema('system', 'sequences');
+    $this->enableModules(array('field', 'user'));
+
+    $account = entity_create('user', array(
+      'name' => $this->randomName(),
+      'mail' => $this->randomName() . '@example.com',
+    ));
 
     $query = db_select('test_task', 'tt', array('target' => 'slave'));
     $query->addExpression('tt.pid + 1', 'abc');
@@ -349,7 +355,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $subquery->join('test_one_blob', 'tpb', 'tp.id = tpb.id');
     $subquery->join('node', 'n', 'tp.id = n.nid');
     $subquery->addTag('node_access');
-    $subquery->addMetaData('account', $acct);
+    $subquery->addMetaData('account', $account);
     $subquery->addField('tp', 'id');
     $subquery->condition('age', 5, '>');
     $subquery->condition('age', 500, '<');

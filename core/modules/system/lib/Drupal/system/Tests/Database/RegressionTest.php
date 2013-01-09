@@ -48,7 +48,7 @@ class RegressionTest extends DatabaseTestBase {
    * Tests the db_table_exists() function.
    */
   function testDBTableExists() {
-    $this->assertIdentical(TRUE, db_table_exists('node'), 'Returns true for existent table.');
+    $this->assertIdentical(TRUE, db_table_exists('test'), 'Returns true for existent table.');
     $this->assertIdentical(FALSE, db_table_exists('nosuchtable'), 'Returns false for nonexistent table.');
   }
 
@@ -56,15 +56,15 @@ class RegressionTest extends DatabaseTestBase {
    * Tests the db_field_exists() function.
    */
   function testDBFieldExists() {
-    $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), 'Returns true for existent column.');
-    $this->assertIdentical(FALSE, db_field_exists('node', 'nosuchcolumn'), 'Returns false for nonexistent column.');
+    $this->assertIdentical(TRUE, db_field_exists('test', 'name'), 'Returns true for existent column.');
+    $this->assertIdentical(FALSE, db_field_exists('test', 'nosuchcolumn'), 'Returns false for nonexistent column.');
   }
 
   /**
    * Tests the db_index_exists() function.
    */
   function testDBIndexExists() {
-    $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), 'Returns true for existent index.');
-    $this->assertIdentical(FALSE, db_index_exists('node', 'nosuchindex'), 'Returns false for nonexistent index.');
+    $this->assertIdentical(TRUE, db_index_exists('test', 'ages'), 'Returns true for existent index.');
+    $this->assertIdentical(FALSE, db_index_exists('test', 'nosuchindex'), 'Returns false for nonexistent index.');
   }
 }
