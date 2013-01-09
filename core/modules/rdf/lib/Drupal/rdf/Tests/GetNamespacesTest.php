@@ -52,8 +52,8 @@ class GetNamespacesTest extends WebTestBase {
     $this->assertTrue(!empty($element), 'Two prefixes can be assigned the same namespace.');
 
     $element = $this->xpath('//html[contains(@prefix, :prefix_binding)]', array(
-      ':prefix_binding' => 'dc: ',
+      ':prefix_binding' => 'dc: http://purl.org/dc/terms/',
     ));
-    $this->assertTrue(empty($element), 'A prefix with conflicting namespaces is discarded.');
+    $this->assertTrue(!empty($element), 'When a prefix has conflicting namespaces, the first declared one is used.');
   }
 }

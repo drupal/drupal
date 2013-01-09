@@ -7,6 +7,7 @@
 
 namespace Drupal\node;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
@@ -91,7 +92,7 @@ class NodeFormController extends EntityFormController {
     //   handlers to the form buttons below. Remove hook_form() entirely.
     $function = node_hook($node->type, 'form');
     if ($function && ($extra = $function($node, $form_state))) {
-      $form = array_merge_recursive($form, $extra);
+      $form = NestedArray::mergeDeep($form, $extra);
     }
     // If the node type has a title, and the node type form defined no special
     // weight for it, we default to a weight of -5 for consistency.

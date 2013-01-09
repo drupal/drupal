@@ -245,6 +245,18 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
     ),
   );
 
+  // Tests the 'settings' command with a callback which sets the same
+  // setting multiple times. This is used to check that settings are
+  // merged properly (e.g., array_merge_recursive() merges settings
+  // incorrectly, #1356170).
+  $form['settings_command_with_merging_example'] = array(
+    '#type' => 'submit',
+    '#value' => t("AJAX 'settings' command with setting merging"),
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_advanced_commands_settings_with_merging_callback',
+    ),
+  );
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -405,6 +417,16 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, $form_state) 
   $commands = array();
   $commands[] = ajax_command_add_css('my/file.css');
   return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Ajax callback for 'settings' but with setting overrides.
+ */
+function ajax_forms_test_advanced_commands_settings_with_merging_callback($form, $form_state) {
+  drupal_add_js(array('ajax_forms_test' => array('foo' => 42)), 'setting');
+  drupal_add_js(array('ajax_forms_test' => array('foo' => 9001)), 'setting');
+
+  return array('#type' => 'ajax', '#commands' => array());
 }
 
 /**

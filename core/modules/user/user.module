@@ -763,6 +763,9 @@ function template_process_username(&$variables) {
     // to use the former unless they want to add attributes on the link only.
     // If a link is being rendered, these need to be merged. Some attributes are
     // themselves arrays, so the merging needs to be recursive.
+    // This purposefully does not use
+    // \Drupal\Component\Utility\NestedArray::mergeDeep() for performance
+    // reasons, since it is potentially called very often.
     $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes']);
   }
 }

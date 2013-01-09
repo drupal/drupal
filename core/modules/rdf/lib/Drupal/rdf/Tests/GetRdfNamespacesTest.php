@@ -39,6 +39,6 @@ class GetRdfNamespacesTest extends WebTestBase {
     $this->assertEqual($ns['rdfs'], 'http://www.w3.org/2000/01/rdf-schema#', 'A prefix declared once is included.');
     $this->assertEqual($ns['foaf'], 'http://xmlns.com/foaf/0.1/', 'The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.');
     $this->assertEqual($ns['foaf1'], 'http://xmlns.com/foaf/0.1/', 'Two prefixes can be assigned the same namespace.');
-    $this->assertTrue(!isset($ns['dc']), 'A prefix with conflicting namespaces is discarded.');
+    $this->assertEqual($ns['dc'], 'http://purl.org/dc/terms/', 'When a prefix has conflicting namespaces, the first declared one is used.');
   }
 }

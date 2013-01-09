@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
+use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -921,7 +922,7 @@ function module_hook_info() {
         if (function_exists($function)) {
           $result = $function();
           if (isset($result) && is_array($result)) {
-            $hook_info = array_merge_recursive($hook_info, $result);
+            $hook_info = NestedArray::mergeDeep($hook_info, $result);
           }
         }
       }
@@ -1002,7 +1003,7 @@ function module_invoke_all($hook) {
     if (function_exists($function)) {
       $result = call_user_func_array($function, $args);
       if (isset($result) && is_array($result)) {
-        $return = array_merge_recursive($return, $result);
+        $return = NestedArray::mergeDeep($return, $result);
       }
       elseif (isset($result)) {
         $return[] = $result;

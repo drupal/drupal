@@ -13,6 +13,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Form\EditFieldForm;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Implements hook_custom_theme().
@@ -65,7 +66,7 @@ function edit_toolbar() {
 
   // Include the attachments and settings for all available editors.
   $attachments = drupal_container()->get('edit.editor.selector')->getAllEditorAttachments();
-  $tab['edit']['tray']['#attached'] = array_merge_recursive($tab['edit']['tray']['#attached'], $attachments);
+  $tab['edit']['tray']['#attached'] = NestedArray::mergeDeep($tab['edit']['tray']['#attached'], $attachments);
 
   return $tab;
 }

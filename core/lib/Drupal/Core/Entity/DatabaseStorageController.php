@@ -11,6 +11,7 @@ use PDO;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Exception;
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Component\Utility\NestedArray;
 
 
 /**
@@ -678,9 +679,9 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
 
       // Invoke hooks.
       $result = module_invoke_all($this->entityType . '_property_info');
-      $this->entityFieldInfo = array_merge_recursive($this->entityFieldInfo, $result);
+      $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
       $result = module_invoke_all('entity_field_info', $this->entityType);
-      $this->entityFieldInfo = array_merge_recursive($this->entityFieldInfo, $result);
+      $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
 
       $hooks = array('entity_field_info', $this->entityType . '_property_info');
       drupal_alter($hooks, $this->entityFieldInfo, $this->entityType);

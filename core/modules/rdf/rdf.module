@@ -5,6 +5,7 @@
  * Enables semantically enriched output for Drupal sites in the form of RDFa.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -99,27 +100,16 @@ function rdf_rdf_namespaces() {
  * implement it.
  */
 function rdf_get_namespaces() {
-  $rdf_namespaces = module_invoke_all('rdf_namespaces');
-  // module_invoke_all() uses array_merge_recursive() which might return nested
-  // arrays if several modules redefine the same prefix multiple times. We need
-  // to ensure the array of namespaces is flat and only contains strings as
-  // URIs.
-  foreach ($rdf_namespaces as $prefix => $uri) {
-    if (is_array($uri)) {
-      if (count(array_unique($uri)) == 1) {
-        // All namespaces declared for this prefix are the same, merge them all
-        // into a single namespace.
-        $rdf_namespaces[$prefix] = $uri[0];
-      }
-      else {
-        // There are conflicting namespaces for this prefix, do not include
-        // duplicates in order to avoid asserting any inaccurate RDF
-        // statements.
-        unset($rdf_namespaces[$prefix]);
-      }
+  $namespaces = array();
+  // In order to resolve duplicate namespaces by using the earliest defined
+  // namespace, do not use module_invoke_all().
+  foreach (module_implements('rdf_namespaces') as $module) {
+    $function = $module . '_rdf_namespaces';
+    if (function_exists($function)) {
+      $namespaces = NestedArray::mergeDeep($function(), $namespaces);
     }
   }
-  return $rdf_namespaces;
+  return $namespaces;
 }
 
 /**
@@ -703,7 +693,7 @@ function rdf_preprocess_username(&$variables) {
   // (see http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes).
   // Therefore, merge rather than override so as not to clobber values set by
   // earlier preprocess functions.
-  $variables['attributes'] = array_merge_recursive($variables['attributes'], $attributes);
+  $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $attributes);
 }
 
 /**
