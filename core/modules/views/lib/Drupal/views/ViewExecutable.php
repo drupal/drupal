@@ -438,14 +438,6 @@ class ViewExecutable {
   }
 
   /**
-   * Returns a list of the sub-object types used by this view. These types are
-   * stored on the display, and are used in the build process.
-   */
-  public function displayObjects() {
-    return array('argument', 'field', 'sort', 'filter', 'relationship', 'header', 'footer', 'empty');
-  }
-
-  /**
    * Set the arguments that come to this view. Usually from the URL
    * but possibly from elsewhere.
    */
