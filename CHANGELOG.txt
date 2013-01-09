@@ -1,6 +1,99 @@
 
-Drupal 7.16, xxxx-xx-xx (development version)
+Drupal 7.19, xxxx-xx-xx (development version)
 -----------------------
+- Fixed entity argument not being passed to implementations of
+  hook_file_download_access_alter(). The fix adds an additional context
+  parameter that can be passed when calling drupal_alter() for any hook (API
+  change: http://drupal.org/node/1882722).
+- Fixed broken support for translatable comment fields (API change:
+  http://drupal.org/node/1874724).
+- Added an assertThemeOutput() method to Simpletest to allow tests to check
+  that themed output matches an expected HTML string (API addition).
+- Added a link to "Install another module" after a module has been successfully
+  downloaded via the Update Manager (UI change).
+- Added an optional "exclusive" flag to installation profile .info files which
+  allows Drupal distributions to force a profile to be selected during
+  installation (API addition).
+- Fixed a bug which caused the database API to not properly close database
+  connections.
+- Added link to the URL for running cron from outside the site to the Cron
+  settings page (UI change).
+- Fixed a bug which prevented image styles from being reverted on PHP 5.4.
+- Made the default .htaccess rules protocol sensitive to improve security for
+  sites which use HTTPS and redirect between "www" and non-"www" versions of
+  the page.
+
+Drupal 7.18, 2012-12-19
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2012-004.
+
+Drupal 7.17, 2012-11-07
+-----------------------
+- Changed the default value of the '404_fast_html' variable to have a DOCTYPE
+  declaration.
+- Made it possible to use associative arrays for the 'items' variable in
+  theme_item_list().
+- Fixed a bug which prevented required form elements without a title from being
+  given an "error" class when the form fails validation.
+- Prevented duplicate HTML IDs from appearing when two forms are displayed on
+  the same page and one of them is submitted with invalid data (minor markup
+  change).
+- Fixed a bug which prevented Drupal 6 to Drupal 7 upgrades on sites which had
+  stale data in the Upload module's database tables.
+- Fixed a bug in the States API which prevented certain types of form elements
+  from being disabled when requested.
+- Allowed aggregator feed items with author names longer than 255 characters to
+  have a truncated version saved to the database (rather than causing a fatal
+  error).
+- Allowed aggregator feed items to have URLs longer than 255 characters
+  (schema change which results in several columns in the Aggregator module's
+  database tables changing from VARCHAR to TEXT fields).
+- Added hook_taxonomy_term_view() and standardized the process for rendering
+  taxonomy terms to invoke hook_entity_view() and otherwise make it consistent
+  with other entities (API change: http://drupal.org/node/1808870).
+- Added hook_entity_view_mode_alter() to allow modules to change entity view
+  modes on display (API addition: http://drupal.org/node/1833086).
+- Fixed a bug which made database queries running a "LIKE" query on blob fields
+  fail on PostgreSQL databases. This caused errors during the Drupal 6 to
+  Drupal 7 upgrade.
+- Changed the hook_menu() entry for Drupal's rss.xml page to prevent extra path
+  components from being accidentally passed to the page callback function (data
+  structure change).
+- Removed a non-standard "name" attribute from Drupal's default Content-Type
+  header for file downloads.
+- Fixed the theme settings form to properly clean up submitted values in
+  $form_state['values'] when the form is submitted (data structure change).
+- Fixed an inconsistency by removing the colon from the end of the label on
+  multi-valued form fields (minor string change).
+- Added support for 'weight' in hook_field_widget_info() to allow modules to
+  control the order in which widgets are displayed in the Field UI.
+- Updated various tables in the OpenID and Book modules to use the default
+  "empty table" text pattern (string change).
+- Added proxy server support to drupal_http_request().
+- Added "lang" attributes to language links, to better support screen readers.
+- Fixed double occurrence of a "ul" HTML tag on secondary local tasks in the
+  Seven theme (markup change).
+- Fixed bugs which caused taxonomy vocabulary and shortcut set titles to be
+  double-escaped. The fix replaces the taxonomy vocabulary overview page and
+  "Edit shortcuts" menu items' title callback entries in hook_menu() with new
+  functions that do not escape HTML characters (data structure change).
+- Modified the Update manager module to allow drupal.org to collect usage
+  statistics for individual modules and themes, rather than only for entire
+  projects.
+- Modified the node listing database query on Drupal's default front page to
+  add table aliases for better query altering (this is a data structure change
+  affecting code which implements hook_query_alter() on this query).
+- Improved the translatability of the "Field type(s) in use" message on the
+  modules page (admin-facing string change).
+- Fixed a regression which caused a "call to undefined function
+  drupal_find_base_themes()" fatal error under rare circumstances.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
+
+Drupal 7.16, 2012-10-17
+-----------------------
+- Fixed security issues (Arbitrary PHP code execution and information
+  disclosure). See SA-CORE-2012-003.
 
 Drupal 7.15, 2012-08-01
 -----------------------
@@ -313,8 +406,8 @@ Drupal 7.0, 2011-01-05
       order can now be customized using the Views module.
     * Removed the 'related terms' feature from taxonomy module since this can
       now be achieved with Field API.
-    * Added additional features to the default install profile, and implemented
-      a "slimmed down" install profile designed for developers.
+    * Added additional features to the default installation profile, and
+      implemented a "slimmed down" profile designed for developers.
     * Added a built-in, automated cron run feature, which is triggered by site
       visitors.
     * Added an administrator role which is assigned all permissions for
@@ -541,7 +634,7 @@ Drupal 6.16, 2010-03-03
   see SA-CORE-2010-001.
 - Better support for updated jQuery versions.
 - Reduced resource usage of update.module.
-- Fixed several issues relating to support of install profiles and
+- Fixed several issues relating to support of installation profiles and
   distributions.
 - Added a locking framework to avoid data corruption on long operations.
 - Fixed a variety of other bugs.
@@ -659,7 +752,7 @@ Drupal 6.0, 2008-02-13
    * Expands the severity levels from 3 (Error, Warning, Notice) to the 8
      levels defined in RFC 3164.
    * The watchdog module is now called dblog, and is optional, but enabled by
-     default in the default install profile.
+     default in the default installation profile.
    * Extended the database log module so log messages can be filtered.
    * Added syslog module: useful for monitoring large Drupal installations.
 - Added optional e-mail notifications when users are approved, blocked, or
@@ -714,7 +807,7 @@ Drupal 6.0, 2008-02-13
     * Themed the installer with the Garland theme.
     * Added form to provide initial site information during installation.
     * Added ability to provide extra installation steps programmatically.
-    * Made it possible to import interface translations at install time.
+    * Made it possible to import interface translations during installation.
 - Added the HTML corrector filter:
     * Fixes faulty and chopped off HTML in postings.
     * Tags are now automatically closed at the end of the teaser.
@@ -893,7 +986,7 @@ Drupal 5.0, 2007-01-15
 - Added web-based installer which can:
     * Check installation and run-time requirements
     * Automatically generate the database configuration file
-    * Install pre-made 'install profiles' or distributions
+    * Install pre-made installation profiles or distributions
     * Import the database structure with automatic table prefixing
     * Be localized
 - Added new default Garland theme
@@ -953,7 +1046,7 @@ Drupal 5.0, 2007-01-15
 - Removed the archive module.
 - Upgrade system:
     * Created space for update branches.
-- Forms API:
+- Form API:
     * Made it possible to programmatically submit forms.
     * Improved api for multistep forms.
 - Theme system:

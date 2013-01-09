@@ -384,7 +384,7 @@ function user_update_dependencies() {
  *   An array of permissions names.
  * @param $module
  *   The name of the module defining the permissions.
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update_api
  */
 function _update_7000_user_role_grant_permissions($rid, array $permissions, $module) {
   // Grant new permissions for the role.

@@ -230,18 +230,19 @@ class ThemeItemListUnitTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test nested list rendering.
+   * Test item list rendering.
    */
-  function testNestedList() {
-    $items = array('a', array('data' => 'b', 'children' => array('c', 'd')), 'e');
+  function testItemList() {
+    $items = array('a', array('data' => 'b', 'children' => array('c' => 'c', 'd' => 'd', 'e' => 'e')), 'f');
     $expected = '<div class="item-list"><ul><li class="first">a</li>
 <li>b<div class="item-list"><ul><li class="first">c</li>
-<li class="last">d</li>
-</ul></div></li>
+<li>d</li>
 <li class="last">e</li>
+</ul></div></li>
+<li class="last">f</li>
 </ul></div>';
     $output = theme('item_list', array('items' => $items));
-    $this->assertIdentical($expected, $output, 'Nested list is rendered correctly.');
+    $this->assertIdentical($expected, $output, 'Item list is rendered correctly.');
   }
 }
 

@@ -30,6 +30,13 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['form-test/validate-required-no-title'] = array(
+    'title' => 'Form #required validation without #title',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_validate_required_form_no_title'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['form-test/limit-validation-errors'] = array(
     'title' => 'Form validation with some error suppression',
     'page callback' => 'drupal_get_form',
@@ -151,6 +158,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form-test/redirect'] = array(
+    'title' => 'Redirect test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_redirect'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['form_test/form-labels'] = array(
     'title' => 'Form label test',
     'page callback' => 'drupal_get_form',
@@ -186,6 +201,12 @@ function form_test_menu() {
       'type' => MENU_CALLBACK,
     );
   }
+  $items['form-test/double-form'] = array(
+    'title' => 'Double form test',
+    'page callback' => 'form_test_double_form',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
   $items['form-test/load-include-menu'] = array(
     'title' => 'FAPI test loading includes',
@@ -396,6 +417,26 @@ function form_test_validate_required_form($form, &$form_state) {
  */
 function form_test_validate_required_form_submit($form, &$form_state) {
   drupal_set_message('The form_test_validate_required_form form was submitted successfully.');
+}
+
+/**
+ * Form constructor to test the #required property without #title.
+ */
+function form_test_validate_required_form_no_title($form, &$form_state) {
+  $form['textfield'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+  );
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => 'Submit');
+  return $form;
+}
+
+/**
+ * Form submission handler for form_test_validate_required_form_no_title().
+ */
+function form_test_validate_required_form_no_title_submit($form, &$form_state) {
+  drupal_set_message('The form_test_validate_required_form_no_title form was submitted successfully.');
 }
 
 /**
@@ -1644,6 +1685,43 @@ function form_test_clicked_button_submit($form, &$form_state) {
 }
 
 /**
+ * Form builder to detect form redirect.
+ */
+function form_test_redirect($form, &$form_state) {
+  $form['redirection'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use redirection'),
+  );
+  $form['destination'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Redirect destination'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="redirection"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit handler to test different redirect behaviours.
+ */
+function form_test_redirect_submit(&$form, &$form_state) {
+  if (!empty($form_state['values']['redirection'])) {
+    $form_state['redirect'] = !empty($form_state['values']['destination']) ? $form_state['values']['destination'] : NULL;
+  }
+  else {
+    $form_state['redirect'] = FALSE;
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter() for the registration form.
  */
 function form_test_form_user_register_form_alter(&$form, &$form_state) {
@@ -1741,4 +1819,30 @@ function form_test_checkboxes_zero($form, &$form_state, $json = TRUE) {
 
 function _form_test_checkboxes_zero_no_redirect($form, &$form_state) {
   $form_state['redirect'] = FALSE;
+}
+
+/**
+ * Menu callback returns two instances of the same form.
+ */
+function form_test_double_form() {
+  return array(
+    'form1' => drupal_get_form('form_test_html_id'),
+    'form2' => drupal_get_form('form_test_html_id'),
+  );
+}
+
+/**
+ * Builds a simple form to test duplicate HTML IDs.
+ */
+function form_test_html_id($form, &$form_state) {
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => 'name',
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save',
+  );
+  return $form;
 }

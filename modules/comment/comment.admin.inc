@@ -98,13 +98,14 @@ function comment_admin_overview($form, &$form_state, $arg) {
     // Remove the first node title from the node_titles array and attach to
     // the comment.
     $comment->node_title = array_shift($node_titles);
+    $comment_body = field_get_items('comment', $comment, 'comment_body');
     $options[$comment->cid] = array(
       'subject' => array(
         'data' => array(
           '#type' => 'link',
           '#title' => $comment->subject,
           '#href' => 'comment/' . $comment->cid,
-          '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body[LANGUAGE_NONE][0]['value'], 128)), 'fragment' => 'comment-' . $comment->cid),
+          '#options' => array('attributes' => array('title' => truncate_utf8($comment_body[0]['value'], 128)), 'fragment' => 'comment-' . $comment->cid),
         ),
       ),
       'author' => theme('username', array('account' => $comment)),

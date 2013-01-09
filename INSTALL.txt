@@ -89,8 +89,8 @@ INSTALLATION
    - Download a translation file for the correct Drupal version and language
      from the translation server: http://localize.drupal.org/translate/downloads
 
-   - Place the file into your installation profile's translations
-     directory. For instance, if you are using the Standard install profile,
+   - Place the file into your installation profile's translations directory.
+     For instance, if you are using the Standard installation profile,
      move the .po file into the directory:
 
        profiles/standard/translations/

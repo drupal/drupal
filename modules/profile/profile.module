@@ -229,7 +229,7 @@ function profile_user_insert(&$edit, $account, $category) {
 /**
  * Implements hook_user_cancel().
  */
-function profile_user_cancel(&$edit, $account, $method) {
+function profile_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       db_delete('profile_value')

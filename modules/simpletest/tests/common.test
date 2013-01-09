@@ -1847,14 +1847,14 @@ class DrupalRenderTestCase extends DrupalWebTestCase {
 class ValidUrlTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Valid Url',
-      'description' => "Performs tests on Drupal's valid url function.",
+      'name' => 'Valid URL',
+      'description' => "Performs tests on Drupal's valid URL function.",
       'group' => 'System'
     );
   }
 
   /**
-   * Test valid absolute urls.
+   * Test valid absolute URLs.
    */
   function testValidAbsolute() {
     $url_schemes = array('http', 'https', 'ftp');
@@ -1889,7 +1889,7 @@ class ValidUrlTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test invalid absolute urls.
+   * Test invalid absolute URLs.
    */
   function testInvalidAbsolute() {
     $url_schemes = array('http', 'https', 'ftp');
@@ -1909,7 +1909,7 @@ class ValidUrlTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test valid relative urls.
+   * Test valid relative URLs.
    */
   function testValidRelative() {
     $valid_relative_urls = array(
@@ -1930,7 +1930,7 @@ class ValidUrlTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test invalid relative urls.
+   * Test invalid relative URLs.
    */
   function testInvalidRelative() {
     $invalid_relative_urls = array(
@@ -2540,12 +2540,12 @@ class DrupalAddFeedTestCase extends DrupalWebTestCase {
         'output_url' => url($path, array('absolute' => TRUE)),
         'title' => '',
       ),
-      'external url without title' => array(
+      'external URL without title' => array(
         'input_url' => $external_url,
         'output_url' => $external_url,
         'title' => '',
       ),
-      'local url without title' => array(
+      'local URL without title' => array(
         'input_url' => $fully_qualified_local_url,
         'output_url' => $fully_qualified_local_url,
         'title' => '',
@@ -2555,12 +2555,12 @@ class DrupalAddFeedTestCase extends DrupalWebTestCase {
         'output_url' => url($path_for_title, array('absolute' => TRUE)),
         'title' => $this->randomName(12),
       ),
-      'external url with title' => array(
+      'external URL with title' => array(
         'input_url' => $external_for_title,
         'output_url' => $external_for_title,
         'title' => $this->randomName(12),
       ),
-      'local url with title' => array(
+      'local URL with title' => array(
         'input_url' => $fully_qualified_for_title,
         'output_url' => $fully_qualified_for_title,
         'title' => $this->randomName(12),
@@ -2581,9 +2581,36 @@ class DrupalAddFeedTestCase extends DrupalWebTestCase {
    * Create a pattern representing the RSS feed in the page.
    */
   function urlToRSSLinkPattern($url, $title = '') {
-    // Escape any regular expression characters in the url ('?' is the worst).
+    // Escape any regular expression characters in the URL ('?' is the worst).
     $url = preg_replace('/([+?.*])/', '[$0]', $url);
     $generated_pattern = '%<link +rel="alternate" +type="application/rss.xml" +title="' . $title . '" +href="' . $url . '" */>%';
     return $generated_pattern;
   }
+}
+
+/**
+ * Test for theme_feed_icon().
+ */
+class FeedIconTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Feed icon',
+      'description' => 'Check escaping of theme_feed_icon()',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Check that special characters are correctly escaped. Test for issue #1211668.
+   */
+  function testFeedIconEscaping() {
+    $variables = array();
+    $variables['url'] = 'node';
+    $variables['title'] = '<>&"\'';
+    $text = theme_feed_icon($variables);
+    preg_match('/title="(.*?)"/', $text, $matches);
+    $this->assertEqual($matches[1], 'Subscribe to &amp;&quot;&#039;', 'theme_feed_icon() escapes reserved HTML characters.');
+  }
+
 }

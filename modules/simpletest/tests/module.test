@@ -25,7 +25,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $profile_info = install_profile_info('standard', 'en');
     $module_list = $profile_info['dependencies'];
 
-    // Install profile is a module that is expected to be loaded.
+    // Installation profile is a module that is expected to be loaded.
     $module_list[] = 'standard';
 
     sort($module_list);
@@ -171,12 +171,12 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $this->assertFalse(module_exists('php'), t('Disabling a module with unlisted dependents succeeded.'));
     $this->assertEqual(variable_get('test_module_disable_order', array()), array('forum', 'poll', 'php'), t('Modules were disabled in the correct order by module_disable().'));
 
-    // Disable a module that is listed as a dependency by the install profile.
-    // Make sure that the profile itself is not on the list of dependent
-    // modules to be disabled.
+    // Disable a module that is listed as a dependency by the installation
+    // profile. Make sure that the profile itself is not on the list of
+    // dependent modules to be disabled.
     $profile = drupal_get_profile();
     $info = install_profile_info($profile);
-    $this->assertTrue(in_array('comment', $info['dependencies']), t('Comment module is listed as a dependency of the install profile.'));
+    $this->assertTrue(in_array('comment', $info['dependencies']), t('Comment module is listed as a dependency of the installation profile.'));
     $this->assertTrue(module_exists('comment'), t('Comment module is enabled.'));
     module_disable(array('comment'));
     $this->assertFalse(module_exists('comment'), t('Comment module was disabled.'));

@@ -386,20 +386,53 @@ function locale_form_node_form_alter(&$form, &$form_state) {
 /**
  * Form submit handler for node_form().
  *
- * Checks if Locale is registered as a translation handler and handle possible
- * node language changes.
- *
  * This submit handler needs to run before entity_form_submit_build_entity()
  * is invoked by node_form_submit_build_node(), because it alters the values of
  * attached fields. Therefore, it cannot be a hook_node_submit() implementation.
  */
 function locale_field_node_form_submit($form, &$form_state) {
-  if (field_has_translation_handler('node', 'locale')) {
-    $node = (object) $form_state['values'];
-    $current_language = entity_language('node', $node);
-    list(, , $bundle) = entity_extract_ids('node', $node);
+  locale_field_entity_form_submit('node', $form, $form_state);
+}
 
-    foreach (field_info_instances('node', $bundle) as $instance) {
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
+  // If a content type has multilingual support we set the content language as
+  // comment language.
+  if ($form['language']['#value'] == LANGUAGE_NONE && locale_multilingual_node_type($form['#node']->type)) {
+    global $language_content;
+    $form['language']['#value'] = $language_content->language;
+    $submit_callback = 'locale_field_comment_form_submit';
+    array_unshift($form['actions']['preview']['#submit'], $submit_callback);
+    array_unshift($form['#submit'], $submit_callback);
+  }
+}
+
+/**
+ * Form submit handler for comment_form().
+ *
+ * This submit handler needs to run before entity_form_submit_build_entity()
+ * is invoked by comment_form_submit_build_comment(), because it alters the
+ * values of attached fields.
+ */
+function locale_field_comment_form_submit($form, &$form_state) {
+  locale_field_entity_form_submit('comment', $form, $form_state);
+}
+
+/**
+ * Handles field language on submit for the given entity type.
+ *
+ * Checks if Locale is registered as a translation handler and handle possible
+ * language changes.
+ */
+function locale_field_entity_form_submit($entity_type, $form, &$form_state ) {
+  if (field_has_translation_handler($entity_type, 'locale')) {
+    $entity = (object) $form_state['values'];
+    $current_language = entity_language($entity_type, $entity);
+    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+
+    foreach (field_info_instances($entity_type, $bundle) as $instance) {
       $field_name = $instance['field_name'];
       $field = field_info_field($field_name);
       $previous_language = $form[$field_name]['#language'];
@@ -407,7 +440,7 @@ function locale_field_node_form_submit($form, &$form_state) {
       // Handle a possible language change: new language values are inserted,
       // previous ones are deleted.
       if ($field['translatable'] && $previous_language != $current_language) {
-        $form_state['values'][$field_name][$current_language] = $node->{$field_name}[$previous_language];
+        $form_state['values'][$field_name][$current_language] = $entity->{$field_name}[$previous_language];
         $form_state['values'][$field_name][$previous_language] = array();
       }
     }
@@ -491,6 +524,9 @@ function locale_field_language_fallback(&$display_language, $entity, $langcode) 
  */
 function locale_entity_info_alter(&$entity_info) {
   $entity_info['node']['translation']['locale'] = TRUE;
+  if (isset($entity_info['comment'])) {
+    $entity_info['comment']['translation']['locale'] = TRUE;
+  }
 }
 
 /**
@@ -1033,7 +1069,7 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
       include_once DRUPAL_ROOT . '/includes/language.inc';
 
       foreach (language_types_configurable() as $type) {
-        // Get url rewriter callbacks only from enabled language providers.
+        // Get URL rewriter callbacks only from enabled language providers.
         $negotiation = variable_get("language_negotiation_$type", array());
 
         foreach ($negotiation as $id => $provider) {
@@ -1058,17 +1094,5 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
     if (empty($callbacks)) {
       unset($options['language']);
     }
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
-  // If a content type has multilingual support we set the content language as
-  // comment language.
-  if ($form['language']['#value'] == LANGUAGE_NONE && locale_multilingual_node_type($form['#node']->type)) {
-    global $language_content;
-    $form['language']['#value'] = $language_content->language;
   }
 }

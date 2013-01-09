@@ -461,7 +461,7 @@ function _locale_get_predefined_list() {
     'tt' => array('Tatar', 'Tatarça'),
     'tw' => array('Twi'),
     'ty' => array('Tahitian'),
-    'ug' => array('Uighur'),
+    'ug' => array('Uyghur'),
     'uk' => array('Ukrainian', 'Українська'),
     'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', LANGUAGE_RTL),
     'uz' => array('Uzbek', "o'zbek"),

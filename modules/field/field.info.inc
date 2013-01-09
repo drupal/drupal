@@ -54,8 +54,8 @@ function field_info_cache_clear() {
  *     the field type.
  *   - 'widget types': Array of hook_field_widget_info() results, keyed by
  *     widget_type. Each element has the following components: label, field
- *     types, settings, and behaviors from hook_field_widget_info(), as well
- *     as module, giving the module that exposes the widget type.
+ *     types, settings, weight, and behaviors from hook_field_widget_info(),
+ *     as well as module, giving the module that exposes the widget type.
  *   - 'formatter types': Array of hook_field_formatter_info() results, keyed by
  *     formatter_type. Each element has the following components: label, field
  *     types, and behaviors from hook_field_formatter_info(), as well as
@@ -124,6 +124,7 @@ function _field_info_collate_types($reset = FALSE) {
         }
       }
       drupal_alter('field_widget_info', $info['widget types']);
+      uasort($info['widget types'], 'drupal_sort_weight');
 
       // Populate formatter types.
       foreach (module_implements('field_formatter_info') as $module) {
@@ -702,6 +703,10 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  *   The field name for the instance.
  * @param $bundle_name
  *   The bundle name for the instance.
+ *
+ * @return
+ *   An associative array of instance data for the specific field and bundle;
+ *   NULL if the instance does not exist.
  */
 function field_info_instance($entity_type, $field_name, $bundle_name) {
   $info = _field_info_collate_fields();

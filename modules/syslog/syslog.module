@@ -70,10 +70,11 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
   $form['actions']['#weight'] = 1;
 }
 
- /**
+/**
  * Lists all possible syslog facilities for UNIX/Linux.
  *
  * @return array
+ *   An array of syslog facilities for UNIX/Linux.
  */
 function syslog_facility_list() {
   return array(

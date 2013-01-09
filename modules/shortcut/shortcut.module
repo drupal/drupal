@@ -86,7 +86,7 @@ function shortcut_menu() {
     'title' => 'Edit shortcuts',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('shortcut_set_customize', 4),
-    'title callback' => 'shortcut_set_title',
+    'title callback' => 'shortcut_set_title_callback',
     'title arguments' => array(4),
     'access callback' => 'shortcut_set_edit_access',
     'access arguments' => array(4),
@@ -617,8 +617,8 @@ function shortcut_valid_link($path) {
   if ($path != $normal_path) {
     $path = $normal_path;
   }
-  // Only accept links that correspond to valid paths on the site itself.
-  return !url_is_external($path) && menu_get_item($path);
+  // An empty path is valid too and will be converted to <front>.
+  return (!url_is_external($path) && menu_get_item($path)) || empty($path) || $path == '<front>';
 }
 
 /**
@@ -735,9 +735,15 @@ function shortcut_toolbar_pre_render($toolbar) {
 }
 
 /**
- * Returns the title of a shortcut set.
+ * Returns the sanitized title of a shortcut set.
  *
- * Title callback for the editing pages for shortcut sets.
+ * Deprecated. This function was previously used as a menu item title callback
+ * but has been replaced by shortcut_set_title_callback() (which does not
+ * sanitize the title, since the menu system does that automatically). In
+ * Drupal 7, use that function for title callbacks, and call check_plain()
+ * directly if you need a sanitized title. In Drupal 8, this function will be
+ * restored as a title callback and therefore will no longer sanitize its
+ * output.
  *
  * @param $shortcut_set
  *   An object representing the shortcut set, as returned by
@@ -747,3 +753,15 @@ function shortcut_set_title($shortcut_set) {
   return check_plain($shortcut_set->title);
 }
 
+/**
+ * Returns the title of a shortcut set.
+ *
+ * Title callback for the editing pages for shortcut sets.
+ *
+ * @param $shortcut_set
+ *   An object representing the shortcut set, as returned by
+ *   shortcut_set_load().
+ */
+function shortcut_set_title_callback($shortcut_set) {
+  return $shortcut_set->title;
+}

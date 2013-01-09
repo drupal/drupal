@@ -278,5 +278,5 @@ function theme_book_admin_table($variables) {
     $rows[] = $row;
   }
 
-  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'book-outline')));
+  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'book-outline'), 'empty' => t('No book content available.')));
 }

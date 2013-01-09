@@ -190,6 +190,38 @@ class FormsTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests validation for required textfield element without title.
+   *
+   * Submits a test form containing a textfield form elements without title.
+   * The form is submitted twice, first without value for the required field
+   * and then with value. Each submission is checked for relevant error
+   * messages.
+   *
+   * @see form_test_validate_required_form_no_title()
+   */
+  function testRequiredTextfieldNoTitle() {
+    $form = $form_state = array();
+    $form = form_test_validate_required_form_no_title($form, $form_state);
+
+    // Attempt to submit the form with no required field set.
+    $edit = array();
+    $this->drupalPost('form-test/validate-required-no-title', $edit, 'Submit');
+    $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
+
+    // Check the page for the error class on the textfield.
+    $this->assertFieldByXPath('//input[contains(@class, "error")]', FALSE, 'Error input form element class found.');
+
+    // Submit again with required fields set and verify that there are no
+    // error messages.
+    $edit = array(
+      'textfield' => $this->randomString(),
+    );
+    $this->drupalPost(NULL, $edit, 'Submit');
+    $this->assertNoFieldByXpath('//input[contains(@class, "error")]', FALSE, 'No error input form element class found.');
+    $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
+  }
+
+  /**
    * Test default value handling for checkboxes.
    *
    * @see _form_test_checkbox()
@@ -1309,6 +1341,81 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests form redirection.
+ */
+class FormsRedirectTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Form redirecting',
+      'description' => 'Tests functionality of drupal_redirect_form().',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('form_test'));
+  }
+
+  /**
+   * Tests form redirection.
+   */
+  function testRedirect() {
+    $path = 'form-test/redirect';
+    $options = array('query' => array('foo' => 'bar'));
+    $options['absolute'] = TRUE;
+
+    // Test basic redirection.
+    $edit = array(
+      'redirection' => TRUE,
+      'destination' => $this->randomName(),
+    );
+    $this->drupalPost($path, $edit, t('Submit'));
+    $this->assertUrl($edit['destination'], array(), 'Basic redirection works.');
+
+
+    // Test without redirection.
+    $edit = array(
+      'redirection' => FALSE,
+    );
+    $this->drupalPost($path, $edit, t('Submit'));
+    $this->assertUrl($path, array(), 'When redirect is set to FALSE, there should be no redirection.');
+
+    // Test redirection with query parameters.
+    $edit = array(
+      'redirection' => TRUE,
+      'destination' => $this->randomName(),
+    );
+    $this->drupalPost($path, $edit, t('Submit'), $options);
+    $this->assertUrl($edit['destination'], array(), 'Redirection with query parameters works.');
+
+    // Test without redirection but with query parameters.
+    $edit = array(
+      'redirection' => FALSE,
+    );
+    $this->drupalPost($path, $edit, t('Submit'), $options);
+    $this->assertUrl($path, $options, 'When redirect is set to FALSE, there should be no redirection, and the query parameters should be passed along.');
+
+    // Test redirection back to the original path.
+    $edit = array(
+      'redirection' => TRUE,
+      'destination' => '',
+    );
+    $this->drupalPost($path, $edit, t('Submit'));
+    $this->assertUrl($path, array(), 'When using an empty redirection string, there should be no redirection.');
+
+    // Test redirection back to the original path with query parameters.
+    $edit = array(
+      'redirection' => TRUE,
+      'destination' => '',
+    );
+    $this->drupalPost($path, $edit, t('Submit'), $options);
+    $this->assertUrl($path, $options, 'When using an empty redirection string, there should be no redirection, and the query parameters should be passed along.');
+  }
+
+}
+
+/**
  * Test the programmatic form submission behavior.
  */
 class FormsProgrammaticTestCase extends DrupalWebTestCase {
@@ -1673,5 +1780,36 @@ class FormCheckboxTestCase extends DrupalWebTestCase {
       $name = (string) $checkbox['name'];
       $this->assertIdentical($checked, $name == 'checkbox_off[0]' || $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', t('Checkbox %name correctly checked', array('%name' => $name)));
     }
+  }
+}
+
+/**
+ * Tests uniqueness of generated HTML IDs.
+ */
+class HTMLIdTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Unique HTML IDs',
+      'description' => 'Tests functionality of drupal_html_id().',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests that HTML IDs do not get duplicated when form validation fails.
+   */
+  function testHTMLId() {
+    $this->drupalGet('form-test/double-form');
+    $this->assertNoDuplicateIds('There are no duplicate IDs');
+
+    // Submit second form with empty title.
+    $edit = array();
+    $this->drupalPost(NULL, $edit, 'Save', array(), array(), 'form-test-html-id--2');
+    $this->assertNoDuplicateIds('There are no duplicate IDs');
   }
 }

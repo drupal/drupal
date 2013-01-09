@@ -99,7 +99,14 @@ function _menu_overview_tree_form($tree) {
       $mlid = 'mlid:' . $item['mlid'];
       $form[$mlid]['#item'] = $item;
       $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => array('menu-disabled')) : array('class' => array('menu-enabled'));
-      $form[$mlid]['title']['#markup'] = l($item['title'], $item['href'], $item['localized_options']) . ($item['hidden'] ? ' (' . t('disabled') . ')' : '');
+      $form[$mlid]['title']['#markup'] = l($item['title'], $item['href'], $item['localized_options']);
+      if ($item['hidden']) {
+        $form[$mlid]['title']['#markup'] .= ' (' . t('disabled') . ')';
+      }
+      elseif ($item['link_path'] == 'user' && $item['module'] == 'system') {
+        $form[$mlid]['title']['#markup'] .= ' (' . t('logged in users only') . ')';
+      }
+
       $form[$mlid]['hidden'] = array(
         '#type' => 'checkbox',
         '#title' => t('Enable @title menu link', array('@title' => $item['title'])),
@@ -463,7 +470,6 @@ function menu_edit_menu($form, &$form_state, $type, $menu = array()) {
     '#machine_name' => array(
       'exists' => 'menu_edit_menu_name_exists',
       'source' => array('title'),
-      'label' => t('URL path'),
       'replace_pattern' => '[^a-z0-9-]+',
       'replace' => '-',
     ),

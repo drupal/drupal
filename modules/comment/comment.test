@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file 
+ * @file
  * Tests for comment.module.
  */
 
@@ -48,7 +48,7 @@ class CommentHelperCase extends DrupalWebTestCase {
       $edit['subject'] = $subject;
     }
     else {
-      $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
+      $this->assertNoFieldByName('subject', '', 'Subject field not found.');
     }
 
     if ($contact !== NULL && is_array($contact)) {
@@ -57,19 +57,19 @@ class CommentHelperCase extends DrupalWebTestCase {
     switch ($preview_mode) {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
-        $this->assertNoFieldByName('op', t('Save'), t('Save button not found.'));
+        $this->assertNoFieldByName('op', t('Save'), 'Save button not found.');
         $this->drupalPost(NULL, $edit, t('Preview'));
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
-        $this->assertFieldByName('op', t('Preview'), t('Preview button found.'));
-        $this->assertFieldByName('op', t('Save'), t('Save button found.'));
+        $this->assertFieldByName('op', t('Preview'), 'Preview button found.');
+        $this->assertFieldByName('op', t('Save'), 'Save button found.');
         $this->drupalPost(NULL, $edit, t('Save'));
         break;
 
       case DRUPAL_DISABLED:
-        $this->assertNoFieldByName('op', t('Preview'), t('Preview button not found.'));
-        $this->assertFieldByName('op', t('Save'), t('Save button found.'));
+        $this->assertNoFieldByName('op', t('Preview'), 'Preview button not found.');
+        $this->assertFieldByName('op', t('Save'), 'Save button found.');
         $this->drupalPost(NULL, $edit, t('Save'));
         break;
     }
@@ -83,7 +83,7 @@ class CommentHelperCase extends DrupalWebTestCase {
         $this->assertText($subject, 'Comment subject posted.');
       }
       $this->assertText($comment, 'Comment body posted.');
-      $this->assertTrue((!empty($match) && !empty($match[1])), t('Comment id found.'));
+      $this->assertTrue((!empty($match) && !empty($match[1])), 'Comment id found.');
     }
 
     if (isset($match[1])) {
@@ -122,7 +122,7 @@ class CommentHelperCase extends DrupalWebTestCase {
    */
   function deleteComment($comment) {
     $this->drupalPost('comment/' . $comment->id . '/delete', array(), t('Delete'));
-    $this->assertText(t('The comment and all its replies have been deleted.'), t('Comment deleted.'));
+    $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
 
   /**
@@ -200,7 +200,8 @@ class CommentHelperCase extends DrupalWebTestCase {
    */
   function setCommentSettings($name, $value, $message) {
     variable_set($name . '_article', $value);
-    $this->assertTrue(TRUE, t($message)); // Display status message.
+    // Display status message.
+    $this->assertTrue(TRUE, $message);
   }
 
   /**
@@ -230,10 +231,10 @@ class CommentHelperCase extends DrupalWebTestCase {
 
     if ($operation == 'delete') {
       $this->drupalPost(NULL, array(), t('Delete comments'));
-      $this->assertRaw(format_plural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), t('Operation "' . $operation . '" was performed on comment.'));
+      $this->assertRaw(format_plural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation @operation was performed on comment.', array('@operation' => $operation)));
     }
     else {
-      $this->assertText(t('The update has been performed.'), t('Operation "' . $operation . '" was performed on comment.'));
+      $this->assertText(t('The update has been performed.'), format_string('Operation @operation was performed on comment.', array('@operation' => $operation)));
     }
   }
 
@@ -280,7 +281,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text);
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+    $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
@@ -295,12 +296,12 @@ class CommentInterfaceTest extends CommentHelperCase {
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+    $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Check comment display.
     $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id);
-    $this->assertText($subject_text, t('Individual comment subject found.'));
-    $this->assertText($comment_text, t('Individual comment body found.'));
+    $this->assertText($subject_text, 'Individual comment subject found.');
+    $this->assertText($comment_text, 'Individual comment body found.');
 
     // Set comments to have subject and preview to optional.
     $this->drupalLogout();
@@ -312,20 +313,20 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalGet('comment/' . $comment->id . '/edit');
     $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => ''));
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue(empty($comment_loaded->name) && $comment_loaded->uid == 0, t('Comment author successfully changed to anonymous.'));
+    $this->assertTrue(empty($comment_loaded->name) && $comment_loaded->uid == 0, 'Comment author successfully changed to anonymous.');
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomName();
     $this->drupalGet('comment/' . $comment->id . '/edit');
     $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $random_name));
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertText($random_name . ' (' . t('not verified') . ')', t('Comment author successfully changed to an unverified user.'));
+    $this->assertText($random_name . ' (' . t('not verified') . ')', 'Comment author successfully changed to an unverified user.');
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id . '/edit');
     $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $this->web_user->name));
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($comment_loaded->name == $this->web_user->name && $comment_loaded->uid == $this->web_user->uid, t('Comment author successfully changed to a registered user.'));
+    $this->assertTrue($comment_loaded->name == $this->web_user->name && $comment_loaded->uid == $this->web_user->uid, 'Comment author successfully changed to a registered user.');
 
     $this->drupalLogout();
 
@@ -333,60 +334,60 @@ class CommentInterfaceTest extends CommentHelperCase {
     // subject though field enabled.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
-    $this->assertText($subject_text, t('Individual comment-reply subject found.'));
-    $this->assertText($comment_text, t('Individual comment-reply body found.'));
+    $this->assertText($subject_text, 'Individual comment-reply subject found.');
+    $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
     $reply_loaded = comment_load($reply->id);
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
-    $this->assertEqual($comment->id, $reply_loaded->pid, t('Pid of a reply to a comment is set correctly.'));
-    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.00/', $reply_loaded->thread, t('Thread of reply grows correctly.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
+    $this->assertEqual($comment->id, $reply_loaded->pid, 'Pid of a reply to a comment is set correctly.');
+    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.00/', $reply_loaded->thread, 'Thread of reply grows correctly.');
 
     // Second reply to comment #3 creating comment #4.
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
-    $this->assertText($subject_text, t('Individual comment-reply subject found.'));
-    $this->assertText($comment_text, t('Individual comment-reply body found.'));
+    $this->assertText($subject_text, 'Individual comment-reply subject found.');
+    $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $reply_loaded = comment_load($reply->id);
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Second reply found.'));
-    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.01/', $reply_loaded->thread, t('Thread of second reply grows correctly.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
+    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.01/', $reply_loaded->thread, 'Thread of second reply grows correctly.');
 
     // Edit reply.
     $this->drupalGet('comment/' . $reply->id . '/edit');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Modified reply found.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Modified reply found.');
 
     // Correct link count
     $this->drupalGet('node');
-    $this->assertRaw('4 comments', t('Link to the 4 comments exist.'));
+    $this->assertRaw('4 comments', 'Link to the 4 comments exist.');
 
     // Confirm a new comment is posted to the correct page.
     $this->setCommentsPerPage(2);
     $comment_new_page = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
-    $this->assertTrue($this->commentExists($comment_new_page), t('Page one exists. %s'));
+    $this->assertTrue($this->commentExists($comment_new_page), 'Page one exists. %s');
     $this->drupalGet('node/' . $this->node->nid, array('query' => array('page' => 1)));
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Page two exists. %s'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Page two exists. %s');
     $this->setCommentsPerPage(50);
 
     // Attempt to post to node with comments disabled.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_HIDDEN));
-    $this->assertTrue($this->node, t('Article node created.'));
+    $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertText('This discussion is closed', t('Posting to node with comments disabled'));
-    $this->assertNoField('edit-comment', t('Comment body field found.'));
+    $this->assertText('This discussion is closed', 'Posting to node with comments disabled');
+    $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with read-only comments.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_CLOSED));
-    $this->assertTrue($this->node, t('Article node created.'));
+    $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertText('This discussion is closed', t('Posting to node with comments read-only'));
-    $this->assertNoField('edit-comment', t('Comment body field found.'));
+    $this->assertText('This discussion is closed', 'Posting to node with comments read-only');
+    $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with comments enabled (check field names etc).
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
-    $this->assertTrue($this->node, t('Article node created.'));
+    $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertNoText('This discussion is closed', t('Posting to node with comments enabled'));
-    $this->assertField('edit-comment-body-' . $langcode . '-0-value', t('Comment body field found.'));
+    $this->assertNoText('This discussion is closed', 'Posting to node with comments enabled');
+    $this->assertField('edit-comment-body-' . $langcode . '-0-value', 'Comment body field found.');
 
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();
@@ -395,8 +396,8 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->deleteComment($comment_new_page);
 
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertFalse($this->commentExists($comment), t('Comment not found.'));
-    $this->assertFalse($this->commentExists($reply, TRUE), t('Reply not found.'));
+    $this->assertFalse($this->commentExists($comment), 'Comment not found.');
+    $this->assertFalse($this->commentExists($reply, TRUE), 'Reply not found.');
 
     // Enabled comment form on node page.
     $this->drupalLogin($this->admin_user);
@@ -407,7 +408,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->node->nid);
     $form_comment = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
-    $this->assertTrue($this->commentExists($form_comment), t('Form comment found.'));
+    $this->assertTrue($this->commentExists($form_comment), 'Form comment found.');
 
     // Disable comment form on node page.
     $this->drupalLogout();
@@ -428,7 +429,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->assertNoLink(t('@count new comments', array('@count' => 0)));
     $this->assertLink(t('Read more'));
     $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
-    $this->assertTrue(count($count) == 1, t('One child found'));
+    $this->assertTrue(count($count) == 1, 'One child found');
 
     // Create a new comment. This helper function may be run with different
     // comment settings so use comment_save() to avoid complex setup.
@@ -452,8 +453,8 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalGet('node');
     $this->assertLink(t('1 new comment'));
     $this->clickLink(t('1 new comment'));
-    $this->assertRaw('<a id="new"></a>', t('Found "new" marker.'));
-    $this->assertTrue($this->xpath('//a[@id=:new]/following-sibling::a[1][@id=:comment_id]', array(':new' => 'new', ':comment_id' => 'comment-1')), t('The "new" anchor is positioned at the right comment.'));
+    $this->assertRaw('<a id="new"></a>', 'Found "new" marker.');
+    $this->assertTrue($this->xpath('//a[@id=:new]/following-sibling::a[1][@id=:comment_id]', array(':new' => 'new', ':comment_id' => 'comment-1')), 'The "new" anchor is positioned at the right comment.');
 
     // Test if "new comment" link is correctly removed.
     $this->drupalGet('node');
@@ -590,10 +591,10 @@ class CommentInterfaceTest extends CommentHelperCase {
 
     // Checks the initial values of node comment statistics with no comment.
     $node = node_load($this->node->nid);
-    $this->assertEqual($node->last_comment_timestamp, $this->node->created, t('The initial value of node last_comment_timestamp is the node created date.'));
-    $this->assertEqual($node->last_comment_name, NULL, t('The initial value of node last_comment_name is NULL.'));
-    $this->assertEqual($node->last_comment_uid, $this->web_user->uid, t('The initial value of node last_comment_uid is the node uid.'));
-    $this->assertEqual($node->comment_count, 0, t('The initial value of node comment_count is zero.'));
+    $this->assertEqual($node->last_comment_timestamp, $this->node->created, 'The initial value of node last_comment_timestamp is the node created date.');
+    $this->assertEqual($node->last_comment_name, NULL, 'The initial value of node last_comment_name is NULL.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user->uid, 'The initial value of node last_comment_uid is the node uid.');
+    $this->assertEqual($node->comment_count, 0, 'The initial value of node comment_count is zero.');
 
     // Post comment #1 as web_user2.
     $this->drupalLogin($this->web_user2);
@@ -604,9 +605,9 @@ class CommentInterfaceTest extends CommentHelperCase {
     // Checks the new values of node comment statistics with comment #1.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, NULL, TRUE);
-    $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is NULL.'));
-    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is the comment #1 uid.'));
-    $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is 1.'));
+    $this->assertEqual($node->last_comment_name, NULL, 'The value of node last_comment_name is NULL.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, 'The value of node last_comment_uid is the comment #1 uid.');
+    $this->assertEqual($node->comment_count, 1, 'The value of node comment_count is 1.');
 
     // Prepare for anonymous comment submission (comment approval enabled).
     variable_set('user_register', USER_REGISTER_VISITORS);
@@ -629,9 +630,9 @@ class CommentInterfaceTest extends CommentHelperCase {
     // ensure they haven't changed since the comment has not been moderated.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, NULL, TRUE);
-    $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is still NULL.'));
-    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is still the comment #1 uid.'));
-    $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is still 1.'));
+    $this->assertEqual($node->last_comment_name, NULL, 'The value of node last_comment_name is still NULL.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, 'The value of node last_comment_uid is still the comment #1 uid.');
+    $this->assertEqual($node->comment_count, 1, 'The value of node comment_count is still 1.');
 
     // Prepare for anonymous comment submission (no approval required).
     $this->drupalLogin($this->admin_user);
@@ -650,9 +651,9 @@ class CommentInterfaceTest extends CommentHelperCase {
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, NULL, TRUE);
-    $this->assertEqual($node->last_comment_name, $comment_loaded->name, t('The value of node last_comment_name is the name of the anonymous user.'));
-    $this->assertEqual($node->last_comment_uid, 0, t('The value of node last_comment_uid is zero.'));
-    $this->assertEqual($node->comment_count, 2, t('The value of node comment_count is 2.'));
+    $this->assertEqual($node->last_comment_name, $comment_loaded->name, 'The value of node last_comment_name is the name of the anonymous user.');
+    $this->assertEqual($node->last_comment_uid, 0, 'The value of node last_comment_uid is zero.');
+    $this->assertEqual($node->comment_count, 2, 'The value of node comment_count is 2.');
   }
 
   /**
@@ -919,10 +920,10 @@ class CommentInterfaceTest extends CommentHelperCase {
         if ($path == "node/$nid") {
           $elements = $this->xpath('//form[@id=:id]', array(':id' => 'comment-form'));
           if ($info['form'] == COMMENT_FORM_BELOW) {
-            $this->assertTrue(count($elements), t('Comment form found below.'));
+            $this->assertTrue(count($elements), 'Comment form found below.');
           }
           else {
-            $this->assertFalse(count($elements), t('Comment form not found below.'));
+            $this->assertFalse(count($elements), 'Comment form not found below.');
           }
         }
       }
@@ -974,13 +975,13 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->drupalPost('node/' . $this->node->nid, $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
-    $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
-    $this->assertText($edit['subject'], t('Subject displayed.'));
-    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], t('Comment displayed.'));
+    $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
+    $this->assertText($edit['subject'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], 'Comment displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
-    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
+    $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
 
     // Check that the signature is displaying with the correct text format.
     $this->assertLink($test_signature);
@@ -1013,28 +1014,28 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Preview'));
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
-    $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
-    $this->assertText($edit['subject'], t('Subject displayed.'));
-    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], t('Comment displayed.'));
-    $this->assertText($edit['name'], t('Author displayed.'));
-    $this->assertText($expected_text_date, t('Date displayed.'));
+    $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
+    $this->assertText($edit['subject'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[' . $langcode . '][0][value]'], 'Comment displayed.');
+    $this->assertText($edit['name'], 'Author displayed.');
+    $this->assertText($expected_text_date, 'Date displayed.');
 
     // Check that the subject, comment, author and date fields are displayed with the correct values.
-    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
-    $this->assertFieldByName('name', $edit['name'], t('Author field displayed.'));
-    $this->assertFieldByName('date', $edit['date'], t('Date field displayed.'));
+    $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
+    $this->assertFieldByName('name', $edit['name'], 'Author field displayed.');
+    $this->assertFieldByName('date', $edit['date'], 'Date field displayed.');
 
     // Check that saving a comment produces a success message.
     $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Save'));
-    $this->assertText(t('Your comment has been posted.'), t('Comment posted.'));
+    $this->assertText(t('Your comment has been posted.'), 'Comment posted.');
 
     // Check that the comment fields are correct after loading the saved comment.
     $this->drupalGet('comment/' . $comment->id . '/edit');
-    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
-    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
-    $this->assertFieldByName('name', $edit['name'], t('Author field displayed.'));
-    $this->assertFieldByName('date', $expected_form_date, t('Date field displayed.'));
+    $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
+    $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
+    $this->assertFieldByName('name', $edit['name'], 'Author field displayed.');
+    $this->assertFieldByName('date', $expected_form_date, 'Date field displayed.');
 
     // Submit the form using the displayed values.
     $displayed = array();
@@ -1046,10 +1047,10 @@ class CommentPreviewTest extends CommentHelperCase {
 
     // Check that the saved comment is still correct.
     $comment_loaded = comment_load($comment->id);
-    $this->assertEqual($comment_loaded->subject, $edit['subject'], t('Subject loaded.'));
-    $this->assertEqual($comment_loaded->comment_body[$langcode][0]['value'], $edit['comment_body[' . $langcode . '][0][value]'], t('Comment body loaded.'));
-    $this->assertEqual($comment_loaded->name, $edit['name'], t('Name loaded.'));
-    $this->assertEqual($comment_loaded->created, $raw_date, t('Date loaded.'));
+    $this->assertEqual($comment_loaded->subject, $edit['subject'], 'Subject loaded.');
+    $this->assertEqual($comment_loaded->comment_body[$langcode][0]['value'], $edit['comment_body[' . $langcode . '][0][value]'], 'Comment body loaded.');
+    $this->assertEqual($comment_loaded->name, $edit['name'], 'Name loaded.');
+    $this->assertEqual($comment_loaded->created, $raw_date, 'Date loaded.');
 
   }
 
@@ -1085,7 +1086,7 @@ class CommentAnonymous extends CommentHelperCase {
 
     // Post anonymous comment without contact info.
     $anonymous_comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
-    $this->assertTrue($this->commentExists($anonymous_comment1), t('Anonymous comment without contact info found.'));
+    $this->assertTrue($this->commentExists($anonymous_comment1), 'Anonymous comment without contact info found.');
 
     // Allow contact info.
     $this->drupalLogin($this->admin_user);
@@ -1094,15 +1095,15 @@ class CommentAnonymous extends CommentHelperCase {
     // Attempt to edit anonymous comment.
     $this->drupalGet('comment/' . $anonymous_comment1->id . '/edit');
     $edited_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
-    $this->assertTrue($this->commentExists($edited_comment, FALSE), t('Modified reply found.'));
+    $this->assertTrue($this->commentExists($edited_comment, FALSE), 'Modified reply found.');
     $this->drupalLogout();
 
     // Post anonymous comment with contact info (optional).
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertTrue($this->commentContactInfoAvailable(), t('Contact information available.'));
+    $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
     $anonymous_comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
-    $this->assertTrue($this->commentExists($anonymous_comment2), t('Anonymous comment with contact info (optional) found.'));
+    $this->assertTrue($this->commentExists($anonymous_comment2), 'Anonymous comment with contact info (optional) found.');
 
     // Ensure anonymous users cannot post in the name of registered users.
     $langcode = LANGUAGE_NONE;
@@ -1122,41 +1123,42 @@ class CommentAnonymous extends CommentHelperCase {
 
     // Try to post comment with contact info (required).
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertTrue($this->commentContactInfoAvailable(), t('Contact information available.'));
+    $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
     $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
-    $this->assertText(t('E-mail field is required.'), t('E-mail required.')); // Name should have 'Anonymous' for value by default.
-    $this->assertFalse($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) not found.'));
+    // Name should have 'Anonymous' for value by default.
+    $this->assertText(t('E-mail field is required.'), 'E-mail required.');
+    $this->assertFalse($this->commentExists($anonymous_comment3), 'Anonymous comment with contact info (required) not found.');
 
     // Post comment with contact info (required).
     $author_name = $this->randomName();
     $author_mail = $this->randomName() . '@example.com';
     $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), array('name' => $author_name, 'mail' => $author_mail));
-    $this->assertTrue($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) found.'));
+    $this->assertTrue($this->commentExists($anonymous_comment3), 'Anonymous comment with contact info (required) found.');
 
     // Make sure the user data appears correctly when editing the comment.
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('comment/' . $anonymous_comment3->id . '/edit');
-    $this->assertRaw($author_name, t("The anonymous user's name is correct when editing the comment."));
-    $this->assertRaw($author_mail, t("The anonymous user's e-mail address is correct when editing the comment."));
+    $this->assertRaw($author_name, "The anonymous user's name is correct when editing the comment.");
+    $this->assertRaw($author_mail, "The anonymous user's e-mail address is correct when editing the comment.");
 
     // Unpublish comment.
     $this->performCommentOperation($anonymous_comment3, 'unpublish');
 
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was unpublished.'));
+    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', 'Comment was unpublished.');
 
     // Publish comment.
     $this->performCommentOperation($anonymous_comment3, 'publish', TRUE);
 
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was published.'));
+    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', 'Comment was published.');
 
     // Delete comment.
     $this->performCommentOperation($anonymous_comment3, 'delete');
 
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was deleted.'));
+    $this->assertNoRaw('comments[' . $anonymous_comment3->id . ']', 'Comment was deleted.');
     $this->drupalLogout();
 
     // Reset.
@@ -1170,14 +1172,14 @@ class CommentAnonymous extends CommentHelperCase {
     // NOTE: if authenticated user has permission to post comments, then a
     // "Login or register to post comments" type link may be shown.
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', t('Comments were not displayed.'));
-    $this->assertNoLink('Add new comment', t('Link to add comment was found.'));
+    $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
+    $this->assertNoLink('Add new comment', 'Link to add comment was found.');
 
     // Attempt to view node-comment form while disallowed.
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $this->assertText('You are not authorized to post comments', t('Error attempting to post comment.'));
-    $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
-    $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', t('Comment field not found.'));
+    $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
+    $this->assertNoFieldByName('subject', '', 'Subject field not found.');
+    $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', 'Comment field not found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
@@ -1185,9 +1187,9 @@ class CommentAnonymous extends CommentHelperCase {
       'skip comment approval' => FALSE,
     ));
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertPattern('@<h2[^>]*>Comments</h2>@', t('Comments were displayed.'));
-    $this->assertLink('Log in', 1, t('Link to log in was found.'));
-    $this->assertLink('register', 1, t('Link to register was found.'));
+    $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
+    $this->assertLink('Log in', 1, 'Link to log in was found.');
+    $this->assertLink('register', 1, 'Link to register was found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => FALSE,
@@ -1195,13 +1197,13 @@ class CommentAnonymous extends CommentHelperCase {
       'skip comment approval' => TRUE,
     ));
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', t('Comments were not displayed.'));
-    $this->assertFieldByName('subject', '', t('Subject field found.'));
-    $this->assertFieldByName("comment_body[$langcode][0][value]", '', t('Comment field found.'));
+    $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
+    $this->assertFieldByName('subject', '', 'Subject field found.');
+    $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
 
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $anonymous_comment3->id);
-    $this->assertText('You are not authorized to view comments', t('Error attempting to post reply.'));
-    $this->assertNoText($author_name, t('Comment not displayed.'));
+    $this->assertText('You are not authorized to view comments', 'Error attempting to post reply.');
+    $this->assertNoText($author_name, 'Comment not displayed.');
   }
 }
 
@@ -1245,22 +1247,22 @@ class CommentPagerTest extends CommentHelperCase {
     // Check the first page of the node, and confirm the correct comments are
     // shown.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw(t('next'), t('Paging links found.'));
-    $this->assertTrue($this->commentExists($comments[0]), t('Comment 1 appears on page 1.'));
-    $this->assertFalse($this->commentExists($comments[1]), t('Comment 2 does not appear on page 1.'));
-    $this->assertFalse($this->commentExists($comments[2]), t('Comment 3 does not appear on page 1.'));
+    $this->assertRaw(t('next'), 'Paging links found.');
+    $this->assertTrue($this->commentExists($comments[0]), 'Comment 1 appears on page 1.');
+    $this->assertFalse($this->commentExists($comments[1]), 'Comment 2 does not appear on page 1.');
+    $this->assertFalse($this->commentExists($comments[2]), 'Comment 3 does not appear on page 1.');
 
     // Check the second page.
     $this->drupalGet('node/' . $node->nid, array('query' => array('page' => 1)));
-    $this->assertTrue($this->commentExists($comments[1]), t('Comment 2 appears on page 2.'));
-    $this->assertFalse($this->commentExists($comments[0]), t('Comment 1 does not appear on page 2.'));
-    $this->assertFalse($this->commentExists($comments[2]), t('Comment 3 does not appear on page 2.'));
+    $this->assertTrue($this->commentExists($comments[1]), 'Comment 2 appears on page 2.');
+    $this->assertFalse($this->commentExists($comments[0]), 'Comment 1 does not appear on page 2.');
+    $this->assertFalse($this->commentExists($comments[2]), 'Comment 3 does not appear on page 2.');
 
     // Check the third page.
     $this->drupalGet('node/' . $node->nid, array('query' => array('page' => 2)));
-    $this->assertTrue($this->commentExists($comments[2]), t('Comment 3 appears on page 3.'));
-    $this->assertFalse($this->commentExists($comments[0]), t('Comment 1 does not appear on page 3.'));
-    $this->assertFalse($this->commentExists($comments[1]), t('Comment 2 does not appear on page 3.'));
+    $this->assertTrue($this->commentExists($comments[2]), 'Comment 3 appears on page 3.');
+    $this->assertFalse($this->commentExists($comments[0]), 'Comment 1 does not appear on page 3.');
+    $this->assertFalse($this->commentExists($comments[1]), 'Comment 2 does not appear on page 3.');
 
     // Post a reply to the oldest comment and test again.
     $replies = array();
@@ -1272,21 +1274,21 @@ class CommentPagerTest extends CommentHelperCase {
     // We are still in flat view - the replies should not be on the first page,
     // even though they are replies to the oldest comment.
     $this->drupalGet('node/' . $node->nid, array('query' => array('page' => 0)));
-    $this->assertFalse($this->commentExists($reply, TRUE), t('In flat mode, reply does not appear on page 1.'));
+    $this->assertFalse($this->commentExists($reply, TRUE), 'In flat mode, reply does not appear on page 1.');
 
     // If we switch to threaded mode, the replies on the oldest comment
     // should be bumped to the first page and comment 6 should be bumped
     // to the second page.
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Switched to threaded mode.'));
     $this->drupalGet('node/' . $node->nid, array('query' => array('page' => 0)));
-    $this->assertTrue($this->commentExists($reply, TRUE), t('In threaded mode, reply appears on page 1.'));
-    $this->assertFalse($this->commentExists($comments[1]), t('In threaded mode, comment 2 has been bumped off of page 1.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'In threaded mode, reply appears on page 1.');
+    $this->assertFalse($this->commentExists($comments[1]), 'In threaded mode, comment 2 has been bumped off of page 1.');
 
     // If (# replies > # comments per page) in threaded expanded view,
     // the overage should be bumped.
     $reply2 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $this->drupalGet('node/' . $node->nid, array('query' => array('page' => 0)));
-    $this->assertFalse($this->commentExists($reply2, TRUE), t('In threaded mode where # replies > # comments per page, the newest reply does not appear on page 1.'));
+    $this->assertFalse($this->commentExists($reply2, TRUE), 'In threaded mode where # replies > # comments per page, the newest reply does not appear on page 1.');
 
     $this->drupalLogout();
   }
@@ -1388,7 +1390,7 @@ class CommentPagerTest extends CommentHelperCase {
       $result_order[] = substr($anchor['id'], 8);
     }
 
-    return $this->assertIdentical($expected_cids, $result_order, t('Comment order: expected @expected, returned @returned.', array('@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order))));
+    return $this->assertIdentical($expected_cids, $result_order, format_string('Comment order: expected @expected, returned @returned.', array('@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order))));
   }
 
   /**
@@ -1448,7 +1450,7 @@ class CommentPagerTest extends CommentHelperCase {
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned = comment_new_page_count($node->comment_count, $new_replies, $node);
       $returned_page = is_array($returned) ? $returned['page'] : 0;
-      $this->assertIdentical($expected_page, $returned_page, t('Flat mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
+      $this->assertIdentical($expected_page, $returned_page, format_string('Flat mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
     }
 
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Switched to threaded mode.'));
@@ -1466,7 +1468,7 @@ class CommentPagerTest extends CommentHelperCase {
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned = comment_new_page_count($node->comment_count, $new_replies, $node);
       $returned_page = is_array($returned) ? $returned['page'] : 0;
-      $this->assertEqual($expected_page, $returned_page, t('Threaded mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
+      $this->assertEqual($expected_page, $returned_page, format_string('Threaded mode, @new replies: expected page @expected, returned page @returned.', array('@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page)));
     }
   }
 }
@@ -1516,12 +1518,12 @@ class CommentNodeAccessTest extends CommentHelperCase {
     $comment_subject = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text, $comment_subject);
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+    $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Check comment display.
     $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id);
-    $this->assertText($comment_subject, t('Individual comment subject found.'));
-    $this->assertText($comment_text, t('Individual comment body found.'));
+    $this->assertText($comment_subject, 'Individual comment subject found.');
+    $this->assertText($comment_text, 'Individual comment body found.');
 
     // Reply to comment, creating second comment.
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
@@ -1529,7 +1531,7 @@ class CommentNodeAccessTest extends CommentHelperCase {
     $reply_subject = $this->randomName();
     $reply = $this->postComment(NULL, $reply_text, $reply_subject, TRUE);
     $reply_loaded = comment_load($reply->id);
-    $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
 
     // Go to the node page and verify comment and reply are visible.
     $this->drupalGet('node/' . $this->node->nid);
@@ -1572,7 +1574,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $subject = $this->randomName();
     $body = $this->randomName();
     $this->postComment($this->node, $body, $subject, TRUE); // Set $contact to true so that it won't check for id and message.
-    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), t('Comment requires approval.'));
+    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
 
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
@@ -1580,7 +1582,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $anonymous_comment4 = (object) array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body);
     $this->drupalLogout();
 
-    $this->assertFalse($this->commentExists($anonymous_comment4), t('Anonymous comment was not published.'));
+    $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
 
     // Approve comment.
     $this->drupalLogin($this->admin_user);
@@ -1588,7 +1590,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertTrue($this->commentExists($anonymous_comment4), t('Anonymous comment visible.'));
+    $this->assertTrue($this->commentExists($anonymous_comment4), 'Anonymous comment visible.');
 
     // Post 2 anonymous comments without contact info.
     $comments[] = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
@@ -1597,13 +1599,13 @@ class CommentApprovalTest extends CommentHelperCase {
     // Publish multiple comments in one operation.
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertText(t('Unapproved comments (@count)', array('@count' => 2)), t('Two unapproved comments waiting for approval.'));
+    $this->assertText(t('Unapproved comments (@count)', array('@count' => 2)), 'Two unapproved comments waiting for approval.');
     $edit = array(
       "comments[{$comments[0]->id}]" => 1,
       "comments[{$comments[1]->id}]" => 1,
     );
     $this->drupalPost(NULL, $edit, t('Update'));
-    $this->assertText(t('Unapproved comments (@count)', array('@count' => 0)), t('All comments were approved.'));
+    $this->assertText(t('Unapproved comments (@count)', array('@count' => 0)), 'All comments were approved.');
 
     // Delete multiple comments in one operation.
     $edit = array(
@@ -1613,9 +1615,9 @@ class CommentApprovalTest extends CommentHelperCase {
       "comments[{$anonymous_comment4->id}]" => 1,
     );
     $this->drupalPost(NULL, $edit, t('Update'));
-    $this->assertText(t('Are you sure you want to delete these comments and all their children?'), t('Confirmation required.'));
+    $this->assertText(t('Are you sure you want to delete these comments and all their children?'), 'Confirmation required.');
     $this->drupalPost(NULL, $edit, t('Delete comments'));
-    $this->assertText(t('No comments available.'), t('All comments were deleted.'));
+    $this->assertText(t('No comments available.'), 'All comments were deleted.');
   }
 
   /**
@@ -1636,7 +1638,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $subject = $this->randomName();
     $body = $this->randomName();
     $this->postComment($this->node, $body, $subject, TRUE); // Set $contact to true so that it won't check for id and message.
-    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), t('Comment requires approval.'));
+    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
 
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
@@ -1644,20 +1646,20 @@ class CommentApprovalTest extends CommentHelperCase {
     $anonymous_comment4 = (object) array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body);
     $this->drupalLogout();
 
-    $this->assertFalse($this->commentExists($anonymous_comment4), t('Anonymous comment was not published.'));
+    $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
 
     // Approve comment.
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('comment/1/approve');
-    $this->assertResponse(403, t('Forged comment approval was denied.'));
+    $this->assertResponse(403, 'Forged comment approval was denied.');
     $this->drupalGet('comment/1/approve', array('query' => array('token' => 'forged')));
-    $this->assertResponse(403, t('Forged comment approval was denied.'));
+    $this->assertResponse(403, 'Forged comment approval was denied.');
     $this->drupalGet('node/' . $this->node->nid);
     $this->clickLink(t('approve'));
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertTrue($this->commentExists($anonymous_comment4), t('Anonymous comment visible.'));
+    $this->assertTrue($this->commentExists($anonymous_comment4), 'Anonymous comment visible.');
   }
 }
 
@@ -1684,7 +1686,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
       'blocks[comment_recent][region]' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block saved to first sidebar region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block saved to first sidebar region.');
 
     // Set block title and variables.
     $block = array(
@@ -1692,7 +1694,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
       'comment_block_count' => 2,
     );
     $this->drupalPost('admin/structure/block/manage/comment/recent/configure', $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block saved.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block saved.');
 
     // Add some test comments, one without a subject.
     $comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
@@ -1704,20 +1706,20 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
     $this->drupalLogout();
     user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
     $this->drupalGet('');
-    $this->assertNoText($block['title'], t('Block was not found.'));
+    $this->assertNoText($block['title'], 'Block was not found.');
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
 
     // Test that a user with the 'access comments' permission can see the
     // block.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('');
-    $this->assertText($block['title'], t('Block was found.'));
+    $this->assertText($block['title'], 'Block was found.');
 
     // Test the only the 2 latest comments are shown and in the proper order.
-    $this->assertNoText($comment1->subject, t('Comment not found in block.'));
-    $this->assertText($comment2->subject, t('Comment found in block.'));
-    $this->assertText($comment3->comment, t('Comment found in block.'));
-    $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment) < strpos($this->drupalGetContent(), $comment2->subject), t('Comments were ordered correctly in block.'));
+    $this->assertNoText($comment1->subject, 'Comment not found in block.');
+    $this->assertText($comment2->subject, 'Comment found in block.');
+    $this->assertText($comment3->comment, 'Comment found in block.');
+    $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment) < strpos($this->drupalGetContent(), $comment2->subject), 'Comments were ordered correctly in block.');
 
     // Set the number of recent comments to show to 10.
     $this->drupalLogout();
@@ -1726,30 +1728,30 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
       'comment_block_count' => 10,
     );
     $this->drupalPost('admin/structure/block/manage/comment/recent/configure', $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block saved.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block saved.');
 
     // Post an additional comment.
     $comment4 = $this->postComment($this->node, $this->randomName(), $this->randomName());
 
     // Test that all four comments are shown.
-    $this->assertText($comment1->subject, t('Comment found in block.'));
-    $this->assertText($comment2->subject, t('Comment found in block.'));
-    $this->assertText($comment3->comment, t('Comment found in block.'));
-    $this->assertText($comment4->subject, t('Comment found in block.'));
+    $this->assertText($comment1->subject, 'Comment found in block.');
+    $this->assertText($comment2->subject, 'Comment found in block.');
+    $this->assertText($comment3->comment, 'Comment found in block.');
+    $this->assertText($comment4->subject, 'Comment found in block.');
 
     // Test that links to comments work when comments are across pages.
     $this->setCommentsPerPage(1);
     $this->drupalGet('');
     $this->clickLink($comment1->subject);
-    $this->assertText($comment1->subject, t('Comment link goes to correct page.'));
+    $this->assertText($comment1->subject, 'Comment link goes to correct page.');
     $this->drupalGet('');
     $this->clickLink($comment2->subject);
-    $this->assertText($comment2->subject, t('Comment link goes to correct page.'));
+    $this->assertText($comment2->subject, 'Comment link goes to correct page.');
     $this->clickLink($comment4->subject);
-    $this->assertText($comment4->subject, t('Comment link goes to correct page.'));
+    $this->assertText($comment4->subject, 'Comment link goes to correct page.');
     // Check that when viewing a comment page from a link to the comment, that
     // rel="canonical" is added to the head of the document.
-    $this->assertRaw('<link rel="canonical"', t('Canonical URL was found in the HTML head'));
+    $this->assertRaw('<link rel="canonical"', 'Canonical URL was found in the HTML head');
   }
 }
 
@@ -1774,13 +1776,13 @@ class CommentRSSUnitTest extends CommentHelperCase {
     $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
     $this->drupalGet('rss.xml');
     $raw = '<comments>' . url('node/' . $this->node->nid, array('fragment' => 'comments', 'absolute' => TRUE)) . '</comments>';
-    $this->assertRaw($raw, t('Comments as part of RSS feed.'));
+    $this->assertRaw($raw, 'Comments as part of RSS feed.');
 
     // Hide comments from RSS feed and check presence.
     $this->node->comment = COMMENT_NODE_HIDDEN;
     node_save($this->node);
     $this->drupalGet('rss.xml');
-    $this->assertNoRaw($raw, t('Hidden comments is not a part of RSS feed.'));
+    $this->assertNoRaw($raw, 'Hidden comments is not a part of RSS feed.');
   }
 }
 
@@ -1814,14 +1816,14 @@ class CommentContentRebuild extends CommentHelperCase {
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+    $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Add the property to the content array and then see if it still exists on build.
     $comment_loaded->content['test_property'] = array('#value' => $this->randomString());
     $built_content = comment_view($comment_loaded, $this->node);
 
     // This means that the content was rebuilt as the added test property no longer exists.
-    $this->assertFalse(isset($built_content['test_property']), t('Comment content was emptied before being built.'));
+    $this->assertFalse(isset($built_content['test_property']), 'Comment content was emptied before being built.');
   }
 }
 
@@ -1887,11 +1889,11 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:author:name]'] = check_plain($this->admin_user->name);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('comment' => $comment), array('language' => $language));
-      $this->assertEqual($output, $expected, t('Sanitized comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Sanitized comment token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -1907,7 +1909,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('comment' => $comment), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, t('Unsanitized comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
 
     // Load node so comment_count gets computed.
@@ -1920,7 +1922,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $node), array('language' => $language));
-      $this->assertEqual($output, $expected, t('Node comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, format_string('Node comment token %token replaced.', array('%token' => $input)));
     }
   }
 }
@@ -1949,25 +1951,25 @@ class CommentActionsTestCase extends CommentHelperCase {
 
     // Unpublish a comment (direct form: doesn't actually save the comment).
     comment_unpublish_action($comment);
-    $this->assertEqual($comment->status, COMMENT_NOT_PUBLISHED, t('Comment was unpublished'));
-    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual($comment->status, COMMENT_NOT_PUBLISHED, 'Comment was unpublished');
+    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), 'Found watchdog message');
     $this->clearWatchdog();
 
     // Unpublish a comment (indirect form: modify the comment in the database).
     comment_unpublish_action(NULL, array('cid' => $comment->cid));
-    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_NOT_PUBLISHED, t('Comment was unpublished'));
-    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_NOT_PUBLISHED, 'Comment was unpublished');
+    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $subject), 'Found watchdog message');
 
     // Publish a comment (direct form: doesn't actually save the comment).
     comment_publish_action($comment);
-    $this->assertEqual($comment->status, COMMENT_PUBLISHED, t('Comment was published'));
-    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual($comment->status, COMMENT_PUBLISHED, 'Comment was published');
+    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
     $this->clearWatchdog();
 
     // Publish a comment (indirect form: modify the comment in the database).
     comment_publish_action(NULL, array('cid' => $comment->cid));
-    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_PUBLISHED, t('Comment was published'));
-    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), t('Found watchdog message'));
+    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_PUBLISHED, 'Comment was published');
+    $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
     $this->clearWatchdog();
   }
 
@@ -1983,7 +1985,7 @@ class CommentActionsTestCase extends CommentHelperCase {
    */
   function assertWatchdogMessage($watchdog_message, $variables, $message) {
     $status = (bool) db_query_range("SELECT 1 FROM {watchdog} WHERE message = :message AND variables = :variables", 0, 1, array(':message' => $watchdog_message, ':variables' => serialize($variables)))->fetchField();
-    return $this->assert($status, $message);
+    return $this->assert($status, format_string('@message', array('@message' => $message)));
   }
 
   /**
@@ -2011,13 +2013,13 @@ class CommentFieldsTest extends CommentHelperCase {
    */
   function testCommentDefaultFields() {
     // Do not make assumptions on default node types created by the test
-    // install profile, and create our own.
+    // installation profile, and create our own.
     $this->drupalCreateContentType(array('type' => 'test_node_type'));
 
     // Check that the 'comment_body' field is present on all comment bundles.
     $instances = field_info_instances('comment');
     foreach (node_type_get_types() as $type_name => $info) {
-      $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), t('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+      $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
       // Delete the instance along the way.
       field_delete_instance($instances['comment_node_' . $type_name]['comment_body']);
@@ -2025,7 +2027,7 @@ class CommentFieldsTest extends CommentHelperCase {
 
     // Check that the 'comment_body' field is deleted.
     $field = field_info_field('comment_body');
-    $this->assertTrue(empty($field), t('The comment_body field was deleted'));
+    $this->assertTrue(empty($field), 'The comment_body field was deleted');
 
     // Create a new content type.
     $type_name = 'test_node_type_2';
@@ -2034,9 +2036,9 @@ class CommentFieldsTest extends CommentHelperCase {
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
     $field = field_info_field('comment_body');
-    $this->assertTrue($field, t('The comment_body field exists'));
+    $this->assertTrue($field, 'The comment_body field exists');
     $instances = field_info_instances('comment');
-    $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), t('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+    $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
   }
 
   /**
@@ -2052,7 +2054,7 @@ class CommentFieldsTest extends CommentHelperCase {
     $edit['modules[Core][comment][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->resetAll();
-    $this->assertFalse(module_exists('comment'), t('Comment module disabled.'));
+    $this->assertFalse(module_exists('comment'), 'Comment module disabled.');
 
     // Enable core content type modules (blog, book, and poll).
     $edit = array();
@@ -2067,7 +2069,7 @@ class CommentFieldsTest extends CommentHelperCase {
     $edit['modules[Core][comment][enable]'] = 'comment';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->resetAll();
-    $this->assertTrue(module_exists('comment'), t('Comment module enabled.'));
+    $this->assertTrue(module_exists('comment'), 'Comment module enabled.');
 
     // Create nodes of each type.
     $blog_node = $this->drupalCreateNode(array('type' => 'blog'));

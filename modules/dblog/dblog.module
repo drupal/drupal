@@ -4,9 +4,9 @@
  * @file
  * System monitoring and logging for administrators.
  *
- * The dblog module monitors your site and keeps a list of
- * recorded events containing usage and performance data, errors,
- * warnings, and similar operational information.
+ * The Database Logging module monitors your site and keeps a list of recorded
+ * events containing usage and performance data, errors, warnings, and similar
+ * operational information.
  *
  * @see watchdog()
  */
@@ -96,7 +96,7 @@ function dblog_init() {
 /**
  * Implements hook_cron().
  *
- * Remove expired log messages and flood control events.
+ * Controls the size of the log table, paring it to 'dblog_row_limit' messages.
  */
 function dblog_cron() {
   // Cleanup the watchdog table.
@@ -121,6 +121,12 @@ function dblog_cron() {
   }
 }
 
+/**
+ * Gathers a list of uniquely defined database log message types.
+ *
+ * @return array
+ *   List of uniquely defined database log message types.
+ */
 function _dblog_get_message_types() {
   $types = array();
 
@@ -135,7 +141,7 @@ function _dblog_get_message_types() {
 /**
  * Implements hook_watchdog().
  *
- * Note some values may be truncated for database column size restrictions.
+ * Note: Some values may be truncated to meet database column size restrictions.
  */
 function dblog_watchdog(array $log_entry) {
   Database::getConnection('default', 'default')->insert('watchdog')
@@ -155,7 +161,7 @@ function dblog_watchdog(array $log_entry) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for system_logging_settings().
  */
 function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   $form['dblog_row_limit'] = array(

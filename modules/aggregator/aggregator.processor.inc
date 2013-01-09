@@ -38,8 +38,9 @@ function aggregator_aggregator_process($feed) {
           $item['timestamp'] = isset($entry->timestamp) ? $entry->timestamp : REQUEST_TIME;
         }
 
-        // Make sure the item title fits in 255 varchar column.
+        // Make sure the item title and author fit in the 255 varchar column.
         $item['title'] = truncate_utf8($item['title'], 255, TRUE, TRUE);
+        $item['author'] = truncate_utf8($item['author'], 255, TRUE, TRUE);
         aggregator_save_item(array('iid' => (isset($entry->iid) ? $entry->iid : ''), 'fid' => $feed->fid, 'timestamp' => $item['timestamp'], 'title' => $item['title'], 'link' => $item['link'], 'author' => $item['author'], 'description' => $item['description'], 'guid' => $item['guid']));
       }
     }

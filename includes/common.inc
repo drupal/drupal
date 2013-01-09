@@ -92,14 +92,20 @@ define('JS_THEME', 100);
 define('HTTP_REQUEST_TIMEOUT', -1);
 
 /**
- * Constants defining cache granularity for blocks and renderable arrays.
+ * @defgroup block_caching Block Caching
+ * @{
+ * Constants that define each block's caching state.
  *
- * Modules specify the caching patterns for their blocks using binary
- * combinations of these constants in their hook_block_info():
- *   $block[delta]['cache'] = DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE;
- * DRUPAL_CACHE_PER_ROLE is used as a default when no caching pattern is
- * specified. Use DRUPAL_CACHE_CUSTOM to disable standard block cache and
- * implement
+ * Modules specify how their blocks can be cached in their hook_block_info()
+ * implementations. Caching can be turned off (DRUPAL_NO_CACHE), managed by the
+ * module declaring the block (DRUPAL_CACHE_CUSTOM), or managed by the core
+ * Block module. If the Block module is managing the cache, you can specify that
+ * the block is the same for every page and user (DRUPAL_CACHE_GLOBAL), or that
+ * it can change depending on the page (DRUPAL_CACHE_PER_PAGE) or by user
+ * (DRUPAL_CACHE_PER_ROLE or DRUPAL_CACHE_PER_USER). Page and user settings can
+ * be combined with a bitwise-binary or operator; for example,
+ * DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE means that the block can change
+ * depending on the user role or page it is on.
  *
  * The block cache is cleared in cache_clear_all(), and uses the same clearing
  * policy than page cache (node, comment, user, taxonomy added or updated...).
@@ -123,9 +129,8 @@ define('DRUPAL_NO_CACHE', -1);
 /**
  * The block is handling its own caching in its hook_block_view().
  *
- * From the perspective of the block cache system, this is equivalent to
- * DRUPAL_NO_CACHE. Useful when time based expiration is needed or a site uses
- * a node access which invalidates standard block cache.
+ * This setting is useful when time based expiration is needed or a site uses a
+ * node access which invalidates standard block cache.
  */
 define('DRUPAL_CACHE_CUSTOM', -2);
 
@@ -154,6 +159,10 @@ define('DRUPAL_CACHE_PER_PAGE', 0x0004);
  * The block or element is the same for every user and page that it is visible.
  */
 define('DRUPAL_CACHE_GLOBAL', 0x0008);
+
+/**
+ * @} End of "defgroup block_caching".
+ */
 
 /**
  * Adds content to a specified region.
@@ -199,7 +208,7 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
 }
 
 /**
- * Gets the name of the currently active install profile.
+ * Gets the name of the currently active installation profile.
  *
  * When this function is called during Drupal's initial installation process,
  * the name of the profile that's about to be installed is stored in the global
@@ -208,7 +217,7 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
  * variable_get() to determine what one is active.
  *
  * @return $profile
- *   The name of the install profile.
+ *   The name of the installation profile.
  */
 function drupal_get_profile() {
   global $install_state;
@@ -443,7 +452,7 @@ function drupal_get_query_parameters(array $query = NULL, array $exclude = array
  *   The query string to split.
  *
  * @return
- *   An array of url decoded couples $param_name => $value.
+ *   An array of URL decoded couples $param_name => $value.
  */
 function drupal_get_query_array($query) {
   $result = array();
@@ -505,6 +514,12 @@ function drupal_http_build_query(array $query, $parent = '') {
  * previous request, that destination is returned. As such, a destination can
  * persist across multiple pages.
  *
+ * @return
+ *   An associative array containing the key:
+ *   - destination: The path provided via the destination query string or, if
+ *     not available, the current path.
+ *
+ * @see current_path()
  * @see drupal_goto()
  */
 function drupal_get_destination() {
@@ -798,10 +813,51 @@ function drupal_http_request($url, array $options = array()) {
     'timeout' => 30.0,
     'context' => NULL,
   );
+
+  // Merge the default headers.
+  $options['headers'] += array(
+    'User-Agent' => 'Drupal (+http://drupal.org/)',
+  );
+
   // stream_socket_client() requires timeout to be a float.
   $options['timeout'] = (float) $options['timeout'];
 
+  // Use a proxy if one is defined and the host is not on the excluded list.
+  $proxy_server = variable_get('proxy_server', '');
+  if ($proxy_server && _drupal_http_use_proxy($uri['host'])) {
+    // Set the scheme so we open a socket to the proxy server.
+    $uri['scheme'] = 'proxy';
+    // Set the path to be the full URL.
+    $uri['path'] = $url;
+    // Since the URL is passed as the path, we won't use the parsed query.
+    unset($uri['query']);
+
+    // Add in username and password to Proxy-Authorization header if needed.
+    if ($proxy_username = variable_get('proxy_username', '')) {
+      $proxy_password = variable_get('proxy_password', '');
+      $options['headers']['Proxy-Authorization'] = 'Basic ' . base64_encode($proxy_username . (!empty($proxy_password) ? ":" . $proxy_password : ''));
+    }
+    // Some proxies reject requests with any User-Agent headers, while others
+    // require a specific one.
+    $proxy_user_agent = variable_get('proxy_user_agent', '');
+    // The default value matches neither condition.
+    if ($proxy_user_agent === NULL) {
+      unset($options['headers']['User-Agent']);
+    }
+    elseif ($proxy_user_agent) {
+      $options['headers']['User-Agent'] = $proxy_user_agent;
+    }
+  }
+
   switch ($uri['scheme']) {
+    case 'proxy':
+      // Make the socket connection to a proxy server.
+      $socket = 'tcp://' . $proxy_server . ':' . variable_get('proxy_port', 8080);
+      // The Host header still needs to match the real request.
+      $options['headers']['Host'] = $uri['host'];
+      $options['headers']['Host'] .= isset($uri['port']) && $uri['port'] != 80 ? ':' . $uri['port'] : '';
+      break;
+
     case 'http':
     case 'feed':
       $port = isset($uri['port']) ? $uri['port'] : 80;
@@ -811,12 +867,14 @@ function drupal_http_request($url, array $options = array()) {
       // checking the host that do not take into account the port number.
       $options['headers']['Host'] = $uri['host'] . ($port != 80 ? ':' . $port : '');
       break;
+
     case 'https':
       // Note: Only works when PHP is compiled with OpenSSL support.
       $port = isset($uri['port']) ? $uri['port'] : 443;
       $socket = 'ssl://' . $uri['host'] . ':' . $port;
       $options['headers']['Host'] = $uri['host'] . ($port != 443 ? ':' . $port : '');
       break;
+
     default:
       $result->error = 'invalid schema ' . $uri['scheme'];
       $result->code = -1003;
@@ -852,11 +910,6 @@ function drupal_http_request($url, array $options = array()) {
   if (isset($uri['query'])) {
     $path .= '?' . $uri['query'];
   }
-
-  // Merge the default headers.
-  $options['headers'] += array(
-    'User-Agent' => 'Drupal (+http://drupal.org/)',
-  );
 
   // Only add Content-Length if we actually have any content or if it is a POST
   // or PUT request. Some non-standard servers get confused by Content-Length in
@@ -1028,6 +1081,18 @@ function drupal_http_request($url, array $options = array()) {
 
   return $result;
 }
+
+/**
+ * Helper function for determining hosts excluded from needing a proxy.
+ *
+ * @return
+ *   TRUE if a proxy should be used for this host.
+ */
+function _drupal_http_use_proxy($host) {
+  $proxy_exceptions = variable_get('proxy_exceptions', array('localhost', '127.0.0.1'));
+  return !in_array(strtolower($host), $proxy_exceptions, TRUE);
+}
+
 /**
  * @} End of "HTTP handling".
  */
@@ -1102,7 +1167,8 @@ function fix_gpc_magic() {
 /**
  * Verifies the syntax of the given e-mail address.
  *
- * See @link http://tools.ietf.org/html/rfc5321 RFC 5321 @endlink for details.
+ * This uses the
+ * @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
  *
  * @param $mail
  *   A string containing an e-mail address.
@@ -1701,7 +1767,7 @@ function format_xml_elements($array) {
  *   $output = format_plural($update_count,
  *     'Changed the content type of 1 post from %old-type to %new-type.',
  *     'Changed the content type of @count posts from %old-type to %new-type.',
- *     array('%old-type' => $info->old_type, '%new-type' => $info->new_type)));
+ *     array('%old-type' => $info->old_type, '%new-type' => $info->new_type));
  * @endcode
  *
  * @param $count
@@ -2079,7 +2145,7 @@ function format_username($account) {
  *     for the URL. If $options['language'] is omitted, the global $language_url
  *     will be used.
  *   - 'https': Whether this URL should point to a secure location. If not
- *     defined, the current scheme is used, so the user stays on http or https
+ *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
  *     only be enforced when the variable 'https' is set to TRUE.
  *   - 'base_url': Only used internally, to modify the base URL when a language
@@ -2309,21 +2375,30 @@ function drupal_attributes(array $attributes = array()) {
 /**
  * Formats an internal or external URL link as an HTML anchor tag.
  *
- * This function correctly handles aliased paths, and adds an 'active' class
+ * This function correctly handles aliased paths and adds an 'active' class
  * attribute to links that point to the current page (for theming), so all
  * internal links output by modules should be generated by this function if
  * possible.
  *
- * @param $text
- *   The link text for the anchor tag.
- * @param $path
+ * However, for links enclosed in translatable text you should use t() and
+ * embed the HTML anchor tag directly in the translated string. For example:
+ * @code
+ * t('Visit the <a href="@url">settings</a> page', array('@url' => url('admin')));
+ * @endcode
+ * This keeps the context of the link title ('settings' in the example) for
+ * translators.
+ *
+ * @param string $text
+ *   The translated link text for the anchor tag.
+ * @param string $path
  *   The internal path or external URL being linked to, such as "node/34" or
  *   "http://example.com/foo". After the url() function is called to construct
  *   the URL from $path and $options, the resulting URL is passed through
  *   check_plain() before it is inserted into the HTML anchor tag, to ensure
  *   well-formed HTML. See url() for more information and notes.
  * @param array $options
- *   An associative array of additional options, with the following elements:
+ *   An associative array of additional options. Defaults to an empty array. It
+ *   may contain the following elements.
  *   - 'attributes': An associative array of HTML attributes to apply to the
  *     anchor tag. If element 'class' is included, it must be an array; 'title'
  *     must be a string; other elements are more flexible, as they just need
@@ -2339,8 +2414,10 @@ function drupal_attributes(array $attributes = array()) {
  *     well as the path must match). This element is also used by url().
  *   - Additional $options elements used by the url() function.
  *
- * @return
+ * @return string
  *   An HTML string containing a link to the given path.
+ *
+ * @see url()
  */
 function l($text, $path, array $options = array()) {
   global $language_url;
@@ -3927,7 +4004,8 @@ function drupal_region_class($region) {
  * actually needed.
  *
  * @param $data
- *   (optional) If given, the value depends on the $options parameter:
+ *   (optional) If given, the value depends on the $options parameter, or
+ *   $options['type'] if $options is passed as an associative array:
  *   - 'file': Path to the file relative to base_path().
  *   - 'inline': The JavaScript code that should be placed in the given scope.
  *   - 'external': The absolute path to an external JavaScript file that is not
@@ -4969,6 +5047,11 @@ function drupal_get_private_key() {
  *
  * @param $value
  *   An additional value to base the token on.
+ *
+ * @return string
+ *   A 43-character URL-safe token for validation, based on the user session ID,
+ *   the global $drupal_hash_salt variable from settings.php, and the
+ *   'drupal_private_key' configuration variable.
  */
 function drupal_get_token($value = '') {
   return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
@@ -5114,6 +5197,7 @@ function drupal_cron_run() {
   @ignore_user_abort(TRUE);
 
   // Prevent session information from being saved while cron is running.
+  $original_session_saving = drupal_save_session();
   drupal_save_session(FALSE);
 
   // Force the current user to anonymous to ensure consistent permissions on
@@ -5176,7 +5260,7 @@ function drupal_cron_run() {
   }
   // Restore the user.
   $GLOBALS['user'] = $original_user;
-  drupal_save_session(TRUE);
+  drupal_save_session($original_session_saving);
 
   return $return;
 }
@@ -5208,7 +5292,7 @@ function drupal_cron_cleanup() {
  * drupal_system_listing("/\.module$/", "modules", 'name', 0);
  * @endcode
  * this function will search the site-wide modules directory (i.e., /modules/),
- * your install profile's directory (i.e.,
+ * your installation profile's directory (i.e.,
  * /profiles/your_site_profile/modules/), the all-sites directory (i.e.,
  * /sites/all/modules/), and your site-specific directory (i.e.,
  * /sites/your_site_dir/modules/), in that order, and return information about
@@ -7730,16 +7814,16 @@ function entity_prepare_view($entity_type, $entities, $langcode = NULL) {
 }
 
 /**
- * Returns the uri elements of an entity.
+ * Returns the URI elements of an entity.
  *
  * @param $entity_type
  *   The entity type; e.g. 'node' or 'user'.
  * @param $entity
  *   The entity for which to generate a path.
  * @return
- *   An array containing the 'path' and 'options' keys used to build the uri of
+ *   An array containing the 'path' and 'options' keys used to build the URI of
  *   the entity, and matching the signature of url(). NULL if the entity has no
- *   uri of its own.
+ *   URI of its own.
  */
 function entity_uri($entity_type, $entity) {
   $info = entity_get_info($entity_type);

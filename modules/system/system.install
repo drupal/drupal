@@ -16,7 +16,7 @@
 function system_requirements($phase) {
   global $base_url;
   $requirements = array();
-  // Ensure translations don't break at install time
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   // Report Drupal version
@@ -28,8 +28,8 @@ function system_requirements($phase) {
       'weight' => -10,
     );
 
-    // Display the currently active install profile, if the site
-    // is not running the default install profile.
+    // Display the currently active installation profile, if the site
+    // is not running the default installation profile.
     $profile = drupal_get_profile();
     if ($profile != 'standard') {
       $info = system_get_info('module', $profile);
@@ -308,7 +308,7 @@ function system_requirements($phase) {
     variable_get('file_private_path', FALSE),
   );
 
-  // Do not check for the temporary files directory at install time
+  // Do not check for the temporary files directory during installation
   // unless it has been set in settings.php. In this case the user has
   // no alternative but to fix the directory if it is not writable.
   if ($phase == 'install') {
@@ -412,7 +412,7 @@ function system_requirements($phase) {
     $profile = drupal_get_profile();
     $files = system_rebuild_module_data();
     foreach ($files as $module => $file) {
-      // Ignore disabled modules and install profiles.
+      // Ignore disabled modules and installation profiles.
       if (!$file->status || $module == $profile) {
         continue;
       }
@@ -810,7 +810,6 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'binary' => TRUE,
       ),
       'uri' => array(
         'description' => 'The URI to access the file (either local or remote).',
@@ -1689,6 +1688,12 @@ function system_update_dependencies() {
     'block' => 7002,
   );
 
+  // system_update_7061() queries the {node_revision} table, so it must run
+  // after node_update_7001(), which renames the {node_revisions} table.
+  $dependencies['system'][7061] = array(
+    'node' => 7001,
+  );
+
   // system_update_7067() migrates role permissions and therefore must run
   // after the {role} and {role_permission} tables are properly set up, which
   // happens in user_update_7007().
@@ -1711,17 +1716,18 @@ function system_update_dependencies() {
 function system_update_7000() {
   $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid");
   foreach ($result as $role) {
-    $renamed_permission = preg_replace('/(?<=^|,\ )create\ blog\ entries(?=,|$)/', 'create blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ blog\ entries(?=,|$)/', 'edit own blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ blog\ entry(?=,|$)/', 'edit any blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ blog\ entries(?=,|$)/', 'delete own blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ blog\ entry(?=,|$)/', 'delete any blog content', $role->perm);
+    $renamed_permission = $role->perm;
+    $renamed_permission = preg_replace('/(?<=^|,\ )create\ blog\ entries(?=,|$)/', 'create blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ blog\ entries(?=,|$)/', 'edit own blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ blog\ entry(?=,|$)/', 'edit any blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ blog\ entries(?=,|$)/', 'delete own blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ blog\ entry(?=,|$)/', 'delete any blog content', $renamed_permission);
 
-    $renamed_permission = preg_replace('/(?<=^|,\ )create\ forum\ topics(?=,|$)/', 'create forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ forum\ topic(?=,|$)/', 'delete any forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ forum\ topics(?=,|$)/', 'delete own forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ forum\ topic(?=,|$)/', 'edit any forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ forum\ topics(?=,|$)/', 'edit own forum content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )create\ forum\ topics(?=,|$)/', 'create forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ forum\ topic(?=,|$)/', 'delete any forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ forum\ topics(?=,|$)/', 'delete own forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ forum\ topic(?=,|$)/', 'edit any forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ forum\ topics(?=,|$)/', 'edit own forum content', $renamed_permission);
 
     if ($renamed_permission != $role->perm) {
       db_update('permission')
@@ -2729,6 +2735,26 @@ function system_update_7061(&$sandbox) {
   }
 
   if (!isset($sandbox['progress'])) {
+    // Delete stale rows from {upload} where the fid is not in the {files} table.
+    db_delete('upload')
+      ->notExists(
+        db_select('files', 'f')
+        ->fields('f', array('fid'))
+        ->where('f.fid = {upload}.fid')
+      )
+      ->execute();
+
+    // Delete stale rows from {upload} where the vid is not in the
+    // {node_revision} table. The table has already been renamed in
+    // node_update_7001().
+    db_delete('upload')
+      ->notExists(
+        db_select('node_revision', 'nr')
+        ->fields('nr', array('vid'))
+        ->where('nr.vid = {upload}.vid')
+      )
+      ->execute();
+
     // Retrieve a list of node revisions that have uploaded files attached.
     // DISTINCT queries are expensive, especially when paged, so we store the
     // data in its own table for the duration of the update.
@@ -2793,7 +2819,7 @@ function system_update_7061(&$sandbox) {
     $scheme = file_default_scheme() . '://';
     foreach ($node_revisions as $vid => $revision) {
       foreach ($revision['file'][LANGUAGE_NONE] as $delta => $file) {
-        // We will convert filepaths to uri using the default scheme
+        // We will convert filepaths to URI using the default scheme
         // and stripping off the existing file directory path.
         $file['uri'] = $scheme . preg_replace('!^' . preg_quote($basename) . '!', '', $file['filepath']);
         $file['uri'] = file_stream_wrapper_uri_normalize($file['uri']);
@@ -2958,8 +2984,9 @@ function system_update_7069() {
  */
 
 /**
- * @defgroup updates-7.x-extra Extra system updates for 7.x
+ * @defgroup updates-7.x-extra Extra updates for 7.x
  * @{
+ * Update functions between 7.x versions.
  */
 
 /**
@@ -3022,6 +3049,41 @@ function system_update_7074() {
   // This update function previously converted menu_links query strings to
   // arrays. It has been removed for now due to incompatibility with
   // PostgreSQL.
+}
+
+/**
+ * Convert menu_links query strings into arrays.
+ */
+function system_update_7076() {
+  $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('ml', array('mlid', 'options'));
+  foreach ($query->execute() as $menu_link) {
+    if (strpos($menu_link['options'], 'query') !== FALSE) {
+      $menu_link['options'] = unserialize($menu_link['options']);
+      if (isset($menu_link['options']['query']) && is_string($menu_link['options']['query'])) {
+        $menu_link['options']['query'] = drupal_get_query_array($menu_link['options']['query']);
+        db_update('menu_links')
+          ->fields(array(
+            'options' => serialize($menu_link['options']),
+          ))
+          ->condition('mlid', $menu_link['mlid'], '=')
+          ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Revert {file_managed}.filename changed to a binary column.
+ */
+function system_update_7077() {
+  db_change_field('file_managed', 'filename', 'filename', array(
+    'description' => 'Name of the file with no path components. This may differ from the basename of the URI if the file is renamed to avoid overwriting an existing file.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  ));
 }
 
 /**

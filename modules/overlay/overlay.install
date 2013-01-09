@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the overlay module.
+ * Install, update, and uninstall functions for the Overlay module.
  */
 
 /**
  * Implements hook_enable().
  *
  * If the module is being enabled through the admin UI, and not from an
- * install profile, reopen the modules page in an overlay.
+ * installation profile, reopen the modules page in an overlay.
  */
 function overlay_enable() {
   if (strpos(current_path(), 'admin/modules') === 0) {

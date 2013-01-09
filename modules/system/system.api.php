@@ -85,8 +85,8 @@ function hook_hook_info_alter(&$hooks) {
  *   - load hook: The name of the hook which should be invoked by
  *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
  *   - uri callback: A function taking an entity as argument and returning the
- *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
- *     uri can be constructed by passing these elements to url().
+ *     URI elements of the entity, e.g. 'path' and 'options'. The actual entity
+ *     URI can be constructed by passing these elements to url().
  *   - label callback: (optional) A function taking an entity and an entity type
  *     as arguments and returning the label of the entity. The entity label is
  *     the main string associated with an entity; for example, the title of a
@@ -466,6 +466,24 @@ function hook_entity_view_alter(&$build, $type) {
 }
 
 /**
+ * Change the view mode of an entity that is being displayed.
+ *
+ * @param string $view_mode
+ *   The view_mode that is to be used to display the entity.
+ * @param array $context
+ *   Array with contextual information, including:
+ *   - entity_type: The type of the entity that is being viewed.
+ *   - entity: The entity object.
+ *   - langcode: The langcode the entity is being viewed in.
+ */
+function hook_entity_view_mode_alter(&$view_mode, $context) {
+  // For nodes, change the view mode when it is teaser.
+  if ($context['entity_type'] == 'node' && $view_mode == 'teaser') {
+    $view_mode = 'my_custom_view_mode';
+  }
+}
+
+/**
  * Define administrative paths.
  *
  * Modules may specify whether or not the paths they define in hook_menu() are
@@ -623,7 +641,7 @@ function hook_cron_queue_info_alter(&$queues) {
 }
 
 /**
- * Allows modules to declare their own Forms API element types and specify their
+ * Allows modules to declare their own Form API element types and specify their
  * default values.
  *
  * This hook allows modules to declare their own form element types and to
@@ -689,7 +707,8 @@ function hook_element_info_alter(&$type) {
  * Perform cleanup tasks.
  *
  * This hook is run at the end of each page request. It is often used for
- * page logging and specialized cleanup. This hook MUST NOT print anything.
+ * page logging and specialized cleanup. This hook MUST NOT print anything
+ * because by the time it runs the response is already sent to the browser.
  *
  * Only use this hook if your code must run even for cached page views.
  * If you have code which must run once on all non-cached pages, use
@@ -1040,7 +1059,7 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * This 'abc' object will then be passed into the callback functions defined
  * for the menu item, such as the page callback function mymodule_abc_edit()
  * to replace the integer 1 in the argument array. Note that a load function
- * should return FALSE when it is unable to provide a loadable object. For 
+ * should return FALSE when it is unable to provide a loadable object. For
  * example, the node_load() function for the 'node/%node/edit' menu item will
  * return FALSE for the path 'node/999/edit' if a node with a node ID of 999
  * does not exist. The menu routing system will return a 404 error in this case.
@@ -1182,6 +1201,10 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     same weight are ordered alphabetically.
  *   - "menu_name": Optional. Set this to a custom menu if you don't want your
  *     item to be placed in Navigation.
+ *   - "expanded": Optional. If set to TRUE, and if a menu link is provided for
+ *     this menu item (as a result of other properties), then the menu link is
+ *     always expanded, equivalent to its 'always expanded' checkbox being set
+ *     in the UI.
  *   - "context": (optional) Defines the context a tab may appear in. By
  *     default, all tabs are only displayed as local tasks when being rendered
  *     in a page context. All tabs that should be accessible as contextual links
@@ -1393,7 +1416,7 @@ function hook_menu_link_delete($link) {
  * - #link: An associative array containing:
  *   - title: The localized title of the link.
  *   - href: The system path to link to.
- *   - localized_options: An array of options to pass to url().
+ *   - localized_options: An array of options to pass to l().
  * - #active: Whether the link should be marked as 'active'.
  *
  * @param $data
@@ -1632,6 +1655,7 @@ function hook_page_alter(&$page) {
  *
  * @see hook_form_BASE_FORM_ID_alter()
  * @see hook_form_FORM_ID_alter()
+ * @see forms_api_reference.html
  */
 function hook_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
@@ -1668,6 +1692,7 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  * @see hook_form_alter()
  * @see hook_form_BASE_FORM_ID_alter()
  * @see drupal_prepare_form()
+ * @see forms_api_reference.html
  */
 function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
   // Modification for the form with the given form ID goes here. For example, if
@@ -1908,8 +1933,9 @@ function hook_image_toolkits() {
  *     The drupal_mail() id of the message. Look at module source code or
  *     drupal_mail() for possible id values.
  *  - 'to':
- *     The address or addresses the message will be sent to. The
- *     formatting of this string must comply with RFC 2822.
+ *     The address or addresses the message will be sent to. The formatting of
+ *     this string will be validated with the
+ *     @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
  *  - 'from':
  *     The address the message will be marked as being from, which is
  *     either a custom address or the site-wide default email address.
@@ -1959,7 +1985,7 @@ function hook_mail_alter(&$message) {
  * purposes of hook_module_implements_alter(), these variants are treated as
  * a single hook. Thus, to ensure that your implementation of
  * hook_form_FORM_ID_alter() is called at the right time, you will have to
- * have to change the order of hook_form_alter() implementation in
+ * change the order of hook_form_alter() implementation in
  * hook_module_implements_alter().
  *
  * @param $implementations
@@ -2147,6 +2173,9 @@ function hook_permission() {
  *     registers the 'node' theme hook, 'theme_node' will be assigned to its
  *     function. If the chameleon theme registers the node hook, it will be
  *     assigned 'chameleon_node' as its function.
+ *   - base hook: A string declaring the base theme hook if this theme
+ *     implementation is actually implementing a suggestion for another theme
+ *     hook.
  *   - pattern: A regular expression pattern to be used to allow this theme
  *     implementation to have a dynamic name. The convention is to use __ to
  *     differentiate the dynamic portion of the theme. For example, to allow
@@ -2172,6 +2201,8 @@ function hook_permission() {
  *     'module', 'theme_engine', or 'theme'.
  *   - theme path: (automatically derived) The directory path of the theme or
  *     module, so that it doesn't need to be looked up.
+ *
+ * @see hook_theme_registry_alter()
  */
 function hook_theme($existing, $type, $theme, $path) {
   return array(
@@ -2452,8 +2483,9 @@ function hook_watchdog(array $log_entry) {
  *   An array to be filled in. Elements in this array include:
  *   - id: An ID to identify the mail sent. Look at module source code
  *     or drupal_mail() for possible id values.
- *   - to: The address or addresses the message will be sent to. The
- *     formatting of this string must comply with RFC 2822.
+ *   - to: The address or addresses the message will be sent to. The formatting
+ *     of this string will be validated with the
+ *     @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
  *   - subject: Subject of the e-mail to be sent. This must not contain any
  *     newline characters, or the mail may not be sent properly. drupal_mail()
  *     sets this to an empty string when the hook is invoked.
@@ -2958,7 +2990,7 @@ function hook_file_url_alter(&$uri) {
  * The returned 'requirements' will be listed on the status report in the
  * administration section, with indication of the severity level.
  * Moreover, any requirement with a severity of REQUIREMENT_ERROR severity will
- * result in a notice on the the administration overview page.
+ * result in a notice on the administration configuration page.
  *
  * @param $phase
  *   The phase in which requirements are checked:
@@ -2983,7 +3015,7 @@ function hook_file_url_alter(&$uri) {
  */
 function hook_requirements($phase) {
   $requirements = array();
-  // Ensure translations don't break at install time
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   // Report Drupal version
@@ -3035,7 +3067,7 @@ function hook_requirements($phase) {
  * more tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.
  *
- * This hook is called at both install and uninstall time, and in the latter
+ * This hook is called at install and uninstall time, and in the latter
  * case, it cannot rely on the .module file being loaded or hooks being known.
  * If the .module file is needed, it may be loaded with drupal_load().
  *
@@ -3068,44 +3100,48 @@ function hook_schema() {
         'description' => 'The primary identifier for a node.',
         'type' => 'serial',
         'unsigned' => TRUE,
-        'not null' => TRUE),
+        'not null' => TRUE,
+      ),
       'vid' => array(
         'description' => 'The current {node_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0,
+      ),
       'type' => array(
         'description' => 'The {node_type} of this node.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
-        'default' => ''),
+        'default' => '',
+      ),
       'title' => array(
         'description' => 'The title of this node, always treated as non-markup plain text.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'default' => ''),
+        'default' => '',
       ),
+    ),
     'indexes' => array(
       'node_changed'        => array('changed'),
       'node_created'        => array('created'),
-      ),
+    ),
     'unique keys' => array(
       'nid_vid' => array('nid', 'vid'),
-      'vid'     => array('vid')
-      ),
+      'vid'     => array('vid'),
+    ),
     'foreign keys' => array(
       'node_revision' => array(
         'table' => 'node_revision',
         'columns' => array('vid' => 'vid'),
-        ),
+      ),
       'node_author' => array(
         'table' => 'users',
-        'columns' => array('uid' => 'uid')
-        ),
-       ),
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
     'primary key' => array('nid'),
   );
   return $schema;
@@ -3212,8 +3248,7 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  * a hook_update_N() is added to the module, this function needs to be updated
  * to reflect the current version of the database schema.
  *
- * See the Schema API documentation at
- * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
+ * See the @link http://drupal.org/node/146843 Schema API documentation @endlink
  * for details on hook_schema and how database tables are defined.
  *
  * Note that since this function is called from a full bootstrap, all functions
@@ -3284,6 +3319,17 @@ function hook_install() {
  * the same directory as mymodule.module. Drupal core's updates are implemented
  * using the system module as a name and stored in database/updates.inc.
  *
+ * Not all module functions are available from within a hook_update_N() function.
+ * In order to call a function from your mymodule.module or an include file,
+ * you need to explicitly load that file first.
+ *
+ * During database updates the schema of any module could be out of date. For
+ * this reason, caution is needed when using any API function within an update
+ * function - particularly CRUD functions, functions that depend on the schema
+ * (for example by using drupal_write_record()), and any functions that invoke
+ * hooks. See @link update_api Update versions of API functions @endlink for
+ * details.
+ *
  * If your update task is potentially time-consuming, you'll need to implement a
  * multipass update to avoid PHP timeouts. Multipass updates use the $sandbox
  * parameter provided by the batch API (normally, $context['sandbox']) to store
@@ -3308,6 +3354,7 @@ function hook_install() {
  *
  * @see batch
  * @see schemaapi
+ * @see update_api
  * @see hook_update_last_removed()
  * @see update_get_update_list()
  */
@@ -3585,6 +3632,9 @@ function hook_registry_files_alter(&$files, $modules) {
  * inspect later. It is important to remove any temporary variables using
  * variable_del() before your last task has completed and control is handed
  * back to the installer.
+ * 
+ * @param array $install_state
+ *   An array of information about the current installation state.
  *
  * @return
  *   A keyed array of tasks the profile will perform during the final stage of
@@ -3643,7 +3693,7 @@ function hook_registry_files_alter(&$files, $modules) {
  * @see install_state_defaults()
  * @see batch_set()
  */
-function hook_install_tasks() {
+function hook_install_tasks(&$install_state) {
   // Here, we define a variable to allow tasks to indicate that a particular,
   // processor-intensive batch process needs to be triggered later on in the
   // installation.
@@ -3735,7 +3785,7 @@ function hook_drupal_goto_alter(&$path, &$options, &$http_response_code) {
 function hook_html_head_alter(&$head_elements) {
   foreach ($head_elements as $key => $element) {
     if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'canonical') {
-      // I want a custom canonical url.
+      // I want a custom canonical URL.
       $head_elements[$key]['#attributes']['href'] = mymodule_canonical_url();
     }
   }
@@ -4630,4 +4680,115 @@ function hook_filetransfer_info_alter(&$filetransfer_info) {
 
 /**
  * @} End of "addtogroup hooks".
+ */
+
+/**
+ * @defgroup update_api Update versions of API functions
+ * @{
+ * Functions that are similar to normal API functions, but do not invoke hooks.
+ *
+ * These simplified versions of core API functions are provided for use by
+ * update functions (hook_update_N() implementations).
+ *
+ * During database updates the schema of any module could be out of date. For
+ * this reason, caution is needed when using any API function within an update
+ * function - particularly CRUD functions, functions that depend on the schema
+ * (for example by using drupal_write_record()), and any functions that invoke
+ * hooks.
+ *
+ * Instead, a simplified utility function should be used. If a utility version
+ * of the API function you require does not already exist, then you should
+ * create a new function. The new utility function should be named
+ * _update_N_mymodule_my_function(). N is the schema version the function acts
+ * on (the schema version is the number N from the hook_update_N()
+ * implementation where this schema was introduced, or a number following the
+ * same numbering scheme), and mymodule_my_function is the name of the original
+ * API function including the module's name.
+ *
+ * Examples:
+ * - _update_6000_mymodule_save(): This function performs a save operation
+ *   without invoking any hooks using the 6.x schema.
+ * - _update_7000_mymodule_save(): This function performs the same save
+ *   operation using the 7.x schema.
+ *
+ * The utility function should not invoke any hooks, and should perform database
+ * operations using functions from the
+ * @link database Database abstraction layer, @endlink
+ * like db_insert(), db_update(), db_delete(), db_query(), and so on.
+ *
+ * If a change to the schema necessitates a change to the utility function, a
+ * new function should be created with a name based on the version of the schema
+ * it acts on. See _update_7000_bar_get_types() and _update_7001_bar_get_types()
+ * in the code examples that follow.
+ *
+ * For example, foo.install could contain:
+ * @code
+ * function foo_update_dependencies() {
+ *   // foo_update_7010() needs to run after bar_update_7000().
+ *   $dependencies['foo'][7010] = array(
+ *     'bar' => 7000,
+ *   );
+ *
+ *   // foo_update_7036() needs to run after bar_update_7001().
+ *   $dependencies['foo'][7036] = array(
+ *     'bar' => 7001,
+ *   );
+ *
+ *   return $dependencies;
+ * }
+ *
+ * function foo_update_7000() {
+ *   // No updates have been run on the {bar_types} table yet, so this needs
+ *   // to work with the 6.x schema.
+ *   foreach (_update_6000_bar_get_types() as $type) {
+ *     // Rename a variable.
+ *   }
+ * }
+ *
+ * function foo_update_7010() {
+ *    // Since foo_update_7010() is going to run after bar_update_7000(), it
+ *    // needs to operate on the new schema, not the old one.
+ *    foreach (_update_7000_bar_get_types() as $type) {
+ *      // Rename a different variable.
+ *    }
+ * }
+ *
+ * function foo_update_7036() {
+ *   // This update will run after bar_update_7001().
+ *   foreach (_update_7001_bar_get_types() as $type) {
+ *   }
+ * }
+ * @endcode
+ *
+ * And bar.install could contain:
+ * @code
+ * function bar_update_7000() {
+ *   // Type and bundle are confusing, so we renamed the table.
+ *   db_rename_table('bar_types', 'bar_bundles');
+ * }
+ *
+ * function bar_update_7001() {
+ *   // Database table names should be singular when possible.
+ *   db_rename_table('bar_bundles', 'bar_bundle');
+ * }
+ *
+ * function _update_6000_bar_get_types() {
+ *   db_query('SELECT * FROM {bar_types}')->fetchAll();
+ * }
+ *
+ * function _update_7000_bar_get_types() {
+ *   db_query('SELECT * FROM {bar_bundles'})->fetchAll();
+ * }
+ *
+ * function _update_7001_bar_get_types() {
+ *   db_query('SELECT * FROM {bar_bundle}')->fetchAll();
+ * }
+ * @endcode
+ *
+ * @see hook_update_N()
+ * @see hook_update_dependencies()
+ */
+
+/**
+ * @} End of "defgroup update_api".
  */

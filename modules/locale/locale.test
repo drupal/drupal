@@ -1958,7 +1958,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Path language settings',
-      'description' => 'Checks you can configure a language for individual url aliases.',
+      'description' => 'Checks you can configure a language for individual URL aliases.',
       'group' => 'Locale',
     );
   }
@@ -2268,7 +2268,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'UI language negotiation',
-      'description' => 'Test UI language switching by url path prefix and domain.',
+      'description' => 'Test UI language switching by URL path prefix and domain.',
       'group' => 'Locale',
     );
   }
@@ -2396,7 +2396,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $this->assertResponse(404, "Unknown language path prefix should return 404");
 
     // Setup for domain negotiation, first configure the language to have domain
-    // URL. We use https and a port to make sure that only the domain name is used.
+    // URL. We use HTTPS and a port to make sure that only the domain name is used.
     $edit = array('prefix' => '', 'domain' => "https://$language_domain:99");
     $this->drupalPost("admin/config/regional/language/edit/$language", $edit, t('Save language'));
     // Set the site to use domain language negotiation.
@@ -2513,7 +2513,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $languages = language_list();
 
     foreach (array('it', 'fr') as $langcode) {
-      // Build the link we're going to test based on the clean url setting.
+      // Build the link we're going to test based on the clean URL setting.
       $link = (!empty($GLOBALS['conf']['clean_url'])) ? $langcode . '.example.com/admin' : $langcode . '.example.com/?q=admin';
 
       // Test URL in another language.
@@ -2524,14 +2524,14 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       $correct_link = $url_scheme . $link;
       $this->assertTrue($url == $correct_link, t('The url() function returns the right url (@url) in accordance with the chosen language', array('@url' => $url . " == " . $correct_link)));
 
-      // Test https via options.
+      // Test HTTPS via options.
       variable_set('https', TRUE);
       $url = url('admin', array('https' => TRUE, 'language' => $languages[$langcode]));
       $correct_link = 'https://' . $link;
       $this->assertTrue($url == $correct_link, t('The url() function returns the right https url (via options) (@url) in accordance with the chosen language', array('@url' => $url . " == " . $correct_link)));
       variable_set('https', FALSE);
 
-      // Test https via current url scheme.
+      // Test HTTPS via current URL scheme.
       $temp_https = $is_https;
       $is_https = TRUE;
       $url = url('admin', array('language' => $languages[$langcode]));
@@ -2758,7 +2758,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     parent::setUp('locale', 'locale_test');
 
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'create article content'));
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'administer comments', 'create article content'));
     $this->drupalLogin($admin_user);
 
     // Add language.
@@ -2787,6 +2787,12 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     // French no matter what path prefix the URLs have.
     $edit = array('language' => 'fr');
     $this->drupalPost("user/{$admin_user->uid}/edit", $edit, t('Save'));
+
+    // Make comment body translatable.
+    $field = field_info_field('comment_body');
+    $field['translatable'] = TRUE;
+    field_update_field($field);
+    $this->assertTrue(field_is_translatable('comment', $field), 'Comment body is translatable.');
   }
 
   /**
@@ -2817,22 +2823,46 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
       foreach (language_list() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($language->prefix) ? '' : $language->prefix . '/';
-        $edit = array("comment_body[$language_none][0][value]" => $this->randomName());
-        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Save'));
+        $comment_values[$node_langcode][$langcode] = $this->randomName();
+        // Initially field form widgets have no language.
+        $edit = array(
+          'subject' => $this->randomName(),
+          "comment_body[$language_none][0][value]" => $comment_values[$node_langcode][$langcode],
+        );
+        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Preview'));
+        // After the first submit the submitted entity language is taken into
+        // account.
+        $edit = array(
+          'subject' => $edit['subject'],
+          "comment_body[$langcode][0][value]" => $comment_values[$node_langcode][$langcode],
+        );
+        $this->drupalPost(NULL, $edit, t('Save'));
 
         // Check that comment language matches the current content language.
-        $comment = db_select('comment', 'c')
-          ->fields('c')
+        $cid = db_select('comment', 'c')
+          ->fields('c', array('cid'))
           ->condition('nid', $node->nid)
           ->orderBy('cid', 'DESC')
+          ->range(0, 1)
           ->execute()
-          ->fetchObject();
+          ->fetchField();
+        $comment = comment_load($cid);
         $comment_langcode = entity_language('comment', $comment);
         $args = array('%node_language' => $node_langcode, '%comment_language' => $comment_langcode, '%langcode' => $langcode);
         $this->assertEqual($comment_langcode, $langcode, t('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEqual($comment->comment_body[$langcode][0]['value'], $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
+      }
+    }
+
+    // Check that comment bodies appear in the administration UI.
+    $this->drupalGet('admin/content/comment');
+    foreach ($comment_values as $node_values) {
+      foreach ($node_values as $value) {
+        $this->assertRaw($value);
       }
     }
   }
+
 }
 
 /**

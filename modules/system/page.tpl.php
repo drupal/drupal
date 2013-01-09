@@ -68,6 +68,8 @@
  * @see template_preprocess_page()
  * @see template_process()
  * @see html.tpl.php
+ *
+ * @ingroup themeable
  */
 ?>
 

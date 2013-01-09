@@ -89,7 +89,7 @@ define('FILE_STATUS_PERMANENT', 1);
  * wrappers that are appropriate for particular usage. For example, this returns
  * only stream wrappers that use local file storage:
  * @code
- *   $local_stream_wrappers = file_get_stream_wrappers(STEAM_WRAPPERS_LOCAL);
+ *   $local_stream_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
  * @endcode
  *
  * The $filter parameter can only filter to types containing a particular flag.
@@ -99,7 +99,7 @@ define('FILE_STATUS_PERMANENT', 1);
  * array_diff_key() function can be used to help with this. For example, this
  * returns only stream wrappers that do not use local file storage:
  * @code
- *   $remote_stream_wrappers = array_diff_key(file_get_stream_wrappers(STREAM_WRAPPERS_ALL), file_get_stream_wrappers(STEAM_WRAPPERS_LOCAL));
+ *   $remote_stream_wrappers = array_diff_key(file_get_stream_wrappers(STREAM_WRAPPERS_ALL), file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL));
  * @endcode
  *
  * @param $filter
@@ -398,8 +398,8 @@ function file_create_url($uri) {
     }
   }
   elseif ($scheme == 'http' || $scheme == 'https') {
-    // Check for http so that we don't have to implement getExternalUrl() for
-    // the http wrapper.
+    // Check for HTTP so that we don't have to implement getExternalUrl() for
+    // the HTTP wrapper.
     return $uri;
   }
   else {
@@ -892,7 +892,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   $destination = file_destination($destination, $replace);
   if ($destination === FALSE) {
     drupal_set_message(t('The file %file could not be copied because a file by that name already exists in the destination directory.', array('%file' => $original_source)), 'error');
-    watchdog('file', 'File %file could not be copied because a file by that name already exists in the destination directory (%directory)', array('%file' => $original_source, '%destination' => $destination));
+    watchdog('file', 'File %file could not be copied because a file by that name already exists in the destination directory (%directory)', array('%file' => $original_source, '%directory' => $destination));
     return FALSE;
   }
 
@@ -1113,6 +1113,9 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
 
   // Allow potentially insecure uploads for very savvy users and admin
   if (!variable_get('allow_insecure_uploads', 0)) {
+    // Remove any null bytes. See http://php.net/manual/en/security.filesystem.nullbytes.php
+    $filename = str_replace(chr(0), '', $filename);
+
     $whitelist = array_unique(explode(' ', trim($extensions)));
 
     // Split the filename up by periods. The first part becomes the basename
@@ -2236,7 +2239,7 @@ function drupal_realpath($uri) {
   if ($wrapper = file_stream_wrapper_get_instance_by_uri($uri)) {
     return $wrapper->realpath();
   }
-  // Check that the uri has a value. There is a bug in PHP 5.2 on *BSD systems
+  // Check that the URI has a value. There is a bug in PHP 5.2 on *BSD systems
   // that makes realpath not return FALSE as expected when passing an empty
   // variable.
   // @todo Remove when Drupal drops support for PHP 5.2.
@@ -2489,7 +2492,7 @@ function file_get_content_headers($file) {
   }
 
   return array(
-    'Content-Type' => $type . '; name="' . $name . '"',
+    'Content-Type' => $type,
     'Content-Length' => $file->filesize,
     'Content-Disposition' => $disposition . '; filename="' . $name . '"',
     'Cache-Control' => 'private',

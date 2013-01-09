@@ -96,7 +96,7 @@ function unicode_check() {
  *   Whether to report any fatal errors with form_set_error().
  */
 function _unicode_check() {
-  // Ensure translations don't break at install time
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   // Check for mbstring extension
@@ -128,7 +128,7 @@ function _unicode_check() {
  * Return Unicode library status and errors.
  */
 function unicode_requirements() {
-  // Ensure translations don't break at install time
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   $libraries = array(

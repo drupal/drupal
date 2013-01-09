@@ -8,7 +8,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.16-dev');
+define('VERSION', '7.19-dev');
 
 /**
  * Core API compatibility.
@@ -24,6 +24,21 @@ define('DRUPAL_MINIMUM_PHP', '5.2.4');
  * Minimum recommended value of PHP memory_limit.
  */
 define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT', '32M');
+
+/**
+ * Error reporting level: display no errors.
+ */
+define('ERROR_REPORTING_HIDE', 0);
+
+/**
+ * Error reporting level: display errors and warnings.
+ */
+define('ERROR_REPORTING_DISPLAY_SOME', 1);
+
+/**
+ * Error reporting level: display all messages.
+ */
+define('ERROR_REPORTING_DISPLAY_ALL', 2);
 
 /**
  * Indicates that the item should never be removed unless explicitly selected.
@@ -498,56 +513,12 @@ function timer_stop($name) {
 }
 
 /**
- * Finds the appropriate configuration directory.
+ * Returns the appropriate configuration directory.
  *
- * Finds a matching configuration directory by stripping the website's
- * hostname from left to right and pathname from right to left. The first
- * configuration file found will be used and the remaining ones will be ignored.
- * If no configuration file is found, return a default value '$confdir/default'.
- *
- * With a site located at http://www.example.com:8080/mysite/test/, the file,
- * settings.php, is searched for in the following directories:
- *
- * - $confdir/8080.www.example.com.mysite.test
- * - $confdir/www.example.com.mysite.test
- * - $confdir/example.com.mysite.test
- * - $confdir/com.mysite.test
- *
- * - $confdir/8080.www.example.com.mysite
- * - $confdir/www.example.com.mysite
- * - $confdir/example.com.mysite
- * - $confdir/com.mysite
- *
- * - $confdir/8080.www.example.com
- * - $confdir/www.example.com
- * - $confdir/example.com
- * - $confdir/com
- *
- * - $confdir/default
- *
- * If a file named sites.php is present in the $confdir, it will be loaded
- * prior to scanning for directories. It should define an associative array
- * named $sites, which maps domains to directories. It should be in the form
- * of:
- * @code
- * $sites = array(
- *   'The url to alias' => 'A directory within the sites directory'
- * );
- * @endcode
- * For example:
- * @code
- * $sites = array(
- *   'devexample.com' => 'example.com',
- *   'localhost.example' => 'example.com',
- * );
- * @endcode
- * The above array will cause Drupal to look for a directory named
- * "example.com" in the sites directory whenever a request comes from
- * "example.com", "devexample.com", or "localhost/example". That is useful
- * on development servers, where the domain name may not be the same as the
- * domain of the live server. Since Drupal stores file paths into the database
- * (files, system table, etc.) this will ensure the paths are correct while
- * accessed on development servers.
+ * Returns the configuration path based on the site's hostname, port, and
+ * pathname. Uses find_conf_path() to find the current configuration directory.
+ * See default.settings.php for examples on how the URL is converted to a
+ * directory.
  *
  * @param bool $require_settings
  *   Only configuration directories with an existing settings.php file
@@ -560,6 +531,8 @@ function timer_stop($name) {
  *
  * @return
  *   The path of the matching directory.
+ *
+ * @see default.settings.php
  */
 function conf_path($require_settings = TRUE, $reset = FALSE) {
   $conf = &drupal_static(__FUNCTION__, '');
@@ -731,7 +704,7 @@ function drupal_valid_http_host($host) {
 function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root;
 
-  // Export the following settings.php variables to the global namespace
+  // Export these settings.php variables to the global namespace.
   global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url;
   $conf = array();
 
@@ -743,7 +716,6 @@ function drupal_settings_initialize() {
   if (isset($base_url)) {
     // Parse fixed base URL from settings.php.
     $parts = parse_url($base_url);
-    $http_protocol = $parts['scheme'];
     if (!isset($parts['path'])) {
       $parts['path'] = '';
     }
@@ -752,7 +724,7 @@ function drupal_settings_initialize() {
     $base_root = substr($base_url, 0, strlen($base_url) - strlen($parts['path']));
   }
   else {
-    // Create base URL
+    // Create base URL.
     $http_protocol = $is_https ? 'https' : 'http';
     $base_root = $http_protocol . '://' . $_SERVER['HTTP_HOST'];
 
@@ -778,7 +750,7 @@ function drupal_settings_initialize() {
   }
   else {
     // Otherwise use $base_url as session name, without the protocol
-    // to use the same session identifiers across http and https.
+    // to use the same session identifiers across HTTP and HTTPS.
     list( , $session_name) = explode('://', $base_url, 2);
     // HTTP_HOST can be modified by a visitor, but we already sanitized it
     // in drupal_settings_initialize().
@@ -1213,10 +1185,11 @@ function _drupal_set_preferred_header_name($name = NULL) {
  * Headers are set in drupal_add_http_header(). Default headers are not set
  * if they have been replaced or unset using drupal_add_http_header().
  *
- * @param $default_headers
- *   An array of headers as name/value pairs.
- * @param $single
- *   If TRUE and headers have already be sent, send only the specified header.
+ * @param array $default_headers
+ *   (optional) An array of headers as name/value pairs.
+ * @param bool $only_default
+ *   (optional) If TRUE and headers have already been sent, send only the
+ *   specified headers.
  */
 function drupal_send_headers($default_headers = array(), $only_default = FALSE) {
   $headers_sent = &drupal_static(__FUNCTION__, FALSE);
@@ -1447,8 +1420,9 @@ function drupal_unpack($obj, $field = 'data') {
  * Basically, you can put variables like @name into your string, and t() will
  * substitute their sanitized values at translation time. (See the
  * Localization API pages referenced above and the documentation of
- * format_string() for details.) Translators can then rearrange the string as
- * necessary for the language (e.g., in Spanish, it might be "blog de @name").
+ * format_string() for details about how to define variables in your string.)
+ * Translators can then rearrange the string as necessary for the language
+ * (e.g., in Spanish, it might be "blog de @name").
  *
  * During the Drupal installation phase, some resources used by t() wil not be
  * available to code that needs localization. See st() and get_t() for
@@ -1511,21 +1485,34 @@ function t($string, array $args = array(), array $options = array()) {
 }
 
 /**
- * Replaces placeholders with sanitized values in a string.
+ * Formats a string for HTML display by replacing variable placeholders.
+ *
+ * This function replaces variable placeholders in a string with the requested
+ * values and escapes the values so they can be safely displayed as HTML. It
+ * should be used on any unknown text that is intended to be printed to an HTML
+ * page (especially text that may have come from untrusted users, since in that
+ * case it prevents cross-site scripting and other security problems).
+ *
+ * In most cases, you should use t() rather than calling this function
+ * directly, since it will translate the text (on non-English-only sites) in
+ * addition to formatting it.
  *
  * @param $string
  *   A string containing placeholders.
  * @param $args
  *   An associative array of replacements to make. Occurrences in $string of
- *   any key in $args are replaced with the corresponding value, after
- *   sanitization. The sanitization function depends on the first character of
- *   the key:
- *   - !variable: Inserted as is. Use this for text that has already been
- *     sanitized.
- *   - @variable: Escaped to HTML using check_plain(). Use this for anything
- *     displayed on a page on the site.
- *   - %variable: Escaped as a placeholder for user-submitted content using
- *     drupal_placeholder(), which shows up as <em>emphasized</em> text.
+ *   any key in $args are replaced with the corresponding value, after optional
+ *   sanitization and formatting. The type of sanitization and formatting
+ *   depends on the first character of the key:
+ *   - @variable: Escaped to HTML using check_plain(). Use this as the default
+ *     choice for anything displayed on a page on the site.
+ *   - %variable: Escaped to HTML and formatted using drupal_placeholder(),
+ *     which makes it display as <em>emphasized</em> text.
+ *   - !variable: Inserted as is, with no sanitization or formatting. Only use
+ *     this for text that has already been prepared for HTML display (for
+ *     example, user-supplied text that has already been run through
+ *     check_plain() previously, or is expected to contain some limited HTML
+ *     tags and has already been run through filter_xss() previously).
  *
  * @see t()
  * @ingroup sanitization
@@ -1732,7 +1719,8 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
       'request_uri' => $base_root . request_uri(),
       'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
       'ip'          => ip_address(),
-      'timestamp'   => REQUEST_TIME,
+      // Request time isn't accurate for long processes, use time() instead.
+      'timestamp'   => time(),
     );
 
     // Call the logging hooks to log/process the message
@@ -1798,18 +1786,29 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
 }
 
 /**
- * Returns all messages that have been set.
+ * Returns all messages that have been set with drupal_set_message().
  *
- * @param $type
- *   (optional) Only return messages of this type.
- * @param $clear_queue
- *   (optional) Set to FALSE if you do not want to clear the messages queue
+ * @param string $type
+ *   (optional) Limit the messages returned by type. Defaults to NULL, meaning
+ *   all types. These values are supported:
+ *   - NULL
+ *   - 'status'
+ *   - 'warning'
+ *   - 'error'
+ * @param bool $clear_queue
+ *   (optional) If this is TRUE, the queue will be cleared of messages of the
+ *   type specified in the $type parameter. Otherwise the queue will be left
+ *   intact. Defaults to TRUE.
  *
- * @return
- *   An associative array, the key is the message type, the value an array
- *   of messages. If the $type parameter is passed, you get only that type,
- *   or an empty array if there are no such messages. If $type is not passed,
- *   all message types are returned, or an empty array if none exist.
+ * @return array
+ *   A multidimensional array with keys corresponding to the set message types.
+ *   The indexed array values of each contain the set messages for that type.
+ *   The messages returned are limited to the type specified in the $type
+ *   parameter. If there are no messages of the specified type, an empty array
+ *   is returned.
+ *
+ * @see drupal_set_message()
+ * @see theme_status_messages()
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
@@ -2533,7 +2532,7 @@ function drupal_fast_404() {
     $fast_paths = variable_get('404_fast_paths', FALSE);
     if ($fast_paths && preg_match($fast_paths, $_GET['q'])) {
       drupal_add_http_header('Status', '404 Not Found');
-      $fast_404_html = variable_get('404_fast_html', '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
+      $fast_404_html = variable_get('404_fast_html', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
       // Replace @path in the variable with the page path.
       print strtr($fast_404_html, array('@path' => check_plain(request_uri())));
       exit;
@@ -2626,6 +2625,9 @@ function drupal_language_types() {
 
 /**
  * Returns TRUE if there is more than one language enabled.
+ *
+ * @return
+ *   TRUE if more than one language is enabled.
  */
 function drupal_multilingual() {
   // The "language_count" variable stores the number of enabled languages to
@@ -2636,6 +2638,10 @@ function drupal_multilingual() {
 
 /**
  * Returns an array of the available language types.
+ *
+ * @return
+ *   An array of all language types where the keys of each are the language type
+ *   name and its value is its configurability (TRUE/FALSE).
  */
 function language_types() {
   return array_keys(variable_get('language_types', drupal_language_types()));

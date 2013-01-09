@@ -592,7 +592,10 @@ function update_calculate_project_update_status($project, &$project_data, $avail
 
     // See if this is a higher major version than our target and yet still
     // supported. If so, record it as an "Also available" release.
-    if ($release['version_major'] > $target_major) {
+    // Note: some projects have a HEAD release from CVS days, which could
+    // be one of those being compared. They would not have version_major
+    // set, so we must call isset first.
+    if (isset($release['version_major']) && $release['version_major'] > $target_major) {
       if (in_array($release['version_major'], $supported_majors)) {
         if (!isset($project_data['also'])) {
           $project_data['also'] = array();

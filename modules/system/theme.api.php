@@ -70,8 +70,8 @@
  * Allow themes to alter the theme-specific settings form.
  *
  * With this hook, themes can alter the theme-specific settings form in any way
- * allowable by Drupal's Forms API, such as adding form elements, changing
- * default values and removing form elements. See the Forms API documentation on
+ * allowable by Drupal's Form API, such as adding form elements, changing
+ * default values and removing form elements. See the Form API documentation on
  * api.drupal.org for detailed information.
  *
  * Note that the base theme's form alterations will be run before any sub-theme

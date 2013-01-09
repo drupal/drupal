@@ -482,8 +482,8 @@ $(document).bind('state:disabled', function(e) {
   if (e.trigger) {
     $(e.target)
       .attr('disabled', e.value)
-      .filter('.form-element')
-        .closest('.form-item, .form-submit, .form-wrapper').toggleClass('form-disabled', e.value);
+        .closest('.form-item, .form-submit, .form-wrapper').toggleClass('form-disabled', e.value)
+        .find('select, input, textarea').attr('disabled', e.value);
 
     // Note: WebKit nightlies don't reflect that change correctly.
     // See https://bugs.webkit.org/show_bug.cgi?id=23789

@@ -1,4 +1,9 @@
 
+/**
+ * @file
+ * Basic styling for the Overlay module.
+ */
+
 html.overlay-open,
 html.overlay-open body {
   height: 100%;

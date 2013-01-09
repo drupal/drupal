@@ -1740,16 +1740,27 @@ function _system_themes_access($theme) {
 /**
  * Setup a given callback to run via authorize.php with elevated privileges.
  *
- * To use authorize.php, certain variables must be stashed into $_SESSION.
- * This function sets up all the necessary $_SESSION variables, then returns
- * the full path to authorize.php so the caller can redirect to authorize.php.
- * That initiates the workflow that will eventually lead to the callback being
- * invoked. The callback will be invoked at a low bootstrap level, without all
- * modules being invoked, so it needs to be careful not to assume any code
- * exists.
+ * To use authorize.php, certain variables must be stashed into $_SESSION. This
+ * function sets up all the necessary $_SESSION variables. The calling function
+ * should then redirect to authorize.php, using the full path returned by
+ * system_authorized_get_url(). That initiates the workflow that will eventually
+ * lead to the callback being invoked. The callback will be invoked at a low
+ * bootstrap level, without all modules being invoked, so it needs to be careful
+ * not to assume any code exists. Example (system_authorized_run()):
+ * @code
+ *   system_authorized_init($callback, $file, $arguments, $page_title);
+ *   drupal_goto(system_authorized_get_url());
+ * @endcode
+ * Example (update_manager_install_form_submit()):
+ * @code
+ *  system_authorized_init('update_authorize_run_install',
+ *    drupal_get_path('module', 'update') . '/update.authorize.inc',
+ *    $arguments, t('Update manager'));
+ *  $form_state['redirect'] = system_authorized_get_url();
+ * @endcode
  *
  * @param $callback
- *   The name of the function to invoke one the user authorizes the operation.
+ *   The name of the function to invoke once the user authorizes the operation.
  * @param $file
  *   The full path to the file where the callback function is implemented.
  * @param $arguments
@@ -1785,11 +1796,13 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
  * @param array $options
  *   Optional array of options to pass to url().
  * @return
- *   The full URL to authorize.php, using https if available.
+ *   The full URL to authorize.php, using HTTPS if available.
+ *
+ * @see system_authorized_init()
  */
 function system_authorized_get_url(array $options = array()) {
   global $base_url;
-  // Force https if available, regardless of what the caller specifies.
+  // Force HTTPS if available, regardless of what the caller specifies.
   $options['https'] = TRUE;
   // We prefix with $base_url so we get a full path even if clean URLs are
   // disabled.
@@ -2348,14 +2361,14 @@ function _system_rebuild_module_data() {
   // Find modules
   $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0);
 
-  // Include the install profile in modules that are loaded.
+  // Include the installation profile in modules that are loaded.
   $profile = drupal_get_profile();
   $modules[$profile] = new stdClass();
   $modules[$profile]->name = $profile;
   $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
   $modules[$profile]->filename = $profile . '.profile';
 
-  // Install profile hooks are always executed last.
+  // Installation profile hooks are always executed last.
   $modules[$profile]->weight = 1000;
 
   // Set defaults for module info.
@@ -2396,7 +2409,7 @@ function _system_rebuild_module_data() {
       $module->info['scripts'] = _system_info_add_path($module->info['scripts'], $path);
     }
 
-    // Install profiles are hidden by default, unless explicitly specified
+    // Installation profiles are hidden by default, unless explicitly specified
     // otherwise in the .info file.
     if ($key == $profile && !isset($modules[$key]->info['hidden'])) {
       $modules[$key]->info['hidden'] = TRUE;
@@ -2409,7 +2422,7 @@ function _system_rebuild_module_data() {
   }
 
   if (isset($modules[$profile])) {
-    // The install profile is required, if it's a valid module.
+    // The installation profile is required, if it's a valid module.
     $modules[$profile]->info['required'] = TRUE;
     // Add a default distribution name if the profile did not provide one. This
     // matches the default value used in install_profile_info().
@@ -3759,7 +3772,7 @@ function _system_date_formats_build() {
   }
 
   // Get custom formats added to the database by the end user.
-  $result = db_query('SELECT df.dfid, df.format, df.type, df.locked, dfl.language FROM {date_formats} df LEFT JOIN {date_format_type} dft ON df.type = dft.type LEFT JOIN {date_format_locale} dfl ON df.format = dfl.format AND df.type = dfl.type ORDER BY df.type, df.format');
+  $result = db_query('SELECT df.dfid, df.format, df.type, df.locked, dfl.language FROM {date_formats} df LEFT JOIN {date_format_locale} dfl ON df.format = dfl.format AND df.type = dfl.type ORDER BY df.type, df.format');
   foreach ($result as $record) {
     // If this date type isn't set, initialise the array.
     if (!isset($date_formats[$record->type])) {

@@ -73,7 +73,14 @@ Drupal.file = Drupal.file || {
       var acceptableMatch = new RegExp('\\.(' + extensionPattern + ')$', 'gi');
       if (!acceptableMatch.test(this.value)) {
         var error = Drupal.t("The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.", {
-          '%filename': this.value,
+          // According to the specifications of HTML5, a file upload control
+          // should not reveal the real local path to the file that a user
+          // has selected. Some web browsers implement this restriction by
+          // replacing the local path with "C:\fakepath\", which can cause
+          // confusion by leaving the user thinking perhaps Drupal could not
+          // find the file because it messed up the file path. To avoid this
+          // confusion, therefore, we strip out the bogus fakepath string.
+          '%filename': this.value.replace('C:\\fakepath\\', ''),
           '%extensions': extensionPattern.replace(/\|/g, ', ')
         });
         $(this).closest('div.form-managed-file').prepend('<div class="messages error file-upload-js-error">' + error + '</div>');

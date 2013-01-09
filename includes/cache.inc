@@ -80,43 +80,15 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  * same name. Other implementations might want to store several bins in data
  * structures that get flushed together. While it is not a problem for most
  * cache bins if the entries in them are flushed before their expire time, some
- * might break functionality or are extremely expensive to recalculate. These
- * will be marked with a (*). The other bins expired automatically by core.
- * Contributed modules can add additional bins and get them expired
- * automatically by implementing hook_flush_caches().
- *
- *  - cache: Generic cache storage bin (used for variables, theme registry,
- *  locale date, list of simpletest tests etc).
- *
- *  - cache_block: Stores the content of various blocks.
- *
- *  - cache field: Stores the field data belonging to a given object.
- *
- *  - cache_filter: Stores filtered pieces of content.
- *
- *  - cache_form(*): Stores multistep forms. Flushing this bin means that some
- *  forms displayed to users lose their state and the data already submitted
- *  to them.
- *
- *  - cache_menu: Stores the structure of visible navigation menus per page.
- *
- *  - cache_page: Stores generated pages for anonymous users. It is flushed
- *  very often, whenever a page changes, at least for every ode and comment
- *  submission. This is the only bin affected by the page cache setting on
- *  the administrator panel.
- *
- *  - cache path: Stores the system paths that have an alias.
- *
- *  - cache update(*): Stores available releases. The update server (for
- *  example, drupal.org) needs to produce the relevant XML for every project
- *  installed on the current site. As this is different for (almost) every
- *  site, it's very expensive to recalculate for the update server.
+ * might break functionality or are extremely expensive to recalculate. The
+ * other bins are expired automatically by core. Contributed modules can add
+ * additional bins and get them expired automatically by implementing
+ * hook_flush_caches().
  *
  * The reasons for having several bins are as follows:
- *
- * - smaller bins mean smaller database tables and allow for faster selects and
- *   inserts
- * - we try to put fast changing cache items and rather static ones into
+ * - Smaller bins mean smaller database tables and allow for faster selects and
+ *   inserts.
+ * - We try to put fast changing cache items and rather static ones into
  *   different bins. The effect is that only the fast changing bins will need a
  *   lot of writes to disk. The more static bins will also be better cacheable
  *   with MySQL's query cache.
@@ -125,13 +97,27 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *   The cache ID of the data to store.
  * @param $data
  *   The data to store in the cache. Complex data types will be automatically
- *   serialized before insertion.
- *   Strings will be stored as plain text and not serialized.
+ *   serialized before insertion. Strings will be stored as plain text and are
+ *   not serialized.
  * @param $bin
- *   The cache bin to store the data in. Valid core values are 'cache_block',
- *   'cache_bootstrap', 'cache_field', 'cache_filter', 'cache_form',
- *   'cache_menu', 'cache_page', 'cache_update' or 'cache' for the default
- *   cache.
+ *   The cache bin to store the data in. Valid core values are:
+ *   - cache: (default) Generic cache storage bin (used for theme registry,
+ *     locale date, list of simpletest tests, etc.).
+ *   - cache_block: Stores the content of various blocks.
+ *   - cache_bootstrap: Stores the class registry, the system list of modules,
+ *     the list of which modules implement which hooks, and the Drupal variable
+ *     list.
+ *   - cache_field: Stores the field data belonging to a given object.
+ *   - cache_filter: Stores filtered pieces of content.
+ *   - cache_form: Stores multistep forms. Flushing this bin means that some
+ *     forms displayed to users lose their state and the data already submitted
+ *     to them. This bin should not be flushed before its expired time.
+ *   - cache_menu: Stores the structure of visible navigation menus per page.
+ *   - cache_page: Stores generated pages for anonymous users. It is flushed
+ *     very often, whenever a page changes, at least for every node and comment
+ *     submission. This is the only bin affected by the page cache setting on
+ *     the administrator panel.
+ *   - cache_path: Stores the system paths that have an alias.
  * @param $expire
  *   One of the following values:
  *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
@@ -141,6 +127,7 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *   - A Unix timestamp: Indicates that the item should be kept at least until
  *     the given time, after which it behaves like CACHE_TEMPORARY.
  *
+ * @see _update_cache_set()
  * @see cache_get()
  */
 function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT) {

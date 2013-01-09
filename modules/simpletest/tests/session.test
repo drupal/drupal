@@ -289,14 +289,14 @@ class SessionTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Ensure that when running under https two session cookies are generated.
+ * Ensure that when running under HTTPS two session cookies are generated.
  */
 class SessionHttpsTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Session https handling',
-      'description' => 'Ensure that when running under https two session cookies are generated.',
+      'name' => 'Session HTTPS handling',
+      'description' => 'Ensure that when running under HTTPS two session cookies are generated.',
       'group' => 'Session'
     );
   }
@@ -384,7 +384,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     $this->cookies = array();
 
     if ($is_https) {
-      // The functionality does not make sense when running on https.
+      // The functionality does not make sense when running on HTTPS.
       return;
     }
 

@@ -330,10 +330,12 @@ function forum_node_presave($node) {
     $langcode = key($node->taxonomy_forums);
     if (!empty($node->taxonomy_forums[$langcode])) {
       $node->forum_tid = $node->taxonomy_forums[$langcode][0]['tid'];
-      $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();
-      if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
-        // A shadow copy needs to be created. Retain new term and add old term.
-        $node->taxonomy_forums[$langcode][] = array('tid' => $old_tid);
+      if (isset($node->nid)) {
+        $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();
+        if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
+          // A shadow copy needs to be created. Retain new term and add old term.
+          $node->taxonomy_forums[$langcode][] = array('tid' => $old_tid);
+        }
       }
     }
   }
@@ -1328,7 +1330,7 @@ function _forum_get_topic_order($sortby) {
  *   The ID of the node to update.
  */
 function _forum_update_forum_index($nid) {
-  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND status = :status', array(
+  $count = db_query('SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.nid = i.nid WHERE c.nid = :nid AND c.status = :status', array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
   ))->fetchField();

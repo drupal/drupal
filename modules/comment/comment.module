@@ -152,7 +152,7 @@ function comment_node_type_load($name) {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  */
 function comment_uri($comment) {
   return array(
@@ -992,6 +992,14 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
   // Remove previously built content, if exists.
   $comment->content = array();
 
+  // Allow modules to change the view mode.
+  $context = array(
+    'entity_type' => 'comment',
+    'entity' => $comment,
+    'langcode' => $langcode,
+  );
+  drupal_alter('entity_view_mode', $view_mode, $context);
+
   // Build fields content.
   field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode, $langcode);
   entity_prepare_view('comment', array($comment->cid => $comment), $langcode);
@@ -1013,6 +1021,10 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
   // Allow modules to make their own additions to the comment.
   module_invoke_all('comment_view', $comment, $view_mode, $langcode);
   module_invoke_all('entity_view', $comment, 'comment', $view_mode, $langcode);
+
+  // Make sure the current view mode is stored if no module has already
+  // populated the related key.
+  $comment->content += array('#view_mode' => $view_mode);
 }
 
 /**
@@ -2029,7 +2041,8 @@ function comment_form($form, &$form_state, $comment) {
 
   // Attach fields.
   $comment->node_type = 'comment_node_' . $node->type;
-  field_attach_form('comment', $comment, $form, $form_state);
+  $langcode = entity_language('comment', $comment);
+  field_attach_form('comment', $comment, $form, $form_state, $langcode);
 
   return $form;
 }
@@ -2054,7 +2067,8 @@ function comment_preview($comment) {
   $node = node_load($comment->nid);
 
   if (!form_get_errors()) {
-    $comment->format = $comment->comment_body[LANGUAGE_NONE][0]['format'];
+    $comment_body = field_get_items('comment', $comment, 'comment_body');
+    $comment->format = $comment_body[0]['format'];
     // Attach the user and time information.
     if (!empty($comment->name)) {
       $account = user_load_by_name($comment->name);
@@ -2178,7 +2192,9 @@ function comment_submit($comment) {
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
-    $comment_body = $comment->comment_body[LANGUAGE_NONE][0];
+    $field = field_info_field('comment_body');
+    $langcode = field_is_translatable('comment', $field) ? entity_language('comment', $comment) : LANGUAGE_NONE;
+    $comment_body = $comment->comment_body[$langcode][0];
     if (isset($comment_body['format'])) {
       $comment_text = check_markup($comment_body['value'], $comment_body['format']);
     }
@@ -2272,8 +2288,16 @@ function template_preprocess_comment(&$variables) {
   $variables['comment']   = $comment;
   $variables['node']      = $node;
   $variables['author']    = theme('username', array('account' => $comment));
+
   $variables['created']   = format_date($comment->created);
-  $variables['changed']   = format_date($comment->changed);
+
+  // Avoid calling format_date() twice on the same timestamp.
+  if ($comment->changed == $comment->created) {
+    $variables['changed'] = $variables['created'];
+  }
+  else {
+    $variables['changed'] = format_date($comment->changed);
+  }
 
   $variables['new']       = !empty($comment->new) ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
@@ -2375,7 +2399,6 @@ function theme_comment_post_forbidden($variables) {
  * Process variables for comment-wrapper.tpl.php.
  *
  * @see comment-wrapper.tpl.php
- * @see theme_comment_wrapper()
  */
 function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.

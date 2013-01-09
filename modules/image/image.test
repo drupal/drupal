@@ -183,7 +183,7 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
 
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');
-    $file = reset($files);
+    $file = array_shift($files);
     $image_info = image_get_info($file->uri);
     $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
     // Let the image_module_test module know about this file, so it can claim
@@ -212,18 +212,30 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
       $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
       $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'no-cache, must-revalidate, post-check=0, pre-check=0', t('Cache-Control header was set to prevent caching.'));
       $this->assertEqual($this->drupalGetHeader('X-Image-Owned-By'), 'image_module_test', t('Expected custom header has been added.'));
-      // Verify access is denied to private image styles.
-      $this->drupalLogout();
+
+      // Make sure that a second request to the already existing derivate works
+      // too.
       $this->drupalGet($generate_url);
+      $this->assertResponse(200, t('Image was generated at the URL.'));
+
+      // Repeat this with a different file that we do not have access to and
+      // make sure that access is denied.
+      $file_noaccess = array_shift($files);
+      $original_uri_noaccess = file_unmanaged_copy($file_noaccess->uri, $scheme . '://', FILE_EXISTS_RENAME);
+      $generated_uri_noaccess = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. drupal_basename($original_uri_noaccess);
+      $this->assertFalse(file_exists($generated_uri_noaccess), t('Generated file does not exist.'));
+      $generate_url_noaccess = image_style_url($this->style_name, $original_uri_noaccess);
+
+      $this->drupalGet($generate_url_noaccess);
       $this->assertResponse(403, t('Confirmed that access is denied for the private image style.') );
       // Verify that images are not appended to the response. Currently this test only uses PNG images.
       if (strpos($generate_url, '.png') === FALSE ) {
-        $this->fail( t('Confirming that private image styles are not appended require PNG file.') );
+        $this->fail('Confirming that private image styles are not appended require PNG file.');
       }
       else {
         // Check for PNG-Signature (cf. http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.2) in the
         // response body.
-        $this->assertNoRaw( chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), t('No PNG signature found in the response body.') );
+        $this->assertNoRaw( chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), 'No PNG signature found in the response body.');
       }
     }
   }
@@ -243,7 +255,7 @@ class ImageEffectsUnitTest extends ImageToolkitTestCase {
   }
 
   function setUp() {
-    parent::setUp('image_test');
+    parent::setUp('image_module_test');
     module_load_include('inc', 'image', 'image.effects');
   }
 
@@ -329,6 +341,25 @@ class ImageEffectsUnitTest extends ImageToolkitTestCase {
     $calls = image_test_get_all_calls();
     $this->assertEqual($calls['rotate'][0][1], 90, t('Degrees were passed correctly'));
     $this->assertEqual($calls['rotate'][0][2], 0xffffff, t('Background color was passed correctly'));
+  }
+
+  /**
+   * Test image effect caching.
+   */
+  function testImageEffectsCaching() {
+    $image_effect_definitions_called = &drupal_static('image_module_test_image_effect_info_alter');
+
+    // First call should grab a fresh copy of the data.
+    $effects = image_effect_definitions();
+    $this->assertTrue($image_effect_definitions_called === 1, 'image_effect_definitions() generated data.');
+
+    // Second call should come from cache.
+    drupal_static_reset('image_effect_definitions');
+    drupal_static_reset('image_module_test_image_effect_info_alter');
+    $cached_effects = image_effect_definitions();
+    $this->assertTrue(is_null($image_effect_definitions_called), 'image_effect_definitions() returned data from cache.');
+
+    $this->assertTrue($effects == $cached_effects, 'Cached effects are the same as generated effects.');
   }
 }
 
@@ -717,7 +748,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
-      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png; name="' . $test_image->filename . '"', t('Content-Type header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', t('Content-Type header was sent.'));
       $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', t('Content-Disposition header was sent.'));
       $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'private', t('Cache-Control header was sent.'));
 
@@ -1563,6 +1594,67 @@ class ImageFieldDefaultImagesTestCase extends ImageFieldTestCase {
         array('@fid' => $default_images['instance2']->fid)
       )
     );
+  }
+
+}
+
+/**
+ * Tests image theme functions.
+ */
+class ImageThemeFunctionWebTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Image theme functions',
+      'description' => 'Test that the image theme functions work correctly.',
+      'group' => 'Image',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('image'));
+  }
+
+  /**
+   * Tests usage of the image field formatters.
+   */
+  function testImageFormatterTheme() {
+    // Create an image.
+    $files = $this->drupalGetTestFiles('image');
+    $file = reset($files);
+    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+
+    // Create a style.
+    image_style_save(array('name' => 'test'));
+    $url = image_style_url('test', $original_uri);
+
+    // Test using theme_image_formatter() without an image title, alt text, or
+    // link options.
+    $path = $this->randomName();
+    $element = array(
+      '#theme' => 'image_formatter',
+      '#image_style' => 'test',
+      '#item' => array(
+        'uri' => $original_uri,
+      ),
+      '#path' => array(
+        'path' => $path,
+      ),
+    );
+    $rendered_element = render($element);
+    $expected_result = '<a href="' . url($path) . '"><img typeof="foaf:Image" src="' . $url . '" alt="" /></a>';
+    $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders without title, alt, or path options.');
+
+    // Link the image to a fragment on the page, and not a full URL.
+    $fragment = $this->randomName();
+    $element['#path']['path'] = '';
+    $element['#path']['options'] = array(
+      'external' => TRUE,
+      'fragment' => $fragment,
+    );
+    $rendered_element = render($element);
+    $expected_result = '<a href="#' . $fragment . '"><img typeof="foaf:Image" src="' . $url . '" alt="" /></a>';
+    $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders a link fragment.');
   }
 
 }

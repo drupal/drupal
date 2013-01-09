@@ -109,7 +109,11 @@ function openid_test_yadis_xrds() {
       }
     }
     drupal_add_http_header('Content-Type', 'application/xrds+xml');
-    print '<?xml version="1.0" encoding="UTF-8"?>
+    print '<?xml version="1.0" encoding="UTF-8"?>';
+    if (!empty($_GET['doctype'])) {
+      print "\n<!DOCTYPE dct [ <!ELEMENT blue (#PCDATA)> ]>\n";
+    }
+    print '
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)" xmlns:openid="http://openid.net/xmlns/1.0">
         <XRD>
           <Status cid="' . check_plain(variable_get('openid_test_canonical_id_status', 'verified')) . '"/>

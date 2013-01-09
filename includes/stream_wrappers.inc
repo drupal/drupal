@@ -553,7 +553,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Support for unlink().
    *
    * @param $uri
-   *   A string containing the uri to the resource to delete.
+   *   A string containing the URI to the resource to delete.
    *
    * @return
    *   TRUE if resource was successfully deleted.
@@ -569,9 +569,9 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Support for rename().
    *
    * @param $from_uri,
-   *   The uri to the file to rename.
+   *   The URI to the file to rename.
    * @param $to_uri
-   *   The new uri for file.
+   *   The new URI for file.
    *
    * @return
    *   TRUE if file was successfully renamed.

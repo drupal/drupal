@@ -5,41 +5,51 @@
  * Drupal site-specific configuration file.
  *
  * IMPORTANT NOTE:
- * This file may have been set to read-only by the Drupal installation
- * program. If you make changes to this file, be sure to protect it again
- * after making your modifications. Failure to remove write permissions
- * to this file is a security risk.
+ * This file may have been set to read-only by the Drupal installation program.
+ * If you make changes to this file, be sure to protect it again after making
+ * your modifications. Failure to remove write permissions to this file is a
+ * security risk.
  *
- * The configuration file to be loaded is based upon the rules below.
+ * The configuration file to be loaded is based upon the rules below. However
+ * if the multisite aliasing file named sites/sites.php is present, it will be
+ * loaded, and the aliases in the array $sites will override the default
+ * directory rules below. See sites/example.sites.php for more information about
+ * aliases.
  *
- * The configuration directory will be discovered by stripping the
- * website's hostname from left to right and pathname from right to
- * left. The first configuration file found will be used and any
- * others will be ignored. If no other configuration file is found
- * then the default configuration file at 'sites/default' will be used.
+ * The configuration directory will be discovered by stripping the website's
+ * hostname from left to right and pathname from right to left. The first
+ * configuration file found will be used and any others will be ignored. If no
+ * other configuration file is found then the default configuration file at
+ * 'sites/default' will be used.
  *
  * For example, for a fictitious site installed at
- * http://www.drupal.org/mysite/test/, the 'settings.php'
- * is searched in the following directories:
+ * http://www.drupal.org:8080/mysite/test/, the 'settings.php' file is searched
+ * for in the following directories:
  *
+ * - sites/8080.www.drupal.org.mysite.test
  * - sites/www.drupal.org.mysite.test
  * - sites/drupal.org.mysite.test
  * - sites/org.mysite.test
  *
+ * - sites/8080.www.drupal.org.mysite
  * - sites/www.drupal.org.mysite
  * - sites/drupal.org.mysite
  * - sites/org.mysite
  *
+ * - sites/8080.www.drupal.org
  * - sites/www.drupal.org
  * - sites/drupal.org
  * - sites/org
  *
  * - sites/default
  *
- * If you are installing on a non-standard port number, prefix the
+ * Note that if you are installing on a non-standard port number, prefix the
  * hostname with that number. For example,
  * http://www.drupal.org:8080/mysite/test/ could be loaded from
  * sites/8080.www.drupal.org.mysite.test/.
+ *
+ * @see example.sites.php
+ * @see conf_path()
  */
 
 /**
@@ -137,7 +147,7 @@
  *     'authmap'   => 'shared_',
  *   ),
  * @endcode
- * You can also use a reference to a schema/database as a prefix. This maybe
+ * You can also use a reference to a schema/database as a prefix. This may be
  * useful if your Drupal installation exists in a schema that is not the default
  * or you want to access several databases from the same code base at the same
  * time.
@@ -425,7 +435,7 @@ ini_set('session.cookie_lifetime', 2000000);
 /**
  * String overrides:
  *
- * To override specific strings on your site with or without enabling locale
+ * To override specific strings on your site with or without enabling the Locale
  * module, add an entry to this list. This functionality allows you to change
  * a small number of your site's default English language interface strings.
  *
@@ -480,32 +490,63 @@ ini_set('session.cookie_lifetime', 2000000);
  */
 $conf['404_fast_paths_exclude'] = '/\/(?:styles)\//';
 $conf['404_fast_paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
-$conf['404_fast_html'] = '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
+$conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
 
 /**
- * By default, fast 404s are returned as part of the normal page request
- * process, which will properly serve valid pages that happen to match and will
- * also log actual 404s to the Drupal log. Alternatively you can choose to
- * return a 404 now by uncommenting the following line. This will reduce server
- * load, but will cause even valid pages that happen to match the pattern to
- * return 404s, rather than the actual page. It will also prevent the Drupal
- * system log entry. Ensure you understand the effects of this before enabling.
+ * By default the page request process will return a fast 404 page for missing
+ * files if they match the regular expression set in '404_fast_paths' and not
+ * '404_fast_paths_exclude' above. 404 errors will simultaneously be logged in
+ * the Drupal system log.
  *
- * To enable this functionality, remove the leading hash sign below.
+ * You can choose to return a fast 404 page earlier for missing pages (as soon
+ * as settings.php is loaded) by uncommenting the line below. This speeds up
+ * server response time when loading 404 error pages and prevents the 404 error
+ * from being logged in the Drupal system log. In order to prevent valid pages
+ * such as image styles and other generated content that may match the
+ * '404_fast_html' regular expression from returning 404 errors, it is necessary
+ * to add them to the '404_fast_paths_exclude' regular expression above. Make
+ * sure that you understand the effects of this feature before uncommenting the
+ * line below.
  */
 # drupal_fast_404();
+
+/**
+ * External access proxy settings:
+ *
+ * If your site must access the Internet via a web proxy then you can enter
+ * the proxy settings here. Currently only basic authentication is supported
+ * by using the username and password variables. The proxy_user_agent variable
+ * can be set to NULL for proxies that require no User-Agent header or to a
+ * non-empty string for proxies that limit requests to a specific agent. The
+ * proxy_exceptions variable is an array of host names to be accessed directly,
+ * not via proxy.
+ */
+# $conf['proxy_server'] = '';
+# $conf['proxy_port'] = 8080;
+# $conf['proxy_username'] = '';
+# $conf['proxy_password'] = '';
+# $conf['proxy_user_agent'] = '';
+# $conf['proxy_exceptions'] = array('127.0.0.1', 'localhost');
 
 /**
  * Authorized file system operations:
  *
  * The Update manager module included with Drupal provides a mechanism for
  * site administrators to securely install missing updates for the site
- * directly through the web user interface by providing either SSH or FTP
- * credentials. This allows the site to update the new files as the user who
- * owns all the Drupal files, instead of as the user the webserver is running
- * as. However, some sites might wish to disable this functionality, and only
- * update the code directly via SSH or FTP themselves. This setting completely
+ * directly through the web user interface. On securely-configured servers,
+ * the Update manager will require the administrator to provide SSH or FTP
+ * credentials before allowing the installation to proceed; this allows the
+ * site to update the new files as the user who owns all the Drupal files,
+ * instead of as the user the webserver is running as. On servers where the
+ * webserver user is itself the owner of the Drupal files, the administrator
+ * will not be prompted for SSH or FTP credentials (note that these server
+ * setups are common on shared hosting, but are inherently insecure).
+ *
+ * Some sites might wish to disable the above functionality, and only update
+ * the code directly via SSH or FTP themselves. This setting completely
  * disables all functionality related to these authorized file operations.
+ *
+ * @see http://drupal.org/node/244924
  *
  * Remove the leading hash signs to disable.
  */

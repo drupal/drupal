@@ -34,7 +34,7 @@ define('IMAGE_STORAGE_MODULE', IMAGE_STORAGE_OVERRIDE | IMAGE_STORAGE_DEFAULT);
 require_once DRUPAL_ROOT . '/modules/image/image.field.inc';
 
 /**
- * Implement of hook_help().
+ * Implements hook_help().
  */
 function image_help($path, $arg) {
   switch ($path) {
@@ -1054,7 +1054,7 @@ function image_effect_definitions() {
   $effects = &drupal_static(__FUNCTION__);
 
   if (!isset($effects)) {
-    if ($cache = cache_get("image_effects:$langcode") && !empty($cache->data)) {
+    if ($cache = cache_get("image_effects:$langcode")) {
       $effects = $cache->data;
     }
     else {
@@ -1262,7 +1262,7 @@ function theme_image_style($variables) {
   $variables['width'] = $dimensions['width'];
   $variables['height'] = $dimensions['height'];
 
-  // Determine the url for the styled image.
+  // Determine the URL for the styled image.
   $variables['path'] = image_style_url($variables['style_name'], $variables['path']);
   return theme('image', $variables);
 }

@@ -5,7 +5,7 @@
  */
 function requirements1_test_requirements($phase) {
   $requirements = array();
-  // Ensure translations don't break at install time.
+  // Ensure translations don't break during installation.
   $t = get_t();
 
   // Always fails requirements.

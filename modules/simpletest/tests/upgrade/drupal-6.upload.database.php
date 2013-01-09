@@ -416,3 +416,34 @@ db_insert('upload')->fields(array(
   'weight' => '0',
 ))
 ->execute();
+
+// Add series of entries for invalid node vids to the {upload} table.
+for ($i = 30; $i < 250; $i += 2) {
+  db_insert('upload')->fields(array(
+    'fid',
+    'nid',
+    'vid',
+    'description',
+    'list',
+    'weight',
+  ))
+  // Invalid fid, invalid vid.
+  ->values(array(
+    'fid' => $i,
+    'nid' => '40',
+    'vid' => 24 + $i,
+    'description' => 'crazy-basename.png',
+    'list' => '1',
+    'weight' => '0',
+  ))
+  // Valid fid, invalid vid.
+  ->values(array(
+    'fid' => 2,
+    'nid' => '40',
+    'vid' => 24 + $i + 1,
+    'description' => 'crazy-basename.png',
+    'list' => '1',
+    'weight' => '0',
+  ))
+  ->execute();
+}

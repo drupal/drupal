@@ -690,11 +690,10 @@ function hook_field_is_empty($item, $field) {
  * which widget to use. Widget types are defined by implementing
  * hook_field_widget_info().
  *
- * Widgets are
- * @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html Form API @endlink
- * elements with additional processing capabilities. Widget hooks are typically
- * called by the Field Attach API during the creation of the field form
- * structure with field_attach_form().
+ * Widgets are @link forms_api_reference.html Form API @endlink elements with
+ * additional processing capabilities. Widget hooks are typically called by the
+ * Field Attach API during the creation of the field form structure with
+ * field_attach_form().
  *
  * @see field
  * @see field_types
@@ -729,6 +728,9 @@ function hook_field_is_empty($item, $field) {
  *       - FIELD_BEHAVIOR_DEFAULT: (default) If the widget accepts default
  *         values.
  *       - FIELD_BEHAVIOR_NONE: if the widget does not support default values.
+ *   - weight: (optional) An integer to determine the weight of this widget
+ *     relative to other widgets in the Field UI when selecting a widget for a
+ *     given field instance.
  *
  * @see hook_field_widget_info_alter()
  * @see hook_field_widget_form()
@@ -738,7 +740,7 @@ function hook_field_is_empty($item, $field) {
  * @see hook_field_widget_settings_form()
  */
 function hook_field_widget_info() {
-    return array(
+  return array(
     'text_textfield' => array(
       'label' => t('Text field'),
       'field types' => array('text'),
@@ -765,6 +767,8 @@ function hook_field_widget_info() {
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
         'default value' => FIELD_BEHAVIOR_DEFAULT,
       ),
+      // As an advanced widget, force it to sink to the bottom of the choices.
+      'weight' => 2,
     ),
   );
 }
@@ -869,7 +873,7 @@ function hook_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     '#type' => $instance['widget']['type'],
     '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
   );
-  return $element;
+  return array('value' => $element);
 }
 
 /**
@@ -1072,8 +1076,8 @@ function hook_field_formatter_info() {
  * Perform alterations on Field API formatter types.
  *
  * @param $info
- *   Array of informations on formatter types exposed by
- *   hook_field_field_formatter_info() implementations.
+ *   An array of information on formatter types exposed by
+ *   hook_field_formatter_info() implementations.
  */
 function hook_field_formatter_info_alter(&$info) {
   // Add a setting to a formatter type.

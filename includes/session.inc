@@ -349,6 +349,11 @@ function drupal_session_started($set = NULL) {
  */
 function drupal_session_regenerate() {
   global $user, $is_https;
+  // Nothing to do if we are not allowed to change the session.
+  if (!drupal_save_session()) {
+    return;
+  }
+
   if ($is_https && variable_get('https', FALSE)) {
     $insecure_session_name = substr(session_name(), 1);
     if (!isset($GLOBALS['lazy_session']) && isset($_COOKIE[$insecure_session_name])) {
@@ -418,6 +423,11 @@ function drupal_session_regenerate() {
 function _drupal_session_destroy($sid) {
   global $user, $is_https;
 
+  // Nothing to do if we are not allowed to change the session.
+  if (!drupal_save_session()) {
+    return;
+  }
+
   // Delete session data.
   db_delete('sessions')
     ->condition($is_https ? 'ssid' : 'sid', $sid)
@@ -465,6 +475,11 @@ function _drupal_session_delete_cookie($name, $secure = NULL) {
  *   User ID.
  */
 function drupal_session_destroy_uid($uid) {
+  // Nothing to do if we are not allowed to change the session.
+  if (!drupal_save_session()) {
+    return;
+  }
+
   db_delete('sessions')
     ->condition('uid', $uid)
     ->execute();
@@ -507,7 +522,10 @@ function _drupal_session_garbage_collection($lifetime) {
  *   FALSE if writing session data has been disabled. Otherwise, TRUE.
  */
 function drupal_save_session($status = NULL) {
-  $save_session = &drupal_static(__FUNCTION__, TRUE);
+  // PHP session ID, session, and cookie handling happens in the global scope.
+  // This value has to persist across calls to drupal_static_reset(), since a
+  // potentially wrong or disallowed session would be written otherwise.
+  static $save_session = TRUE;
   if (isset($status)) {
     $save_session = $status;
   }
