@@ -2174,38 +2174,4 @@ class ViewExecutable {
     $this->setItem($display_id, $type, $id, $item);
   }
 
-  /**
-   * Creates and stores a new display.
-   *
-   * @param string $id
-   *   The ID for the display being added.
-   *
-   * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
-   *   A new display plugin instance.
-   */
-  public function newDisplay($id) {
-    // Create a handler.
-    $display = $this->storage->get('display');
-    $manager = drupal_container()->get("plugin.manager.views.display");
-    $this->displayHandlers[$id] = $manager->createInstance($display[$id]['display_plugin']);
-    if (empty($this->displayHandlers[$id])) {
-      // provide a 'default' handler as an emergency. This won't work well but
-      // it will keep things from crashing.
-      $this->displayHandlers[$id] = $manager->createInstance('default');
-    }
-
-    if (!empty($this->displayHandlers[$id])) {
-      // Initialize the new display handler with data.
-      $this->displayHandlers[$id]->initDisplay($this, $display[$id]);
-      // If this is NOT the default display handler, let it know which is
-      if ($id != 'default') {
-        // @todo is the '&' still required in php5?
-        $this->displayHandlers[$id]->default_display = &$this->displayHandlers['default'];
-      }
-    }
-    $this->storage->set('display', $display);
-
-    return $this->displayHandlers[$id];
-  }
-
 }

@@ -189,13 +189,15 @@ class ViewStorageTest extends ViewTestBase {
     // Check whether a display can be added and saved to a View.
     $view = $this->loadView('frontpage');
 
-    $view->newDisplay('page', 'Test', 'test');
-
-    $new_display = $view->get('display');
+    $new_id = $view->newDisplay('page', 'Test', 'test');
+    $display = $view->get('display');
 
     // Ensure the right display_plugin is created/instantiated.
-    $this->assertEqual($new_display['test']['display_plugin'], 'page', 'New page display "test" uses the right display plugin.');
-    $this->assertTrue($view->get('executable')->displayHandlers[$new_display['test']['id']] instanceof Page, 'New page display "test" uses the right display plugin.');
+    $this->assertEqual($display[$new_id]['display_plugin'], 'page', 'New page display "test" uses the right display plugin.');
+
+    $executable = $view->get('executable');
+    $executable->initDisplay();
+    $this->assertTrue($executable->displayHandlers[$new_id] instanceof Page, 'New page display "test" uses the right display plugin.');
 
 
     $view->set('name', 'frontpage_new');
@@ -316,19 +318,21 @@ class ViewStorageTest extends ViewTestBase {
     $view->newDisplay('default');
 
     $display = $view->newDisplay('page');
-    $this->assertTrue($display instanceof Page);
-    $this->assertTrue($view->get('executable')->displayHandlers['page_1'] instanceof Page);
-    $this->assertTrue($view->get('executable')->displayHandlers['page_1']->default_display instanceof DefaultDisplay);
-
+    $this->assertEqual($display, 'page_1');
     $display = $view->newDisplay('page');
-    $this->assertTrue($display instanceof Page);
-    $this->assertTrue($view->get('executable')->displayHandlers['page_2'] instanceof Page);
-    $this->assertTrue($view->get('executable')->displayHandlers['page_2']->default_display instanceof DefaultDisplay);
-
+    $this->assertEqual($display, 'page_2');
     $display = $view->newDisplay('feed');
-    $this->assertTrue($display instanceof Feed);
-    $this->assertTrue($view->get('executable')->displayHandlers['feed_1'] instanceof Feed);
-    $this->assertTrue($view->get('executable')->displayHandlers['feed_1']->default_display instanceof DefaultDisplay);
+    $this->assertEqual($display, 'feed_1');
+
+    $executable = $view->get('executable');
+    $executable->initDisplay();
+
+    $this->assertTrue($executable->displayHandlers['page_1'] instanceof Page);
+    $this->assertTrue($executable->displayHandlers['page_1']->default_display instanceof DefaultDisplay);
+    $this->assertTrue($executable->displayHandlers['page_2'] instanceof Page);
+    $this->assertTrue($executable->displayHandlers['page_2']->default_display instanceof DefaultDisplay);
+    $this->assertTrue($executable->displayHandlers['feed_1'] instanceof Feed);
+    $this->assertTrue($executable->displayHandlers['feed_1']->default_display instanceof DefaultDisplay);
 
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));

@@ -95,6 +95,36 @@ abstract class PluginBag implements \ArrayAccess, \Iterator, \Countable {
   }
 
   /**
+   * Adds an instance ID to the array of available instance IDs.
+   *
+   * @param string $id
+   *   The ID of the plugin instance to add.
+   */
+  public function addInstanceID($id) {
+    $this->instanceIDs[$id] = $id;
+  }
+
+  /**
+   * Returns all instance IDs.
+   *
+   * @return array
+   *   An array of all available instance IDs.
+   */
+  public function getInstanceIDs() {
+    return $this->instanceIDs;
+  }
+
+  /**
+   * Sets the instance IDs property.
+   *
+   * @param array $instance_ids
+   *   An associative array of instance IDs.
+   */
+  public function setInstanceIDs(array $instance_ids) {
+    $this->instanceIDs = $instance_ids;
+  }
+
+  /**
    * Implements \ArrayAccess::offsetExists().
    *
    * This is deprecated, use \Drupal\Component\Plugin\PluginBag::has().
