@@ -1336,27 +1336,6 @@ class ViewExecutable {
   }
 
   /**
-   * Render a specific field via the field ID and the row #
-   *
-   * Note: You might want to use views_plugin_style::render_fields as it
-   * caches the output for you.
-   *
-   * @param string $field
-   *   The id of the field to be rendered.
-   *
-   * @param int $row
-   *   The row number in the $view->result which is used for the rendering.
-   *
-   * @return string
-   *   The rendered output of the field.
-   */
-  public function renderField($field, $row) {
-    if (isset($this->field[$field]) && isset($this->result[$row])) {
-      return $this->field[$field]->advanced_render($this->result[$row]);
-    }
-  }
-
-  /**
    * Execute the given display, with the given arguments.
    * To be called externally by whatever mechanism invokes the view,
    * such as a page callback, hook_block, etc.

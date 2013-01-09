@@ -81,6 +81,16 @@ abstract class StylePluginBase extends PluginBase {
   protected $usesFields = FALSE;
 
   /**
+    * Stores the rendered field values, keyed by the row index and field name.
+    *
+    * @see \Drupal\views\Plugin\views\style\StylePluginBase::render_fields()
+    * @see \Drupal\views\Plugin\views\style\StylePluginBase::get_field()
+    *
+    * @var array|null
+    */
+  protected $rendered_fields;
+
+  /**
    * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    *
    * The style options might come externally as the style can be sourced from at
@@ -587,12 +597,12 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-   * Render all of the fields for a given style and store them on the object.
+   * Renders all of the fields for a given style and store them on the object.
    *
-   * @param $result
+   * @param array $result
    *   The result array from $view->result
    */
-  function render_fields($result) {
+  protected function render_fields(array $result) {
     if (!$this->usesFields()) {
       return;
     }
@@ -616,19 +626,20 @@ abstract class StylePluginBase extends PluginBase {
       }
       unset($this->view->row_index);
     }
-
-    return $this->rendered_fields;
   }
 
   /**
-   * Get a rendered field.
+   * Gets a rendered field.
    *
-   * @param $index
+   * @param int $index
    *   The index count of the row.
-   * @param $field
-   *    The id of the field.
+   * @param string $field
+   *   The ID of the field.
+   *
+   * @return string|null
+   *   The output of the field, or NULL if it was empty.
    */
-  function get_field($index, $field) {
+  public function get_field($index, $field) {
     if (!isset($this->rendered_fields)) {
       $this->render_fields($this->view->result);
     }
