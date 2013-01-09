@@ -6,7 +6,6 @@ ui:
   show:
     additional_queries: '0'
     advanced_column: '0'
-    listing_filters: '0'
     master_display: '0'
     performance_statistics: '0'
     preview_information: '1'
