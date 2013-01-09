@@ -2203,7 +2203,6 @@ function drupal_handle_request($test_only = FALSE) {
   $response = $kernel->handle($request)->prepare($request)->send();
 
   $kernel->terminate($request, $response);
-  exit;
 }
 
 /**
