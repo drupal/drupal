@@ -9,6 +9,9 @@ namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the default filter functionality in the Filter module.
+ */
 class FilterDefaultFormatTest extends WebTestBase {
   public static function getInfo() {
     return array(
@@ -64,7 +67,7 @@ class FilterDefaultFormatTest extends WebTestBase {
   }
 
   /**
-   * Rebuild text format and permission caches in the thread running the tests.
+   * Rebuilds text format and permission caches in the thread running the tests.
    */
   protected function resetFilterCaches() {
     filter_formats_reset();

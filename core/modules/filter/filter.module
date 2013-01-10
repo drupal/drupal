@@ -359,6 +359,12 @@ function filter_format_exists($format_id) {
 /**
  * Displays a text format form title.
  *
+ * @param object $format_id
+ *   A format object.
+ *
+ * @return string
+ *   The name of the format.
+ *
  * @see filter_menu()
  */
 function filter_admin_format_title($format) {
@@ -434,7 +440,8 @@ function filter_modules_disabled($modules) {
  *
  * @param $account
  *   (optional) If provided, only those formats that are allowed for this user
- *   account will be returned. All formats will be returned otherwise.
+ *   account will be returned. All formats will be returned otherwise. Defaults
+ *   to NULL.
  *
  * @return
  *   An array of text format objects, keyed by the format ID and ordered by
@@ -547,7 +554,7 @@ function filter_get_formats_by_role($rid) {
  *
  * @param $account
  *   (optional) The user account to check. Defaults to the currently logged-in
- *   user.
+ *   user. Defaults to NULL.
  *
  * @return
  *   The ID of the user's default text format.
@@ -612,15 +619,15 @@ function filter_get_filter_types_by_format($format_id) {
  * format is initialized to output plain text. Installation profiles and site
  * administrators have the freedom to configure it further.
  *
- * Note that the fallback format is completely distinct from the default
- * format, which differs per user and is simply the first format which that
- * user has access to. The default and fallback formats are only guaranteed to
- * be the same for users who do not have access to any other format; otherwise,
- * the fallback format's weight determines its placement with respect to the
- * user's other formats.
+ * Note that the fallback format is completely distinct from the default format,
+ * which differs per user and is simply the first format which that user has
+ * access to. The default and fallback formats are only guaranteed to be the
+ * same for users who do not have access to any other format; otherwise, the
+ * fallback format's weight determines its placement with respect to the user's
+ * other formats.
  *
- * Any modules implementing a format deletion functionality must not delete
- * this format.
+ * Any modules implementing a format deletion functionality must not delete this
+ * format.
  *
  * @return
  *   The ID of the fallback text format.
@@ -640,6 +647,9 @@ function filter_fallback_format() {
 
 /**
  * Returns the title of the fallback text format.
+ *
+ * @return string
+ *   The title of the fallback text format.
  */
 function filter_fallback_format_title() {
   $fallback_format = filter_format_load(filter_fallback_format());
@@ -648,6 +658,9 @@ function filter_fallback_format_title() {
 
 /**
  * Returns a list of all filters provided by modules.
+ *
+ * @return array
+ *   An array of filter formats.
  */
 function filter_get_filters() {
   $filters = &drupal_static(__FUNCTION__, array());
@@ -799,16 +812,17 @@ function filter_list_format($format_id) {
  * @param $text
  *   The text to be filtered.
  * @param $format_id
- *   The format ID of the text to be filtered. If no format is assigned, the
- *   fallback format will be used.
+ *   (optional) The format ID of the text to be filtered. If no format is
+ *   assigned, the fallback format will be used. Defaults to NULL.
  * @param $langcode
- *   Optional: the language code of the text to be filtered, e.g. 'en' for
+ *   (optional) The language code of the text to be filtered, e.g. 'en' for
  *   English. This allows filters to be language aware so language specific
- *   text replacement can be implemented.
+ *   text replacement can be implemented. Defaults to an empty string.
  * @param $cache
- *   Boolean whether to cache the filtered output in the {cache_filter} table.
- *   The caller may set this to FALSE when the output is already cached
- *   elsewhere to avoid duplicate cache lookups and storage.
+ *   (optional) A Boolean indicating whether to cache the filtered output in the
+ *   {cache_filter} table. The caller may set this to FALSE when the output is
+ *   already cached elsewhere to avoid duplicate cache lookups and storage.
+ *   Defaults to FALSE.
  * @param array $filter_types_to_skip
  *   (optional) An array of filter types to skip, or an empty array (default)
  *   to skip no filter types. All of the format's filters will be applied,
@@ -1071,7 +1085,7 @@ function filter_form_access_denied($element) {
 /**
  * Returns HTML for a text format-enabled form element.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element containing #children and #description.
  *
@@ -1096,7 +1110,7 @@ function theme_text_format_wrapper($variables) {
  *   An object representing the text format.
  * @param $account
  *   (optional) The user account to check access for; if omitted, the currently
- *   logged-in user is used.
+ *   logged-in user is used. Defaults to NULL.
  *
  * @return
  *   Boolean TRUE if the user is allowed to access the given format.
@@ -1232,9 +1246,11 @@ function filter_dom_serialize($dom_document) {
  * @param $dom_element
  *   The element potentially containing a CDATA node.
  * @param $comment_start
- *   String to use as a comment start marker to escape the CDATA declaration.
+ *   (optional) A string to use as a comment start marker to escape the CDATA
+ *   declaration. Defaults to '//'.
  * @param $comment_end
- *   String to use as a comment end marker to escape the CDATA declaration.
+ *   (optional) A string to use as a comment end marker to escape the CDATA
+ *   declaration. Defaults to an empty string.
  */
 function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, $comment_start = '//', $comment_end = '') {
   foreach ($dom_element->childNodes as $node) {
@@ -1269,7 +1285,7 @@ function theme_filter_tips_more_info() {
 /**
  * Returns HTML for guidelines for a text format.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - format: An object representing a text format.
  *
@@ -1695,8 +1711,9 @@ function _filter_url_parse_partial_links($match) {
  *   An array containing matches to replace from preg_replace_callback(),
  *   whereas $match[1] is expected to contain the content to be filtered.
  * @param $escape
- *   (optional) Boolean whether to escape (TRUE) or unescape comments (FALSE).
- *   Defaults to neither. If TRUE, statically cached $comments are reset.
+ *   (optional) A Boolean indicating whether to escape (TRUE) or unescape
+ *   comments (FALSE). Defaults to NULL, indicating neither. If TRUE, statically
+ *   cached $comments are reset.
  */
 function _filter_url_escape_comments($match, $escape = NULL) {
   static $mode, $comments = array();

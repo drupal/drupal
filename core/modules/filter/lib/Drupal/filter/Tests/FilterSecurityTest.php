@@ -21,6 +21,13 @@ class FilterSecurityTest extends WebTestBase {
    */
   public static $modules = array('node', 'php', 'filter_test');
 
+  /**
+   * A user with administrative permissions.
+   *
+   * @var object
+   */
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Security',

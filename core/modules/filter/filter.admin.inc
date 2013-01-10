@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Admin page callbacks for the Filter module.
+ * Administrative page callbacks for the Filter module.
  */
 
 /**
- * Form constructor for a form to list and reorder text formats.
+ * Page callback: Form constructor for a form to list and reorder text formats.
  *
  * @see filter_menu()
  * @see filter_admin_overview_submit()
@@ -103,6 +103,7 @@ function filter_admin_overview_submit($form, &$form_state) {
  *     enabled (1) or not (0). Defaults to 1.
  *   - weight: (optional) The weight of the text format, which controls its
  *     placement in text format lists. If omitted, the weight is set to 0.
+ *     Defaults to NULL.
  *
  * @return
  *   A form array.
@@ -129,8 +130,8 @@ function filter_admin_format_page($format = NULL) {
  *     save. If this corresponds to an existing text format, that format will be
  *     updated; otherwise, a new format will be created.
  *   - name: The title of the text format.
- *   - cache: An integer indicating whether the text format is cacheable (1) or
- *     not (0). Defaults to 1.
+ *   - cache: (optional) An integer indicating whether the text format is
+ *     cacheable (1) or not (0). Defaults to 1.
  *   - status: (optional) An integer indicating whether the text format is
  *     enabled (1) or not (0). Defaults to 1.
  *   - weight: (optional) The weight of the text format, which controls its
@@ -283,7 +284,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
 /**
  * Returns HTML for a text format's filter order form.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the form.
  *
@@ -365,7 +366,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
 }
 
 /**
- * Form constructor for the text format deletion confirmation form.
+ * Page callback: Form constructor to confirm the text format deletion.
  *
  * @param $format
  *   An object representing a text format.

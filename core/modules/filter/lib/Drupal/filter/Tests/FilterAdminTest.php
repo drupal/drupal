@@ -9,7 +9,16 @@ namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the administrative functionality of the Filter module.
+ */
 class FilterAdminTest extends WebTestBase {
+
+  /**
+   * The installation profile to use with this test.
+   *
+   * @var string
+   */
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -36,6 +45,9 @@ class FilterAdminTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
   }
 
+  /**
+   * Tests the format administration functionality.
+   */
   function testFormatAdmin() {
     // Add text format.
     $this->drupalGet('admin/config/content/formats');
