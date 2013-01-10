@@ -47,7 +47,7 @@ function update_fix_compatibility() {
 }
 
 /**
- * Helper function to test compatibility of a module or theme.
+ * Tests the compatibility of a module or theme.
  */
 function update_check_incompatibility($name, $type = 'module') {
   static $themes, $modules;
@@ -418,7 +418,7 @@ function update_prepare_d8_bootstrap() {
 }
 
 /**
- * Fix stored include paths to match the "/core" migration.
+ * Fixes stored include paths to match the "/core" migration.
  */
 function update_prepare_stored_includes() {
   // Update language negotiation settings.
@@ -434,7 +434,7 @@ function update_prepare_stored_includes() {
 }
 
 /**
- * Prepare Drupal 8 language changes for the bootstrap if needed.
+ * Prepares Drupal 8 language changes for the bootstrap if needed.
  */
 function update_prepare_d8_language() {
   if (db_table_exists('languages')) {
@@ -603,8 +603,7 @@ function update_prepare_d8_language() {
 }
 
 /**
- * Perform Drupal 7.x to 8.x updates that are required for update.php
- * to function properly.
+ * Performs Drupal 7.x to 8.x required update.php updates.
  *
  * This function runs when update.php is run the first time for 8.x,
  * even before updates are selected or performed. It is important
@@ -625,7 +624,7 @@ function update_fix_d8_requirements() {
 }
 
 /**
- * Helper function to install a new module in Drupal 8 via hook_update_N().
+ * Installs a new module in Drupal 8 via hook_update_N().
  */
 function update_module_enable(array $modules) {
   $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
@@ -664,7 +663,7 @@ function update_module_enable(array $modules) {
 }
 
 /**
- * Perform one update and store the results for display on finished page.
+ * Performs one update and stores the results for display on the results page.
  *
  * If an update function completes successfully, it should return a message
  * as a string indicating success, for example:
@@ -762,7 +761,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 }
 
 /**
- * Start the database update batch process.
+ * Starts the database update batch process.
  *
  * @param $start
  *   An array whose keys contain the names of modules to be updated during the
@@ -840,7 +839,7 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
 }
 
 /**
- * Finish the update process and store results for eventual display.
+ * Finishes the update process and stores the results for eventual display.
  *
  * After the updates run, all caches are flushed. The update results are
  * stored into the session (for example, to be displayed on the update results
@@ -875,7 +874,7 @@ function update_finished($success, $results, $operations) {
 }
 
 /**
- * Return a list of all the pending database updates.
+ * Returns a list of all the pending database updates.
  *
  * @return
  *   An associative array keyed by module name which contains all information
@@ -965,8 +964,8 @@ function update_get_update_list() {
  *   containing all the keys provided by the
  *   Drupal\Component\Graph\Graph::searchAndSort() algorithm, which encode
  *   detailed information about the dependency chain for this update function
- *   (for example: 'paths', 'reverse_paths', 'weight', and 'component'), as well
- *   as the following additional keys:
+ *   (for example: 'paths', 'reverse_paths', 'weight', and 'component'), as
+ *   well as the following additional keys:
  *   - 'allowed': A boolean which is TRUE when the update function's
  *     dependencies are met, and FALSE otherwise. Calling functions should
  *     inspect this value before running the update.
@@ -1171,7 +1170,7 @@ function update_already_performed($module, $number) {
 }
 
 /**
- * Invoke hook_update_dependencies() in all installed modules.
+ * Invokes hook_update_dependencies() in all installed modules.
  *
  * This function is similar to module_invoke_all(), with the main difference
  * that it does not require that a module be enabled to invoke its hook, only
@@ -1307,10 +1306,10 @@ function update_variable_del($name) {
 }
 
 /**
- * Updates config with values set on Drupal 7.x
+ * Updates config with values set on Drupal 7.x.
  *
- * Provide a generalised method to migrate variables from Drupal 7 to Drupal 8's
- * configuration management system.
+ * Provides a generalised method to migrate variables from Drupal 7 to
+ * Drupal 8's configuration management system.
  *
  * @param string $config_name
  *   The configuration object name to retrieve.

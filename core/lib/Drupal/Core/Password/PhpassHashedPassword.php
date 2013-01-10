@@ -56,7 +56,7 @@ class PhpassHashedPassword implements PasswordInterface {
   }
 
   /**
-   * Encode bytes into printable base 64 using the *nix standard from crypt().
+   * Encodes bytes into printable base 64 using the *nix standard from crypt().
    *
    * @param String $input
    *   The string containing bytes to encode.

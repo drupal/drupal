@@ -61,10 +61,11 @@
  *   replacement process. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
  *     tokens.
- *   - callback: A callback function that will be used to post-process the array
- *     of token replacements after they are generated. For example, a module
- *     using tokens in a text-only email might provide a callback to strip HTML
- *     entities from token values before they are inserted into the final text.
+ *   - callback: A callback function that will be used to post-process the
+ *     array of token replacements after they are generated. For example, a
+ *     module using tokens in a text-only email might provide a callback to
+ *     strip HTML entities from token values before they are inserted into the
+ *     final text.
  *   - clear: A boolean flag indicating that tokens should be removed from the
  *     final text if no replacement value can be generated.
  *   - sanitize: A boolean flag indicating that tokens should be sanitized for
@@ -190,10 +191,10 @@ function token_generate($type, array $tokens, array $data = array(), array $opti
 }
 
 /**
- * Given a list of tokens, returns those that begin with a specific prefix.
+ * Returns a list of tokens that begin with a specific prefix.
  *
- * Used to extract a group of 'chained' tokens (such as [node:author:name]) from
- * the full list of tokens found in text. For example:
+ * Used to extract a group of 'chained' tokens (such as [node:author:name])
+ * from the full list of tokens found in text. For example:
  * @code
  *   $data = array(
  *     'author:name' => '[node:author:name]',
@@ -230,8 +231,10 @@ function token_find_with_prefix(array $tokens, $prefix, $delimiter = ':') {
 /**
  * Returns metadata describing supported tokens.
  *
- * The metadata array contains token type, name, and description data as well as
- * an optional pointer indicating that the token chains to another set of tokens.
+ * The metadata array contains token type, name, and description data as well
+ * as an optional pointer indicating that the token chains to another set of
+ * tokens.
+ *
  * For example:
  * @code
  *   $data['types']['node'] = array(

@@ -123,8 +123,8 @@ function drupal_get_complete_schema($rebuild = FALSE) {
  *   A module name.
  *
  * @return array|bool
- *   If the module has updates, an array of available updates sorted by version.
- *   Otherwise, FALSE.
+ *   If the module has updates, an array of available updates sorted by
+ *   version. Otherwise, FALSE.
  */
 function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
@@ -369,9 +369,9 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  *   An object or array representing the record to write, passed in by
  *   reference. If inserting a new record, values not provided in $record will
  *   be populated in $record and in the database with the default values from
- *   the schema, as well as a single serial (auto-increment) field (if present).
- *   If updating an existing record, only provided values are updated in the
- *   database, and $record is not modified.
+ *   the schema, as well as a single serial (auto-increment) field
+ *   (if present). If updating an existing record, only provided values are
+ *   updated in the database, and $record is not modified.
  * @param array $primary_keys
  *   To indicate that this is a new record to be inserted, omit this argument.
  *   If this is an update, this argument specifies the primary keys' field
