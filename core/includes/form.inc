@@ -2893,22 +2893,21 @@ function theme_details($variables) {
 }
 
 /**
- * Returns HTML for a radio button form element.
+ * Prepares a #type 'radio' render element for theme_input().
+ *
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #required, #return_value, #value, #attributes, #title,
+ *   #description.
  *
  * Note: The input "name" attribute needs to be sanitized before output, which
  *       is currently done by initializing Drupal\Core\Template\Attribute with
  *       all the attributes.
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #required, #return_value, #value, #attributes, #title,
- *     #description
- *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_radio($variables) {
-  $element = $variables['element'];
+function form_pre_render_radio($element) {
   $element['#attributes']['type'] = 'radio';
   element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
 
@@ -2917,7 +2916,7 @@ function theme_radio($variables) {
   }
   _form_set_attributes($element, array('form-radio'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />';
+  return $element;
 }
 
 /**
@@ -3164,19 +3163,17 @@ function form_process_radios($element) {
 }
 
 /**
- * Returns HTML for a checkbox form element.
+ * Prepares a #type 'checkbox' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #return_value, #description, #required,
- *     #attributes, #checked.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #return_value, #description, #required,
+ *   #attributes, #checked.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_checkbox($variables) {
-  $element = $variables['element'];
-  $t = get_t();
+function form_pre_render_checkbox($element) {
   $element['#attributes']['type'] = 'checkbox';
   element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
 
@@ -3186,7 +3183,7 @@ function theme_checkbox($variables) {
   }
   _form_set_attributes($element, array('form-checkbox'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />';
+  return $element;
 }
 
 /**
@@ -4087,34 +4084,49 @@ function form_process_autocomplete($element, &$form_state) {
 }
 
 /**
- * Returns HTML for a submit button form element.
+ * Preprocesses variables for theme_input().
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #button_type, #name, #value.
  *
  * @ingroup themeable
  */
-function theme_submit($variables) {
-  return theme('button', $variables['element']);
+function template_preprocess_input(&$variables) {
+  $element = $variables['element'];
+  $variables['attributes'] = new Attribute($element['#attributes']);
 }
 
 /**
- * Returns HTML for a button form element.
+ * Returns HTML for an input form element.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #button_type, #name, #value.
- *
- * The #button_type property accepts any value, though core themes have css that
- * styles the following button_types appropriately: 'primary', 'danger'.
+ *     Properties used: #attributes.
  *
  * @ingroup themeable
  */
-function theme_button($variables) {
+function theme_input($variables) {
   $element = $variables['element'];
+  $attributes = $variables['attributes'];
+  return '<input' . $attributes . ' />' . drupal_render_children($element);
+}
+
+/**
+ * Prepares a #type 'button' render element for theme_input().
+ *
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #attributes, #button_type, #name, #value.
+ *
+ * The #button_type property accepts any value, though core themes have CSS that
+ * styles the following button_types appropriately: 'primary', 'danger'.
+ *
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
+ */
+function form_pre_render_button($element) {
   $element['#attributes']['type'] = 'submit';
   element_set_attributes($element, array('id', 'name', 'value'));
 
@@ -4129,24 +4141,23 @@ function theme_button($variables) {
     $element['#attributes']['class'][] = 'form-button-disabled';
   }
 
-  return '<input' . new Attribute($element['#attributes']) . ' />';
+  return $element;
 }
 
 /**
- * Returns HTML for an image button form element.
+ * Prepares a #type 'image_button' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #button_type, #name, #value, #title, #src.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #attributes, #button_type, #name, #value, #title, #src.
  *
  * The #button_type property accepts any value, though core themes have css that
  * styles the following button_types appropriately: 'primary', 'danger'.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_image_button($variables) {
-  $element = $variables['element'];
+function form_pre_render_image_button($element) {
   $element['#attributes']['type'] = 'image';
   element_set_attributes($element, array('id', 'name', 'value'));
 
@@ -4167,64 +4178,62 @@ function theme_image_button($variables) {
     $element['#attributes']['class'][] = 'image-button-disabled';
   }
 
-  return '<input' . new Attribute($element['#attributes']) . ' />';
+  return $element;
 }
 
 /**
- * Returns HTML for a hidden form element.
+ * Prepares a #type 'hidden' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #name, #value, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #name, #value, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_hidden($variables) {
-  $element = $variables['element'];
+function form_pre_render_hidden($element) {
   $element['#attributes']['type'] = 'hidden';
   element_set_attributes($element, array('name', 'value'));
-  return '<input' . new Attribute($element['#attributes']) . " />\n";
+
+  return $element;
 }
 
 /**
- * Returns HTML for a textfield form element.
+ * Prepares a #type 'textfield' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #required, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_textfield($variables) {
-  $element = $variables['element'];
+function form_pre_render_textfield($element) {
   $element['#attributes']['type'] = 'text';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-text'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
+  return $element;
 }
 
 /**
- * Returns HTML for an email form element.
+ * Prepares a #type 'email' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #required, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_email($variables) {
-  $element = $variables['element'];
+function form_pre_render_email($element) {
   $element['#attributes']['type'] = 'email';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-email'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
+  return $element;
 }
 
 /**
@@ -4242,69 +4251,60 @@ function form_validate_email(&$element, &$form_state) {
 }
 
 /**
- * Returns HTML for a tel form element.
+ * Prepares a #type 'tel' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #required, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_tel($variables) {
-  $element = $variables['element'];
+function form_pre_render_tel($element) {
   $element['#attributes']['type'] = 'tel';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-tel'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
+  return $element;
 }
 
 /**
- * Returns HTML for a number form element.
+ * Prepares a #type 'number' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #min, #max, #placeholder,
- *     #required, #attributes, #step.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #min, #max, #placeholder,
+ *   #required, #attributes, #step.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_number($variables) {
-  $element = $variables['element'];
-
+function form_pre_render_number($element) {
   $element['#attributes']['type'] = 'number';
   element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder'));
   _form_set_attributes($element, array('form-number'));
 
-  $output = '<input' . new Attribute($element['#attributes']) . ' />';
-
-  return $output;
+  return $element;
 }
 
 /**
- * Returns HTML for a range form element.
+ * Prepares a #type 'range' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #min, #max, #attributes,
- *     #step.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #min, #max, #attributes,
+ *   #step.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_range($variables) {
-  $element = $variables['element'];
-
+function form_pre_render_range($element) {
   $element['#attributes']['type'] = 'range';
   element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
   _form_set_attributes($element, array('form-range'));
 
-  $output = '<input' . new Attribute($element['#attributes']) . ' />';
-
-  return $output;
+  return $element;
 }
 
 /**
@@ -4378,43 +4378,41 @@ function form_type_range_value($element, $input = FALSE) {
 }
 
 /**
- * Returns HTML for a URL form element.
+ * Prepares a #type 'url' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #required, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_url($variables) {
-  $element = $variables['element'];
+function form_pre_render_url($element) {
   $element['#attributes']['type'] = 'url';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-url'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
+  return $element;
 }
 
 /**
- * Returns HTML for a search form element.
+ * Prepares a #type 'search' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #required, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_search($variables) {
-  $element = $variables['element'];
+function form_pre_render_search($element) {
   $element['#attributes']['type'] = 'search';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-search'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
+  return $element;
 }
 
 /**
@@ -4454,22 +4452,21 @@ function form_validate_color(&$element, &$form_state) {
 }
 
 /**
- * Returns HTML for a color form element.
+ * Prepares a #type 'color' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_color($variables) {
-  $element = $variables['element'];
+function form_pre_render_color($element) {
   $element['#attributes']['type'] = 'color';
   element_set_attributes($element, array('id', 'name', 'value'));
   _form_set_attributes($element, array('form-color'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
+  return $element;
 }
 
 /**
@@ -4527,23 +4524,22 @@ function theme_textarea($variables) {
 }
 
 /**
- * Returns HTML for a password form element.
+ * Prepares a #type 'password' render element for theme_input().
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #placeholder, #required, #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_password($variables) {
-  $element = $variables['element'];
+function form_pre_render_password($element) {
   $element['#attributes']['type'] = 'password';
   element_set_attributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-text'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />';
+  return $element;
 }
 
 /**
@@ -4574,26 +4570,25 @@ function form_process_weight($element) {
 }
 
 /**
- * Returns HTML for a file upload form element.
+ * Prepares a #type 'file' render element for theme_input().
  *
  * For assistance with handling the uploaded file correctly, see the API
  * provided by file.inc.
  *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #name, #size, #description, #required,
- *     #attributes.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #name, #size, #description, #required,
+ *   #attributes.
  *
- * @ingroup themeable
+ * @return array
+ *   The $element with prepared variables ready for theme_input().
  */
-function theme_file($variables) {
-  $element = $variables['element'];
+function form_pre_render_file($element) {
   $element['#attributes']['type'] = 'file';
   element_set_attributes($element, array('id', 'name', 'size'));
   _form_set_attributes($element, array('form-file'));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />';
+  return $element;
 }
 
 /**

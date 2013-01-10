@@ -3244,6 +3244,9 @@ function drupal_common_theme() {
       'variables' => array('primary' => array(), 'secondary' => array()),
     ),
     // From form.inc.
+    'input' => array(
+      'render element' => 'element',
+    ),
     'select' => array(
       'render element' => 'element',
     ),
@@ -3251,9 +3254,6 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'details' => array(
-      'render element' => 'element',
-    ),
-    'radio' => array(
       'render element' => 'element',
     ),
     'radios' => array(
@@ -3265,55 +3265,13 @@ function drupal_common_theme() {
     'exposed_filters' => array(
       'render element' => 'form',
     ),
-    'checkbox' => array(
-      'render element' => 'element',
-    ),
     'checkboxes' => array(
-      'render element' => 'element',
-    ),
-    'button' => array(
-      'render element' => 'element',
-    ),
-    'image_button' => array(
-      'render element' => 'element',
-    ),
-    'hidden' => array(
-      'render element' => 'element',
-    ),
-    'textfield' => array(
-      'render element' => 'element',
-    ),
-    'tel' => array(
-      'render element' => 'element',
-    ),
-    'email' => array(
-      'render element' => 'element',
-    ),
-    'url' => array(
-      'render element' => 'element',
-    ),
-    'number' => array(
-      'render element' => 'element',
-    ),
-    'range' => array(
-      'render element' => 'element',
-    ),
-    'color' => array(
       'render element' => 'element',
     ),
     'form' => array(
       'render element' => 'element',
     ),
     'textarea' => array(
-      'render element' => 'element',
-    ),
-    'search' => array(
-      'render element' => 'element',
-    ),
-    'password' => array(
-      'render element' => 'element',
-    ),
-    'file' => array(
       'render element' => 'element',
     ),
     'tableselect' => array(

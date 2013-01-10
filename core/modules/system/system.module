@@ -297,7 +297,8 @@ function system_element_info() {
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
     '#process' => array('form_process_button', 'ajax_process_form'),
-    '#theme_wrappers' => array('button'),
+    '#pre_render' => array('form_pre_render_button'),
+    '#theme_wrappers' => array('input__submit'),
   );
   $types['button'] = array(
     '#input' => TRUE,
@@ -306,7 +307,8 @@ function system_element_info() {
     '#executes_submit_callback' => FALSE,
     '#limit_validation_errors' => FALSE,
     '#process' => array('form_process_button', 'ajax_process_form'),
-    '#theme_wrappers' => array('button'),
+    '#pre_render' => array('form_pre_render_button'),
+    '#theme_wrappers' => array('input__button'),
   );
   $types['image_button'] = array(
     '#input' => TRUE,
@@ -317,7 +319,8 @@ function system_element_info() {
     '#return_value' => TRUE,
     '#has_garbage_value' => TRUE,
     '#src' => NULL,
-    '#theme_wrappers' => array('image_button'),
+    '#pre_render' => array('form_pre_render_image_button'),
+    '#theme_wrappers' => array('input__image_button'),
   );
   $types['textfield'] = array(
     '#input' => TRUE,
@@ -325,7 +328,8 @@ function system_element_info() {
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
     '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
-    '#theme' => 'textfield',
+    '#pre_render' => array('form_pre_render_textfield'),
+    '#theme' => 'input__textfield',
     '#theme_wrappers' => array('form_element'),
   );
   $types['tel'] = array(
@@ -334,7 +338,8 @@ function system_element_info() {
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
     '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
-    '#theme' => 'tel',
+    '#pre_render' => array('form_pre_render_tel'),
+    '#theme' => 'input__tel',
     '#theme_wrappers' => array('form_element'),
   );
   $types['email'] = array(
@@ -345,7 +350,8 @@ function system_element_info() {
     '#autocomplete_path' => FALSE,
     '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#element_validate' => array('form_validate_email'),
-    '#theme' => 'email',
+    '#pre_render' => array('form_pre_render_email'),
+    '#theme' => 'input__email',
     '#theme_wrappers' => array('form_element'),
   );
   $types['url'] = array(
@@ -355,7 +361,8 @@ function system_element_info() {
     '#autocomplete_path' => FALSE,
     '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#element_validate' => array('form_validate_url'),
-    '#theme' => 'url',
+    '#pre_render' => array('form_pre_render_url'),
+    '#theme' => 'input__url',
     '#theme_wrappers' => array('form_element'),
   );
   $types['search'] = array(
@@ -364,7 +371,8 @@ function system_element_info() {
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
     '#process' => array('form_process_autocomplete', 'ajax_process_form'),
-    '#theme' => 'search',
+    '#pre_render' => array('form_pre_render_search'),
+    '#theme' => 'input__search',
     '#theme_wrappers' => array('form_element'),
   );
   $types['number'] = array(
@@ -372,7 +380,8 @@ function system_element_info() {
     '#step' => 1,
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_number'),
-    '#theme' => 'number',
+    '#pre_render' => array('form_pre_render_number'),
+    '#theme' => 'input__number',
     '#theme_wrappers' => array('form_element'),
   );
   $types['range'] = array(
@@ -382,14 +391,16 @@ function system_element_info() {
     '#max' => 100,
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_number'),
-    '#theme' => 'range',
+    '#pre_render' => array('form_pre_render_range'),
+    '#theme' => 'input__range',
     '#theme_wrappers' => array('form_element'),
   );
   $types['color'] = array(
     '#input' => TRUE,
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_color'),
-    '#theme' => 'color',
+    '#pre_render' => array('form_pre_render_color'),
+    '#theme' => 'input__color',
     '#theme_wrappers' => array('form_element'),
   );
   $types['machine_name'] = array(
@@ -401,7 +412,8 @@ function system_element_info() {
     '#autocomplete_path' => FALSE,
     '#process' => array('form_process_machine_name', 'form_process_autocomplete', 'ajax_process_form'),
     '#element_validate' => array('form_validate_machine_name'),
-    '#theme' => 'textfield',
+    '#pre_render' => array('form_pre_render_textfield'),
+    '#theme' => 'input__textfield',
     '#theme_wrappers' => array('form_element'),
   );
   $types['password'] = array(
@@ -409,7 +421,8 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => 128,
     '#process' => array('ajax_process_form', 'form_process_pattern'),
-    '#theme' => 'password',
+    '#pre_render' => array('form_pre_render_password'),
+    '#theme' => 'input__password',
     '#theme_wrappers' => array('form_element'),
   );
   $types['password_confirm'] = array(
@@ -436,21 +449,23 @@ function system_element_info() {
     '#input' => TRUE,
     '#default_value' => NULL,
     '#process' => array('ajax_process_form'),
-    '#theme' => 'radio',
+    '#pre_render' => array('form_pre_render_radio'),
+    '#theme' => 'input__radio',
     '#theme_wrappers' => array('form_element'),
     '#title_display' => 'after',
   );
   $types['checkboxes'] = array(
     '#input' => TRUE,
     '#process' => array('form_process_checkboxes'),
-    '#theme_wrappers' => array('checkboxes'),
     '#pre_render' => array('form_pre_render_conditional_form_element'),
+    '#theme_wrappers' => array('checkboxes'),
   );
   $types['checkbox'] = array(
     '#input' => TRUE,
     '#return_value' => 1,
-    '#theme' => 'checkbox',
     '#process' => array('form_process_checkbox', 'ajax_process_form'),
+    '#pre_render' => array('form_pre_render_checkbox'),
+    '#theme' => 'input__checkbox',
     '#theme_wrappers' => array('form_element'),
     '#title_display' => 'after',
   );
@@ -481,7 +496,8 @@ function system_element_info() {
   $types['file'] = array(
     '#input' => TRUE,
     '#size' => 60,
-    '#theme' => 'file',
+    '#pre_render' => array('form_pre_render_file'),
+    '#theme' => 'input__file',
     '#theme_wrappers' => array('form_element'),
   );
   $types['tableselect'] = array(
@@ -508,7 +524,13 @@ function system_element_info() {
   $types['hidden'] = array(
     '#input' => TRUE,
     '#process' => array('ajax_process_form'),
-    '#theme' => 'hidden',
+    '#pre_render' => array('form_pre_render_hidden'),
+    '#theme' => 'input__hidden',
+  );
+  $types['token'] = array(
+    '#input' => TRUE,
+    '#pre_render' => array('form_pre_render_hidden'),
+    '#theme' => 'input__hidden',
   );
   $types['value'] = array(
     '#input' => TRUE,
@@ -533,32 +555,27 @@ function system_element_info() {
     '#theme_wrappers' => array('details'),
   );
   $types['vertical_tabs'] = array(
-    '#theme_wrappers' => array('vertical_tabs'),
     '#default_tab' => '',
     '#process' => array('form_process_vertical_tabs'),
+    '#theme_wrappers' => array('vertical_tabs'),
   );
   $types['dropbutton'] = array(
-    '#theme' => 'links__dropbutton',
     '#pre_render' => array('drupal_pre_render_dropbutton'),
+    '#theme' => 'links__dropbutton',
   );
   $types['operations'] = array(
-    '#theme' => 'links__dropbutton__operations',
     '#pre_render' => array('drupal_pre_render_dropbutton'),
+    '#theme' => 'links__dropbutton__operations',
   );
 
   $types['container'] = array(
-    '#theme_wrappers' => array('container'),
     '#process' => array('form_process_container'),
+    '#theme_wrappers' => array('container'),
   );
   $types['actions'] = array(
-    '#theme_wrappers' => array('container'),
     '#process' => array('form_process_actions', 'form_process_container'),
     '#weight' => 100,
-  );
-
-  $types['token'] = array(
-    '#input' => TRUE,
-    '#theme' => 'hidden',
+    '#theme_wrappers' => array('container'),
   );
 
   $types['table'] = array(
