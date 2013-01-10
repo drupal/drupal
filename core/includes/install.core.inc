@@ -342,17 +342,8 @@ function install_begin_request(&$install_state) {
   module_list(NULL, $module_list);
   drupal_load('module', 'system');
 
-  // Load the cache infrastructure using a "fake" cache implementation that
-  // does not attempt to write to the database. We need this during the initial
-  // part of the installer because the database is not available yet. We
-  // continue to use it even when the database does become available, in order
-  // to preserve consistency between interactive and command-line installations
-  // (the latter complete in one page request and therefore are forced to
-  // continue using the cache implementation they started with) and also
-  // because any data put in the cache during the installer is inherently
-  // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
-  $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\InstallBackend');
+  $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
 
   // The install process cannot use the database lock backend since the database
   // is not fully up, so we use a null backend implementation during the
@@ -1496,6 +1487,11 @@ function install_load_profile(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_bootstrap_full(&$install_state) {
+  // The early stages of the installer override the cache backend since Drupal
+  // isn't fully set up yet. Here the override is removed so that the standard
+  // cache backend will be used again.
+  unset($GLOBALS['conf']['cache_classes']['cache']);
+  drupal_static_reset('cache');
   // Clear the module list that was overriden earlier in the process.
   // This will allow all freshly installed modules to be loaded.
   module_list_reset();

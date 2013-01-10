@@ -135,7 +135,10 @@ function update_prepare_d8_bootstrap() {
     drupal_install_config_directories();
   }
 
-  // Bootstrap the database.
+  // Bootstrap the database. During this, the DRUPAL_BOOTSTRAP_PAGE_CACHE will
+  // try to read the cache but the cache tables might not be Drupal 8
+  // compatible yet. Use the null backend by default to avoid exceptions.
+  $GLOBALS['conf']['cache_classes'] = array('cache' => 'Drupal\Core\Cache\NullBackend');
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
   // If the site has not updated to Drupal 8 yet, check to make sure that it is
@@ -195,6 +198,116 @@ function update_prepare_d8_bootstrap() {
         );
         db_create_table('key_value', $specs);
       }
+      if (!db_table_exists('cache_tags')) {
+        $table = array(
+          'description' => 'Cache table for tracking cache tags related to the cache bin.',
+          'fields' => array(
+            'tag' => array(
+              'description' => 'Namespace-prefixed tag string.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+            ),
+            'invalidations' => array(
+              'description' => 'Number incremented when the tag is invalidated.',
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+            ),
+            'deletions' => array(
+              'description' => 'Number incremented when the tag is deleted.',
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+            ),
+          ),
+          'primary key' => array('tag'),
+        );
+        db_create_table('cache_tags', $table);
+      }
+      if (!db_table_exists('cache_config')) {
+        $spec = array(
+          'description' =>  'Cache table for configuration data.',
+          'fields' => array(
+            'cid' => array(
+              'description' => 'Primary Key: Unique cache ID.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+            ),
+            'data' => array(
+              'description' => 'A collection of data to cache.',
+              'type' => 'blob',
+              'not null' => FALSE,
+              'size' => 'big',
+            ),
+            'expire' => array(
+              'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+            ),
+            'created' => array(
+              'description' => 'A Unix timestamp indicating when the cache entry was created.',
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+            ),
+            'serialized' => array(
+              'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
+              'type' => 'int',
+              'size' => 'small',
+              'not null' => TRUE,
+              'default' => 0,
+            ),
+            'tags' => array(
+              'description' => 'Space-separated list of cache tags for this entry.',
+              'type' => 'text',
+              'size' => 'big',
+              'not null' => FALSE,
+            ),
+            'checksum_invalidations' => array(
+              'description' => 'The tag invalidation sum when this entry was saved.',
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+            ),
+            'checksum_deletions' => array(
+              'description' => 'The tag deletion sum when this entry was saved.',
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+            ),
+          ),
+          'indexes' => array(
+            'expire' => array('expire'),
+          ),
+          'primary key' => array('cid'),
+        );
+        db_create_table('cache_config', $spec);
+      }
+
+      require_once DRUPAL_ROOT . '/core/modules/system/system.install';
+      $tables = array(
+        'cache',
+        'cache_bootstrap',
+        'cache_block',
+        'cache_field',
+        'cache_filter',
+        'cache_form',
+        'cache_image',
+        'cache_menu',
+        'cache_page',
+        'cache_path',
+        'cache_update',
+      );
+
+      foreach ($tables as $table) {
+        update_add_cache_columns($table);
+      }
+
       // Bootstrap variables so we can update theme while preparing the update
       // process.
       drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
@@ -299,6 +412,9 @@ function update_prepare_d8_bootstrap() {
       }
     }
   }
+  // Now remove the cache override.
+  unset($GLOBALS['conf']['cache_classes']['cache']);
+  drupal_static_reset('cache');
 }
 
 /**
@@ -1331,5 +1447,35 @@ function update_add_uuids(&$sandbox, $table, $primary_key, $values) {
       ->execute();
     $sandbox['progress']++;
     $sandbox['last'] = $value;
+  }
+}
+
+
+/**
+ * Adds tags, checksum_invalidations, checksum_deletions to a cache table.
+ *
+ * @param string $table
+ *   Name of the cache table.
+ */
+function update_add_cache_columns($table) {
+  if (db_table_exists($table) && !db_field_exists($table, 'tags')) {
+    db_add_field($table, 'tags', array(
+      'description' => 'Space-separated list of cache tags for this entry.',
+      'type' => 'text',
+      'size' => 'big',
+      'not null' => FALSE,
+    ));
+    db_add_field($table, 'checksum_invalidations', array(
+      'description' => 'The tag invalidation sum when this entry was saved.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+    db_add_field($table, 'checksum_deletions', array(
+      'description' => 'The tag deletion sum when this entry was saved.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
   }
 }
