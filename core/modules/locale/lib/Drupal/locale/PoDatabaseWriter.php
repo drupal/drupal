@@ -102,7 +102,6 @@ class PoDatabaseWriter implements PoWriterInterface {
       'updates' => 0,
       'deletes' => 0,
       'skips' => 0,
-      'strings' => array(),
     );
     $this->_report = $report;
   }
@@ -259,7 +258,6 @@ class PoDatabaseWriter implements PoWriterInterface {
           $string->save();
           $this->_report['updates']++;
         }
-        $this->_report['strings'][] = $string->getId();
         return $string->lid;
       }
       else {
@@ -274,7 +272,6 @@ class PoDatabaseWriter implements PoWriterInterface {
         ))->save();
 
         $this->_report['additions']++;
-        $this->_report['strings'][] = $string->getId();
         return $string->lid;
       }
     }
@@ -282,7 +279,6 @@ class PoDatabaseWriter implements PoWriterInterface {
       // Empty translation, remove existing if instructed.
       $string->delete();
       $this->_report['deletes']++;
-      $this->_report['strings'][] = $string->lid;
       return $string->lid;
     }
   }
