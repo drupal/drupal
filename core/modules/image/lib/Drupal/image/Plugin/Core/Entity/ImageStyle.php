@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Image style"),
  *   module = "image",
  *   controller_class = "Drupal\image\ImageStyleStorageController",
- *   uri_callback = "image_style_uri",
+ *   uri_callback = "image_style_entity_uri",
  *   config_prefix = "image.style",
  *   entity_keys = {
  *     "id" = "name",
@@ -29,6 +29,13 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class ImageStyle extends ConfigEntityBase {
+
+  /**
+   * The name of the image style to use as replacement upon delete.
+   *
+   * @var string
+   */
+  protected $replacementID;
 
   /**
    * The name of the image style.
@@ -50,7 +57,6 @@ class ImageStyle extends ConfigEntityBase {
    * @var string
    */
   public $effects;
-
 
   /**
    * Overrides Drupal\Core\Entity\Entity::id().

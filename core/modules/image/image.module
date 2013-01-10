@@ -72,6 +72,15 @@ function image_help($path, $arg) {
 }
 
 /**
+ * Entity URI callback for image style.
+ */
+function image_style_entity_uri(ImageStyle $style) {
+  return array(
+    'path' => 'admin/config/media/image-styles/manage/' . $style->id(),
+  );
+}
+
+/**
  * Implements hook_menu().
  */
 function image_menu() {
@@ -326,9 +335,9 @@ function image_file_predelete(File $file) {
 }
 
 /**
- * Implements hook_image_style_save().
+ * Implements hook_image_style_update().
  */
-function image_image_style_save($style) {
+function image_image_style_update(ImageStyle $style) {
   if ($style->id() != $style->getOriginalID()) {
     $instances = field_read_instances();
     // Loop through all fields searching for image fields.
@@ -361,10 +370,17 @@ function image_image_style_save($style) {
 /**
  * Implements hook_image_style_delete().
  */
-function image_image_style_delete($style) {
-  image_image_style_save($style);
+function image_image_style_delete(ImageStyle $style) {
   // Flush cached media for the style.
   image_style_flush($style);
+  // Check whether field instance settings need to be updated.
+  // In case no replacement style was specified, all image fields that are using
+  // the deleted style are left in a broken state.
+  if ($new_id = $style->get('replacementID')) {
+    // The deleted ID is still set as originalID.
+    $style->set('name', $new_id);
+    image_image_style_update($style);
+  }
 }
 
 /**
@@ -527,38 +543,6 @@ function image_image_style_load($styles) {
       uasort($style->effects, 'drupal_sort_weight');
     }
   }
-}
-
-/**
- * Implements hook_image_style_update().
- */
-function image_image_style_update($style) {
-  // Flush cached media for the style.
-  image_style_flush($style);
-}
-
-/**
- * Delete an image style.
- *
- * @param Drupal\image\Plugin\Core\Entity\ImageStyle $style
- *   An image style array.
- * @param $replacement_style_name
- *   (optional) When deleting a style, specify a replacement style name so
- *   that existing settings (if any) may be converted to a new style.
- *
- * @return
- *   TRUE on success.
- */
-function image_style_delete($style, $replacement_style_name = '') {
-  $style->delete();
-
-  // Let other modules update as necessary on save.
-  if ($replacement_style_name) {
-    $style->set('name', $replacement_style_name);
-  }
-  module_invoke_all('image_style_delete', $style);
-
-  return TRUE;
 }
 
 /**
@@ -766,12 +750,6 @@ function image_style_flush($style) {
   // Let other modules update as necessary on flush.
   module_invoke_all('image_style_flush', $style);
 
-//  // Clear image style and effect caches.
-//  cache()->delete('image_styles');
-//  cache()->deletePrefix('image_effects:');
-//  drupal_static_reset('image_styles');
-//  drupal_static_reset('image_effects');
-
   // Clear field caches so that formatters may be added for this style.
   field_info_cache_clear();
   drupal_theme_rebuild();
@@ -906,43 +884,6 @@ function image_effect_definition_load($effect) {
 }
 
 /**
- * Load all image effects from the database.
- *
- * @return
- *   An array of all image effects.
- * @see image_effect_load()
- *
- * @todo Remove after moving/resolving the todo.
- */
-function image_effects() {
-  $effects = &drupal_static(__FUNCTION__);
-
-  if (!isset($effects)) {
-    $effects = array();
-
-    // Add database image effects.
-    // @todo Strictly speaking, this is obsolete. However, it demonstrates a
-    //   use-case for retrieving/listing configuration objects using a wildcard
-    //   within the name (instead of only the suffix).
-    $result = db_select('image_effects', NULL, array('fetch' => PDO::FETCH_ASSOC))
-      ->fields('image_effects')
-      ->orderBy('image_effects.weight', 'ASC')
-      ->execute();
-    foreach ($result as $effect) {
-      $effect['data'] = unserialize($effect['data']);
-      $definition = image_effect_definition_load($effect['name']);
-      // Do not load image effects whose definition cannot be found.
-      if ($definition) {
-        $effect = array_merge($definition, $effect);
-        $effects[$effect['ieid']] = $effect;
-      }
-    }
-  }
-
-  return $effects;
-}
-
-/**
  * Load a single image effect.
  *
  * @param $ieid
@@ -991,6 +932,10 @@ function image_effect_load($ieid, $style_name) {
  *   The saved image effect array. The 'ieid' key will be set for the effect.
  */
 function image_effect_save($style, &$effect) {
+  // Remove all values that are not properties of an image effect.
+  // @todo Convert image effects into plugins.
+  $effect = array_intersect_key($effect, array_flip(array('ieid', 'module', 'name', 'data', 'weight')));
+
   // Generate a unique image effect ID for a new effect.
   if (empty($effect['ieid'])) {
     $uuid = new Uuid();
@@ -1106,11 +1051,3 @@ function _image_effect_definitions_sort($a, $b) {
   return strcasecmp($a['name'], $b['name']);
 }
 
-/**
- * URI callbacks for image styles.
- */
-function image_style_uri(ImageStyle $image_style) {
-  return array(
-    'path' => 'admin/config/media/image-styles/manage/' . $image_style->id(),
-  );
-}

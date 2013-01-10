@@ -17,7 +17,6 @@ use Drupal\simpletest\WebTestBase;
  *   image_style_create_derivative()
  *
  * image.module:
- *   image_style_delete()
  *   image_style_options()
  *   image_style_flush()
  *   image_effect_definition_load()

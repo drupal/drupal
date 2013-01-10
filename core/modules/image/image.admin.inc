@@ -206,23 +206,11 @@ function image_style_form_submit($form, &$form_state) {
     }
   }
 
-  // Update the image style name if it has changed. We can not rename a piece
-  // of config, all we can do is create a new one and delete the old one.
-  if (isset($form_state['values']['name']) && $style->id() != $form_state['values']['name']) {
-    $old_style = $style;
-    $data = array(
-      'effects' => $style->effects,
-      'name' => $form_state['values']['name'],
-    );
-    $style = entity_create('image_style', $data);
-  }
+  $style->set('name', $form_state['values']['name']);
   $style->set('label', $form_state['values']['label']);
-  $style->save();
-  if (isset($old_style)) {
-    image_style_delete($old_style, $style->id());
-  }
+  $status = $style->save();
 
-  if ($form_state['values']['op'] == t('Update style')) {
+  if ($status == SAVED_UPDATED) {
     drupal_set_message(t('Changes to the style have been saved.'));
   }
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style->id();
@@ -262,11 +250,10 @@ function image_style_add_form($form, &$form_state) {
  * Submit handler for adding a new image style.
  */
 function image_style_add_form_submit($form, &$form_state) {
-  $style = array(
+  $style = entity_create('image_style', array(
     'name' => $form_state['values']['name'],
     'label' => $form_state['values']['label'],
-  );
-  $style = entity_create('image_style', $style);
+  ));
   $style->save();
   drupal_set_message(t('Style %name was created.', array('%name' => $style->label())));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style->id();
@@ -306,8 +293,8 @@ function image_style_delete_form($form, &$form_state, $style) {
  */
 function image_style_delete_form_submit($form, &$form_state) {
   $style = $form_state['image_style'];
-
-  image_style_delete($style, $form_state['values']['replacement']);
+  $style->set('replacementID', $form_state['values']['replacement']);
+  $style->delete();
   drupal_set_message(t('Style %name was deleted.', array('%name' => $style->label())));
   $form_state['redirect'] = 'admin/config/media/image-styles';
 }
@@ -316,8 +303,8 @@ function image_style_delete_form_submit($form, &$form_state) {
  * Form builder; Form for adding and editing image effects.
  *
  * This form is used universally for editing all image effects. Each effect adds
- * its own custom section to the form by calling the form function specified in
- * hook_image_effects().
+ * its own custom section to the form by calling the 'form callback' specified
+ * in hook_image_effect_info().
  *
  * @param $form_state
  *   An associative array containing the current state of the form.
@@ -327,8 +314,6 @@ function image_style_delete_form_submit($form, &$form_state) {
  *   An image effect array.
  *
  * @ingroup forms
- * @see hook_image_effects()
- * @see image_effects()
  * @see image_resize_form()
  * @see image_scale_form()
  * @see image_rotate_form()
