@@ -991,7 +991,7 @@ function t($string, $args = array(), $langcode = NULL) {
 /**
  * Verifies the syntax of the given e-mail address.
  *
- * See RFC 2822 for details.
+ * See @link http://tools.ietf.org/html/rfc5322 RFC 5322 @endlink for details.
  *
  * @param $mail
  *   A string containing an e-mail address.

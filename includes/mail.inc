@@ -59,11 +59,13 @@
  *   will be {$module}_{$key}.
  * @param $to
  *   The e-mail address or addresses where the message will be sent to. The
- *   formatting of this string must comply with RFC 2822. Some examples are:
- *    user@example.com
- *    user@example.com, anotheruser@example.com
- *    User <user@example.com>
- *    User <user@example.com>, Another User <anotheruser@example.com>
+ *   formatting of this string must comply with
+ *   @link http://tools.ietf.org/html/rfc5322 RFC 5322 @endlink.
+ *   Some examples are:
+ *   - user@example.com
+ *   - user@example.com, anotheruser@example.com
+ *   - User <user@example.com>
+ *   - User <user@example.com>, Another User <anotheruser@example.com>
  * @param $language
  *   Language object to use to compose the e-mail.
  * @param $params
@@ -72,6 +74,7 @@
  *   Sets From to this value, if given.
  * @param $send
  *   Send the message directly, without calling drupal_mail_send() manually.
+ *
  * @return
  *   The $message array structure containing all details of the
  *   message. If already sent ($send = TRUE), then the 'result' element
@@ -145,26 +148,24 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  * how $message is composed.
  *
  * @param $message
- *  Message array with at least the following elements:
- *   - id
- *      A unique identifier of the e-mail type. Examples: 'contact_user_copy',
- *      'user_password_reset'.
- *   - to
- *      The mail address or addresses where the message will be sent to. The
- *      formatting of this string must comply with RFC 2822. Some examples are:
- *       user@example.com
- *       user@example.com, anotheruser@example.com
- *       User <user@example.com>
- *       User <user@example.com>, Another User <anotheruser@example.com>
- *   - subject
- *      Subject of the e-mail to be sent. This must not contain any newline
- *      characters, or the mail may not be sent properly.
- *   - body
- *      Message to be sent. Accepts both CRLF and LF line-endings.
- *      E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
- *      smart plain text wrapping.
- *   - headers
- *      Associative array containing all mail headers.
+ *   Message array with at least the following elements:
+ *   - id: A unique identifier of the e-mail type. Examples:
+ *     'contact_user_copy', 'user_password_reset'.
+ *   - to: The mail address or addresses where the message will be sent to. The
+ *     formatting of this string must comply with
+ *     @link http://tools.ietf.org/html/rfc5322 RFC 5322 @endlink.
+ *     Some examples are:
+ *     - user@example.com
+ *     - user@example.com, anotheruser@example.com
+ *     - User <user@example.com>
+ *     - User <user@example.com>, Another User <anotheruser@example.com>
+ *   - subject: Subject of the e-mail to be sent. This must not contain any
+ *     newline characters, or the mail may not be sent properly.
+ *   - body: Message to be sent. Accepts both CRLF and LF line-endings.
+ *     E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
+ *     smart plain text wrapping.
+ *   - headers: Associative array containing all mail headers.
+ *
  * @return
  *   Returns TRUE if the mail was successfully accepted for delivery,
  *   FALSE otherwise.
@@ -254,6 +255,7 @@ function drupal_wrap_mail($text, $indent = '') {
  * @param $allowed_tags (optional)
  *   If supplied, a list of tags that will be transformed. If omitted, all
  *   all supported tags are transformed.
+ *
  * @return
  *   The transformed string.
  */
