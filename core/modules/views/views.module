@@ -897,6 +897,9 @@ function views_hook_info() {
   $hooks['views_form_substitutions'] = array(
     'group' => 'views',
   );
+  $hooks['views_analyze'] = array(
+    'group' => 'views',
+  );
 
   return $hooks;
 }

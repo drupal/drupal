@@ -30,6 +30,8 @@ class AnalyzeTest extends ViewTestBase {
   public function setUp() {
     parent::setUp();
 
+    $this->enableViewsTestModule();
+
     // Add an admin user will full rights;
     $this->admin = $this->drupalCreateUser(array('administer views'));
   }
@@ -45,9 +47,14 @@ class AnalyzeTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/view/frontpage/edit');
     $this->assertLink(t('analyze view'));
 
-    // This redirects the user to the form.
+    // This redirects the user to the analyze form.
     $this->clickLink(t('analyze view'));
     $this->assertText(t('View analysis'));
+
+    foreach (array('ok', 'warning', 'error') as $type) {
+      $xpath = $this->xpath('//div[contains(@class, :class)]', array(':class' => $type));
+      $this->assertTrue(count($xpath), format_string('Analyse messages with @type found', array('@type' => $type)));
+    }
 
     // This redirects the user back to the main views edit page.
     $this->drupalPost(NULL, array(), t('Ok'));
