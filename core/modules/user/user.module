@@ -391,36 +391,34 @@ function user_password($length = 10) {
  *   An array indexed by role ID. Each value is an array whose keys are the
  *   permission strings for the given role ID.
  */
-function user_role_permissions($roles = array()) {
+function user_role_permissions($roles) {
   $cache = &drupal_static(__FUNCTION__, array());
 
   $role_permissions = $fetch = array();
 
-  if ($roles) {
-    foreach ($roles as $rid => $name) {
-      if (isset($cache[$rid])) {
-        $role_permissions[$rid] = $cache[$rid];
-      }
-      else {
-        // Add this rid to the list of those needing to be fetched.
-        $fetch[] = $rid;
-        // Prepare in case no permissions are returned.
-        $cache[$rid] = array();
-      }
+  foreach ($roles as $rid => $name) {
+    if (isset($cache[$rid])) {
+      $role_permissions[$rid] = $cache[$rid];
     }
+    else {
+      // Add this rid to the list of those needing to be fetched.
+      $fetch[] = $rid;
+      // Prepare in case no permissions are returned.
+      $cache[$rid] = array();
+    }
+  }
 
-    if ($fetch) {
-      // Get from the database permissions that were not in the static variable.
-      // Only role IDs with at least one permission assigned will return rows.
-      $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
+  if ($fetch) {
+    // Get from the database permissions that were not in the static variable.
+    // Only role IDs with at least one permission assigned will return rows.
+    $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
 
-      foreach ($result as $row) {
-        $cache[$row->rid][$row->permission] = TRUE;
-      }
-      foreach ($fetch as $rid) {
-        // For every rid, we know we at least assigned an empty array.
-        $role_permissions[$rid] = $cache[$rid];
-      }
+    foreach ($result as $row) {
+      $cache[$row->rid][$row->permission] = TRUE;
+    }
+    foreach ($fetch as $rid) {
+      // For every rid, we know we at least assigned an empty array.
+      $role_permissions[$rid] = $cache[$rid];
     }
   }
 
