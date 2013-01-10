@@ -1,6 +1,6 @@
-.menu-operations {
-  width: 100px;
-}
 .menu-enabled {
   width: 70px;
+}
+.menu-label {
+  font-weight: bold;
 }

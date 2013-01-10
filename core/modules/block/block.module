@@ -662,7 +662,7 @@ function block_menu_delete($menu) {
   $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
   foreach ($block_configs as $config_id) {
     $config = config($config_id);
-    if ($config->get('id') == 'menu_menu_block:' . $menu['menu_name']) {
+    if ($config->get('id') == 'menu_menu_block:' . $menu->id()) {
       $config->delete();
     }
   }
