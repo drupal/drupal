@@ -221,6 +221,9 @@ function _book_outline_remove_access($node) {
  *
  * A node can be removed from a book if it is actually in a book and it either
  * is not a top-level page or is a top-level page with no children.
+ *
+ * @param $node
+ *   The node to remove from the outline.
  */
 function _book_node_is_removable($node) {
   return (!empty($node->book['bid']) && (($node->book['bid'] != $node->nid) || !$node->book['has_children']));
@@ -734,7 +737,7 @@ function book_get_flat_menu($book_link) {
  * @param $tree
  *   A tree of menu links in an array.
  * @param $flat
- *   A flat array of the menu links from $tree.
+ *   A flat array of the menu links from $tree, passed by reference.
  *
  * @see book_get_flat_menu().
  */
@@ -1062,8 +1065,9 @@ function _book_link_defaults($nid) {
  * to the structured data but can also simply iterate over all elements and
  * render them (as in the default template).
  *
- * The $variables array contains the following elements:
- * - book_menus
+ * @param $variables
+ *   An associative array containing the following key:
+ *   - book_menus
  *
  * @see book-all-books-block.tpl.php
  */
@@ -1079,8 +1083,9 @@ function template_preprocess_book_all_books_block(&$variables) {
 /**
  * Processes variables for book-navigation.tpl.php.
  *
- * The $variables array contains the following elements:
- * - book_link
+ * @param $variables
+ *   An associative array containing the following key:
+ *   - book_link
  *
  * @see book-navigation.tpl.php
  */
@@ -1151,8 +1156,9 @@ function template_preprocess_book_navigation(&$variables) {
  *   Reference to the table of contents array. This is modified in place, so the
  *   function does not have a return value.
  * @param $exclude
- *   Optional array of menu link ID values. Any link whose menu link ID is in
- *   this array will be excluded (along with its children).
+ *   (optional) An array of menu link ID values. Any link whose menu link ID is
+ *   in this array will be excluded (along with its children). Defaults to an
+ *   empty array.
  * @param $depth_limit
  *   Any link deeper than this value will be excluded (along with its children).
  */
@@ -1198,10 +1204,11 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
 /**
  * Processes variables for book-export-html.tpl.php.
  *
- * The $variables array contains the following elements:
- * - title
- * - contents
- * - depth
+ * @param $variables
+ *   An associative array containing the following keys:
+ *   - title
+ *   - contents
+ *   - depth
  *
  * @see book-export-html.tpl.php
  */
@@ -1261,7 +1268,8 @@ function book_export_traverse($tree, $visit_func) {
  * @param $node
  *   The node that will be output.
  * @param $children
- *   All the rendered child nodes within the current node.
+ *   (optional) All the rendered child nodes within the current node. Defaults
+ *   to an empty string.
  *
  * @return
  *   The HTML generated for the given node.
@@ -1280,9 +1288,10 @@ function book_node_export($node, $children = '') {
 /**
  * Processes variables for book-node-export-html.tpl.php.
  *
- * The $variables array contains the following elements:
- * - node
- * - children
+ * @param $variables
+ *   An associative array containing the following keys:
+ *   - node
+ *   - children
  *
  * @see book-node-export-html.tpl.php
  */
@@ -1294,6 +1303,12 @@ function template_preprocess_book_node_export_html(&$variables) {
 
 /**
  * Determine if a given node type is in the list of types allowed for books.
+ *
+ * @param $type
+ *   A node type.
+ *
+ * @return
+ *   A Boolean TRUE if the node type can be included in books; otherwise, FALSE.
  */
 function book_type_is_allowed($type) {
   return in_array($type, variable_get('book_allowed_types', array('book')));
@@ -1336,7 +1351,7 @@ function book_node_type_update($type) {
  *
  * @return
  *   A menu link, with the link translated for rendering and data added from the
- *   {book} table.
+ *   {book} table. FALSE if there is an error.
  */
 function book_link_load($mlid) {
   if ($item = db_query("SELECT * FROM {menu_links} ml INNER JOIN {book} b ON b.mlid = ml.mlid LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = :mlid", array(
