@@ -131,6 +131,12 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
  *
  * Callback for drupal_map_assoc() within
  * aggregator_form_aggregator_admin_form_alter().
+ *
+ * @param $length
+ *   The desired length of teaser text, in bytes.
+ *
+ * @return
+ *   A translated string explaining the teaser string length.
  */
 function _aggregator_characters($length) {
   return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
