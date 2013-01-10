@@ -154,6 +154,9 @@ function install_state_defaults() {
     // This becomes TRUE only when a valid database connection can be
     // established.
     'database_verified' => FALSE,
+    // Whether a translation file for the selected language will be downloaded
+    // from the translation server.
+    'download_translation' => FALSE,
     // An array of forms to be programmatically submitted during the
     // installation. The keys of each element indicate the name of the
     // installation task that the form submission is for, and the values are
@@ -170,8 +173,6 @@ function install_state_defaults() {
     // Whether or not this installation is interactive. By default this will
     // be set to FALSE if settings are passed in to install_drupal().
     'interactive' => TRUE,
-    // An array of available translation files for the installation.
-    'translations' => array(),
     // An array of parameters for the installation, pre-populated by the URL
     // or by the settings passed in to install_drupal(). This is primarily
     // used to store 'profile' (the name of the chosen installation profile)
@@ -192,6 +193,10 @@ function install_state_defaults() {
     // $_SERVER array via drupal_override_server_variables(). Used by
     // non-interactive installations only.
     'server' => array(),
+    // The server URL where the interface translation files can be downloaded.
+    // Tokens in the pattern will be replaced by appropriate values for the
+    // required translation file.
+    'server_pattern' => 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po',
     // This becomes TRUE only when a valid settings.php file is written
     // (containing both valid database connection information and a valid
     // config directory).
@@ -218,6 +223,9 @@ function install_state_defaults() {
     // A list of installation tasks which have already been performed during
     // the current page request.
     'tasks_performed' => array(),
+    // An array of translation files URIs available for the installation. Keyed
+    // by the translation language code.
+    'translations' => array(),
   );
   return $defaults;
 }
@@ -609,8 +617,14 @@ function install_tasks_to_perform($install_state) {
  *   A list of tasks, with associated metadata.
  */
 function install_tasks($install_state) {
-  // Determine whether translation import tasks will need to be performed.
+  // Determine whether a translation file must be imported during the
+  // 'install_import_translations' task. Import when a non-English language is
+  // available and selected.
   $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
+  // Determine whether a translation file must be downloaded during the
+  // 'install_download_translation' task. Download when a non-English language
+  // is selected, but no translation is yet in the translations directory.
+  $needs_download = isset($install_state['parameters']['langcode']) && !isset($install_state['translations'][$install_state['parameters']['langcode']]) && $install_state['parameters']['langcode'] != 'en';
 
   // Start with the core installation tasks that run before handing control
   // to the installation profile.
@@ -618,6 +632,9 @@ function install_tasks($install_state) {
     'install_select_language' => array(
       'display_name' => st('Choose language'),
       'run' => INSTALL_TASK_RUN_IF_REACHED,
+    ),
+    'install_download_translation' => array(
+      'run' => $needs_download ? INSTALL_TASK_RUN_IF_REACHED : INSTALL_TASK_SKIP,
     ),
     'install_select_profile' => array(
       'display_name' => st('Choose profile'),
@@ -824,10 +841,6 @@ function install_display_output($output, $install_state) {
  *
  * @return
  *   A themed status report, or an exception if there are requirement errors.
- *   If there are only requirement warnings, a themed status report is shown
- *   initially, but the user is allowed to bypass it by providing 'continue=1'
- *   in the URL. Otherwise, no output is returned, so that the next task can be
- *   run in the same page request.
  */
 function install_verify_requirements(&$install_state) {
   // Check the installation requirements for Drupal and this profile.
@@ -836,35 +849,7 @@ function install_verify_requirements(&$install_state) {
   // Verify existence of all required modules.
   $requirements += drupal_verify_profile($install_state);
 
-  // Check the severity of the requirements reported.
-  $severity = drupal_requirements_severity($requirements);
-
-  // If there are errors, always display them. If there are only warnings, skip
-  // them if the user has provided a URL parameter acknowledging the warnings
-  // and indicating a desire to continue anyway. See drupal_requirements_url().
-  if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($install_state['parameters']['continue']))) {
-    if ($install_state['interactive']) {
-      drupal_set_title(st('Requirements problem'));
-      $status_report = theme('status_report', array('requirements' => $requirements));
-      $status_report .= st('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
-      return $status_report;
-    }
-    else {
-      // Throw an exception showing any unmet requirements.
-      $failures = array();
-      foreach ($requirements as $requirement) {
-        // Skip warnings altogether for non-interactive installations; these
-        // proceed in a single request so there is no good opportunity (and no
-        // good method) to warn the user anyway.
-        if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-          $failures[] = $requirement['title'] . ': ' . $requirement['value'] . "\n\n" . $requirement['description'];
-        }
-      }
-      if (!empty($failures)) {
-        throw new Exception(implode("\n\n", $failures));
-      }
-    }
-  }
+  return install_display_requirements($install_state, $requirements);
 }
 
 /**
@@ -1262,26 +1247,26 @@ function install_select_profile_form($form, &$form_state, $install_state) {
  * Finds all .po files that are useful to the installer.
  *
  * @return
- *   An associative array of file information objects keyed by file URIs as
- *   returned by file_scan_directory(). English is removed from the array and
- *   the object is prepared for database insertion.
+ *   An associative array of file URIs keyed by language code. URIs as
+ *   returned by file_scan_directory().
  *
  * @see file_scan_directory()
  */
 function install_find_translations() {
+  $translations = array();
   $files = install_find_translation_files();
   // English does not need a translation file.
   array_unshift($files, (object) array('name' => 'en'));
-  foreach ($files as $key => $file) {
+  foreach ($files as $uri => $file) {
     // Strip off the file name component before the language code.
-    $files[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $file->name);
+    $langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $file->name);
     // Language codes cannot exceed 12 characters to fit into the {language}
     // table.
-    if (strlen($files[$key]->langcode) > 12) {
-      unset($files[$key]);
+    if (strlen($langcode) <= 12) {
+      $translations[$langcode] = $uri;
     }
   }
-  return $files;
+  return $translations;
 }
 
 /**
@@ -1319,66 +1304,46 @@ function install_find_translation_files($langcode = NULL) {
  *   language cannot be chosen automatically.
  */
 function install_select_language(&$install_state) {
-  // Find all available translations.
+  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+
+  // Find all available translation files.
   $files = install_find_translations();
   $install_state['translations'] += $files;
 
+  // If a valid language code is set, continue with the next installation step.
+  // When translations from the localization server are used, any language code
+  // is accepted because the standard language list is kept in sync with the
+  // langauges available at http://localize.drupal.org.
+  // When files from the translation directory are used, we only accept
+  // languages for which a file is available.
   if (!empty($_POST['langcode'])) {
-    foreach ($files as $file) {
-      if ($_POST['langcode'] == $file->langcode) {
-        $install_state['parameters']['langcode'] = $file->langcode;
-        return;
-      }
+    $standard_languages = standard_language_list();
+    $langcode = $_POST['langcode'];
+    if ($langcode == 'en' || isset($files[$langcode]) || isset($standard_languages[$langcode])) {
+      $install_state['parameters']['langcode'] = $langcode;
+      return;
     }
   }
 
   if (empty($install_state['parameters']['langcode'])) {
-    // If only the built-in (English) language is available, and we are
-    // performing an interactive installation, inform the user that the
-    // installer can be translated. Otherwise we assume the user knows what he
-    // is doing.
-    if (count($files) == 1) {
-      if ($install_state['interactive']) {
-        $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
-
-        drupal_set_title(st('Choose language'));
-        if (!empty($install_state['parameters']['translate'])) {
-          $output = '<p>Follow these steps to translate Drupal into your language:</p>';
-          $output .= '<ol>';
-          $output .= '<li>Download a translation from the <a href="http://localize.drupal.org/download">translation server</a>.</li>';
-          $output .= '<li>Place it into the following directory:<pre>' . $directory . '</pre></li>';
-          $output .= '</ol>';
-          $output .= '<p>For more information on installing Drupal in different languages, visit the <a href="http://drupal.org/localize" target="_blank">drupal.org handbook page</a>.</p>';
-          $output .= '<p>How should the installation continue?</p>';
-          $output .= '<ul>';
-          $output .= '<li><a href="' . check_url(drupal_current_script_url(array('translate' => NULL))) . '">Reload the language selection page after adding translations</a></li>';
-          $output .= '<li><a href="' . check_url(drupal_current_script_url(array('langcode' => 'en', 'translate' => NULL))) . '">Continue installation in English</a></li>';
-          $output .= '</ul>';
-        }
-        else {
-          include_once DRUPAL_ROOT . '/core/includes/form.inc';
-          $elements = drupal_get_form('install_select_language_form', $files);
-          $output = drupal_render($elements);
-        }
-        return $output;
-      }
-      // One language, but not an interactive installation. Assume the user
-      // knows what he is doing.
-      $file = current($files);
-      $install_state['parameters']['langcode'] = $file->langcode;
-      return;
+    // If we are performing an interactive installation, we display a form to
+    // select a right language. If no translation files were found in the
+    // translations directory, the form shows a list of standard languages. If
+    // translation files were found the form shows a select list of the
+    // corresponding languages to choose from.
+    if ($install_state['interactive']) {
+      drupal_set_title(st('Choose language'));
+      include_once DRUPAL_ROOT . '/core/includes/form.inc';
+      $elements = drupal_get_form('install_select_language_form', count($files) > 1 ? $files : array());
+      return drupal_render($elements);
     }
+    // If we are performing a non-interactive installation. If only one language
+    // (English) is available, assume the user knows what he is doing. Otherwise
+    // thow an error.
     else {
-      // We still don't have a langcode, so display a form for selecting one.
-      // Only do this in the case of interactive installations, since this is
-      // not a real form with submit handlers (the database isn't even set up
-      // yet), rather just a convenience method for setting parameters in the
-      // URL.
-      if ($install_state['interactive']) {
-        drupal_set_title(st('Choose language'));
-        include_once DRUPAL_ROOT . '/core/includes/form.inc';
-        $elements = drupal_get_form('install_select_language_form', $files);
-        return drupal_render($elements);
+      if (count($files) == 1) {
+        $install_state['parameters']['langcode'] = array_shift(array_keys($files));
+        return;
       }
       else {
         throw new Exception(st('Sorry, you must select a language to continue the installation.'));
@@ -1390,38 +1355,45 @@ function install_select_language(&$install_state) {
 /**
  * Form constructor for the language selection form.
  *
- * @param $files
- *   An associative array of file information objects keyed by file URIs as
- *   returned by file_scan_directory().
+ * @param array $files
+ *   (optional) An associative array of file URIs keyed by language code as
+ *   returned by file_scan_directory(). Defaults to all standard languages.
  *
  * @see file_scan_directory()
  * @ingroup forms
  */
-function install_select_language_form($form, &$form_state, $files) {
+function install_select_language_form($form, &$form_state, $files = array()) {
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
   include_once DRUPAL_ROOT . '/core/modules/language/language.module';
   include_once DRUPAL_ROOT . '/core/modules/language/language.negotiation.inc';
 
   $standard_languages = standard_language_list();
   $select_options = array();
-  $languages = array();
+  $browser_options = array();
 
-  foreach ($files as $file) {
-    if (isset($standard_languages[$file->langcode])) {
-      // Build a list of select list options based on files we found.
-      $select_options[$file->langcode] = $standard_languages[$file->langcode][1];
+  // Build a select list with language names in native language for the user
+  // to choose from. And build a list of available languages for the browser
+  // to select the language default from.
+  if (count($files)) {
+    // Select lists based on available language files.
+    foreach ($files as $langcode => $uri) {
+      $select_options[$langcode] = isset($standard_languages[$langcode]) ? $standard_languages[$langcode][1] : $langcode;
+      $browser_options[$langcode] = new Language(array(
+        'langcode' => $langcode,
+      ));
     }
-    else {
-      // If the language was not found in standard.inc, display its langcode.
-      $select_options[$file->langcode] = $file->langcode;
+  }
+  else {
+    // Select lists based on all standard languages.
+    foreach ($standard_languages as $langcode => $language_names) {
+      $select_options[$langcode] = $language_names[1];
+      $browser_options[$langcode] = new Language(array(
+        'langcode' => $langcode,
+      ));
     }
-    // Build a list of languages simulated for browser detection.
-    $languages[$file->langcode] = new Language(array(
-      'langcode' => $file->langcode,
-    ));
   }
 
-  $browser_langcode = language_from_browser($languages);
+  $browser_langcode = language_from_browser($browser_options);
   $form['langcode'] = array(
     '#type' => 'select',
     '#options' => $select_options,
@@ -1429,9 +1401,10 @@ function install_select_language_form($form, &$form_state, $files) {
     '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
   );
 
-  if (count($files) == 1) {
+  if (empty($files)) {
     $form['help'] = array(
-      '#markup' => '<p><a href="' . check_url(drupal_current_script_url(array('translate' => 'true'))) . '">' . st('Learn how to install Drupal in other languages') . '</a></p>',
+      '#markup' => '<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>. ' .
+                   'If you do not want this, select <em>English</em> and continue the installation. For more information, see the <a href="http://drupal.org/documentation/install">online handbook</a>.</p>',
     );
   }
   $form['actions'] = array('#type' => 'actions');
@@ -1440,6 +1413,112 @@ function install_select_language_form($form, &$form_state, $files) {
     '#value' => st('Save and continue'),
   );
   return $form;
+}
+
+/**
+ * Download a translation file for the selected langaguage.
+ *
+ * @param array $install_state
+ *   An array of information about the current installation state.
+ *
+ * @return string
+ *   A themed status report, or an exception if there are requirement errors.
+ *   Upon successfull download the page is reloaded and no output is returned.
+ */
+function install_download_translation(&$install_state) {
+  // Check whether all conditions are met to download. Download the translation
+  // if possible.
+  $requirements = install_check_translations($install_state);
+  if ($output = install_display_requirements($install_state, $requirements)) {
+    return $output;
+  }
+
+  // The download was successfull, reload the page in the new lanagage.
+  install_goto(install_redirect_url($install_state));
+}
+
+/**
+ * Attempts to get a file using drupal_http_request and to store it locally.
+ *
+ * @param string $uri
+ *   The URI of the file to grab.
+ * @param string $destination
+ *   Stream wrapper URI specifying where the file should be placed. If a
+ *   directory path is provided, the file is saved into that directory under its
+ *   original name. If the path contains a filename as well, that one will be
+ *   used instead.
+ *
+ * @return boolean
+ *   TRUE on success, FALSE on failure.
+ */
+function install_retrieve_file($uri, $destination) {
+  $parsed_url = parse_url($uri);
+  if (is_dir(drupal_realpath($destination))) {
+    // Prevent URIs with triple slashes when gluing parts together.
+    $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
+  }
+  else {
+    $path = $destination;
+  }
+  $result = drupal_http_request($uri);
+  if ($result->code != 200) {
+    return FALSE;
+  }
+  if (file_put_contents($path, $result->data) === FALSE) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
+/**
+ *  Checks if the localization server can be contacted.
+ *
+ * @param string $uri
+ *  The URI to contact.
+ *
+ * @return string
+ *   URI of the server if the localization server was contacted successfully.
+ *   FALSE if not.
+ */
+function install_check_localization_server($uri) {
+  $result = drupal_http_request($uri, array('method' => 'HEAD'));
+  return (!isset($result->error) && $result->code == 200);
+}
+
+/**
+ * Gets the core release version for localization.
+ *
+ * In case core has a development version we fall back to the latest stable
+ * release. e.g. 8.2-dev falls back to 8.1. 8.0-dev falls back to 7.0. Fallback
+ * is required because the localization server only provides translation files
+ * for stable releases.
+ *
+ * @return array
+ *   Associative array containing 'core' and 'version' of the release.
+ */
+function install_get_localization_release() {
+  if (strpos(VERSION, 'dev')) {
+    list($version, ) = explode('-', VERSION);
+    list($major, $minor) = explode('.', $version);
+
+    // Calculate the major and minor release numbers to fall back to.
+    // E.g. 8.0-dev falls back to 7.0 and 8.2-dev falls back to 8.1.
+    if ($minor == 0) {
+      $major--;
+    }
+    else {
+      $minor--;
+    }
+    $release = "$major.$minor";
+  }
+  else {
+    $release = VERSION;
+  }
+
+  return array(
+    'core' => "$major.x",
+    'version' => $release,
+  );
 }
 
 /**
@@ -1561,10 +1640,10 @@ function install_profile_modules(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
-  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  $langcode = $install_state['parameters']['langcode'];
-
+  include_once DRUPAL_ROOT . '/core/modules/locale/locale.bulk.inc';
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+
+  $langcode = $install_state['parameters']['langcode'];
   $standard_languages = standard_language_list();
   if (!isset($standard_languages[$langcode])) {
     // Drupal does not know about this language, so we prefill its values with
@@ -1585,16 +1664,39 @@ function install_import_translations(&$install_state) {
     language_save($language);
   }
 
-  // If a non-english language was selected, remove English.
+  // If a non-English language was selected, remove English and import the
+  // translations.
   if ($langcode != 'en') {
     language_delete('en');
-  }
 
-  // Collect files to import for this language.
-  $batch = locale_translate_batch_import_files(array('langcode' => $langcode));
-  if (!empty($batch)) {
-    return $batch;
+    // Set up a batch to import translations for the newly added language.
+    _install_prepare_import();
+    module_load_include('fetch.inc', 'locale');
+    if ($batch = locale_translation_batch_fetch_build(array(), array($langcode))) {
+      return $batch;
+    }
   }
+}
+
+/**
+ * Tells the translation import process that Drupal core is installed.
+ */
+function _install_prepare_import() {
+  global $install_state;
+
+  $release = install_get_localization_release();
+  db_insert('locale_project')
+    ->fields(array(
+      'name' => 'drupal',
+      'project_type' => 'module',
+      'core' => $release['core'],
+      'version' => $release['version'],
+      'server_pattern' => $install_state['server_pattern'],
+      'status' => 1,
+    ))
+    ->execute();
+  module_load_include('compare.inc', 'locale');
+  locale_translation_check_projects_local(array('drupal'), array($install_state['parameters']['langcode']));
 }
 
 /**
@@ -1647,20 +1749,29 @@ function install_configure_form($form, &$form_state, &$install_state) {
 /**
  * Finishes importing files at end of installation.
  *
+ * If other projects besides Drupal core have been installed, their translation
+ * will be imported here.
+ *
  * @param $install_state
  *   An array of information about the current installation state.
  *
  * @return
  *   The batch definition, if there are language files to import.
- *
- * @todo
- *   This currently does the same as the first import step. Need to revisit
- *   once we have l10n_update functionality integrated. See
- *   http://drupal.org/node/1191488.
  */
 function install_import_translations_remaining(&$install_state) {
-  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  return locale_translate_batch_import_files(array('langcode' => $install_state['parameters']['langcode']));
+  module_load_include('fetch.inc', 'locale');
+  module_load_include('compare.inc', 'locale');
+
+  // Build a fresh list of installed projects. When more projects than core are
+  // installed, their translations will be downloaded (if required) and imported
+  // using a batch.
+  $projects = locale_translation_build_projects();
+  if (count($projects) > 1) {
+    $options = _locale_translation_default_update_options();
+    if ($batch =  locale_translation_batch_update_build(array(), array($install_state['parameters']['langcode']), $options)) {
+      return $batch;
+    }
+  }
 }
 
 /**
@@ -1719,6 +1830,162 @@ function _install_profile_modules_finished($success, $results, $operations) {
   // Flush all caches to complete the module installation process. Subsequent
   // installation tasks will now have full access to the profile's modules.
   drupal_flush_all_caches();
+}
+
+/**
+ * Checks installation requirements and reports any errors.
+ */
+function install_check_translations($install_state) {
+  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  $requirements = array();
+
+  $readable = FALSE;
+  $writable = FALSE;
+  $executable = FALSE;
+  $files_directory = variable_get('file_public_path', conf_path() . '/files');
+  $translations_directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+  $translations_directory_exists = FALSE;
+  $online = FALSE;
+  $server_available = FALSE;
+  $translation_available = FALSE;
+
+  // First attempt to create or make writable the files directory.
+  file_prepare_directory($files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  // Then, attempt to create or make writable the translations directory.
+  file_prepare_directory($translations_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+
+  // Get values so the requirements errors can be specific.
+  if (drupal_verify_install_file($translations_directory, FILE_EXIST|FILE_WRITABLE, 'dir')) {
+    $readable = is_readable($translations_directory);
+    $writable = is_writable($translations_directory);
+    $executable = is_executable($translations_directory);
+    $translations_directory_exists = TRUE;
+  }
+
+  // Build URLs for the translation file and the translation server.
+  $release = install_get_localization_release();
+  $langcode = $install_state['parameters']['langcode'];
+  $variables = array(
+    '%project' => 'drupal',
+    '%version' => $release['version'],
+    '%core' => $release['core'],
+    '%language' => $langcode,
+  );
+  $translation_url = strtr($install_state['server_pattern'], $variables);
+  $elements = parse_url($translation_url);
+  $server_url = $elements['scheme'] . '://' . $elements['host'];
+
+  // Build the language name for display.
+  $languages = standard_language_list();
+  $language = isset($languages[$langcode]) ? $languages[$langcode][0] : $langcode;
+
+  // Check if the desirered translation file is available and if the translation
+  // server can be reached, or in other words if we have an internet connection.
+  if ($translation_available = install_check_localization_server($translation_url)) {
+    $online = TRUE;
+    $server_available = TRUE;
+  }
+  else {
+    if ($server_available = install_check_localization_server($server_url)) {
+      $online = TRUE;
+    }
+  }
+
+  // If the translations directory does not exists, throw an error.
+  if (!$translations_directory_exists) {
+    $requirements['translations directory exists'] = array(
+      'title'       => st('Translations directory'),
+      'value'       => st('The translations directory does not exist.'),
+      'severity'    => REQUIREMENT_ERROR,
+      'description' => st('The installer requires that you create a translations directory as part of the installation process. Create the directory %translations_directory . More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('%translations_directory' => $translations_directory, '@install_txt' => base_path() . 'core/INSTALL.txt')),
+    );
+  }
+  else {
+    $requirements['translations directory exists'] = array(
+      'title'       => st('Translations directory'),
+      'value'       => st('The diretory %translations_directory exists.', array('%translations_directory' => $translations_directory)),
+    );
+    // If the translations directory is not readable, throw an error.
+    if (!$readable) {
+      $requirements['translations directory readable'] = array(
+      'title'       => st('Translations directory'),
+        'value'       => st('The translations directory is not readable.'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The installer requires read permissions to %translations_directory at all times. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
+      );
+    }
+    // If translations directory is not writable, throw an error.
+    if (!$writable) {
+      $requirements['translations directory writable'] = array(
+      'title'       => st('Translations directory'),
+        'value'       => st('The translations directory is not writable.'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The installer requires write permissions to %translations_directory during the installation process. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
+      );
+    }
+    else {
+      $requirements['translations directory writable'] = array(
+      'title'       => st('Translations directory'),
+        'value'       => st('The translations directory is writable.'),
+      );
+    }
+    // If translations directory is not executable, throw an error.
+    if (!$executable) {
+      $requirements['translations directory executable'] = array(
+      'title'       => st('Translations directory'),
+        'value'       => st('The translations directory is not executable.'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The installer requires execute permissions to %translations_directory during the installation process. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
+      );
+    }
+  }
+
+  // If the translations server can not be contacted, throw an error.
+  if (!$online) {
+    $requirements['online'] = array(
+      'title'       => st('Internet'),
+      'value'       => st('The translation server is offline.'),
+      'severity'    => REQUIREMENT_ERROR,
+      'description' => st('The installer requires to contact the translation server to download a translation file. Check your internet connection and verify that your website can reach the translation server at <a href="!server_url">!server_url</a>.', array('!server_url' => $server_url)),
+    );
+  }
+  else {
+    $requirements['online'] = array(
+      'title'       => st('Internet'),
+      'value'       => st('The translation server is online.'),
+    );
+    // If translation file is not found at the translation server, throw an
+    // error.
+    if (!$translation_available) {
+      $requirements['translation available'] = array(
+      'title'       => st('Translation'),
+        'value'       => st('The %language translation is not available.', array('%language' => $language)),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The %language translation file is not available at the translation server. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
+      );
+    }
+    else {
+      $requirements['translation available'] = array(
+      'title'       => st('Translation'),
+        'value'       => st('The %language translation is available.', array('%language' => $language)),
+      );
+    }
+  }
+
+  if ($translations_directory_exists && $readable && $writable && $executable && $translation_available) {
+    $translation_downloaded = install_retrieve_file($translation_url, $translations_directory);
+
+    if (!$translation_downloaded) {
+      $requirements['translation downloaded'] = array(
+      'title'       => st('Translation'),
+        'value'       => st('The %language translation could not be downloaded.', array('%language' => $language)),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The %language translation file could not be downloaded. <a href="!url">Choose a different language</a> or select English and translate your website later.', array('%language' => $language, '!url' => check_url($_SERVER['SCRIPT_NAME']))),
+      );
+    }
+  }
+
+  return $requirements;
 }
 
 /**
@@ -1856,6 +2123,56 @@ function install_check_requirements($install_state) {
     }
   }
   return $requirements;
+}
+
+/**
+ * Displays installation requirements.
+ *
+ * @param array $install_state
+ *   An array of information about the current installation state.
+ * @param array $requirements
+ *   An array of requirements, in the same format as is returned by
+ *   hook_requirements().
+ *
+ * @return
+ *   A themed status report, or an exception if there are requirement errors.
+ *   If there are only requirement warnings, a themed status report is shown
+ *   initially, but the user is allowed to bypass it by providing 'continue=1'
+ *   in the URL. Otherwise, no output is returned, so that the next task can be
+ *   run in the same page request.
+ *
+ * @thows \Exception
+ */
+function install_display_requirements($install_state, $requirements) {
+  // Check the severity of the requirements reported.
+  $severity = drupal_requirements_severity($requirements);
+
+  // If there are errors, always display them. If there are only warnings, skip
+  // them if the user has provided a URL parameter acknowledging the warnings
+  // and indicating a desire to continue anyway. See drupal_requirements_url().
+  if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($install_state['parameters']['continue']))) {
+    if ($install_state['interactive']) {
+      drupal_set_title(st('Requirements problem'));
+      $status_report = theme('status_report', array('requirements' => $requirements));
+      $status_report .= st('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
+      return $status_report;
+    }
+    else {
+      // Throw an exception showing any unmet requirements.
+      $failures = array();
+      foreach ($requirements as $requirement) {
+        // Skip warnings altogether for non-interactive installations; these
+        // proceed in a single request so there is no good opportunity (and no
+        // good method) to warn the user anyway.
+        if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+          $failures[] = $requirement['title'] . ': ' . $requirement['value'] . "\n\n" . $requirement['description'];
+        }
+      }
+      if (!empty($failures)) {
+        throw new \Exception(implode("\n\n", $failures));
+      }
+    }
+  }
 }
 
 /**
