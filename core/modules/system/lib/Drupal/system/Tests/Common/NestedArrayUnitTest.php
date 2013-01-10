@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\ArrayUnitTest.
+ * Contains \Drupal\system\Tests\Common\NestedArrayUnitTest.
  */
 
 namespace Drupal\system\Tests\Common;
