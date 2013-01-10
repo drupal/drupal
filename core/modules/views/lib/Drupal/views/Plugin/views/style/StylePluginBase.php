@@ -556,7 +556,7 @@ abstract class StylePluginBase extends PluginBase {
               // Not all field handlers return a scalar value,
               // e.g. views_handler_field_field.
               if (!is_scalar($grouping)) {
-                $grouping = md5(serialize($grouping));
+                $grouping = hash('sha256', serialize($grouping));
               }
             }
           }

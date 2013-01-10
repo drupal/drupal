@@ -130,7 +130,7 @@ abstract class DisplayPluginBase extends PluginBase {
     // Cache for unpackOptions, but not if we are in the ui.
     static $unpack_options = array();
     if (empty($view->editing)) {
-      $cid = 'unpackOptions:' . md5(serialize(array($this->options, $options)));
+      $cid = 'unpackOptions:' . hash('sha256', serialize(array($this->options, $options)));
       if (empty($unpack_options[$cid])) {
         $cache = views_cache_get($cid, TRUE);
         if (!empty($cache->data)) {

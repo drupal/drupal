@@ -1413,7 +1413,7 @@ class ViewExecutable {
     }
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
-    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : md5($this->storage->get('name') . REQUEST_TIME . rand());
+    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->get('name') . REQUEST_TIME . mt_rand());
 
     // Allow the display handler to set up for execution
     $this->display_handler->preExecute();
