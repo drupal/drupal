@@ -17,7 +17,7 @@ class UpdateCoreTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = array('update_test', 'update');
+  public static $modules = array('update_test', 'update', 'language');
 
   public static function getInfo() {
     return array(
@@ -32,6 +32,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules'));
     $this->drupalLogin($admin_user);
   }
+
 
   /**
    * Tests the Update Manager module when no updates are available.
@@ -215,6 +216,19 @@ class UpdateCoreTest extends UpdateTestBase {
     drupal_static_reset('_update_create_fetch_task');
     update_create_fetch_task($projecta);
     $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+  }
+
+  /**
+   * Checks language module in core package at admin/reports/updates.
+   */
+  function testLanguageModuleUpdate() {
+    $this->setSystemInfo7_0();
+    // Instead of using refreshUpdateStatus(), set these manually.
+    config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    config('update_test.settings')->set('xml_map', array('drupal' => '1'))->save();
+
+    $this->drupalGet('admin/reports/updates');
+    $this->assertText(t('Language'));
   }
 
   /**
