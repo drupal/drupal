@@ -3994,6 +3994,14 @@ function form_process_vertical_tabs($element, &$form_state) {
     '#parents' => $element['#parents'],
   );
 
+  // Add an invisible label for accessibility.
+  if (!isset($element['#title'])) {
+    $element['#title'] = t('Vertical Tabs');
+    $element['#title_display'] = 'invisible';
+  }
+
+  $element['#attached']['library'][] = array('system', 'drupal.vertical-tabs');
+
   // The JavaScript stores the currently selected tab in this hidden
   // field so that the active tab can be restored the next time the
   // form is rendered, e.g. on preview pages or when form validation
@@ -4012,6 +4020,25 @@ function form_process_vertical_tabs($element, &$form_state) {
 }
 
 /**
+ * Prepares a vertical_tabs element for rendering.
+ *
+ * @param array $element
+ *   An associative array containing the properties and children of the
+ *   vertical tabs element.
+ *
+ * @return array
+ *   The modified element.
+ */
+function form_pre_render_vertical_tabs($element) {
+  // Do not render the vertical tabs element if it is empty.
+  $group = implode('][', $element['#parents']);
+  if (!element_get_visible_children($element['group']['#groups'][$group])) {
+    $element['#printed'] = TRUE;
+  }
+  return $element;
+}
+
+/**
  * Returns HTML for an element's children details as vertical tabs.
  *
  * @param $variables
@@ -4023,26 +4050,7 @@ function form_process_vertical_tabs($element, &$form_state) {
  */
 function theme_vertical_tabs($variables) {
   $element = $variables['element'];
-  // Even if there are no tabs the element will still have a child element for
-  // the active tab. We need to iterate over the tabs to ascertain if any
-  // are visible before showing the wrapper and h2.
-  $visible_tab = FALSE;
-  $output = '';
-  foreach (element_children($element['group']) as $tab_index) {
-    if (!isset($element['group'][$tab_index]['#access']) ||
-        !empty($element['group'][$tab_index]['#access'])) {
-      $visible_tab = TRUE;
-      break;
-    }
-  }
-  if ($visible_tab) {
-    // Add required JavaScript and Stylesheet.
-    drupal_add_library('system', 'drupal.vertical-tabs');
-
-    $output = '<h2 class="element-invisible">' . t('Vertical Tabs') . '</h2>';
-    $output .= '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
-  }
-  return $output;
+  return '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
 }
 
 /**

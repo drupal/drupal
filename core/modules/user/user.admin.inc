@@ -389,12 +389,9 @@ function user_admin_settings($form, &$form_state) {
     '#default_value' => $config->get('signatures'),
   );
 
-  $form['email_title'] = array(
-    '#type' => 'item',
-    '#title' => t('E-mails'),
-  );
   $form['email'] = array(
     '#type' => 'vertical_tabs',
+    '#title' => t('E-mails'),
   );
   // These email tokens are shared for all settings, so just define
   // the list once to help ensure they stay in sync.

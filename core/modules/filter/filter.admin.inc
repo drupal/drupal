@@ -247,12 +247,9 @@ function filter_admin_format_form($form, &$form_state, $format) {
   }
 
   // Filter settings.
-  $form['filter_settings_title'] = array(
-    '#type' => 'item',
-    '#title' => t('Filter settings'),
-  );
   $form['filter_settings'] = array(
     '#type' => 'vertical_tabs',
+    '#title' => t('Filter settings'),
   );
 
   foreach ($filter_info as $name => $filter) {

@@ -557,7 +557,8 @@ function system_element_info() {
   $types['vertical_tabs'] = array(
     '#default_tab' => '',
     '#process' => array('form_process_vertical_tabs'),
-    '#theme_wrappers' => array('vertical_tabs'),
+    '#pre_render' => array('form_pre_render_vertical_tabs'),
+    '#theme_wrappers' => array('vertical_tabs', 'form_element'),
   );
   $types['dropbutton'] = array(
     '#pre_render' => array('drupal_pre_render_dropbutton'),
