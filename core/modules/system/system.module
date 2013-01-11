@@ -2218,6 +2218,11 @@ function system_data_type_info() {
       'class' => '\Drupal\Core\TypedData\Type\Uri',
       'primitive type' => Primitive::URI,
     ),
+    'email' => array(
+      'label' => t('Email'),
+      'class' => '\Drupal\Core\TypedData\Type\Email',
+      'primitive type' => Primitive::STRING,
+    ),
     'binary' => array(
       'label' => t('Binary'),
       'class' => '\Drupal\Core\TypedData\Type\Binary',
