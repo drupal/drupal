@@ -8,12 +8,25 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Config\ConfigNameException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Defines the default configuration object.
  */
 class Config {
+
+  /**
+   * The maximum length of a configuration object name.
+   *
+   * Many filesystems (including HFS, NTFS, and ext4) have a maximum file name
+   * length of 255 characters. To ensure that no configuration objects
+   * incompatible with this limitation are created, we enforce a maximum name
+   * length of 250 characters (leaving 5 characters for the file extension).
+   *
+   * @see http://en.wikipedia.org/wiki/Comparison_of_file_systems
+   */
+  const MAX_NAME_LENGTH = 250;
 
   /**
    * The name of the configuration object.
@@ -120,6 +133,37 @@ class Config {
   public function setName($name) {
     $this->name = $name;
     return $this;
+  }
+
+  /**
+   * Validates the configuration object name.
+   *
+   * @throws \Drupal\Core\Config\ConfigNameException
+   *
+   * @see Config::MAX_NAME_LENGTH
+   */
+  public static function validateName($name) {
+    // The name must be namespaced by owner.
+    if (strpos($name, '.') === FALSE) {
+      throw new ConfigNameException(format_string('Missing namespace in Config object name @name.', array(
+        '@name' => $name,
+      )));
+    }
+    // The name must be shorter than Config::MAX_NAME_LENGTH characters.
+    if (strlen($name) > self::MAX_NAME_LENGTH) {
+      throw new ConfigNameException(format_string('Config object name @name exceeds maximum allowed length of @length characters.', array(
+        '@name' => $name,
+        '@length' => self::MAX_NAME_LENGTH,
+      )));
+    }
+
+    // The name must not contain any of the following characters:
+    // : ? * < > " ' / \
+    if (preg_match('/[:?*<>"\'\/\\\\]/', $name)) {
+      throw new ConfigNameException(format_string('Invalid character in Config object name @name.', array(
+        '@name' => $name,
+      )));
+    }
   }
 
   /**
@@ -390,6 +434,8 @@ class Config {
    *   The configuration object.
    */
   public function save() {
+    // Validate the configuration object name before saving.
+    static::validateName($this->name);
     if (!$this->isLoaded) {
       $this->load();
     }
@@ -448,7 +494,7 @@ class Config {
     $this->eventDispatcher->dispatch('config.' . $config_event_name, new ConfigEvent($this));
   }
 
-  /*
+  /**
    * Merges data into a configuration object.
    *
    * @param array $data_to_merge

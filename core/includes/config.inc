@@ -182,6 +182,8 @@ function config_sync_changes(array $config_changes, StorageInterface $source_sto
   $factory = drupal_container()->get('config.factory');
   foreach (array('delete', 'create', 'change') as $op) {
     foreach ($config_changes[$op] as $name) {
+      // Validate the configuration object name before importing it.
+      Config::validateName($name);
       if ($op == 'delete') {
         $target_storage->delete($name);
       }
@@ -256,6 +258,8 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
       // Call to the configuration entity's storage controller to handle the
       // configuration change.
       $handled_by_module = FALSE;
+      // Validate the configuration object name before importing it.
+      Config::validateName($name);
       if ($entity_type = config_get_entity_type_by_name($name)) {
         $old_config = new Config($name, $target_storage);
         $old_config->load();
