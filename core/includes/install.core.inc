@@ -338,6 +338,14 @@ function install_begin_request(&$install_state) {
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
       ->addArgument(new Reference('event_dispatcher'));
+    // The install process cannot use the database lock backend since the database
+    // is not fully up, so we use a null backend implementation during the
+    // installation process. This will also speed up the installation process.
+    // The site being installed will use the real lock backend when doing AJAX
+    // requests but, except for a WSOD, there is no chance for a a lock to stall
+    // (as opposed to the cache backend) so we can afford having a null
+    // implementation here.
+    $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     drupal_container($container);
   }
 
@@ -352,15 +360,6 @@ function install_begin_request(&$install_state) {
 
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
   $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
-
-  // The install process cannot use the database lock backend since the database
-  // is not fully up, so we use a null backend implementation during the
-  // installation process. This will also speed up the installation process.
-  // The site being installed will use the real lock backend when doing AJAX
-  // requests but, except for a WSOD, there is no chance for a a lock to stall
-  // (as opposed to the cache backend) so we can afford having a null
-  // implementation here.
-  $conf['lock_backend'] = 'Drupal\Core\Lock\NullLockBackend';
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also

@@ -180,8 +180,8 @@ abstract class UpgradePathTestBase extends WebTestBase {
    * Specialized refreshVariables().
    */
   protected function refreshVariables() {
-    // No operation if the child has not been upgraded yet.
-    if (!$this->upgradedSite) {
+    // Refresh the variables only if the site was already upgraded.
+    if ($this->upgradedSite) {
       global $conf;
       cache('bootstrap')->delete('variables');
       $conf = variable_initialize();
@@ -262,6 +262,9 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Upgrade succeed, rebuild the environment so that we can call the API
     // of the child site directly from this request.
     $this->upgradedSite = TRUE;
+
+    // Force a variable refresh as we only just enabled it.
+    $this->refreshVariables();
 
     // Reload module list for modules that are enabled in the test database
     // but not on the test client.

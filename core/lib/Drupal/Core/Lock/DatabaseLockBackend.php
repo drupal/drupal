@@ -15,6 +15,15 @@ use Drupal\Core\Database\IntegrityConstraintViolationException;
 class DatabaseLockBackend extends LockBackendAbstract {
 
   /**
+   * Constructs a new DatabaseLockBackend.
+   */
+  public function __construct() {
+    // __destruct() is causing problems with garbage collections, register a
+    // shutdown function instead.
+    drupal_register_shutdown_function(array($this, 'releaseAll'));
+  }
+
+  /**
    * Implements Drupal\Core\Lock\LockBackedInterface::acquire().
    */
   public function acquire($name, $timeout = 30.0) {

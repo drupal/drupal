@@ -3495,27 +3495,7 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
  * @return Drupal\Core\Lock\LockBackendInterface
  */
 function lock() {
-  $lock_backend = &drupal_static(__FUNCTION__);
-
-  if (!isset($lock_backend)) {
-    $class_name = variable_get('lock_backend', 'Drupal\Core\Lock\DatabaseLockBackend');
-
-    // Do not allow a WSOD here, if the class does not exists use the default
-    // one.
-    // @todo We should log failed class loading for debugging, but for that we
-    //   need an early watchdog function that logs into a file if the database
-    //   is not present.
-    if (class_exists($class_name)) {
-      $lock_backend = new $class_name();
-    }
-    else {
-      $lock_backend = new DatabaseLockBackend();
-    }
-
-    drupal_register_shutdown_function(array($lock_backend, 'releaseAll'));
-  }
-
-  return $lock_backend;
+  return drupal_container()->get('lock');
 }
 
 /**

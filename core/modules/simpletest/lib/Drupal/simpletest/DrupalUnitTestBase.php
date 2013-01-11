@@ -132,7 +132,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     global $conf;
     // Keep the container object around for tests.
     $this->container = $container;
-    $conf['lock_backend'] = 'Drupal\Core\Lock\NullLockBackend';
+    $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
     $container
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')

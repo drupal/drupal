@@ -866,6 +866,11 @@ abstract class TestBase {
     // Create and set new configuration directories.
     $this->prepareConfigDirectories();
 
+    // Reset statics before the old container is replaced so that objects with a
+    // __destruct() method still have access to it.
+    // @todo: Remove once they have been converted to services.
+    drupal_static_reset();
+
     // Reset and create a new service container.
     $this->container = new ContainerBuilder();
     drupal_container($this->container);
