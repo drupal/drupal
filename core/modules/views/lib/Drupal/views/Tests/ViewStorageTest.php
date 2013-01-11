@@ -19,7 +19,7 @@ use Drupal\views\Plugin\views\display\Feed;
  * @see Drupal\views\Plugin\Core\Entity\View
  * @see Drupal\views\ViewStorageController
  */
-class ViewStorageTest extends ViewTestBase {
+class ViewStorageTest extends ViewUnitTestBase {
 
   /**
    * Properties that should be stored in the configuration.
@@ -54,16 +54,16 @@ class ViewStorageTest extends ViewTestBase {
   protected $controller;
 
   /**
-   * Modules to enable.
+   * Views used by this test.
    *
    * @var array
    */
-  public static $modules = array('node', 'search', 'comment', 'taxonomy');
+  public static $testViews = array('test_view_storage');
 
   public static function getInfo() {
     return array(
-      'name' => 'Configuration entity CRUD tests',
-      'description' => 'Tests the CRUD functionality for View.',
+      'name' => 'View storage tests',
+      'description' => 'Tests the CRUD functionality for a view.',
       'group' => 'Views',
     );
   }
@@ -96,8 +96,8 @@ class ViewStorageTest extends ViewTestBase {
    * Tests loading configuration entities.
    */
   protected function loadTests() {
-    $view = $this->loadView('archive');
-    $data = config('views.view.archive')->get();
+    $view = entity_load('view', 'test_view_storage');
+    $data = config('views.view.test_view_storage')->get();
 
     // Confirm that an actual view object is loaded and that it returns all of
     // expected properties.
@@ -123,26 +123,8 @@ class ViewStorageTest extends ViewTestBase {
       }
     }
 
-    // Fetch data for all configuration entities and default view configurations.
-    $all_configuration_entities = $this->controller->load();
-    $all_config = config_get_storage_names_with_prefix('views.view');
-
-    // Remove the 'views.view.' prefix from config names for comparision with
-    // loaded configuration entities.
-    $prefix_map = function ($value) {
-      $parts = explode('.', $value);
-      return end($parts);
-    };
-
-    // Check that the correct number of configuration entities have been loaded.
-    $count = count($all_configuration_entities);
-    $this->assertEqual($count, count($all_config), format_string('The array of all @count configuration entities is loaded.', array('@count' => $count)));
-
-    // Check that all of these machine names match.
-    $this->assertIdentical(array_keys($all_configuration_entities), array_map($prefix_map, $all_config), 'All loaded elements match.');
-
     // Make sure that loaded default views get a UUID.
-    $view = views_get_view('frontpage');
+    $view = views_get_view('test_view_storage');
     $this->assertTrue($view->storage->uuid());
   }
 
@@ -160,7 +142,7 @@ class ViewStorageTest extends ViewTestBase {
     }
 
     // Create a new View instance with config values.
-    $values = config('views.view.glossary')->get();
+    $values = config('views.view.test_view_storage')->get();
     $created = $this->controller->create($values);
 
     $this->assertTrue($created instanceof View, 'Created object is a View.');
@@ -176,9 +158,9 @@ class ViewStorageTest extends ViewTestBase {
     }
 
     // Check the UUID of the loaded View.
-    $created->set('name', 'glossary_new');
+    $created->set('name', 'test_view_storage_new');
     $created->save();
-    $created_loaded = $this->loadView('glossary_new');
+    $created_loaded = entity_load('view', 'test_view_storage_new');
     $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');
   }
 
@@ -187,7 +169,7 @@ class ViewStorageTest extends ViewTestBase {
    */
   protected function displayTests() {
     // Check whether a display can be added and saved to a View.
-    $view = $this->loadView('frontpage');
+    $view = entity_load('view', 'test_view_storage_new');
 
     $new_id = $view->newDisplay('page', 'Test', 'test');
     $display = $view->get('display');
@@ -199,10 +181,9 @@ class ViewStorageTest extends ViewTestBase {
     $executable->initDisplay();
     $this->assertTrue($executable->displayHandlers[$new_id] instanceof Page, 'New page display "test" uses the right display plugin.');
 
-
-    $view->set('name', 'frontpage_new');
+    $view->set('name', 'test_view_storage_new_new2');
     $view->save();
-    $values = config('views.view.frontpage_new')->get();
+    $values = config('views.view.test_view_storage_new_new2')->get();
 
     $this->assertTrue(isset($values['display']['test']) && is_array($values['display']['test']), 'New display was saved.');
   }
@@ -212,7 +193,7 @@ class ViewStorageTest extends ViewTestBase {
    */
   protected function statusTests() {
     // Test a View can be enabled and disabled again (with a new view).
-    $view = $this->loadView('backlinks');
+    $view = entity_load('view', 'test_view_storage_new_new2');
 
     // The view should already be disabled.
     $view->enable();
@@ -220,7 +201,7 @@ class ViewStorageTest extends ViewTestBase {
 
     // Check the saved values.
     $view->save();
-    $config = config('views.view.backlinks')->get();
+    $config = config('views.view.test_view_storage_new_new2')->get();
     $this->assertFalse($config['disabled'], 'The changed disabled property was saved.');
 
     // Disable the view.
@@ -229,28 +210,17 @@ class ViewStorageTest extends ViewTestBase {
 
     // Check the saved values.
     $view->save();
-    $config = config('views.view.backlinks')->get();
+    $config = config('views.view.test_view_storage_new_new2')->get();
     $this->assertTrue($config['disabled'], 'The changed disabled property was saved.');
-  }
-
-  /**
-   * Loads a single configuration entity from the controller.
-   *
-   * @param string $view_name
-   *   The machine name of the view.
-   *
-   * @return object Drupal\views\ViewExecutable.
-   *   The loaded view object.
-   */
-  protected function loadView($view_name) {
-    $load = $this->controller->load(array($view_name));
-    return reset($load);
   }
 
   /**
    * Tests the display related functions like getDisplaysList().
    */
   protected function displayMethodTests() {
+    // Enable the system module so l() can work using url_alias table.
+    $this->enableModules(array('system'));
+
     $config['display'] = array(
       'page_1' => array(
         'display_options' => array('path' => 'test'),
@@ -392,7 +362,7 @@ class ViewStorageTest extends ViewTestBase {
    * Tests the createDuplicate() View method.
    */
   public function testCreateDuplicate() {
-    $view = views_get_view('archive');
+    $view = views_get_view('test_view_storage');
     $copy = $view->storage->createDuplicate();
 
     $this->assertTrue($copy instanceof View, 'The copied object is a View.');
