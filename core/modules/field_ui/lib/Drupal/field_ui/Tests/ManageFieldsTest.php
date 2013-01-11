@@ -450,4 +450,27 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertFieldByXPath("//select[@name='widget_type']", 'options_buttons');
   }
 
+  /**
+   * Tests that deletion removes fields and instances as expected for a term.
+   */
+  function testDeleteTaxonomyField() {
+    // Create a new field.
+    $bundle_path = 'admin/structure/taxonomy/tags';
+    $edit1 = array(
+      'fields[_add_new_field][label]' => $this->field_label,
+      'fields[_add_new_field][field_name]' => $this->field_name_input,
+    );
+    $this->fieldUIAddNewField($bundle_path, $edit1);
+
+    // Delete the field.
+    $this->fieldUIDeleteField($bundle_path, $this->field_name, $this->field_label, 'Tags');
+
+    // Reset the fields info.
+    field_info_cache_clear();
+    // Check that the field instance was deleted.
+    $this->assertNull(field_info_instance('taxonomy_term', $this->field_name, 'tags'), 'Field instance was deleted.');
+    // Check that the field was deleted too.
+    $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
+  }
+
 }

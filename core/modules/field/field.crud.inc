@@ -865,11 +865,14 @@ function field_purge_batch($batch_size) {
     // field_purge_data() will need the field array.
     $field = field_info_field_by_id($instance['field_id']);
     // Retrieve some entities.
-    $results = $factory->get($entity_type)
+    $query = $factory->get($entity_type)
       ->condition('id:' . $field['id'] . '.deleted', 1)
-      ->condition($info[$entity_type]['entity_keys']['bundle'], $ids->bundle)
-      ->range(0, $batch_size)
-      ->execute();
+      ->range(0, $batch_size);
+    // If there's no bundle key, all results will have the same bundle.
+    if (!empty($info[$entity_type]['entity_keys']['bundle'])) {
+      $query->condition($info[$entity_type]['entity_keys']['bundle'], $ids->bundle);
+    }
+    $results = $query->execute();
 
     if ($results) {
       $entities = array();
