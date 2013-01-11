@@ -217,7 +217,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
       return $return;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $transaction->rollback();
       watchdog_exception($this->entityType, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);

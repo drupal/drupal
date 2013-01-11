@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Database\Database;
 
 /**
  * Tests invocation of hooks when performing an action.
@@ -28,7 +29,7 @@ class EntityCrudHookTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'comment', 'file');
+  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'comment', 'file', 'entity_test');
 
   protected $ids = array();
 
@@ -408,5 +409,30 @@ class EntityCrudHookTest extends WebTestBase {
       'entity_crud_hook_test_user_delete called',
       'entity_crud_hook_test_entity_delete called for type user',
     ));
+  }
+
+  /**
+   * Tests rollback from failed insert in EntityNG.
+   */
+  function testEntityNGRollback() {
+    // Create a block.
+    try {
+      $entity = entity_create('entity_test', array('name' => 'fail_insert'))->save();
+      $this->fail('Expected exception has not been thrown.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Expected exception has been thrown.');
+    }
+
+    if (Database::getConnection()->supportsTransactions()) {
+      // Check that the block does not exist in the database.
+      $ids = entity_query('entity_test')->condition('name', 'fail_insert')->execute();
+      $this->assertTrue(empty($ids), 'Transactions supported, and entity not found in database.');
+    }
+    else {
+      // Check that the block exists in the database.
+      $ids = entity_query('entity_test')->condition('name', 'fail_insert')->execute();
+      $this->assertFalse(empty($ids), 'Transactions not supported, and entity found in database.');
+    }
   }
 }

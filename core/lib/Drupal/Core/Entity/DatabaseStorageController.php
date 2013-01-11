@@ -9,7 +9,6 @@ namespace Drupal\Core\Entity;
 
 use PDO;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Exception;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
 
@@ -492,7 +491,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       // Ignore slave server temporarily.
       db_ignore_slave();
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $transaction->rollback();
       watchdog_exception($this->entityType, $e);
       throw new EntityStorageException($e->getMessage, $e->getCode, $e);
@@ -548,7 +547,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
 
       return $return;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $transaction->rollback();
       watchdog_exception($this->entityType, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);

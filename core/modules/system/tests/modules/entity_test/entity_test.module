@@ -169,3 +169,12 @@ function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
   $langcode = $form_state['controller']->getFormLangcode($form_state);
   variable_set('entity_form_langcode', $langcode);
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function entity_test_entity_test_insert($entity) {
+  if ($entity->name->value == 'fail_insert') {
+    throw new Exception("Test exception rollback.");
+  }
+}
