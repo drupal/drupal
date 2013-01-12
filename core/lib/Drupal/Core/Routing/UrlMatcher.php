@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains Drupal\Core\Routing\UrlMatcher.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +17,12 @@ use Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher as BaseUrlMatcher;
  */
 class UrlMatcher extends BaseUrlMatcher {
 
+  /**
+   * Constructs a new UrlMatcher.
+   *
+   * The parent class has a constructor we need to skip, so just override it
+   * with a no-op.
+   */
   public function __construct() {}
 
   public function finalMatch(RouteCollection $collection, Request $request) {

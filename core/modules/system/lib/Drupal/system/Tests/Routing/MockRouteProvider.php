@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains of Drupal\system\Tests\Routing\MockRouteProvider.
+ * Contains Drupal\system\Tests\Routing\MockRouteProvider.
  */
 
 namespace Drupal\system\Tests\Routing;
@@ -14,7 +14,6 @@ use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
 /**
  * Easily configurable mock route provider.
- *
  */
 class MockRouteProvider implements RouteProviderInterface {
 
