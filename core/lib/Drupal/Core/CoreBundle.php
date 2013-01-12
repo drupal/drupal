@@ -133,6 +133,7 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('lock'));
 
     $this->registerTwig($container);
+    $this->registerRouting($container);
 
     // Add the entity query factory.
     $container->register('entity.query', 'Drupal\Core\Entity\Query\QueryFactory')
@@ -144,34 +145,6 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('router.dumper'))
       ->addArgument(new Reference('lock'))
       ->addArgument(new Reference('event_dispatcher'));
-
-    $container->register('router.request_context', 'Symfony\Component\Routing\RequestContext')
-      ->addMethodCall('fromRequest', array(new Reference('request')));
-    $container->register('router.route_provider', 'Drupal\Core\Routing\RouteProvider')
-      ->addArgument(new Reference('database'));
-    $container->register('router.matcher.final_matcher', 'Drupal\Core\Routing\UrlMatcher');
-    $container->register('router.matcher', 'Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher')
-      ->addArgument(new Reference('router.route_provider'))
-      ->addMethodCall('setFinalMatcher', array(new Reference('router.matcher.final_matcher')));
-    $container->register('router.generator', 'Drupal\Core\Routing\UrlGenerator')
-      ->addArgument(new Reference('router.route_provider'))
-      ->addArgument(new Reference('path.alias_manager.cached'));
-    $container->register('router.dynamic', 'Symfony\Cmf\Component\Routing\DynamicRouter')
-      ->addArgument(new Reference('router.request_context'))
-      ->addArgument(new Reference('router.matcher'))
-      ->addArgument(new Reference('router.generator'));
-
-    $container->register('legacy_generator', 'Drupal\Core\Routing\NullGenerator');
-    $container->register('legacy_url_matcher', 'Drupal\Core\LegacyUrlMatcher');
-    $container->register('legacy_router', 'Symfony\Cmf\Component\Routing\DynamicRouter')
-            ->addArgument(new Reference('router.request_context'))
-            ->addArgument(new Reference('legacy_url_matcher'))
-            ->addArgument(new Reference('legacy_generator'));
-
-    $container->register('router', 'Symfony\Cmf\Component\Routing\ChainRouter')
-      ->addMethodCall('setContext', array(new Reference('router.request_context')))
-      ->addMethodCall('add', array(new Reference('router.dynamic')))
-      ->addMethodCall('add', array(new Reference('legacy_router')));
 
     $container
       ->register('cache.path', 'Drupal\Core\Cache\CacheBackendInterface')
@@ -272,6 +245,42 @@ class CoreBundle extends Bundle {
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());
+  }
+
+  /**
+   * Registers the various services for the routing system.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+   */
+  protected function registerRouting(ContainerBuilder $container) {
+    $container->register('router.request_context', 'Symfony\Component\Routing\RequestContext')
+      ->addMethodCall('fromRequest', array(new Reference('request')));
+
+    $container->register('router.route_provider', 'Drupal\Core\Routing\RouteProvider')
+      ->addArgument(new Reference('database'));
+    $container->register('router.matcher.final_matcher', 'Drupal\Core\Routing\UrlMatcher');
+    $container->register('router.matcher', 'Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher')
+      ->addArgument(new Reference('router.route_provider'))
+      ->addMethodCall('setFinalMatcher', array(new Reference('router.matcher.final_matcher')));
+    $container->register('router.generator', 'Drupal\Core\Routing\UrlGenerator')
+      ->addArgument(new Reference('router.route_provider'))
+      ->addArgument(new Reference('path.alias_manager.cached'));
+    $container->register('router.dynamic', 'Symfony\Cmf\Component\Routing\DynamicRouter')
+      ->addArgument(new Reference('router.request_context'))
+      ->addArgument(new Reference('router.matcher'))
+      ->addArgument(new Reference('router.generator'));
+
+    $container->register('legacy_generator', 'Drupal\Core\Routing\NullGenerator');
+    $container->register('legacy_url_matcher', 'Drupal\Core\LegacyUrlMatcher');
+    $container->register('legacy_router', 'Symfony\Cmf\Component\Routing\DynamicRouter')
+            ->addArgument(new Reference('router.request_context'))
+            ->addArgument(new Reference('legacy_url_matcher'))
+            ->addArgument(new Reference('legacy_generator'));
+
+    $container->register('router', 'Symfony\Cmf\Component\Routing\ChainRouter')
+      ->addMethodCall('setContext', array(new Reference('router.request_context')))
+      ->addMethodCall('add', array(new Reference('router.dynamic')))
+      ->addMethodCall('add', array(new Reference('legacy_router')));
   }
 
   /**
