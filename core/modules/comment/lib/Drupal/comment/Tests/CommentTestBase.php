@@ -145,7 +145,8 @@ abstract class CommentTestBase extends WebTestBase {
     }
 
     if (isset($match[1])) {
-      return entity_create('comment', array('id' => $match[1], 'subject' => $subject, 'comment' => $comment));
+      $entity = comment_load($match[1]);
+      return $entity;
     }
   }
 
@@ -163,9 +164,9 @@ abstract class CommentTestBase extends WebTestBase {
   function commentExists(Comment $comment = NULL, $reply = FALSE) {
     if ($comment) {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
-      $regex .= '<a id="comment-' . $comment->id . '"(.*?)'; // Comment anchor.
-      $regex .= $comment->subject . '(.*?)'; // Match subject.
-      $regex .= $comment->comment . '(.*?)'; // Match comment.
+      $regex .= '<a id="comment-' . $comment->id() . '"(.*?)'; // Comment anchor.
+      $regex .= $comment->subject->value . '(.*?)'; // Match subject.
+      $regex .= $comment->comment_body->value . '(.*?)'; // Match comment.
       $regex .= '/s';
 
       return (boolean)preg_match($regex, $this->drupalGetContent());
@@ -182,7 +183,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Comment to delete.
    */
   function deleteComment(Comment $comment) {
-    $this->drupalPost('comment/' . $comment->id . '/delete', array(), t('Delete'));
+    $this->drupalPost('comment/' . $comment->id() . '/delete', array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
 
@@ -292,7 +293,7 @@ abstract class CommentTestBase extends WebTestBase {
   function performCommentOperation($comment, $operation, $approval = FALSE) {
     $edit = array();
     $edit['operation'] = $operation;
-    $edit['comments[' . $comment->id . ']'] = TRUE;
+    $edit['comments[' . $comment->id() . ']'] = TRUE;
     $this->drupalPost('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
 
     if ($operation == 'delete') {

@@ -754,7 +754,7 @@ function hook_node_update_index(Drupal\node\Node $node, $langcode) {
   $text = '';
   $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
   foreach ($comments as $comment) {
-    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', TRUE);
+    $text .= '<h2>' . check_plain($comment->subject->value) . '</h2>' . $comment->comment_body->processed;
   }
   return $text;
 }

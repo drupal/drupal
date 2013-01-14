@@ -39,7 +39,6 @@ class CommentStatisticsTest extends CommentTestBase {
    * Tests the node comment statistics.
    */
   function testCommentNodeCommentStatistics() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -58,8 +57,7 @@ class CommentStatisticsTest extends CommentTestBase {
     // Post comment #1 as web_user2.
     $this->drupalLogin($this->web_user2);
     $comment_text = $this->randomName();
-    $comment = $this->postComment($this->node, $comment_text);
-    $comment_loaded = comment_load($comment->id);
+    $this->postComment($this->node, $comment_text);
 
     // Checks the new values of node comment statistics with comment #1.
     // The node needs to be reloaded with a node_load_multiple cache reset.
@@ -81,8 +79,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Post comment #2 as anonymous (comment approval enabled).
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', TRUE);
-    $comment_unpublished_loaded = comment_load($anonymous_comment->id);
+    $this->postComment($this->node, $this->randomName(), '', TRUE);
 
     // Checks the new values of node comment statistics with comment #2 and
     // ensure they haven't changed since the comment has not been moderated.
@@ -103,13 +100,12 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Post comment #3 as anonymous.
     $this->drupalGet('comment/reply/' . $this->node->nid);
-    $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', array('name' => $this->randomName()));
-    $comment_loaded = comment_load($anonymous_comment->id);
+    $comment_loaded = $this->postComment($this->node, $this->randomName(), '', array('name' => $this->randomName()));
 
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, TRUE);
-    $this->assertEqual($node->last_comment_name, $comment_loaded->name, 'The value of node last_comment_name is the name of the anonymous user.');
+    $this->assertEqual($node->last_comment_name, $comment_loaded->name->value, 'The value of node last_comment_name is the name of the anonymous user.');
     $this->assertEqual($node->last_comment_uid, 0, 'The value of node last_comment_uid is zero.');
     $this->assertEqual($node->comment_count, 2, 'The value of node comment_count is 2.');
   }

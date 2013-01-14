@@ -99,6 +99,7 @@ class CommentTranslationUITest extends EntityTranslationUITest {
    * Tests translate link on comment content admin page.
    */
   function testTranslateLinkCommentAdminPage() {
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'page'));
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer comments', 'translate any entity'));
     $this->drupalLogin($this->admin_user);
 

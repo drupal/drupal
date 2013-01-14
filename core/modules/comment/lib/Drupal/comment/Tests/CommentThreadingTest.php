@@ -42,43 +42,39 @@ class CommentThreadingTest extends CommentTestBase {
     $comment_text = $this->randomName();
     $comment1 = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment1_loaded = comment_load($comment1->id);
     $this->assertTrue($this->commentExists($comment1), 'Comment #1. Comment found.');
-    $this->assertEqual($comment1_loaded->thread, '01/');
+    $this->assertEqual($comment1->thread->value, '01/');
     // Confirm that there is no reference to a parent comment.
-    $this->assertNoParentLink($comment1->id);
+    $this->assertNoParentLink($comment1->id());
 
     // Reply to comment #1 creating comment #2.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment1->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment1->id());
     $comment2 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment2_loaded = comment_load($comment2->id);
     $this->assertTrue($this->commentExists($comment2, TRUE), 'Comment #2. Reply found.');
-    $this->assertEqual($comment2_loaded->thread, '01.00/');
+    $this->assertEqual($comment2->thread->value, '01.00/');
     // Confirm that there is a link to the parent comment.
-    $this->assertParentLink($comment2->id, $comment1->id);
+    $this->assertParentLink($comment2->id(), $comment1->id());
 
     // Reply to comment #2 creating comment #3.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment2->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment2->id());
     $comment3 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment3_loaded = comment_load($comment3->id);
     $this->assertTrue($this->commentExists($comment3, TRUE), 'Comment #3. Second reply found.');
-    $this->assertEqual($comment3_loaded->thread, '01.00.00/');
+    $this->assertEqual($comment3->thread->value, '01.00.00/');
     // Confirm that there is a link to the parent comment.
-    $this->assertParentLink($comment3->id, $comment2->id);
+    $this->assertParentLink($comment3->id(), $comment2->id());
 
     // Reply to comment #1 creating comment #4.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment1->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment1->id());
     $comment4 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment4_loaded = comment_load($comment4->id);
     $this->assertTrue($this->commentExists($comment4), 'Comment #4. Third reply found.');
-    $this->assertEqual($comment4_loaded->thread, '01.01/');
+    $this->assertEqual($comment4->thread->value, '01.01/');
     // Confirm that there is a link to the parent comment.
-    $this->assertParentLink($comment4->id, $comment1->id);
+    $this->assertParentLink($comment4->id(), $comment1->id());
 
     // Post comment #2 overall comment #5.
     $this->drupalLogin($this->web_user);
@@ -86,43 +82,39 @@ class CommentThreadingTest extends CommentTestBase {
     $comment_text = $this->randomName();
     $comment5 = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment5_loaded = comment_load($comment5->id);
     $this->assertTrue($this->commentExists($comment5), 'Comment #5. Second comment found.');
-    $this->assertEqual($comment5_loaded->thread, '02/');
+    $this->assertEqual($comment5->thread->value, '02/');
     // Confirm that there is no link to a parent comment.
-    $this->assertNoParentLink($comment5->id);
+    $this->assertNoParentLink($comment5->id());
 
     // Reply to comment #5 creating comment #6.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment5->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment5->id());
     $comment6 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment6_loaded = comment_load($comment6->id);
     $this->assertTrue($this->commentExists($comment6, TRUE), 'Comment #6. Reply found.');
-    $this->assertEqual($comment6_loaded->thread, '02.00/');
+    $this->assertEqual($comment6->thread->value, '02.00/');
     // Confirm that there is a link to the parent comment.
-    $this->assertParentLink($comment6->id, $comment5->id);
+    $this->assertParentLink($comment6->id(), $comment5->id());
 
     // Reply to comment #6 creating comment #7.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment6->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment6->id());
     $comment7 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment7_loaded = comment_load($comment7->id);
     $this->assertTrue($this->commentExists($comment7, TRUE), 'Comment #7. Second reply found.');
-    $this->assertEqual($comment7_loaded->thread, '02.00.00/');
+    $this->assertEqual($comment7->thread->value, '02.00.00/');
     // Confirm that there is a link to the parent comment.
-    $this->assertParentLink($comment7->id, $comment6->id);
+    $this->assertParentLink($comment7->id(), $comment6->id());
 
     // Reply to comment #5 creating comment #8.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment5->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment5->id());
     $comment8 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
-    $comment8_loaded = comment_load($comment8->id);
     $this->assertTrue($this->commentExists($comment8), 'Comment #8. Third reply found.');
-    $this->assertEqual($comment8_loaded->thread, '02.01/');
+    $this->assertEqual($comment8->thread->value, '02.01/');
     // Confirm that there is a link to the parent comment.
-    $this->assertParentLink($comment8->id, $comment5->id);
+    $this->assertParentLink($comment8->id(), $comment5->id());
   }
 
   /**

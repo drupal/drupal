@@ -23,7 +23,7 @@ use Drupal\Core\Entity\EntityInterface;
  */
 function hook_comment_presave(Drupal\comment\Comment $comment) {
   // Remove leading & trailing spaces from the comment subject.
-  $comment->subject = trim($comment->subject);
+  $comment->subject->value = trim($comment->subject->value);
 }
 
 /**
@@ -34,7 +34,7 @@ function hook_comment_presave(Drupal\comment\Comment $comment) {
  */
 function hook_comment_insert(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are added.
-  search_touch_node($comment->nid);
+  search_touch_node($comment->nid->value);
 }
 
 /**
@@ -45,7 +45,7 @@ function hook_comment_insert(Drupal\comment\Comment $comment) {
  */
 function hook_comment_update(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are updated.
-  search_touch_node($comment->nid);
+  search_touch_node($comment->nid->value);
 }
 
 /**
@@ -130,7 +130,7 @@ function hook_comment_view_alter(&$build, \Drupal\comment\Plugin\Core\Entity\Com
  *   The comment the action is being performed on.
  */
 function hook_comment_publish(Drupal\comment\Comment $comment) {
-  drupal_set_message(t('Comment: @subject has been published', array('@subject' => $comment->subject)));
+  drupal_set_message(t('Comment: @subject has been published', array('@subject' => $comment->subject->value)));
 }
 
 /**
@@ -140,7 +140,7 @@ function hook_comment_publish(Drupal\comment\Comment $comment) {
  *   The comment the action is being performed on.
  */
 function hook_comment_unpublish(Drupal\comment\Comment $comment) {
-  drupal_set_message(t('Comment: @subject has been unpublished', array('@subject' => $comment->subject)));
+  drupal_set_message(t('Comment: @subject has been unpublished', array('@subject' => $comment->subject->value)));
 }
 
 /**
@@ -160,7 +160,7 @@ function hook_comment_unpublish(Drupal\comment\Comment $comment) {
 function hook_comment_predelete(Drupal\comment\Comment $comment) {
   // Delete a record associated with the comment in a custom table.
   db_delete('example_comment_table')
-    ->condition('cid', $comment->cid)
+    ->condition('cid', $comment->id())
     ->execute();
 }
 
@@ -179,7 +179,7 @@ function hook_comment_predelete(Drupal\comment\Comment $comment) {
  * @see entity_delete_multiple()
  */
 function hook_comment_delete(Drupal\comment\Comment $comment) {
-  drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject)));
+  drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject->value)));
 }
 
 /**

@@ -37,7 +37,6 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalLogin($this->web_user);
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text);
-    $comment_loaded = comment_load($comment->id);
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Set comments to have subject and preview to required.
@@ -52,11 +51,10 @@ class CommentInterfaceTest extends CommentTestBase {
     $subject_text = $this->randomName();
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
-    $comment_loaded = comment_load($comment->id);
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Check comment display.
-    $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id());
     $this->assertText($subject_text, 'Individual comment subject found.');
     $this->assertText($comment_text, 'Individual comment body found.');
 
@@ -67,49 +65,47 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_OPTIONAL);
 
     // Test changing the comment author to "Anonymous".
-    $this->drupalGet('comment/' . $comment->id . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => ''));
-    $comment_loaded = comment_load($comment->id);
-    $this->assertTrue(empty($comment_loaded->name) && $comment_loaded->uid == 0, 'Comment author successfully changed to anonymous.');
+    $this->drupalGet('comment/' . $comment->id() . '/edit');
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->subject->value, array('name' => ''));
+    $this->assertTrue(empty($comment->name->value) && $comment->uid->value == 0, 'Comment author successfully changed to anonymous.');
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomName();
-    $this->drupalGet('comment/' . $comment->id . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $random_name));
+    $this->drupalGet('comment/' . $comment->id() . '/edit');
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->subject->value, array('name' => $random_name));
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertText($random_name . ' (' . t('not verified') . ')', 'Comment author successfully changed to an unverified user.');
 
     // Test changing the comment author to a verified user.
-    $this->drupalGet('comment/' . $comment->id . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $this->web_user->name));
-    $comment_loaded = comment_load($comment->id);
-    $this->assertTrue($comment_loaded->name == $this->web_user->name && $comment_loaded->uid == $this->web_user->uid, 'Comment author successfully changed to a registered user.');
+    $this->drupalGet('comment/' . $comment->id() . '/edit');
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->subject->value, array('name' => $this->web_user->name));
+    $this->assertTrue($comment->name->value == $this->web_user->name && $comment->uid->value == $this->web_user->uid, 'Comment author successfully changed to a registered user.');
 
     $this->drupalLogout();
 
     // Reply to comment #2 creating comment #3 with optional preview and no
     // subject though field enabled.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id());
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
-    $reply_loaded = comment_load($reply->id);
+    $reply_loaded = comment_load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
-    $this->assertEqual($comment->id, $reply_loaded->pid, 'Pid of a reply to a comment is set correctly.');
-    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.00/', $reply_loaded->thread, 'Thread of reply grows correctly.');
+    $this->assertEqual($comment->id(), $reply_loaded->pid->value, 'Pid of a reply to a comment is set correctly.');
+    $this->assertEqual(rtrim($comment->thread->value, '/') . '.00/', $reply_loaded->thread->value, 'Thread of reply grows correctly.');
 
     // Second reply to comment #3 creating comment #4.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id());
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
-    $reply_loaded = comment_load($reply->id);
+    $reply_loaded = comment_load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
-    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.01/', $reply_loaded->thread, 'Thread of second reply grows correctly.');
+    $this->assertEqual(rtrim($comment->thread->value, '/') . '.01/', $reply_loaded->thread->value, 'Thread of second reply grows correctly.');
 
     // Edit reply.
-    $this->drupalGet('comment/' . $reply->id . '/edit');
+    $this->drupalGet('comment/' . $reply->id() . '/edit');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $this->assertTrue($this->commentExists($reply, TRUE), 'Modified reply found.');
 
@@ -126,9 +122,9 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->setCommentsPerPage(50);
 
     // Attempt to reply to an unpublished comment.
-    $reply_loaded->status = COMMENT_NOT_PUBLISHED;
+    $reply_loaded->status->value = COMMENT_NOT_PUBLISHED;
     $reply_loaded->save();
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $reply_loaded->cid);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $reply_loaded->id());
     $this->assertText(t('The comment you are replying to does not exist.'), 'Replying to an unpublished comment');
 
     // Attempt to post to node with comments disabled.
@@ -178,5 +174,4 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
     $this->setCommentForm(FALSE);
   }
-
 }

@@ -810,7 +810,7 @@ function search_node_update(Node $node) {
  */
 function search_comment_insert($comment) {
   // Reindex the node when comments are added.
-  search_touch_node($comment->nid);
+  search_touch_node($comment->nid->value);
 }
 
 /**
@@ -818,7 +818,7 @@ function search_comment_insert($comment) {
  */
 function search_comment_update($comment) {
   // Reindex the node when comments are changed.
-  search_touch_node($comment->nid);
+  search_touch_node($comment->nid->value);
 }
 
 /**
@@ -826,7 +826,7 @@ function search_comment_update($comment) {
  */
 function search_comment_delete($comment) {
   // Reindex the node when comments are deleted.
-  search_touch_node($comment->nid);
+  search_touch_node($comment->nid->value);
 }
 
 /**
@@ -834,7 +834,7 @@ function search_comment_delete($comment) {
  */
 function search_comment_publish($comment) {
   // Reindex the node when comments are published.
-  search_touch_node($comment->nid);
+  search_touch_node($comment->nid->value);
 }
 
 /**
@@ -842,7 +842,7 @@ function search_comment_publish($comment) {
  */
 function search_comment_unpublish($comment) {
   // Reindex the node when comments are unpublished.
-  search_touch_node($comment->nid);
+  search_touch_node($comment->nid->value);
 }
 
 /**

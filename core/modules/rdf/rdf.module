@@ -418,10 +418,10 @@ function rdf_comment_load($comments) {
     // Pages with many comments can show poor performance. This information
     // isn't needed until rdf_preprocess_comment() is called, but set it here
     // to optimize performance for websites that implement an entity cache.
-    $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created);
-    $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid);
-    if ($comment->pid) {
-      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid, array('fragment' => 'comment-' . $comment->pid));
+    $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created->value);
+    $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid->value);
+    if ($comment->pid->value) {
+      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->value, array('fragment' => 'comment-' . $comment->pid->value));
     }
   }
 }
@@ -617,28 +617,30 @@ function rdf_preprocess_user(&$variables) {
     $variables['attributes']['typeof'] = $account->rdf_mapping['rdftype'];
     $variables['attributes']['about'] = url($uri['path'], $uri['options']);
   }
-  // Adds the relationship between the sioc:UserAccount and the foaf:Person who
-  // holds the account.
-  $account_holder_meta = array(
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'about' => url($uri['path'], array_merge($uri['options'], array('fragment' => 'me'))),
-      'typeof' => array('foaf:Person'),
-      'rel' => array('foaf:account'),
-      'resource' => url($uri['path'], $uri['options']),
-    ),
-  );
-  // Adds the markup for username.
-  $username_meta = array(
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'about' => url($uri['path'], $uri['options']),
-      'property' => $account->rdf_mapping['name']['predicates'],
-      'content' => $account->name,
-    )
-  );
-  drupal_add_html_head($account_holder_meta, 'rdf_user_account_holder');
-  drupal_add_html_head($username_meta, 'rdf_user_username');
+  // If we are on the user account page, add the relationship between the
+  // sioc:UserAccount and the foaf:Person who holds the account.
+  if (current_path() == $uri['path']) {
+    $account_holder_meta = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'about' => url($uri['path'], array_merge($uri['options'], array('fragment' => 'me'))),
+        'typeof' => array('foaf:Person'),
+        'rel' => array('foaf:account'),
+        'resource' => url($uri['path'], $uri['options']),
+      ),
+    );
+    // Adds the markup for username.
+    $username_meta = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'about' => url($uri['path'], $uri['options']),
+        'property' => $account->rdf_mapping['name']['predicates'],
+        'content' => $account->name,
+      )
+    );
+    drupal_add_html_head($account_holder_meta, 'rdf_user_account_holder');
+    drupal_add_html_head($username_meta, 'rdf_user_username');
+  }
 }
 
 /**
@@ -746,7 +748,7 @@ function rdf_preprocess_comment(&$variables) {
     $variables['rdf_metadata_attributes'][] = $parent_node_attributes;
 
     // Adds the relation to parent comment, if it exists.
-    if ($comment->pid != 0) {
+    if ($comment->pid->value != 0) {
       $parent_comment_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
       // The parent comment URI is precomputed as part of the rdf_data so that
       // it can be cached as part of the entity.

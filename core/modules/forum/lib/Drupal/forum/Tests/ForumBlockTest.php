@@ -105,7 +105,7 @@ class ForumBlockTest extends WebTestBase {
       $comment = entity_create('comment', array(
         'nid' => $node->nid,
         'subject' => $this->randomString(20),
-        'comment_body' => array(LANGUAGE_NOT_SPECIFIED => $this->randomString(256)),
+        'comment_body' => $this->randomString(256),
         'created' => $timestamp + $index,
       ));
       comment_save($comment);

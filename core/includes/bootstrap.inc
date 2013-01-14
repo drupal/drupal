@@ -2500,7 +2500,15 @@ function state() {
  * @return Drupal\Core\TypedData\TypedDataManager
  */
 function typed_data() {
-  return drupal_container()->get('typed_data');
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['manager'] = &drupal_static(__FUNCTION__);
+  }
+  if (!isset($drupal_static_fast['manager'])) {
+    $drupal_static_fast['manager'] = drupal_container()->get('typed_data');
+  }
+  return $drupal_static_fast['manager'];
 }
 
 /**

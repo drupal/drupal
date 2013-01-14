@@ -52,7 +52,6 @@ class CommentNodeAccessTest extends CommentTestBase {
    * Test that threaded comments can be viewed.
    */
   function testThreadedCommentView() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject required and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -66,20 +65,18 @@ class CommentNodeAccessTest extends CommentTestBase {
     $comment_text = $this->randomName();
     $comment_subject = $this->randomName();
     $comment = $this->postComment($this->node, $comment_text, $comment_subject);
-    $comment_loaded = comment_load($comment->id);
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Check comment display.
-    $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id());
     $this->assertText($comment_subject, 'Individual comment subject found.');
     $this->assertText($comment_text, 'Individual comment body found.');
 
     // Reply to comment, creating second comment.
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id());
     $reply_text = $this->randomName();
     $reply_subject = $this->randomName();
     $reply = $this->postComment(NULL, $reply_text, $reply_subject, TRUE);
-    $reply_loaded = comment_load($reply->id);
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
 
     // Go to the node page and verify comment and reply are visible.

@@ -156,7 +156,7 @@ class CommentAttributesTest extends CommentTestBase {
     $this->assertFalse($result, 'No RDFa markup referring to the comment itself is present.');
 
     // Posts a reply to the first comment.
-    $this->drupalGet('comment/reply/' . $this->node1->nid . '/' . $comments[0]->id);
+    $this->drupalGet('comment/reply/' . $this->node1->nid . '/' . $comments[0]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Tests the reply_of relationship of a second level comment.
@@ -181,7 +181,7 @@ class CommentAttributesTest extends CommentTestBase {
     $comment_container = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]');
     $this->assertTrue(!empty($comment_container), 'Comment RDF type for comment found.');
     $comment_title = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//h3[@property="dc:title"]');
-    $this->assertEqual((string) $comment_title[0]->a, $comment->subject, 'RDFa markup for the comment title found.');
+    $this->assertEqual((string) $comment_title[0]->a, $comment->subject->value, 'RDFa markup for the comment title found.');
     $comment_date = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//*[contains(@property, "dc:date") and contains(@property, "dc:created")]');
     $this->assertTrue(!empty($comment_date), 'RDFa markup for the date of the comment found.');
     // The author tag can be either a or span
@@ -189,6 +189,6 @@ class CommentAttributesTest extends CommentTestBase {
     $name = empty($account["name"]) ? $this->web_user->name : $account["name"] . " (not verified)";
     $this->assertEqual((string) $comment_author[0], $name, 'RDFa markup for the comment author found.');
     $comment_body = $this->xpath('//div[contains(@class, "comment") and contains(@typeof, "sioct:Comment")]//div[@class="content"]//div[contains(@class, "comment-body")]//div[@property="content:encoded"]');
-    $this->assertEqual((string) $comment_body[0]->p, $comment->comment, 'RDFa markup for the comment body found.');
+    $this->assertEqual((string) $comment_body[0]->p, $comment->comment_body->value, 'RDFa markup for the comment body found.');
   }
 }

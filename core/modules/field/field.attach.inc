@@ -1341,6 +1341,9 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
       // Add this entity to the items to be prepared.
       $prepare[$id] = $entity;
 
+      // Enable BC if necessary.
+      $entity = $entity->getBCEntity();
+
       // Determine the actual language code to display for each field, given the
       // language codes available in the field data.
       $options['langcode'][$id] = field_language($entity, NULL, $langcode);
@@ -1407,11 +1410,13 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  * @param array $options
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
-
+ *
  * @return array
  *   A renderable array for the field values.
  */
 function field_attach_view(EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
+  // Enable BC if necessary.
+  $entity = $entity->getBCEntity();
   // Determine the actual language code to display for each field, given the
   // language codes available in the field data.
   $options['langcode'] = field_language($entity, NULL, $langcode);
@@ -1423,6 +1428,8 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   };
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);
+  // Remove the BC layer now.
+  $entity = $entity->getOriginalEntity();
 
   // Let other modules alter the renderable array.
   $view_mode = $display->originalViewMode;
@@ -1459,6 +1466,8 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
  *   values.
  */
 function field_attach_preprocess(EntityInterface $entity, $element, &$variables) {
+  // Enable BC if necessary.
+  $entity = $entity->getBCEntity();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field_name = $instance['field_name'];
     if (isset($element[$field_name]['#language'])) {

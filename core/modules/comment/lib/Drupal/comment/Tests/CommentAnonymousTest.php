@@ -53,7 +53,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->setCommentAnonymous('1');
 
     // Attempt to edit anonymous comment.
-    $this->drupalGet('comment/' . $anonymous_comment1->id . '/edit');
+    $this->drupalGet('comment/' . $anonymous_comment1->id() . '/edit');
     $edited_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($edited_comment, FALSE), 'Modified reply found.');
     $this->drupalLogout();
@@ -98,7 +98,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Make sure the user data appears correctly when editing the comment.
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('comment/' . $anonymous_comment3->id . '/edit');
+    $this->drupalGet('comment/' . $anonymous_comment3->id() . '/edit');
     $this->assertRaw($author_name, "The anonymous user's name is correct when editing the comment.");
     $this->assertRaw($author_mail, "The anonymous user's e-mail address is correct when editing the comment.");
 
@@ -106,19 +106,19 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->performCommentOperation($anonymous_comment3, 'unpublish');
 
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', 'Comment was unpublished.');
+    $this->assertRaw('comments[' . $anonymous_comment3->id() . ']', 'Comment was unpublished.');
 
     // Publish comment.
     $this->performCommentOperation($anonymous_comment3, 'publish', TRUE);
 
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', 'Comment was published.');
+    $this->assertRaw('comments[' . $anonymous_comment3->id() . ']', 'Comment was published.');
 
     // Delete comment.
     $this->performCommentOperation($anonymous_comment3, 'delete');
 
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $anonymous_comment3->id . ']', 'Comment was deleted.');
+    $this->assertNoRaw('comments[' . $anonymous_comment3->id() . ']', 'Comment was deleted.');
     $this->drupalLogout();
 
     // Reset.
@@ -161,7 +161,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertFieldByName('subject', '', 'Subject field found.');
     $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
 
-    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $anonymous_comment3->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $anonymous_comment3->id());
     $this->assertText('You are not authorized to view comments', 'Error attempting to post reply.');
     $this->assertNoText($author_name, 'Comment not displayed.');
   }

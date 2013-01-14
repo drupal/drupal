@@ -28,21 +28,25 @@ class CommentRenderController extends EntityRenderController {
       return $return;
     }
 
-    // Attach user account.
-    user_attach_accounts($entities);
+    // Pre-load associated users into cache to leverage multiple loading.
+    $uids = array();
+    foreach ($entities as $entity) {
+      $uids[] = $entity->uid->value;
+    }
+    user_load_multiple(array_unique($uids));
 
     parent::buildContent($entities, $displays, $view_mode, $langcode);
 
     // Load all nodes of all comments at once.
     $nids = array();
     foreach ($entities as $entity) {
-      $nids[$entity->nid] = $entity->nid;
+      $nids[$entity->nid->value] = $entity->nid->value;
     }
     $nodes = node_load_multiple($nids);
 
     foreach ($entities as $entity) {
-      if (isset($nodes[$entity->nid])) {
-        $node = $nodes[$entity->nid];
+      if (isset($nodes[$entity->nid->value])) {
+        $node = $nodes[$entity->nid->value];
       }
       else {
         throw new \InvalidArgumentException(t('Invalid node for comment.'));
@@ -87,7 +91,7 @@ class CommentRenderController extends EntityRenderController {
       }
 
       // Add anchor for each comment.
-      $prefix .= "<a id=\"comment-$comment->cid\"></a>\n";
+      $prefix .= "<a id=\"comment-{$comment->id()}\"></a>\n";
       $build['#prefix'] = $prefix;
 
       // Close all open divs.

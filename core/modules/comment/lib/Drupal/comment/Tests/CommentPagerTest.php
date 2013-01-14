@@ -66,7 +66,7 @@ class CommentPagerTest extends CommentTestBase {
     // Post a reply to the oldest comment and test again.
     $replies = array();
     $oldest_comment = reset($comments);
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $oldest_comment->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $oldest_comment->id());
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     $this->setCommentsPerPage(2);
@@ -114,19 +114,19 @@ class CommentPagerTest extends CommentTestBase {
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the second comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[1]->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[1]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the first comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[0]->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[0]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the last comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[2]->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[2]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the second comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[3]->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[3]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // At this point, the comment tree is:
@@ -180,7 +180,7 @@ class CommentPagerTest extends CommentTestBase {
 
     // First, rekey the expected order by cid.
     foreach ($expected_order as $key) {
-      $expected_cids[] = $comments[$key]->id;
+      $expected_cids[] = $comments[$key]->id();
     }
 
     $comment_anchors = $this->xpath('//a[starts-with(@id,"comment-")]');
@@ -188,8 +188,7 @@ class CommentPagerTest extends CommentTestBase {
     foreach ($comment_anchors as $anchor) {
       $result_order[] = substr($anchor['id'], 8);
     }
-
-    return $this->assertIdentical($expected_cids, $result_order, format_string('Comment order: expected @expected, returned @returned.', array('@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order))));
+    return $this->assertEqual($expected_cids, $result_order, format_string('Comment order: expected @expected, returned @returned.', array('@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order))));
   }
 
   /**
@@ -215,15 +214,15 @@ class CommentPagerTest extends CommentTestBase {
     $comments[] = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the second comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[1]->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[1]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the first comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[0]->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[0]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the last comment.
-    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[2]->id);
+    $this->drupalGet('comment/reply/' . $node->nid . '/' . $comments[2]->id());
     $comments[] = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
 
     // At this point, the comment tree is:

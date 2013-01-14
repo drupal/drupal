@@ -127,9 +127,9 @@ class CommentLanguageTest extends WebTestBase {
           ->execute()
           ->fetchField();
         $comment = comment_load($cid);
-        $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->langcode, '%langcode' => $langcode);
-        $this->assertEqual($comment->langcode, $langcode, format_string('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
-        $this->assertEqual($comment->comment_body[$langcode][0]['value'], $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
+        $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->langcode->value, '%langcode' => $langcode);
+        $this->assertEqual($comment->langcode->value, $langcode, format_string('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEqual($comment->comment_body->value, $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
       }
     }
 

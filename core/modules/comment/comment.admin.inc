@@ -109,41 +109,40 @@ function comment_admin_overview($form, &$form_state, $arg) {
   foreach ($comments as $comment) {
     // Remove the first node title from the node_titles array and attach to
     // the comment.
-    $comment->node_title = array_shift($node_titles);
-    $comment_body = field_get_items($comment, 'comment_body');
-    $options[$comment->cid] = array(
+    $node_title = array_shift($node_titles);
+    $options[$comment->id()] = array(
       'subject' => array(
         'data' => array(
           '#type' => 'link',
-          '#title' => $comment->subject,
-          '#href' => 'comment/' . $comment->cid,
-          '#options' => array('attributes' => array('title' => truncate_utf8($comment_body[0]['value'], 128)), 'fragment' => 'comment-' . $comment->cid),
+          '#title' => $comment->subject->value,
+          '#href' => 'comment/' . $comment->id(),
+          '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body->value, 128)), 'fragment' => 'comment-' . $comment->id()),
         ),
       ),
-      'author' => theme('username', array('account' => $comment)),
+      'author' => theme('username', array('account' => comment_prepare_author($comment))),
       'posted_in' => array(
         'data' => array(
           '#type' => 'link',
-          '#title' => $comment->node_title,
-          '#href' => 'node/' . $comment->nid,
+          '#title' => $node_title,
+          '#href' => 'node/' . $comment->nid->value,
         ),
       ),
-      'changed' => format_date($comment->changed, 'short'),
+      'changed' => format_date($comment->changed->value, 'short'),
     );
     $links = array();
     $links['edit'] = array(
       'title' => t('edit'),
-      'href' => 'comment/' . $comment->cid . '/edit',
+      'href' => 'comment/' . $comment->id() . '/edit',
       'query' => $destination,
     );
     if (module_invoke('translation_entity', 'translate_access', $comment)) {
       $links['translate'] = array(
         'title' => t('translate'),
-        'href' => 'comment/' . $comment->cid . '/translations',
+        'href' => 'comment/' . $comment->id() . '/translations',
         'query' => $destination,
       );
     }
-    $options[$comment->cid]['operations']['data'] = array(
+    $options[$comment->id()]['operations']['data'] = array(
       '#type' => 'operations',
       '#links' => $links,
     );
@@ -194,10 +193,10 @@ function comment_admin_overview_submit($form, &$form_state) {
       $comment = comment_load($value);
 
       if ($operation == 'unpublish') {
-        $comment->status = COMMENT_NOT_PUBLISHED;
+        $comment->status->value = COMMENT_NOT_PUBLISHED;
       }
       elseif ($operation == 'publish') {
-        $comment->status = COMMENT_PUBLISHED;
+        $comment->status->value = COMMENT_PUBLISHED;
       }
       comment_save($comment);
     }
@@ -226,7 +225,7 @@ function comment_multiple_delete_confirm($form, &$form_state) {
   $comment_counter = 0;
   foreach (array_filter($edit['comments']) as $cid => $value) {
     $comment = comment_load($cid);
-    if (is_object($comment) && is_numeric($comment->cid)) {
+    if (is_object($comment) && is_numeric($comment->id())) {
       $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid' => $cid))->fetchField();
       $form['comments'][$cid] = array('#type' => 'hidden', '#value' => $cid, '#prefix' => '<li>', '#suffix' => check_plain($subject) . '</li>');
       $comment_counter++;
@@ -290,11 +289,11 @@ function comment_confirm_delete_page($cid) {
 function comment_confirm_delete($form, &$form_state, Comment $comment) {
   $form_state['comment'] = $comment;
   // Always provide entity id in the same form key as in the entity edit form.
-  $form['cid'] = array('#type' => 'value', '#value' => $comment->cid);
+  $form['cid'] = array('#type' => 'value', '#value' => $comment->id());
   return confirm_form(
     $form,
-    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
-    'node/' . $comment->nid,
+    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject->value)),
+    'node/' . $comment->nid->value,
     t('Any replies to this comment will be lost. This action cannot be undone.'),
     t('Delete'),
     t('Cancel'),
@@ -307,11 +306,11 @@ function comment_confirm_delete($form, &$form_state, Comment $comment) {
 function comment_confirm_delete_submit($form, &$form_state) {
   $comment = $form_state['comment'];
   // Delete the comment and its replies.
-  comment_delete($comment->cid);
+  $comment->delete();
   drupal_set_message(t('The comment and all its replies have been deleted.'));
-  watchdog('content', 'Deleted comment @cid and its replies.', array('@cid' => $comment->cid));
+  watchdog('content', 'Deleted comment @cid and its replies.', array('@cid' => $comment->id()));
   // Clear the cache so an anonymous user sees that his comment was deleted.
   cache_invalidate_tags(array('content' => TRUE));
 
-  $form_state['redirect'] = "node/$comment->nid";
+  $form_state['redirect'] = "node/{$comment->nid->value}";
 }

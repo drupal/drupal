@@ -148,8 +148,8 @@ function comment_node_type_load($name) {
  */
 function comment_uri(Comment $comment) {
   return array(
-    'path' => 'comment/' . $comment->cid,
-    'options' => array('fragment' => 'comment-' . $comment->cid),
+    'path' => 'comment/' . $comment->id(),
+    'options' => array('fragment' => 'comment-' . $comment->id()),
   );
 }
 
@@ -430,10 +430,10 @@ function comment_permission() {
  *   The comment listing set to the page on which the comment appears.
  */
 function comment_permalink($cid) {
-  if (($comment = comment_load($cid)) && ($node = node_load($comment->nid))) {
+  if (($comment = comment_load($cid)) && ($node = $comment->nid->entity)) {
 
     // Find the current display page for this comment.
-    $page = comment_get_display_page($comment->cid, $node->type);
+    $page = comment_get_display_page($comment->id(), $node->type);
 
     // @todo: Cleaner sub request handling.
     $request = drupal_container()->get('request');
@@ -862,7 +862,7 @@ function comment_prepare_thread(&$comments) {
   $divs = 0;
 
   foreach ($comments as $key => $comment) {
-    if ($first_new && $comment->new != MARK_READ) {
+    if ($first_new && $comment->new->value != MARK_READ) {
       // Assign the anchor only for the first new comment. This avoids duplicate
       // id attributes on a page.
       $first_new = FALSE;
@@ -871,7 +871,7 @@ function comment_prepare_thread(&$comments) {
 
     // The $divs element instructs #prefix whether to add an indent div or
     // close existing divs (a negative value).
-    $comment->depth = count(explode('.', $comment->thread)) - 1;
+    $comment->depth = count(explode('.', $comment->thread->value)) - 1;
     if ($comment->depth > $divs) {
       $comment->divs = 1;
       $divs++;
@@ -924,25 +924,25 @@ function comment_links(Comment $comment, Node $node) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment-delete'] = array(
         'title' => t('delete'),
-        'href' => "comment/$comment->cid/delete",
+        'href' => "comment/{$comment->id()}/delete",
         'html' => TRUE,
       );
       $links['comment-edit'] = array(
         'title' => t('edit'),
-        'href' => "comment/$comment->cid/edit",
+        'href' => "comment/{$comment->id()}/edit",
         'html' => TRUE,
       );
       $links['comment-reply'] = array(
         'title' => t('reply'),
-        'href' => "comment/reply/$comment->nid/$comment->cid",
+        'href' => "comment/reply/{$comment->nid->value}/{$comment->id()}",
         'html' => TRUE,
       );
-      if ($comment->status == COMMENT_NOT_PUBLISHED) {
+      if ($comment->status->value == COMMENT_NOT_PUBLISHED) {
         $links['comment-approve'] = array(
           'title' => t('approve'),
-          'href' => "comment/$comment->cid/approve",
+          'href' => "comment/{$comment->id()}/approve",
           'html' => TRUE,
-          'query' => array('token' => drupal_get_token("comment/$comment->cid/approve")),
+          'query' => array('token' => drupal_get_token("comment/{$comment->id()}/approve")),
         );
       }
     }
@@ -950,13 +950,13 @@ function comment_links(Comment $comment, Node $node) {
       if (comment_access('edit', $comment)) {
         $links['comment-edit'] = array(
           'title' => t('edit'),
-          'href' => "comment/$comment->cid/edit",
+          'href' => "comment/{$comment->id()}/edit",
           'html' => TRUE,
         );
       }
       $links['comment-reply'] = array(
         'title' => t('reply'),
-        'href' => "comment/reply/$comment->nid/$comment->cid",
+        'href' => "comment/reply/{$comment->nid->value}/{$comment->id()}",
         'html' => TRUE,
       );
     }
@@ -1303,7 +1303,7 @@ function comment_user_cancel($edit, $account, $method) {
     case 'user_cancel_block_unpublish':
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
       foreach ($comments as $comment) {
-        $comment->status = 0;
+        $comment->status->value = 0;
         comment_save($comment);
       }
       break;
@@ -1311,7 +1311,7 @@ function comment_user_cancel($edit, $account, $method) {
     case 'user_cancel_reassign':
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
       foreach ($comments as $comment) {
-        $comment->uid = 0;
+        $comment->uid->value = 0;
         comment_save($comment);
       }
       break;
@@ -1346,7 +1346,7 @@ function comment_access($op, Comment $comment) {
   global $user;
 
   if ($op == 'edit') {
-    return ($user->uid && $user->uid == $comment->uid && $comment->status == COMMENT_PUBLISHED && user_access('edit own comments')) || user_access('administer comments');
+    return ($user->uid && $user->uid == $comment->uid->value && $comment->status->value == COMMENT_PUBLISHED && user_access('edit own comments')) || user_access('administer comments');
   }
 }
 
@@ -1526,7 +1526,7 @@ function comment_get_display_page($cid, $node_type) {
  * @see comment_menu()
  */
 function comment_edit_page(Comment $comment) {
-  drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject)), PASS_THROUGH);
+  drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject->value)), PASS_THROUGH);
   return entity_get_form($comment);
 }
 
@@ -1540,28 +1540,24 @@ function comment_preview(Comment $comment) {
   $preview_build = array();
 
   if (!form_get_errors()) {
-    $comment_body = field_get_items($comment, 'comment_body');
-    $comment->format = $comment_body[0]['format'];
     // Attach the user and time information.
-    if (!empty($comment->name)) {
-      $account = user_load_by_name($comment->name);
+    if (!empty($comment->name->value)) {
+      $account = user_load_by_name($comment->name->value);
     }
     elseif ($user->uid && empty($comment->is_anonymous)) {
       $account = $user;
     }
 
     if (!empty($account->uid)) {
-      $comment->uid = $account->uid;
-      $comment->name = check_plain($account->name);
-      $comment->signature = $account->signature;
-      $comment->signature_format = $account->signature_format;
+      $comment->uid->value = $account->uid;
+      $comment->name->value = check_plain($account->name);
     }
-    elseif (empty($comment->name)) {
-      $comment->name = config('user.settings')->get('anonymous');
+    elseif (empty($comment->name->value)) {
+      $comment->name->value = config('user.settings')->get('anonymous');
     }
 
-    $comment->created = !empty($comment->created) ? $comment->created : REQUEST_TIME;
-    $comment->changed = REQUEST_TIME;
+    $comment->created->value = !empty($comment->created->value) ? $comment->created->value : REQUEST_TIME;
+    $comment->changed->value = REQUEST_TIME;
     $comment->in_preview = TRUE;
     $comment_build = comment_view($comment);
     $comment_build['#weight'] = -100;
@@ -1569,15 +1565,15 @@ function comment_preview(Comment $comment) {
     $preview_build['comment_preview'] = $comment_build;
   }
 
-  if ($comment->pid) {
+  if ($comment->pid->value) {
     $build = array();
-    $comment = comment_load($comment->pid);
-    if ($comment && $comment->status == COMMENT_PUBLISHED) {
+    $comment = $comment->pid->entity;
+    if ($comment && $comment->status->value == COMMENT_PUBLISHED) {
       $build = comment_view($comment);
     }
   }
   else {
-    $build = node_view(node_load($comment->nid));
+    $build = node_view($comment->nid->entity);
   }
 
   $preview_build['comment_output_below'] = $build;
@@ -1596,6 +1592,24 @@ function comment_preprocess_block(&$variables) {
 }
 
 /**
+ * Prepares a user account object for rendering comment authors.
+ *
+ * This helper handles anonymous authors in addition to registered comment
+ * authors.
+ *
+ * @return \Drupal\user\Plugin\Core\Entity\User
+ *   A user account, for use with theme_username() or the user_picture template.
+ */
+function comment_prepare_author(Comment $comment) {
+  // The account has been pre-loaded by CommentRenderController::buildContent().
+  $account = $comment->uid->entity;
+  if (!$account) {
+    $account = entity_create('user', array('uid' => 0, 'name' => $comment->name->value, 'homepage' => $comment->homepage->value));
+  }
+  return $account;
+}
+
+/**
  * Preprocesses variables for comment.tpl.php.
  *
  * @see comment.tpl.php
@@ -1605,52 +1619,58 @@ function template_preprocess_comment(&$variables) {
   $node = $variables['elements']['#node'];
   $variables['comment'] = $comment;
   $variables['node'] = $node;
-  $variables['author'] = theme('username', array('account' => $comment));
 
-  $variables['created'] = format_date($comment->created);
-
+  $account = comment_prepare_author($comment);
+  $variables['author'] = theme('username', array('account' => $account));
+  $variables['new'] = $comment->new->value ? t('new') : '';
+  $variables['created'] = format_date($comment->created->value);
   // Avoid calling format_date() twice on the same timestamp.
-  if ($comment->changed == $comment->created) {
+  if ($comment->changed->value == $comment->created->value) {
     $variables['changed'] = $variables['created'];
   }
   else {
-    $variables['changed'] = format_date($comment->changed);
+    $variables['changed'] = format_date($comment->changed->value);
   }
 
-  $variables['new'] = !empty($comment->new) ? t('new') : '';
   if (theme_get_setting('toggle_comment_user_picture')) {
     // To change user picture settings (e.g., image style), edit the 'compact'
     // view mode on the User entity.
-    $variables['user_picture'] = user_view($comment->account, 'compact');
+    $variables['user_picture'] = user_view($account, 'compact');
   }
   else {
     $variables['user_picture'] = array();
   }
-  $variables['signature'] = $comment->signature;
+  if (config('user.settings')->get('signatures') && !empty($account->signature)) {
+    $variables['signature'] = check_markup($account->signature, $account->signature_format, '', TRUE) ;
+  }
+  else {
+    $variables['signature'] = '';
+  }
 
   $uri = $comment->uri();
   $uri['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
 
-  $variables['title'] = l($comment->subject, $uri['path'], $uri['options']);
+  $variables['title'] = l($comment->subject->value, $uri['path'], $uri['options']);
   $variables['permalink'] = l(t('Permalink'), $uri['path'], $uri['options']);
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 
-  if ($comment->pid > 0) {
+  if ($comment->pid->value) {
     // Fetch and store the parent comment information for use in templates.
-    $comment_parent = comment_load($comment->pid);
+    $comment_parent = $comment->pid->entity;
+    $account_parent = comment_prepare_author($comment);
     $variables['parent_comment'] = $comment_parent;
-    $variables['parent_author'] = theme('username', array('account' => $comment_parent));
-    $variables['parent_created'] = format_date($comment_parent->created);
+    $variables['parent_author'] = theme('username', array('account' => $account_parent));
+    $variables['parent_created'] = format_date($comment_parent->created->value);
     // Avoid calling format_date() twice on the same timestamp.
-    if ($comment_parent->changed == $comment_parent->created) {
+    if ($comment_parent->changed->value == $comment_parent->created->value) {
       $variables['parent_changed'] = $variables['parent_created'];
     }
     else {
-      $variables['parent_changed'] = format_date($comment_parent->changed);
+      $variables['parent_changed'] = format_date($comment_parent->changed->value);
     }
     $uri_parent = $comment_parent->uri();
     $uri_parent['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
-    $variables['parent_title'] = l($comment_parent->subject, $uri_parent['path'], $uri_parent['options']);
+    $variables['parent_title'] = l($comment_parent->subject->value, $uri_parent['path'], $uri_parent['options']);
     $variables['parent_permalink'] = l(t('Parent permalink'), $uri_parent['path'], $uri_parent['options']);
     $variables['parent'] = t('In reply to !parent_title by !parent_username',
         array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
@@ -1678,7 +1698,7 @@ function template_preprocess_comment(&$variables) {
     $variables['status'] = 'preview';
   }
   else {
-    $variables['status'] = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'unpublished' : 'published';
+    $variables['status'] = ($comment->status->value == COMMENT_NOT_PUBLISHED) ? 'unpublished' : 'published';
   }
 
   // Gather comment classes.
@@ -1689,14 +1709,14 @@ function template_preprocess_comment(&$variables) {
   if ($variables['new']) {
     $variables['attributes']['class'][] = 'new';
   }
-  if (!$comment->uid) {
+  if (!$comment->uid->value) {
     $variables['attributes']['class'][] = 'by-anonymous';
   }
   else {
-    if ($comment->uid == $variables['node']->uid) {
+    if ($comment->uid->value == $variables['node']->uid) {
       $variables['attributes']['class'][] = 'by-node-author';
     }
-    if ($comment->uid == $variables['user']->uid) {
+    if ($comment->uid->value == $variables['user']->uid) {
       $variables['attributes']['class'][] = 'by-viewer';
     }
   }
@@ -1858,9 +1878,9 @@ function comment_action_info() {
  * @ingroup actions
  */
 function comment_publish_action(Comment $comment = NULL, $context = array()) {
-  if (isset($comment->subject)) {
-    $subject = $comment->subject;
-    $comment->status = COMMENT_PUBLISHED;
+  if (isset($comment->subject->value)) {
+    $subject = $comment->subject->value;
+    $comment->status->value = COMMENT_PUBLISHED;
   }
   else {
     $cid = $context['cid'];
@@ -1885,9 +1905,9 @@ function comment_publish_action(Comment $comment = NULL, $context = array()) {
  * @ingroup actions
  */
 function comment_unpublish_action(Comment $comment = NULL, $context = array()) {
-  if (isset($comment->subject)) {
-    $subject = $comment->subject;
-    $comment->status = COMMENT_NOT_PUBLISHED;
+  if (isset($comment->subject->value)) {
+    $subject = $comment->subject->value;
+    $comment->status->value = COMMENT_NOT_PUBLISHED;
   }
   else {
     $cid = $context['cid'];
@@ -1918,8 +1938,8 @@ function comment_unpublish_by_keyword_action(Comment $comment, $context) {
   foreach ($context['keywords'] as $keyword) {
     $text = drupal_render($comment);
     if (strpos($text, $keyword) !== FALSE) {
-      $comment->status = COMMENT_NOT_PUBLISHED;
-      watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
+      $comment->status->value = COMMENT_NOT_PUBLISHED;
+      watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject->value));
       break;
     }
   }
@@ -1962,7 +1982,7 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
 function comment_save_action(Comment $comment) {
   comment_save($comment);
   cache_invalidate_tags(array('content' => TRUE));
-  watchdog('action', 'Saved comment %title', array('%title' => $comment->subject));
+  watchdog('action', 'Saved comment %title', array('%title' => $comment->subject->value));
 }
 
 /**
@@ -2032,8 +2052,8 @@ function comment_rdf_mapping() {
  */
 function comment_file_download_access($field, EntityInterface $entity, File $file) {
   if ($entity->entityType() == 'comment') {
-    if (user_access('access comments') && $entity->status == COMMENT_PUBLISHED || user_access('administer comments')) {
-      $node = node_load($entity->nid);
+    if (user_access('access comments') && $entity->status->value == COMMENT_PUBLISHED || user_access('administer comments')) {
+      $node = $entity->nid->entity;
       return node_access('view', $node);
     }
     return FALSE;

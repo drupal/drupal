@@ -2385,22 +2385,6 @@ function user_build_filter_query(SelectInterface $query) {
 }
 
 /**
- * Implements hook_comment_view().
- */
-function user_comment_view(Comment $comment, EntityDisplay $display) {
-  if (config('user.settings')->get('signatures') && !empty($comment->signature)) {
-    // @todo This alters and replaces the original object value, so a
-    //   hypothetical process of loading, viewing, and saving will hijack the
-    //   stored data. Consider renaming to $comment->signature_safe or similar
-    //   here and elsewhere in Drupal 8.
-    $comment->signature = check_markup($comment->signature, $comment->signature_format, '', TRUE);
-  }
-  else {
-    $comment->signature = '';
-  }
-}
-
-/**
  * Returns HTML for a user signature.
  *
  * @param $variables

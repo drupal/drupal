@@ -56,18 +56,15 @@ function comment_reply(Node $node, $pid = NULL) {
       if (user_access('access comments')) {
         // Load the parent comment.
         $comment = comment_load($pid);
-        if ($comment->status == COMMENT_PUBLISHED) {
+        if ($comment->status->value == COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
-          if ($comment->nid != $node->nid) {
+          if ($comment->nid->value != $node->nid) {
             // Attempting to reply to a comment not belonging to the current nid.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
             drupal_goto("node/$node->nid");
           }
           // Display the parent comment
-          $comment->node_type = 'comment_node_' . $node->type;
-          field_attach_load('comment', array($comment->cid => $comment));
-          $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
           $build['comment_parent'] = comment_view($comment);
         }
         else {
@@ -120,11 +117,11 @@ function comment_approve($cid) {
   }
 
   if ($comment = comment_load($cid)) {
-    $comment->status = COMMENT_PUBLISHED;
+    $comment->status->value = COMMENT_PUBLISHED;
     comment_save($comment);
 
     drupal_set_message(t('Comment approved.'));
-    drupal_goto('node/' . $comment->nid);
+    drupal_goto('node/' . $comment->nid->value);
   }
   throw new NotFoundHttpException();
 }
