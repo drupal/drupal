@@ -20,7 +20,7 @@ interface MetadataGeneratorInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being edited.
-   * @param Drupal\field\FieldInstance $instance
+   * @param \Drupal\field\FieldInstance $instance
    *   The field instance of the field being edited.
    * @param string $langcode
    *   The name of the language for which the field is being edited.
@@ -32,9 +32,7 @@ interface MetadataGeneratorInterface {
    *   - access: whether the current user may edit the field or not.
    *   - editor: which editor should be used for the field.
    *   - aria: the ARIA label.
-   *   - format: (optional) the text format ID of the field.
-   *   - formatHasTransformations: (optional) whether the text format uses any
-   *     transformation filters or not.
+   *   - custom: (optional) any additional metadata that the editor provides.
    */
   public function generate(EntityInterface $entity, FieldInstance $instance, $langcode, $view_mode);
 

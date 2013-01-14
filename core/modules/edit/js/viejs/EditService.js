@@ -62,7 +62,7 @@
 
       // Let's only have this overhead for direct types. Form-based editors are
       // handled in backbone.drupalform.js and the PropertyEditor instance.
-      if (!jQuery(element).hasClass('edit-type-direct')) {
+      if (jQuery(element).hasClass('edit-type-form')) {
         return;
       }
 
@@ -142,7 +142,7 @@
     // Returns the "URI" of an entity of an element in format
     // `<entity type>/<id>`.
     getElementSubject: function (element) {
-      return this._getID(element).split(':').slice(0, 2).join('/');
+      return this._getID(element).split('/').slice(0, 2).join('/');
     },
 
     // Returns the field name for an element in format
@@ -152,11 +152,11 @@
       if (!this._getID(element)) {
         throw new Error('Could not find predicate for element');
       }
-      return this._getID(element).split(':').slice(2, 5).join('/');
+      return this._getID(element).split('/').slice(2, 5).join('/');
     },
 
     getElementType: function (element) {
-      return this._getID(element).split(':').slice(0, 1)[0];
+      return this._getID(element).split('/').slice(0, 1)[0];
     },
 
     // Reads all editable entities (currently each Drupal field is considered an
@@ -214,15 +214,7 @@
       if (type.attributes.get(predicate)) {
         return type;
       }
-
-      var label = element.data('edit-field-label');
-      var range = 'Form';
-      if (element.hasClass('edit-type-direct')) {
-        range = 'Direct';
-      }
-      if (element.hasClass('edit-type-direct-with-wysiwyg')) {
-        range = 'Wysiwyg';
-      }
+      var range = predicate.split('/')[0];
       type.attributes.add(predicate, [range], 0, 1, {
         label: element.data('edit-field-label')
       });

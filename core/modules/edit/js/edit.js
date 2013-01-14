@@ -39,14 +39,7 @@ Drupal.behaviors.edit = {
           field.$el
             .attr('data-edit-field-label', meta.label)
             .attr('aria-label', meta.aria)
-            .addClass('edit-field edit-type-' + meta.editor);
-          if (meta.editor === 'direct-with-wysiwyg') {
-            field.$el
-              // This editor also uses the Backbone.syncDirect saving mechanism.
-              .addClass('edit-type-direct')
-              .attr('data-edit-text-format', meta.format)
-              .addClass((meta.formatHasTransformations) ? 'edit-text-with-transformation-filters' : 'edit-text-without-transformation-filters');
-          }
+            .addClass('edit-field edit-type-' + ((meta.editor === 'form') ? 'form' : 'direct'));
         }
 
         return true;

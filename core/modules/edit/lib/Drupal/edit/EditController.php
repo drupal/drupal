@@ -42,7 +42,7 @@ class EditController extends ContainerAware {
 
     $metadata = array();
     foreach ($fields as $field) {
-      list($entity_type, $entity_id, $field_name, $langcode, $view_mode) = explode(':', $field);
+      list($entity_type, $entity_id, $field_name, $langcode, $view_mode) = explode('/', $field);
 
       // Load the entity.
       if (!$entity_type || !entity_get_info($entity_type)) {

@@ -2,7 +2,7 @@
  * @file
  * Provides utility functions for Edit.
  */
-(function($, Drupal, drupalSettings) {
+(function($, _, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -14,6 +14,33 @@ Drupal.edit.util.constants.transitionEnd = "transitionEnd.edit webkitTransitionE
 
 Drupal.edit.util.calcPropertyID = function(entity, predicate) {
   return entity.getSubjectUri() + '/' + predicate;
+};
+
+/**
+ * Retrieves a setting of the editor-specific Edit UI integration.
+ *
+ * If the editor does not implement the optional getEditUISettings() method, or
+ * if it doesn't set a value for a certain setting, then the default value will
+ * be used.
+ *
+ * @param editor
+ *   A Create.js PropertyEditor widget instance.
+ * @param setting
+ *   Name of the Edit UI integration setting.
+ *
+ * @return {*}
+ */
+Drupal.edit.util.getEditUISetting = function(editor, setting) {
+  var settings = {};
+  var defaultSettings = {
+    padding: false,
+    unifiedToolbar: false,
+    fullWidthToolbar: false
+  };
+  if (typeof editor.getEditUISettings === 'function') {
+    settings = editor.getEditUISettings();
+  }
+  return _.extend(defaultSettings, settings)[setting];
 };
 
 Drupal.edit.util.buildUrl = function(id, urlFormat) {
@@ -148,4 +175,4 @@ Drupal.edit.util.form = {
   }
 };
 
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, _, Drupal, drupalSettings);

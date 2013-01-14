@@ -2,18 +2,25 @@
 
 /**
  * @file
- * Definition of Drupal\edit\Tests\EditorSelectionTest.
+ * Contains \Drupal\edit\Tests\EditorSelectionTest.
  */
 
 namespace Drupal\edit\Tests;
 
-use Drupal\edit\Plugin\ProcessedTextEditorManager;
+use Drupal\edit\Plugin\EditorManager;
 use Drupal\edit\EditorSelector;
 
 /**
  * Test in-place field editor selection.
  */
 class EditorSelectionTest extends EditTestBase {
+
+  /**
+   * The manager for editor (Create.js PropertyEditor widget) plugins.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $editorManager;
 
   /**
    * The editor selector object to be tested.
@@ -33,12 +40,8 @@ class EditorSelectionTest extends EditTestBase {
   function setUp() {
     parent::setUp();
 
-    // @todo Rather than using the real ProcessedTextEditorManager, which can
-    //   find all text editor plugins in the codebase, create a mock one for
-    //   testing that is populated with only the ones we want to test.
-    $text_editor_manager = new ProcessedTextEditorManager();
-
-    $this->editorSelector = new EditorSelector($text_editor_manager);
+    $this->editorManager = new EditorManager();
+    $this->editorSelector = new EditorSelector($this->editorManager);
   }
 
   /**
@@ -99,10 +102,14 @@ class EditorSelectionTest extends EditTestBase {
 
   /**
    * Tests a textual field, with text processing, with cardinality 1 and >1,
-   * always with a ProcessedTextEditor plug-in present, but with varying text
-   * format compatibility.
+   * always with an Editor plugin present that supports textual fields with text
+   * processing, but with varying text format compatibility.
    */
   function testTextWysiwyg() {
+    // Enable edit_test module so that the 'wysiwyg' Create.js PropertyEditor
+    // widget becomes available.
+    $this->enableModules(array('edit_test'), FALSE);
+
     $field_name = 'field_textarea';
     $this->createFieldWithInstance(
       $field_name, 'text', 1, 'Long text field',
@@ -116,18 +123,15 @@ class EditorSelectionTest extends EditTestBase {
       array()
     );
 
-    // ProcessedTextEditor plug-in compatible with the full_html text format.
-    state()->set('edit_test.compatible_format', 'full_html');
-
     // Pretend there is an entity with these items for the field.
     $items = array(array('value' => 'Hello, world!', 'format' => 'filtered_html'));
 
-    // Editor selection with cardinality 1, without compatible text format.
-    $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "Without cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
+    // Editor selection w/ cardinality 1, text format w/o associated text editor.
+    $this->assertEqual('form', $this->getSelectedEditor($items, $field_name), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
 
-    // Editor selection with cardinality 1, with compatible text format.
+    // Editor selection w/ cardinality 1, text format w/ associated text editor.
     $items[0]['format'] = 'full_html';
-    $this->assertEqual('direct-with-wysiwyg', $this->getSelectedEditor($items, $field_name), "With cardinality 1, and the full_html text format, the 'direct-with-wysiwyg' editor is selected.");
+    $this->assertEqual('wysiwyg', $this->getSelectedEditor($items, $field_name), "With cardinality 1, and the full_html text format, the 'wysiwyg' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
     $this->field_textarea_field['cardinality'] = 2;

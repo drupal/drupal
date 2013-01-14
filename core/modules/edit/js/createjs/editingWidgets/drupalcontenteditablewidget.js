@@ -9,6 +9,13 @@
   jQuery.widget('Drupal.drupalContentEditableWidget', jQuery.Create.editWidget, {
 
     /**
+     * Implements getEditUISettings() method.
+     */
+    getEditUISettings: function() {
+      return { padding: true, unifiedToolbar: false, fullWidthToolbar: false };
+    },
+
+    /**
      * Implements jQuery UI widget factory's _init() method.
      *
      * @todo: POSTPONED_ON(Create.js, https://github.com/bergie/create/issues/142)
