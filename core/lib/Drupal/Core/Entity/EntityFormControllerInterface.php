@@ -47,12 +47,12 @@ interface EntityFormControllerInterface {
    * Checks whether the current form language matches the entity one.
    *
    * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   *   A keyed array containing the current state of the form.
    *
    * @return boolean
    *   Returns TRUE if the entity form language matches the entity one.
    */
-  public function isDefaultFormLangcode($form_state);
+  public function isDefaultFormLangcode(array $form_state);
 
   /**
    * Returns the operation identifying the form controller.

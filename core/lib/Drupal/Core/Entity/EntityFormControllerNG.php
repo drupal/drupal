@@ -48,6 +48,16 @@ class EntityFormControllerNG extends EntityFormController {
   }
 
   /**
+   * Overrides EntityFormController::submitEntityLanguage().
+   */
+  protected function submitEntityLanguage(array $form, array &$form_state) {
+    // Nothing to do here, as original field values are always stored with
+    // LANGUAGE_DEFAULT language.
+    // @todo Delete this method when merging EntityFormControllerNG with
+    //   EntityFormController.
+  }
+
+  /**
    * Overrides EntityFormController::buildEntity().
    */
   public function buildEntity(array $form, array &$form_state) {

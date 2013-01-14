@@ -47,8 +47,22 @@ class EntityRevisionsTest extends WebTestBase {
    */
   public function testRevisions() {
 
+    // All revisable entity variations have to have the same results.
+    foreach (entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
+      $this->assertRevisions($entity_type);
+    }
+  }
+
+  /**
+   * Executes the revision tests for the given entity type.
+   *
+   * @param string $entity_type
+   *   The entity type to run the tests with.
+   */
+  protected function assertRevisions($entity_type) {
+
     // Create initial entity.
-    $entity = entity_create('entity_test', array(
+    $entity = entity_create($entity_type, array(
       'name' => 'foo',
       'user_id' => $this->web_user->uid,
     ));
@@ -67,7 +81,7 @@ class EntityRevisionsTest extends WebTestBase {
       $legacy_name = $entity->name->value;
       $legacy_text = $entity->field_test_text->value;
 
-      $entity = entity_test_load($entity->id->value);
+      $entity = entity_load($entity_type, $entity->id->value);
       $entity->setNewRevision(TRUE);
       $names[] = $entity->name->value = $this->randomName(32);
       $texts[] = $entity->field_test_text->value = $this->randomName(32);
@@ -75,25 +89,25 @@ class EntityRevisionsTest extends WebTestBase {
       $revision_ids[] = $entity->revision_id->value;
 
       // Check that the fields and properties contain new content.
-      $this->assertTrue($entity->revision_id->value > $legacy_revision_id, 'Revision ID changed.');
-      $this->assertNotEqual($entity->name->value, $legacy_name, 'Name changed.');
-      $this->assertNotEqual($entity->field_test_text->value, $legacy_text, 'Text changed.');
+      $this->assertTrue($entity->revision_id->value > $legacy_revision_id, format_string('%entity_type: Revision ID changed.', array('%entity_type' => $entity_type)));
+      $this->assertNotEqual($entity->name->value, $legacy_name, format_string('%entity_type: Name changed.', array('%entity_type' => $entity_type)));
+      $this->assertNotEqual($entity->field_test_text->value, $legacy_text, format_string('%entity_type: Text changed.', array('%entity_type' => $entity_type)));
     }
 
     for ($i = 0; $i < $revision_count; $i++) {
       // Load specific revision.
-      $entity_revision = entity_revision_load('entity_test', $revision_ids[$i]);
+      $entity_revision = entity_revision_load($entity_type, $revision_ids[$i]);
 
       // Check if properties and fields contain the revision specific content.
-      $this->assertEqual($entity_revision->revision_id->value, $revision_ids[$i], 'Revision ID matches.');
-      $this->assertEqual($entity_revision->name->value, $names[$i], 'Name matches.');
-      $this->assertEqual($entity_revision->field_test_text->value, $texts[$i], 'Text matches.');
+      $this->assertEqual($entity_revision->revision_id->value, $revision_ids[$i], format_string('%entity_type: Revision ID matches.', array('%entity_type' => $entity_type)));
+      $this->assertEqual($entity_revision->name->value, $names[$i], format_string('%entity_type: Name matches.', array('%entity_type' => $entity_type)));
+      $this->assertEqual($entity_revision->field_test_text->value, $texts[$i], format_string('%entity_type: Text matches.', array('%entity_type' => $entity_type)));
     }
 
     // Confirm the correct revision text appears in the edit form.
-    $entity = entity_load('entity_test', $entity->id->value);
-    $this->drupalGet('entity-test/manage/' . $entity->id->value);
-    $this->assertFieldById('edit-name', $entity->name->value, 'Name matches in UI.');
-    $this->assertFieldById('edit-field-test-text-und-0-value', $entity->field_test_text->value, 'Text matches in UI.');
+    $entity = entity_load($entity_type, $entity->id->value);
+    $this->drupalGet($entity_type . '/manage/' . $entity->id->value);
+    $this->assertFieldById('edit-name', $entity->name->value, format_string('%entity_type: Name matches in UI.', array('%entity_type' => $entity_type)));
+    $this->assertFieldById('edit-field-test-text-und-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', array('%entity_type' => $entity_type)));
   }
 }

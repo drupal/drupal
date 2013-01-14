@@ -220,8 +220,10 @@ abstract class EntityTranslationUITest extends WebTestBase {
     $this->drupalPost($path, array(), t('Delete translation'));
     $this->drupalPost(NULL, array(), t('Delete'));
     $entity = entity_load($this->entityType, $entity->id(), TRUE);
-    $translations = $entity->getTranslationLanguages();
-    $this->assertTrue(count($translations) == 2 && empty($translations[$enabled_langcode]), 'Translation successfully deleted.');
+    if ($this->assertTrue(is_object($entity), 'Entity found')) {
+      $translations = $entity->getTranslationLanguages();
+      $this->assertTrue(count($translations) == 2 && empty($translations[$enabled_langcode]), 'Translation successfully deleted.');
+    }
   }
 
   /**

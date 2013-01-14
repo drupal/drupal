@@ -102,7 +102,7 @@ class EntityNG extends Entity {
   }
 
   /**
-   * Magic __wakeup() implemenation.
+   * Magic __wakeup() implementation.
    */
   public function __wakeup() {
     $this->init();

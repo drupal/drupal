@@ -59,7 +59,7 @@ class EntitySerializationTest extends WebTestBase {
         'format' => 'full_html',
       ),
     );
-    $this->entity = entity_create('entity_test', $this->values);
+    $this->entity = entity_create('entity_test_mulrev', $this->values);
     $this->entity->save();
   }
 
@@ -105,7 +105,7 @@ class EntitySerializationTest extends WebTestBase {
     foreach (array_keys($expected) as $fieldName) {
       $this->assertEqual($expected[$fieldName], $normalized[$fieldName], "ComplexDataNormalizer produces expected array for $fieldName.");
     }
-    $this->assertEqual(array_keys($expected), array_keys($normalized), 'No unexpected data is added to the normalized array.');
+    $this->assertEqual(array_diff_key($normalized, $expected), array(), 'No unexpected data is added to the normalized array.');
   }
 
   /**

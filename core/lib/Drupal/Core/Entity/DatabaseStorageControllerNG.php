@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use PDO;
 
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageException;
@@ -37,12 +38,24 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   protected $bundleKey;
 
   /**
+   * The table that stores properties, if the entity has multilingual support.
+   *
+   * @var string
+   */
+  protected $dataTable;
+
+  /**
    * Overrides DatabaseStorageController::__construct().
    */
   public function __construct($entityType) {
     parent::__construct($entityType);
     $this->bundleKey = !empty($this->entityInfo['entity_keys']['bundle']) ? $this->entityInfo['entity_keys']['bundle'] : FALSE;
     $this->entityClass = $this->entityInfo['class'];
+
+    // Check if the entity type has a dedicated table for properties.
+    if (!empty($this->entityInfo['data_table'])) {
+      $this->dataTable = $this->entityInfo['data_table'];
+    }
 
     // Work-a-round to let load() get stdClass storage records without having to
     // override it. We map storage records to entities in
@@ -92,6 +105,34 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $entity->{$this->uuidKey}->value = $uuid->generate();
     }
     return $entity;
+  }
+
+  /**
+   * Builds an entity query.
+   *
+   * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
+   *   EntityQuery instance.
+   * @param array $values
+   *   An associative array of properties of the entity, where the keys are the
+   *   property names and the values are the values those properties must have.
+   */
+  protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
+    if ($this->dataTable) {
+      // @todo We should not be using a condition to specify whether conditions
+      //   apply to the default language. See http://drupal.org/node/1866330.
+      // Default to the original entity language if not explicitly specified
+      // otherwise.
+      if (!array_key_exists('default_langcode', $values)) {
+        $values['default_langcode'] = 1;
+      }
+      // If the 'default_langcode' flag is explicitly not set, we do not care
+      // whether the queried values are in the original entity language or not.
+      elseif ($values['default_langcode'] === NULL) {
+        unset($values['default_langcode']);
+      }
+    }
+
+    parent::buildPropertyQuery($entity_query, $values);
   }
 
   /**
@@ -146,7 +187,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *   An array of entity objects implementing the EntityInterface.
    */
   protected function mapFromStorageRecords(array $records, $load_revision = FALSE) {
-
+    $entities = array();
     foreach ($records as $id => $record) {
       $values = array();
       foreach ($record as $name => $value) {
@@ -155,9 +196,59 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       }
       $bundle = $this->bundleKey ? $record->{$this->bundleKey} : FALSE;
       // Turn the record into an entity class.
-      $records[$id] = new $this->entityClass($values, $this->entityType, $bundle);
+      $entities[$id] = new $this->entityClass($values, $this->entityType, $bundle);
     }
-    return $records;
+    $this->attachPropertyData($entities, $load_revision);
+    return $entities;
+  }
+
+  /**
+   * Attaches property data in all languages for translatable properties.
+   *
+   * @param array &$entities
+   *   Associative array of entities, keyed on the entity ID.
+   * @param boolean $load_revision
+   *   (optional) TRUE if the revision should be loaded, defaults to FALSE.
+   */
+  protected function attachPropertyData(array &$entities, $load_revision = FALSE) {
+    if ($this->dataTable) {
+      $query = db_select($this->dataTable, 'data', array('fetch' => PDO::FETCH_ASSOC))
+        ->fields('data')
+        ->condition($this->idKey, array_keys($entities))
+        ->orderBy('data.' . $this->idKey);
+      if ($load_revision) {
+        // Get revision ID's.
+        $revision_ids = array();
+        foreach ($entities as $id => $entity) {
+          $revision_ids[] = $entity->get($this->revisionKey)->value;
+        }
+        $query->condition($this->revisionKey, $revision_ids);
+      }
+      $data = $query->execute();
+
+      // Fetch the field definitions to check which field is translatable.
+      $field_definition = $this->getFieldDefinitions(array());
+      $data_fields = array_flip($this->entityInfo['schema_fields_sql']['data_table']);
+
+      foreach ($data as $values) {
+        $id = $values[$this->idKey];
+        // Field values in default language are stored with LANGUAGE_DEFAULT as
+        // key.
+        $langcode = empty($values['default_langcode']) ? $values['langcode'] : LANGUAGE_DEFAULT;
+        $translation = $entities[$id]->getTranslation($langcode);
+
+        foreach ($field_definition as $name => $definition) {
+          // Set translatable properties only.
+          if (isset($data_fields[$name]) && !empty($definition['translatable'])) {
+            $translation->{$name}->value = $values[$name];
+          }
+          // Avoid initializing configurable fields before loading them.
+          elseif (!empty($definition['configurable'])) {
+            unset($entities[$id]->fields[$name]);
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -191,6 +282,9 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         if ($this->revisionKey) {
           $record->{$this->revisionKey} = $this->saveRevision($entity);
         }
+        if ($this->dataTable) {
+          $this->savePropertyData($entity);
+        }
         $this->resetCache(array($entity->id()));
         $this->postSave($entity, TRUE);
         $this->invokeHook('update', $entity);
@@ -201,10 +295,14 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
           $entity->{$this->idKey}->value = $record->{$this->idKey};
           $record->{$this->revisionKey} = $this->saveRevision($entity);
         }
+        $entity->{$this->idKey}->value = $record->{$this->idKey};
+        if ($this->dataTable) {
+          $this->savePropertyData($entity);
+        }
+
         // Reset general caches, but keep caches specific to certain entities.
         $this->resetCache(array());
 
-        $entity->{$this->idKey}->value = $record->{$this->idKey};
         $entity->enforceIsNew(FALSE);
         $this->postSave($entity, FALSE);
         $this->invokeHook('insert', $entity);
@@ -263,6 +361,31 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   }
 
   /**
+   * Stores the entity property language-aware data.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   */
+  protected function savePropertyData(EntityInterface $entity) {
+    // Delete and insert to handle removed values.
+    db_delete($this->dataTable)
+      ->condition($this->idKey, $entity->id())
+      ->execute();
+
+    $query = db_insert($this->dataTable);
+
+    foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+      $record = $this->mapToDataStorageRecord($entity, $langcode);
+      $values = (array) $record;
+      $query
+        ->fields(array_keys($values))
+        ->values($values);
+    }
+
+    $query->execute();
+  }
+
+  /**
    * Overrides DatabaseStorageController::invokeHook().
    *
    * Invokes field API attachers with a BC entity.
@@ -286,6 +409,12 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
   /**
    * Maps from an entity object to the storage record of the base table.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return \stdClass
+   *   The record to store.
    */
   protected function mapToStorageRecord(EntityInterface $entity) {
     $record = new \stdClass();
@@ -297,6 +426,12 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
   /**
    * Maps from an entity object to the storage record of the revision table.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return \stdClass
+   *   The record to store.
    */
   protected function mapToRevisionStorageRecord(EntityInterface $entity) {
     $record = new \stdClass();
@@ -304,5 +439,82 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $record->$name = $entity->$name->value;
     }
     return $record;
+  }
+
+  /**
+   * Maps from an entity object to the storage record of the data table.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param $langcode
+   *   The language code of the translation to get.
+   *
+   * @return \stdClass
+   *   The record to store.
+   */
+  protected function mapToDataStorageRecord(EntityInterface $entity, $langcode) {
+    $default_langcode = $entity->language()->langcode;
+    // Don't use strict mode, this way there's no need to do checks here, as
+    // non-translatable properties are replicated for each language.
+    $translation = $entity->getTranslation($langcode, FALSE);
+
+    $record = new \stdClass();
+    foreach ($this->entityInfo['schema_fields_sql']['data_table'] as $name) {
+      $record->$name = $translation->$name->value;
+    }
+    $record->langcode = $langcode;
+    $record->default_langcode = intval($default_langcode == $langcode);
+
+    return $record;
+  }
+
+  /**
+   * Overwrites \Drupal\Core\Entity\DatabaseStorageController::delete().
+   */
+  public function delete(array $entities) {
+    if (!$entities) {
+      // If no IDs or invalid IDs were passed, do nothing.
+      return;
+    }
+
+    $transaction = db_transaction();
+    try {
+      $this->preDelete($entities);
+      foreach ($entities as $id => $entity) {
+        $this->invokeHook('predelete', $entity);
+      }
+      $ids = array_keys($entities);
+
+      db_delete($this->entityInfo['base_table'])
+        ->condition($this->idKey, $ids)
+        ->execute();
+
+      if ($this->revisionKey) {
+        db_delete($this->revisionTable)
+          ->condition($this->idKey, $ids)
+          ->execute();
+      }
+
+      if ($this->dataTable) {
+        db_delete($this->dataTable)
+          ->condition($this->idKey, $ids)
+          ->execute();
+      }
+
+      // Reset the cache as soon as the changes have been applied.
+      $this->resetCache($ids);
+
+      $this->postDelete($entities);
+      foreach ($entities as $id => $entity) {
+        $this->invokeHook('delete', $entity);
+      }
+      // Ignore slave server temporarily.
+      db_ignore_slave();
+    }
+    catch (Exception $e) {
+      $transaction->rollback();
+      watchdog_exception($this->entityType, $e);
+      throw new EntityStorageException($e->getMessage, $e->getCode, $e);
+    }
   }
 }

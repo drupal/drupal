@@ -32,43 +32,58 @@ class EntityApiTest extends WebTestBase {
   /**
    * Tests basic CRUD functionality of the Entity API.
    */
-  function testCRUD() {
+  public function testCRUD() {
     $user1 = $this->drupalCreateUser();
 
+    // All entity variations have to have the same results.
+    foreach (entity_test_entity_types() as $entity_type) {
+      $this->assertCRUD($entity_type, $user1);
+    }
+  }
+
+  /**
+   * Executes a test set for a defined entity type and user.
+   *
+   * @param string $entity_type
+   *   The entity type to run the tests with.
+   * @param \Drupal\user\Plugin\Core\Entity\User $user1
+   *   The user to run the tests with.
+   */
+  protected function assertCRUD($entity_type, \Drupal\user\Plugin\Core\Entity\User $user1) {
     // Create some test entities.
-    $entity = entity_create('entity_test', array('name' => 'test', 'user_id' => $user1->uid));
+    $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => $user1->uid));
     $entity->save();
-    $entity = entity_create('entity_test', array('name' => 'test2', 'user_id' => $user1->uid));
+    $entity = entity_create($entity_type, array('name' => 'test2', 'user_id' => $user1->uid));
     $entity->save();
-    $entity = entity_create('entity_test', array('name' => 'test', 'user_id' => NULL));
+    $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => NULL));
     $entity->save();
 
-    $entities = array_values(entity_load_multiple_by_properties('entity_test', array('name' => 'test')));
-    $this->assertEqual($entities[0]->name->value, 'test', 'Created and loaded entity.');
-    $this->assertEqual($entities[1]->name->value, 'test', 'Created and loaded entity.');
+    $entities = array_values(entity_load_multiple_by_properties($entity_type, array('name' => 'test')));
+    $this->assertEqual($entities[0]->name->value, 'test', format_string('%entity_type: Created and loaded entity', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entities[1]->name->value, 'test', format_string('%entity_type: Created and loaded entity', array('%entity_type' => $entity_type)));
 
     // Test loading a single entity.
-    $loaded_entity = entity_test_load($entity->id());
-    $this->assertEqual($loaded_entity->id(), $entity->id(), 'Loaded a single entity by id.');
+    $loaded_entity = entity_load($entity_type, $entity->id());
+    $this->assertEqual($loaded_entity->id(), $entity->id(), format_string('%entity_type: Loaded a single entity by id.', array('%entity_type' => $entity_type)));
 
     // Test deleting an entity.
-    $entities = array_values(entity_load_multiple_by_properties('entity_test', array('name' => 'test2')));
+    $entities = array_values(entity_load_multiple_by_properties($entity_type, array('name' => 'test2')));
     $entities[0]->delete();
-    $entities = array_values(entity_load_multiple_by_properties('entity_test', array('name' => 'test2')));
-    $this->assertEqual($entities, array(), 'Entity deleted.');
+    $entities = array_values(entity_load_multiple_by_properties($entity_type, array('name' => 'test2')));
+    $this->assertEqual($entities, array(), format_string('%entity_type: Entity deleted.', array('%entity_type' => $entity_type)));
 
     // Test updating an entity.
-    $entities = array_values(entity_load_multiple_by_properties('entity_test', array('name' => 'test')));
+    $entities = array_values(entity_load_multiple_by_properties($entity_type, array('name' => 'test')));
     $entities[0]->name->value = 'test3';
     $entities[0]->save();
-    $entity = entity_test_load($entities[0]->id());
-    $this->assertEqual($entity->name->value, 'test3', 'Entity updated.');
+    $entity = entity_load($entity_type, $entities[0]->id());
+    $this->assertEqual($entity->name->value, 'test3', format_string('%entity_type: Entity updated.', array('%entity_type' => $entity_type)));
 
     // Try deleting multiple test entities by deleting all.
-    $ids = array_keys(entity_test_load_multiple());
-    entity_test_delete_multiple($ids);
+    $ids = array_keys(entity_load_multiple($entity_type));
+    entity_delete_multiple($entity_type, $ids);
 
-    $all = entity_test_load_multiple();
-    $this->assertTrue(empty($all), 'Deleted all entities.');
+    $all = entity_load_multiple($entity_type);
+    $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', array('%entity_type' => $entity_type)));
   }
 }
