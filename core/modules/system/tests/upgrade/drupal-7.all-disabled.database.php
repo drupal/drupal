@@ -18,3 +18,11 @@ db_update('system')
   ->condition('name', array('filter', 'field', 'field_sql_storage', 'entity',
     'system', 'text', 'user'), 'NOT IN')
   ->execute();
+
+db_update('system')
+  ->fields(array(
+    'schema_version' => 0,
+  ))
+  ->condition('type', 'module')
+  ->condition('name', 'update_test_1')
+  ->execute();
