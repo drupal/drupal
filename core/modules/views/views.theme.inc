@@ -890,8 +890,8 @@ function template_preprocess_views_view_rss(&$vars) {
   // Figure out which display which has a path we're using for this feed. If there isn't
   // one, use the global $base_url
   $link_display_id = $view->display_handler->getLinkDisplay();
-  if ($link_display_id && !empty($view->displayHandlers[$link_display_id])) {
-    $path = $view->displayHandlers[$link_display_id]->getPath();
+  if ($link_display_id && $display = $view->displayHandlers->get($link_display_id)) {
+    $path = $view->displayHandlers->get($link_display_id)->getPath();
   }
 
   if ($path) {

@@ -38,7 +38,7 @@ class ArgumentLanguageTest extends LanguageTestBase {
     $view = views_get_view('test_view');
     foreach (array('en' => 'John', 'xx-lolspeak' => 'George') as $langcode => $name) {
       $view->setDisplay();
-      $view->displayHandlers['default']->overrideOption('arguments', array(
+      $view->displayHandlers->get('default')->overrideOption('arguments', array(
         'langcode' => array(
           'id' => 'langcode',
           'table' => 'views_test_data',

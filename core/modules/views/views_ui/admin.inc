@@ -771,7 +771,7 @@ function views_ui_edit_display_form($form, &$form_state) {
  * Validate handler for views_ui_edit_display_form
  */
 function views_ui_edit_display_form_validate($form, &$form_state) {
-  $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']]->validateOptionsForm($form['options'], $form_state);
+  $form_state['view']->get('executable')->displayHandlers->get($form_state['display_id'])->validateOptionsForm($form['options'], $form_state);
 
   if (form_get_errors()) {
     $form_state['rerender'] = TRUE;
@@ -782,7 +782,7 @@ function views_ui_edit_display_form_validate($form, &$form_state) {
  * Submit handler for views_ui_edit_display_form
  */
 function views_ui_edit_display_form_submit($form, &$form_state) {
-  $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']]->submitOptionsForm($form['options'], $form_state);
+  $form_state['view']->get('executable')->displayHandlers->get($form_state['display_id'])->submitOptionsForm($form['options'], $form_state);
 
   views_ui_cache_set($form_state['view']);
 }
@@ -793,7 +793,7 @@ function views_ui_edit_display_form_submit($form, &$form_state) {
  * @TODO: Not currently used. Remove unless we implement an override toggle.
  */
 function views_ui_edit_display_form_override($form, &$form_state) {
-  $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']]->optionsOverride($form['options'], $form_state);
+  $form_state['view']->get('executable')->displayHandlers->get($form_state['display_id'])->optionsOverride($form['options'], $form_state);
 
   views_ui_cache_set($form_state['view']);
   $form_state['rerender'] = TRUE;
@@ -813,7 +813,7 @@ function views_ui_rearrange_form($form, &$form_state) {
   if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $display = &$executable->displayHandlers[$display_id];
+  $display = &$executable->displayHandlers->get($display_id);
   $form['#title'] = t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
   $form['#section'] = $display_id . 'rearrange-item';
 
@@ -893,7 +893,7 @@ function views_ui_rearrange_form($form, &$form_state) {
  */
 function views_ui_rearrange_form_submit($form, &$form_state) {
   $types = ViewExecutable::viewsHandlerTypes();
-  $display = &$form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
+  $display = &$form_state['view']->get('executable')->displayHandlers->get($form_state['display_id']);
 
   $old_fields = $display->getOption($types[$form_state['type']]['plural']);
   $new_fields = $order = array();
@@ -933,7 +933,7 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
   if (!$executable->setDisplay($display_id)) {
     views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $display = $executable->displayHandlers[$display_id];
+  $display = $executable->displayHandlers->get($display_id);
   $form['#title'] = check_plain($display->display['display_title']) . ': ';
   $form['#title'] .= t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
   $form['#section'] = $display_id . 'rearrange-item';
@@ -1103,7 +1103,7 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
  */
 function views_ui_rearrange_filter_form_submit($form, &$form_state) {
   $types = ViewExecutable::viewsHandlerTypes();
-  $display = &$form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
+  $display = &$form_state['view']->get('executable')->displayHandlers->get($form_state['display_id']);
   $remember_groups = array();
 
   if (!empty($form_state['view']->form_cache)) {
@@ -1225,7 +1225,7 @@ function views_ui_add_item_form($form, &$form_state) {
   if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $display = &$executable->displayHandlers[$display_id];
+  $display = &$executable->displayHandlers->get($display_id);
 
   $types = ViewExecutable::viewsHandlerTypes();
   $ltitle = $types[$type]['ltitle'];
@@ -1709,7 +1709,7 @@ function views_ui_config_item_form_remove($form, &$form_state) {
   list($was_defaulted, $is_defaulted) = $form_state['view']->getOverrideValues($form, $form_state);
   // If the display selection was changed toggle the override value.
   if ($was_defaulted != $is_defaulted) {
-    $display =& $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
+    $display =& $form_state['view']->get('executable')->displayHandlers->get($form_state['display_id']);
     $display->optionsOverride($form, $form_state);
   }
   $form_state['view']->get('executable')->removeItem($form_state['display_id'], $form_state['type'], $form_state['id']);

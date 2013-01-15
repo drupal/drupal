@@ -708,7 +708,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getLinkDisplay() {
     $display_id = $this->getOption('link_display');
     // If unknown, pick the first one.
-    if (empty($display_id) || empty($this->view->displayHandlers[$display_id])) {
+    if (empty($display_id) || !$this->view->displayHandlers->has($display_id)) {
       foreach ($this->view->displayHandlers as $display_id => $display) {
         if (!empty($display) && $display->hasPath()) {
           return $display_id;
@@ -733,8 +733,8 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     $display_id = $this->getLinkDisplay();
-    if ($display_id && !empty($this->view->displayHandlers[$display_id]) && is_object($this->view->displayHandlers[$display_id])) {
-      return $this->view->displayHandlers[$display_id]->getPath();
+    if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
+      return $this->view->displayHandlers->get($display_id)->getPath();
     }
   }
 
@@ -1655,7 +1655,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'link_display':
         $form['#title'] .= t('Which display to use for path');
         foreach ($this->view->storage->get('display') as $display_id => $display) {
-          if ($this->view->displayHandlers[$display_id]->hasPath()) {
+          if ($this->view->displayHandlers->get($display_id)->hasPath()) {
             $options[$display_id] = $display['display_title'];
           }
         }

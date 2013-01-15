@@ -43,7 +43,7 @@ class ArgumentNullTest extends ViewUnitTestBase {
 
     // Add a null argument.
     $string = $this->randomString();
-    $view->displayHandlers['default']->overrideOption('arguments', array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', array(
       'null' => array(
         'id' => 'null',
         'table' => 'views',
@@ -69,7 +69,7 @@ class ArgumentNullTest extends ViewUnitTestBase {
 
     // Add a argument, which has null as handler.
     $string = $this->randomString();
-    $view->displayHandlers['default']->overrideOption('arguments', array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', array(
       'id' => array(
         'id' => 'id',
         'table' => 'views_test_data',

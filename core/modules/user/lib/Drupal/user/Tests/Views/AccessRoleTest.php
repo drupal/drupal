@@ -38,7 +38,7 @@ class AccessRoleTest extends AccessTestBase {
     $view = views_get_view('test_access_role');
     $view->setDisplay();
 
-    $view->displayHandlers['default']->options['access']['options']['role'] = array(
+    $view->displayHandlers->get('default')->options['access']['options']['role'] = array(
       $this->normalRole => $this->normalRole,
     );
 

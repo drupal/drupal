@@ -114,8 +114,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
   public function _testFormatterSimpleFieldRender() {
     $view = views_get_view('test_view_fieldapi');
     $this->prepareView($view);
-    $view->displayHandlers['default']->options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
-    $view->displayHandlers['default']->options['fields'][$this->fields[0]['field_name']]['settings'] = array(
+    $view->displayHandlers->get('default')->options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
+    $view->displayHandlers->get('default')->options['fields'][$this->fields[0]['field_name']]['settings'] = array(
       'trim_length' => 3,
     );
     $this->executeView($view);
@@ -134,8 +134,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     // Test delta limit.
     $this->prepareView($view);
-    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 3;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -156,9 +156,9 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     // Test delta limit + offset
     $this->prepareView($view);
-    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_offset'] = 1;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_offset'] = 1;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -175,10 +175,10 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     // Test delta limit + reverse.
     $this->prepareView($view);
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_offset'] = 0;
-    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_reversed'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_offset'] = 0;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_reversed'] = TRUE;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -196,10 +196,10 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     // Test delta first last.
     $this->prepareView($view);
-    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 0;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_first_last'] = TRUE;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_reversed'] = FALSE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 0;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_first_last'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_reversed'] = FALSE;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -214,10 +214,10 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     // Test delta limit + custom seperator.
     $this->prepareView($view);
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_first_last'] = FALSE;
-    $view->displayHandlers['default']->options['fields'][$field_name]['delta_limit'] = 3;
-    $view->displayHandlers['default']->options['fields'][$field_name]['group_rows'] = TRUE;
-    $view->displayHandlers['default']->options['fields'][$field_name]['separator'] = ':';
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_first_last'] = FALSE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['separator'] = ':';
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {

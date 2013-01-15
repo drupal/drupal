@@ -213,7 +213,7 @@ class Feed extends PathPluginBase {
         $displays = array();
         foreach ($this->view->storage->get('display') as $display_id => $display) {
           // @todo The display plugin should have display_title and id as well.
-          if (!empty($this->view->displayHandlers[$display_id]) && $this->view->displayHandlers[$display_id]->acceptAttachments()) {
+          if ($this->view->displayHandlers->has($display_id) && $this->view->displayHandlers->get($display_id)->acceptAttachments()) {
             $displays[$display_id] = $display['display_title'];
           }
         }

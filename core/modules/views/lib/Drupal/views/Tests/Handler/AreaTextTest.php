@@ -44,7 +44,7 @@ class AreaTextTest extends ViewUnitTestBase {
 
     // add a text header
     $string = $this->randomName();
-    $view->displayHandlers['default']->overrideOption('header', array(
+    $view->displayHandlers->get('default')->overrideOption('header', array(
       'area' => array(
         'id' => 'area',
         'table' => 'views',

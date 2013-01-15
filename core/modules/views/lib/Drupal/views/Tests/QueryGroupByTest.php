@@ -95,7 +95,7 @@ class QueryGroupByTest extends ViewTestBase {
 
     $view = views_get_view('test_group_by_count');
     $view->setDisplay();
-    $view->displayHandlers['default']->options['fields']['nid']['group_type'] = $group_by;
+    $view->displayHandlers->get('default')->options['fields']['nid']['group_type'] = $group_by;
     $this->executeView($view);
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');

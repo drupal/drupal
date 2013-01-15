@@ -33,7 +33,7 @@ class ArgumentValidatorTest extends ViewUnitTestBase {
     $string = $this->randomName();
     $view = views_get_view('test_view_argument_validate_php');
     $view->setDisplay();
-    $view->displayHandlers['default']->options['arguments']['null']['validate_options']['code'] = 'return $argument == \''. $string .'\';';
+    $view->displayHandlers->get('default')->options['arguments']['null']['validate_options']['code'] = 'return $argument == \''. $string .'\';';
 
     $view->initHandlers();
     $this->assertTrue($view->argument['null']->validateArgument($string));

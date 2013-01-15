@@ -38,8 +38,8 @@ class FilterCombineTest extends ViewUnitTestBase {
     $view = views_get_view('test_view');
     $view->setDisplay();
 
-    $fields = $view->displayHandlers['default']->getOption('fields');
-    $view->displayHandlers['default']->overrideOption('fields', $fields + array(
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
       'job' => array(
         'id' => 'job',
         'table' => 'views_test_data',
@@ -49,7 +49,7 @@ class FilterCombineTest extends ViewUnitTestBase {
     ));
 
     // Change the filtering.
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'age' => array(
         'id' => 'combine',
         'table' => 'views',

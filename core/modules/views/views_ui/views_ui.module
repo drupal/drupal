@@ -375,7 +375,7 @@ function views_ui_cache_set(ViewUI $view) {
   unset($executable->display_handler);
   unset($executable->default_display);
   $executable->query = NULL;
-  $executable->displayHandlers = array();
+  unset($executable->displayHandlers);
   drupal_container()->get('user.tempstore')->get('views')->set($view->get('name'), $view);
 }
 

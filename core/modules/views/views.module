@@ -618,7 +618,7 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
-    $plugin_id = $view->displayHandlers[$display_id]->getPluginId();
+    $plugin_id = $view->displayHandlers->get($display_id)->getPluginId();
     $plugin = drupal_container()->get('plugin.manager.views.display')->getDefinition($plugin_id);
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still

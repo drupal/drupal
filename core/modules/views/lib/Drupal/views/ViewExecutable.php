@@ -592,7 +592,7 @@ class ViewExecutable {
     $this->displayHandlers = new DisplayBag($this, drupal_container()->get('plugin.manager.views.display'));
 
     $this->current_display = 'default';
-    $this->display_handler = $this->displayHandlers['default'];
+    $this->display_handler = $this->displayHandlers->get('default');
 
     return TRUE;
   }
@@ -614,7 +614,7 @@ class ViewExecutable {
     $this->initDisplay();
 
     foreach ($displays as $display_id) {
-      if ($this->displayHandlers[$display_id]->access()) {
+      if ($this->displayHandlers->get($display_id)->access()) {
         return $display_id;
       }
     }
@@ -648,9 +648,9 @@ class ViewExecutable {
     }
 
     // Ensure the requested display exists.
-    if (empty($this->displayHandlers[$display_id])) {
+    if (!$this->displayHandlers->has($display_id)) {
       $display_id = 'default';
-      if (empty($this->displayHandlers[$display_id])) {
+      if (!$this->displayHandlers->has($display_id)) {
         debug(format_string('set_display() called with invalid display ID @display.', array('@display' => $display_id)));
         return FALSE;
       }
@@ -660,12 +660,12 @@ class ViewExecutable {
     $this->current_display = $display_id;
 
     // Ensure requested display has a working handler.
-    if (empty($this->displayHandlers[$display_id])) {
+    if (!$this->displayHandlers->has($display_id)) {
       return FALSE;
     }
 
     // Set a shortcut
-    $this->display_handler = $this->displayHandlers[$display_id];
+    $this->display_handler = $this->displayHandlers->get($display_id);
 
     return TRUE;
   }
@@ -1450,7 +1450,7 @@ class ViewExecutable {
     foreach ($this->display_handler->getAttachedDisplays() as $id) {
       // Create a clone for the attachments to manipulate. 'static' refers to the current class name.
       $cloned_view = new static($this->storage);
-      $this->displayHandlers[$id]->attachTo($cloned_view, $this->current_display);
+      $this->displayHandlers->get($id)->attachTo($cloned_view, $this->current_display);
     }
     $this->is_attachment = FALSE;
   }
@@ -1499,8 +1499,8 @@ class ViewExecutable {
     // calls this one.
     $displays = (array)$displays;
     foreach ($displays as $display_id) {
-      if (!empty($this->displayHandlers[$display_id])) {
-        if ($this->displayHandlers[$display_id]->access($account)) {
+      if ($this->displayHandlers->has($display_id)) {
+        if ($this->displayHandlers->get($display_id)->access($account)) {
           return TRUE;
         }
       }
@@ -1824,7 +1824,7 @@ class ViewExecutable {
           continue;
         }
 
-        $result = $this->displayHandlers[$id]->validate();
+        $result = $this->displayHandlers->get($id)->validate();
         if (!empty($result) && is_array($result)) {
           $errors = array_merge($errors, $result);
           // Mark this display as having validation errors.
@@ -1978,7 +1978,7 @@ class ViewExecutable {
     $types = $this::viewsHandlerTypes();
     $this->setDisplay($display_id);
 
-    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
 
     if (empty($id)) {
       $id = $this->generateItemId($field, $fields);
@@ -1996,7 +1996,7 @@ class ViewExecutable {
       'field' => $field,
     ) + $options;
 
-    $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
+    $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);
 
     return $id;
   }
@@ -2048,7 +2048,7 @@ class ViewExecutable {
 
     // Get info about the types so we can get the right data.
     $types = static::viewsHandlerTypes();
-    return $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    return $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
   }
 
   /**
@@ -2072,7 +2072,7 @@ class ViewExecutable {
     $this->setDisplay($display_id);
 
     // Get the existing configuration
-    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
 
     return isset($fields[$id]) ? $fields[$id] : NULL;
   }
@@ -2107,13 +2107,13 @@ class ViewExecutable {
     $this->setDisplay($display_id);
 
     // Get the existing configuration.
-    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
     if (isset($item)) {
       $fields[$id] = $item;
     }
 
     // Store.
-    $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
+    $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);
   }
 
   /**
@@ -2133,12 +2133,12 @@ class ViewExecutable {
     $this->setDisplay($display_id);
 
     // Get the existing configuration.
-    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
     // Unset the item.
     unset($fields[$id]);
 
     // Store.
-    $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
+    $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);
   }
 
   /**
@@ -2166,5 +2166,4 @@ class ViewExecutable {
     $item[$option] = $value;
     $this->setItem($display_id, $type, $id, $item);
   }
-
 }

@@ -161,7 +161,7 @@ class AreaTest extends HandlerTestBase {
     $view->initDisplay('page_1');
 
     // Add the title area handler to the empty area.
-    $view->displayHandlers['page_1']->overrideOption('empty', array(
+    $view->displayHandlers->get('page_1')->overrideOption('empty', array(
       'title' => array(
         'id' => 'title',
         'table' => 'views',

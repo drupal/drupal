@@ -53,7 +53,7 @@ class BasicTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Add a filter.
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'age' => array(
         'operator' => '<',
         'value' => array(

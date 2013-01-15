@@ -53,7 +53,7 @@ class SortRandomTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Add a random ordering.
-    $view->displayHandlers['default']->overrideOption('sorts', array(
+    $view->displayHandlers->get('default')->overrideOption('sorts', array(
       'random' => array(
         'id' => 'random',
         'field' => 'random',

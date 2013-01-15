@@ -50,7 +50,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -78,7 +78,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
     // Filter: Name, Operator: =, Value: Ringo
     $filters['name']['group_info']['default_group'] = 1;
     $view->setDisplay('page_1');
-    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
+    $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
 
     $this->executeView($view);
     $resultset = array(
@@ -94,7 +94,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -131,7 +131,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
     // Filter: Name, Operator: !=, Value: Ringo
     $filters['name']['group_info']['default_group'] = 2;
     $view->setDisplay('page_1');
-    $view->displayHandlers['page_1']->overrideOption('filters', $filters);
+    $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
 
     $this->executeView($view);
     $resultset = array(

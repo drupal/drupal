@@ -170,7 +170,7 @@ class ViewUI implements ViewStorageInterface {
     // these changes apply to.
     if ($revert) {
       // If it's revert just change the override and return.
-      $display = &$this->executable->displayHandlers[$form_state['display_id']];
+      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
       $display->optionsOverride($form, $form_state);
 
       // Don't execute the normal submit handling but still store the changed view into cache.
@@ -184,7 +184,7 @@ class ViewUI implements ViewStorageInterface {
     elseif ($was_defaulted && !$is_defaulted) {
       // We were using the default display's values, but we're now overriding
       // the default display and saving values specific to this display.
-      $display = &$this->executable->displayHandlers[$form_state['display_id']];
+      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
       // optionsOverride toggles the override of this section.
       $display->optionsOverride($form, $form_state);
       $display->submitOptionsForm($form, $form_state);
@@ -194,7 +194,7 @@ class ViewUI implements ViewStorageInterface {
       // to go back to the default display.
       // Overwrite the default display with the current form values, and make
       // the current display use the new default values.
-      $display = &$this->executable->displayHandlers[$form_state['display_id']];
+      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
       // optionsOverride toggles the override of this section.
       $display->optionsOverride($form, $form_state);
       $display->submitOptionsForm($form, $form_state);
@@ -527,7 +527,7 @@ class ViewUI implements ViewStorageInterface {
     if ($was_defaulted && !$is_defaulted) {
       // We were using the default display's values, but we're now overriding
       // the default display and saving values specific to this display.
-      $display = &$this->executable->displayHandlers[$form_state['display_id']];
+      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
       // setOverride toggles the override of this section.
       $display->setOverride($section);
     }
@@ -536,7 +536,7 @@ class ViewUI implements ViewStorageInterface {
       // to go back to the default display.
       // Overwrite the default display with the current form values, and make
       // the current display use the new default values.
-      $display = &$this->executable->displayHandlers[$form_state['display_id']];
+      $display = &$this->executable->displayHandlers->get($form_state['display_id']);
       // optionsOverride toggles the override of this section.
       $display->setOverride($section);
     }
@@ -558,7 +558,7 @@ class ViewUI implements ViewStorageInterface {
           $key = $types[$type]['type'];
         }
         $handler = views_get_handler($table, $field, $key);
-        if ($this->executable->displayHandlers['default']->useGroupBy() && $handler->usesGroupBy()) {
+        if ($this->executable->displayHandlers->get('default')->useGroupBy() && $handler->usesGroupBy()) {
           $this->addFormToStack('config-item-group', $form_state['display_id'], array($type, $id));
         }
 

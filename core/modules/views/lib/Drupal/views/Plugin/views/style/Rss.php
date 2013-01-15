@@ -33,7 +33,7 @@ class Rss extends StylePluginBase {
   protected $usesRowPlugin = TRUE;
 
   function attach_to($display_id, $path, $title) {
-    $display = $this->view->displayHandlers[$display_id];
+    $display = $this->view->displayHandlers->get($display_id);
     $url_options = array();
     $input = $this->view->getExposedInput();
     if ($input) {

@@ -38,7 +38,7 @@ class FieldCounterTest extends ViewUnitTestBase {
   function testSimple() {
     $view = views_get_view('test_view');
     $view->setDisplay();
-    $view->displayHandlers['default']->overrideOption('fields', array(
+    $view->displayHandlers->get('default')->overrideOption('fields', array(
       'counter' => array(
         'id' => 'counter',
         'table' => 'views',
@@ -64,7 +64,7 @@ class FieldCounterTest extends ViewUnitTestBase {
 
     $view->setDisplay();
     $rand_start = rand(5, 10);
-    $view->displayHandlers['default']->overrideOption('fields', array(
+    $view->displayHandlers->get('default')->overrideOption('fields', array(
       'counter' => array(
         'id' => 'counter',
         'table' => 'views',

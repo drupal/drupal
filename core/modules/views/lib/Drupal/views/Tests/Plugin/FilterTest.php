@@ -66,7 +66,7 @@ class FilterTest extends PluginTestBase {
     $view->initDisplay();
 
     // Change the filtering.
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'test_filter' => array(
         'id' => 'test_filter',
         'table' => 'views_test_data',
@@ -102,7 +102,7 @@ class FilterTest extends PluginTestBase {
     $view->initDisplay();
 
     // Change the filtering.
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'test_filter' => array(
         'id' => 'test_filter',
         'table' => 'views_test_data',
@@ -128,7 +128,7 @@ class FilterTest extends PluginTestBase {
 
     // Set the test_enable option to FALSE. The 'where' clause should not be
     // added to the query.
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'test_filter' => array(
         'id' => 'test_filter',
         'table' => 'views_test_data',

@@ -324,7 +324,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       $executable = $this->get('executable');
       $executable->initDisplay();
       $executable->displayHandlers->addInstanceID($id);
-      return $executable->displayHandlers[$id];
+      return $executable->displayHandlers->get($id);
     }
 
     return $id;

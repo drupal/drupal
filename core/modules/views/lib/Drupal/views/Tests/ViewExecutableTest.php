@@ -90,7 +90,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $view->initDisplay();
 
     $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
-    $this->assertTrue($view->displayHandlers['default'] instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
+    $this->assertTrue($view->displayHandlers->get('default') instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
 
     $view->destroy();
     $view->initHandlers();
@@ -107,7 +107,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
 
     // initHandlers() should create display handlers automatically as well.
     $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
-    $this->assertTrue($view->displayHandlers['default'] instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
+    $this->assertTrue($view->displayHandlers->get('default') instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
 
     $view_hash = spl_object_hash($view);
     $display_hash = spl_object_hash($view->display_handler);
@@ -154,35 +154,35 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $view->initDisplay();
     $this->assertTrue($view->displayHandlers instanceof DisplayBag, 'The displayHandlers property has the right class.');
     // Tests the classes of the instances.
-    $this->assertTrue($view->displayHandlers['default'] instanceof DefaultDisplay);
-    $this->assertTrue($view->displayHandlers['page_1'] instanceof Page);
-    $this->assertTrue($view->displayHandlers['page_2'] instanceof Page);
+    $this->assertTrue($view->displayHandlers->get('default') instanceof DefaultDisplay);
+    $this->assertTrue($view->displayHandlers->get('page_1') instanceof Page);
+    $this->assertTrue($view->displayHandlers->get('page_2') instanceof Page);
 
     // After initializing the default display is the current used display.
     $this->assertEqual($view->current_display, 'default');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers['default']));
+    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
 
     // All handlers should have a reference to the default display.
-    $this->assertEqual(spl_object_hash($view->displayHandlers['page_1']->default_display), spl_object_hash($view->displayHandlers['default']));
-    $this->assertEqual(spl_object_hash($view->displayHandlers['page_2']->default_display), spl_object_hash($view->displayHandlers['default']));
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('page_1')->default_display), spl_object_hash($view->displayHandlers->get('default')));
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('page_2')->default_display), spl_object_hash($view->displayHandlers->get('default')));
 
     // Tests Drupal\views\ViewExecutable::setDisplay().
     $view->setDisplay();
     $this->assertEqual($view->current_display, 'default', 'If setDisplay is called with no parameter the default display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers['default']));
+    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
 
     // Set two different valid displays.
     $view->setDisplay('page_1');
     $this->assertEqual($view->current_display, 'page_1', 'If setDisplay is called with a valid display id the appropriate display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers['page_1']));
+    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('page_1')));
 
     $view->setDisplay('page_2');
     $this->assertEqual($view->current_display, 'page_2', 'If setDisplay is called with a valid display id the appropriate display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers['page_2']));
+    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('page_2')));
 
     $view->setDisplay('invalid');
     $this->assertEqual($view->current_display, 'default', 'If setDisplay is called with an invalid display id the default display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers['default']));
+    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
   }
 
   /**
@@ -201,7 +201,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertNull($view->usePager());
 
     // Add a pager, initialize, and test.
-    $view->displayHandlers['default']->overrideOption('pager', array(
+    $view->displayHandlers->get('default')->overrideOption('pager', array(
       'type' => 'full',
       'options' => array('items_per_page' => 10),
     ));
@@ -233,7 +233,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
 
     // Test the getPath() method.
     $path = $this->randomName();
-    $view->displayHandlers['page_1']->overrideOption('path', $path);
+    $view->displayHandlers->get('page_1')->overrideOption('path', $path);
     $view->setDisplay('page_1');
     $this->assertEqual($view->getPath(), $path);
     // Test the override_path property override.
@@ -277,9 +277,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * @param \Drupal\views\ViewExecutable $view
    */
   protected function assertViewDestroy($view) {
-    $this->assertFalse(isset($view->displayHandlers['default']), 'Make sure all displays are destroyed.');
-    $this->assertFalse(isset($view->displayHandlers['attachment_1']), 'Make sure all displays are destroyed.');
-
+    $this->assertFalse(isset($view->displayHandlers), 'Make sure all displays are destroyed');
     $this->assertFalse(isset($view->filter), 'Make sure all filter handlers are destroyed');
     $this->assertFalse(isset($view->field), 'Make sure all field handlers are destroyed');
     $this->assertFalse(isset($view->argument), 'Make sure all argument handlers are destroyed');
@@ -341,7 +339,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertEqual(count($view->displayHandlers), $count, 'Error messages from all handlers merged.');
 
     // Test that a deleted display is not included.
-    $view->displayHandlers['default']->deleted = TRUE;
+    $view->displayHandlers->get('default')->deleted = TRUE;
     $validate_deleted = $view->validate();
 
     $this->assertNotEqual(count($validate), count($validate_deleted));
