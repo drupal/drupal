@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Queue\System.
+ * Contains \Drupal\Core\Queue\DatabaseQueue.
  */
 
 namespace Drupal\Core\Queue;
 
+use Drupal\Core\Database\Connection;
+
 /**
  * Default queue implementation.
  */
-class System implements ReliableQueueInterface {
+class DatabaseQueue implements ReliableQueueInterface {
+
   /**
    * The name of the queue this instance is working with.
    *
@@ -19,22 +22,30 @@ class System implements ReliableQueueInterface {
   protected $name;
 
   /**
-   * Constructs a System object.
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection $connection
+   */
+  protected $connection;
+
+  /**
+   * Constructs this factory object.
    *
    * @param string $name
-   *   An arbitrary string. The name of the queue to work with.
+   *   The name of the queue.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The Connection object containing the key-value tables.
    */
-  public function __construct($name) {
+  function __construct($name, Connection $connection) {
     $this->name = $name;
+    $this->connection = $connection;
   }
 
   /**
    * Implements Drupal\Core\Queue\QueueInterface::createItem().
    */
   public function createItem($data) {
-    // During a Drupal 6.x to 8.x update, drupal_get_schema() does not contain
-    // the queue table yet, so we cannot rely on drupal_write_record().
-    $query = db_insert('queue')
+    $query = $this->connection->insert('queue')
       ->fields(array(
         'name' => $this->name,
         'data' => serialize($data),
@@ -49,7 +60,7 @@ class System implements ReliableQueueInterface {
    * Implements Drupal\Core\Queue\QueueInterface::numberOfItems().
    */
   public function numberOfItems() {
-    return db_query('SELECT COUNT(item_id) FROM {queue} WHERE name = :name', array(':name' => $this->name))->fetchField();
+    return $this->connection->query('SELECT COUNT(item_id) FROM {queue} WHERE name = :name', array(':name' => $this->name))->fetchField();
   }
 
   /**
@@ -61,7 +72,7 @@ class System implements ReliableQueueInterface {
     // until an item is successfully claimed or we are reasonably sure there
     // are no unclaimed items left.
     while (TRUE) {
-      $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE expire = 0 AND name = :name ORDER BY created ASC', 0, 1, array(':name' => $this->name))->fetchObject();
+      $item = $this->connection->queryRange('SELECT data, item_id FROM {queue} q WHERE expire = 0 AND name = :name ORDER BY created ASC', 0, 1, array(':name' => $this->name))->fetchObject();
       if ($item) {
         // Try to update the item. Only one thread can succeed in UPDATEing the
         // same row. We cannot rely on REQUEST_TIME because items might be
@@ -69,7 +80,7 @@ class System implements ReliableQueueInterface {
         // continue to use REQUEST_TIME instead of the current time(), we steal
         // time from the lease, and will tend to reset items before the lease
         // should really expire.
-        $update = db_update('queue')
+        $update = $this->connection->update('queue')
           ->fields(array(
             'expire' => time() + $lease_time,
           ))
@@ -92,7 +103,7 @@ class System implements ReliableQueueInterface {
    * Implements Drupal\Core\Queue\QueueInterface::releaseItem().
    */
   public function releaseItem($item) {
-    $update = db_update('queue')
+    $update = $this->connection->update('queue')
       ->fields(array(
         'expire' => 0,
       ))
@@ -104,7 +115,7 @@ class System implements ReliableQueueInterface {
    * Implements Drupal\Core\Queue\QueueInterface::deleteItem().
    */
   public function deleteItem($item) {
-    db_delete('queue')
+    $this->connection->delete('queue')
       ->condition('item_id', $item->item_id)
       ->execute();
   }
@@ -122,7 +133,7 @@ class System implements ReliableQueueInterface {
    * Implements Drupal\Core\Queue\QueueInterface::deleteQueue().
    */
   public function deleteQueue() {
-    db_delete('queue')
+    $this->connection->delete('queue')
       ->condition('name', $this->name)
       ->execute();
   }

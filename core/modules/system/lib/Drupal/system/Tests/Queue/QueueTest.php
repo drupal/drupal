@@ -7,14 +7,23 @@
 
 namespace Drupal\system\Tests\Queue;
 
+use Drupal\Core\Database\Database;
+use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
-use Drupal\Core\Queue\System;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the basic queue functionality.
  */
-class QueueTest extends WebTestBase {
+class QueueTest extends DrupalUnitTestBase {
+
+  /**
+   * The modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
+
   public static function getInfo() {
     return array(
       'name' => 'Queue functionality',
@@ -27,10 +36,11 @@ class QueueTest extends WebTestBase {
    * Tests the System queue.
    */
   public function testSystemQueue() {
+    $this->installSchema('system', 'queue');
     // Create two queues.
-    $queue1 = new System($this->randomName());
+    $queue1 = new DatabaseQueue($this->randomName(), Database::getConnection());
     $queue1->createQueue();
-    $queue2 = new System($this->randomName());
+    $queue2 = new DatabaseQueue($this->randomName(), Database::getConnection());
     $queue2->createQueue();
 
     $this->queueTest($queue1, $queue2);

@@ -18,7 +18,7 @@ namespace Drupal\Core\Queue;
  * Stale items from failed batches are cleaned from the {queue} table on cron
  * using the 'created' date.
  */
-class Batch extends System {
+class Batch extends DatabaseQueue {
 
   /**
    * Overrides Drupal\Core\Queue\System::claimItem().

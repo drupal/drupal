@@ -6719,9 +6719,9 @@ function drupal_get_filetransfer_info() {
  * @param string $name
  *   The name of the queue to work with.
  * @param bool $reliable
- *   TRUE if the ordering of items and guaranteeing every item executes at
- *   least once is important, FALSE if scalability is the main concern. Defaults
- *   to FALSE.
+ *   (optional) TRUE if the ordering of items and guaranteeing every item
+ *   executes at least once is important, FALSE if scalability is the main
+ *   concern. Defaults to FALSE.
  *
  * @return Drupal\Core\Queue\QueueInterface
  *   The queue object for a given name.
@@ -6729,18 +6729,7 @@ function drupal_get_filetransfer_info() {
  * @see Drupal\Core\Queue\QueueInterface
  */
 function queue($name, $reliable = FALSE) {
-  static $queues;
-  if (!isset($queues[$name])) {
-    $class = variable_get('queue_class_' . $name, NULL);
-    if ($class && $reliable && in_array('Drupal\Core\Queue\ReliableQueueInterface', class_implements($class))) {
-      $class = variable_get('queue_default_reliable_class', 'Drupal\Core\Queue\System');
-    }
-    elseif (!$class) {
-      $class = variable_get('queue_default_class', 'Drupal\Core\Queue\System');
-    }
-    $queues[$name] = new $class($name);
-  }
-  return $queues[$name];
+  return drupal_container()->get('queue')->get($name, $reliable);
 }
 
 /**

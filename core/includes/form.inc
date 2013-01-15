@@ -6,8 +6,9 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Utility\Color;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Utility\Color;
 
 /**
  * @defgroup forms Form builder functions
@@ -5204,7 +5205,7 @@ function _batch_queue($batch_set) {
     $class = $batch_set['queue']['class'];
 
     if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name);
+      $queues[$class][$name] = new $class($name, Database::getConnection());
     }
     return $queues[$class][$name];
   }
