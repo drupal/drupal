@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Menu\RouterTest.
+ * Definition of Drupal\system\Tests\Menu\MenuRouterTest.
  */
 
 namespace Drupal\system\Tests\Menu;
@@ -13,7 +13,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests menu router and hook_menu() functionality.
  */
-class RouterTest extends WebTestBase {
+class MenuRouterTest extends WebTestBase {
 
   /**
    * Modules to enable.
