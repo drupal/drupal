@@ -2091,7 +2091,6 @@ function node_feed($nids = FALSE, $channel = array()) {
 
   $item_length = $rss_config->get('items.view_mode');
   $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
-  $teaser = ($item_length == 'teaser');
 
   // Load all nodes to be rendered.
   $nodes = node_load_multiple($nids);
