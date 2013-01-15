@@ -2012,23 +2012,6 @@ function node_form_block_admin_configure_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_modules_uninstalled().
- *
- * Cleans up the {block_node_type} table from modules' blocks.
- */
-function node_modules_uninstalled($modules) {
-  // Remove the block visibility settings for all node types.
-  $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-  foreach ($block_configs as $config_id) {
-    $config = config($config_id);
-    $node_types = $config->get('visibility.node_type.types');
-    if (!empty($node_types)) {
-      $config->clear('visibility.node_type.types');
-    }
-  }
-}
-
-/**
  * Implements hook_block_access().
  *
  * Checks the content type specific visibility settings and removes the block
