@@ -231,8 +231,11 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
  * structure of $term->content is a renderable array as expected by
  * drupal_render().
  *
- * @param $term
+ * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
  *   The term that is being assembled for rendering.
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   term components.
  * @param $view_mode
  *   The $view_mode parameter from taxonomy_term_view().
  * @param $langcode
@@ -240,12 +243,16 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
  *
  * @see hook_entity_view()
  */
-function hook_taxonomy_term_view($term, $view_mode, $langcode) {
-  $term->content['my_additional_field'] = array(
-    '#markup' => $additional_field,
-    '#weight' => 10,
-    '#theme' => 'mymodule_my_additional_field',
-  );
+function hook_taxonomy_term_view(\Drupal\taxonomy\Plugin\Core\Entity\Term $term, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a 'mymodule_addition' extra field has been defined for the
+  // vocabulary in hook_field_extra_fields().
+  if ($display->getComponent('mymodule_addition')) {
+    $term->content['mymodule_addition'] = array(
+      '#markup' => mymodule_addition($term),
+      '#theme' => 'mymodule_my_additional_field',
+    );
+  }
 }
 
 /**
@@ -263,12 +270,15 @@ function hook_taxonomy_term_view($term, $view_mode, $langcode) {
  *
  * @param $build
  *   A renderable array representing the taxonomy term content.
- * @param Drupal\taxonomy\Term $term
+ * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
  *   The taxonomy term being rendered.
+ * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ *   The entity_display object holding the display options configured for the
+ *   term components.
  *
  * @see hook_entity_view_alter()
  */
-function hook_taxonomy_term_view_alter(&$build, Drupal\taxonomy\Term $term) {
+function hook_taxonomy_term_view_alter(&$build, \Drupal\taxonomy\Plugin\Core\Entity\Term $term, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

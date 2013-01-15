@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * @file
  * Default 'implementations' of hook_field_*(): common field housekeeping.
@@ -18,9 +20,7 @@
  *
  * @see _hook_field_validate()
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -38,7 +38,7 @@
  *   - error: An error code (should be a string, prefixed with the module name).
  *   - message: The human readable message to be displayed.
  */
-function field_default_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+function field_default_validate(EntityInterface $entity, $field, $instance, $langcode, $items, &$errors) {
   // Filter out empty values.
   $items = _field_filter_items($field, $items);
 
@@ -60,9 +60,7 @@ function field_default_validate($entity_type, $entity, $field, $instance, $langc
  * the current user doesn't have 'edit' permission for the field. This is the
  * default field 'insert' operation.
  *
- * @param $entity_type
- *   The type of $entity.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for the operation.
  * @param $field
  *   The field structure for the operation.
@@ -73,7 +71,7 @@ function field_default_validate($entity_type, $entity, $field, $instance, $langc
  * @param $items
  *   An array that this function will populate with default values.
  */
-function field_default_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function field_default_insert(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   // _field_invoke() populates $items with an empty array if the $entity has no
   // entry for the field, so we check on the $entity itself.
   // We also check that the current field translation is actually defined before
@@ -82,16 +80,14 @@ function field_default_insert($entity_type, $entity, $field, $instance, $langcod
   // not yet open languages.
   if (empty($entity) || (!isset($entity->{$field['field_name']}[$langcode]) && !property_exists($entity, $field['field_name'])) ||
     (isset($entity->{$field['field_name']}[$langcode]) && count($entity->{$field['field_name']}[$langcode]) == 0)) {
-    $items = field_get_default_value($entity_type, $entity, $field, $instance, $langcode);
+    $items = field_get_default_value($entity, $field, $instance, $langcode);
   }
 }
 
 /**
  * Copies source field values into the entity to be prepared.
  *
- * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to be prepared for translation.
  * @param $field
  *   The field structure for the operation.
@@ -101,12 +97,12 @@ function field_default_insert($entity_type, $entity, $field, $instance, $langcod
  *   The language the entity has to be translated to.
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
- * @param $source_entity
+ * @param \Drupal\Core\Entity\EntityInterface $source_entity
  *   The source entity holding the field values to be translated.
  * @param $source_langcode
  *   The source language from which to translate.
  */
-function field_default_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items, $source_entity, $source_langcode) {
+function field_default_prepare_translation(EntityInterface $entity, $field, $instance, $langcode, &$items, EntityInterface $source_entity, $source_langcode) {
   $field_name = $field['field_name'];
   // If the field is untranslatable keep using LANGUAGE_NOT_SPECIFIED.
   if ($langcode == LANGUAGE_NOT_SPECIFIED) {

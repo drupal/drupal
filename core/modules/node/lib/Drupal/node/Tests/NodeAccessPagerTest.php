@@ -56,9 +56,7 @@ class NodeAccessPagerTest extends WebTestBase {
         'field_name' => 'comment',
         'subject' => $this->randomName(),
         'comment_body' => array(
-          LANGUAGE_NOT_SPECIFIED => array(
-            array('value' => $this->randomName()),
-          ),
+          array('value' => $this->randomName()),
         ),
       ));
       $comment->save();

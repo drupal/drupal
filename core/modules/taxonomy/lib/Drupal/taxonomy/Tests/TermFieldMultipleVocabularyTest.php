@@ -100,7 +100,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $entities = array($id => $entity);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
     field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view('test_entity', $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertText($term1->name, 'Term 1 name is displayed.');
     $this->assertText($term2->name, 'Term 2 name is displayed.');
@@ -113,7 +113,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $entities = array($id => $entity);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
     field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view('test_entity', $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $this->plainTextContent = FALSE;
     $this->content = drupal_render($entity->content);
 

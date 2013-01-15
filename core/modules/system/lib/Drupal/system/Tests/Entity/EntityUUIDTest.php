@@ -34,10 +34,23 @@ class EntityUUIDTest extends WebTestBase {
    * Tests UUID generation in entity CRUD operations.
    */
   function testCRUD() {
+    // All entity variations have to have the same results.
+    foreach (entity_test_entity_types() as $entity_type) {
+      $this->assertCRUD($entity_type);
+    }
+  }
+
+  /**
+   * Executes the UUID CRUD tests for the given entity type.
+   *
+   * @param string $entity_type
+   *   The entity type to run the tests with.
+   */
+  protected function assertCRUD($entity_type) {
     // Verify that no UUID is auto-generated when passing one for creation.
     $uuid_service = new Uuid();
     $uuid = $uuid_service->generate();
-    $custom_entity = entity_create('entity_test', array(
+    $custom_entity = entity_create($entity_type, array(
       'name' => $this->randomName(),
       'uuid' => $uuid,
     ));
@@ -46,7 +59,7 @@ class EntityUUIDTest extends WebTestBase {
     $custom_entity->save();
 
     // Verify that a new UUID is generated upon creating an entity.
-    $entity = entity_create('entity_test', array('name' => $this->randomName()));
+    $entity = entity_create($entity_type, array('name' => $this->randomName()));
     $uuid = $entity->uuid();
     $this->assertTrue($uuid);
 
@@ -58,11 +71,11 @@ class EntityUUIDTest extends WebTestBase {
     $this->assertIdentical($entity->uuid(), $uuid);
 
     // Verify that the UUID is retained upon loading.
-    $entity_loaded = entity_test_load($entity->id(), TRUE);
+    $entity_loaded = entity_load($entity_type, $entity->id(), TRUE);
     $this->assertIdentical($entity_loaded->uuid(), $uuid);
 
     // Verify that entity_load_by_uuid() loads the same entity.
-    $entity_loaded_by_uuid = entity_load_by_uuid('entity_test', $uuid, TRUE);
+    $entity_loaded_by_uuid = entity_load_by_uuid($entity_type, $uuid, TRUE);
     $this->assertIdentical($entity_loaded_by_uuid->uuid(), $uuid);
     $this->assertEqual($entity_loaded_by_uuid->id(), $entity_loaded->id());
 

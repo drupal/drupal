@@ -105,25 +105,6 @@ function drupal_install_profile_distribution_name() {
 }
 
 /**
- * Detects the base URL using the PHP $_SERVER variables.
- *
- * @param $file
- *   The name of the file calling this function so we can strip it out of
- *   the URI when generating the base_url.
- *
- * @return
- *   The auto-detected $base_url that should be configured in settings.php
- */
-function drupal_detect_baseurl($file = 'core/install.php') {
-  $proto = $_SERVER['HTTPS'] ? 'https://' : 'http://';
-  $host = $_SERVER['SERVER_NAME'];
-  $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);
-  $dir = str_replace("/$file", '', $_SERVER['SCRIPT_NAME']);
-
-  return "$proto$host$port$dir";
-}
-
-/**
  * Detects all supported databases that are compiled into PHP.
  *
  * @return
@@ -448,6 +429,10 @@ function drupal_install_system() {
   module_list_reset();
   module_implements_reset();
 
+  // To ensure that the system module can be found by the plugin system, warm
+  // the module list cache.
+  // @todo Remove this in http://drupal.org/node/1798732.
+  module_list();
   config_install_default_config('module', 'system');
 
   module_invoke('system', 'install');

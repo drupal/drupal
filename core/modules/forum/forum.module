@@ -5,7 +5,9 @@
  * Provides discussion forums.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\taxonomy\Plugin\Core\Entity\Term;
 
 /**
@@ -253,7 +255,7 @@ function _forum_node_check_node_type(Node $node) {
 /**
  * Implements hook_node_view().
  */
-function forum_node_view(Node $node, $view_mode) {
+function forum_node_view(Node $node, EntityDisplay $display, $view_mode) {
   $vid = config('forum.settings')->get('vocabulary');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_node_check_node_type($node)) {
@@ -482,8 +484,8 @@ function forum_taxonomy_term_delete(Term $term) {
  * comment_save() calls hook_comment_publish() for all published comments.
  */
 function forum_comment_publish($comment) {
-  if ($comment->entity_type == 'node') {
-    _forum_update_forum_index($comment->entity_id);
+  if ($comment->entity_type->value == 'node') {
+    _forum_update_forum_index($comment->entity_id->value);
   }
 }
 
@@ -496,8 +498,8 @@ function forum_comment_publish($comment) {
 function forum_comment_update($comment) {
   // comment_save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
-  if (!$comment->status && $comment->entity_type == 'node') {
-    _forum_update_forum_index($comment->entity_id);
+  if (!$comment->status->value && $comment->entity_type->value == 'node') {
+    _forum_update_forum_index($comment->entity_id->value);
   }
 }
 
@@ -505,8 +507,8 @@ function forum_comment_update($comment) {
  * Implements hook_comment_unpublish().
  */
 function forum_comment_unpublish($comment) {
-  if ($comment->entity_type == 'node') {
-    _forum_update_forum_index($comment->entity_id);
+  if ($comment->entity_type->value == 'node') {
+    _forum_update_forum_index($comment->entity_id->value);
   }
 }
 
@@ -514,16 +516,16 @@ function forum_comment_unpublish($comment) {
  * Implements hook_comment_delete().
  */
 function forum_comment_delete($comment) {
-  if ($comment->entity_type == 'node') {
-    _forum_update_forum_index($comment->entity_id);
+  if ($comment->entity_type->value == 'node') {
+    _forum_update_forum_index($comment->entity_id->value);
   }
 }
 
 /**
  * Implements hook_field_storage_pre_insert().
  */
-function forum_field_storage_pre_insert($entity_type, $entity, &$skip_fields) {
-  if ($entity_type == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
+function forum_field_storage_pre_insert(EntityInterface $entity, &$skip_fields) {
+  if ($entity->entityType() == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
     foreach ($entity->taxonomy_forums as $language) {
       foreach ($language as $item) {
@@ -545,10 +547,10 @@ function forum_field_storage_pre_insert($entity_type, $entity, &$skip_fields) {
 /**
  * Implements hook_field_storage_pre_update().
  */
-function forum_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
+function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) {
   $first_call = &drupal_static(__FUNCTION__, array());
 
-  if ($entity_type == 'node' && _forum_node_check_node_type($entity)) {
+  if ($entity->entityType() == 'node' && _forum_node_check_node_type($entity)) {
 
     // If the node is published, update the forum index.
     if ($entity->status) {

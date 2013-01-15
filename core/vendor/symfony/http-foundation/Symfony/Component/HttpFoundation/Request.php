@@ -30,10 +30,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class Request
 {
-    const HEADER_CLIENT_IP = 'client_ip';
-    const HEADER_CLIENT_HOST = 'client_host';
+    const HEADER_CLIENT_IP    = 'client_ip';
+    const HEADER_CLIENT_HOST  = 'client_host';
     const HEADER_CLIENT_PROTO = 'client_proto';
-    const HEADER_CLIENT_PORT = 'client_port';
+    const HEADER_CLIENT_PORT  = 'client_port';
 
     protected static $trustProxy = false;
 
@@ -466,6 +466,8 @@ class Request
      */
     public static function trustProxyData()
     {
+        trigger_error('trustProxyData() is deprecated since version 2.0 and will be removed in 2.3. Use setTrustedProxies() instead.', E_USER_DEPRECATED);
+
         self::$trustProxy = true;
     }
 
@@ -498,6 +500,8 @@ class Request
      *
      * @param string $key   The header key
      * @param string $value The header name
+     *
+     * @throws \InvalidArgumentException
      */
     public static function setTrustedHeaderName($key, $value)
     {
@@ -989,6 +993,8 @@ class Request
      *
      * @return string
      *
+     * @throws \UnexpectedValueException when the host name is invalid
+     *
      * @api
      */
     public function getHost()
@@ -996,20 +1002,24 @@ class Request
         if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_HOST] && $host = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_HOST])) {
             $elements = explode(',', $host);
 
-            $host = trim($elements[count($elements) - 1]);
-        } else {
-            if (!$host = $this->headers->get('HOST')) {
-                if (!$host = $this->server->get('SERVER_NAME')) {
-                    $host = $this->server->get('SERVER_ADDR', '');
-                }
+            $host = $elements[count($elements) - 1];
+        } elseif (!$host = $this->headers->get('HOST')) {
+            if (!$host = $this->server->get('SERVER_NAME')) {
+                $host = $this->server->get('SERVER_ADDR', '');
             }
         }
 
-        // Remove port number from host
-        $host = preg_replace('/:\d+$/', '', $host);
-
+        // trim and remove port number from host
         // host is lowercase as per RFC 952/2181
-        return trim(strtolower($host));
+        $host = strtolower(preg_replace('/:\d+$/', '', trim($host)));
+
+        // as the host can come from the user (HTTP_HOST and depending on the configuration, SERVER_NAME too can come from the user)
+        // check that it does not contain forbidden characters (see RFC 952 and RFC 2181)
+        if ($host && !preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host)) {
+            throw new \UnexpectedValueException('Invalid Host');
+        }
+
+        return $host;
     }
 
     /**
@@ -1250,6 +1260,8 @@ class Request
      * @param Boolean $asResource If true, a resource will be returned
      *
      * @return string|resource The request body content or a resource to read the body stream.
+     *
+     * @throws \LogicException
      */
     public function getContent($asResource = false)
     {
@@ -1414,6 +1426,8 @@ class Request
      */
     public function splitHttpAcceptHeader($header)
     {
+        trigger_error('splitHttpAcceptHeader() is deprecated since version 2.2 and will be removed in 2.3.', E_USER_DEPRECATED);
+
         $headers = array();
         foreach (AcceptHeader::fromString($header)->all() as $item) {
             $key = $item->getValue();

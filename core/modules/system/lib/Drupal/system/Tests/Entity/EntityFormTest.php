@@ -39,6 +39,19 @@ class EntityFormTest extends WebTestBase {
    * Tests basic form CRUD functionality.
    */
   function testFormCRUD() {
+    // All entity variations have to have the same results.
+    foreach (entity_test_entity_types() as $entity_type) {
+      $this->assertFormCRUD($entity_type);
+    }
+  }
+
+  /**
+   * Executes the form CRUD tests for the given entity type.
+   *
+   * @param string $entity_type
+   *   The entity type to run the tests with.
+   */
+  protected function assertFormCRUD($entity_type) {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $name1 = $this->randomName(8);
     $name2 = $this->randomName(10);
@@ -49,28 +62,27 @@ class EntityFormTest extends WebTestBase {
       "field_test_text[$langcode][0][value]" => $this->randomName(16),
     );
 
-    $this->drupalPost('entity-test/add', $edit, t('Save'));
-    $entity = $this->loadEntityByName($name1);
-    $this->assertTrue($entity, 'Entity found in the database.');
+    $this->drupalPost($entity_type . '/add', $edit, t('Save'));
+    $entity = $this->loadEntityByName($entity_type, $name1);
+    $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type)));
 
     $edit['name'] = $name2;
-    $this->drupalPost('entity-test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
-    $entity = $this->loadEntityByName($name1);
-    $this->assertFalse($entity, 'The entity has been modified.');
-    $entity = $this->loadEntityByName($name2);
-    $this->assertTrue($entity, 'Modified entity found in the database.');
-    $this->assertNotEqual($entity->name->value, $name1, 'The entity name has been modified.');
+    $this->drupalPost($entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $entity = $this->loadEntityByName($entity_type, $name1);
+    $this->assertFalse($entity, format_string('%entity_type: The entity has been modified.', array('%entity_type' => $entity_type)));
+    $entity = $this->loadEntityByName($entity_type, $name2);
+    $this->assertTrue($entity, format_string('%entity_type: Modified entity found in the database.', array('%entity_type' => $entity_type)));
+    $this->assertNotEqual($entity->name->value, $name1, format_string('%entity_type: The entity name has been modified.', array('%entity_type' => $entity_type)));
 
-    $this->drupalPost('entity-test/manage/' . $entity->id() . '/edit', array(), t('Delete'));
-    $entity = $this->loadEntityByName($name2);
-    $this->assertFalse($entity, 'Entity not found in the database.');
+    $this->drupalPost($entity_type . '/manage/' . $entity->id() . '/edit', array(), t('Delete'));
+    $entity = $this->loadEntityByName($entity_type, $name2);
+    $this->assertFalse($entity, format_string('%entity_type: Entity not found in the database.', array('%entity_type' => $entity_type)));
   }
 
   /**
    * Loads a test entity by name always resetting the storage controller cache.
    */
-  protected function loadEntityByName($name) {
-    $entity_type = 'entity_test';
+  protected function loadEntityByName($entity_type, $name) {
     // Always load the entity from the database to ensure that changes are
     // correctly picked up.
     entity_get_controller($entity_type)->resetCache();

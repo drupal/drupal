@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_field_info().
@@ -240,7 +241,7 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
 /**
  * Implements hook_field_presave().
  */
-function image_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function image_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
 
   // Determine the dimensions if necessary.
   foreach ($items as &$item) {
@@ -258,29 +259,29 @@ function image_field_presave($entity_type, $entity, $field, $instance, $langcode
 /**
  * Implements hook_field_insert().
  */
-function image_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  file_field_insert($entity_type, $entity, $field, $instance, $langcode, $items);
+function image_field_insert(EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  file_field_insert($entity, $field, $instance, $langcode, $items);
 }
 
 /**
  * Implements hook_field_update().
  */
-function image_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  file_field_update($entity_type, $entity, $field, $instance, $langcode, $items);
+function image_field_update(EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  file_field_update($entity, $field, $instance, $langcode, $items);
 }
 
 /**
  * Implements hook_field_delete().
  */
-function image_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  file_field_delete($entity_type, $entity, $field, $instance, $langcode, $items);
+function image_field_delete(EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  file_field_delete($entity, $field, $instance, $langcode, $items);
 }
 
 /**
  * Implements hook_field_delete_revision().
  */
-function image_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  file_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, $items);
+function image_field_delete_revision(EntityInterface $entity, $field, $instance, $langcode, &$items) {
+  file_field_delete_revision($entity, $field, $instance, $langcode, $items);
 }
 
 /**

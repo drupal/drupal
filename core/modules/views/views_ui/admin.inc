@@ -1567,8 +1567,9 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // extra stuff on the form is not sent through.
   $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
-  // Store the item back on the view
-  $form_state['view']->temporary_options[$type][$form_state['id']] = $handler->options;
+  // Store the item back on the view.
+  $executable = $form_state['view']->get('executable');
+  $executable->temporary_options[$type][$form_state['id']] = $handler->options;
 
   // @todo: Figure out whether views_ui_ajax_form is perhaps the better place to fix the issue.
   // views_ui_ajax_form() drops the current form from the stack, even if it's an #ajax.
@@ -1668,7 +1669,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
       $handler->init($executable, $executable->display_handler, $item);
       $types = ViewExecutable::viewsHandlerTypes();
 
-      $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
+      $form['#title'] = t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
       $handler->buildGroupByForm($form['options'], $form_state);
       $form_state['handler'] = &$handler;
@@ -1711,7 +1712,7 @@ function views_ui_config_item_form_remove($form, &$form_state) {
     $display =& $form_state['view']->get('executable')->displayHandlers[$form_state['display_id']];
     $display->optionsOverride($form, $form_state);
   }
-  $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], NULL);
+  $form_state['view']->get('executable')->removeItem($form_state['display_id'], $form_state['type'], $form_state['id']);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -1832,12 +1833,6 @@ function views_ui_admin_settings_basic($form, &$form_state) {
   // so this will make it easier to change if we do.
   $form['basic'] = array();
 
-  $form['basic']['ui_show_listing_filters'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show filters on the list of views'),
-    '#default_value' => $config->get('ui.show.listing_filters'),
-  );
-
   $form['basic']['ui_show_master_display'] = array(
     '#type' => 'checkbox',
     '#title' => t('Always show the master display'),
@@ -1929,7 +1924,6 @@ function views_ui_admin_settings_basic($form, &$form_state) {
  */
 function views_ui_admin_settings_basic_submit(&$form, &$form_state) {
   config('views.settings')
-    ->set('ui.show.listing_filters', $form_state['values']['ui_show_listing_filters'])
     ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
     ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
     ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])

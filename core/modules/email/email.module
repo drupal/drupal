@@ -28,6 +28,7 @@ function email_field_info() {
       'description' => t('This field stores an e-mail address in the database.'),
       'default_widget' => 'email_default',
       'default_formatter' => 'email_mailto',
+      'field item class' => 'Drupal\email\Type\EmailItem',
     ),
   );
 }

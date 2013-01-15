@@ -63,8 +63,8 @@ class Rss extends RowPluginBase {
     }
 
     $this->comments = comment_load_multiple($cids);
-    foreach ($this->comments as &$comment) {
-      $comment->depth = count(explode('.', $comment->thread)) - 1;
+    foreach ($this->comments as $comment) {
+      $comment->depth = count(explode('.', $comment->thread->value)) - 1;
     }
 
   }
@@ -116,11 +116,11 @@ class Rss extends RowPluginBase {
     $comment->rss_elements = array(
       array(
         'key' => 'pubDate',
-        'value' => gmdate('r', $comment->created),
+        'value' => gmdate('r', $comment->created->value),
       ),
       array(
         'key' => 'dc:creator',
-        'value' => $comment->name,
+        'value' => $comment->name->value,
       ),
       array(
         'key' => 'guid',

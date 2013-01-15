@@ -33,38 +33,18 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
    * Check the enabled Bartik blocks are correctly copied over.
    */
   function testNewDefaultThemeBlocks() {
+    $default_theme = variable_get('theme_default', 'stark');
 
     // Add several block instances.
-    // @todo Do this programmatically and with test blocks instead of other
-    //   modules' blocks once block instances are config entities.
     $this->adminUser = $this->drupalCreateUser(array('administer blocks'));
     $this->drupalLogin($this->adminUser);
 
-    // Add one instance of the user login block.
-    $block_id = 'user_login_block';
-    $default_theme = variable_get('theme_default', 'stark');
-    $edit = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $edit, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'User login block enabled');
-
-    // Add another instance of the same block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $edit, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'User login block enabled');
+    // Add two instances of the user login block.
+    $this->drupalPlaceBlock('user_login_block');
+    $this->drupalPlaceBlock('user_login_block');
 
     // Add an instance of a different block.
-    $block_id = 'system_powered_by_block';
-    $edit = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $edit, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'User login block enabled');
-
+    $this->drupalPlaceBlock('system_powered_by_block');
     $this->drupalLogout($this->adminUser);
 
     // Enable a different theme.

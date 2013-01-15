@@ -188,10 +188,6 @@ function language_permission() {
  */
 function language_theme() {
   return array(
-    'language_admin_overview_form_table' => array(
-      'render element' => 'form',
-      'file' => 'language.admin.inc',
-    ),
     'language_negotiation_configure_form' => array(
       'render element' => 'form',
     ),

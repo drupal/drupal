@@ -402,31 +402,45 @@ function locale_translate_edit_form_submit($form, &$form_state) {
 
   // Preload all translations for strings in the form.
   $lids = array_keys($form_state['values']['strings']);
-  $strings = array();
-  foreach (locale_storage()->getTranslations(array('lid' => $lids, 'language' => $langcode, 'translated' => TRUE)) as $string) {
-    $strings[$string->lid] = $string;
+  $existing_translation_objects = array();
+  foreach (locale_storage()->getTranslations(array('lid' => $lids, 'language' => $langcode, 'translated' => TRUE)) as $existing_translation_object) {
+    $existing_translation_objects[$existing_translation_object->lid] = $existing_translation_object;
   }
 
-  foreach ($form_state['values']['strings'] as $lid => $translations) {
-    // No translation when all strings are empty.
-    $has_translation = FALSE;
-    foreach ($translations['translations'] as $string) {
-      if (!empty($string)) {
-        $has_translation = TRUE;
-        break;
-      }
+  foreach ($form_state['values']['strings'] as $lid => $new_translation) {
+    $existing_translation = isset($existing_translation_objects[$lid]);
+
+    // Plural translations are saved in a delimited string. To be able to
+    // compare the new strings with the existing strings a string in the same format is created.
+    $new_translation_string_delimited = implode(LOCALE_PLURAL_DELIMITER, $new_translation['translations']);
+
+    // Generate an imploded string without delimiter, to be able to run
+    // empty() on it.
+    $new_translation_string = implode('', $new_translation['translations']);
+
+    $is_changed = FALSE;
+
+    if ($existing_translation && $existing_translation_objects[$lid]->translation != $new_translation_string_delimited) {
+      // If there is an existing translation in the DB and the new translation
+      // is not the same as the existing one.
+      $is_changed = TRUE;
     }
-    if ($has_translation) {
+    elseif (!$existing_translation && !empty($new_translation_string)) {
+      // Newly entered translation.
+      $is_changed = TRUE;
+    }
+
+    if ($is_changed) {
       // Only update or insert if we have a value to use.
-      $target = isset($strings[$lid]) ? $strings[$lid] : locale_storage()->createTranslation(array('lid' => $lid, 'language' => $langcode));
-      $target->setPlurals($translations['translations'])
+      $target = isset($existing_translation_objects[$lid]) ? $existing_translation_objects[$lid] : locale_storage()->createTranslation(array('lid' => $lid, 'language' => $langcode));
+      $target->setPlurals($new_translation['translations'])
         ->setCustomized()
         ->save();
       $updated[] = $target->getId();
     }
-    elseif (isset($strings[$lid])) {
-      // Empty translation entered: remove existing entry from database.
-      $strings[$lid]->delete();
+    if (empty($new_translation_string) && isset($existing_translation_objects[$lid])) {
+      // Empty new translation entered: remove existing entry from database.
+      $existing_translation_objects[$lid]->delete();
       $updated[] = $lid;
     }
   }

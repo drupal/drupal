@@ -26,11 +26,8 @@ class DrupalKernelTest extends UnitTestBase {
     );
   }
 
-  /**
-   * Tests DIC compilation.
-   */
-  function testCompileDIC() {
-    $classloader = drupal_classloader();
+  function setUp() {
+    parent::setUp();
     global $conf;
     $conf['php_storage']['service_container']= array(
       'bin' => 'service_container',
@@ -38,6 +35,15 @@ class DrupalKernelTest extends UnitTestBase {
       'directory' => DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php',
       'secret' => $GLOBALS['drupal_hash_salt'],
     );
+    // Use a non-persistent cache to avoid queries to non-existing tables.
+    $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
+  }
+
+  /**
+   * Tests DIC compilation.
+   */
+  function testCompileDIC() {
+    $classloader = drupal_classloader();
     // @todo: write a memory based storage backend for testing.
     $module_enabled = array(
       'system' => 'system',
@@ -60,6 +66,7 @@ class DrupalKernelTest extends UnitTestBase {
 
     // Now use the read-only storage implementation, simulating a "production"
     // environment.
+    global $conf;
     $conf['php_storage']['service_container']['class'] = 'Drupal\Component\PhpStorage\FileReadOnlyStorage';
     $kernel = new DrupalKernel('testing', FALSE, $classloader);
     $kernel->updateModules($module_enabled);

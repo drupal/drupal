@@ -5,6 +5,7 @@
  * User page callbacks for the Translation module.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\node\Plugin\Core\Entity\Node;
 
 /**
@@ -71,7 +72,7 @@ function translation_node_overview(Node $node) {
           $options['add'] = array(
             'title' => t('add translation'),
           ) + $links->links[$langcode];
-          $options['add'] = array_merge_recursive($options['add'], $query);
+          $options['add'] = NestedArray::mergeDeep($options['add'], $query);
         }
       }
       $status = t('Not translated');

@@ -80,7 +80,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $term = $this->createTerm($this->vocabulary);
     $entity->{$this->field_name}[$langcode][0]['tid'] = $term->tid;
     try {
-      field_attach_validate('test_entity', $entity);
+      field_attach_validate($entity);
       $this->pass('Correct term does not cause validation error.');
     }
     catch (FieldValidationException $e) {
@@ -91,7 +91,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $bad_term = $this->createTerm($this->createVocabulary());
     $entity->{$this->field_name}[$langcode][0]['tid'] = $bad_term->tid;
     try {
-      field_attach_validate('test_entity', $entity);
+      field_attach_validate($entity);
       $this->fail('Wrong term causes validation error.');
     }
     catch (FieldValidationException $e) {
@@ -125,7 +125,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $entities = array($id => $entity);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
     field_attach_prepare_view('test_entity', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view('test_entity', $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertText($term->label(), 'Term label is displayed.');
 

@@ -5,6 +5,7 @@
  * Defines a field type and its formatters and widgets.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldException;
 
 /**
@@ -87,7 +88,7 @@ function field_test_field_load($entity_type, $entities, $field, $instances, $lan
 /**
  * Implements hook_field_insert().
  */
-function field_test_field_insert($entity_type, $entity, $field, $instance, $items) {
+function field_test_field_insert(EntityInterface $entity, $field, $instance, $items) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
@@ -95,7 +96,7 @@ function field_test_field_insert($entity_type, $entity, $field, $instance, $item
 /**
  * Implements hook_field_update().
  */
-function field_test_field_update($entity_type, $entity, $field, $instance, $items) {
+function field_test_field_update(EntityInterface $entity, $field, $instance, $items) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
@@ -103,7 +104,7 @@ function field_test_field_update($entity_type, $entity, $field, $instance, $item
 /**
  * Implements hook_field_delete().
  */
-function field_test_field_delete($entity_type, $entity, $field, $instance, $items) {
+function field_test_field_delete(EntityInterface $entity, $field, $instance, $items) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
@@ -114,7 +115,7 @@ function field_test_field_delete($entity_type, $entity, $field, $instance, $item
  * Possible error codes:
  * - 'field_test_invalid': The value is invalid.
  */
-function field_test_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+function field_test_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 
@@ -184,7 +185,7 @@ function field_test_widget_multiple_validate($element, &$form_state) {
 /**
  * Sample 'default value' callback.
  */
-function field_test_default_value($entity_type, $entity, $field, $instance) {
+function field_test_default_value(EntityInterface $entity, $field, $instance) {
   return array(array('value' => 99));
 }
 

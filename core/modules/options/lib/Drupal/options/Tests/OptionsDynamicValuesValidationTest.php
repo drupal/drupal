@@ -29,7 +29,7 @@ class OptionsDynamicValuesValidationTest extends OptionsDynamicValuesTest {
     foreach ($this->test as $key => $value) {
       $this->entity->test_options[LANGUAGE_NOT_SPECIFIED][0]['value'] = $value;
       try {
-        field_attach_validate('test_entity', $this->entity);
+        field_attach_validate($this->entity);
         $this->pass("$key should pass");
       }
       catch (FieldValidationException $e) {
@@ -42,7 +42,7 @@ class OptionsDynamicValuesValidationTest extends OptionsDynamicValuesTest {
       $this->entity->test_options[LANGUAGE_NOT_SPECIFIED][0]['value'] = is_numeric($value) ? (100 - $value) : ('X' . $value);
       $pass = FALSE;
       try {
-        field_attach_validate('test_entity', $this->entity);
+        field_attach_validate($this->entity);
       }
       catch (FieldValidationException $e) {
         $pass = TRUE;

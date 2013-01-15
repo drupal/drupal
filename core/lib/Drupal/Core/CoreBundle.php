@@ -99,12 +99,12 @@ class CoreBundle extends Bundle {
 
     $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));
-    $container->register('resolver', 'Drupal\Core\ControllerResolver')
+    $container->register('controller_resolver', 'Drupal\Core\ControllerResolver')
       ->addArgument(new Reference('service_container'));
     $container->register('http_kernel', 'Drupal\Core\HttpKernel')
       ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('service_container'))
-      ->addArgument(new Reference('resolver'));
+      ->addArgument(new Reference('controller_resolver'));
     $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
       ->addArgument(new Reference('request'))
       ->setScope('request');
@@ -242,8 +242,6 @@ class CoreBundle extends Bundle {
 
     $container->addCompilerPass(new RegisterMatchersPass());
     $container->addCompilerPass(new RegisterNestedMatchersPass());
-    // Add a compiler pass for registering event subscribers.
-    $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     // Add a compiler pass for adding Normalizers and Encoders to Serializer.
     $container->addCompilerPass(new RegisterSerializationClassesPass());
     // Add a compiler pass for registering event subscribers.

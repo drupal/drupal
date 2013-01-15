@@ -40,8 +40,7 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
    *   - editor: the editor object with an 'options' object that has these keys:
    *      * entity: the VIE entity for the property.
    *      * property: the predicate of the property.
-   *      * editorName: the editor name: 'form', 'direct' or
-   *        'direct-with-wysiwyg'.
+   *      * editorName: the editor name.
    *      * element: the jQuery-wrapped editor DOM element
    *   - $storageWidgetEl: the DOM element on which the Create Storage widget is
    *     initialized.
@@ -71,8 +70,8 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
         break;
       case 'candidate':
         if (from !== 'inactive') {
-          if (from !== 'highlighted' && this.editorName !== 'form') {
-            this._unpad(this.editorName);
+          if (from !== 'highlighted' && this.getEditUISetting('padding')) {
+            this._unpad();
           }
           this.remove();
         }
@@ -86,12 +85,16 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
         this.setLoadingIndicator(true);
         break;
       case 'active':
-        this.startEdit(this.editorName);
+        this.startEdit();
         this.setLoadingIndicator(false);
-        if (this.editorName !== 'form') {
-          this._pad(this.editorName);
+        if (this.getEditUISetting('fullWidthToolbar')) {
+          this.$el.addClass('edit-toolbar-fullwidth');
         }
-        if (this.editorName === 'direct-with-wysiwyg') {
+
+        if (this.getEditUISetting('padding')) {
+          this._pad();
+        }
+        if (this.getEditUISetting('unifiedToolbar')) {
           this.insertWYSIWYGToolGroups();
         }
         break;
@@ -304,25 +307,33 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
   },
 
   /**
+   * Retrieves a setting of the editor-specific Edit UI integration.
+   *
+   * @see Drupal.edit.util.getEditUISetting().
+   */
+  getEditUISetting: function(setting) {
+    return Drupal.edit.util.getEditUISetting(this.editor, setting);
+  },
+
+  /**
    * Adjusts the toolbar to accomodate padding on the PropertyEditor widget.
    *
    * @see PropertyEditorDecorationView._pad().
    */
-  _pad: function(editorName) {
-      // The whole toolbar must move to the top when the property's DOM element
-      // is displayed inline.
-      if (this.editor.element.css('display') === 'inline') {
-        this.$el.css('top', parseInt(this.$el.css('top'), 10) - 5 + 'px');
-      }
+  _pad: function() {
+    // The whole toolbar must move to the top when the property's DOM element
+    // is displayed inline.
+    if (this.editor.element.css('display') === 'inline') {
+      this.$el.css('top', parseInt(this.$el.css('top'), 10) - 5 + 'px');
+    }
 
-      // The toolbar must move to the top and the left.
-      var $hf = this.$el.find('.edit-toolbar-heightfaker');
-      $hf.css({ bottom: '6px', left: '-5px' });
-      // When using a WYSIWYG editor, the width of the toolbar must match the
-      // width of the editable.
-      if (editorName === 'direct-with-wysiwyg') {
-        $hf.css({ width: this.editor.element.width() + 10 });
-      }
+    // The toolbar must move to the top and the left.
+    var $hf = this.$el.find('.edit-toolbar-heightfaker');
+    $hf.css({ bottom: '6px', left: '-5px' });
+
+    if (this.getEditUISetting('fullWidthToolbar')) {
+      $hf.css({ width: this.editor.element.width() + 10 });
+    }
   },
 
   /**
@@ -330,14 +341,14 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
    *
    * @see PropertyEditorDecorationView._unpad().
    */
-  _unpad: function(editorName) {
-      // Move the toolbar back to its original position.
-      var $hf = this.$el.find('.edit-toolbar-heightfaker');
-      $hf.css({ bottom: '1px', left: '' });
-      // When using a WYSIWYG editor, restore the width of the toolbar.
-      if (editorName === 'direct-with-wysiwyg') {
-        $hf.css({ width: '' });
-      }
+  _unpad: function() {
+    // Move the toolbar back to its original position.
+    var $hf = this.$el.find('.edit-toolbar-heightfaker');
+    $hf.css({ bottom: '1px', left: '' });
+
+    if (this.getEditUISetting('fullWidthToolbar')) {
+      $hf.css({ width: '' });
+    }
   },
 
   insertWYSIWYGToolGroups: function() {

@@ -12,10 +12,6 @@ Drupal.edit = Drupal.edit || {};
 Drupal.edit.views = Drupal.edit.views || {};
 Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
 
-  editor: null,
-  entity: null,
-  predicate : null,
-  editorName: null,
   toolbarId: null,
 
   _widthAttributeIsEmpty: null,
@@ -35,18 +31,12 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
    *   - editor: the editor object with an 'options' object that has these keys:
    *      * entity: the VIE entity for the property.
    *      * property: the predicate of the property.
-   *      * editorName: the editor name: 'form', 'direct' or
-   *        'direct-with-wysiwyg'.
    *      * widget: the parent EditableeEntity widget.
    *   - toolbarId: the ID attribute of the toolbar as rendered in the DOM.
    */
   initialize: function(options) {
     this.editor = options.editor;
     this.toolbarId = options.toolbarId;
-
-    this.entity = this.editor.options.entity;
-    this.predicate = this.editor.options.property;
-    this.editorName = this.editor.options.editorName;
 
     this.$el.css('background-color', this._getBgColor(this.$el));
   },
@@ -66,7 +56,7 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
         if (from !== 'inactive') {
           this.stopHighlight();
           if (from !== 'highlighted') {
-            this.stopEdit(this.editorName);
+            this.stopEdit();
           }
         }
         break;
@@ -74,16 +64,15 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
         this.startHighlight();
         break;
       case 'activating':
-        // NOTE: this step only exists for the 'form' editor! It is skipped by
-        // the 'direct' and 'direct-with-wysiwyg' editors, because no loading is
-        // necessary.
-        this.prepareEdit(this.editorName);
+        // NOTE: this state is not used by every editor! It's only used by those
+        // that need to interact with the server.
+        this.prepareEdit();
         break;
       case 'active':
-        if (this.editorName !== 'form') {
-          this.prepareEdit(this.editorName);
+        if (from !== 'activating') {
+          this.prepareEdit();
         }
-        this.startEdit(this.editorName);
+        this.startEdit();
         break;
       case 'changed':
         break;
@@ -130,7 +119,7 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
 
   undecorate: function () {
     this.$el
-      .removeClass('edit-candidate edit-editable edit-highlighted edit-editing edit-belowoverlay');
+      .removeClass('edit-candidate edit-editable edit-highlighted edit-editing');
   },
 
   startHighlight: function () {
@@ -146,26 +135,22 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
       .removeClass('edit-highlighted');
   },
 
-  prepareEdit: function(editorName) {
+  prepareEdit: function() {
     this.$el.addClass('edit-editing');
 
     // While editing, don't show *any* other editors.
     // @todo: BLOCKED_ON(Create.js, https://github.com/bergie/create/issues/133)
     // Revisit this.
     $('.edit-candidate').not('.edit-editing').removeClass('edit-editable');
-
-    if (editorName === 'form') {
-      this.$el.addClass('edit-belowoverlay');
-    }
   },
 
-  startEdit: function(editorName) {
-    if (editorName !== 'form') {
+  startEdit: function() {
+    if (this.getEditUISetting('padding')) {
       this._pad();
     }
   },
 
-  stopEdit: function(editorName) {
+  stopEdit: function() {
     this.$el.removeClass('edit-highlighted edit-editing');
 
     // Make the other editors show up again.
@@ -173,12 +158,18 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     // Revisit this.
     $('.edit-candidate').addClass('edit-editable');
 
-    if (editorName === 'form') {
-      this.$el.removeClass('edit-belowoverlay');
-    }
-    else {
+    if (this.getEditUISetting('padding')) {
       this._unpad();
     }
+  },
+
+  /**
+   * Retrieves a setting of the editor-specific Edit UI integration.
+   *
+   * @see Drupal.edit.util.getEditUISetting().
+   */
+  getEditUISetting: function(setting) {
+    return Drupal.edit.util.getEditUISetting(this.editor, setting);
   },
 
   _pad: function () {

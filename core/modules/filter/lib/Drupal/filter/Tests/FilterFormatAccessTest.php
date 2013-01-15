@@ -9,11 +9,43 @@ namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the filter format access functionality in the Filter module.
+ */
 class FilterFormatAccessTest extends WebTestBase {
+  /**
+   * A user with administrative permissions.
+   *
+   * @var object
+   */
   protected $admin_user;
+
+  /**
+   * A user with 'administer filters' permission.
+   *
+   * @var object
+   */
   protected $filter_admin_user;
+
+  /**
+   * A user with permission to create and edit own content.
+   *
+   * @var object
+   */
   protected $web_user;
+
+  /**
+   * An object representing an allowed text format.
+   *
+   * @var object
+   */
   protected $allowed_format;
+
+  /**
+   * An object representing a disallowed text format.
+   *
+   * @var object
+   */
   protected $disallowed_format;
 
   public static function getInfo() {
@@ -69,6 +101,9 @@ class FilterFormatAccessTest extends WebTestBase {
     ));
   }
 
+  /**
+   * Tests the Filter format access permissions functionality.
+   */
   function testFormatPermissions() {
     // Make sure that a regular user only has access to the text format they
     // were granted access to, as well to the fallback format.
@@ -154,11 +189,11 @@ class FilterFormatAccessTest extends WebTestBase {
   /**
    * Tests editing a page using a disallowed text format.
    *
-   * Verifies that regular users and administrators are able to edit a page,
-   * but not allowed to change the fields which use an inaccessible text
-   * format. Also verifies that fields which use a text format that does not
-   * exist can be edited by administrators only, but that the administrator is
-   * forced to choose a new format before saving the page.
+   * Verifies that regular users and administrators are able to edit a page, but
+   * not allowed to change the fields which use an inaccessible text format.
+   * Also verifies that fields which use a text format that does not exist can
+   * be edited by administrators only, but that the administrator is forced to
+   * choose a new format before saving the page.
    */
   function testFormatWidgetPermissions() {
     $langcode = LANGUAGE_NOT_SPECIFIED;
@@ -274,7 +309,7 @@ class FilterFormatAccessTest extends WebTestBase {
   }
 
   /**
-   * Rebuild text format and permission caches in the thread running the tests.
+   * Rebuilds text format and permission caches in the thread running the tests.
    */
   protected function resetFilterCaches() {
     filter_formats_reset();

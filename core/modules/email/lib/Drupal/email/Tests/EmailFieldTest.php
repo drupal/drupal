@@ -89,7 +89,7 @@ class EmailFieldTest extends WebTestBase {
     // Verify that a mailto link is displayed.
     $entity = field_test_entity_test_load($id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-    $entity->content = field_attach_view('test_entity', $entity, $display);
+    $entity->content = field_attach_view($entity, $display);
     $this->drupalSetContent(drupal_render($entity->content));
     $this->assertLinkByHref('mailto:test@example.com');
   }

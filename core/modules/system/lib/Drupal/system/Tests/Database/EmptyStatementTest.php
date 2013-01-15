@@ -9,12 +9,12 @@ namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\StatementEmpty;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
 
 /**
  * Tests the empty pseudo-statement class.
  */
-class EmptyStatementTest extends WebTestBase {
+class EmptyStatementTest extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Empty statement',

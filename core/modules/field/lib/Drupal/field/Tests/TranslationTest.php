@@ -123,9 +123,9 @@ class TranslationTest extends FieldTestBase {
     }
     $entity->{$this->field_name} = $values;
 
-    $results = _field_invoke('test_op', $entity_type, $entity);
+    $results = _field_invoke('test_op', $entity);
     foreach ($results as $langcode => $result) {
-      $hash = hash('sha256', serialize(array($entity_type, $entity, $this->field_name, $langcode, $values[$langcode])));
+      $hash = hash('sha256', serialize(array($entity, $this->field_name, $langcode, $values[$langcode])));
       // Check whether the parameters passed to _field_invoke() were correctly
       // forwarded to the callback function.
       $this->assertEqual($hash, $result, format_string('The result for %language is correctly stored.', array('%language' => $langcode)));
@@ -182,7 +182,7 @@ class TranslationTest extends FieldTestBase {
       $entities[$id] = $entity;
 
       // Store per-entity language suggestions.
-      $options['langcode'][$id] = field_language($entity_type, $entity, NULL, $display_langcode);
+      $options['langcode'][$id] = field_language($entity, NULL, $display_langcode);
     }
 
     $grouped_results = _field_invoke_multiple('test_op_multiple', $entity_type, $entities);
@@ -230,7 +230,7 @@ class TranslationTest extends FieldTestBase {
 
     // Save and reload the field translations.
     $entity->{$this->field_name} = $field_translations;
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
     unset($entity->{$this->field_name});
     field_attach_load($entity_type, array($eid => $entity));
 
@@ -305,7 +305,7 @@ class TranslationTest extends FieldTestBase {
     field_test_entity_info_translatable($entity_type, FALSE);
     drupal_static_reset('field_language');
     $requested_langcode = $enabled_langcodes[0];
-    $display_langcodes = field_language($entity_type, $entity, NULL, $requested_langcode);
+    $display_langcodes = field_language($entity, NULL, $requested_langcode);
     foreach ($instances as $instance) {
       $field_name = $instance['field_name'];
       $this->assertTrue($display_langcodes[$field_name] == $locked_languages[$field_name], format_string('The display language for field %field_name is %language.', array('%field_name' => $field_name, '%language' => $locked_languages[$field_name])));
@@ -314,7 +314,7 @@ class TranslationTest extends FieldTestBase {
     // Test multiple-fields display languages for translatable entities.
     field_test_entity_info_translatable($entity_type, TRUE);
     drupal_static_reset('field_language');
-    $display_langcodes = field_language($entity_type, $entity, NULL, $requested_langcode);
+    $display_langcodes = field_language($entity, NULL, $requested_langcode);
     foreach ($instances as $instance) {
       $field_name = $instance['field_name'];
       $langcode = $display_langcodes[$field_name];
@@ -326,14 +326,14 @@ class TranslationTest extends FieldTestBase {
 
     // Test single-field display language.
     drupal_static_reset('field_language');
-    $langcode = field_language($entity_type, $entity, $this->field_name, $requested_langcode);
+    $langcode = field_language($entity, $this->field_name, $requested_langcode);
     $this->assertTrue(isset($entity->{$this->field_name}[$langcode]) && $langcode != $requested_langcode, format_string('The display language for the (single) field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
 
     // Test field_language() basic behavior without language fallback.
     state()->set('field_test.language_fallback', FALSE);
     $entity->{$this->field_name}[$requested_langcode] = mt_rand(1, 127);
     drupal_static_reset('field_language');
-    $display_langcode = field_language($entity_type, $entity, $this->field_name, $requested_langcode);
+    $display_langcode = field_language($entity, $this->field_name, $requested_langcode);
     $this->assertEqual($display_langcode, $requested_langcode, 'Display language behave correctly when language fallback is disabled');
   }
 

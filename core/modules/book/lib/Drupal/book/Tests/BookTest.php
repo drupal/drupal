@@ -309,16 +309,8 @@ class BookTest extends WebTestBase {
   function testBookNavigationBlock() {
     $this->drupalLogin($this->admin_user);
 
-    $block_id = 'book_navigation';
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'footer',
-    );
     // Enable the block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
+    $block = $this->drupalPlaceBlock('book_navigation');
 
     // Give anonymous users the permission 'node test view'.
     $edit = array();
@@ -329,7 +321,7 @@ class BookTest extends WebTestBase {
     // Test correct display of the block.
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
-    $this->assertText($block['title'], 'Book navigation block is displayed.');
+    $this->assertText($block['subject'], 'Book navigation block is displayed.');
     $this->assertText($this->book->label(), format_string('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->label())));
     $this->assertNoText($nodes[0]->label(), 'No links to individual book pages are displayed.');
   }
@@ -339,17 +331,7 @@ class BookTest extends WebTestBase {
    */
   function testNavigationBlockOnAccessModuleEnabled() {
     $this->drupalLogin($this->admin_user);
-    $block_id = 'book_navigation';
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'footer',
-      'book_block_mode' => 'book pages',
-    );
-    // Enable the block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
+    $block = $this->drupalPlaceBlock('book_navigation', array('book_block_mode' => 'book pages'));
 
     // Give anonymous users the permission 'node test view'.
     $edit = array();
@@ -363,12 +345,12 @@ class BookTest extends WebTestBase {
     // Test correct display of the block to registered users.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->book->nid);
-    $this->assertText($block['title'], 'Book navigation block is displayed to registered users.');
+    $this->assertText($block['subject'], 'Book navigation block is displayed to registered users.');
     $this->drupalLogout();
 
     // Test correct display of the block to anonymous users.
     $this->drupalGet('node/' . $this->book->nid);
-    $this->assertText($block['title'], 'Book navigation block is displayed to anonymous users.');
+    $this->assertText($block['subject'], 'Book navigation block is displayed to anonymous users.');
   }
 
   /**

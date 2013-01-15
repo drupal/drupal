@@ -7,6 +7,7 @@
 
 namespace Drupal\node;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFormController;
@@ -91,7 +92,7 @@ class NodeFormController extends EntityFormController {
     //   handlers to the form buttons below. Remove hook_form() entirely.
     $function = node_hook($node->type, 'form');
     if ($function && ($extra = $function($node, $form_state))) {
-      $form = array_merge_recursive($form, $extra);
+      $form = NestedArray::mergeDeep($form, $extra);
     }
     // If the node type has a title, and the node type form defined no special
     // weight for it, we default to a weight of -5 for consistency.
@@ -397,20 +398,6 @@ class NodeFormController extends EntityFormController {
     }
     $node = $this->getEntity($form_state);
     $form_state['redirect'] = array('node/' . $node->nid . '/delete', array('query' => $destination));
-  }
-
-  /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::buildEntity().
-   */
-  public function buildEntity(array $form, array &$form_state) {
-    $node = parent::buildEntity($form, $form_state);
-    // If the node went through 'Preview', it got stored back in $form_state
-    // with values out of the 'prepare_view' steps, and with the
-    // entity_view_prepared flag set. Since buildEntity() resets the values to
-    // those in the form submission, the entity_view_prepared flag needs to be
-    // reset too so that the next 'Preview' can work on a consistent $node.
-    unset($node->entity_view_prepared);
-    return $node;
   }
 
 }

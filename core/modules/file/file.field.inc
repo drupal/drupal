@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_field_info().
@@ -218,10 +219,10 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
 /**
  * Implements hook_field_insert().
  */
-function file_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function file_field_insert(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   // Add a new usage of each uploaded file.
   foreach ($items as $item) {
-    file_usage()->add(file_load($item['fid']), 'file', $entity_type, $entity->id());
+    file_usage()->add(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
   }
 }
 
@@ -230,12 +231,12 @@ function file_field_insert($entity_type, $entity, $field, $instance, $langcode, 
  *
  * Checks for files that have been removed from the object.
  */
-function file_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function file_field_update(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   // On new revisions, all files are considered to be a new usage and no
   // deletion of previous file usages are necessary.
   if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
     foreach ($items as $item) {
-      file_usage()->add(file_load($item['fid']), 'file', $entity_type, $entity->id());
+      file_usage()->add(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
     }
     return;
   }
@@ -254,7 +255,7 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
       $original_fids[] = $original_item['fid'];
       if (isset($original_item['fid']) && !in_array($original_item['fid'], $current_fids)) {
         // Decrement the file usage count by 1.
-        file_usage()->delete(file_load($original_item['fid']), 'file', $entity_type, $entity->id());
+        file_usage()->delete(file_load($original_item['fid']), 'file', $entity->entityType(), $entity->id());
       }
     }
   }
@@ -262,7 +263,7 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
   // Add new usage entries for newly added files.
   foreach ($items as $item) {
     if (!in_array($item['fid'], $original_fids)) {
-      file_usage()->add(file_load($item['fid']), 'file', $entity_type, $entity->id());
+      file_usage()->add(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
     }
   }
 }
@@ -270,20 +271,20 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
 /**
  * Implements hook_field_delete().
  */
-function file_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function file_field_delete(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   // Delete all file usages within this entity.
   foreach ($items as $delta => $item) {
-    file_usage()->delete(file_load($item['fid']), 'file', $entity_type, $entity->id(), 0);
+    file_usage()->delete(file_load($item['fid']), 'file', $entity->entityType(), $entity->id(), 0);
   }
 }
 
 /**
  * Implements hook_field_delete_revision().
  */
-function file_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function file_field_delete_revision(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
     // Decrement the file usage count by 1.
-    file_usage()->delete(file_load($item['fid']), 'file', $entity_type, $entity->id());
+    file_usage()->delete(file_load($item['fid']), 'file', $entity->entityType(), $entity->id());
   }
 }
 

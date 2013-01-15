@@ -438,14 +438,6 @@ class ViewExecutable {
   }
 
   /**
-   * Returns a list of the sub-object types used by this view. These types are
-   * stored on the display, and are used in the build process.
-   */
-  public function displayObjects() {
-    return array('argument', 'field', 'sort', 'filter', 'relationship', 'header', 'footer', 'empty');
-  }
-
-  /**
    * Set the arguments that come to this view. Usually from the URL
    * but possibly from elsewhere.
    */
@@ -597,7 +589,7 @@ class ViewExecutable {
     }
 
     // Initialize the display cache array.
-    $this->displayHandlers = new DisplayBag($this);
+    $this->displayHandlers = new DisplayBag($this, drupal_container()->get('plugin.manager.views.display'));
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers['default'];
@@ -1344,27 +1336,6 @@ class ViewExecutable {
   }
 
   /**
-   * Render a specific field via the field ID and the row #
-   *
-   * Note: You might want to use views_plugin_style::render_fields as it
-   * caches the output for you.
-   *
-   * @param string $field
-   *   The id of the field to be rendered.
-   *
-   * @param int $row
-   *   The row number in the $view->result which is used for the rendering.
-   *
-   * @return string
-   *   The rendered output of the field.
-   */
-  public function renderField($field, $row) {
-    if (isset($this->field[$field]) && isset($this->result[$row])) {
-      return $this->field[$field]->advanced_render($this->result[$row]);
-    }
-  }
-
-  /**
    * Execute the given display, with the given arguments.
    * To be called externally by whatever mechanism invokes the view,
    * such as a page callback, hook_block, etc.
@@ -1442,7 +1413,7 @@ class ViewExecutable {
     }
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
-    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : md5($this->storage->get('name') . REQUEST_TIME . rand());
+    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->get('name') . REQUEST_TIME . mt_rand());
 
     // Allow the display handler to set up for execution
     $this->display_handler->preExecute();
@@ -1503,24 +1474,6 @@ class ViewExecutable {
     // Execute the view
     if (isset($this->display_handler)) {
       return $this->display_handler->executeHookMenu($callbacks);
-    }
-  }
-
-  /**
-   * Called to get hook_block information from the view and the
-   * named display handler.
-   */
-  public function executeHookBlockList($display_id = NULL) {
-    // Prepare the view with the information we have.
-
-    // This was probably already called, but it's good to be safe.
-    if (!$this->setDisplay($display_id)) {
-      return FALSE;
-    }
-
-    // Execute the view
-    if (isset($this->display_handler)) {
-      return $this->display_handler->executeHookBlockList();
     }
   }
 
@@ -2094,7 +2047,7 @@ class ViewExecutable {
     }
 
     // Get info about the types so we can get the right data.
-    $types = $this::viewsHandlerTypes();
+    $types = static::viewsHandlerTypes();
     return $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
   }
 
@@ -2114,7 +2067,7 @@ class ViewExecutable {
    */
   public function getItem($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
-    $types = $this::viewsHandlerTypes();
+    $types = static::viewsHandlerTypes();
     // Initialize the display
     $this->setDisplay($display_id);
 
@@ -2149,7 +2102,7 @@ class ViewExecutable {
    */
   public function setItem($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
-    $types = $this::viewsHandlerTypes();
+    $types = static::viewsHandlerTypes();
     // Initialize the display.
     $this->setDisplay($display_id);
 
@@ -2158,9 +2111,31 @@ class ViewExecutable {
     if (isset($item)) {
       $fields[$id] = $item;
     }
-    else {
-      unset($fields[$id]);
-    }
+
+    // Store.
+    $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
+  }
+
+  /**
+   * Removes configuration for a handler instance on a given display.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being removed.
+   * @param string $id
+   *   The ID of the handler being removed.
+   */
+  public function removeItem($display_id, $type, $id) {
+    // Get info about the types so we can get the right data.
+    $types = static::viewsHandlerTypes();
+    // Initialize the display.
+    $this->setDisplay($display_id);
+
+    // Get the existing configuration.
+    $fields = $this->displayHandlers[$display_id]->getOption($types[$type]['plural']);
+    // Unset the item.
+    unset($fields[$id]);
 
     // Store.
     $this->displayHandlers[$display_id]->setOption($types[$type]['plural'], $fields);
@@ -2190,40 +2165,6 @@ class ViewExecutable {
     $item = $this->getItem($display_id, $type, $id);
     $item[$option] = $value;
     $this->setItem($display_id, $type, $id, $item);
-  }
-
-  /**
-   * Creates and stores a new display.
-   *
-   * @param string $id
-   *   The ID for the display being added.
-   *
-   * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
-   *   A new display plugin instance.
-   */
-  public function newDisplay($id) {
-    // Create a handler.
-    $display = $this->storage->get('display');
-    $manager = drupal_container()->get("plugin.manager.views.display");
-    $this->displayHandlers[$id] = $manager->createInstance($display[$id]['display_plugin']);
-    if (empty($this->displayHandlers[$id])) {
-      // provide a 'default' handler as an emergency. This won't work well but
-      // it will keep things from crashing.
-      $this->displayHandlers[$id] = $manager->createInstance('default');
-    }
-
-    if (!empty($this->displayHandlers[$id])) {
-      // Initialize the new display handler with data.
-      $this->displayHandlers[$id]->initDisplay($this, $display[$id]);
-      // If this is NOT the default display handler, let it know which is
-      if ($id != 'default') {
-        // @todo is the '&' still required in php5?
-        $this->displayHandlers[$id]->default_display = &$this->displayHandlers['default'];
-      }
-    }
-    $this->storage->set('display', $display);
-
-    return $this->displayHandlers[$id];
   }
 
 }

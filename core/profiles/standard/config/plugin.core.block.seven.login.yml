@@ -1,4 +1,3 @@
-region: '-1'
 id: user_login_block
 whois_new_count: '5'
 status: '1'
@@ -16,4 +15,5 @@ visibility:
   visibility__active_tab: edit-visibility-path
 subject: 'User login'
 module: user
-weight: '-3'
+region: content
+weight: '10'

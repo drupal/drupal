@@ -33,8 +33,8 @@ class TermTranslationController extends EntityTranslationController {
   function entityFormSave(array $form, array &$form_state) {
     if ($this->getSourceLangcode($form_state)) {
       $entity = translation_entity_form_controller($form_state)->getEntity($form_state);
-      // We need a redirect here, otherwise we would get an access denied page
-      // since the curret URL would be preserved and we would try to add a
+      // We need a redirect here, otherwise we would get an access denied page,
+      // since the current URL would be preserved and we would try to add a
       // translation for a language that already has a translation.
       $form_state['redirect'] = $this->getEditPath($entity);
     }

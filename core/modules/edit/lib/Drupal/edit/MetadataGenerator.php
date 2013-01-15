@@ -8,6 +8,7 @@
 namespace Drupal\edit;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\field\FieldInstance;
 use Drupal\edit\Access\EditEntityFieldAccessCheckInterface;
 
@@ -32,16 +33,26 @@ class MetadataGenerator implements MetadataGeneratorInterface {
   protected $editorSelector;
 
   /**
+   * The manager for editor (Create.js PropertyEditor widget) plugins.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $editorManager;
+
+  /**
    * Constructs a new MetadataGenerator.
    *
    * @param \Drupal\edit\Access\EditEntityFieldAccessCheckInterface $access_checker
    *   An object that checks if a user has access to edit a given field.
    * @param \Drupal\edit\EditorSelectorInterface $editor_selector
    *   An object that determines which editor to attach to a given field.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface
+   *   The manager for editor plugins.
    */
-  public function __construct(EditEntityFieldAccessCheckInterface $access_checker, EditorSelectorInterface $editor_selector) {
+  public function __construct(EditEntityFieldAccessCheckInterface $access_checker, EditorSelectorInterface $editor_selector, PluginManagerInterface $editor_manager) {
     $this->accessChecker = $access_checker;
     $this->editorSelector = $editor_selector;
+    $this->editorManager = $editor_manager;
   }
 
   /**
@@ -56,31 +67,30 @@ class MetadataGenerator implements MetadataGeneratorInterface {
       return array('access' => FALSE);
     }
 
-    $label = $instance['label'];
+    // Early-return if no editor is available.
     $formatter_id = entity_get_render_display($entity, $view_mode)->getFormatter($instance['field_name'])->getPluginId();
     $items = $entity->get($field_name);
     $items = $items[$langcode];
-    $editor = $this->editorSelector->getEditor($formatter_id, $instance, $items);
+    $editor_id = $this->editorSelector->getEditor($formatter_id, $instance, $items);
+    if (!isset($editor_id)) {
+      return array('access' => FALSE);
+    }
+
+    // Gather metadata, allow the editor to add additional metadata of its own.
+    $label = $instance['label'];
+    $editor = $this->editorManager->createInstance($editor_id);
     $metadata = array(
       'label' => $label,
       'access' => TRUE,
-      'editor' => $editor,
+      'editor' => $editor_id,
       'aria' => t('Entity @type @id, field @field', array('@type' => $entity->entityType(), '@id' => $entity->id(), '@field' => $label)),
     );
-    // Additional metadata for WYSIWYG editor integration.
-    if ($editor === 'direct-with-wysiwyg') {
-      $format_id = $items[0]['format'];
-      $metadata['format'] = $format_id;
-      $metadata['formatHasTransformations'] = $this->textFormatHasTransformationFilters($format_id);
+    $custom_metadata = $editor->getMetadata($instance, $items);
+    if (count($custom_metadata)) {
+      $metadata['custom'] = $custom_metadata;
     }
-    return $metadata;
-  }
 
-  /**
-   * Returns whether the text format has transformation filters.
-   */
-  protected function textFormatHasTransformationFilters($format_id) {
-    return (bool) count(array_intersect(array(FILTER_TYPE_TRANSFORM_REVERSIBLE, FILTER_TYPE_TRANSFORM_IRREVERSIBLE), filter_get_filter_types_by_format($format_id)));
+    return $metadata;
   }
 
 }

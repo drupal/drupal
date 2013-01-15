@@ -7,9 +7,10 @@
 
 namespace Drupal\search\Tests;
 
+/**
+ * Tests the rendering of the search block.
+ */
 class SearchBlockTest extends SearchTestBase {
-
-  protected $adminUser;
 
   /**
    * Modules to enable.
@@ -30,27 +31,16 @@ class SearchBlockTest extends SearchTestBase {
     parent::setUp();
 
     // Create and login user.
-    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'search content'));
-    $this->drupalLogin($this->adminUser);
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'search content'));
+    $this->drupalLogin($admin_user);
   }
 
   /**
    * Test that the search form block can be placed and works.
    */
   protected function testSearchFormBlock() {
-    $block_id = 'search_form_block';
-    $default_theme = variable_get('theme_default', 'stark');
-
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'content',
-    );
-
-    // Enable the search block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), '"Search form" block enabled');
-    $this->assertText($block['title'], 'Block title was found.');
+    $block = $this->drupalPlaceBlock('search_form_block');
+    $this->assertText($block['subject'], 'Block title was found.');
 
     // Test a normal search via the block form, from the front page.
     $terms = array('search_block_form' => 'test');
@@ -64,7 +54,6 @@ class SearchBlockTest extends SearchTestBase {
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
-    $block['config_id'] = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
     $config = config($block['config_id']);
     $config->set('visibility.path.pages', 'search');
     $config->save();
@@ -92,4 +81,5 @@ class SearchBlockTest extends SearchTestBase {
       'Redirected to correct url.'
     );
   }
+
 }

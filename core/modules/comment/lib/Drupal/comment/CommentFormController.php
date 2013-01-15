@@ -9,29 +9,28 @@ namespace Drupal\comment;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityFormControllerNG;
 
 /**
  * Base for controller for comment forms.
  */
-class CommentFormController extends EntityFormController {
+class CommentFormController extends EntityFormControllerNG {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::form().
+   * Overrides Drupal\Core\Entity\EntityFormControllerNG::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $comment) {
     global $user;
 
-    $entity = entity_load($comment->entity_type, $comment->entity_id);
-    $instance = field_info_instance($comment->entity_type, $comment->field_name, $entity->bundle());
-    $form_state['comment']['entity'] = $entity;
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
 
     // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = drupal_html_id('comment_form');
-    $form['#theme'] = array('comment_form__' . $comment->entity_type . '__' . $entity->bundle() . '__' . $comment->field_name, 'comment_form');
+    $form['#theme'] = array('comment_form__' . $comment->entity_type->value . '__' . $entity->bundle() . '__' . $comment->field_name->value, 'comment_form');
 
     $anonymous_contact = $instance['settings']['comment']['comment_anonymous'];
-    $is_admin = (!empty($comment->cid) && user_access('administer comments'));
+    $is_admin = ($comment->id() && user_access('administer comments'));
 
     if (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
       $form['#attached']['library'][] = array('system', 'jquery.cookie');
@@ -40,8 +39,8 @@ class CommentFormController extends EntityFormController {
 
     // If not replying to a comment, use our dedicated page callback for new
     // comments on entities.
-    if (empty($comment->cid) && empty($comment->pid)) {
-      $form['#action'] = url('comment/reply/' . $comment->entity_type . '/' . $comment->entity_id . '/' . $comment->field_name);
+    if (!$comment->id() && empty($comment->pid->value)) {
+      $form['#action'] = url('comment/reply/' . $comment->entity_type->value . '/' . $comment->entity_id->value . '/' . $comment->field_name->value);
     }
 
     if (isset($form_state['comment_preview'])) {
@@ -63,16 +62,16 @@ class CommentFormController extends EntityFormController {
 
     // Prepare default values for form elements.
     if ($is_admin) {
-      $author = (!$comment->uid && $comment->name ? $comment->name : $comment->registered_name);
-      $status = (isset($comment->status) ? $comment->status : COMMENT_NOT_PUBLISHED);
-      $date = (!empty($comment->date) ? $comment->date : format_date($comment->created, 'custom', 'Y-m-d H:i O'));
+      $author = $comment->name->value;
+      $status = (isset($comment->status->value) ? $comment->status->value : COMMENT_NOT_PUBLISHED);
+      $date = (!empty($comment->date) ? $comment->date : format_date($comment->created->value, 'custom', 'Y-m-d H:i O'));
     }
     else {
       if ($user->uid) {
         $author = $user->name;
       }
       else {
-        $author = ($comment->name ? $comment->name : '');
+        $author = ($comment->name->value ? $comment->name->value : '');
       }
       $status = (user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
       $date = '';
@@ -117,7 +116,7 @@ class CommentFormController extends EntityFormController {
     $form['author']['mail'] = array(
       '#type' => 'email',
       '#title' => t('E-mail'),
-      '#default_value' => $comment->mail,
+      '#default_value' => $comment->mail->value,
       '#required' => (!$user->uid && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
       '#maxlength' => 64,
       '#size' => 30,
@@ -128,7 +127,7 @@ class CommentFormController extends EntityFormController {
     $form['author']['homepage'] = array(
       '#type' => 'url',
       '#title' => t('Homepage'),
-      '#default_value' => $comment->homepage,
+      '#default_value' => $comment->homepage->value,
       '#maxlength' => 255,
       '#size' => 30,
       '#access' => $is_admin || (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
@@ -159,32 +158,27 @@ class CommentFormController extends EntityFormController {
       '#type' => 'textfield',
       '#title' => t('Subject'),
       '#maxlength' => 64,
-      '#default_value' => $comment->subject,
+      '#default_value' => $comment->subject->value,
       '#access' => $instance['settings']['comment']['comment_subject_field'],
     );
 
     // Used for conditional validation of author fields.
     $form['is_anonymous'] = array(
       '#type' => 'value',
-      '#value' => ($comment->cid ? !$comment->uid : !$user->uid),
+      '#value' => ($comment->id() ? !$comment->uid->value : !$user->uid),
     );
 
-    // Add internal comment properties.
-    foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_name', 'uid') as $key) {
-      $form[$key] = array('#type' => 'value', '#value' => $comment->$key);
-    }
-
-    // Make the comment inherit the entity language unless specifically set.
-    $comment_langcode = $comment->langcode;
+    // Make the comment inherit the current content language unless specifically
+    // set.
     if ($comment->isNew()) {
       $language_content = language(LANGUAGE_TYPE_CONTENT);
-      $comment->langcode = $language_content->langcode;
+      $comment->langcode->value = $language_content->langcode;
     }
 
-    $form['langcode'] = array(
-      '#type' => 'value',
-      '#value' => $comment->langcode,
-    );
+    // Add internal comment properties.
+    foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_name', 'uid', 'langcode') as $key) {
+      $form[$key] = array('#type' => 'value', '#value' => $comment->$key->value);
+    }
 
     return parent::form($form, $form_state, $comment);
   }
@@ -195,8 +189,8 @@ class CommentFormController extends EntityFormController {
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
     $comment = $this->getEntity($form_state);
-    $entity = $form_state['comment']['entity'];
-    $instance = field_info_instance($comment->entity_type, $comment->field_name, $entity->bundle());
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
     $preview_mode = $instance['settings']['comment']['comment_preview'];
 
     // No delete action on the comment form.
@@ -207,7 +201,8 @@ class CommentFormController extends EntityFormController {
 
     // Only show the save button if comment previews are optional or if we are
     // already previewing the submission.
-    $element['submit']['#access'] = ($comment->cid && user_access('administer comments')) || $preview_mode != DRUPAL_REQUIRED || isset($form_state['comment_preview']);
+    $element['submit']['#access'] = ($comment->id() && user_access('administer comments')) || $preview_mode != DRUPAL_REQUIRED || isset($form_state['comment_preview']);
+
     $element['preview'] = array(
       '#type' => 'submit',
       '#value' => t('Preview'),
@@ -235,7 +230,7 @@ class CommentFormController extends EntityFormController {
       $account = user_load_by_name($form_state['values']['name']);
       $form_state['values']['uid'] = $account ? $account->uid : 0;
 
-      $date = new DrupalDateTime($form_state['values']['date']);
+      $date = new DrupalDateTime(!empty($form_state['values']['date']) ? $form_state['values']['date'] : 'now');
       if ($date->hasErrors()) {
         form_set_error('date', t('You have to specify a valid date.'));
       }
@@ -263,51 +258,47 @@ class CommentFormController extends EntityFormController {
   }
 
   /**
+   * Overrides EntityFormController::buildEntity().
+   */
+  public function buildEntity(array $form, array &$form_state) {
+    $comment = parent::buildEntity($form, $form_state);
+    $date = new DrupalDateTime(!empty($form_state['values']['date']) ? $form_state['values']['date'] : 'now');
+    $comment->created->value = $date->getTimestamp();
+    $comment->changed->value = REQUEST_TIME;
+    return $comment;
+  }
+
+  /**
    * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {
     $comment = parent::submit($form, $form_state);
 
-    if (empty($comment->date)) {
-      $comment->date = 'now';
-    }
-    $date = new DrupalDateTime($comment->date);
-    $comment->created = $date->getTimestamp();
-    $comment->changed = REQUEST_TIME;
-
     // If the comment was posted by a registered user, assign the author's ID.
     // @todo Too fragile. Should be prepared and stored in comment_form()
     // already.
-    if (!$comment->is_anonymous && !empty($comment->name) && ($account = user_load_by_name($comment->name))) {
-      $comment->uid = $account->uid;
+    if (!$comment->is_anonymous && !empty($comment->name->value) && ($account = user_load_by_name($comment->name->value))) {
+      $comment->uid->value = $account->uid;
     }
     // If the comment was posted by an anonymous user and no author name was
     // required, use "Anonymous" by default.
-    if ($comment->is_anonymous && (!isset($comment->name) || $comment->name === '')) {
-      $comment->name = config('user.settings')->get('anonymous');
+    if ($comment->is_anonymous && (!isset($comment->name->value) || $comment->name->value === '')) {
+      $comment->name->value = config('user.settings')->get('anonymous');
     }
 
     // Validate the comment's subject. If not specified, extract from comment
     // body.
-    if (trim($comment->subject) == '') {
+    if (trim($comment->subject->value) == '') {
       // The body may be in any format, so:
       // 1) Filter it into HTML
       // 2) Strip out all HTML tags
       // 3) Convert entities back to plain-text.
-      $field = field_info_field('comment_body');
-      $langcode = field_is_translatable('comment', $field) ? $this->getFormLangcode($form_state) : LANGUAGE_NOT_SPECIFIED;
-      $comment_body = $comment->comment_body[$langcode][0];
-      if (isset($comment_body['format'])) {
-        $comment_text = check_markup($comment_body['value'], $comment_body['format']);
-      }
-      else {
-        $comment_text = check_plain($comment_body['value']);
-      }
+      $comment_text = $comment->comment_body->processed;
       $comment->subject = truncate_utf8(trim(decode_entities(strip_tags($comment_text))), 29, TRUE);
       // Edge cases where the comment body is populated only by HTML tags will
       // require a default subject.
-      if ($comment->subject == '') {
-        $comment->subject = t('(No subject)');
+      if ($comment->subject->value == '') {
+        $comment->subject->value = t('(No subject)');
       }
     }
 
@@ -337,7 +328,7 @@ class CommentFormController extends EntityFormController {
     $comment = $this->getEntity($form_state);
     $field_name = $form_state['values']['field_name'];
     $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
-    $items = field_get_items($entity->entityType(), $entity, $field_name);
+    $items = field_get_items($entity, $field_name);
     $status = reset($items);
     $uri = $entity->uri();
 
@@ -348,13 +339,13 @@ class CommentFormController extends EntityFormController {
       }
 
       comment_save($comment);
-      $form_state['values']['cid'] = $comment->cid;
+      $form_state['values']['cid'] = $comment->id();
 
       // Add an entry to the watchdog log.
-      watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
+      watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject->value), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id())));
 
       // Explain the approval queue if necessary.
-      if ($comment->status == COMMENT_NOT_PUBLISHED) {
+      if ($comment->status->value == COMMENT_NOT_PUBLISHED) {
         if (!user_access('administer comments')) {
           drupal_set_message(t('Your comment has been queued for review by site administrators and will be published after approval.'));
         }
@@ -364,16 +355,16 @@ class CommentFormController extends EntityFormController {
       }
       $query = array();
       // Find the current display page for this comment.
-      $page = comment_get_display_page($comment->cid, $instance);
+      $page = comment_get_display_page($comment->id(), $instance);
       if ($page > 0) {
         $query['page'] = $page;
       }
       // Redirect to the newly posted comment. @todo up to here.
-      $redirect = array($uri['path'], array('query' => $query, 'fragment' => 'comment-' . $comment->cid) + $uri['options']);
+      $redirect = array($uri['path'], array('query' => $query, 'fragment' => 'comment-' . $comment->id()) + $uri['options']);
     }
     else {
-      watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);
-      drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject)), 'error');
+      watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject->value), WATCHDOG_WARNING);
+      drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject->value)), 'error');
       // Redirect the user to the entity they are commenting on.
       $redirect = $uri['path'];
     }

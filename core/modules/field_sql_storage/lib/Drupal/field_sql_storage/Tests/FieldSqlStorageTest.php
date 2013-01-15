@@ -138,7 +138,7 @@ class FieldSqlStorageTest extends WebTestBase {
       $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name}[$langcode] = $rev_values[0] = $values;
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
 
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
@@ -158,7 +158,7 @@ class FieldSqlStorageTest extends WebTestBase {
       $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name}[$langcode] = $rev_values[1] = $values;
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
@@ -188,7 +188,7 @@ class FieldSqlStorageTest extends WebTestBase {
     // Check that update leaves the field data untouched if
     // $entity->{$field_name} is absent.
     unset($entity->{$this->field_name});
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
@@ -198,7 +198,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
     // Check that update with an empty $entity->$field_name empties the field.
     $entity->{$this->field_name} = NULL;
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
   }
@@ -212,7 +212,7 @@ class FieldSqlStorageTest extends WebTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Insert: Field is missing
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()
@@ -221,7 +221,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
     // Insert: Field is NULL
     $entity->{$this->field_name} = NULL;
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()
@@ -230,7 +230,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
     // Add some real data
     $entity->{$this->field_name}[$langcode] = array(0 => array('value' => 1));
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()
@@ -239,7 +239,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
     // Update: Field is missing. Data should survive.
     unset($entity->{$this->field_name});
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()
@@ -248,7 +248,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
     // Update: Field is NULL. Data should be wiped.
     $entity->{$this->field_name} = NULL;
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()
@@ -269,7 +269,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
     // Again add some real data.
     $entity->{$this->field_name}[$langcode] = array(0 => array('value' => 1));
-    field_attach_insert($entity_type, $entity);
+    field_attach_insert($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()
@@ -280,7 +280,7 @@ class FieldSqlStorageTest extends WebTestBase {
     // data should survive.
     $entity->{$this->field_name}[$unavailable_langcode] = array(mt_rand(1, 127));
     unset($entity->{$this->field_name}[$langcode]);
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()
@@ -290,7 +290,7 @@ class FieldSqlStorageTest extends WebTestBase {
     // Update: Field translation is NULL but field is not empty. Translation
     // data should be wiped.
     $entity->{$this->field_name}[$langcode] = NULL;
-    field_attach_update($entity_type, $entity);
+    field_attach_update($entity);
     $count = db_select($this->table)
       ->countQuery()
       ->execute()

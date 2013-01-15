@@ -215,19 +215,6 @@
 $databases = array();
 
 /**
- * Access control for update.php script.
- *
- * If you are updating your Drupal installation using the update.php script but
- * are not logged in using either an account with the "Administer software
- * updates" permission or the site maintenance account (the account that was
- * created during installation), you will need to modify the access check
- * statement below. Change the FALSE to a TRUE to disable the access check.
- * After finishing the upgrade, be sure to open this file again and change the
- * TRUE back to a FALSE!
- */
-$update_free_access = FALSE;
-
-/**
  * Salt for one-time login links and cancel links, form tokens, etc.
  *
  * This variable will be set to a random value by the installer. All one-time
@@ -245,20 +232,6 @@ $update_free_access = FALSE;
  *
  */
 $drupal_hash_salt = '';
-
-/**
- * Class Loader.
- *
- * By default, Drupal uses the Symfony UniversalClassLoader which is best for
- * development, as it does not break when code is moved on the file system.
- * The APC classloader provides better performance and is recommended for
- * production sites.
- *
- * Examples:
- *  $class_loader = 'apc'
- *  $class_loader = 'default'
- */
-# $class_loader = 'apc';
 
 /**
  * Location of the site configuration files.
@@ -285,6 +258,149 @@ $drupal_hash_salt = '';
  * @endcode
  */
 $config_directories = array();
+
+/**
+ * Settings:
+ *
+ * $settings contains configuration that can not be saved in the configuration
+ * system because it is required too early during bootstrap like the database
+ * information. It is also used for configuration that is specific for a given
+ * environment like reverse proxy settings
+ *
+ * @see settings_get()
+ */
+
+/**
+ * Access control for update.php script.
+ *
+ * If you are updating your Drupal installation using the update.php script but
+ * are not logged in using either an account with the "Administer software
+ * updates" permission or the site maintenance account (the account that was
+ * created during installation), you will need to modify the access check
+ * statement below. Change the FALSE to a TRUE to disable the access check.
+ * After finishing the upgrade, be sure to open this file again and change the
+ * TRUE back to a FALSE!
+ */
+$settings['update_free_access'] = FALSE;
+
+/**
+ * External access proxy settings:
+ *
+ * If your site must access the Internet via a web proxy then you can enter
+ * the proxy settings here. Currently only basic authentication is supported
+ * by using the username and password variables. The proxy_user_agent variable
+ * can be set to NULL for proxies that require no User-Agent header or to a
+ * non-empty string for proxies that limit requests to a specific agent. The
+ * proxy_exceptions variable is an array of host names to be accessed directly,
+ * not via proxy.
+ */
+# $settings['proxy_server'] = '';
+# $settings['proxy_port'] = 8080;
+# $settings['proxy_username'] = '';
+# $settings['proxy_password'] = '';
+# $settings['proxy_user_agent'] = '';
+# $settings['proxy_exceptions'] = array('127.0.0.1', 'localhost');
+
+/**
+ * Reverse Proxy Configuration:
+ *
+ * Reverse proxy servers are often used to enhance the performance
+ * of heavily visited sites and may also provide other site caching,
+ * security, or encryption benefits. In an environment where Drupal
+ * is behind a reverse proxy, the real IP address of the client should
+ * be determined such that the correct client IP address is available
+ * to Drupal's logging, statistics, and access management systems. In
+ * the most simple scenario, the proxy server will add an
+ * X-Forwarded-For header to the request that contains the client IP
+ * address. However, HTTP headers are vulnerable to spoofing, where a
+ * malicious client could bypass restrictions by setting the
+ * X-Forwarded-For header directly. Therefore, Drupal's proxy
+ * configuration requires the IP addresses of all remote proxies to be
+ * specified in $settings['reverse_proxy_addresses'] to work correctly.
+ *
+ * Enable this setting to get Drupal to determine the client IP from
+ * the X-Forwarded-For header (or $settings['reverse_proxy_header'] if set).
+ * If you are unsure about this setting, do not have a reverse proxy,
+ * or Drupal operates in a shared hosting environment, this setting
+ * should remain commented out.
+ *
+ * In order for this setting to be used you must specify every possible
+ * reverse proxy IP address in $settings['reverse_proxy_addresses'].
+ * If a complete list of reverse proxies is not available in your
+ * environment (for example, if you use a CDN) you may set the
+ * $_SERVER['REMOTE_ADDR'] variable directly in settings.php.
+ * Be aware, however, that it is likely that this would allow IP
+ * address spoofing unless more advanced precautions are taken.
+ */
+# $settings['reverse_proxy'] = TRUE;
+
+/**
+ * Specify every reverse proxy IP address in your environment.
+ * This setting is required if $settings['reverse_proxy'] is TRUE.
+ */
+# $settings['reverse_proxy_addresses'] = array('a.b.c.d', ...);
+
+/**
+ * Set this value if your proxy server sends the client IP in a header
+ * other than X-Forwarded-For.
+ */
+# $settings['reverse_proxy_header'] = 'HTTP_X_CLUSTER_CLIENT_IP';
+
+/**
+ * Page caching:
+ *
+ * By default, Drupal sends a "Vary: Cookie" HTTP header for anonymous page
+ * views. This tells a HTTP proxy that it may return a page from its local
+ * cache without contacting the web server, if the user sends the same Cookie
+ * header as the user who originally requested the cached page. Without "Vary:
+ * Cookie", authenticated users would also be served the anonymous page from
+ * the cache. If the site has mostly anonymous users except a few known
+ * editors/administrators, the Vary header can be omitted. This allows for
+ * better caching in HTTP proxies (including reverse proxies), i.e. even if
+ * clients send different cookies, they still get content served from the cache.
+ * However, authenticated users should access the site directly (i.e. not use an
+ * HTTP proxy, and bypass the reverse proxy if one is used) in order to avoid
+ * getting cached pages from the proxy.
+ */
+# $settings['omit_vary_cookie'] = TRUE;
+
+/**
+ * Class Loader.
+ *
+ * By default, Drupal uses the Symfony UniversalClassLoader which is best for
+ * development, as it does not break when code is moved on the file system.
+ * The APC classloader provides better performance and is recommended for
+ * production sites.
+ *
+ * Examples:
+ *  $class_loader = 'apc'
+ *  $class_loader = 'default'
+ */
+# $settings['class_loader'] = 'apc';
+
+/**
+ * Authorized file system operations:
+ *
+ * The Update Manager module included with Drupal provides a mechanism for
+ * site administrators to securely install missing updates for the site
+ * directly through the web user interface. On securely-configured servers,
+ * the Update manager will require the administrator to provide SSH or FTP
+ * credentials before allowing the installation to proceed; this allows the
+ * site to update the new files as the user who owns all the Drupal files,
+ * instead of as the user the webserver is running as. On servers where the
+ * webserver user is itself the owner of the Drupal files, the administrator
+ * will not be prompted for SSH or FTP credentials (note that these server
+ * setups are common on shared hosting, but are inherently insecure).
+ *
+ * Some sites might wish to disable the above functionality, and only update
+ * the code directly via SSH or FTP themselves. This setting completely
+ * disables all functionality related to these authorized file operations.
+ *
+ * @see http://drupal.org/node/244924
+ *
+ * Remove the leading hash signs to disable.
+ */
+# $settings['allow_authorize_operations'] = FALSE;
 
 /**
  * Base URL (optional).
@@ -398,69 +514,6 @@ ini_set('session.cookie_lifetime', 2000000);
 # $conf['maintenance_theme'] = 'bartik';
 
 /**
- * Reverse Proxy Configuration:
- *
- * Reverse proxy servers are often used to enhance the performance
- * of heavily visited sites and may also provide other site caching,
- * security, or encryption benefits. In an environment where Drupal
- * is behind a reverse proxy, the real IP address of the client should
- * be determined such that the correct client IP address is available
- * to Drupal's logging, statistics, and access management systems. In
- * the most simple scenario, the proxy server will add an
- * X-Forwarded-For header to the request that contains the client IP
- * address. However, HTTP headers are vulnerable to spoofing, where a
- * malicious client could bypass restrictions by setting the
- * X-Forwarded-For header directly. Therefore, Drupal's proxy
- * configuration requires the IP addresses of all remote proxies to be
- * specified in $conf['reverse_proxy_addresses'] to work correctly.
- *
- * Enable this setting to get Drupal to determine the client IP from
- * the X-Forwarded-For header (or $conf['reverse_proxy_header'] if set).
- * If you are unsure about this setting, do not have a reverse proxy,
- * or Drupal operates in a shared hosting environment, this setting
- * should remain commented out.
- *
- * In order for this setting to be used you must specify every possible
- * reverse proxy IP address in $conf['reverse_proxy_addresses'].
- * If a complete list of reverse proxies is not available in your
- * environment (for example, if you use a CDN) you may set the
- * $_SERVER['REMOTE_ADDR'] variable directly in settings.php.
- * Be aware, however, that it is likely that this would allow IP
- * address spoofing unless more advanced precautions are taken.
- */
-# $conf['reverse_proxy'] = TRUE;
-
-/**
- * Specify every reverse proxy IP address in your environment.
- * This setting is required if $conf['reverse_proxy'] is TRUE.
- */
-# $conf['reverse_proxy_addresses'] = array('a.b.c.d', ...);
-
-/**
- * Set this value if your proxy server sends the client IP in a header
- * other than X-Forwarded-For.
- */
-# $conf['reverse_proxy_header'] = 'HTTP_X_CLUSTER_CLIENT_IP';
-
-/**
- * Page caching:
- *
- * By default, Drupal sends a "Vary: Cookie" HTTP header for anonymous page
- * views. This tells a HTTP proxy that it may return a page from its local
- * cache without contacting the web server, if the user sends the same Cookie
- * header as the user who originally requested the cached page. Without "Vary:
- * Cookie", authenticated users would also be served the anonymous page from
- * the cache. If the site has mostly anonymous users except a few known
- * editors/administrators, the Vary header can be omitted. This allows for
- * better caching in HTTP proxies (including reverse proxies), i.e. even if
- * clients send different cookies, they still get content served from the cache.
- * However, authenticated users should access the site directly (i.e. not use an
- * HTTP proxy, and bypass the reverse proxy if one is used) in order to avoid
- * getting cached pages from the proxy.
- */
-# $conf['system.performance']['cache']['page']['omit_vary_cookie'] = TRUE;
-
-/**
  * CSS/JS aggregated file gzip compression:
  *
  * By default, when CSS or JS aggregation and clean URLs are enabled Drupal will
@@ -511,48 +564,6 @@ ini_set('session.cookie_lifetime', 2000000);
 #$conf['system.fast_404']['exclude_paths'] = '/\/(?:styles)\//';
 #$conf['system.fast_404']['paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
 #$conf['system.fast_404']['html'] = '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
-
-/**
- * External access proxy settings:
- *
- * If your site must access the Internet via a web proxy then you can enter
- * the proxy settings here. Currently only basic authentication is supported
- * by using the username and password variables. The proxy_user_agent variable
- * can be set to NULL for proxies that require no User-Agent header or to a
- * non-empty string for proxies that limit requests to a specific agent. The
- * proxy_exceptions variable is an array of host names to be accessed directly,
- * not via proxy.
- */
-# $conf['proxy_server'] = '';
-# $conf['proxy_port'] = 8080;
-# $conf['proxy_username'] = '';
-# $conf['proxy_password'] = '';
-# $conf['proxy_user_agent'] = '';
-# $conf['proxy_exceptions'] = array('127.0.0.1', 'localhost');
-
-/**
- * Authorized file system operations:
- *
- * The Update Manager module included with Drupal provides a mechanism for
- * site administrators to securely install missing updates for the site
- * directly through the web user interface. On securely-configured servers,
- * the Update manager will require the administrator to provide SSH or FTP
- * credentials before allowing the installation to proceed; this allows the
- * site to update the new files as the user who owns all the Drupal files,
- * instead of as the user the webserver is running as. On servers where the
- * webserver user is itself the owner of the Drupal files, the administrator
- * will not be prompted for SSH or FTP credentials (note that these server
- * setups are common on shared hosting, but are inherently insecure).
- *
- * Some sites might wish to disable the above functionality, and only update
- * the code directly via SSH or FTP themselves. This setting completely
- * disables all functionality related to these authorized file operations.
- *
- * @see http://drupal.org/node/244924
- *
- * Remove the leading hash signs to disable.
- */
-# $conf['allow_authorize_operations'] = FALSE;
 
 /**
  * Load local development override configuration, if available.

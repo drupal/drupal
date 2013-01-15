@@ -12,6 +12,13 @@
     $formContainer: null,
 
     /**
+     * Implements getEditUISettings() method.
+     */
+    getEditUISettings: function() {
+      return { padding: false, unifiedToolbar: false, fullWidthToolbar: false };
+    },
+
+    /**
      * Implements jQuery UI widget factory's _init() method.
      *
      * @todo: POSTPONED_ON(Create.js, https://github.com/bergie/create/issues/142)
@@ -42,11 +49,15 @@
         case 'candidate':
           if (from !== 'inactive') {
             this.disable();
+            if (from !== 'highlighted') {
+              this.element.removeClass('edit-belowoverlay');
+            }
           }
           break;
         case 'highlighted':
           break;
         case 'activating':
+          this.element.addClass('edit-belowoverlay');
           this.enable();
           break;
         case 'active':

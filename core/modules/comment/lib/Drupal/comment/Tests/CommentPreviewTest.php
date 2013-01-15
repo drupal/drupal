@@ -94,7 +94,7 @@ class CommentPreviewTest extends CommentTestBase {
     $expected_text_date = format_date($raw_date);
     $expected_form_date = format_date($raw_date, 'custom', 'Y-m-d H:i O');
     $comment = $this->postComment($this->node, $edit['subject'], $edit['comment_body[' . $langcode . '][0][value]'], TRUE);
-    $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Preview'));
+    $this->drupalPost('comment/' . $comment->id() . '/edit', $edit, t('Preview'));
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
     $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
@@ -110,11 +110,11 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertFieldByName('date', $edit['date'], 'Date field displayed.');
 
     // Check that saving a comment produces a success message.
-    $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Save'));
+    $this->drupalPost('comment/' . $comment->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('Your comment has been posted.'), 'Comment posted.');
 
     // Check that the comment fields are correct after loading the saved comment.
-    $this->drupalGet('comment/' . $comment->id . '/edit');
+    $this->drupalGet('comment/' . $comment->id() . '/edit');
     $this->assertFieldByName('subject', $edit['subject'], 'Subject field displayed.');
     $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], 'Comment field displayed.');
     $this->assertFieldByName('name', $edit['name'], 'Author field displayed.');
@@ -126,14 +126,14 @@ class CommentPreviewTest extends CommentTestBase {
     $displayed['comment_body[' . $langcode . '][0][value]'] = (string) current($this->xpath("//textarea[@id='edit-comment-body-" . $langcode . "-0-value']"));
     $displayed['name'] = (string) current($this->xpath("//input[@id='edit-name']/@value"));
     $displayed['date'] = (string) current($this->xpath("//input[@id='edit-date']/@value"));
-    $this->drupalPost('comment/' . $comment->id . '/edit', $displayed, t('Save'));
+    $this->drupalPost('comment/' . $comment->id() . '/edit', $displayed, t('Save'));
 
     // Check that the saved comment is still correct.
-    $comment_loaded = comment_load($comment->id);
-    $this->assertEqual($comment_loaded->subject, $edit['subject'], 'Subject loaded.');
-    $this->assertEqual($comment_loaded->comment_body[$langcode][0]['value'], $edit['comment_body[' . $langcode . '][0][value]'], 'Comment body loaded.');
-    $this->assertEqual($comment_loaded->name, $edit['name'], 'Name loaded.');
-    $this->assertEqual($comment_loaded->created, $raw_date, 'Date loaded.');
+    $comment_loaded = comment_load($comment->id(), TRUE);
+    $this->assertEqual($comment_loaded->subject->value, $edit['subject'], 'Subject loaded.');
+    $this->assertEqual($comment_loaded->comment_body->value, $edit['comment_body[' . $langcode . '][0][value]'], 'Comment body loaded.');
+    $this->assertEqual($comment_loaded->name->value, $edit['name'], 'Name loaded.');
+    $this->assertEqual($comment_loaded->created->value, $raw_date, 'Date loaded.');
 
   }
 

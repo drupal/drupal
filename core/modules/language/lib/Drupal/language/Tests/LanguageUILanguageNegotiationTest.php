@@ -402,15 +402,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable the language switcher block.
-    $block_id = 'language_block:' . LANGUAGE_TYPE_INTERFACE;
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
+    $this->drupalPlaceBlock('language_block:' . LANGUAGE_TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
 
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.
@@ -420,7 +412,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // Check that the language switcher active link matches the given browser
     // language.
-    $args = array(':id' => 'block-' . strtolower($block['machine_name']), ':url' => base_path() . $GLOBALS['script_path'] . $langcode_browser_fallback);
+    $args = array(':id' => 'block-test-language-block', ':url' => base_path() . $GLOBALS['script_path'] . $langcode_browser_fallback);
     $fields = $this->xpath('//div[@id=:id]//a[@class="language-link active" and starts-with(@href, :url)]', $args);
     $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, 'The browser language is the URL active language');
 

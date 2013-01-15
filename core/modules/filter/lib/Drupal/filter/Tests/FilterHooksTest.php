@@ -10,7 +10,7 @@ namespace Drupal\filter\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for filter hook invocation.
+ * Tests for Filter's hook invocations.
  */
 class FilterHooksTest extends WebTestBase {
 

@@ -46,22 +46,13 @@ class BlockHiddenRegionTest extends WebTestBase {
     );
 
     $this->drupalLogin($this->adminUser);
-
-    $default_theme = variable_get('theme_default', 'stark');
-
-    $block['machine_name'] = $this->randomName();
-    $block['region'] = 'sidebar_first';
-    $block['title'] = $this->randomName();
-    $this->drupalPost('admin/structure/block/manage/search_form_block/' . $default_theme, $block, t('Save block'));
-    $this->assertText('The block configuration has been saved.', 'Block was saved');
+    $this->drupalPlaceBlock('search_form_block');
   }
 
   /**
    * Tests that hidden regions do not inherit blocks when a theme is enabled.
    */
   public function testBlockNotInHiddenRegion() {
-
-    $this->drupalLogin($this->adminUser);
 
     // Ensure that the search form block is displayed.
     $this->drupalGet('');
@@ -81,4 +72,5 @@ class BlockHiddenRegionTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText('Search', 'Block was displayed on the front page.');
   }
+
 }

@@ -54,13 +54,9 @@ class AccessDeniedTest extends WebTestBase {
     $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
 
     // Enable the user login block.
-    $edit = array(
-      'machine_name' => 'login',
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block/manage/user_login_block/stark', $edit, t('Save block'));
+    $this->drupalPlaceBlock('user_login_block', array('machine_name' => 'login'));
 
-    // Logout and check that the user login block is shown on custom 403 pages.
+    // Log out and check that the user login block is shown on custom 403 pages.
     $this->drupalLogout();
     $this->drupalGet('admin');
     $this->assertText($this->admin_user->name, 'Found the custom 403 page');

@@ -82,7 +82,7 @@ class FilterCrudTest extends WebTestBase {
   }
 
   /**
-   * Verify that a text format is properly stored.
+   * Verifies that a text format is properly stored.
    */
   function verifyTextFormat($format) {
     $t_args = array('%format' => $format->name);
@@ -120,7 +120,7 @@ class FilterCrudTest extends WebTestBase {
   }
 
   /**
-   * Verify that filters are properly stored for a text format.
+   * Verifies that filters are properly stored for a text format.
    */
   function verifyFilters($format) {
     // Verify filter database records.

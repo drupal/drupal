@@ -105,6 +105,8 @@ class ViewsDataCache {
       if (isset($this->storage[$key])) {
         return $this->storage[$key];
       }
+      // If the key is invalid, return an empty array.
+      return array();
     }
     else {
       if (!$this->fullyLoaded) {
@@ -205,14 +207,21 @@ class ViewsDataCache {
    * Destructs the ViewDataCache object.
    */
   public function __destruct() {
-    if ($this->rebuildCache && !empty($this->storage)) {
-      // Keep a record with all data.
-      $this->set($this->baseCid, $this->storage);
-      // Save data in seperate cache entries.
-      foreach ($this->storage as $table => $data) {
-        $cid = $this->baseCid . ':' . $table;
-        $this->set($cid, $data);
+    try {
+      if ($this->rebuildCache && !empty($this->storage)) {
+        // Keep a record with all data.
+        $this->set($this->baseCid, $this->storage);
+        // Save data in seperate cache entries.
+        foreach ($this->storage as $table => $data) {
+          $cid = $this->baseCid . ':' . $table;
+          $this->set($cid, $data);
+        }
       }
+    }
+    catch (\Exception $e) {
+      // During testing the table is gone before this fires.
+      // @todo Use terminate() instead of __destruct(), see
+      //   http://drupal.org/node/512026.
     }
   }
 

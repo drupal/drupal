@@ -167,10 +167,9 @@ class Page extends PathPluginBase {
 
         $form['menu']['title'] = array(
           '#prefix' => '<div class="views-left-50">',
-          '#title' => t('Title'),
+          '#title' => t('Menu link title'),
           '#type' => 'textfield',
           '#default_value' => $menu['title'],
-          '#description' => t('If set to normal or tab, enter the text to use for the menu item.'),
           '#states' => array(
             'visible' => array(
               array(
@@ -189,7 +188,7 @@ class Page extends PathPluginBase {
           '#title' => t('Description'),
           '#type' => 'textfield',
           '#default_value' => $menu['description'],
-          '#description' => t("If set to normal or tab, enter the text to use for the menu item's description."),
+          '#description' => t("Shown when hovering over the menu link."),
           '#states' => array(
             'visible' => array(
               array(
@@ -212,7 +211,6 @@ class Page extends PathPluginBase {
             '#type' => 'select',
             '#options' => menu_get_menus(),
             '#default_value' => $menu['name'],
-            '#description' => t('Insert item into an available menu.'),
             '#states' => array(
               'visible' => array(
                 array(
@@ -238,7 +236,7 @@ class Page extends PathPluginBase {
           '#title' => t('Weight'),
           '#type' => 'textfield',
           '#default_value' => isset($menu['weight']) ? $menu['weight'] : 0,
-          '#description' => t('The lower the weight the higher/further left it will appear.'),
+          '#description' => t('In the menu, the heavier links will sink and the lighter links will be positioned nearer the top.'),
           '#states' => array(
             'visible' => array(
               array(
@@ -353,7 +351,7 @@ class Page extends PathPluginBase {
           '#type' => 'textfield',
           '#default_value' => $tab_options['weight'],
           '#size' => 5,
-          '#description' => t('If the parent menu item is a tab, enter the weight of the tab. The lower the number, the more to the left it will be.'),
+          '#description' => t('If the parent menu item is a tab, enter the weight of the tab. Heavier tabs will sink and the lighter tabs will be positioned nearer to the first menu item.'),
           '#states' => array(
             'visible' => array(
               ':input[name="tab_options[type]"]' => array('value' => 'tab'),

@@ -61,11 +61,16 @@ class EntityTestFormController extends EntityFormControllerNG {
     $is_new = $entity->isNew();
     $entity->save();
 
-    $message = $is_new ? t('entity_test @id has been created.', array('@id' => $entity->id())) : t('entity_test @id has been updated.', array('@id' => $entity->id()));
+    if ($is_new) {
+     $message = t('%entity_type @id has been created.', array('@id' => $entity->id(), '%entity_type' => $entity->entityType()));
+    }
+    else {
+      $message = t('%entity_type @id has been updated.', array('@id' => $entity->id(), '%entity_type' => $entity->entityType()));
+    }
     drupal_set_message($message);
 
     if ($entity->id()) {
-      $form_state['redirect'] = 'entity-test/manage/' . $entity->id() . '/edit';
+      $form_state['redirect'] = $entity->entityType() . '/manage/' . $entity->id() . '/edit';
     }
     else {
       // Error on save.
@@ -80,7 +85,7 @@ class EntityTestFormController extends EntityFormControllerNG {
   public function delete(array $form, array &$form_state) {
     $entity = $this->getEntity($form_state);
     $entity->delete();
-    drupal_set_message(t('entity_test @id has been deleted.', array('@id' => $entity->id())));
+    drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->entityType())));
     $form_state['redirect'] = '<front>';
   }
 }

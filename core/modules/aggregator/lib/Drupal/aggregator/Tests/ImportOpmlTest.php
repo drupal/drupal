@@ -49,15 +49,7 @@ class ImportOpmlTest extends AggregatorTestBase {
       ->execute();
 
     // Enable the help block.
-    $block_id = 'system_help_block';
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'help',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), '"Help" block enabled');
+    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->assertText('A single OPML document may contain a collection of many feeds.', 'Found OPML help text.');

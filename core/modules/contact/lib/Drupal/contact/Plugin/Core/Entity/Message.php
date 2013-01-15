@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Entity;
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
  *   module = "contact",
- *   list_controller_class = "Drupal\contact\MessageListController",
  *   form_controller_class = {
  *     "default" = "Drupal\contact\MessageFormController"
  *   },

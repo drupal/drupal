@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 /**
  * Tests temporary queries.
  */
-class TemporaryQueryTest extends DatabaseTestBase {
+class TemporaryQueryTest extends DatabaseWebTestBase {
 
   /**
    * Modules to enable.

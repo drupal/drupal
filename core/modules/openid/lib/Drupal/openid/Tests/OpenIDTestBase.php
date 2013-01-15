@@ -24,16 +24,10 @@ abstract class OpenIDTestBase extends WebTestBase {
   function setUp() {
     parent::setUp();
 
+    // Enable user login block.
     $this->admin_user = $this->drupalCreateUser(array('administer blocks'));
     $this->drupalLogin($this->admin_user);
-
-    // Enable user login block.
-    $edit = array(
-      'machine_name' => 'user_login',
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block/manage/user_login_block/stark', $edit, t('Save block'));
-
+    $this->drupalPlaceBlock('user_login_block');
     $this->drupalLogout();
 
     // Use a different front page than login page for testing OpenID login from

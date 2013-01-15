@@ -8,7 +8,14 @@
 /**
  * Page callback: Displays a page with long filter tips.
  *
+ * @param $format
+ *   (optional) A filter format. Defaults to NULL.
+ *
+ * @return string
+ *   An HTML-formatted string.
+ *
  * @see filter_menu()
+ * @see theme_filter_tips()
  */
 function filter_tips_long($format = NULL) {
   if (!empty($format)) {
@@ -23,7 +30,7 @@ function filter_tips_long($format = NULL) {
 /**
  * Returns HTML for a set of filter tips.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - tips: An array containing descriptions and a CSS ID in the form of
  *     'module-name/filter-id' (only used when $long is TRUE) for each

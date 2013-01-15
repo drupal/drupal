@@ -31,7 +31,8 @@ class EntityTestTranslationUITest extends EntityTranslationUITest {
    * Overrides \Drupal\simpletest\WebTestBase::setUp().
    */
   function setUp() {
-    $this->entityType = 'entity_test';
+    // Use the entity_test_mul as this has multilingual property support.
+    $this->entityType = 'entity_test_mul';
     parent::setUp();
   }
 

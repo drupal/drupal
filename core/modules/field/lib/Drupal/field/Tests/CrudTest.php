@@ -340,7 +340,7 @@ class CrudTest extends FieldTestBase {
     $values[0]['value'] = mt_rand(1, 127);
     $entity->{$field['field_name']}[$langcode] = $values;
     $entity_type = 'test_entity';
-    field_attach_insert('test_entity', $entity);
+    field_attach_insert($entity);
 
     // Verify the field is present on load
     $entity = field_test_create_entity(0, 0, $this->instance_definition['bundle']);
@@ -406,7 +406,7 @@ class CrudTest extends FieldTestBase {
         $entity->field_update[LANGUAGE_NOT_SPECIFIED][$i]['value'] = $i;
       }
       // Save the entity.
-      field_attach_insert('test_entity', $entity);
+      field_attach_insert($entity);
       // Load back and assert there are $cardinality number of values.
       $entity = field_test_create_entity($id, $id, $instance['bundle']);
       field_attach_load('test_entity', array($id => $entity));

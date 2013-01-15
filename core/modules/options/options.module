@@ -5,9 +5,9 @@
  * Defines selection, check box and radio button widgets for text and numeric fields.
  */
 
-use Drupal\field\FieldUpdateForbiddenException;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\FieldUpdateForbiddenException;
 
 /**
  * Implements hook_help().
@@ -238,16 +238,14 @@ function options_field_update_field($field, $prior_field, $has_data) {
  *   The field definition.
  * @param $instance
  *   (optional) A field instance array. Defaults to NULL.
- * @param $entity_type
- *   (optional) The type of entity; e.g. 'node' or 'user'. Defaults to NULL.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   (optional) The entity object. Defaults to NULL.
  *
  * @return
  *   The array of allowed values. Keys of the array are the raw stored values
  *   (number or text), values of the array are the display labels.
  */
-function options_allowed_values($field, $instance = NULL, $entity_type = NULL, $entity = NULL) {
+function options_allowed_values($field, $instance = NULL, EntityInterface $entity = NULL) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
   if (!isset($allowed_values[$field['id']])) {
@@ -257,7 +255,7 @@ function options_allowed_values($field, $instance = NULL, $entity_type = NULL, $
     // generating dynamic and uncached values.
     $cacheable = TRUE;
     if (!empty($function)) {
-      $values = $function($field, $instance, $entity_type, $entity, $cacheable);
+      $values = $function($field, $instance, $entity, $cacheable);
     }
     else {
       $values = $field['settings']['allowed_values'];
@@ -409,8 +407,8 @@ function _options_values_in_use($field, $values) {
  * Possible error codes:
  * - 'list_illegal_value': The value is not part of the list of allowed values.
  */
-function options_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  $allowed_values = options_allowed_values($field, $instance, $entity_type, $entity);
+function options_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
+  $allowed_values = options_allowed_values($field, $instance, $entity);
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($allowed_values) && !isset($allowed_values[$item['value']])) {
@@ -486,7 +484,7 @@ function options_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   $entity = $element['#entity'];
 
   // Prepare the list of options.
-  $options = _options_get_options($field, $instance, $properties, $entity_type, $entity);
+  $options = _options_get_options($field, $instance, $properties, $entity);
 
   // Put current field values in shape.
   $default_value = _options_storage_to_form($items, $options, $value_key, $properties);
@@ -655,9 +653,9 @@ function _options_properties($type, $multiple, $required, $has_value) {
 /**
  * Collects the options for a field.
  */
-function _options_get_options($field, $instance, $properties, $entity_type, $entity) {
+function _options_get_options($field, $instance, $properties, EntityInterface $entity) {
   // Get the list of options.
-  $options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $entity_type, $entity);
+  $options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $entity);
 
   // Sanitize the options.
   _options_prepare_options($options, $properties);
@@ -827,8 +825,8 @@ function options_field_widget_error($element, $error, $form, &$form_state) {
 /**
  * Implements hook_options_list().
  */
-function options_options_list($field, $instance, $entity_type, $entity) {
-  return options_allowed_values($field, $instance, $entity_type, $entity);
+function options_options_list($field, $instance, $entity) {
+  return options_allowed_values($field, $instance, $entity);
 }
 
 /**
@@ -880,12 +878,12 @@ function options_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function options_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function options_field_formatter_view(EntityInterface $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {
     case 'list_default':
-      $allowed_values = options_allowed_values($field, $instance, $entity_type, $entity);
+      $allowed_values = options_allowed_values($field, $instance, $entity);
       foreach ($items as $delta => $item) {
         if (isset($allowed_values[$item['value']])) {
           $output = field_filter_xss($allowed_values[$item['value']]);

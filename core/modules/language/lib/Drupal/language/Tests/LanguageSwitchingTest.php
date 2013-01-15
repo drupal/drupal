@@ -42,16 +42,7 @@ class LanguageSwitchingTest extends WebTestBase {
    */
   function testLanguageBlock() {
     // Enable the language switching block.
-    $language_type = LANGUAGE_TYPE_INTERFACE;
-    $block_id = 'language_block:' . $language_type;
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block enabled');
+    $block = $this->drupalPlaceBlock('language_block:' . LANGUAGE_TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
 
     // Add language.
     $edit = array(
@@ -65,10 +56,10 @@ class LanguageSwitchingTest extends WebTestBase {
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertText($block['title'], 'Language switcher block found.');
+    $this->assertText($block['subject'], 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-' . strtolower($block['machine_name'])));
+    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-test-language-block'));
     $links = array(
       'active' => array(),
       'inactive' => array(),
@@ -97,4 +88,5 @@ class LanguageSwitchingTest extends WebTestBase {
     $this->assertIdentical($links, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language list item is marked as active on the language switcher block.');
     $this->assertIdentical($anchors, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language anchor is marked as active on the language switcher block.');
   }
+
 }

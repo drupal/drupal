@@ -628,7 +628,7 @@ function views_ui_library_alter(&$libraries, $module) {
  * There are other analysis tools in core specific sections, such as
  * node.views.inc as well.
  */
-function views_ui_views_analyze($view) {
+function views_ui_views_analyze(ViewExecutable $view) {
   $ret = array();
   // Check for something other than the default display:
   if (count($view->displayHandlers) < 2) {
@@ -644,7 +644,7 @@ function views_ui_views_analyze($view) {
     if ($display->hasPath() && $path = $display->getOption('path')) {
       $normal_path = drupal_container()->get('path.alias_manager.cached')->getSystemPath($path);
       if ($path != $normal_path) {
-        $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', array('%display' => $display['display_title'])), 'warning');
+        $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', array('%display' => $display->display['display_title'])), 'warning');
       }
     }
   }

@@ -5,63 +5,7 @@
  * Install, update and uninstall functions for the menu module.
  */
 
-/**
- * Implements hook_schema().
- */
-function menu_schema() {
-  $schema['menu_custom'] = array(
-    'description' => 'Holds definitions for top-level custom menus (for example, Main navigation menu).',
-    'fields' => array(
-      'menu_name' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Primary Key: Unique key for menu. This is used as a block delta so length is 32.',
-      ),
-      'title' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Menu title; displayed at top of block.',
-        'translatable' => TRUE,
-      ),
-      'description' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'description' => 'Menu description.',
-        'translatable' => TRUE,
-      ),
-    ),
-    'primary key' => array('menu_name'),
-  );
-
-  return $schema;
-}
-
-/**
- * Implements hook_install().
- */
-function menu_install() {
-  $system_menus = menu_list_system_menus();
-  $t = get_t();
-  $descriptions = array(
-    'tools' => $t('Contains links for site visitors. Some modules add their links here.'),
-    'account' => $t('Links related to the user account.'),
-    'admin' => $t('Contains links to administrative tasks.'),
-    'main' => $t('Use this for linking to the main site sections.'),
-    'footer' => $t('Use this for linking to site information.'),
-  );
-  foreach ($system_menus as $menu_name => $title) {
-    $menu = array(
-      'menu_name' => $menu_name,
-      'title' => $t($title),
-      'description' => $descriptions[$menu_name],
-    );
-    menu_save($menu);
-  }
-}
+use Drupal\Component\Uuid\Uuid;
 
 /**
  * Implements hook_uninstall().
@@ -126,3 +70,22 @@ function menu_update_8003() {
   ));
 }
 
+/**
+ * Migrate menus into configuration.
+ *
+ * @ingroup config_upgrade
+ */
+function menu_update_8004() {
+  $uuid = new Uuid();
+  $result = db_query('SELECT * FROM {menu_custom}');
+  foreach ($result as $menu) {
+    // Save the config object.
+    config('menu.menu.' . $menu->menu_name)
+      ->set('id', $menu->menu_name)
+      ->set('uuid', $uuid->generate())
+      ->set('label', $menu->title)
+      ->set('description', $menu->description)
+      ->save();
+    update_config_manifest_add('menu.menu', array($menu->menu_name));
+  }
+}

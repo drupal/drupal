@@ -414,8 +414,8 @@ function _translation_entity_update_field($entity_type, EntityInterface $entity,
   // otherwise any stored empty field value would be deleted. If this happens
   // the range queries would be messed up.
   if ($empty < count($entity->{$field_name})) {
-    field_attach_presave($entity_type, $entity);
-    field_attach_update($entity_type, $entity);
+    field_attach_presave($entity);
+    field_attach_update($entity);
   }
 }
 

@@ -7,6 +7,7 @@
  * Provides a field and formatters to allow administrators to enable and
  * configure comments attached to entities.
  */
+use \Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_field_info().
@@ -223,7 +224,7 @@ function comment_field_widget_form(&$form, &$form_state, $field, $instance, $lan
 /**
  * Implements hook_field_formatter_view().
  */
-function comment_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function comment_field_formatter_view(EntityInterface $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   switch ($display['type']) {

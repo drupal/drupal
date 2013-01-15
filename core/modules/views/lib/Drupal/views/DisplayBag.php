@@ -8,6 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\Component\Plugin\PluginBag;
+use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * A class which wraps the displays of a view so you can lazy-initialize them.
@@ -22,13 +23,23 @@ class DisplayBag extends PluginBag {
   protected $view;
 
   /**
+   * The manager used to instantiate the plugins.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $manager;
+
+  /**
    * Constructs a DisplayBag object.
    *
    * @param \Drupal\views\ViewExecutable
    *   The view which has this displays attached.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
+   *   The manager to be used for instantiating plugins.
    */
-  public function __construct(ViewExecutable $view) {
+  public function __construct(ViewExecutable $view, PluginManagerInterface $manager) {
     $this->view = $view;
+    $this->manager = $manager;
 
     $this->initializePlugin('default');
 
@@ -66,11 +77,11 @@ class DisplayBag extends PluginBag {
 
     // Retrieve and initialize the new display handler with data.
     $display = &$this->view->storage->getDisplay($display_id);
-    $this->pluginInstances[$display_id] = drupal_container()->get("plugin.manager.views.display")->createInstance($display['display_plugin']);
+    $this->pluginInstances[$display_id] = $this->manager->createInstance($display['display_plugin']);
     if (empty($this->pluginInstances[$display_id])) {
       // Provide a 'default' handler as an emergency. This won't work well but
       // it will keep things from crashing.
-      $this->pluginInstances[$display_id] = drupal_container()->get("plugin.manager.views.display")->createInstance('default');
+      $this->pluginInstances[$display_id] = $this->manager->createInstance('default');
     }
 
     $this->pluginInstances[$display_id]->initDisplay($this->view, $display);

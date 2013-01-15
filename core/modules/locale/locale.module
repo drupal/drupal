@@ -1028,12 +1028,14 @@ function locale_string_is_safe($string) {
  * @param array $langcodes
  *   Language codes for updated translations.
  * @param array $lids
- *   List of string identifiers that have been updated / created.
+ *   (optional) List of string identifiers that have been updated / created.
+ *   If not provided, all caches for the affected languages are cleared.
  */
-function _locale_refresh_translations($langcodes, $lids) {
-  if ($lids && $langcodes) {
-    // Update javascript translations if any of the strings has a javascript location.
-    if ($strings = locale_storage()->getStrings(array('lid' => $lids, 'type' => 'javascript'))) {
+function _locale_refresh_translations($langcodes, $lids = array()) {
+  if (!empty($langcodes)) {
+    // Update javascript translations if any of the strings has a javascript
+    // location, or if no string ids were provided, update all languages.
+    if (empty($lids) || ($strings = locale_storage()->getStrings(array('lid' => $lids, 'type' => 'javascript')))) {
       array_map('_locale_invalidate_js', $langcodes);
     }
   }

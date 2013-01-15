@@ -26,27 +26,17 @@ Drupal.behaviors.blockSettingsSummary = {
       return $.map(vals, $.trim).join(', ');
     }
 
-    $('#edit-node-type').drupalSetSummary(checkboxesSummary);
-    $('#edit-language').drupalSetSummary(checkboxesSummary);
-    $('#edit-role').drupalSetSummary(checkboxesSummary);
+    $('#edit-visibility-node-type').drupalSetSummary(checkboxesSummary);
+    $('#edit-visibility-language').drupalSetSummary(checkboxesSummary);
+    $('#edit-visibility-role').drupalSetSummary(checkboxesSummary);
 
-    $('#edit-path').drupalSetSummary(function (context) {
-      var $pages = $(context).find('textarea[name="pages"]');
+    $('#edit-visibility-path').drupalSetSummary(function (context) {
+      var $pages = $(context).find('textarea[name="visibility[path][pages]"]');
       if (!$pages.val()) {
         return Drupal.t('Not restricted');
       }
       else {
         return Drupal.t('Restricted to certain pages');
-      }
-    });
-
-    $('#edit-user').drupalSetSummary(function (context) {
-      var $radio = $(context).find('input[name="custom"]:checked');
-      if ($radio.val() === 0) {
-        return Drupal.t('Not customizable');
-      }
-      else {
-        return $radio.next('label').text();
       }
     });
   }

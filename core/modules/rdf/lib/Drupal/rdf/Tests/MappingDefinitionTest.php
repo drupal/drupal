@@ -133,7 +133,7 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     $this->drupalGet('node/' . $node->nid);
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.
-    $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and contains(@lang, "")]', array(
+    $author_about = $this->xpath('//a[@typeof="sioc:UserAccount" and @about=:account-uri and @property="foaf:name" and @datatype="" and contains(@lang, "")]', array(
       ':account-uri' => $account_uri,
     ));
     $this->assertTrue(!empty($author_about), 'RDFa markup found on author information on post. The lang attribute on username is set to empty string.');

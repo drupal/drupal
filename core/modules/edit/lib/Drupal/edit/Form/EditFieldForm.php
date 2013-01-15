@@ -23,7 +23,7 @@ class EditFieldForm {
     }
 
     // Add the field form.
-    field_attach_form($form_state['entity']->entityType(), $form_state['entity'], $form, $form_state, $form_state['langcode'], array('field_name' =>  $form_state['field_name']));
+    field_attach_form($form_state['entity'], $form, $form_state, $form_state['langcode'], array('field_name' =>  $form_state['field_name']));
 
     // Add a submit button. Give it a class for easy JavaScript targeting.
     $form['actions'] = array('#type' => 'actions');
@@ -63,7 +63,7 @@ class EditFieldForm {
    */
   public function validate(array $form, array &$form_state) {
     $entity = $this->buildEntity($form, $form_state);
-    field_attach_form_validate($entity->entityType(), $entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
+    field_attach_form_validate($entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
   }
 
   /**
@@ -86,7 +86,7 @@ class EditFieldForm {
     // @todo field_attach_submit() only "submits" to the in-memory $entity
     //   object, not to anywhere persistent. Consider renaming it to minimize
     //   confusion: http://drupal.org/node/1846648.
-    field_attach_submit($entity->entityType(), $entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
+    field_attach_submit($entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
 
     // @todo Refine automated log messages and abstract them to all entity
     //   types: http://drupal.org/node/1678002.

@@ -543,7 +543,7 @@ function locale_translate_batch_import_save($context) {
 function locale_translate_batch_finished($success, $results) {
   if ($success) {
     $additions = $updates = $deletes = $skips = 0;
-    $strings = $langcodes = array();
+    $langcodes = array();
     if (isset($results['failed_files'])) {
         if (module_exists('dblog')) {
           $message = format_plural(count($results['failed_files']), 'One translation file could not be imported. <a href="@url">See the log</a> for details.', '@count translation files could not be imported. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
@@ -566,10 +566,8 @@ function locale_translate_batch_finished($success, $results) {
           if ($report['skips'] > 0) {
             $skipped_files[] = $filepath;
           }
-          $strings = array_merge($strings, $report['strings']);
         }
-        // Get list of unique string identifiers and language codes updated.
-        $strings = array_unique($strings);
+        // Get list of unique language codes updated.
         $langcodes = array_unique(array_values($results['languages']));
       }
       drupal_set_message(format_plural(count($results['files']),
@@ -590,10 +588,8 @@ function locale_translate_batch_finished($success, $results) {
         watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
       }
 
-      if ($strings) {
-        // Clear cache and force refresh of JavaScript translations.
-        _locale_refresh_translations($langcodes, $strings);
-      }
+      // Clear cache and force refresh of JavaScript translations.
+      _locale_refresh_translations($langcodes);
     }
   }
 }

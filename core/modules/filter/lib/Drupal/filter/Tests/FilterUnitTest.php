@@ -981,9 +981,9 @@ body {color:red}
    * @param $needle
    *   Lowercase, plain text to look for.
    * @param $message
-   *   Message to display if failed.
+   *   (optional) Message to display if failed. Defaults to an empty string.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message belongs to. Defaults to 'Other'.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -1005,9 +1005,9 @@ body {color:red}
    * @param $needle
    *   Lowercase, plain text to look for.
    * @param $message
-   *   Message to display if failed.
+   *   (optional) Message to display if failed. Defaults to an empty string.
    * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
+   *   (optional) The group this message belongs to. Defaults to 'Other'.
    * @return
    *   TRUE on pass, FALSE on fail.
    */

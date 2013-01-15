@@ -41,20 +41,7 @@ class UserBlocksTests extends WebTestBase {
 
     $this->adminUser = $this->drupalCreateUser(array('administer blocks'));
     $this->drupalLogin($this->adminUser);
-
-    $block_id = 'user_login_block';
-    $default_theme = variable_get('theme_default', 'stark');
-
-    $block = array(
-      'title' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
-      'region' => 'sidebar_first',
-    );
-
-    // Enable the user login block.
-    $this->drupalPost('admin/structure/block/manage/' . $block_id . '/' . $default_theme, $block, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'User login block enabled');
-    $this->plugin_id = 'plugin.core.block.' . $default_theme . '.' . $block['machine_name'];
+    $this->drupalPlaceBlock('user_login_block');
     $this->drupalLogout($this->adminUser);
   }
 

@@ -31,7 +31,7 @@ class EnableDisableTest extends ModuleTestBase {
       $in_testing_package = ($module->info['package'] == 'Testing');
       // Try to enable, disable and uninstall all core modules, unless they are
       // hidden or required or system test modules.
-      if (!$in_core_path || isset($module->info['hidden']) || isset($module->info['required']) || $in_testing_package) {
+      if (!$in_core_path || !empty($module->info['hidden']) || !empty($module->info['required']) || $in_testing_package) {
         unset($modules[$name]);
       }
     }

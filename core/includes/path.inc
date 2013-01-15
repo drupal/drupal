@@ -96,7 +96,7 @@ function current_path() {
 }
 
 /**
- * Fetch a specific URL alias from the database.
+ * Fetches a specific URL alias from the database.
  *
  * @param $conditions
  *   A string representing the source, a number representing the pid, or an
@@ -118,11 +118,11 @@ function path_load($conditions) {
 }
 
 /**
- * Determine whether a path is in the administrative section of the site.
+ * Determines whether a path is in the administrative section of the site.
  *
- * By default, paths are considered to be non-administrative. If a path does not
- * match any of the patterns in path_get_admin_paths(), or if it matches both
- * administrative and non-administrative patterns, it is considered
+ * By default, paths are considered to be non-administrative. If a path does
+ * not match any of the patterns in path_get_admin_paths(), or if it matches
+ * both administrative and non-administrative patterns, it is considered
  * non-administrative.
  *
  * @param $path
@@ -146,7 +146,7 @@ function path_is_admin($path) {
 }
 
 /**
- * Get a list of administrative and non-administrative paths.
+ * Gets a list of administrative and non-administrative paths.
  *
  * @return array
  *   An associative array containing the following keys:

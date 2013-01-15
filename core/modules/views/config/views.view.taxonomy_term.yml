@@ -2,7 +2,7 @@ disabled: true
 api_version: '3.0'
 module: taxonomy
 name: taxonomy_term
-description: 'A view to emulate Drupal core''s handling of taxonomy/term.'
+description: 'Customize the default taxonomy/term display.'
 tag: default
 base_table: node
 human_name: 'Taxonomy term'

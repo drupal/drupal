@@ -601,12 +601,6 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       $sorts += $available_sorts;
     }
 
-    foreach ($sorts as &$option) {
-      if (is_object($option)) {
-        $option = $option->get();
-      }
-    }
-
     // If there is no sorts option available continue.
     if (!empty($sorts)) {
       $form['displays']['show']['sort'] = array(
@@ -698,6 +692,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Adds the array of display options to the view, with appropriate overrides.
    */
   protected function addDisplays(View $view, $display_options, $form, $form_state) {
+    // Initialize the view executable to get the display plugin instances.
+    $view->get('executable');
+
     // Display: Master
     $default_display = $view->newDisplay('default', 'Master', 'default');
     foreach ($display_options['default'] as $option => $value) {

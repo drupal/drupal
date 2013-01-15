@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Implements hook_help().
@@ -101,7 +102,7 @@ function statistics_permission() {
 /**
  * Implements hook_node_view().
  */
-function statistics_node_view(Node $node, $view_mode) {
+function statistics_node_view(Node $node, EntityDisplay $display, $view_mode) {
   if (!empty($node->nid) && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
     $node->content['#attached']['library'][] = array('statistics', 'drupal.statistics');
     $settings = array('data' => array('nid' => $node->nid), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));

@@ -113,6 +113,19 @@ class TypedDataTest extends WebTestBase {
     $wrapper->setValue(NULL);
     $this->assertNull($wrapper->getValue(), 'URI wrapper is null-able.');
 
+    // Email type.
+    $value = $this->randomString();
+    $wrapper = $this->createTypedData(array('type' => 'email'), $value);
+    $this->assertIdentical($wrapper->getValue(), $value, 'E-mail value was fetched.');
+
+    $new_value = 'test@example.com';
+    $wrapper->setValue($new_value);
+    $this->assertIdentical($wrapper->getValue(), $new_value, 'E-mail value was changed.');
+    $this->assertTrue(is_string($wrapper->getString()), 'E-mail value was converted to string');
+
+    $wrapper->setValue(NULL);
+    $this->assertNull($wrapper->getValue(), 'E-mail wrapper is null-able.');
+
     // Binary type.
     $wrapper = $this->createTypedData(array('type' => 'binary'), $files[0]->uri);
     $this->assertTrue(is_resource($wrapper->getValue()), 'Binary value was fetched.');

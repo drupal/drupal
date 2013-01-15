@@ -10,7 +10,7 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test block HTML id validity.
+ * Tests block HTML ID validity.
  */
 class BlockHtmlIdTest extends WebTestBase {
 
@@ -28,8 +28,8 @@ class BlockHtmlIdTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Block HTML id',
-      'description' => 'Test block HTML id validity.',
+      'name' => 'Block HTML ID',
+      'description' => 'Tests block HTML ID validity.',
       'group' => 'Block',
     );
   }
@@ -46,11 +46,7 @@ class BlockHtmlIdTest extends WebTestBase {
     state()->set('block_test.content', $current_content);
 
     // Enable our test block.
-    $default_theme = variable_get('theme_default', 'stark');
-    $block = array();
-    $block['machine_name'] = 'test_id_block';
-    $block['region'] = 'sidebar_first';
-    $this->drupalPost('admin/structure/block/manage/test_html_id' . '/' . $default_theme, array('machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
+    $this->drupalPlaceBlock('test_html_id', array('machine_name' => 'test_id_block'));
   }
 
   /**
@@ -60,4 +56,5 @@ class BlockHtmlIdTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertRaw('id="block-test-id-block"', 'HTML ID for test block is valid.');
   }
+
 }

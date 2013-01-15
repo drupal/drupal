@@ -1,0 +1,53 @@
+api_version: '3.0'
+base_table: views_test_data
+core: '8'
+module: views
+description: 'Storage Test View for testing.'
+disabled: true
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: '1'
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+      path: test_view_storage
+  block_1:
+    id: block_1
+    display_title: Block
+    display_plugin: block
+    position: '2'
+    display_options:
+      query:
+        type: views_query
+        options: {  }
+human_name: 'Storage Test View'
+name: test_view_storage
+tag: 'test'

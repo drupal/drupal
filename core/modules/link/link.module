@@ -5,6 +5,8 @@
  * Defines simple link field types.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_help().
  */
@@ -79,7 +81,7 @@ function link_field_is_empty($item, $field) {
 /**
  * Implements hook_field_presave().
  */
-function link_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function link_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => &$item) {
     // Trim any spaces around the URL and title.
     $item['url'] = trim($item['url']);
@@ -339,7 +341,7 @@ function link_field_formatter_prepare_view($entity_type, $entities, $field, $ins
 /**
  * Implements hook_field_formatter_view().
  */
-function link_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function link_field_formatter_view(EntityInterface $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
 
@@ -351,7 +353,7 @@ function link_field_formatter_view($entity_type, $entity, $field, $instance, $la
     if (empty($settings['url_only']) && !empty($item['title'])) {
       // Unsanitizied token replacement here because $options['html'] is FALSE
       // by default in theme_link().
-      $link_title = token_replace($item['title'], array($entity_type => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
+      $link_title = token_replace($item['title'], array($entity->entityType() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
     }
 
     // Trim the link title to the desired length.

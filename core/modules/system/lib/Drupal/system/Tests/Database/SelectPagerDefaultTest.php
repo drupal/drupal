@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Database;
 /**
  * Tests the pager query select extender.
  */
-class SelectPagerDefaultTest extends DatabaseTestBase {
+class SelectPagerDefaultTest extends DatabaseWebTestBase {
 
   public static function getInfo() {
     return array(

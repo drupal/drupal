@@ -13,6 +13,10 @@ display:
           field: nid
           id: nid
           table: node
+        field_name_0:
+          id: field_name_0
+          table: field_data_field_name_0
+          field: field_name_0
       cache:
         type: none
       exposed_form:

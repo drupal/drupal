@@ -9,6 +9,7 @@ namespace Drupal\Core\Ajax;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * JSON response object for AJAX requests.
@@ -92,8 +93,8 @@ class AjaxResponse extends JsonResponse {
         //   reliably diffed with array_diff_key(), since the number can change
         //   due to factors unrelated to the inline content, so for now, we
         //   strip the inline items from Ajax responses, and can add support for
-        //   them when drupal_add_css() and drupal_add_js() are changed to using
-        //   md5() or some other hash of the inline content.
+        //   them when drupal_add_css() and drupal_add_js() are changed to use
+        //   a hash of the inline content as the array key.
         foreach ($items[$type] as $key => $item) {
           if (is_numeric($key)) {
             unset($items[$type][$key]);
@@ -134,7 +135,7 @@ class AjaxResponse extends JsonResponse {
     $scripts = drupal_add_js();
     if (!empty($scripts['settings'])) {
       $settings = $scripts['settings'];
-      $this->addCommand(new SettingsCommand(call_user_func_array('array_merge_recursive', $settings['data']), TRUE), TRUE);
+      $this->addCommand(new SettingsCommand(NestedArray::mergeDeepArray($settings['data']), TRUE), TRUE);
     }
 
     $commands = $this->commands;

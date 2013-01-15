@@ -9,8 +9,8 @@ namespace Drupal\Core\Entity;
 
 use PDO;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Exception;
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Component\Utility\NestedArray;
 
 
 /**
@@ -491,7 +491,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       // Ignore slave server temporarily.
       db_ignore_slave();
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $transaction->rollback();
       watchdog_exception($this->entityType, $e);
       throw new EntityStorageException($e->getMessage, $e->getCode, $e);
@@ -547,7 +547,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
 
       return $return;
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $transaction->rollback();
       watchdog_exception($this->entityType, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
@@ -653,7 +653,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       $function = 'field_attach_delete_revision';
     }
     if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($this->entityType, $entity);
+      $function($entity);
     }
     // Invoke the hook.
     module_invoke_all($this->entityType . '_' . $hook, $entity);
@@ -678,9 +678,9 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
 
       // Invoke hooks.
       $result = module_invoke_all($this->entityType . '_property_info');
-      $this->entityFieldInfo = array_merge_recursive($this->entityFieldInfo, $result);
+      $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
       $result = module_invoke_all('entity_field_info', $this->entityType);
-      $this->entityFieldInfo = array_merge_recursive($this->entityFieldInfo, $result);
+      $this->entityFieldInfo = NestedArray::mergeDeep($this->entityFieldInfo, $result);
 
       $hooks = array('entity_field_info', $this->entityType . '_property_info');
       drupal_alter($hooks, $this->entityFieldInfo, $this->entityType);

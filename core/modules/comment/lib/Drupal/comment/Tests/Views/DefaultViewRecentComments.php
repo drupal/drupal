@@ -82,16 +82,15 @@ class DefaultViewRecentComments extends ViewTestBase {
 
     // Create some comments and attach them to the created node.
     for ($i = 0; $i < $this->masterDisplayResults; $i++) {
-      $comment = entity_create('comment', array());
-      $comment->uid = 0;
-      $comment->entity_type = 'node';
+      $comment = entity_create('comment', array('field_name' => 'comment'));
+      $comment->uid->value = 0;
+      $comment->entity_type->value = 'node';
       // Stagger the comments so the timestamp sorting works.
-      $comment->created = REQUEST_TIME - $i;
-      $comment->field_name = 'comment';
-      $comment->entity_id = $this->node->nid;
-      $comment->subject = 'Test comment ' . $i;
-      $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['value'] = 'Test body ' . $i;
-      $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['format'] = 'full_html';
+      $comment->created->value = REQUEST_TIME - $i;
+      $comment->entity_id->value = $this->node->nid;
+      $comment->subject->value = 'Test comment ' . $i;
+      $comment->comment_body->value = 'Test body ' . $i;
+      $comment->comment_body->format = 'full_html';
 
       comment_save($comment);
     }
@@ -116,10 +115,10 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['entity_id'] = $comment->entity_id;
-      $expected_result[$key]['subject'] = $comment->subject;
-      $expected_result[$key]['cid'] = $comment->cid;
-      $expected_result[$key]['changed'] = $comment->changed;
+      $expected_result[$key]['entity_id'] = $comment->entity_id->value;
+      $expected_result[$key]['subject'] = $comment->subject->value;
+      $expected_result[$key]['cid'] = $comment->id();
+      $expected_result[$key]['changed'] = $comment->changed->value;
     }
     $this->assertIdenticalResultset($view, $expected_result, $map);
 
@@ -148,11 +147,11 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['entity_id'] = $comment->entity_id;
-      $expected_result[$key]['subject'] = $comment->subject;
-      $expected_result[$key]['changed'] = $comment->changed;
-      $expected_result[$key]['created'] = $comment->created;
-      $expected_result[$key]['cid'] = $comment->cid;
+      $expected_result[$key]['entity_id'] = $comment->entity_id->value;
+      $expected_result[$key]['subject'] = $comment->subject->value;
+      $expected_result[$key]['changed'] = $comment->changed->value;
+      $expected_result[$key]['created'] = $comment->created->value;
+      $expected_result[$key]['cid'] = $comment->id();
     }
     $this->assertIdenticalResultset($view, $expected_result, $map);
 

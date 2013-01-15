@@ -14,6 +14,13 @@ namespace Drupal\views\Tests;
  */
 class ViewsDataTest extends ViewUnitTestBase {
 
+  /**
+   * Stores the views data cache service used by this test.
+   *
+   * @var \Drupal\views\ViewsDataCache
+   */
+  protected $viewsDataCache;
+
   public static function getInfo() {
     return array(
       'name' => 'Table Data',
@@ -31,10 +38,15 @@ class ViewsDataTest extends ViewUnitTestBase {
     $table_name = 'views_test_data';
     $expected_data = $this->viewsData();
 
-    $data = drupal_container()->get('views.views_data')->get($table_name);
+    $this->viewsDataCache = drupal_container()->get('views.views_data');
+
+    $data = $this->viewsDataCache->get($table_name);
     $this->assertEqual($data, $expected_data[$table_name], 'Make sure fetching views data by table works as expected.');
 
-    $data = drupal_container()->get('views.views_data')->get();
+    $data = $this->viewsDataCache->get($this->randomName());
+    $this->assertTrue(empty($data), 'Make sure fetching views data for an invalid table returns empty.');
+
+    $data = $this->viewsDataCache->get();
     $this->assertTrue(isset($data[$table_name]), 'Make sure the views_test_data info appears in the total views data.');
     $this->assertEqual($data[$table_name], $expected_data[$table_name], 'Make sure the views_test_data has the expected values.');
   }

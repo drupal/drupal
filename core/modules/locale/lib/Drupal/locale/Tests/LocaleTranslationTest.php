@@ -8,6 +8,7 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Functional test for string translation and validation.
@@ -470,5 +471,79 @@ class LocaleTranslationTest extends WebTestBase {
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t("Search didn't find the invalid string."));
+  }
+
+  /**
+   * Tests that only changed strings are saved customized when edited.
+   */
+  function testUICustomizedStrings(){
+    $user = $this->drupalCreateUser(array('translate interface', 'administer languages', 'access administration pages'));
+    $this->drupalLogin($user);
+    $language = new Language(array('langcode' => 'de'));
+    language_save($language);
+
+    // Create test source string
+    $string = locale_storage()->createString(array(
+      'source' => $this->randomName(100),
+      'context' => $this->randomName(20),
+    ))->save();
+
+    // Create translation for new string and save it as non-customized.
+    $translation = locale_storage()->createTranslation(array(
+      'lid' => $string->lid,
+      'language' => 'de',
+      'translation' => $this->randomName(100),
+      'customized' => 0,
+    ))->save();
+
+    // Reset locale cache.
+    locale_reset();
+
+    // Ensure non-customized translation string does appear if searching Non-customized translation.
+    $search = array(
+      'string' => $string->getString(),
+      'langcode' => 'de',
+      'translation' => 'translated',
+      'customized' => '0',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+
+    $source = $this->assertText($translation->getString(), 'Translation is found in search result.');
+
+    // Submit the translations without changing the translation.
+    $textarea = current($this->xpath('//textarea'));
+    $lid = (string) $textarea[0]['name'];
+    $edit = array(
+      $lid => $translation->getString(),
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Save translations'));
+
+    // Ensure unchanged translation string does appear if searching non-customized translation.
+    $search = array(
+      'string' => $string->getString(),
+      'langcode' => 'de',
+      'translation' => 'translated',
+      'customized' => '0',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $source = $this->assertText($string->getString(), 'Translation is not marked as customized.');
+
+    // Submit the translations with a new translation.
+    $textarea = current($this->xpath('//textarea'));
+    $lid = (string) $textarea[0]['name'];
+    $edit = array(
+      $lid => $this->randomName(100),
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Save translations'));
+
+    // Ensure changed translation string does appear if searching customized translation.
+    $search = array(
+      'string' => $string->getString(),
+      'langcode' => 'de',
+      'translation' => 'translated',
+      'customized' => '1',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->assertText($string->getString(), "Translation is marked as customized.");
   }
 }

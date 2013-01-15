@@ -561,7 +561,7 @@ function template_preprocess_taxonomy_term(&$variables) {
   // values of the field in the language that was selected for display, instead
   // of the raw values in $term->[field_name], which contain all values in all
   // languages.
-  field_attach_preprocess('taxonomy_term', $term, $variables['content'], $variables);
+  field_attach_preprocess($term, $variables['content'], $variables);
 
   // Gather classes, and clean up name so there are no underscores.
   $vocabulary_name_css = str_replace('_', '-', $term->bundle());
@@ -1010,9 +1010,9 @@ function taxonomy_field_widget_info_alter(&$info) {
 /**
  * Implements hook_options_list().
  */
-function taxonomy_options_list($field, $instance, $entity_type, $entity) {
+function taxonomy_options_list($field, $instance, $entity) {
   $function = !empty($field['settings']['options_list_callback']) ? $field['settings']['options_list_callback'] : 'taxonomy_allowed_values';
-  return $function($field, $instance, $entity_type, $entity);
+  return $function($field, $instance, $entity);
 }
 
 /**
@@ -1026,7 +1026,7 @@ function taxonomy_options_list($field, $instance, $entity_type, $entity) {
  * Possible error codes:
  * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
  */
-function taxonomy_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+function taxonomy_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
   // Build an array of existing term IDs so they can be loaded with
   // taxonomy_term_load_multiple();
   foreach ($items as $delta => $item) {
@@ -1107,7 +1107,7 @@ function taxonomy_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function taxonomy_field_formatter_view(EntityInterface $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
   // Terms whose tid is 'autocreate' do not exist
@@ -1169,16 +1169,14 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
  *   The instance definition. It is recommended to only use instance level
  *   properties to filter out values from a list defined by field level
  *   properties.
- * @param $entity_type
- *   The entity type the field is attached to.
- * @param $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object the field is attached to, or NULL if no entity
  *   exists (e.g. in field settings page).
  *
  * @return
  *   The array of valid terms for this field, keyed by term id.
  */
-function taxonomy_allowed_values($field, $instance, $entity_type, $entity) {
+function taxonomy_allowed_values($field, $instance, EntityInterface $entity) {
   $options = array();
   foreach ($field['settings']['allowed_values'] as $tree) {
     if ($vocabulary = taxonomy_vocabulary_load($tree['vocabulary'])) {
@@ -1369,7 +1367,7 @@ function taxonomy_rdf_mapping() {
  *
  * Create any new terms defined in a freetagging vocabulary.
  */
-function taxonomy_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function taxonomy_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
     if ($item['tid'] == 'autocreate') {
       unset($item['tid']);

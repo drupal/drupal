@@ -25,13 +25,10 @@ use Drupal\Core\Annotation\Translation;
  *   },
  *   translation_controller_class = "Drupal\translation_entity\EntityTranslationControllerNG",
  *   base_table = "entity_test",
- *   data_table = "entity_test_property_data",
- *   revision_table = "entity_test_property_revision",
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *     "revision" = "revision_id"
  *   },
  *   menu_base_path = "entity-test/manage/%entity_test"
  * )
@@ -51,13 +48,6 @@ class EntityTest extends EntityNG {
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $uuid;
-
-  /**
-   * The entity revision id.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $revision_id;
 
   /**
    * The name of the test entity.
@@ -81,7 +71,6 @@ class EntityTest extends EntityNG {
     // We unset all defined properties, so magic getters apply.
     unset($this->id);
     unset($this->uuid);
-    unset($this->revision_id);
     unset($this->name);
     unset($this->user_id);
   }
@@ -91,12 +80,5 @@ class EntityTest extends EntityNG {
    */
   public function label($langcode = LANGUAGE_DEFAULT) {
     return $this->getTranslation($langcode)->name->value;
-  }
-
-  /**
-   * Implements Drupal\Core\Entity\EntityInterface::getRevisionId().
-   */
-  public function getRevisionId() {
-    return $this->get('revision_id')->value;
   }
 }

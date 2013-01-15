@@ -18,19 +18,17 @@ class MessageRenderController extends EntityRenderController {
   /**
    * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
    */
-  public function buildContent(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
-    parent::buildContent($entities, $view_mode, $langcode);
+  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
+    parent::buildContent($entities, $displays, $view_mode, $langcode);
 
     foreach ($entities as $entity) {
       // Add the message extra field, if enabled.
-      $entity_view_mode = $entity->content['#view_mode'];
-      $fields = field_extra_fields_get_display($entity, $entity_view_mode);
-      if (!empty($entity->message) && !empty($fields['message']['visible'])) {
+      $display = $displays[$entity->bundle()];
+      if (!empty($entity->message) && $display->getComponent('message')) {
         $entity->content['message'] = array(
           '#type' => 'item',
           '#title' => t('Message'),
           '#markup' => check_plain($entity->message),
-          '#weight' => $fields['message']['weight'],
         );
       }
     }

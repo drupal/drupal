@@ -294,6 +294,9 @@ class EntityManager extends PluginManagerBase {
     // Drupal\Core\Entity\DatabaseStorageControllerInterface::buildQuery().
     if (isset($definition['base_table'])) {
       $definition['schema_fields_sql']['base_table'] = drupal_schema_fields_sql($definition['base_table']);
+      if (isset($definition['data_table'])) {
+        $definition['schema_fields_sql']['data_table'] = drupal_schema_fields_sql($definition['data_table']);
+      }
       if (isset($definition['revision_table'])) {
         $definition['schema_fields_sql']['revision_table'] = drupal_schema_fields_sql($definition['revision_table']);
       }

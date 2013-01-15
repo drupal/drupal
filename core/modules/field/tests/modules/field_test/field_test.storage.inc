@@ -5,6 +5,7 @@
  * Defines a field storage backend.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_field_storage_info().
@@ -116,7 +117,7 @@ function field_test_field_storage_load($entity_type, $entities, $age, $fields, $
 /**
  * Implements hook_field_storage_write().
  */
-function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
+function field_test_field_storage_write(EntityInterface $entity, $op, $fields) {
   $data = _field_test_storage_data();
 
   $id = $entity->id();
@@ -128,7 +129,7 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
     $field_name = $field['field_name'];
     $field_data = &$data[$field_id];
 
-    $all_langcodes = field_available_languages($entity_type, $field);
+    $all_langcodes = field_available_languages($entity->entityType(), $field);
     $field_langcodes = array_intersect($all_langcodes, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.
@@ -138,13 +139,13 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
       $langcodes = !empty($entity->$field_name) ? $field_langcodes : $all_langcodes;
       if ($langcodes) {
         foreach ($field_data['current'] as $key => $row) {
-          if ($row->type == $entity_type && $row->entity_id == $id && in_array($row->langcode, $langcodes)) {
+          if ($row->type == $entity->entityType() && $row->entity_id == $id && in_array($row->langcode, $langcodes)) {
             unset($field_data['current'][$key]);
           }
         }
         if (isset($vid)) {
           foreach ($field_data['revisions'] as $key => $row) {
-            if ($row->type == $entity_type && $row->revision_id == $vid) {
+            if ($row->type == $entity->entityType() && $row->revision_id == $vid) {
               unset($field_data['revisions'][$key]);
             }
           }
@@ -158,7 +159,7 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
       foreach ($items as $delta => $item) {
         $row = (object) array(
           'field_id' => $field_id,
-          'type' => $entity_type,
+          'type' => $entity->entityType(),
           'entity_id' => $id,
           'revision_id' => $vid,
           'bundle' => $bundle,
@@ -188,13 +189,13 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
 /**
  * Implements hook_field_storage_delete().
  */
-function field_test_field_storage_delete($entity_type, $entity, $fields) {
+function field_test_field_storage_delete(EntityInterface $entity, $fields) {
   // Note: reusing field_test_storage_purge(), like field_sql_storage.module
   // does, is highly inefficient in our case...
-  foreach (field_info_instances($entity->bundle()) as $instance) {
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
-      field_test_field_storage_purge($entity_type, $entity, $field, $instance);
+      field_test_field_storage_purge($entity, $field, $instance);
     }
   }
 }
@@ -202,13 +203,13 @@ function field_test_field_storage_delete($entity_type, $entity, $fields) {
 /**
  * Implements hook_field_storage_purge().
  */
-function field_test_field_storage_purge($entity_type, $entity, $field, $instance) {
+function field_test_field_storage_purge(EntityInterface $entity, $field, $instance) {
   $data = _field_test_storage_data();
 
   $field_data = &$data[$field['id']];
   foreach (array('current', 'revisions') as $sub_table) {
     foreach ($field_data[$sub_table] as $key => $row) {
-      if ($row->type == $entity_type && $row->entity_id == $entity->id()) {
+      if ($row->type == $entity->entityType() && $row->entity_id == $entity->id()) {
         unset($field_data[$sub_table][$key]);
       }
     }
@@ -220,14 +221,14 @@ function field_test_field_storage_purge($entity_type, $entity, $field, $instance
 /**
  * Implements hook_field_storage_delete_revision().
  */
-function field_test_field_storage_delete_revision($entity_type, $entity, $fields) {
+function field_test_field_storage_delete_revision(EntityInterface $entity, $fields) {
   $data = _field_test_storage_data();
 
   foreach ($fields as $field_id) {
     $field_data = &$data[$field_id];
     foreach (array('current', 'revisions') as $sub_table) {
       foreach ($field_data[$sub_table] as $key => $row) {
-        if ($row->type == $entity_type && $row->entity_id == $entity->id() && $row->revision_id == $entity->getRevisionId()) {
+        if ($row->type == $entity->entityType() && $row->entity_id == $entity->id() && $row->revision_id == $entity->getRevisionId()) {
           unset($field_data[$sub_table][$key]);
         }
       }

@@ -85,8 +85,8 @@ function taxonomy_schema() {
       'uuid' => array('uuid'),
     ),
     'indexes' => array(
-      'taxonomy_tree' => array('vid', 'weight', 'name'),
-      'vid_name' => array('vid', 'name'),
+      'taxonomy_tree' => array(array('vid', 64), 'weight', 'name'),
+      'vid_name' => array(array('vid', 64), 'name'),
       'name' => array('name'),
     ),
   );
@@ -317,6 +317,8 @@ function taxonomy_update_8005() {
  * Change {taxonomy_term_data}.vid into a string holding the vocabulary machine name.
  */
 function taxonomy_update_8006() {
+  db_drop_index('taxonomy_term_data', 'taxonomy_tree');
+  db_drop_index('taxonomy_term_data', 'vid_name');
   db_change_field('taxonomy_term_data', 'vid', 'vid', array(
     'type' => 'varchar',
     'length' => 255,
@@ -324,6 +326,9 @@ function taxonomy_update_8006() {
     'default' => '',
     'description' => 'The ID of the vocabulary to which the term is assigned.',
   ));
+  db_add_index('taxonomy_term_data', 'taxonomy_tree', array(array('vid', 64), 'weight', 'name'));
+  db_add_index('taxonomy_term_data', 'vid_name', array(array('vid', 64), 'name'));
+
   $map = db_query('SELECT vid, machine_name FROM {taxonomy_vocabulary}')->fetchAllKeyed();
   foreach ($map as $vid => $machine_name) {
     db_update('taxonomy_term_data')

@@ -47,31 +47,6 @@ class Block extends DisplayPluginBase {
   }
 
   /**
-   * The default block handler doesn't support configurable items,
-   * but extended block handlers might be able to do interesting
-   * stuff with it.
-   */
-  public function executeHookBlockList($delta = 0, $edit = array()) {
-    $delta = $this->view->storage->get('name') . '-' . $this->display['id'];
-    $desc = $this->getOption('block_description');
-
-    if (empty($desc)) {
-      if ($this->display['display_title'] == $this->definition['title']) {
-        $desc = t('View: !view', array('!view' => $this->view->storage->getHumanName()));
-      }
-      else {
-        $desc = t('View: !view: !display', array('!view' => $this->view->storage->getHumanName(), '!display' => $this->display['display_title']));
-      }
-    }
-    return array(
-      $delta => array(
-        'info' => $desc,
-        'cache' => $this->getCacheType()
-      ),
-    );
-  }
-
-  /**
    * The display block handler returns the structure necessary for a block.
    */
   public function execute() {
@@ -188,9 +163,6 @@ class Block extends DisplayPluginBase {
   public function submitOptionsForm(&$form, &$form_state) {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
-      case 'display_id':
-        $this->updateBlockBid($form_state['view']->storage->get('name'), $this->display['id'], $this->display['new_id']);
-        break;
       case 'block_description':
         $this->setOption('block_description', $form_state['values']['block_description']);
         break;
@@ -209,37 +181,5 @@ class Block extends DisplayPluginBase {
       }
       return FALSE;
     }
-
-  /**
-   * Update the block delta when you change the machine readable name of the display.
-   */
-  protected function updateBlockBid($name, $old_delta, $delta) {
-    $old_hashes = $hashes = state()->get('views_block_hashes');
-
-    $old_delta = $name . '-' . $old_delta;
-    $delta = $name . '-' . $delta;
-    if (strlen($old_delta) >= 32) {
-      $old_delta = md5($old_delta);
-      unset($hashes[$old_delta]);
-    }
-    if (strlen($delta) >= 32) {
-      $md5_delta = md5($delta);
-      $hashes[$md5_delta] = $delta;
-      $delta = $md5_delta;
-    }
-
-    // Maybe people don't have block module installed, so let's skip this.
-    if (db_table_exists('block')) {
-      db_update('block')
-        ->fields(array('delta' => $delta))
-        ->condition('delta', $old_delta)
-        ->execute();
-    }
-
-    // Update the hashes if needed.
-    if ($hashes != $old_hashes) {
-      state()->set('views_block_hashes', $hashes);
-    }
-  }
 
 }

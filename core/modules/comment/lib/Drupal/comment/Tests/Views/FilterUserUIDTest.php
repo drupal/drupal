@@ -32,7 +32,7 @@ class FilterUserUIDTest extends CommentTestBase {
   function testCommentUserUIDTest() {
     $view = views_get_view('test_comment_user_uid');
     $view->setDisplay();
-    $view->setItem('default', 'argument', 'uid_touch', NULL);
+    $view->removeItem('default', 'argument', 'uid_touch');
 
     $options = array(
       'id' => 'uid_touch',

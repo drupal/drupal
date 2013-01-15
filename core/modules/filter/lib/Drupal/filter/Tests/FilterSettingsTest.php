@@ -13,6 +13,11 @@ use Drupal\simpletest\WebTestBase;
  * Tests filter settings.
  */
 class FilterSettingsTest extends WebTestBase {
+  /**
+   * The installation profile to use with this test class.
+   *
+   * @var string
+   */
   protected $profile = 'testing';
 
   public static function getInfo() {

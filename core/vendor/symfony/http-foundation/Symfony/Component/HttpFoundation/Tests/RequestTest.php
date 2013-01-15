@@ -17,6 +17,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    public function deprecationErrorHandler($errorNumber, $message, $file, $line, $context)
+    {
+        if ($errorNumber & E_USER_DEPRECATED) {
+            return true;
+        }
+
+        return \PHPUnit_Util_ErrorHandler::handleError($errorNumber, $message, $file, $line);
+    }
+
     /**
      * @covers Symfony\Component\HttpFoundation\Request::__construct
      */
@@ -609,9 +618,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($request->getQueryString(), '->getQueryString() returns null for empty query string');
     }
 
-    /**
-     * @covers Symfony\Component\HttpFoundation\Request::getHost
-     */
     public function testGetHost()
     {
         $request = new Request();
@@ -633,6 +639,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request->initialize(array(), array(), array(), array(), array(), array('SERVER_NAME' => 'www.exemple.com', 'HTTP_HOST' => 'www.host.com'));
         $this->assertEquals('www.host.com', $request->getHost(), '->getHost() value from Host header has priority over SERVER_NAME ');
         $this->stopTrustingProxyData();
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testGetHostWithFakeHttpHostValue()
+    {
+        $request = new Request();
+        $request->initialize(array(), array(), array(), array(), array(), array('HTTP_HOST' => 'www.host.com?query=string'));
+        $request->getHost();
     }
 
     /**
@@ -706,7 +722,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $request->initialize(array(), array(), array(), array(), array(), $server);
         if ($proxy) {
+            set_error_handler(array($this, "deprecationErrorHandler"));
             $this->startTrustingProxyData();
+            restore_error_handler();
         }
         $this->assertEquals($expected, $request->getClientIp($proxy));
 
@@ -823,6 +841,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testOverrideGlobals()
     {
+        set_error_handler(array($this, "deprecationErrorHandler"));
+
         $request = new Request();
         $request->initialize(array('foo' => 'bar'));
 
@@ -853,6 +873,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         // restore initial $_SERVER array
         $_SERVER = $server;
+
+        restore_error_handler();
     }
 
     public function testGetScriptName()
@@ -1100,7 +1122,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request();
 
+        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->assertEquals($expected, $request->splitHttpAcceptHeader($acceptHeader));
+        restore_error_handler();
     }
 
     public function splitHttpAcceptHeaderData()
@@ -1268,11 +1292,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($request->isSecure());
 
         // trusted proxy via deprecated trustProxyData()
+        set_error_handler(array($this, "deprecationErrorHandler"));
         Request::trustProxyData();
         $this->assertEquals('2.2.2.2', $request->getClientIp());
         $this->assertEquals('real.example.com', $request->getHost());
         $this->assertEquals(443, $request->getPort());
         $this->assertTrue($request->isSecure());
+        restore_error_handler();
 
         // disabling proxy trusting
         Request::setTrustedProxies(array());

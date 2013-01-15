@@ -81,7 +81,8 @@ class BulkDeleteTest extends FieldTestBase {
       foreach ($invocations as $argument) {
         $found = FALSE;
         foreach ($actual_invocations as $actual_arguments) {
-          if ($actual_arguments[1] == $argument) {
+          // $entity is sometimes the first and sometimes the second argument.
+          if ($actual_arguments[0] == $argument || $actual_arguments[1] == $argument) {
             $found = TRUE;
             break;
           }

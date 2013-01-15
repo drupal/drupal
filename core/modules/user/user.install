@@ -690,7 +690,7 @@ function user_update_8009(&$sandbox) {
 /**
  * Create user picture field.
  */
-function user_update_8010() {
+function user_update_8011() {
   global $user;
 
   // User pictures can only be migrated to the new user picture image field
@@ -846,7 +846,7 @@ function user_update_8010() {
 /**
  * Migrate {users}.picture to 'user_picture' image field.
  */
-function user_update_8011(&$sandbox) {
+function user_update_8012(&$sandbox) {
   // Initialize total values to process.
   if (!isset($sandbox['total'])) {
     $sandbox['total'] = (int) db_query('SELECT COUNT(picture) FROM {users} WHERE picture > 0')->fetchField();
@@ -914,7 +914,7 @@ function user_update_8011(&$sandbox) {
 /**
  * Deletes {users}.picture field.
  */
-function user_update_8012() {
+function user_update_8013() {
   db_drop_field('users', 'picture');
 }
 

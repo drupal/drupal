@@ -17,11 +17,8 @@
  * Contributed modules may use the information to perform actions based on the
  * information entered into the menu system.
  *
- * @param $menu
- *   An array representing a custom menu:
- *   - menu_name: The unique name of the custom menu.
- *   - title: The human readable menu title.
- *   - description: The custom menu description.
+ * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ *   A menu entity.
  *
  * @see hook_menu_update()
  * @see hook_menu_delete()
@@ -29,7 +26,7 @@
 function hook_menu_insert($menu) {
   // For example, we track available menus in a variable.
   $my_menus = variable_get('my_module_menus', array());
-  $my_menus[$menu['menu_name']] = $menu['menu_name'];
+  $my_menus[$menu->id()] = $menu->id();
   variable_set('my_module_menus', $my_menus);
 }
 
@@ -40,13 +37,8 @@ function hook_menu_insert($menu) {
  * Contributed modules may use the information to perform actions based on the
  * information entered into the menu system.
  *
- * @param $menu
- *   An array representing a custom menu:
- *   - menu_name: The unique name of the custom menu.
- *   - title: The human readable menu title.
- *   - description: The custom menu description.
- *   - old_name: The current 'menu_name'. Note that internal menu names cannot
- *     be changed after initial creation.
+ * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ *   A menu entity.
  *
  * @see hook_menu_insert()
  * @see hook_menu_delete()
@@ -54,7 +46,7 @@ function hook_menu_insert($menu) {
 function hook_menu_update($menu) {
   // For example, we track available menus in a variable.
   $my_menus = variable_get('my_module_menus', array());
-  $my_menus[$menu['menu_name']] = $menu['menu_name'];
+  $my_menus[$menu->id()] = $menu->id();
   variable_set('my_module_menus', $my_menus);
 }
 
@@ -66,11 +58,8 @@ function hook_menu_update($menu) {
  * information to perform actions based on the information entered into the menu
  * system.
  *
- * @param $link
- *   An array representing a custom menu:
- *   - menu_name: The unique name of the custom menu.
- *   - title: The human readable menu title.
- *   - description: The custom menu description.
+ * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ *   A menu entity.
  *
  * @see hook_menu_insert()
  * @see hook_menu_update()
@@ -78,7 +67,7 @@ function hook_menu_update($menu) {
 function hook_menu_delete($menu) {
   // Delete the record from our variable.
   $my_menus = variable_get('my_module_menus', array());
-  unset($my_menus[$menu['menu_name']]);
+  unset($my_menus[$menu->id()]);
   variable_set('my_module_menus', $my_menus);
 }
 

@@ -99,13 +99,18 @@ abstract class ModuleTestBase extends WebTestBase {
       return;
     }
     $module_file_storage = new FileStorage($module_config_dir);
-    $names = $module_file_storage->listAll($module . '.');
 
-    // Verify that the config directory is not empty.
-    $this->assertTrue($names);
+    // Verify that the module's default config directory is not empty and
+    // contains default configuration files (instead of something else).
+    $all_names = $module_file_storage->listAll();
+    $this->assertTrue($all_names);
 
     // Look up each default configuration object name in the active
     // configuration, and if it exists, remove it from the stack.
+    // Only default config that belongs to $module is guaranteed to exist; any
+    // other default config depends on whether other modules are enabled. Thus,
+    // list all default config once more, but filtered by $module.
+    $names = $module_file_storage->listAll($module . '.');
     foreach ($names as $key => $name) {
       if (config($name)->get()) {
         unset($names[$key]);

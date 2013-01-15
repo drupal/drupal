@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\edit\Tests\EditTestBase.
+ * Contains \Drupal\edit\Tests\EditTestBase.
  */
 
 namespace Drupal\edit\Tests;
@@ -20,7 +20,7 @@ class EditTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'field_test', 'field', 'number', 'text', 'edit', 'edit_test');
+  public static $modules = array('system', 'entity', 'field_test', 'field', 'number', 'text', 'edit');
 
   /**
    * Sets the default field storage backend for fields created during tests.

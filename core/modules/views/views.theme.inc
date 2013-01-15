@@ -480,10 +480,6 @@ function template_preprocess_views_view_table(&$vars) {
     $query += $view->exposed_raw_input;
   }
 
-  // Fields must be rendered in order as of Views 2.3, so we will pre-render
-  // everything.
-  $renders = $handler->render_fields($result);
-
   foreach ($columns as $field => $column) {
     // Create a second variable so we can easily find what fields we have and what the
     // CSS classes should be.
@@ -575,7 +571,7 @@ function template_preprocess_views_view_table(&$vars) {
       }
 
       if (!empty($fields[$field]) && empty($fields[$field]->options['exclude'])) {
-        $field_output = $renders[$num][$field];
+        $field_output = $handler->get_field($num, $field);
         $element_type = $fields[$field]->element_type(TRUE, TRUE);
         if ($element_type) {
           $field_output = '<' . $element_type . '>' . $field_output . '</' . $element_type . '>';

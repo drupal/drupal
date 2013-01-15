@@ -287,18 +287,14 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
 
 
     // Visibility settings.
-    $form['visibility_title'] = array(
-      '#type' => 'item',
-      '#title' => t('Visibility settings'),
-      '#weight' => 10,
-    );
     $form['visibility'] = array(
       '#type' => 'vertical_tabs',
+      '#title' => t('Visibility settings'),
       '#attached' => array(
         'js' => array(drupal_get_path('module', 'block') . '/block.js'),
       ),
       '#tree' => TRUE,
-      '#weight' => 15,
+      '#weight' => 10,
     );
 
     // Per-path visibility.

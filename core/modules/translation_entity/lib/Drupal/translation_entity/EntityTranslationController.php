@@ -243,7 +243,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
       }
 
       if ($language_widget) {
-        $form_langcode['#multilingual'] = TRUE;
+        $form['langcode']['#multilingual'] = TRUE;
       }
 
       $form['#process'][] = array($this, 'entityFormSharedElements');

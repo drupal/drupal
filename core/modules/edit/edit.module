@@ -13,6 +13,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Form\EditFieldForm;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Implements hook_custom_theme().
@@ -65,7 +66,7 @@ function edit_toolbar() {
 
   // Include the attachments and settings for all available editors.
   $attachments = drupal_container()->get('edit.editor.selector')->getAllEditorAttachments();
-  $tab['edit']['tray']['#attached'] = array_merge_recursive($tab['edit']['tray']['#attached'], $attachments);
+  $tab['edit']['tray']['#attached'] = NestedArray::mergeDeep($tab['edit']['tray']['#attached'], $attachments);
 
   return $tab;
 }
@@ -104,8 +105,6 @@ function edit_library_info() {
       // Create.js subclasses.
       $path . '/js/createjs/editable.js' => $options,
       $path . '/js/createjs/storage.js' => $options,
-      $path . '/js/createjs/editingWidgets/formwidget.js' => $options,
-      $path . '/js/createjs/editingWidgets/drupalcontenteditablewidget.js' => $options,
       // Other.
       $path . '/js/util.js' => $options,
       $path . '/js/theme.js' => $options,
@@ -135,6 +134,26 @@ function edit_library_info() {
       array('system', 'drupalSettings'),
     ),
   );
+  $libraries['edit.editor.form'] = array(
+    'title' => '"Form" Create.js PropertyEditor widget',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/createjs/editingWidgets/formwidget.js' => $options,
+    ),
+    'dependencies' => array(
+      array('edit', 'edit'),
+    ),
+  );
+  $libraries['edit.editor.direct'] = array(
+    'title' => '"Direct" Create.js PropertyEditor widget',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/createjs/editingWidgets/drupalcontenteditablewidget.js' => $options,
+    ),
+    'dependencies' => array(
+      array('edit', 'edit'),
+    ),
+  );
 
   return $libraries;
 }
@@ -145,7 +164,7 @@ function edit_library_info() {
 function edit_preprocess_field(&$variables) {
   $element = $variables['element'];
   $entity = $element['#object'];
-  $variables['attributes']['data-edit-id'] = $entity->entityType() . ':' . $entity->id() . ':' . $element['#field_name'] . ':' . $element['#language'] . ':' . $element['#view_mode'];
+  $variables['attributes']['data-edit-id'] = $entity->entityType() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
 }
 
 /**

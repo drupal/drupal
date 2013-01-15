@@ -2,7 +2,10 @@
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\comment\Plugin\Core\Entity\Comment;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -151,7 +154,8 @@ function user_label($entity_type, $entity) {
 /**
  * Populates $entity->account for each prepared entity.
  *
- * Called by hook_entity_prepare_view() implementations.
+ * Called by Drupal\Core\Entity\EntityRenderControllerInterface::buildContent()
+ * implementations.
  *
  * @param array $entities
  *   The entities keyed by entity ID.
@@ -387,36 +391,34 @@ function user_password($length = 10) {
  *   An array indexed by role ID. Each value is an array whose keys are the
  *   permission strings for the given role ID.
  */
-function user_role_permissions($roles = array()) {
+function user_role_permissions($roles) {
   $cache = &drupal_static(__FUNCTION__, array());
 
   $role_permissions = $fetch = array();
 
-  if ($roles) {
-    foreach ($roles as $rid => $name) {
-      if (isset($cache[$rid])) {
-        $role_permissions[$rid] = $cache[$rid];
-      }
-      else {
-        // Add this rid to the list of those needing to be fetched.
-        $fetch[] = $rid;
-        // Prepare in case no permissions are returned.
-        $cache[$rid] = array();
-      }
+  foreach ($roles as $rid => $name) {
+    if (isset($cache[$rid])) {
+      $role_permissions[$rid] = $cache[$rid];
     }
+    else {
+      // Add this rid to the list of those needing to be fetched.
+      $fetch[] = $rid;
+      // Prepare in case no permissions are returned.
+      $cache[$rid] = array();
+    }
+  }
 
-    if ($fetch) {
-      // Get from the database permissions that were not in the static variable.
-      // Only role IDs with at least one permission assigned will return rows.
-      $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
+  if ($fetch) {
+    // Get from the database permissions that were not in the static variable.
+    // Only role IDs with at least one permission assigned will return rows.
+    $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
 
-      foreach ($result as $row) {
-        $cache[$row->rid][$row->permission] = TRUE;
-      }
-      foreach ($fetch as $rid) {
-        // For every rid, we know we at least assigned an empty array.
-        $role_permissions[$rid] = $cache[$rid];
-      }
+    foreach ($result as $row) {
+      $cache[$row->rid][$row->permission] = TRUE;
+    }
+    foreach ($fetch as $rid) {
+      // For every rid, we know we at least assigned an empty array.
+      $role_permissions[$rid] = $cache[$rid];
     }
   }
 
@@ -583,13 +585,14 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
 /**
  * Implements hook_user_view().
  */
-function user_user_view($account) {
-  $account->content['member_for'] = array(
-    '#type' => 'item',
-    '#title' => t('Member for'),
-    '#markup' => format_interval(REQUEST_TIME - $account->created),
-    '#weight' => 5,
-  );
+function user_user_view(User $account, EntityDisplay $display) {
+  if ($display->getComponent('member_for')) {
+    $account->content['member_for'] = array(
+      '#type' => 'item',
+      '#title' => t('Member for'),
+      '#markup' => format_interval(REQUEST_TIME - $account->created),
+    );
+  }
 }
 
 /**
@@ -758,6 +761,9 @@ function template_process_username(&$variables) {
     // to use the former unless they want to add attributes on the link only.
     // If a link is being rendered, these need to be merged. Some attributes are
     // themselves arrays, so the merging needs to be recursive.
+    // This purposefully does not use
+    // \Drupal\Component\Utility\NestedArray::mergeDeep() for performance
+    // reasons, since it is potentially called very often.
     $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes']);
   }
 }
@@ -1451,7 +1457,7 @@ function user_login_finalize(&$edit = array()) {
   // or incorrectly does a redirect which would leave the old session in place.
   drupal_session_regenerate();
 
-  module_invoke_all('user_login', $edit, $user);
+  module_invoke_all('user_login', $user);
 }
 
 /**
@@ -1470,7 +1476,7 @@ function user_login_form_submit($form, &$form_state) {
 /**
  * Implements hook_user_login().
  */
-function user_user_login($edit, $account) {
+function user_user_login($account) {
   // Reset static cache of default variables in template_preprocess() to reflect
   // the new user.
   drupal_static_reset('template_preprocess');
@@ -2375,22 +2381,6 @@ function user_build_filter_query(SelectInterface $query) {
     else {
       $query->condition($filters[$key]['field'], $value);
     }
-  }
-}
-
-/**
- * Implements hook_comment_view().
- */
-function user_comment_view($comment) {
-  if (config('user.settings')->get('signatures') && !empty($comment->signature)) {
-    // @todo This alters and replaces the original object value, so a
-    //   hypothetical process of loading, viewing, and saving will hijack the
-    //   stored data. Consider renaming to $comment->signature_safe or similar
-    //   here and elsewhere in Drupal 8.
-    $comment->signature = check_markup($comment->signature, $comment->signature_format, '', TRUE);
-  }
-  else {
-    $comment->signature = '';
   }
 }
 

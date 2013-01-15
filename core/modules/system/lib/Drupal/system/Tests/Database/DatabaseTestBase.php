@@ -7,64 +7,26 @@
 
 namespace Drupal\system\Tests\Database;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests for databases.
+ * Base class for databases database tests.
  *
  * Because all database tests share the same test data, we can centralize that
  * here.
  */
-abstract class DatabaseTestBase extends WebTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('database_test');
+abstract class DatabaseTestBase extends DrupalUnitTestBase {
 
   function setUp() {
     parent::setUp();
-
-    $schema['test'] = drupal_get_schema('test');
-    $schema['test_people'] = drupal_get_schema('test_people');
-    $schema['test_one_blob'] = drupal_get_schema('test_one_blob');
-    $schema['test_two_blobs'] = drupal_get_schema('test_two_blobs');
-    $schema['test_task'] = drupal_get_schema('test_task');
-
-    $this->installTables($schema);
-
-    $this->addSampleData();
-  }
-
-  /**
-   * Sets up several tables needed by a certain test.
-   *
-   * @param $schema
-   *   An array of table definitions to install.
-   */
-  function installTables($schema) {
-    // This ends up being a test for table drop and create, too, which is nice.
-    foreach ($schema as $name => $data) {
-      if (db_table_exists($name)) {
-        db_drop_table($name);
-      }
-      db_create_table($name, $data);
-    }
-
-    foreach ($schema as $name => $data) {
-      $this->assertTrue(db_table_exists($name), format_string('Table @name created successfully.', array('@name' => $name)));
-    }
+    $this->enableModules(array('database_test'));
+    self::addSampleData();
   }
 
   /**
    * Sets up tables for NULL handling.
    */
   function ensureSampleDataNull() {
-    $schema['test_null'] = drupal_get_schema('test_null');
-    $this->installTables($schema);
-
     db_insert('test_null')
     ->fields(array('name', 'age'))
     ->values(array(
@@ -84,11 +46,8 @@ abstract class DatabaseTestBase extends WebTestBase {
 
   /**
    * Sets up our sample data.
-   *
-   * These are added using db_query(), since we're not trying to test the
-   * INSERT operations here, just populate.
    */
-  function addSampleData() {
+  static function addSampleData() {
     // We need the IDs, so we can't use a multi-insert here.
     $john = db_insert('test')
       ->fields(array(

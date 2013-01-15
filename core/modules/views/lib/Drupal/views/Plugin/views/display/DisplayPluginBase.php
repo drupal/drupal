@@ -130,7 +130,7 @@ abstract class DisplayPluginBase extends PluginBase {
     // Cache for unpackOptions, but not if we are in the ui.
     static $unpack_options = array();
     if (empty($view->editing)) {
-      $cid = 'unpackOptions:' . md5(serialize(array($this->options, $options)));
+      $cid = 'unpackOptions:' . hash('sha256', serialize(array($this->options, $options)));
       if (empty($unpack_options[$cid])) {
         $cache = views_cache_get($cid, TRUE);
         if (!empty($cache->data)) {
@@ -2076,44 +2076,21 @@ abstract class DisplayPluginBase extends PluginBase {
           }
         }
         break;
-      case 'style_options':
-        $style = TRUE;
-      case 'row_options':
-        // if row, $style will be empty.
-        $plugin = $this->getPlugin(empty($style) ? 'row' : 'style');
-        if ($plugin) {
-          $plugin->validateOptionsForm($form[$form_state['section']], $form_state);
-        }
-        break;
-      case 'access_options':
-        $plugin = $this->getPlugin('access');
-        if ($plugin) {
-          $plugin->validateOptionsForm($form['access_options'], $form_state);
-        }
-        break;
       case 'query':
         if ($this->view->query) {
           $this->view->query->validateOptionsForm($form['query'], $form_state);
         }
         break;
-      case 'cache_options':
-        $plugin = $this->getPlugin('cache');
-        if ($plugin) {
-          $plugin->validateOptionsForm($form['cache_options'], $form_state);
-        }
-        break;
-      case 'exposed_form_options':
-        $plugin = $this->getPlugin('exposed_form');
-        if ($plugin) {
-          $plugin->validateOptionsForm($form['exposed_form_options'], $form_state);
-        }
-        break;
-      case 'pager_options':
-        $plugin = $this->getPlugin('pager');
-        if ($plugin) {
-          $plugin->validateOptionsForm($form['pager_options'], $form_state);
-        }
-        break;
+    }
+
+    // Validate plugin options. Every section with "_options" in it, belongs to
+    // a plugin type, like "style_options".
+    if (strpos($form_state['section'], '_options') !== FALSE) {
+      $plugin_type = str_replace('_options', '', $form_state['section']);
+      // Load the plugin and let it handle the validation.
+      if ($plugin = $this->getPlugin($plugin_type)) {
+        $plugin->validateOptionsForm($form[$form_state['section']], $form_state);
+      }
     }
 
     foreach ($this->extender as $extender) {
@@ -2453,11 +2430,6 @@ abstract class DisplayPluginBase extends PluginBase {
   public function renderEmpty() {
     return $this->renderArea('empty', TRUE);
   }
-
-  /**
-   * If this display creates a block, implement one of these.
-   */
-  public function hookBlockList($delta = 0, $edit = array()) { return array(); }
 
   /**
    * If this display creates a page with a menu item, implement it here.

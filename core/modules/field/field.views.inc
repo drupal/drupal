@@ -127,6 +127,9 @@ function field_views_field_default_views_data($field) {
       $group_name = $groups[$entity];
     }
 
+    if (!isset($entity_info['base_table'])) {
+      continue;
+    }
     $entity_tables[$entity_info['base_table']] = $entity;
     $current_tables[$entity] = $entity_info['base_table'];
     if (isset($entity_info['revision_table'])) {
@@ -201,6 +204,9 @@ function field_views_field_default_views_data($field) {
     $aliases = array();
     $also_known = array();
     foreach ($all_labels as $entity_name => $labels) {
+      if (!isset($current_tables[$entity_name])) {
+        continue;
+      }
       foreach ($labels as $label_name => $true) {
         if ($type == FIELD_LOAD_CURRENT) {
           if ($group_name != $groups[$entity_name] || $label != $label_name) {

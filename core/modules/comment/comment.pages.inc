@@ -66,21 +66,21 @@ function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, 
       if (user_access('access comments')) {
         // Load the parent comment.
         $comment = comment_load($pid);
-        if ($comment->status == COMMENT_PUBLISHED) {
+        if ($comment->status->value == COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
-          if ($comment->entity_id != $entity->id() ||
-              $comment->field_name != $field_name ||
-              $comment->entity_type != $entity->entityType()) {
+          if ($comment->entity_id->value != $entity->id() ||
+              $comment->field_name->value != $field_name ||
+              $comment->entity_type->value != $entity->entityType()) {
             // Attempting to reply to a comment not belonging to the current entity.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
             drupal_goto($uri['path']);
           }
           // Display the parent comment.
-          $comment->entity_type = $entity->entityType();
-          $comment->field_name = $field_name;
-          field_attach_load('comment', array($comment->cid => $comment));
-          $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+          $comment->entity_type->value = $entity->entityType();
+          $comment->field_name->value = $field_name;
+          field_attach_load('comment', array($comment->id() => $comment));
+          $comment->name->value = $comment->uid->value ? $comment->registered_name : $comment->name->value;
           $build['comment_parent'] = comment_view($comment);
         }
         else {
@@ -107,7 +107,7 @@ function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, 
     }
 
     // Should we show the reply box?
-    $items = field_get_items($entity->entityType(), $entity, $field_name);
+    $items = field_get_items($entity, $field_name);
     $status = reset($items);
     if (isset($status['comment']) && $status['comment'] != COMMENT_OPEN) {
       drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
@@ -143,11 +143,11 @@ function comment_approve($cid) {
   }
 
   if ($comment = comment_load($cid)) {
-    $comment->status = COMMENT_PUBLISHED;
+    $comment->status->value = COMMENT_PUBLISHED;
     comment_save($comment);
 
     drupal_set_message(t('Comment approved.'));
-    $entity = entity_load($comment->entity_type, $comment->entity_id);
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
     if ($entity) {
       $uri = $entity->uri();
       drupal_goto($uri['path']);

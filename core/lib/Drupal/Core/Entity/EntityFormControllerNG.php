@@ -23,7 +23,7 @@ class EntityFormControllerNG extends EntityFormController {
     // entity properties.
     $info = $entity->entityInfo();
     if (!empty($info['fieldable'])) {
-      field_attach_form($entity->entityType(), $entity->getBCEntity(), $form, $form_state, $this->getFormLangcode($form_state));
+      field_attach_form($entity->getBCEntity(), $form, $form_state, $this->getFormLangcode($form_state));
     }
     return $form;
   }
@@ -38,13 +38,23 @@ class EntityFormControllerNG extends EntityFormController {
     $info = $entity->entityInfo();
 
     if (!empty($info['fieldable'])) {
-      field_attach_form_validate($entity->entityType(), $entity->getBCEntity(), $form, $form_state);
+      field_attach_form_validate($entity->getBCEntity(), $form, $form_state);
     }
 
     // @todo Remove this.
     // Execute legacy global validation handlers.
     unset($form_state['validate_handlers']);
     form_execute_handlers('validate', $form, $form_state);
+  }
+
+  /**
+   * Overrides EntityFormController::submitEntityLanguage().
+   */
+  protected function submitEntityLanguage(array $form, array &$form_state) {
+    // Nothing to do here, as original field values are always stored with
+    // LANGUAGE_DEFAULT language.
+    // @todo Delete this method when merging EntityFormControllerNG with
+    //   EntityFormController.
   }
 
   /**
@@ -78,7 +88,7 @@ class EntityFormControllerNG extends EntityFormController {
 
     // Copy field values to the entity.
     if ($info['fieldable']) {
-      field_attach_submit($entity_type, $entity->getBCEntity(), $form, $form_state);
+      field_attach_submit($entity->getBCEntity(), $form, $form_state);
     }
     return $entity;
   }

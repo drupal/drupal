@@ -407,7 +407,7 @@ class FormTest extends FieldTestBase {
 
     $form = array();
     $form_state = form_state_defaults();
-    field_attach_form($entity_type, $entity, $form, $form_state);
+    field_attach_form($entity, $form, $form_state);
 
     $this->assertEqual($form[$field_name_no_access][$langcode][0]['value']['#entity_type'], $entity_type, 'The correct entity type is set in the field structure.');
     $this->assertFalse($form[$field_name_no_access]['#access'], 'Field #access is FALSE for the field without edit access.');
