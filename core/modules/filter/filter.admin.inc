@@ -153,6 +153,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#title' => t('Name'),
     '#default_value' => $format->name,
     '#required' => TRUE,
+    '#weight' => -30,
   );
   $form['format'] = array(
     '#type' => 'machine_name',
@@ -164,6 +165,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
       'source' => array('name'),
     ),
     '#disabled' => !empty($format->format),
+    '#weight' => -20,
   );
 
   // Add user role access selection.
@@ -172,6 +174,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#title' => t('Roles'),
     '#options' => array_map('check_plain', user_roles()),
     '#disabled' => $is_fallback,
+    '#weight' => -10,
   );
   if ($is_fallback) {
     $form['roles']['#description'] = t('All roles for this text format must be enabled and cannot be changed.');
