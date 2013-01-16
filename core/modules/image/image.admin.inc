@@ -71,7 +71,7 @@ function image_style_form($form, &$form_state, $style) {
     foreach ($style->effects as $key => $effect) {
       $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
       $form['effects'][$key]['label'] = array(
-        '#markup' => $effect['label'],
+        '#markup' => check_plain($effect['label']),
       );
       $form['effects'][$key]['summary'] = array(
         '#markup' => isset($effect['summary theme']) ? theme($effect['summary theme'], array('data' => $effect['data'])) : '',
@@ -115,7 +115,7 @@ function image_style_form($form, &$form_state, $style) {
   // Build the new image effect addition form and add it to the effect list.
   $new_effect_options = array();
   foreach (image_effect_definitions() as $effect => $definition) {
-    $new_effect_options[$effect] = check_plain($definition['label']);
+    $new_effect_options[$effect] = $definition['label'];
   }
   $form['effects']['new'] = array(
     '#tree' => FALSE,
