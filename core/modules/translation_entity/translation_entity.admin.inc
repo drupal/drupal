@@ -75,7 +75,7 @@ function translation_entity_form_language_content_settings_validate(array $form,
         }
 
         $values = $bundle_settings['settings']['language'];
-        if (language_is_locked($values['langcode']) && $values['language_hidden']) {
+        if (language_is_locked($values['langcode']) && empty($values['language_show'])) {
           foreach (language_list(LANGUAGE_LOCKED) as $language) {
             $locked_languages[] = $language->name;
           }

@@ -70,7 +70,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[comment]' => TRUE,
       'settings[comment][comment_node_article][settings][language][langcode]' => LANGUAGE_NOT_SPECIFIED,
-      'settings[comment][comment_node_article][settings][language][language_hidden]' => TRUE,
+      'settings[comment][comment_node_article][settings][language][language_show]' => FALSE,
       'settings[comment][comment_node_article][translatable]' => TRUE,
       'settings[comment][comment_node_article][fields][comment_body]' => TRUE,
     );
@@ -82,7 +82,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[comment]' => TRUE,
       'settings[comment][comment_node_article][settings][language][langcode]' => 'current_interface',
-      'settings[comment][comment_node_article][settings][language][language_hidden]' => FALSE,
+      'settings[comment][comment_node_article][settings][language][language_show]' => TRUE,
       'settings[comment][comment_node_article][translatable]' => TRUE,
       'settings[comment][comment_node_article][fields][comment_body]' => TRUE,
     );
@@ -93,7 +93,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     // Test that language settings are correctly stored.
     $language_configuration = language_get_default_configuration('comment', 'comment_node_article');
     $this->assertEqual($language_configuration['langcode'], 'current_interface', 'The default language for article comments is set to the current interface language.');
-    $this->assertFalse($language_configuration['language_hidden'], 'The language selector for article comments is shown.');
+    $this->assertTrue($language_configuration['language_show'], 'The language selector for article comments is shown.');
   }
 
   /**

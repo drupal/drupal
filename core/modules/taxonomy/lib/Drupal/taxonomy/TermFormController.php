@@ -47,7 +47,7 @@ class TermFormController extends EntityFormController {
       '#title' => t('Language'),
       '#languages' => LANGUAGE_ALL,
       '#default_value' => $term->langcode,
-      '#access' => !is_null($language_configuration['language_hidden']) && !$language_configuration['language_hidden'],
+      '#access' => !is_null($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 
     $form['relations'] = array(

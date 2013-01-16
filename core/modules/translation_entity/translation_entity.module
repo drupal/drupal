@@ -754,7 +754,7 @@ function translation_entity_language_configuration_element_process(array $elemen
 function translation_entity_language_configuration_element_validate($element, array &$form_state, array $form) {
   $key = $form_state['translation_entity']['key'];
   $values = $form_state['values'][$key];
-  if (language_is_locked($values['langcode']) && $values['language_hidden'] && $values['translation_entity']) {
+  if (language_is_locked($values['langcode']) && !$values['language_show'] && $values['translation_entity']) {
     foreach (language_list(LANGUAGE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
     }

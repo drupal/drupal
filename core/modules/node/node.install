@@ -509,14 +509,14 @@ function node_update_8003() {
     update_variable_set('node_type_language_default_' . $type, LANGUAGE_NOT_SPECIFIED);
     $node_type_language = update_variable_get('node_type_language_' . $type, 0);
     if ($node_type_language == 0) {
-      update_variable_set('node_type_language_hidden_' . $type, TRUE);
+      update_variable_set('node_type_language_show_' . $type, FALSE);
     }
     if ($node_type_language == 2) {
       // Translation was enabled, so enable it again and
       // unhide the language selector. Because if language is
       // LANGUAGE_NOT_SPECIFIED and the selector hidden, translation
       // cannot be enabled.
-      update_variable_set('node_type_language_hidden_' . $type, FALSE);
+      update_variable_set('node_type_language_show_' . $type, TRUE);
       update_variable_set('node_type_language_translation_enabled_' . $type, TRUE);
     }
     update_variable_del('node_type_language_' . $type);
@@ -627,9 +627,9 @@ function node_update_8007() {
   $types = db_query('SELECT type FROM {node_type}')->fetchCol();
   foreach ($types as $type) {
     $language_default = update_variable_get('node_type_language_default_' . $type, NULL);
-    $language_hidden = update_variable_get('node_type_language_hidden_' . $type, NULL);
-    if (isset($language_default) || isset($language_hidden)) {
-      $values = array('langcode' => $language_default, 'language_hidden' => $language_hidden);
+    $language_show = update_variable_get('node_type_language_show_' . $type, NULL);
+    if (isset($language_default) || isset($language_show)) {
+      $values = array('langcode' => $language_default, 'language_show' => $language_show);
       config('language.settings')->set('node.' . $type . '.language.default_configuration', $values)->save();
     }
   }

@@ -106,7 +106,7 @@ class NodeFormController extends EntityFormController {
       '#type' => 'language_select',
       '#default_value' => $node->langcode,
       '#languages' => LANGUAGE_ALL,
-      '#access' => isset($language_configuration['language_hidden']) && !$language_configuration['language_hidden'],
+      '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 
     $form['additional_settings'] = array(

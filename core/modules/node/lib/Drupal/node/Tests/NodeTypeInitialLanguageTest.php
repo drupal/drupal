@@ -42,8 +42,8 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    */
   function testNodeTypeInitialLanguageDefaults() {
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertOptionSelected('edit-language-configuration-langcode', 'site_default', 'The default inital language is the site default.');
-    $this->assertFieldChecked('edit-language-configuration-language-hidden', 'Language selector is hidden by default.');
+    $this->assertOptionSelected('edit-language-configuration-langcode', 'site_default', 'The default initial language is the site default.');
+    $this->assertNoFieldChecked('edit-language-configuration-language-show', 'Language selector is hidden by default.');
 
     // Tests if the language field cannot be rearranged on the manage fields tab.
     $this->drupalGet('admin/structure/types/manage/article/fields');
@@ -66,12 +66,12 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     // Tests the initial language after changing the site default language.
     // First unhide the language selector.
     $edit = array(
-      'language_configuration[language_hidden]' => FALSE,
+      'language_configuration[language_show]' => TRUE,
     );
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('node/add/article');
     $this->assertField('langcode', 'Language is selectable on node add/edit page when language not hidden.');
-    $this->assertOptionSelected('edit-langcode', 'hu', 'The inital language is the site default on the node add page after the site default language is changed.');
+    $this->assertOptionSelected('edit-langcode', 'hu', 'The initial language is the site default on the node add page after the site default language is changed.');
 
     // Tests if the language field can be rearranged on the manage fields tab.
     $this->drupalGet('admin/structure/types/manage/article/fields');
@@ -91,7 +91,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     );
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('node/add/article');
-    $this->assertOptionSelected('edit-langcode', 'en', 'The inital language is the defined language.');
+    $this->assertOptionSelected('edit-langcode', 'en', 'The initial language is the defined language.');
   }
 
   /**

@@ -175,7 +175,7 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
  * and language selector is not hidden, translation cannot be enabled.
  */
 function translation_node_type_language_translation_enabled_validate($element, &$form_state, $form) {
-  if (language_is_locked($form_state['values']['language_configuration']['langcode']) && $form_state['values']['language_configuration']['language_hidden'] && $form_state['values']['node_type_language_translation_enabled']) {
+  if (language_is_locked($form_state['values']['language_configuration']['langcode']) && !$form_state['values']['language_configuration']['language_show'] && $form_state['values']['node_type_language_translation_enabled']) {
     foreach (language_list(LANGUAGE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
     }

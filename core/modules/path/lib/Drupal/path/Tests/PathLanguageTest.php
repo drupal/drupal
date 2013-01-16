@@ -51,7 +51,7 @@ class PathLanguageTest extends PathTestBase {
   function testAliasTranslation() {
     // Set 'page' content type to enable translation.
     $edit = array(
-      'language_configuration[language_hidden]' => FALSE,
+      'language_configuration[language_show]' => TRUE,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');

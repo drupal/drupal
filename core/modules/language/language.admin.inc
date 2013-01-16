@@ -1023,7 +1023,7 @@ function language_content_settings_form(array $form, array $form_state, array $s
     // Check whether we have any custom setting.
     foreach (entity_get_bundles($entity_type) as $bundle) {
       $conf = language_get_default_configuration($entity_type, $bundle);
-      if (empty($conf['language_hidden']) || $conf['langcode'] != 'site_default') {
+      if (!empty($conf['language_show']) || $conf['langcode'] != 'site_default') {
         $default[$entity_type] = $entity_type;
       }
       $language_configuration[$entity_type][$bundle] = $conf;
