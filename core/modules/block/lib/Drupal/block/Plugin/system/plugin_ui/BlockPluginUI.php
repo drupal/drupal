@@ -30,7 +30,7 @@ use Drupal\Core\Annotation\Translation;
  *   suffix = "add",
  *   task_suffix = "library",
  *   task_title = @Translation("Library"),
- *   title = @Translation("Block Library"),
+ *   title = @Translation("Add block"),
  *   title_attribute = "subject",
  *   type = MENU_LOCAL_ACTION
  * )
