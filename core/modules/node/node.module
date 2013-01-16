@@ -2872,6 +2872,14 @@ function node_access_view_all_nodes($account = NULL) {
  * node access checks for the user account given by the 'account' meta-data (or
  * global $user if not provided), for an operation given by the 'op' meta-data
  * (or 'view' if not provided; other possible values are 'update' and 'delete').
+ *
+ * Queries tagged with 'node_access' that are not against the {node} table
+ * must add the base table as metadata. For example:
+ * @code
+ *   $query
+ *     ->addTag('node_access')
+ *     ->addMetaData('base_table', 'taxonomy_index');
+ * @endcode
  */
 function node_query_node_access_alter(AlterableInterface $query) {
   global $user;
