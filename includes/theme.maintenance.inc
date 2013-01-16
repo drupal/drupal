@@ -10,9 +10,9 @@
  *
  * Used for site installs, updates and when the site is in maintenance mode.
  * It also applies when the database is unavailable or bootstrap was not
- * complete. Seven is always used for the initial install and update operations.
- * In other cases, Bartik is used, but this can be overridden by setting a
- * "maintenance_theme" key in the $conf variable in settings.php.
+ * complete. Seven is always used for the initial install and update
+ * operations. In other cases, Bartik is used, but this can be overridden by
+ * setting a "maintenance_theme" key in the $conf variable in settings.php.
  */
 function _drupal_maintenance_theme() {
   global $theme, $theme_key, $conf;
@@ -85,7 +85,7 @@ function _drupal_maintenance_theme() {
 }
 
 /**
- * This builds the registry when the site needs to bypass any database calls.
+ * Builds the registry when the site needs to bypass any database calls.
  */
 function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine = NULL) {
   return _theme_build_registry($theme, $base_theme, $theme_engine);
@@ -160,7 +160,7 @@ function theme_update_page($variables) {
 }
 
 /**
- * Returns HTML for a report of the results from an operation run via authorize.php.
+ * Returns HTML for a results report of an operation run by authorize.php.
  *
  * @param $variables
  *   An associative array containing:
