@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 function language_admin_overview_form($form, &$form_state) {
   drupal_static_reset('language_list');
-  $languages = language_list(LANGUAGE_ALL);
+  $languages = language_list();
   $default = language_default();
 
   $form['languages'] = array(
@@ -33,22 +33,8 @@ function language_admin_overview_form($form, &$form_state) {
 
   foreach ($languages as $langcode => $language) {
     $form['languages'][$langcode]['#attributes']['class'][] = 'draggable';
-    $form['languages'][$langcode]['#weight'] = $language->weight;
-    $title = check_plain($language->name);
-    $description = '';
-    switch ($langcode) {
-      case LANGUAGE_NOT_APPLICABLE:
-        $description = t('For language independent content.');
-        break;
-      case LANGUAGE_NOT_SPECIFIED:
-        $description = t('Use this when the language is not (yet) known.');
-        break;
-    }
-    if (!empty($description)) {
-      $title .= '<div class="description">' . $description . '</div>';
-    }
     $form['languages'][$langcode]['name'] = array(
-      '#markup' => $title,
+      '#markup' => check_plain($language->name),
     );
     $form['languages'][$langcode]['default'] = array(
       '#type' => 'radio',
@@ -70,20 +56,15 @@ function language_admin_overview_form($form, &$form_state) {
       '#delta' => 30,
     );
     $links = array();
-    if (empty($language->locked)) {
-      $links['edit'] = array(
-        'title' => t('edit'),
-        'href' => 'admin/config/regional/language/edit/' . $langcode,
+    $links['edit'] = array(
+      'title' => t('edit'),
+      'href' => 'admin/config/regional/language/edit/' . $langcode,
+    );
+    if ($langcode != $default->langcode) {
+      $links['delete'] = array(
+        'title' => t('delete'),
+        'href' => 'admin/config/regional/language/delete/' . $langcode,
       );
-      if ($langcode != $default->langcode) {
-        $links['delete'] = array(
-          'title' => t('delete'),
-          'href' => 'admin/config/regional/language/delete/' . $langcode,
-        );
-      }
-    }
-    else {
-      $form['languages'][$langcode]['default']['#attributes']['disabled'] = 'disabled';
     }
     $form['languages'][$langcode]['operations'] = array(
       '#type' => 'operations',
@@ -105,7 +86,7 @@ function language_admin_overview_form($form, &$form_state) {
  * Process language overview form submissions, updating existing languages.
  */
 function language_admin_overview_form_submit($form, &$form_state) {
-  $languages = language_list(LANGUAGE_ALL);
+  $languages = language_list();
   $old_default = language_default();
 
   foreach ($languages as $langcode => $language) {

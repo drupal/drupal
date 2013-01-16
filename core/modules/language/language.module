@@ -513,6 +513,9 @@ function language_save($language) {
   // Update language count based on unlocked language count.
   language_update_count();
 
+  // Update weight of locked system languages.
+  language_update_locked_weights();
+
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
 
@@ -558,6 +561,9 @@ function language_delete($langcode) {
       ->execute();
 
     language_update_count();
+
+    // Update weight of locked system languages.
+    language_update_locked_weights();
 
     drupal_static_reset('language_list');
 
@@ -853,4 +859,21 @@ function language_set_browser_drupal_langcode_mappings($mappings) {
   $config = config('language.mappings');
   $config->setData($mappings);
   $config->save();
+}
+
+/**
+ * Updates locked system language weights.
+ */
+function language_update_locked_weights() {
+  // Get maximum weight to update the system languages to keep them on bottom.
+  $max_weight = db_query('SELECT MAX(weight) FROM {language} WHERE locked = 0')->fetchField();
+  // Loop locked languages to maintain the existing order.
+  foreach (language_list(LANGUAGE_LOCKED) as $language) {
+    $max_weight++;
+    // Update system languages weight.
+    db_update('language')
+      ->fields(array('weight' => $max_weight))
+      ->condition('langcode', $language->langcode)
+      ->execute();
+  }
 }

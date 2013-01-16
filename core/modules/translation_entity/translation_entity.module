@@ -22,7 +22,7 @@ function translation_entity_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
-      $output .= '<dd><p>' . t('Before you can translate content, there must be at least two non-system languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language'))) . '</p>';
+      $output .= '<dd><p>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language'))) . '</p>';
       $output .= '<p>' . t('After adding languages, <a href="!url">configure translation</a>.', array('!url' => url('admin/config/regional/content-language'))) . '</p>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
       $output .= '<dd>' . t('After enabling translation you can create a new piece of content, or edit existing content and assign it a language. Then, you will see a <em>Translations</em> tab or link that will gives an overview of the translation status for the current content. From there, you can add translations and edit or delete existing translations. This process is similar for every translatable element on your site, such as taxonomy terms, comments or user accounts.') . '</dd>';
@@ -38,7 +38,7 @@ function translation_entity_help($path, $arg) {
     case 'admin/config/regional/content-language':
       $output = '';
       if (!language_multilingual()) {
-        $output .= '<br/>' . t('Before you can translate content, there must be at least two non-system languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language')));
+        $output .= '<br/>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language')));
       }
       return $output;
   }
