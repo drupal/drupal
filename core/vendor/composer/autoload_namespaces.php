@@ -21,7 +21,7 @@ return array(
     'Guzzle\\Parser' => $vendorDir . '/guzzle/parser/',
     'Guzzle\\Http' => $vendorDir . '/guzzle/http/',
     'Guzzle\\Common' => $vendorDir . '/guzzle/common/',
+    'EasyRdf_' => $vendorDir . '/easyrdf/easyrdf/lib/',
     'Doctrine\\Common' => $vendorDir . '/doctrine/common/lib/',
     'Assetic' => $vendorDir . '/kriswallsmith/assetic/src/',
-    'EasyRdf_' => $vendorDir . '/njh/easyrdf/lib/',
 );

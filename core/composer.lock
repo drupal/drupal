@@ -1,5 +1,5 @@
 {
-    "hash": "27b5fb7194e0d492c69d372d8ba17b2b",
+    "hash": "9dba4484f19203d80a4d60c987df2e59",
     "packages": [
         {
             "name": "doctrine/common",
@@ -25,7 +25,6 @@
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common": "lib/"
@@ -72,27 +71,85 @@
             ]
         },
         {
-            "name": "guzzle/common",
+            "name": "easyrdf/easyrdf",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/njh/easyrdf.git",
+                "reference": "d1c363bd04cd55169fbefe52328e86031c6db3a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/njh/easyrdf/archive/d1c363bd04cd55169fbefe52328e86031c6db3a2.zip",
+                "reference": "d1c363bd04cd55169fbefe52328e86031c6db3a2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.8"
+            },
+            "replace": {
+                "njh/easyrdf": "self.version"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.5.15",
+                "squizlabs/php_codesniffer": ">=1.4.3",
+                "sami/sami": "dev-master"
+            },
+            "time": "2013-01-13 01:20:04",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "EasyRdf_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nicholas Humfrey",
+                    "email": "njh@aelius.com",
+                    "homepage": "http://www.aelius.com/njh/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "EasyRdf is a PHP library designed to make it easy to consume and produce RDF.",
+            "homepage": "http://www.easyrdf.org/",
+            "keywords": [
+                "rdfa",
+                "RDF",
+                "Semantic Web",
+                "Turtle",
+                "Linked Data"
+            ]
+        },
+        {
+            "name": "guzzle/common",
+            "version": "v3.1.0",
             "target-dir": "Guzzle/Common",
             "source": {
                 "type": "git",
                 "url": "git://github.com/guzzle/common.git",
-                "reference": "23162d56daa85b1ee6f1d73d9b5a5ecda2d70849"
+                "reference": "v3.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/common/archive/23162d56daa85b1ee6f1d73d9b5a5ecda2d70849.zip",
-                "reference": "23162d56daa85b1ee6f1d73d9b5a5ecda2d70849",
+                "url": "https://github.com/guzzle/common/archive/v3.1.0.zip",
+                "reference": "v3.1.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "symfony/event-dispatcher": ">=2.1"
             },
-            "time": "2012-12-06 02:26:39",
+            "time": "2013-01-13 05:14:34",
             "type": "library",
-            "installation-source": "source",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Common": ""
@@ -113,28 +170,33 @@
         },
         {
             "name": "guzzle/http",
-            "version": "dev-master",
+            "version": "v3.1.0",
             "target-dir": "Guzzle/Http",
             "source": {
                 "type": "git",
                 "url": "git://github.com/guzzle/http.git",
-                "reference": "v3.0.5"
+                "reference": "v3.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/http/archive/v3.0.5.zip",
-                "reference": "v3.0.5",
+                "url": "https://github.com/guzzle/http/archive/v3.1.0.zip",
+                "reference": "v3.1.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
+                "ext-curl": "*",
                 "guzzle/common": "self.version",
                 "guzzle/parser": "self.version",
                 "guzzle/stream": "self.version"
             },
-            "time": "2012-11-18 05:28:55",
+            "time": "2013-01-13 05:09:32",
             "type": "library",
-            "installation-source": "source",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Http": ""
@@ -163,25 +225,29 @@
         },
         {
             "name": "guzzle/parser",
-            "version": "dev-master",
+            "version": "v3.1.0",
             "target-dir": "Guzzle/Parser",
             "source": {
                 "type": "git",
                 "url": "git://github.com/guzzle/parser.git",
-                "reference": "v3.0.5"
+                "reference": "v3.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/parser/archive/v3.0.5.zip",
-                "reference": "v3.0.5",
+                "url": "https://github.com/guzzle/parser/archive/v3.1.0.zip",
+                "reference": "v3.1.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2012-11-19 00:07:13",
+            "time": "2013-01-12 21:43:21",
             "type": "library",
-            "installation-source": "source",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Parser": ""
@@ -203,26 +269,30 @@
         },
         {
             "name": "guzzle/stream",
-            "version": "dev-master",
+            "version": "v3.1.0",
             "target-dir": "Guzzle/Stream",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/stream",
-                "reference": "v3.0.5"
+                "reference": "v3.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/stream/archive/v3.0.5.zip",
-                "reference": "v3.0.5",
+                "url": "https://github.com/guzzle/stream/archive/v3.1.0.zip",
+                "reference": "v3.1.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "guzzle/common": "self.version"
             },
-            "time": "2012-11-11 23:54:57",
+            "time": "2012-12-07 16:45:11",
             "type": "library",
-            "installation-source": "source",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Stream": ""
@@ -284,7 +354,6 @@
                     "dev-master": "1.1-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Assetic": "src/"
@@ -336,7 +405,6 @@
                     "dev-master": "1.0-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Cmf\\Component\\Routing": ""
@@ -358,39 +426,6 @@
                 "database",
                 "routing"
             ]
-        },
-        {
-            "name": "njh/easyrdf",
-            "description": "EasyRdf is a PHP library designed to make it easy to consume and produce RDF.",
-            "version": "0.8.0",
-            "type": "library",
-            "keywords": ["RDF", "Semantic Web", "Turtle", "RDFa"],
-            "homepage": "http://www.aelius.com/njh/easyrdf/",
-            "license": "BSD-3-Clause",
-            "authors": [
-                {
-                    "name": "Nicholas Humfrey",
-                    "email": "njh@aelius.com",
-                    "homepage": "http://www.aelius.com/njh/",
-                    "role": "Developer"
-                }
-            ],
-            "support": {
-                "forum": "http://groups.google.com/group/easyrdf/",
-                "issues": "http://github.com/njh/easyrdf/issues"
-            },
-            "require": {
-                "php": ">=5.2.8"
-            },
-            "repositories": [
-                {
-                    "type": "vcs",
-                    "url": "https://github.com/njh/easyrdf"
-                }
-            ],
-            "autoload": {
-                "psr-0": { "EasyRdf": "lib/" }
-            }
         },
         {
             "name": "symfony/class-loader",
@@ -420,7 +455,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\ClassLoader\\": ""
@@ -476,7 +510,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\DependencyInjection\\": ""
@@ -531,7 +564,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\EventDispatcher\\": ""
@@ -579,7 +611,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\HttpFoundation\\": ""
@@ -651,7 +682,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\HttpKernel\\": ""
@@ -694,7 +724,6 @@
             },
             "time": "2012-12-06 10:00:55",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Process": ""
@@ -753,7 +782,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Routing\\": ""
@@ -801,7 +829,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Serializer\\": ""
@@ -849,7 +876,6 @@
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Yaml\\": ""
@@ -896,7 +922,6 @@
                     "dev-master": "1.11-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Twig_": "lib/"
@@ -931,7 +956,9 @@
     "stability-flags": {
         "twig/twig": 0,
         "doctrine/common": 0,
+        "guzzle/http": 0,
         "kriswallsmith/assetic": 15,
-        "symfony-cmf/routing": 20
+        "symfony-cmf/routing": 20,
+        "easyrdf/easyrdf": 20
     }
 }

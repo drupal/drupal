@@ -13,6 +13,20 @@ class ExceptionCollection extends \Exception implements GuzzleException, \Iterat
     protected $exceptions = array();
 
     /**
+     * Set all of the exceptions
+     *
+     * @param array $exceptions Array of exceptions
+     *
+     * @return self
+     */
+    public function setExceptions(array $exceptions)
+    {
+        $this->exceptions = $exceptions;
+
+        return $this;
+    }
+
+    /**
      * Add exceptions to the collection
      *
      * @param ExceptionCollection|\Exception $e Exception to add
@@ -54,5 +68,15 @@ class ExceptionCollection extends \Exception implements GuzzleException, \Iterat
     public function getIterator()
     {
         return new \ArrayIterator($this->exceptions);
+    }
+
+    /**
+     * Get the first exception in the collection
+     *
+     * @return \Exception
+     */
+    public function getFirst()
+    {
+        return $this->exceptions ? $this->exceptions[0] : null;
     }
 }
