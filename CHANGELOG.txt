@@ -1,3 +1,7 @@
+Drupal 7.19, 2013-01-16
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2013-001.
+
 Drupal 7.18, 2012-12-19
 -----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2012-004.

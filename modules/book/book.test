@@ -258,6 +258,13 @@ class BookTestCase extends DrupalWebTestCase {
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->nid);
     $this->assertResponse('403', t('Anonymous user properly forbidden.'));
+
+    // Now grant anonymous users permission to view the printer-friendly
+    // version and verify that node access restrictions still prevent them from
+    // seeing it.
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access printer-friendly version'));
+    $this->drupalGet('book/export/html/' . $this->book->nid);
+    $this->assertResponse('403', 'Anonymous user properly forbidden from seeing the printer-friendly version when denied by node access.');
   }
 
   /**
