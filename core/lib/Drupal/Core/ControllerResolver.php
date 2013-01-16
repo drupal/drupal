@@ -15,9 +15,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * ControllerResolver to enhance controllers beyond Symfony's basic handling.
  *
- * When creating a new object-based controller that implements
- * ContainerAwareInterface, inject the container into it. While not always
- * necessary, that allows a controller to vary the services it needs at runtime.
+ * It adds two behaviors:
+ *
+ *  - When creating a new object-based controller that implements
+ *    ContainerAwareInterface, inject the container into it. While not always
+ *    necessary, that allows a controller to vary the services it needs at
+ *    runtime.
+ *
+ *  - By default, a controller name follows the class::method notation. This
+ *    class adds the possibility to use a service from the container as a
+ *    controller by using a service:method notation (Symfony uses the same
+ *    convention).
  */
 class ControllerResolver extends BaseControllerResolver {
 
@@ -50,17 +58,36 @@ class ControllerResolver extends BaseControllerResolver {
    *
    * @return mixed
    *   A PHP callable.
+   *
+   * @throws \LogicException
+   *   If the controller cannot be parsed
+   *
+   * @throws \InvalidArgumentException
+   *   If the controller class does not exist
    */
   protected function createController($controller) {
-    $controller = parent::createController($controller);
+    // class::method
+    if (strpos($controller, '::') !== FALSE) {
+      list($class, $method) = explode('::', $controller, 2);
 
-    // $controller will be an array of object and method name, per PHP's
-    // definition of a callable. Index 0 therefore is the object we want to
-    // enhance.
-    if ($controller[0] instanceof ContainerAwareInterface) {
-      $controller[0]->setContainer($this->container);
+      if (!class_exists($class)) {
+        throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+      }
+
+      $controller = new $class();
+      if ($controller instanceof ContainerAwareInterface) {
+        $controller->setContainer($this->container);
+      }
+      return array($controller, $method);
     }
 
-    return $controller;
+    // service:method
+    if (substr_count($controller, ':') == 1) {
+      // controller in the service:method notation
+      list($service, $method) = explode(':', $controller, 2);
+      return array($this->container->get($service), $method);
+    }
+
+    throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
   }
 }
