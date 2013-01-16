@@ -35,7 +35,7 @@ class ViewStorageController extends ConfigStorageController {
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     foreach ($queried_entities as $id => $entity) {
-      $this->attachDisplays($entity);
+      $this->mergeDefaultDisplaysOptions($entity);
     }
 
     parent::attachLoad($queried_entities, $revision_id);
@@ -70,16 +70,17 @@ class ViewStorageController extends ConfigStorageController {
 
     $entity = parent::create($values);
 
-    $this->attachDisplays($entity);
+    $this->mergeDefaultDisplaysOptions($entity);
     return $entity;
   }
 
   /**
    * Add defaults to the display options.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The view entity to attach default displays options.
    */
-  protected function attachDisplays(EntityInterface $entity) {
+  protected function mergeDefaultDisplaysOptions(EntityInterface $entity) {
     if (isset($entity->display) && is_array($entity->display)) {
       $displays = array();
 
