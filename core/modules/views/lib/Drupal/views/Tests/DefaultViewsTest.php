@@ -108,6 +108,7 @@ class DefaultViewsTest extends WebTestBase {
       $comment = array(
         'uid' => $user->uid,
         'nid' => $node->nid,
+        'node_type' => 'node_type_' . $node->bundle(),
       );
       entity_create('comment', $comment)->save();
     }

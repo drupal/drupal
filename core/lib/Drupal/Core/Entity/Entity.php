@@ -263,7 +263,12 @@ class Entity implements IteratorAggregate, EntityInterface {
   public function language() {
     // @todo: Replace by EntityNG implementation once all entity types have been
     // converted to use the entity field API.
-    return !empty($this->langcode) ? language_load($this->langcode) : new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
+    $language = language_load($this->langcode);
+    if (!$language) {
+      // Make sure we return a proper language object.
+      $language = new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
+    }
+    return $language;
   }
 
   /**

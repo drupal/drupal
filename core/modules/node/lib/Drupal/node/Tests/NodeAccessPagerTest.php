@@ -47,6 +47,7 @@ class NodeAccessPagerTest extends WebTestBase {
     for ($i = 0; $i < 60; $i++) {
       $comment = entity_create('comment', array(
         'nid' => $node->nid,
+        'node_type' => 'node_type_' . $node->bundle(),
         'subject' => $this->randomName(),
         'comment_body' => array(
           array('value' => $this->randomName()),

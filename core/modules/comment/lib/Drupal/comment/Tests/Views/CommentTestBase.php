@@ -48,6 +48,7 @@ abstract class CommentTestBase extends ViewTestBase {
       'nid' => $this->node_user_commented->nid,
       'cid' => '',
       'pid' => '',
+      'node_type' => '',
     );
     $this->comment = entity_create('comment', $comment);
     $this->comment->save();

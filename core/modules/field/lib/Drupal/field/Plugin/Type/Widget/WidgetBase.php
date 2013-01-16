@@ -84,11 +84,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $field_name => array(),
     );
 
-    // Populate widgets with default values when creating a new entity.
-    if (empty($items) && ($entity->isNew())) {
-      $items = field_get_default_value($entity, $field, $instance, $langcode);
-    }
-
     // Store field information in $form_state.
     if (!field_form_get_state($parents, $field_name, $langcode, $form_state)) {
       $field_state = array(

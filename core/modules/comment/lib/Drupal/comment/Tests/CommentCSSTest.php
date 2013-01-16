@@ -50,6 +50,7 @@ class CommentCSSTest extends CommentTestBase {
       // Add a comment.
       $comment = entity_create('comment', array(
         'nid' => $node->nid,
+        'node_type' => 'node_type_' . $node->bundle(),
         'uid' => $case['comment_uid'],
         'status' => $case['comment_status'],
         'subject' => $this->randomName(),

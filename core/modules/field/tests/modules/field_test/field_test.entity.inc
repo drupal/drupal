@@ -121,7 +121,7 @@ function field_test_delete_bundle($bundle) {
  * Creates a basic test_entity entity.
  */
 function field_test_create_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $label = '') {
-  $entity = entity_create('test_entity', array());
+  $entity = entity_create('test_entity', array('fttype' => $bundle));
   // Only set id and vid properties if they don't come as NULL (creation form).
   if (isset($id)) {
     $entity->ftid = $id;
@@ -131,7 +131,6 @@ function field_test_create_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $l
     // Flag to make sure that the provided vid is used for a new revision.
     $entity->use_provided_revision_id = $vid;
   }
-  $entity->fttype = $bundle;
 
   $label = !empty($label) ? $label : $bundle . ' label';
   $entity->ftlabel = $label;

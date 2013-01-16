@@ -86,6 +86,7 @@ class EntityCrudHookTest extends WebTestBase {
     $nid = $node->nid;
 
     $comment = entity_create('comment', array(
+      'node_type' => 'node_type_' . $node->bundle(),
       'cid' => NULL,
       'pid' => 0,
       'nid' => $nid,

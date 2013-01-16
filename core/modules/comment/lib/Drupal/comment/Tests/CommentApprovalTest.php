@@ -47,7 +47,7 @@ class CommentApprovalTest extends CommentTestBase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->nid));
+    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->nid));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
@@ -111,7 +111,7 @@ class CommentApprovalTest extends CommentTestBase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->nid));
+    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->nid));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');

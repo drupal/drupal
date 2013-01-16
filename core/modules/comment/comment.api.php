@@ -49,6 +49,21 @@ function hook_comment_update(Drupal\comment\Comment $comment) {
 }
 
 /**
+ * Act on a newly created comment.
+ *
+ * This hook runs after a new comment object has just been instantiated. It can
+ * be used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ *   The comment object.
+ */
+function hook_comment_create(\Drupal\comment\Plugin\Core\Entity\Comment $comment) {
+  if (!isset($comment->foo)) {
+    $comment->foo = 'some_initial_value';
+  }
+}
+
+/**
  * Act on comments being loaded from the database.
  *
  * @param array $comments

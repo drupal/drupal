@@ -266,8 +266,7 @@ class EntityNG extends Entity {
     $language = $this->get('langcode')->language;
     if (!$language) {
       // Make sure we return a proper language object.
-      // @todo Refactor this, see: http://drupal.org/node/1834542.
-      $language = language_default();
+      $language = new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
     }
     return $language;
   }

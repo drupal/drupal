@@ -340,9 +340,12 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $this->instance['default_value_function'] = 'field_test_default_value';
     field_update_instance($this->instance);
 
+    // Verify that fields are populated with default values.
     $entity_type = 'test_entity';
     $entity_init = field_test_create_entity();
     $langcode = LANGUAGE_NOT_SPECIFIED;
+    $default = field_test_default_value($entity_init, $this->field, $this->instance);
+    $this->assertEqual($entity_init->{$this->field_name}[$langcode], $default, 'Default field value correctly populated.');
 
     // Insert: Field is NULL.
     $entity = clone($entity_init);
@@ -350,6 +353,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_attach_insert($entity);
 
     $entity = clone($entity_init);
+    $entity->{$this->field_name} = array();
     field_attach_load($entity_type, array($entity->ftid => $entity));
     $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), 'Insert: NULL field results in no value saved');
 
@@ -359,9 +363,14 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_attach_insert($entity);
 
     $entity = clone($entity_init);
+    $entity->{$this->field_name} = array();
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $values = field_test_default_value($entity, $this->field, $this->instance);
-    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, 'Insert: missing field results in default value saved');
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $default, 'Insert: missing field results in default value saved');
+
+    // Verify that prepopulated field values are not overwritten by defaults.
+    $value = array(array('value' => $default[0]['value'] - mt_rand(1, 127)));
+    $entity = entity_create('test_entity', array('fttype' => $entity_init->bundle(), $this->field_name => array($langcode => $value)));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $value, 'Prepopulated field value correctly maintained.');
   }
 
   /**

@@ -13,6 +13,21 @@ use Drupal\Core\Entity\EntityInterface;
  */
 
 /**
+ * Act on a newly created user.
+ *
+ * This hook runs after a new user object has just been instantiated. It can be
+ * used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\user\Plugin\Core\Entity\User $user
+ *   The user object.
+ */
+function hook_user_create(\Drupal\user\Plugin\Core\Entity\User $user) {
+  if (!isset($user->foo)) {
+    $user->foo = 'some_initial_value';
+  }
+}
+
+/**
  * Act on user objects when loaded from the database.
  *
  * Due to the static cache in user_load_multiple() you should not use this

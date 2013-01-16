@@ -69,7 +69,6 @@ class FormTest extends FieldTestBase {
     $this->assertText($token_description, 'Token replacement for description is displayed');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
     $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
-    // TODO : check that the widget is populated with default value ?
 
     // Check that hook_field_widget_form_alter() does not believe this is the
     // default value form.
@@ -113,7 +112,34 @@ class FormTest extends FieldTestBase {
     entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $this->assertIdentical($entity->{$this->field_name}, array(), 'Field was emptied');
+  }
 
+  /**
+   * Tests field widget default values on entity forms.
+   */
+  function testFieldFormDefaultValue() {
+    $this->field = $this->field_single;
+    $this->field_name = $this->field['field_name'];
+    $this->instance['field_name'] = $this->field_name;
+    $default = rand(1, 127);
+    $this->instance['default_value'] = array(array('value' => $default));
+    field_create_field($this->field);
+    field_create_instance($this->instance);
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+
+    // Display creation form.
+    $this->drupalGet('test-entity/add/test_bundle');
+    // Test that the default value is displayed correctly.
+    $this->assertFieldByXpath("//input[@name='{$this->field_name}[$langcode][0][value]' and @value='$default']");
+
+    // Try to submit an empty value.
+    $edit = array("{$this->field_name}[$langcode][0][value]" => '');
+    $this->drupalPost(NULL, $edit, t('Save'));
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created.');
+    $entity = field_test_entity_test_load($id);
+    $this->assertTrue(empty($entity->{$this->field_name}), 'Field is now empty.');
   }
 
   function testFieldFormSingleRequired() {

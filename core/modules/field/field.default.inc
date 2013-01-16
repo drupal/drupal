@@ -54,37 +54,6 @@ function field_default_validate(EntityInterface $entity, $field, $instance, $lan
 }
 
 /**
- * Inserts a default value if no $entity->$field_name entry was provided.
- *
- * This can happen with programmatic saves, or on form-based creation where
- * the current user doesn't have 'edit' permission for the field. This is the
- * default field 'insert' operation.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity for the operation.
- * @param $field
- *   The field structure for the operation.
- * @param $instance
- *   The instance structure for $field in $entity's bundle.
- * @param $langcode
- *   The language associated with $items.
- * @param $items
- *   An array that this function will populate with default values.
- */
-function field_default_insert(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-  // _field_invoke() populates $items with an empty array if the $entity has no
-  // entry for the field, so we check on the $entity itself.
-  // We also check that the current field translation is actually defined before
-  // assigning it a default value. This way we ensure that only the intended
-  // languages get a default value. Otherwise we could have default values for
-  // not yet open languages.
-  if (empty($entity) || (!isset($entity->{$field['field_name']}[$langcode]) && !property_exists($entity, $field['field_name'])) ||
-    (isset($entity->{$field['field_name']}[$langcode]) && count($entity->{$field['field_name']}[$langcode]) == 0)) {
-    $items = field_get_default_value($entity, $field, $instance, $langcode);
-  }
-}
-
-/**
  * Copies source field values into the entity to be prepared.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
