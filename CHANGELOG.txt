@@ -1,5 +1,5 @@
 
-Drupal 7.19, xxxx-xx-xx (development version)
+Drupal 7.20, xxxx-xx-xx (development version)
 -----------------------
 - Fixed entity argument not being passed to implementations of
   hook_file_download_access_alter(). The fix adds an additional context
@@ -22,6 +22,10 @@ Drupal 7.19, xxxx-xx-xx (development version)
 - Made the default .htaccess rules protocol sensitive to improve security for
   sites which use HTTPS and redirect between "www" and non-"www" versions of
   the page.
+
+Drupal 7.19, 2013-01-16
+-----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2013-001.
 
 Drupal 7.18, 2012-12-19
 -----------------------

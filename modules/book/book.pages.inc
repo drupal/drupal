@@ -45,6 +45,15 @@ function book_render() {
  * @see book_menu()
  */
 function book_export($type, $nid) {
+  // Check that the node exists and that the current user has access to it.
+  $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
+  if (!node_access('view', $node)) {
+    return MENU_ACCESS_DENIED;
+  }
+
   $type = drupal_strtolower($type);
 
   $export_function = 'book_export_' . $type;
