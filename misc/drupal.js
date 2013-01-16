@@ -1,4 +1,27 @@
 
+/**
+ * Override jQuery.fn.init to guard against XSS attacks.
+ *
+ * See http://bugs.jquery.com/ticket/9521
+ */
+(function () {
+  var jquery_init = jQuery.fn.init;
+  jQuery.fn.init = function (selector, context, rootjQuery) {
+    // If the string contains a "#" before a "<", treat it as invalid HTML.
+    if (selector && typeof selector === 'string') {
+      var hash_position = selector.indexOf('#');
+      if (hash_position >= 0) {
+        var bracket_position = selector.indexOf('<');
+        if (bracket_position > hash_position) {
+          throw 'Syntax error, unrecognized expression: ' + selector;
+        }
+      }
+    }
+    return jquery_init.call(this, selector, context, rootjQuery);
+  };
+  jQuery.fn.init.prototype = jquery_init.prototype;
+})();
+
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
 /**
