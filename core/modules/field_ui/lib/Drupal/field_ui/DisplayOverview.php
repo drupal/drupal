@@ -92,7 +92,7 @@ class DisplayOverview extends OverviewBase {
     $field_label_options = array(
       'above' => t('Above'),
       'inline' => t('Inline'),
-      'hidden' => t('<Hidden>'),
+      'hidden' => '<' . t('Hidden') . '>',
     );
     $extra_visibility_options = array(
       'visible' => t('Visible'),
@@ -149,7 +149,7 @@ class DisplayOverview extends OverviewBase {
       );
 
       $formatter_options = field_ui_formatter_options($field['type']);
-      $formatter_options['hidden'] = t('<Hidden>');
+      $formatter_options['hidden'] = '<' . t('Hidden') . '>';
       $table[$name]['format'] = array(
         'type' => array(
           '#type' => 'select',
