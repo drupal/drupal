@@ -277,11 +277,14 @@ function views_ui_theme() {
 function views_ui_library_info() {
   $libraries = array();
 
+  $path = drupal_get_path('module', 'views_ui') . '/js/';
+
   $libraries['views_ui.admin'] = array(
     'title' => 'Views UI ADMIN',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'views_ui') . '/js/views-admin.js' => array('group' => JS_DEFAULT),
+      $path . 'ajax.js' => array('group' => JS_DEFAULT),
+      $path . 'views-admin.js' => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

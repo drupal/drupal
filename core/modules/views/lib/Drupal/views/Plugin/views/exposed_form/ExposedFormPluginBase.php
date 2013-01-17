@@ -124,7 +124,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     // Deal with any exposed filters we may have, before building.
     $form_state = array(
       'view' => &$this->view,
-      'display' => &$this->display,
+      'display' => &$this->view->display_handler->display,
       'method' => 'get',
       'rerender' => TRUE,
       'no_redirect' => TRUE,

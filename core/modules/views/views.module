@@ -914,7 +914,6 @@ function views_library_info() {
     'version' => VERSION,
     'js' => array(
       "$path/base.js" => array('group' => JS_DEFAULT),
-      "$path/ajax.js" => array('group' => JS_DEFAULT),
       "$path/ajax_view.js" => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
@@ -1569,11 +1568,6 @@ function views_exposed_form($form, &$form_state) {
   $form['#theme'] = views_theme_functions('views_exposed_form', $view, $display);
   $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . check_plain($view->storage->get('name')) . '-' . check_plain($display['id']));
 //  $form['#attributes']['class'] = array('views-exposed-form');
-
-  // If using AJAX, we need the form plugin.
-  if ($view->use_ajax) {
-    $form['#attached']['library'][] = array('system', 'jquery.form');
-  }
 
   $exposed_form_plugin = $form_state['exposed_form_plugin'];
   $exposed_form_plugin->exposed_form_alter($form, $form_state);

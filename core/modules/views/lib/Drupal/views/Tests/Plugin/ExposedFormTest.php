@@ -49,7 +49,7 @@ class ExposedFormTest extends UITestBase {
   }
 
   /**
-   * Tests whether the reset button works on an expoed form.
+   * Tests whether the reset button works on an exposed form.
    */
   public function testResetButton() {
     $this->drupalGet('test_reset_button', array('query' => array('type' => 'article')));
@@ -86,6 +86,22 @@ class ExposedFormTest extends UITestBase {
     $this->assertResponse(200);
 
     $this->helperButtonHasLabel('edit-reset', $expected_label);
+  }
+
+  /**
+   * Tests the exposed form markup.
+   */
+  public function testExposedFormRender() {
+    $view = views_get_view('test_reset_button');
+    $this->executeView($view);
+    $exposed_form = $view->display_handler->getPlugin('exposed_form');
+    $this->drupalSetContent($exposed_form->render_exposed_form());
+
+    $expected_id = drupal_clean_css_identifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
+    $this->assertFieldByXpath('//form/@id', $expected_id, 'Expected form ID found.');
+
+    $expected_action = url($view->display_handler->getUrl());
+    $this->assertFieldByXPath('//form/@action', $expected_action, 'The expected value for the action attribute was found.');
   }
 
   /**
