@@ -1,0 +1,18 @@
+id: stark.tools
+label: Tools
+region: sidebar_first
+weight: '0'
+module: system
+status: '1'
+visibility:
+  path:
+    visibility: '0'
+    pages: ''
+  role:
+    roles: {  }
+  node_type:
+    types: {  }
+  visibility__active_tab: edit-visibility-path
+plugin: 'system_menu_block:menu-tools'
+settings:
+  cache: '-1'

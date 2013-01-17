@@ -1,0 +1,18 @@
+id: stark.login
+label: 'User login'
+region: sidebar_first
+weight: '0'
+module: user
+status: '1'
+visibility:
+  path:
+    visibility: '0'
+    pages: ''
+  role:
+    roles: {  }
+  node_type:
+    types: {  }
+  visibility__active_tab: edit-visibility-path
+plugin: user_login_block
+settings:
+  cache: '-1'

@@ -146,25 +146,12 @@ class RdfaMarkupTest extends WebTestBase {
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
-    // Get filenames and nid for comparison with HTML output.
-    $file_filename = $file->filename;
-    $image_filename = $image->filename;
-    $nid = $node->nid;
-    // Navigate to front page, where node is displayed in teaser form.
-    $this->drupalGet('node');
-
-    // We only check to make sure that the resource attribute contains '.txt'
-    // instead of the full file name because the filename is altered on upload.
-    $file_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, ".txt")]', array(
-      ':node-uri' => 'node/' . $nid,
-    ));
-    $this->assertTrue(!empty($file_rel), "Attribute 'rel' set on file field. Attribute 'resource' is also set.");
-    $image_rel = $this->xpath('//div[contains(@about, :node-uri)]//div[contains(@rel, "rdfs:seeAlso") and contains(@resource, :image)]//img[contains(@typeof, "foaf:Image")]', array(
-      ':node-uri' => 'node/' . $nid,
-      ':image' => $image_filename,
-    ));
-
-    $this->assertTrue(!empty($image_rel), "Attribute 'rel' set on image field. Attribute 'resource' is also set.");
+    // Prepares filenames for lookup in RDF graph.
+    $node = node_load($node->nid);
+    $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
+    $file_uri = file_create_url(file_load($node->file_test['und'][0]['fid'])->uri);
+    $image_uri = image_style_url('medium', file_load($node->field_image['und'][0]['fid'])->uri);
+    $base_uri = url('<front>', array('absolute' => TRUE));
 
     // Edits the node to add tags.
     $tag1 = $this->randomName(8);
@@ -172,17 +159,91 @@ class RdfaMarkupTest extends WebTestBase {
     $edit = array();
     $edit['field_tags[' . LANGUAGE_NOT_SPECIFIED . ']'] = "$tag1, $tag2";
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    // Ensures the RDFa markup for the relationship between the node and its
-    // tags is correct.
-    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and @datatype="" and text()=:term-name]', array(
-      ':node-url' => url('node/' . $node->nid),
-      ':term-name' => $tag1,
-    ));
-    $this->assertTrue(!empty($term_rdfa_meta), 'Property dc:subject is present for the tag1 field item.');
-    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and @datatype="" and text()=:term-name]', array(
-      ':node-url' => url('node/' . $node->nid),
-      ':term-name' => $tag2,
-    ));
-    $this->assertTrue(!empty($term_rdfa_meta), 'Property dc:subject is present for the tag2 field item.');
+    $term_1_id = key(taxonomy_term_load_multiple_by_name($tag1));
+    $taxonomy_term_1_uri = url('taxonomy/term/' . $term_1_id, array('absolute' => TRUE));
+    $term_2_id = key(taxonomy_term_load_multiple_by_name($tag2));
+    $taxonomy_term_2_uri = url('taxonomy/term/' . $term_2_id, array('absolute' => TRUE));
+
+    // Parses front page where the node is displayed in its teaser form.
+    $parser = new \EasyRdf_Parser_Rdfa();
+    $graph = new \EasyRdf_Graph();
+    $parser->parse($graph, $this->drupalGet('node'), 'rdfa', $base_uri);
+    $rdf_output = $graph->toArray();
+
+    // Inspects RDF graph output.
+    // Node relations to attached file.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $file_uri,
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://www.w3.org/2000/01/rdf-schema#seeAlso', $expected_value), 'Node to file relation found in RDF output (rdfs:seeAlso).');
+
+    // Node relations to attached image.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $image_uri,
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://www.w3.org/2000/01/rdf-schema#seeAlso', $expected_value), 'Node to file relation found in RDF output (rdfs:seeAlso).');
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $image_uri,
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://ogp.me/ns#image', $expected_value), 'Node to file relation found in RDF output (og:image).');
+    // Image type.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => 'http://xmlns.com/foaf/0.1/Image',
+    );
+    $this->assertTrue($graph->hasProperty($image_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Image type found in RDF output (foaf:Image).');
+
+    // Node relations to taxonomy terms.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $taxonomy_term_1_uri,
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/subject', $expected_value), 'Node to term relation found in RDF output (dc:subject).');
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $taxonomy_term_2_uri,
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/subject', $expected_value), 'Node to term relation found in RDF output (dc:subject).');
+
+    // Taxonomy terms triples.
+    // Term 1.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => 'http://www.w3.org/2004/02/skos/core#Concept',
+    );
+    $this->assertTrue($graph->hasProperty($taxonomy_term_1_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Taxonomy term type found in RDF output (skos:Concept).');
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => $tag1,
+      'lang' => 'en',
+    );
+    $this->assertTrue($graph->hasProperty($taxonomy_term_1_uri, 'http://www.w3.org/2000/01/rdf-schema#label', $expected_value), 'Taxonomy term name found in RDF output (rdfs:label).');
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => $tag1,
+      'lang' => 'en',
+    );
+    $this->assertTrue($graph->hasProperty($taxonomy_term_1_uri, 'http://www.w3.org/2004/02/skos/core#prefLabel', $expected_value), 'Taxonomy term name found in RDF output (skos:prefLabel).');
+    // Term 2.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => 'http://www.w3.org/2004/02/skos/core#Concept',
+    );
+    $this->assertTrue($graph->hasProperty($taxonomy_term_2_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Taxonomy term type found in RDF output (skos:Concept).');
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => $tag2,
+      'lang' => 'en',
+    );
+    $this->assertTrue($graph->hasProperty($taxonomy_term_2_uri, 'http://www.w3.org/2000/01/rdf-schema#label', $expected_value), 'Taxonomy term name found in RDF output (rdfs:label).');
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => $tag2,
+      'lang' => 'en',
+    );
+    $this->assertTrue($graph->hasProperty($taxonomy_term_2_uri, 'http://www.w3.org/2004/02/skos/core#prefLabel', $expected_value), 'Taxonomy term name found in RDF output (skos:prefLabel).');
   }
 }
