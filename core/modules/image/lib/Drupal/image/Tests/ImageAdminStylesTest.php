@@ -68,7 +68,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Setup a style to be created and effects to add to it.
     $style_name = strtolower($this->randomName(10));
     $style_label = $this->randomString();
-    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
+    $style_path = 'admin/config/media/image-styles/manage/' . $style_name;
     $effect_edits = array(
       'image_resize' => array(
         'data[width]' => 100,
@@ -120,6 +120,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Load the saved image style.
     $style = entity_load('image_style', $style_name);
+    // Ensure that the image style URI matches our expected path.
+    $style_uri = $style->uri();
+    $style_uri_path = url($style_uri['path'], $style_uri['options']);
+    $this->assertTrue(strpos($style_uri_path, $style_path) !== FALSE, 'The image style URI is correct.');
 
     // Confirm that all effects on the image style have settings on the effect
     // edit form that match what was saved.
@@ -178,7 +182,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPost($style_path, $edit, t('Update style'));
 
     // Note that after changing the style name, the style path is changed.
-    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
+    $style_path = 'admin/config/media/image-styles/manage/' . $style_name;
 
     // Check that the URL was updated.
     $this->drupalGet($style_path);
@@ -229,7 +233,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Style deletion form.
 
     // Delete the style.
-    $this->drupalPost('admin/config/media/image-styles/delete/' . $style_name, array(), t('Delete'));
+    $this->drupalPost($style_path . '/delete', array(), t('Delete'));
 
     // Confirm the style directory has been removed.
     $directory = file_default_scheme() . '://styles/' . $style_name;
@@ -248,7 +252,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $style_label = $this->randomString();
     $style = entity_create('image_style', array('name' => $style_name, 'label' => $style_label));
     $style->save();
-    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
+    $style_path = 'admin/config/media/image-styles/manage/';
 
     // Create an image field that uses the new style.
     $field_name = strtolower($this->randomName(10));
@@ -276,7 +280,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $new_style_name,
       'label' => $new_style_label,
     );
-    $this->drupalPost('admin/config/media/image-styles/edit/' . $style_name, $edit, t('Update style'));
+    $this->drupalPost($style_path . $style_name, $edit, t('Update style'));
     $this->assertText(t('Changes to the style have been saved.'), format_string('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw(image_style_url($new_style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), 'Image displayed using style replacement style.');
@@ -285,7 +289,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $edit = array(
       'replacement' => 'thumbnail',
     );
-    $this->drupalPost('admin/config/media/image-styles/delete/' . $new_style_name, $edit, t('Delete'));
+    $this->drupalPost($style_path . $new_style_name . '/delete', $edit, t('Delete'));
     $message = t('Style %name was deleted.', array('%name' => $new_style_label));
     $this->assertRaw($message);
 
