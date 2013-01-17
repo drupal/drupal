@@ -249,6 +249,7 @@ class CoreBundle extends Bundle {
     $container->register('serializer.normalizer.list', 'Drupal\Core\Serialization\ListNormalizer')->addTag('normalizer');
     $container->register('serializer.normalizer.typed_data', 'Drupal\Core\Serialization\TypedDataNormalizer')->addTag('normalizer');
     $container->register('serializer.encoder.json', 'Drupal\Core\Serialization\JsonEncoder')->addTag('encoder');
+    $container->register('serializer.encoder.xml', 'Drupal\Core\Serialization\XmlEncoder')->addTag('encoder');
 
     $container->register('flood', 'Drupal\Core\Flood\DatabaseBackend')
       ->addArgument(new Reference('database'));
