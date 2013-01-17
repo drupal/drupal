@@ -80,7 +80,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     $label = $instance['label'];
     $editor = $this->editorManager->createInstance($editor_id);
     $metadata = array(
-      'label' => $label,
+      'label' => check_plain($label),
       'access' => TRUE,
       'editor' => $editor_id,
       'aria' => t('Entity @type @id, field @field', array('@type' => $entity->entityType(), '@id' => $entity->id(), '@field' => $label)),
