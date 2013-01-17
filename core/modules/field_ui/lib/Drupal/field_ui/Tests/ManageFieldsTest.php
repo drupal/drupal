@@ -116,7 +116,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // should also appear in the 'taxonomy term' entity.
     $vocabulary = taxonomy_vocabulary_load('tags');
     $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->id() . '/fields');
-    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in account settings.');
+    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in taxonomy term fields.');
   }
 
   /**

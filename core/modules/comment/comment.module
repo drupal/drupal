@@ -118,7 +118,6 @@ function comment_entity_info(&$info) {
         'path' => 'admin/structure/types/manage/%comment_node_type/comment',
         'bundle argument' => 4,
         'real path' => 'admin/structure/types/manage/' . $type . '/comment',
-        'access arguments' => array('administer content types'),
       ),
     );
   }

@@ -37,7 +37,7 @@ class AlterTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer users'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer users', 'administer user fields'));
     $this->drupalLogin($admin_user);
   }
 

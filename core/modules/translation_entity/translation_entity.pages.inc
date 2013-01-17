@@ -20,7 +20,7 @@ function translation_entity_overview(EntityInterface $entity) {
   $languages = language_list();
   $original = $entity->language()->langcode;
   $translations = $entity->getTranslationLanguages();
-  $field_ui = module_exists('field_ui');
+  $field_ui = module_exists('field_ui') && user_access('administer ' . $entity->entityType() . ' fields');
 
   $path = $controller->getViewPath($entity);
   $base_path = $controller->getBasePath($entity);

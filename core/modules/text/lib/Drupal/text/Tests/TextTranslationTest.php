@@ -39,6 +39,7 @@ class TextTranslationTest extends WebTestBase {
     $this->admin = $this->drupalCreateUser(array(
       'administer languages',
       'administer content types',
+      'administer node fields',
       'access administration pages',
       'bypass node access',
       filter_permission_name($full_html_format),

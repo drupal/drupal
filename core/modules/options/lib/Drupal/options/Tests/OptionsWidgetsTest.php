@@ -477,7 +477,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create admin user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer taxonomy'));
     $this->drupalLogin($admin_user);
 
     // Create a test field instance.

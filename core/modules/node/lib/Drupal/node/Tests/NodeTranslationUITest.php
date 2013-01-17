@@ -80,7 +80,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
    * Tests field translation form.
    */
   function testFieldTranslationForm() {
-    $admin_user = $this->drupalCreateUser(array('translate any entity', 'access administration pages', 'bypass node access'));
+    $admin_user = $this->drupalCreateUser(array('translate any entity', 'access administration pages', 'bypass node access', 'administer node fields'));
     $this->drupalLogin($admin_user);
 
     $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => 'en'));

@@ -46,6 +46,7 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
       'access administration pages',
       'administer site configuration',
       'administer content types',
+      'administer node display',
       'administer nodes',
       'create article content',
       'edit any article content',

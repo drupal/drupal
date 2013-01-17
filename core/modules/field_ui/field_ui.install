@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Field UI module.
+ */
+
+/**
+ * Upgrade Field UI permissions.
+ */
+function field_ui_update_8001() {
+
+  $permissions = array(
+    'administer comments' => array(
+      'administer comment fields',
+      'administer comment display',
+    ),
+    'administer content types' => array(
+      'administer node fields',
+      'administer node display',
+    ),
+    'administer users' => array(
+      'administer user fields',
+      'administer user display',
+    ),
+    'administer taxonomy' => array(
+      'administer taxonomy_term fields',
+      'administer taxonomy_term display',
+    ),
+  );
+
+  // We can not call user_permission_get_modules() as that will start
+  // invoking hooks which we can't during update hooks. Directly query
+  // for the permissions and insert them into the database.
+  foreach ($permissions as $old_permission => $new_permissions) {
+    $results = db_query("SELECT rid FROM {role_permission} WHERE permission = :permission", array(':permission' => $old_permission));
+    foreach ($results as $record) {
+      $query = db_insert('role_permission')->fields(array('rid', 'permission', 'module'));
+      foreach ($new_permissions as $new_permission) {
+        $query->values(array($record->rid, $new_permission, 'field_ui'));
+      }
+      $query->execute();
+    }
+
+    // Remove old permission.
+    db_delete('role_permission')
+      ->condition('permission', $old_permission)
+      ->execute();
+  }
+}

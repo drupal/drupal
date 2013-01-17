@@ -117,7 +117,6 @@ function taxonomy_entity_info(&$info) {
         'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary',
         'real path' => 'admin/structure/taxonomy/' . $id,
         'bundle argument' => 3,
-        'access arguments' => array('administer taxonomy'),
       ),
     );
   }

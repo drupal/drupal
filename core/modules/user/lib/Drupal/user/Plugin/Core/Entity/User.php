@@ -38,7 +38,6 @@ use Drupal\Core\Annotation\Translation;
  *       "label" = "User",
  *       "admin" = {
  *         "path" = "admin/config/people/accounts",
- *         "access arguments" = {"administer users"}
  *       }
  *     }
  *   },

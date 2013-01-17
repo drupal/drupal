@@ -30,12 +30,14 @@ function node_overview_types() {
         'weight' => 0,
       );
 
-      if ($field_ui) {
+      if ($field_ui && user_access('administer node fields')) {
         $links['fields'] = array(
           'title' => t('manage fields'),
           'href' => 'admin/structure/types/manage/' . $type->type . '/fields',
           'weight' => 5,
         );
+      }
+      if ($field_ui && user_access('administer node display')) {
         $links['display'] = array(
           'title' => t('manage display'),
           'href' => 'admin/structure/types/manage/' . $type->type . '/display',

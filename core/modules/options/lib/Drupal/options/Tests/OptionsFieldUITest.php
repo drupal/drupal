@@ -33,7 +33,7 @@ class OptionsFieldUITest extends FieldTestBase {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer taxonomy'));
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
