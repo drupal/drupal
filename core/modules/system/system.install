@@ -294,7 +294,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . state()->get('system.cron_key'))));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . state()->get('system.cron_key'), array('absolute' => TRUE))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
