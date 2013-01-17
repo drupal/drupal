@@ -8,7 +8,6 @@
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 use Drupal\Core\Database\Connection;

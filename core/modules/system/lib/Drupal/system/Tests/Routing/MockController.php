@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Routing\MockController.
+ * Contains Drupal\system\Tests\Routing\MockController.
  */
 
 namespace Drupal\system\Tests\Routing;
@@ -14,6 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  */
 class MockController extends ContainerAware {
 
+  /**
+   * Does nothing; this is just a fake controller method.
+   */
   public function run() {}
 
 }

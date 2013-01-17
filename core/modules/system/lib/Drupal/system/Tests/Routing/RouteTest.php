@@ -10,7 +10,6 @@ namespace Drupal\system\Tests\Routing;
 use Symfony\Component\Routing\Route;
 
 use Drupal\simpletest\UnitTestBase;
-use Drupal\Core\Database\Database;
 
 /**
  * Basic tests for the Route.

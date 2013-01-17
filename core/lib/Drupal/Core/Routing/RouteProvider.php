@@ -2,21 +2,22 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Routing\PathMatcher.
+ * Contains Drupal\Core\Routing\RouteProvider.
  */
 
 namespace Drupal\Core\Routing;
 
+use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
-use Drupal\Core\Database\Connection;
+use \Drupal\Core\Database\Connection;
 
 /**
- * Initial matcher to match a route against a built database, by path.
+ * A Route Provider front-end for all Drupal-stored routes.
  */
-class PathMatcher implements InitialMatcherInterface {
+class RouteProvider implements RouteProviderInterface {
 
   /**
    * The database connection from which to read route information.
@@ -33,6 +34,13 @@ class PathMatcher implements InitialMatcherInterface {
   protected $tableName;
 
   /**
+   * A cache of already-loaded routes, keyed by route name.
+   *
+   * @var array
+   */
+  protected $routes;
+
+  /**
    * Constructs a new PathMatcher.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -46,15 +54,31 @@ class PathMatcher implements InitialMatcherInterface {
   }
 
   /**
-   * Matches a request against multiple routes.
+   * Finds routes that may potentially match the request.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   A Request object against which to match.
+   * This may return a mixed list of class instances, but all routes returned
+   * must extend the core symfony route. The classes may also implement
+   * RouteObjectInterface to link to a content document.
    *
-   * @return \Symfony\Component\Routing\RouteCollection
-   *   A RouteCollection of matched routes.
+   * This method may not throw an exception based on implementation specific
+   * restrictions on the url. That case is considered a not found - returning
+   * an empty array. Exceptions are only used to abort the whole request in
+   * case something is seriously broken, like the storage backend being down.
+   *
+   * Note that implementations may not implement an optimal matching
+   * algorithm, simply a reasonable first pass.  That allows for potentially
+   * very large route sets to be filtered down to likely candidates, which
+   * may then be filtered in memory more completely.
+   *
+   * @param Request $request A request against which to match.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection with all urls that
+   *      could potentially match $request. Empty collection if nothing can
+   *      match.
+   *
+   * @todo Should this method's found routes also be included in the cache?
    */
-  public function matchRequestPartial(Request $request) {
+  public function getRouteCollectionForRequest(Request $request) {
 
     // The 'system_path' has language prefix stripped and path alias resolved,
     // whereas getPathInfo() returns the requested path. In Drupal, the request
@@ -94,6 +118,61 @@ class PathMatcher implements InitialMatcherInterface {
     }
 
     return $collection;
+  }
+
+  /**
+   * Find the route using the provided route name (and parameters)
+   *
+   * @param string $name the route name to fetch
+   * @param array $parameters the parameters as they are passed to the
+   *      UrlGeneratorInterface::generate call
+   *
+   * @return \Symfony\Component\Routing\Route
+   *
+   * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException if
+   *      there is no route with that name in this repository
+   */
+  public function getRouteByName($name, $parameters = array()) {
+    $routes = $this->getRoutesByNames(array($name), $parameters);
+    if (empty($routes)) {
+      throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
+    }
+
+    return reset($routes);
+  }
+
+  /**
+   * Find many routes by their names using the provided list of names
+   *
+   * Note that this method may not throw an exception if some of the routes
+   * are not found. It will just return the list of those routes it found.
+   *
+   * This method exists in order to allow performance optimizations. The
+   * simple implementation could be to just repeatedly call
+   * $this->getRouteByName()
+   *
+   * @param array $names the list of names to retrieve
+   * @param array $parameters the parameters as they are passed to the
+   *      UrlGeneratorInterface::generate call. (Only one array, not one for
+   *      each entry in $names.
+   *
+   * @return \Symfony\Component\Routing\Route[] iterable thing with the keys
+   *      the names of the $names argument.
+   */
+  public function getRoutesByNames($names, $parameters = array()) {
+
+    $routes_to_load = array_diff($names, array_keys($this->routes));
+
+    $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN :names', array(':names' => $routes_to_load));
+    $routes = $result->fetchAllKeyed();
+
+    $return = array();
+    foreach ($routes as $name => $route) {
+      $this->routes[$name] = unserialize($route);
+    }
+
+    return array_intersect_key($this->routes, $names);
+
   }
 
   /**
@@ -145,4 +224,5 @@ class PathMatcher implements InitialMatcherInterface {
     }
     return $ancestors;
   }
+
 }

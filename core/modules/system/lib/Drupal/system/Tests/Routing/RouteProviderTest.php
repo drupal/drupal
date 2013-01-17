@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Routing\PartialMatcherTest.
+ * Contains Drupal\system\Tests\Routing\RouteProviderTest.
  */
 
 namespace Drupal\system\Tests\Routing;
@@ -13,16 +13,16 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 use Drupal\simpletest\UnitTestBase;
-use Drupal\Core\Routing\PathMatcher;
+use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
 
 use Exception;
 
 /**
- * Basic tests for the UrlMatcherDumper.
+ * Basic tests for the RouteProvider.
  */
-class PathMatcherTest extends UnitTestBase {
+class RouteProviderTest extends UnitTestBase {
 
   /**
    * A collection of shared fixture data for tests.
@@ -33,8 +33,8 @@ class PathMatcherTest extends UnitTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Path matcher tests',
-      'description' => 'Confirm that the path matching library is working correctly.',
+      'name' => 'Route Provider tests',
+      'description' => 'Confirm that the default route provider is working correctly.',
       'group' => 'Routing',
     );
   }
@@ -57,11 +57,11 @@ class PathMatcherTest extends UnitTestBase {
   public function testCandidateOutlines() {
 
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection);
+    $provider = new RouteProvider($connection);
 
     $parts = array('node', '5', 'edit');
 
-    $candidates = $matcher->getCandidateOutlines($parts);
+    $candidates = $provider->getCandidateOutlines($parts);
 
     $candidates = array_flip($candidates);
 
@@ -77,7 +77,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testExactPathMatch() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -89,7 +89,7 @@ class PathMatcherTest extends UnitTestBase {
 
     $request = Request::create($path, 'GET');
 
-    $routes = $matcher->matchRequestPartial($request);
+    $routes = $provider->getRouteCollectionForRequest($request);
 
     foreach ($routes as $route) {
       $this->assertEqual($route->getPattern(), $path, 'Found path has correct pattern');
@@ -101,7 +101,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testOutlinePathMatch() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -113,14 +113,14 @@ class PathMatcherTest extends UnitTestBase {
 
     $request = Request::create($path, 'GET');
 
-    $routes = $matcher->matchRequestPartial($request);
+    $routes = $provider->getRouteCollectionForRequest($request);
 
     // All of the matching paths have the correct pattern.
     foreach ($routes as $route) {
       $this->assertEqual($route->compile()->getPatternOutline(), '/path/%/one', 'Found path has correct pattern');
     }
 
-    $this->assertEqual(count($routes->all()), 2, 'The correct number of routes was found.');
+    $this->assertEqual(count($routes), 2, 'The correct number of routes was found.');
     $this->assertNotNull($routes->get('route_a'), 'The first matching route was found.');
     $this->assertNotNull($routes->get('route_b'), 'The second matching route was not found.');
   }
@@ -130,7 +130,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testOutlinePathMatchTrailingSlash() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -142,14 +142,14 @@ class PathMatcherTest extends UnitTestBase {
 
     $request = Request::create($path, 'GET');
 
-    $routes = $matcher->matchRequestPartial($request);
+    $routes = $provider->getRouteCollectionForRequest($request);
 
     // All of the matching paths have the correct pattern.
     foreach ($routes as $route) {
       $this->assertEqual($route->compile()->getPatternOutline(), '/path/%/one', 'Found path has correct pattern');
     }
 
-    $this->assertEqual(count($routes->all()), 2, 'The correct number of routes was found.');
+    $this->assertEqual(count($routes), 2, 'The correct number of routes was found.');
     $this->assertNotNull($routes->get('route_a'), 'The first matching route was found.');
     $this->assertNotNull($routes->get('route_b'), 'The second matching route was not found.');
   }
@@ -159,7 +159,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaults() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -177,15 +177,14 @@ class PathMatcherTest extends UnitTestBase {
     $request = Request::create($path, 'GET');
 
     try {
-      $routes = $matcher->matchRequestPartial($request);
+      $routes = $provider->getRouteCollectionForRequest($request);
 
       // All of the matching paths have the correct pattern.
       foreach ($routes as $route) {
-        $compiled = $route->compile();
         $this->assertEqual($route->compile()->getPatternOutline(), '/some/path', 'Found path has correct pattern');
       }
 
-      $this->assertEqual(count($routes->all()), 1, 'The correct number of routes was found.');
+      $this->assertEqual(count($routes), 1, 'The correct number of routes was found.');
       $this->assertNotNull($routes->get('poink'), 'The first matching route was found.');
     }
     catch (ResourceNotFoundException $e) {
@@ -198,7 +197,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaultsCollision() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -217,15 +216,14 @@ class PathMatcherTest extends UnitTestBase {
     $request = Request::create($path, 'GET');
 
     try {
-      $routes = $matcher->matchRequestPartial($request);
+      $routes = $provider->getRouteCollectionForRequest($request);
 
       // All of the matching paths have the correct pattern.
       foreach ($routes as $route) {
-        $compiled = $route->compile();
         $this->assertEqual($route->compile()->getPatternOutline(), '/some/path', 'Found path has correct pattern');
       }
 
-      $this->assertEqual(count($routes->all()), 1, 'The correct number of routes was found.');
+      $this->assertEqual(count($routes), 1, 'The correct number of routes was found.');
       $this->assertNotNull($routes->get('poink'), 'The first matching route was found.');
     }
     catch (ResourceNotFoundException $e) {
@@ -238,7 +236,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaultsCollision2() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -257,14 +255,14 @@ class PathMatcherTest extends UnitTestBase {
     $request = Request::create($path, 'GET');
 
     try {
-      $routes = $matcher->matchRequestPartial($request);
+      $routes = $provider->getRouteCollectionForRequest($request);
 
       // All of the matching paths have the correct pattern.
       foreach ($routes as $route) {
         $this->assertEqual($route->compile()->getPatternOutline(), '/some/path/here', 'Found path has correct pattern');
       }
 
-      $this->assertEqual(count($routes->all()), 1, 'The correct number of routes was found.');
+      $this->assertEqual(count($routes), 1, 'The correct number of routes was found.');
       $this->assertNotNull($routes->get('narf'), 'The first matching route was found.');
     }
     catch (ResourceNotFoundException $e) {
@@ -277,7 +275,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testOutlinePathNoMatch() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -290,13 +288,12 @@ class PathMatcherTest extends UnitTestBase {
     $request = Request::create($path, 'GET');
 
     try {
-      $routes = $matcher->matchRequestPartial($request);
+      $routes = $provider->getRouteCollectionForRequest($request);
       $this->fail(t('No exception was thrown.'));
     }
     catch (Exception $e) {
       $this->assertTrue($e instanceof ResourceNotFoundException, 'The correct exception was thrown.');
     }
-
   }
 
   /**
@@ -304,7 +301,7 @@ class PathMatcherTest extends UnitTestBase {
    */
   function testSystemPathMatch() {
     $connection = Database::getConnection();
-    $matcher = new PathMatcher($connection, 'test_routes');
+    $provider = new RouteProvider($connection, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -315,7 +312,7 @@ class PathMatcherTest extends UnitTestBase {
     $request = Request::create('/path/one', 'GET');
     $request->attributes->set('system_path', 'path/two');
 
-    $routes = $matcher->matchRequestPartial($request);
+    $routes = $provider->getRouteCollectionForRequest($request);
 
     foreach ($routes as $route) {
       $this->assertEqual($route->getPattern(), '/path/two', 'Found path has correct pattern');
