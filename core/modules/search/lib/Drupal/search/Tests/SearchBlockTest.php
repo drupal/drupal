@@ -40,7 +40,9 @@ class SearchBlockTest extends SearchTestBase {
    */
   protected function testSearchFormBlock() {
     $block = $this->drupalPlaceBlock('search_form_block');
-    $this->assertText($block['subject'], 'Block title was found.');
+
+    $this->drupalGet('');
+    $this->assertText($block->label(), 'Block title was found.');
 
     // Test a normal search via the block form, from the front page.
     $terms = array('search_block_form' => 'test');
@@ -54,9 +56,9 @@ class SearchBlockTest extends SearchTestBase {
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
-    $config = config($block['config_id']);
-    $config->set('visibility.path.pages', 'search');
-    $config->save();
+    $visibility = $block->get('visibility');
+    $visibility['path']['pages'] = 'search';
+    $block->set('visibility', $visibility);
 
     $this->drupalPost('node', $terms, t('Search'));
     $this->assertText('Your search yielded no results');

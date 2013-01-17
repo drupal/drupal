@@ -72,8 +72,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
    */
   function testPopularContentBlock() {
     // Clear the block cache to load the Statistics module's block definitions.
-    $manager = $this->container->get('plugin.manager.block');
-    $manager->clearCachedDefinitions();
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     // Visit a node to have something show up in the block.
     $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blocking_user->uid));
@@ -87,11 +86,10 @@ class StatisticsReportsTest extends StatisticsTestBase {
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     // Configure and save the block.
-    $this->drupalPlaceBlock('statistics_popular_block', array(
-      'title' => 'Popular content',
-      'statistics_block_top_day_num' => 3,
-      'statistics_block_top_all_num' => 3,
-      'statistics_block_top_last_num' => 3,
+    $this->drupalPlaceBlock('statistics_popular_block', array('label' => 'Popular content'), array(
+      'top_day_num' => 3,
+      'top_all_num' => 3,
+      'top_last_num' => 3,
     ));
 
     // Get some page and check if the block is displayed.

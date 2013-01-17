@@ -29,17 +29,6 @@ use Drupal\Core\Annotation\Translation;
 class CustomBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
-   */
-  public function blockSettings() {
-    // By default, use a blank block title rather than the block description
-    // (which is "Custom Block").
-    return array(
-      'subject' => '',
-    );
-  }
-
-  /**
    * Overrides \Drupal\block\BlockBase::getConfig().
    */
   public function getConfig() {
@@ -60,7 +49,7 @@ class CustomBlock extends BlockBase {
   public function blockForm($form, &$form_state) {
     // @todo Disable this field when editing an existing block and provide a
     //   separate interface for administering custom blocks.
-    $form['custom_block']['info'] = array(
+    $form['info'] = array(
       '#type' => 'textfield',
       '#title' => t('Block description'),
       '#required' => TRUE,
@@ -69,7 +58,7 @@ class CustomBlock extends BlockBase {
     );
     // @todo Disable this field when editing an existing block and provide a
     //   separate interface for administering custom blocks.
-    $form['custom_block']['body'] = array(
+    $form['body'] = array(
       '#type' => 'text_format',
       '#title' => t('Block body'),
       '#default_value' => $this->configuration['body'],
@@ -78,8 +67,22 @@ class CustomBlock extends BlockBase {
       '#rows' => 15,
       '#required' => TRUE,
     );
-    $form['custom_block']['title']['#description'] = t('The title of the block as shown to the user.');
+    $form['title']['#description'] = t('The title of the block as shown to the user.');
     return $form;
+  }
+
+  /**
+   * Overrides \Drupal\block\BlockBase::blockValidate().
+   */
+  public function blockValidate($form, &$form_state) {
+    list(, $bid) = explode(':', $form_state['entity']->get('plugin'));
+    $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE bid <> :bid AND info = :info', 0, 1, array(
+      ':bid' => $bid,
+      ':info' => $form_state['values']['info'],
+    ))->fetchField();
+    if (empty($form_state['values']['info']) || $custom_block_exists) {
+      form_set_error('info', t('Ensure that each block description is unique.'));
+    }
   }
 
   /**
@@ -94,7 +97,7 @@ class CustomBlock extends BlockBase {
       'bid' => is_numeric($bid) ? $bid : NULL,
     );
     drupal_write_record('block_custom', $block, !is_null($block['bid']) ? array('bid') : array());
-    $this->configuration['id'] = 'custom_block:' . $block['bid'];
+    $form_state['entity']->set('plugin', 'custom_block:' . $block['bid']);
     // Invalidate the block cache to update custom block-based derivatives.
     if (module_exists('block')) {
       drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();

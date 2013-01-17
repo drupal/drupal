@@ -121,22 +121,29 @@ function block_menu() {
     'access arguments' => array('administer blocks'),
     'file' => 'block.admin.inc',
   );
-  $items['admin/structure/block/manage/%/%'] = array(
+  $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Configure block',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_admin_configure', 4, 5),
+    'page callback' => 'block_admin_add',
+    'page arguments' => array(4, 5),
     'access arguments' => array('administer blocks'),
     'file' => 'block.admin.inc',
   );
-  $items['admin/structure/block/manage/%/%/configure'] = array(
+  $items['admin/structure/block/manage/%block'] = array(
+    'title' => 'Configure block',
+    'page callback' => 'block_admin_edit',
+    'page arguments' => array(4),
+    'access arguments' => array('administer blocks'),
+    'file' => 'block.admin.inc',
+  );
+  $items['admin/structure/block/manage/%block/configure'] = array(
     'title' => 'Configure block',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
   );
-  $items['admin/structure/block/manage/%/%/delete'] = array(
+  $items['admin/structure/block/manage/%block/delete'] = array(
     'title' => 'Delete block',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_admin_block_delete', 4, 5),
+    'page arguments' => array('block_admin_block_delete', 4),
     'access arguments' => array('administer blocks'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,
@@ -306,27 +313,24 @@ function _block_get_renderable_region($list = array()) {
     !in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD'));
 
   foreach ($list as $key => $block) {
-    $config = $block->getConfig();
-    $definition = $block->getDefinition();
-    $build[$key] = array(
-      '#block' => $block,
-      '#weight' => (int) $config['weight'],
-      '#theme_wrappers' => array('block'),
-    );
-
-    if ($not_cacheable || in_array($config['cache'], array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM))) {
-      // Non-cached blocks get built immediately. Provides more content
-      // that can be easily manipulated during hook_page_alter().
-      $build[$key] = _block_get_renderable_block($build[$key]);
+    $settings = $block->get('settings');
+    if ($not_cacheable || in_array($settings['cache'], array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM))) {
+      // Non-cached blocks get built immediately.
+      if ($block->access()) {
+        $build[$key] = entity_view($block, 'block');
+      }
     }
     else {
       $key_components = explode('.', $key);
       $id = array_pop($key_components);
-      $build[$key] += array(
+      $build[$key] = array(
+        '#block' => $block,
+        '#weight' => $block->get('weight'),
+        '#theme_wrappers' => array('block'),
         '#pre_render' => array('_block_get_renderable_block'),
         '#cache' => array(
-          'keys' => array($id, $config['module']),
-          'granularity' => $config['cache'],
+          'keys' => array($id, $block->get('module')),
+          'granularity' => $settings['cache'],
           'bin' => 'block',
           'tags' => array('content' => TRUE),
         ),
@@ -338,9 +342,8 @@ function _block_get_renderable_region($list = array()) {
     // skip the help block, since we assume that most users do not need or want
     // to perform contextual actions on the help block, and the links needlessly
     // draw attention on it.
-    if ($definition['class'] != 'Drupal\\system\\Plugin\\block\\block\\SystemHelpBlock' && $definition['class'] != 'Drupal\\system\\Plugin\\block\\block\\SystemMainBlock') {
-      global $theme;
-      $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($key, $theme));
+    if (!in_array($block->get('plugin'), array('system_help_block', 'system_main_block'))) {
+      $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($key));
     }
   }
   return $build;
@@ -357,33 +360,25 @@ function _block_get_renderable_region($list = array()) {
  *   Blocks currently exported by modules.
  */
 function _block_rehash($theme = NULL) {
-  $blocks = array();
-  $instances = array();
   $theme = $theme ? $theme : variable_get('theme_default', 'stark');
-  $block_configs = config_get_storage_names_with_prefix('plugin.core.block.' . $theme);
   $regions = system_region_list($theme);
-  foreach ($block_configs as $config) {
-    // Only list valid block instances.
-    if (!$block = block_load($config)) {
-      continue;
-    }
-    $blocks[$config] = $block;
-    $config = config($config);
-    $region = $config->get('region');
-    $status = $config->get('status');
+  $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
+  foreach ($blocks as $block_id => $block) {
+    $region = $block->get('region');
+    $status = $block->get('status');
     // Disable blocks in invalid regions.
     if (!empty($region) && $region != BLOCK_REGION_NONE && !isset($regions[$region]) && $status == 1) {
-      drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $config->get('id'), '%region' => $region)), 'warning');
+      drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block_id, '%region' => $region)), 'warning');
       // Disabled modules are moved into the BLOCK_REGION_NONE later so no
       // need to move the block to another region.
-      $config->set('status', 0);
-      $config->save();
+      $block->set('status', 0);
+      $block->save();
     }
     // Set region to none if not enabled and make sure status is set.
     if (empty($status)) {
-      $config->set('region', BLOCK_REGION_NONE);
-      $config->set('status', 0);
-      $config->save();
+      $block->set('region', BLOCK_REGION_NONE);
+      $block->set('status', 0);
+      $block->save();
     }
   }
   return $blocks;
@@ -414,28 +409,22 @@ function block_themes_enabled($theme_list) {
  */
 function block_theme_initialize($theme) {
   // Initialize theme's blocks if none already registered.
-  $has_blocks = config_get_storage_names_with_prefix('plugin.core.block.' . $theme);
+  $has_blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
   if (!$has_blocks) {
     $default_theme = variable_get('theme_default', 'stark');
     // Apply only to new theme's visible regions.
     $regions = system_region_list($theme, REGIONS_VISIBLE);
-    $default_theme_blocks = config_get_storage_names_with_prefix('plugin.core.block.' . $default_theme);
-    foreach ($default_theme_blocks as $config_id) {
-      $block_config = config($config_id)->get();
-      $machine_name = explode('.', $config_id);
-      $machine_name = array_pop($machine_name);
-      $new_config_id = 'plugin.core.block.' . $theme . '.' . $machine_name;
-      $new_block = config($new_config_id);
+    $default_theme_blocks = entity_load_multiple_by_properties('block', array('theme' => $default_theme));
+    foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
+      list(, $machine_name) = explode('.', $default_theme_block_id);
+      $block = $default_theme_block->createDuplicate();
+      $block->set('id', $theme . '.' . $machine_name);
       // If the region isn't supported by the theme, assign the block to the
       // theme's default region.
-      if (!isset($regions[$block_config['region']])) {
-        $new_block->set('region', system_default_region($theme));
-        unset($block_config['region']);
+      if (!isset($regions[$block->get('region')])) {
+        $block->set('region', system_default_region($theme));
       }
-      foreach ($block_config as $key => $value) {
-        $new_block->set($key, $value);
-      }
-      $new_block->save();
+      $block->save();
     }
   }
 }
@@ -456,7 +445,11 @@ function block_list($region) {
   $blocks = &drupal_static(__FUNCTION__);
 
   if (!isset($blocks)) {
-    $blocks = _block_load_blocks();
+    global $theme;
+    $blocks = array();
+    foreach (entity_load_multiple_by_properties('block', array('theme' => $theme)) as $block_id => $block) {
+      $blocks[$block->get('region')][$block_id] = $block;
+    }
   }
 
   // Create an empty array if there are no entries.
@@ -470,57 +463,16 @@ function block_list($region) {
 /**
  * Loads a block instance.
  *
- * @param string $plugin_id
- *   The plugin ID to load.
- * @param array $conf
- *   An optional configuration array for creating a block instance manually
- *   rather than retrieving it from the configuration system.
+ * This should only be used when entity_load() cannot be used directly.
  *
- * @return
- *   A block object.
+ * @param string $entity_id
+ *   The block ID.
  *
- * @todo Add block_load_multiple() and make this function a single-value wrapper.
+ * @return \Drupal\block\Plugin\Core\Entity\Block
+ *   The loaded block object.
  */
-function block_load($plugin_id, array $conf = array()) {
-  $manager = drupal_container()->get('plugin.manager.block');
-  if (!$block = $manager->getInstance(array('config' => $plugin_id))) {
-    // If the block instance does not exist, try to create it.
-    try {
-      $block = $manager->createInstance($plugin_id, $conf);
-    }
-    catch (PluginException $e) {
-      $config = config($plugin_id)->get();
-      // Ignore blocks belonging to disabled modules, but re-throw valid
-      // exceptions when the module is enabled and the plugin is misconfigured.
-      if (empty($config['module']) || module_exists($config['module'])) {
-        throw $e;
-      }
-      return FALSE;
-    }
-  }
-  return $block;
-}
-
-/**
- * Loads blocks' information from the configuration management system.
- *
- * @return
- *   An array of blocks grouped by region.
- *
- * @todo Remove this function, and replace it with a block_load_multiple().
- */
-function _block_load_blocks() {
-  global $theme;
-  $blocks = array();
-  $instances = config_get_storage_names_with_prefix('plugin.core.block.' . $theme);
-  $manager = drupal_container()->get('plugin.manager.block');
-  foreach ($instances as $plugin_id) {
-    if ($block = block_load($plugin_id)) {
-      $config = $block->getConfig();
-      $blocks[$config['region']]["$plugin_id"] = $block;
-    }
-  }
-  return $blocks;
+function block_load($entity_id) {
+  return entity_load('block', $entity_id);
 }
 
 /**
@@ -538,17 +490,7 @@ function _block_get_renderable_block($element) {
   $block = $element['#block'];
   // Don't bother to build blocks that aren't accessible.
   if ($element['#access'] = $block->access()) {
-    $build = $block->build();
-    if ($build) {
-      if (isset($build['#title'])) {
-        $element['#title'] = $build['#title'];
-      }
-      $element += $build;
-    }
-    else {
-      // @todo Add an inline comment explaining why this line is necessary.
-      $element = array();
-    }
+    $element += entity_view($block, 'block');
   }
   return $element;
 }
@@ -590,10 +532,9 @@ function block_rebuild() {
  */
 function template_preprocess_block(&$variables) {
   $block_counter = &drupal_static(__FUNCTION__, array());
-  $variables['block'] = (object) array_merge($variables['elements']['#block']->getDefinition(), $variables['elements']['#block']->getConfig());
-  if (!empty($variables['elements']['#title']) && empty($variables['block']->subject)) {
-    $variables['block']->subject = $variables['elements']['#title'];
-  }
+
+  $variables['block'] = (object) $variables['elements']['#block_config'];
+
   // All blocks get an independent counter for each region.
   if (!isset($block_counter[$variables['block']->region])) {
     $block_counter[$variables['block']->region] = 1;
@@ -623,14 +564,14 @@ function template_preprocess_block(&$variables) {
 
   // We can safely explode on : because we know the Block plugin type manager
   // enforces that delimiter for all derivatives.
-  $parts = explode(':', $variables['elements']['#block']->getPluginId());
+  $parts = explode(':', $variables['elements']['#block']->get('plugin'));
   $suggestion = 'block';
   while ($part = array_shift($parts)) {
     $variables['theme_hook_suggestions'][] = $suggestion .= '__' . strtr($part, '-', '_');
   }
   // Create a valid HTML ID and make sure it is unique.
-  if (!empty($variables['block']->config_id)) {
-    $config_id = explode('.', $variables['block']->config_id);
+  if ($id = $variables['elements']['#block']->id()) {
+    $config_id = explode('.', $id);
     $machine_name = array_pop($config_id);
     $variables['block_html_id'] = drupal_html_id('block-' . $machine_name);
     $variables['theme_hook_suggestions'][] = 'block__' . $machine_name;
@@ -643,14 +584,12 @@ function template_preprocess_block(&$variables) {
  * Removes deleted role from blocks that use it.
  */
 function block_user_role_delete($role) {
-  $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-  foreach ($block_configs as $config_id) {
-    $config = config($config_id);
-    $roles = $config->get('visibility.role.roles');
-    if (isset($roles[$role->rid])) {
-      unset($roles[$role->rid]);
-      $config->set('visibility.role.roles', $roles);
-      $config->save();
+  foreach (entity_load_multiple('block') as $block_id => $block) {
+    $visibility = $block->get('visibility');
+    if (isset($visibility['roles']['roles'][$role->rid])) {
+      unset($visibility['roles']['roles'][$role->rid]);
+      $block->set('visibility', $visibility);
+      $block->save();
     }
   }
 }
@@ -659,11 +598,9 @@ function block_user_role_delete($role) {
  * Implements hook_menu_delete().
  */
 function block_menu_delete($menu) {
-  $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-  foreach ($block_configs as $config_id) {
-    $config = config($config_id);
-    if ($config->get('id') == 'menu_menu_block:' . $menu->id()) {
-      $config->delete();
+  foreach (entity_load_multiple('block') as $block_id => $block) {
+    if ($block->get('plugin') == 'menu_menu_block:' . $menu->id()) {
+      $block->delete();
     }
   }
 }
@@ -681,35 +618,18 @@ function block_admin_paths() {
 }
 
 /**
- * Implements hook_modules_uninstalled().
- *
- * Cleans up any block configuration for uninstalled modules.
- */
-function block_modules_uninstalled($modules) {
-  $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-  foreach ($block_configs as $config_id) {
-    $config = config($config_id);
-    if (in_array($config->get('module'), $modules)) {
-      $config->delete();
-    }
-  }
-}
-
-/**
  * Implements hook_language_delete().
  *
  * Delete the potential block visibility settings of the deleted language.
  */
 function block_language_delete($language) {
   // Remove the block visibility settings for the deleted language.
-  $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-  foreach ($block_configs as $config_id) {
-    $config = config($config_id);
-    $languages = $config->get('visibility.language.langcodes');
-    if (isset($languages[$language->langcode])) {
-      unset($languages[$language->langcode]);
-      $config->set('visibility.language.langcodes', $languages);
-      $config->save();
+  foreach (entity_load_multiple('block') as $block_id => $block) {
+    $visibility = $block->get('visibility');
+    if (isset($visibility['language']['langcodes'][$language->langcode])) {
+      unset($visibility['language']['langcodes'][$language->langcode]);
+      $block->set('visibility', $visibility);
+      $block->save();
     }
   }
 }

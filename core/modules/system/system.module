@@ -7,7 +7,7 @@
 
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\Core\TypedData\Primitive;
-
+use Drupal\system\Plugin\block\block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -2634,7 +2634,7 @@ function system_preprocess_block(&$variables) {
 
     // System menu blocks should get the same class as menu module blocks.
     default:
-      if ($variables['block']->class == 'Drupal\\system\\Plugin\\block\\block\\SystemMenuBlock') {
+      if ($variables['elements']['#block']->getPlugin() instanceof SystemMenuBlock) {
         $variables['attributes_array']['role'] = 'navigation';
         $variables['classes_array'][] = 'block-menu';
       }

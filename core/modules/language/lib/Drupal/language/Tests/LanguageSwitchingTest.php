@@ -56,7 +56,7 @@ class LanguageSwitchingTest extends WebTestBase {
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertText($block['subject'], 'Language switcher block found.');
+    $this->assertText($block->label(), 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
     list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-test-language-block'));

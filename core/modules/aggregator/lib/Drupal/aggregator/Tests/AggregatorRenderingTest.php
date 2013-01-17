@@ -39,8 +39,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->updateFeedItems($feed, $this->getDefaultFeedItemCount());
 
     // Clear the block cache to load the new block definitions.
-    $manager = $this->container->get('plugin.manager.block');
-    $manager->clearCachedDefinitions();
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     // Need admin user to be able to access block admin.
     $admin_user = $this->drupalCreateUser(array(
@@ -51,15 +50,11 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     ));
     $this->drupalLogin($admin_user);
 
-    $block = array(
-      'title' => 'feed-' . $feed->title,
-      'block_count' => 2,
-    );
-    $this->drupalPlaceBlock("aggregator_feed_block:{$feed->fid}", $block);
+    $block = $this->drupalPlaceBlock("aggregator_feed_block:{$feed->fid}", array('label' => 'feed-' . $feed->title), array('block_count' => 2));
 
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('node');
-    $this->assertText(t($block['title']), 'Feed block is displayed on the page.');
+    $this->assertText($block->label(), 'Feed block is displayed on the page.');
 
     // Find the expected read_more link.
     $href = 'aggregator/sources/' . $feed->fid;
@@ -77,7 +72,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     aggregator_save_feed((array) $feed);
     // Check that the block is no longer displayed.
     $this->drupalGet('node');
-    $this->assertNoText(t($block['title']), 'Feed block is not displayed on the page when number of items is set to 0.');
+    $this->assertNoText($block->label(), 'Feed block is not displayed on the page when number of items is set to 0.');
   }
 
   /**

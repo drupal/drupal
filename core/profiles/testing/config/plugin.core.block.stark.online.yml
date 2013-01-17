@@ -1,11 +1,14 @@
-id: user_online_block
-properties:
-  administrative: '1'
-seconds_online: '900'
-max_list_count: '10'
+id: stark.online
+label: 'Who''s online'
+plugin: user_online_block
+settings:
+  properties:
+    administrative: '1'
+  seconds_online: '900'
+  max_list_count: '10'
+  cache: '-1'
 status: '1'
-cache: '-1'
-subject: 'Who''s online'
+label: 'Who''s online'
 visibility:
   path:
     visibility: '0'
@@ -21,3 +24,4 @@ visibility:
 module: user
 region: sidebar_first
 weight: '0'
+langcode: und

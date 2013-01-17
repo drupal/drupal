@@ -1,7 +1,9 @@
-id: 'system_menu_block:menu-footer'
+id: bartik.footer
+plugin: 'system_menu_block:menu-footer'
 status: '1'
-cache: '-1'
-subject: 'Footer menu'
+settings:
+  cache: '-1'
+label: 'Footer menu'
 visibility:
   path:
     visibility: '0'
@@ -16,3 +18,4 @@ visibility:
 module: system
 region: footer
 weight: '0'
+langcode: und

@@ -8,6 +8,8 @@
 namespace Drupal\block;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Defines a base block implementation that most blocks plugins will extend.
@@ -19,22 +21,19 @@ use Drupal\Component\Plugin\PluginBase;
 abstract class BlockBase extends PluginBase implements BlockInterface {
 
   /**
-   * Implements \Drupal\block\BlockInterface::settings().
+   * The entity using this plugin.
    *
-   * Most block plugins should not override this method. To add additional
-   * settings or change the default values for setting, override
-   * BlockBase::blockSettings().
-   *
-   * @see \Drupal\block\BlockBase::blockSettings()
+   * @var \Drupal\block\Plugin\Core\Entity\Block
    */
-  public function settings() {
-    $settings = $this->blockSettings();
-    // By default, blocks are enabled and not cached.
-    $settings += array(
-      'status' => TRUE,
-      'cache' => DRUPAL_NO_CACHE,
-    );
-    return $settings;
+  protected $entity;
+
+  /**
+   * Overrides \Drupal\Component\Plugin\PluginBase::__construct().
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery, Block $entity) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
+    $this->entity = $entity;
   }
 
   /**
@@ -69,7 +68,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     if (empty($this->configuration)) {
       // If the plugin configuration is not already set, initialize it with the
       // default settings for the block plugin.
-      $this->configuration = $this->settings();
+      $this->configuration = $this->blockSettings();
 
       // @todo This loads the default subject. Is this the right place to do so?
       $definition = $this->getDefinition();
@@ -77,6 +76,8 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
         $this->configuration += array('subject' => $definition['subject']);
       }
     }
+    // Ensure that the default cache mode is set.
+    $this->configuration += array('cache' => DRUPAL_NO_CACHE);
     return $this->configuration;
   }
 
@@ -142,7 +143,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     global $user;
 
     // Deny access to disabled blocks.
-    if (empty($this->configuration['status'])) {
+    if (!$this->entity->get('status')) {
       return FALSE;
     }
 
@@ -150,26 +151,27 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     // If a block has no roles associated, it is displayed for every role.
     // For blocks with roles associated, if none of the user's roles matches
     // the settings from this block, access is denied.
-    if (!empty($this->configuration['visibility']['role']['roles']) && !array_intersect(array_filter($this->configuration['visibility']['role']['roles']), array_keys($user->roles))) {
+    $visibility = $this->entity->get('visibility');
+    if (!empty($visibility['role']['roles']) && !array_intersect(array_filter($visibility['role']['roles']), array_keys($user->roles))) {
       // No match.
       return FALSE;
     }
 
     // Page path handling.
     // Limited visibility blocks must list at least one page.
-    if (!empty($this->configuration['visibility']['path']['visibility']) && $this->configuration['visibility']['path']['visibility'] == BLOCK_VISIBILITY_LISTED && empty($this->configuration['visibility']['path']['pages'])) {
+    if (!empty($visibility['path']['visibility']) && $visibility['path']['visibility'] == BLOCK_VISIBILITY_LISTED && empty($visibility['path']['pages'])) {
       return FALSE;
     }
 
     // Match path if necessary.
-    if (!empty($this->configuration['visibility']['path']['pages'])) {
+    if (!empty($visibility['path']['pages'])) {
       // Assume there are no matches until one is found.
       $page_match = FALSE;
 
       // Convert path to lowercase. This allows comparison of the same path
       // with different case. Ex: /Page, /page, /PAGE.
-      $pages = drupal_strtolower($this->configuration['visibility']['path']['pages']);
-      if ($this->configuration['visibility']['path']['visibility'] < BLOCK_VISIBILITY_PHP) {
+      $pages = drupal_strtolower($visibility['path']['pages']);
+      if ($visibility['path']['visibility'] < BLOCK_VISIBILITY_PHP) {
         // Compare the lowercase path alias (if any) and internal path.
         $path = current_path();
         $path_alias = drupal_strtolower(drupal_container()->get('path.alias_manager')->getPathAlias($path));
@@ -179,10 +181,10 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
         // except those listed in $block->pages. When set to 1
         // (BLOCK_VISIBILITY_LISTED), it is displayed only on those pages
         // listed in $block->pages.
-        $page_match = !($this->configuration['visibility']['path']['visibility'] xor $page_match);
+        $page_match = !($visibility['path']['visibility'] xor $page_match);
       }
       elseif (module_exists('php')) {
-        $page_match = php_eval($this->configuration['visibility']['path']['pages']);
+        $page_match = php_eval($visibility['path']['pages']);
       }
 
       // If there are page visibility restrictions and this page does not
@@ -193,15 +195,15 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     }
 
     // Language visibility settings.
-    if (!empty($this->configuration['visibility']['language']['langcodes']) && array_filter($this->configuration['visibility']['language']['langcodes'])) {
-      if (empty($this->configuration['visibility']['language']['langcodes'][language($this->configuration['visibility']['language']['language_type'])->langcode])) {
+    if (!empty($visibility['language']['langcodes']) && array_filter($visibility['language']['langcodes'])) {
+      if (empty($visibility['language']['langcodes'][language($visibility['language']['language_type'])->langcode])) {
         return FALSE;
       }
     }
 
     // Check other modules for block access rules.
     foreach (module_implements('block_access') as $module) {
-      if (module_invoke($module, 'block_access', $this) === FALSE) {
+      if (module_invoke($module, 'block_access', $this->entity) === FALSE) {
         return FALSE;
       }
     }
@@ -221,70 +223,42 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
    * @see \Drupal\block\BlockBase::blockForm()
    */
   public function form($form, &$form_state) {
+    $entity = $form_state['entity'];
     $definition = $this->getDefinition();
-    $config = $this->getConfig();
     $form['id'] = array(
       '#type' => 'value',
-      '#value' => $definition['id'],
+      '#value' => $entity->id(),
     );
     $form['module'] = array(
       '#type' => 'value',
       '#value' => $definition['module'],
     );
 
-    // Get the block subject for the page title.
-    $subject = isset($config['subject']) ? $config['subject'] : '';
-
-    // Get the theme for the page title.
-    $theme_default = variable_get('theme_default', 'stark');
-    $admin_theme = config('system.theme')->get('admin');
-    $themes = list_themes();
-    $theme_key = $form['theme']['#value'];
-    $theme = $themes[$theme_key];
-    // Use meaningful titles for the main site and administrative themes.
-    $theme_title = $theme->info['name'];
-    if ($theme_key == $theme_default) {
-      $theme_title = t('!theme (default theme)', array('!theme' => $theme_title));
-    }
-    elseif ($admin_theme && $theme_key == $admin_theme) {
-      $theme_title = t('!theme (administration theme)', array('!theme' => $theme_title));
-    }
-
-    if ($subject) {
-      drupal_set_title(t("%subject block in %theme", array('%subject' => $subject, '%theme' => $theme_title)), PASS_THROUGH);
-    }
-
-    $form['settings'] = array(
-      '#weight' => -5,
-    );
-    $form['settings']['title'] = array(
+    $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Block title'),
       '#maxlength' => 255,
-      '#default_value' => isset($subject) ? $subject : '',
+      '#default_value' => !$entity->isNew() ? $entity->label() : $definition['subject'],
     );
-    $form['settings']['machine_name'] = array(
+    $form['machine_name'] = array(
       '#type' => 'textfield',
       '#title' => t('Block machine name'),
       '#maxlength' => 64,
       '#description' => t('A unique name to save this block configuration. Must be alpha-numeric and be underscore separated.'),
-      '#default_value' => isset($config['config_id']) ? $config['config_id'] : '',
+      '#default_value' => $entity->id(),
       '#required' => TRUE,
+      '#disabled' => !$entity->isNew(),
     );
-    if (isset($config['config_id'])) {
-      $form['settings']['machine_name']['#disabled'] = TRUE;
-    }
 
     // Region settings.
     $form['region'] = array(
       '#type' => 'select',
       '#title' => t('Region'),
       '#description' => t('Select the region where this block should be displayed.'),
-      '#default_value' => !empty($config['region']) && $config['region'] != -1 ? $config['region'] : NULL,
+      '#default_value' => $entity->get('region'),
       '#empty_value' => BLOCK_REGION_NONE,
-      '#options' => system_region_list($theme_key, REGIONS_VISIBLE),
+      '#options' => system_region_list($entity->get('theme'), REGIONS_VISIBLE),
     );
-
 
     // Visibility settings.
     $form['visibility'] = array(
@@ -309,15 +283,16 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     // @todo remove this access check and inject it in some other way. In fact
     //   this entire visibility settings section probably needs a separate user
     //   interface in the near future.
+    $visibility = $entity->get('visibility');
     $access = user_access('use PHP for settings');
-    if (!empty($config['visibility']['path']['visibility']) && $config['visibility']['path']['visibility'] == BLOCK_VISIBILITY_PHP && !$access) {
+    if (!empty($visibility['path']['visibility']) && $visibility['path']['visibility'] == BLOCK_VISIBILITY_PHP && !$access) {
       $form['visibility']['path']['visibility'] = array(
         '#type' => 'value',
         '#value' => BLOCK_VISIBILITY_PHP,
       );
       $form['visibility']['path']['pages'] = array(
         '#type' => 'value',
-        '#value' => !empty($config['visibility']['path']['pages']) ? $config['visibility']['path']['pages'] : '',
+        '#value' => !empty($visibility['path']['pages']) ? $visibility['path']['pages'] : '',
       );
     }
     else {
@@ -339,12 +314,12 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
         '#type' => 'radios',
         '#title' => t('Show block on specific pages'),
         '#options' => $options,
-        '#default_value' => !empty($this->configuration['visibility']['path']['visibility']) ? $this->configuration['visibility']['path']['visibility'] : BLOCK_VISIBILITY_NOTLISTED,
+        '#default_value' => !empty($visibility['path']['visibility']) ? $visibility['path']['visibility'] : BLOCK_VISIBILITY_NOTLISTED,
       );
       $form['visibility']['path']['pages'] = array(
         '#type' => 'textarea',
         '#title' => '<span class="element-invisible">' . $title . '</span>',
-        '#default_value' => !empty($this->configuration['visibility']['path']['pages']) ? $this->configuration['visibility']['path']['pages'] : '',
+        '#default_value' => !empty($visibility['path']['pages']) ? $visibility['path']['pages'] : '',
         '#description' => $description,
       );
     }
@@ -379,13 +354,13 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
         '#type' => 'radios',
         '#title' => t('Language type'),
         '#options' => $language_type_options,
-        '#default_value' => !empty($this->configuration['visibility']['language']['language_type']) ? $this->configuration['visibility']['language']['language_type'] : $configurable_language_types[0],
+        '#default_value' => !empty($visibility['language']['language_type']) ? $visibility['language']['language_type'] : $configurable_language_types[0],
         '#access' => count($language_type_options) > 1,
       );
       $form['visibility']['language']['langcodes'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Show this block only for specific languages'),
-        '#default_value' => !empty($this->configuration['visibility']['language']['langcodes']) ? $this->configuration['visibility']['language']['langcodes'] : array(),
+        '#default_value' => !empty($visibility['language']['langcodes']) ? $visibility['language']['langcodes'] : array(),
         '#options' => $langcodes_options,
         '#description' => t('Show this block only for the selected language(s). If you select no languages, the block will be visibile in all languages.'),
       );
@@ -403,20 +378,13 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     $form['visibility']['role']['roles'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Show block for specific roles'),
-      '#default_value' => !empty($this->configuration['visibility']['role']['roles']) ? $this->configuration['visibility']['role']['roles'] : array(),
+      '#default_value' => !empty($visibility['role']['roles']) ? $visibility['role']['roles'] : array(),
       '#options' => $role_options,
       '#description' => t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
     );
 
-    // Add specific configuration for this block type.
-    $form += $this->blockForm($form, $form_state);
-
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save block'),
-    );
-
+    // Add plugin-specific settings for this block type.
+    $form['settings'] = $this->blockForm(array(), $form_state);
     return $form;
   }
 
@@ -451,30 +419,19 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
    * @see \Drupal\block\BlockBase::blockValidate()
    */
   public function validate($form, &$form_state) {
-    if (empty($form['settings']['machine_name']['#disabled'])) {
+    if (empty($form['machine_name']['#disabled'])) {
       if (preg_match('/[^a-zA-Z0-9_]/', $form_state['values']['machine_name'])) {
         form_set_error('machine_name', t('Block name must be alphanumeric or underscores only.'));
-      }
-      if (in_array('plugin.core.block.' . $form_state['values']['machine_name'], config_get_storage_names_with_prefix('plugin.core.block'))) {
-        form_set_error('machine_name', t('Block name must be unique.'));
       }
     }
     else {
       $config_id = explode('.', $form_state['values']['machine_name']);
       $form_state['values']['machine_name'] = array_pop($config_id);
     }
-    if ($form_state['values']['module'] == 'block') {
-      $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE bid <> :bid AND info = :info', 0, 1, array(
-        ':bid' => $form_state['values']['delta'],
-        ':info' => $form_state['values']['info'],
-      ))->fetchField();
-      if (empty($form_state['values']['info']) || $custom_block_exists) {
-        form_set_error('info', t('Ensure that each block description is unique.'));
-      }
-    }
     $form_state['values']['visibility']['role']['roles'] = array_filter($form_state['values']['visibility']['role']['roles']);
-
-    // Perform block type-specific validation.
+    if ($form_state['entity']->isNew()) {
+      form_set_value($form['id'], $form_state['entity']->get('theme') . '.' . $form_state['values']['machine_name'], $form_state);
+    }
     $this->blockValidate($form, $form_state);
   }
 
@@ -508,32 +465,11 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
    */
   public function submit($form, &$form_state) {
     if (!form_get_errors()) {
-      $transaction = db_transaction();
-      try {
-        $keys = array(
-          'visibility' => 'visibility',
-          'pages' => 'pages',
-          'title' => 'subject',
-          'module' => 'module',
-          'region' => 'region',
-        );
-        foreach ($keys as $key => $new_key) {
-          if (isset($form_state['values'][$key])) {
-            $this->configuration[$new_key] = $form_state['values'][$key];
-          }
-        }
-      }
-      catch (Exception $e) {
-        $transaction->rollback();
-        watchdog_exception('block', $e);
-        throw $e;
-      }
-      if (empty($this->configuration['weight'])) {
-        $this->configuration['weight'] = 0;
-      }
-
-      // Perform block type-specific validation.
       $this->blockSubmit($form, $form_state);
+
+      drupal_set_message(t('The block configuration has been saved.'));
+      cache_invalidate_tags(array('content' => TRUE));
+      $form_state['redirect'] = 'admin/structure/block/list/block_plugin_ui:' . $form_state['entity']->get('theme');
     }
   }
 
@@ -554,47 +490,5 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
    * @see \Drupal\block\BlockBase::submit()
    */
   public function blockSubmit($form, &$form_state) {}
-
-  /**
-   * Implements \Drupal\block\BlockInterface::build().
-   *
-   * Allows blocks to be altered after they are built.
-   *
-   * Most block plugins should not override this method. To define how a
-   * particular block is rendered, implement the abstract method
-   * BlockBase::blockBuild().
-   *
-   * @return array $build
-   *   A renderable array of data.
-   *   - #title: The default localized title of the block.
-   *
-   * @todo Add specific examples of $id and $name below.
-   *
-   * @see \Drupal\block\BlockBase::blockBuild()
-   */
-  public function build() {
-    // Allow modules to modify the block before it is viewed, via either
-    // hook_block_view_alter(), hook_block_view_ID_alter(), or
-    // hook_block_view_NAME_alter().
-    $id = str_replace(':', '__', $this->getPluginId());
-
-    $config = $this->getConfig();
-    $config_id = explode('.', $config['config_id']);
-    $name = array_pop($config_id);
-
-    $build = $this->blockBuild();
-    drupal_alter(array('block_view', "block_view_$id", "block_view_$name"), $build, $this);
-    return $build;
-  }
-
-  /**
-   * Builds the renderable array for a specific block type.
-   *
-   * @return array
-   *   A renderable array representing the output of the block.
-   *
-   * @see \Drupal\block\BlockBase::build()
-   */
-  abstract public function blockBuild();
 
 }

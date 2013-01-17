@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Contains \Drupal\block\BlockInterface.
  */
 
@@ -28,7 +29,7 @@ interface BlockInterface {
    * @todo Consider merging this with the general plugin configuration member
    *   variable and its getter/setter in http://drupal.org/node/1764380.
    */
-  public function settings();
+  public function blockSettings();
 
   /**
    * Indicates whether the block should be shown.
@@ -38,6 +39,8 @@ interface BlockInterface {
    *
    * @return bool
    *   TRUE if the block should be shown, or FALSE otherwise.
+   *
+   * @see \Drupal\block\BlockAccessController
    */
   public function access();
 
@@ -55,6 +58,7 @@ interface BlockInterface {
    * @return array $form
    *   The renderable form array representing the entire configuration form.
    *
+   * @see \Drupal\block\BlockFormController::form()
    * @see \Drupal\block\BlockInterace::validate()
    * @see \Drupal\block\BlockInterace::submit()
    */
@@ -68,6 +72,7 @@ interface BlockInterface {
    * @param array $form_state
    *   An array containing the current state of the configuration form.
    *
+   * @see \Drupal\block\BlockFormController::validate()
    * @see \Drupal\block\BlockInterace::form()
    * @see \Drupal\block\BlockInterace::submit()
    */
@@ -81,17 +86,20 @@ interface BlockInterface {
    * @param array $form_state
    *   An array containing the current state of the configuration form.
    *
+   * @see \Drupal\block\BlockFormController::submit()
    * @see \Drupal\block\BlockInterace::form()
    * @see \Drupal\block\BlockInterace::validate()
    */
   public function submit($form, &$form_state);
 
   /**
-   * Builds and returns the renderable array for this block.
+   * Builds and returns the renderable array for this block plugin.
    *
    * @return array
-   *   A renderable array representing the output of the block.
+   *   A renderable array representing the content of the block.
+   *
+   * @see \Drupal\block\BlockRenderController
    */
-  public function build();
+  public function blockBuild();
 
 }

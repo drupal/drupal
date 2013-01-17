@@ -1,6 +1,8 @@
-id: system_help_block
+id: bartik.help
+plugin: system_help_block
 status: '1'
-cache: '-1'
+settings:
+  cache: '-1'
 visibility:
   path:
     visibility: '0'
@@ -12,7 +14,8 @@ visibility:
       article: '0'
       page: '0'
   visibility__active_tab: edit-visibility-path
-subject: ''
+label: ''
 module: system
 region: help
 weight: '0'
+langcode: und

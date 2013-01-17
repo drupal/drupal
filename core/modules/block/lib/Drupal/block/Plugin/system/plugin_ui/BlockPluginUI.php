@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "block_plugin_ui",
  *   module = "block",
  *   all_plugins = @Translation("All Blocks"),
- *   config_path = "admin/structure/block/manage",
+ *   config_path = "admin/structure/block/add",
  *   default_task = TRUE,
  *   derivative = "Drupal\block\Plugin\Derivative\BlockPluginUI",
  *   facets = {
@@ -116,7 +116,7 @@ class BlockPluginUI extends PluginUIBase {
    * Overrides \Drupal\system\Plugin\PluginUIBase::formSubmit().
    */
   public function formSubmit($form, &$form_state) {
-    $form_state['redirect'] = 'admin/structure/block/manage/' . $form_state['values']['block'] . '/' . $form_state['values']['theme'];
+    $form_state['redirect'] = 'admin/structure/block/add/' . $form_state['values']['block'] . '/' . $form_state['values']['theme'];
   }
 
   /**

@@ -29,7 +29,7 @@ class EntityCrudHookTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'comment', 'file', 'entity_test');
+  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'block_test', 'block', 'comment', 'file', 'entity_test');
 
   protected $ids = array();
 
@@ -64,6 +64,54 @@ class EntityCrudHookTest extends WebTestBase {
     $sorted = $positions;
     sort($sorted);
     $this->assertTrue($sorted == $positions, 'The hook messages appear in the correct order.');
+  }
+
+  /**
+   * Tests hook invocations for CRUD operations on blocks.
+   */
+  public function testBlockHooks() {
+    $entity = entity_create('block', array(
+      'id' => 'stark.test_html_id',
+      'plugin' => 'test_html_id',
+    ));
+    $_SESSION['entity_crud_hook_test'] = array();
+    $entity->save();
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_block_presave called',
+      'entity_crud_hook_test_entity_presave called for type block',
+      'entity_crud_hook_test_block_insert called',
+      'entity_crud_hook_test_entity_insert called for type block',
+    ));
+
+    $_SESSION['entity_crud_hook_test'] = array();
+    $entity = entity_load('block', $entity->id());
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_entity_load called for type block',
+      'entity_crud_hook_test_block_load called',
+    ));
+
+    $_SESSION['entity_crud_hook_test'] = array();
+    $entity->label = 'New label';
+    $entity->save();
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_block_presave called',
+      'entity_crud_hook_test_entity_presave called for type block',
+      'entity_crud_hook_test_block_update called',
+      'entity_crud_hook_test_entity_update called for type block',
+    ));
+
+    $_SESSION['entity_crud_hook_test'] = array();
+    $entity->delete();
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_block_predelete called',
+      'entity_crud_hook_test_entity_predelete called for type block',
+      'entity_crud_hook_test_block_delete called',
+      'entity_crud_hook_test_entity_delete called for type block',
+    ));
   }
 
   /**

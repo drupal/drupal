@@ -15,6 +15,13 @@ function entity_crud_hook_test_entity_presave(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_block_presave().
+ */
+function entity_crud_hook_test_block_presave() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
  * Implements hook_comment_presave().
  */
 function entity_crud_hook_test_comment_presave() {
@@ -61,6 +68,13 @@ function entity_crud_hook_test_user_presave() {
  */
 function entity_crud_hook_test_entity_insert(EntityInterface $entity) {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
+}
+
+/**
+ * Implements hook_block_insert().
+ */
+function entity_crud_hook_test_block_insert() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
 
 /**
@@ -113,6 +127,13 @@ function entity_crud_hook_test_entity_load(array $entities, $type) {
 }
 
 /**
+ * Implements hook_block_load().
+ */
+function entity_crud_hook_test_block_load() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
  * Implements hook_comment_load().
  */
 function entity_crud_hook_test_comment_load() {
@@ -159,6 +180,13 @@ function entity_crud_hook_test_user_load() {
  */
 function entity_crud_hook_test_entity_update(EntityInterface $entity) {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
+}
+
+/**
+ * Implements hook_block_update().
+ */
+function entity_crud_hook_test_block_update() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
 
 /**
@@ -211,6 +239,13 @@ function entity_crud_hook_test_entity_predelete(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_block_predelete().
+ */
+function entity_crud_hook_test_block_predelete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
  * Implements hook_comment_predelete().
  */
 function entity_crud_hook_test_comment_predelete() {
@@ -257,6 +292,13 @@ function entity_crud_hook_test_user_predelete() {
  */
 function entity_crud_hook_test_entity_delete(EntityInterface $entity) {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
+}
+
+/**
+ * Implements hook_block_delete().
+ */
+function entity_crud_hook_test_block_delete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
 
 /**

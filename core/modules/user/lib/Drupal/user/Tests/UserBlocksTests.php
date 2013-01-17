@@ -80,9 +80,8 @@ class UserBlocksTests extends WebTestBase {
    * Test the Who's Online block.
    */
   function testWhosOnlineBlock() {
-    $plugin_id = 'plugin.core.block.' . variable_get('theme_default', 'stark') . '.online';
-    $block = $this->container->get('plugin.manager.block')->getInstance(array('config' => $plugin_id));
-    $config = $block->getConfig();
+    $block = entity_load('block', 'stark.online');
+    $config = $block->get('settings');
 
     // Generate users.
     $user1 = $this->drupalCreateUser(array());
@@ -100,7 +99,7 @@ class UserBlocksTests extends WebTestBase {
     $this->updateAccess($this->adminUser->uid, $inactive_time);
 
     // Test block output.
-    $content = $block->build();
+    $content = entity_view($block, 'block');
     $this->drupalSetContent(render($content));
     $this->assertRaw(t('2 users'), 'Correct number of online users (2 users).');
     $this->assertText($user1->name, 'Active user 1 found in online list.');

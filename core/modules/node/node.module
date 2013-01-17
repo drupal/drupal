@@ -1986,14 +1986,13 @@ function theme_node_recent_content($variables) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for block_admin_configure().
+ * Implements hook_form_FORM_ID_alter() for block_form().
  *
  * Adds node-type specific visibility options to block configuration form.
- *
- * @see node_form_block_admin_configure_submit()
  */
-function node_form_block_admin_configure_alter(&$form, &$form_state) {
-  $config = $form['#instance']->getConfig();
+function node_form_block_form_alter(&$form, &$form_state) {
+  $block = $form_state['entity'];
+  $visibility = $block->get('visibility');
   $form['visibility']['node_type'] = array(
     '#type' => 'details',
     '#title' => t('Content types'),
@@ -2005,7 +2004,7 @@ function node_form_block_admin_configure_alter(&$form, &$form_state) {
   $form['visibility']['node_type']['types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Show block for specific content types'),
-    '#default_value' => !empty($config['visibility']['node_type']['types']) ? $config['visibility']['node_type']['types'] : array(),
+    '#default_value' => !empty($visibility['node_type']['types']) ? $visibility['node_type']['types'] : array(),
     '#options' => node_type_get_names(),
     '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
   );
@@ -2018,9 +2017,8 @@ function node_form_block_admin_configure_alter(&$form, &$form_state) {
  * if the visibility conditions are not met.
  */
 function node_block_access($block) {
-  $configuration = $block->getConfig();
-  if (!empty($configuration['visibility'])) {
-    $visibility = $configuration['visibility'];
+  $visibility = $block->get('visibility');
+  if (!empty($visibility)) {
     $allowed_types = array();
     $node = menu_get_object();
     $node_types = node_type_get_types();

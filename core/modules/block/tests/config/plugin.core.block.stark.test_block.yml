@@ -1,0 +1,11 @@
+id: stark.test_block
+label: ''
+region: '-1'
+weight: ''
+module: block_test
+status: '1'
+visibility: {  }
+plugin: test_html_id
+settings:
+  cache: '1'
+  subject: 'Test block html id'

@@ -67,10 +67,8 @@ class BlockTest extends WebTestBase {
    */
   protected function removeDefaultBlocks() {
     $default_theme = variable_get('theme_default', 'stark');
-    $manager = $this->container->get('plugin.manager.block');
-    $instances = config_get_storage_names_with_prefix('plugin.core.block.' . $default_theme);
-    foreach ($instances as $plugin_id) {
-      config($plugin_id)->delete();
+    foreach (entity_load_multiple_by_properties('block', array('theme' => $default_theme)) as $block) {
+      $block->delete();
     }
   }
 
@@ -82,8 +80,7 @@ class BlockTest extends WebTestBase {
     $this->removeDefaultBlocks();
 
     // Clear the block cache to load the Custom Block module's block definitions.
-    $manager = $this->container->get('plugin.manager.block');
-    $manager->clearCachedDefinitions();
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     // Enable a second theme.
     theme_enable(array('seven'));
@@ -110,21 +107,23 @@ class BlockTest extends WebTestBase {
     $info = strtolower($this->randomName(8));
     $custom_block['machine_name'] = $info;
     $custom_block['info'] = $info;
-    $custom_block['title'] = $this->randomName(8);
+    $custom_block['label'] = $this->randomName(8);
     $custom_block['body[value]'] = $this->randomName(32);
     $custom_block['region'] = $this->regions[0];
     $this->drupalPost("admin/structure/block/list/block_plugin_ui:$default_theme/add/custom_blocks", $custom_block, t('Save block'));
-    $plugin_id = "plugin.core.block.$default_theme.$info";
-    $block = $manager->getInstance(array('config' => $plugin_id));
-    $config = $block->getConfig();
+    $block = entity_load('block', $default_theme . '.' . $info);
 
     // Confirm that the custom block has been created, and then query the created bid.
     $this->assertText(t('The block configuration has been saved.'), 'Custom block successfully created.');
 
-    // Check that block_block_view() returns the correct title and content.
-    $data = $block->build();
-    $format = $config['format'];
-    $this->assertEqual(check_markup($custom_block['body[value]'], $format), render($data), 'BlockInterface::build() provides correct block content.');
+    // Check that entity_view() returns the correct title and content.
+    // @todo This assumes that a block's content can be rendered without its
+    //   wrappers. If this is a reasonable expectation, it should be documented
+    //   elsewhere.
+    $data = entity_view($block, 'content');
+    $definition = $block->getPlugin()->getDefinition();
+    $config = $definition['settings'];
+    $this->assertEqual(check_markup($custom_block['body[value]'], $config['format']), render($data), 'BlockInterface::build() provides correct block content.');
 
     // Check whether the block can be moved to all available regions.
     $custom_block['module'] = 'block';
@@ -134,7 +133,7 @@ class BlockTest extends WebTestBase {
 
     // Verify presence of configure and delete links for custom block.
     $this->drupalGet('admin/structure/block');
-    $config_block_id = "admin/structure/block/manage/plugin.core.block.$default_theme.$info/$default_theme";
+    $config_block_id = "admin/structure/block/manage/$default_theme.$info";
     $this->assertLinkByHref("$config_block_id/configure", 0, 'Custom block configure link found.');
     $this->assertLinkByHref("$config_block_id/delete", 0, 'Custom block delete link found.');
 
@@ -146,9 +145,9 @@ class BlockTest extends WebTestBase {
     // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
     $this->clickLink(t('delete'));
     $this->drupalPost("$config_block_id/delete", array(), t('Delete'));
-    $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['title'])), 'Custom block successfully deleted.');
+    $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['label'])), 'Custom block successfully deleted.');
     $this->drupalGet(NULL);
-    $this->assertNoText(t($custom_block['title']), 'Custom block no longer appears on page.');
+    $this->assertNoText(t($custom_block['label']), 'Custom block no longer appears on page.');
   }
 
   /**
@@ -162,7 +161,7 @@ class BlockTest extends WebTestBase {
     $info = $this->randomName(8);
     $custom_block['machine_name'] = $info;
     $custom_block['info'] = $info;
-    $custom_block['title'] = $this->randomName(8);
+    $custom_block['label'] = $this->randomName(8);
     $custom_block['body[value]'] = '<h1>Full HTML</h1>';
     $full_html_format = filter_format_load('full_html');
     $custom_block['body[format]'] = $full_html_format->format;
@@ -170,7 +169,7 @@ class BlockTest extends WebTestBase {
     $this->drupalPost("admin/structure/block/list/block_plugin_ui:$default_theme/add/custom_blocks", $custom_block, t('Save block'));
 
     // Set the created custom block to a specific region.
-    $edit['blocks[0][region]'] = $this->regions[1];
+    $edit['blocks[' . $default_theme . '.' . $custom_block['machine_name'] . '][region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the custom block is being displayed using configured text format.
@@ -180,11 +179,10 @@ class BlockTest extends WebTestBase {
     // Confirm that a user without access to Full HTML can not see the body field,
     // but can still submit the form without errors.
     $block_admin = $this->drupalCreateUser(array('administer blocks'));
-    $config_block_id = "admin/structure/block/manage/plugin.core.block.$default_theme.$info/$default_theme";
     $this->drupalLogin($block_admin);
-    $this->drupalGet("$config_block_id/configure");
+    $this->drupalGet("admin/structure/block/manage/$default_theme.$info/configure");
     $this->assertFieldByXPath("//textarea[@name='body[value]' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Body field contains denied message');
-    $this->drupalPost("$config_block_id/configure", array(), t('Save block'));
+    $this->drupalPost("admin/structure/block/manage/$default_theme.$info/configure", array(), t('Save block'));
     $this->assertNoText(t('Ensure that each block description is unique.'));
 
     // Confirm that the custom block is still being displayed using configured text format.
@@ -204,13 +202,13 @@ class BlockTest extends WebTestBase {
     $edit = array(
       'machine_name' => $this->randomName(8),
       'region' => 'sidebar_first',
-      'title' => $title,
+      'label' => $title,
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
     $edit['visibility[path][pages]'] = 'user*';
     $edit['visibility[role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
-    $this->drupalPost('admin/structure/block/manage/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('');
@@ -244,12 +242,12 @@ class BlockTest extends WebTestBase {
     $edit = array(
       'machine_name' => $this->randomName(8),
       'region' => 'sidebar_first',
-      'title' => $title,
+      'label' => $title,
       'visibility[path][visibility]' => BLOCK_VISIBILITY_LISTED,
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $this->drupalPost('admin/structure/block/manage/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('user');
@@ -272,20 +270,18 @@ class BlockTest extends WebTestBase {
     // Select the 'Powered by Drupal' block to be configured and moved.
     $block = array();
     $block['id'] = 'system_powered_by_block';
-    $block['title'] = $this->randomName(8);
+    $block['label'] = $this->randomName(8);
     $block['machine_name'] = $this->randomName(8);
     $block['theme'] = variable_get('theme_default', 'stark');
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPost('admin/structure/block/manage/' . $block['id'] . '/' . $block['theme'], array('title' => $block['title'], 'machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
+    $this->drupalPost('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('label' => $block['label'], 'machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
     // Check to see if the block was created by checking its configuration.
-    $block['config_id'] = 'plugin.core.block.' . $block['theme'] . '.' . $block['machine_name'];
-    $instance = block_load($block['config_id']);
-    $config = $instance->getConfig();
+    $instance = entity_load('block', $block['theme'] . '.' . $block['machine_name']);
 
-    $this->assertEqual($config['subject'], $block['title'], 'Stored block title found.');
+    $this->assertEqual($instance->label(), $block['label'], 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -294,7 +290,7 @@ class BlockTest extends WebTestBase {
 
     // Set the block to the disabled region.
     $edit = array();
-    $edit['blocks[0][region]'] = -1;
+    $edit['blocks[' . $block['theme'] . '.' . $block['machine_name'] . '][region]'] = -1;
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block is now listed as disabled.
@@ -302,7 +298,7 @@ class BlockTest extends WebTestBase {
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
-    $this->assertNoText(t($block['title']));
+    $this->assertNoText(t($block['label']));
     // Check for <div id="block-my-block-instance-name"> if the machine name
     // is my_block_instance_name.
     $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-' . strtr(strtolower($block['machine_name']), '-', '_')));
@@ -323,8 +319,9 @@ class BlockTest extends WebTestBase {
    */
   function moveBlockToRegion(array $block, $region) {
     // Set the created block to a specific region.
+    $block += array('theme' => variable_get('theme_default', 'stark'));
     $edit = array();
-    $edit['blocks[0][region]'] = $region;
+    $edit['blocks[' . $block['theme'] . '.' . $block['machine_name'] . '][region]'] = $region;
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
@@ -332,7 +329,7 @@ class BlockTest extends WebTestBase {
 
     // Confirm that the block is being displayed.
     $this->drupalGet('');
-    $this->assertText(t($block['title']), 'Block successfully being displayed on the page.');
+    $this->assertText(t($block['label']), 'Block successfully being displayed on the page.');
 
     // Confirm that the custom block was found at the proper region.
     $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
@@ -350,34 +347,30 @@ class BlockTest extends WebTestBase {
     $this->assertTrue(module_exists('block_test'), 'Test block module enabled.');
 
     // Clear the block cache to load the block_test module's block definitions.
-    $manager = $this->container->get('plugin.manager.block');
-    $manager->clearCachedDefinitions();
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     // Add a test block.
-    $plugin = $manager->getDefinition('test_cache');
     $block = array();
     $block['id'] = 'test_cache';
     $block['machine_name'] = $this->randomName(8);
     $block['theme'] = variable_get('theme_default', 'stark');
     $block['region'] = 'header';
-    $this->drupalPost('admin/structure/block/manage/' . $block['id'] . '/' . $block['theme'], array('machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
+    $block = $this->drupalPlaceBlock('test_cache', array('region' => 'header'));
 
     // Our test block's caching should default to DRUPAL_CACHE_PER_ROLE.
-    $block['config_id'] = 'plugin.core.block.' . $block['theme'] . '.' . $block['machine_name'];
-    $instance = block_load($block['config_id']);
-    $config = $instance->getConfig();
-    $this->assertEqual($config['cache'], DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
+    $settings = $block->get('settings');
+    $this->assertEqual($settings['cache'], DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
 
     // Disable caching for this block.
-    $block_config = config($block['config_id']);
-    $block_config->set('cache', DRUPAL_NO_CACHE);
-    $block_config->save();
+    $settings['cache'] = DRUPAL_NO_CACHE;
+    $block->set('settings', $settings);
+    $block->save();
     // Flushing all caches should call _block_rehash().
     $this->resetAll();
     // Verify that block is updated with the new caching mode.
-    $instance = block_load($block['config_id']);
-    $config = $instance->getConfig();
-    $this->assertEqual($config['cache'], DRUPAL_NO_CACHE, "Test block's database entry updated to DRUPAL_NO_CACHE.");
+    $block = entity_load('block', $block->id());
+    $settings = $block->get('settings');
+    $this->assertEqual($settings['cache'], DRUPAL_NO_CACHE, "Test block's database entry updated to DRUPAL_NO_CACHE.");
   }
 
   /**
@@ -399,7 +392,7 @@ class BlockTest extends WebTestBase {
     }
     $this->drupalGet('');
     foreach ($regions as $region) {
-      $this->assertText($blocks[$region]['subject']);
+      $this->assertText($blocks[$region]->label());
     }
 
     // Disable the block test module and refresh the definitions cache.
@@ -415,7 +408,7 @@ class BlockTest extends WebTestBase {
 
     // Ensure that the disabled module's block instance is not listed.
     foreach ($regions as $region) {
-      $this->assertNoText($blocks[$region]['subject']);
+      $this->assertNoText($blocks[$region]->label());
     }
 
     // Ensure that the disabled module's block plugin is no longer available.
@@ -426,7 +419,7 @@ class BlockTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertResponse(200);
     foreach ($regions as $region) {
-      $this->assertNoText($blocks[$region]['subject']);
+      $this->assertNoText($blocks[$region]->label());
     }
 
     // Confirm that a different block instance can still be enabled by
@@ -434,16 +427,16 @@ class BlockTest extends WebTestBase {
     // Emulate a POST submission rather than using drupalPlaceBlock() to ensure
     // that the form still functions as expected.
     $edit = array(
-      'title' => $this->randomName(8),
+      'label' => $this->randomName(8),
       'machine_name' => $this->randomName(8),
       'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/structure/block/manage/system_powered_by_block/stark', $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/add/system_powered_by_block/stark', $edit, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'));
-    $this->assertText($edit['title']);
+    $this->assertText($edit['label']);
 
     // Update the weight of a block.
-    $edit = array('blocks[0][weight]' => -1);
+    $edit = array('blocks[stark.' . $edit['machine_name'] . '][weight]' => -1);
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'));
 
@@ -455,7 +448,7 @@ class BlockTest extends WebTestBase {
     // Reload the admin page and confirm the block can again be configured.
     $this->drupalGet('admin/structure/block');
     foreach ($regions as $region) {
-      $this->assertLinkByHref(url('admin/structure/block/manage/' . $blocks[$region]['config_id'] . '/stark/config'));
+      $this->assertLinkByHref(url('admin/structure/block/manage/' . $blocks[$region]->id()));
     }
 
     // Confirm that the blocks are again displayed on the front page in the
@@ -463,14 +456,14 @@ class BlockTest extends WebTestBase {
     $this->drupalGet('');
     foreach ($regions as $region) {
       // @todo Use a proper method for this.
-      $name_pieces = explode('.', $blocks[$region]['config_id']);
+      $name_pieces = explode('.', $blocks[$region]->id());
       $machine_name = array_pop($name_pieces);
       $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
         ':region-class' => 'region region-' . drupal_html_class($region),
         ':block-id' => 'block-' . strtr(strtolower($machine_name), '-', '_'),
     ));
       $this->assertFieldByXPath($xpath, NULL, format_string('Block %name found in the %region region.', array(
-        '%name' => $blocks[$region]['subject'],
+        '%name' => $blocks[$region]->label(),
         '%region' => $region,
       )));
     }

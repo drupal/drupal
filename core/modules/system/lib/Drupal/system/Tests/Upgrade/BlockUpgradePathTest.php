@@ -35,23 +35,27 @@ class BlockUpgradePathTest extends UpgradePathTestBase {
   public function testBlockUpgradeTitleLength() {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
-    // Add a block instance with a 255-character title.
-    $title = $this->randomName(255);
-    $this->drupalPlaceBlock('system_powered_by_block', array('title' => $title));
-    // Confirm that the custom block has been created, and title matches input.
-    $this->drupalGet('');
-    $this->assertText($title, 'Block with title longer than 64 characters successfully created.');
+    // WebTestBase::drupalPlaceBlock() uses the API directly, which doesn't
+    // output validation errors or success messages, so create the blocks from
+    // the UI.
 
-    // Try to add a block with a title over 255 characters.
-    // WebTestBase::drupalPlaceBlock() asserts that the block is created
-    // successfully. In this case we expect the block creation to fail, so
-    // create a new instance of the block manually.
+    // Add a block instance with a 255-character title.
+    // Confirm that the custom block has been created, and title matches input.
     $settings = array(
-      'title' => $this->randomName(256),
+      'label' => $this->randomName(255),
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/structure/block/manage/system_powered_by_block/' . variable_get('theme_default', 'stark'), $settings, t('Save block'));
+    $this->drupalPost('admin/structure/block/add/system_powered_by_block/' . variable_get('theme_default', 'stark'), $settings, t('Save block'));
+    $this->assertText($settings['label'], 'Block with title longer than 64 characters successfully created.');
+
+    // Try to add a block with a title over 255 characters.
+    $settings = array(
+      'label' => $this->randomName(256),
+      'machine_name' => strtolower($this->randomName(8)),
+      'region' => 'sidebar_first',
+    );
+    $this->drupalPost('admin/structure/block/add/system_powered_by_block/' . variable_get('theme_default', 'stark'), $settings, t('Save block'));
 
     // Confirm that the custom block cannot be created with title longer than
     // the maximum number of characters.

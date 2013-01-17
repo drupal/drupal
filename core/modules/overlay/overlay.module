@@ -477,8 +477,7 @@ function overlay_block_access($block) {
   // reason for duplicating effort here is performance; we do not even want
   // these blocks to be built if they are not going to be displayed.
   if ($regions_to_render = overlay_get_regions_to_render()) {
-    $config = $block->getConfig();
-    if (!in_array($config['region'], $regions_to_render)) {
+    if (!in_array($block->get('region'), $regions_to_render)) {
       return FALSE;
     }
   }

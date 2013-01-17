@@ -12,6 +12,7 @@
  */
 
 use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\block\Plugin\Core\Entity\Block;
 use Drupal\system\Plugin\Core\Entity\Menu;
 use Drupal\system\Plugin\block\block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -292,6 +293,7 @@ function menu_menu_predelete(Menu $menu) {
  */
 function menu_menu_delete(Menu $menu) {
   menu_cache_clear_all();
+
   // Invalidate the block cache to update menu-based derivatives.
   if (module_exists('block')) {
     drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
@@ -431,9 +433,9 @@ function menu_reset_item($link) {
 /**
  * Implements hook_block_view_alter().
  */
-function menu_block_view_alter(&$build, $block) {
+function menu_block_view_alter(array &$build, Block $block) {
   // Add contextual links for system menu blocks.
-  if ($block instanceof SystemMenuBlock) {
+  if ($block->getPlugin() instanceof SystemMenuBlock) {
     foreach (element_children($build) as $key) {
       $build['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($build[$key]['#original_link']['menu_name']));
     }

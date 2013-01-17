@@ -59,7 +59,7 @@ class ForumBlockTest extends WebTestBase {
 
     // Enable the new forum topics block.
     $block = $this->drupalPlaceBlock('forum_new_block');
-    $this->assertText(t('The block configuration has been saved.'), '"New forum topics" block was enabled');
+    $this->drupalGet('');
 
     $this->assertLink(t('More'), 0, 'New forum topics block has a "more"-link.');
     $this->assertLinkByHref('forum', 0, 'New forum topics block has a "more"-link.');
@@ -70,9 +70,8 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Configure the new forum topics block to only show 2 topics.
-    $config = config($block['config_id']);
-    $config->set('block_count', 2);
-    $config->save();
+    $block->set('settings', array('block_count' => 2));
+    $block->save();
 
     $this->drupalGet('');
     // We expect only the 2 most recent forum topics to appear in the "New forum
@@ -114,6 +113,7 @@ class ForumBlockTest extends WebTestBase {
 
     // Enable the block.
     $block = $this->drupalPlaceBlock('forum_active_block');
+    $this->drupalGet('');
     $this->assertLink(t('More'), 0, 'Active forum topics block has a "more"-link.');
     $this->assertLinkByHref('forum', 0, 'Active forum topics block has a "more"-link.');
 
@@ -130,9 +130,8 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Configure the active forum block to only show 2 topics.
-    $config = config($block['config_id']);
-    $config->set('block_count', 2);
-    $config->save();
+    $block->set('settings', array('block_count' => 2));
+    $block->save();
 
     $this->drupalGet('');
 

@@ -58,7 +58,7 @@ class UserRoleUpgradePathTest extends UpgradePathTestBase {
 
     // Check that the role visibility setting for the who's online block still
     // exists.
-    $this->drupalGet('admin/structure/block/manage/user_online_block/bartik');
+    $this->drupalGet('admin/structure/block/add/user_online_block/bartik');
 
     // @todo Blocks are not being upgraded.
     //   $this->assertFieldChecked('edit-visibility-role-roles-5', "Who's online block visibility setting is correctly set for the long role name.");

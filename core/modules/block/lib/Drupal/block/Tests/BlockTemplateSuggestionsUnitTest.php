@@ -37,18 +37,25 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
     // an underscore (not transformed) and a hyphen (transformed to underscore),
     // and generates possibilities for each level of derivative.
     // @todo Clarify this comment.
-    $data = array(
+    $block = entity_create('block', array(
+      'plugin' => 'system_menu_block:menu-admin',
       'region' => 'footer',
-    );
+      'id' => variable_get('theme_default', 'stark') . '.machinename',
+    ));
 
-    $block = drupal_container()->get('plugin.manager.block')->createInstance('system_menu_block:menu-admin', $data);
     $variables = array();
     $variables['elements']['#block'] = $block;
+    $variables['elements']['#block_config'] = $block->getPlugin()->getConfig() + array(
+      'id' => $block->get('plugin'),
+      'region' => $block->get('region'),
+      'module' => $block->get('module'),
+    );
     $variables['elements']['#children'] = '';
     // Test adding a class to the block content.
     $variables['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables);
-    $this->assertEqual($variables['theme_hook_suggestions'], array('block__footer', 'block__system', 'block__system_menu_block', 'block__system_menu_block__menu_admin'));
+    $this->assertEqual($variables['theme_hook_suggestions'], array('block__footer', 'block__system', 'block__system_menu_block', 'block__system_menu_block__menu_admin', 'block__machinename'));
     $this->assertEqual($variables['content_attributes']['class'], array('test-class', 'content'), 'Default .content class added to block content_attributes_array');
   }
+
 }

@@ -47,7 +47,8 @@ class BreadcrumbTest extends MenuTestBase {
       'region' => 'content',
     );
     $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings);
-    $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings, config('system.theme')->get('admin'));
+    $settings['theme'] = config('system.theme')->get('admin');
+    $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings);
   }
 
   /**
