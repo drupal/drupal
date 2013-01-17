@@ -1259,8 +1259,9 @@ abstract class DisplayPluginBase extends PluginBase {
 
     if ($this->usesLinkDisplay()) {
       $display_id = $this->getLinkDisplay();
-      $link_display = empty($this->view->display[$display_id]) ? t('None') : check_plain($this->view->display[$display_id]['display_title']);
-      $link_display =  $this->getOption('link_display') == 'custom_url' ? t('Custom URL') : $link_display;
+      $displays = $this->view->storage->get('display');
+      $link_display = empty($displays[$display_id]) ? t('None') : check_plain($displays[$display_id]['display_title']);
+      $link_display = $this->getOption('link_display') == 'custom_url' ? t('Custom URL') : $link_display;
       $options['link_display'] = array(
         'category' => 'other',
         'title' => t('Link display'),

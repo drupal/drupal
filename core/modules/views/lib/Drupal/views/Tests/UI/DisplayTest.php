@@ -65,6 +65,9 @@ class DisplayTest extends UITestBase {
     $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
+    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
+    $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
+
     // Undo the deleting of the display.
     $this->drupalPost($path_prefix . '/page_1', array(), 'undo delete of Page');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there is no undo button on the page display after reverting.');
@@ -213,6 +216,28 @@ class DisplayTest extends UITestBase {
       $element = $this->xpath('//div[contains(@class, :class)]/div', array(':class' => $class));
       $this->assertEqual((string) $element[0], "The selected display type does not utilize $type plugins");
     }
+  }
+
+  /**
+   * Tests the link-display setting.
+   */
+  public function testLinkDisplay() {
+    // Test setting the link display in the UI form.
+    $path = 'admin/structure/views/view/test_display/edit/block_1';
+    $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
+    $this->drupalPost($link_display_path, array('link_display' => 'page_1'), t('Apply'));
+    // The form redirects to the master display.
+    $this->drupalGet($path);
+
+    $result = $this->xpath("//a[contains(@href, :path)]", array(':path' => $link_display_path));
+    $this->assertEqual($result[0], 'Page', 'Make sure that the link option summary shows the right linked display.');
+
+    $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
+    $this->drupalPost($link_display_path, array('link_display' => 'custom_url'), t('Apply'));
+    // The form redirects to the master display.
+    $this->drupalGet($path);
+
+    $this->assertLink(t('Custom URL'), 0, 'The link option has custom url as summary.');
   }
 
 }

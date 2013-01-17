@@ -4,7 +4,7 @@ core: '8'
 description: ''
 disabled: '1'
 display:
-  block:
+  block_1:
     display_options:
       defaults:
         pager: '0'
@@ -30,7 +30,7 @@ display:
       style_plugin: default
     display_plugin: block
     display_title: Block
-    id: block
+    id: block_1
     position: '2'
   default:
     display_options:
