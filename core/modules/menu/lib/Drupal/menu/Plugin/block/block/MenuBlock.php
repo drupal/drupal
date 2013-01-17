@@ -24,9 +24,9 @@ use Drupal\Core\Annotation\Translation;
 class MenuBlock extends SystemMenuBlock {
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     list($plugin, $menu) = explode(':', $this->getPluginId());
     return menu_tree($menu);
   }

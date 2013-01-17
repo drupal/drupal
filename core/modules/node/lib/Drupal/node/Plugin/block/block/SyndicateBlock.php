@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class SyndicateBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'block_count' => 10,
     );
@@ -39,9 +39,9 @@ class SyndicateBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     return array(
       '#theme' => 'feed_icon',
       '#url' => 'rss.xml',

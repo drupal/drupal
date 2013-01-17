@@ -24,9 +24,9 @@ use Drupal\Core\Annotation\Translation;
 class AggregatorFeedBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     // By default, the block will contain 10 feed items.
     return array(
       'block_count' => 10,
@@ -62,9 +62,9 @@ class AggregatorFeedBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     // Plugin IDs look something like this: aggregator_feed_block:1.
     list(, $id) = explode(':', $this->getPluginId());
     if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {

@@ -44,9 +44,9 @@ class StatisticsPopularBlock extends BlockBase {
   protected $last_list;
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'top_day_num' => 0,
       'top_all_num' => 0,
@@ -116,9 +116,9 @@ class StatisticsPopularBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     $content = array();
 
     if ($this->day_list) {

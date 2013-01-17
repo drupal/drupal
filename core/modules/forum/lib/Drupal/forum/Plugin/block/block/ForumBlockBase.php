@@ -15,9 +15,9 @@ use Drupal\block\BlockBase;
 abstract class ForumBlockBase extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'cache' => DRUPAL_CACHE_CUSTOM,
       'properties' => array(

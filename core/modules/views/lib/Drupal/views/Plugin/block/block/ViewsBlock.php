@@ -70,9 +70,9 @@ class ViewsBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     $output = $this->view->executeDisplay($this->displayID);
     // Set the label to the title configured in the view.
     $this->entity->set('label', filter_xss_admin($this->view->getTitle()));

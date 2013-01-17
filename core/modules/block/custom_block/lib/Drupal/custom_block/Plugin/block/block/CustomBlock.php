@@ -105,9 +105,9 @@ class CustomBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     // Populate the block with the user-defined block body.
     return array(
       '#theme' => 'custom_block_block',

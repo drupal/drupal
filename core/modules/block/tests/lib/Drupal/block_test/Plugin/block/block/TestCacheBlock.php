@@ -23,20 +23,20 @@ use Drupal\Core\Annotation\Translation;
 class TestCacheBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    *
    * Sets a different caching strategy for testing purposes.
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'cache' => DRUPAL_CACHE_PER_ROLE,
     );
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     return array(
       '#children' => state()->get('block_test.content'),
     );

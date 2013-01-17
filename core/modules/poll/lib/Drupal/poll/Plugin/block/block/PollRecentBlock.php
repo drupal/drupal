@@ -30,9 +30,9 @@ class PollRecentBlock extends BlockBase {
   protected $record;
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'properties' => array(
         'administrative' => TRUE,
@@ -65,9 +65,9 @@ class PollRecentBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     $poll = node_load($this->record);
     if ($poll->nid) {
       $poll = poll_block_latest_poll_view($poll);

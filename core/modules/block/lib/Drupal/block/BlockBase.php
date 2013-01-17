@@ -48,7 +48,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
    *
    * @see \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array();
   }
 
@@ -68,7 +68,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     if (empty($this->configuration)) {
       // If the plugin configuration is not already set, initialize it with the
       // default settings for the block plugin.
-      $this->configuration = $this->blockSettings();
+      $this->configuration = $this->settings();
 
       // @todo This loads the default subject. Is this the right place to do so?
       $definition = $this->getDefinition();

@@ -29,7 +29,7 @@ interface BlockInterface {
    * @todo Consider merging this with the general plugin configuration member
    *   variable and its getter/setter in http://drupal.org/node/1764380.
    */
-  public function blockSettings();
+  public function settings();
 
   /**
    * Indicates whether the block should be shown.
@@ -100,6 +100,6 @@ interface BlockInterface {
    *
    * @see \Drupal\block\BlockRenderController
    */
-  public function blockBuild();
+  public function build();
 
 }

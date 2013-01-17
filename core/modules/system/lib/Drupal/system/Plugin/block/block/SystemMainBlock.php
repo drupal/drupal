@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class SystemMainBlock extends BlockBase {
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     return array(
       drupal_set_page_content()
     );
