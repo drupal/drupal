@@ -15,13 +15,22 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  */
 class NullGenerator implements UrlGeneratorInterface {
 
+  /**
+   * Implements Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate();
+   */
   public function generate($name, $parameters = array(), $absolute = FALSE) {
     throw new RouteNotFoundException();
   }
 
+  /**
+   * Implements Symfony\Component\Routing\RequestContextAwareInterface::setContext();
+   */
   public function setContext(RequestContext $context) {
   }
 
+  /**
+   * Implements Symfony\Component\Routing\RequestContextAwareInterface::getContext();
+   */
   public function getContext() {
   }
 }

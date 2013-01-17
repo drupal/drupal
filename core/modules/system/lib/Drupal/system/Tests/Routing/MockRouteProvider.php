@@ -18,19 +18,34 @@ use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 class MockRouteProvider implements RouteProviderInterface {
 
   /**
+   * A collection of routes for this route provider.
    *
    * @var RouteCollection
    */
   protected $routes;
 
+  /**
+   * Constructs a new MockRouteProvider.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $routes
+   *   The route collection to use for this provider.
+   */
   public function __construct(RouteCollection $routes) {
     $this->routes = $routes;
   }
 
+  /**
+   * Implements \Symfony\Cmf\Component\Routing\RouteProviderInterface::getRouteCollectionForRequest().
+   *
+   * Not implemented at present as it is not needed.
+   */
   public function getRouteCollectionForRequest(Request $request) {
 
   }
 
+  /**
+   * Implements \Symfony\Cmf\Component\Routing\RouteProviderInterface::getRouteByName().
+   */
   public function getRouteByName($name, $parameters = array()) {
     $routes = $this->getRoutesByNames(array($name), $parameters);
     if (empty($routes)) {
@@ -40,6 +55,9 @@ class MockRouteProvider implements RouteProviderInterface {
     return reset($routes);
   }
 
+  /**
+   * Implements \Symfony\Cmf\Component\Routing\RouteProviderInterface::getRoutesByName().
+   */
   public function getRoutesByNames($names, $parameters = array()) {
     $routes = array();
     foreach ($names as $name) {

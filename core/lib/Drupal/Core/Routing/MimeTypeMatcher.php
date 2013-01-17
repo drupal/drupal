@@ -19,7 +19,7 @@ class MimeTypeMatcher implements RouteFilterInterface {
 
 
   /**
-   * {@inheritDoc}
+   * Implements \Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface::filter()
    */
   public function filter(RouteCollection $collection, Request $request) {
     // Generates a list of Symfony formats matching the acceptable MIME types.

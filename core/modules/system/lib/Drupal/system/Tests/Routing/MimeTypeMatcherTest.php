@@ -7,9 +7,7 @@
 
 namespace Drupal\system\Tests\Routing;
 
-use Drupal\Core\Routing\FirstEntryFinalMatcher;
 use Drupal\Core\Routing\MimeTypeMatcher;
-use Drupal\Core\Routing\NestedMatcher;
 use Drupal\simpletest\UnitTestBase;
 
 use Symfony\Component\HttpFoundation\Request;
