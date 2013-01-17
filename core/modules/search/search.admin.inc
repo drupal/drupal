@@ -5,6 +5,8 @@
  * Admin page callbacks for the search module.
  */
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Menu callback: confirm wiping of the index.
  */
@@ -129,7 +131,7 @@ function search_admin_settings($form, &$form_state) {
   foreach ($config->get('active_modules') as $module) {
     $added_form = module_invoke($module, 'search_admin');
     if (is_array($added_form)) {
-      $form = array_merge($form, $added_form);
+      $form = NestedArray::mergeDeep($form, $added_form);
     }
   }
 

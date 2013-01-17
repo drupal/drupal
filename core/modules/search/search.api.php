@@ -137,20 +137,25 @@ function hook_search_admin() {
     '#title' => t('Content ranking'),
   );
   $form['content_ranking']['#theme'] = 'node_search_admin';
+  $form['content_ranking']['#tree'] = TRUE;
   $form['content_ranking']['info'] = array(
     '#value' => '<em>' . t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
   );
 
   // Note: reversed to reflect that higher number = higher ranking.
   $options = drupal_map_assoc(range(0, 10));
+  $ranks = config('node.settings')->get('search_rank');
   foreach (module_invoke_all('ranking') as $var => $values) {
-    $form['content_ranking']['factors']['node_rank_' . $var] = array(
+    $form['content_ranking']['factors'][$var] = array(
       '#title' => $values['title'],
       '#type' => 'select',
       '#options' => $options,
-      '#default_value' => variable_get('node_rank_' . $var, 0),
+      '#default_value' => isset($ranks[$var]) ? $ranks[$var] : 0,
     );
   }
+
+  $form['#submit'][] = 'node_search_admin_submit';
+
   return $form;
 }
 
