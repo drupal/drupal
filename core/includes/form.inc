@@ -4663,8 +4663,6 @@ function form_pre_render_file($element) {
  */
 function theme_form_element($variables) {
   $element = &$variables['element'];
-  // This is also used in the installer, pre-database setup.
-  $t = get_t();
 
   // This function is invoked as theme wrapper, but the rendered form element
   // may not necessarily have been processed by form_builder().
