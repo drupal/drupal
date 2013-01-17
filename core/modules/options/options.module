@@ -304,8 +304,9 @@ function options_extract_allowed_values($string, $field_type, $generate_keys) {
     // Check for an explicit key.
     $matches = array();
     if (preg_match('/(.*)\|(.*)/', $text, $matches)) {
-      $key = $matches[1];
-      $value = $matches[2];
+      // Trim key and value to avoid unwanted spaces issues.
+      $key = trim($matches[1]);
+      $value = trim($matches[2]);
       $explicit_keys = TRUE;
     }
     // Otherwise see if we can use the value as the key. Detecting true integer

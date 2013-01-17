@@ -199,7 +199,7 @@ class OptionsFieldUITest extends FieldTestBase {
   }
 
   /**
-   * Options (boolen) : test 'On/Off' values input.
+   * Options (boolean) : test 'On/Off' values input.
    */
   function testOptionsAllowedValuesBoolean() {
     $this->field_name = 'field_options_boolean';
@@ -223,6 +223,19 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertEqual($field['settings']['allowed_values'], $allowed_values, 'The allowed value is correct');
     $this->assertFalse(isset($field['settings']['on']), 'The on value is not saved into settings');
     $this->assertFalse(isset($field['settings']['off']), 'The off value is not saved into settings');
+  }
+
+  /**
+   * Options (text) : test 'trimmed values' input.
+   */
+  function testOptionsTrimmedValuesText() {
+    $this->field_name = 'field_options_trimmed_text';
+    $this->createOptionsField('list_text');
+
+    // Explicit keys.
+    $string = "zero |Zero\none | One";
+    $array = array('zero' => 'Zero', 'one' => 'One');
+    $this->assertAllowedValuesInput($string, $array, 'Explicit keys are accepted and trimmed.');
   }
 
   /**
