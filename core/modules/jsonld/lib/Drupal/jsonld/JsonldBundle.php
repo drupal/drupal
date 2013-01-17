@@ -44,11 +44,6 @@ class JsonldBundle extends Bundle {
         'jsonld' => 'Drupal\jsonld\JsonldRdfSchemaNormalizer',
       ),
     );
-    // Encoders can only specify which format they support in
-    // Encoder::supportsEncoding().
-    $encoders = array(
-      'jsonld' => 'Drupal\jsonld\JsonldEncoder',
-    );
 
     // Add Normalizers to service container.
     foreach ($normalizers as $supported_class => $formats) {
@@ -60,11 +55,10 @@ class JsonldBundle extends Bundle {
       }
     }
 
-    // Add Encoders to service container.
-    foreach ($encoders as $format => $encoder_class) {
-      $container->register("serializer.encoder.{$format}", $encoder_class)
-        ->addTag('encoder', array('priority' => $priority));
-    }
+    // Add the encoder to the service container. Encoders can only specify which
+    // format they support in Encoder::supportsEncoding().
+    $container->register('serializer.encoder.jsonld', 'Drupal\jsonld\JsonldEncoder')
+      ->addTag('encoder', array('priority' => $priority));
 
     $container->register('jsonld.subscriber', 'Drupal\jsonld\EventSubscriber\JsonldSubscriber')
       ->addTag('event_subscriber');
