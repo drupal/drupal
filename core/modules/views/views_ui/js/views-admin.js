@@ -345,7 +345,7 @@ Drupal.viewsUi.OptionsSearch = function ($form) {
 
   this.$form = $form;
   // Add a keyup handler to the search box.
-  this.$searchBox = this.$form.find('#edit-override-controls-options-search');
+  this.$searchBox = this.$form.find('#edit-options-search');
   this.$searchBox.keyup(jQuery.proxy(this.handleKeyup, this));
   // Get a list of option labels and their corresponding divs and maintain it
   // in memory, so we have as little overhead as possible at keyup time.
