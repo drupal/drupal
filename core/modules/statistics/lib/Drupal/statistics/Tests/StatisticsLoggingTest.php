@@ -53,12 +53,10 @@ class StatisticsLoggingTest extends WebTestBase {
 
     // Enable access logging.
     config('statistics.settings')
-      ->set('access_log.enabled', 1)
       ->set('count_content_views', 1)
       ->save();
 
     // Clear the logs.
-    db_truncate('accesslog');
     db_truncate('node_counter');
   }
 
@@ -82,9 +80,6 @@ class StatisticsLoggingTest extends WebTestBase {
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Testing an uncached page.');
-    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    $this->assertTrue(is_array($log) && count($log) == 1, 'Page request was logged.');
-    $this->assertEqual(array_intersect_key($log[0], $expected), $expected);
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '1');
 
@@ -93,9 +88,6 @@ class StatisticsLoggingTest extends WebTestBase {
     // Manually calling statistics.php, simulating ajax behavior.
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Testing a cached page.');
-    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    $this->assertTrue(is_array($log) && count($log) == 2, 'Page request was logged.');
-    $this->assertEqual(array_intersect_key($log[1], $expected), $expected);
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '2');
 
@@ -104,37 +96,8 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->drupalGet($path);
     // Manually calling statistics.php, simulating ajax behavior.
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
-    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    // Check the 6th item since login and account pages are also logged
-    $this->assertTrue(is_array($log) && count($log) == 6, 'Page request was logged.');
-    $this->assertEqual(array_intersect_key($log[5], $expected), $expected);
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '3');
-
-    // Visit edit page to generate a title greater than 255.
-    $path = 'node/' . $this->node->nid . '/edit';
-    $expected = array(
-      'title' => truncate_utf8(t('Edit Basic page') . ' ' . $this->node->label(), 255),
-      'path' => $path,
-    );
-    $this->drupalGet($path);
-    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    $this->assertTrue(is_array($log) && count($log) == 7, 'Page request was logged.');
-    $this->assertEqual(array_intersect_key($log[6], $expected), $expected);
-
-    // Create a path longer than 255 characters. Drupal's .htaccess file
-    // instructs Apache to test paths against the file system before routing to
-    // index.php. Many file systems restrict file names to 255 characters
-    // (http://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits), and
-    // Apache returns a 403 when testing longer file names, but the total path
-    // length is not restricted.
-    $long_path = $this->randomName(127) . '/' . $this->randomName(128);
-
-    // Test that the long path is properly truncated when logged.
-    $this->drupalGet($long_path);
-    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
-    $this->assertTrue(is_array($log) && count($log) == 8, 'Page request was logged for a path over 255 characters.');
-    $this->assertEqual($log[7]['path'], truncate_utf8($long_path, 255));
 
   }
 }

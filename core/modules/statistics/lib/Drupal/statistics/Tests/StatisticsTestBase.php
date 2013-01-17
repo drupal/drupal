@@ -33,7 +33,6 @@ abstract class StatisticsTestBase extends WebTestBase {
     $this->blocking_user = $this->drupalCreateUser(array(
       'access administration pages',
       'access site reports',
-      'access statistics',
       'ban IP addresses',
       'administer blocks',
       'administer statistics',
@@ -41,23 +40,9 @@ abstract class StatisticsTestBase extends WebTestBase {
     ));
     $this->drupalLogin($this->blocking_user);
 
-    // Enable access logging.
+    // Enable logging.
     config('statistics.settings')
-      ->set('access_log.enabled', 1)
       ->set('count_content_views', 1)
       ->save();
-    // Insert dummy access by anonymous user into access log.
-    db_insert('accesslog')
-      ->fields(array(
-        'title' => 'test',
-        'path' => 'node/1',
-        'url' => 'http://example.com',
-        'hostname' => '192.168.1.1',
-        'uid' => 0,
-        'sid' => 10,
-        'timer' => 10,
-        'timestamp' => REQUEST_TIME,
-      ))
-      ->execute();
   }
 }

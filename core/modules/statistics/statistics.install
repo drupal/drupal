@@ -18,79 +18,6 @@ function statistics_uninstall() {
  * Implements hook_schema().
  */
 function statistics_schema() {
-  $schema['accesslog'] = array(
-    'description' => 'Stores site access information for statistics.',
-    'fields' => array(
-      'aid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique accesslog ID.',
-      ),
-      'sid' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Browser session ID of user that visited page.',
-      ),
-      'title' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'description' => 'Title of page visited.',
-      ),
-      'path' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'description' => 'Internal path to page visited (relative to Drupal root.)',
-      ),
-      'url' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'description' => 'Referrer URI.',
-      ),
-      'hostname' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-        'description' => 'Hostname of user that visited the page.',
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-        'default' => 0,
-        'description' => 'User {users}.uid that visited the page.',
-      ),
-      'timer' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Time in milliseconds that the page took to load.',
-      ),
-      'timestamp' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp of when the page was visited.',
-      ),
-    ),
-    'indexes' => array(
-      'accesslog_timestamp' => array('timestamp'),
-      'uid' => array('uid'),
-    ),
-    'primary key' => array('aid'),
-    'foreign keys' => array(
-      'visitor' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
   $schema['node_counter'] = array(
     'description' => 'Access statistics for {node}s.',
     'fields' => array(
@@ -139,8 +66,6 @@ function statistics_schema() {
 function statistics_update_8000() {
   update_variables_to_config('statistics.settings', array(
     'statistics_count_content_views' => 'count_content_views',
-    'statistics_enable_access_log' => 'access_log.enabled',
-    'statistics_flush_accesslog_timer' => 'access_log.max_lifetime',
     'statistics_block_top_day_num' => 'block.popular.top_day_limit',
     'statistics_block_top_all_num' => 'block.popular.top_all_limit',
     'statistics_block_top_last_num' => 'block.popular.top_recent_limit',

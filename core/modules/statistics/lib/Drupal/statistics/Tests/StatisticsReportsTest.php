@@ -15,56 +15,9 @@ class StatisticsReportsTest extends StatisticsTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Statistics reports tests',
-      'description' => 'Tests display of statistics report pages and access logging.',
+      'description' => 'Tests display of statistics report blocks.',
       'group' => 'Statistics'
     );
-  }
-
-  /**
-   * Verifies that 'Recent hits' renders properly and displays the added hit.
-   */
-  function testRecentHits() {
-    $this->drupalGet('admin/reports/hits');
-    $this->assertText('test', 'Hit title found.');
-    $this->assertText('node/1', 'Hit URL found.');
-    $this->assertText('Anonymous', 'Hit user found.');
-  }
-
-  /**
-   * Verifies that 'Top pages' renders properly and displays the added hit.
-   */
-  function testTopPages() {
-    $this->drupalGet('admin/reports/pages');
-    $this->assertText('test', 'Hit title found.');
-    $this->assertText('node/1', 'Hit URL found.');
-  }
-
-  /**
-   * Verifies that 'Top referrers' renders properly and displays the added hit.
-   */
-  function testTopReferrers() {
-    $this->drupalGet('admin/reports/referrers');
-    $this->assertText('http://example.com', 'Hit referrer found.');
-  }
-
-  /**
-   * Verifies that 'Details' page renders properly and displays the added hit.
-   */
-  function testDetails() {
-    $this->drupalGet('admin/reports/access/1');
-    $this->assertText('test', 'Hit title found.');
-    $this->assertText('node/1', 'Hit URL found.');
-    $this->assertText('Anonymous', 'Hit user found.');
-  }
-
-  /**
-   * Verifies that access logging is working and is reported correctly.
-   */
-  function testAccessLogging() {
-    $this->drupalGet('admin/reports/referrers');
-    $this->drupalGet('admin/reports/hits');
-    $this->assertText('Top referrers in the past 3 days', 'Hit title found.');
-    $this->assertText('admin/reports/referrers', 'Hit URL found.');
   }
 
   /**
