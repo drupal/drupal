@@ -90,7 +90,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
       $value = $value->id();
     }
     elseif (isset($value) && !(is_scalar($value) && !empty($this->definition['constraints']['entity type']))) {
-      throw new InvalidArgumentException('Value is no valid entity.');
+      throw new InvalidArgumentException('Value is not a valid entity.');
     }
 
     $source = $this->getIdSource();
