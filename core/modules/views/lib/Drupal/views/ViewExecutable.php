@@ -1227,9 +1227,6 @@ class ViewExecutable {
     drupal_theme_initialize();
     $config = config('views.settings');
 
-    // Set the response so other parts can alter it.
-    $this->response = new Response('', 200);
-
     $start = microtime(TRUE);
     if (!empty($this->live_preview) && $config->get('ui.show.additional_queries')) {
       $this->startQueryCapture();
@@ -1259,6 +1256,11 @@ class ViewExecutable {
 
       // Initialize the style plugin.
       $this->initStyle();
+
+      if (!isset($this->response)) {
+        // Set the response so other parts can alter it.
+        $this->response = new Response('', 200);
+      }
 
       // Give field handlers the opportunity to perform additional queries
       // using the entire resultset prior to rendering.

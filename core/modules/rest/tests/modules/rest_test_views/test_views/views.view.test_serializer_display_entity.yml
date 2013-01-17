@@ -1,0 +1,49 @@
+base_table: entity_test
+name: test_serializer_display_entity
+description: ''
+tag: ''
+human_name: 'Test serialize display entity rows'
+core: 8.x
+api_version: '3.0'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      style:
+        type: serializer
+      row:
+        type: data_entity
+      sorts:
+        id:
+          id: standard
+          table: entity_test
+          field: id
+          order: DESC
+      title: 'Test serialize'
+      arguments: {  }
+  rest_export_1:
+    display_plugin: rest_export
+    id: rest_export_1
+    display_title: serializer
+    position: ''
+    display_options:
+      defaults:
+        access: false
+      path: test/serialize/entity
+base_field: id
+disabled: '0'
+module: rest
+langcode: und

@@ -817,10 +817,16 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $build['#name'] = $build['#title'] = $types[$type]['title'];
 
+    $rearrange_url = "admin/structure/views/nojs/rearrange/{$view->get('name')}/{$display['id']}/$type";
+    $rearrange_text = t('Rearrange');
+    $class = 'icon compact rearrange';
+
     // Different types now have different rearrange forms, so we use this switch
     // to get the right one.
     switch ($type) {
       case 'filter':
+        // The rearrange form for filters contains the and/or UI, so override
+        // the used path.
         $rearrange_url = "admin/structure/views/nojs/rearrange-$type/{$view->get('name')}/{$display['id']}/$type";
         $rearrange_text = t('And/Or, Rearrange');
         // TODO: Add another class to have another symbol for filter rearrange.
@@ -838,6 +844,7 @@ class ViewEditFormController extends ViewFormControllerBase {
           );
           return $build;
         }
+        break;
       case 'header':
       case 'footer':
       case 'empty':
@@ -849,10 +856,7 @@ class ViewEditFormController extends ViewFormControllerBase {
           );
           return $build;
         }
-      default:
-        $rearrange_url = "admin/structure/views/nojs/rearrange/{$view->get('name')}/{$display['id']}/$type";
-        $rearrange_text = t('Rearrange');
-        $class = 'icon compact rearrange';
+        break;
     }
 
     // Create an array of actions to pass to theme_links

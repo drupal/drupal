@@ -1,0 +1,94 @@
+base_table: views_test_data
+name: test_serializer_display_field
+description: ''
+tag: ''
+human_name: 'Test serializer display field rows'
+core: 8.x
+api_version: '3.0'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      style:
+        type: serializer
+      row:
+        type: data_field
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+          label: ''
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Custom text'
+          exclude: '0'
+          alter:
+            alter_text: '1'
+            text: TEST
+      sorts:
+        created:
+          id: created
+          table: views_test_data
+          field: created
+          order: DESC
+      title: 'Test serialize'
+      arguments: {  }
+  rest_export_1:
+    display_plugin: rest_export
+    id: rest_export_1
+    display_title: serializer
+    position: ''
+    display_options:
+      defaults:
+        access: false
+        style: false
+        row: false
+      path: test/serialize/field
+      access:
+        type: none
+      style:
+        type: serializer
+      row:
+        type: data_field
+  rest_export_2:
+    display_plugin: rest_export
+    id: rest_export_2
+    display_title: 'serialize - access denied'
+    position: ''
+    display_options:
+      defaults:
+        access: false
+        style: false
+        row: false
+      path: test/serialize/denied
+      access:
+        type: perm
+        options:
+          perm: 'administer views'
+      style:
+        type: serializer
+      row:
+        type: data_field
+base_field: id
+disabled: '0'
+module: rest
+langcode: und
