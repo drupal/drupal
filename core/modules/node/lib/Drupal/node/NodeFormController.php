@@ -56,6 +56,20 @@ class NodeFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $node) {
+
+    // Visual representation of the node content form depends on following
+    // parameters:
+    // - the current user has access to view the administration theme.
+    // - the current path is an admin path.
+    // - the node/add / edit pages are configured to be represented in the
+    //   administration theme.
+    $container_type = 'vertical_tabs';
+    $request = drupal_container()->get('request');
+    $path = $request->attributes->get('system_path');
+    if (user_access('view the administration theme') && path_is_admin($path)) {
+      $container_type = 'container';
+    }
+
     $user_config = config('user.settings');
     // Some special stuff when previewing a node.
     if (isset($form_state['node_preview'])) {
@@ -109,20 +123,47 @@ class NodeFormController extends EntityFormController {
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 
-    $form['additional_settings'] = array(
-      '#type' => 'vertical_tabs',
+    $form['advanced'] = array(
+      '#type' => $container_type,
+      '#attributes' => array('class' => array('entity-meta')),
       '#weight' => 99,
+    );
+    $form['meta'] = array (
+      '#type' => 'fieldset',
+      '#attributes' => array('class' => array('entity-meta-header')),
+      '#type' => 'container',
+      '#group' => 'advanced',
+      '#weight' => -100,
+      '#access' => $container_type == 'container',
+      // @todo Geez. Any .status is styled as OK icon? Really?
+      'published' => array(
+        '#type' => 'item',
+        '#wrapper_attributes' => array('class' => array('published')),
+        '#markup' => !empty($node->status) ? t('Published') : t('Not published'),
+        '#access' => !empty($node->nid),
+      ),
+      'changed' => array(
+        '#type' => 'item',
+        '#wrapper_attributes' => array('class' => array('changed', 'container-inline')),
+        '#title' => t('Last saved'),
+        '#markup' => !$node->isNew() ? format_date($node->changed, 'short') : t('Not saved yet'),
+      ),
+      'author' => array(
+        '#type' => 'item',
+        '#wrapper_attributes' => array('class' => array('author', 'container-inline')),
+        '#title' => t('Author'),
+        '#markup' => user_format_name(user_load($node->uid)),
+      ),
     );
 
     // Add a log field if the "Create new revision" option is checked, or if the
     // current user has the ability to check that option.
     $form['revision_information'] = array(
-      '#type' => 'details',
+      '#type' => $container_type == 'container' ? 'container' : 'details',
+      '#group' => $container_type == 'container' ? 'meta' : 'advanced',
       '#title' => t('Revision information'),
-      '#collapsible' => TRUE,
       // Collapsed by default when "Create new revision" is unchecked.
       '#collapsed' => !$node->isNewRevision(),
-      '#group' => 'additional_settings',
       '#attributes' => array(
         'class' => array('node-form-revision-information'),
       ),
@@ -133,30 +174,24 @@ class NodeFormController extends EntityFormController {
       '#access' => $node->isNewRevision() || user_access('administer nodes'),
     );
 
-    $form['revision_information']['revision'] = array(
+    $form['revision_information']['revision']['revision'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $node->isNewRevision(),
       '#access' => user_access('administer nodes'),
     );
 
-    // Check the revision log checkbox when the log textarea is filled in.
-    // This must not happen if "Create new revision" is enabled by default,
-    // since the state would auto-disable the checkbox otherwise.
-    if (!$node->isNewRevision()) {
-      $form['revision_information']['revision']['#states'] = array(
-        'checked' => array(
-          'textarea[name="log"]' => array('empty' => FALSE),
-        ),
-      );
-    }
-
-    $form['revision_information']['log'] = array(
+    $form['revision_information']['revision']['log'] = array(
       '#type' => 'textarea',
       '#title' => t('Revision log message'),
       '#rows' => 4,
       '#default_value' => !empty($node->log) ? $node->log : '',
       '#description' => t('Briefly describe the changes you have made.'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="revision"]' => array('checked' => TRUE),
+        ),
+      ),
     );
 
     // Node author information for administrators.
@@ -166,7 +201,7 @@ class NodeFormController extends EntityFormController {
       '#title' => t('Authoring information'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#group' => 'additional_settings',
+      '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('node-form-author'),
       ),
@@ -207,7 +242,7 @@ class NodeFormController extends EntityFormController {
       '#title' => t('Publishing options'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#group' => 'additional_settings',
+      '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('node-form-options'),
       ),

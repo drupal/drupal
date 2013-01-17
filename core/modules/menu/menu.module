@@ -581,7 +581,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
     '#access' => user_access('administer menu'),
     '#collapsible' => TRUE,
     '#collapsed' => !$link['link_title'],
-    '#group' => 'additional_settings',
+    '#group' => 'advanced',
     '#attached' => array(
       'library' => array(array('menu', 'drupal.menu')),
     ),

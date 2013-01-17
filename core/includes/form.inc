@@ -2832,10 +2832,15 @@ function theme_fieldset($variables) {
     $element['#attributes']['aria-describedby'] = $description_id;
   }
 
+  $legend_attributes = array();
+  if (isset($element['#title_display']) && $element['#title_display'] == 'invisible') {
+    $legend_attributes['class'][] = 'element-invisible';
+  }
+
   $output = '<fieldset' . new Attribute($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
     // Always wrap fieldset legends in a SPAN for CSS positioning.
-    $output .= '<legend><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
+    $output .= '<legend' . new Attribute($legend_attributes) . '><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
   }
   $output .= '<div class="fieldset-wrapper">';
   if (!empty($element['#description'])) {
@@ -4670,12 +4675,18 @@ function theme_form_element($variables) {
     '#title_display' => 'before',
   );
 
+  // Take over any #wrapper_attributes defined by the element.
+  // @todo Temporary hack for #type 'item'.
+  // @see http://drupal.org/node/1829202
+  if (isset($element['#wrapper_attributes'])) {
+    $attributes = $element['#wrapper_attributes'];
+  }
   // Add element #id for #type 'item'.
   if (isset($element['#markup']) && !empty($element['#id'])) {
     $attributes['id'] = $element['#id'];
   }
   // Add element's #type and #name as class to aid with JS/CSS selectors.
-  $attributes['class'] = array('form-item');
+  $attributes['class'][] = 'form-item';
   if (!empty($element['#type'])) {
     $attributes['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');
   }
@@ -4798,8 +4809,7 @@ function theme_form_element_label($variables) {
     $attributes['for'] = $element['#id'];
   }
 
-  // The leading whitespace helps visually separate fields from inline labels.
-  return ' <label' . new Attribute($attributes) . '>' . $t('!title !required', array('!title' => $title, '!required' => $required)) . "</label>\n";
+  return '<label' . new Attribute($attributes) . '>' . $t('!title!required', array('!title' => $title, '!required' => $required)) . '</label>';
 }
 
 /**

@@ -1114,7 +1114,7 @@ function comment_form_node_form_alter(&$form, $form_state) {
     '#title' => t('Comment settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' => 'additional_settings',
+    '#group' => 'advanced',
     '#attributes' => array(
       'class' => array('comment-node-settings-form'),
     ),

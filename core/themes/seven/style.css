@@ -506,12 +506,6 @@ details summary {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
 }
-details details {
-  background-color: #fff;
-}
-details details details {
-  background-color: #f8f8f8;
-}
 
 /**
  * Form elements.
@@ -1406,3 +1400,65 @@ details.fieldset-no-legend {
 /* @end */
 
 /* @end */
+
+/**
+ * Entity meta settings.
+ */
+.entity-meta {
+  background-color: #e2e2e2;
+  border-bottom: 0;
+  border-left: 1px solid #a5a5a5;
+  border-right: 1px solid #a5a5a5;
+  border-top: 0;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, .15);
+  box-shadow:         inset 0 0 5px rgba(0, 0, 0, .15);
+  margin-top: 0;
+  padding-top: 0;
+}
+.entity-meta-header,
+.entity-meta details {
+  background-color: #f2f2f2;
+  border-top: 1px solid #a5a5a5;
+  border-bottom: 1px solid #a5a5a5;
+}
+.entity-meta-header {
+  padding: 1em 1.5em;
+}
+.entity-meta-header .published {
+  font-size: 1.231em;
+  font-weight: bold;
+  text-shadow: 0 1px 0 #fff;
+}
+.entity-meta-header .changed {
+  font-style: italic; /* As-designed, but really: why is this italic? */
+}
+.entity-meta details {
+  border-left: 0;
+  border-right: 0;
+  border-top: 1px solid #fff;
+  margin: 0;
+}
+.entity-meta details[open] {
+  background-color: transparent;
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, .15), transparent 5px);
+  background-image:    -moz-linear-gradient(top, rgba(0, 0, 0, .15), transparent 5px);
+  background-image:      -o-linear-gradient(top, rgba(0, 0, 0, .15), transparent 5px);
+  background-image:         linear-gradient(to bottom, rgba(0, 0, 0, .15), transparent 5px);
+  border-top-width: 0;
+  padding-top: 1px;
+}
+.entity-meta details[open] + [open] {
+  background-image: none;
+  border-top-width: 1px;
+  padding-top: 0;
+}
+.entity-meta details > .details-wrapper {
+  padding-top: 0;
+}
+.entity-meta details > summary {
+  padding: 0.85em 1.25em;
+  text-shadow: 0 1px 0 white;
+}
+.entity-meta details .summary {
+  display: none; /* Hide JS summaries. @todo Rethink summaries. */
+}

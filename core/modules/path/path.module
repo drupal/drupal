@@ -124,7 +124,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     '#title' => t('URL path settings'),
     '#collapsible' => TRUE,
     '#collapsed' => empty($path['alias']),
-    '#group' => 'additional_settings',
+    '#group' => 'advanced',
     '#attributes' => array(
       'class' => array('path-form'),
     ),

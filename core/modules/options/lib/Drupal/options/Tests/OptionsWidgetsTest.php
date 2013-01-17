@@ -500,12 +500,12 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->drupalGet($fieldEditUrl);
 
     $this->assertText(
-      'Use field label instead of the "On value" as label ',
+      'Use field label instead of the "On value" as label',
       t('Display setting checkbox available.')
     );
 
     $this->assertFieldByXPath(
-      '*//label[@for="edit-' . $this->bool['field_name'] . '-und" and text()="MyOnValue "]',
+      '*//label[@for="edit-' . $this->bool['field_name'] . '-und" and text()="MyOnValue"]',
       TRUE,
       t('Default case shows "On value"')
     );
@@ -519,7 +519,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // is stored and has the expected effect
     $this->drupalGet($fieldEditUrl);
     $this->assertText(
-      'Use field label instead of the "On value" as label ',
+      'Use field label instead of the "On value" as label',
       t('Display setting checkbox is available')
     );
     $this->assertFieldChecked(
@@ -527,7 +527,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       t('Display settings checkbox checked')
     );
     $this->assertFieldByXPath(
-      '*//label[@for="edit-' . $this->bool['field_name'] . '-und" and text()="' . $this->bool['field_name'] . ' "]',
+      '*//label[@for="edit-' . $this->bool['field_name'] . '-und" and text()="' . $this->bool['field_name'] . '"]',
       TRUE,
       t('Display label changes label of the checkbox')
     );

@@ -234,4 +234,5 @@ class Node extends Entity implements ContentEntityInterface {
   public function getRevisionId() {
     return $this->vid;
   }
+
 }
