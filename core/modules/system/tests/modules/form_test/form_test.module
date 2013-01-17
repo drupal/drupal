@@ -314,6 +314,31 @@ function form_test_menu() {
     'access callback' => TRUE,
   );
 
+  $items['form-test/group-details'] = array(
+    'title' => 'Group details testing',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_group_details'),
+    'access callback' => TRUE,
+  );
+  $items['form-test/group-container'] = array(
+    'title' => 'Group container testing',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_group_container'),
+    'access callback' => TRUE,
+  );
+  $items['form-test/group-fieldset'] = array(
+    'title' => 'Group fieldset testing',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_group_fieldset'),
+    'access callback' => TRUE,
+  );
+  $items['form-test/group-vertical-tabs'] = array(
+    'title' => 'Group vertical tabs testing',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_group_vertical_tabs'),
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -2330,6 +2355,93 @@ function form_test_button_class($form, &$form_state) {
     '#type' => 'button',
     '#value' => 'Delete',
     '#button_type' => 'danger',
+  );
+  return $form;
+}
+
+/**
+ * Builds a simple form to test the #group property on #type 'details'.
+ */
+function form_test_group_details() {
+  $form['details'] = array(
+    '#type' => 'details',
+    '#title' => 'Root element',
+  );
+  $form['meta'] = array(
+    '#type' => 'details',
+    '#title' => 'Group element',
+    '#group' => 'details',
+  );
+  $form['meta']['element'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Nest in details element',
+  );
+  return $form;
+}
+
+/**
+ * Builds a simple form to test the #group property on #type 'container'.
+ */
+function form_test_group_container() {
+  $form['container'] = array(
+    '#type' => 'container',
+  );
+  $form['meta'] = array(
+    '#type' => 'details',
+    '#title' => 'Group element',
+    '#group' => 'container',
+  );
+  $form['meta']['element'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Nest in details element',
+  );
+  return $form;
+}
+
+/**
+ * Builds a simple form to test the #group property on #type 'fieldset'.
+ */
+function form_test_group_fieldset() {
+  $form['fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Fieldset',
+  );
+  $form['meta'] = array(
+    '#type' => 'container',
+    '#title' => 'Group element',
+    '#group' => 'fieldset',
+  );
+  $form['meta']['element'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Nest in container element',
+  );
+  return $form;
+}
+
+/**
+ * Builds a simple form to test the #group property on #type 'vertical_tabs'.
+ */
+function form_test_group_vertical_tabs() {
+  $form['vertical_tabs'] = array(
+    '#type' => 'vertical_tabs',
+  );
+  $form['meta'] = array(
+    '#type' => 'details',
+    '#title' => 'First group element',
+    '#group' => 'vertical_tabs',
+  );
+  $form['meta']['element'] = array(
+    '#type' => 'textfield',
+    '#title' => 'First nested element in details element',
+  );
+  $form['meta_2'] = array(
+    '#type' => 'details',
+    '#title' => 'Second group element',
+    '#group' => 'vertical_tabs',
+  );
+  $form['meta_2']['element_2'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Second nested element in details element',
   );
   return $form;
 }

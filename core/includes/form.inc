@@ -3870,19 +3870,19 @@ function form_validate_machine_name(&$element, &$form_state) {
 }
 
 /**
- * Arranges details into groups.
+ * Arranges elements into groups.
  *
  * @param $element
  *   An associative array containing the properties and children of the
- *   details. Note that $element must be taken by reference here, so processed
+ *   element. Note that $element must be taken by reference here, so processed
  *   child elements are taken over into $form_state.
  * @param $form_state
- *   The $form_state array for the form this details belongs to.
+ *   The $form_state array for the form this element belongs to.
  *
  * @return
  *   The processed element.
  */
-function form_process_details(&$element, &$form_state) {
+function form_process_group(&$element, &$form_state) {
   $parents = implode('][', $element['#parents']);
 
   // Each details element forms a new group. The #type 'vertical_tabs' basically
@@ -3904,14 +3904,14 @@ function form_process_details(&$element, &$form_state) {
 }
 
 /**
- * Adds members of this group as actual elements for rendering.
+ * Adds form element theming to details.
  *
  * @param $element
  *   An associative array containing the properties and children of the
  *   details.
  *
  * @return
- *   The modified element with all group members.
+ *   The modified element.
  */
 function form_pre_render_details($element) {
   // The .form-wrapper class is required for #states to treat details like
@@ -3929,10 +3929,25 @@ function form_pre_render_details($element) {
     $element['#attributes']['open'] = 'open';
   }
 
-  // Details may be rendered outside of a Form API context.
+  return $element;
+}
+
+/**
+ * Adds members of this group as actual elements for rendering.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   element.
+ *
+ * @return
+ *   The modified element with all group members.
+ */
+function form_pre_render_group($element) {
+  // The element may be rendered outside of a Form API context.
   if (!isset($element['#parents']) || !isset($element['#groups'])) {
     return $element;
   }
+
   // Inject group member elements belonging to this group.
   $parents = implode('][', $element['#parents']);
   $children = element_children($element['#groups'][$parents]);

@@ -543,15 +543,16 @@ function system_element_info() {
   );
   $types['fieldset'] = array(
     '#value' => NULL,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_group', 'ajax_process_form'),
+    '#pre_render' => array('form_pre_render_group'),
     '#theme_wrappers' => array('fieldset'),
   );
   $types['details'] = array(
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#value' => NULL,
-    '#process' => array('form_process_details', 'ajax_process_form'),
-    '#pre_render' => array('form_pre_render_details'),
+    '#process' => array('form_process_group', 'ajax_process_form'),
+    '#pre_render' => array('form_pre_render_details', 'form_pre_render_group'),
     '#theme_wrappers' => array('details'),
   );
   $types['vertical_tabs'] = array(
@@ -570,7 +571,8 @@ function system_element_info() {
   );
 
   $types['container'] = array(
-    '#process' => array('form_process_container'),
+    '#process' => array('form_process_group', 'form_process_container'),
+    '#pre_render' => array('form_pre_render_group'),
     '#theme_wrappers' => array('container'),
   );
   $types['actions'] = array(
