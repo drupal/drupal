@@ -106,12 +106,11 @@ class SearchRankingTest extends SearchTestBase {
    * Test rankings of HTML tags.
    */
   function testHTMLRankings() {
-    $full_html_format = array(
+    $full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
       'name' => 'Full HTML',
-    );
-    $full_html_format = (object) $full_html_format;
-    filter_format_save($full_html_format);
+    ));
+    $full_html_format->save();
 
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('create page content')));

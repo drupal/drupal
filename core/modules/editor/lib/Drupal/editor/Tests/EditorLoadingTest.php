@@ -32,23 +32,21 @@ class EditorLoadingTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-   // Add text formats.
-    $filtered_html_format = array(
+    // Add text formats.
+    $filtered_html_format = entity_create('filter_format', array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
       'filters' => array(),
-    );
-    $filtered_html_format = (object) $filtered_html_format;
-    filter_format_save($filtered_html_format);
-    $full_html_format = array(
+    ));
+    $filtered_html_format->save();
+    $full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
       'filters' => array(),
-    );
-    $full_html_format = (object) $full_html_format;
-    filter_format_save($full_html_format);
+    ));
+    $full_html_format->save();
 
     // Create node type.
     $this->drupalCreateContentType(array(

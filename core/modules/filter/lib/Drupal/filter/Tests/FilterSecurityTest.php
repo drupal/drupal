@@ -43,7 +43,7 @@ class FilterSecurityTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create Filtered HTML format.
-    $filtered_html_format = array(
+    $filtered_html_format = entity_create('filter_format', array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'filters' => array(
@@ -52,9 +52,8 @@ class FilterSecurityTest extends WebTestBase {
           'status' => 1,
         ),
       )
-    );
-    $filtered_html_format = (object) $filtered_html_format;
-    filter_format_save($filtered_html_format);
+    ));
+    $filtered_html_format->save();
 
     $filtered_html_permission = filter_permission_name($filtered_html_format);
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));

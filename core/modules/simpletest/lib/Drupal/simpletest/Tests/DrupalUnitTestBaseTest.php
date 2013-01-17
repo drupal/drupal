@@ -74,8 +74,8 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    * Tests expected installation behavior of enableModules().
    */
   function testEnableModulesInstall() {
-    $module = 'filter';
-    $table = 'filter';
+    $module = 'node';
+    $table = 'node';
 
     // @todo Remove after configuration system conversion.
     $this->enableModules(array('system'), FALSE);

@@ -75,13 +75,12 @@ function filter_admin_overview($form) {
  * Form submission handler for filter_admin_overview().
  */
 function filter_admin_overview_submit($form, &$form_state) {
+  $filter_formats = filter_formats();
   foreach ($form_state['values']['formats'] as $id => $data) {
+    // Only update if this is a form element with weight.
     if (is_array($data) && isset($data['weight'])) {
-      // Only update if this is a form element with weight.
-      db_update('filter_format')
-        ->fields(array('weight' => $data['weight']))
-        ->condition('format', $id)
-        ->execute();
+      $filter_formats[$id]->set('weight', $data['weight']);
+      $filter_formats[$id]->save();
     }
   }
   filter_formats_reset();
@@ -113,10 +112,8 @@ function filter_admin_overview_submit($form, &$form_state) {
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
     drupal_set_title(t('Add text format'));
-    $format = (object) array(
-      'format' => NULL,
-      'name' => '',
-    );
+
+    $format = entity_create('filter_format', array());
   }
   return drupal_get_form('filter_admin_format_form', $format);
 }
@@ -216,6 +213,10 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#title' => t('Enabled filters'),
     '#prefix' => '<div id="filters-status-wrapper">',
     '#suffix' => '</div>',
+    // This item is used as a pure wrapping container with heading. Ignore its
+    // value, since 'filters' should only contain filter definitions.
+    // @see http://drupal.org/node/1829202
+    '#input' => FALSE,
   );
   foreach ($filter_info as $name => $filter) {
     $form['filters']['status'][$name] = array(
@@ -233,6 +234,10 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#type' => 'item',
     '#title' => t('Filter processing order'),
     '#theme' => 'filter_admin_format_filter_order',
+    // This item is used as a pure wrapping container with heading. Ignore its
+    // value, since 'filters' should only contain filter definitions.
+    // @see http://drupal.org/node/1829202
+    '#input' => FALSE,
   );
   foreach ($filter_info as $name => $filter) {
     $form['filters']['order'][$name]['filter'] = array(
@@ -260,8 +265,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
       $function = $filter['settings callback'];
       // Pass along stored filter settings and default settings, but also the
       // format object and all filters to allow for complex implementations.
-      $defaults = (isset($filter['default settings']) ? $filter['default settings'] : array());
-      $settings_form = $function($form, $form_state, $filters[$name], $format, $defaults, $filters);
+      $settings_form = $function($form, $form_state, $filters[$name], $format, $filter['default settings'], $filters);
       if (!empty($settings_form)) {
         $form['filters']['settings'][$name] = array(
           '#type' => 'details',
@@ -325,9 +329,12 @@ function filter_admin_format_form_validate($form, &$form_state) {
   form_set_value($form['format'], $format_format, $form_state);
   form_set_value($form['name'], $format_name, $form_state);
 
-  $result = db_query("SELECT format FROM {filter_format} WHERE name = :name AND format <> :format", array(':name' => $format_name, ':format' => $format_format))->fetchField();
-  if ($result) {
-    form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
+  $filter_formats = entity_load_multiple('filter_format');
+  foreach ($filter_formats as $format) {
+    if ($format->name == $format_name && $format->format != $format_format) {
+      form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
+      break;
+    }
   }
 }
 
@@ -343,13 +350,13 @@ function filter_admin_format_form_submit($form, &$form_state) {
   // Add the submitted form values to the text format, and save it.
   $format = $form['#format'];
   foreach ($form_state['values'] as $key => $value) {
-    $format->$key = $value;
+    $format->set($key, $value);
   }
-  $status = filter_format_save($format);
+  $status = $format->save();
 
   // Save user permissions.
   if ($permission = filter_permission_name($format)) {
-    foreach ($format->roles as $rid => $enabled) {
+    foreach ($form_state['values']['roles'] as $rid => $enabled) {
       user_role_change_permissions($rid, array($permission => $enabled));
     }
   }

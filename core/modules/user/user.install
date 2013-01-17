@@ -75,7 +75,7 @@ function user_schema() {
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => 'The {filter_format}.format of the signature.',
+        'description' => 'The filter format ID of the signature.',
       ),
       'created' => array(
         'type' => 'int',

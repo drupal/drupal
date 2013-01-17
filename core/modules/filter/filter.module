@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\filter\Plugin\Core\Entity\FilterFormat;
 
 /**
  * Non-HTML markup language filters that generate HTML.
@@ -205,116 +206,6 @@ function filter_format_load($format_id) {
 }
 
 /**
- * Saves a text format object to the database.
- *
- * @param $format
- *   A format object having the properties:
- *   - format: A machine-readable name representing the ID of the text format
- *     to save. If this corresponds to an existing text format, that format
- *     will be updated; otherwise, a new format will be created.
- *   - name: The title of the text format.
- *   - status: (optional) An integer indicating whether the text format is
- *     enabled (1) or not (0). Defaults to 1.
- *   - weight: (optional) The weight of the text format, which controls its
- *     placement in text format lists. If omitted, the weight is set to 0.
- *   - filters: (optional) An associative, multi-dimensional array of filters
- *     assigned to the text format, keyed by the name of each filter and using
- *     the properties:
- *     - weight: (optional) The weight of the filter in the text format. If
- *       omitted, either the currently stored weight is retained (if there is
- *       one), or the filter is assigned a weight of 10, which will usually
- *       put it at the bottom of the list.
- *     - status: (optional) A Boolean indicating whether the filter is
- *       enabled in the text format. If omitted, the filter will be disabled.
- *     - settings: (optional) An array of configured settings for the filter.
- *       See hook_filter_info() for details.
- *
- * @return
- *   SAVED_NEW or SAVED_UPDATED.
- */
-function filter_format_save($format) {
-  $format->name = trim($format->name);
-  $format->cache = _filter_format_is_cacheable($format);
-  if (!isset($format->status)) {
-    $format->status = 1;
-  }
-  if (!isset($format->weight)) {
-    $format->weight = 0;
-  }
-
-  // Insert or update the text format.
-  $return = db_merge('filter_format')
-    ->key(array('format' => $format->format))
-    ->fields(array(
-      'name' => $format->name,
-      'cache' => (int) $format->cache,
-      'status' => (int) $format->status,
-      'weight' => (int) $format->weight,
-    ))
-    ->execute();
-
-  // Programmatic saves may not contain any filters.
-  if (!isset($format->filters)) {
-    $format->filters = array();
-  }
-  $filter_info = filter_get_filters();
-  foreach ($filter_info as $name => $filter) {
-    // If the format does not specify an explicit weight for a filter, assign
-    // a default weight, either defined in hook_filter_info(), or the default of
-    // 0 by filter_get_filters().
-    if (!isset($format->filters[$name]['weight'])) {
-      $format->filters[$name]['weight'] = $filter['weight'];
-    }
-    $format->filters[$name]['status'] = isset($format->filters[$name]['status']) ? $format->filters[$name]['status'] : 0;
-    $format->filters[$name]['module'] = $filter['module'];
-
-    // If settings were passed, only ensure default settings.
-    if (isset($format->filters[$name]['settings'])) {
-      if (isset($filter['default settings'])) {
-        $format->filters[$name]['settings'] = array_merge($filter['default settings'], $format->filters[$name]['settings']);
-      }
-    }
-    // Otherwise, use default settings or fall back to an empty array.
-    else {
-      $format->filters[$name]['settings'] = isset($filter['default settings']) ? $filter['default settings'] : array();
-    }
-
-    $fields = array();
-    $fields['weight'] = $format->filters[$name]['weight'];
-    $fields['status'] = $format->filters[$name]['status'];
-    $fields['module'] = $format->filters[$name]['module'];
-    $fields['settings'] = serialize($format->filters[$name]['settings']);
-
-    db_merge('filter')
-      ->key(array(
-        'format' => $format->format,
-        'name' => $name,
-      ))
-      ->fields($fields)
-      ->execute();
-  }
-
-  if ($return == SAVED_NEW) {
-    module_invoke_all('filter_format_insert', $format);
-  }
-  else {
-    module_invoke_all('filter_format_update', $format);
-    // Explicitly indicate that the format was updated. We need to do this
-    // since if the filters were updated but the format object itself was not,
-    // the merge query above would not return an indication that anything had
-    // changed.
-    $return = SAVED_UPDATED;
-
-    // Clear the filter cache whenever a text format is updated.
-    cache('filter')->deleteTags(array('filter_format' => $format->format));
-  }
-
-  filter_formats_reset();
-
-  return $return;
-}
-
-/**
  * Disables a text format.
  *
  * There is no core facility to re-enable a disabled format. It is not deleted
@@ -326,10 +217,8 @@ function filter_format_save($format) {
  *   The text format object to be disabled.
  */
 function filter_format_disable($format) {
-  db_update('filter_format')
-    ->fields(array('status' => 0))
-    ->condition('format', $format->format)
-    ->execute();
+  $format->status = 0;
+  $format->save();
 
   // Allow modules to react on text format deletion.
   module_invoke_all('filter_format_disable', $format);
@@ -353,7 +242,7 @@ function filter_format_disable($format) {
  * @see filter_format_load()
  */
 function filter_format_exists($format_id) {
-  return (bool) db_query_range('SELECT 1 FROM {filter_format} WHERE format = :format', 0, 1, array(':format' => $format_id))->fetchField();
+  return entity_load('filter_format', $format_id);
 }
 
 /**
@@ -459,13 +348,14 @@ function filter_formats($account = NULL) {
       $formats['all'] = $cache->data;
     }
     else {
-      $formats['all'] = db_select('filter_format', 'ff')
-        ->addTag('translatable')
-        ->fields('ff')
-        ->condition('status', 1)
-        ->orderBy('weight')
-        ->execute()
-        ->fetchAllAssoc('format');
+      $filter_formats = entity_load_multiple('filter_format');
+      $formats['all'] = array();
+      foreach ($filter_formats as $format_name => $filter_format) {
+        if (!empty($filter_format->status)) {
+          $formats['all'][$format_name] = $filter_format;
+        }
+      }
+      uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
 
       cache()->set("filter_formats:{$language_interface->langcode}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
     }
@@ -676,6 +566,7 @@ function filter_get_filters() {
           $info[$name] += array(
             'description' => '',
             'weight' => 0,
+            'default settings' => array(),
           );
         }
         $filters = array_merge($filters, $info);
@@ -730,7 +621,7 @@ function filter_format_allowcache($format_id) {
  *   TRUE if all the filters enabled in the given text format allow caching,
  *   FALSE otherwise.
  *
- * @see filter_format_save()
+ * @see Drupal\filter\Plugin\Core\Entity\FilterFormat::save()
  */
 function _filter_format_is_cacheable($format) {
   if (empty($format->filters)) {
@@ -770,9 +661,18 @@ function filter_list_format($format_id) {
       $filters['all'] = $cache->data;
     }
     else {
-      $result = db_query('SELECT * FROM {filter} ORDER BY weight, module, name');
-      foreach ($result as $record) {
-        $filters['all'][$record->format][$record->name] = $record;
+      $filter_formats = filter_formats();
+      foreach ($filter_formats as $filter_format) {
+        foreach ($filter_format->filters as $filter_name => $filter) {
+          $filter['name'] = $filter_name;
+          $filters['all'][$filter_format->format][$filter_name] = $filter;
+        }
+        uasort($filters['all'][$filter_format->format], 'Drupal\filter\Plugin\Core\Entity\FilterFormat::sortFilters');
+        // Convert filters into objects.
+        // @todo Retain filters as arrays or convert to plugins.
+        foreach ($filters['all'][$filter_format->format] as $filter_name => $filter) {
+          $filters['all'][$filter_format->format][$filter_name] = (object) $filter;
+        }
       }
       cache()->set('filter_list_format', $filters['all']);
     }
@@ -784,12 +684,10 @@ function filter_list_format($format_id) {
     foreach ($filter_map as $name => $filter) {
       if (isset($filter_info[$name])) {
         $filter->title = $filter_info[$name]['title'];
-        // Unpack stored filter settings.
-        $filter->settings = (isset($filter->settings) ? unserialize($filter->settings) : array());
+
+        $filter->settings = isset($filter->settings) ? $filter->settings : array();
         // Merge in default settings.
-        if (isset($filter_info[$name]['default settings'])) {
-          $filter->settings += $filter_info[$name]['default settings'];
-        }
+        $filter->settings += $filter_info[$name]['default settings'];
 
         $format_filters[$name] = $filter;
       }
@@ -899,7 +797,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
   // Cache the filtered text. This cache is infinitely valid. It becomes
   // obsolete when $text changes (which leads to a new $cache_id). It is
   // automatically flushed when the text format is updated.
-  // @see filter_format_save()
+  // @see Drupal\filter\Plugin\Core\Entity\FilterFormat::save()
   if ($cache) {
     cache('filter')->set($cache_id, $text, CacheBackendInterface::CACHE_PERMANENT, array('filter_format' => $format->format));
   }

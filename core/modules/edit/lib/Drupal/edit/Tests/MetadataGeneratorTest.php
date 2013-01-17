@@ -125,7 +125,8 @@ class MetadataGeneratorTest extends EditTestBase {
   }
 
   function testEditorWithCustomMetadata() {
-    $this->enableModules(array('filter'));
+    $this->installSchema('system', 'url_alias');
+    $this->enableModules(array('user', 'filter'));
 
     // Enable edit_test module so that the WYSIWYG Create.js PropertyEditor
     // widget becomes available.
@@ -147,16 +148,15 @@ class MetadataGeneratorTest extends EditTestBase {
     );
 
     // Create a text format.
-    $full_html_format = array(
+    $full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
       'filters' => array(
         'filter_htmlcorrector' => array('status' => 1),
       ),
-    );
-    $full_html_format = (object) $full_html_format;
-    filter_format_save($full_html_format);
+    ));
+    $full_html_format->save();
 
     // Create an entity with values for this rich text field.
     $this->entity = field_test_create_entity();

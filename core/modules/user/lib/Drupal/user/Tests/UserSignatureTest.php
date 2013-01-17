@@ -41,19 +41,17 @@ class UserSignatureTest extends WebTestBase {
     // Prefetch and create text formats.
     $this->plain_text_format = filter_format_load('plain_text');
 
-    $filtered_html_format = array(
+    $this->filtered_html_format = entity_create('filter_format', array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
-    );
-    $this->filtered_html_format = (object) $filtered_html_format;
-    filter_format_save($this->filtered_html_format);
+    ));
+    $this->filtered_html_format->save();
 
-    $full_html_format = array(
+    $this->full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
       'name' => 'Full HTML',
-    );
-    $this->full_html_format = (object) $full_html_format;
-    filter_format_save($this->full_html_format);
+    ));
+    $this->full_html_format->save();
 
     user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array(filter_permission_name($this->filtered_html_format)));
     $this->checkPermissions(array(), TRUE);
