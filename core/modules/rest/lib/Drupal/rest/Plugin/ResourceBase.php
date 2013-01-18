@@ -14,17 +14,14 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Common base class for resource plugins.
  */
-abstract class ResourceBase extends PluginBase {
+abstract class ResourceBase extends PluginBase implements ResourceInterface {
 
   /**
-   * Provides an array of permissions suitable for hook_permission().
+   * Implements ResourceInterface::permissions().
    *
    * Every plugin operation method gets its own user permission. Example:
    * "restful delete entity:node" with the title "Access DELETE on Node
    * resource".
-   *
-   * @reutrn array
-   *   The permission array.
    */
   public function permissions() {
     $permissions = array();
@@ -43,13 +40,7 @@ abstract class ResourceBase extends PluginBase {
   }
 
   /**
-   * Returns a collection of routes with URL path information for the resource.
-   *
-   * This method determines where a resource is reachable, what path
-   * replacements are used, the required HTTP method for the operation etc.
-   *
-   * @return \Symfony\Component\Routing\RouteCollection
-   *   A collection of routes that should be registered for this resource.
+   * Implements ResourceInterface::routes().
    */
   public function routes() {
     $collection = new RouteCollection();
