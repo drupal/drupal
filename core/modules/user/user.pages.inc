@@ -34,7 +34,7 @@ function user_autocomplete() {
       $anonymous_name = config('user.settings')->get('anonymous');
       // Allow autocompletion for the anonymous user.
       if (stripos($anonymous_name, $string) !== FALSE) {
-        $matches[$anonymous_name] = check_plain($anonymous_name);
+        $matches[$anonymous_name] = $anonymous_name;
       }
     }
     $result = db_select('users')->fields('users', array('name'))->condition('name', db_like($string) . '%', 'LIKE')->range(0, 10)->execute();
