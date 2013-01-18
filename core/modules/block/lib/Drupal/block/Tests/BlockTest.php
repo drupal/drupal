@@ -36,12 +36,11 @@ class BlockTest extends WebTestBase {
     config('system.site')->set('page.front', 'test-page')->save();
 
     // Create Full HTML text format.
-    $full_html_format = array(
+    $full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
       'name' => 'Full HTML',
-    );
-    $full_html_format = (object) $full_html_format;
-    filter_format_save($full_html_format);
+    ));
+    $full_html_format->save();
     $this->checkPermissions(array(), TRUE);
 
     // Create and log in an administrative user having access to the Full HTML

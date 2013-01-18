@@ -79,7 +79,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('node', 'comment', 'user', 'filter'));
+    $this->enableModules(array('system', 'node', 'comment', 'user', 'filter'));
   }
 
   /**

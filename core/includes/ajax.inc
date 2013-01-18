@@ -5,8 +5,6 @@
  * Functions for use with Drupal's Ajax framework.
  */
 
-use Drupal\Component\Utility\NestedArray;
-
 /**
  * @defgroup ajax Ajax framework
  * @{
@@ -291,8 +289,8 @@ function ajax_render($commands = array()) {
   // Now add a command to merge changes and additions to Drupal.settings.
   $scripts = drupal_add_js();
   if (!empty($scripts['settings'])) {
-    $settings = $scripts['settings'];
-    array_unshift($commands, ajax_command_settings(NestedArray::mergeDeepArray($settings['data']), TRUE));
+    $settings = drupal_merge_js_settings($scripts['settings']['data']);
+    array_unshift($commands, ajax_command_settings($settings, TRUE));
   }
 
   // Allow modules to alter any Ajax response.

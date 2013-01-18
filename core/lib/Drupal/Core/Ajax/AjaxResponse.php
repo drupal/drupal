@@ -9,7 +9,6 @@ namespace Drupal\Core\Ajax;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Component\Utility\NestedArray;
 
 /**
  * JSON response object for AJAX requests.
@@ -134,8 +133,8 @@ class AjaxResponse extends JsonResponse {
     // Prepend a command to merge changes and additions to Drupal.settings.
     $scripts = drupal_add_js();
     if (!empty($scripts['settings'])) {
-      $settings = $scripts['settings'];
-      $this->addCommand(new SettingsCommand(NestedArray::mergeDeepArray($settings['data']), TRUE), TRUE);
+      $settings = drupal_merge_js_settings($scripts['settings']['data']);
+      $this->addCommand(new SettingsCommand($settings, TRUE));
     }
 
     $commands = $this->commands;

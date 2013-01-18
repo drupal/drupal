@@ -36,12 +36,12 @@ class FilterSettingsTest extends WebTestBase {
     $filters = array_fill_keys(array_keys($filter_info), array());
 
     // Create text format using filter default settings.
-    $filter_defaults_format = (object) array(
+    $filter_defaults_format = entity_create('filter_format', array(
       'format' => 'filter_defaults',
       'name' => 'Filter defaults',
       'filters' => $filters,
-    );
-    filter_format_save($filter_defaults_format);
+    ));
+    $filter_defaults_format->save();
 
     // Verify that default weights defined in hook_filter_info() were applied.
     $saved_settings = array();
@@ -56,7 +56,7 @@ class FilterSettingsTest extends WebTestBase {
     }
 
     // Re-save the text format.
-    filter_format_save($filter_defaults_format);
+    $filter_defaults_format->save();
     // Reload it from scratch.
     filter_formats_reset();
     $filter_defaults_format = filter_format_load($filter_defaults_format->format);

@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\rest\Plugin\ResourceInterface.
+ */
+
+namespace Drupal\rest\Plugin;
+
+use Drupal\Component\Plugin\PluginInspectionInterface;
+
+/**
+ * Specifies the publicly available methods of a resource plugin.
+ */
+interface ResourceInterface extends PluginInspectionInterface {
+
+  /**
+   * Returns a collection of routes with URL path information for the resource.
+   *
+   * This method determines where a resource is reachable, what path
+   * replacements are used, the required HTTP method for the operation etc.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   *   A collection of routes that should be registered for this resource.
+   */
+  public function routes();
+
+  /**
+   * Provides an array of permissions suitable for hook_permission().
+   *
+   * A resource plugin can define a set of user permissions that are used on the
+   * routes for this resource or for other purposes.
+   *
+   * @return array
+   *   The permission array.
+   */
+  public function permissions();
+
+}

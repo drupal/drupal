@@ -80,7 +80,7 @@ class UserBlocksTests extends WebTestBase {
    * Test the Who's Online block.
    */
   function testWhosOnlineBlock() {
-    $block = entity_load('block', 'stark.online');
+    $block = $this->drupalPlaceBlock('user_online_block');
     $config = $block->get('settings');
 
     // Generate users.

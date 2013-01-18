@@ -32,15 +32,14 @@ class EditorAdminTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-   // Add text format.
-    $filtered_html_format = array(
+    // Add text format.
+    $filtered_html_format = entity_create('filter_format', array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
       'filters' => array(),
-    );
-    $filtered_html_format = (object) $filtered_html_format;
-    filter_format_save($filtered_html_format);
+    ));
+    $filtered_html_format->save();
 
     // Create admin user.
     $this->admin_user = $this->drupalCreateUser(array('administer filters'));

@@ -26,7 +26,7 @@ class FilterAPITest extends WebTestBase {
     parent::setUp();
 
     // Create Filtered HTML format.
-    $filtered_html_format = array(
+    $filtered_html_format = entity_create('filter_format', array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'filters' => array(
@@ -40,12 +40,11 @@ class FilterAPITest extends WebTestBase {
           'status' => 1,
         ),
       )
-    );
-    $filtered_html_format = (object) $filtered_html_format;
-    filter_format_save($filtered_html_format);
+    ));
+    $filtered_html_format->save();
 
     // Create Full HTML format.
-    $full_html_format = array(
+    $full_html_format = entity_create('filter_format', array(
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
@@ -55,9 +54,8 @@ class FilterAPITest extends WebTestBase {
           'status' => 1,
         ),
       ),
-    );
-    $full_html_format = (object) $full_html_format;
-    filter_format_save($full_html_format);
+    ));
+    $full_html_format->save();
   }
 
   /**

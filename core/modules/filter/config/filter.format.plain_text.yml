@@ -1,0 +1,26 @@
+# Every site requires at least one text format as fallback format that
+# - is accessible to all users.
+# - is secure, using very basic formatting only.
+# - may be modified by installation profiles to have other properties.
+format: plain_text
+name: 'Plain text'
+status: '1'
+weight: '10'
+roles:
+  - anonymous
+  - authenticated
+cache: '1'
+filters:
+  # Escape all HTML.
+  filter_html_escape:
+    module: filter
+    status: '1'
+  # Convert URLs into links.
+  filter_url:
+    module: filter
+    status: '1'
+  # Convert linebreaks into paragraphs.
+  filter_autop:
+    module: filter
+    status: '1'
+langcode: und

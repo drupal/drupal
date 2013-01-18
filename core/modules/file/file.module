@@ -776,7 +776,7 @@ function file_ajax_upload() {
 
   $output = theme('status_messages') . drupal_render($form);
   $js = drupal_add_js();
-  $settings = NestedArray::mergeDeepArray($js['settings']['data']);
+  $settings = drupal_merge_js_settings($js['settings']['data']);
 
   $response = new AjaxResponse();
   return $response->addCommand(new ReplaceCommand(NULL, $output, $settings));

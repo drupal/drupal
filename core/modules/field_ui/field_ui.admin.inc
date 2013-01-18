@@ -582,11 +582,6 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
   if (is_array($additions)) {
     $form['field']['settings'] += $additions;
   }
-  if (!element_children($form['field']['settings'])) {
-    $form['field']['settings'] += array(
-      '#markup' => t('%field has no field settings.', array('%field' => $instance['label'])),
-    );
-  }
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));

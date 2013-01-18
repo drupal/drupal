@@ -3869,6 +3869,63 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
 }
 
 /**
+ * Merges an array of settings arrays into a single settings array.
+ *
+ * This function merges the items in the same way that
+ *
+ * @code
+ *   jQuery.extend(true, {}, $settings_items[0], $settings_items[1], ...)
+ * @endcode
+ *
+ * would. This means integer indeces are preserved just like string indeces are,
+ * rather than re-indexed as is common in PHP array merging.
+ *
+ * Example:
+ * @code
+ * function module1_page_build(&$page) {
+ *   $page['#attached']['js'][] = array(
+ *     'type' => 'setting',
+ *     'data' => array('foo' => array('a', 'b', 'c')),
+ *   );
+ * }
+ * function module2_page_build(&$page) {
+ *   $page['#attached']['js'][] = array(
+ *     'type' => 'setting',
+ *     'data' => array('foo' => array('d')),
+ *   );
+ * }
+ * // When the page is rendered after the above code, and the browser runs the
+ * // resulting <SCRIPT> tags, the value of drupalSettings.foo is
+ * // ['d', 'b', 'c'], not ['a', 'b', 'c', 'd'].
+ * @endcode
+ *
+ * By following jQuery.extend() merge logic rather than common PHP array merge
+ * logic, the following are ensured:
+ * - drupal_add_js() is idempotent: calling it twice with the same parameters
+ *   does not change the output sent to the browser.
+ * - If pieces of the page are rendered in separate PHP requests and the
+ *   returned settings are merged by JavaScript, the resulting settings are the
+ *   same as if rendered in one PHP request and merged by PHP.
+ *
+ * @param $settings_items
+ *   An array of settings arrays, as returned by:
+ *   @code
+ *     $js = drupal_add_js();
+ *     $settings_items = $js['settings']['data'];
+ *   @endcode
+ *
+ * @return
+ *   A merged $settings array, suitable for JSON encoding and returning to the
+ *   browser.
+ *
+ * @see drupal_add_js()
+ * @see drupal_pre_render_scripts()
+ */
+function drupal_merge_js_settings($settings_items) {
+  return NestedArray::mergeDeepArray($settings_items, TRUE);
+}
+
+/**
  * #pre_render callback to add the elements needed for JavaScript tags to be rendered.
  *
  * This function evaluates the aggregation enabled/disabled condition on a group
@@ -3949,7 +4006,7 @@ function drupal_pre_render_scripts($elements) {
         switch ($item['type']) {
           case 'setting':
             $element['#value_prefix'] = $embed_prefix;
-            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(NestedArray::mergeDeepArray($item['data'], TRUE)) . ";";
+            $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(drupal_merge_js_settings($item['data'])) . ";";
             $element['#value_suffix'] = $embed_suffix;
             break;
 
@@ -4574,6 +4631,9 @@ function drupal_get_library($module, $name = NULL) {
  */
 function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE, $limit = 0) {
   $js_added = &drupal_static(__FUNCTION__, FALSE);
+  $tabledrag_id = &drupal_static(__FUNCTION__  . '_setting', FALSE);
+  $tabledrag_id = (!isset($tabledrag_id)) ? 0 : $tabledrag_id + 1;
+
   if (!$js_added) {
     // Add the table drag JavaScript to the page before the module JavaScript
     // to ensure that table drag behaviors are registered before any module
@@ -4585,7 +4645,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
   // If a subgroup or source isn't set, assume it is the same as the group.
   $target = isset($subgroup) ? $subgroup : $group;
   $source = isset($source) ? $source : $target;
-  $settings['tableDrag'][$table_id][$group][] = array(
+  $settings['tableDrag'][$table_id][$group][$tabledrag_id] = array(
     'target' => $target,
     'source' => $source,
     'relationship' => $relationship,

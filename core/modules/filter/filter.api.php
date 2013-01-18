@@ -277,43 +277,10 @@ function hook_filter_FILTER_tips($filter, $format, $long) {
  */
 
 /**
- * Perform actions when a new text format has been created.
- *
- * @param $format
- *   The format object of the format being updated.
- *
- * @see hook_filter_format_update()
- * @see hook_filter_format_disable()
- */
-function hook_filter_format_insert($format) {
-  mymodule_cache_rebuild();
-}
-
-/**
- * Perform actions when a text format has been updated.
- *
- * This hook allows modules to act when a text format has been updated in any
- * way. For example, when filters have been reconfigured, disabled, or
- * re-arranged in the text format.
- *
- * @param $format
- *   The format object of the format being updated.
- *
- * @see hook_filter_format_insert()
- * @see hook_filter_format_disable()
- */
-function hook_filter_format_update($format) {
-  mymodule_cache_rebuild();
-}
-
-/**
  * Perform actions when a text format has been disabled.
  *
  * @param $format
  *   The format object of the format being disabled.
- *
- * @see hook_filter_format_insert()
- * @see hook_filter_format_update()
  */
 function hook_filter_format_disable($format) {
   mymodule_cache_rebuild();

@@ -1,0 +1,10 @@
+format: php_code
+name: 'PHP code'
+status: '1'
+weight: '11'
+cache: '0'
+filters:
+  php_code:
+    module: php
+    status: '1'
+langcode: und

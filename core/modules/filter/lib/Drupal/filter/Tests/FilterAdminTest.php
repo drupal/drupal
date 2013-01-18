@@ -164,14 +164,13 @@ class FilterAdminTest extends WebTestBase {
     ));
     $this->assertTrue(!empty($elements), 'Reorder confirmed in admin interface.');
 
-    $result = db_query('SELECT * FROM {filter} WHERE format = :format ORDER BY weight ASC', array(':format' => $filtered));
-    $filters = array();
-    foreach ($result as $filter) {
-      if ($filter->name == $second_filter || $filter->name == $first_filter) {
-        $filters[] = $filter;
+    $filter_format = entity_load('filter_format', $filtered);
+    foreach ($filter_format->filters as $filter_name => $filter) {
+      if ($filter_name == $second_filter || $filter_name == $first_filter) {
+        $filters[] = $filter_name;
       }
     }
-    $this->assertTrue(($filters[0]->name == $second_filter && $filters[1]->name == $first_filter), 'Order confirmed in database.');
+    $this->assertTrue(($filters[0] == $second_filter && $filters[1] == $first_filter), t('Order confirmed in database.'));
 
     // Add format.
     $edit = array();
