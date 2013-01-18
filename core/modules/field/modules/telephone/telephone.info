@@ -1,0 +1,6 @@
+name = Telephone
+description = Defines a field type for telephone numbers.
+package = Core
+version = VERSION
+core = 8.x
+dependencies[] = field
