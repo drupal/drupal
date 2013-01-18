@@ -174,7 +174,9 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Test a random aliases for fields, they should be replaced.
     $random_name = $this->randomName();
-    $random_string = $this->randomString();
+    // randomString() might produce a " " at the end but the DataFieldRow plugin
+    // trims the values.
+    $random_string = trim($this->randomString());
     $edit = array('row_options[aliases][name]' => $random_name, 'row_options[aliases][nothing]' => $random_string);
     $this->drupalPost($row_options, $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
