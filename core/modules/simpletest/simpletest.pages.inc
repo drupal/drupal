@@ -41,9 +41,7 @@ function simpletest_test_form($form) {
     '#value' => t('Run tests'),
   );
   $form['clean'] = array(
-    '#type' => 'details',
-    '#collapsible' => FALSE,
-    '#collapsed' => FALSE,
+    '#type' => 'fieldset',
     '#title' => t('Clean test environment'),
     '#description' => t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
   );
@@ -221,7 +219,7 @@ function simpletest_result_form($form, &$form_state, $test_id) {
 
   // Summary result widget.
   $form['result'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Results'),
   );
   $form['result']['summary'] = $summary = array(
@@ -289,7 +287,7 @@ function simpletest_result_form($form, &$form_state, $test_id) {
   // Actions.
   $form['#action'] = url('admin/config/development/testing/results/re-run');
   $form['action'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Actions'),
     '#attributes' => array('class' => array('container-inline')),
     '#weight' => -11,
