@@ -37,10 +37,10 @@ class UserRoleAdminTest extends WebTestBase {
     // correspond to an integer, to test that the role administration pages
     // correctly distinguish between role names and IDs.)
     $role_name = '123';
-    $edit = array('role[label]' => $role_name, 'role[id]' => $role_name);
+    $edit = array('role[name]' => $role_name, 'role[rid]' => $role_name);
     $this->drupalPost('admin/people/roles', $edit, t('Add role'));
     $this->assertText(t('The role has been added.'), 'The role has been added.');
-    $role = entity_load('user_role', $role_name);
+    $role = user_role_load($role_name);
     $this->assertTrue(is_object($role), 'The role was successfully retrieved from the database.');
 
     // Try adding a duplicate role.
@@ -50,18 +50,18 @@ class UserRoleAdminTest extends WebTestBase {
     // Test renaming a role.
     $old_name = $role_name;
     $role_name = '456';
-    $edit = array('role[label]' => $role_name);
-    $this->drupalPost("admin/people/roles/edit/{$role->id()}", $edit, t('Save role'));
+    $edit = array('role[name]' => $role_name);
+    $this->drupalPost("admin/people/roles/edit/{$role->rid}", $edit, t('Save role'));
     $this->assertText(t('The role has been renamed.'), 'The role has been renamed.');
-    $new_role = entity_load('user_role', $old_name);
-    $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
+    $new_role = user_role_load($old_name);
+    $this->assertEqual($new_role->name, $role_name, 'The role name has been successfully changed.');
 
     // Test deleting a role.
-    $this->drupalPost("admin/people/roles/edit/{$role->id()}", NULL, t('Delete role'));
+    $this->drupalPost("admin/people/roles/edit/{$role->rid}", NULL, t('Delete role'));
     $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertText(t('The role has been deleted.'), 'The role has been deleted');
-    $this->assertNoLinkByHref("admin/people/roles/edit/{$role->id()}", 'Role edit link removed.');
-    $this->assertFalse(entity_load('user_role', $role_name), 'A deleted role can no longer be loaded.');
+    $this->assertNoLinkByHref("admin/people/roles/edit/{$role->rid}", 'Role edit link removed.');
+    $this->assertFalse(user_role_load($role_name), 'A deleted role can no longer be loaded.');
 
     // Make sure that the system-defined roles can be edited via the user
     // interface.
@@ -74,36 +74,24 @@ class UserRoleAdminTest extends WebTestBase {
   }
 
   /**
-   * Test user role weight change operation and ordering.
+   * Test user role weight change operation.
    */
-  function testRoleWeightOrdering() {
+  function testRoleWeightChange() {
     $this->drupalLogin($this->admin_user);
-    $roles = user_roles();
-    $weight = count($roles);
-    $new_role_weights = array();
-    $saved_rids = array();
 
-    // Change the role weights to make the roles in reverse order.
-    $edit = array();
-    foreach ($roles as $role) {
-      $edit['roles['. $role->id() .'][weight]'] =  $weight;
-      $new_role_weights[$role->id()] = $weight;
-      $saved_rids[] = $role->id;
-      $weight--;
-    }
+    // Pick up a random role and get its weight.
+    $rid = array_rand(user_roles());
+    $role = user_role_load($rid);
+    $old_weight = $role->weight;
+
+    // Change the role weight and submit the form.
+    $edit = array('roles['. $rid .'][weight]' => $old_weight + 1);
     $this->drupalPost('admin/people/roles', $edit, t('Save order'));
     $this->assertText(t('The role settings have been updated.'), 'The role settings form submitted successfully.');
 
-    // Load up the user roles with the new weights.
-    drupal_static_reset('user_roles');
-    $roles = user_roles();
-    $rids = array();
-    // Test that the role weights have been correctly saved.
-    foreach ($roles as $role) {
-      $this->assertEqual($role->weight, $new_role_weights[$role->id()]);
-      $rids[] = $role->id;
-    }
-    // The order of the roles should be reversed.
-    $this->assertIdentical($rids, array_reverse($saved_rids));
+    // Retrieve the saved role and compare its weight.
+    $role = user_role_load($rid);
+    $new_weight = $role->weight;
+    $this->assertTrue(($old_weight + 1) == $new_weight, 'Role weight updated successfully.');
   }
 }

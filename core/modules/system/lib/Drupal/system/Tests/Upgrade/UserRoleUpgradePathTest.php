@@ -73,19 +73,4 @@ class UserRoleUpgradePathTest extends UpgradePathTestBase {
     $this->drupalGet('admin/config/people/accounts');
     $this->assertFieldByName('user_admin_role', 3);
   }
-
-  /**
-   * Tests that roles were converted to config.
-   */
-  public function testRoleUpgradeToConfig() {
-    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
-
-    // Check that the 'anonymous' role has been converted to config.
-    $anonymous = entity_load('user_role', DRUPAL_ANONYMOUS_RID);
-    $this->assertNotEqual(FALSE, $anonymous, "The 'anonymous' role has been converted to config.");
-
-    // Check that the 'authenticated' role has been converted to config.
-    $authenticated = entity_load('user_role', DRUPAL_AUTHENTICATED_RID);
-    $this->assertNotEqual(FALSE, $authenticated, "The 'authenticated' role has been converted to config.");
-  }
 }

@@ -34,9 +34,9 @@ class UserStorageController extends DatabaseStorageController {
     }
 
     // Add any additional roles from the database.
-    $result = db_query('SELECT rid, uid FROM {users_roles} WHERE uid IN (:uids)', array(':uids' => array_keys($queried_users)));
+    $result = db_query('SELECT r.rid, r.name, ur.uid FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid IN (:uids)', array(':uids' => array_keys($queried_users)));
     foreach ($result as $record) {
-      $queried_users[$record->uid]->roles[$record->rid] = $record->rid;
+      $queried_users[$record->uid]->roles[$record->rid] = $record->name;
     }
 
     // Call the default attachLoad() method. This will add fields and call

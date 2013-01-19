@@ -551,7 +551,7 @@ abstract class FilterPluginBase extends HandlerBase {
       '#default_value' => $this->options['expose']['remember'],
     );
 
-    $role_options = array_map('check_plain', user_role_names());
+    $role_options = array_map('check_plain', user_roles());
     $form['expose']['remember_roles'] = array(
       '#type' => 'checkboxes',
       '#title' => t('User roles'),

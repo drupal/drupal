@@ -23,7 +23,16 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
 class RolesRid extends ManyToOne {
 
   function title_query() {
-    return array(entity_load('user_role', $this->value)->label());
+    $titles = array();
+
+    $query = db_select('role', 'r');
+    $query->addField('r', 'name');
+    $query->condition('r.rid', $this->value);
+    $result = $query->execute();
+    foreach ($result as $term) {
+      $titles[] = check_plain($term->name);
+    }
+    return $titles;
   }
 
 }

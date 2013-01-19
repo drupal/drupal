@@ -398,11 +398,11 @@ function filter_formats_reset() {
 function filter_get_roles_by_format($format) {
   // Handle the fallback format upfront (all roles have access to this format).
   if ($format->format == filter_fallback_format()) {
-    return user_role_names();
+    return user_roles();
   }
   // Do not list any roles if the permission does not exist.
   $permission = filter_permission_name($format);
-  return !empty($permission) ? user_role_names(FALSE, $permission) : array();
+  return !empty($permission) ? user_roles(FALSE, $permission) : array();
 }
 
 /**

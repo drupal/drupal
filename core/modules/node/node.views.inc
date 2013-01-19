@@ -691,9 +691,11 @@ function node_views_analyze(ViewExecutable $view) {
         // check for no access control
         $access = $display->getOption('access');
         if (empty($access['type']) || $access['type'] == 'none') {
-          $result = db_select('role_permission', 'p')
-            ->fields('p', array('rid', 'permission'))
-            ->condition('p.rid', array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID), 'IN')
+          $select = db_select('role', 'r');
+          $select->innerJoin('role_permission', 'p', 'r.rid = p.rid');
+          $result = $select->fields('r', array('rid'))
+            ->fields('p', array('permission'))
+            ->condition('r.rid', array('anonymous', 'authenticated'), 'IN')
             ->condition('p.permission', 'access content')
             ->execute();
 
@@ -701,7 +703,7 @@ function node_views_analyze(ViewExecutable $view) {
             $role->safe = TRUE;
             $roles[$role->rid] = $role;
           }
-          if (!($roles[DRUPAL_ANONYMOUS_RID]->safe && $roles[DRUPAL_AUTHENTICATED_RID]->safe)) {
+          if (!($roles['anonymous']->safe && $roles['authenticated']->safe)) {
             $ret[] = Analyzer::formatMessage(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display->display['display_title'])), 'warning');
           }
           $filters = $display->getOption('filters');

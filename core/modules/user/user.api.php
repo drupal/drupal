@@ -440,7 +440,7 @@ function hook_user_role_insert($role) {
   // Save extra fields provided by the module to user roles.
   db_insert('my_module_table')
     ->fields(array(
-      'rid' => $role->id(),
+      'rid' => $role->rid,
       'role_description' => $role->description,
     ))
     ->execute();
@@ -460,7 +460,7 @@ function hook_user_role_insert($role) {
 function hook_user_role_update($role) {
   // Save extra fields provided by the module to user roles.
   db_merge('my_module_table')
-    ->key(array('rid' => $role->id()))
+    ->key(array('rid' => $role->rid))
     ->fields(array(
       'role_description' => $role->description
     ))
@@ -481,7 +481,7 @@ function hook_user_role_update($role) {
 function hook_user_role_delete($role) {
   // Delete existing instances of the deleted role.
   db_delete('my_module_table')
-    ->condition('rid', $role->id())
+    ->condition('rid', $role->rid)
     ->execute();
 }
 

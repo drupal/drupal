@@ -46,7 +46,7 @@ class Role extends AccessPluginBase {
       return t('Multiple roles');
     }
     else {
-      $rids = user_role_names();
+      $rids = user_roles();
       $rid = reset($this->options['role']);
       return check_plain($rids[$rid]);
     }

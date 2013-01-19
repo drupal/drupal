@@ -169,7 +169,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   $form['roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
-    '#options' => array_map('check_plain', user_role_names()),
+    '#options' => array_map('check_plain', user_roles()),
     '#disabled' => $is_fallback,
     '#weight' => -10,
   );

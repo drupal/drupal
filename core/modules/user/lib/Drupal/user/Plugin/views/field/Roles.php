@@ -47,25 +47,16 @@ class Roles extends PrerenderList {
     }
 
     if ($uids) {
-      $roles = user_roles();
-      $query = db_select('users_roles', 'u');
+      $query = db_select('role', 'r');
+      $query->join('users_roles', 'u', 'u.rid = r.rid');
+      $query->addField('r', 'name');
       $query->fields('u', array('uid', 'rid'));
-      $query->condition('u.rid', array_keys($roles));
       $query->condition('u.uid', $uids);
-
+      $query->orderBy('r.name');
       $result = $query->execute();
       foreach ($result as $role) {
-        $this->items[$role->uid][$role->rid]['role'] = check_plain($roles[$role->rid]->label());
+        $this->items[$role->uid][$role->rid]['role'] = check_plain($role->name);
         $this->items[$role->uid][$role->rid]['rid'] = $role->rid;
-      }
-      // Sort the roles for each user by role weight.
-      $ordered_roles = array_flip(array_keys($roles));
-      foreach ($this->items as &$user_roles) {
-        // Create an array of rids that the user has in the role weight order.
-        $sorted_keys  = array_intersect_key($ordered_roles, $user_roles);
-        // Merge with the unsorted array of role information which has the
-        // effect of sorting it.
-        $user_roles = array_merge($sorted_keys, $user_roles);
       }
     }
   }

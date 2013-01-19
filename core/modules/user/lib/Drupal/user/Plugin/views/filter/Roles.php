@@ -23,7 +23,7 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
 class Roles extends ManyToOne {
 
   function get_value_options() {
-    $this->value_options = user_role_names(TRUE);
+    $this->value_options = user_roles(TRUE);
     unset($this->value_options[DRUPAL_AUTHENTICATED_RID]);
   }
 
