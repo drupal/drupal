@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\telephone\TelephoneFieldTest.
+ * Contains \Drupal\telephone\TelephoneFieldTest.
  */
 
 namespace Drupal\telephone\Tests;

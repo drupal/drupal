@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\telephone\Plugin\field\formatter\TelephoneLinkFormatter.
+ * Contains \Drupal\telephone\Plugin\field\formatter\TelephoneLinkFormatter.
  */
 
 namespace Drupal\telephone\Plugin\field\formatter;
@@ -30,7 +30,7 @@ use Drupal\Core\Entity\EntityInterface;
 class TelephoneLinkFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
    */
   public function settingsForm(array $form, array &$form_state) {
     $elements['title'] = array(
@@ -43,7 +43,7 @@ class TelephoneLinkFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
+   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
    */
   public function settingsSummary() {
     $settings = $this->getSettings();
@@ -59,7 +59,7 @@ class TelephoneLinkFormatter extends FormatterBase {
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::prepareView().
+   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::prepareView().
    */
   public function prepareView(array $entities, $langcode, array &$items) {
     $settings = $this->getSettings();
@@ -74,19 +74,17 @@ class TelephoneLinkFormatter extends FormatterBase {
         else {
           $item['title'] = $item['value'];
         }
-
       }
     }
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
    */
   public function viewElements(EntityInterface $entity, $langcode, array $items) {
     $element = array();
 
     foreach ($items as $delta => $item) {
-
       // Prepend 'tel:' to the telephone number.
       $href = 'tel:' . rawurlencode(preg_replace('/\s+/', '', $item['value']));
 
@@ -97,8 +95,8 @@ class TelephoneLinkFormatter extends FormatterBase {
         '#href' => $href,
         '#options' => array('external' => TRUE),
       );
-
     }
+
     return $element;
   }
 }

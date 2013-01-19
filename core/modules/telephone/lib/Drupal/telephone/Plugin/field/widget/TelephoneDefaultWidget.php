@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\telephone\Plugin\field\widget\TelephoneDefaultWidget.
+ * Contains \Drupal\telephone\Plugin\field\widget\TelephoneDefaultWidget.
  */
 
 namespace Drupal\telephone\Plugin\field\widget;
@@ -26,7 +26,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
 class TelephoneDefaultWidget extends WidgetBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
+   * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element['value'] = $element + array(
