@@ -35,7 +35,7 @@ class View extends AreaPluginBase {
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $view_display = $this->view->storage->get('name') . ':' . $this->view->current_display;
+    $view_display = $this->view->storage->id() . ':' . $this->view->current_display;
 
     $options = array('' => t('-Select-'));
     $options += views_get_views_as_options(FALSE, 'all', $view_display, FALSE, TRUE);

@@ -1244,8 +1244,8 @@ abstract class FilterPluginBase extends HandlerBase {
 
     // false means that we got a setting that means to recuse ourselves,
     // so we should erase whatever happened to be there.
-    if ($status === FALSE && isset($_SESSION['views'][$this->view->storage->get('name')][$display_id])) {
-      $session = &$_SESSION['views'][$this->view->storage->get('name')][$display_id];
+    if ($status === FALSE && isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
+      $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];
 
       if (isset($session[$this->options['group_info']['identifier']])) {
         unset($session[$this->options['group_info']['identifier']]);
@@ -1253,11 +1253,11 @@ abstract class FilterPluginBase extends HandlerBase {
     }
 
     if ($status !== FALSE) {
-      if (!isset($_SESSION['views'][$this->view->storage->get('name')][$display_id])) {
-        $_SESSION['views'][$this->view->storage->get('name')][$display_id] = array();
+      if (!isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
+        $_SESSION['views'][$this->view->storage->id()][$display_id] = array();
       }
 
-      $session = &$_SESSION['views'][$this->view->storage->get('name')][$display_id];
+      $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];
 
       $session[$this->options['group_info']['identifier']] = $input[$this->options['group_info']['identifier']];
     }
@@ -1338,8 +1338,8 @@ abstract class FilterPluginBase extends HandlerBase {
 
     // false means that we got a setting that means to recuse ourselves,
     // so we should erase whatever happened to be there.
-    if (!$status && isset($_SESSION['views'][$this->view->storage->get('name')][$display_id])) {
-      $session = &$_SESSION['views'][$this->view->storage->get('name')][$display_id];
+    if (!$status && isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
+      $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];
       if ($operator && isset($session[$this->options['expose']['operator_id']])) {
         unset($session[$this->options['expose']['operator_id']]);
       }
@@ -1350,11 +1350,11 @@ abstract class FilterPluginBase extends HandlerBase {
     }
 
     if ($status) {
-      if (!isset($_SESSION['views'][$this->view->storage->get('name')][$display_id])) {
-        $_SESSION['views'][$this->view->storage->get('name')][$display_id] = array();
+      if (!isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
+        $_SESSION['views'][$this->view->storage->id()][$display_id] = array();
       }
 
-      $session = &$_SESSION['views'][$this->view->storage->get('name')][$display_id];
+      $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];
 
       if ($operator && isset($input[$this->options['expose']['operator_id']])) {
         $session[$this->options['expose']['operator_id']] = $input[$this->options['expose']['operator_id']];

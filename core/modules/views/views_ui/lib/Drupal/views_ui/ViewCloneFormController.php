@@ -36,7 +36,7 @@ class ViewCloneFormController extends ViewFormControllerBase {
       '#maxlength' => 255,
       '#default_value' => t('Clone of @human_name', array('@human_name' => $entity->getHumanName())),
     );
-    $form['name'] = array(
+    $form['id'] = array(
       '#type' => 'machine_name',
       '#maxlength' => 128,
       '#machine_name' => array(

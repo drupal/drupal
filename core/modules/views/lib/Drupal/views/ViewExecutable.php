@@ -572,8 +572,8 @@ class ViewExecutable {
       // remember settings.
       $display_id = ($this->display_handler->isDefaulted('filters')) ? 'default' : $this->current_display;
 
-      if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->storage->get('name')][$display_id])) {
-        $this->exposed_input = $_SESSION['views'][$this->storage->get('name')][$display_id];
+      if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->storage->id()][$display_id])) {
+        $this->exposed_input = $_SESSION['views'][$this->storage->id()][$display_id];
       }
     }
 
@@ -1415,7 +1415,7 @@ class ViewExecutable {
     }
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
-    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->get('name') . REQUEST_TIME . mt_rand());
+    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . REQUEST_TIME . mt_rand());
 
     // Allow the display handler to set up for execution
     $this->display_handler->preExecute();

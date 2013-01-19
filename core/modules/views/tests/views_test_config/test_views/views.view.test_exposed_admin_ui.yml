@@ -49,5 +49,5 @@ display:
     id: page_1
     position: '0'
 human_name: ''
-name: test_exposed_admin_ui
+id: test_exposed_admin_ui
 tag: ''

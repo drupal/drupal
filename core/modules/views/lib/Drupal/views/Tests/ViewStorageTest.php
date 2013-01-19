@@ -30,7 +30,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     'disabled',
     'api_version',
     'module',
-    'name',
+    'id',
     'description',
     'tag',
     'base_table',
@@ -158,7 +158,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     }
 
     // Check the UUID of the loaded View.
-    $created->set('name', 'test_view_storage_new');
+    $created->set('id', 'test_view_storage_new');
     $created->save();
     $created_loaded = entity_load('view', 'test_view_storage_new');
     $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');
@@ -181,7 +181,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     $executable->initDisplay();
     $this->assertTrue($executable->displayHandlers->get($new_id) instanceof Page, 'New page display "test" uses the right display plugin.');
 
-    $view->set('name', 'test_view_storage_new_new2');
+    $view->set('id', 'test_view_storage_new_new2');
     $view->save();
     $values = config('views.view.test_view_storage_new_new2')->get();
 

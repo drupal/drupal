@@ -43,7 +43,7 @@ function views_forms($form_id, $args) {
 function views_form_id($view) {
   $parts = array(
     'views_form',
-    $view->storage->get('name'),
+    $view->storage->id(),
     $view->current_display,
   );
 
@@ -223,7 +223,7 @@ function views_plugin_list() {
         }
 
         // Add this view to the list for this plugin.
-        $plugins[$key]['views'][$view->get('name')] = $view->get('name');
+        $plugins[$key]['views'][$view->id()] = $view->id();
       }
     }
   }
@@ -240,11 +240,11 @@ function views_plugin_list() {
  */
 function views_preprocess_node(&$vars) {
   // The 'view' attribute of the node is added in views_preprocess_node()
-  if (!empty($vars['node']->view) && $vars['node']->view->storage->get('name')) {
+  if (!empty($vars['node']->view) && $vars['node']->view->storage->id()) {
     $vars['view'] = $vars['node']->view;
-    $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->get('name');
+    $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->id();
     if (!empty($vars['node']->view->current_display)) {
-      $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->get('name') . '__' . $vars['node']->view->current_display;
+      $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->id() . '__' . $vars['node']->view->current_display;
 
       // If a node is being rendered in a view, and the view does not have a path,
       // prevent drupal from accidentally setting the $page variable:
@@ -266,11 +266,11 @@ function views_preprocess_node(&$vars) {
  */
 function views_preprocess_comment(&$vars) {
   // The 'view' attribute of the node is added in template_preprocess_views_view_row_comment()
-  if (!empty($vars['comment']->view) && $vars['comment']->view->storage->get('name')) {
+  if (!empty($vars['comment']->view) && $vars['comment']->view->storage->id()) {
     $vars['view'] = &$vars['comment']->view;
-    $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->get('name');
+    $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->id();
     if (!empty($vars['node']->view->current_display)) {
-      $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->get('name') . '__' . $vars['comment']->view->current_display;
+      $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->id() . '__' . $vars['comment']->view->current_display;
     }
   }
 }
@@ -663,7 +663,7 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
           $render_element['#views_contextual_links_info'][$module] = array(
             'location' => $location,
             'view' => $view,
-            'view_name' => $view->storage->get('name'),
+            'view_name' => $view->storage->id(),
             'view_display_id' => $display_id,
           );
         }
@@ -1527,7 +1527,7 @@ function views_exposed_form($form, &$form_state) {
   // Let form plugins know this is for exposed widgets.
   $form_state['exposed'] = TRUE;
   // Check if the form was already created
-  if ($cache = views_exposed_form_cache($view->storage->get('name'), $view->current_display)) {
+  if ($cache = views_exposed_form_cache($view->storage->id(), $view->current_display)) {
     return $cache;
   }
 
@@ -1561,19 +1561,19 @@ function views_exposed_form($form, &$form_state) {
     '#name' => '',
     '#type' => 'submit',
     '#value' => t('Apply'),
-    '#id' => drupal_html_id('edit-submit-' . $view->storage->get('name')),
+    '#id' => drupal_html_id('edit-submit-' . $view->storage->id()),
   );
 
   $form['#action'] = url($view->display_handler->getUrl());
   $form['#theme'] = views_theme_functions('views_exposed_form', $view, $display);
-  $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . check_plain($view->storage->get('name')) . '-' . check_plain($display['id']));
+  $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . check_plain($view->storage->id()) . '-' . check_plain($display['id']));
 //  $form['#attributes']['class'] = array('views-exposed-form');
 
   $exposed_form_plugin = $form_state['exposed_form_plugin'];
   $exposed_form_plugin->exposed_form_alter($form, $form_state);
 
   // Save the form
-  views_exposed_form_cache($view->storage->get('name'), $view->current_display, $form);
+  views_exposed_form_cache($view->storage->id(), $view->current_display, $form);
 
   return $form;
 }

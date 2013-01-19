@@ -52,5 +52,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_plugin_argument_default_current_user
+id: test_plugin_argument_default_current_user
 tag: ''

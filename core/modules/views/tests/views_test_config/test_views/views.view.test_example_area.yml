@@ -30,5 +30,5 @@ display:
     id: default
     position: '0'
 human_name: {  }
-name: test_example_area
+id: test_example_area
 tag: ''

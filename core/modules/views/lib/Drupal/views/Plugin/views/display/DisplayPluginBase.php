@@ -977,7 +977,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $title = $text;
     }
 
-    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->get('name') . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
+    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->id() . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
   }
 
   /**
@@ -2627,8 +2627,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $blocks = array();
 
     if ($this->usesExposedFormInBlock()) {
-      $delta = '-exp-' . $this->view->storage->get('name') . '-' . $this->display['id'];
-      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->storage->get('name'), '@display_id' => $this->display['id']));
+      $delta = '-exp-' . $this->view->storage->id() . '-' . $this->display['id'];
+      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->storage->id(), '@display_id' => $this->display['id']));
 
       $blocks[$delta] = array(
         'info' => $desc,

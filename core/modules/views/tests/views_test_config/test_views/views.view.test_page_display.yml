@@ -29,5 +29,5 @@ display:
     id: page_2
     position: '0'
 human_name: ''
-name: test_page_display
+id: test_page_display
 tag: ''

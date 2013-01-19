@@ -1,5 +1,5 @@
 base_table: views_test_data
-name: test_serializer_display_field
+id: test_serializer_display_field
 description: ''
 tag: ''
 human_name: 'Test serializer display field rows'

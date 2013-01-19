@@ -49,5 +49,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_group_by_in_filters
+id: test_group_by_in_filters
 tag: ''

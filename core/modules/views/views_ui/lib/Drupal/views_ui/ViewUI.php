@@ -215,7 +215,7 @@ class ViewUI implements ViewStorageInterface {
       views_ui_cache_set($this);
     }
 
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->get('name') . '/edit';
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->id() . '/edit';
   }
 
   /**
@@ -348,8 +348,8 @@ class ViewUI implements ViewStorageInterface {
    * Submit handler to break_lock a view.
    */
   public function submitBreakLock(&$form, &$form_state) {
-    drupal_container()->get('user.tempstore')->get('views')->delete($this->get('name'));
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->get('name') . '/edit';
+    drupal_container()->get('user.tempstore')->get('views')->delete($this->id());
+    $form_state['redirect'] = 'admin/structure/views/view/' . $this->id() . '/edit';
     drupal_set_message(t('The lock has been broken and you may now edit this view.'));
   }
 
@@ -411,7 +411,7 @@ class ViewUI implements ViewStorageInterface {
       'limit' => 0,
     );
 
-    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $this->get('name') . '/' . $display_id);
+    $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $this->id() . '/' . $display_id);
 
     $this->getStandardButtons($form, $form_state, 'views_ui_reorder_displays_form');
     $form['buttons']['submit']['#submit'] = array(array($this, 'submitDisplaysReorderForm'));
@@ -463,7 +463,7 @@ class ViewUI implements ViewStorageInterface {
 
     // Store in cache
     views_ui_cache_set($this);
-    $form_state['redirect'] = array('admin/structure/views/view/' . $this->get('name') . '/edit', array('fragment' => 'views-tab-default'));
+    $form_state['redirect'] = array('admin/structure/views/view/' . $this->id() . '/edit', array('fragment' => 'views-tab-default'));
   }
 
   /**
@@ -630,7 +630,7 @@ class ViewUI implements ViewStorageInterface {
       }
 
       // Make view links come back to preview.
-      $this->override_path = 'admin/structure/views/nojs/preview/' . $this->get('name') . '/' . $display_id;
+      $this->override_path = 'admin/structure/views/nojs/preview/' . $this->id() . '/' . $display_id;
 
       // Also override the current path so we get the pager.
       $original_path = current_path();
@@ -795,7 +795,7 @@ class ViewUI implements ViewStorageInterface {
     $form = views_ui_ajax_forms($key);
     // Automatically remove the single-form cache if it exists and
     // does not match the key.
-    $identifier = implode('-', array($key, $this->get('name'), $display_id));
+    $identifier = implode('-', array($key, $this->id(), $display_id));
 
     foreach ($form['args'] as $id) {
       $arg = (!empty($args)) ? array_shift($args) : NULL;

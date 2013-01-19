@@ -1,5 +1,5 @@
 base_table: node
-name: test_get_attach_displays
+id: test_get_attach_displays
 description: ''
 tag: ''
 human_name: test_get_attach_displays

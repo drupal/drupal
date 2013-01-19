@@ -284,8 +284,8 @@ abstract class ExposedFormPluginBase extends PluginBase {
     // remember settings.
     $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
-    if (isset($_SESSION['views'][$this->view->storage->get('name')][$display_id])) {
-      unset($_SESSION['views'][$this->view->storage->get('name')][$display_id]);
+    if (isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
+      unset($_SESSION['views'][$this->view->storage->id()][$display_id]);
     }
 
     // Set the form to allow redirect.

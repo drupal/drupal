@@ -350,7 +350,7 @@ function views_ui_cache_load($name) {
   if (empty($view)) {
     return FALSE;
   }
-  $view->locked = $views_temp_store->getMetadata($view->get('name'));
+  $view->locked = $views_temp_store->getMetadata($view->id());
 
   return $view;
 }
@@ -379,7 +379,7 @@ function views_ui_cache_set(ViewUI $view) {
   unset($executable->default_display);
   $executable->query = NULL;
   unset($executable->displayHandlers);
-  drupal_container()->get('user.tempstore')->get('views')->set($view->get('name'), $view);
+  drupal_container()->get('user.tempstore')->get('views')->set($view->id(), $view);
 }
 
 /**
@@ -441,13 +441,13 @@ function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
-      'href' => "admin/structure/views/nojs/config-item/{$view->storage->get('name')}/{$display['id']}/$type/$id",
+      'href' => "admin/structure/views/nojs/config-item/{$view->storage->id()}/{$display['id']}/$type/$id",
       'attributes' => array('class' => array('views-ajax-link')),
     );
   }
   $links[$type . '-add'] = array(
     'title' => t('Add new'),
-    'href' => "admin/structure/views/nojs/add-item/{$view->storage->get('name')}/{$display['id']}/$type",
+    'href' => "admin/structure/views/nojs/add-item/{$view->storage->id()}/{$display['id']}/$type",
     'attributes' => array('class' => array('views-ajax-link')),
   );
 
@@ -462,7 +462,7 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
   $links = array(
     $type . '-edit' => array(
       'title' => t('Edit @section', array('@section' => $title)),
-      'href' => "admin/structure/views/nojs/display/{$view->storage->get('name')}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/display/{$view->storage->id()}/{$display['id']}/$type",
       'attributes' => array('class' => array('views-ajax-link')),
     ),
   );
@@ -490,7 +490,7 @@ function views_ui_view_preview_section_rows_links(ViewExecutable $view) {
  */
 function views_ui_views_plugins_display_alter(&$plugins) {
   // Attach contextual links to each display plugin. The links will point to
-  // paths underneath "admin/structure/views/view/{$view->get('name')}" (i.e., paths
+  // paths underneath "admin/structure/views/view/{$view->id()}" (i.e., paths
   // for editing and performing other contextual actions on the view).
   foreach ($plugins as &$display) {
     $display['contextual links']['views_ui'] = array(

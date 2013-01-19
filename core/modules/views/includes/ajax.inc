@@ -208,7 +208,7 @@ function views_ajax_command_replace_title($title) {
   $command = array(
     'command' => 'viewsReplaceTitle',
     'title' => $title,
-    'siteName' => config('system.site')->get('name'),
+    'siteName' => config('system.site')->id(),
   );
   return $command;
 }

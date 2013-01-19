@@ -60,6 +60,6 @@ display:
       path: test-comment-rss
 human_name: test_comment_rss
 module: views
-name: test_comment_rss
+id: test_comment_rss
 tag: ''
 uuid: 9b1b1e58-d41b-468a-9d04-4e6bde742c29

@@ -63,5 +63,5 @@ display:
         page_1: page_1
 human_name: test_display_attachment
 module: views
-name: test_display_attachment
+id: test_display_attachment
 tag: ''

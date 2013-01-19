@@ -23,5 +23,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_store_pager_settings
+id: test_store_pager_settings
 tag: ''

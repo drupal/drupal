@@ -50,5 +50,5 @@ display:
     id: page_1
     position: '0'
 human_name: test_filter_group_override
-name: test_filter_group_override
+id: test_filter_group_override
 tag: default

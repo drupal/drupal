@@ -22,9 +22,9 @@ function views_token_info() {
     'name' => t('Description'),
     'description' => t('The description of the view.'),
   );
-  $info['tokens']['view']['machine-name'] = array(
-    'name' => t('Machine name'),
-    'description' => t('The machine-readable name of the view.'),
+  $info['tokens']['view']['id'] = array(
+    'name' => t('ID'),
+    'description' => t('The machine-readable ID of the view.'),
   );
   $info['tokens']['view']['title'] = array(
     'name' => t('Title'),
@@ -89,8 +89,8 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
           $replacements[$original] = $sanitize ? check_plain($view->storage->get('description')) : $view->storage->get('description');
           break;
 
-        case 'machine-name':
-          $replacements[$original] = $view->storage->get('name');
+        case 'id':
+          $replacements[$original] = $view->storage->id();
           break;
 
         case 'title':

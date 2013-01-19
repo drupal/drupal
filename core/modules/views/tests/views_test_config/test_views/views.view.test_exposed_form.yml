@@ -23,5 +23,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_exposed_form
+id: test_exposed_form
 tag: ''

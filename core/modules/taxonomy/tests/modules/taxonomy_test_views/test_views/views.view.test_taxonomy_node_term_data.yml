@@ -69,5 +69,5 @@ display:
     id: default
     position: '0'
 human_name: test_taxonomy_node_term_data
-name: test_taxonomy_node_term_data
+id: test_taxonomy_node_term_data
 tag: ''

@@ -44,12 +44,12 @@ class ViewAddFormController extends ViewFormControllerBase {
       '#default_value' => '',
       '#maxlength' => 255,
     );
-    $form['name']['name'] = array(
+    $form['name']['id'] = array(
       '#type' => 'machine_name',
       '#maxlength' => 128,
       '#machine_name' => array(
         'exists' => 'views_get_view',
-        'source' => array('name', 'human_name'),
+        'source' => array('id', 'human_name'),
       ),
       '#description' => t('A unique machine-readable name for this View. It must only contain lowercase letters, numbers, and underscores.'),
     );
@@ -160,7 +160,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     }
     $view->save();
 
-    $form_state['redirect'] = array('admin/structure/views/view/' . $view->get('name'));
+    $form_state['redirect'] = array('admin/structure/views/view/' . $view->id());
   }
 
   /**

@@ -61,7 +61,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
         '#markup' => $view->renderPreview($view->displayID, $args),
       );
     }
-    $form['#action'] = url('admin/structure/views/view/' . $view->get('name') .'/preview/' . $view->displayID);
+    $form['#action'] = url('admin/structure/views/view/' . $view->id() .'/preview/' . $view->displayID);
 
     return $form;
   }
@@ -82,7 +82,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
         '#submit' => array(array($this, 'submitPreview')),
         '#id' => 'preview-submit',
         '#ajax' => array(
-          'path' => 'admin/structure/views/view/' . $view->get('name') . '/preview/' . $view->displayID . '/ajax',
+          'path' => 'admin/structure/views/view/' . $view->id() . '/preview/' . $view->displayID . '/ajax',
           'wrapper' => 'views-preview-wrapper',
           'event' => 'click',
           'progress' => array('type' => 'throbber'),
@@ -98,7 +98,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
   public function submitPreview($form, &$form_state) {
     // Rebuild the form with a pristine $view object.
     $view = $this->getEntity($form_state);
-    $form_state['build_info']['args'][0] = views_ui_cache_load($view->get('name'));
+    $form_state['build_info']['args'][0] = views_ui_cache_load($view->id());
     $view->renderPreview = TRUE;
     $form_state['show_preview'] = TRUE;
     $form_state['rebuild'] = TRUE;

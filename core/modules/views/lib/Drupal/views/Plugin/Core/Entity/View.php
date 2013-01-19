@@ -32,7 +32,7 @@ use Drupal\Core\Annotation\Translation;
  *   config_prefix = "views.view",
  *   fieldable = FALSE,
  *   entity_keys = {
- *     "id" = "name",
+ *     "id" = "id",
  *     "label" = "human_name",
  *     "uuid" = "uuid"
  *   }
@@ -48,11 +48,11 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   protected $base_table = 'node';
 
   /**
-   * The name of the view.
+   * The unique ID of the view.
    *
    * @var string
    */
-  public $name = NULL;
+  public $id = NULL;
 
   /**
    * The description of the view, which is used only in the interface.
@@ -162,13 +162,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityInterface::id().
-   */
-  public function id() {
-    return $this->get('name');
-  }
-
-  /**
    * Overrides Drupal\Core\Config\Entity\ConfigEntityBase::createDuplicate().
    */
   public function createDuplicate() {
@@ -207,7 +200,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function getHumanName() {
     if (!$human_name = $this->get('human_name')) {
-      $human_name = $this->get('name');
+      $human_name = $this->id();
     }
     return $human_name;
   }
@@ -405,7 +398,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       'display',
       'human_name',
       'module',
-      'name',
+      'id',
       'tag',
       'uuid',
     );

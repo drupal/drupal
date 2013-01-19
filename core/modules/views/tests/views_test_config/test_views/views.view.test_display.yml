@@ -83,5 +83,5 @@ display:
     id: page_1
     position: '1'
 human_name: ''
-name: test_display
+id: test_display
 tag: ''

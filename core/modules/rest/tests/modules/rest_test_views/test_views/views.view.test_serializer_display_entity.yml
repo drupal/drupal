@@ -1,5 +1,5 @@
 base_table: entity_test
-name: test_serializer_display_entity
+id: test_serializer_display_entity
 description: ''
 tag: ''
 human_name: 'Test serialize display entity rows'

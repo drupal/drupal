@@ -41,7 +41,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
     // views_arg_load -- which lives in views.module.
 
     $bits = explode('/', $this->getOption('path'));
-    $page_arguments = array($this->view->storage->name, $this->display['id']);
+    $page_arguments = array($this->view->storage->id(), $this->display['id']);
     $this->view->initHandlers();
     $view_arguments = $this->view->argument;
 
@@ -103,7 +103,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
         'access callback' => 'views_access',
         'access arguments' => $access_arguments,
         // Identify URL embedded arguments and correlate them to a handler.
-        'load arguments'  => array($this->view->storage->name, $this->display['id'], '%index'),
+        'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
       );
       $menu = $this->getOption('menu');
       if (empty($menu)) {
@@ -165,7 +165,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
               'access arguments' => $access_arguments,
               // Identify URL embedded arguments and correlate them to a
               // handler.
-              'load arguments'  => array($this->view->storage->name, $this->display['id'], '%index'),
+              'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
               'title' => $tab_options['title'],
               'description' => $tab_options['description'],
               'menu_name' => $tab_options['name'],

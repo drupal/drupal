@@ -64,5 +64,5 @@ display:
             guid_field_is_permalink: '0'
       path: test_attachment_ui_feed
     position: '3'
-name: test_attachment_ui
+id: test_attachment_ui
 tag: ''

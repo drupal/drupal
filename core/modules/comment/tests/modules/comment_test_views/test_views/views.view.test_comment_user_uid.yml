@@ -44,5 +44,5 @@ display:
     id: default
     position: '0'
 human_name: test_comment_user_uid
-name: test_comment_user_uid
+id: test_comment_user_uid
 tag: default

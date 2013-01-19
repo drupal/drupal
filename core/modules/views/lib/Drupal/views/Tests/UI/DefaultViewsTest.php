@@ -84,7 +84,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Clone'), '/frontpage');
     $edit = array(
-      'name' => 'clone_of_frontpage',
+      'id' => 'clone_of_frontpage',
     );
     $this->assertTitle(t('Clone of @human_name | @site-name', array('@human_name' => 'Front page', '@site-name' => config('system.site')->get('name'))));
     $this->drupalPost(NULL, $edit, t('Clone'));
@@ -94,7 +94,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Clone'), '/frontpage');
     $random_name = strtolower($this->randomName());
-    $this->drupalPost(NULL, array('name' => $random_name), t('Clone'));
+    $this->drupalPost(NULL, array('id' => $random_name), t('Clone'));
     $this->assertUrl("admin/structure/views/view/$random_name/edit", array(), 'The custom view name got saved.');
 
     // Now disable the view, and make sure it stops appearing on the main view

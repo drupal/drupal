@@ -72,5 +72,5 @@ display:
 human_name: test_groupwise_user
 langcode: und
 module: views
-name: test_groupwise_user
+id: test_groupwise_user
 tag: default

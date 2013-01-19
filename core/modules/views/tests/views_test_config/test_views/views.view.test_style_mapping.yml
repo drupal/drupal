@@ -54,5 +54,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_style_mapping
+id: test_style_mapping
 tag: ''

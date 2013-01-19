@@ -208,7 +208,7 @@ class ModuleTest extends ViewUnitTestBase {
     foreach ($views as $id => $view) {
       foreach ($view->get('display') as $display_id => $display) {
         $expected_options[$view->id() . ':' . $display['id']] = t('View: @view - Display: @display',
-          array('@view' => $view->name, '@display' => $display['id']));
+          array('@view' => $view->id(), '@display' => $display['id']));
       }
     }
 

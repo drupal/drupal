@@ -60,5 +60,5 @@ display:
     id: default
     position: '0'
 human_name: test_field_get_entity
-name: test_field_get_entity
+id: test_field_get_entity
 tag: default

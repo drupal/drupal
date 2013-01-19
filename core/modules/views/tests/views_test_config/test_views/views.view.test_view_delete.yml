@@ -25,5 +25,5 @@ display:
     id: default
     position: '0'
 human_name: test_view_delete
-name: test_view_delete
+id: test_view_delete
 tag: ''

@@ -56,5 +56,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_group_by_count
+id: test_group_by_count
 tag: ''

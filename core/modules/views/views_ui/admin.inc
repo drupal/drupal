@@ -285,19 +285,19 @@ function views_ui_break_lock_confirm($form, &$form_state, ViewUI $view) {
   $form = array();
 
   if (empty($view->locked)) {
-    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->get('name')));
+    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->id()));
     return $form;
   }
 
   $cancel = drupal_container()->get('request')->query->get('cancel');
   if (empty($cancel)) {
-    $cancel = 'admin/structure/views/view/' . $view->get('name') . '/edit';
+    $cancel = 'admin/structure/views/view/' . $view->id() . '/edit';
   }
 
   $account = user_load($view->locked->owner);
   $form = confirm_form($form,
                   t('Do you want to break the lock on view %name?',
-                  array('%name' => $view->get('name'))),
+                  array('%name' => $view->id())),
                   $cancel,
                   t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => $account)))),
                   t('Break lock'),
@@ -540,7 +540,7 @@ function views_ui_ajax_forms($key = NULL) {
 function views_ui_build_form_url($form_state) {
   $form = views_ui_ajax_forms($form_state['form_key']);
   $ajax = empty($form_state['ajax']) ? 'nojs' : 'ajax';
-  $name = $form_state['view']->get('name');
+  $name = $form_state['view']->id();
   $url = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";
   foreach ($form['args'] as $arg) {
     $url .= '/' . $form_state[$arg];
@@ -621,7 +621,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
     }
     elseif (!$js) {
       // if nothing on the stack, non-js forms just go back to the main view editor.
-      return drupal_goto("admin/structure/views/view/{$view->get('name')}/edit");
+      return drupal_goto("admin/structure/views/view/{$view->id()}/edit");
     }
     else {
       $output = array();
@@ -672,7 +672,7 @@ function views_ui_analyze_view_form($form, &$form_state) {
  * Submit handler for views_ui_analyze_view_form
  */
 function views_ui_analyze_view_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->get('name') . '/edit';
+  $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->id() . '/edit';
 }
 
 /**
@@ -2274,7 +2274,7 @@ function views_ui_field_list() {
               && $field_data = $table_data[$item['field']][$type]) {
               // The final check that we have a fieldapi field now.
               if (isset($field_data['field_name'])) {
-                $fields[$field_data['field_name']][$view->get('name')] = $view->get('name');
+                $fields[$field_data['field_name']][$view->id()] = $view->id();
               }
             }
           }

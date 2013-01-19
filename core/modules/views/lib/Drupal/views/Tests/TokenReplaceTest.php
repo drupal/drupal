@@ -44,7 +44,7 @@ class TokenReplaceTest extends ViewUnitTestBase {
     $expected = array(
       '[view:name]' => 'Test tokens',
       '[view:description]' => 'Test view to token replacement tests.',
-      '[view:machine-name]' => 'test_tokens',
+      '[view:id]' => 'test_tokens',
       '[view:title]' => 'Test token page',
       '[view:url]' => url('test_tokens', array('absolute' => TRUE)),
       '[view:total-rows]' => (string) $view->total_rows,

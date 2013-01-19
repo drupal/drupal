@@ -22,7 +22,7 @@ function _views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
   $themes = array();
 
   if ($display) {
-    $themes[] = $hook . '__' . $view->storage->get('name') . '__' . $display['id'];
+    $themes[] = $hook . '__' . $view->storage->id() . '__' . $display['id'];
     $themes[] = $hook . '__' . $display['id'];
     // Add theme suggestions for each single tag.
     foreach (drupal_explode_tags($view->storage->get('tag')) as $tag) {
@@ -30,11 +30,11 @@ function _views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
     }
 
     if ($display['id'] != $display['display_plugin']) {
-      $themes[] = $hook . '__' . $view->storage->get('name') . '__' . $display['display_plugin'];
+      $themes[] = $hook . '__' . $view->storage->id() . '__' . $display['display_plugin'];
       $themes[] = $hook . '__' . $display['display_plugin'];
     }
   }
-  $themes[] = $hook . '__' . $view->storage->get('name');
+  $themes[] = $hook . '__' . $view->storage->id();
   $themes[] = $hook;
   return $themes;
 }
@@ -53,8 +53,8 @@ function template_preprocess_views_view(&$vars) {
     $vars['rows'] = array('#markup' => $vars['rows']);
   }
 
-  $vars['css_name']   = drupal_clean_css_identifier($view->storage->get('name'));
-  $vars['name']       = $view->storage->get('name');
+  $vars['css_name'] = drupal_clean_css_identifier($view->storage->id());
+  $vars['id'] = $view->storage->id();
   $vars['display_id'] = $view->current_display;
 
   // Basic classes
@@ -62,8 +62,8 @@ function template_preprocess_views_view(&$vars) {
 
   $vars['attributes']['class'] = array();
   $vars['attributes']['class'][] = 'view';
-  $vars['attributes']['class'][] = 'view-' . drupal_clean_css_identifier($vars['name']);
-  $vars['attributes']['class'][] = 'view-id-' . $vars['name'];
+  $vars['attributes']['class'][] = 'view-' . drupal_clean_css_identifier($vars['id']);
+  $vars['attributes']['class'][] = 'view-id-' . $vars['id'];
   $vars['attributes']['class'][] = 'view-display-id-' . $vars['display_id'];
 
   $css_class = $view->display_handler->getOption('css_class');
@@ -136,7 +136,7 @@ function template_preprocess_views_view(&$vars) {
         'ajax_path' => url('views/ajax'),
         'ajaxViews' => array(
           'views_dom_id:' . $vars['dom_id'] => array(
-            'view_name' => $view->storage->get('name'),
+            'view_name' => $view->storage->id(),
             'view_display_id' => $view->current_display,
             'view_args' => check_plain(implode('/', $view->args)),
             'view_path' => check_plain(current_path()),
@@ -877,7 +877,7 @@ function template_preprocess_views_view_rss(&$vars) {
   $vars['description'] = check_plain(decode_entities(strip_tags($style->get_description())));
 
   if ($view->display_handler->getOption('sitename_title')) {
-    $title = $config->get('name');
+    $title = $config->id();
     if ($slogan = $config->get('slogan')) {
       $title .= ' - ' . $slogan;
     }

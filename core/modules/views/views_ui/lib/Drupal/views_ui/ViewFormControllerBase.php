@@ -92,7 +92,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
         '#theme' => 'menu_local_task',
         '#link' => array(
           'title' => $this->getDisplayLabel($view, $id),
-          'href' => 'admin/structure/views/view/' . $view->get('name') . '/edit/' . $id,
+          'href' => 'admin/structure/views/view/' . $view->id() . '/edit/' . $id,
           'localized_options' => array(),
         ),
       );

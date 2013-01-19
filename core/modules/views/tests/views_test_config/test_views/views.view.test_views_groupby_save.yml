@@ -23,5 +23,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_views_groupby_save
+id: test_views_groupby_save
 tag: ''

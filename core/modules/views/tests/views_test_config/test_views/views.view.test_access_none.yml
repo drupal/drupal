@@ -23,5 +23,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_access_none
+id: test_access_none
 tag: ''

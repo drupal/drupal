@@ -125,7 +125,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->drupalPost('admin/structure/views/add', $view1, t('Update "of type" choice'));
     // Now resubmit the entire form to the same URL.
     $view1['human_name'] = $this->randomName(16);
-    $view1['name'] = strtolower($this->randomName(16));
+    $view1['id'] = strtolower($this->randomName(16));
     $view1['description'] = $this->randomName(16);
     $view1['show[tagged_with]'] = 'tag1';
     $view1['page[create]'] = 1;
@@ -147,7 +147,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->drupalPost('admin/structure/views/add', $view2, t('Update "of type" choice'));
     $this->assertResponse(200);
     $view2['human_name'] = $this->randomName(16);
-    $view2['name'] = strtolower($this->randomName(16));
+    $view2['id'] = strtolower($this->randomName(16));
     $view2['description'] = $this->randomName(16);
     $view2['show[tagged_with]'] = 'tag2';
     $view2['page[create]'] = 1;

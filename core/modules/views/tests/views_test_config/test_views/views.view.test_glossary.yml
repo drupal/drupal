@@ -44,5 +44,5 @@ display:
     id: default
     position: '0'
 human_name: test_glossary
-name: test_glossary
+id: test_glossary
 tag: default

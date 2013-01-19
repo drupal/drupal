@@ -1,5 +1,5 @@
 base_table: views_test_data
-name: test_tokens
+id: test_tokens
 description: 'Test view to token replacement tests.'
 tag: ''
 human_name: 'Test tokens'

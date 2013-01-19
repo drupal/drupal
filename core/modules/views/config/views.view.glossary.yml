@@ -1,7 +1,7 @@
 disabled: true
 api_version: '3.0'
 module: node
-name: glossary
+id: glossary
 description: 'A list of all content, by letter.'
 tag: default
 base_table: node

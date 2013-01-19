@@ -34,7 +34,7 @@ class TagTest extends ViewUnitTestBase {
       $suffix = $i % 2 ? 'odd' : 'even';
       $tag = 'autocomplete_tag_test_' . $suffix . $this->randomName();
       $tags[] = $tag;
-      entity_create('view', array('tag' => $tag, 'name' => $this->randomName()))->save();
+      entity_create('view', array('tag' => $tag, 'id' => $this->randomName()))->save();
     }
 
     // Make sure just ten results are returns.
