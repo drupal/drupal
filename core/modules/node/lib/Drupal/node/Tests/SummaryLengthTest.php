@@ -35,8 +35,9 @@ class SummaryLengthTest extends NodeTestBase {
     $web_user = $this->drupalCreateUser(array('access content', 'administer content types'));
     $this->loggedInUser = $web_user;
 
+    $controller = $this->container->get('plugin.manager.entity')->getRenderController('node');
     // Render the node as a teaser.
-    $content = entity_render_controller('node')->view($node, 'teaser');
+    $content = $controller->view($node, 'teaser');
     $this->assertTrue(strlen($content['body'][0]['#markup']) < 600, 'Teaser is less than 600 characters long.');
     $this->drupalSetContent(drupal_render($content));
     // The string 'What is a Drupalism?' is between the 200th and 600th
@@ -54,7 +55,7 @@ class SummaryLengthTest extends NodeTestBase {
 
     // Render the node as a teaser again and check that the summary is now only
     // 200 characters in length and so does not include 'What is a Drupalism?'.
-    $content = entity_render_controller('node')->view($node, 'teaser');
+    $content = $controller->view($node, 'teaser');
     $this->assertTrue(strlen($content['body'][0]['#markup']) < 200, 'Teaser is less than 200 characters long.');
     $this->drupalSetContent(drupal_render($content));
     $this->assertText($node->label());

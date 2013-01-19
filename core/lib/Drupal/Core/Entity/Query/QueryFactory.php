@@ -33,7 +33,7 @@ class QueryFactory {
    * @return QueryInterface
    */
   public function get($entity_type, $conjunction = 'AND') {
-    $service_name = entity_get_controller($entity_type)->getQueryServicename();
+    $service_name = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type)->getQueryServicename();
     return $this->container->get($service_name)->get($entity_type, $conjunction);
   }
 

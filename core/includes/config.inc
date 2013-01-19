@@ -253,6 +253,7 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
   // higher-level configuration data.
   // First pass deleted, then new, and lastly changed configuration, in order to
   // handle dependencies correctly.
+  $manager = drupal_container()->get('plugin.manager.entity');
   foreach (array('delete', 'create', 'change') as $op) {
     foreach ($config_changes[$op] as $key => $name) {
       // Call to the configuration entity's storage controller to handle the
@@ -271,7 +272,7 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
         }
 
         $method = 'import' . ucfirst($op);
-        $handled_by_module = entity_get_controller($entity_type)->$method($name, $new_config, $old_config);
+        $handled_by_module = $manager->getStorageController($entity_type)->$method($name, $new_config, $old_config);
       }
       if (!empty($handled_by_module)) {
         unset($config_changes[$op][$key]);

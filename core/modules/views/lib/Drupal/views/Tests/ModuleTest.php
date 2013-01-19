@@ -112,7 +112,7 @@ class ModuleTest extends ViewUnitTestBase {
    */
   public function testLoadFunctions() {
     $this->enableModules(array('node'), FALSE);
-    $controller = entity_get_controller('view');
+    $controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
 
     // Test views_view_is_enabled/disabled.
     $load = $controller->load(array('archive'));

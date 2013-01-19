@@ -247,7 +247,7 @@ abstract class EntityTranslationUITest extends WebTestBase {
     if (!empty($info['entity_keys']['bundle'])) {
       $entity_values[$info['entity_keys']['bundle']] = $bundle_name ?: $this->bundle;
     }
-    $controller = entity_get_controller($this->entityType);
+    $controller = $this->container->get('plugin.manager.entity')->getStorageController($this->entityType);
     if (!($controller instanceof DatabaseStorageControllerNG)) {
       foreach ($values as $property => $value) {
         if (is_array($value)) {

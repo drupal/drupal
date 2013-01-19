@@ -12,7 +12,9 @@ use Drupal\system\Plugin\Core\Entity\Menu;
  * Menu callback which shows an overview page of all the custom menus and their descriptions.
  */
 function menu_overview_page() {
-  return entity_list_controller('menu')->render();
+  return drupal_container()->get('plugin.manager.entity')
+    ->getListController('menu')
+    ->render();
 }
 
 /**

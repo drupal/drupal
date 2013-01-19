@@ -47,7 +47,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     parent::setUp();
 
     $this->enableModules(array('block'));
-    $this->controller = entity_get_controller('block');
+    $this->controller = $this->container->get('plugin.manager.entity')->getStorageController('block');
   }
 
   /**

@@ -694,7 +694,7 @@ function views_ui_ajax_callback(ViewExecutable $view, $op) {
 
   // If the request is via AJAX, return the rendered list as JSON.
   if (drupal_container()->get('request')->request->get('js')) {
-    $list = entity_list_controller('view')->render();
+    $list = views_ui_list_page();
     $commands = array(ajax_command_replace('#views-entity-list', drupal_render($list)));
     return new JsonResponse(ajax_render($commands));
   }
@@ -741,5 +741,7 @@ function views_ui_confirm_delete_submit($form, &$form_state) {
  * @see views_ui_menu()
  */
 function views_ui_list_page() {
-  return entity_list_controller('view')->render();
+  return drupal_container()->get('plugin.manager.entity')
+    ->getListController('view')
+    ->render();
 }

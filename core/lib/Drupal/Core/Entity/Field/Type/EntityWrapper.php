@@ -174,7 +174,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    */
   public function getPropertyDefinitions() {
     // @todo: Support getting definitions if multiple bundles are specified.
-    return entity_get_controller($this->entityType)->getFieldDefinitions($this->definition['constraints']);
+    return drupal_container()->get('plugin.manager.entity')->getStorageController($this->entityType)->getFieldDefinitions($this->definition['constraints']);
   }
 
   /**

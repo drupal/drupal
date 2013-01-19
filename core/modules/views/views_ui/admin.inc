@@ -635,7 +635,9 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
     // If this form was for view-wide changes, there's no need to regenerate
     // the display section of the form.
     if ($display_id !== '') {
-      entity_form_controller('view', 'edit')->rebuildCurrentTab($view, $output, $display_id);
+      drupal_container()->get('plugin.manager.entity')
+        ->getFormController('view', 'edit')
+        ->rebuildCurrentTab($view, $output, $display_id);
     }
   }
 

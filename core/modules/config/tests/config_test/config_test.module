@@ -71,8 +71,9 @@ function config_test_load($id) {
  * Page callback; Lists available ConfigTest objects.
  */
 function config_test_list_page() {
-  $controller = entity_list_controller('config_test');
-  return $controller->render();
+  return drupal_container()->get('plugin.manager.entity')
+    ->getListController('config_test')
+    ->render();
 }
 
 /**

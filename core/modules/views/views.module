@@ -1155,7 +1155,7 @@ function views_get_applicable_views($type) {
  * Returns an array of all views as fully loaded $view objects.
  */
 function views_get_all_views() {
-  return entity_get_controller('view')->load();
+  return drupal_container()->get('plugin.manager.entity')->getStorageController('view')->load();
 }
 
 /**

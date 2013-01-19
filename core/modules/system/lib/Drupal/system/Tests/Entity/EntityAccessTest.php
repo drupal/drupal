@@ -84,7 +84,7 @@ class EntityAccessTest extends WebTestBase  {
   function testEntityAccessDefaultController() {
     // Check that the default access controller is used for entities that don't
     // have a specific access controller defined.
-    $controller = entity_access_controller('entity_test_default_access');
+    $controller = $this->container->get('plugin.manager.entity')->getAccessController('entity_test_default_access');
     $this->assertTrue($controller instanceof EntityAccessController, 'The default entity controller is used for the entity_test_default_access entity type.');
 
     $entity = entity_create('entity_test_default_access', array());
