@@ -46,13 +46,5 @@ class UserAutocompleteTest extends WebTestBase {
 
     // Using first letter of the user's name, make sure the user's full name is in the results.
     $this->assertRaw($this->unprivileged_user->name, 'User name found in autocompletion results.');
-
-    // Test that anonymous username is in the result.
-    $anonymous_name = $this->randomString();
-    config('user.settings')->set('anonymous', $anonymous_name)->save();
-    $this->drupalGet('user/autocomplete', array('query' => array('q' => drupal_substr($anonymous_name, 0, 4), 'anonymous' => '1')));
-    $this->assertRaw($anonymous_name, 'The anonymous name found in autocompletion results.');
-    $this->drupalGet('user/autocomplete', array('query' => array('q' => drupal_substr($anonymous_name, 0, 4))));
-    $this->assertNoRaw($anonymous_name, 'The anonymous name not found in autocompletion results without enabling anonymous username.');
   }
 }

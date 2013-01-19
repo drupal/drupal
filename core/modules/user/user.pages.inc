@@ -12,31 +12,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Menu callback for user autocompletion.
- *
- * Like other autocomplete functions, this function inspects the 'q' query
- * parameter for the string to use to search for suggestions. If the name used
- * to indicate anonymous users (e.g. "Anonymous") is to be included as a
- * possible suggestion, the 'anonymous' query parameter should be set
- * additionally. For example, http://example.com/user/autocomplete?q=An might
- * return "Andrew" and "Anne", while
- * http://example.com/user/autocomplete?q=An&anonymous=1 will additionally
- * return "Anonymous".
- *
- * @return \Symfony\Component\HttpFoundation\JsonResponse
- *   A JSON response containing the autocomplete suggestions for existing users.
+ * Menu callback; Retrieve a JSON object containing autocomplete suggestions for existing users.
  */
 function user_autocomplete() {
   $matches = array();
-  $query = drupal_container()->get('request')->query;
-  if ($string = $query->get('q')) {
-    if ($query->get('anonymous')) {
-      $anonymous_name = config('user.settings')->get('anonymous');
-      // Allow autocompletion for the anonymous user.
-      if (stripos($anonymous_name, $string) !== FALSE) {
-        $matches[$anonymous_name] = $anonymous_name;
-      }
-    }
+  if ($string = drupal_container()->get('request')->query->get('q')) {
     $result = db_select('users')->fields('users', array('name'))->condition('name', db_like($string) . '%', 'LIKE')->range(0, 10)->execute();
     foreach ($result as $account) {
       $matches[$account->name] = check_plain($account->name);
