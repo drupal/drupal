@@ -586,8 +586,8 @@ function template_preprocess_block(&$variables) {
 function block_user_role_delete($role) {
   foreach (entity_load_multiple('block') as $block_id => $block) {
     $visibility = $block->get('visibility');
-    if (isset($visibility['roles']['roles'][$role->rid])) {
-      unset($visibility['roles']['roles'][$role->rid]);
+    if (isset($visibility['roles']['roles'][$role->id()])) {
+      unset($visibility['roles']['roles'][$role->id()]);
       $block->set('visibility', $visibility);
       $block->save();
     }
