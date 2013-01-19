@@ -44,14 +44,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Check that each new shortcut links where it should.
     foreach ($test_cases as $test) {
-      $title = $this->randomName(10);
+      $title = $this->randomName();
       $form_data = array(
         'shortcut_link[link_title]' => $title,
         'shortcut_link[link_path]'  => $test['path'],
       );
-      $this->drupalPost('admin/config/user-interface/shortcut/' . $set->set_name . '/add-link', $form_data, t('Save'));
+      $this->drupalPost('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
       $this->assertResponse(200);
-      $saved_set = shortcut_set_load($set->set_name);
+      $saved_set = shortcut_set_load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'link_path');
       $test_path = empty($test['path']) ? '<front>' : $test['path'];
       $this->assertTrue(in_array(drupal_container()->get('path.alias_manager')->getSystemPath($test_path), $paths), 'Shortcut created: '. $test['path']);
@@ -67,7 +67,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     config('system.theme')->set('admin', 'seven')->save();
     variable_set('node_admin_theme', TRUE);
     $this->drupalGet($this->set->links[0]['link_path']);
-    $this->assertRaw(t('Remove from %title shortcuts', array('%title' => $this->set->title)), '"Add to shortcuts" link properly switched to "Remove from shortcuts".');
+    $this->assertRaw(t('Remove from %title shortcuts', array('%title' => $this->set->label())), '"Add to shortcuts" link properly switched to "Remove from shortcuts".');
   }
 
   /**
@@ -77,10 +77,10 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $set = $this->set;
 
     // Attempt to rename shortcut link.
-    $new_link_name = $this->randomName(10);
+    $new_link_name = $this->randomName();
 
     $this->drupalPost('admin/config/user-interface/shortcut/link/' . $set->links[0]['mlid'], array('shortcut_link[link_title]' => $new_link_name, 'shortcut_link[link_path]' => $set->links[0]['link_path']), t('Save'));
-    $saved_set = shortcut_set_load($set->set_name);
+    $saved_set = shortcut_set_load($set->id());
     $titles = $this->getShortcutInformation($saved_set, 'link_title');
     $this->assertTrue(in_array($new_link_name, $titles), 'Shortcut renamed: ' . $new_link_name);
     $this->assertLink($new_link_name, 0, 'Renamed shortcut link appears on the page.');
@@ -96,7 +96,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $new_link_path = 'admin/config';
 
     $this->drupalPost('admin/config/user-interface/shortcut/link/' . $set->links[0]['mlid'], array('shortcut_link[link_title]' => $set->links[0]['link_title'], 'shortcut_link[link_path]' => $new_link_path), t('Save'));
-    $saved_set = shortcut_set_load($set->set_name);
+    $saved_set = shortcut_set_load($set->id());
     $paths = $this->getShortcutInformation($saved_set, 'link_path');
     $this->assertTrue(in_array($new_link_path, $paths), 'Shortcut path changed: ' . $new_link_path);
     $this->assertLinkByHref($new_link_path, 0, 'Shortcut with new path appears on the page.');
@@ -109,7 +109,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $set = $this->set;
 
     $this->drupalPost('admin/config/user-interface/shortcut/link/' . $set->links[0]['mlid'] . '/delete', array(), 'Delete');
-    $saved_set = shortcut_set_load($set->set_name);
+    $saved_set = shortcut_set_load($set->id());
     $mlids = $this->getShortcutInformation($saved_set, 'mlid');
     $this->assertFalse(in_array($set->links[0]['mlid'], $mlids), 'Successfully deleted a shortcut.');
   }

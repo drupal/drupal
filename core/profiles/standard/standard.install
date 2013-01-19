@@ -249,7 +249,7 @@ function standard_install() {
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
 
   // Populate the default shortcut set.
-  $shortcut_set = shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME);
+  $shortcut_set = shortcut_set_load('default');
   $shortcut_set->links[] = array(
     'link_path' => 'node/add',
     'link_title' => st('Add content'),
@@ -260,7 +260,7 @@ function standard_install() {
     'link_title' => st('Find content'),
     'weight' => -19,
   );
-  shortcut_set_save($shortcut_set);
+  $shortcut_set->save();
 
   // Enable the admin theme.
   theme_enable(array('seven'));
