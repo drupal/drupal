@@ -351,22 +351,6 @@ function user_views_data() {
     ),
   );
 
-  // role table
-
-  $data['role']['table']['join'] = array(
-     // Directly links to users table.
-    'users' => array(
-      'left_table' => 'users_roles',
-      'left_field' => 'rid',
-      'field' => 'rid',
-    ),
-    // needed for many to one helper sometimes
-    'users_roles' => array(
-      'left_field' => 'rid',
-      'field' => 'rid',
-    ),
-  );
-
   // permission table
   $data['role_permission']['table']['group']  = t('User');
   $data['role_permission']['table']['join'] = array(

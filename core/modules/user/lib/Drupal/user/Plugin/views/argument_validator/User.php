@@ -56,7 +56,7 @@ class User extends ArgumentValidatorPluginBase {
     $form['roles'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Restrict to the selected roles'),
-      '#options' => array_map('check_plain', user_roles(TRUE)),
+      '#options' => array_map('check_plain', user_role_names(TRUE)),
       '#default_value' => $this->options['roles'],
       '#description' => t('If no roles are selected, users from any role will be allowed.'),
       '#states' => array(

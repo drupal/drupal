@@ -182,7 +182,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $this->assertFalse(in_array($this->disallowed_format->format, array_keys(filter_get_formats_by_role($rid))), 'A text format which a role does not have access to does not appear in the list of formats available to that role.');
 
     // Check that the fallback format is always allowed.
-    $this->assertEqual(filter_get_roles_by_format(filter_format_load(filter_fallback_format())), user_roles(), 'All roles have access to the fallback format.');
+    $this->assertEqual(filter_get_roles_by_format(filter_format_load(filter_fallback_format())), user_role_names(), 'All roles have access to the fallback format.');
     $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_get_formats_by_role($rid))), 'The fallback format appears in the list of allowed formats for any role.');
   }
 

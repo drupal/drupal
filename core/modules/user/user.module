@@ -6,6 +6,7 @@ use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\UserRole;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -1818,6 +1819,25 @@ function user_mail_tokens(&$replacements, $data, $options) {
  *   An associative array with the role id as the key and the role name as
  *   value.
  */
+function user_role_names($membersonly = FALSE, $permission = NULL) {
+  return array_map(function($item) {
+    return $item->label();
+  }, user_roles($membersonly, $permission));
+}
+
+/**
+ * Retrieve an array of roles matching specified conditions.
+ *
+ * @param $membersonly
+ *   Set this to TRUE to exclude the 'anonymous' role.
+ * @param $permission
+ *   A string containing a permission. If set, only roles containing that
+ *   permission are returned.
+ *
+ * @return
+ *   An associative array with the role id as the key and the role object as
+ *   value.
+ */
 function user_roles($membersonly = FALSE, $permission = NULL) {
   $user_roles = &drupal_static(__FUNCTION__);
 
@@ -1830,23 +1850,22 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
     }
   }
 
-  $query = db_select('role', 'r');
-  $query->addTag('translatable');
-  $query->fields('r', array('rid', 'name'));
-  $query->orderBy('weight');
-  $query->orderBy('name');
-  if (!empty($permission)) {
-    $query->innerJoin('role_permission', 'p', 'r.rid = p.rid');
-    $query->condition('p.permission', $permission);
-  }
+  $roles = entity_load_multiple('user_role');
   if ($membersonly) {
-    $query->condition('r.rid', DRUPAL_ANONYMOUS_RID, '!=');
+    unset($roles[DRUPAL_ANONYMOUS_RID]);
   }
-  $roles = $query->execute()->fetchAllKeyed();
+
+  if (!empty($permission)) {
+    $result = db_select('role_permission', 'p')
+      ->fields('p', array('rid'))
+      ->condition('p.rid', array_keys($roles))
+      ->condition('p.permission', $permission)
+      ->execute()->fetchCol();
+    $roles = array_intersect_key($roles, array_flip($result));
+  }
 
   if (empty($permission)) {
     $user_roles[$cid] = $roles;
-    return $user_roles[$cid];
   }
 
   return $roles;
@@ -1863,87 +1882,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  *   otherwise.
  */
 function user_role_load($rid) {
-  return db_select('role', 'r')
-    ->fields('r')
-    ->condition('rid', $rid)
-    ->execute()
-    ->fetchObject();
-}
-
-/**
- * Save a user role to the database.
- *
- * @param $role
- *   A role object to modify or add.
- *
- * @return
- *   Status constant indicating if role was created or updated.
- *   Failure to write the user role record will return FALSE. Otherwise
- *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
- *   performed.
- */
-function user_role_save($role) {
-  if ($role->name) {
-    // Prevent leading and trailing spaces in role names.
-    $role->name = trim($role->name);
-  }
-  if (!isset($role->weight)) {
-    // Set a role weight to make this new role last.
-    $query = db_select('role');
-    $query->addExpression('MAX(weight)');
-    $role->weight = $query->execute()->fetchField() + 1;
-  }
-
-  // Let modules modify the user role before it is saved to the database.
-  module_invoke_all('user_role_presave', $role);
-
-  $exists = db_select('role', 'r')
-    ->fields('r', array('rid'))
-    ->condition('rid', $role->rid)
-    ->execute()
-    ->fetchAll();
-
-  if (empty($exists)) {
-    $status = drupal_write_record('role', $role);
-    module_invoke_all('user_role_insert', $role);
-  }
-  else {
-    $status = drupal_write_record('role', $role, 'rid');
-    module_invoke_all('user_role_update', $role);
-  }
-
-  // Clear the user access cache.
-  drupal_static_reset('user_access');
-  drupal_static_reset('user_role_permissions');
-
-  return $status;
-}
-
-/**
- * Delete a user role from database.
- *
- * @param $role
- *   A string with the role ID.
- */
-function user_role_delete($role) {
-  $role = user_role_load($role);
-
-  db_delete('role')
-    ->condition('rid', $role->rid)
-    ->execute();
-  db_delete('role_permission')
-    ->condition('rid', $role->rid)
-    ->execute();
-  // Update the users who have this role set:
-  db_delete('users_roles')
-    ->condition('rid', $role->rid)
-    ->execute();
-
-  module_invoke_all('user_role_delete', $role);
-
-  // Clear the user access cache.
-  drupal_static_reset('user_access');
-  drupal_static_reset('user_role_permissions');
+  return entity_load('user_role', $rid);
 }
 
 /**
@@ -1951,7 +1890,7 @@ function user_role_delete($role) {
  */
 function user_role_delete_access($role) {
   // Prevent the system-defined roles from being removed.
-  if ($role->rid == DRUPAL_ANONYMOUS_RID || $role->rid == DRUPAL_AUTHENTICATED_RID) {
+  if ($role->id() == DRUPAL_ANONYMOUS_RID || $role->id() == DRUPAL_AUTHENTICATED_RID) {
     return FALSE;
   }
 
@@ -2090,7 +2029,7 @@ function user_user_operations($form = array(), $form_state = array()) {
   );
 
   if (user_access('administer permissions')) {
-    $roles = user_roles(TRUE);
+    $roles = user_role_names(TRUE);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);  // Can't edit authenticated role.
 
     $add_roles = array();
@@ -2175,7 +2114,7 @@ function user_user_operations_block($accounts) {
  * Callback function for admin mass adding/deleting a user role.
  */
 function user_multiple_role_edit($accounts, $operation, $rid) {
-  $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', array(':rid' => $rid))->fetchField();
+  $role_name = entity_load('user_role', $rid)->label();
 
   switch ($operation) {
     case 'add_role':
@@ -2307,7 +2246,7 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
 function user_filters() {
   // Regular filters
   $filters = array();
-  $roles = user_roles(TRUE);
+  $roles = user_role_names(TRUE);
   unset($roles[DRUPAL_AUTHENTICATED_RID]); // Don't list authorized role.
   if (count($roles)) {
     $filters['role'] = array(

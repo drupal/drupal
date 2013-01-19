@@ -148,39 +148,6 @@ function user_schema() {
     ),
   );
 
-  $schema['role'] = array(
-    'description' => 'Stores user roles.',
-    'fields' => array(
-      'rid' => array(
-        'type' => 'varchar',
-        // The role ID is often used as part of a compound index; at least MySQL
-        // has a maximum index length of 1000 characters (333 on utf8), so we
-        // limit the maximum length.
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique role ID.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Role label.',
-        'translatable' => TRUE,
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The weight of this role in listings and the user interface.',
-      ),
-    ),
-    'primary key' => array('rid'),
-    'indexes' => array(
-      'name_weight' => array('name', 'weight'),
-    ),
-  );
-
   $schema['role_permission'] = array(
     'description' => 'Stores the permissions assigned to user roles.',
     'fields' => array(
@@ -325,13 +292,6 @@ function user_install() {
       'created' => REQUEST_TIME,
       'status' => 1,
     ))
-    ->execute();
-
-  // Insert built-in roles.
-  db_insert('role')
-    ->fields(array('rid', 'name', 'weight'))
-    ->values(array(DRUPAL_ANONYMOUS_RID, 'Anonymous user', 0))
-    ->values(array(DRUPAL_AUTHENTICATED_RID, 'Authenticated user', 1))
     ->execute();
 }
 
@@ -1052,6 +1012,34 @@ function user_update_8015(&$sandbox) {
  */
 function user_update_8016() {
   db_drop_field('users', 'data');
+}
+
+/**
+ * Migrate user roles into configuration.
+ *
+ * @ingroup config_upgrade
+ */
+function user_update_8017() {
+  $uuid = new Uuid();
+
+  $roles = db_select('role', 'r')
+    ->fields('r')
+    ->execute()
+    ->fetchAll();
+
+  foreach ($roles as $role) {
+    config('user.role.' . $role->rid)
+      ->set('id', $role->rid)
+      ->set('uuid', $uuid->generate())
+      ->set('label', $role->name)
+      ->set('weight', $role->weight)
+      ->set('langcode', LANGUAGE_NOT_SPECIFIED)
+      ->save();
+  }
+
+  update_config_manifest_add('user.role', array_map(function ($role) {
+    return $role->rid;
+  }, $roles));
 }
 
 /**

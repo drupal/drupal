@@ -367,7 +367,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
     }
 
     // Per-role visibility.
-    $role_options = array_map('check_plain', user_roles());
+    $role_options = array_map('check_plain', user_role_names());
     $form['visibility']['role'] = array(
       '#type' => 'details',
       '#title' => t('Roles'),
