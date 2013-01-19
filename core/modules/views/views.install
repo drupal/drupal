@@ -26,3 +26,17 @@ function views_schema() {
 
   return $schema;
 }
+
+/**
+ * Provide an initial schema.
+ *
+ * @see update_module_enable().
+ */
+function views_schema_0() {
+  module_load_install('system');
+  // Add the cache_views_info and cache_views_results tables.
+  $cache_schema = system_schema_cache_8007();
+  $schema['cache_views_info'] = $cache_schema;
+  $schema['cache_views_results'] = $cache_schema;
+  return $schema;
+}

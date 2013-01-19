@@ -633,6 +633,7 @@ function update_module_enable(array $modules) {
     // installed module is always 0. Using 8000 here would be inconsistent
     // since $module_update_8000() may involve a schema change, and we want
     // to install the schema as it was before any updates were added.
+    module_load_install($module);
     $function = $module . '_schema_0';
     if (function_exists($function)) {
       $schema = $function();
