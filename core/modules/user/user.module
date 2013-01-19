@@ -2814,6 +2814,9 @@ function user_library_info() {
     'js' => array(
       drupal_get_path('module', 'user') . '/user.js' => array(),
     ),
+    'css' => array(
+      drupal_get_path('module', 'user') . '/user.css' => array(),
+    ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
