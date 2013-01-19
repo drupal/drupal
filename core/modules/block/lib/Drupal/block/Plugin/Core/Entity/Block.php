@@ -26,7 +26,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
  *   form_controller_class = {
  *     "default" = "Drupal\block\BlockFormController"
  *   },
- *   config_prefix = "plugin.core.block",
+ *   config_prefix = "block.block",
  *   fieldable = FALSE,
  *   entity_keys = {
  *     "id" = "id",

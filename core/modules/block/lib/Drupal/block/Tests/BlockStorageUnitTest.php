@@ -86,7 +86,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $this->assertTrue($entity instanceof Block, 'The newly created entity is a Block.');
 
     // Verify all of the block properties.
-    $actual_properties = config('plugin.core.block.stark.test_block')->get();
+    $actual_properties = config('block.block.stark.test_block')->get();
     $this->assertTrue(!empty($actual_properties['uuid']), 'The block UUID is set.');
     unset($actual_properties['uuid']);
 
@@ -177,14 +177,14 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
 
     // Ensure that the storage isn't currently empty.
     $config_storage = $this->container->get('config.storage');
-    $config = $config_storage->listAll('plugin.core.block.');
+    $config = $config_storage->listAll('block.block.');
     $this->assertFalse(empty($config), 'There are blocks in config storage.');
 
     // Delete the block.
     $entity->delete();
 
     // Ensure that the storage is now empty.
-    $config = $config_storage->listAll('plugin.core.block.');
+    $config = $config_storage->listAll('block.block.');
     $this->assertTrue(empty($config), 'There are no blocks in config storage.');
   }
 
