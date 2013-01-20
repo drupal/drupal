@@ -7,8 +7,9 @@
 
 namespace Drupal\system\Tests\Plugin;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Drupal\plugin_test\Plugin\CachedMockBlockManager;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests that the AlterDecorator fires and respects the alter hook.
@@ -98,8 +99,9 @@ class CacheDecoratorLanguageTest extends WebTestBase {
       $this->assertEqual($cache->cid, 'mock_block:' . $langcode, format_string('The !cache cache exists.', array('!cache' => 'mock_block:' . $langcode)));
       $this->assertEqual($cache->expire, 1542646800, format_string('The cache expiration was properly set.'));
     }
-    // Delete cached items tagged with "plugin_test".
-    cache()->deleteTags(array('plugin_test'));
+    // Clear the plugin definitions.
+    $manager = new CachedMockBlockManager();
+    $manager->clearCachedDefinitions();
     foreach ($languages as $langcode) {
       $cache = cache()->get('mock_block:' . $langcode);
       $this->assertFalse($cache, format_string('The !cache cache was properly cleared through the cache::deleteTags() method.', array('!cache' => 'mock_block:' . $langcode)));
