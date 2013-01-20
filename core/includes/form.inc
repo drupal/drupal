@@ -4101,11 +4101,11 @@ function form_process_autocomplete($element, &$form_state) {
     $element['autocomplete'] = array(
       '#type' => 'hidden',
       '#input' => FALSE,
-      '#id' => $element['#id'] . '-autocomplete',
       '#value' => url($element['#autocomplete_path'], array('absolute' => TRUE)),
       '#disabled' => TRUE,
       '#attributes' => array(
         'class' => array('autocomplete'),
+        'id' => $element['#id'] . '-autocomplete',
       ),
     );
   }
