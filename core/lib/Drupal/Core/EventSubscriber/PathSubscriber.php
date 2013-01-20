@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\CacheDecorator\AliasManagerCacheDecorator;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -35,7 +36,11 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
     $path = $this->extractPath($request);
     $path = $this->aliasManager->getSystemPath($path);
     $this->setPath($request, $path);
-    $this->aliasManager->setCacheKey($path);
+    // If this is the master request, set the cache key for the caching of all
+    // system paths looked up during the request.
+    if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+      $this->aliasManager->setCacheKey($path);
+    }
   }
 
   /**
