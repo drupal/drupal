@@ -157,7 +157,7 @@ class BlockTest extends WebTestBase {
     $this->removeDefaultBlocks();
 
     // Add a new custom block by filling out the input form on the admin/structure/block/add page.
-    $info = $this->randomName(8);
+    $info = strtolower($this->randomName(8));
     $custom_block['machine_name'] = $info;
     $custom_block['info'] = $info;
     $custom_block['label'] = $this->randomName(8);
@@ -199,7 +199,7 @@ class BlockTest extends WebTestBase {
     // Enable a standard block.
     $default_theme = variable_get('theme_default', 'stark');
     $edit = array(
-      'machine_name' => $this->randomName(8),
+      'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
       'label' => $title,
     );
@@ -239,7 +239,7 @@ class BlockTest extends WebTestBase {
     // Enable a standard block.
     $default_theme = variable_get('theme_default', 'stark');
     $edit = array(
-      'machine_name' => $this->randomName(8),
+      'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
       'label' => $title,
       'visibility[path][visibility]' => BLOCK_VISIBILITY_LISTED,
@@ -270,7 +270,7 @@ class BlockTest extends WebTestBase {
     $block = array();
     $block['id'] = 'system_powered_by_block';
     $block['label'] = $this->randomName(8);
-    $block['machine_name'] = $this->randomName(8);
+    $block['machine_name'] = strtolower($this->randomName(8));
     $block['theme'] = variable_get('theme_default', 'stark');
     $block['region'] = 'header';
 
@@ -351,7 +351,7 @@ class BlockTest extends WebTestBase {
     // Add a test block.
     $block = array();
     $block['id'] = 'test_cache';
-    $block['machine_name'] = $this->randomName(8);
+    $block['machine_name'] = strtolower($this->randomName(8));
     $block['theme'] = variable_get('theme_default', 'stark');
     $block['region'] = 'header';
     $block = $this->drupalPlaceBlock('test_cache', array('region' => 'header'));
@@ -427,7 +427,7 @@ class BlockTest extends WebTestBase {
     // that the form still functions as expected.
     $edit = array(
       'label' => $this->randomName(8),
-      'machine_name' => $this->randomName(8),
+      'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block/add/system_powered_by_block/stark', $edit, t('Save block'));

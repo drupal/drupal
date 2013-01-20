@@ -241,11 +241,15 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
       '#default_value' => !$entity->isNew() ? $entity->label() : $definition['subject'],
     );
     $form['machine_name'] = array(
-      '#type' => 'textfield',
+      '#type' => 'machine_name',
       '#title' => t('Block machine name'),
       '#maxlength' => 64,
       '#description' => t('A unique name to save this block configuration. Must be alpha-numeric and be underscore separated.'),
       '#default_value' => $entity->id(),
+      '#machine_name' => array(
+        'exists' => 'block_load',
+        'replace_pattern' => '[^a-z0-9_.]+',
+      ),
       '#required' => TRUE,
       '#disabled' => !$entity->isNew(),
     );
@@ -419,12 +423,7 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
    * @see \Drupal\block\BlockBase::blockValidate()
    */
   public function validate($form, &$form_state) {
-    if (empty($form['machine_name']['#disabled'])) {
-      if (preg_match('/[^a-zA-Z0-9_]/', $form_state['values']['machine_name'])) {
-        form_set_error('machine_name', t('Block name must be alphanumeric or underscores only.'));
-      }
-    }
-    else {
+    if (!empty($form['machine_name']['#disabled'])) {
       $config_id = explode('.', $form_state['values']['machine_name']);
       $form_state['values']['machine_name'] = array_pop($config_id);
     }
