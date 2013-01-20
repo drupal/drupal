@@ -78,7 +78,7 @@ function block_admin_edit(Block $entity) {
   }
 
   // Get the block subject for the page title.
-  drupal_set_title(t("%label block in %theme", array('%label' => $entity->label(), '%theme' => $theme_title)), PASS_THROUGH);
+  drupal_set_title(t("Configure %label block in %theme", array('%label' => $entity->label(), '%theme' => $theme_title)), PASS_THROUGH);
 
   return entity_get_form($entity);
 }

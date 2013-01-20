@@ -59,7 +59,7 @@ class BlockUpgradePathTest extends UpgradePathTestBase {
 
     // Confirm that the custom block cannot be created with title longer than
     // the maximum number of characters.
-    $this->assertText('Block title cannot be longer than 255 characters');
+    $this->assertText('Title cannot be longer than 255 characters');
   }
 
 }

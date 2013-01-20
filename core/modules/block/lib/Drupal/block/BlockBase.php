@@ -236,13 +236,13 @@ abstract class BlockBase extends PluginBase implements BlockInterface {
 
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Block title'),
+      '#title' => t('Title'),
       '#maxlength' => 255,
       '#default_value' => !$entity->isNew() ? $entity->label() : $definition['subject'],
     );
     $form['machine_name'] = array(
       '#type' => 'machine_name',
-      '#title' => t('Block machine name'),
+      '#title' => t('Machine name'),
       '#maxlength' => 64,
       '#description' => t('A unique name to save this block configuration. Must be alpha-numeric and be underscore separated.'),
       '#default_value' => $entity->id(),

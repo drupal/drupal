@@ -51,7 +51,7 @@ class CustomBlock extends BlockBase {
     //   separate interface for administering custom blocks.
     $form['info'] = array(
       '#type' => 'textfield',
-      '#title' => t('Block description'),
+      '#title' => t('Description'),
       '#required' => TRUE,
       '#default_value' => $this->configuration['info'],
       '#description' => t('A brief description of your block. Used on the <a href="@overview">Blocks administration page</a>. <strong>Changing this field will change the description for all copies of this block.</strong>', array('@overview' => url('admin/structure/block'))),
@@ -60,7 +60,7 @@ class CustomBlock extends BlockBase {
     //   separate interface for administering custom blocks.
     $form['body'] = array(
       '#type' => 'text_format',
-      '#title' => t('Block body'),
+      '#title' => t('Body'),
       '#default_value' => $this->configuration['body'],
       '#format' => isset($this->configuration['format']) ? $this->configuration['format'] : filter_default_format(),
       '#description' => t('The content of the block as shown to the user. <strong>Changing this field will change the block body everywhere it is used.</strong>'),
