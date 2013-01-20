@@ -7,6 +7,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException as DependencyInjectionRuntimeException;
@@ -2457,14 +2458,14 @@ function drupal_get_bootstrap_phase() {
  *
  * @see Drupal\Core\DrupalKernel
  *
- * @param Symfony\Component\DependencyInjection\Container $new_container
+ * @param Symfony\Component\DependencyInjection\ContainerInterface $new_container
  *   (optional) A new container instance to replace the current.
  *
- * @return Symfony\Component\DependencyInjection\Container|bool
- *   The instance of the Container used to set up and maintain object
- *   instances or FALSE if none exist yet.
+ * @return Symfony\Component\DependencyInjection\ContainerInterface|bool
+ *   The instance of the ContainerInterface used to set up and maintain
+ *   object instances or FALSE if none exist yet.
  */
-function drupal_container(Container $new_container = NULL) {
+function drupal_container(ContainerInterface $new_container = NULL) {
   // We do not use drupal_static() here because we do not have a mechanism by
   // which to reinitialize the stored objects, so a drupal_static_reset() call
   // would leave Drupal in a nonfunctional state.
