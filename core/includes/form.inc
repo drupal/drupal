@@ -4096,11 +4096,13 @@ function form_process_autocomplete($element, &$form_state) {
     $element['#attached']['library'][] = array('system', 'drupal.autocomplete');
     // Provide a hidden element for the JavaScript behavior to bind to. Since
     // this element is for client-side functionality only, and we don't want to
-    // collect any input from it, use #theme='hidden' instead of #type='hidden'.
+    // collect any input from it, use #theme = 'input__hidden' and #pre_render =
+    // 'form_pre_render_hidden' instead of #type='hidden'.
     // @todo Refactor autocomplete.js to accept Drupal.settings instead of
     //   requiring extraneous markup.
     $element['autocomplete'] = array(
-      '#theme' => 'hidden',
+      '#theme' => 'input__hidden',
+      '#pre_render' => array('form_pre_render_hidden'),
       '#attributes' => array(
         'id' => $element['#id'] . '-autocomplete',
         'value' => url($element['#autocomplete_path'], array('absolute' => TRUE)),
