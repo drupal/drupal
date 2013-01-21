@@ -15,9 +15,9 @@ function common_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['common-test/drupal_goto/alt'] = array(
+  $items['common-test/drupal_goto/alternative'] = array(
     'title' => 'Drupal Goto',
-    'page callback' => 'common_test_drupal_goto_land_alt',
+    'page callback' => 'common_test_drupal_goto_land_alternative',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -101,8 +101,8 @@ function common_test_drupal_goto_land() {
  *
  * @see common_test_menu()
  */
-function common_test_drupal_goto_land_alt() {
-  print "drupal_goto_alt";
+function common_test_drupal_goto_land_alternative() {
+  print "drupal_goto_alternative";
 }
 
 /**

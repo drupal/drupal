@@ -688,8 +688,8 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
   // A destination in $_GET always overrides the function arguments.
   // We do not allow absolute URLs to be passed via $_GET, as this can be an
   // attack vector, with the following exception:
-  // - absolute URLs that point to this site (i.e. same base URL and
-  //   base path) are allowed
+  // - Absolute URLs that point to this site (i.e. same base URL and
+  //   base path) are allowed.
   if (isset($_GET['destination']) && (!url_is_external($_GET['destination']) || _external_url_is_local($_GET['destination']))) {
     $destination = drupal_parse_url($_GET['destination']);
     $path = $destination['path'];
@@ -722,13 +722,18 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
  *   TRUE if the URL has the same domain and base path.
  */
 function _external_url_is_local($url) {
-    $url_parts = parse_url($url);
-    $base_host = parse_url($GLOBALS['base_url'], PHP_URL_HOST);
+  $url_parts = parse_url($url);
+  $base_host = parse_url($GLOBALS['base_url'], PHP_URL_HOST);
 
+  if (!isset($url_parts['path'])) {
+    return ($url_parts['host'] == $base_host);
+  }
+  else {
     // When comparing base paths, we need a trailing slash to make sure a
     // partial URL match isn't occuring. Since base_path() always returns with
     // a trailing slash, we don't need to add the trailing slash here.
     return ($url_parts['host'] == $base_host && stripos($url_parts['path'], base_path()) === 0);
+  }
 }
 
 /**
