@@ -25,7 +25,7 @@ class ModuleApiTest extends WebTestBase {
   }
 
   /**
-   * The basic functionality of retrieving enabled modules.
+   * The basic functionality of module_list().
    */
   function testModuleList() {
     // Build a list of modules, sorted alphabetically.
@@ -36,8 +36,8 @@ class ModuleApiTest extends WebTestBase {
     $module_list[] = 'standard';
 
     sort($module_list);
-    // Compare this list to the one returned by the extension handler. We expect
-    // them to match, since all default profile modules have a weight equal to 0
+    // Compare this list to the one returned by module_list(). We expect them
+    // to match, since all default profile modules have a weight equal to 0
     // (except for block.module, which has a lower weight but comes first in
     // the alphabet anyway).
     $this->assertModuleList($module_list, t('Standard profile'));
@@ -50,7 +50,8 @@ class ModuleApiTest extends WebTestBase {
 
     // Try to mess with the module weights.
     module_set_weight('contact', 20);
-
+    // Reset the module list.
+    system_list_reset();
     // Move contact to the end of the array.
     unset($module_list[array_search('contact', $module_list)]);
     $module_list[] = 'contact';
@@ -58,26 +59,27 @@ class ModuleApiTest extends WebTestBase {
 
     // Test the fixed list feature.
     $fixed_list = array(
-      'system' => 'core/modules/system/system.module',
-      'menu' => 'core/modules/menu/menu.module',
+      'system' => array('filename' => drupal_get_path('module', 'system')),
+      'menu' => array('filename' => drupal_get_path('module', 'menu')),
     );
-    $this->container->get('module_handler')->setModuleList($fixed_list);
+    module_list(NULL, $fixed_list);
     $new_module_list = array_combine(array_keys($fixed_list), array_keys($fixed_list));
     $this->assertModuleList($new_module_list, t('When using a fixed list'));
 
+    // Reset the module list.
+    module_list_reset();
+    $this->assertModuleList($module_list, t('After reset'));
   }
 
   /**
-   * Assert that the extension handler returns the expected values.
+   * Assert that module_list() return the expected values.
    *
    * @param $expected_values
    *   The expected values, sorted by weight and module name.
    */
   protected function assertModuleList(Array $expected_values, $condition) {
-    $expected_values = array_values(array_unique($expected_values));
-    $enabled_modules = array_keys($this->container->get('module_handler')->getModuleList());
-    $enabled_modules = sort($enabled_modules);
-    $this->assertEqual($expected_values, $enabled_modules, format_string('@condition: extension handler returns correct results', array('@condition' => $condition)));
+    $expected_values = array_combine($expected_values, $expected_values);
+    $this->assertEqual($expected_values, module_list(), format_string('@condition: module_list() returns correct results', array('@condition' => $condition)));
   }
 
   /**
@@ -101,11 +103,12 @@ class ModuleApiTest extends WebTestBase {
     // already loaded when the cache is rebuilt.
     // For that activate the module_test which provides the file to load.
     module_enable(array('module_test'));
-    $module_handler = drupal_container()->get('module_handler');
-    $module_handler->loadAll();
+
     module_load_include('inc', 'module_test', 'module_test.file');
-    $modules = $module_handler->getImplementations('test_hook');
+    $modules = module_implements('test_hook');
+    $static = drupal_static('module_implements');
     $this->assertTrue(in_array('module_test', $modules), 'Hook found.');
+    $this->assertEqual($static['test_hook']['module_test'], 'file', 'Include file detected.');
   }
 
   /**

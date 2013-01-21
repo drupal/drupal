@@ -921,24 +921,26 @@ abstract class TestBase {
   /**
    * Rebuild drupal_container().
    *
-   * Use this to build a new kernel and service container. For example, when the
-   * list of enabled modules is changed via the internal browser, in which case
-   * the test process still contains an old kernel and service container with an
-   * old module list.
-   *
    * @todo Fix http://drupal.org/node/1708692 so that module enable/disable
    *   changes are immediately reflected in drupal_container(). Until then,
    *   tests can invoke this workaround when requiring services from newly
    *   enabled modules to be immediately available in the same request.
-   *
-   * @see TestBase::prepareEnvironment()
-   * @see TestBase::tearDown()
    */
   protected function rebuildContainer() {
+    // Create a new DrupalKernel for testing purposes, now that all required
+    // modules have been enabled. This also stores a new dependency injection
+    // container in drupal_container(). Drupal\simpletest\TestBase::tearDown()
+    // restores the original container.
+    // @see Drupal\Core\DrupalKernel::initializeContainer()
     $this->kernel = new DrupalKernel('testing', FALSE, drupal_classloader(), FALSE);
+    // Booting the kernel is necessary to initialize the new DIC. While
+    // normally the kernel gets booted on demand in
+    // Symfony\Component\HttpKernel\handle(), this kernel needs manual booting
+    // as it is not used to handle a request.
     $this->kernel->boot();
-    // DrupalKernel replaces the container in drupal_container() with a
-    // different object, so we need to replace the instance on this test class.
+    // The DrupalKernel does not update the container in drupal_container(), but
+    // replaces it with a new object. We therefore need to replace the minimal
+    // boostrap container that has been set up by TestBase::prepareEnvironment().
     $this->container = drupal_container();
   }
 
@@ -1030,6 +1032,10 @@ abstract class TestBase {
     if (isset($this->originalPrefix)) {
       drupal_valid_test_ua($this->originalPrefix);
     }
+
+    // Reset module list and module load status.
+    module_list_reset();
+    module_load_all(FALSE, TRUE);
 
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();

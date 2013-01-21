@@ -55,10 +55,9 @@ function _drupal_maintenance_theme() {
 
   // Ensure that system.module is loaded.
   if (!function_exists('_system_rebuild_theme_data')) {
-    $module_list['system'] = 'core/modules/system/system.module';
-    $module_handler = drupal_container()->get('module_handler');
-    $module_handler->setModuleList($module_list);
-    $module_handler->load('system');
+    $module_list['system']['filename'] = 'core/modules/system/system.module';
+    module_list(NULL, $module_list);
+    drupal_load('module', 'system');
   }
 
   $themes = list_themes();

@@ -315,7 +315,6 @@ EOF;
     // modules not hidden. locale_test_system_info_alter() modifies the project
     // info of the locale_test and locale_test_translate modules.
     state()->set('locale.test_system_info_alter', TRUE);
-    $this->resetAll();
 
     // Check if interface translation data is collected from hook_info.
     $projects = locale_translation_project_list();
@@ -333,7 +332,6 @@ EOF;
 
     // Make the test modules look like a normal custom module.
     state()->set('locale.test_system_info_alter', TRUE);
-    $this->resetAll();
 
     // Set test condition: include disabled modules when building a project list.
     $edit = array(

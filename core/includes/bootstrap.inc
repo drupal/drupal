@@ -888,14 +888,6 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // nothing
   }
   else {
-    if ($type == 'module') {
-      if (empty($files[$type])) {
-        $files[$type] = drupal_container()->get('module_handler')->getModuleList();
-      }
-      if (isset($files[$type][$name])) {
-        return $files[$type][$name];
-      }
-    }
     // Verify that we have an keyvalue service before using it. This is required
     // because this function is called during installation.
     // @todo Inject database connection into KeyValueStore\DatabaseStorage.
@@ -1141,9 +1133,8 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
  * @see bootstrap_hooks()
  */
 function bootstrap_invoke_all($hook) {
-  $module_handler = drupal_container()->get('module_handler');
-  foreach ($module_handler->getBootstrapModules() as $module) {
-    $module_handler->load($module);
+  foreach (module_list('bootstrap') as $module) {
+    drupal_load('module', $module);
     module_invoke($module, $hook);
   }
 }
@@ -1162,10 +1153,6 @@ function bootstrap_invoke_all($hook) {
  *   TRUE if the item is loaded or has already been loaded.
  */
 function drupal_load($type, $name) {
-  if ($type == 'module' && drupal_container()->get('module_handler')->moduleExists($name)) {
-    return drupal_container()->get('module_handler')->load($name);
-  }
-
   // Once a file is included this can't be reversed during a request so do not
   // use drupal_static() here.
   static $files = array();
@@ -2436,7 +2423,7 @@ function _drupal_bootstrap_variables() {
   $conf = variable_initialize(isset($conf) ? $conf : array());
   // Load bootstrap modules.
   require_once DRUPAL_ROOT . '/core/includes/module.inc';
-  drupal_container()->get('module_handler')->loadBootstrapModules();
+  module_load_all(TRUE);
 }
 
 /**
@@ -2487,82 +2474,6 @@ function drupal_container(ContainerInterface $new_container = NULL) {
     $container = $new_container;
   }
   return $container;
-}
-
-/**
- * Returns the list of enabled modules.
- *
- * @deprecated as of Drupal 8.0. Use
- *   drupal_container()->get('module_handler')->getModuleList().
- *
- * @see \Drupal\Core\Extension\ModuleHandler::getModuleList()
- */
-function module_list() {
-  $modules = array_keys(drupal_container()->get('module_handler')->getModuleList());
-  return array_combine($modules, $modules);
-}
-
-/**
- * Determines which modules are implementing a hook.
- *
- * @deprecated as of Drupal 8.0. Use
- *   drupal_container()->get('module_handler')->getImplementations($hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::getImplementations()
- */
-function module_implements($hook) {
-  return drupal_container()->get('module_handler')->getImplementations($hook);
-}
-
-/**
- * Invokes a hook in all enabled modules that implement it.
- *
- * @deprecated as of Drupal 8.0. Use
- *   drupal_container()->get('module_handler')->invokeAll($hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::invokeAll()
- */
-function module_invoke_all($hook) {
-  $args = func_get_args();
-  // Remove $hook from the arguments.
-  array_shift($args);
-  return drupal_container()->get('module_handler')->invokeAll($hook, $args);
-}
-
-/**
- * Passes alterable variables to specific hook_TYPE_alter() implementations.
- *
- * @deprecated as of Drupal 8.0. Use
- *   drupal_container()->get('module_handler')->alter($hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::alter()
- */
-function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
-  return drupal_container()->get('module_handler')->alter($type, $data, $context1, $context2);
-}
-
-/**
- * Determines whether a given module exists.
- *
- * @deprecated as of Drupal 8.0. Use
- *   drupal_container()->get('module_handler')->moduleExists($hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::moduleExists()
- */
-function module_exists($module) {
-  return drupal_container()->get('module_handler')->moduleExists($module);
-}
-
-/**
- * Determines whether a module implements a hook.
- *
- * @deprecated as of Drupal 8.0. Use
- *   drupal_container()->get('module_handler')->implementsHook($module, $hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::implementsHook()
- */
-function module_hook($module, $hook) {
-  return drupal_container()->get('module_handler')->implementsHook($module, $hook);
 }
 
 /**

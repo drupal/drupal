@@ -91,7 +91,7 @@ function update_prepare_d8_bootstrap() {
   include_once DRUPAL_ROOT . '/core/includes/install.inc';
   include_once DRUPAL_ROOT . '/core/includes/schema.inc';
   // Bootstrap to configuration.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_KERNEL);
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
   // Check whether settings.php needs to be rewritten.
   $settings_exist = !empty($GLOBALS['config_directories']);
@@ -125,9 +125,9 @@ function update_prepare_d8_bootstrap() {
 
     include_once DRUPAL_ROOT . '/core/includes/module.inc';
     include_once DRUPAL_ROOT . '/core/includes/cache.inc';
-    $module_handler = drupal_container()->get('module_handler');
-    $module_handler->setModuleList(array('system' => 'core/modules/system/system.module'));
-    $module_handler->load('system');
+    $module_list['system']['filename'] = 'core/modules/system/system.module';
+    module_list(NULL, $module_list);
+    require_once DRUPAL_ROOT . '/' . $module_list['system']['filename'];
     // Ensure the configuration directories exist and are writable, or create
     // them. If the directories have not been specified in settings.php and
     // created manually already, and either directory cannot be created by the
@@ -353,8 +353,8 @@ function update_prepare_d8_bootstrap() {
 
       // Populate a fixed module list (again, why did it get lost?) to avoid
       // errors due to the drupal_alter() in _system_rebuild_module_data().
-      $module_list['system'] = 'core/modules/system/system.module';
-      drupal_container()->get('module_handler')->setModuleList($module_list);
+      $module_list['system']['filename'] = 'core/modules/system/system.module';
+      module_list(NULL, $module_list);
       $module_data = _system_rebuild_module_data();
 
       // Migrate each extension into configuration, varying by the extension's
@@ -378,13 +378,7 @@ function update_prepare_d8_bootstrap() {
         }
         $schema_store->set($record->name, $record->schema_version);
       }
-      $sorted_modules = module_config_sort($module_config->get('enabled'));
-      $module_config->set('enabled', $sorted_modules)->save();
-      $sorted_with_filenames = array();
-      foreach (array_keys($sorted_modules) as $m) {
-        $sorted_with_filenames[$m] = drupal_get_filename('module', $m);
-      }
-      drupal_container()->get('module_handler')->setModuleList($sorted_with_filenames);
+      $module_config->set('enabled', module_config_sort($module_config->get('enabled')))->save();
       $disabled_modules->save();
       $theme_config->save();
       $disabled_themes->save();
@@ -394,6 +388,8 @@ function update_prepare_d8_bootstrap() {
       update_prepare_stored_includes();
       // Update the environment for the language bootstrap if needed.
       update_prepare_d8_language();
+      // Prime the classloader.
+      system_list('module_enabled');
 
       // Change language column to langcode in url_alias.
       if (db_table_exists('url_alias') && db_field_exists('url_alias', 'language')) {

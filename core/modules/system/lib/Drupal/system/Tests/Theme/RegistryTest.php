@@ -40,7 +40,7 @@ class RegistryTest extends WebTestBase {
 
     // Directly instantiate the theme registry, this will cause a base cache
     // entry to be written in __construct().
-    $registry = new ThemeRegistry($cid, 'cache', array('theme_registry' => TRUE), $this->container->get('module_handler')->isLoaded());
+    $registry = new ThemeRegistry($cid, 'cache', array('theme_registry' => TRUE));
 
     $this->assertTrue(cache()->get($cid), 'Cache entry was created.');
 

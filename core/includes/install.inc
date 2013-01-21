@@ -424,10 +424,15 @@ function drupal_install_system() {
     ->set('enabled.system', 0)
     ->save();
 
-  // Update the module list to include it.
-  drupal_container()->get('module_handler')->setModuleList(array('system' => $system_path . '/system.module'));
-  drupal_container()->get('module_handler')->resetImplementations();
+  // Clear out module list and hook implementation statics.
+  system_list_reset();
+  module_list_reset();
+  module_implements_reset();
 
+  // To ensure that the system module can be found by the plugin system, warm
+  // the module list cache.
+  // @todo Remove this in http://drupal.org/node/1798732.
+  module_list();
   config_install_default_config('module', 'system');
 
   module_invoke('system', 'install');

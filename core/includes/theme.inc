@@ -368,14 +368,14 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL, 
       $registry = _theme_build_registry($theme, $base_theme, $theme_engine);
       // Only persist this registry if all modules are loaded. This assures a
       // complete set of theme hooks.
-      if (drupal_container()->get('module_handler')->isLoaded()) {
+      if (module_load_all(NULL)) {
         _theme_save_registry($theme, $registry);
       }
     }
     return $registry;
   }
   else {
-    return new ThemeRegistry('theme_registry:runtime:' . $theme->name, 'cache', array('theme_registry' => TRUE), drupal_container()->get('module_handler')->isLoaded());
+    return new ThemeRegistry('theme_registry:runtime:' . $theme->name, 'cache', array('theme_registry' => TRUE));
   }
 }
 
@@ -441,6 +441,7 @@ function drupal_theme_rebuild() {
  *   themes/bartik.
  *
  * @see theme()
+ * @see _theme_process_registry()
  * @see hook_theme()
  * @see list_themes()
  */
@@ -547,7 +548,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
             // Add all modules so they can intervene with their own variable
             // processors. This allows them to provide variable processors even
             // if they are not the owner of the current hook.
-            $prefixes = array_merge($prefixes, array_keys(drupal_container()->get('module_handler')->getModuleList()));
+            $prefixes += module_list();
           }
           elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
             // Theme engines get an extra set that come before the normally
@@ -643,7 +644,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
       _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
     }
     // Only cache this registry if all modules are loaded.
-    if (drupal_container()->get('module_handler')->isLoaded()) {
+    if (module_load_all(NULL)) {
       cache()->set("theme_registry:build:modules", $cache, CacheBackendInterface::CACHE_PERMANENT, array('theme_registry' => TRUE));
     }
   }
@@ -958,7 +959,7 @@ function theme($hook, $variables = array()) {
   // If called before all modules are loaded, we do not necessarily have a full
   // theme registry to work with, and therefore cannot process the theme
   // request properly. See also _theme_load_registry().
-  if (!drupal_container()->get('module_handler')->isLoaded() && !defined('MAINTENANCE_MODE')) {
+  if (!module_load_all(NULL) && !defined('MAINTENANCE_MODE')) {
     throw new Exception(t('theme() may not be called until all modules are loaded.'));
   }
 

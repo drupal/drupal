@@ -43,7 +43,7 @@ class EnableDisableTest extends ModuleTestBase {
 
     // Remove already enabled modules (via installation profile).
     // @todo Remove this after removing all dependencies from Testing profile.
-    foreach ($this->container->get('module_handler')->getModuleList() as $dependency => $filename) {
+    foreach (module_list() as $dependency) {
       // Exclude required modules. Only installation profile "suggestions" can
       // be disabled and uninstalled.
       if (isset($modules[$dependency])) {

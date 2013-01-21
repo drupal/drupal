@@ -435,14 +435,13 @@ if (is_null($op) && update_access_allowed()) {
 
   // Load module basics.
   include_once DRUPAL_ROOT . '/core/includes/module.inc';
-  $module_list['system'] = 'core/modules/system/system.module';
-  $module_handler = drupal_container()->get('module_handler');
-  $module_handler->setModuleList($module_list);
-  $module_handler->load('system');
+  $module_list['system']['filename'] = 'core/modules/system/system.module';
+  module_list(NULL, $module_list);
+  drupal_load('module', 'system');
 
-  // Reset the module implementations cache so that any new hook implementations
+  // Reset the module_implements() cache so that any new hook implementations
   // in updated code are picked up.
-  $module_handler->resetImplementations();
+  module_implements_reset();
 
   // Set up $language, since the installer components require it.
   drupal_language_initialize();

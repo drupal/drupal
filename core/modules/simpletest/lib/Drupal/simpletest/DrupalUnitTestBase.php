@@ -50,6 +50,18 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    */
   public static $modules = array();
 
+  /**
+   * Fixed module list being used by this test.
+   *
+   * @var array
+   *   An associative array containing the required data for the $fixed_list
+   *   argument of module_list().
+   *
+   * @see UnitTestBase::setUp()
+   * @see UnitTestBase::enableModules()
+   */
+  private $moduleList = array();
+
   private $moduleFiles;
   private $themeFiles;
   private $themeData;
@@ -92,6 +104,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     $this->kernel = new DrupalKernel('testing', TRUE, drupal_classloader(), FALSE);
     $this->kernel->boot();
 
+    // Ensure that the module list is initially empty.
+    $this->moduleList = array();
     // Collect and set a fixed module list.
     $class = get_class($this);
     $modules = array();
@@ -118,15 +132,11 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     global $conf;
     // Keep the container object around for tests.
     $this->container = $container;
-
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
-
     $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
-
     $container
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')
       ->addArgument($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
-
     $conf['keyvalue_default'] = 'keyvalue.memory';
     $container->set('keyvalue.memory', $this->keyValueFactory);
     if (!$container->has('keyvalue')) {
@@ -162,7 +172,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     // file depends on many other factors. To prevent differences in test
     // behavior and non-reproducible test failures, we only allow the schema of
     // explicitly loaded/enabled modules to be installed.
-    if (!$this->container->get('module_handler')->moduleExists($module)) {
+    if (!module_exists($module)) {
       throw new \RuntimeException(format_string("'@module' module is not enabled.", array(
         '@module' => $module,
       )));
@@ -197,30 +207,27 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    *   Defaults to TRUE. If FALSE, the new modules are only added to the fixed
    *   module list and loaded.
    *
-   * @todo Remove $install argument and replace all callers that do not pass
-   *   FALSE with module_enable().
+   * @todo Remove this method as soon as there is an Extensions service
+   *   implementation that is able to manage a fixed module list.
    */
   protected function enableModules(array $modules, $install = TRUE) {
-    if ($install) {
-      module_enable($modules, FALSE);
-    }
-    // Explicitly set the list of modules in the extension handler.
-    else {
-      $module_handler = $this->container->get('module_handler');
-      $module_filenames = $module_handler->getModuleList();
-      foreach ($modules as $module) {
-        $module_filenames[$module] = drupal_get_filename('module', $module);
+    // Set the modules in the fixed module_list().
+    $new_enabled = array();
+    foreach ($modules as $module) {
+      $this->moduleList[$module]['filename'] = drupal_get_filename('module', $module);
+      $new_enabled[$module] = dirname($this->moduleList[$module]['filename']);
+      module_list(NULL, $this->moduleList);
+
+      // Call module_enable() to enable (install) the new module.
+      if ($install) {
+        module_enable(array($module), FALSE);
       }
-      $module_handler->setModuleList($module_filenames);
-      $module_handler->resetImplementations();
-      $this->kernel->updateModules($module_filenames, $module_filenames);
     }
-    // Regardless of loaded or installed, ensure isLoaded() is TRUE in order to
-    // make theme() work.
-    // Note that the kernel has rebuilt the container; this $module_handler is
-    // no longer the $module_handler instance from above.
-    $module_handler = $this->container->get('module_handler');
-    $module_handler->reload();
+    // Otherwise, only ensure that the new modules are loaded.
+    if (!$install) {
+      module_load_all(FALSE, TRUE);
+      module_implements_reset();
+    }
   }
 
 }

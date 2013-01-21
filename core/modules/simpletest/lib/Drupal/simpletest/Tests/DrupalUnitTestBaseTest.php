@@ -39,7 +39,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     // Verify that specified $modules have been loaded.
     $this->assertTrue(function_exists('entity_test_permission'), "$module.module was loaded.");
     // Verify that there is a fixed module list.
-    $this->assertIdentical(array_keys(drupal_container()->get('module_handler')->getModuleList()), array($module));
+    $this->assertIdentical(module_list(), array($module => $module));
     $this->assertIdentical(module_implements('permission'), array($module));
 
     // Verify that no modules have been installed.
@@ -54,9 +54,9 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
 
     // Verify that the module does not exist yet.
     $this->assertFalse(module_exists($module), "$module module not found.");
-    $list = array_keys(drupal_container()->get('module_handler')->getModuleList());
-    $this->assertFalse(in_array($module, $list), "$module module not found in the extension handler's module list.");
-    $list = module_implements('permission');
+    $list = module_list();
+    $this->assertFalse(in_array($module, $list), "$module module in module_list() not found.");
+    $list = module_list('permission');
     $this->assertFalse(in_array($module, $list), "{$module}_permission() in module_implements() not found.");
 
     // Enable the module.
@@ -64,9 +64,9 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
 
     // Verify that the module exists.
     $this->assertTrue(module_exists($module), "$module module found.");
-    $list = array_keys(drupal_container()->get('module_handler')->getModuleList());
-    $this->assertTrue(in_array($module, $list), "$module module found in the extension handler's module list.");
-    $list = module_implements('permission');
+    $list = module_list();
+    $this->assertTrue(in_array($module, $list), "$module module in module_list() found.");
+    $list = module_list('permission');
     $this->assertTrue(in_array($module, $list), "{$module}_permission() in module_implements() found.");
   }
 
@@ -83,9 +83,9 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
 
     // Verify that the module does not exist yet.
     $this->assertFalse(module_exists($module), "$module module not found.");
-    $list = array_keys(drupal_container()->get('module_handler')->getModuleList());
-    $this->assertFalse(in_array($module, $list), "$module module not found in the extension handler's module list.");
-    $list = module_implements('permission');
+    $list = module_list();
+    $this->assertFalse(in_array($module, $list), "$module module in module_list() not found.");
+    $list = module_list('permission');
     $this->assertFalse(in_array($module, $list), "{$module}_permission() in module_implements() not found.");
 
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
@@ -97,9 +97,9 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
 
     // Verify that the enabled module exists.
     $this->assertTrue(module_exists($module), "$module module found.");
-    $list = array_keys(drupal_container()->get('module_handler')->getModuleList());
-    $this->assertTrue(in_array($module, $list), "$module module found in the extension handler's module list.");
-    $list = module_implements('permission');
+    $list = module_list();
+    $this->assertTrue(in_array($module, $list), "$module module in module_list() found.");
+    $list = module_list('permission');
     $this->assertTrue(in_array($module, $list), "{$module}_permission() in module_implements() found.");
 
     $this->assertTrue(db_table_exists($table), "'$table' database table found.");
@@ -178,70 +178,6 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(db_table_exists($table), "'$table' database table found.");
     $schema = drupal_get_schema($table);
     $this->assertTrue($schema, "'$table' table schema found.");
-  }
-
-  /**
-   * Tests that the fixed module list is retained after enabling and installing modules.
-   */
-  function testEnableModulesFixedList() {
-    // entity_test is loaded via $modules; its entity type should exist.
-    $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
-    $this->assertTrue(TRUE == entity_get_info('entity_test'));
-
-    // Load some additional modules; entity_test should still exist.
-    $this->enableModules(array('entity', 'field', 'field_sql_storage', 'text', 'entity_test'), FALSE);
-    $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
-    $this->assertTrue(TRUE == entity_get_info('entity_test'));
-
-    // Install some other modules; entity_test should still exist.
-    module_enable(array('field', 'field_sql_storage', 'field_test'), FALSE);
-    $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
-    $this->assertTrue(TRUE == entity_get_info('entity_test'));
-
-    // Disable one of those modules; entity_test should still exist.
-    module_disable(array('field_test'));
-    $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
-    $this->assertTrue(TRUE == entity_get_info('entity_test'));
-
-    // Set the weight of a module; entity_test should still exist.
-    module_set_weight('entity', -1);
-    $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
-    $this->assertTrue(TRUE == entity_get_info('entity_test'));
-
-    // Reactivate the disabled module without enabling it.
-    $this->enableModules(array('field_test'), FALSE);
-
-    // Create a field and an instance.
-    $display = entity_create('entity_display', array(
-      'targetEntityType' => 'entity_test',
-      'bundle' => 'entity_test',
-      'viewMode' => 'default',
-    ));
-    $field = array(
-      'field_name' => 'test_field',
-      'type' => 'test_field'
-    );
-    field_create_field($field);
-    $instance = array(
-      'field_name' => $field['field_name'],
-      'entity_type' => 'entity_test',
-      'bundle' => 'entity_test',
-    );
-    field_create_instance($instance);
-  }
-
-  /**
-   * Tests that theme() works right after loading a module.
-   */
-  function testEnableModulesTheme() {
-    $element = array(
-      '#type' => 'container',
-      '#markup' => 'Foo',
-      '#attributes' => array(),
-    );
-    $this->enableModules(array('system'), FALSE);
-    // theme() throws an exception if modules are not loaded yet.
-    drupal_render($element);
   }
 
 }

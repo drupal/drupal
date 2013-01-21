@@ -338,7 +338,6 @@ function install_begin_request(&$install_state) {
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
       ->addArgument(new Reference('event_dispatcher'));
-
     // The install process cannot use the database lock backend since the database
     // is not fully up, so we use a null backend implementation during the
     // installation process. This will also speed up the installation process.
@@ -347,10 +346,6 @@ function install_begin_request(&$install_state) {
     // (as opposed to the cache backend) so we can afford having a null
     // implementation here.
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
-
-    // Register a module handler for managing enabled modules.
-    $container
-      ->register('module_handler', 'Drupal\Core\Extension\ModuleHandler');
     drupal_container($container);
   }
 
@@ -358,13 +353,10 @@ function install_begin_request(&$install_state) {
   drupal_language_initialize();
 
   require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
-
-  $module_handler = drupal_container()->get('module_handler');
-  if (!$module_handler->moduleExists('system')) {
-    // Override the module list with a minimal set of modules.
-    $module_handler->setModuleList(array('system' => 'core/modules/system/system.module'));
-  }
-  $module_handler->load('system');
+  // Override the module list with a minimal set of modules.
+  $module_list['system']['filename'] = 'core/modules/system/system.module';
+  module_list(NULL, $module_list);
+  drupal_load('module', 'system');
 
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
   $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
@@ -1578,7 +1570,9 @@ function install_bootstrap_full(&$install_state) {
   // cache backend will be used again.
   unset($GLOBALS['conf']['cache_classes']['cache']);
   drupal_static_reset('cache');
-
+  // Clear the module list that was overriden earlier in the process.
+  // This will allow all freshly installed modules to be loaded.
+  module_list_reset();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 }
 

@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\CachedModuleHandlerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,18 +15,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Subscriber for all responses.
  */
 class RequestCloseSubscriber implements EventSubscriberInterface {
-
-  /**
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructor.
-   */
-  function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-  }
 
   /**
    * Performs end of request tasks.
@@ -42,15 +28,8 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onTerminate(PostResponseEvent $event) {
-    $this->moduleHandler->invokeAll('exit');
-    $request_method = $event->getRequest()->getMethod();
-    // Check whether we need to write the module implementations cache. We do
-    // not want to cache hooks which are only invoked on HTTP POST requests
-    // since these do not need to be optimized as tightly, and not doing so
-    // keeps the cache entry smaller.
-    if (($request_method == 'GET' || $request_method == 'HEAD') && $this->moduleHandler instanceof CachedModuleHandlerInterface) {
-      $this->moduleHandler->writeCache();
-    }
+    module_invoke_all('exit');
+    module_implements_write_cache();
     system_run_automated_cron();
   }
 

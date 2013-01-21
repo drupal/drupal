@@ -18,5 +18,6 @@ function breakpoint_enable() {
   _breakpoint_theme_enabled(array_keys($themes));
 
   // Import breakpoints from modules.
-  _breakpoint_modules_enabled(array_keys(drupal_container()->get('module_handler')->getModuleList()));
+  $modules = module_list();
+  _breakpoint_modules_enabled(array_keys($modules));
 }

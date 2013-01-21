@@ -58,12 +58,11 @@ class Layout implements DerivativeInterface {
     $available_layout_providers = array();
 
     // Add all modules as possible layout providers.
-    // @todo Inject the module handler.
-    foreach (drupal_container()->get('module_handler')->getModuleList() as $module => $filename) {
+    foreach (module_list() as $module) {
       $available_layout_providers[$module] = array(
         'type' => 'module',
         'provider' => $module,
-        'dir' => dirname($filename),
+        'dir' => drupal_get_path('module', $module),
       );
     }
 

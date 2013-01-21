@@ -2777,7 +2777,7 @@ function system_get_info($type, $name = NULL) {
   $info = array();
   if ($type == 'module') {
     $data = system_rebuild_module_data();
-    foreach (drupal_container()->get('module_handler')->getModuleList() as $module => $filename) {
+    foreach (module_list() as $module) {
       $info[$module] = $data[$module]->info;
     }
   }
@@ -2920,7 +2920,7 @@ function system_rebuild_module_data() {
       $record->schema_version = SCHEMA_UNINSTALLED;
       $files[$module] = $record->filename;
     }
-    $modules = drupal_container()->get('module_handler')->buildModuleDependencies($modules);
+    $modules = _module_build_dependencies($modules);
     $modules_cache = $modules;
 
     // Store filenames to allow system_list() and drupal_get_filename() to

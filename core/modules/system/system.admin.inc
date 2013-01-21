@@ -1204,7 +1204,7 @@ function system_modules_submit($form, &$form_state) {
 
   // Gets list of modules prior to install process, unsets $form_state['storage']
   // so we don't get redirected back to the confirmation form.
-  $pre_install_list = drupal_container()->get('module_handler')->getModuleList();
+  $pre_install_list = module_list();
   unset($form_state['storage']);
 
   // Reverse the 'enable' list, to order dependencies before dependents.
@@ -1216,7 +1216,7 @@ function system_modules_submit($form, &$form_state) {
 
   // Gets module list after install process, flushes caches and displays a
   // message if there are changes.
-  $post_install_list = drupal_container()->get('module_handler')->getModuleList();
+  $post_install_list = module_list();
   if ($pre_install_list != $post_install_list) {
     drupal_flush_all_caches();
     drupal_set_message(t('The configuration options have been saved.'));
