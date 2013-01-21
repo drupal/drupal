@@ -137,7 +137,6 @@ class ViewTestData {
       'help' => t('The test data ID'),
       'field' => array(
         'id' => 'numeric',
-        'click sortable' => TRUE,
       ),
       'argument' => array(
         'id' => 'numeric',
@@ -154,7 +153,6 @@ class ViewTestData {
       'help' => t('The name of the person'),
       'field' => array(
         'id' => 'standard',
-        'click sortable' => TRUE,
       ),
       'argument' => array(
         'id' => 'string',
@@ -171,7 +169,6 @@ class ViewTestData {
       'help' => t('The age of the person'),
       'field' => array(
         'id' => 'numeric',
-        'click sortable' => TRUE,
       ),
       'argument' => array(
         'id' => 'numeric',
@@ -188,7 +185,6 @@ class ViewTestData {
       'help' => t('The job of the person'),
       'field' => array(
         'id' => 'standard',
-        'click sortable' => TRUE,
       ),
       'argument' => array(
         'id' => 'string',
@@ -205,7 +201,6 @@ class ViewTestData {
       'help' => t('The creation date of this record'),
       'field' => array(
         'id' => 'date',
-        'click sortable' => TRUE,
       ),
       'argument' => array(
         'id' => 'date',

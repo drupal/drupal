@@ -45,6 +45,7 @@ function entity_test_views_data() {
     ),
     'field' => array(
       'id' => 'standard',
+      'click sortable' => FALSE,
     ),
     'filter' => array(
       'id' => 'string',
@@ -60,7 +61,6 @@ function entity_test_views_data() {
       'help' => t('The {language}.langcode of the original variant of this test entity.'),
       'field' => array(
         'id' => 'language',
-        'click sortable' => TRUE,
       ),
       'filter' => array(
         'id' => 'language',
@@ -102,7 +102,6 @@ function entity_test_views_data() {
       'help' => t('The {language}.langcode of this variant of this test entity.'),
       'field' => array(
         'id' => 'language',
-        'click sortable' => TRUE,
       ),
       'filter' => array(
         'id' => 'language',
@@ -119,7 +118,6 @@ function entity_test_views_data() {
       'help' => t('Boolean indicating whether the current variant is in the original entity language.'),
       'field' => array(
         'id' => 'boolean',
-        'click sortable' => TRUE,
       ),
       'filter' => array(
         'id' => 'boolean',
@@ -138,7 +136,6 @@ function entity_test_views_data() {
     'help' => t('The name of the test entity.'),
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'string',
@@ -156,7 +153,6 @@ function entity_test_views_data() {
     'help' => t('The name of the test entity.'),
     'field' => array(
       'id' => 'user',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'user_name',

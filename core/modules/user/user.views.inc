@@ -32,7 +32,6 @@ function user_views_data() {
     'help' => t('The user ID'), // The help that appears on the UI,
     'field' => array(
       'id' => 'user',
-      'click sortable' => TRUE,
     ),
     'argument' => array(
       'id' => 'user_uid',
@@ -100,7 +99,6 @@ function user_views_data() {
     'help' => t('The user or author name.'), // The help that appears on the UI,
     'field' => array(
       'id' => 'user_name',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -122,7 +120,6 @@ function user_views_data() {
     'help' => t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.'), // The help that appears on the UI,
     'field' => array(
       'id' => 'user_mail',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -141,7 +138,6 @@ function user_views_data() {
     'help' => t('Language of the user'),
     'field' => array(
       'id' => 'user_language',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -160,6 +156,7 @@ function user_views_data() {
       'title' => t('Link'),
       'help' => t('Provide a simple link to the user.'),
       'id' => 'user_link',
+      'click sortable' => FALSE,
     ),
   );
 
@@ -169,7 +166,6 @@ function user_views_data() {
     'help' => t('The date the user was created.'), // The help that appears on the UI,
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date'
@@ -239,7 +235,6 @@ function user_views_data() {
     'help' => t("The user's last access date."), // The help that appears on the UI,
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date'
@@ -255,7 +250,6 @@ function user_views_data() {
     'help' => t("The user's last login date."), // The help that appears on the UI,
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date'
@@ -272,7 +266,6 @@ function user_views_data() {
      // Information for displaying a title as a field
     'field' => array(
       'id' => 'boolean',
-      'click sortable' => TRUE,
       'output formats' => array(
         'active-blocked' => array(t('Active'), t('Blocked')),
       ),
@@ -295,6 +288,7 @@ function user_views_data() {
     'field' => array(
       'id' => 'markup',
       'format' => filter_fallback_format(),
+      'click sortable' => FALSE,
     ),
     'filter' => array(
       'id' => 'string',
@@ -306,6 +300,7 @@ function user_views_data() {
       'title' => t('Edit link'),
       'help' => t('Provide a simple link to edit the user.'),
       'id' => 'user_link_edit',
+      'click sortable' => FALSE,
     ),
   );
 
@@ -314,6 +309,7 @@ function user_views_data() {
       'title' => t('Cancel link'),
       'help' => t('Provide a simple link to cancel the user.'),
       'id' => 'user_link_cancel',
+      'click sortable' => FALSE,
     ),
   );
 

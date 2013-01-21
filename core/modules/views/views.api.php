@@ -191,7 +191,6 @@ function hook_views_data() {
     'help' => t('Just a plain text field.'),
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE, // This is use by the table display plugin.
     ),
     'sort' => array(
       'id' => 'standard',
@@ -210,7 +209,6 @@ function hook_views_data() {
     'help' => t('Just a numeric field.'),
     'field' => array(
       'id' => 'numeric',
-      'click sortable' => TRUE,
      ),
     'filter' => array(
       'id' => 'numeric',
@@ -226,7 +224,6 @@ function hook_views_data() {
     'help' => t('Just an on/off field.'),
     'field' => array(
       'id' => 'boolean',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'boolean',
@@ -248,7 +245,6 @@ function hook_views_data() {
     'help' => t('Just a timestamp field.'),
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date',
