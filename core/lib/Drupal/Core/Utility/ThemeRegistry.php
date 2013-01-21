@@ -42,12 +42,14 @@ class ThemeRegistry extends CacheArray {
    *   The bin to cache the array.
    * @param array $tags
    *   (optional) The tags to specify for the cache item.
+   * @param bool $modules_loaded
+   *   Whether all modules have already been loaded.
    */
-  function __construct($cid, $bin, $tags) {
+  function __construct($cid, $bin, $tags, $modules_loaded = FALSE) {
     $this->cid = $cid;
     $this->bin = $bin;
     $this->tags = $tags;
-    $this->persistable = module_load_all(NULL) && $_SERVER['REQUEST_METHOD'] == 'GET';
+    $this->persistable = $modules_loaded && $_SERVER['REQUEST_METHOD'] == 'GET';
 
     $data = array();
     if ($this->persistable && $cached = cache($this->bin)->get($this->cid)) {

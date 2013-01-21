@@ -77,6 +77,12 @@ class CoreBundle extends Bundle {
       ->setFactoryClass('Drupal\Component\Utility\Settings')
       ->setFactoryMethod('getSingleton');
 
+    // Register the State k/v store as a service.
+    $container->register('state', 'Drupal\Core\KeyValueStore\KeyValueStoreInterface')
+      ->setFactoryService(new Reference('keyvalue'))
+      ->setFactoryMethod('get')
+      ->addArgument('state');
+
     // Register the Queue factory.
     $container
       ->register('queue', 'Drupal\Core\Queue\QueueFactory')
@@ -114,6 +120,20 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('service_container'));
     $container->register('controller_resolver', 'Drupal\Core\ControllerResolver')
       ->addArgument(new Reference('service_container'));
+
+    $container
+      ->register('cache.cache', 'Drupal\Core\Cache\CacheBackendInterface')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('cache');
+    $container
+      ->register('cache.bootstrap', 'Drupal\Core\Cache\CacheBackendInterface')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('bootstrap');
+
+    $this->registerModuleHandler($container);
+
     $container->register('http_kernel', 'Drupal\Core\HttpKernel')
       ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('service_container'))
@@ -144,7 +164,8 @@ class CoreBundle extends Bundle {
     $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
       ->addArgument(new Reference('router.dumper'))
       ->addArgument(new Reference('lock'))
-      ->addArgument(new Reference('event_dispatcher'));
+      ->addArgument(new Reference('event_dispatcher'))
+      ->addArgument(new Reference('module_handler'));
 
     $container
       ->register('cache.path', 'Drupal\Core\Cache\CacheBackendInterface')
@@ -209,6 +230,7 @@ class CoreBundle extends Bundle {
       ->setScope('request')
       ->addTag('event_subscriber');
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
+      ->addArgument(new Reference('module_handler'))
       ->addTag('event_subscriber');
     $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
       ->addTag('event_subscriber');
@@ -245,6 +267,25 @@ class CoreBundle extends Bundle {
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());
+  }
+
+  /**
+   * Registers the module handler.
+   */
+  protected function registerModuleHandler(ContainerBuilder $container) {
+    // The ModuleHandler manages enabled modules and provides the ability to
+    // invoke hooks in all enabled modules.
+    if ($container->getParameter('kernel.environment') == 'install') {
+      // During installation we use the non-cached version.
+      $container->register('module_handler', 'Drupal\Core\Extension\ModuleHandler')
+        ->addArgument('%container.modules%');
+    }
+    else {
+      $container->register('module_handler', 'Drupal\Core\Extension\CachedModuleHandler')
+        ->addArgument('%container.modules%')
+        ->addArgument(new Reference('state'))
+        ->addArgument(new Reference('cache.bootstrap'));
+    }
   }
 
   /**

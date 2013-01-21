@@ -56,9 +56,6 @@ abstract class UnitTestBase extends TestBase {
     $conf = array();
     drupal_static_reset();
 
-    // Enforce an empty module list.
-    module_list(NULL, array());
-
     $conf['file_public_path'] = $this->public_files_directory;
 
     // Change the database prefix.

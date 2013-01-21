@@ -268,9 +268,8 @@ abstract class UpgradePathTestBase extends WebTestBase {
 
     // Reload module list for modules that are enabled in the test database
     // but not on the test client.
-    system_list_reset();
-    module_implements_reset();
-    module_load_all(FALSE, TRUE);
+    drupal_container()->get('module_handler')->resetImplementations();
+    drupal_container()->get('module_handler')->reload();
 
     // Rebuild the container and all caches.
     $this->rebuildContainer();

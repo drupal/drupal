@@ -223,6 +223,9 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
 
   /**
    * Implements Drupal\Core\DrupalKernelInterface::updateModules().
+   *
+   * @todo Remove obsolete $module_list parameter. Only $module_filenames is
+   *   needed.
    */
   public function updateModules(array $module_list, array $module_filenames = array()) {
     $this->newModuleList = $module_list;

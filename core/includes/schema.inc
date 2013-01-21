@@ -77,16 +77,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
     else {
       $schema = array();
       // Load the .install files to get hook_schema.
-      // On some databases this function may be called before bootstrap has
-      // been completed, so we force the functions we need to load just in case.
-      if (function_exists('module_load_all_includes')) {
-        // This function can be called very early in the bootstrap process, so
-        // we force the system_list() static cache to be refreshed to ensure
-        // that it contains the complete list of modules before we go on to call
-        // module_load_all_includes().
-        system_list_reset();
-        module_load_all_includes('install');
-      }
+      drupal_container()->get('module_handler')->loadAllIncludes('install');
 
       require_once DRUPAL_ROOT . '/core/includes/common.inc';
       // Invoke hook_schema for all modules.
@@ -130,8 +121,7 @@ function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
   if (!isset($updates[$module])) {
     $updates = array();
-
-    foreach (module_list() as $loaded_module) {
+    foreach (drupal_container()->get('module_handler')->getModuleList() as $loaded_module => $filename) {
       $updates[$loaded_module] = array();
     }
 
@@ -341,7 +331,9 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
  *   An array of fields.
  */
 function drupal_schema_fields_sql($table, $prefix = NULL) {
-  $schema = drupal_get_schema($table);
+  if (!$schema = drupal_get_schema($table)) {
+    return array();
+  }
   $fields = array_keys($schema['fields']);
   if ($prefix) {
     $columns = array();

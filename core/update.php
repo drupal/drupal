@@ -333,10 +333,15 @@ function update_access_allowed() {
   // Calls to user_access() might fail during the Drupal 6 to 7 update process,
   // so we fall back on requiring that the user be logged in as user #1.
   try {
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'user') . '/user.module';
+    $module_handler = drupal_container()->get('module_handler');
+    $module_filenames = $module_handler->getModuleList();
+    $module_filenames['user'] = 'core/modules/user/user.module';
+    $module_handler->setModuleList($module_filenames);
+    $module_handler->reload();
+    drupal_container()->get('kernel')->updateModules($module_filenames, $module_filenames);
     return user_access('administer software updates');
   }
-  catch (Exception $e) {
+  catch (\Exception $e) {
     return ($user->uid == 1);
   }
 }
@@ -435,13 +440,14 @@ if (is_null($op) && update_access_allowed()) {
 
   // Load module basics.
   include_once DRUPAL_ROOT . '/core/includes/module.inc';
-  $module_list['system']['filename'] = 'core/modules/system/system.module';
-  module_list(NULL, $module_list);
-  drupal_load('module', 'system');
+  $module_list['system'] = 'core/modules/system/system.module';
+  $module_handler = drupal_container()->get('module_handler');
+  $module_handler->setModuleList($module_list);
+  $module_handler->load('system');
 
-  // Reset the module_implements() cache so that any new hook implementations
+  // Reset the module implementations cache so that any new hook implementations
   // in updated code are picked up.
-  module_implements_reset();
+  $module_handler->resetImplementations();
 
   // Set up $language, since the installer components require it.
   drupal_language_initialize();

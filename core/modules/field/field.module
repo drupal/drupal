@@ -541,7 +541,7 @@ function field_modules_disabled($modules) {
 function field_sync_field_status() {
   // Refresh the 'active' and 'storage_active' columns according to the current
   // set of enabled modules.
-  $modules = module_list();
+  $modules = array_keys(drupal_container()->get('module_handler')->getModuleList());
   foreach ($modules as $module_name) {
     field_associate_fields($module_name);
   }
