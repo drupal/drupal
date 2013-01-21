@@ -425,7 +425,7 @@ function _book_add_form_elements(&$form, &$form_state, Node $node) {
     '#weight' => 10,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' => 'additional_settings',
+    '#group' => 'advanced',
     '#attributes' => array(
       'class' => array('book-outline-form'),
     ),

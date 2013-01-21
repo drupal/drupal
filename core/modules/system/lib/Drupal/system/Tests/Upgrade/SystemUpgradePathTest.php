@@ -108,4 +108,16 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
       }
     }
   }
+
+  /**
+   * Check whether views got enabled.
+   */
+  public function testFrontpageUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+
+    // Reset the module enable list to get the current result.
+    module_list_reset();
+    $this->assertTrue(module_exists('views'), 'Views is enabled after the upgrade.');
+  }
+
 }

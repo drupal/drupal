@@ -156,5 +156,5 @@ display:
     id: page_1
     position: '0'
 human_name: ''
-name: test_destroy
+id: test_destroy
 tag: ''

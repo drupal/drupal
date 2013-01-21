@@ -180,7 +180,7 @@ abstract class CachePluginBase extends PluginBase {
    * to be sure that we catch everything. Maybe that's a bad idea.
    */
   function cache_flush() {
-    cache($this->table)->deleteTags(array($this->view->storage->get('name') => TRUE));
+    cache($this->table)->deleteTags(array($this->view->storage->id() => TRUE));
   }
 
   /**
@@ -295,7 +295,7 @@ abstract class CachePluginBase extends PluginBase {
         }
       }
 
-      $this->resultsKey = $this->view->storage->get('name') . ':' . $this->displayHandler->display['id'] . ':results:' . hash('sha256', serialize($key_data));
+      $this->resultsKey = $this->view->storage->id() . ':' . $this->displayHandler->display['id'] . ':results:' . hash('sha256', serialize($key_data));
     }
 
     return $this->resultsKey;
@@ -319,7 +319,7 @@ abstract class CachePluginBase extends PluginBase {
         'base_url' => $GLOBALS['base_url'],
       );
 
-      $this->outputKey = $this->view->storage->get('name') . ':' . $this->displayHandler->display['id'] . ':output:' . hash('sha256', serialize($key_data));
+      $this->outputKey = $this->view->storage->id() . ':' . $this->displayHandler->display['id'] . ':output:' . hash('sha256', serialize($key_data));
     }
 
     return $this->outputKey;

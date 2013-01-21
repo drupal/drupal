@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Defines a simple telephone number field type.
+ */
+
+/**
+ * Implements hook_field_info().
+ */
+function telephone_field_info() {
+  return array(
+    'telephone' => array(
+      'label' => t('Telephone number'),
+      'description' => t('This field stores a telephone number in the database.'),
+      'default_widget' => 'telephone_default',
+      'default_formatter' => 'telephone_link',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function telephone_field_info_alter(&$info) {
+  if (module_exists('text')) {
+    $info['telephone']['default_formatter'] = 'text_plain';
+  }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function telephone_field_is_empty($item, $field) {
+  return !isset($item['value']) || $item['value'] === '';
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function telephone_field_formatter_info_alter(&$info) {
+  if (isset($info['text_plain'])) {
+    $info['text_plain']['field_types'][] = 'telephone';
+  }
+}

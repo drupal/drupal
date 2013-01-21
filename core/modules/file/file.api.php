@@ -7,6 +7,21 @@
 
 
 /**
+ * Act on a newly created file.
+ *
+ * This hook runs after a new file object has just been instantiated. It can be
+ * used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\file\Plugin\Core\Entity\File $file
+ *   The file object.
+ */
+function hook_file_create(\Drupal\file\Plugin\Core\Entity\File $file) {
+  if (!isset($file->foo)) {
+    $file->foo = 'some_initial_value';
+  }
+}
+
+/**
  * Load additional information into file entities.
  *
  * file_load_multiple() calls this hook to allow modules to load

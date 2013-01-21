@@ -19,7 +19,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   *
   * @var array
   */
-  public static $modules = array('file', 'file_module_test', 'field_test');
+  public static $modules = array('file', 'file_module_test', 'field_ui', 'field_test');
 
   protected $profile = 'standard';
 
@@ -27,7 +27,20 @@ abstract class FileFieldTestBase extends WebTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer comments', 'access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer nodes', 'bypass node access'));
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer node fields',
+      'administer node display',
+      'administer comment fields',
+      'administer comments',
+      'access content',
+      'access administration pages',
+      'administer site configuration',
+      'administer users',
+      'administer permissions',
+      'administer content types',
+      'administer nodes',
+      'bypass node access'
+    ));
     $this->drupalLogin($this->admin_user);
   }
 
@@ -193,7 +206,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file exists in the database.
    */
   function assertFileEntryExists($file, $message = NULL) {
-    entity_get_controller('file')->resetCache();
+    $this->container->get('plugin.manager.entity')->getStorageController('file')->resetCache();
     $db_file = file_load($file->fid);
     $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->uri));
     $this->assertEqual($db_file->uri, $file->uri, $message);
@@ -211,7 +224,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file does not exist in the database.
    */
   function assertFileEntryNotExists($file, $message) {
-    entity_get_controller('file')->resetCache();
+    $this->container->get('plugin.manager.entity')->getStorageController('file')->resetCache();
     $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->uri));
     $this->assertFalse(file_load($file->fid), $message);
   }

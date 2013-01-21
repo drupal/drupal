@@ -61,7 +61,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     ));
 
     // Enable the recent content block with two items.
-    $block = $this->drupalPlaceBlock('node_recent_block', array('machine_name' => 'test_block', 'block_count' => 2));
+    $block = $this->drupalPlaceBlock('node_recent_block', array('machine_name' => 'test_block'), array('block_count' => 2));
 
     // Test that block is not visible without nodes.
     $this->drupalGet('');
@@ -91,7 +91,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // see the block.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($block['subject'], 'Block was not found.');
+    $this->assertNoText($block->label(), 'Block was not found.');
 
     // Test that only the 2 latest nodes are shown.
     $this->drupalLogin($this->webUser);
@@ -106,9 +106,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Set the number of recent nodes to show to 10.
-    $config = config($block['config_id']);
-    $config->set('block_count', 10);
-    $config->save();
+    $block->set('settings', array('block_count' => 10));
+    $block->save();
 
     // Post an additional node.
     $node4 = $this->drupalCreateNode($default_settings);
@@ -125,24 +124,30 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     // Enable the "Powered by Drupal" block only on article nodes.
     $block = $this->drupalPlaceBlock('system_powered_by_block', array(
-      'visibility[node_type][types][article]' => TRUE,
-             ));
-    $config = config($block['config_id']);
-    $node_type_visibility = $config->get('visibility.node_type.types.article');
-    $this->assertEqual($node_type_visibility, 'article', 'Visibility settings were saved to configuration');
+      'visibility' => array(
+        'node_type' => array(
+          'types' => array(
+            'article' => 'article',
+          ),
+        ),
+      ),
+    ));
+    $visibility = $block->get('visibility');
+    $this->assertTrue(isset($visibility['node_type']['types']['article']), 'Visibility settings were saved to configuration');
 
     // Create a page node.
     $node5 = $this->drupalCreateNode(array('uid' => $this->adminUser->uid, 'type' => 'page'));
 
     // Verify visibility rules.
     $this->drupalGet('');
-    $this->assertNoText($block['subject'], 'Block was not displayed on the front page.');
+    $label = $block->label();
+    $this->assertNoText($label, 'Block was not displayed on the front page.');
     $this->drupalGet('node/add/article');
-    $this->assertText($block['subject'], 'Block was displayed on the node/add/article page.');
+    $this->assertText($label, 'Block was displayed on the node/add/article page.');
     $this->drupalGet('node/' . $node1->nid);
-    $this->assertText($block['subject'], 'Block was displayed on the node/N when node is of type article.');
+    $this->assertText($label, 'Block was displayed on the node/N when node is of type article.');
     $this->drupalGet('node/' . $node5->nid);
-    $this->assertNoText($block['subject'], 'Block was not displayed on nodes of type page.');
+    $this->assertNoText($label, 'Block was not displayed on nodes of type page.');
   }
 
 }

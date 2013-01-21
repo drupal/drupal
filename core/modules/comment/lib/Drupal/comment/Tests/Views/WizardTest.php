@@ -38,7 +38,7 @@ class WizardTest extends WizardTestBase {
   public function testCommentWizard() {
     $view = array();
     $view['human_name'] = $this->randomName(16);
-    $view['name'] = strtolower($this->randomName(16));
+    $view['id'] = strtolower($this->randomName(16));
     $view['show[wizard_key]'] = 'comment';
     $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomName(16);
@@ -46,7 +46,7 @@ class WizardTest extends WizardTestBase {
     // Just triggering the saving should automatically choose a proper row
     // plugin.
     $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertUrl('admin/structure/views/view/' . $view['name'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
+    $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
 
     // If we update the type first we should get a selection of comment valid
     // row plugins as the select field.
@@ -67,11 +67,11 @@ class WizardTest extends WizardTestBase {
     $expected_options = array('comment', 'fields');
     $this->assertEqual($options, $expected_options);
 
-    $view['name'] = strtolower($this->randomName(16));
+    $view['id'] = strtolower($this->randomName(16));
     $this->drupalPost(NULL, $view, t('Save and edit'));
-    $this->assertUrl('admin/structure/views/view/' . $view['name'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
+    $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
 
-    $view = views_get_view($view['name']);
+    $view = views_get_view($view['id']);
     $view->initHandlers();
     $row = $view->display_handler->getOption('row');
     $this->assertEqual($row['type'], 'comment');

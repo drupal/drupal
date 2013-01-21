@@ -18,7 +18,7 @@ class FormatterFactory extends DefaultFactory {
    * Overrides Drupal\Component\Plugin\Factory\DefaultFactory::createInstance().
    */
   public function createInstance($plugin_id, array $configuration) {
-    $plugin_class = $this->getPluginClass($plugin_id);
+    $plugin_class = static::getPluginClass($plugin_id, $this->discovery);
     return new $plugin_class($plugin_id, $this->discovery, $configuration['instance'], $configuration['settings'], $configuration['label'], $configuration['view_mode']);
   }
 }

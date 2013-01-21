@@ -23,4 +23,4 @@ display:
     id: default
     position: '0'
 human_name:
-name: test_user_uid_argument
+id: test_user_uid_argument

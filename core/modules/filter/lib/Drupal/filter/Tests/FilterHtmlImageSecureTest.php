@@ -33,7 +33,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     parent::setUp();
 
     // Setup Filtered HTML text format.
-    $filtered_html_format = array(
+    $filtered_html_format = entity_create('filter_format', array(
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'filters' => array(
@@ -50,9 +50,8 @@ class FilterHtmlImageSecureTest extends WebTestBase {
           'status' => 1,
         ),
       ),
-    );
-    $filtered_html_format = (object) $filtered_html_format;
-    filter_format_save($filtered_html_format);
+    ));
+    $filtered_html_format->save();
 
     // Setup users.
     $this->checkPermissions(array(), TRUE);

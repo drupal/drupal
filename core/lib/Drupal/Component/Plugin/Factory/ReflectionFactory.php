@@ -20,7 +20,7 @@ class ReflectionFactory extends DefaultFactory {
    * Implements Drupal\Component\Plugin\Factory\FactoryInterface::createInstance().
    */
   public function createInstance($plugin_id, array $configuration) {
-    $plugin_class = $this->getPluginClass($plugin_id);
+    $plugin_class = static::getPluginClass($plugin_id, $this->discovery);
 
     // Lets figure out of there's a constructor for this class and pull
     // arguments from the $options array if so to populate it.

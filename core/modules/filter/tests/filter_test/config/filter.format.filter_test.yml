@@ -1,0 +1,13 @@
+format: filter_test
+name: 'Test format'
+weight: 2
+roles:
+  - anonymous
+  - authenticated
+filters:
+  filter_html_escape:
+    status: '1'
+  filter_url:
+    status: '1'
+  filter_autop:
+    status: '1'

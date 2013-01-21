@@ -150,6 +150,12 @@ class LegacyUrlMatcher implements RequestMatcherInterface, RequestContextAwareIn
       '_controller' => $router_item['page_callback']
     );
 
+    // A few menu items have a fake page callback temporarily. Skip those,
+    // we aren't going to route them.
+    if ($router_item['page_callback'] == 'NOT_USED') {
+      throw new ResourceNotFoundException();
+    }
+
     // @todo menu_get_item() does not unserialize page arguments when the access
     //   is denied. Remove this temporary hack that always does that.
     if (!is_array($router_item['page_arguments'])) {

@@ -37,7 +37,7 @@ class SortTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Change the ordering
-    $view->displayHandlers['default']->overrideOption('sorts', array(
+    $view->displayHandlers->get('default')->overrideOption('sorts', array(
       'age' => array(
         'order' => 'ASC',
         'id' => 'age',
@@ -61,7 +61,7 @@ class SortTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Reverse the ordering
-    $view->displayHandlers['default']->overrideOption('sorts', array(
+    $view->displayHandlers->get('default')->overrideOption('sorts', array(
       'age' => array(
         'order' => 'DESC',
         'id' => 'age',
@@ -90,7 +90,7 @@ class SortTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Change the ordering
-    $view->displayHandlers['default']->overrideOption('sorts', array(
+    $view->displayHandlers->get('default')->overrideOption('sorts', array(
       'name' => array(
         'order' => 'ASC',
         'id' => 'name',
@@ -114,7 +114,7 @@ class SortTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Reverse the ordering
-    $view->displayHandlers['default']->overrideOption('sorts', array(
+    $view->displayHandlers->get('default')->overrideOption('sorts', array(
       'name' => array(
         'order' => 'DESC',
         'id' => 'name',

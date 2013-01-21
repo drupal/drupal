@@ -87,5 +87,5 @@ display:
     position: '0'
 human_name: test_feed_display
 module: views
-name: test_feed_display
+id: test_feed_display
 tag: default

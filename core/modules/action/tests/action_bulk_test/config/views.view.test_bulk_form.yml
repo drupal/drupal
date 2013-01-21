@@ -1,5 +1,5 @@
 base_table: node
-name: test_bulk_form
+id: test_bulk_form
 description: ''
 tag: ''
 human_name: form

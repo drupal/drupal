@@ -34,5 +34,5 @@ display:
     id: default
     position: '0'
 human_name: test_view_fieldapi
-name: test_view_fieldapi
+id: test_view_fieldapi
 tag: default

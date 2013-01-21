@@ -56,8 +56,8 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
     // Ensure that the new theme has all the blocks as the previous default.
     // @todo Replace the string manipulation below once the configuration
     //   system provides a method for extracting an ID in a given namespace.
-    $default_prefix = "plugin.core.block.$default_theme";
-    $new_prefix = "plugin.core.block.$new_theme";
+    $default_prefix = "block.block.$default_theme";
+    $new_prefix = "block.block.$new_theme";
     $default_block_names = config_get_storage_names_with_prefix($default_prefix);
     $new_blocks = array_flip(config_get_storage_names_with_prefix($new_prefix));
     $this->assertTrue(count($default_block_names) == count($new_blocks), 'The new default theme has the same number of blocks as the previous theme.');
@@ -65,8 +65,8 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
       // Make sure the configuration object name is in the expected format.
       if (strpos($default_block_name, $default_prefix) === 0) {
         // Remove the matching block from the list of blocks in the new theme.
-        // E.g., if the old theme has plugin.core.block.stark.admin,
-        // unset plugin.core.block.bartik.admin.
+        // E.g., if the old theme has block.block.stark.admin,
+        // unset block.block.bartik.admin.
         $id = substr($default_block_name, (strlen($default_prefix) + 1));
         unset($new_blocks[$new_prefix . '.' . $id]);
       }

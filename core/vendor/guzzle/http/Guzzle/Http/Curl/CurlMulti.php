@@ -3,7 +3,7 @@
 namespace Guzzle\Http\Curl;
 
 use Guzzle\Common\AbstractHasDispatcher;
-use Guzzle\Common\Exception\ExceptionCollection;
+use Guzzle\Http\Exception\MultiTransferException;
 use Guzzle\Http\Exception\CurlException;
 use Guzzle\Http\Message\RequestInterface;
 
@@ -126,7 +126,7 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         class_exists('Guzzle\Http\Message\Response');
         class_exists('Guzzle\Http\Exception\CurlException');
 
-        $this->createMutliHandle();
+        $this->createMultiHandle();
     }
 
     /**
@@ -246,7 +246,7 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         }
 
         if ($hard) {
-            $this->createMutliHandle();
+            $this->createMultiHandle();
         }
     }
 
@@ -257,10 +257,11 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
     {
         $this->scope++;
         $this->state = self::STATE_SENDING;
+        $requestsInScope = empty($this->requests[$this->scope]) ? array() : $this->requests[$this->scope];
 
         // Only prepare and send requests that are in the current recursion scope
         // Only enter the main perform() loop if there are requests in scope
-        if (!empty($this->requests[$this->scope])) {
+        if ($requestsInScope) {
 
             // Any exceptions thrown from this event should break the entire flow of sending requests
             $this->dispatch(self::BEFORE_SEND, array(
@@ -276,20 +277,14 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
             try {
                 $this->perform();
             } catch (\Exception $e) {
-                $this->exceptions[] = $e;
+                $this->exceptions[] = array('request' => null, 'exception' => $e);
             }
         }
 
         $this->scope--;
 
-        // Aggregate exceptions into an ExceptionCollection
-        $exceptionCollection = null;
-        if (!empty($this->exceptions)) {
-            $exceptionCollection = new ExceptionCollection('Errors during multi transfer');
-            while ($e = array_shift($this->exceptions)) {
-                $exceptionCollection->add($e);
-            }
-        }
+        // Aggregate exceptions into a MultiTransferException if needed
+        $multiException = $this->buildMultiTransferException($requestsInScope);
 
         // Complete the transfer if this is not a nested scope
         if ($this->scope == -1) {
@@ -299,8 +294,8 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         }
 
         // Throw any exceptions that were encountered
-        if ($exceptionCollection) {
-            throw $exceptionCollection;
+        if ($multiException) {
+            throw $multiException;
         }
     }
 
@@ -310,6 +305,43 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
     public function count()
     {
         return count($this->all());
+    }
+
+    /**
+     * Build a MultiTransferException if needed
+     *
+     * @param array $requestsInScope All requests in the previous scope
+     *
+     * @return MultiTransferException|null
+     */
+    protected function buildMultiTransferException(array $requestsInScope)
+    {
+        if (empty($this->exceptions)) {
+            return null;
+        }
+
+        // Keep a list of all requests, and remove errored requests from the list
+        $store = new \SplObjectStorage();
+        foreach ($requestsInScope as $request) {
+            $store->attach($request);
+        }
+
+        $multiException = new MultiTransferException('Errors during multi transfer');
+        while ($e = array_shift($this->exceptions)) {
+            $multiException->add($e['exception']);
+            if (isset($e['request'])) {
+                $multiException->addFailedRequest($e['request']);
+                // Remove from the total list so that it becomes a list of successful requests
+                unset($store[$e['request']]);
+            }
+        }
+
+        // Add successful requests
+        foreach ($store as $request) {
+            $multiException->addSuccessfulRequest($request);
+        }
+
+        return $multiException;
     }
 
     /**
@@ -379,43 +411,53 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
 
         // Create the polling event external to the loop
         $event = array('curl_multi' => $this);
+        $active = $this->executeHandles();
 
         while (1) {
 
-            $active = $this->executeHandles();
-
-            // Get messages from curl handles
-            while ($done = curl_multi_info_read($this->multiHandle)) {
-                $request = $this->resourceHash[(int) $done['handle']];
-                $handle = $this->handles[$request];
-                try {
-                    $this->processResponse($request, $handle, $done);
-                } catch (\Exception $e) {
-                    $this->removeErroredRequest($request, $e);
-                }
-            }
-
-            // Notify each request as polling and handled queued responses
-            $scopedPolling = $this->scope <= 0 ? $this->all() : $this->requests[$this->scope];
+            $this->processMessages();
 
             // Exit the function if there are no more requests to send
-            if (empty($scopedPolling)) {
+            if (!($scopedPolling = $this->scope <= 0 ? $this->all() : $this->requests[$this->scope])) {
                 break;
             }
 
-            // Notify all requests that requests are being polled
+            // Notify each request as polling
+            $blocking = $total = 0;
             foreach ($scopedPolling as $request) {
                 $event['request'] = $request;
                 $request->dispatch(self::POLLING_REQUEST, $event);
+                ++$total;
+                // The blocking variable just has to be non-falsey to block the loop
+                if ($request->getParams()->hasKey(self::BLOCKING)) {
+                    ++$blocking;
+                }
             }
 
-            if ($active) {
-                // Select the curl handles until there is any activity on any of the open file descriptors
-                // See https://github.com/php/php-src/blob/master/ext/curl/multi.c#L170
-                $active = $this->executeHandles(true, 0.1);
-            } else {
+            if ($blocking == $total) {
                 // Sleep to prevent eating CPU because no requests are actually pending a select call
                 usleep(500);
+            } else {
+                // Select the curl handles until there is any activity on any of the open file descriptors
+                // See https://github.com/php/php-src/blob/master/ext/curl/multi.c#L170
+                $active = $this->executeHandles(true, 0.02, $active);
+            }
+        }
+    }
+
+    /**
+     * Process any received curl multi messages
+     */
+    private function processMessages()
+    {
+        // Get messages from curl handles
+        while ($done = curl_multi_info_read($this->multiHandle)) {
+            try {
+                $request = $this->resourceHash[(int) $done['handle']];
+                $handle = $this->handles[$request];
+                $this->processResponse($request, $handle, $done);
+            } catch (\Exception $e) {
+                $this->removeErroredRequest($request, $e);
             }
         }
     }
@@ -425,29 +467,27 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
      *
      * @param bool $select  Set to TRUE to select the file descriptors
      * @param int  $timeout Select timeout in seconds
+     * @param int  $active  Previous active value
      *
      * @return int Returns the number of active handles
      */
-    private function executeHandles($select = false, $timeout = 1)
+    private function executeHandles($select = false, $timeout = 1, $active = 0)
     {
-        $active = $selectResult = 0;
-
         do {
-
-            if ($select) {
-                $selectResult = curl_multi_select($this->multiHandle, $timeout);
+            // @codeCoverageIgnoreStart
+            if ($select && $active && curl_multi_select($this->multiHandle, $timeout) == -1) {
+                // Perform a usleep if a previously executed select returned -1
+                // @see https://bugs.php.net/bug.php?id=61141
+                usleep(125);
             }
-
-            if ($selectResult === 0) {
-                do {
-                    $mrc = curl_multi_exec($this->multiHandle, $active);
-                } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-                // Check the return value to ensure an error did not occur
-                $this->checkCurlResult($mrc);
-            }
-
+            // @codeCoverageIgnoreEnd
+            do {
+                $mrc = curl_multi_exec($this->multiHandle, $active);
+            } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+            // Check the return value to ensure an error did not occur
+            $this->checkCurlResult($mrc);
         // Poll once if not selecting, or poll until there are no handles with activity
-        } while ($select && $active && $selectResult == 0);
+        } while ($select && $active);
 
         return $active;
     }
@@ -460,7 +500,7 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
      */
     protected function removeErroredRequest(RequestInterface $request, \Exception $e)
     {
-        $this->exceptions[] = $e;
+        $this->exceptions[] = array('request' => $request, 'exception' => $e);
         $this->remove($request);
         $request->setState(RequestInterface::STATE_ERROR);
         $this->dispatch(self::MULTI_EXCEPTION, array(
@@ -490,7 +530,7 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         $this->removeHandle($request);
 
         if (!$curlException) {
-            $request->setState(RequestInterface::STATE_COMPLETE);
+            $request->setState(RequestInterface::STATE_COMPLETE, array('handle' => $handle));
             // Only remove the request if it wasn't resent as a result of the state change
             if ($request->getState() != RequestInterface::STATE_TRANSFER) {
                 $this->remove($request);
@@ -552,11 +592,11 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         }
 
         $handle->setErrorNo($curl['result']);
-        $e = new CurlException(sprintf('[curl] %s: %s [url] %s [info] %s [debug] %s',
-            $handle->getErrorNo(), $handle->getError(), $handle->getUrl(),
-            var_export($handle->getInfo(), true), $handle->getStderr()));
+        $e = new CurlException(sprintf('[curl] %s: %s [url] %s',
+            $handle->getErrorNo(), $handle->getError(), $handle->getUrl()));
         $e->setCurlHandle($handle)
           ->setRequest($request)
+          ->setCurlInfo($handle->getInfo())
           ->setError($handle->getError(), $handle->getErrorNo());
 
         return $e;
@@ -572,19 +612,17 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
     private function checkCurlResult($code)
     {
         if ($code != CURLM_OK && $code != CURLM_CALL_MULTI_PERFORM) {
-            if (isset($this->multiErrors[$code])) {
-                $message = "cURL error: {$code} ({$this->multiErrors[$code][0]}): cURL message: {$this->multiErrors[$code][1]}";
-            } else {
-                $message = 'Unexpected cURL error: ' . $code;
-            }
-            throw new CurlException($message);
+            throw new CurlException(isset($this->multiErrors[$code])
+                ? "cURL error: {$code} ({$this->multiErrors[$code][0]}): cURL message: {$this->multiErrors[$code][1]}"
+                : 'Unexpected cURL error: ' . $code
+            );
         }
     }
 
     /**
      * Create the new cURL multi handle with error checking
      */
-    private function createMutliHandle()
+    private function createMultiHandle()
     {
         if ($this->multiHandle && is_resource($this->multiHandle)) {
             curl_multi_close($this->multiHandle);

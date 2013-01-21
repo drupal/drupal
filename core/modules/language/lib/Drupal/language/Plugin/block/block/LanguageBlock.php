@@ -31,15 +31,16 @@ class LanguageBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
+    $build = array();
     $path = drupal_is_front_page() ? '<front>' : current_path();
     list($plugin_id, $type) = explode(':', $this->getPluginId());
     $links = language_negotiation_get_switch_links($type, $path);
 
     if (isset($links->links)) {
-      return array(
+      $build = array(
         '#theme' => 'links__language_block',
         '#links' => $links->links,
         '#attributes' => array(
@@ -49,6 +50,7 @@ class LanguageBlock extends BlockBase {
         ),
       );
     }
+    return $build;
   }
 
 }

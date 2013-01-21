@@ -1,5 +1,5 @@
 base_table: node
-name: test_redirect_view
+id: test_redirect_view
 description: ''
 tag: ''
 human_name: test_redirect_view

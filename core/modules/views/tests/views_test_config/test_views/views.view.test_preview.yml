@@ -57,5 +57,5 @@ display:
           title: ''
 human_name: test_preview
 module: views
-name: test_preview
+id: test_preview
 tag: ''

@@ -30,5 +30,5 @@ display:
     id: page_1
     position: '0'
 human_name: ''
-name: test_access_static
+id: test_access_static
 tag: ''

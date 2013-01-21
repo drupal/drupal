@@ -27,5 +27,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_pager_full
+id: test_pager_full
 tag: ''

@@ -9,38 +9,6 @@
   Drupal.Views = {};
 
   /**
-   * jQuery UI tabs, Views integration component
-   */
-  Drupal.behaviors.viewsTabs = {
-    attach: function () {
-      if ($.viewsUi && $.viewsUi.tabs) {
-        $('#views-tabset').once('views-processed').viewsTabs({
-          selectedClass: 'active'
-        });
-      }
-
-      $('a.views-remove-link').once('views-processed').click(function(event) {
-        var id = $(this).attr('id').replace('views-remove-link-', '');
-        $('#views-row-' + id).hide();
-        $('#views-removed-' + id).attr('checked', true);
-        event.preventDefault();
-     });
-    /**
-      * Here is to handle display deletion
-      * (checking in the hidden checkbox and hiding out the row)
-      */
-    $('a.display-remove-link')
-      .addClass('display-processed')
-      .click(function() {
-        var id = $(this).attr('id').replace('display-remove-link-', '');
-        $('#display-row-' + id).hide();
-        $('#display-removed-' + id).attr('checked', true);
-        event.preventDefault();
-    });
-    }
-  };
-
-  /**
    * Helper function to parse a querystring.
    */
   Drupal.Views.parseQueryString = function (query) {

@@ -50,5 +50,5 @@ display:
     id: page_1
     position: '0'
 human_name: ''
-name: test_reset_button
+id: test_reset_button
 tag: ''

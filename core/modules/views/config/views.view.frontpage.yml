@@ -1,7 +1,7 @@
 disabled: true
 api_version: '3.0'
 module: node
-name: frontpage
+id: frontpage
 description: 'Emulates the default Drupal front page; you may set the default home page path to this view to make it your front page.'
 tag: default
 base_table: node

@@ -35,7 +35,8 @@ class ConfigEntityListTest extends WebTestBase {
    * Tests entity list controller methods.
    */
   function testList() {
-    $controller = entity_list_controller('config_test');
+    $controller = $this->container->get('plugin.manager.entity')
+      ->getListController('config_test');
 
     // Test getStorageController() method.
     $this->assertTrue($controller->getStorageController() instanceof EntityStorageControllerInterface, 'EntityStorageController instance in storage.');

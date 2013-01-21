@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Logs and displays access statistics for a site.
+ * Logs and displays content statistics for a site.
  */
 
 use Drupal\node\Plugin\Core\Entity\Node;
@@ -16,17 +16,9 @@ function statistics_help($path, $arg) {
     case 'admin/help#statistics':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Statistics module shows you how often a given page is viewed, who viewed it, the previous page the user visited (referrer URL), and when it was viewed. These statistics are useful in determining how users are visiting and navigating your site. For more information, see the online handbook entry for the <a href="@statistics">Statistics module</a>.', array('@statistics' => url('http://drupal.org/documentation/modules/statistics/'))) . '</p>';
+      $output .= '<p>' . t('The Statistics module shows you how often content is viewed. This is useful in determining which pages of your site are most popular. For more information, see the online handbook entry for the <a href="@statistics">Statistics module</a>.', array('@statistics' => url('http://drupal.org/documentation/modules/statistics/'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Managing logs') . '</dt>';
-      $output .= '<dd>' . t('To enable collection of statistics, the <em>Enable access log</em> checkbox on the <a href="@statistics-settings">Statistics settings page</a> must be checked. The <em>Discard access logs older than</em> setting on the settings page specifies the length of time entries are kept in the log before they are deleted. This setting requires a correctly configured <a href="@cron">cron maintenance task</a> to run.', array('@statistics-settings' => url('admin/config/system/statistics'), '@cron' => 'http://drupal.org/cron')) . '</dd>';
-      $output .= '<dt>' . t('Viewing site usage') . '</dt>';
-      $output .= '<dd>' . t('The Statistics module can help you break down details about your users and how they are using the site. The module offers four reports:');
-      $output .= '<ul><li>' . t('<a href="@recent-hits">Recent hits</a> displays information about the latest activity on your site, including the URL and title of the page that was accessed, the user name (if available) and the IP address of the viewer.', array('@recent-hits' => url('admin/reports/hits'))) . '</li>';
-      $output .= '<li>' . t('<a href="@top-referrers">Top referrers</a> displays where visitors came from (referrer URL).', array('@top-referrers' => url('admin/reports/referrers'))) . '</li>';
-      $output .= '<li>' . t('<a href="@top-pages">Top pages</a> displays a list of pages ordered by how often they were viewed.', array('@top-pages' => url('admin/reports/pages'))) . '</li>';
-      $output .= '<li>' . t('<a href="@top-visitors">Top visitors</a> shows you the most active visitors for your site and allows you to ban abusive visitors.', array('@top-visitors' => url('admin/reports/visitors'))) . '</li></ul>';
       $output .= '<dt>' . t('Displaying popular content') . '</dt>';
       $output .= '<dd>' . t('The module includes a <em>Popular content</em> block that displays the most viewed pages today and for all time, and the last content viewed. To use the block, enable <em>Count content views</em> on the <a href="@statistics-settings">statistics settings page</a>, and then you can enable and configure the block on the <a href="@blocks">blocks administration page</a>.', array('@statistics-settings' => url('admin/config/system/statistics'), '@blocks' => url('admin/structure/block'))) . '</dd>';
       $output .= '<dt>' . t('Page view counter') . '</dt>';
@@ -35,50 +27,6 @@ function statistics_help($path, $arg) {
       return $output;
     case 'admin/config/system/statistics':
       return '<p>' . t('Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.', array('@statistics' => url('admin/reports/hits'))) . '</p>';
-    case 'admin/reports/hits':
-      return '<p>' . t("This page displays the site's most recent hits.") . '</p>';
-    case 'admin/reports/referrers':
-      return '<p>' . t('This page displays all external referrers, or external references to your website.') . '</p>';
-    case 'admin/reports/visitors':
-      return '<p>' . t("When you ban a visitor, you prevent the visitor's IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. This is most commonly used to block resource-intensive bots or web crawlers.") . '</p>';
-  }
-}
-
-/**
- * Implements hook_exit().
- *
- * Gathers statistics for page accesses.
- */
-function statistics_exit() {
-  global $user;
-
-  // When serving cached pages with the 'page_cache_without_database'
-  // configuration, system variables need to be loaded. This is a major
-  // performance decrease for non-database page caches, but with Statistics
-  // module, it is likely to also have 'statistics.settings:access_log.enabled'
-  // enabled, in which case we need to bootstrap to the session phase anyway.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
-
-  if (config('statistics.settings')->get('access_log.enabled')) {
-    drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
-
-    // For anonymous users unicode.inc will not have been loaded.
-    include_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-    // Log this page access.
-    db_insert('accesslog')
-      ->fields(array(
-        'title' => truncate_utf8(strip_tags(drupal_get_title()), 255),
-        // @todo The public function current_path() is not available on a cache
-        //   hit.
-        'path' => truncate_utf8(_current_path(), 255),
-        'url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-        'hostname' => ip_address(),
-        'uid' => $user->uid,
-        'sid' => session_id(),
-        'timer' => (int) timer_read('page'),
-        'timestamp' => REQUEST_TIME,
-      ))
-      ->execute();
   }
 }
 
@@ -89,9 +37,6 @@ function statistics_permission() {
   return array(
     'administer statistics' => array(
       'title' => t('Administer statistics'),
-    ),
-    'access statistics' => array(
-      'title' => t('View content access statistics'),
     ),
     'view post access counter' => array(
       'title' => t('View content hits'),
@@ -131,96 +76,16 @@ function statistics_node_view(Node $node, EntityDisplay $display, $view_mode) {
  * Implements hook_menu().
  */
 function statistics_menu() {
-  $items['admin/reports/hits'] = array(
-    'title' => 'Recent hits',
-    'description' => 'View pages that have recently been visited.',
-    'page callback' => 'statistics_recent_hits',
-    'access arguments' => array('access statistics'),
-    'file' => 'statistics.admin.inc',
-  );
-  $items['admin/reports/pages'] = array(
-    'title' => 'Top pages',
-    'description' => 'View pages that have been hit frequently.',
-    'page callback' => 'statistics_top_pages',
-    'access arguments' => array('access statistics'),
-    'weight' => 1,
-    'file' => 'statistics.admin.inc',
-  );
-  $items['admin/reports/visitors'] = array(
-    'title' => 'Top visitors',
-    'description' => 'View visitors that hit many pages.',
-    'page callback' => 'statistics_top_visitors',
-    'access arguments' => array('access statistics'),
-    'weight' => 2,
-    'file' => 'statistics.admin.inc',
-  );
-  $items['admin/reports/referrers'] = array(
-    'title' => 'Top referrers',
-    'description' => 'View top referrers.',
-    'page callback' => 'statistics_top_referrers',
-    'access arguments' => array('access statistics'),
-    'file' => 'statistics.admin.inc',
-  );
-  $items['admin/reports/access/%'] = array(
-    'title' => 'Details',
-    'description' => 'View access log.',
-    'page callback' => 'statistics_access_log',
-    'page arguments' => array(3),
-    'access arguments' => array('access statistics'),
-    'file' => 'statistics.admin.inc',
-  );
   $items['admin/config/system/statistics'] = array(
     'title' => 'Statistics',
-    'description' => 'Control details about what and how your site logs access statistics.',
+    'description' => 'Control details about what and how your site logs content statistics.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('statistics_settings_form'),
     'access arguments' => array('administer statistics'),
     'file' => 'statistics.admin.inc',
     'weight' => -15,
   );
-  $items['user/%user/track/navigation'] = array(
-    'title' => 'Page visits',
-    'page callback' => 'statistics_user_tracker',
-    'access callback' => 'user_access',
-    'access arguments' => array('access statistics'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-    'file' => 'statistics.pages.inc',
-  );
-  $items['node/%node/track'] = array(
-    'title' => 'Track',
-    'page callback' => 'statistics_node_tracker',
-    'access callback' => 'user_access',
-    'access arguments' => array('access statistics'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-    'file' => 'statistics.pages.inc',
-  );
-
   return $items;
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function statistics_user_cancel($edit, $account, $method) {
-  switch ($method) {
-    case 'user_cancel_reassign':
-      db_update('accesslog')
-        ->fields(array('uid' => 0))
-        ->condition('uid', $account->uid)
-        ->execute();
-      break;
-  }
-}
-
-/**
- * Implements hook_user_predelete().
- */
-function statistics_user_predelete($account) {
-  db_delete('accesslog')
-    ->condition('uid', $account->uid)
-    ->execute();
 }
 
 /**
@@ -235,14 +100,6 @@ function statistics_cron() {
       ->fields(array('daycount' => 0))
       ->execute();
     state()->set('statistics.day_timestamp', REQUEST_TIME);
-  }
-
-  // Delete access logs (if applicable).
-  $max_lifetime = config('statistics.settings')->get('access_log.max_lifetime');
-  if ($max_lifetime > 0) {
-    db_delete('accesslog')
-      ->condition('timestamp', REQUEST_TIME - $max_lifetime, '<')
-      ->execute();
   }
 }
 

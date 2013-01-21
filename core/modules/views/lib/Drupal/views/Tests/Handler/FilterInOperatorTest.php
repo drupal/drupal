@@ -51,7 +51,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Add a in_operator ordering.
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
         'field' => 'age',
@@ -81,7 +81,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
     $view->setDisplay();
 
     // Add a in_operator ordering.
-    $view->displayHandlers['default']->overrideOption('filters', array(
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
         'field' => 'age',
@@ -119,7 +119,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 1;
     $view->setDisplay();
-    $view->displayHandlers['default']->overrideOption('filters', $filters);
+    $view->displayHandlers->get('default')->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
@@ -145,7 +145,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 2;
     $view->setDisplay();
-    $view->displayHandlers['default']->overrideOption('filters', $filters);
+    $view->displayHandlers->get('default')->overrideOption('filters', $filters);
 
     $this->executeView($view);
 

@@ -71,7 +71,7 @@ function taxonomy_schema() {
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => 'The {filter_format}.format of the description.',
+        'description' => 'The filter format ID of the description.',
       ),
       'weight' => array(
         'type' => 'int',

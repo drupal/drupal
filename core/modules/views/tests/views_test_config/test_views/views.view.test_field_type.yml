@@ -16,5 +16,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_field_type
+id: test_field_type
 tag: ''

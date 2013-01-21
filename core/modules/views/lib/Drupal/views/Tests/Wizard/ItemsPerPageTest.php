@@ -41,7 +41,7 @@ class ItemsPerPageTest extends WizardTestBase {
     // 3 in the block.
     $view = array();
     $view['human_name'] = $this->randomName(16);
-    $view['name'] = strtolower($this->randomName(16));
+    $view['id'] = strtolower($this->randomName(16));
     $view['description'] = $this->randomName(16);
     $view['show[wizard_key]'] = 'node';
     $view['show[type]'] = 'article';
@@ -79,7 +79,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $this->assertText('View: ' . $view['human_name']);
     // Place the block, visit a page that displays the block, and check that the
     // nodes we expect appear in the correct order.
-    $this->drupalPlaceBlock("views_block:{$view['name']}-block_1");
+    $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
 
     $this->drupalGet('user');
     $content = $this->drupalGetContent();

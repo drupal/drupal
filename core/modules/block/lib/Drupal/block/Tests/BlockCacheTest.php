@@ -24,6 +24,7 @@ class BlockCacheTest extends WebTestBase {
   protected $admin_user;
   protected $normal_user;
   protected $normal_user_alt;
+  protected $block;
 
   public static function getInfo() {
     return array(
@@ -49,8 +50,7 @@ class BlockCacheTest extends WebTestBase {
     $this->normal_user_alt->save();
 
     // Enable our test block.
-   $block = $this->drupalPlaceBlock('test_cache');
-   $this->block_config_id = $block['config_id'];
+   $this->block = $this->drupalPlaceBlock('test_cache');
   }
 
   /**
@@ -192,15 +192,10 @@ class BlockCacheTest extends WebTestBase {
    * Private helper method to set the test block's cache mode.
    */
   private function setCacheMode($cache_mode) {
-    $block_config = config($this->block_config_id);
-    $block_config->set('cache', $cache_mode);
-    $block_config->save();
-
-    $instance = block_load($this->block_config_id);
-    $config = $instance->getConfig();
-    if ($config['cache'] != $cache_mode) {
-      $this->fail(t('Unable to set cache mode to %mode. Current mode: %current_mode', array('%mode' => $cache_mode, '%current_mode' => $config['cache'])));
-    }
-    $this->assertEqual($config['cache'], $cache_mode, t("Test block's database entry updated to DRUPAL_NO_CACHE."));
+    $settings = $this->block->get('settings');
+    $settings['cache'] = $cache_mode;
+    $this->block->set('settings', $settings);
+    $this->block->save();
   }
+
 }

@@ -37,4 +37,4 @@ display:
     id: default
     position: '0'
 human_name: 'Test filters'
-name: test_filter
+id: test_filter

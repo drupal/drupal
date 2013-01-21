@@ -50,8 +50,8 @@ class ViewsExposedFilterBlock implements DerivativeInterface {
         if (isset($display) && $display->getOption('exposed_block')) {
           // Add a block definition for the block.
           if ($display->usesExposedFormInBlock()) {
-            $delta = $view->get('name') . '-' . $display->display['id'];
-            $desc = t('Exposed form: @view-@display_id', array('@view' => $view->get('name'), '@display_id' => $display->display['id']));
+            $delta = $view->id() . '-' . $display->display['id'];
+            $desc = t('Exposed form: @view-@display_id', array('@view' => $view->id(), '@display_id' => $display->display['id']));
             $this->derivatives[$delta] = array(
               'subject' => $desc,
               'cache' => DRUPAL_NO_CACHE,

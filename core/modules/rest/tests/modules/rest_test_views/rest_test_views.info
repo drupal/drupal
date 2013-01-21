@@ -1,0 +1,8 @@
+name = REST test views
+description = Provides default views for views REST tests.
+package = Testing
+version = VERSION
+core = 8.x
+dependencies[] = rest
+dependencies[] = views
+hidden = TRUE

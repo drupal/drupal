@@ -109,7 +109,9 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  * @see Drupal\Core\Entity\DatabaseStorageController
  */
 function entity_revision_load($entity_type, $revision_id) {
-  return entity_get_controller($entity_type)->loadRevision($revision_id);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getStorageController($entity_type)
+    ->loadRevision($revision_id);
 }
 
 /**
@@ -121,7 +123,9 @@ function entity_revision_load($entity_type, $revision_id) {
  *   The revision ID to delete.
  */
 function entity_revision_delete($entity_type, $revision_id) {
-  entity_get_controller($entity_type)->deleteRevision($revision_id);
+  drupal_container()->get('plugin.manager.entity')
+    ->getStorageController($entity_type)
+    ->deleteRevision($revision_id);
 }
 
 /**
@@ -151,7 +155,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
   }
   $uuid_key = $entity_info['entity_keys']['uuid'];
 
-  $controller = entity_get_controller($entity_type);
+  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
   if ($reset) {
     $controller->resetCache();
   }
@@ -193,10 +197,11 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * @see Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
+  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
   if ($reset) {
-    entity_get_controller($entity_type)->resetCache();
+    $controller->resetCache();
   }
-  return entity_get_controller($entity_type)->load($ids);
+  return $controller->load($ids);
 }
 
 /**
@@ -212,7 +217,9 @@ function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
  *   An array of entity objects indexed by their ids.
  */
 function entity_load_multiple_by_properties($entity_type, array $values) {
-  return entity_get_controller($entity_type)->loadByProperties($values);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getStorageController($entity_type)
+    ->loadByProperties($values);
 }
 
 /**
@@ -232,8 +239,9 @@ function entity_load_multiple_by_properties($entity_type, array $values) {
  *   The unchanged entity, or FALSE if the entity cannot be loaded.
  */
 function entity_load_unchanged($entity_type, $id) {
-  entity_get_controller($entity_type)->resetCache(array($id));
-  $result = entity_get_controller($entity_type)->load(array($id));
+  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
+  $controller->resetCache(array($id));
+  $result = $controller->load(array($id));
   return reset($result);
 }
 
@@ -246,7 +254,7 @@ function entity_load_unchanged($entity_type, $id) {
  *   An array of entity IDs of the entities to delete.
  */
 function entity_delete_multiple($entity_type, array $ids) {
-  $controller = entity_get_controller($entity_type);
+  $controller = drupal_container()->get('plugin.manager.entity')->getStorageController($entity_type);
   $entities = $controller->load($ids);
   $controller->delete($entities);
 }
@@ -264,22 +272,21 @@ function entity_delete_multiple($entity_type, array $ids) {
  *   A new entity object.
  */
 function entity_create($entity_type, array $values) {
-  return entity_get_controller($entity_type)->create($values);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getStorageController($entity_type)
+    ->create($values);
 }
 
 /**
  * Gets the entity controller class for an entity type.
  *
  * @return Drupal\Core\Entity\EntityStorageControllerInterface
+ *
+ * @deprecated Use \Drupal\Core\Entity\EntityManager::getStorageController().
  */
 function entity_get_controller($entity_type) {
-  $controllers = &drupal_static(__FUNCTION__, array());
-  if (!isset($controllers[$entity_type])) {
-    $type_info = entity_get_info($entity_type);
-    $class = $type_info['controller_class'];
-    $controllers[$entity_type] = new $class($entity_type);
-  }
-  return $controllers[$entity_type];
+  return drupal_container()->get('plugin.manager.entity')
+    ->getStorageController($entity_type);
 }
 
 /**
@@ -313,16 +320,11 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  * @return \Drupal\Core\Entity\EntityAccessControllerInterface
  *   An entity access controller instance.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @deprecated Use \Drupal\Core\Entity\EntityManager::getRenderController().
  */
 function entity_access_controller($entity_type) {
-  $controllers = &drupal_static(__FUNCTION__, array());
-  if (!isset($controllers[$entity_type])) {
-    $type_info = entity_get_info($entity_type);
-    $class = $type_info['access_controller_class'];
-    $controllers[$entity_type] = new $class($entity_type);
-  }
-  return $controllers[$entity_type];
+  return drupal_container()->get('plugin.manager.entity')
+    ->getAccessController($entity_type);
 }
 
 /**
@@ -345,24 +347,12 @@ function entity_access_controller($entity_type) {
  *
  * @return Drupal\Core\Entity\EntityFormControllerInterface
  *   An entity form controller instance.
+ *
+ * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
  */
 function entity_form_controller($entity_type, $operation = 'default') {
-  $info = entity_get_info($entity_type);
-
-  // Check whether there is a form controller class for the specified operation.
-  if (!empty($info['form_controller_class'][$operation])) {
-    $class = $info['form_controller_class'][$operation];
-  }
-  // If no controller is specified default to the base implementation.
-  elseif (empty($info['form_controller_class']) && $operation == 'default') {
-    $class = 'Drupal\Core\Entity\EntityFormController';
-  }
-  // If a non-existing operation has been specified stop.
-  else {
-    throw new InvalidArgumentException("Missing form controller for '$entity_type', operation '$operation'");
-  }
-
-  return new $class($operation);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getFormController($entity_type, $operation);
 }
 
 /**
@@ -402,7 +392,7 @@ function entity_form_id(EntityInterface $entity, $operation = 'default') {
  */
 function entity_form_state_defaults(EntityInterface $entity, $operation = 'default', $langcode = NULL) {
   $form_state = array();
-  $controller = entity_form_controller($entity->entityType(), $operation);
+  $controller = drupal_container()->get('plugin.manager.entity')->getFormController($entity->entityType(), $operation);
   $form_state['build_info']['callback'] = array($controller, 'build');
   $form_state['build_info']['base_form_id'] = $entity->entityType() . '_form';
   $form_state['build_info']['args'] = array($entity);
@@ -500,13 +490,11 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
  * @return Drupal\Core\Entity\EntityListControllerInterface
  *   An entity list controller.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
  */
 function entity_list_controller($entity_type) {
-  $storage = entity_get_controller($entity_type);
-  $entity_info = entity_get_info($entity_type);
-  $class = $entity_info['list_controller_class'];
-  return new $class($entity_type, $storage);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getListController($entity_type);
 }
 
 /**
@@ -518,12 +506,11 @@ function entity_list_controller($entity_type) {
  * @return Drupal\Core\Entity\EntityRenderControllerInterface
  *   An entity render controller.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
  */
 function entity_render_controller($entity_type) {
-  $info = entity_get_info($entity_type);
-  $class = $info['render_controller_class'];
-  return new $class($entity_type);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getRenderController($entity_type);
 }
 
 /**
@@ -541,7 +528,9 @@ function entity_render_controller($entity_type) {
  *   A render array for the entity.
  */
 function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL) {
-  return entity_render_controller($entity->entityType())->view($entity, $view_mode, $langcode);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getRenderController($entity->entityType())
+    ->view($entity, $view_mode, $langcode);
 }
 
 /**
@@ -560,7 +549,9 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL) {
  *   entities array passed in $entities.
  */
 function entity_view_multiple(array $entities, $view_mode, $langcode = NULL) {
-  return entity_render_controller(reset($entities)->entityType())->viewMultiple($entities, $view_mode, $langcode);
+  return drupal_container()->get('plugin.manager.entity')
+    ->getRenderController(reset($entities)->entityType())
+    ->viewMultiple($entities, $view_mode, $langcode);
 }
 
 /**

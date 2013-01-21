@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class ViewsExposedFilterBlock extends ViewsBlock {
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     $type = 'exp';
     $output = $this->view->display_handler->viewSpecialBlocks($type);
     // Before returning the block output, convert it to a renderable array with

@@ -101,13 +101,13 @@ class StyleTest extends ViewTestBase {
 
     // Reduce the amount of items to make the test a bit easier.
     // Set up the pager.
-    $view->displayHandlers['default']->overrideOption('pager', array(
+    $view->displayHandlers->get('default')->overrideOption('pager', array(
       'type' => 'some',
       'options' => array('items_per_page' => 3),
     ));
 
     // Add the job field .
-    $view->displayHandlers['default']->overrideOption('fields', array(
+    $view->displayHandlers->get('default')->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -200,13 +200,13 @@ class StyleTest extends ViewTestBase {
 
     // Reduce the amount of items to make the test a bit easier.
     // Set up the pager.
-    $view->displayHandlers['default']->overrideOption('pager', array(
+    $view->displayHandlers->get('default')->overrideOption('pager', array(
       'type' => 'some',
       'options' => array('items_per_page' => 3),
     ));
 
     // Add the job and age field.
-    $view->displayHandlers['default']->overrideOption('fields', array(
+    $view->displayHandlers->get('default')->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',

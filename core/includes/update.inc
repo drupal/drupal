@@ -633,6 +633,7 @@ function update_module_enable(array $modules) {
     // installed module is always 0. Using 8000 here would be inconsistent
     // since $module_update_8000() may involve a schema change, and we want
     // to install the schema as it was before any updates were added.
+    module_load_install($module);
     $function = $module . '_schema_0';
     if (function_exists($function)) {
       $schema = $function();
@@ -1188,8 +1189,14 @@ function update_retrieve_dependencies() {
   $return = array();
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that module_invoke_all() does.
-  foreach (config('system.module')->get('enabled') as $module => $weight) {
-    $function = $module . '_update_dependencies';
+  foreach (drupal_container()->get('keyvalue')->get('system.schema')->getAll() as $module => $schema) {
+    if ($schema == SCHEMA_UNINSTALLED) {
+      // Nothing to upgrade.
+      continue;
+    }
+     $function = $module . '_update_dependencies';
+    // Ensure install file is loaded.
+    module_load_install($module);
     if (function_exists($function)) {
       $result = $function();
       // Each implementation of hook_update_dependencies() returns a

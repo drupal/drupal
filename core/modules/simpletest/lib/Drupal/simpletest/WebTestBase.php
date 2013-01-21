@@ -176,7 +176,7 @@ abstract class WebTestBase extends TestBase {
    */
   function drupalGetNodeByTitle($title, $reset = FALSE) {
     if ($reset) {
-      entity_get_controller('node')->resetCache();
+      drupal_container()->get('plugin.manager.entity')->getStorageController('node')->resetCache();
     }
     $nodes = entity_load_multiple_by_properties('node', array('title' => $title));
     // Load the first node returned from the database.
@@ -349,69 +349,43 @@ abstract class WebTestBase extends TestBase {
    *
    * @param string $plugin_id
    *   The plugin ID of the block type for this block instance.
-   * @param array $settings
-   *   (optional) An associative array of settings for the block instance.
-   *   Override the defaults by specifying the key and value  in the array, for
+   * @param array $values
+   *   (optional) An associative array of values for the block entity.
+   *   Override the defaults by specifying the key and value in the array, for
    *   example:
    *   @code
    *     $this->drupalPlaceBlock('system_powered_by_block', array(
-   *       'title' => t('Hello, world!'),
+   *       'label' => t('Hello, world!'),
    *     ));
    *   @endcode
    *   The following defaults are provided:
-   *   - title: Random string.
+   *   - label: Random string.
    *   - machine_name: Random string.
    *   - region: 'sidebar_first'.
-   * @param string $theme
-   *   (optional) The theme for which to add a block instance. Defaults to the
-   *   default theme.
+   *   - theme: The default theme.
+   * @param array $settings
+   *   (optional) An associative array of plugin-specific settings.
    *
-   * @return array|false
-   *   The block instance configuration from BlockBase::getConfig(), or FALSE
-   *   on failure.
+   * @return \Drupal\block\Plugin\Core\Entity\Block
+   *   The block entity.
    *
-   * @todo
-   *   Create the block programmatically once block instances are configuration
-   *   entities.
    * @todo
    *   Add support for creating custom block instances.
    */
-  protected function drupalPlaceBlock($plugin_id, array $settings = array(), $theme = NULL) {
-    // Confirm that the active user has permission to add the block instance.
-    // @todo Remove this check once it is possible to do this programmatically.
-    if (!empty($this->loggedInUser) && !user_access('administer blocks', $this->loggedInUser)) {
-      $this->fail('The logged in user does not have permission to administer blocks.');
-      return FALSE;
-    }
-
-    // If no theme was specified, use the default theme.
-    $theme = $theme ?: variable_get('theme_default', 'stark');
-
-    // Populate some default block settings.
-    $settings += array(
-      'title' => $this->randomName(8),
-      'machine_name' => strtolower($this->randomName(8)),
+  protected function drupalPlaceBlock($plugin_id, array $values = array(), array $settings = array()) {
+    $values += array(
+      'plugin' => $plugin_id,
+      'label' => $this->randomName(8),
       'region' => 'sidebar_first',
+      'theme' => variable_get('theme_default', 'stark'),
+      'machine_name' => strtolower($this->randomName(8)),
+      'settings' => $settings,
     );
-
-    // Submit the block instance configuration.
-    $this->drupalPost('admin/structure/block/manage/' . $plugin_id . '/' . $theme, $settings, t('Save block'));
-    $this->assertText(
-      t('The block configuration has been saved.'),
-      format_string(
-        '%plugin block instance added for %theme',
-        array(
-          '%plugin' => $plugin_id,
-          '%theme' => $theme,
-        )
-      )
-    );
-
-    // Return the created block instance.
-    $instance_id = "plugin.core.block.$theme." . $settings['machine_name'];
-    $manager = $this->container->get('plugin.manager.block');
-    $block = $manager->getInstance(array('config' => $instance_id));
-    return $block->getConfig();
+    // Build the ID out of the theme and machine_name.
+    $values['id'] = $values['theme'] . '.' . $values['machine_name'];
+    $block = entity_create('block', $values);
+    $block->save();
+    return $block;
   }
 
   /**
@@ -537,11 +511,14 @@ abstract class WebTestBase extends TestBase {
    *   (optional) The role ID (machine name). Defaults to a random name.
    * @param string $name
    *   (optional) The label for the role. Defaults to a random string.
+   * @param integer $weight
+   *   (optional) The weight for the role. Defaults NULL so that entity_create()
+   *   sets the weight to maximum + 1.
    *
    * @return string
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function drupalCreateRole(array $permissions, $rid = NULL, $name = NULL) {
+  protected function drupalCreateRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
     // Generate a random, lowercase machine name if none was passed.
     if (!isset($rid)) {
       $rid = strtolower($this->randomName(8));
@@ -557,22 +534,26 @@ abstract class WebTestBase extends TestBase {
     }
 
     // Create new role.
-    $role = new stdClass();
-    $role->rid = $rid;
-    $role->name = $name;
-    $result = user_role_save($role);
+    $role = entity_create('user_role', array(
+      'id' => $rid,
+      'label' => $name,
+    ));
+    if (!is_null($weight)) {
+      $role->set('weight', $weight);
+    }
+    $result = $role->save();
 
     $this->assertIdentical($result, SAVED_NEW, t('Created role ID @rid with name @name.', array(
-      '@name' => var_export($role->name, TRUE),
-      '@rid' => var_export($role->rid, TRUE),
+      '@name' => var_export($role->label(), TRUE),
+      '@rid' => var_export($role->id(), TRUE),
     )), t('Role'));
 
     if ($result === SAVED_NEW) {
       // Grant the specified permissions to the role, if any.
       if (!empty($permissions)) {
-        user_role_grant_permissions($role->rid, $permissions);
+        user_role_grant_permissions($role->id(), $permissions);
 
-        $assigned_permissions = db_query('SELECT permission FROM {role_permission} WHERE rid = :rid', array(':rid' => $role->rid))->fetchCol();
+        $assigned_permissions = db_query('SELECT permission FROM {role_permission} WHERE rid = :rid', array(':rid' => $role->id()))->fetchCol();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
         if (!$missing_permissions) {
           $this->pass(t('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), t('Role'));
@@ -581,7 +562,7 @@ abstract class WebTestBase extends TestBase {
           $this->fail(t('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))), t('Role'));
         }
       }
-      return $role->rid;
+      return $role->id();
     }
     else {
       return FALSE;
@@ -1432,7 +1413,7 @@ abstract class WebTestBase extends TestBase {
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
-            $drupal_settings = NestedArray::mergeDeep($drupal_settings, $command['settings']);
+            $drupal_settings = drupal_merge_js_settings(array($drupal_settings, $command['settings']));
             break;
 
           case 'insert':

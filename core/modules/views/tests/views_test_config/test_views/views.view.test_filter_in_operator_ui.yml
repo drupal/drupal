@@ -35,5 +35,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_filter_in_operator_ui
+id: test_filter_in_operator_ui
 tag: ''

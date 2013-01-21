@@ -15,56 +15,9 @@ class StatisticsReportsTest extends StatisticsTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Statistics reports tests',
-      'description' => 'Tests display of statistics report pages and access logging.',
+      'description' => 'Tests display of statistics report blocks.',
       'group' => 'Statistics'
     );
-  }
-
-  /**
-   * Verifies that 'Recent hits' renders properly and displays the added hit.
-   */
-  function testRecentHits() {
-    $this->drupalGet('admin/reports/hits');
-    $this->assertText('test', 'Hit title found.');
-    $this->assertText('node/1', 'Hit URL found.');
-    $this->assertText('Anonymous', 'Hit user found.');
-  }
-
-  /**
-   * Verifies that 'Top pages' renders properly and displays the added hit.
-   */
-  function testTopPages() {
-    $this->drupalGet('admin/reports/pages');
-    $this->assertText('test', 'Hit title found.');
-    $this->assertText('node/1', 'Hit URL found.');
-  }
-
-  /**
-   * Verifies that 'Top referrers' renders properly and displays the added hit.
-   */
-  function testTopReferrers() {
-    $this->drupalGet('admin/reports/referrers');
-    $this->assertText('http://example.com', 'Hit referrer found.');
-  }
-
-  /**
-   * Verifies that 'Details' page renders properly and displays the added hit.
-   */
-  function testDetails() {
-    $this->drupalGet('admin/reports/access/1');
-    $this->assertText('test', 'Hit title found.');
-    $this->assertText('node/1', 'Hit URL found.');
-    $this->assertText('Anonymous', 'Hit user found.');
-  }
-
-  /**
-   * Verifies that access logging is working and is reported correctly.
-   */
-  function testAccessLogging() {
-    $this->drupalGet('admin/reports/referrers');
-    $this->drupalGet('admin/reports/hits');
-    $this->assertText('Top referrers in the past 3 days', 'Hit title found.');
-    $this->assertText('admin/reports/referrers', 'Hit URL found.');
   }
 
   /**
@@ -72,8 +25,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
    */
   function testPopularContentBlock() {
     // Clear the block cache to load the Statistics module's block definitions.
-    $manager = $this->container->get('plugin.manager.block');
-    $manager->clearCachedDefinitions();
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     // Visit a node to have something show up in the block.
     $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blocking_user->uid));
@@ -87,11 +39,10 @@ class StatisticsReportsTest extends StatisticsTestBase {
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     // Configure and save the block.
-    $this->drupalPlaceBlock('statistics_popular_block', array(
-      'title' => 'Popular content',
-      'statistics_block_top_day_num' => 3,
-      'statistics_block_top_all_num' => 3,
-      'statistics_block_top_last_num' => 3,
+    $this->drupalPlaceBlock('statistics_popular_block', array('label' => 'Popular content'), array(
+      'top_day_num' => 3,
+      'top_all_num' => 3,
+      'top_last_num' => 3,
     ));
 
     // Get some page and check if the block is displayed.

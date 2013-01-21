@@ -13,6 +13,21 @@ use Drupal\Core\Entity\EntityInterface;
  */
 
 /**
+ * Act on a newly created vocabulary.
+ *
+ * This hook runs after a new vocabulary object has just been instantiated. It
+ * can be used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ *   The vocabulary object.
+ */
+function hook_taxonomy_vocabulary_create(\Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
+  if (!isset($vocabulary->synonyms)) {
+    $vocabulary->synonyms = FALSE;
+  }
+}
+
+/**
  * Act on taxonomy vocabularies when loaded.
  *
  * Modules implementing this hook can act on the vocabulary objects before they
@@ -106,6 +121,21 @@ function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\V
 function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->id() . '_synonyms', FALSE)) {
     variable_del('taxonomy_' . $vocabulary->id() . '_synonyms');
+  }
+}
+
+/**
+ * Act on a newly created term.
+ *
+ * This hook runs after a new term object has just been instantiated. It can be
+ * used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ *   The term object.
+ */
+function hook_taxonomy_term_create(\Drupal\taxonomy\Plugin\Core\Entity\Term $term) {
+  if (!isset($term->foo)) {
+    $term->foo = 'some_initial_value';
   }
 }
 

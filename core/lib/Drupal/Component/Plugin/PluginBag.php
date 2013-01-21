@@ -13,7 +13,7 @@ namespace Drupal\Component\Plugin;
  * The \ArrayAccess implementation is only for backwards compatibility, it is
  * deprecated and should not be used by new code.
  */
-abstract class PluginBag implements \ArrayAccess, \Iterator, \Countable {
+abstract class PluginBag implements \Iterator, \Countable {
 
   /**
    * Stores all instantiated plugins.
@@ -63,7 +63,7 @@ abstract class PluginBag implements \ArrayAccess, \Iterator, \Countable {
    * @param string $instance_id
    *   The ID of the plugin instance being retrieved.
    */
-  public function get($instance_id) {
+  public function &get($instance_id) {
     if (!isset($this->pluginInstances[$instance_id])) {
       $this->initializePlugin($instance_id);
     }
@@ -125,49 +125,10 @@ abstract class PluginBag implements \ArrayAccess, \Iterator, \Countable {
   }
 
   /**
-   * Implements \ArrayAccess::offsetExists().
-   *
-   * This is deprecated, use \Drupal\Component\Plugin\PluginBag::has().
-   */
-  public function offsetExists($offset) {
-    return isset($this->pluginInstances[$offset]) || isset($this->instanceIDs[$offset]);
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetGet().
-   *
-   * This is deprecated, use \Drupal\Component\Plugin\PluginBag::get().
-   */
-  public function offsetGet($offset) {
-    if (!isset($this->pluginInstances[$offset])) {
-      $this->initializePlugin($offset);
-    }
-    return $this->pluginInstances[$offset];
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetSet().
-   *
-   * This is deprecated, use \Drupal\Component\Plugin\PluginBag::set().
-   */
-  public function offsetSet($offset, $value) {
-    $this->pluginInstances[$offset] = $value;
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetUnset().
-   *
-   * This is deprecated, use \Drupal\Component\Plugin\PluginBag::remove().
-   */
-  public function offsetUnset($offset) {
-    unset($this->pluginInstances[$offset]);
-  }
-
-  /**
    * Implements \Iterator::current().
    */
   public function current() {
-    return $this->offsetGet($this->key());
+    return $this->get($this->key());
   }
 
   /**

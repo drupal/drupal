@@ -46,7 +46,7 @@ class CommentBlockTest extends CommentTestBase {
    */
   function testRecentCommentBlock() {
     $this->drupalLogin($this->admin_user);
-    $block = $this->drupalPlaceBlock('recent_comments', array('block_count' => 2));
+    $block = $this->drupalPlaceBlock('recent_comments', array(), array('block_count' => 2));
 
     // Add some test comments, one without a subject.
     $comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
@@ -61,14 +61,15 @@ class CommentBlockTest extends CommentTestBase {
     // posting a node from a node form.
     cache_invalidate_tags(array('content' => TRUE));
     $this->drupalGet('');
-    $this->assertNoText($block['subject'], 'Block was not found.');
+    $label = $block->label();
+    $this->assertNoText($label, 'Block was not found.');
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
 
     // Test that a user with the 'access comments' permission can see the
     // block.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('');
-    $this->assertText($block['subject'], 'Block was found.');
+    $this->assertText($label, 'Block was found.');
 
     // Test the only the 2 latest comments are shown and in the proper order.
     $this->assertNoText($comment1->subject->value, 'Comment not found in block.');
@@ -77,15 +78,8 @@ class CommentBlockTest extends CommentTestBase {
     $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment_body->value) < strpos($this->drupalGetContent(), $comment2->subject->value), 'Comments were ordered correctly in block.');
 
     // Set the number of recent comments to show to 10.
-    $this->drupalLogout();
-    $this->drupalLogin($this->admin_user);
-    $edit = array(
-      'block_count' => 10,
-    );
-    $current_theme = variable_get('theme_default', 'stark');
-
-    $this->drupalPost('admin/structure/block/manage/' . $block['config_id'] . '/' . variable_get('theme_default', 'stark') . '/configure', $edit, t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block saved.');
+    $block->set('settings', array('block_count' => 10));
+    $block->save();
 
     // Post an additional comment.
     $comment4 = $this->postComment($this->node, $this->randomName(), $this->randomName());

@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class RecentContentBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'block_count' => 10,
     );
@@ -59,9 +59,9 @@ class RecentContentBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     if ($nodes = node_get_recent($this->configuration['block_count'])) {
       return array(
         '#theme' => 'node_recent_block',

@@ -195,7 +195,7 @@ class Attachment extends DisplayPluginBase {
         $form['#title'] .= t('Attach to');
         $displays = array();
         foreach ($this->view->storage->get('display') as $display_id => $display) {
-          if (!empty($this->view->displayHandlers[$display_id]) && $this->view->displayHandlers[$display_id]->acceptAttachments()) {
+          if ($this->view->displayHandlers->has($display_id) && $this->view->displayHandlers->get($display_id)->acceptAttachments()) {
             $displays[$display_id] = $display['display_title'];
           }
         }
@@ -246,8 +246,8 @@ class Attachment extends DisplayPluginBase {
     $view->setArguments($args);
     $view->setDisplay($this->display['id']);
     if ($this->getOption('inherit_pager')) {
-      $view->display_handler->usesPager = $this->view->displayHandlers[$display_id]->usesPager();
-      $view->display_handler->setOption('pager', $this->view->displayHandlers[$display_id]->getOption('pager'));
+      $view->display_handler->usesPager = $this->view->displayHandlers->get($display_id)->usesPager();
+      $view->display_handler->setOption('pager', $this->view->displayHandlers->get($display_id)->getOption('pager'));
     }
 
     $attachment = $view->executeDisplay($this->display['id'], $args);

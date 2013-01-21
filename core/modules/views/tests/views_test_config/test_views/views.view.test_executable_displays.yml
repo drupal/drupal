@@ -20,5 +20,5 @@ display:
     id: page_2
     position: '2'
 human_name: ''
-name: test_executable_displays
+id: test_executable_displays
 tag: ''

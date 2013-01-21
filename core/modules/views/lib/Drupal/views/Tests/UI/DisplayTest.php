@@ -34,10 +34,10 @@ class DisplayTest extends UITestBase {
     // Create a new view in the UI.
     $default = array();
     $default['human_name'] = $this->randomName(16);
-    $default['name'] = strtolower($this->randomName(16));
+    $default['id'] = strtolower($this->randomName(16));
     $default['description'] = $this->randomName(16);
     $default['page[create]'] = TRUE;
-    $default['page[path]'] = $default['name'];
+    $default['page[path]'] = $default['id'];
 
     $view += $default;
 
@@ -51,7 +51,7 @@ class DisplayTest extends UITestBase {
    */
   public function testRemoveDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->drupalGet($path_prefix . '/default');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'delete Page', 'Make sure there is no delete button on the default display.');
@@ -62,6 +62,9 @@ class DisplayTest extends UITestBase {
     // Delete the page, so we can test the undo process.
     $this->drupalPost($path_prefix . '/page_1', array(), 'delete Page');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
+    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
+    $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
+
     $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
@@ -87,7 +90,7 @@ class DisplayTest extends UITestBase {
     $settings['page[create]'] = FALSE;
     $view = $this->randomView($settings);
 
-    $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
     $this->drupalGet($path_prefix);
 
     // Add a new display.
@@ -106,7 +109,7 @@ class DisplayTest extends UITestBase {
       'block[create]' => TRUE
     );
     $view = $this->randomView($view);
-    $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->clickLink(t('reorder displays'));
     $this->assertTrue($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
@@ -121,7 +124,7 @@ class DisplayTest extends UITestBase {
     $this->drupalPost(NULL, $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
 
-    $view = views_get_view($view['name']);
+    $view = views_get_view($view['id']);
     $displays = $view->storage->get('display');
     $this->assertEqual($displays['default']['position'], 0, 'Make sure the master display comes first.');
     $this->assertEqual($displays['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
@@ -142,7 +145,7 @@ class DisplayTest extends UITestBase {
    */
   public function testCloneDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->drupalGet($path_prefix);
     $this->drupalPost(NULL, array(), 'clone Page');
@@ -154,7 +157,7 @@ class DisplayTest extends UITestBase {
    */
   public function testDisableDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['name'] .'/edit';
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->drupalGet($path_prefix);
     $this->assertFalse($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class does not appear after initial adding of a view.');
@@ -213,6 +216,28 @@ class DisplayTest extends UITestBase {
       $element = $this->xpath('//div[contains(@class, :class)]/div', array(':class' => $class));
       $this->assertEqual((string) $element[0], "The selected display type does not utilize $type plugins");
     }
+  }
+
+  /**
+   * Tests the link-display setting.
+   */
+  public function testLinkDisplay() {
+    // Test setting the link display in the UI form.
+    $path = 'admin/structure/views/view/test_display/edit/block_1';
+    $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
+    $this->drupalPost($link_display_path, array('link_display' => 'page_1'), t('Apply'));
+    // The form redirects to the master display.
+    $this->drupalGet($path);
+
+    $result = $this->xpath("//a[contains(@href, :path)]", array(':path' => $link_display_path));
+    $this->assertEqual($result[0], 'Page', 'Make sure that the link option summary shows the right linked display.');
+
+    $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
+    $this->drupalPost($link_display_path, array('link_display' => 'custom_url'), t('Apply'));
+    // The form redirects to the master display.
+    $this->drupalGet($path);
+
+    $this->assertLink(t('Custom URL'), 0, 'The link option has custom url as summary.');
   }
 
 }

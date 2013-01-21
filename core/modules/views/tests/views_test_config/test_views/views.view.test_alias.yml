@@ -83,6 +83,6 @@ display:
     position: '0'
 human_name: test_alias
 module: views
-name: test_alias
+id: test_alias
 tag: default
 uuid: 3bdfd3e6-15aa-4324-9005-5ad8b321d265

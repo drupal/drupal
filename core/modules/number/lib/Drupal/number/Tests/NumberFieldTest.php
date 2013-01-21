@@ -36,7 +36,7 @@ class NumberFieldTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer content types'));
+    $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer content types', 'administer node fields','administer node display'));
     $this->drupalLogin($this->web_user);
   }
 

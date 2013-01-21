@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class UserNewBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'properties' => array(
         'administrative' => TRUE
@@ -62,9 +62,9 @@ class UserNewBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     // Retrieve a list of new users who have accessed the site successfully.
     $items = db_query_range('SELECT uid, name FROM {users} WHERE status <> 0 AND access <> 0 ORDER BY created DESC', 0, $this->configuration['whois_new_count'])->fetchAll();
     $build = array(

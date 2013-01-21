@@ -6,8 +6,9 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Utility\Color;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Utility\Color;
 
 /**
  * @defgroup forms Form builder functions
@@ -2831,10 +2832,15 @@ function theme_fieldset($variables) {
     $element['#attributes']['aria-describedby'] = $description_id;
   }
 
+  $legend_attributes = array();
+  if (isset($element['#title_display']) && $element['#title_display'] == 'invisible') {
+    $legend_attributes['class'][] = 'element-invisible';
+  }
+
   $output = '<fieldset' . new Attribute($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
     // Always wrap fieldset legends in a SPAN for CSS positioning.
-    $output .= '<legend><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
+    $output .= '<legend' . new Attribute($legend_attributes) . '><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
   }
   $output .= '<div class="fieldset-wrapper">';
   if (!empty($element['#description'])) {
@@ -3869,19 +3875,19 @@ function form_validate_machine_name(&$element, &$form_state) {
 }
 
 /**
- * Arranges details into groups.
+ * Arranges elements into groups.
  *
  * @param $element
  *   An associative array containing the properties and children of the
- *   details. Note that $element must be taken by reference here, so processed
+ *   element. Note that $element must be taken by reference here, so processed
  *   child elements are taken over into $form_state.
  * @param $form_state
- *   The $form_state array for the form this details belongs to.
+ *   The $form_state array for the form this element belongs to.
  *
  * @return
  *   The processed element.
  */
-function form_process_details(&$element, &$form_state) {
+function form_process_group(&$element, &$form_state) {
   $parents = implode('][', $element['#parents']);
 
   // Each details element forms a new group. The #type 'vertical_tabs' basically
@@ -3903,14 +3909,14 @@ function form_process_details(&$element, &$form_state) {
 }
 
 /**
- * Adds members of this group as actual elements for rendering.
+ * Adds form element theming to details.
  *
  * @param $element
  *   An associative array containing the properties and children of the
  *   details.
  *
  * @return
- *   The modified element with all group members.
+ *   The modified element.
  */
 function form_pre_render_details($element) {
   // The .form-wrapper class is required for #states to treat details like
@@ -3928,10 +3934,25 @@ function form_pre_render_details($element) {
     $element['#attributes']['open'] = 'open';
   }
 
-  // Details may be rendered outside of a Form API context.
+  return $element;
+}
+
+/**
+ * Adds members of this group as actual elements for rendering.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   element.
+ *
+ * @return
+ *   The modified element with all group members.
+ */
+function form_pre_render_group($element) {
+  // The element may be rendered outside of a Form API context.
   if (!isset($element['#parents']) || !isset($element['#groups'])) {
     return $element;
   }
+
   // Inject group member elements belonging to this group.
   $parents = implode('][', $element['#parents']);
   $children = element_children($element['#groups'][$parents]);
@@ -4074,17 +4095,17 @@ function form_process_autocomplete($element, &$form_state) {
     $element['#attributes']['class'][] = 'form-autocomplete';
     $element['#attached']['library'][] = array('system', 'drupal.autocomplete');
     // Provide a hidden element for the JavaScript behavior to bind to. Since
-    // this element is for client-side functionality only, and we don't want to
-    // collect any input from it, use #theme='hidden' instead of #type='hidden'.
+    // this element is for client-side functionality only, do not process input.
     // @todo Refactor autocomplete.js to accept Drupal.settings instead of
     //   requiring extraneous markup.
     $element['autocomplete'] = array(
-      '#theme' => 'hidden',
+      '#type' => 'hidden',
+      '#input' => FALSE,
+      '#value' => url($element['#autocomplete_path'], array('absolute' => TRUE)),
+      '#disabled' => TRUE,
       '#attributes' => array(
-        'id' => $element['#id'] . '-autocomplete',
-        'value' => url($element['#autocomplete_path'], array('absolute' => TRUE)),
         'class' => array('autocomplete'),
-        'disabled' => 'disabled',
+        'id' => $element['#id'] . '-autocomplete',
       ),
     );
   }
@@ -4647,8 +4668,6 @@ function form_pre_render_file($element) {
  */
 function theme_form_element($variables) {
   $element = &$variables['element'];
-  // This is also used in the installer, pre-database setup.
-  $t = get_t();
 
   // This function is invoked as theme wrapper, but the rendered form element
   // may not necessarily have been processed by form_builder().
@@ -4656,12 +4675,18 @@ function theme_form_element($variables) {
     '#title_display' => 'before',
   );
 
+  // Take over any #wrapper_attributes defined by the element.
+  // @todo Temporary hack for #type 'item'.
+  // @see http://drupal.org/node/1829202
+  if (isset($element['#wrapper_attributes'])) {
+    $attributes = $element['#wrapper_attributes'];
+  }
   // Add element #id for #type 'item'.
   if (isset($element['#markup']) && !empty($element['#id'])) {
     $attributes['id'] = $element['#id'];
   }
   // Add element's #type and #name as class to aid with JS/CSS selectors.
-  $attributes['class'] = array('form-item');
+  $attributes['class'][] = 'form-item';
   if (!empty($element['#type'])) {
     $attributes['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');
   }
@@ -4784,8 +4809,7 @@ function theme_form_element_label($variables) {
     $attributes['for'] = $element['#id'];
   }
 
-  // The leading whitespace helps visually separate fields from inline labels.
-  return ' <label' . new Attribute($attributes) . '>' . $t('!title !required', array('!title' => $title, '!required' => $required)) . "</label>\n";
+  return '<label' . new Attribute($attributes) . '>' . $t('!title!required', array('!title' => $title, '!required' => $required)) . '</label>';
 }
 
 /**
@@ -5204,7 +5228,7 @@ function _batch_queue($batch_set) {
     $class = $batch_set['queue']['class'];
 
     if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name);
+      $queues[$class][$name] = new $class($name, Database::getConnection());
     }
     return $queues[$class][$name];
   }

@@ -340,7 +340,7 @@ class ForumTest extends WebTestBase {
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), 'Vocabulary was edited');
 
     // Grab the newly edited vocabulary.
-    entity_get_controller('taxonomy_vocabulary')->resetCache();
+    $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')->resetCache();
     $current_settings = taxonomy_vocabulary_load($vid);
 
     // Make sure we actually edited the vocabulary properly.

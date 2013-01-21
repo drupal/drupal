@@ -277,11 +277,14 @@ function views_ui_theme() {
 function views_ui_library_info() {
   $libraries = array();
 
+  $path = drupal_get_path('module', 'views_ui') . '/js/';
+
   $libraries['views_ui.admin'] = array(
     'title' => 'Views UI ADMIN',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'views_ui') . '/js/views-admin.js' => array('group' => JS_DEFAULT),
+      $path . 'ajax.js' => array('group' => JS_DEFAULT),
+      $path . 'views-admin.js' => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -347,7 +350,7 @@ function views_ui_cache_load($name) {
   if (empty($view)) {
     return FALSE;
   }
-  $view->locked = $views_temp_store->getMetadata($view->get('name'));
+  $view->locked = $views_temp_store->getMetadata($view->id());
 
   return $view;
 }
@@ -375,8 +378,8 @@ function views_ui_cache_set(ViewUI $view) {
   unset($executable->display_handler);
   unset($executable->default_display);
   $executable->query = NULL;
-  $executable->displayHandlers = array();
-  drupal_container()->get('user.tempstore')->get('views')->set($view->get('name'), $view);
+  unset($executable->displayHandlers);
+  drupal_container()->get('user.tempstore')->get('views')->set($view->id(), $view);
 }
 
 /**
@@ -438,13 +441,13 @@ function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type
     $field_name = $handler->adminLabel(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
-      'href' => "admin/structure/views/nojs/config-item/{$view->storage->get('name')}/{$display['id']}/$type/$id",
+      'href' => "admin/structure/views/nojs/config-item/{$view->storage->id()}/{$display['id']}/$type/$id",
       'attributes' => array('class' => array('views-ajax-link')),
     );
   }
   $links[$type . '-add'] = array(
     'title' => t('Add new'),
-    'href' => "admin/structure/views/nojs/add-item/{$view->storage->get('name')}/{$display['id']}/$type",
+    'href' => "admin/structure/views/nojs/add-item/{$view->storage->id()}/{$display['id']}/$type",
     'attributes' => array('class' => array('views-ajax-link')),
   );
 
@@ -459,7 +462,7 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
   $links = array(
     $type . '-edit' => array(
       'title' => t('Edit @section', array('@section' => $title)),
-      'href' => "admin/structure/views/nojs/display/{$view->storage->get('name')}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/display/{$view->storage->id()}/{$display['id']}/$type",
       'attributes' => array('class' => array('views-ajax-link')),
     ),
   );
@@ -487,7 +490,7 @@ function views_ui_view_preview_section_rows_links(ViewExecutable $view) {
  */
 function views_ui_views_plugins_display_alter(&$plugins) {
   // Attach contextual links to each display plugin. The links will point to
-  // paths underneath "admin/structure/views/view/{$view->get('name')}" (i.e., paths
+  // paths underneath "admin/structure/views/view/{$view->id()}" (i.e., paths
   // for editing and performing other contextual actions on the view).
   foreach ($plugins as &$display) {
     $display['contextual links']['views_ui'] = array(
@@ -691,7 +694,7 @@ function views_ui_ajax_callback(ViewExecutable $view, $op) {
 
   // If the request is via AJAX, return the rendered list as JSON.
   if (drupal_container()->get('request')->request->get('js')) {
-    $list = entity_list_controller('view')->render();
+    $list = views_ui_list_page();
     $commands = array(ajax_command_replace('#views-entity-list', drupal_render($list)));
     return new JsonResponse(ajax_render($commands));
   }
@@ -738,5 +741,7 @@ function views_ui_confirm_delete_submit($form, &$form_state) {
  * @see views_ui_menu()
  */
 function views_ui_list_page() {
-  return entity_list_controller('view')->render();
+  return drupal_container()->get('plugin.manager.entity')
+    ->getListController('view')
+    ->render();
 }

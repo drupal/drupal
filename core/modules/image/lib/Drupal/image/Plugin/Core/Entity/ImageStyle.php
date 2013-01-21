@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\image\Plugin\Core\Entity\ImageStyle.
+ * Contains \Drupal\image\Plugin\Core\Entity\ImageStyle.
  */
 
 namespace Drupal\image\Plugin\Core\Entity;

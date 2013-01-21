@@ -46,5 +46,5 @@ display:
     id: default
     position: '0'
 human_name: test_filter_node_uid_revision
-name: test_filter_node_uid_revision
+id: test_filter_node_uid_revision
 tag: default

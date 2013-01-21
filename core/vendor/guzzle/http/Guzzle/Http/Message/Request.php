@@ -5,6 +5,7 @@ namespace Guzzle\Http\Message;
 use Guzzle\Common\Event;
 use Guzzle\Common\Collection;
 use Guzzle\Common\Exception\RuntimeException;
+use Guzzle\Common\Exception\InvalidArgumentException;
 use Guzzle\Http\Utils;
 use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Exception\BadResponseException;
@@ -456,13 +457,13 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritdoc}
      */
-    public function setState($state)
+    public function setState($state, array $context = array())
     {
         $this->state = $state;
         if ($this->state == self::STATE_NEW) {
             $this->response = null;
         } elseif ($this->state == self::STATE_COMPLETE) {
-            $this->processResponse();
+            $this->processResponse($context);
             $this->responseBody = null;
         }
 
@@ -542,9 +543,18 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritdoc}
      */
-    public function setResponseBody(EntityBodyInterface $body)
+    public function setResponseBody($body)
     {
-        $this->responseBody = $body;
+        // Attempt to open a file for writing if a string was passed
+        if (is_string($body)) {
+            // @codeCoverageIgnoreStart
+            if (!($body = fopen($body, 'w+'))) {
+                throw new InvalidArgumentException('Could not open ' . $body . ' for writing');
+            }
+            // @codeCoverageIgnoreEnd
+        }
+
+        $this->responseBody = EntityBody::factory($body);
 
         return $this;
     }
@@ -715,9 +725,11 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * Process a received response
      *
+     * @param array $context Contextual information
+     *
      * @throws BadResponseException on unsuccessful responses
      */
-    protected function processResponse()
+    protected function processResponse(array $context = array())
     {
         // Use the queued response if one is set
         if ($this->getParams()->get('queued_response')) {
@@ -734,7 +746,7 @@ class Request extends AbstractMessage implements RequestInterface
         $this->state = self::STATE_COMPLETE;
 
         // A request was sent, but we don't know if we'll send more or if the final response will be successful
-        $this->dispatch('request.sent', $this->getEventArray());
+        $this->dispatch('request.sent', $this->getEventArray() + $context);
 
         // Some response processors will remove the response or reset the state (example: ExponentialBackoffPlugin)
         if ($this->state == RequestInterface::STATE_COMPLETE) {

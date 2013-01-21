@@ -29,7 +29,7 @@
  * @see hook_block_view_ID_alter()
  * @see hook_block_view_NAME_alter()
  */
-function hook_block_view_alter(array &$build, \Drupal\block\BlockInterface $block) {
+function hook_block_view_alter(array &$build, \Drupal\block\Plugin\Core\Entity\Block $block) {
   // Remove the contextual links on all blocks that provide them.
   if (is_array($build) && isset($build['#contextual_links'])) {
     unset($build['#contextual_links']);

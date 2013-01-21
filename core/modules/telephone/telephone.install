@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Telephone module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function telephone_field_schema($field) {
+  $columns = array(
+    'value' => array(
+      'type' => 'varchar',
+      'length' => 256,
+      'not null' => FALSE,
+    ),
+  );
+  return array(
+    'columns' => $columns,
+  );
+}

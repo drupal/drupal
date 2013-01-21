@@ -26,9 +26,9 @@ use Drupal\Core\Annotation\Translation;
 class UserOnlineBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'properties' => array(
         'administrative' => TRUE
@@ -76,9 +76,9 @@ class UserOnlineBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     // Count users active within the defined period.
     $interval = REQUEST_TIME - $this->configuration['seconds_online'];
 

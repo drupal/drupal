@@ -20,7 +20,7 @@ abstract class CommentTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'node', 'history');
+  public static $modules = array('comment', 'node', 'history', 'field_ui');
 
   /**
    * An administrative user with permission to configure comment settings.
@@ -57,6 +57,7 @@ abstract class CommentTestBase extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array(
       'administer content types',
       'administer comments',
+      'administer comment fields',
       'skip comment approval',
       'post comments',
       'access comments',

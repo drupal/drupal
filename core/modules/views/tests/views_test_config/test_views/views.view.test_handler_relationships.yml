@@ -26,5 +26,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_handler_relationships
+id: test_handler_relationships
 tag: ''

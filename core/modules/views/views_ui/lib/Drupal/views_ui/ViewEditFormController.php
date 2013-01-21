@@ -87,7 +87,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $form['locked'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-locked', 'messages', 'warning')),
-        '#children' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($view->locked->owner))), '!age' => format_interval(REQUEST_TIME - $view->locked->updated), '!break' => url('admin/structure/views/view/' . $view->get('name') . '/break-lock'))),
+        '#children' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($view->locked->owner))), '!age' => format_interval(REQUEST_TIME - $view->locked->updated), '!break' => url('admin/structure/views/view/' . $view->id() . '/break-lock'))),
         '#weight' => -10,
       );
     }
@@ -139,8 +139,8 @@ class ViewEditFormController extends ViewFormControllerBase {
       $display_title = $this->getDisplayLabel($view, $display_id, FALSE);
 
       // Add a text that the display is disabled.
-      if (!empty($view->get('executable')->displayHandlers[$display_id])) {
-        if (!$view->get('executable')->displayHandlers[$display_id]->isEnabled()) {
+      if ($view->get('executable')->displayHandlers->has($display_id)) {
+        if (!$view->get('executable')->displayHandlers->get($display_id)->isEnabled()) {
           $form['displays']['settings']['disabled']['#markup'] = t('This display is disabled.');
         }
       }
@@ -156,7 +156,8 @@ class ViewEditFormController extends ViewFormControllerBase {
         $tab_content['#attributes']['class'][] = 'views-display-deleted';
       }
       // Mark disabled displays as such.
-      if (isset($view->get('executable')->displayHandlers[$display_id]) && !$view->get('executable')->displayHandlers[$display_id]->isEnabled()) {
+
+      if ($view->get('executable')->displayHandlers->has($display_id) && !$view->get('executable')->displayHandlers->get($display_id)->isEnabled()) {
         $tab_content['#attributes']['class'][] = 'views-display-disabled';
       }
       $form['displays']['settings']['settings_content'] = array(
@@ -224,7 +225,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $displays = $view->get('display');
     foreach ($displays as $id => $display) {
       if (!empty($display['deleted'])) {
-        unset($view->get('executable')->displayHandlers[$id]);
+        $view->get('executable')->displayHandlers->remove($id);
         unset($displays[$id]);
       }
     }
@@ -232,13 +233,13 @@ class ViewEditFormController extends ViewFormControllerBase {
     foreach ($view->get('executable')->displayHandlers as $id => $display) {
       if (!empty($display->display['new_id'])) {
         $new_id = $display->display['new_id'];
-        $view->get('executable')->displayHandlers[$new_id] = $view->get('executable')->displayHandlers[$id];
-        $view->get('executable')->displayHandlers[$new_id]->display['id'] = $new_id;
+        $view->get('executable')->displayHandlers->set($new_id, $view->get('executable')->displayHandlers->get($id));
+        $view->get('executable')->displayHandlers->get($new_id)->display['id'] = $new_id;
 
         $displays[$new_id] = $displays[$id];
         unset($displays[$id]);
         // Redirect the user to the renamed display to be sure that the page itself exists and doesn't throw errors.
-        $form_state['redirect'] = 'admin/structure/views/view/' . $view->get('name') . '/edit/' . $new_id;
+        $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $new_id;
       }
     }
     $view->set('display', $displays);
@@ -249,7 +250,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $destination = $query->get('destination');
     if (!empty($destination)) {
       // Find out the first display which has a changed path and redirect to this url.
-      $old_view = views_get_view($view->get('name'));
+      $old_view = views_get_view($view->id());
       $old_view->initDisplay();
       foreach ($old_view->displayHandlers as $id => $display) {
         // Only check for displays with a path.
@@ -258,8 +259,8 @@ class ViewEditFormController extends ViewFormControllerBase {
           continue;
         }
 
-        if (($display->getPluginId() == 'page') && ($old_path == $destination) && ($old_path != $view->get('executable')->displayHandlers[$id]->getOption('path'))) {
-          $destination = $view->get('executable')->displayHandlers[$id]->getOption('path');
+        if (($display->getPluginId() == 'page') && ($old_path == $destination) && ($old_path != $view->get('executable')->displayHandlers->get($id)->getOption('path'))) {
+          $destination = $view->get('executable')->displayHandlers->get($id)->getOption('path');
           $query->remove('destination');
           // @todo For whatever reason drupal_goto is still using $_GET.
           // @see http://drupal.org/node/1668866
@@ -273,7 +274,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     drupal_set_message(t('The view %name has been saved.', array('%name' => $view->getHumanName())));
 
     // Remove this view from cache so we can edit it properly.
-    drupal_container()->get('user.tempstore')->get('views')->delete($view->get('name'));
+    drupal_container()->get('user.tempstore')->get('views')->delete($view->id());
   }
 
   /**
@@ -287,7 +288,7 @@ class ViewEditFormController extends ViewFormControllerBase {
   public function cancel(array $form, array &$form_state) {
     // Remove this view from cache so edits will be lost.
     $view = $this->getEntity($form_state);
-    drupal_container()->get('user.tempstore')->get('views')->delete($view->get('name'));
+    drupal_container()->get('user.tempstore')->get('views')->delete($view->id());
     $form_state['redirect'] = 'admin/structure/views';
   }
 
@@ -314,7 +315,7 @@ class ViewEditFormController extends ViewFormControllerBase {
   public function getDisplayTab($view) {
     $build = array();
     $display_id = $view->displayID;
-    $display = $view->get('executable')->displayHandlers[$display_id];
+    $display = $view->get('executable')->displayHandlers->get($display_id);
     // If the plugin doesn't exist, display an error message instead of an edit
     // page.
     if (empty($display)) {
@@ -351,7 +352,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     // The master display cannot be cloned.
     $is_default = $display['id'] == 'default';
     // @todo: Figure out why getOption doesn't work here.
-    $is_enabled = $view->get('executable')->displayHandlers[$display['id']]->isEnabled();
+    $is_enabled = $view->get('executable')->displayHandlers->get($display['id'])->isEnabled();
 
     if ($display['id'] != 'default') {
       $build['top']['#theme_wrappers'] = array('container');
@@ -379,8 +380,8 @@ class ViewEditFormController extends ViewFormControllerBase {
           );
         }
         // Add a link to view the page.
-        elseif ($view->get('executable')->displayHandlers[$display['id']]->hasPath()) {
-          $path = $view->get('executable')->displayHandlers[$display['id']]->getPath();
+        elseif ($view->get('executable')->displayHandlers->get($display['id'])->hasPath()) {
+          $path = $view->get('executable')->displayHandlers->get($display['id'])->getPath();
           if (strpos($path, '%') === FALSE) {
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
@@ -438,7 +439,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $build['top']['display_title'] = array(
         '#theme' => 'views_ui_display_tab_setting',
         '#description' => t('Display name'),
-        '#link' => $view->get('executable')->displayHandlers[$display['id']]->optionLink(check_plain($display_title), 'display_title'),
+        '#link' => $view->get('executable')->displayHandlers->get($display['id'])->optionLink(check_plain($display_title), 'display_title'),
       );
     }
 
@@ -483,7 +484,7 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     // Fetch options from the display plugin, with a list of buckets they go into.
     $options = array();
-    $view->get('executable')->displayHandlers[$display['id']]->optionsSummary($buckets, $options);
+    $view->get('executable')->displayHandlers->get($display['id'])->optionsSummary($buckets, $options);
 
     // Place each option into its bucket.
     foreach ($options as $id => $option) {
@@ -537,7 +538,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     views_ui_cache_set($view);
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->get('name') . '/edit/' . $id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
   }
 
   /**
@@ -547,13 +548,13 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view = $this->getEntity($form_state);
     $id = $form_state['display_id'];
     // setOption doesn't work because this would might affect upper displays
-    $view->get('executable')->displayHandlers[$id]->setOption('enabled', TRUE);
+    $view->get('executable')->displayHandlers->get($id)->setOption('enabled', TRUE);
 
     // Store in cache
     views_ui_cache_set($view);
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->get('name') . '/edit/' . $id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
   }
 
   /**
@@ -562,13 +563,13 @@ class ViewEditFormController extends ViewFormControllerBase {
   public function submitDisplayDisable($form, &$form_state) {
     $view = $this->getEntity($form_state);
     $id = $form_state['display_id'];
-    $view->get('executable')->displayHandlers[$id]->setOption('enabled', FALSE);
+    $view->get('executable')->displayHandlers->get($id)->setOption('enabled', FALSE);
 
     // Store in cache
     views_ui_cache_set($view);
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->get('name') . '/edit/' . $id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
   }
 
   /**
@@ -586,7 +587,7 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     // Redirect to the top-level edit page. The first remaining display will
     // become the active display.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->get('name');
+    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id();
   }
 
   /**
@@ -627,21 +628,21 @@ class ViewEditFormController extends ViewFormControllerBase {
       '#links' => array(
         'edit-details' => array(
           'title' => t('edit view name/description'),
-          'href' => "admin/structure/views/nojs/edit-details/{$view->get('name')}",
+          'href' => "admin/structure/views/nojs/edit-details/{$view->id()}",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'analyze' => array(
           'title' => t('analyze view'),
-          'href' => "admin/structure/views/nojs/analyze/{$view->get('name')}/$display_id",
+          'href' => "admin/structure/views/nojs/analyze/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'clone' => array(
           'title' => t('clone view'),
-          'href' => "admin/structure/views/view/{$view->get('name')}/clone",
+          'href' => "admin/structure/views/view/{$view->id()}/clone",
         ),
         'reorder' => array(
           'title' => t('reorder displays'),
-          'href' => "admin/structure/views/nojs/reorder-displays/{$view->get('name')}/$display_id",
+          'href' => "admin/structure/views/nojs/reorder-displays/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
       ),
@@ -654,14 +655,14 @@ class ViewEditFormController extends ViewFormControllerBase {
       if ($view->type == t('Overridden')) {
         $element['extra_actions']['#links']['revert'] = array(
           'title' => t('revert view'),
-          'href' => "admin/structure/views/view/{$view->get('name')}/revert",
-          'query' => array('destination' => "admin/structure/views/view/{$view->get('name')}"),
+          'href' => "admin/structure/views/view/{$view->id()}/revert",
+          'query' => array('destination' => "admin/structure/views/view/{$view->id()}"),
         );
       }
       else {
         $element['extra_actions']['#links']['delete'] = array(
           'title' => t('delete view'),
-          'href' => "admin/structure/views/view/{$view->get('name')}/delete",
+          'href' => "admin/structure/views/view/{$view->id()}/delete",
         );
       }
     }
@@ -744,7 +745,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     views_ui_cache_set($view);
 
     // Redirect to the new display's edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->get('name') . '/edit/' . $new_display_id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $new_display_id;
   }
 
   /**
@@ -762,7 +763,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     views_ui_cache_set($view);
 
     // Redirect to the new display's edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->get('name') . '/edit/' . $display_id;
+    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $display_id;
   }
 
   /**
@@ -777,23 +778,23 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $option_build['#description'] = $option['title'];
 
-    $option_build['#link'] = $view->get('executable')->displayHandlers[$display['id']]->optionLink($option['value'], $id, '', empty($option['desc']) ? '' : $option['desc']);
+    $option_build['#link'] = $view->get('executable')->displayHandlers->get($display['id'])->optionLink($option['value'], $id, '', empty($option['desc']) ? '' : $option['desc']);
 
     $option_build['#links'] = array();
     if (!empty($option['links']) && is_array($option['links'])) {
       foreach ($option['links'] as $link_id => $link_value) {
-        $option_build['#settings_links'][] = $view->get('executable')->displayHandlers[$display['id']]->optionLink($option['setting'], $link_id, 'views-button-configure', $link_value);
+        $option_build['#settings_links'][] = $view->get('executable')->displayHandlers->get($display['id'])->optionLink($option['setting'], $link_id, 'views-button-configure', $link_value);
       }
     }
 
-    if (!empty($view->get('executable')->displayHandlers[$display['id']]->options['defaults'][$id])) {
+    if (!empty($view->get('executable')->displayHandlers->get($display['id'])->options['defaults'][$id])) {
       $display_id = 'default';
       $option_build['#defaulted'] = TRUE;
     }
     else {
       $display_id = $display['id'];
-      if (!$view->get('executable')->displayHandlers[$display['id']]->isDefaultDisplay()) {
-        if ($view->get('executable')->displayHandlers[$display['id']]->defaultableSections($id)) {
+      if (!$view->get('executable')->displayHandlers->get($display['id'])->isDefaultDisplay()) {
+        if ($view->get('executable')->displayHandlers->get($display['id'])->defaultableSections($id)) {
           $option_build['#overridden'] = TRUE;
         }
       }
@@ -816,18 +817,24 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $build['#name'] = $build['#title'] = $types[$type]['title'];
 
+    $rearrange_url = "admin/structure/views/nojs/rearrange/{$view->id()}/{$display['id']}/$type";
+    $rearrange_text = t('Rearrange');
+    $class = 'icon compact rearrange';
+
     // Different types now have different rearrange forms, so we use this switch
     // to get the right one.
     switch ($type) {
       case 'filter':
-        $rearrange_url = "admin/structure/views/nojs/rearrange-$type/{$view->get('name')}/{$display['id']}/$type";
+        // The rearrange form for filters contains the and/or UI, so override
+        // the used path.
+        $rearrange_url = "admin/structure/views/nojs/rearrange-$type/{$view->id()}/{$display['id']}/$type";
         $rearrange_text = t('And/Or, Rearrange');
         // TODO: Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';
         break;
       case 'field':
         // Fetch the style plugin info so we know whether to list fields or not.
-        $style_plugin = $view->get('executable')->displayHandlers[$display['id']]->getPlugin('style');
+        $style_plugin = $view->get('executable')->displayHandlers->get($display['id'])->getPlugin('style');
         $uses_fields = $style_plugin && $style_plugin->usesFields();
         if (!$uses_fields) {
           $build['fields'][] = array(
@@ -837,10 +844,11 @@ class ViewEditFormController extends ViewFormControllerBase {
           );
           return $build;
         }
+        break;
       case 'header':
       case 'footer':
       case 'empty':
-        if (!$view->get('executable')->displayHandlers[$display['id']]->usesAreas()) {
+        if (!$view->get('executable')->displayHandlers->get($display['id'])->usesAreas()) {
           $build[$type][] = array(
             '#markup' => t('The selected display type does not utilize @type plugins', array('@type' => $type)),
             '#theme_wrappers' => array('views_ui_container'),
@@ -848,18 +856,15 @@ class ViewEditFormController extends ViewFormControllerBase {
           );
           return $build;
         }
-      default:
-        $rearrange_url = "admin/structure/views/nojs/rearrange/{$view->get('name')}/{$display['id']}/$type";
-        $rearrange_text = t('Rearrange');
-        $class = 'icon compact rearrange';
+        break;
     }
 
     // Create an array of actions to pass to theme_links
     $actions = array();
-    $count_handlers = count($view->get('executable')->displayHandlers[$display['id']]->getHandlers($type));
+    $count_handlers = count($view->get('executable')->displayHandlers->get($display['id'])->getHandlers($type));
     $actions['add'] = array(
       'title' => t('Add'),
-      'href' => "admin/structure/views/nojs/add-item/{$view->get('name')}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/add-item/{$view->id()}/{$display['id']}/$type",
       'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'title' => t('Add'), 'id' => 'views-add-' . $type),
       'html' => TRUE,
     );
@@ -881,8 +886,8 @@ class ViewEditFormController extends ViewFormControllerBase {
       ),
     );
 
-    if (!$view->get('executable')->displayHandlers[$display['id']]->isDefaultDisplay()) {
-      if (!$view->get('executable')->displayHandlers[$display['id']]->isDefaulted($types[$type]['plural'])) {
+    if (!$view->get('executable')->displayHandlers->get($display['id'])->isDefaultDisplay()) {
+      if (!$view->get('executable')->displayHandlers->get($display['id'])->isDefaulted($types[$type]['plural'])) {
         $build['#overridden'] = TRUE;
       }
       else {
@@ -894,7 +899,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     if (!isset($relationships)) {
       // Get relationship labels
       $relationships = array();
-      foreach ($view->get('executable')->displayHandlers[$display['id']]->getHandlers('relationship') as $id => $handler) {
+      foreach ($view->get('executable')->displayHandlers->get($display['id'])->getHandlers('relationship') as $id => $handler) {
         $relationships[$id] = $handler->label();
       }
     }
@@ -903,7 +908,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $groups = array();
     $grouping = FALSE;
     if ($type == 'filter') {
-      $group_info = $view->get('executable')->displayHandlers['default']->getOption('filter_groups');
+      $group_info = $view->get('executable')->displayHandlers->get('default')->getOption('filter_groups');
       // If there is only one group but it is using the "OR" filter, we still
       // treat it as a group for display purposes, since we want to display the
       // "OR" label next to items within the group.
@@ -915,16 +920,16 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $build['fields'] = array();
 
-    foreach ($view->get('executable')->displayHandlers[$display['id']]->getOption($types[$type]['plural']) as $id => $field) {
+    foreach ($view->get('executable')->displayHandlers->get($display['id'])->getOption($types[$type]['plural']) as $id => $field) {
       // Build the option link for this handler ("Node: ID = article").
       $build['fields'][$id] = array();
       $build['fields'][$id]['#theme'] = 'views_ui_display_tab_setting';
 
-      $handler = $view->get('executable')->displayHandlers[$display['id']]->getHandler($type, $id);
+      $handler = $view->get('executable')->displayHandlers->get($display['id'])->getHandler($type, $id);
       if (empty($handler)) {
         $build['fields'][$id]['#class'][] = 'broken';
         $field_name = t('Broken/missing handler: @table > @field', array('@table' => $field['table'], '@field' => $field['field']));
-        $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/config-item/{$view->get('name')}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
+        $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
         continue;
       }
 
@@ -939,15 +944,15 @@ class ViewEditFormController extends ViewFormControllerBase {
       if (!empty($field['exclude'])) {
         $link_attributes['class'][] = 'views-field-excluded';
       }
-      $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$view->get('name')}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
+      $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
 
-      if ($view->get('executable')->displayHandlers[$display['id']]->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$view->get('name')}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
+      if ($view->get('executable')->displayHandlers->get($display['id'])->useGroupBy() && $handler->usesGroupBy()) {
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/{$view->get('name')}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => TRUE));
       }
 
       if ($grouping) {

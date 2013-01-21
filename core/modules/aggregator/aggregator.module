@@ -371,11 +371,9 @@ function aggregator_save_category($edit) {
         ->condition('cid', $edit['cid'])
         ->execute();
       // Make sure there is no active block for this category.
-      $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-      foreach ($block_configs as $config_id) {
-        $config = config($config_id);
-        if ($config->get('id') == 'aggregator_category_block:' . $edit['cid']) {
-          $config->delete();
+      if (module_exists('block')) {
+        foreach (entity_load_multiple_by_properties('block', array('plugin' => 'aggregator_category_block:' . $edit['cid'])) as $block) {
+          $block->delete();
         }
       }
       $edit['title'] = '';
@@ -439,11 +437,9 @@ function aggregator_save_feed($edit) {
       ->condition('fid', $edit['fid'])
       ->execute();
     // Make sure there is no active block for this feed.
-    $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-    foreach ($block_configs as $config_id) {
-      $config = config($config_id);
-      if ($config->get('id') == 'aggregator_feed_block:' . $edit['fid']) {
-        $config->delete();
+    if (module_exists('block')) {
+      foreach (entity_load_multiple_by_properties('block', array('plugin' => 'aggregator_feed_block:' . $edit['fid'])) as $block) {
+        $block->delete();
       }
     }
   }

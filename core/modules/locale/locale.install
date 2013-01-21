@@ -505,8 +505,10 @@ function locale_update_8004() {
       $negotiation = update_variable_get('language_negotiation_' . $type, NULL);
       if (!empty($negotiation)) {
         foreach ($negotiation as $method_id => &$method) {
-          $method['callbacks']['negotiation'] = $method['callbacks']['language'];
-          unset($method['callbacks']['language']);
+          if (isset($method['callbacks']['language'])) {
+            $method['callbacks']['negotiation'] = $method['callbacks']['language'];
+            unset($method['callbacks']['language']);
+          }
           if (isset($method['callbacks']['switcher'])) {
             $method['callbacks']['language_switch'] = $method['callbacks']['switcher'];
             unset($method['callbacks']['switcher']);

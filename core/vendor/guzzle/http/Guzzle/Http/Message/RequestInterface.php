@@ -233,11 +233,12 @@ interface RequestInterface extends MessageInterface, HasDispatcherInterface
     /**
      * Set the state of the request
      *
-     * @param string $state State of the request (complete, sending, or new)
+     * @param string $state   State of the request (complete, sending, or new)
+     * @param array  $context Contextual information about the state change
      *
      * @return RequestInterface
      */
-    public function setState($state);
+    public function setState($state, array $context = array());
 
     /**
      * Get the cURL options that will be applied when the cURL handle is created
@@ -261,11 +262,11 @@ interface RequestInterface extends MessageInterface, HasDispatcherInterface
      * This method should be invoked when you need to send the response's entity body somewhere other than the normal
      * php://temp buffer. For example, you can send the entity body to a socket, file, or some other custom stream.
      *
-     * @param EntityBodyInterface $body Response body object
-     *
+     * @param EntityBodyInterface|string|resource $body Response body object. Pass a string to attempt to store the
+     *                                                  response body in a local file.
      * @return Request
      */
-    public function setResponseBody(EntityBodyInterface $body);
+    public function setResponseBody($body);
 
     /**
      * Determine if the response body is repeatable (readable + seekable)

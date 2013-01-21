@@ -46,5 +46,5 @@ display:
     id: default
     position: '0'
 human_name: test_views_handler_field_user_name
-name: test_views_handler_field_user_name
+id: test_views_handler_field_user_name
 tag: default

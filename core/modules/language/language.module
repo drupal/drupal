@@ -47,7 +47,8 @@ function language_help($path, $arg) {
 
       return $output;
 
-    case 'admin/structure/block/manage/%/%':
+    case 'admin/structure/block/manage/%':
+    case 'admin/structure/block/add/%/%':
       if ($arg[4] == 'language' && $arg[5] == 'language_interface') {
         return '<p>' . t('With multiple languages enabled, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
@@ -314,11 +315,10 @@ function language_configuration_element_process($element, &$form_state, &$form) 
     '#default_value' => isset($element['#default_value']['langcode']) ? $element['#default_value']['langcode'] : NULL,
   );
 
-  $element['language_hidden'] = array(
+  $element['language_show'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Hide language selection'),
-    '#default_value' => isset($element['#default_value']['language_hidden']) ? $element['#default_value']['language_hidden'] : NULL,
-    '#description' => t('Language selector appears on create and edit pages.'),
+    '#title' => t('Show language selector on create and edit pages'),
+    '#default_value' => isset($element['#default_value']['language_show']) ? $element['#default_value']['language_show'] : NULL,
   );
 
   // Add the entity type and bundle information to the form if they are set.
@@ -361,10 +361,10 @@ function language_configuration_element_submit(&$form, &$form_state) {
  * @param array $values
  *   An array holding the values to be saved having the following keys:
  *   - langcode: the language code.
- *   - language_hidden: if the language element should be hidden or not.
+ *   - language_show: if the language element should be hidden or not.
  */
 function language_save_default_configuration($entity_type, $bundle, $values = array()) {
-  config('language.settings')->set(language_get_default_configuration_settings_key($entity_type, $bundle), array('langcode' => $values['langcode'], 'language_hidden' => $values['language_hidden']))->save();
+  config('language.settings')->set(language_get_default_configuration_settings_key($entity_type, $bundle), array('langcode' => $values['langcode'], 'language_show' => $values['language_show']))->save();
 }
 
 /**
@@ -378,14 +378,14 @@ function language_save_default_configuration($entity_type, $bundle, $values = ar
  * @return array
  *   An array with the following keys:
  *   - langcode: the language code.
- *   - language_hidden: if the language element is hidden or not.
+ *   - language_show: if the language element is hidden or not.
  */
 function language_get_default_configuration($entity_type, $bundle) {
   $configuration = config('language.settings')->get(language_get_default_configuration_settings_key($entity_type, $bundle));
   if (is_null($configuration)) {
     $configuration = array();
   }
-  $configuration += array('langcode' => 'site_default', 'language_hidden' => TRUE);
+  $configuration += array('langcode' => 'site_default', 'language_show' => FALSE);
   return $configuration;
 }
 
@@ -514,6 +514,9 @@ function language_save($language) {
   // Update language count based on unlocked language count.
   language_update_count();
 
+  // Update weight of locked system languages.
+  language_update_locked_weights();
+
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
 
@@ -559,6 +562,9 @@ function language_delete($langcode) {
       ->execute();
 
     language_update_count();
+
+    // Update weight of locked system languages.
+    language_update_locked_weights();
 
     drupal_static_reset('language_list');
 
@@ -854,4 +860,21 @@ function language_set_browser_drupal_langcode_mappings($mappings) {
   $config = config('language.mappings');
   $config->setData($mappings);
   $config->save();
+}
+
+/**
+ * Updates locked system language weights.
+ */
+function language_update_locked_weights() {
+  // Get maximum weight to update the system languages to keep them on bottom.
+  $max_weight = db_query('SELECT MAX(weight) FROM {language} WHERE locked = 0')->fetchField();
+  // Loop locked languages to maintain the existing order.
+  foreach (language_list(LANGUAGE_LOCKED) as $language) {
+    $max_weight++;
+    // Update system languages weight.
+    db_update('language')
+      ->fields(array('weight' => $max_weight))
+      ->condition('langcode', $language->langcode)
+      ->execute();
+  }
 }

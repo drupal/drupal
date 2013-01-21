@@ -229,186 +229,6 @@
         ]
     },
     {
-        "name": "guzzle/common",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "target-dir": "Guzzle/Common",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/guzzle/common.git",
-            "reference": "23162d56daa85b1ee6f1d73d9b5a5ecda2d70849"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/guzzle/common/archive/23162d56daa85b1ee6f1d73d9b5a5ecda2d70849.zip",
-            "reference": "23162d56daa85b1ee6f1d73d9b5a5ecda2d70849",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2",
-            "symfony/event-dispatcher": ">=2.1"
-        },
-        "time": "2012-12-06 02:26:39",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Guzzle\\Common": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Common libraries used by Guzzle",
-        "homepage": "http://guzzlephp.org/",
-        "keywords": [
-            "event",
-            "exception",
-            "common",
-            "collection"
-        ]
-    },
-    {
-        "name": "guzzle/stream",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "target-dir": "Guzzle/Stream",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/guzzle/stream",
-            "reference": "v3.0.5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/guzzle/stream/archive/v3.0.5.zip",
-            "reference": "v3.0.5",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2",
-            "guzzle/common": "self.version"
-        },
-        "time": "2012-11-11 23:54:57",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Guzzle\\Stream": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Michael Dowling",
-                "email": "mtdowling@gmail.com",
-                "homepage": "https://github.com/mtdowling"
-            }
-        ],
-        "description": "Guzzle stream wrapper component",
-        "homepage": "http://guzzlephp.org/",
-        "keywords": [
-            "stream",
-            "Guzzle",
-            "component"
-        ]
-    },
-    {
-        "name": "guzzle/parser",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "target-dir": "Guzzle/Parser",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/guzzle/parser.git",
-            "reference": "v3.0.5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/guzzle/parser/archive/v3.0.5.zip",
-            "reference": "v3.0.5",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2"
-        },
-        "time": "2012-11-19 00:07:13",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Guzzle\\Parser": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Interchangeable parsers used by Guzzle",
-        "homepage": "http://guzzlephp.org/",
-        "keywords": [
-            "http",
-            "url",
-            "message",
-            "cookie",
-            "URI Template"
-        ]
-    },
-    {
-        "name": "guzzle/http",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "target-dir": "Guzzle/Http",
-        "source": {
-            "type": "git",
-            "url": "git://github.com/guzzle/http.git",
-            "reference": "v3.0.5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/guzzle/http/archive/v3.0.5.zip",
-            "reference": "v3.0.5",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2",
-            "guzzle/common": "self.version",
-            "guzzle/parser": "self.version",
-            "guzzle/stream": "self.version"
-        },
-        "time": "2012-11-18 05:28:55",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Guzzle\\Http": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Michael Dowling",
-                "email": "mtdowling@gmail.com",
-                "homepage": "https://github.com/mtdowling"
-            }
-        ],
-        "description": "HTTP libraries used by Guzzle",
-        "homepage": "http://guzzlephp.org/",
-        "keywords": [
-            "curl",
-            "http",
-            "http client",
-            "client",
-            "Guzzle"
-        ]
-    },
-    {
         "name": "symfony-cmf/routing",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -903,5 +723,262 @@
         ],
         "description": "Symfony Yaml Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "guzzle/common",
+        "version": "v3.1.0",
+        "version_normalized": "3.1.0.0",
+        "target-dir": "Guzzle/Common",
+        "source": {
+            "type": "git",
+            "url": "git://github.com/guzzle/common.git",
+            "reference": "v3.1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/common/archive/v3.1.0.zip",
+            "reference": "v3.1.0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "symfony/event-dispatcher": ">=2.1"
+        },
+        "time": "2013-01-13 05:14:34",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Common": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Common libraries used by Guzzle",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "event",
+            "exception",
+            "common",
+            "collection"
+        ]
+    },
+    {
+        "name": "guzzle/stream",
+        "version": "v3.1.0",
+        "version_normalized": "3.1.0.0",
+        "target-dir": "Guzzle/Stream",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/stream",
+            "reference": "v3.1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/stream/archive/v3.1.0.zip",
+            "reference": "v3.1.0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "guzzle/common": "self.version"
+        },
+        "time": "2012-12-07 16:45:11",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Stream": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "Guzzle stream wrapper component",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "stream",
+            "Guzzle",
+            "component"
+        ]
+    },
+    {
+        "name": "guzzle/parser",
+        "version": "v3.1.0",
+        "version_normalized": "3.1.0.0",
+        "target-dir": "Guzzle/Parser",
+        "source": {
+            "type": "git",
+            "url": "git://github.com/guzzle/parser.git",
+            "reference": "v3.1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/parser/archive/v3.1.0.zip",
+            "reference": "v3.1.0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "time": "2013-01-12 21:43:21",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Parser": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Interchangeable parsers used by Guzzle",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "http",
+            "url",
+            "message",
+            "cookie",
+            "URI Template"
+        ]
+    },
+    {
+        "name": "guzzle/http",
+        "version": "v3.1.0",
+        "version_normalized": "3.1.0.0",
+        "target-dir": "Guzzle/Http",
+        "source": {
+            "type": "git",
+            "url": "git://github.com/guzzle/http.git",
+            "reference": "v3.1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/guzzle/http/archive/v3.1.0.zip",
+            "reference": "v3.1.0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "ext-curl": "*",
+            "guzzle/common": "self.version",
+            "guzzle/parser": "self.version",
+            "guzzle/stream": "self.version"
+        },
+        "time": "2013-01-13 05:09:32",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Guzzle\\Http": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "HTTP libraries used by Guzzle",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "curl",
+            "http",
+            "http client",
+            "client",
+            "Guzzle"
+        ]
+    },
+    {
+        "name": "easyrdf/easyrdf",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git://github.com/njh/easyrdf.git",
+            "reference": "d1c363bd04cd55169fbefe52328e86031c6db3a2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/njh/easyrdf/archive/d1c363bd04cd55169fbefe52328e86031c6db3a2.zip",
+            "reference": "d1c363bd04cd55169fbefe52328e86031c6db3a2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.8"
+        },
+        "replace": {
+            "njh/easyrdf": "self.version"
+        },
+        "require-dev": {
+            "phpunit/phpunit": ">=3.5.15",
+            "squizlabs/php_codesniffer": ">=1.4.3",
+            "sami/sami": "dev-master"
+        },
+        "time": "2013-01-13 01:20:04",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "EasyRdf_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Nicholas Humfrey",
+                "email": "njh@aelius.com",
+                "homepage": "http://www.aelius.com/njh/",
+                "role": "Developer"
+            }
+        ],
+        "description": "EasyRdf is a PHP library designed to make it easy to consume and produce RDF.",
+        "homepage": "http://www.easyrdf.org/",
+        "keywords": [
+            "rdfa",
+            "RDF",
+            "Semantic Web",
+            "Turtle",
+            "Linked Data"
+        ]
     }
 ]

@@ -112,7 +112,7 @@ class ModuleTest extends ViewUnitTestBase {
    */
   public function testLoadFunctions() {
     $this->enableModules(array('node'), FALSE);
-    $controller = entity_get_controller('view');
+    $controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
 
     // Test views_view_is_enabled/disabled.
     $load = $controller->load(array('archive'));
@@ -208,7 +208,7 @@ class ModuleTest extends ViewUnitTestBase {
     foreach ($views as $id => $view) {
       foreach ($view->get('display') as $display_id => $display) {
         $expected_options[$view->id() . ':' . $display['id']] = t('View: @view - Display: @display',
-          array('@view' => $view->name, '@display' => $display['id']));
+          array('@view' => $view->id(), '@display' => $display['id']));
       }
     }
 

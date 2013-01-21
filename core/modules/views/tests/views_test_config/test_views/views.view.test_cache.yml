@@ -37,6 +37,6 @@ display:
           field: id
           relationship: none
 human_name: ''
-name: test_cache
+id: test_cache
 tag: ''
 base_field: nid

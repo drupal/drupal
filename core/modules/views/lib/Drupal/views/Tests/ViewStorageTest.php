@@ -30,7 +30,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     'disabled',
     'api_version',
     'module',
-    'name',
+    'id',
     'description',
     'tag',
     'base_table',
@@ -74,7 +74,7 @@ class ViewStorageTest extends ViewUnitTestBase {
   function testConfigurationEntityCRUD() {
     // Get the configuration entity information and controller.
     $this->info = entity_get_info('view');
-    $this->controller = entity_get_controller('view');
+    $this->controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
 
     // Confirm that an info array has been returned.
     $this->assertTrue(!empty($this->info) && is_array($this->info), 'The View info array is loaded.');
@@ -158,7 +158,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     }
 
     // Check the UUID of the loaded View.
-    $created->set('name', 'test_view_storage_new');
+    $created->set('id', 'test_view_storage_new');
     $created->save();
     $created_loaded = entity_load('view', 'test_view_storage_new');
     $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');
@@ -179,9 +179,9 @@ class ViewStorageTest extends ViewUnitTestBase {
 
     $executable = $view->get('executable');
     $executable->initDisplay();
-    $this->assertTrue($executable->displayHandlers[$new_id] instanceof Page, 'New page display "test" uses the right display plugin.');
+    $this->assertTrue($executable->displayHandlers->get($new_id) instanceof Page, 'New page display "test" uses the right display plugin.');
 
-    $view->set('name', 'test_view_storage_new_new2');
+    $view->set('id', 'test_view_storage_new_new2');
     $view->save();
     $values = config('views.view.test_view_storage_new_new2')->get();
 
@@ -297,12 +297,12 @@ class ViewStorageTest extends ViewUnitTestBase {
     $executable = $view->get('executable');
     $executable->initDisplay();
 
-    $this->assertTrue($executable->displayHandlers['page_1'] instanceof Page);
-    $this->assertTrue($executable->displayHandlers['page_1']->default_display instanceof DefaultDisplay);
-    $this->assertTrue($executable->displayHandlers['page_2'] instanceof Page);
-    $this->assertTrue($executable->displayHandlers['page_2']->default_display instanceof DefaultDisplay);
-    $this->assertTrue($executable->displayHandlers['feed_1'] instanceof Feed);
-    $this->assertTrue($executable->displayHandlers['feed_1']->default_display instanceof DefaultDisplay);
+    $this->assertTrue($executable->displayHandlers->get('page_1') instanceof Page);
+    $this->assertTrue($executable->displayHandlers->get('page_1')->default_display instanceof DefaultDisplay);
+    $this->assertTrue($executable->displayHandlers->get('page_2') instanceof Page);
+    $this->assertTrue($executable->displayHandlers->get('page_2')->default_display instanceof DefaultDisplay);
+    $this->assertTrue($executable->displayHandlers->get('feed_1') instanceof Feed);
+    $this->assertTrue($executable->displayHandlers->get('feed_1')->default_display instanceof DefaultDisplay);
 
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));

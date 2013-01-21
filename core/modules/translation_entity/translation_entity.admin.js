@@ -22,7 +22,7 @@ Drupal.behaviors.translationEntity = {
       var $bundleSettings = $target.closest('.bundle-settings');
       var $fieldSettings = $bundleSettings.nextUntil('.bundle-settings');
       if ($target.is(':checked')) {
-        $bundleSettings.find('.operations :input[name$="[language_hidden]"]').attr('checked', false);
+        $bundleSettings.find('.operations :input[name$="[language_show]"]').attr('checked', true);
         $fieldSettings.find('.translatable :input').attr('checked', true);
         $fieldSettings.show();
       }

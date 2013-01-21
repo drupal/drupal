@@ -155,7 +155,12 @@ class CacheDecorator implements CachedDiscoveryInterface {
    * Implements \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface::clearCachedDefinitions().
    */
   public function clearCachedDefinitions() {
-    if (isset($this->cacheKey)) {
+    // If there are any cache tags, clear cache based on those.
+    if (!empty($this->cacheTags)) {
+      cache($this->cacheBin)->deleteTags($this->cacheTags);
+    }
+    // Otherwise, just delete the specified cache key.
+    else if (isset($this->cacheKey)) {
       cache($this->cacheBin)->delete($this->cacheKey);
     }
     $this->definitions = NULL;

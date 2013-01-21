@@ -29,5 +29,5 @@ display:
     id: page_1
     position: '0'
 human_name: {  }
-name: test_field_classes
+id: test_field_classes
 tag: ''

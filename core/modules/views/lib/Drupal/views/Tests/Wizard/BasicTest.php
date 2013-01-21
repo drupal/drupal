@@ -31,7 +31,7 @@ class BasicTest extends WizardTestBase {
     // Create a simple and not at all useful view.
     $view1 = array();
     $view1['human_name'] = $this->randomName(16);
-    $view1['name'] = strtolower($this->randomName(16));
+    $view1['id'] = strtolower($this->randomName(16));
     $view1['description'] = $this->randomName(16);
     $view1['page[create]'] = FALSE;
     $this->drupalPost('admin/structure/views/add', $view1, t('Save and edit'));
@@ -41,7 +41,7 @@ class BasicTest extends WizardTestBase {
     $this->assertText($view1['description']);
     // @todo For now, clone is being left to config.module to solve.
     foreach (array('delete', 'edit') as $operation) {
-      $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['name'] . '/' . $operation));
+      $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/' . $operation));
     }
 
     // This view should not have a block.
@@ -55,7 +55,7 @@ class BasicTest extends WizardTestBase {
     // Now create a page with simple node listing and an attached feed.
     $view2 = array();
     $view2['human_name'] = $this->randomName(16);
-    $view2['name'] = strtolower($this->randomName(16));
+    $view2['id'] = strtolower($this->randomName(16));
     $view2['description'] = $this->randomName(16);
     $view2['page[create]'] = 1;
     $view2['page[title]'] = $this->randomName(16);
@@ -97,7 +97,7 @@ class BasicTest extends WizardTestBase {
     // Create a view with a page and a block, and filter the listing.
     $view3 = array();
     $view3['human_name'] = $this->randomName(16);
-    $view3['name'] = strtolower($this->randomName(16));
+    $view3['id'] = strtolower($this->randomName(16));
     $view3['description'] = $this->randomName(16);
     $view3['show[wizard_key]'] = 'node';
     $view3['show[type]'] = 'page';
@@ -127,7 +127,7 @@ class BasicTest extends WizardTestBase {
     $this->assertText('View: ' . $view3['human_name']);
 
     // Place the block.
-    $this->drupalPlaceBlock("views_block:{$view3['name']}-block_1");
+    $this->drupalPlaceBlock("views_block:{$view3['id']}-block_1");
 
     // Visit a random page (not the one that displays the view itself) and look
     // for the expected node title in the block.

@@ -1156,7 +1156,6 @@ function field_attach_presave($entity) {
  *   it leaves unspecified.
  */
 function field_attach_insert(EntityInterface $entity) {
-  _field_invoke_default('insert', $entity);
   _field_invoke('insert', $entity);
 
   // Let any module insert field data before the storage engine, accumulating

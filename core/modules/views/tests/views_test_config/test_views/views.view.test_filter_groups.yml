@@ -107,5 +107,5 @@ display:
     id: page
     position: '0'
 human_name: test_filter_groups
-name: test_filter_groups
+id: test_filter_groups
 tag: default

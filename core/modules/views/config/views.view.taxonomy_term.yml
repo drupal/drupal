@@ -1,7 +1,7 @@
 disabled: true
 api_version: '3.0'
 module: taxonomy
-name: taxonomy_term
+id: taxonomy_term
 description: 'Customize the default taxonomy/term display.'
 tag: default
 base_table: node

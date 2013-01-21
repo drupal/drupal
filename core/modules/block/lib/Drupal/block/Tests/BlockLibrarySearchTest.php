@@ -54,6 +54,7 @@ class BlockLibrarySearchTest extends WebTestBase {
 
     // Check that the block search form redirects to the correct block form.
     $this->drupalPost('admin/structure/block/list/block_plugin_ui:stark/add', array('block' => 'system_main_block'), t('Next'));
-    $this->assertUrl('admin/structure/block/manage/system_main_block/stark');
+    $this->assertUrl('admin/structure/block/add/system_main_block/stark');
   }
+
 }

@@ -86,7 +86,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
       'name' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
       'default_language[langcode]' => 'bb',
-      'default_language[language_hidden]' => FALSE,
+      'default_language[language_show]' => TRUE,
     );
     $vid = $edit['vid'];
     $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
@@ -98,39 +98,39 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     // Check that the language settings were saved.
     $language_settings = language_get_default_configuration('taxonomy_term', $edit['vid']);
     $this->assertEqual($language_settings['langcode'], 'bb');
-    $this->assertEqual($language_settings['language_hidden'], FALSE);
+    $this->assertEqual($language_settings['language_show'], TRUE);
 
     // Check that the correct options are selected in the interface.
     $this->assertOptionSelected('edit-default-language-langcode', 'bb', 'The correct default language for the terms of this vocabulary is selected.');
-    $this->assertNoFieldChecked('edit-default-language-language-hidden', 'Hide language selection option is not checked.');
+    $this->assertFieldChecked('edit-default-language-language-show', 'Show language selection option is checked.');
 
     // Edit the vocabulary and check that the new settings are updated.
     $edit = array(
       'default_language[langcode]' => 'aa',
-      'default_language[language_hidden]' => TRUE,
+      'default_language[language_show]' => FALSE,
     );
     $this->drupalPost('admin/structure/taxonomy/' . $vid . '/edit', $edit, t('Save'));
 
     // And check again the settings and also the interface.
     $language_settings = language_get_default_configuration('taxonomy_term', $vid);
     $this->assertEqual($language_settings['langcode'], 'aa');
-    $this->assertEqual($language_settings['language_hidden'], TRUE);
+    $this->assertEqual($language_settings['language_show'], FALSE);
 
     $this->drupalGet('admin/structure/taxonomy/' . $vid . '/edit');
     $this->assertOptionSelected('edit-default-language-langcode', 'aa', 'The correct default language for the terms of this vocabulary is selected.');
-    $this->assertFieldChecked('edit-default-language-language-hidden', 'Hide language selection option is not checked.');
+    $this->assertNoFieldChecked('edit-default-language-language-show', 'Show language selection option is not checked.');
 
     // Check that language settings are changed after editing vocabulary.
     $edit = array(
       'name' => $this->randomName(),
       'default_language[langcode]' => 'authors_default',
-      'default_language[language_hidden]' => TRUE,
+      'default_language[language_show]' => FALSE,
     );
     $this->drupalPost('admin/structure/taxonomy/' . $vid . '/edit', $edit, t('Save'));
 
     // Check that we have the new settings.
     $new_settings = language_get_default_configuration('taxonomy_term', $vid);
     $this->assertEqual($new_settings['langcode'], 'authors_default');
-    $this->assertEqual($new_settings['language_hidden'], TRUE);
+    $this->assertEqual($new_settings['language_show'], FALSE);
   }
 }

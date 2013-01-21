@@ -1,7 +1,7 @@
 disabled: true
 api_version: '3.0'
 module: comment
-name: comments_recent
+id: comments_recent
 description: 'A block and a page with recent comments.'
 tag: default
 base_table: comment

@@ -84,7 +84,7 @@ class ViewElementTest extends ViewTestBase {
     $this->assertEqual(count($xpath), 5);
 
     // Add an argument and save the view.
-    $view->displayHandlers['default']->overrideOption('arguments', array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', array(
       'age' => array(
         'default_action' => 'ignore',
         'style_plugin' => 'default_summary',

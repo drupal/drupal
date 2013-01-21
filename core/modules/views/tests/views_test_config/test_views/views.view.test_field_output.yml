@@ -22,5 +22,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_field_output
+id: test_field_output
 tag: ''

@@ -94,11 +94,15 @@ function field_ui_menu() {
           // items below.
           $field_position = count(explode('/', $path)) + 1;
 
-          // Extract access information, providing defaults.
-          $access = array_intersect_key($bundle_info['admin'], drupal_map_assoc(array('access callback', 'access arguments')));
-          $access += array(
+          // User access check to be done against the permission to edit
+          // fields or the display per entity type.
+          $access_fields = array(
             'access callback' => 'user_access',
-            'access arguments' => array('administer site configuration'),
+            'access arguments' => array('administer ' . $entity_type . ' fields'),
+          );
+          $access_display = array(
+            'access callback' => 'user_access',
+            'access arguments' => array('administer ' . $entity_type . ' display'),
           );
 
           $items["$path/fields"] = array(
@@ -108,7 +112,7 @@ function field_ui_menu() {
             'type' => MENU_LOCAL_TASK,
             'weight' => 1,
             'file' => 'field_ui.admin.inc',
-          ) + $access;
+          ) + $access_fields;
           $items["$path/fields/%field_ui_instance"] = array(
             'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
             'title callback' => 'field_ui_instance_title',
@@ -116,7 +120,7 @@ function field_ui_menu() {
             'page callback' => 'drupal_get_form',
             'page arguments' => array('field_ui_field_edit_form', $field_position),
             'file' => 'field_ui.admin.inc',
-          ) + $access;
+          ) + $access_fields;
           $items["$path/fields/%field_ui_instance/edit"] = array(
             'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
             'title' => 'Edit',
@@ -124,7 +128,7 @@ function field_ui_menu() {
             'page arguments' => array('field_ui_field_edit_form', $field_position),
             'type' => MENU_DEFAULT_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
-          ) + $access;
+          ) + $access_fields;
           $items["$path/fields/%field_ui_instance/field-settings"] = array(
             'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
             'title' => 'Field settings',
@@ -132,7 +136,7 @@ function field_ui_menu() {
             'page arguments' => array('field_ui_field_settings_form', $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
-          ) + $access;
+          ) + $access_fields;
           $items["$path/fields/%field_ui_instance/widget-type"] = array(
             'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
             'title' => 'Widget type',
@@ -140,7 +144,7 @@ function field_ui_menu() {
             'page arguments' => array('field_ui_widget_type_form', $field_position),
             'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
-          ) + $access;
+          ) + $access_fields;
           $items["$path/fields/%field_ui_instance/delete"] = array(
             'load arguments' => array($entity_type, $bundle_arg, $bundle_pos, '%map'),
             'title' => 'Delete',
@@ -149,7 +153,7 @@ function field_ui_menu() {
             'type' => MENU_VISIBLE_IN_BREADCRUMB,
             'weight' => 10,
             'file' => 'field_ui.admin.inc',
-          ) + $access;
+          ) + $access_fields;
 
           // 'Manage display' tab.
           $items["$path/display"] = array(
@@ -159,7 +163,7 @@ function field_ui_menu() {
             'type' => MENU_LOCAL_TASK,
             'weight' => 2,
             'file' => 'field_ui.admin.inc',
-          ) + $access;
+          ) + $access_display;
 
           // View modes secondary tabs.
           // The same base $path for the menu item (with a placeholder) can be
@@ -179,7 +183,7 @@ function field_ui_menu() {
               // display' setting for the view mode, and the overall access
               // rules for the bundle admin pages.
               'access callback' => '_field_ui_view_mode_menu_access',
-              'access arguments' => array_merge(array($entity_type, $bundle_arg, $view_mode, $access['access callback']), $access['access arguments']),
+              'access arguments' => array($entity_type, $bundle_arg, $view_mode, $access_display['access arguments'][0]),
               'type' => ($view_mode == 'default' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK),
               'weight' => ($view_mode == 'default' ? -10 : $weight++),
               'file' => 'field_ui.admin.inc',
@@ -190,6 +194,29 @@ function field_ui_menu() {
     }
   }
   return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function field_ui_permission() {
+  $permissions = array();
+
+  foreach (entity_get_info() as $entity_type => $entity_info) {
+    if ($entity_info['fieldable']) {
+      // Create a permission for each fieldable entity to manage
+      // the fields and the display.
+      $permissions['administer ' . $entity_type . ' fields'] = array(
+        'title' => t('%entity_label: Administer fields', array('%entity_label' => $entity_info['label'])),
+        'restrict access' => TRUE,
+      );
+      $permissions['administer ' . $entity_type . ' display'] = array(
+        'title' => t('%entity_label: Administer display', array('%entity_label' => $entity_info['label']))
+      );
+    }
+  }
+
+  return $permissions;
 }
 
 /**
@@ -251,32 +278,16 @@ function field_ui_instance_title($instance) {
  *
  * @see field_ui_menu()
  */
-function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $access_callback) {
+function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $permission) {
   // First, determine visibility according to the 'use custom display'
   // setting for the view mode.
   $bundle = field_extract_bundle($entity_type, $bundle);
   $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
   $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['custom_settings']);
 
-  // Then, determine access according to the $access parameter. This duplicates
-  // part of _menu_check_access().
+  // Then, determine access according to the $permission parameter.
   if ($visibility) {
-    // Grab the variable 'access arguments' part.
-    $args = array_slice(func_get_args(), 4);
-    $callback = empty($access_callback) ? 0 : trim($access_callback);
-    if (is_numeric($callback)) {
-      return (bool) $callback;
-    }
-    else {
-      // As call_user_func_array() is quite slow and user_access is a very
-      // common callback, it is worth making a special case for it.
-      if ($access_callback == 'user_access') {
-        return (count($args) == 1) ? user_access($args[0]) : user_access($args[0], $args[1]);
-      }
-      else {
-        return call_user_func_array($access_callback, $args);
-      }
-    }
+    return user_access($permission);
   }
 }
 

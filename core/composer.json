@@ -13,10 +13,10 @@
     "symfony/yaml": "<2.4",
     "twig/twig": "1.*@stable",
     "doctrine/common": "2.3.*@stable",
-    "guzzle/http": "*",
+    "guzzle/http": "3.1.*@stable",
     "kriswallsmith/assetic": "1.1.*@alpha",
     "symfony-cmf/routing": "1.0.*@dev",
-    "njh/easyrdf": "0.8.*"
+    "easyrdf/easyrdf": "dev-master"
   },
   "minimum-stability": "dev"
 }

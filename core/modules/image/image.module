@@ -62,10 +62,10 @@ function image_help($path, $arg) {
       return $output;
     case 'admin/config/media/image-styles':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
-    case 'admin/config/media/image-styles/edit/%/add/%':
+    case 'admin/config/media/image-styles/manage/%/add/%':
       $effect = image_effect_definition_load($arg[7]);
       return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
-    case 'admin/config/media/image-styles/edit/%/effects/%':
+    case 'admin/config/media/image-styles/manage/%/effects/%':
       $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[6], $arg[4]);
       return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
   }
@@ -134,24 +134,33 @@ function image_menu() {
     'weight' => 2,
     'file' => 'image.admin.inc',
   );
-  $items['admin/config/media/image-styles/edit/%image_style'] = array(
+  $items['admin/config/media/image-styles/manage/%image_style'] = array(
     'title' => 'Edit style',
+    'title callback' => 'entity_page_label',
+    'title arguments' => array(5),
     'description' => 'Configure an image style.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_style_form', 5),
     'access arguments' => array('administer image styles'),
     'file' => 'image.admin.inc',
   );
-  $items['admin/config/media/image-styles/delete/%image_style'] = array(
-    'title' => 'Delete style',
+  $items['admin/config/media/image-styles/manage/%image_style/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/config/media/image-styles/manage/%image_style/delete'] = array(
+    'title' => 'Delete',
     'description' => 'Delete an image style.',
     'load arguments' => array(NULL, (string) IMAGE_STORAGE_NORMAL),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_style_delete_form', 5),
     'access arguments' => array('administer image styles'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
     'file' => 'image.admin.inc',
   );
-  $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
+  $items['admin/config/media/image-styles/manage/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
     'description' => 'Edit an existing effect within a style.',
     'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
@@ -160,7 +169,7 @@ function image_menu() {
     'access arguments' => array('administer image styles'),
     'file' => 'image.admin.inc',
   );
-  $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
+  $items['admin/config/media/image-styles/manage/%image_style/effects/%image_effect/delete'] = array(
     'title' => 'Delete image effect',
     'description' => 'Delete an existing effect from a style.',
     'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
@@ -169,7 +178,7 @@ function image_menu() {
     'access arguments' => array('administer image styles'),
     'file' => 'image.admin.inc',
   );
-  $items['admin/config/media/image-styles/edit/%image_style/add/%image_effect_definition'] = array(
+  $items['admin/config/media/image-styles/manage/%image_style/add/%image_effect_definition'] = array(
     'title' => 'Add image effect',
     'description' => 'Add a new effect to a style.',
     'load arguments' => array(5),

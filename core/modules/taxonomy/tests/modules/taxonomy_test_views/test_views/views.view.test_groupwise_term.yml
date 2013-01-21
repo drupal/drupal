@@ -62,5 +62,5 @@ display:
 human_name: test_groupwise
 langcode: und
 module: views
-name: test_groupwise_term
+id: test_groupwise_term
 tag: default

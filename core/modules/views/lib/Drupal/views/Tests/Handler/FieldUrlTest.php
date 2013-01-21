@@ -44,7 +44,7 @@ class FieldUrlTest extends ViewUnitTestBase {
     $view = views_get_view('test_view');
     $view->setDisplay();
 
-    $view->displayHandlers['default']->overrideOption('fields', array(
+    $view->displayHandlers->get('default')->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',
@@ -62,7 +62,7 @@ class FieldUrlTest extends ViewUnitTestBase {
     $view->destroy();
     $view->setDisplay();
 
-    $view->displayHandlers['default']->overrideOption('fields', array(
+    $view->displayHandlers->get('default')->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
         'table' => 'views_test_data',

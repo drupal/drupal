@@ -1,0 +1,9 @@
+doap.rdf
+docs
+samicache
+lib/arc/
+reports
+*.tar.gz
+vendor
+composer.phar
+composer.lock

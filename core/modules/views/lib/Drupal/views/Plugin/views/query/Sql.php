@@ -1283,7 +1283,7 @@ class Sql extends QueryPluginBase {
     $query = Database::getConnection($target, $key)
       ->select($this->view->storage->get('base_table'), $this->view->storage->get('base_table'), $options)
       ->addTag('views')
-      ->addTag('views_' . $this->view->storage->get('name'));
+      ->addTag('views_' . $this->view->storage->id());
 
     // Add the tags added to the view itself.
     foreach ($this->tags as $tag) {
@@ -1514,7 +1514,7 @@ class Sql extends QueryPluginBase {
           drupal_set_message($e->getMessage(), 'error');
         }
         else {
-          throw new DatabaseExceptionWrapper(format_string('Exception in @human_name[@view_name]: @message', array('@human_name' => $view->storage->getHumanName(), '@view_name' => $view->storage->get('name'), '@message' => $e->getMessage())));
+          throw new DatabaseExceptionWrapper(format_string('Exception in @human_name[@view_name]: @message', array('@human_name' => $view->storage->getHumanName(), '@view_name' => $view->storage->id(), '@message' => $e->getMessage())));
         }
       }
 
@@ -1646,7 +1646,7 @@ class Sql extends QueryPluginBase {
   }
 
   function add_signature(ViewExecutable $view) {
-    $view->query->add_field(NULL, "'" . $view->storage->get('name') . ':' . $view->current_display . "'", 'view_name');
+    $view->query->add_field(NULL, "'" . $view->storage->id() . ':' . $view->current_display . "'", 'view_name');
   }
 
   function get_aggregation_info() {

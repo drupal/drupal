@@ -251,7 +251,6 @@ function comment_entity_info_alter(&$info) {
         'path' =>  'admin/structure/comments/%comment_field_name',
         'bundle argument' => 3,
         'real path' => 'admin/structure/comments/' . strtr($field_name, '_', '-'),
-        'access arguments' => array('administer comments'),
       ),
     );
   }

@@ -47,7 +47,8 @@ class BreadcrumbTest extends MenuTestBase {
       'region' => 'content',
     );
     $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings);
-    $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings, config('system.theme')->get('admin'));
+    $settings['theme'] = config('system.theme')->get('admin');
+    $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings);
   }
 
   /**
@@ -150,7 +151,8 @@ class BreadcrumbTest extends MenuTestBase {
     $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/body/widget-type", $trail);
 
     // Verify Filter text format administration breadcrumbs.
-    $format = db_query_range("SELECT format, name FROM {filter_format}", 1, 1)->fetch();
+    $filter_formats = filter_formats();
+    $format = reset($filter_formats);
     $format_id = $format->format;
     $trail = $config + array(
       'admin/config/content' => t('Content authoring'),

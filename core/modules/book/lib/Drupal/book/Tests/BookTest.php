@@ -321,7 +321,7 @@ class BookTest extends WebTestBase {
     // Test correct display of the block.
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
-    $this->assertText($block['subject'], 'Book navigation block is displayed.');
+    $this->assertText($block->label(), 'Book navigation block is displayed.');
     $this->assertText($this->book->label(), format_string('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->label())));
     $this->assertNoText($nodes[0]->label(), 'No links to individual book pages are displayed.');
   }
@@ -331,7 +331,7 @@ class BookTest extends WebTestBase {
    */
   function testNavigationBlockOnAccessModuleEnabled() {
     $this->drupalLogin($this->admin_user);
-    $block = $this->drupalPlaceBlock('book_navigation', array('book_block_mode' => 'book pages'));
+    $block = $this->drupalPlaceBlock('book_navigation', array(), array('block_mode' => 'book pages'));
 
     // Give anonymous users the permission 'node test view'.
     $edit = array();
@@ -345,12 +345,16 @@ class BookTest extends WebTestBase {
     // Test correct display of the block to registered users.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->book->nid);
-    $this->assertText($block['subject'], 'Book navigation block is displayed to registered users.');
+    $this->assertText($block->label(), 'Book navigation block is displayed to registered users.');
     $this->drupalLogout();
 
     // Test correct display of the block to anonymous users.
     $this->drupalGet('node/' . $this->book->nid);
-    $this->assertText($block['subject'], 'Book navigation block is displayed to anonymous users.');
+    $this->assertText($block->label(), 'Book navigation block is displayed to anonymous users.');
+
+    // Test the 'book pages' block_mode setting.
+    $this->drupalGet('<front>');
+    $this->assertNoText($block->label(), 'Book navigation block is not shown on non-book pages.');
   }
 
   /**

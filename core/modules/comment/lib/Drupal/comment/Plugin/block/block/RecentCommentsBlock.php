@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class RecentCommentsBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'block_count' => 10,
     );
@@ -59,9 +59,9 @@ class RecentCommentsBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     return array(
       '#theme' => 'comment_block',
       '#number' => $this->configuration['block_count'],

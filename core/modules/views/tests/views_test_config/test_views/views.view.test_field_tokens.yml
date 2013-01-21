@@ -41,5 +41,5 @@ display:
     display_title: Defaults
     id: default
     position: '0'
-name: test_field_tokens
+id: test_field_tokens
 tag: ''

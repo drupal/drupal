@@ -97,6 +97,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Added language select form element in the Form API.
 - Added E-mail field type to core.
 - Added Link field type to core.
+- Added Phone number field type to core.
 - Added local image input filter, to enable secure image posting.
 - Added Views and Views UI module to core.
 

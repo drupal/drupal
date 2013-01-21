@@ -131,7 +131,7 @@ class CacheTest extends PluginTestBase {
     // so they should be added to the css/js storage.
     $view = views_get_view('test_view');
     $view->setDisplay();
-    $view->storage->set('name', 'test_cache_header_storage');
+    $view->storage->set('id', 'test_cache_header_storage');
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'options' => array(
@@ -158,7 +158,7 @@ class CacheTest extends PluginTestBase {
 
     // Now add some css/jss before running the view.
     // Make sure that this css is not added when running the cached view.
-    $view->storage->set('name', 'test_cache_header_storage_2');
+    $view->storage->set('id', 'test_cache_header_storage_2');
 
     $system_css_path = drupal_get_path('module', 'system') . '/system.maintenance.css';
     drupal_add_css($system_css_path);

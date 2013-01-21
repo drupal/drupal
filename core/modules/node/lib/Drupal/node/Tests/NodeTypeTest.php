@@ -80,7 +80,7 @@ class NodeTypeTest extends NodeTestBase {
    * Tests editing a node type using the UI.
    */
   function testNodeTypeEditing() {
-    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types'));
+    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer node fields'));
     $this->drupalLogin($web_user);
 
     $instance = field_info_instance('node', 'body', 'page');

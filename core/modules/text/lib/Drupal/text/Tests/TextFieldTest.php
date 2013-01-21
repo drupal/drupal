@@ -251,7 +251,7 @@ class TextFieldTest extends WebTestBase {
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
 
     // Display the entity.
-    entity_get_controller('test_entity')->resetCache(array($id));
+    $this->container->get('plugin.manager.entity')->getStorageController('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
     $entity->content = field_attach_view($entity, $display);

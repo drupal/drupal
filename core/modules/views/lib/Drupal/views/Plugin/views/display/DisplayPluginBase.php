@@ -708,7 +708,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getLinkDisplay() {
     $display_id = $this->getOption('link_display');
     // If unknown, pick the first one.
-    if (empty($display_id) || empty($this->view->displayHandlers[$display_id])) {
+    if (empty($display_id) || !$this->view->displayHandlers->has($display_id)) {
       foreach ($this->view->displayHandlers as $display_id => $display) {
         if (!empty($display) && $display->hasPath()) {
           return $display_id;
@@ -733,8 +733,8 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     $display_id = $this->getLinkDisplay();
-    if ($display_id && !empty($this->view->displayHandlers[$display_id]) && is_object($this->view->displayHandlers[$display_id])) {
-      return $this->view->displayHandlers[$display_id]->getPath();
+    if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
+      return $this->view->displayHandlers->get($display_id)->getPath();
     }
   }
 
@@ -977,7 +977,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $title = $text;
     }
 
-    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->get('name') . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
+    return l($text, 'admin/structure/views/nojs/display/' . $this->view->storage->id() . '/' . $this->display['id'] . '/' . $section, array('attributes' => array('class' => 'views-ajax-link ' . $class, 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE));
   }
 
   /**
@@ -1259,8 +1259,9 @@ abstract class DisplayPluginBase extends PluginBase {
 
     if ($this->usesLinkDisplay()) {
       $display_id = $this->getLinkDisplay();
-      $link_display = empty($this->view->display[$display_id]) ? t('None') : check_plain($this->view->display[$display_id]['display_title']);
-      $link_display =  $this->getOption('link_display') == 'custom_url' ? t('Custom URL') : $link_display;
+      $displays = $this->view->storage->get('display');
+      $link_display = empty($displays[$display_id]) ? t('None') : check_plain($displays[$display_id]['display_title']);
+      $link_display = $this->getOption('link_display') == 'custom_url' ? t('Custom URL') : $link_display;
       $options['link_display'] = array(
         'category' => 'other',
         'title' => t('Link display'),
@@ -1655,7 +1656,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'link_display':
         $form['#title'] .= t('Which display to use for path');
         foreach ($this->view->storage->get('display') as $display_id => $display) {
-          if ($this->view->displayHandlers[$display_id]->hasPath()) {
+          if ($this->view->displayHandlers->get($display_id)->hasPath()) {
             $options[$display_id] = $display['display_title'];
           }
         }
@@ -2626,8 +2627,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $blocks = array();
 
     if ($this->usesExposedFormInBlock()) {
-      $delta = '-exp-' . $this->view->storage->get('name') . '-' . $this->display['id'];
-      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->storage->get('name'), '@display_id' => $this->display['id']));
+      $delta = '-exp-' . $this->view->storage->id() . '-' . $this->display['id'];
+      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->storage->id(), '@display_id' => $this->display['id']));
 
       $blocks[$delta] = array(
         'info' => $desc,

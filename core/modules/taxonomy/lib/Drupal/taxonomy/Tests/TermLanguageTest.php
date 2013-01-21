@@ -47,7 +47,7 @@ class TermLanguageTest extends TaxonomyTestBase {
   function testTermLanguage() {
     // Configure the vocabulary to not hide the language selector.
     $edit = array(
-      'default_language[language_hidden]' => FALSE,
+      'default_language[language_show]' => TRUE,
     );
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
 
@@ -83,7 +83,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     // default language of the terms fixed.
     $edit = array(
       'default_language[langcode]' => 'bb',
-      'default_language[language_hidden]' => FALSE,
+      'default_language[language_show]' => TRUE,
     );
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');
@@ -92,7 +92,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     // Make the default language of the terms to be the current interface.
     $edit = array(
       'default_language[langcode]' => 'current_interface',
-      'default_language[language_hidden]' => FALSE,
+      'default_language[language_show]' => TRUE,
     );
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('aa/admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');
@@ -110,7 +110,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     language_save($new_default);
     $edit = array(
       'default_language[langcode]' => 'site_default',
-      'default_language[language_hidden]' => FALSE,
+      'default_language[language_show]' => TRUE,
     );
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->id() . '/add');

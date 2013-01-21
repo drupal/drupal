@@ -355,21 +355,36 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, ToArra
      */
     public function inject($input)
     {
-        // Only perform the preg callback if needed
-        return strpos($input, '{') === false
-            ? $input
-            : preg_replace_callback('/{\s*([A-Za-z_\-\.0-9]+)\s*}/', array($this, 'getPregMatchValue'), $input);
+        $replace = array();
+        foreach ($this->data as $key => $val) {
+            $replace['{' . $key . '}'] = $val;
+        }
+
+        return strtr($input, $replace);
     }
 
     /**
-     * Return a collection value for a match array of a preg_replace function
+     * Gets a value from the collection using an array path (e.g. foo/baz/bar would retrieve bar from two nested arrays)
      *
-     * @param array $matches preg_replace* matches
+     * @param string $path      Path to traverse and retrieve a value from
+     * @param string $separator Character used to add depth to the search
      *
-     * @return mixed
+     * @return mixed|null
      */
-    public function getPregMatchValue(array $matches)
+    public function getPath($path, $separator = '/')
     {
-        return $this->get($matches[1]);
+        $parts = explode($separator, $path);
+        $data = &$this->data;
+
+        // Using an iterative approach rather than recursion for speed
+        while (null !== ($part = array_shift($parts))) {
+            // Return null if this path doesn't exist or if there's more depth and the value is not an array
+            if (!isset($data[$part]) || ($parts && !is_array($data[$part]))) {
+                return null;
+            }
+            $data = &$data[$part];
+        }
+
+        return $data;
     }
 }

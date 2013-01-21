@@ -216,7 +216,7 @@ class EntityNG extends Entity {
    */
   public function getPropertyDefinitions() {
     if (!isset($this->fieldDefinitions)) {
-      $this->fieldDefinitions = entity_get_controller($this->entityType)->getFieldDefinitions(array(
+      $this->fieldDefinitions = drupal_container()->get('plugin.manager.entity')->getStorageController($this->entityType)->getFieldDefinitions(array(
         'entity type' => $this->entityType,
         'bundle' => $this->bundle,
       ));
@@ -266,8 +266,7 @@ class EntityNG extends Entity {
     $language = $this->get('langcode')->language;
     if (!$language) {
       // Make sure we return a proper language object.
-      // @todo Refactor this, see: http://drupal.org/node/1834542.
-      $language = language_default();
+      $language = new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
     }
     return $language;
   }

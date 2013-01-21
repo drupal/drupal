@@ -129,7 +129,7 @@ abstract class AccountFormController extends EntityFormController {
       '#access' => $admin,
     );
 
-    $roles = array_map('check_plain', user_roles(TRUE));
+    $roles = array_map('check_plain', user_role_names(TRUE));
     // The disabled checkbox subelement for the 'authenticated user' role
     // must be generated separately and added to the checkboxes element,
     // because of a limitation in Form API not supporting a single disabled

@@ -46,5 +46,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_view_render
+id: test_view_render
 tag: ''

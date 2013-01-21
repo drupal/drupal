@@ -201,6 +201,13 @@ class EntityManager extends PluginManagerBase {
   protected $cacheTags = array('entity_info' => TRUE);
 
   /**
+   * Contains instantiated controllers keyed by controller type and entity type.
+   *
+   * @var array
+   */
+  protected $controllers = array();
+
+  /**
    * The default values for optional keys of the entity plugin definition.
    *
    * @var array
@@ -301,6 +308,131 @@ class EntityManager extends PluginManagerBase {
         $definition['schema_fields_sql']['revision_table'] = drupal_schema_fields_sql($definition['revision_table']);
       }
     }
+  }
+
+  /**
+   * Returns an entity controller class.
+   *
+   * @param string $entity_type
+   *   The name of the entity type
+   * @param string $controller_type
+   *   The name of the controller.
+   * @param string|null $nested
+   *   (optional) If this controller definition is nested, the name of the key.
+   *   Defaults to NULL.
+   *
+   * @return string
+   *   The class name for this controller instance.
+   */
+  public function getControllerClass($entity_type, $controller_type, $nested = NULL) {
+    $definition = $this->getDefinition($entity_type);
+    if (empty($definition[$controller_type])) {
+      throw new \InvalidArgumentException(sprintf('The entity (%s) did not specify a %s.', $entity_type, $controller_type));
+    }
+
+    $class = $definition[$controller_type];
+
+    // Some class definitions can be nested.
+    if (isset($nested)) {
+      if (empty($class[$nested])) {
+        throw new \InvalidArgumentException(sprintf("Missing '%s: %s' for entity '%s'", $controller_type, $nested, $entity_type));
+      }
+
+      $class = $class[$nested];
+    }
+
+    if (!class_exists($class)) {
+      throw new \InvalidArgumentException(sprintf('Entity (%s) %s "%s" does not exist.', $entity_type, $controller_type, $class));
+    }
+
+    return $class;
+  }
+
+  /**
+   * Creates a new storage controller instance.
+   *
+   * @param string $entity_type
+   *   The entity type for this storage controller.
+   *
+   * @return \Drupal\Core\Entity\EntityStorageControllerInterface
+   *   A storage controller instance.
+   */
+  public function getStorageController($entity_type) {
+    if (!isset($this->controllers['storage'][$entity_type])) {
+      $class = $this->getControllerClass($entity_type, 'controller_class');
+      $this->controllers['storage'][$entity_type] = new $class($entity_type);
+    }
+    return $this->controllers['storage'][$entity_type];
+  }
+
+  /**
+   * Creates a new list controller instance.
+   *
+   * @param string $entity_type
+   *   The entity type for this list controller.
+   *
+   * @return \Drupal\Core\Entity\EntityListControllerInterface
+   *   A list controller instance.
+   */
+  public function getListController($entity_type) {
+    if (!isset($this->controllers['listing'][$entity_type])) {
+      $class = $this->getControllerClass($entity_type, 'list_controller_class');
+      $this->controllers['listing'][$entity_type] = new $class($entity_type, $this->getStorageController($entity_type));
+    }
+    return $this->controllers['listing'][$entity_type];
+  }
+
+  /**
+   * Creates a new form controller instance.
+   *
+   * @param string $entity_type
+   *   The entity type for this form controller.
+   * @param string $operation
+   *   The name of the operation to use, e.g., 'default'.
+   *
+   * @return \Drupal\Core\Entity\EntityFormControllerInterface
+   *   A form controller instance.
+   */
+  public function getFormController($entity_type, $operation) {
+    if (!isset($this->controllers['form'][$operation][$entity_type])) {
+      $class = $this->getControllerClass($entity_type, 'form_controller_class', $operation);
+      $this->controllers['form'][$operation][$entity_type] = new $class($operation);
+    }
+    return $this->controllers['form'][$operation][$entity_type];
+  }
+
+  /**
+   * Creates a new render controller instance.
+   *
+   * @param string $entity_type
+   *   The entity type for this render controller.
+   *
+   * @return \Drupal\Core\Entity\EntityRenderControllerInterface.
+   *   A render controller instance.
+   */
+  public function getRenderController($entity_type) {
+    if (!isset($this->controllers['render'][$entity_type])) {
+      $class = $this->getControllerClass($entity_type, 'render_controller_class');
+      $this->controllers['render'][$entity_type] = new $class($entity_type);
+    }
+    return $this->controllers['render'][$entity_type];
+  }
+
+  /**
+   * Creates a new access controller instance.
+   *
+   * @param string $entity_type
+   *   The entity type for this access controller.
+   *
+   * @return \Drupal\Core\Entity\EntityRenderControllerInterface.
+   *   A access controller instance.
+   */
+  public function getAccessController($entity_type) {
+    if (!isset($this->controllers['access'][$entity_type])) {
+      $class = $this->getControllerClass($entity_type, 'access_controller_class');
+      $this->controllers['access'][$entity_type] = new $class($entity_type);
+    }
+    return $this->controllers['access'][$entity_type];
   }
 
 }

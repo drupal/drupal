@@ -49,7 +49,7 @@ class ViewsBlock implements DerivativeInterface {
       foreach ($executable->displayHandlers as $display) {
         // Add a block plugin definition for each block display.
         if (isset($display) && !empty($display->definition['uses_hook_block'])) {
-          $delta = $view->get('name') . '-' . $display->display['id'];
+          $delta = $view->id() . '-' . $display->display['id'];
           $desc = $display->getOption('block_description');
 
           if (empty($desc)) {

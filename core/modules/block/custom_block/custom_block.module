@@ -19,8 +19,8 @@ function custom_block_menu() {
       $items['admin/structure/block/list/' . $plugin_id . '/add/custom_blocks'] = array(
         'title' => 'Add custom block',
         'description' => 'Create a block with custom content and settings.',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('block_admin_configure', 'custom_block:custom_block', $theme),
+        'page callback' => 'block_admin_add',
+        'page arguments' => array('custom_block:custom_block', $theme),
         'access callback' => TRUE,
         'type' => MENU_LOCAL_ACTION,
         'file' => 'block.admin.inc',

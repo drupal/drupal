@@ -13,6 +13,21 @@ use Drupal\Core\Entity\EntityInterface;
  */
 
 /**
+ * Act on a newly created user.
+ *
+ * This hook runs after a new user object has just been instantiated. It can be
+ * used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\user\Plugin\Core\Entity\User $user
+ *   The user object.
+ */
+function hook_user_create(\Drupal\user\Plugin\Core\Entity\User $user) {
+  if (!isset($user->foo)) {
+    $user->foo = 'some_initial_value';
+  }
+}
+
+/**
  * Act on user objects when loaded from the database.
  *
  * Due to the static cache in user_load_multiple() you should not use this
@@ -425,7 +440,7 @@ function hook_user_role_insert($role) {
   // Save extra fields provided by the module to user roles.
   db_insert('my_module_table')
     ->fields(array(
-      'rid' => $role->rid,
+      'rid' => $role->id(),
       'role_description' => $role->description,
     ))
     ->execute();
@@ -445,7 +460,7 @@ function hook_user_role_insert($role) {
 function hook_user_role_update($role) {
   // Save extra fields provided by the module to user roles.
   db_merge('my_module_table')
-    ->key(array('rid' => $role->rid))
+    ->key(array('rid' => $role->id()))
     ->fields(array(
       'role_description' => $role->description
     ))
@@ -466,7 +481,7 @@ function hook_user_role_update($role) {
 function hook_user_role_delete($role) {
   // Delete existing instances of the deleted role.
   db_delete('my_module_table')
-    ->condition('rid', $role->rid)
+    ->condition('rid', $role->id())
     ->execute();
 }
 

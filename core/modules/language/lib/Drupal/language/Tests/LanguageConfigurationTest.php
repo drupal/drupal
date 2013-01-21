@@ -99,4 +99,65 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertText(t('The prefix may not contain a slash.'), 'English prefix cannot be changed to contain a slash.');
   }
+
+  /**
+   * Functional tests for setting system language weight on adding, editing and deleting languages.
+   */
+  function testLanguageConfigurationWeight() {
+    // User to add and remove language.
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $this->drupalLogin($admin_user);
+    $this->checkConfigurableLanguageWeight();
+
+    // Add predefined language.
+    $edit = array(
+      'predefined_langcode' => 'fr',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, 'Add language');
+    $this->checkConfigurableLanguageWeight('after adding new language');
+
+    // Re-ordering languages.
+    $edit = array(
+      'languages[en][weight]' => $this->getHighestConfigurableLanguageWeight() + 1,
+    );
+    $this->drupalPost('admin/config/regional/language', $edit, 'Save configuration');
+    $this->checkConfigurableLanguageWeight('after re-ordering');
+
+    // Remove predefined language.
+    $edit = array(
+      'confirm' => 1,
+    );
+    $this->drupalPost('admin/config/regional/language/delete/fr', $edit, 'Delete');
+    $this->checkConfigurableLanguageWeight('after deleting a language');
+  }
+
+  /**
+   * Validates system languages are ordered after configurable languages.
+   *
+   * @param string $state
+   *   (optional) A string for customizing assert messages, containing the
+   *   description of the state of the check, for example: 'after re-ordering'.
+   *   Defaults to 'by default'.
+   */
+  protected function checkConfigurableLanguageWeight($state = 'by default') {
+    // Reset language list.
+    drupal_static_reset('language_list');
+    $max_configurable_language_weight = $this->getHighestConfigurableLanguageWeight();
+    $replacements = array('@event' => $state);
+    foreach (language_list(LANGUAGE_LOCKED) as $locked_language) {
+      $replacements['%language'] = $locked_language->name;
+      $this->assertTrue($locked_language->weight > $max_configurable_language_weight, format_string('System language %language has higher weight than configurable languages @event', $replacements));
+    }
+  }
+
+  /**
+   * Helper to get maximum weight of configurable (unlocked) languages.
+   *
+   * @return int
+   *   Maximum weight of configurable languages.
+   */
+  protected function getHighestConfigurableLanguageWeight(){
+    return db_query('SELECT MAX(weight) FROM {language} WHERE locked = 0')->fetchField();
+  }
+
 }

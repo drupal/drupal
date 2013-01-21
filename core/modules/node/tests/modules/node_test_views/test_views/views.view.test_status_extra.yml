@@ -1,5 +1,5 @@
 base_table: node
-name: test_status_extra
+id: test_status_extra
 description: ''
 tag: ''
 human_name: test_status_extra

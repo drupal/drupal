@@ -223,5 +223,5 @@ display:
           link_to_node: '0'
 human_name: test_dropbutton
 module: views
-name: test_dropbutton
+id: test_dropbutton
 tag: ''

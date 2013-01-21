@@ -26,11 +26,11 @@ class AliasManagerCacheDecorator implements CacheDecoratorInterface, AliasManage
   protected $cache;
 
   /**
-   * Stack of request paths for use as cids when caching system paths.
+   * The cache key to use when caching system paths.
    *
-   * @var array
+   * @var string
    */
-  protected $cacheKeys = array();
+  protected $cacheKey;
 
   /**
    * Holds an array of previously cached paths based on a request path.
@@ -58,7 +58,7 @@ class AliasManagerCacheDecorator implements CacheDecoratorInterface, AliasManage
    * Implements \Drupal\Core\CacheDecorator\CacheDecoratorInterface::setCacheKey().
    */
   public function setCacheKey($key) {
-    $this->cacheKeys[] = $key;
+    $this->cacheKey = $key;
   }
 
   /**
@@ -73,15 +73,11 @@ class AliasManagerCacheDecorator implements CacheDecoratorInterface, AliasManage
     $path_lookups = $this->getPathLookups();
     // Check if the system paths for this page were loaded from cache in this
     // request to avoid writing to cache on every request.
-    if ($this->cacheNeedsWriting && !empty($path_lookups) && !empty($this->cacheKeys)) {
-      // Use the system path of the current request for the cache ID (cid).
-      $cid = end($this->cacheKeys);
+    if ($this->cacheNeedsWriting && !empty($path_lookups) && !empty($this->cacheKey)) {
       // Set the path cache to expire in 24 hours.
       $expire = REQUEST_TIME + (60 * 60 * 24);
-      $this->cache->set($cid, $path_lookups, $expire);
+      $this->cache->set($this->cacheKey, $path_lookups, $expire);
     }
-    // We are at the end of the request, so pop off the last request path.
-    array_pop($this->cacheKeys);
   }
 
   /**

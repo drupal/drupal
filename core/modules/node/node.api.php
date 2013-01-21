@@ -16,9 +16,9 @@ use Drupal\Core\Entity\EntityInterface;
  * node.module (for content types created in the user interface) or the module
  * that implements hook_node_info() to define the content type.
  *
- * During node operations (create, update, view, delete, etc.), there are
- * several sets of hooks that get invoked to allow modules to modify the base
- * node operation:
+ * During node operations (create, insert, update, view, delete, etc.), there
+ * are several sets of hooks that get invoked to allow modules to modify the
+ * base node operation:
  * - Node-type-specific hooks: These hooks are only invoked on the primary
  *   module, using the "base" return component of hook_node_info() as the
  *   function prefix.  For example, poll.module defines the base for the Poll
@@ -36,6 +36,9 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * Here is a list of the node and entity hooks that are invoked, field
  * operations, and other steps that take place during node operations:
+ * - Instantiating a new node:
+ *   - hook_node_create() (all)
+ *   - hook_entity_create() (all)
  * - Creating a new node (calling node_save() on a new node):
  *   - field_attach_presave()
  *   - hook_node_presave() (all)
@@ -532,6 +535,23 @@ function hook_node_insert(Drupal\node\Node $node) {
       'extra' => $node->extra,
     ))
     ->execute();
+}
+
+/**
+ * Act on a newly created node.
+ *
+ * This hook runs after a new node object has just been instantiated. It can be
+ * used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ *   The node object.
+ *
+ * @ingroup node_api_hooks
+ */
+function hook_node_create(\Drupal\node\Plugin\Core\Entity\Node $node) {
+  if (!isset($node->foo)) {
+    $node->foo = 'some_initial_value';
+  }
 }
 
 /**

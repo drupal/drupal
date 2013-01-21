@@ -36,30 +36,30 @@ class LanguageConfigurationElementTest extends WebTestBase {
   public function testLanguageConfigurationElement() {
     $this->drupalGet('language-tests/language_configuration_element');
     $edit['lang_configuration[langcode]'] = 'current_interface';
-    $edit['lang_configuration[language_hidden]'] = TRUE;
+    $edit['lang_configuration[language_show]'] = FALSE;
     $this->drupalPost(NULL, $edit, 'Save');
     $lang_conf = language_get_default_configuration('some_custom_type', 'some_bundle');
 
     // Check that the settings have been saved.
     $this->assertEqual($lang_conf['langcode'], 'current_interface');
-    $this->assertTrue($lang_conf['language_hidden']);
+    $this->assertFalse($lang_conf['language_show']);
     $this->drupalGet('language-tests/language_configuration_element');
     $this->assertOptionSelected('edit-lang-configuration-langcode', 'current_interface');
-    $this->assertFieldChecked('edit-lang-configuration-language-hidden');
+    $this->assertNoFieldChecked('edit-lang-configuration-language-show');
 
     // Reload the page and save again.
     $this->drupalGet('language-tests/language_configuration_element');
     $edit['lang_configuration[langcode]'] = 'authors_default';
-    $edit['lang_configuration[language_hidden]'] = FALSE;
+    $edit['lang_configuration[language_show]'] = TRUE;
     $this->drupalPost(NULL, $edit, 'Save');
     $lang_conf = language_get_default_configuration('some_custom_type', 'some_bundle');
 
     // Check that the settings have been saved.
     $this->assertEqual($lang_conf['langcode'], 'authors_default');
-    $this->assertFalse($lang_conf['language_hidden']);
+    $this->assertTrue($lang_conf['language_show']);
     $this->drupalGet('language-tests/language_configuration_element');
     $this->assertOptionSelected('edit-lang-configuration-langcode', 'authors_default');
-    $this->assertNoFieldChecked('edit-lang-configuration-language-hidden');
+    $this->assertFieldChecked('edit-lang-configuration-language-show');
   }
 
   /**
@@ -76,12 +76,12 @@ class LanguageConfigurationElementTest extends WebTestBase {
     }
 
     // Fixed language.
-    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'bb', 'language_hidden' => FALSE));
+    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'bb', 'language_show' => TRUE));
     $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
     $this->assertEqual($langcode, 'bb');
 
     // Current interface.
-    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'current_interface', 'language_hidden' => FALSE));
+    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'current_interface', 'language_show' => TRUE));
     $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $this->assertEqual($langcode, $language_interface->langcode);
@@ -93,7 +93,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $new_default = language_load('cc');
     $new_default->default = TRUE;
     language_save($new_default);
-    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'site_default', 'language_hidden' => FALSE));
+    language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'site_default', 'language_show' => TRUE));
     $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
     $this->assertEqual($langcode, 'cc');
 
@@ -104,7 +104,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $some_user->preferred_langcode = 'bb';
     $some_user->save();
     $this->drupalLogin($some_user);
-    language_save_default_configuration('custom_type', 'some_bundle', array('langcode' => 'authors_default', 'language_hidden' => FALSE));
+    language_save_default_configuration('custom_type', 'some_bundle', array('langcode' => 'authors_default', 'language_show' => TRUE));
     $this->drupalGet('language-tests/language_configuration_element_test');
     $this->assertOptionSelected('edit-langcode', 'bb');
   }
@@ -122,12 +122,12 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     $edit = array(
       'language_configuration[langcode]' => 'current_interface',
-      'language_configuration[language_hidden]' => FALSE,
+      'language_configuration[language_show]' => TRUE,
     );
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     // Check the language default configuration for the articles.
     $configuration = language_get_default_configuration('node', 'article');
-    $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_hidden' => 0), 'The default language configuration has been saved on the Article content type.');
+    $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_show' => TRUE), 'The default language configuration has been saved on the Article content type.');
     // Rename the article content type.
     $edit = array(
       'type' => 'article_2'
@@ -135,6 +135,6 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     // Check that we still have the settings for the new node type.
     $configuration = language_get_default_configuration('node', 'article_2');
-    $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_hidden' => 0), 'The default language configuration has been kept on the new Article content type.');
+    $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_show' => TRUE), 'The default language configuration has been kept on the new Article content type.');
   }
 }

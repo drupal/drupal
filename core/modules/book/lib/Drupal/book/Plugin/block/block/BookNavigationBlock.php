@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class BookNavigationBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSettings().
+   * Overrides \Drupal\block\BlockBase::settings().
    */
-  public function blockSettings() {
+  public function settings() {
     return array(
       'cache' => DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE,
       'block_mode' => "all pages",
@@ -59,9 +59,9 @@ class BookNavigationBlock extends BlockBase {
   }
 
   /**
-   * Implements \Drupal\block\BlockBase::blockBuild().
+   * Implements \Drupal\block\BlockBase::build().
    */
-  public function blockBuild() {
+  public function build() {
     $current_bid = 0;
     if ($node = menu_get_object()) {
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];

@@ -111,7 +111,6 @@ Markup
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 
 Menu system
-- Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Path system

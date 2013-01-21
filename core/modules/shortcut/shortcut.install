@@ -6,59 +6,20 @@
  */
 
 /**
- * Implements hook_install().
- */
-function shortcut_install() {
-  $t = get_t();
-  // Create an initial default shortcut set.
-  $shortcut_set = new stdClass();
-  $shortcut_set->title = $t('Default');
-  $shortcut_set->links = array();
-  shortcut_set_save($shortcut_set);
-}
-
-/**
  * Implements hook_uninstall().
  */
 function shortcut_uninstall() {
-  drupal_load('module', 'shortcut');
   // Delete the menu links associated with each shortcut set.
-  foreach (shortcut_sets() as $shortcut_set) {
-    menu_delete_links($shortcut_set->set_name);
-  }
+  // @todo find a way to clean-up associated menu links.
+  /*foreach (entity_load_multiple('shortcut') as $shortcut_set) {
+    menu_delete_links('shortcut-' . $shortcut_set->id());
+  }*/
 }
 
 /**
  * Implements hook_schema().
  */
 function shortcut_schema() {
-  $schema['shortcut_set'] = array(
-    'description' => 'Stores information about sets of shortcuts links.',
-    'fields' => array(
-      'set_name' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "Primary Key: The {menu_links}.menu_name under which the set's links are stored.",
-      ),
-      'title' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The title of the set.',
-      ),
-    ),
-    'primary key' => array('set_name'),
-    'foreign keys' => array(
-      'menu_name' => array(
-        'table' => 'menu_links',
-        'columns' => array('set_name' => 'menu_name'),
-      ),
-    ),
-  );
-
   $schema['shortcut_set_users'] = array(
     'description' => 'Maps users to shortcut sets.',
     'fields' => array(
@@ -95,3 +56,45 @@ function shortcut_schema() {
 
   return $schema;
 }
+
+/**
+ * @defgroup updates-7.x-to-8.x Updates from 7.x to 8.x
+ * @{
+ * Update functions from 7.x to 8.x.
+ */
+
+/**
+ * Migrate shortcuts into configuration.
+ */
+function shortcut_update_8000() {
+  $result = db_query('SELECT * from {shortcut_set}');
+  foreach ($result as $set) {
+    // Save a config object.
+    if ($set->set_name == 'shortcut-set-1') {
+      // Change default shortcut id.
+      $set->set_name = 'default';
+      // Update menu links.
+      $links = menu_load_links('shortcut-set-1');
+      foreach ($links as $link) {
+        $link['menu_name'] = 'shortcut-default';
+        menu_link_save($link);
+      }
+    }
+    config('shortcut.set.' . $set->set_name)
+      ->set('id', $set->set_name)
+      ->set('label', $set->title)
+      ->save();
+  }
+}
+
+/**
+ * Drop the {shortcut_set} table.
+ */
+function shortcut_update_8001() {
+  db_drop_table('shortcut_set');
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */

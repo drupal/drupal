@@ -147,6 +147,9 @@ abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
 /**
  * Inline items.
  */
+.container-inline label:after {
+  content: ':';
+}
 .container-inline .form-actions,
 .container-inline.form-actions {
   margin-top: 0;

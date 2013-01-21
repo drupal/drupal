@@ -1,7 +1,7 @@
 disabled: true
 api_version: '3.0'
 module: node
-name: tracker
+id: tracker
 description: 'Shows all new activity on the system.'
 tag: default
 base_table: node

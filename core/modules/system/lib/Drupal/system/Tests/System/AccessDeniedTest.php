@@ -82,7 +82,7 @@ class AccessDeniedTest extends WebTestBase {
     $edit = array(
       'region' => -1,
     );
-    $this->drupalPost('admin/structure/block/manage/plugin.core.block.stark.login/stark/configure', $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/stark.login/configure', $edit, t('Save block'));
 
     // Check that we can log in from the 403 page.
     $this->drupalLogout();

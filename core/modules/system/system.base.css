@@ -27,6 +27,9 @@
   cursor: default;
   white-space: pre;
 }
+input.form-autocomplete {
+  max-width: 100%;
+}
 /* Animated throbber */
 .js input.form-autocomplete {
   background-image: url(../../misc/throbber.gif);

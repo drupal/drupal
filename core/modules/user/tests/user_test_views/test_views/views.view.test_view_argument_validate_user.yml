@@ -33,5 +33,5 @@ display:
     id: default
     position: '0'
 human_name: ''
-name: test_view_argument_validate_user
+id: test_view_argument_validate_user
 tag: ''

@@ -242,6 +242,52 @@ class TranslationTest extends FieldTestBase {
       }
       $this->assertTrue($result, format_string('%language translation correctly handled.', array('%language' => $langcode)));
     }
+
+    // Test default values.
+    $field_name_default = drupal_strtolower($this->randomName() . '_field_name');
+    $field = $this->field;
+    $field['field_name'] = $field_name_default;
+    $instance = $this->instance;
+    $instance['field_name'] = $field_name_default;
+    $default = rand(1, 127);
+    $instance['default_value'] = array(array('value' => $default));
+    field_create_field($field);
+    field_create_instance($instance);
+    $translation_langcodes = array_slice($available_langcodes, 0, 2);
+    asort($translation_langcodes);
+    $translation_langcodes = array_values($translation_langcodes);
+
+    $eid++;
+    $evid++;
+    $values = array('eid' => $eid, 'evid' => $evid, 'fttype' => $instance['bundle'], 'langcode' => $translation_langcodes[0]);
+    foreach ($translation_langcodes as $langcode) {
+      $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field['cardinality']);
+    }
+    $entity = entity_create($entity_type, $values);
+
+    ksort($entity->{$field_name_default});
+    $field_langcodes = array_keys($entity->{$field_name_default});
+    $this->assertEqual($translation_langcodes, $field_langcodes, 'Missing translations did not get a default value.');
+
+    foreach ($entity->{$field_name_default} as $langcode => $items) {
+      $this->assertEqual($items, $instance['default_value'], format_string('Default value correctly populated for language %language.', array('%language' => $langcode)));
+    }
+
+    // Check that explicit empty values are not overridden with default values.
+    foreach (array(NULL, array()) as $empty_items) {
+      $eid++;
+      $evid++;
+      $values = array('eid' => $eid, 'evid' => $evid, 'fttype' => $instance['bundle'], 'langcode' => $translation_langcodes[0]);
+      foreach ($translation_langcodes as $langcode) {
+        $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field['cardinality']);
+        $values[$field_name_default][$langcode] = $empty_items;
+      }
+      $entity = entity_create($entity_type, $values);
+
+      foreach ($entity->{$field_name_default} as $langcode => $items) {
+        $this->assertEqual($items, $empty_items, format_string('Empty value correctly populated for language %language.', array('%language' => $langcode)));
+      }
+    }
   }
 
   /**

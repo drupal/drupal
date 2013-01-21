@@ -45,7 +45,7 @@ class SettingsTest extends UITestBase {
 
     $view = array();
     $view['human_name'] = $this->randomName(16);
-    $view['name'] = strtolower($this->randomName(16));
+    $view['id'] = strtolower($this->randomName(16));
     $view['description'] = $this->randomName(16);
     $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomName(16);
@@ -65,7 +65,7 @@ class SettingsTest extends UITestBase {
 
     // Create a view with an additional display, so master should be hidden.
     $view['page[create]'] = TRUE;
-    $view['name'] = strtolower($this->randomName());
+    $view['id'] = strtolower($this->randomName());
     $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
     $this->assertNoLink(t('Master'));
@@ -79,7 +79,7 @@ class SettingsTest extends UITestBase {
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
 
-    $view['name'] = strtolower($this->randomName());
+    $view['id'] = strtolower($this->randomName());
     $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertFieldById('edit-displays-top-add-display-embed');
 
@@ -97,7 +97,7 @@ class SettingsTest extends UITestBase {
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
 
-    $view['name'] = strtolower($this->randomName());
+    $view['id'] = strtolower($this->randomName());
     $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
     $this->drupalPost(NULL, array(), t('Update preview'));
@@ -109,7 +109,7 @@ class SettingsTest extends UITestBase {
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
 
-    $view['name'] = strtolower($this->randomName());
+    $view['id'] = strtolower($this->randomName());
     $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
     $this->drupalPost(NULL, array(), t('Update preview'));

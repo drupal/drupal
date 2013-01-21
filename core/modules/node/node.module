@@ -206,7 +206,6 @@ function node_entity_info(&$info) {
         'path' => 'admin/structure/types/manage/%node_type',
         'real path' => 'admin/structure/types/manage/' . $type,
         'bundle argument' => 4,
-        'access arguments' => array('administer content types'),
       ),
     );
   }
@@ -609,7 +608,7 @@ function node_field_extra_fields() {
     // node/add form.
     if ($module_language_enabled) {
       $configuration = language_get_default_configuration('node', $bundle->type);
-      if (!$configuration['language_hidden']) {
+      if ($configuration['language_show']) {
         $extra['node'][$bundle->type]['form']['language'] = array(
           'label' => t('Language'),
           'description' => $description,
@@ -1986,14 +1985,13 @@ function theme_node_recent_content($variables) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for block_admin_configure().
+ * Implements hook_form_FORM_ID_alter() for block_form().
  *
  * Adds node-type specific visibility options to block configuration form.
- *
- * @see node_form_block_admin_configure_submit()
  */
-function node_form_block_admin_configure_alter(&$form, &$form_state) {
-  $config = $form['#instance']->getConfig();
+function node_form_block_form_alter(&$form, &$form_state) {
+  $block = $form_state['entity'];
+  $visibility = $block->get('visibility');
   $form['visibility']['node_type'] = array(
     '#type' => 'details',
     '#title' => t('Content types'),
@@ -2005,27 +2003,10 @@ function node_form_block_admin_configure_alter(&$form, &$form_state) {
   $form['visibility']['node_type']['types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Show block for specific content types'),
-    '#default_value' => !empty($config['visibility']['node_type']['types']) ? $config['visibility']['node_type']['types'] : array(),
+    '#default_value' => !empty($visibility['node_type']['types']) ? $visibility['node_type']['types'] : array(),
     '#options' => node_type_get_names(),
     '#description' => t('Show this block only on pages that display content of the given type(s). If you select no types, there will be no type-specific limitation.'),
   );
-}
-
-/**
- * Implements hook_modules_uninstalled().
- *
- * Cleans up the {block_node_type} table from modules' blocks.
- */
-function node_modules_uninstalled($modules) {
-  // Remove the block visibility settings for all node types.
-  $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
-  foreach ($block_configs as $config_id) {
-    $config = config($config_id);
-    $node_types = $config->get('visibility.node_type.types');
-    if (!empty($node_types)) {
-      $config->clear('visibility.node_type.types');
-    }
-  }
 }
 
 /**
@@ -2035,9 +2016,8 @@ function node_modules_uninstalled($modules) {
  * if the visibility conditions are not met.
  */
 function node_block_access($block) {
-  $configuration = $block->getConfig();
-  if (!empty($configuration['visibility'])) {
-    $visibility = $configuration['visibility'];
+  $visibility = $block->get('visibility');
+  if (!empty($visibility)) {
     $allowed_types = array();
     $node = menu_get_object();
     $node_types = node_type_get_types();
@@ -2108,7 +2088,6 @@ function node_feed($nids = FALSE, $channel = array()) {
 
   $item_length = $rss_config->get('items.view_mode');
   $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
-  $teaser = ($item_length == 'teaser');
 
   // Load all nodes to be rendered.
   $nodes = node_load_multiple($nids);
@@ -2890,6 +2869,14 @@ function node_access_view_all_nodes($account = NULL) {
  * node access checks for the user account given by the 'account' meta-data (or
  * global $user if not provided), for an operation given by the 'op' meta-data
  * (or 'view' if not provided; other possible values are 'update' and 'delete').
+ *
+ * Queries tagged with 'node_access' that are not against the {node} table
+ * must add the base table as metadata. For example:
+ * @code
+ *   $query
+ *     ->addTag('node_access')
+ *     ->addMetaData('base_table', 'taxonomy_index');
+ * @endcode
  */
 function node_query_node_access_alter(AlterableInterface $query) {
   global $user;

@@ -204,5 +204,5 @@ display:
           1: AND
 human_name: test_history
 module: views
-name: test_history
+id: test_history
 tag: ''

@@ -123,7 +123,7 @@ class DefaultViewsTest extends WebTestBase {
    */
   public function testDefaultViews() {
     // Get all default views.
-    $controller = entity_get_controller('view');
+    $controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
     $views = $controller->load();
 
     foreach ($views as $name => $view_storage) {
@@ -137,7 +137,7 @@ class DefaultViewsTest extends WebTestBase {
           $view->preExecute($this->viewArgMap[$name]);
         }
 
-        $this->assert(TRUE, format_string('View @view will be executed.', array('@view' => $view->storage->get('name'))));
+        $this->assert(TRUE, format_string('View @view will be executed.', array('@view' => $view->storage->id())));
         $view->execute();
 
         $tokens = array('@name' => $name, '@display_id' => $display_id);
@@ -154,11 +154,13 @@ class DefaultViewsTest extends WebTestBase {
    * Returns a new term with random properties in vocabulary $vid.
    */
   function createTerm($vocabulary) {
+    $filter_formats = filter_formats();
+    $format = array_pop($filter_formats);
     $term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       // Use the first available text format.
-      'format' => db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField(),
+      'format' => $format->format,
       'vid' => $vocabulary->id(),
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     ));

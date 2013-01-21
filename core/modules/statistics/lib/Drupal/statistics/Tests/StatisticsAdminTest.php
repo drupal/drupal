@@ -22,7 +22,7 @@ class StatisticsAdminTest extends WebTestBase {
   public static $modules = array('node', 'statistics');
 
   /**
-   * A user that has permission to administer and access statistics.
+   * A user that has permission to administer statistics.
    *
    * @var object|FALSE
    *
@@ -31,7 +31,7 @@ class StatisticsAdminTest extends WebTestBase {
   protected $privileged_user;
 
   /**
-   * A page node for which to check access statistics.
+   * A page node for which to check content statistics.
    *
    * @var object
    */
@@ -52,7 +52,7 @@ class StatisticsAdminTest extends WebTestBase {
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     }
-    $this->privileged_user = $this->drupalCreateUser(array('access statistics', 'administer statistics', 'view post access counter', 'create page content'));
+    $this->privileged_user = $this->drupalCreateUser(array('administer statistics', 'view post access counter', 'create page content'));
     $this->drupalLogin($this->privileged_user);
     $this->test_node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->privileged_user->uid));
   }
@@ -62,18 +62,12 @@ class StatisticsAdminTest extends WebTestBase {
    */
   function testStatisticsSettings() {
     $config = config('statistics.settings');
-    $this->assertFalse($config->get('access_log.enabled'), 'Access log is disabled by default.');
     $this->assertFalse($config->get('count_content_views'), 'Count content view log is disabled by default.');
 
-    $this->drupalGet('admin/reports/pages');
-    $this->assertRaw(t('No statistics available.'), 'Verifying text shown when no statistics is available.');
-
-    // Enable access log and counter on content view.
-    $edit['statistics_enable_access_log'] = 1;
+    // Enable counter on content view.
     $edit['statistics_count_content_views'] = 1;
     $this->drupalPost('admin/config/system/statistics', $edit, t('Save configuration'));
     $config = config('statistics.settings');
-    $this->assertTrue($config->get('access_log.enabled'), 'Access log is enabled.');
     $this->assertTrue($config->get('count_content_views'), 'Count content view log is enabled.');
 
     // Hit the node.
@@ -85,9 +79,6 @@ class StatisticsAdminTest extends WebTestBase {
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
-
-    $this->drupalGet('admin/reports/pages');
-    $this->assertText('node/1', 'Test node found.');
 
     // Hit the node again (the counter is incremented after the hit, so
     // "1 view" will actually be shown when the node is hit the second time).
@@ -133,44 +124,11 @@ class StatisticsAdminTest extends WebTestBase {
   }
 
   /**
-   * Tests that accesslog reflects when a user is deleted.
-   */
-  function testDeleteUser() {
-    config('statistics.settings')->set('access_log.enabled', 1)->save();
-
-    config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
-    $this->drupalLogout($this->privileged_user);
-    $account = $this->drupalCreateUser(array('access content', 'cancel account'));
-    $this->drupalLogin($account);
-    $this->drupalGet('node/' . $this->test_node->nid);
-
-    $account = user_load($account->uid, TRUE);
-
-    $this->drupalGet('user/' . $account->uid . '/edit');
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
-
-    $timestamp = time();
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
-    // Confirm account cancellation request.
-    $mails = $this->drupalGetMails();
-    $mail = end($mails);
-    preg_match('@http.+?(user/\d+/cancel/confirm/\d+/[^\s]+)@', $mail['body'], $matches);
-    $path = $matches[1];
-    $this->drupalGet($path);
-    $this->assertFalse(user_load($account->uid, TRUE), 'User is not found in the database.');
-
-    $this->drupalGet('admin/reports/visitors');
-    $this->assertNoText($account->name, 'Did not find user in visitor statistics.');
-  }
-
-  /**
    * Tests that cron clears day counts and expired access logs.
    */
   function testExpiredLogs() {
     config('statistics.settings')
-      ->set('access_log.enabled', 1)
       ->set('count_content_views', 1)
-      ->set('access_log.max_lifetime', 1)
       ->save();
     state()->set('statistics.day_timestamp', 8640000);
 
@@ -185,9 +143,6 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $this->test_node->nid);
     drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertText('1 view', 'Node is viewed once.');
-
-    $this->drupalGet('admin/reports/pages');
-    $this->assertText('node/' . $this->test_node->nid, 'Hit URL found.');
 
     // statistics_cron() will subtract
     // statistics.settings:accesslog.max_lifetime config from REQUEST_TIME in
