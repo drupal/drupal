@@ -400,7 +400,7 @@ function system_requirements($phase) {
     );
 
     // Check installed modules.
-    foreach (module_list() as $module) {
+    foreach (drupal_container()->get('module_handler')->getModuleList() as $module => $filename) {
       $updates = drupal_get_schema_versions($module);
       if ($updates !== FALSE) {
         $default = drupal_get_installed_schema_version($module);

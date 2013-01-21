@@ -78,11 +78,11 @@ global $conf;
 
 // We have to enable the user and system modules, even to check access and
 // display errors via the maintenance theme.
-$module_list['system']['filename'] = 'core/modules/system/system.module';
-$module_list['user']['filename'] = 'core/modules/user/user.module';
-module_list(NULL, $module_list);
-drupal_load('module', 'system');
-drupal_load('module', 'user');
+$module_list['system'] = 'core/modules/system/system.module';
+$module_list['user'] = 'core/modules/user/user.module';
+drupal_container()->get('module_handler')->setModuleList($module_list);
+drupal_container()->get('module_handler')->load('system');
+drupal_container()->get('module_handler')->load('user');
 
 // Initialize the language system.
 drupal_language_initialize();

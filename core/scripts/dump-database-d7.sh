@@ -45,7 +45,7 @@ $output = <<<ENDOFHEADER
 
 ENDOFHEADER;
 
-foreach (module_list() as $module) {
+foreach (drupal_container()->get('module_handler')->getModuleList() as $module => $filename) {
   $output .= " *  - $module\n";
 }
 $output .= " */\n\n";

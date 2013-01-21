@@ -15,6 +15,8 @@ use Symfony\Component\Serializer\Serializer;
 
 class RdfSchemaSerializationTest extends DrupalUnitTestBase {
 
+  public static $modules = array('system');
+
   public static function getInfo() {
     return array(
       'name' => 'Site schema JSON-LD serialization',
@@ -27,9 +29,8 @@ class RdfSchemaSerializationTest extends DrupalUnitTestBase {
    * Tests the serialization of site schemas.
    */
   function testSchemaSerialization() {
-    // In order to use url() the url_alias table must be installed, so system
-    // is enabled.
-    $this->enableModules(array('system'));
+    // url() requires the {url_alias} table.
+    $this->installSchema('system', 'url_alias');
 
     $entity_type = $bundle = 'entity_test';
 

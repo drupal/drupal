@@ -36,6 +36,11 @@ class DatabaseBackendUnitTest extends GenericCacheBackendUnitTestBase {
    * Installs system schema.
    */
   public function setUpCacheBackend() {
+    // Calling drupal_install_schema() entails a call to module_invoke, for which
+    // we need a ModuleHandler. Register one to the container.
+    // @todo Use DrupalUnitTestBase.
+    $this->container->register('module_handler', 'Drupal\Core\Extension\ModuleHandler');
+
     drupal_install_schema('system');
   }
 

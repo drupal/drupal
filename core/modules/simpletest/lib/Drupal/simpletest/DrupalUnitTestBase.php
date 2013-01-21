@@ -50,18 +50,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    */
   public static $modules = array();
 
-  /**
-   * Fixed module list being used by this test.
-   *
-   * @var array
-   *   An associative array containing the required data for the $fixed_list
-   *   argument of module_list().
-   *
-   * @see UnitTestBase::setUp()
-   * @see UnitTestBase::enableModules()
-   */
-  private $moduleList = array();
-
   private $moduleFiles;
   private $themeFiles;
   private $themeData;
@@ -104,8 +92,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     $this->kernel = new DrupalKernel('testing', TRUE, drupal_classloader(), FALSE);
     $this->kernel->boot();
 
-    // Ensure that the module list is initially empty.
-    $this->moduleList = array();
     // Collect and set a fixed module list.
     $class = get_class($this);
     $modules = array();
@@ -132,11 +118,15 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     global $conf;
     // Keep the container object around for tests.
     $this->container = $container;
+
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
+
     $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\MemoryBackend');
+
     $container
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')
       ->addArgument($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
+
     $conf['keyvalue_default'] = 'keyvalue.memory';
     $container->set('keyvalue.memory', $this->keyValueFactory);
     if (!$container->has('keyvalue')) {
@@ -172,7 +162,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     // file depends on many other factors. To prevent differences in test
     // behavior and non-reproducible test failures, we only allow the schema of
     // explicitly loaded/enabled modules to be installed.
-    if (!module_exists($module)) {
+    if (!$this->container->get('module_handler')->moduleExists($module)) {
       throw new \RuntimeException(format_string("'@module' module is not enabled.", array(
         '@module' => $module,
       )));
@@ -207,27 +197,30 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    *   Defaults to TRUE. If FALSE, the new modules are only added to the fixed
    *   module list and loaded.
    *
-   * @todo Remove this method as soon as there is an Extensions service
-   *   implementation that is able to manage a fixed module list.
+   * @todo Remove $install argument and replace all callers that do not pass
+   *   FALSE with module_enable().
    */
   protected function enableModules(array $modules, $install = TRUE) {
-    // Set the modules in the fixed module_list().
-    $new_enabled = array();
-    foreach ($modules as $module) {
-      $this->moduleList[$module]['filename'] = drupal_get_filename('module', $module);
-      $new_enabled[$module] = dirname($this->moduleList[$module]['filename']);
-      module_list(NULL, $this->moduleList);
-
-      // Call module_enable() to enable (install) the new module.
-      if ($install) {
-        module_enable(array($module), FALSE);
+    if ($install) {
+      module_enable($modules, FALSE);
+    }
+    // Explicitly set the list of modules in the extension handler.
+    else {
+      $module_handler = $this->container->get('module_handler');
+      $module_filenames = $module_handler->getModuleList();
+      foreach ($modules as $module) {
+        $module_filenames[$module] = drupal_get_filename('module', $module);
       }
+      $module_handler->setModuleList($module_filenames);
+      $module_handler->resetImplementations();
+      $this->kernel->updateModules($module_filenames, $module_filenames);
     }
-    // Otherwise, only ensure that the new modules are loaded.
-    if (!$install) {
-      module_load_all(FALSE, TRUE);
-      module_implements_reset();
-    }
+    // Regardless of loaded or installed, ensure isLoaded() is TRUE in order to
+    // make theme() work.
+    // Note that the kernel has rebuilt the container; this $module_handler is
+    // no longer the $module_handler instance from above.
+    $module_handler = $this->container->get('module_handler');
+    $module_handler->reload();
   }
 
 }

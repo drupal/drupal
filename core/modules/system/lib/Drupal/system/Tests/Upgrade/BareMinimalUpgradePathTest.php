@@ -82,7 +82,7 @@ class BareMinimalUpgradePathTest extends UpgradePathTestBase {
     $this->assertFalse($result, 'No {menu_links} entry exists for user/autocomplete');
 
     // Verify that all required modules are enabled.
-    $enabled = module_list();
+    $enabled = $this->container->get('module_handler')->getModuleList();
     $required = array_filter(system_rebuild_module_data(), function ($data) {
       return !empty($data->info['required']);
     });
