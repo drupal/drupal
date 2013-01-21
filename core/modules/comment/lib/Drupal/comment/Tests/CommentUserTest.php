@@ -178,7 +178,7 @@ class CommentUserTest extends WebTestBase {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
       $regex .= '<a id="comment-' . $comment->id() . '"(.*?)'; // Comment anchor.
       $regex .= $comment->subject->value . '(.*?)'; // Match subject.
-      $regex .= $comment->comment->value . '(.*?)'; // Match comment.
+      $regex .= $comment->comment_body->value . '(.*?)'; // Match comment.
       $regex .= '/s';
 
       return (boolean)preg_match($regex, $this->drupalGetContent());

@@ -172,7 +172,7 @@ function comment_field_widget_form(&$form, &$form_state, $field, $instance, $lan
     '#access' => user_access('administer comments'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' => 'additional_settings',
+    '#group' => 'advanced',
     '#attributes' => array(
       'class' => array('comment-node-settings-form'),
     ),

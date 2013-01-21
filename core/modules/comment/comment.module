@@ -14,6 +14,7 @@ use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityNG;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -1696,7 +1697,8 @@ function template_preprocess_comment(&$variables) {
     $variables['attributes']['class'][] = 'by-anonymous';
   }
   else {
-    if (!empty($comment_entity->uid->value) && $comment->uid->value == $comment_entity->uid->value) {
+    if (($comment_entity instanceof EntityNG && !empty($comment_entity->uid->value) && $comment->uid->value == $comment_entity->uid->value) ||
+        (!empty($comment_entity->uid) && $comment->uid->value == $comment_entity->uid)) {
       $variables['attributes']['class'][] = 'by-' . $comment_entity->entityType() . '-author';
     }
     if ($comment->uid->value == $variables['user']->uid) {

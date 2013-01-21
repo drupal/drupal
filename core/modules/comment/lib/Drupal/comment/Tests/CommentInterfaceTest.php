@@ -96,9 +96,9 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertEqual(rtrim($comment->thread->value, '/') . '.00/', $reply_loaded->thread->value, 'Thread of reply grows correctly.');
 
     // Second reply to comment #3 creating comment #4.
-    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment->id());
-    $this->assertText($subject_text, 'Individual comment-reply subject found.');
-    $this->assertText($comment_text, 'Individual comment-reply body found.');
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $reply_loaded->id());
+    $this->assertText($reply_loaded->subject->value, 'Individual comment-reply subject found.');
+    $this->assertText($reply_loaded->comment_body->value, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $reply_loaded = comment_load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
