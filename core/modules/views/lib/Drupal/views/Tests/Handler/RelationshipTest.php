@@ -8,13 +8,14 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Tests\Plugin\RelationshipJoinTestBase;
 
 /**
  * Tests the base relationship handler.
  *
  * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
-class RelationshipTest extends ViewUnitTestBase {
+class RelationshipTest extends RelationshipJoinTestBase {
 
   /**
    * Views used by this test.
@@ -39,56 +40,6 @@ class RelationshipTest extends ViewUnitTestBase {
       'description' => 'Tests the base relationship handler.',
       'group' => 'Views Handlers',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableModules(array('field', 'user'));
-  }
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::schemaDefinition().
-   *
-   * Adds a uid column to test the relationships.
-   *
-   * @return array
-   */
-  protected function schemaDefinition() {
-    $schema = parent::schemaDefinition();
-
-    $schema['views_test_data']['fields']['uid'] = array(
-      'description' => "The {users}.uid of the author of the beatle entry.",
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-      'default' => 0
-    );
-
-    return $schema;
-  }
-
-
-  /**
-   * Overrides Drupal\views\Tests\ViewTestBase::viewsData().
-   *
-   * Adds a relationship for the uid column.
-   *
-   * @return array
-   */
-  protected function viewsData() {
-    $data = parent::viewsData();
-    $data['views_test_data']['uid'] = array(
-      'title' => t('UID'),
-      'help' => t('The test data UID'),
-      'relationship' => array(
-        'id' => 'standard',
-        'base' => 'users',
-        'base field' => 'uid'
-      )
-    );
-
-    return $data;
   }
 
   /**
