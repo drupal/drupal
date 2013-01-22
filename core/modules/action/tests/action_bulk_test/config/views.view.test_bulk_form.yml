@@ -74,7 +74,7 @@ display:
           link_to_node: '1'
         bulk_form:
           id: action_bulk_form
-          table: views
+          table: action
           field: action_bulk_form
           relationship: none
           group_type: group
