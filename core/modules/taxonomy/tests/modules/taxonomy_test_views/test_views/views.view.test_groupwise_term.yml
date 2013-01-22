@@ -1,4 +1,3 @@
-api_version: '3.0'
 base_field: tid
 base_table: taxonomy_term_data
 core: 8.0-dev

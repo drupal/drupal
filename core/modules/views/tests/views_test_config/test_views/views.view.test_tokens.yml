@@ -4,7 +4,6 @@ description: 'Test view to token replacement tests.'
 tag: ''
 human_name: 'Test tokens'
 core: 8.x
-api_version: '3.0'
 display:
   default:
     display_options:

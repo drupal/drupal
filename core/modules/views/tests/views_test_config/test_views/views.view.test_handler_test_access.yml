@@ -1,4 +1,3 @@
-api_version: '3.0'
 base_table: views_test_data
 core: 8
 display:

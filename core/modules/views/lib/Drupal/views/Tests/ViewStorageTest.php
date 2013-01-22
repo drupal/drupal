@@ -28,7 +28,6 @@ class ViewStorageTest extends ViewUnitTestBase {
    */
   protected $config_properties = array(
     'disabled',
-    'api_version',
     'module',
     'id',
     'description',
@@ -378,7 +377,6 @@ class ViewStorageTest extends ViewUnitTestBase {
     // @todo Create a reusable property on the base test class for these?
     $config_properties = array(
       'disabled',
-      'api_version',
       'description',
       'tag',
       'base_table',

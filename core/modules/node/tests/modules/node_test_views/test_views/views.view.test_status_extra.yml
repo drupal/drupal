@@ -4,7 +4,6 @@ description: ''
 tag: ''
 human_name: test_status_extra
 core: 8.x
-api_version: '3.0'
 display:
   default:
     display_plugin: default
