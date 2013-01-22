@@ -289,7 +289,7 @@ function node_title_list($result, $title = NULL) {
 }
 
 /**
- * Decides on the type of marker to be displayed for a given node.
+ * Determines the type of marker to be displayed for a given node.
  *
  * @param $nid
  *   Node ID whose history supplies the "last viewed" timestamp.
@@ -1087,7 +1087,7 @@ function node_is_page(Node $node) {
   return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
 }
 
- /**
+/**
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function node_preprocess_block(&$variables) {
@@ -2139,9 +2139,9 @@ function node_feed($nids = FALSE, $channel = array()) {
   return new Response($output, 200, array('Content-Type' =>  'application/rss+xml; charset=utf-8'));
 }
 
- /**
-  * Generates an array for rendering the given node.
-  *
+/**
+ * Generates an array for rendering the given node.
+ *
  * @param Drupal\node\Node $node
  *   A node entity.
  * @param $view_mode
@@ -2436,8 +2436,8 @@ function node_search_validate($form, &$form_state) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * Alters System module's site information settings form to add a global default
- * setting for number of posts to show on node listing pages.
+ * Alters the System module's site information settings form to add a global
+ * default setting for number of posts to show on node listing pages.
  *
  * @see node_page_default()
  * @see taxonomy_term_page()
@@ -3209,7 +3209,6 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 /**
  * @} End of "defgroup node_access".
  */
-
 
 /**
  * @defgroup node_content Hook implementations for user-created content types
