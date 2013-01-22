@@ -5223,7 +5223,7 @@ function drupal_pre_render_link($element) {
  * @code
  * $node->content['links'] = array(
  *   '#theme' => 'links__node',
- *   '#pre_render' = array('drupal_pre_render_links'),
+ *   '#pre_render' => array('drupal_pre_render_links'),
  *   'comment' => array(
  *     '#theme' => 'links__node__comment',
  *     '#links' => array(
