@@ -154,7 +154,10 @@ function hook_hook_info_alter(&$hooks) {
  *       the name of the bundle object.
  *   - bundles: An array describing all bundles for this object type. Keys are
  *     bundles machine names, as found in the objects' 'bundle' property
- *     (defined in the 'entity keys' entry above). Elements:
+ *     (defined in the 'entity keys' entry above). This entry can be omitted if
+ *     this entity type exposes a single bundle (all entities have the same
+ *     collection of fields). The name of this single bundle will be the same as
+ *     the entity type. Elements:
  *     - label: The human-readable name of the bundle.
  *     - uri callback: Same as the 'uri callback' key documented above for the
  *       entity type, but for the bundle only. When determining the URI of an
