@@ -104,6 +104,11 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $uuid = new Uuid();
       $entity->{$this->uuidKey}->value = $uuid->generate();
     }
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    $this->invokeHook('create', $entity);
+
     return $entity;
   }
 

@@ -55,24 +55,11 @@ class CommentStorageController extends DatabaseStorageControllerNG {
    * Overrides Drupal\Core\Entity\DatabaseStorageControllerNG::create().
    */
   public function create(array $values) {
-    // We have to determine the bundle first.
     if (empty($values['node_type']) && !empty($values['nid'])) {
       $node = node_load($values['nid']);
       $values['node_type'] = 'comment_node_' . $node->type;
     }
-    $comment = new $this->entityClass(array(), $this->entityType, $values['node_type']);
-
-    // Set all other given values.
-    foreach ($values as $name => $value) {
-      $comment->$name = $value;
-    }
-
-    // Assign a new UUID if there is none yet.
-    if ($this->uuidKey && !isset($comment->{$this->uuidKey})) {
-      $uuid = new Uuid();
-      $comment->{$this->uuidKey}->value = $uuid->generate();
-    }
-    return $comment;
+    return parent::create($values);
   }
 
   /**

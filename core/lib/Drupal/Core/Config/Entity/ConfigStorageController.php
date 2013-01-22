@@ -244,6 +244,10 @@ class ConfigStorageController implements EntityStorageControllerInterface {
       $entity->{$this->uuidKey} = $uuid->generate();
     }
 
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    $this->invokeHook('create', $entity);
+
     return $entity;
   }
 
