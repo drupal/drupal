@@ -162,9 +162,7 @@ abstract class AreaPluginBase extends HandlerBase {
   /**
    * Render the area
    */
-  function render($empty = FALSE) {
-    return '';
-  }
+  public abstract function render($empty = FALSE);
 
   /**
    * Area handlers shouldn't have groupby.
