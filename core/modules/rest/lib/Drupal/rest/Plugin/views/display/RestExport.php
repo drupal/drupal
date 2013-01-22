@@ -106,7 +106,7 @@ class RestExport extends PathPluginBase {
   /**
    * Sets the request content type.
    *
-   * @var string $mime_type
+   * @param string $mime_type
    *   The response mime type. E.g. 'application/json'.
    */
   public function setMimeType($mime_type) {
@@ -119,7 +119,7 @@ class RestExport extends PathPluginBase {
    * This will return any overriden mime type, otherwise returns the mime type
    * from the request.
    *
-   * @var string
+   * @return string
    *   The response mime type. E.g. 'application/json'.
    */
   public function getMimeType() {
@@ -129,7 +129,7 @@ class RestExport extends PathPluginBase {
   /**
    * Sets the content type.
    *
-   * @var string $content_type
+   * @param string $content_type
    *   The content type machine name. E.g. 'json'.
    */
   public function setContentType($content_type) {
