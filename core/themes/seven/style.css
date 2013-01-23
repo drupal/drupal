@@ -761,7 +761,6 @@ select.form-select:focus {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 100%;
   }
   #dblog-filter-form .form-actions {
     float: none;
