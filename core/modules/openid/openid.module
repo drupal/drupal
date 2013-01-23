@@ -166,15 +166,15 @@ function openid_user_logout($account) {
  */
 function openid_block_view_user_login_block_alter(&$build, $block) {
   // Only alter the block when it is non-empty, i.e. when no user is logged in.
-  if (!isset($build['user_login_form'])) {
+  if (!isset($build['content']['user_login_form'])) {
     return;
   }
 
-  $build['openid_login_form'] = drupal_get_form('openid_login_form');
-  $build['openid_login_form']['openid_identifier']['#size'] = $build['user_login_form']['name']['#size'];
+  $build['content']['openid_login_form'] = drupal_get_form('openid_login_form');
+  $build['content']['openid_login_form']['openid_identifier']['#size'] = $build['content']['user_login_form']['name']['#size'];
 
   // Put an OpenID link as a first element.
-  $build['user_links']['#items'] = array(
+  $build['content']['user_links']['#items'] = array(
     l(t('Log in using OpenID'), 'user/login/openid', array(
       'attributes' => array(
         'title' => t('Log in using OpenID.'),
@@ -183,10 +183,10 @@ function openid_block_view_user_login_block_alter(&$build, $block) {
         'tabindex' => 0,
       ),
     ))
-  ) + $build['user_links']['#items'];
+  ) + $build['content']['user_links']['#items'];
 
   // Move links under the openid form.
-  $build['user_links']['#weight'] = 10;
+  $build['content']['user_links']['#weight'] = 10;
 }
 
 /**

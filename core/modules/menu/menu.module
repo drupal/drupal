@@ -436,8 +436,8 @@ function menu_reset_item($link) {
 function menu_block_view_alter(array &$build, Block $block) {
   // Add contextual links for system menu blocks.
   if ($block->getPlugin() instanceof SystemMenuBlock) {
-    foreach (element_children($build) as $key) {
-      $build['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($build[$key]['#original_link']['menu_name']));
+    foreach (element_children($build['content']) as $key) {
+      $build['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($build['content'][$key]['#original_link']['menu_name']));
     }
   }
 }

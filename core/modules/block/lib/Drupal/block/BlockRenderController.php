@@ -72,11 +72,11 @@ class BlockRenderController implements EntityRenderControllerInterface {
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $build = array();
     foreach ($entities as $entity_id => $entity) {
-      $build[$entity_id] = $entity->getPlugin()->build();
       // Allow blocks to be empty, do not add in the defaults.
-      if (!empty($build[$entity_id])) {
-        $build[$entity_id] = $this->getBuildDefaults($entity, $view_mode, $langcode) + $build[$entity_id];
+      if ($content = $entity->getPlugin()->build()) {
+        $build[$entity_id] = $this->getBuildDefaults($entity, $view_mode, $langcode);
       }
+      $build[$entity_id]['content'] = $content;
 
       // All blocks, even when empty, should be available for altering.
       $id = str_replace(':', '__', $entity->get('plugin'));
