@@ -632,13 +632,28 @@ abstract class WebTestBase extends TestBase {
     );
     $this->drupalPost('user', $edit, t('Log in'));
 
-    // If a "log out" link appears on the page, it is almost certainly because
-    // the login was successful.
-    $pass = $this->assertLink(t('Log out'), 0, t('User %name successfully logged in.', array('%name' => $user->name)), t('User login'));
-
+    // @see WebTestBase::drupalUserIsLoggedIn()
+    if (isset($this->session_id)) {
+      $user->session_id = $this->session_id;
+    }
+    $pass = $this->assert($this->drupalUserIsLoggedIn($user), format_string('User %name successfully logged in.', array('%name' => $user->name)), 'User login');
     if ($pass) {
       $this->loggedInUser = $user;
     }
+  }
+
+  /**
+   * Returns whether a given user account is logged in.
+   *
+   * @param \Drupal\user\User $account
+   *   The user account object to check.
+   */
+  protected function drupalUserIsLoggedIn($account) {
+    if (!isset($account->session_id)) {
+      return FALSE;
+    }
+    // @see _drupal_session_read()
+    return (bool) db_query("SELECT sid FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $account->session_id))->fetchField();
   }
 
   /**
@@ -662,6 +677,8 @@ abstract class WebTestBase extends TestBase {
     $pass = $pass && $this->assertField('pass', t('Password field found.'), t('Logout'));
 
     if ($pass) {
+      // @see WebTestBase::drupalUserIsLoggedIn()
+      unset($this->loggedInUser->session_id);
       $this->loggedInUser = FALSE;
     }
   }
