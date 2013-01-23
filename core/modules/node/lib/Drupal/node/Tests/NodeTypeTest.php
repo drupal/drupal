@@ -134,19 +134,13 @@ class NodeTypeTest extends NodeTestBase {
    */
   function testNodeTypeStatus() {
     // Enable all core node modules, and all types should be active.
-    module_enable(array('book', 'poll'), FALSE);
+    module_enable(array('book'), FALSE);
     node_types_rebuild();
     $types = node_type_get_types();
-    foreach (array('book', 'poll', 'article', 'page') as $type) {
+    foreach (array('book', 'article', 'page') as $type) {
       $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
       $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), format_string('%type type is enabled.', array('%type' => $type)));
     }
-
-    // Disable poll module and the respective type should be marked as disabled.
-    module_disable(array('poll'), FALSE);
-    node_types_rebuild();
-    $types = node_type_get_types();
-    $this->assertTrue(!empty($types['poll']->disabled), "Poll module's node type disabled.");
 
     // Disable book module and the respective type should still be active, since
     // it is not provided by hook_node_info().
@@ -154,15 +148,14 @@ class NodeTypeTest extends NodeTestBase {
     node_types_rebuild();
     $types = node_type_get_types();
     $this->assertTrue(isset($types['book']) && empty($types['book']->disabled), "Book module's node type still active.");
-    $this->assertTrue(!empty($types['poll']->disabled), "Poll module's node type still disabled.");
     $this->assertTrue(isset($types['article']) && empty($types['article']->disabled), 'Article node type still active.');
     $this->assertTrue(isset($types['page']) && empty($types['page']->disabled), 'Basic page node type still active.');
 
     // Re-enable the modules and verify that the types are active again.
-    module_enable(array('book', 'poll'), FALSE);
+    module_enable(array('book'), FALSE);
     node_types_rebuild();
     $types = node_type_get_types();
-    foreach (array('book', 'poll', 'article', 'page') as $type) {
+    foreach (array('book', 'article', 'page') as $type) {
       $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
       $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), format_string('%type type is enabled.', array('%type' => $type)));
     }

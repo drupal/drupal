@@ -1497,54 +1497,6 @@ div.admin-panel .description {
   width: auto;
 }
 
-/* ---------- Poll ----------- */
-
-.node .poll {
-  margin: 2em 0;
-}
-.node .poll #edit-choice {
-  margin: 0 0 1.5em;
-}
-.poll .vote-form {
-  text-align: left; /* LTR */
-  margin: 0;
-}
-.poll .percent {
-  font-size: 0.857em;
-  font-style: italic;
-  margin-bottom: 3em;
-  margin-top: -3.2em;
-  float: right; /* LTR */
-  text-align: right; /* LTR */
-}
-.poll .choice-title {
-  clear: right; /* LTR */
-}
-.poll .total {
-  font-size: 0.929em;
-  font-style: italic;
-  text-align: right; /* LTR */
-  clear: both;
-}
-.node .poll {
-  margin: 1.8em 0 0;
-}
-.node .poll .text {
-  margin-right: 6.75em;
-}
-.node .poll #edit-choice {
-  margin: 0 0 1.2em;
-}
-.poll .bar .foreground {
-  background-color: #666;
-}
-#footer-wrapper .poll .bar {
-  background-color: #666;
-}
-#footer-wrapper .poll .bar .foreground {
-  background-color: #ddd;
-}
-
 /* ---------- book ----------- */
 .book-navigation .menu {
   border-top: 1px solid #d6d6d6;

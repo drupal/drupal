@@ -21,12 +21,12 @@ use Drupal\Core\Entity\EntityInterface;
  * base node operation:
  * - Node-type-specific hooks: These hooks are only invoked on the primary
  *   module, using the "base" return component of hook_node_info() as the
- *   function prefix.  For example, poll.module defines the base for the Poll
- *   content type as "poll", so during creation of a poll node, hook_insert() is
- *   only invoked by calling poll_insert().
+ *   function prefix.  For example, forum.module defines the base for the Forum
+ *   content type as "forum", so during creation of a forum node, hook_insert() is
+ *   only invoked by calling forum_insert().
  * - All-module hooks: This set of hooks is invoked on all implementing modules,
  *   to allow other modules to modify what the primary node module is doing. For
- *   example, hook_node_insert() is invoked on all modules when creating a poll
+ *   example, hook_node_insert() is invoked on all modules when creating a forum
  *   node.
  * - Field hooks: Hooks related to the fields attached to the node. These are
  *   invoked from the field operations functions described below, and can be
