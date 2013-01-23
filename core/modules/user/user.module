@@ -890,6 +890,15 @@ function user_menu() {
     'file' => 'user.pages.inc',
   );
 
+  $items['user/autocomplete/anonymous'] = array(
+    'title' => 'User autocomplete including anonymous',
+    'page callback' => 'user_autocomplete',
+    'page arguments' => array(TRUE),
+    'access callback' => 'user_access',
+    'access arguments' => array('access user profiles'),
+    'type' => MENU_CALLBACK,
+    'file' => 'user.pages.inc',
+  );
   // Registration and login pages.
   $items['user'] = array(
     'title' => 'User account',
