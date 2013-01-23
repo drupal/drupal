@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rdf\Tests\TrackerAttributesTest.
+ * Contains Drupal\rdf\Tests\TrackerAttributesTest.
  */
 
 namespace Drupal\rdf\Tests;
@@ -20,13 +20,11 @@ class TrackerAttributesTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'rdf_test', 'tracker');
-
-  protected $profile = 'standard';
+  public static $modules = array('rdf', 'tracker');
 
   public static function getInfo() {
     return array(
-      'name' => 'RDF tracker page mapping',
+      'name' => 'RDFa markup for tracker page',
       'description' => 'Test the mapping for the tracker page and ensure the proper RDFa markup in included.',
       'group' => 'RDF',
     );
@@ -35,13 +33,19 @@ class TrackerAttributesTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    // Enable anonymous posting of content.
+    // Creates article content type.
+    $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
+
+    // Enables anonymous posting of content.
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'create article content' => TRUE,
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
     ));
+
+    // Sets base URI of the site used by the RDFa parser.
+    $this->base_uri = url('<front>', array('absolute' => TRUE));
   }
 
   /**
@@ -51,16 +55,15 @@ class TrackerAttributesTest extends WebTestBase {
    * markup on the tracker page for those nodes and their comments.
    */
   function testAttributesInTracker() {
-    // Create node as anonymous user.
+    // Creates node as anonymous user.
     $node_anon = $this->drupalCreateNode(array('type' => 'article', 'uid' => 0));
-    // Create node as admin user.
+    // Creates node as admin user.
     $node_admin = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1));
 
-    // Pass both the anonymously posted node and the administrator posted node
+    // Passes both the anonymously posted node and the administrator posted node
     // through to test for the RDF attributes.
     $this->_testBasicTrackerRdfaMarkup($node_anon);
     $this->_testBasicTrackerRdfaMarkup($node_admin);
-
   }
 
   /**
@@ -72,68 +75,81 @@ class TrackerAttributesTest extends WebTestBase {
    * The node just created.
    */
   function _testBasicTrackerRdfaMarkup(Node $node) {
-    $url = url('node/' . $node->nid);
+    $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
+    $user_uri = url('user/' . $node->uid, array('absolute' => TRUE));
 
     $user = ($node->uid == 0) ? 'Anonymous user' : 'Registered user';
 
-    // Navigate to tracker page.
-    $this->drupalGet('tracker');
+    // Parses tracker page where the nodes are displayed in a table.
+    $parser = new \EasyRdf_Parser_Rdfa();
+    $graph = new \EasyRdf_Graph();
+    $parser->parse($graph, $this->drupalGet('tracker'), 'rdfa', $this->base_uri);
 
-    // Tests whether the about property is applied. This is implicit in the
-    // success of the following tests, but making it explicit will make
-    // debugging easier in case of failure.
-    $tracker_about = $this->xpath('//tr[@about=:url]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_about), format_string('About attribute found on table row for @user content.', array('@user'=> $user)));
-
-    // Tests whether the title has the correct property attribute.
-    $tracker_title = $this->xpath('//tr[@about=:url]/td[@property="dc:title" and @datatype=""]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_title), format_string('Title property attribute found on @user content.', array('@user'=> $user)));
-
-    // Tests whether the relationship between the content and user has been set.
-    $tracker_user = $this->xpath('//tr[@about=:url]//td[contains(@rel, "sioc:has_creator")]//*[contains(@typeof, "sioc:UserAccount") and contains(@property, "foaf:name")]', array(':url' => $url));
-    $this->assertTrue(!empty($tracker_user), format_string('Typeof and name property attributes found on @user.', array('@user'=> $user)));
-    // There should be an about attribute on logged in users and no about
-    // attribute for anonymous users.
-    $tracker_user = $this->xpath('//tr[@about=:url]//td[@rel="sioc:has_creator"]/*[@about]', array(':url' => $url));
+    // Inspects RDF graph output.
+    // Node title.
+    $expected_value = array(
+      'type' => 'literal',
+      // The theme layer adds a space after the title a element, and the RDFa
+      // attribute is on the wrapping td. Adds a space to match this.
+      'value' => $node->title . ' ',
+      'lang' => 'en',
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/title', $expected_value), 'Title found in RDF output (dc:title).');
+    // Number of comments.
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => '0',
+      'datatype' => 'http://www.w3.org/2001/XMLSchema#integer',
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#num_replies', $expected_value), 'Number of comments found in RDF output (sioc:num_replies).');
+    // Node relation to author.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $user_uri,
+    );
     if ($node->uid == 0) {
-      $this->assertTrue(empty($tracker_user), format_string('No about attribute is present on @user.', array('@user'=> $user)));
+      $this->assertFalse($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#has_creator', $expected_value), 'No relation to author found in RDF output (sioc:has_creator).');
     }
     elseif ($node->uid > 0) {
-      $this->assertTrue(!empty($tracker_user), format_string('About attribute is present on @user.', array('@user'=> $user)));
+      $this->assertTrue($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#has_creator', $expected_value), 'Relation to author found in RDF output (sioc:has_creator).');
     }
+    // Last updated.
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => date('c', $node->changed),
+      'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#last_activity_date', $expected_value), 'Last activity date found in RDF output (sioc:last_activity_date).');
 
-    // Tests whether the property has been set for number of comments.
-    $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "0") and @datatype="xsd:integer"]', array(':url' => $url));
-    $this->assertTrue($tracker_replies, format_string('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
 
-    // Tests that the appropriate RDFa markup to annotate the latest activity
-    // date has been added to the tracker output before comments have been
-    // posted, meaning the latest activity reflects changes to the node itself.
-    $isoDate = date('c', $node->changed);
-    $tracker_activity = $this->xpath('//tr[@about=:url]//td[contains(@property, "dc:modified") and contains(@property, "sioc:last_activity_date") and contains(@datatype, "xsd:dateTime") and @content=:date]', array(':url' => $url, ':date' => $isoDate));
-    $this->assertTrue(!empty($tracker_activity), format_string('Latest activity date and changed properties found when there are no comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
-
-    // Tests that the appropriate RDFa markup to annotate the latest activity
-    // date has been added to the tracker output after a comment is posted.
+    // Adds new comment to ensure the tracker is updated accordingly.
     $comment = array(
       'subject' => $this->randomName(),
       'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(),
     );
     $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
-    $this->drupalGet('tracker');
 
-    // Tests whether the property has been set for number of comments.
-    $tracker_replies = $this->xpath('//tr[@about=:url]//td[contains(@property, "sioc:num_replies") and contains(@content, "1") and @datatype="xsd:integer"]', array(':url' => $url));
-    $this->assertTrue($tracker_replies, format_string('Num replies property and content attributes found on @user content.', array('@user'=> $user)));
+    // Parses tracker page where the nodes are displayed in a table.
+    $parser = new \EasyRdf_Parser_Rdfa();
+    $graph = new \EasyRdf_Graph();
+    $parser->parse($graph, $this->drupalGet('tracker'), 'rdfa', $this->base_uri);
 
-    // Need to query database directly to obtain last_activity_date because
+    // Number of comments.
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => '1',
+      'datatype' => 'http://www.w3.org/2001/XMLSchema#integer',
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#num_replies', $expected_value), 'Number of comments found in RDF output (sioc:num_replies).');
+    // Last updated due to new comment.
+    // last_activity_date needs to be queried from the database directly because
     // it cannot be accessed via node_load().
-    $result = db_query('SELECT t.changed FROM {tracker_node} t WHERE t.nid = (:nid)', array(':nid' => $node->nid));
-    foreach ($result as $node) {
-      $expected_last_activity_date = $node->changed;
-    }
-    $isoDate = date('c', $expected_last_activity_date);
-    $tracker_activity = $this->xpath('//tr[@about=:url]//td[@property="sioc:last_activity_date" and @datatype="xsd:dateTime" and @content=:date]', array(':url' => $url, ':date' => $isoDate));
-    $this->assertTrue(!empty($tracker_activity), format_string('Latest activity date found when there are comments on @user content. Latest activity date content is correct.', array('@user'=> $user)));
+    $expected_last_activity_date = db_query('SELECT t.changed FROM {tracker_node} t WHERE t.nid = (:nid)', array(':nid' => $node->nid))->fetchField();
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => date('c', $expected_last_activity_date),
+      'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
+    );
+    $this->assertTrue($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#last_activity_date', $expected_value), 'Last activity date after new comment has been posted found in RDF output (sioc:last_activity_date).');
   }
 }
