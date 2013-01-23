@@ -49,7 +49,7 @@ class ViewAddFormController extends ViewFormControllerBase {
       '#maxlength' => 128,
       '#machine_name' => array(
         'exists' => 'views_get_view',
-        'source' => array('id', 'human_name'),
+        'source' => array('name', 'human_name'),
       ),
       '#description' => t('A unique machine-readable name for this View. It must only contain lowercase letters, numbers, and underscores.'),
     );
