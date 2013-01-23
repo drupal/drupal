@@ -1044,65 +1044,57 @@ function theme_views_mini_pager($vars) {
   $parameters = $vars['parameters'];
   $quantity = $vars['quantity'];
 
-  // Calculate various markers within this pager piece:
-  // Middle is used to "center" pages around the current page.
-  $pager_middle = ceil($quantity / 2);
   // current is the page we are currently paged to
   $pager_current = $pager_page_array[$element] + 1;
   // max is the maximum page number
   $pager_max = $pager_total[$element];
   // End of marker calculations.
 
-  if ($pager_total[$element] > 1) {
-
-    $li_previous = theme('pager_previous',
-      array(
-        'text' => (isset($tags[1]) ? $tags[1] : t('‹‹')),
-        'element' => $element,
-        'interval' => 1,
-        'parameters' => $parameters,
-      )
-    );
-    if (empty($li_previous)) {
-      $li_previous = "&nbsp;";
-    }
-
-    $li_next = theme('pager_next',
-      array(
-        'text' => (isset($tags[3]) ? $tags[3] : t('››')),
-        'element' => $element,
-        'interval' => 1,
-        'parameters' => $parameters,
-      )
-    );
-
-    if (empty($li_next)) {
-      $li_next = "&nbsp;";
-    }
-
-    $items[] = array(
-      'class' => array('pager-previous'),
-      'data' => $li_previous,
-    );
-
-    $items[] = array(
-      'class' => array('pager-current'),
-      'data' => t('@current of @max', array('@current' => $pager_current, '@max' => $pager_max)),
-    );
-
-    $items[] = array(
-      'class' => array('pager-next'),
-      'data' => $li_next,
-    );
-    return theme('item_list',
-      array(
-        'items' => $items,
-        'title' => NULL,
-        'type' => 'ul',
-        'attributes' => array('class' => array('pager')),
-      )
+  $li_previous = array();
+  if ($pager_total[$element] > 1 && $pager_page_array[$element] > 0) {
+    $li_previous = array(
+      '#theme' => 'pager_link__previous',
+      '#text' => (isset($tags[1]) ? $tags[1] : t('‹‹')),
+      '#page_new' => pager_load_array($pager_page_array[$element] - 1, $element, $pager_page_array),
+      '#element' => $element,
+      '#interval' => 1,
+      '#parameters' => $parameters,
     );
   }
+
+  $li_next = array();
+  if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
+    $li_next = array(
+      '#theme' => 'pager_link__next',
+      '#text' => (isset($tags[3]) ? $tags[3] : t('››')),
+      '#page_new' => pager_load_array($pager_page_array[$element] + 1, $element, $pager_page_array),
+      '#element' => $element,
+      '#interval' => 1,
+      '#parameters' => $parameters,
+    );
+  }
+
+  $items[] = array(
+    '#wrapper_attributes' => array('class' => array('pager-previous')),
+  ) + $li_previous;
+
+  $items[] = array(
+    '#wrapper_attributes' => array('class' => array('pager-current')),
+    '#markup' => t('@current of @max', array('@current' => $pager_current, '@max' => $pager_max)),
+  );
+
+  $items[] = array(
+    '#wrapper_attributes' => array('class' => array('pager-next')),
+  ) + $li_next;
+
+  return theme('item_list',
+    array(
+      'items' => $items,
+      'title' => NULL,
+      'type' => 'ul',
+      'attributes' => array('class' => array('pager')),
+    )
+  );
 }
 
 /**
