@@ -17,7 +17,7 @@ use Drupal\field_ui\DisplayOverview;
 function field_ui_fields_list() {
   $instances = field_info_instances();
   $field_types = field_info_field_types();
-  $bundles = field_info_bundles();
+  $bundles = entity_get_bundles();
 
   $modules = system_rebuild_module_data();
 
@@ -654,7 +654,7 @@ function field_ui_widget_type_form($form, &$form_state, FieldInstance $instance)
   $field_name = $instance['field_name'];
 
   $field = field_info_field($field_name);
-  $bundles = field_info_bundles();
+  $bundles = entity_get_bundles();
   $bundle_label = $bundles[$entity_type][$bundle]['label'];
 
   $form = array(
@@ -759,7 +759,7 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
 
   $field = field_info_field($field_name);
   $instance = field_info_instance($entity_type, $field_name, $bundle);
-  $bundles = field_info_bundles();
+  $bundles = entity_get_bundles();
   $bundle_label = $bundles[$entity_type][$bundle]['label'];
 
   if (!empty($bundle) && $field && !$field['locked'] && $form_values['confirm']) {
@@ -795,7 +795,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   $bundle = $instance['bundle'];
   $entity_type = $instance['entity_type'];
   $field = field_info_field($instance['field_name']);
-  $bundles = field_info_bundles();
+  $bundles = entity_get_bundles();
 
   drupal_set_title(t('%instance settings for %bundle', array(
     '%instance' => $instance['label'],

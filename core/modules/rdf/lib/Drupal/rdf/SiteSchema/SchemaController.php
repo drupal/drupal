@@ -54,7 +54,7 @@ class SchemaController implements ContainerAwareInterface {
     if (!$entity_info = entity_get_info($entity_type)) {
       throw new NotFoundHttpException(t('Entity type @entity_type not found', array('@entity_type' => $entity_type)));
     }
-    if (!array_key_exists($bundle, $entity_info['bundles'])) {
+    if (!array_key_exists($bundle, entity_get_bundles($entity_type))) {
       throw new NotFoundHttpException(t('Bundle @bundle not found', array('@bundle' => $bundle)));
     }
 

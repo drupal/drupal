@@ -276,31 +276,6 @@ function field_info_storage_types($storage_type = NULL) {
 }
 
 /**
- * Returns information about existing bundles.
- *
- * @param $entity_type
- *   The type of entity; e.g. 'node' or 'user'.
- *
- * @return
- *   An array of bundles for the $entity_type keyed by bundle name, or, if no
- *   $entity_type was provided, the array of all existing bundles, keyed by
- *   entity type.
- */
-function field_info_bundles($entity_type = NULL) {
-  $info = entity_get_info();
-
-  if ($entity_type) {
-    return isset($info[$entity_type]['bundles']) ? $info[$entity_type]['bundles'] : array();
-  }
-
-  $bundles = array();
-  foreach ($info as $type => $entity_info) {
-    $bundles[$type] = $entity_info['bundles'];
-  }
-  return $bundles;
-}
-
-/**
  * Returns all field definitions.
  *
  * Use of this function should be avoided when possible, since it loads and

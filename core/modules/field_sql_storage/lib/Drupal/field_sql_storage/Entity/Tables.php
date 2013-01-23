@@ -174,8 +174,7 @@ class Tables {
           // If there are bundles, pick one. It does not matter which,
           // properties exist on all bundles.
           if (!empty($entity_info['entity keys']['bundle'])) {
-            $bundles = array_keys($entity_info['bundles']);
-            $values[$entity_info['entity keys']['bundle']] = reset($bundles);
+            $values[$entity_info['entity keys']['bundle']] = key(entity_get_bundles('node'));
           }
           $entity = entity_create($entity_type, $values);
           $propertyDefinitions = $entity->$specifier->getPropertyDefinitions();

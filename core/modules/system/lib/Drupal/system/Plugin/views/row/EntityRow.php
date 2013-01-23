@@ -94,10 +94,9 @@ class EntityRow extends RowPluginBase {
    */
   protected function buildViewModeOptions() {
     $options = array();
-    if (!empty($this->entityInfo['view_modes'])) {
-      foreach ($this->entityInfo['view_modes'] as $mode => $settings) {
-        $options[$mode] = $settings['label'];
-      }
+    $view_modes = entity_get_view_modes($this->entityType);
+    foreach ($view_modes as $mode => $settings) {
+      $options[$mode] = $settings['label'];
     }
 
     return $options;

@@ -39,20 +39,6 @@ use Drupal\Core\Annotation\Translation;
  *   },
  *   bundle_keys = {
  *     "bundle" = "type"
- *   },
- *   view_modes = {
- *     "full" = {
- *       "label" = "Full content",
- *       "custom_settings" = FALSE
- *     },
- *     "teaser" = {
- *       "label" = "Teaser",
- *       "custom_settings" = TRUE
- *     },
- *     "rss" = {
- *       "label" = "RSS",
- *       "custom_settings" = FALSE
- *     }
  *   }
  * )
  */

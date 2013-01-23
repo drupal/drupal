@@ -32,24 +32,6 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "uid",
  *     "uuid" = "uuid"
- *   },
- *   bundles = {
- *     "user" = {
- *       "label" = "User",
- *       "admin" = {
- *         "path" = "admin/config/people/accounts",
- *       }
- *     }
- *   },
- *   view_modes = {
- *     "full" = {
- *       "label" = "User account",
- *       "custom_settings" = FALSE
- *     },
- *     "compact" = {
- *       "label" = "Compact",
- *       "custom_settings" = TRUE
- *     }
  *   }
  * )
  */

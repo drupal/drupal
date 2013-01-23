@@ -24,11 +24,114 @@
  * @see entity_get_info()
  */
 function hook_entity_info(&$entity_info) {
-  // Add the 'Print' view mode for nodes.
-  $entity_info['node']['view_modes']['print'] = array(
-    'label' => t('Print'),
-    'custom_settings' => FALSE,
+  // Add a form controller for a custom node form without overriding the default
+  // node form. To override the default node form, use hook_entity_info_alter()
+  // to alter $entity_info['node']['form_controller_class']['default'].
+  $entity_info['node']['form_controller_class']['mymodule_foo'] = 'Drupal\mymodule\NodeFooFormController';
+}
+
+/**
+ * Describe the view modes for entity types.
+ *
+ * View modes let entities be displayed differently depending on the context.
+ * For instance, a node can be displayed differently on its own page ('full'
+ * mode), on the home page or taxonomy listings ('teaser' mode), or in an RSS
+ * feed ('rss' mode). Modules taking part in the display of the entity (notably
+ * the Field API) can adjust their behavior depending on the requested view
+ * mode. An additional 'default' view mode is available for all entity types.
+ * This view mode is not intended for actual entity display, but holds default
+ * display settings. For each available view mode, administrators can configure
+ * whether it should use its own set of field display settings, or just
+ * replicate the settings of the 'default' view mode, thus reducing the amount
+ * of display configurations to keep track of.
+ *
+ * @return array
+ *   An associative array of all entity view modes, keyed by the entity
+ *   type name, and then the view mode name, with the following keys:
+ *   - label: The human-readable name of the view mode.
+ *   - custom_settings: A boolean specifying whether the view mode should by
+ *     default use its own custom field display settings. If FALSE, entities
+ *     displayed in this view mode will reuse the 'default' display settings
+ *     by default (e.g. right after the module exposing the view mode is
+ *     enabled), but administrators can later use the Field UI to apply custom
+ *     display settings specific to the view mode.
+ *
+ * @see entity_get_view_modes()
+ * @see hook_entity_view_mode_info_alter()
+ */
+function hook_entity_view_mode_info() {
+  $view_modes['user']['full'] = array(
+    'label' => t('User account'),
   );
+  $view_modes['user']['compact'] = array(
+    'label' => t('Compact'),
+    'custom_settings' => TRUE,
+  );
+  return $view_modes;
+}
+
+/**
+ * Alter the view modes for entity types.
+ *
+ * @param array $view_modes
+ *   An array of view modes, keyed first by entity type, then by view mode name.
+ *
+ * @see entity_get_view_modes()
+ * @see hook_entity_view_mode_info()
+ */
+function hook_entity_view_mode_info_alter(&$view_modes) {
+  $view_modes['user']['full']['custom_settings'] = TRUE;
+}
+
+/**
+ * Describe the bundles for entity types.
+ *
+ * @return array
+ *   An associative array of all entity bundles, keyed by the entity
+ *   type name, and then the bundle name, with the following keys:
+ *   - label: The human-readable name of the bundle.
+ *   - uri_callback: The same as the 'uri_callback' key defined for the entity
+ *     type in the EntityManager, but for the bundle only. When determining
+ *     the URI of an entity, if a 'uri_callback' is defined for both the
+ *     entity type and the bundle, the one for the bundle is used.
+ *   - admin: An array of information that allows Field UI pages to attach
+ *     themselves to the existing administration pages for the bundle.
+ *     Elements:
+ *     - path: the path of the bundle's main administration page, as defined
+ *       in hook_menu(). If the path includes a placeholder for the bundle,
+ *       the 'bundle argument', 'bundle helper' and 'real path' keys below
+ *       are required.
+ *     - bundle argument: The position of the placeholder in 'path', if any.
+ *     - real path: The actual path (no placeholder) of the bundle's main
+ *       administration page. This will be used to generate links.
+ *     - access callback: As in hook_menu(). 'user_access' will be assumed if
+ *       no value is provided.
+ *     - access arguments: As in hook_menu().
+ *
+ * @see entity_get_bundles()
+ * @see hook_entity_bundle_info_alter()
+ */
+function hook_entity_bundle_info() {
+  $bundles['user']['user'] = array(
+    'label' => t('User'),
+    'admin' => array(
+      'path' => 'admin/config/people/accounts',
+    ),
+  );
+  return $bundles;
+}
+
+/**
+ * Alter the bundles for entity types.
+ *
+ * @param array $bundles
+ *   An array of bundles, keyed first by entity type, then by bundle name.
+ *
+ * @see entity_get_bundles()
+ * @see hook_entity_bundle_info()
+ */
+function hook_entity_bundle_info_alter(&$bundles) {
+  $bundles['user']['user']['label'] = t('Full account');
 }
 
 /**

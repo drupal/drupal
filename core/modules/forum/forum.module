@@ -217,13 +217,13 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_bundle_info_alter().
  */
-function forum_entity_info_alter(&$info) {
+function forum_entity_bundle_info_alter(&$bundles) {
   // Take over URI construction for taxonomy terms that are forums.
   if ($vid = config('forum.settings')->get('vocabulary')) {
-    if (isset($info['taxonomy_term']['bundles'][$vid])) {
-      $info['taxonomy_term']['bundles'][$vid]['uri_callback'] = 'forum_uri';
+    if (isset($bundles['taxonomy_term'][$vid])) {
+      $bundles['taxonomy_term'][$vid]['uri_callback'] = 'forum_uri';
     }
   }
 }

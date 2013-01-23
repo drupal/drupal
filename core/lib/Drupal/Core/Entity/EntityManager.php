@@ -109,49 +109,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *   Elements:
  *   - bundle: The name of the property that contains the name of the bundle
  *     object.
- * - bundles: An array describing all bundles for this object type. Keys are
- *   bundle machine names, as found in the objects' 'bundle' property
- *   (defined in the 'entity_keys' entry for the entity type in the
- *   EntityManager). Elements:
- *   - label: The human-readable name of the bundle.
- *   - uri_callback: The same as the 'uri_callback' key defined for the entity
- *     type in the EntityManager, but for the bundle only. When determining
- *     the URI of an entity, if a 'uri_callback' is defined for both the
- *     entity type and the bundle, the one for the bundle is used.
- *   - admin: An array of information that allows Field UI pages to attach
- *     themselves to the existing administration pages for the bundle.
- *     Elements:
- *     - path: the path of the bundle's main administration page, as defined
- *       in hook_menu(). If the path includes a placeholder for the bundle,
- *       the 'bundle argument', 'bundle helper' and 'real path' keys below
- *       are required.
- *     - bundle argument: The position of the placeholder in 'path', if any.
- *     - real path: The actual path (no placeholder) of the bundle's main
- *       administration page. This will be used to generate links.
- *     - access callback: As in hook_menu(). 'user_access' will be assumed if
- *       no value is provided.
- *     - access arguments: As in hook_menu().
- * - view_modes: An array describing the view modes for the entity type. View
- *   modes let entities be displayed differently depending on the context.
- *   For instance, a node can be displayed differently on its own page
- *   ('full' mode), on the home page or taxonomy listings ('teaser' mode), or
- *   in an RSS feed ('rss' mode). Modules taking part in the display of the
- *   entity (notably the Field API) can adjust their behavior depending on
- *   the requested view mode. An additional 'default' view mode is available
- *   for all entity types. This view mode is not intended for actual entity
- *   display, but holds default display settings. For each available view
- *   mode, administrators can configure whether it should use its own set of
- *   field display settings, or just replicate the settings of the 'default'
- *   view mode, thus reducing the amount of display configurations to keep
- *   track of. Keys of the array are view mode names. Each view mode is
- *   described by an array with the following key/value pairs:
- *   - label: The human-readable name of the view mode.
- *   - custom_settings: A boolean specifying whether the view mode should by
- *     default use its own custom field display settings. If FALSE, entities
- *     displayed in this view mode will reuse the 'default' display settings
- *     by default (e.g. right after the module exposing the view mode is
- *     enabled), but administrators can later use the Field UI to apply custom
- *     display settings specific to the view mode.
  * - menu_base_path: (optional) The base menu router path to which the entity
  *   administration user interface responds. It can be used to generate UI
  *   links and to attach additional router items to the entity UI in a generic
@@ -229,8 +186,6 @@ class EntityManager extends PluginManagerBase {
     'access_controller_class' => 'Drupal\Core\Entity\EntityAccessController',
     'static_cache' => TRUE,
     'translation' => array(),
-    'bundles' => array(),
-    'view_modes' => array(),
   );
 
   /**
@@ -286,17 +241,6 @@ class EntityManager extends PluginManagerBase {
       return;
     }
 
-    foreach ($definition['view_modes'] as $view_mode => $view_mode_info) {
-      $definition['view_modes'][$view_mode] += array(
-        'custom_settings' => FALSE,
-      );
-    }
-
-    // If no bundle key is provided, assume a single bundle, named after
-    // the entity type.
-    if (empty($definition['entity_keys']['bundle']) && empty($definition['bundles'])) {
-      $definition['bundles'] = array($plugin_id => array('label' => $definition['label']));
-    }
     // Prepare entity schema fields SQL info for
     // Drupal\Core\Entity\DatabaseStorageControllerInterface::buildQuery().
     if (isset($definition['base_table'])) {

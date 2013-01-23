@@ -746,8 +746,8 @@ function field_view_mode_settings($entity_type, $bundle) {
     // Include view modes for which nothing has been stored yet, but whose
     // definition in hook_entity_info_alter() specify they should use custom
     // settings by default.
-    $entity_info = entity_get_info($entity_type);
-    foreach ($entity_info['view_modes'] as $view_mode => $view_mode_info) {
+    $view_modes = entity_get_view_modes($entity_type);
+    foreach ($view_modes as $view_mode => $view_mode_info) {
       if (!isset($settings[$view_mode]['custom_settings']) && $view_mode_info['custom_settings']) {
         $settings[$view_mode]['custom_settings'] = TRUE;
       }

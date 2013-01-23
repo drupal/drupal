@@ -99,11 +99,22 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_view_mode_info().
  */
-function comment_entity_info(&$info) {
+function comment_entity_view_mode_info() {
+  $view_modes['comment']['full'] = array(
+    'label' => t('Full comment'),
+  );
+  return $view_modes;
+}
+
+/**
+ * Implements hook_entity_bundle_info().
+ */
+function comment_entity_bundle_info() {
+  $bundles = array();
   foreach (node_type_get_names() as $type => $name) {
-    $info['comment']['bundles']['comment_node_' . $type] = array(
+    $bundles['comment']['comment_node_' . $type] = array(
       'label' => t('@node_type comment', array('@node_type' => $name)),
       // Provide the node type/bundle name for other modules, so it does not
       // have to be extracted manually from the bundle name.
@@ -121,6 +132,7 @@ function comment_entity_info(&$info) {
       ),
     );
   }
+  return $bundles;
 }
 
 /**
@@ -289,7 +301,7 @@ function comment_menu_alter(&$items) {
   $items['admin/content']['description'] = 'Administer content and comments.';
 
   // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
-  // See comment_entity_info().
+  // See comment_entity_bundle_info().
   $items['admin/structure/types/manage/%comment_node_type/comment/fields']['title'] = 'Comment fields';
   $items['admin/structure/types/manage/%comment_node_type/comment/fields']['weight'] = 3;
   $items['admin/structure/types/manage/%comment_node_type/comment/display']['title'] = 'Comment display';
@@ -1389,7 +1401,7 @@ function comment_delete_multiple($cids) {
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
- *   cache is disabled in comment_entity_info() by default.
+ *   cache is disabled by default.
  *
  * @return array
  *   An array of comment objects, indexed by comment ID.
@@ -1408,7 +1420,7 @@ function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
  *   The ID of the comment to be loaded.
  * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
- *   cache is disabled in comment_entity_info() by default.
+ *   cache is disabled by default.
  *
  * @return
  *   The comment object.

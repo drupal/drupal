@@ -558,12 +558,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Find all the fields we are allowed to filter by.
     $fields = views_fetch_fields($this->base_table, 'filter');
 
-    $entity_info = $this->entity_info;
+    $bundles = entity_get_bundles($this->entity_type);
     // If the current base table support bundles and has more than one (like user).
-    if (isset($entity_info['bundle_keys']) && isset($entity_info['bundles'])) {
+    if (isset($this->entity_info['bundle_keys']) && !empty($bundles)) {
       // Get all bundles and their human readable names.
       $options = array('all' => t('All'));
-      foreach ($entity_info['bundles'] as $type => $bundle) {
+      foreach ($bundles as $type => $bundle) {
         $options[$type] = $bundle['label'];
       }
       $form['displays']['show']['type'] = array(

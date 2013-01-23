@@ -346,8 +346,7 @@ class DisplayOverview extends OverviewBase {
 
     // Custom display settings.
     if ($this->view_mode == 'default') {
-      $entity_info = entity_get_info($this->entity_type);
-      $view_modes = $entity_info['view_modes'];
+      $view_modes = entity_get_view_modes($this->entity_type);
       // Only show the settings if there is more than one view mode.
       if (count($view_modes) > 1) {
         $form['modes'] = array(
@@ -478,6 +477,7 @@ class DisplayOverview extends OverviewBase {
     // Handle the 'view modes' checkboxes if present.
     if ($this->view_mode == 'default' && !empty($form_values['view_modes_custom'])) {
       $entity_info = entity_get_info($this->entity_type);
+      $view_modes = entity_get_view_modes($this->entity_type);
       $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);
       $view_mode_settings = field_view_mode_settings($this->entity_type, $this->bundle);
 
@@ -491,7 +491,7 @@ class DisplayOverview extends OverviewBase {
             $display->save();
           }
 
-          $view_mode_label = $entity_info['view_modes'][$view_mode]['label'];
+          $view_mode_label = $view_modes[$view_mode]['label'];
           $path = field_ui_bundle_admin_path($this->entity_type, $this->bundle) . "/display/$view_mode";
           drupal_set_message(t('The %view_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%view_mode' => $view_mode_label, '@url' => url($path))));
         }

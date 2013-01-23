@@ -352,8 +352,8 @@ function image_image_style_update(ImageStyle $style) {
     // Loop through all fields searching for image fields.
     foreach ($instances as $instance) {
       if ($instance['widget']['module'] == 'image') {
-        $entity_info = entity_get_info($instance['entity_type']);
-        $view_modes = array('default') + array_keys($entity_info['view_modes']);
+        $view_modes = entity_get_view_modes($instance['entity_type']);
+        $view_modes = array('default') + array_keys($view_modes);
         foreach ($view_modes as $view_mode) {
           $display = entity_get_display($instance['entity_type'], $instance['bundle'], $view_mode);
           $display_options = $display->getComponent($instance['field_name']);

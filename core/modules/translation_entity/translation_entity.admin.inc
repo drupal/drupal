@@ -28,7 +28,7 @@ function _translation_entity_form_language_content_settings_form_alter(array &$f
   $form['#attached']['library'][] = array('translation_entity', 'drupal.translation_entity.admin');
 
   foreach ($form['#labels'] as $entity_type => $label) {
-    foreach (entity_get_bundles($entity_type) as $bundle) {
+    foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
       $form['settings'][$entity_type][$bundle]['translatable'] = array(
         '#type' => 'checkbox',
         '#default_value' => translation_entity_enabled($entity_type, $bundle),
