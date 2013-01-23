@@ -52,6 +52,19 @@
 }
 
 /**
+ * Improve image style preview on narrow viewports.
+ */
+@media screen and (max-width: 470px) {
+  .image-style-preview .preview-image-wrapper {
+    float: none;
+    margin-bottom: 1em;
+  }
+  .image-style-preview .preview-image-wrapper:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/**
  * Image anchor element.
  */
 .image-anchor {
