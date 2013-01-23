@@ -120,9 +120,38 @@ class EntitySerializationTest extends WebTestBase {
     $expected = json_encode($normalized);
     // Test 'json'.
     $actual = $serializer->serialize($this->entity, 'json');
-    $this->assertIdentical($actual, $expected, 'Entity serializes to JSON when json is requested.');
+    $this->assertIdentical($actual, $expected, 'Entity serializes to JSON when "json" is requested.');
+    $actual = $serializer->serialize($normalized, 'json');
+    $this->assertIdentical($actual, $expected, 'A normalized array serializes to JSON when "json" is requested');
     // Test 'ajax'.
     $actual = $serializer->serialize($this->entity, 'ajax');
-    $this->assertIdentical($actual, $expected, 'Entity serializes to JSON when ajax is requested.');
+    $this->assertIdentical($actual, $expected, 'Entity serializes to JSON when "ajax" is requested.');
+    $actual = $serializer->serialize($normalized, 'ajax');
+    $this->assertIdentical($actual, $expected, 'A normalized array serializes to JSON when "ajax" is requested');
+
+    // Generate the expected xml in a way that allows changes to entity property
+    // order.
+    $expected = array(
+      'id' => '<id><value>' . $this->entity->id() . '</value></id>',
+      'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
+      'uuid' => '<uuid><value>' . $this->entity->uuid() . '</value></uuid>',
+      'langcode' => '<langcode><value>' . LANGUAGE_NOT_SPECIFIED . '</value></langcode>',
+      'default_langcode' => '<default_langcode><value/></default_langcode>',
+      'name' => '<name><value>' . $this->values['name'] . '</value></name>',
+      'user_id' => '<user_id><value>' . $this->values['user_id'] . '</value></user_id>',
+      'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
+    );
+    // Sort it in the same order as normalised.
+    $expected = array_merge($normalized, $expected);
+    // Add header and footer.
+    array_unshift($expected, '<?xml version="1.0"?>' . PHP_EOL . '<response>');
+    $expected[] = '</response>' . PHP_EOL;
+    // Reduced the array to a string.
+    $expected = implode('', $expected);
+    // Test 'xml'. The output should match that of Symfony's XmlEncoder.
+    $actual = $serializer->serialize($this->entity, 'xml');
+    $this->assertIdentical($actual, $expected);
+    $actual = $serializer->serialize($normalized, 'xml');
+    $this->assertIdentical($actual, $expected);
   }
 }
