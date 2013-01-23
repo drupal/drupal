@@ -65,6 +65,37 @@ div.password-suggestions ul {
   width: 36.3em;
 }
 
+ /**
+ * Password strength indicator on narrow viewport.
+ */
+@media screen and (max-width: 600px) {
+  .password-strength {
+    margin-top: 0;
+    width: auto;
+  }
+  .password-indicator {
+    margin-bottom: 0.4em;
+  }
+  input.password-confirm,
+  input.password-field {
+    margin-bottom: 0;
+    width: 100%;
+  }
+  div.password-confirm {
+    margin-top: 0;
+    width: auto;
+  }
+  div.form-item div.password-suggestions {
+    width: auto;
+  }
+  .confirm-parent,
+  .password-parent {
+    clear: none;
+    margin: 0;
+    width: 100%;
+  }
+}
+
 /**
  * Toolbar icon.
  */
