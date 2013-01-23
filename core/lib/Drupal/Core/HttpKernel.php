@@ -12,6 +12,7 @@
 
 namespace Drupal\Core;
 
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -153,7 +154,7 @@ class HttpKernel extends BaseHttpKernel
                 $options['attributes']['_format'] = $request->getRequestFormat();
             }
 
-            $options['attributes']['_route'] = '_internal';
+            $options['attributes'][RouteObjectInterface::ROUTE_OBJECT] = '_internal';
             $subRequest = $request->duplicate($options['query'], null, $options['attributes']);
             $subRequest->setMethod('GET');
         }

@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -15,7 +16,7 @@ use Symfony\Cmf\Component\Routing\RouteProviderInterface;
  *
  * @author Larry Garfield
  */
-class ProviderBasedGenerator extends UrlGenerator
+class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorInterface
 {
     /**
      * The route provider for this generator.
@@ -45,13 +46,13 @@ class ProviderBasedGenerator extends UrlGenerator
         $compiledRoute = $route->compile();
 
         // handle symfony 2.1 and 2.2
-        // getHostnameTokens exists only since 2.2
-        $hostnameTokens = null;
-        if (method_exists($compiledRoute, 'getHostnameTokens')) {
-            $hostnameTokens = $compiledRoute->getHostnameTokens();
+        // getHostTokens exists only since 2.2
+        $hostTokens = null;
+        if (method_exists($compiledRoute, 'getHostTokens')) {
+            $hostTokens = $compiledRoute->getHostTokens();
         }
 
-        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $absolute, $hostnameTokens);
+        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $absolute, $hostTokens);
     }
 
     /**

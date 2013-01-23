@@ -1,5 +1,5 @@
 {
-    "hash": "9dba4484f19203d80a4d60c987df2e59",
+    "hash": "4c18d6f1c91b78555300b0036b5a8a7e",
     "packages": [
         {
             "name": "doctrine/common",
@@ -385,12 +385,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony-cmf/Routing",
-                "reference": "1.0.0-alpha3"
+                "reference": "ea4a10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony-cmf/Routing/archive/1.0.0-alpha3.zip",
-                "reference": "1.0.0-alpha3",
+                "url": "https://github.com/symfony-cmf/Routing/archive/ea4a10dd971580a9a57a69397f165e25233ba667.zip",
+                "reference": "ea4a10",
                 "shasum": ""
             },
             "require": {
@@ -398,7 +398,7 @@
                 "symfony/routing": ">=2.1,<2.3-dev",
                 "symfony/http-kernel": ">=2.1,<2.3-dev"
             },
-            "time": "2012-12-16 17:52:57",
+            "time": "2013-01-21 20:33:16",
             "type": "library",
             "extra": {
                 "branch-alias": {

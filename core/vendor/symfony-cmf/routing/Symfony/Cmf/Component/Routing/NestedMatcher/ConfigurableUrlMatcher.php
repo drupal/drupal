@@ -36,17 +36,19 @@ class ConfigurableUrlMatcher implements FinalMatcherInterface
         $attributes = $matcher->match($request->getPathInfo());
 
         // cleanup route attributes
-        if (! isset($attributes['_route']) || ! $attributes['_route'] instanceof Route) {
-            $name = $attributes['_route'];
-            $route = $collection->get($attributes['_route']);
-            $attributes['_route'] = $route;
+        if (! isset($attributes[RouteObjectInterface::ROUTE_OBJECT])
+            || ! $attributes[RouteObjectInterface::ROUTE_OBJECT] instanceof Route
+        ) {
+            $name = $attributes['_route']; // this is the field coming from symfony core
+            $route = $collection->get($name);
+            $attributes[RouteObjectInterface::ROUTE_OBJECT] = $route;
 
             if ($route instanceof RouteObjectInterface && is_string($route->getRouteKey())) {
                 $name = $route->getRouteKey();
             }
 
-            if (empty($attributes['_route_name']) && is_string($name)) {
-                $attributes['_route_name'] = $name;
+            if (is_string($name)) {
+                $attributes[RouteObjectInterface::ROUTE_NAME] = $name;
             }
         }
 

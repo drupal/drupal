@@ -51,7 +51,12 @@ class ConfigurableUrlMatcherTest extends CmfUnitTestCase
             ->method('getDefaults')
             ->will($this->returnValue(array('foo' => 'bar')))
         ;
+        $this->routeDocument->expects($this->any())
+            ->method('getRouteKey')
+            ->will($this->returnValue('/routes/company/more'))
+        ;
 
+        // add some other routes to the collection
         $mockCompiled = $this->buildMock('Symfony\\Component\\Routing\\CompiledRoute');
         $mockCompiled->expects($this->any())
             ->method('getStaticPrefix')
@@ -62,6 +67,7 @@ class ConfigurableUrlMatcherTest extends CmfUnitTestCase
             ->method('compile')
             ->will($this->returnValue($mockCompiled))
         ;
+
         $routeCollection = new RouteCollection();
         $routeCollection->add('some', $mockRoute);
         $routeCollection->add('_company_more', $this->routeDocument);
@@ -69,9 +75,10 @@ class ConfigurableUrlMatcherTest extends CmfUnitTestCase
 
         $results = $this->matcher->finalMatch($routeCollection, $this->request);
 
+        // the matched route returns a key
         $expected = array(
-            '_route_name' => '_company_more',
-            '_route' => $this->routeDocument,
+            RouteObjectInterface::ROUTE_NAME => '/routes/company/more',
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeDocument,
             'foo' => 'bar',
         );
 
@@ -118,9 +125,10 @@ class ConfigurableUrlMatcherTest extends CmfUnitTestCase
 
         $results = $this->matcher->finalMatch($routeCollection, $this->request);
 
+        // the matched route does not return a key
         $expected = array(
-            '_route_name' => '_company_more',
-            '_route' => $this->routeDocument,
+            RouteObjectInterface::ROUTE_NAME => '_company_more',
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeDocument,
             'foo' => 'bar',
         );
 

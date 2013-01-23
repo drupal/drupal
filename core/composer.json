@@ -15,7 +15,7 @@
     "doctrine/common": "2.3.*@stable",
     "guzzle/http": "3.1.*@stable",
     "kriswallsmith/assetic": "1.1.*@alpha",
-    "symfony-cmf/routing": "1.0.*@dev",
+    "symfony-cmf/routing": "dev-master#ea4a10",
     "easyrdf/easyrdf": "dev-master"
   },
   "minimum-stability": "dev"

@@ -18,7 +18,7 @@ use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
  * A flexible router accepting matcher and generator through injection and
  * using the RouteEnhancer concept to generate additional data on the routes.
  *
- * @author Crell
+ * @author Larry Garfield
  * @author David Buchmann
  */
 class DynamicRouter implements RouterInterface, RequestMatcherInterface, ChainedRouterInterface
@@ -130,14 +130,18 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
     }
 
     /**
-     * Support any string as route name
+     * Delegate to our generator
      *
      * {@inheritDoc}
      */
     public function supports($name)
     {
-        // TODO: check $this->generator instanceof VersatileGeneratorInterface
-        return $this->generator->supports($name);
+        if ($this->generator instanceof VersatileGeneratorInterface) {
+
+            return $this->generator->supports($name);
+        }
+
+        return (!is_string($name) || !preg_match(VersatileGeneratorInterface::CORE_NAME_PATTERN, $name));
     }
 
     /**

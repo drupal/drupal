@@ -5,6 +5,7 @@ namespace Symfony\Cmf\Component\Routing\Tests\Enhancer;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Cmf\Component\Routing\Enhancer\RouteContentEnhancer;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 use Symfony\Cmf\Component\Routing\Test\CmfUnitTestCase;
 
@@ -22,7 +23,7 @@ class RouteContentEnhancerTest extends CmfUnitTestCase
         $this->document = $this->buildMock('Symfony\\Cmf\\Component\\Routing\\Tests\\Enhancer\\RouteObject',
                                             array('getRouteContent', 'getRouteDefaults', 'getUrl'));
 
-        $this->mapper = new RouteContentEnhancer('_route', '_content');
+        $this->mapper = new RouteContentEnhancer(RouteObjectInterface::ROUTE_OBJECT, '_content');
 
         $this->request = Request::create('/test');
     }
@@ -34,8 +35,8 @@ class RouteContentEnhancerTest extends CmfUnitTestCase
             ->method('getRouteContent')
             ->will($this->returnValue($targetDocument));
 
-        $defaults = array('_route' => $this->document);
-        $expected = array('_route' => $this->document, '_content' => $targetDocument);
+        $defaults = array(RouteObjectInterface::ROUTE_OBJECT => $this->document);
+        $expected = array(RouteObjectInterface::ROUTE_OBJECT => $this->document, '_content' => $targetDocument);
 
         $this->assertEquals($expected, $this->mapper->enhance($defaults, $this->request));
     }
@@ -47,7 +48,7 @@ class RouteContentEnhancerTest extends CmfUnitTestCase
             ->method('getRouteContent')
         ;
 
-        $defaults = array('_route' => $this->document, '_content' => 'foo');
+        $defaults = array(RouteObjectInterface::ROUTE_OBJECT => $this->document, '_content' => 'foo');
 
         $this->assertEquals($defaults, $this->mapper->enhance($defaults, $this->request));
     }
@@ -58,13 +59,13 @@ class RouteContentEnhancerTest extends CmfUnitTestCase
             ->method('getRouteContent')
             ->will($this->returnValue(null));
 
-        $defaults = array('_route' => $this->document);
+        $defaults = array(RouteObjectInterface::ROUTE_OBJECT => $this->document);
         $this->assertEquals($defaults, $this->mapper->enhance($defaults, $this->request));
     }
 
     public function testNoCmfRoute()
     {
-        $defaults = array('_route' => $this->buildMock('Symfony\\Component\\Routing\\Route'));
+        $defaults = array(RouteObjectInterface::ROUTE_OBJECT => $this->buildMock('Symfony\\Component\\Routing\\Route'));
         $this->assertEquals($defaults, $this->mapper->enhance($defaults, $this->request));
     }
 }

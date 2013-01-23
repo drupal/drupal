@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -38,13 +39,13 @@ class AccessSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequestAccessCheck(GetResponseEvent $event) {
     $request = $event->getRequest();
-    if (!$request->attributes->has('_route')) {
+    if (!$request->attributes->has(RouteObjectInterface::ROUTE_OBJECT)) {
       // If no Route is available it is likely a static resource and access is
       // handled elsewhere.
       return;
     }
 
-    $this->accessManager->check($request->attributes->get('_route'));
+    $this->accessManager->check($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
   }
 
   /**

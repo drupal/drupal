@@ -5,21 +5,9 @@ namespace Symfony\Cmf\Component\Routing;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Use this interface on custom routers that can handle non-string route
- * "names".
+ * Interface to combine the VersatileGeneratorInterface with the RouterInterface
  */
-interface ChainedRouterInterface extends RouterInterface
+interface ChainedRouterInterface extends RouterInterface, VersatileGeneratorInterface
 {
-    /**
-     * Whether the router supports the thing in $name to generate a route.
-     *
-     * This check does not need to look if the specific instance can be
-     * resolved to a route, only whether the router can generate routes from
-     * objects of this class.
-
-     * @param mixed $name The route name or route object
-     *
-     * @return bool
-     */
-    public function supports($name);
+    // nothing new to add
 }
