@@ -58,7 +58,13 @@ class JsonldBundle extends Bundle {
     // Add the encoder to the service container. Encoders can only specify which
     // format they support in Encoder::supportsEncoding().
     $container->register('serializer.encoder.jsonld', 'Drupal\jsonld\JsonldEncoder')
-      ->addTag('encoder', array('priority' => $priority));
+      ->addTag('encoder', array(
+        'priority' => $priority,
+        'format' => array(
+          'jsonld' => 'JSON-LD',
+          'drupal_jsonld' => 'Drupal JSON-LD',
+        ),
+      ));
 
     $container->register('jsonld.subscriber', 'Drupal\jsonld\EventSubscriber\JsonldSubscriber')
       ->addTag('event_subscriber');
