@@ -771,6 +771,9 @@ select.form-select:focus {
       box-sizing: border-box;
       width: 100%;
   }
+  input.form-number {
+    width: auto;
+  }
   input.form-autocomplete,
   input.form-text,
   input.form-tel,
