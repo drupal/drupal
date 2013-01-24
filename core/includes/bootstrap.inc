@@ -2516,6 +2516,21 @@ function module_implements($hook) {
 }
 
 /**
+ * Invokes a hook in a particular module.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   drupal_container()->get('module_handler')->invoke($module, $hook, $args = array()).
+ *
+ * @see \Drupal\Core\Extension\ModuleHandler::invoke()
+ */
+function module_invoke($module, $hook) {
+  $args = func_get_args();
+  // Remove $module and $hook from the arguments.
+  unset($args[0], $args[1]);
+  return drupal_container()->get('module_handler')->invoke($module, $hook, $args);
+}
+
+/**
  * Invokes a hook in all enabled modules that implement it.
  *
  * @deprecated as of Drupal 8.0. Use
