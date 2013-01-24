@@ -279,53 +279,6 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
 }
 
 /**
- * Page callback for views user autocomplete.
- *
- * @param string $string
- *   (optional) A comma-separated list of user names entered in the
- *   autocomplete form element. If not passed, it is taken from the 'q' query
- *   string parameter.
- *
- * @return Symfony\Component\HttpFoundation\JsonResponse
- */
-function views_ajax_autocomplete_user($string = NULL) {
-  if (!isset($string)) {
-    $string = drupal_container()->get('request')->query->get('q');
-  }
-  // The user enters a comma-separated list of user name. We only autocomplete the last name.
-  $array = drupal_explode_tags($string);
-
-  // Fetch last name
-  $last_string = trim(array_pop($array));
-  $matches = array();
-  if ($last_string != '') {
-    $prefix = count($array) ? implode(', ', $array) . ', ' : '';
-
-    if (strpos('anonymous', strtolower($last_string)) !== FALSE) {
-      $matches[$prefix . 'Anonymous'] = 'Anonymous';
-    }
-
-    $result = db_select('users', 'u')
-      ->fields('u', array('uid', 'name'))
-      ->condition('u.name', db_like($last_string) . '%', 'LIKE')
-      ->range(0, 10)
-      ->execute()
-      ->fetchAllKeyed();
-
-    foreach ($result as $account) {
-      $n = $account;
-      // Commas and quotes in terms are special cases, so encode 'em.
-      if (strpos($account, ',') !== FALSE || strpos($account, '"') !== FALSE) {
-        $n = '"' . str_replace('"', '""', $account) . '"';
-      }
-      $matches[$prefix . $n] = check_plain($account);
-    }
-  }
-
-  return new JsonResponse($matches);
-}
-
-/**
  * Page callback for views taxonomy autocomplete.
  *
  * @param $vid

@@ -45,7 +45,7 @@ class Name extends InOperator {
       '#title' => t('Usernames'),
       '#description' => t('Enter a comma separated list of user names.'),
       '#default_value' => $default_value,
-      '#autocomplete_path' => 'admin/views/ajax/autocomplete/user',
+      '#autocomplete_path' => 'user/autocomplete/anonymous',
     );
 
     if (!empty($form_state['exposed']) && !isset($form_state['input'][$this->options['expose']['identifier']])) {
