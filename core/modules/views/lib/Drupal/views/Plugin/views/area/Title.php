@@ -58,4 +58,11 @@ class Title extends AreaPluginBase {
     return '';
   }
 
+  /**
+   * Implements \Drupal\views\Plugins\views\area\AreaPluginBase::render();
+   */
+  public function render($empty = FALSE) {
+    // Do nothing for this handler.
+  }
+
 }

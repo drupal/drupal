@@ -42,7 +42,6 @@ function node_views_data() {
     // Information for displaying the nid
     'field' => array(
       'id' => 'node',
-      'click sortable' => TRUE,
     ),
     // Information for accepting a nid as an argument
     'argument' => array(
@@ -71,7 +70,6 @@ function node_views_data() {
       'field' => 'title', // the real field. This could be left out since it is the same.
       'group' => t('Content'), // The group it appears in on the UI. Could be left out.
       'id' => 'node',
-      'click sortable' => TRUE,
       'link_to_node default' => TRUE,
      ),
     'sort' => array(
@@ -92,7 +90,6 @@ function node_views_data() {
     'help' => t('The date the content was posted.'), // The help that appears on the UI,
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date'
@@ -108,7 +105,6 @@ function node_views_data() {
     'help' => t('The date the content was last updated.'), // The help that appears on the UI,
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date'
@@ -124,7 +120,6 @@ function node_views_data() {
     'help' => t('The content type (for example, "blog entry", "forum post", "story", etc).'), // The help that appears on the UI,
     'field' => array(
       'id' => 'node_type',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -143,7 +138,6 @@ function node_views_data() {
     'help' => t('Whether or not the content is published.'),
     'field' => array(
       'id' => 'boolean',
-      'click sortable' => TRUE,
       'output formats' => array(
         'published-notpublished' => array(t('Published'), t('Not published')),
       ),
@@ -176,7 +170,6 @@ function node_views_data() {
     'help' => t('Whether or not the content is promoted to the front page.'),
     'field' => array(
       'id' => 'boolean',
-      'click sortable' => TRUE,
       'output formats' => array(
         'promoted-notpromoted' => array(t('Promoted'), t('Not promoted')),
       ),
@@ -198,7 +191,6 @@ function node_views_data() {
      // Information for displaying a title as a field
     'field' => array(
       'id' => 'boolean',
-      'click sortable' => TRUE,
       'output formats' => array(
         'sticky' => array(t('Sticky'), t('Not sticky')),
       ),
@@ -221,7 +213,6 @@ function node_views_data() {
       'help' => t('The language the content is in.'),
       'field' => array(
         'id' => 'node_language',
-        'click sortable' => TRUE,
       ),
       'filter' => array(
         'id' => 'language',
@@ -466,12 +457,10 @@ function node_views_data() {
     // Information for displaying the nid.
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE,
     ),
     // Information for accepting a nid as an argument.
     'argument' => array(
       'id' => 'node_nid',
-      'click sortable' => TRUE,
       'numeric' => TRUE,
     ),
     // Information for accepting a nid as a filter.
@@ -498,12 +487,10 @@ function node_views_data() {
     // Information for displaying the vid
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE,
     ),
     // Information for accepting a vid as an argument
     'argument' => array(
       'id' => 'node_vid',
-      'click sortable' => TRUE,
       'numeric' => TRUE,
     ),
     // Information for accepting a vid as a filter
@@ -529,7 +516,6 @@ function node_views_data() {
     'help' => t('Whether or not the content is published.'),
     'field' => array(
       'id' => 'boolean',
-      'click sortable' => TRUE,
       'output formats' => array(
         'published-notpublished' => array(t('Published'), t('Not published')),
       ),
@@ -553,7 +539,6 @@ function node_views_data() {
     'field' => array(
       'field' => 'title', // the real field
       'id' => 'node_revision',
-      'click sortable' => TRUE,
      ),
     'sort' => array(
       'id' => 'standard',
@@ -586,7 +571,6 @@ function node_views_data() {
     'help' => t('The date the node was last updated.'), // The help that appears on the UI,
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date'
@@ -601,6 +585,7 @@ function node_views_data() {
       'title' => t('Link'),
       'help' => t('Provide a simple link to the revision.'),
       'id' => 'node_revision_link',
+      'click sortable' => FALSE,
     ),
   );
 
@@ -609,6 +594,7 @@ function node_views_data() {
       'title' => t('Revert link'),
       'help' => t('Provide a simple link to revert to the revision.'),
       'id' => 'node_revision_link_revert',
+      'click sortable' => FALSE,
     ),
   );
 
@@ -617,6 +603,7 @@ function node_views_data() {
       'title' => t('Delete link'),
       'help' => t('Provide a simple link to delete the content revision.'),
       'id' => 'node_revision_link_delete',
+      'click sortable' => FALSE,
     ),
   );
 

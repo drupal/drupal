@@ -585,6 +585,8 @@ function user_update_8006() {
     'register_admin_created_body' => 'register_admin_created.body',
     'register_pending_approval_subject' => 'register_pending_approval.subject',
     'register_pending_approval_body' => 'register_pending_approval.body',
+    'register_pending_approval_admin_body' => 'register_pending_approval_admin.body',
+    'register_pending_approval_admin_subject' => 'register_pending_approval_admin.subject',
     'register_no_approval_required_subject' => 'register_no_approval_required.subject',
     'register_no_approval_required_body' => 'register_no_approval_required.body',
     'password_reset_subject' => 'password_reset.subject',

@@ -48,25 +48,6 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageControllerNG::create().
-   */
-  public function create(array $values) {
-    $comment = new $this->entityClass(array(), $this->entityType, $values['field_name']);
-
-    // Set all other given values.
-    foreach ($values as $name => $value) {
-      $comment->$name = $value;
-    }
-
-    // Assign a new UUID if there is none yet.
-    if ($this->uuidKey && !isset($comment->{$this->uuidKey})) {
-      $uuid = new Uuid();
-      $comment->{$this->uuidKey}->value = $uuid->generate();
-    }
-    return $comment;
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
    *
    * @see comment_int_to_alphadecimal()

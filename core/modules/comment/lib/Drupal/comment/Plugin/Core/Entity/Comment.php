@@ -35,12 +35,6 @@ use Drupal\Core\Annotation\Translation;
  *     "bundle" = "field_name",
  *     "label" = "subject",
  *     "uuid" = "uuid"
- *   },
- *   view_modes = {
- *     "full" = {
- *       "label" = "Full comment",
- *       "custom_settings" = FALSE
- *     }
  *   }
  * )
  */

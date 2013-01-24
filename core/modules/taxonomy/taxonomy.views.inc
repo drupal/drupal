@@ -41,7 +41,6 @@ function taxonomy_views_data() {
     'help' => t('The tid of a taxonomy term.'),
     'field' => array(
       'id' => 'numeric',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -93,7 +92,6 @@ function taxonomy_views_data() {
     'help' => t('The taxonomy term name.'),
     'field' => array(
       'id' => 'taxonomy',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -116,7 +114,6 @@ function taxonomy_views_data() {
     'help' => t('The term weight field'),
     'field' => array(
       'id' => 'numeric',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -136,6 +133,7 @@ function taxonomy_views_data() {
     'field' => array(
       'id' => 'markup',
       'format' => array('field' => 'format'),
+      'click sortable' => FALSE,
     ),
     'filter' => array(
       'id' => 'string',
@@ -156,7 +154,6 @@ function taxonomy_views_data() {
     'help' => t('Language of the term'),
     'field' => array(
       'id' => 'taxonomy_term_language',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -175,6 +172,7 @@ function taxonomy_views_data() {
       'title' => t('Term edit link'),
       'help' => t('Provide a simple link to edit the term.'),
       'id' => 'term_link_edit',
+      'click sortable' => FALSE,
     ),
   );
 
@@ -291,6 +289,7 @@ function taxonomy_views_data_alter(&$data) {
       'help' => t('Display all taxonomy terms associated with a node from specified vocabularies.'),
       'id' => 'taxonomy_index_tid',
       'no group by' => TRUE,
+      'click sortable' => FALSE,
     ),
   );
 

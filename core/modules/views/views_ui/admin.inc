@@ -418,9 +418,16 @@ function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
   $displays = $executable->displayHandlers;
   $current_display = $executable->display_handler;
 
-  // Add the "2 of 3" progress indicator.
-  // @TODO: Move this to a separate function if it's needed on any forms that
+  // @todo Move this to a separate function if it's needed on any forms that
   // don't have the display dropdown.
+  $form['override'] = array(
+    '#prefix' => '<div class="views-override clearfix container-inline">',
+    '#suffix' => '</div>',
+    '#weight' => -1000,
+    '#tree' => TRUE,
+  );
+
+  // Add the "2 of 3" progress indicator.
   if ($form_progress = $view->getFormProgress()) {
     $form['progress']['#markup'] = '<div id="views-progress-indicator">' . t('@current of @total', array('@current' => $form_progress['current'], '@total' => $form_progress['total'])) . '</div>';
     $form['progress']['#weight'] = -1001;
@@ -449,12 +456,6 @@ function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
     $display_dropdown['default_revert'] = t('Revert to default');
   }
 
-  $form['override'] = array(
-    '#prefix' => '<div class="views-override clearfix container-inline">',
-    '#suffix' => '</div>',
-    '#weight' => -1000,
-    '#tree' => TRUE,
-  );
   $form['override']['dropdown'] = array(
     '#type' => 'select',
     '#title' => t('For'), // @TODO: Translators may need more context than this.
@@ -1216,7 +1217,6 @@ function views_ui_add_item_form($form, &$form_state) {
   $type = $form_state['type'];
 
   $form = array(
-    'override' => array(),
     'options' => array(
       '#theme_wrappers' => array('container'),
       '#attributes' => array('class' => array('scroll')),

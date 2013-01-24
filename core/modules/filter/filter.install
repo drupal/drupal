@@ -47,9 +47,6 @@ function filter_update_8001() {
     // Generate a UUID.
     $format['uuid'] = $uuid->generate();
 
-    // Add user roles.
-    $format['roles'] = array_keys(user_roles(FALSE, 'use text format ' . $format['format']));
-
     // Retrieve and prepare all filters.
     $filters = db_query('SELECT name, module, status, weight, settings FROM {filter} WHERE format = :format ORDER BY weight, module, name', array(
       ':format' => $id,

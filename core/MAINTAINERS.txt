@@ -260,9 +260,6 @@ PHP module
 Picture module
 - Peter Droogmans 'attiks' http://drupal.org/user/105002
 
-Poll module
-- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
-
 RDF module
 - Stéphane Corlosquet 'scor' http://drupal.org/user/52142
 - Lin Clark 'linclark' http://drupal.org/user/396253

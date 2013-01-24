@@ -439,6 +439,27 @@ function user_admin_settings($form, &$form_state) {
     '#rows' => 8,
   );
 
+  $form['email_pending_approval_admin'] = array(
+    '#type' => 'details',
+    '#title' => t('Admin (user awaiting approval)'),
+    '#collapsible' => TRUE,
+    '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
+    '#description' => t('Edit the e-mail notifying the site administrator that there are new members awaiting administrative approval.') . ' ' . $email_token_help,
+    '#group' => 'email',
+  );
+  $form['email_pending_approval_admin']['register_pending_approval_admin_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => $mail_config->get('register_pending_approval_admin.subject'),
+    '#maxlength' => 180,
+  );
+  $form['email_pending_approval_admin']['register_pending_approval_admin_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => $mail_config->get('register_pending_approval_admin.body'),
+    '#rows' => 8,
+  );
+
   $form['email_no_approval_required'] = array(
     '#type' => 'details',
     '#title' => t('Welcome (no approval required)'),

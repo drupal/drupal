@@ -245,7 +245,7 @@ class EntityTranslationTest extends WebTestBase {
       if ($langcode != $default_langcode) {
         $properties[$langcode] = array(
           'name' => array(0 => $this->randomName()),
-          'user_id' => array(0 => mt_rand(0, 127)),
+          'user_id' => array(0 => mt_rand(128, 256)),
         );
       }
       else {

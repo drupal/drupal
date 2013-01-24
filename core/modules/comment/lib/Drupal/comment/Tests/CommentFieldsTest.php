@@ -61,6 +61,47 @@ class CommentFieldsTest extends CommentTestBase {
   }
 
   /**
+   * Tests that comment module works when enabled after a content module.
+   */
+  function testCommentEnable() {
+    // Create a user to do module administration.
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+    $this->drupalLogin($this->admin_user);
+
+    // Disable the comment module.
+    $edit = array();
+    $edit['modules[Core][comment][enable]'] = FALSE;
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->rebuildContainer();
+    $this->assertFalse(module_exists('comment'), 'Comment module disabled.');
+
+    // Enable core content type module (book).
+    $edit = array();
+    $edit['modules[Core][book][enable]'] = 'book';
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+
+    // Now enable the comment module.
+    $edit = array();
+    $edit['modules[Core][comment][enable]'] = 'comment';
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->rebuildContainer();
+    $this->assertTrue(module_exists('comment'), 'Comment module enabled.');
+
+    // Create nodes of each type.
+    $book_node = $this->drupalCreateNode(array('type' => 'book'));
+
+    $this->drupalLogout();
+
+    // Try to post a comment on each node. A failure will be triggered if the
+    // comment body is missing on one of these forms, due to postComment()
+    // asserting that the body is actually posted correctly.
+    $this->web_user = $this->drupalCreateUser(array('access content', 'access comments', 'post comments', 'skip comment approval'));
+    $this->drupalLogin($this->web_user);
+    $this->postComment($book_node, $this->randomName(), $this->randomName());
+>>>>>>> 8.x
+  }
+
+  /**
    * Tests that comment module works correctly with plain text format.
    */
   function testCommentFormat() {

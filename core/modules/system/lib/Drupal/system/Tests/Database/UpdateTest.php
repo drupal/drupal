@@ -125,4 +125,18 @@ class UpdateTest extends DatabaseTestBase {
       ->execute();
     $this->assertIdentical($num_rows, 3, 'Number of affected rows are returned.');
   }
+
+  /**
+   * Confirm that we can update the primary key of a record successfully.
+   */
+  function testPrimaryKeyUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('id' => 42, 'name' => 'John'))
+      ->condition('id', 1)
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $saved_name= db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 42))->fetchField();
+    $this->assertIdentical($saved_name, 'John', t('Updated primary key successfully.'));
+  }
 }

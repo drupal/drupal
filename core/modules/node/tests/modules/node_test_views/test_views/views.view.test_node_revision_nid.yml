@@ -1,7 +1,6 @@
 id: test_node_revision_nid
 base_table: node_revision
 core: 8
-api_version: 3
 display:
   default:
     display_options:

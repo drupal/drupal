@@ -64,12 +64,10 @@ class Rss extends RowPluginBase {
    * Return the main options, which are shown in the summary title.
    */
   public function buildOptionsForm_summary_options() {
-    $entity_info = entity_get_info('node');
+    $view_modes = entity_get_view_modes('node');
     $options = array();
-    if (!empty($entity_info['view_modes'])) {
-      foreach ($entity_info['view_modes'] as $mode => $settings) {
-        $options[$mode] = $settings['label'];
-      }
+    foreach ($view_modes as $mode => $settings) {
+      $options[$mode] = $settings['label'];
     }
     $options['title'] = t('Title only');
     $options['default'] = t('Use site default RSS settings');

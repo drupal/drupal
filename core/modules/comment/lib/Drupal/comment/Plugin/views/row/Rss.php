@@ -77,12 +77,10 @@ class Rss extends RowPluginBase {
    * in views_plugin_row_comment|node_rss.inc
    */
   function options_form_summary_options() {
-    $entity_info = entity_get_info('node');
+    $view_modes = entity_get_view_modes('node');
     $options = array();
-    if (!empty($entity_info['view_modes'])) {
-      foreach ($entity_info['view_modes'] as $mode => $settings) {
-        $options[$mode] = $settings['label'];
-      }
+    foreach ($view_modes as $mode => $settings) {
+      $options[$mode] = $settings['label'];
     }
     $options['title'] = t('Title only');
     $options['default'] = t('Use site default RSS settings');

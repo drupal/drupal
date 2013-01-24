@@ -26,12 +26,6 @@ use Drupal\Core\Annotation\Translation;
  *     "id" = "fid",
  *     "label" = "filename",
  *     "uuid" = "uuid"
- *   },
- *   view_modes = {
- *     "full" = {
- *       "label" = "File default",
- *       "custom_settings" = FALSE
- *     }
  *   }
  * )
  */

@@ -38,14 +38,16 @@ class SiteSchemaManager {
 
     // Type URIs correspond to bundles. Iterate through the bundles to get the
     // URI and data for them.
-    foreach (entity_get_info() as $entity_type => $entity_info) {
+    $entity_info = entity_get_info();
+    foreach (entity_get_bundles() as $entity_type => $bundles) {
       // Only content entities are supported currently.
       // @todo Consider supporting config entities.
-      $reflection = new ReflectionClass($entity_info['class']);
+      $entity_type_info = $entity_info[$entity_type];
+      $reflection = new ReflectionClass($entity_type_info['class']);
       if ($reflection->implementsInterface('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
         continue;
       }
-      foreach ($entity_info['bundles'] as $bundle => $bundle_info) {
+      foreach ($bundles as $bundle => $bundle_info) {
         // Get a type URI for the bundle in each of the defined schemas.
         foreach ($this->siteSchemas as $schema) {
           $bundle_uri = $schema->bundle($entity_type, $bundle)->getUri();

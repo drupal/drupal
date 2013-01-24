@@ -1,5 +1,4 @@
 disabled: true
-api_version: '3.0'
 module: node
 id: tracker
 description: 'Shows all new activity on the system.'

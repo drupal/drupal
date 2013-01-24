@@ -47,6 +47,8 @@ class FieldUnitTest extends ViewUnitTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['job']['field']['id'] = 'test_field';
+    $data['views_test_data']['job']['field']['click sortable'] = FALSE;
+    $data['views_test_data']['id']['field']['click sortable'] = TRUE;
     return $data;
   }
 
@@ -512,6 +514,23 @@ class FieldUnitTest extends ViewUnitTestBase {
 
     $this->assertTrue($field->is_value_empty(NULL, TRUE, TRUE), 'Null should be always seen as empty, regardless of no_skip_empty.');
     $this->assertTrue($field->is_value_empty(NULL, TRUE, FALSE), 'Null should be always seen as empty, regardless of no_skip_empty.');
+  }
+
+  /**
+   * Tests whether the filters are click sortable as expected.
+   */
+  public function testClickSortable() {
+    // Test that click_sortable is TRUE by default.
+    $plugin = views_get_handler('views_test_data', 'name', 'field');
+    $this->assertTrue($plugin->click_sortable(), 'TRUE as a default value is correct.');
+
+    // Test that click_sortable is TRUE by when set TRUE in the data.
+    $plugin = views_get_handler('views_test_data', 'id', 'field');
+    $this->assertTrue($plugin->click_sortable(), 'TRUE as a views data value is correct.');
+
+    // Test that click_sortable is FALSE by when set FALSE in the data.
+    $plugin = views_get_handler('views_test_data', 'job', 'field');
+    $this->assertFalse($plugin->click_sortable(), 'FALSE as a views data value is correct.');
   }
 
 }

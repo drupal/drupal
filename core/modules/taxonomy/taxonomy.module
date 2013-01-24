@@ -106,12 +106,26 @@ function taxonomy_permission() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_view_mode_info().
  */
-function taxonomy_entity_info(&$info) {
+function taxonomy_entity_view_mode_info() {
+  $view_modes['taxonomy_term']['full'] = array(
+    'label' => t('Taxonomy term page'),
+  );
+  $view_modes['taxonomy_vocabulary']['full'] = array(
+    'label' => t('Taxonomy vocabulary'),
+  );
+  return $view_modes;
+}
+
+/**
+ * Implements hook_entity_bundle_info().
+ */
+function taxonomy_entity_bundle_info() {
+  $bundles = array();
   foreach (taxonomy_vocabulary_get_names() as $id) {
     $config = config('taxonomy.vocabulary.' . $id);
-    $info['taxonomy_term']['bundles'][$id] = array(
+    $bundles['taxonomy_term'][$id] = array(
       'label' => $config->get('name'),
       'admin' => array(
         'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary',
@@ -120,6 +134,7 @@ function taxonomy_entity_info(&$info) {
       ),
     );
   }
+  return $bundles;
 }
 
 /**
@@ -136,8 +151,7 @@ function taxonomy_term_uri($term) {
  */
 function taxonomy_field_extra_fields() {
   $return = array();
-  $info = entity_get_info('taxonomy_term');
-  foreach (array_keys($info['bundles']) as $bundle) {
+  foreach (entity_get_bundles('taxonomy_term') as $bundle => $bundle_info) {
     $return['taxonomy_term'][$bundle] = array(
       'form' => array(
         'name' => array(

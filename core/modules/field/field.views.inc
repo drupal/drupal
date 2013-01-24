@@ -242,7 +242,6 @@ function field_views_field_default_views_data($field) {
     $data[$table][$column]['field'] = array(
       'table' => $table,
       'id' => 'field',
-      'click sortable' => TRUE,
       'field_name' => $field['field_name'],
       // Provide a real field for group by.
       'real field' => $column . '_' . $real_field,

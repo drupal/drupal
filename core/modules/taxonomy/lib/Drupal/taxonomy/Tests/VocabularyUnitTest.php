@@ -160,9 +160,9 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     taxonomy_vocabulary_save($this->vocabulary);
 
     // Check that entity bundles are properly updated.
-    $info = entity_get_info('taxonomy_term');
-    $this->assertFalse(isset($info['bundles'][$old_name]), 'The old bundle name does not appear in entity_get_info().');
-    $this->assertTrue(isset($info['bundles'][$new_name]), 'The new bundle name appears in entity_get_info().');
+    $info = entity_get_bundles('taxonomy_term');
+    $this->assertFalse(isset($info[$old_name]), 'The old bundle name does not appear in entity_get_bundles().');
+    $this->assertTrue(isset($info[$new_name]), 'The new bundle name appears in entity_get_bundles().');
 
     // Check that the field instance is still attached to the vocabulary.
     $this->assertTrue(field_info_instance('taxonomy_term', 'field_test', $new_name), 'The bundle name was updated correctly.');

@@ -86,13 +86,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   protected $core = DRUPAL_CORE_COMPATIBILITY;
 
   /**
-   * The views API version this view was created by.
-   *
-   * @var string
-   */
-  protected $api_version = VIEWS_API_VERSION;
-
-  /**
    * Stores all display handlers of this view.
    *
    * An array containing Drupal\views\Plugin\views\display\DisplayPluginBase
@@ -389,7 +382,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function getExportProperties() {
     $names = array(
-      'api_version',
       'base_field',
       'base_table',
       'core',

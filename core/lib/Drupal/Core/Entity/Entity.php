@@ -154,8 +154,9 @@ class Entity implements IteratorAggregate, EntityInterface {
     // A bundle-specific callback takes precedence over the generic one for the
     // entity type.
     $entity_info = $this->entityInfo();
-    if (isset($entity_info['bundles'][$bundle]['uri_callback'])) {
-      $uri_callback = $entity_info['bundles'][$bundle]['uri_callback'];
+    $bundles = entity_get_bundles($this->entityType);
+    if (isset($bundles[$bundle]['uri_callback'])) {
+      $uri_callback = $bundles[$bundle]['uri_callback'];
     }
     elseif (isset($entity_info['uri_callback'])) {
       $uri_callback = $entity_info['uri_callback'];

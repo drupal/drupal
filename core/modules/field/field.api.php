@@ -12,9 +12,8 @@ use Drupal\field\FieldUpdateForbiddenException;
  * Exposes "pseudo-field" components on fieldable entities.
  *
  * Field UI's "Manage fields" and "Manage display" pages let users re-order
- * fields, but also non-field components. For nodes, these include the title,
- * poll choices, and other elements exposed by modules through hook_form() or
- * hook_form_alter().
+ * fields, but also non-field components. For nodes, these include the title
+ * and other elements exposed by modules through hook_form() or hook_form_alter().
  *
  * Fieldable entities or modules that want to have their components supported
  * should expose them using this hook. The user-defined settings (weight,
@@ -38,32 +37,40 @@ use Drupal\field\FieldUpdateForbiddenException;
  *     context.
  */
 function hook_field_extra_fields() {
-  $extra['node']['poll'] = array(
-    'form' => array(
-      'choice_wrapper' => array(
-        'label' => t('Poll choices'),
-        'description' => t('Poll choices'),
-        'weight' => -4,
-      ),
-      'settings' => array(
-        'label' => t('Poll settings'),
-        'description' => t('Poll module settings'),
-        'weight' => -3,
-      ),
-    ),
-    'display' => array(
-      'poll_view_voting' => array(
-        'label' => t('Poll vote'),
-        'description' => t('Poll vote'),
-        'weight' => 0,
-      ),
-      'poll_view_results' => array(
-        'label' => t('Poll results'),
-        'description' => t('Poll results'),
-        'weight' => 0,
-      ),
-    )
-  );
+  $extra = array();
+  $module_language_enabled = module_exists('language');
+  $description = t('Node module element');
+
+  foreach (node_type_get_types() as $bundle) {
+    if ($bundle->has_title) {
+      $extra['node'][$bundle->type]['form']['title'] = array(
+        'label' => $bundle->title_label,
+        'description' => $description,
+        'weight' => -5,
+      );
+    }
+
+    // Add also the 'language' select if Language module is enabled and the
+    // bundle has multilingual support.
+    // Visibility of the ordering of the language selector is the same as on the
+    // node/add form.
+    if ($module_language_enabled) {
+      $configuration = language_get_default_configuration('node', $bundle->type);
+      if ($configuration['language_show']) {
+        $extra['node'][$bundle->type]['form']['language'] = array(
+          'label' => t('Language'),
+          'description' => $description,
+          'weight' => 0,
+        );
+      }
+    }
+    $extra['node'][$bundle->type]['display']['language'] = array(
+      'label' => t('Language'),
+      'description' => $description,
+      'weight' => 0,
+      'visible' => FALSE,
+    );
+  }
 
   return $extra;
 }

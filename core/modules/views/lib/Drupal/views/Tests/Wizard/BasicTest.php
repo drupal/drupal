@@ -139,4 +139,15 @@ class BasicTest extends WizardTestBase {
     $this->assertNoText('tracker', t('Default tracker view does not show on the listing page.'));
   }
 
+  /**
+   * Tests the actual wizard form.
+   *
+   * @see \Drupal\views_ui\ViewAddFormController::form()
+   */
+  protected function testWizardForm() {
+    $this->drupalGet('admin/structure/views/add');
+
+    $result = $this->xpath('//small[@id = "edit-human-name-machine-name-suffix"]');
+    $this->assertTrue(count($result), 'Ensure that the machine name is applied to the name field.');
+  }
 }

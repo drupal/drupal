@@ -4,7 +4,6 @@ description: ''
 tag: ''
 human_name: form
 core: 8.x
-api_version: '3.0'
 display:
   default:
     display_plugin: default
@@ -74,7 +73,7 @@ display:
           link_to_node: '1'
         bulk_form:
           id: action_bulk_form
-          table: views
+          table: action
           field: action_bulk_form
           relationship: none
           group_type: group

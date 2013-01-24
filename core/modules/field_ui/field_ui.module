@@ -71,7 +71,7 @@ function field_ui_menu() {
   // Create tabs for all possible bundles.
   foreach (entity_get_info() as $entity_type => $entity_info) {
     if ($entity_info['fieldable']) {
-      foreach ($entity_info['bundles'] as $bundle_name => $bundle_info) {
+      foreach (entity_get_bundles($entity_type) as $bundle_name => $bundle_info) {
         if (isset($bundle_info['admin'])) {
           // Extract path information from the bundle.
           $path = $bundle_info['admin']['path'];
@@ -173,7 +173,7 @@ function field_ui_menu() {
           // view modes, and use an access callback to determine which ones are
           // actually visible for a given bundle.
           $weight = 0;
-          $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view_modes'];
+          $view_modes = array('default' => array('label' => t('Default'))) + entity_get_view_modes($entity_type);
           foreach ($view_modes as $view_mode => $view_mode_info) {
             $items["$path/display/$view_mode"] = array(
               'title' => $view_mode_info['label'],
@@ -328,7 +328,7 @@ function field_ui_field_attach_create_bundle($entity_type, $bundle) {
  * Determines the adminstration path for a bundle.
  */
 function field_ui_bundle_admin_path($entity_type, $bundle_name) {
-  $bundles = field_info_bundles($entity_type);
+  $bundles = entity_get_bundles($entity_type);
   $bundle_info = $bundles[$bundle_name];
   if (isset($bundle_info['admin'])) {
     return isset($bundle_info['admin']['real path']) ? $bundle_info['admin']['real path'] : $bundle_info['admin']['path'];

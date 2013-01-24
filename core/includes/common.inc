@@ -688,8 +688,8 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
   // A destination in $_GET always overrides the function arguments.
   // We do not allow absolute URLs to be passed via $_GET, as this can be an
   // attack vector, with the following exception:
-  // - absolute URLs that point to this site (i.e. same base URL and
-  //   base path) are allowed
+  // - Absolute URLs that point to this site (i.e. same base URL and
+  //   base path) are allowed.
   if (isset($_GET['destination']) && (!url_is_external($_GET['destination']) || _external_url_is_local($_GET['destination']))) {
     $destination = drupal_parse_url($_GET['destination']);
     $path = $destination['path'];
@@ -722,13 +722,18 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
  *   TRUE if the URL has the same domain and base path.
  */
 function _external_url_is_local($url) {
-    $url_parts = parse_url($url);
-    $base_host = parse_url($GLOBALS['base_url'], PHP_URL_HOST);
+  $url_parts = parse_url($url);
+  $base_host = parse_url($GLOBALS['base_url'], PHP_URL_HOST);
 
+  if (!isset($url_parts['path'])) {
+    return ($url_parts['host'] == $base_host);
+  }
+  else {
     // When comparing base paths, we need a trailing slash to make sure a
     // partial URL match isn't occuring. Since base_path() always returns with
     // a trailing slash, we don't need to add the trailing slash here.
     return ($url_parts['host'] == $base_host && stripos($url_parts['path'], base_path()) === 0);
+  }
 }
 
 /**
@@ -1893,7 +1898,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     'langcode' => $langcode,
     'format_string_type' => $key,
   );
-  return $date->format($format, $settings);
+  return filter_xss_admin($date->format($format, $settings));
 }
 
 /**
@@ -4834,7 +4839,7 @@ function _drupal_bootstrap_code() {
   require_once DRUPAL_ROOT . '/core/includes/entity.inc';
 
   // Load all enabled modules
-  module_load_all();
+  drupal_container()->get('module_handler')->loadAll();
 
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
@@ -5218,7 +5223,7 @@ function drupal_pre_render_link($element) {
  * @code
  * $node->content['links'] = array(
  *   '#theme' => 'links__node',
- *   '#pre_render' = array('drupal_pre_render_links'),
+ *   '#pre_render' => array('drupal_pre_render_links'),
  *   'comment' => array(
  *     '#theme' => 'links__node__comment',
  *     '#links' => array(
@@ -6433,7 +6438,7 @@ function drupal_flush_all_caches() {
 
   // Ensure that all modules that are currently supposed to be enabled are
   // actually loaded.
-  module_load_all();
+  drupal_container()->get('module_handler')->loadAll();
 
   // Update the list of bootstrap modules.
   // Allows developers to get new hook_boot() implementations registered without
@@ -6507,68 +6512,10 @@ function debug($data, $label = NULL, $print_r = FALSE) {
 }
 
 /**
- * Parses a dependency for comparison by drupal_check_incompatibility().
- *
- * @param $dependency
- *   A dependency string, for example 'foo (>=8.x-4.5-beta5, 3.x)'.
- *
- * @return
- *   An associative array with three keys:
- *   - 'name' includes the name of the thing to depend on (e.g. 'foo').
- *   - 'original_version' contains the original version string (which can be
- *     used in the UI for reporting incompatibilities).
- *   - 'versions' is a list of associative arrays, each containing the keys
- *     'op' and 'version'. 'op' can be one of: '=', '==', '!=', '<>', '<',
- *     '<=', '>', or '>='. 'version' is one piece like '4.5-beta3'.
- *   Callers should pass this structure to drupal_check_incompatibility().
- *
- * @see drupal_check_incompatibility()
- */
-function drupal_parse_dependency($dependency) {
-  // We use named subpatterns and support every op that version_compare
-  // supports. Also, op is optional and defaults to equals.
-  $p_op = '(?P<operation>!=|==|=|<|<=|>|>=|<>)?';
-  // Core version is always optional: 8.x-2.x and 2.x is treated the same.
-  $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
-  $p_major = '(?P<major>\d+)';
-  // By setting the minor version to x, branches can be matched.
-  $p_minor = '(?P<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';
-  $value = array();
-  $parts = explode('(', $dependency, 2);
-  $value['name'] = trim($parts[0]);
-  if (isset($parts[1])) {
-    $value['original_version'] = ' (' . $parts[1];
-    foreach (explode(',', $parts[1]) as $version) {
-      if (preg_match("/^\s*$p_op\s*$p_core$p_major\.$p_minor/", $version, $matches)) {
-        $op = !empty($matches['operation']) ? $matches['operation'] : '=';
-        if ($matches['minor'] == 'x') {
-          // Drupal considers "2.x" to mean any version that begins with
-          // "2" (e.g. 2.0, 2.9 are all "2.x"). PHP's version_compare(),
-          // on the other hand, treats "x" as a string; so to
-          // version_compare(), "2.x" is considered less than 2.0. This
-          // means that >=2.x and <2.x are handled by version_compare()
-          // as we need, but > and <= are not.
-          if ($op == '>' || $op == '<=') {
-            $matches['major']++;
-          }
-          // Equivalence can be checked by adding two restrictions.
-          if ($op == '=' || $op == '==') {
-            $value['versions'][] = array('op' => '<', 'version' => ($matches['major'] + 1) . '.x');
-            $op = '>=';
-          }
-        }
-        $value['versions'][] = array('op' => $op, 'version' => $matches['major'] . '.' . $matches['minor']);
-      }
-    }
-  }
-  return $value;
-}
-
-/**
  * Checks whether a version is compatible with a given dependency.
  *
  * @param $v
- *   The parsed dependency structure from drupal_parse_dependency().
+ *   A parsed dependency structure e.g. from ModuleHandler::parseDependency().
  * @param $current_version
  *   The version to check against (like 4.2).
  *
@@ -6576,7 +6523,7 @@ function drupal_parse_dependency($dependency) {
  *   NULL if compatible, otherwise the original dependency version string that
  *   caused the incompatibility.
  *
- * @see drupal_parse_dependency()
+ * @see \Drupal\Core\Extension\ModuleHandler::parseDependency()
  */
 function drupal_check_incompatibility($v, $current_version) {
   if (!empty($v['versions'])) {

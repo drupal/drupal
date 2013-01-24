@@ -45,9 +45,8 @@ function field_test_permission() {
  */
 function field_test_menu() {
   $items = array();
-  $bundles = field_info_bundles('test_entity');
 
-  foreach ($bundles as $bundle_name => $bundle_info) {
+  foreach (entity_get_bundles('test_entity') as $bundle_name => $bundle_info) {
     $items['test-entity/add/' . $bundle_name] = array(
       'title' => t('Add %bundle test_entity', array('%bundle' => $bundle_info['label'])),
       'page callback' => 'field_test_entity_add',
@@ -309,7 +308,7 @@ function field_test_field_extra_fields_alter(&$info) {
  * @todo Remove when http://drupal.org/node/1822458 is fixed.
  */
 function field_test_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'entity_info_alter' && isset($implementations['field_test']) && isset($implementations['rdf'])) {
+  if ($hook == 'entity_bundle_info_alter' && isset($implementations['field_test']) && isset($implementations['rdf'])) {
     foreach (array('field_test', 'rdf') as $module) {
       $group = $implementations[$module];
       unset($implementations[$module]);

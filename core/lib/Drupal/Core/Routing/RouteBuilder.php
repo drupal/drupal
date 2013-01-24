@@ -13,6 +13,7 @@ use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
@@ -45,6 +46,13 @@ class RouteBuilder {
   protected $dispatcher;
 
   /**
+   * The extension handler for retieving the list of enabled modules.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Construcs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param \Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface $dumper
@@ -54,10 +62,11 @@ class RouteBuilder {
    * @param \Symfony\Component\EventDispatcherEventDispatcherInterface
    *   The event dispatcher to notify of routes.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -76,11 +85,9 @@ class RouteBuilder {
 
     // We need to manually call each module so that we can know which module
     // a given item came from.
-    // @todo Use an injected Extension service rather than module_list():
-    //   http://drupal.org/node/1331486.
-    foreach (module_list() as $module) {
+    foreach ($this->moduleHandler->getModuleList() as $module => $filename) {
       $collection = new RouteCollection();
-      $routing_file = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . '/' . $module . '.routing.yml';
+      $routing_file = DRUPAL_ROOT . '/' . dirname($filename) . '/' . $module . '.routing.yml';
       if (file_exists($routing_file)) {
         $routes = $parser->parse(file_get_contents($routing_file));
         if (!empty($routes)) {

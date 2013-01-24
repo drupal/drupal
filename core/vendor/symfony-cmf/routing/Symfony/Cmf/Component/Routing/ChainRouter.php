@@ -135,7 +135,7 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
     {
         $methodNotAllowed = null;
 
-        /** @var $router ChainedRouterInterface */
+        /** @var $router RouterInterface */
         foreach ($this->all() as $router) {
             try {
                 return $router->match($url);
@@ -196,13 +196,13 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
      */
     public function generate($name, $parameters = array(), $absolute = false)
     {
-        /** @var $router ChainedRouterInterface */
+        /** @var $router RouterInterface */
         foreach ($this->all() as $router) {
 
             // if $name and $router does not implement ChainedRouterInterface and $name is not a string, continue
             // if $name and $router does not implement ChainedRouterInterface and $name is string but does not match a default Symfony2 route name, continue
             if ($name && !$router instanceof ChainedRouterInterface) {
-                if (!is_string($name) || !preg_match('/^[a-z0-9A-Z_.]+$/', $name)) {
+                if (!is_string($name) || !preg_match(VersatileGeneratorInterface::CORE_NAME_PATTERN, $name)) {
                     continue;
                 }
             }

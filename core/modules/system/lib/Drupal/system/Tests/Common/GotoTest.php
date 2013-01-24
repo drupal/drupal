@@ -56,14 +56,14 @@ class GotoTest extends WebTestBase {
 
     // Test that drupal_goto() respects ?destination=xxx with an absolute URL
     // that points to this Drupal installation.
-    $destination = url('common-test/drupal_goto/alt', array('absolute' => TRUE));
+    $destination = url('common-test/drupal_goto/alternative', array('absolute' => TRUE));
     $this->drupalGet('common-test/drupal_goto/redirect', array('query' => array('destination' => $destination)));
-    $this->assertText('drupal_goto_alt', 'Drupal goto redirect with absolute URL destination that points to this Drupal installation succeeded.');
-    $this->assertEqual($this->getUrl(), url('common-test/drupal_goto/alt', array('absolute' => TRUE)), 'Drupal goto redirected to given query string destination with absolute URL that points to this Drupal installation.');
+    $this->assertText('drupal_goto_alternative', 'Drupal goto redirect with absolute URL destination that points to this Drupal installation succeeded.');
+    $this->assertEqual($this->getUrl(), url('common-test/drupal_goto/alternative', array('absolute' => TRUE)), 'Drupal goto redirected to given query string destination with absolute URL that points to this Drupal installation.');
 
     // Test that drupal_goto() fails to respect ?destination=xxx with an absolute URL
     // that does not point to this Drupal installation.
-    $destination = 'http://pagedoesnotexist';
+    $destination = 'http://example.com';
     $this->drupalGet('common-test/drupal_goto/redirect', array('query' => array('destination' => $destination)));
     $this->assertText('drupal_goto', 'Drupal goto fails to redirect with absolute URL destination that does not point to this Drupal installation.');
     $this->assertNotEqual($this->getUrl(), $destination, 'Drupal goto failed to redirect to given query string destination with absolute URL that does not point to this Drupal installation.');

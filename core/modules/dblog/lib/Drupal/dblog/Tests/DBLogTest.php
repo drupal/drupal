@@ -20,7 +20,7 @@ class DBLogTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('dblog', 'node', 'poll', 'help');
+  public static $modules = array('dblog', 'node', 'forum', 'help');
 
   /**
    * A user with some relevent administrative permissions.
@@ -202,7 +202,7 @@ class DBLogTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
     $this->doNode('article');
     $this->doNode('page');
-    $this->doNode('poll');
+    $this->doNode('forum');
 
     // When a user account is canceled, any content they created remains but the
     // uid = 0. Records in the watchdog table related to that user have the uid
@@ -297,7 +297,7 @@ class DBLogTest extends WebTestBase {
    * Generates and then verifies some node events.
    *
    * @param string $type
-   *   A node type (e.g., 'article', 'page' or 'poll').
+   *   A node type (e.g., 'article', 'page' or 'forum').
    */
   private function doNode($type) {
     // Create user.
@@ -369,11 +369,11 @@ class DBLogTest extends WebTestBase {
   private function getContent($type) {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     switch ($type) {
-      case 'poll':
+      case 'forum':
         $content = array(
           "title" => $this->randomName(8),
-          'choice[new:0][chtext]' => $this->randomName(32),
-          'choice[new:1][chtext]' => $this->randomName(32),
+          "taxonomy_forums[$langcode]" => array(1),
+          "body[$langcode][0][value]" => $this->randomName(32),
         );
       break;
 
@@ -397,21 +397,10 @@ class DBLogTest extends WebTestBase {
    *   Random content needed by various node types.
    */
   private function getContentUpdate($type) {
-    switch ($type) {
-      case 'poll':
-        $content = array(
-          'choice[chid:1][chtext]' => $this->randomName(32),
-          'choice[chid:2][chtext]' => $this->randomName(32),
-        );
-      break;
-
-      default:
-        $langcode = LANGUAGE_NOT_SPECIFIED;
-        $content = array(
-          "body[$langcode][0][value]" => $this->randomName(32),
-        );
-      break;
-    }
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $content = array(
+      "body[$langcode][0][value]" => $this->randomName(32),
+    );
     return $content;
   }
 

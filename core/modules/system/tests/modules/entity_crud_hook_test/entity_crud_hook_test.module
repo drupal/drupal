@@ -8,6 +8,62 @@
 use Drupal\Core\Entity\EntityInterface;
 
 /**
+ * Implements hook_entity_create().
+ */
+function entity_crud_hook_test_entity_create(EntityInterface $entity) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
+}
+
+/**
+ * Implements hook_block_create().
+ */
+function entity_crud_hook_test_block_create() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_comment_create().
+ */
+function entity_crud_hook_test_comment_create() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_file_create().
+ */
+function entity_crud_hook_test_file_create() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_node_create().
+ */
+function entity_crud_hook_test_node_create() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_term_create().
+ */
+function entity_crud_hook_test_taxonomy_term_create() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_create().
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_create() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_user_create().
+ */
+function entity_crud_hook_test_user_create() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
  * Implements hook_entity_presave().
  */
 function entity_crud_hook_test_entity_presave(EntityInterface $entity) {

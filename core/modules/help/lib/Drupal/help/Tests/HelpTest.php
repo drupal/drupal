@@ -19,7 +19,7 @@ class HelpTest extends WebTestBase {
    *
    * @var array.
    */
-  public static $modules = array('poll');
+  public static $modules = array('shortcut');
 
   // Tests help implementations of many arbitrary core modules.
   protected $profile = 'standard';

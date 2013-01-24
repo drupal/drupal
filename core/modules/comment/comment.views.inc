@@ -32,7 +32,6 @@ function comment_views_data() {
     'help' => t('The title of the comment.'),
     'field' => array(
       'id' => 'comment',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'string',
@@ -51,7 +50,6 @@ function comment_views_data() {
     'help' => t('The comment ID of the field'),
     'field' => array(
       'id' => 'comment',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'numeric',
@@ -70,7 +68,6 @@ function comment_views_data() {
     'help' => t("The name of the comment's author. Can be rendered as a link to the author's homepage."),
     'field' => array(
       'id' => 'comment_username',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'string',
@@ -89,7 +86,6 @@ function comment_views_data() {
     'help' => t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."),
     'field' => array(
       'id' => 'url',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'string',
@@ -108,7 +104,6 @@ function comment_views_data() {
     'help' => t('Hostname of user that posted the comment.'),
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE,
      ),
     'filter' => array(
       'id' => 'string',
@@ -127,7 +122,6 @@ function comment_views_data() {
     'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE,
      ),
     'filter' => array(
       'id' => 'string',
@@ -146,7 +140,6 @@ function comment_views_data() {
     'help' => t('Date and time of when the comment was created.'),
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date',
@@ -163,7 +156,6 @@ function comment_views_data() {
       'help' => t('The language the comment is in.'),
       'field' => array(
         'id' => 'language',
-        'click sortable' => TRUE,
       ),
       'filter' => array(
         'id' => 'language',
@@ -183,7 +175,6 @@ function comment_views_data() {
     'help' => t('Date and time of when the comment was last updated.'),
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date',
@@ -253,7 +244,6 @@ function comment_views_data() {
     'help' => t('Whether the comment is approved (or still in the moderation queue).'),
     'field' => array(
       'id' => 'boolean',
-      'click sortable' => TRUE,
       'output formats' => array(
         'approved-not-approved' => array(t('Approved'), t('Not Approved')),
       ),
@@ -462,7 +452,6 @@ function comment_views_data() {
     'help' => t('Date and time of when the last comment was posted.'),
     'field' => array(
       'id' => 'comment_last_timestamp',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date',
@@ -478,7 +467,6 @@ function comment_views_data() {
     'help' => t('The name of the author of the last posted comment.'),
     'field' => array(
       'id' => 'comment_ces_last_comment_name',
-      'click sortable' => TRUE,
       'no group by' => TRUE,
     ),
     'sort' => array(
@@ -493,7 +481,6 @@ function comment_views_data() {
     'help' => t('The number of comments a node has.'),
     'field' => array(
       'id' => 'numeric',
-      'click sortable' => TRUE,
     ),
     'filter' => array(
       'id' => 'numeric',
@@ -512,7 +499,6 @@ function comment_views_data() {
     'help' => t('The most recent of last comment posted or node updated time.'),
     'field' => array(
       'id' => 'comment_ces_last_updated',
-      'click sortable' => TRUE,
       'no group by' => TRUE,
     ),
     'sort' => array(

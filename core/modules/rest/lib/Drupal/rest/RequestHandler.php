@@ -7,6 +7,7 @@
 
 namespace Drupal\rest;
 
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +30,7 @@ class RequestHandler extends ContainerAware {
    *   The response object.
    */
   public function handle(Request $request, $id = NULL) {
-    $plugin = $request->attributes->get('_route')->getDefault('_plugin');
+    $plugin = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getDefault('_plugin');
     $method = strtolower($request->getMethod());
     $resource = $this->container
       ->get('plugin.manager.rest')

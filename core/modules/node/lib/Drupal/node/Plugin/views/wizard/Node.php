@@ -248,7 +248,6 @@ class Node extends WizardPluginBase {
    */
   protected function build_filters(&$form, &$form_state) {
     parent::build_filters($form, $form_state);
-    $entity_info = $this->entity_info;
 
     $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
 
@@ -270,7 +269,7 @@ class Node extends WizardPluginBase {
     // entities. If a particular entity type (i.e., bundle) has been
     // selected above, then we only search for taxonomy fields associated
     // with that bundle. Otherwise, we use all bundles.
-    $bundles = array_keys($entity_info['bundles']);
+    $bundles = array_keys(entity_get_bundles($this->entity_type));
     // Double check that this is a real bundle before using it (since above
     // we added a dummy option 'all' to the bundle list on the form).
     if (isset($selected_bundle) && in_array($selected_bundle, $bundles)) {

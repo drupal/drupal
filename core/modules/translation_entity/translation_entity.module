@@ -74,6 +74,7 @@ function translation_entity_language_types_info_alter(array &$language_types) {
 function translation_entity_entity_info_alter(array &$entity_info) {
   $edit_form_info = array();
 
+  $bundles_info = entity_get_bundles();
   // Provide defaults for translation info.
   foreach ($entity_info as $entity_type => &$info) {
     if (!isset($info['translation']['translation_entity'])) {
@@ -90,7 +91,7 @@ function translation_entity_entity_info_alter(array &$entity_info) {
     // use translation_entity_enabled() here since it would cause infinite
     // recursion, as it relies on entity info.
     $enabled = FALSE;
-    $bundles = isset($info['bundles']) ? array_keys($info['bundles']) : array($entity_type);
+    $bundles = isset($bundles_info[$entity_type]) ? array_keys($bundles_info[$entity_type]) : array($entity_type);
     foreach ($bundles as $bundle) {
       if (translation_entity_get_config($entity_type, $bundle, 'enabled')) {
         $enabled = TRUE;
@@ -379,7 +380,7 @@ function translation_entity_set_config($entity_type, $bundle, $setting, $value) 
  */
 function translation_entity_enabled($entity_type, $bundle = NULL, $skip_handler = FALSE) {
   $enabled = FALSE;
-  $bundles = !empty($bundle) ? array($bundle) : entity_get_bundles($entity_type);
+  $bundles = !empty($bundle) ? array($bundle) : array_keys(entity_get_bundles($entity_type));
 
   foreach ($bundles as $bundle) {
     if (translation_entity_get_config($entity_type, $bundle, 'enabled')) {
@@ -630,7 +631,7 @@ function translation_entity_field_extra_fields() {
   $extra = array();
 
   foreach (entity_get_info() as $entity_type => $info) {
-    foreach (entity_get_bundles($entity_type) as $bundle) {
+    foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
       if (translation_entity_enabled($entity_type, $bundle)) {
         $extra[$entity_type][$bundle]['form']['translation'] = array(
           'label' => t('Translation'),

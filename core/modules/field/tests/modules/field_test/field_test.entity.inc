@@ -19,8 +19,17 @@ function field_test_entity_info_alter(&$entity_info) {
   // Disable the entity type translation handler.
   foreach ($entity_info as $entity_type => $info) {
     $entity_info[$entity_type]['translation'][$entity_type] = FALSE;
-    if ($info['module'] == 'field_test') {
-      $entity_info[$entity_type]['view_modes'] = array(
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_info_alter().
+ */
+function field_test_entity_view_mode_info_alter(&$view_modes) {
+  $entity_info = entity_get_info();
+  foreach ($entity_info as $entity_type => $info) {
+    if ($entity_info[$entity_type]['module'] == 'field_test') {
+      $view_modes[$entity_type] = array(
         'full' => array(
           'label' => t('Full object'),
           'custom_settings' => TRUE,
@@ -30,12 +39,23 @@ function field_test_entity_info_alter(&$entity_info) {
           'custom_settings' => TRUE,
         ),
       );
-      $entity_info[$entity_type]['bundles'] = state()->get('field_test_bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_info_alter().
+ */
+function field_test_entity_bundle_info_alter(&$bundles) {
+  $entity_info = entity_get_info();
+  foreach ($bundles as $entity_type => $info) {
+    if ($entity_info[$entity_type]['module'] == 'field_test') {
+      $bundles[$entity_type] = state()->get('field_test_bundles') ?: array('test_bundle' => array('label' => 'Test Bundle'));
       if ($entity_type == 'test_entity_bundle') {
-        $entity_info[$entity_type]['bundles'] += array('test_entity_2' => array('label' => 'Test entity 2'));
+        $bundles[$entity_type] += array('test_entity_2' => array('label' => 'Test entity 2'));
       }
       if ($entity_type == 'test_entity_bundle_key') {
-        $entity_info[$entity_type]['bundles'] += array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2'));
+        $bundles[$entity_type] += array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2'));
       }
     }
   }

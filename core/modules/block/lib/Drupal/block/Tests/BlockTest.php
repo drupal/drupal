@@ -62,21 +62,10 @@ class BlockTest extends WebTestBase {
   }
 
   /**
-   * Removes default blocks to avoid conflicts in the Block UI.
-   */
-  protected function removeDefaultBlocks() {
-    $default_theme = variable_get('theme_default', 'stark');
-    foreach (entity_load_multiple_by_properties('block', array('theme' => $default_theme)) as $block) {
-      $block->delete();
-    }
-  }
-
-  /**
    * Test creating custom block, moving it to a specific region and then deleting it.
    */
   public function testCustomBlock() {
     $default_theme = variable_get('theme_default', 'stark');
-    $this->removeDefaultBlocks();
 
     // Clear the block cache to load the Custom Block module's block definitions.
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();
@@ -154,7 +143,6 @@ class BlockTest extends WebTestBase {
    */
   public function testCustomBlockFormat() {
     $default_theme = variable_get('theme_default', 'stark');
-    $this->removeDefaultBlocks();
 
     // Add a new custom block by filling out the input form on the admin/structure/block/add page.
     $info = strtolower($this->randomName(8));
@@ -265,7 +253,6 @@ class BlockTest extends WebTestBase {
    * Test configuring and moving a module-define block to specific regions.
    */
   function testBlock() {
-    $this->removeDefaultBlocks();
     // Select the 'Powered by Drupal' block to be configured and moved.
     $block = array();
     $block['id'] = 'system_powered_by_block';

@@ -15,7 +15,6 @@
  * dependency module.
  *
  * @see EnableDisableTestCase::testEntityCache()
- * @see entity_cache_test_dependency_entity_info()
  */
 function entity_cache_test_watchdog($log_entry) {
   if ($log_entry['type'] == 'system' && $log_entry['message'] == '%module module installed.') {

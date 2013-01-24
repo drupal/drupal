@@ -235,22 +235,6 @@ ul.tips {
   float: right;
 }
 
-/* ---------- Poll ----------- */
-
-.poll .vote-form {
-  text-align: right;
-}
-.poll .total {
-  text-align: left;
-}
-.poll .choice-title {
-  clear: left;
-}
-.poll .percent {
-  float: left;
-  text-align: left;
-}
-
 /* ---------- Color Form ----------- */
 
 .color-form #palette {

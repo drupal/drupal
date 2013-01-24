@@ -175,32 +175,52 @@ function node_theme() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_info_alter().
  */
-function node_entity_info(&$info) {
+function node_entity_info_alter(&$info) {
   // Add a translation handler for fields if the language module is enabled.
   if (module_exists('language')) {
     $info['node']['translation']['node'] = TRUE;
   }
+}
 
+/**
+ * Implements hook_entity_view_mode_info().
+ */
+function node_entity_view_mode_info() {
+  $view_modes['node']['full'] = array(
+    'label' => t('Full content'),
+  );
+  $view_modes['node']['teaser'] = array(
+    'label' => t('Teaser'),
+    'custom_settings' => TRUE,
+  );
+  $view_modes['node']['rss'] = array(
+    'label' => t('RSS'),
+  );
   // Search integration is provided by node.module, so search-related
   // view modes for nodes are defined here and not in search.module.
   if (module_exists('search')) {
-    $info['node']['view_modes']['search_index'] = array(
+    $view_modes['node']['search_index'] = array(
       'label' => t('Search index'),
-      'custom_settings' => FALSE,
     );
-    $info['node']['view_modes']['search_result'] = array(
+    $view_modes['node']['search_result'] = array(
       'label' => t('Search result'),
-      'custom_settings' => FALSE,
     );
   }
+  return $view_modes;
+}
 
+/**
+ * Implements hook_entity_bundle_info().
+ */
+function node_entity_bundle_info() {
+  $bundles = array();
   // Bundles must provide a human readable name so we can create help and error
   // messages, and the path to attach Field admin pages to.
   node_type_cache_reset();
   foreach (node_type_get_names() as $type => $name) {
-    $info['node']['bundles'][$type] = array(
+    $bundles['node'][$type] = array(
       'label' => $name,
       'admin' => array(
         'path' => 'admin/structure/types/manage/%node_type',
@@ -209,6 +229,7 @@ function node_entity_info(&$info) {
       ),
     );
   }
+  return $bundles;
 }
 
 /**
@@ -289,7 +310,7 @@ function node_title_list($result, $title = NULL) {
 }
 
 /**
- * Decides on the type of marker to be displayed for a given node.
+ * Determines the type of marker to be displayed for a given node.
  *
  * @param $nid
  *   Node ID whose history supplies the "last viewed" timestamp.
@@ -1087,7 +1108,7 @@ function node_is_page(Node $node) {
   return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
 }
 
- /**
+/**
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function node_preprocess_block(&$variables) {
@@ -2139,9 +2160,9 @@ function node_feed($nids = FALSE, $channel = array()) {
   return new Response($output, 200, array('Content-Type' =>  'application/rss+xml; charset=utf-8'));
 }
 
- /**
-  * Generates an array for rendering the given node.
-  *
+/**
+ * Generates an array for rendering the given node.
+ *
  * @param Drupal\node\Node $node
  *   A node entity.
  * @param $view_mode
@@ -2436,8 +2457,8 @@ function node_search_validate($form, &$form_state) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * Alters System module's site information settings form to add a global default
- * setting for number of posts to show on node listing pages.
+ * Alters the System module's site information settings form to add a global
+ * default setting for number of posts to show on node listing pages.
  *
  * @see node_page_default()
  * @see taxonomy_term_page()
@@ -3209,7 +3230,6 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 /**
  * @} End of "defgroup node_access".
  */
-
 
 /**
  * @defgroup node_content Hook implementations for user-created content types

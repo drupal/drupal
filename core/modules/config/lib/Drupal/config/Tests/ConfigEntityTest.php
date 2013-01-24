@@ -175,6 +175,11 @@ class ConfigEntityTest extends WebTestBase {
       $this->assertIdentical($config_test->id(), $new_id);
       $this->assertIdentical($config_test->getOriginalID(), $new_id);
     }
+
+    // Test config entity prepopulation.
+    state()->set('config_test.prepopulate', TRUE);
+    $config_test = entity_create('config_test', array('foo' => 'bar'));
+    $this->assertEqual($config_test->get('foo'), 'baz', 'Initial value correctly populated');
   }
 
   /**

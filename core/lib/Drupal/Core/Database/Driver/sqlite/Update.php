@@ -19,41 +19,18 @@ use Drupal\Core\Database\Query\Update as QueryUpdate;
  * we don't select those rows.
  *
  * A query like this one:
- *   UPDATE test SET name = 'newname' WHERE tid = 1
+ *   UPDATE test SET col1 = 'newcol1', col2 = 'newcol2' WHERE tid = 1
  * will become:
- *   UPDATE test SET name = 'newname' WHERE tid = 1 AND name <> 'newname'
+ *   UPDATE test SET col1 = 'newcol1', col2 = 'newcol2' WHERE tid = 1 AND (col1 <> 'newcol1' OR col2 <> 'newcol2')
  */
 class Update extends QueryUpdate {
-  /**
-   * Helper function that removes the fields that are already in a condition.
-   *
-   * @param $fields
-   *   The fields.
-   * @param QueryConditionInterface $condition
-   *   A database condition.
-   */
-  protected function removeFieldsInCondition(&$fields, ConditionInterface $condition) {
-    foreach ($condition->conditions() as $child_condition) {
-      if (isset($child_condition['field'])) {
-        if ($child_condition['field'] instanceof ConditionInterface) {
-          $this->removeFieldsInCondition($fields, $child_condition['field']);
-        }
-        else {
-          unset($fields[$child_condition['field']]);
-        }
-      }
-    }
-  }
-
   public function execute() {
     if (!empty($this->queryOptions['sqlite_return_matched_rows'])) {
       return parent::execute();
     }
 
-    // Get the fields used in the update query, and remove those that are already
-    // in the condition.
+    // Get the fields used in the update query.
     $fields = $this->expressionFields + $this->fields;
-    $this->removeFieldsInCondition($fields, $this->condition);
 
     // Add the inverse of the fields to the condition.
     $condition = new Condition('OR');

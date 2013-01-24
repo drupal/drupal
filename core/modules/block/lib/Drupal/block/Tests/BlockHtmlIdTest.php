@@ -15,11 +15,6 @@ use Drupal\simpletest\WebTestBase;
 class BlockHtmlIdTest extends WebTestBase {
 
   /**
-   * An administrative user to configure the test environment.
-   */
-  protected $adminUser;
-
-  /**
    * Modules to enable.
    *
    * @var array
@@ -37,15 +32,14 @@ class BlockHtmlIdTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    // Create an admin user, log in and enable test blocks.
-    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($this->root_user);
 
     // Make sure the block has some content so it will appear.
     $current_content = $this->randomName();
     state()->set('block_test.content', $current_content);
 
-    // Enable our test block.
+    // Enable our test blocks.
+    $this->drupalPlaceBlock('system_menu_block:menu-tools');
     $this->drupalPlaceBlock('test_html_id', array('machine_name' => 'test_id_block'));
   }
 
@@ -55,6 +49,8 @@ class BlockHtmlIdTest extends WebTestBase {
   function testHtmlId() {
     $this->drupalGet('');
     $this->assertRaw('id="block-test-id-block"', 'HTML ID for test block is valid.');
+    $elements = $this->xpath('//div[contains(@class, :div-class)]/div/ul[contains(@class, :ul-class)]/li', array(':div-class' => 'block-system', ':ul-class' => 'menu'));
+    $this->assertTrue(!empty($elements), 'The proper block markup was found.');
   }
 
 }

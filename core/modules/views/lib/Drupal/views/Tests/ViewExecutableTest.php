@@ -36,7 +36,6 @@ class ViewExecutableTest extends ViewUnitTestBase {
    */
   protected $configProperties = array(
     'disabled',
-    'api_version',
     'name',
     'description',
     'tag',

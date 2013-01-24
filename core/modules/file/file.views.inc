@@ -35,7 +35,6 @@ function file_views_data() {
     'help' => t('The ID of the file.'),
     'field' => array(
       'id' => 'file',
-      'click sortable' => TRUE,
     ),
     'argument' => array(
       'id' => 'file_fid',
@@ -56,7 +55,6 @@ function file_views_data() {
     'help' => t('The name of the file.'),
     'field' => array(
       'id' => 'file',
-      'click sortable' => TRUE,
      ),
     'sort' => array(
       'id' => 'standard',
@@ -75,7 +73,6 @@ function file_views_data() {
     'help' => t('The path of the file.'),
     'field' => array(
       'id' => 'file_uri',
-      'click sortable' => TRUE,
      ),
     'sort' => array(
       'id' => 'standard',
@@ -94,7 +91,6 @@ function file_views_data() {
     'help' => t('The mime type of the file.'),
     'field' => array(
       'id' => 'file_filemime',
-      'click sortable' => TRUE,
      ),
     'sort' => array(
       'id' => 'standard',
@@ -124,7 +120,6 @@ function file_views_data() {
     'help' => t('The size of the file.'),
     'field' => array(
       'id' => 'file_size',
-      'click sortable' => TRUE,
      ),
     'sort' => array(
       'id' => 'standard',
@@ -140,7 +135,6 @@ function file_views_data() {
     'help' => t('The status of the file.'),
     'field' => array(
       'id' => 'file_status',
-      'click sortable' => TRUE,
      ),
     'sort' => array(
       'id' => 'standard',
@@ -156,7 +150,6 @@ function file_views_data() {
     'help' => t('The date the file was uploaded.'),
     'field' => array(
       'id' => 'date',
-      'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'date'
@@ -390,7 +383,6 @@ function file_views_data() {
     'help' => t('The module managing this file relationship.'),
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE,
      ),
     'filter' => array(
       'id' => 'string',
@@ -407,7 +399,6 @@ function file_views_data() {
     'help' => t('The type of entity that is related to the file.'),
     'field' => array(
       'id' => 'standard',
-      'click sortable' => TRUE,
      ),
     'filter' => array(
       'id' => 'string',
@@ -424,7 +415,6 @@ function file_views_data() {
     'help' => t('The ID of the entity that is related to the file.'),
     'field' => array(
       'id' => 'numeric',
-      'click sortable' => TRUE,
     ),
     'argument' => array(
       'id' => 'numeric',
@@ -441,7 +431,6 @@ function file_views_data() {
     'help' => t('The number of times the file is used by this entity.'),
     'field' => array(
       'id' => 'numeric',
-      'click sortable' => TRUE,
      ),
     'filter' => array(
       'id' => 'numeric',

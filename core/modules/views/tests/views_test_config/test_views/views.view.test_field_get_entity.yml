@@ -1,4 +1,3 @@
-api_version: '3.0'
 base_table: comment
 core: 8.0-dev
 description: ''

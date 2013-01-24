@@ -26,12 +26,6 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "vid",
  *     "label" = "name"
- *   },
- *   view_modes = {
- *     "full" = {
- *       "label" = "Taxonomy vocabulary",
- *       "custom_settings" = FALSE
- *     }
  *   }
  * )
  */

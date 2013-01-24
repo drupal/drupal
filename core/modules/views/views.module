@@ -15,11 +15,6 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Plugin\Core\Entity\View;
 
 /**
- * Views API version string.
- */
-const VIEWS_API_VERSION = '3.0';
-
-/**
  * Implements hook_forms().
  *
  * To provide distinct form IDs for Views forms, the View name and

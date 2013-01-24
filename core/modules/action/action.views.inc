@@ -14,7 +14,11 @@
  *   the alter hook doesn't load the *.views.inc automatically.
  */
 function action_views_data() {
-  $data['views']['action_bulk_form'] = array(
+  $data['action']['table']['group'] = t('Action');
+  $data['action']['table']['join'] = array(
+    '#global' => array(),
+  );
+  $data['action']['action_bulk_form'] = array(
     'title' => t('Bulk update'),
     'help' => t('Allows users to apply an action to one or more items.'),
     'field' => array(

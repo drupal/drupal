@@ -250,14 +250,14 @@ function book_admin_paths() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_view_mode_info().
  */
-function book_entity_info(&$info) {
+function book_entity_view_mode_info() {
   // Add the 'Print' view mode for nodes.
-  $info['node']['view_modes']['print'] = array(
+  $view_modes['node']['print'] = array(
     'label' => t('Print'),
-    'custom_settings' => FALSE,
   );
+  return $view_modes;
 }
 
 /**

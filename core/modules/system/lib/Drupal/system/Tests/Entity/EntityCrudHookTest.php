@@ -36,7 +36,7 @@ class EntityCrudHookTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Entity CRUD hooks',
-      'description' => 'Tests the invocation of hooks when inserting, loading, updating or deleting an entity.',
+      'description' => 'Tests the invocation of hooks when creating, inserting, loading, updating or deleting an entity.',
       'group' => 'Entity API',
     );
   }
@@ -74,6 +74,12 @@ class EntityCrudHookTest extends WebTestBase {
       'id' => 'stark.test_html_id',
       'plugin' => 'test_html_id',
     ));
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_block_create called',
+      'entity_crud_hook_test_entity_create called for type block',
+    ));
+
     $_SESSION['entity_crud_hook_test'] = array();
     $entity->save();
 
@@ -139,6 +145,7 @@ class EntityCrudHookTest extends WebTestBase {
     ));
     $node->save();
     $nid = $node->nid;
+    $_SESSION['entity_crud_hook_test'] = array();
 
     $comment = entity_create('comment', array(
       'node_type' => 'node_type_' . $node->bundle(),
@@ -153,6 +160,11 @@ class EntityCrudHookTest extends WebTestBase {
       'changed' => REQUEST_TIME,
       'status' => 1,
       'langcode' => LANGUAGE_NOT_SPECIFIED,
+    ));
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_comment_create called',
+      'entity_crud_hook_test_entity_create called for type comment',
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
@@ -211,6 +223,12 @@ class EntityCrudHookTest extends WebTestBase {
       'status' => 1,
       'timestamp' => REQUEST_TIME,
     ));
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_file_create called',
+      'entity_crud_hook_test_entity_create called for type file',
+    ));
+
     $_SESSION['entity_crud_hook_test'] = array();
     $file->save();
 
@@ -267,6 +285,12 @@ class EntityCrudHookTest extends WebTestBase {
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
     ));
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_node_create called',
+      'entity_crud_hook_test_entity_create called for type node',
+    ));
+
     $_SESSION['entity_crud_hook_test'] = array();
     $node->save();
 
@@ -319,6 +343,7 @@ class EntityCrudHookTest extends WebTestBase {
       'module' => 'entity_crud_hook_test',
     ));
     taxonomy_vocabulary_save($vocabulary);
+    $_SESSION['entity_crud_hook_test'] = array();
 
     $term = entity_create('taxonomy_term', array(
       'vid' => $vocabulary->id(),
@@ -327,6 +352,12 @@ class EntityCrudHookTest extends WebTestBase {
       'description' => NULL,
       'format' => 1,
     ));
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_term_create called',
+      'entity_crud_hook_test_entity_create called for type taxonomy_term',
+    ));
+
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_term_save($term);
 
@@ -378,6 +409,12 @@ class EntityCrudHookTest extends WebTestBase {
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     ));
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_vocabulary_create called',
+      'entity_crud_hook_test_entity_create called for type taxonomy_vocabulary',
+    ));
+
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_vocabulary_save($vocabulary);
 
@@ -429,6 +466,12 @@ class EntityCrudHookTest extends WebTestBase {
       'status' => 1,
       'language' => 'en',
     ));
+
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_user_create called',
+      'entity_crud_hook_test_entity_create called for type user',
+    ));
+
     $_SESSION['entity_crud_hook_test'] = array();
     $account->save();
 

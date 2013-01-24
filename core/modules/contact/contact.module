@@ -174,12 +174,13 @@ function _contact_personal_tab_access($account) {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_bundle_info().
  */
-function contact_entity_info(&$types) {
+function contact_entity_bundle_info() {
+  $bundles = array();
   foreach (config_get_storage_names_with_prefix('contact.category.') as $config_name) {
     $config = config($config_name);
-    $types['contact_message']['bundles'][$config->get('id')] = array(
+    $bundles['contact_message'][$config->get('id')] = array(
       'label' => $config->get('label'),
       'admin' => array(
         'path' => 'admin/structure/contact/manage/%contact_category',
@@ -189,6 +190,7 @@ function contact_entity_info(&$types) {
       ),
     );
   }
+  return $bundles;
 }
 
 /**
@@ -196,8 +198,7 @@ function contact_entity_info(&$types) {
  */
 function contact_field_extra_fields() {
   $fields = array();
-  $entity_info = entity_get_info('contact_message');
-  foreach (array_keys($entity_info['bundles']) as $bundle) {
+  foreach (array_keys(entity_get_bundles('contact_message')) as $bundle) {
     $fields['contact_message'][$bundle]['form']['name'] = array(
       'label' => t('Sender name'),
       'description' => t('Text'),
