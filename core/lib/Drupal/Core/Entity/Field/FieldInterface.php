@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Field\FieldInterface.
+ * Contains \Drupal\Core\Entity\Field\FieldInterface.
  */
 
 namespace Drupal\Core\Entity\Field;
@@ -15,10 +15,10 @@ use Drupal\Core\TypedData\TypedDataInterface;
 /**
  * Interface for fields, being lists of field items.
  *
- * Contained items must implement the FieldItemInterface. This
- * interface is required for every property of an entity. Some methods are
- * delegated to the first contained item, in particular get() and set() as well
- * as their magic equivalences.
+ * This interface must be implemented by every entity field, whereas contained
+ * field items must implement the FieldItemInterface.
+ * Some methods of the fields are delegated to the first contained item, in
+ * particular get() and set() as well as their magic equivalences.
  *
  * Optionally, a typed data object implementing
  * Drupal\Core\TypedData\TypedDataInterface may be passed to
@@ -30,50 +30,49 @@ use Drupal\Core\TypedData\TypedDataInterface;
 interface FieldInterface extends ListInterface, AccessibleInterface, ContextAwareInterface, TypedDataInterface {
 
   /**
-   * Delegates to the first item.
+   * Gets a property object from the first field item.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::get()
    */
   public function get($property_name);
 
   /**
-   * Magic getter: Delegates to the first item.
+   * Magic method: Gets a property value of to the first field item.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::__get()
    */
   public function __get($property_name);
 
   /**
-   * Magic setter: Delegates to the first item.
+   * Magic method: Sets a property value of the first field item.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::__set()
    */
   public function __set($property_name, $value);
 
   /**
-   * Magic method for isset(): Delegates to the first item.
+   * Magic method: Determines whether a property of the first field item is set.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::__isset()
    */
   public function __isset($property_name);
 
   /**
-   * Magic method for unset(): Delegates to the first item.
+   * Magic method: Unsets a property of the first field item.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::__unset()
    */
   public function __unset($property_name);
 
-
   /**
-   * Delegates to the first item.
+   * Gets the definition of a property of the first field item.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::getPropertyDefinition()
    */
   public function getPropertyDefinition($name);
 
   /**
-   * Delegates to the first item.
+   * Gets an array of property definitions of the first field item.
    *
    * @see \Drupal\Core\Entity\Field\FieldItemInterface::getPropertyDefinitions()
    */

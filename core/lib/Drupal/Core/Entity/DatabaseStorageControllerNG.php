@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\DatabaseStorageControllerNG.
+ * Contains \Drupal\Core\Entity\DatabaseStorageControllerNG.
  */
 
 namespace Drupal\Core\Entity;
@@ -20,6 +20,10 @@ use Drupal\Component\Uuid\Uuid;
  *
  * @todo: Once all entity types have been converted, merge improvements into the
  * DatabaseStorageController class.
+ *
+ * See the EntityNG documentation for an explanation of "NG".
+ *
+ * @see \Drupal\Core\EntityNG
  */
 class DatabaseStorageControllerNG extends DatabaseStorageController {
 
@@ -72,7 +76,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *   the plain value of an entity field, i.e. an array of field items.
    *   If no numerically indexed array is given, the value will be set for the
    *   first field item. For example, to set the first item of a 'name'
-   *   property one can pass:
+   *   field one can pass:
    *   @code
    *     $values = array('name' => array(0 => array('value' => 'the name')));
    *   @endcode
@@ -81,12 +85,13 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *     $values = array('name' => array('value' => 'the name'));
    *   @endcode
    *   If the 'name' field is a defined as 'string_item' which supports
-   *   setting by string value, it's also possible to just pass the name string:
+   *   setting its value by a string, it's also possible to just pass the name
+   *   string:
    *   @code
    *     $values = array('name' => 'the name');
    *   @endcode
    *
-   * @return Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\EntityInterface
    *   A new entity object.
    */
   public function create(array $values) {
@@ -146,13 +151,12 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    * Added mapping from storage records to entities.
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    // Now map the record values to the according entity properties and
-    // activate compatibility mode.
+    // Map the loaded stdclass records into entity objects and according fields.
     $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
     // Attach fields.
     if ($this->entityInfo['fieldable']) {
-      // Prepare BC compatible entities for field API.
+      // Prepare BC compatible entities before passing them to the field API.
       $bc_entities = array();
       foreach ($queried_entities as $key => $entity) {
         $bc_entities[$key] = $entity->getBCEntity();
@@ -196,7 +200,9 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     foreach ($records as $id => $record) {
       $values = array();
       foreach ($record as $name => $value) {
-        // Avoid unnecessary array hierarchies to save memory.
+        // Skip the item delta and item value levels but let the field assign
+        // the value as suiting. This avoids unnecessary array hierarchies and
+        // saves memory here.
         $values[$name][LANGUAGE_DEFAULT] = $value;
       }
       $bundle = $this->bundleKey ? $record->{$this->bundleKey} : FALSE;
@@ -296,8 +302,8 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       }
       else {
         $return = drupal_write_record($this->entityInfo['base_table'], $record);
+        $entity->{$this->idKey}->value = $record->{$this->idKey};
         if ($this->revisionKey) {
-          $entity->{$this->idKey}->value = $record->{$this->idKey};
           $record->{$this->revisionKey} = $this->saveRevision($entity);
         }
         $entity->{$this->idKey}->value = $record->{$this->idKey};
@@ -312,7 +318,6 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $this->postSave($entity, FALSE);
         $this->invokeHook('insert', $entity);
       }
-      $entity->updateOriginalValues();
 
       // Ignore slave server temporarily.
       db_ignore_slave();

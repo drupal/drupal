@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\DatabaseStorageController.
+ * Contains \Drupal\Core\Entity\DatabaseStorageController.
  */
 
 namespace Drupal\Core\Entity;
@@ -155,7 +155,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::resetCache().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::resetCache().
    */
   public function resetCache(array $ids = NULL) {
     if (isset($ids)) {
@@ -169,7 +169,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::load().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::load().
    */
   public function load(array $ids = NULL) {
     $entities = array();
@@ -236,7 +236,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadRevision().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadRevision().
    */
   public function loadRevision($revision_id) {
     // Build and execute the query.
@@ -260,7 +260,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::deleteRevision().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::deleteRevision().
    */
   public function deleteRevision($revision_id) {
     if ($revision = $this->loadRevision($revision_id)) {
@@ -277,7 +277,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadByProperties().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadByProperties().
    */
   public function loadByProperties(array $values = array()) {
     // Build a query to fetch the entity IDs.
@@ -438,7 +438,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::create().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::create().
    */
   public function create(array $values) {
     $class = $this->entityInfo['class'];
@@ -459,7 +459,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::delete().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::delete().
    */
   public function delete(array $entities) {
     if (!$entities) {
@@ -503,7 +503,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::save().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::save().
    */
   public function save(EntityInterface $entity) {
     $transaction = db_transaction();
@@ -666,17 +666,17 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::getFieldDefinitions().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::getFieldDefinitions().
    */
   public function getFieldDefinitions(array $constraints) {
-    // @todo: Add caching for $this->propertyInfo.
+    // @todo: Add caching for $this->entityFieldInfo.
     if (!isset($this->entityFieldInfo)) {
       $this->entityFieldInfo = array(
         'definitions' => $this->baseFieldDefinitions(),
-        // Contains definitions of optional (per-bundle) properties.
+        // Contains definitions of optional (per-bundle) fields.
         'optional' => array(),
-        // An array keyed by bundle name containing the names of the per-bundle
-        // properties.
+        // An array keyed by bundle name containing the optional fields added by
+        // the bundle.
         'bundle map' => array(),
       );
 
@@ -700,12 +700,12 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
 
     $bundle = !empty($constraints['bundle']) ? $constraints['bundle'] : FALSE;
 
-    // Add in per-bundle properties.
+    // Add in per-bundle fields.
     if (!isset($this->fieldDefinitions[$bundle])) {
       $this->fieldDefinitions[$bundle] = $this->entityFieldInfo['definitions'];
 
-      if ($bundle && isset($this->entityFieldInfo['bundle map'][$constraints['bundle']])) {
-        $this->fieldDefinitions[$bundle] += array_intersect_key($this->entityFieldInfo['optional'], array_flip($this->entityFieldInfo['bundle map'][$constraints['bundle']]));
+      if ($bundle && isset($this->entityFieldInfo['bundle map'][$bundle])) {
+        $this->fieldDefinitions[$bundle] += array_intersect_key($this->entityFieldInfo['optional'], array_flip($this->entityFieldInfo['bundle map'][$bundle]));
       }
     }
     return $this->fieldDefinitions[$bundle];
@@ -721,7 +721,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServiceName().
+   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServiceName().
    */
   public function getQueryServiceName() {
     return 'entity.query.field_sql_storage';

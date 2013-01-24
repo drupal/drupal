@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Entity.
+ * Contains \Drupal\Core\Entity\Entity.
  */
 
 namespace Drupal\Core\Entity;
@@ -75,28 +75,28 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::id().
+   * Implements \Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return isset($this->id) ? $this->id : NULL;
   }
 
   /**
-   * Implements EntityInterface::uuid().
+   * Implements \Drupal\Core\Entity\EntityInterface::uuid().
    */
   public function uuid() {
     return isset($this->uuid) ? $this->uuid : NULL;
   }
 
   /**
-   * Implements EntityInterface::isNew().
+   * Implements \Drupal\Core\Entity\EntityInterface::isNew().
    */
   public function isNew() {
     return !empty($this->enforceIsNew) || !$this->id();
   }
 
   /**
-   * Implements EntityInterface::isNewRevision().
+   * Implements \Drupal\Core\Entity\EntityInterface::isNewRevision().
    */
   public function isNewRevision() {
     $info = $this->entityInfo();
@@ -104,35 +104,35 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::enforceIsNew().
+   * Implements \Drupal\Core\Entity\EntityInterface::enforceIsNew().
    */
   public function enforceIsNew($value = TRUE) {
     $this->enforceIsNew = $value;
   }
 
   /**
-   * Implements EntityInterface::setNewRevision().
+   * Implements \Drupal\Core\Entity\EntityInterface::setNewRevision().
    */
   public function setNewRevision($value = TRUE) {
     $this->newRevision = $value;
   }
 
   /**
-   * Implements EntityInterface::entityType().
+   * Implements \Drupal\Core\Entity\EntityInterface::entityType().
    */
   public function entityType() {
     return $this->entityType;
   }
 
   /**
-   * Implements EntityInterface::bundle().
+   * Implements \Drupal\Core\Entity\EntityInterface::bundle().
    */
   public function bundle() {
     return $this->entityType;
   }
 
   /**
-   * Implements EntityInterface::label().
+   * Implements \Drupal\Core\Entity\EntityInterface::label().
    */
   public function label($langcode = NULL) {
     $label = NULL;
@@ -147,7 +147,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::uri().
+   * Implements \Drupal\Core\Entity\EntityInterface::uri().
    */
   public function uri() {
     $bundle = $this->bundle();
@@ -177,7 +177,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::get().
+   * Implements \Drupal\Core\Entity\EntityInterface::get().
    */
   public function get($property_name, $langcode = NULL) {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -186,7 +186,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::set().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
   public function set($property_name, $value) {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -195,7 +195,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::getProperties().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
    */
   public function getProperties($include_computed = FALSE) {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -203,7 +203,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
    */
   public function getPropertyValues() {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -211,7 +211,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::setPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
    */
   public function setPropertyValues($values) {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -219,7 +219,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinition().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
    */
   public function getPropertyDefinition($name) {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -227,7 +227,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -235,7 +235,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::isEmpty().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
    */
   public function isEmpty() {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -243,7 +243,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements ComplexDataInterface::getIterator().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getIterator().
    */
   public function getIterator() {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -251,7 +251,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements AccessibleInterface::access().
+   * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
     $method = $operation . 'Access';
@@ -261,7 +261,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements TranslatableInterface::language().
+   * Implements \Drupal\Core\TypedData\TranslatableInterface::language().
    */
   public function language() {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -275,7 +275,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements TranslatableInterface::getTranslation().
+   * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslation().
    */
   public function getTranslation($langcode, $strict = TRUE) {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -287,14 +287,14 @@ class Entity implements IteratorAggregate, EntityInterface {
    *
    * @todo: Remove once all entity types implement the entity field API.
    *   This is deprecated by
-   *   Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages().
+   *   \Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages().
    */
   public function translations() {
     return $this->getTranslationLanguages(FALSE);
   }
 
   /**
-   * Implements TranslatableInterface::getTranslationLanguages().
+   * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages().
    */
   public function getTranslationLanguages($include_default = TRUE) {
     // @todo: Replace by EntityNG implementation once all entity types have been
@@ -325,14 +325,14 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::save().
+   * Implements \Drupal\Core\Entity\EntityInterface::save().
    */
   public function save() {
     return drupal_container()->get('plugin.manager.entity')->getStorageController($this->entityType)->save($this);
   }
 
   /**
-   * Implements EntityInterface::delete().
+   * Implements \Drupal\Core\Entity\EntityInterface::delete().
    */
   public function delete() {
     if (!$this->isNew()) {
@@ -341,7 +341,7 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::createDuplicate().
+   * Implements \Drupal\Core\Entity\EntityInterface::createDuplicate().
    */
   public function createDuplicate() {
     $duplicate = clone $this;
@@ -357,21 +357,21 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements EntityInterface::entityInfo().
+   * Implements \Drupal\Core\Entity\EntityInterface::entityInfo().
    */
   public function entityInfo() {
     return entity_get_info($this->entityType);
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getRevisionId().
+   * Implements \Drupal\Core\Entity\EntityInterface::getRevisionId().
    */
   public function getRevisionId() {
     return NULL;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::isDefaultRevision().
+   * Implements \Drupal\Core\Entity\EntityInterface::isDefaultRevision().
    */
   public function isDefaultRevision($new_value = NULL) {
     $return = $this->isDefaultRevision;
@@ -382,21 +382,21 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getExportProperties().
+   * Implements \Drupal\Core\Entity\EntityInterface::getExportProperties().
    */
   public function getExportProperties() {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getBCEntity().
+   * Implements \Drupal\Core\Entity\EntityInterface::getBCEntity().
    */
   public function getBCEntity() {
     return $this;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getOriginalEntity().
+   * Implements \Drupal\Core\Entity\EntityInterface::getOriginalEntity().
    */
   public function getOriginalEntity() {
     return $this;
@@ -434,7 +434,7 @@ class Entity implements IteratorAggregate, EntityInterface {
    * Implements \Drupal\Core\TypedData\ContextAwareInterface::setContext().
    */
   public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
-    // As entities are always the root of the tree, we do not need to set any
-    // context.
+    // As entities are always the root of the tree of typed data, we do not need
+    // to set any parent or name.
   }
 }

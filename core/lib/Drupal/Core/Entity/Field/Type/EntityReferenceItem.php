@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Field\Type\EntityReferenceItem.
+ * Contains \Drupal\Core\Entity\Field\Type\EntityReferenceItem.
  */
 
 namespace Drupal\Core\Entity\Field\Type;
@@ -21,26 +21,26 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * Definitions of the contained properties.
    *
-   * @see self::getPropertyDefinitions()
+   * @see EntityReferenceItem::getPropertyDefinitions()
    *
    * @var array
    */
   static $propertyDefinitions;
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
     // Definitions vary by entity type, so key them by entity type.
     $entity_type = $this->definition['settings']['entity type'];
 
-    if (!isset(self::$propertyDefinitions[$entity_type])) {
-      self::$propertyDefinitions[$entity_type]['value'] = array(
+    if (!isset(static::$propertyDefinitions[$entity_type])) {
+      static::$propertyDefinitions[$entity_type]['value'] = array(
         // @todo: Lookup the entity type's ID data type and use it here.
         'type' => 'integer',
         'label' => t('Entity ID'),
       );
-      self::$propertyDefinitions[$entity_type]['entity'] = array(
+      static::$propertyDefinitions[$entity_type]['entity'] = array(
         'type' => 'entity',
         'constraints' => array(
           'entity type' => $entity_type,
@@ -53,7 +53,7 @@ class EntityReferenceItem extends FieldItemBase {
         'settings' => array('id source' => 'value'),
       );
     }
-    return self::$propertyDefinitions[$entity_type];
+    return static::$propertyDefinitions[$entity_type];
   }
 
   /**
@@ -61,7 +61,7 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function setValue($values) {
     // Treat the values as property value of the entity field, if no array
-    // is given.
+    // is given. That way we support setting the field by entity ID or object.
     if (!is_array($values)) {
       $values = array('entity' => $values);
     }

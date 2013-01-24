@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityStorageControllerInterface.
+ * Contains \Drupal\Core\Entity\EntityStorageControllerInterface.
  */
 
 namespace Drupal\Core\Entity;
@@ -46,7 +46,7 @@ interface EntityStorageControllerInterface {
    * @param int $revision_id
    *   The revision id.
    *
-   * @return Drupal\Core\Entity\EntityInterface|false
+   * @return \Drupal\Core\Entity\EntityInterface|false
    *   The specified entity revision or FALSE if not found.
    */
   public function loadRevision($revision_id);
@@ -80,7 +80,7 @@ interface EntityStorageControllerInterface {
    *   An array of values to set, keyed by property name. If the entity type has
    *   bundles the bundle key has to be specified.
    *
-   * @return Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\EntityInterface
    *   A new entity object.
    */
   public function create(array $values);
@@ -91,7 +91,7 @@ interface EntityStorageControllerInterface {
    * @param array $entities
    *   An array of entity objects to delete.
    *
-   * @throws Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures, an exception is thrown.
    */
   public function delete(array $entities);
@@ -99,14 +99,14 @@ interface EntityStorageControllerInterface {
   /**
    * Saves the entity permanently.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to save.
    *
    * @return
    *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
    *   performed.
    *
-   * @throws Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures, an exception is thrown.
    */
   public function save(EntityInterface $entity);

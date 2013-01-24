@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityStorageException.
+ * Contains \Drupal\Core\Entity\EntityStorageException.
  */
 
 namespace Drupal\Core\Entity;

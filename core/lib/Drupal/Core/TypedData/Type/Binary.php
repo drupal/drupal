@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\Type\Binary.
+ * Contains \Drupal\Core\TypedData\Type\Binary.
  */
 
 namespace Drupal\Core\TypedData\Type;
@@ -34,9 +34,11 @@ class Binary extends TypedData {
   public $handle = NULL;
 
   /**
-   * Implements TypedDataInterface::getValue().
+   * Overrides TypedData::getValue().
    */
   public function getValue() {
+    // If the value has been set by (absolute) stream resource URI, access the
+    // resource now.
     if (!isset($this->handle) && isset($this->uri)) {
       $this->handle = fopen($this->uri, 'rb');
     }
@@ -44,7 +46,9 @@ class Binary extends TypedData {
   }
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides TypedData::setValue().
+   *
+   * Supports a PHP file resource or a (absolute) stream resource URI as value.
    */
   public function setValue($value) {
     if (!isset($value)) {
@@ -65,20 +69,14 @@ class Binary extends TypedData {
   }
 
   /**
-   * Implements TypedDataInterface::getString().
+   * Overrides TypedData::getString().
    */
   public function getString() {
+    // Return the file content.
     $contents = '';
     while (!feof($this->getValue())) {
       $contents .= fread($this->handle, 8192);
     }
     return $contents;
-  }
-
-  /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate() {
-    // TODO: Implement validate() method.
   }
 }

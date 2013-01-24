@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\ReadOnlyException.
+ * Contains \Drupal\Core\TypedData\ReadOnlyException.
  */
 
 namespace Drupal\Core\TypedData;

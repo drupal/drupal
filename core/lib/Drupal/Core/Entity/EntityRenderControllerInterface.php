@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityRenderControllerInterface.
+ * Contains \Drupal\Core\Entity\EntityRenderControllerInterface.
  */
 
 namespace Drupal\Core\Entity;
@@ -34,7 +34,7 @@ interface EntityRenderControllerInterface {
   /**
    * Returns the render array for the provided entity.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to render.
    * @param string $view_mode
    *   (optional) The view mode that should be used to render the entity.

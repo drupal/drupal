@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\AccessibleInterface.
+ * Contains \Drupal\Core\TypedData\AccessibleInterface.
  */
 
 namespace Drupal\Core\TypedData;

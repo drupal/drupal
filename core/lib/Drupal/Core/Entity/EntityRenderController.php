@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityRenderController.
+ * Contains \Drupal\Core\Entity\EntityRenderController.
  */
 
 namespace Drupal\Core\Entity;
@@ -25,7 +25,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityRenderControllerInterface::buildContent().
+   * Implements \Drupal\Core\Entity\EntityRenderControllerInterface::buildContent().
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     field_attach_prepare_view($this->entityType, $entities, $displays, $langcode);
@@ -43,7 +43,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
   /**
    * Provides entity-specific defaults to the build process.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity for which the defaults should be provided.
    * @param string $view_mode
    *   The view mode that should be used.
@@ -82,7 +82,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) { }
 
   /**
-   * Implements Drupal\Core\Entity\EntityRenderControllerInterface::view().
+   * Implements \Drupal\Core\Entity\EntityRenderControllerInterface::view().
    */
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
     $buildList = $this->viewMultiple(array($entity), $view_mode, $langcode);
@@ -90,7 +90,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityRenderControllerInterface::viewMultiple().
+   * Implements \Drupal\Core\Entity\EntityRenderControllerInterface::viewMultiple().
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     if (!isset($langcode)) {

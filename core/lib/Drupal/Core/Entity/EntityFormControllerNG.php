@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityFormControllerNG.
+ * Contains \Drupal\Core\Entity\EntityFormControllerNG.
  */
 
 namespace Drupal\Core\Entity;
@@ -11,7 +11,11 @@ namespace Drupal\Core\Entity;
  * Entity form controller variant for entity types using the new property API.
  *
  * @todo: Merge with EntityFormController and overhaul once all entity types
- * are converted to the new property API.
+ * are converted to the new entity field API.
+ *
+ * See the EntityNG documentation for an explanation of "NG".
+ *
+ * @see \Drupal\Core\EntityNG
  */
 class EntityFormControllerNG extends EntityFormController {
 
@@ -20,7 +24,7 @@ class EntityFormControllerNG extends EntityFormController {
    */
   public function form(array $form, array &$form_state, EntityInterface $entity) {
     // @todo Exploit the Field API to generate the default widgets for the
-    // entity properties.
+    // entity fields.
     $info = $entity->entityInfo();
     if (!empty($info['fieldable'])) {
       field_attach_form($entity->getBCEntity(), $form, $form_state, $this->getFormLangcode($form_state));
@@ -33,7 +37,7 @@ class EntityFormControllerNG extends EntityFormController {
    */
   public function validate(array $form, array &$form_state) {
     // @todo Exploit the Field API to validate the values submitted for the
-    // entity properties.
+    // entity fields.
     $entity = $this->buildEntity($form, $form_state);
     $info = $entity->entityInfo();
 
@@ -64,11 +68,12 @@ class EntityFormControllerNG extends EntityFormController {
     $entity = clone $this->getEntity($form_state);
     $entity_type = $entity->entityType();
     $info = entity_get_info($entity_type);
-    // @todo Exploit the Field API to process the submitted entity field.
+    // @todo Exploit the Field API to process the submitted entity fields.
 
-    // Copy top-level form values that are not for fields to entity properties,
-    // without changing existing entity properties that are not being edited by
-    // this form. Copying field values must be done using field_attach_submit().
+    // Copy top-level form values that are entity fields but not handled by
+    // field API without changing existing entity fields that are not being
+    // edited by this form. Values of fields handled by field API are copied
+    // by field_attach_submit() below.
     $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $entity->bundle())) : $form_state['values'];
     $translation = $entity->getTranslation($this->getFormLangcode($form_state), FALSE);
     $definitions = $translation->getPropertyDefinitions();
@@ -78,15 +83,14 @@ class EntityFormControllerNG extends EntityFormController {
       }
     }
 
-    // Invoke all specified builders for copying form values to entity
-    // properties.
+    // Invoke all specified builders for copying form values to entity fields.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
         call_user_func_array($function, array($entity_type, $entity, &$form, &$form_state));
       }
     }
 
-    // Copy field values to the entity.
+    // Invoke field API for copying field values.
     if ($info['fieldable']) {
       field_attach_submit($entity->getBCEntity(), $form, $form_state);
     }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityFormController.
+ * Contains \Drupal\Core\Entity\EntityFormController.
  */
 
 namespace Drupal\Core\Entity;
@@ -33,7 +33,7 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::build().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::build().
    */
   public function build(array $form, array &$form_state, EntityInterface $entity) {
 
@@ -151,7 +151,7 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::validate().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::validate().
    */
   public function validate(array $form, array &$form_state) {
     // @todo Exploit the Field API to validate the values submitted for the
@@ -170,7 +170,7 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::submit().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::submit().
    *
    * This is the default entity object builder function. It is called before any
    * other submit handler to build the new entity object to be passed to the
@@ -219,7 +219,7 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::getFormLangcode().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::getFormLangcode().
    */
   public function getFormLangcode(array $form_state) {
     $entity = $this->getEntity($form_state);
@@ -245,7 +245,7 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements EntityFormControllerInterface::isDefaultFormLangcode().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::isDefaultFormLangcode().
    */
   public function isDefaultFormLangcode(array $form_state) {
     return $this->getFormLangcode($form_state) == $this->getEntity($form_state)->language()->langcode;
@@ -301,7 +301,7 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::buildEntity().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::buildEntity().
    */
   public function buildEntity(array $form, array &$form_state) {
     $entity = clone $this->getEntity($form_state);
@@ -312,14 +312,14 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::getEntity().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::getEntity().
    */
   public function getEntity(array $form_state) {
     return isset($form_state['entity']) ? $form_state['entity'] : NULL;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::setEntity().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::setEntity().
    */
   public function setEntity(EntityInterface $entity, array &$form_state) {
     $form_state['entity'] = $entity;
@@ -333,7 +333,7 @@ class EntityFormController implements EntityFormControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityFormControllerInterface::getOperation().
+   * Implements \Drupal\Core\Entity\EntityFormControllerInterface::getOperation().
    */
   public function getOperation() {
     return $this->operation;

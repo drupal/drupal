@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Field\Type\DateItem.
+ * Contains \Drupal\Core\Entity\Field\Type\DateItem.
  */
 
 namespace Drupal\Core\Entity\Field\Type;
@@ -17,23 +17,23 @@ class DateItem extends FieldItemBase {
   /**
    * Definitions of the contained properties.
    *
-   * @see self::getPropertyDefinitions()
+   * @see DateItem::getPropertyDefinitions()
    *
    * @var array
    */
   static $propertyDefinitions;
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
 
-    if (!isset(self::$propertyDefinitions)) {
-      self::$propertyDefinitions['value'] = array(
+    if (!isset(static::$propertyDefinitions)) {
+      static::$propertyDefinitions['value'] = array(
         'type' => 'date',
         'label' => t('Date value'),
       );
     }
-    return self::$propertyDefinitions;
+    return static::$propertyDefinitions;
   }
 }

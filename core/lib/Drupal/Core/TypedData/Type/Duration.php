@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\Type\Duration.
+ * Contains \Drupal\Core\TypedData\Type\Duration.
  */
 
 namespace Drupal\Core\TypedData\Type;
@@ -29,7 +29,7 @@ class Duration extends TypedData {
   protected $value;
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides TypedData::setValue().
    */
   public function setValue($value) {
     if ($value instanceof DateInterval || !isset($value)) {
@@ -51,18 +51,11 @@ class Duration extends TypedData {
   }
 
   /**
-   * Implements TypedDataInterface::getString().
+   * Overrides TypedData::getString().
    */
   public function getString() {
     // Generate an ISO 8601 formatted string as supported by
     // DateInterval::__construct() and setValue().
     return (string) $this->getValue()->format('%rP%yY%mM%dDT%hH%mM%sS');
-  }
-
-  /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate() {
-    // TODO: Implement validate() method.
   }
 }

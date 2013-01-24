@@ -15,7 +15,7 @@ class TextSummaryItem extends TextItem {
   /**
    * Definitions of the contained properties.
    *
-   * @see self::getPropertyDefinitions()
+   * @see TextSummaryItem::getPropertyDefinitions()
    *
    * @var array
    */
@@ -26,15 +26,15 @@ class TextSummaryItem extends TextItem {
    */
   public function getPropertyDefinitions() {
 
-    if (!isset(self::$propertyDefinitions)) {
+    if (!isset(static::$propertyDefinitions)) {
 
-      self::$propertyDefinitions = parent::getPropertyDefinitions();
+      static::$propertyDefinitions = parent::getPropertyDefinitions();
 
-      self::$propertyDefinitions['summary'] = array(
+      static::$propertyDefinitions['summary'] = array(
         'type' => 'string',
         'label' => t('Summary text value'),
       );
-      self::$propertyDefinitions['summary_processed'] = array(
+      static::$propertyDefinitions['summary_processed'] = array(
         'type' => 'string',
         'label' => t('Processed summary text'),
         'description' => t('The summary text value with the text format applied.'),
@@ -45,6 +45,6 @@ class TextSummaryItem extends TextItem {
         ),
       );
     }
-    return self::$propertyDefinitions;
+    return static::$propertyDefinitions;
   }
 }

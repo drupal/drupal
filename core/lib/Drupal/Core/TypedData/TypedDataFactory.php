@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\TypedDataFactory.
+ * Contains \Drupal\Core\TypedData\TypedDataFactory.
  */
 
 namespace Drupal\Core\TypedData;
@@ -20,7 +20,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
 class TypedDataFactory extends DefaultFactory {
 
   /**
-   * Implements Drupal\Component\Plugin\Factory\FactoryInterface::createInstance().
+   * Implements \Drupal\Component\Plugin\Factory\FactoryInterface::createInstance().
    *
    * @param string $plugin_id
    *   The id of a plugin, i.e. the data type.
@@ -35,6 +35,7 @@ class TypedDataFactory extends DefaultFactory {
    *   ComplexDataInterface.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The instantiated typed data object.
    */
   public function createInstance($plugin_id, array $configuration, $name = NULL, $parent = NULL) {
     $type_definition = $this->discovery->getDefinition($plugin_id);
@@ -43,7 +44,8 @@ class TypedDataFactory extends DefaultFactory {
       throw new InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
     }
 
-    // Allow per-data definition overrides of the used classes.
+    // Allow per-data definition overrides of the used classes, i.e. take over
+    // classes specified in the data definition.
     $key = empty($configuration['list']) ? 'class' : 'list class';
     if (isset($configuration[$key])) {
       $class = $configuration[$key];

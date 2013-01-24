@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Field\FieldItemBase.
+ * Contains \Drupal\Core\Entity\Field\FieldItemBase.
  */
 
 namespace Drupal\Core\Entity\Field;
@@ -26,13 +26,13 @@ use InvalidArgumentException;
 abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAggregate, FieldItemInterface {
 
   /**
-   * The array of properties.
+   * The array of properties, each implementing the TypedDataInterface.
    *
    * Field objects are instantiated during object construction and cannot be
    * replaced by others, so computed properties can safely store references on
    * other properties.
    *
-   * @var array<TypedDataInterface>
+   * @var array
    */
   protected $properties = array();
 
@@ -61,7 +61,7 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements TypedDataInterface::getValue().
+   * Overrides \Drupal\Core\TypedData\TypedData::getValue().
    */
   public function getValue() {
     $values = array();
@@ -72,9 +72,9 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides \Drupal\Core\TypedData\TypedData::setValue().
    *
-   * @param array $values
+   * @param array|null $values
    *   An array of property values.
    */
   public function setValue($values) {
@@ -98,7 +98,7 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements TypedDataInterface::getString().
+   * Overrides \Drupal\Core\TypedData\TypedData::getString().
    */
   public function getString() {
     $strings = array();
@@ -109,14 +109,7 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate() {
-    // @todo implement
-  }
-
-  /**
-   * Implements ComplexDataInterface::get().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::get().
    */
   public function get($property_name) {
     if (!isset($this->properties[$property_name])) {
@@ -126,21 +119,21 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements ComplexDataInterface::set().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
   public function set($property_name, $value) {
     $this->get($property_name)->setValue($value);
   }
 
   /**
-   * Implements FieldItemInterface::__get().
+   * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__get().
    */
   public function __get($name) {
     return $this->get($name)->getValue();
   }
 
   /**
-   * Implements FieldItemInterface::__set().
+   * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__set().
    */
   public function __set($name, $value) {
     // Support setting values via property objects.
@@ -151,14 +144,14 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements FieldItemInterface::__isset().
+   * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__isset().
    */
   public function __isset($name) {
     return isset($this->properties[$name]) && $this->properties[$name]->getValue() !== NULL;
   }
 
   /**
-   * Implements FieldItemInterface::__unset().
+   * Implements \Drupal\Core\Entity\Field\FieldItemInterface::__unset().
    */
   public function __unset($name) {
     if (isset($this->properties[$name])) {
@@ -166,9 +159,8 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
     }
   }
 
-
   /**
-   * Implements ComplexDataInterface::getProperties().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
    */
   public function getProperties($include_computed = FALSE) {
     $properties = array();
@@ -181,14 +173,14 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
    */
   public function getPropertyValues() {
     return $this->getValue();
   }
 
   /**
-   * Implements ComplexDataInterface::setPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
    */
   public function setPropertyValues($values) {
     foreach ($values as $name => $value) {
@@ -197,14 +189,14 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements IteratorAggregate::getIterator().
+   * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
     return new ArrayIterator($this->getProperties());
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinition().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
    */
   public function getPropertyDefinition($name) {
     $definitions = $this->getPropertyDefinitions();
@@ -217,7 +209,7 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements ComplexDataInterface::isEmpty().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
    */
   public function isEmpty() {
     foreach ($this->getProperties() as $property) {
@@ -229,7 +221,7 @@ abstract class FieldItemBase extends ContextAwareTypedData implements IteratorAg
   }
 
   /**
-   * Implements a deep clone.
+   * Magic method: Implements a deep clone.
    */
   public function __clone() {
     foreach ($this->properties as $name => $property) {

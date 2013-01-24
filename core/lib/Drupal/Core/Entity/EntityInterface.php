@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityInterface.
+ * Contains \Drupal\Core\Entity\EntityInterface.
  */
 
 namespace Drupal\Core\Entity;
@@ -15,8 +15,18 @@ use Drupal\Core\TypedData\TranslatableInterface;
 /**
  * Defines a common interface for all entity objects.
  *
+ * This interface builds upon the general interfaces provided by the typed data
+ * API, while extending them with entity-specific additions. I.e., an entity
+ * implements the ComplexDataInterface among others, thus is complex data
+ * containing fields as its data properties. The contained fields have to
+ * implement the \Drupal\Core\Entity\Field\FieldInterface, which builds upon
+ * typed data interfaces as well.
+ *
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
+ *
+ * @see \Drupal\Core\TypedData\TypedDataManager
+ * @see \Drupal\Core\Field\FieldInterface
  */
 interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, AccessibleInterface, TranslatableInterface {
 
@@ -49,7 +59,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    * @return
    *   TRUE if the entity is new, or FALSE if the entity has already been saved.
    *
-   * @see Drupal\Core\Entity\EntityInterface::enforceIsNew()
+   * @see \Drupal\Core\Entity\EntityInterface::enforceIsNew()
    */
   public function isNew();
 
@@ -59,7 +69,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    * @return bool
    *   TRUE if a new revision should be created.
    *
-   * @see Drupal\Core\Entity\EntityInterface::setNewRevision()
+   * @see \Drupal\Core\Entity\EntityInterface::setNewRevision()
    */
   public function isNewRevision();
 
@@ -69,7 +79,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    * @param bool $value
    *   (optional) Whether a new revision should be saved.
    *
-   * @see Drupal\Core\Entity\EntityInterface::isNewRevision()
+   * @see \Drupal\Core\Entity\EntityInterface::isNewRevision()
    */
   public function setNewRevision($value = TRUE);
 
@@ -83,7 +93,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    *   (optional) Whether the entity should be forced to be new. Defaults to
    *   TRUE.
    *
-   * @see Drupal\Core\Entity\EntityInterface::isNew()
+   * @see \Drupal\Core\Entity\EntityInterface::isNew()
    */
   public function enforceIsNew($value = TRUE);
 
@@ -133,7 +143,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
    * @return
    *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
    *
-   * @throws Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures an exception is thrown.
    */
   public function save();
@@ -141,7 +151,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
   /**
    * Deletes an entity permanently.
    *
-   * @throws Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures an exception is thrown.
    */
   public function delete();
@@ -149,7 +159,7 @@ interface EntityInterface extends ContextAwareInterface, ComplexDataInterface, A
   /**
    * Creates a duplicate of the entity.
    *
-   * @return Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\EntityInterface
    *   A clone of the current entity with all identifiers unset, so saving
    *   it inserts a new entity into the storage system.
    */

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Entity\EntityAccessControllerInterface.
+ * Contains \Drupal\Core\Entity\EntityAccessControllerInterface.
  */
 
 namespace Drupal\Core\Entity;

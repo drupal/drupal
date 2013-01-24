@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\Type\Date.
+ * Contains \Drupal\Core\TypedData\Type\Date.
  */
 
 namespace Drupal\Core\TypedData\Type;
@@ -14,10 +14,10 @@ use InvalidArgumentException;
 /**
  * The date data type.
  *
- * The plain value of a date is an instance of the DrupalDateTime class. For setting
- * the value any value supported by the __construct() of the DrupalDateTime
- * class will work, including a DateTime object, a timestamp, a string
- * date, or an array of date parts.
+ * The plain value of a date is an instance of the DrupalDateTime class. For
+ * setting the value any value supported by the __construct() of the
+ * DrupalDateTime class will work, including a DateTime object, a timestamp, a
+ * string date, or an array of date parts.
  */
 class Date extends TypedData {
 
@@ -29,7 +29,7 @@ class Date extends TypedData {
   protected $value;
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides TypedData::setValue().
    */
   public function setValue($value) {
 
@@ -44,19 +44,5 @@ class Date extends TypedData {
         throw new InvalidArgumentException("Invalid date format given.");
       }
     }
-  }
-
-  /**
-   * Implements TypedDataInterface::getString().
-   */
-  public function getString() {
-    return (string) $this->getValue();
-  }
-
-  /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate() {
-    // TODO: Implement validate() method.
   }
 }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Query\QueryBase.
+ * Contains \Drupal\Core\Entity\Query\QueryBase.
  */
 
 namespace Drupal\Core\Entity\Query;
@@ -84,14 +84,14 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::getEntityType().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::getEntityType().
    */
   public function getEntityType() {
     return $this->entityType;
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::condition().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::condition().
    */
   public function condition($property, $value = NULL, $operator = NULL, $langcode = NULL) {
     $this->condition->condition($property, $value, $operator, $langcode);
@@ -99,7 +99,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::exists().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::exists().
    */
   public function exists($property, $langcode = NULL) {
     $this->condition->exists($property, $langcode);
@@ -107,7 +107,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::notExists().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::notExists().
    */
   public function notExists($property, $langcode = NULL) {
     $this->condition->notExists($property, $langcode);
@@ -115,7 +115,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::range().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::range().
    */
   public function range($start = NULL, $length = NULL) {
     $this->range = array(
@@ -126,21 +126,21 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::andConditionGroup().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::andConditionGroup().
    */
   public function andConditionGroup() {
     return $this->conditionGroupFactory('and');
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::orConditionGroup().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::orConditionGroup().
    */
   public function orConditionGroup() {
     return $this->conditionGroupFactory('or');
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::sort().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::sort().
    */
   public function sort($property, $direction = 'ASC', $langcode = NULL) {
     $this->sort[$property] = array(
@@ -151,7 +151,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::count().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::count().
    */
   public function count() {
     $this->count = TRUE;
@@ -159,7 +159,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::accessCheck().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::accessCheck().
    */
   public function accessCheck($access_check = TRUE) {
     $this->accessCheck = $access_check;
@@ -167,7 +167,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::age().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::age().
    */
   public function age($age = FIELD_LOAD_CURRENT) {
     $this->age = $age;
@@ -175,7 +175,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::pager().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::pager().
    */
   public function pager($limit = 10, $element = NULL) {
     // Even when not using SQL, storing the element PagerSelectExtender is as
@@ -212,7 +212,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::tableSort().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::tableSort().
    */
   public function tableSort(&$headers) {
     // If 'field' is not initialized, the header columns aren't clickable.
@@ -241,7 +241,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\AlterableInterface::addTag().
+   * Implements \Drupal\Core\Database\Query\AlterableInterface::addTag().
    */
   public function addTag($tag) {
     $this->alterTags[$tag] = 1;
@@ -249,28 +249,28 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\AlterableInterface::hasTag().
+   * Implements \Drupal\Core\Database\Query\AlterableInterface::hasTag().
    */
   public function hasTag($tag) {
     return isset($this->alterTags[$tag]);
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\AlterableInterface::hasAllTags().
+   * Implements \Drupal\Core\Database\Query\AlterableInterface::hasAllTags().
    */
   public function hasAllTags() {
     return !(boolean)array_diff(func_get_args(), array_keys($this->alterTags));
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\AlterableInterface::hasAnyTag().
+   * Implements \Drupal\Core\Database\Query\AlterableInterface::hasAnyTag().
    */
   public function hasAnyTag() {
     return (boolean)array_intersect(func_get_args(), array_keys($this->alterTags));
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\AlterableInterface::addMetaData().
+   * Implements \Drupal\Core\Database\Query\AlterableInterface::addMetaData().
    */
   public function addMetaData($key, $object) {
     $this->alterMetaData[$key] = $object;
@@ -278,7 +278,7 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\AlterableInterface::getMetaData().
+   * Implements \Drupal\Core\Database\Query\AlterableInterface::getMetaData().
    */
   public function getMetaData($key) {
     return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
