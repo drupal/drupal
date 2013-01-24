@@ -185,7 +185,7 @@ function _tracker_myrecent_access($account) {
  * @see tracker_menu()
  */
 function _tracker_user_access($account) {
-  return user_view_access($account) && user_access('access content');
+  return $account->access('view') && user_access('access content');
 }
 
 /**
