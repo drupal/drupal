@@ -1898,7 +1898,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     'langcode' => $langcode,
     'format_string_type' => $key,
   );
-  return $date->format($format, $settings);
+  return filter_xss_admin($date->format($format, $settings));
 }
 
 /**

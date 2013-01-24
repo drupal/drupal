@@ -141,4 +141,18 @@ class DateTimeTest extends WebTestBase {
     $format = config('locale.config.en.system.date')->get('formats.test_short_en.pattern.php');
     $this->assertEqual('dmYHis', $format, 'Localized date format resides in localized config.');
   }
+
+  /**
+   * Test that date formats are sanitized.
+   */
+  function testDateFormatXSS() {
+    $date_format_info = array(
+      'name' => 'XSS format',
+      'pattern' => array('php' => '\<\s\c\r\i\p\t\>\a\l\e\r\t\(\'\X\S\S\'\)\;\<\/\s\c\r\i\p\t\>'),
+    );
+    system_date_format_save('xss_short', $date_format_info);
+
+    $this->drupalGet('admin/config/regional/date-time');
+    $this->assertNoRaw("<script>alert('XSS');</script>", 'The date format was properly sanitized');
+  }
 }
