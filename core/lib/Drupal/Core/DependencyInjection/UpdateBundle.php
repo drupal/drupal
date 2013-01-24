@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -22,7 +22,7 @@ class UpdateBundle extends Bundle {
   /**
    * Implements \Symfony\Component\HttpKernel\Bundle\BundleInterface::build().
    */
-  public function build(ContainerBuilder $container) {
+  public function build(SymfonyContainerBuilder $container) {
     // Disable the Lock service.
     $container
       ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
