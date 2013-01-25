@@ -1846,7 +1846,6 @@ function install_check_translations($install_state) {
 
   $readable = FALSE;
   $writable = FALSE;
-  $executable = FALSE;
   $files_directory = variable_get('file_public_path', conf_path() . '/files');
   $translations_directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
   $translations_directory_exists = FALSE;
@@ -1863,7 +1862,6 @@ function install_check_translations($install_state) {
   if (drupal_verify_install_file($translations_directory, FILE_EXIST|FILE_WRITABLE, 'dir')) {
     $readable = is_readable($translations_directory);
     $writable = is_writable($translations_directory);
-    $executable = is_executable($translations_directory);
     $translations_directory_exists = TRUE;
   }
 
@@ -1934,15 +1932,6 @@ function install_check_translations($install_state) {
         'value'       => st('The translations directory is writable.'),
       );
     }
-    // If translations directory is not executable, throw an error.
-    if (!$executable) {
-      $requirements['translations directory executable'] = array(
-      'title'       => st('Translations directory'),
-        'value'       => st('The translations directory is not executable.'),
-        'severity'    => REQUIREMENT_ERROR,
-        'description' => st('The installer requires execute permissions to %translations_directory during the installation process. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('%translations_directory' => $translations_directory, '@handbook_url' => 'http://drupal.org/server-permissions')),
-      );
-    }
   }
 
   // If the translations server can not be contacted, throw an error.
@@ -1977,7 +1966,7 @@ function install_check_translations($install_state) {
     }
   }
 
-  if ($translations_directory_exists && $readable && $writable && $executable && $translation_available) {
+  if ($translations_directory_exists && $readable && $writable && $translation_available) {
     $translation_downloaded = install_retrieve_file($translation_url, $translations_directory);
 
     if (!$translation_downloaded) {
