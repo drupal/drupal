@@ -1,0 +1,8 @@
+name = Entity translation test views
+description = Provides default views for views entity translation tests.
+package = Testing
+version = VERSION
+core = 8.x
+dependencies[] = translation_entity
+dependencies[] = views
+hidden = TRUE

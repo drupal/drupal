@@ -376,6 +376,17 @@ function comment_views_data() {
     ),
   );
 
+  // Entity translation field.
+  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
+    $data['comment']['translation_link'] = array(
+      'title' => t('Translation link'),
+      'help' => t('Provide a link to the translations overview for comments.'),
+      'field' => array(
+        'id' => 'translation_entity_link',
+      ),
+    );
+  }
+
   // node_comment_statistics table
 
   // define the group

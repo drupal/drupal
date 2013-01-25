@@ -226,6 +226,17 @@ function node_views_data() {
     );
   }
 
+  // Entity translation field.
+  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
+    $data['node']['translation_link'] = array(
+      'title' => t('Translation link'),
+      'help' => t('Provide a link to the translations overview for nodes.'),
+      'field' => array(
+        'id' => 'translation_entity_link',
+      ),
+    );
+  }
+
   // Define some fields based upon views_handler_field_entity in the entity
   // table so they can be re-used with other query backends.
   // @see views_handler_field_entity
