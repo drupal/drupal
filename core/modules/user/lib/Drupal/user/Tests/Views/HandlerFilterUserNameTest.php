@@ -176,26 +176,4 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     }
   }
 
-  /**
-   * Tests the autocomplete function.
-   *
-   * @see views_ajax_autocomplete_user
-   */
-  public function testUserAutocomplete() {
-    module_load_include('inc', 'views', 'includes/ajax');
-
-    // Nothing should return no user.
-    $result = (array) json_decode(views_ajax_autocomplete_user(''));
-    $this->assertFalse($result);
-
-    // A random user should also not be findable.
-    $result = (array) json_decode(views_ajax_autocomplete_user($this->randomName())->getContent());
-    $this->assertFalse($result);
-
-    // A valid user should be found.
-    $result = (array) json_decode(views_ajax_autocomplete_user($this->names[0])->getContent());
-    $expected_result = array($this->names[0] => $this->names[0]);
-    $this->assertIdentical($result, $expected_result);
-  }
-
 }

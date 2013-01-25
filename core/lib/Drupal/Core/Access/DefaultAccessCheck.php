@@ -26,6 +26,6 @@ class DefaultAccessCheck implements AccessCheckInterface {
    * Implements AccessCheckInterface::access().
    */
   public function access(Route $route, Request $request) {
-    return $route->getRequirement('_access');
+    return (bool) $route->getRequirement('_access');
   }
 }

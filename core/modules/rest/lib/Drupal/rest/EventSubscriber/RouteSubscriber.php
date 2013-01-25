@@ -62,7 +62,6 @@ class RouteSubscriber implements EventSubscriberInterface {
 
         // @todo Switch to ->addCollection() once http://drupal.org/node/1819018 is resolved.
         foreach ($plugin->routes() as $name => $route) {
-          $route->setRequirement('_access', 'TRUE');
           $collection->add("rest.$name", $route);
         }
       }

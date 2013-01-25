@@ -304,16 +304,6 @@ function views_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/ajax.inc',
   );
-  // Path is not admin/structure/views due to menu complications with the wildcards from
-  // the generic ajax callback.
-  $items['admin/views/ajax/autocomplete/user'] = array(
-    'page callback' => 'views_ajax_autocomplete_user',
-    'theme callback' => 'ajax_base_page_theme',
-    'access callback' => 'user_access',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'includes/ajax.inc',
-  );
   // Define another taxonomy autocomplete because the default one of drupal
   // does not support a vid a argument anymore
   $items['admin/views/ajax/autocomplete/taxonomy/%'] = array(
