@@ -25,7 +25,7 @@ class TypedDataNormalizer extends NormalizerBase {
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize().
    */
-  public function normalize($object, $format = NULL, array $context = array()) {
+  public function normalize($object, $format = NULL) {
     return $object->getValue();
   }
 

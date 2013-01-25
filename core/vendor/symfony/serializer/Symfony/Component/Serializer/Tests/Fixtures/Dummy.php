@@ -23,7 +23,7 @@ class Dummy implements NormalizableInterface, DenormalizableInterface
     public $baz;
     public $qux;
 
-    public function normalize(NormalizerInterface $normalizer, $format = null, array $context = array())
+    public function normalize(NormalizerInterface $normalizer, $format = null)
     {
         return array(
             'foo' => $this->foo,
@@ -33,7 +33,7 @@ class Dummy implements NormalizableInterface, DenormalizableInterface
         );
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null)
     {
         $this->foo = $data['foo'];
         $this->bar = $data['bar'];

@@ -31,7 +31,7 @@ class ListNormalizer extends NormalizerBase {
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize().
    */
-  public function normalize($object, $format = NULL, array $context = array()) {
+  public function normalize($object, $format = NULL) {
     $attributes = array();
     foreach ($object as $fieldItem) {
       $attributes[] = $this->serializer->normalize($fieldItem, $format);

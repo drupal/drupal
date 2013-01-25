@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class NormalizableTraversableDummy extends TraversableDummy implements NormalizableInterface, DenormalizableInterface
 {
-    public function normalize(NormalizerInterface $normalizer, $format = null, array $context = array())
+    public function normalize(NormalizerInterface $normalizer, $format = null)
     {
         return array(
             'foo' => 'normalizedFoo',
@@ -26,7 +26,7 @@ class NormalizableTraversableDummy extends TraversableDummy implements Normaliza
         );
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null)
     {
         return array(
             'foo' => 'denormalizedFoo',

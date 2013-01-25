@@ -27,14 +27,14 @@ class JsonldFieldItemNormalizer extends JsonldNormalizerBase implements Denormal
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
-  public function normalize($object, $format = NULL, array $context = array()) {
+  public function normalize($object, $format = NULL) {
     return $object->getPropertyValues();
   }
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
    */
-  public function denormalize($data, $class, $format = null, array $context = array()) {
+  public function denormalize($data, $class, $format = null) {
     // For most fields, the field items array should simply be returned as is.
     return $data;
   }

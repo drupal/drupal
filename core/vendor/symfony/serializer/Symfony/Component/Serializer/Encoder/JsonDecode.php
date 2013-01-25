@@ -21,7 +21,6 @@ class JsonDecode implements DecoderInterface
     private $associative;
     private $recursionDepth;
     private $lastError = JSON_ERROR_NONE;
-    protected $serializer;
 
     public function __construct($associative = false, $depth = 512)
     {
@@ -49,20 +48,9 @@ class JsonDecode implements DecoderInterface
      *
      * @return mixed
      */
-    public function decode($data, $format, array $context = array())
+    public function decode($data, $format)
     {
-        $context = $this->resolveContext($context);
-
-        $associative    = $context['json_decode_associative'];
-        $recursionDepth = $context['json_decode_recursion_depth'];
-        $options        = $context['json_decode_options'];
-
-        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-            $decodedData = json_decode($data, $associative, $recursionDepth, $options);
-        } else {
-            $decodedData = json_decode($data, $associative, $recursionDepth);
-        }
-
+        $decodedData = json_decode($data, $this->associative, $this->recursionDepth);
         $this->lastError = json_last_error();
 
         return $decodedData;
@@ -74,22 +62,5 @@ class JsonDecode implements DecoderInterface
     public function supportsDecoding($format)
     {
         return JsonEncoder::FORMAT === $format;
-    }
-
-    /**
-     * Merge the default options of the Json Decoder with the passed context.
-     *
-     * @param array $context
-     * @return array
-     */
-    private function resolveContext(array $context)
-    {
-        $defaultOptions = array(
-            'json_decode_associative' => $this->associative,
-            'json_decode_recursion_depth' => $this->recursionDepth,
-            'json_decode_options' => 0
-        );
-
-        return array_merge($defaultOptions, $context);
     }
 }

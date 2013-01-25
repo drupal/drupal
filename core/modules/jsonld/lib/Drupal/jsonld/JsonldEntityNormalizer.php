@@ -27,7 +27,7 @@ class JsonldEntityNormalizer extends JsonldNormalizerBase implements Denormalize
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
-  public function normalize($entity, $format = NULL, array $context = array()) {
+  public function normalize($entity, $format = NULL) {
     $entity_wrapper = new JsonldEntityWrapper($entity, $format, $this->serializer, $this->siteSchemaManager);
 
     $attributes = $entity_wrapper->getProperties();
@@ -43,7 +43,7 @@ class JsonldEntityNormalizer extends JsonldNormalizerBase implements Denormalize
    *
    * @throws \Symfony\Component\Serializer\Exception\UnexpectedValueException
    */
-  public function denormalize($data, $class, $format = null, array $context = array()) {
+  public function denormalize($data, $class, $format = null) {
     if (!isset($data['@type'])) {
       throw new UnexpectedValueException('JSON-LD @type parameter must be included.');
     }

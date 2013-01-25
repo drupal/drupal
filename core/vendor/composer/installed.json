@@ -576,6 +576,55 @@
         "homepage": "http://symfony.com"
     },
     {
+        "name": "symfony/serializer",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "target-dir": "Symfony/Component/Serializer",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Serializer",
+            "reference": "ef3d92815bdb07281ee8cbd73b3e3f9e41bdc1a0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/symfony/Serializer/archive/ef3d92815bdb07281ee8cbd73b3e3f9e41bdc1a0.zip",
+            "reference": "ef3d92815bdb07281ee8cbd73b3e3f9e41bdc1a0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2012-12-19 07:09:49",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Serializer\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Serializer Component",
+        "homepage": "http://symfony.com"
+    },
+    {
         "name": "symfony/yaml",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -931,54 +980,5 @@
             "database",
             "routing"
         ]
-    },
-    {
-        "name": "symfony/serializer",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "target-dir": "Symfony/Component/Serializer",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/Serializer",
-            "reference": "45fe843e3144a594f93a6a372385c6534c7df31c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/symfony/Serializer/archive/45fe843e3144a594f93a6a372385c6534c7df31c.zip",
-            "reference": "45fe843e3144a594f93a6a372385c6534c7df31c",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2013-01-19 07:50:02",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\Serializer\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Serializer Component",
-        "homepage": "http://symfony.com"
     }
 ]

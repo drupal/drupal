@@ -41,13 +41,14 @@ class JsonEncode implements EncoderInterface
     /**
      * Encodes PHP data to a JSON string
      *
-     * {@inheritdoc}
+     * @param mixed  $data
+     * @param string $format
+     *
+     * @return string
      */
-    public function encode($data, $format, array $context = array())
+    public function encode($data, $format)
     {
-        $context = $this->resolveContext($context);
-
-        $encodedJson = json_encode($data, $context['json_encode_options']);
+        $encodedJson = json_encode($data, $this->options);
         $this->lastError = json_last_error();
 
         return $encodedJson;
@@ -59,16 +60,5 @@ class JsonEncode implements EncoderInterface
     public function supportsEncoding($format)
     {
         return JsonEncoder::FORMAT === $format;
-    }
-
-    /**
-     * Merge default json encode options with context.
-     *
-     * @param array $context
-     * @return array
-     */
-    private function resolveContext(array $context = array())
-    {
-        return array_merge(array('json_encode_options' => $this->options), $context);
     }
 }

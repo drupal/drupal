@@ -44,9 +44,9 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   /**
    * Implements \Symfony\Component\Serializer\Encoder\EncoderInterface::encode().
    */
-  public function encode($data, $format, array $context = array()){
-    $normalized = $this->serializer->normalize($data, $format, $context);
-    return $this->baseEncoder->encode($normalized, $format, $context);
+  public function encode($data, $format){
+    $normalized = $this->serializer->normalize($data, $format);
+    return $this->baseEncoder->encode($normalized, $format);
   }
 
   /**
@@ -59,8 +59,8 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   /**
    * Implements \Symfony\Component\Serializer\Encoder\EncoderInterface::decode().
    */
-  public function decode($data, $format, array $context = array()){
-    return $this->baseEncoder->decode($data, $format, $context);
+  public function decode($data, $format){
+    return $this->baseEncoder->decode($data, $format);
   }
 
   /**
