@@ -75,61 +75,28 @@ class ClassLoader
     }
 
     /**
-     * Registers a set of classes, merging with any others previously set.
+     * Registers a set of classes
      *
-     * @param string       $prefix  The classes prefix
-     * @param array|string $paths   The location(s) of the classes
-     * @param bool         $prepend Prepend the location(s)
+     * @param string       $prefix The classes prefix
+     * @param array|string $paths  The location(s) of the classes
      */
-    public function add($prefix, $paths, $prepend = false)
+    public function add($prefix, $paths)
     {
         if (!$prefix) {
-            if ($prepend) {
-                $this->fallbackDirs = array_merge(
-                    (array) $paths,
-                    $this->fallbackDirs
-                );
-            } else {
-                $this->fallbackDirs = array_merge(
-                    $this->fallbackDirs,
-                    (array) $paths
-                );
+            foreach ((array) $paths as $path) {
+                $this->fallbackDirs[] = $path;
             }
 
             return;
         }
-        if (!isset($this->prefixes[$prefix])) {
-            $this->prefixes[$prefix] = (array) $paths;
-
-            return;
-        }
-        if ($prepend) {
-            $this->prefixes[$prefix] = array_merge(
-                (array) $paths,
-                $this->prefixes[$prefix]
-            );
-        } else {
+        if (isset($this->prefixes[$prefix])) {
             $this->prefixes[$prefix] = array_merge(
                 $this->prefixes[$prefix],
                 (array) $paths
             );
+        } else {
+            $this->prefixes[$prefix] = (array) $paths;
         }
-    }
-
-    /**
-     * Registers a set of classes, replacing any others previously set.
-     *
-     * @param string       $prefix  The classes prefix
-     * @param array|string $paths   The location(s) of the classes
-     */
-    public function set($prefix, $paths)
-    {
-        if (!$prefix) {
-            $this->fallbackDirs = (array) $paths;
-
-            return;
-        }
-        $this->prefixes[$prefix] = (array) $paths;
     }
 
     /**
