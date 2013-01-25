@@ -888,18 +888,18 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // nothing
   }
   else {
-    if ($type == 'module') {
-      if (empty($files[$type])) {
-        $files[$type] = drupal_container()->get('module_handler')->getModuleList();
-      }
-      if (isset($files[$type][$name])) {
-        return $files[$type][$name];
-      }
-    }
     // Verify that we have an keyvalue service before using it. This is required
     // because this function is called during installation.
     // @todo Inject database connection into KeyValueStore\DatabaseStorage.
     if (($container = drupal_container()) && $container->has('keyvalue') && function_exists('db_query')) {
+      if ($type == 'module') {
+        if (empty($files[$type])) {
+          $files[$type] = drupal_container()->get('module_handler')->getModuleList();
+        }
+        if (isset($files[$type][$name])) {
+          return $files[$type][$name];
+        }
+      }
       try {
         $file_list = state()->get('system.' . $type . '.files');
         if ($file_list && isset($file_list[$name]) && file_exists(DRUPAL_ROOT . '/' . $file_list[$name])) {
