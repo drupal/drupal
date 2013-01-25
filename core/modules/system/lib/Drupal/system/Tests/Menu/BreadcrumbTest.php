@@ -282,7 +282,7 @@ class BreadcrumbTest extends MenuTestBase {
     $edit = array(
       'menu[parent]' => $link['menu_name'] . ':' . $link['mlid'],
     );
-    $this->drupalPost("node/{$parent->nid}/edit", $edit, t('Save'));
+    $this->drupalPost("node/{$parent->nid}/edit", $edit, t('Save and keep published'));
     $expected = array(
       "node" => $link['link_title'],
     );
@@ -308,7 +308,7 @@ class BreadcrumbTest extends MenuTestBase {
     $edit = array(
       "field_tags[$langcode]" => implode(',', array_keys($tags)),
     );
-    $this->drupalPost("node/{$parent->nid}/edit", $edit, t('Save'));
+    $this->drupalPost("node/{$parent->nid}/edit", $edit, t('Save and keep published'));
 
     // Put both terms into a hierarchy Drupal » Breadcrumbs. Required for both
     // the menu links and the terms itself, since taxonomy_term_page() resets

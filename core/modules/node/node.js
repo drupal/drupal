@@ -38,14 +38,15 @@ Drupal.behaviors.nodeDetailsSummaries = {
       var $context = $(context);
       var vals = [];
 
-      $context.find('input:checked').parent().each(function () {
-        vals.push(Drupal.checkPlain($.trim($(this).text())));
-      });
-
-      if (!$context.find('.form-item-status input').is(':checked')) {
-        vals.unshift(Drupal.t('Not published'));
+      if ($context.find('input').is(':checked')) {
+        $context.find('input:checked').parent().each(function () {
+          vals.push(Drupal.checkPlain($.trim($(this).text())));
+        });
+        return vals.join(', ');
       }
-      return vals.join(', ');
+      else {
+        return Drupal.t('Not promoted');
+      }
     });
 
     $context.find('fieldset.node-translation-options').drupalSetSummary(function (context) {

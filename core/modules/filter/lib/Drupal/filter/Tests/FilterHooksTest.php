@@ -71,7 +71,7 @@ class FilterHooksTest extends WebTestBase {
       "body[$language_not_specified][0][value]" => $this->randomName(32),
       "body[$language_not_specified][0][format]" => $format_id,
     );
-    $this->drupalPost("node/add/{$type->type}", $edit, t('Save'));
+    $this->drupalPost("node/add/{$type->type}", $edit, t('Save and publish'));
     $this->assertText(t('@type @title has been created.', array('@type' => $type_name, '@title' => $title)));
 
     // Disable the text format.

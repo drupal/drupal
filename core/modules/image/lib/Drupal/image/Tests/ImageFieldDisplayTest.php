@@ -187,7 +187,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]' => $image_info['alt'],
       $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $image_info['title'],
     );
-    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $default_output = theme('image', $image_info);
     $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
 
@@ -197,7 +197,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]' => $this->randomName($test_size),
       $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
     );
-    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
       '%max' => $schema['fields'][$field_name .'_alt']['length'],
       '%length' => $test_size,

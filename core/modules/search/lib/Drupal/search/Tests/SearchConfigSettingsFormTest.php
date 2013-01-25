@@ -45,7 +45,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $body_key = "body[$langcode][0][value]";
     $edit[$body_key] = l($node->label(), 'node/' . $node->nid) . ' pizza sandwich';
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save and keep published'));
 
     node_update_index();
     search_update_totals();

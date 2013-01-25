@@ -75,9 +75,9 @@ class TranslationTest extends WebTestBase {
     // Unpublish the original node to check that this has no impact on the
     // translation overview page, publish it again afterwards.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('node/' . $node->nid . '/edit', array('status' => FALSE), t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', array(), t('Save and unpublish'));
     $this->drupalGet('node/' . $node->nid . '/translate');
-    $this->drupalPost('node/' . $node->nid . '/edit', array('status' => NODE_PUBLISHED), t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', array(), t('Save and publish'));
     $this->drupalLogin($this->translator);
 
     // Check that the "add translation" link uses a localized path.
@@ -169,8 +169,7 @@ class TranslationTest extends WebTestBase {
     // Unpublish the Spanish translation to check that the related language
     // switch link is not shown.
     $this->drupalLogin($this->admin_user);
-    $edit = array('status' => FALSE);
-    $this->drupalPost("node/$translation_es->nid/edit", $edit, t('Save'));
+    $this->drupalPost("node/$translation_es->nid/edit", array(), t('Save and unpublish'));
     $this->drupalLogin($this->translator);
     $this->assertLanguageSwitchLinks($node, $translation_es, FALSE);
 
@@ -180,8 +179,7 @@ class TranslationTest extends WebTestBase {
     $edit = array('language_interface[enabled][language-url]' => FALSE);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->resetCaches();
-    $edit = array('status' => TRUE);
-    $this->drupalPost("node/$translation_es->nid/edit", $edit, t('Save'));
+    $this->drupalPost("node/$translation_es->nid/edit", array(), t('Save and publish'));
     $this->drupalLogin($this->translator);
     $this->assertLanguageSwitchLinks($node, $translation_es, TRUE, 'node');
   }

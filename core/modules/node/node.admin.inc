@@ -435,7 +435,7 @@ function node_admin_nodes() {
     '#attributes' => array('class' => array('container-inline')),
     '#access' => $admin_access,
     '#attached' => array (
-      'css' => array(drupal_get_path('module', 'node') . '/node.admin.css'),
+      'css' => array(drupal_get_path('module', 'node') . '/css/node-admin.theme.css'),
     ),
   );
   $options = array();

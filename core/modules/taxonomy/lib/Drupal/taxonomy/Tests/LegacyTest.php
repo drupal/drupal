@@ -39,7 +39,7 @@ class LegacyTest extends TaxonomyTestBase {
     $edit['date'] = '1969-01-01 00:00:00 -0500';
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit["field_tags[$langcode]"] = $this->randomName();
-    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $this->drupalPost('node/add/article', $edit, t('Save and publish'));
     // Checks that the node has been saved.
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertEqual($node->created, strtotime($edit['date']), 'Legacy node was saved with the right date.');

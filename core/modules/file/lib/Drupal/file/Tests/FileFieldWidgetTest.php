@@ -73,7 +73,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
       // Save the node and ensure it does not have the file.
-      $this->drupalPost(NULL, array(), t('Save'));
+      $this->drupalPost(NULL, array(), t('Save and keep published'));
       $node = node_load($nid, TRUE);
       $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']), t('File was successfully removed from the node.'));
     }
@@ -191,7 +191,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), t('After removing all files, there is no "Remove" button displayed (JSMode=%type).', array('%type' => $type)));
 
       // Save the node and ensure it does not have any files.
-      $this->drupalPost(NULL, array('title' => $this->randomName()), t('Save'));
+      $this->drupalPost(NULL, array('title' => $this->randomName()), t('Save and publish'));
       $matches = array();
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
@@ -268,7 +268,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = array(
       'title' => $this->randomName(),
     );
-    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $this->drupalPost('node/add/article', $edit, t('Save and publish'));
     $node = $this->drupalGetNodeByTitle($edit['title']);
 
     // Add a comment with a file.
@@ -302,10 +302,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Unpublishes node.
     $this->drupalLogin($this->admin_user);
-    $edit = array(
-      'status' => FALSE,
-    );
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', array(), t('Save and unpublish'));
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);

@@ -1844,6 +1844,24 @@ function theme_dropbutton_wrapper($variables) {
 }
 
 /**
+ * Returns HTML for wrapping a dropbutton list.
+ *
+ * Use this function if the dropbutton contains submit buttons. These elements
+ * need to have a #prefix and #suffix element that wraps those into an <li>
+ * element.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the dropbutton list. Properties used: #children.
+ */
+function theme_dropbutton_list_wrapper($variables) {
+  if (!empty($variables['element']['#children'])) {
+    return '<ul class="dropbutton">' . $variables['element']['#children'] . '</ul>';
+  }
+}
+
+/**
  * Returns HTML for an image.
  *
  * @param $variables
@@ -3152,6 +3170,9 @@ function drupal_common_theme() {
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),
     ),
     'dropbutton_wrapper' => array(
+      'render element' => 'element',
+    ),
+    'dropbutton_list_wrapper' => array(
       'render element' => 'element',
     ),
     'image' => array(

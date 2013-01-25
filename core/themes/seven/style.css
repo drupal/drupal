@@ -794,8 +794,11 @@ select.form-select:focus {
     margin-right: 0;
     margin-top: 10px;
     padding-bottom: 6px;
-    padding-top: 6px;
     width: 100%;
+  }
+  .form-actions input:first-child,
+  .form-wrapper input[type="submit"]:first-child {
+    margin-top: 0;
   }
   .exposed-filters .filters,
   .exposed-filters .form-item label,
@@ -1112,6 +1115,24 @@ div.add-or-remove-shortcuts {
 }
 .dropbutton-multiple.open .dropbutton-content li:first-child > * {
   text-overflow: clip;
+}
+
+.js .form-actions .dropbutton-widget:focus,
+.js .form-actions .dropbutton-widget:hover {
+  background-color: #73b3dd;
+  border: 1px solid #6ea3bf;
+  border-bottom-color: #4680a0;
+}
+.js .form-actions .dropbutton-widget:active {
+  background-color: #3981b1;
+  border: 1px solid #36647c;
+  border-bottom-color: #284657;
+}
+.js .form-actions .dropbutton-multiple.open .dropbutton-widget:hover {
+  background-color: #9dcae7;
+}
+.js .form-actions .dropbutton-multiple.open .dropbutton-action:hover {
+  background-color: #73b3dd;
 }
 
 /* Disable overlay message */
