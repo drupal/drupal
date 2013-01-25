@@ -30,7 +30,7 @@ class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase implements De
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
-  public function normalize($object, $format = NULL) {
+  public function normalize($object, $format = NULL, array $context = array()) {
     // @todo If an $options parameter is added to the serialize signature, as
     // requested in https://github.com/symfony/symfony/pull/4938, then instead
     // of creating the array of properties, we could simply call normalize and
@@ -45,7 +45,7 @@ class JsonldEntityReferenceNormalizer extends JsonldNormalizerBase implements De
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::denormalize()
    */
-  public function denormalize($data, $class, $format = null) {
+  public function denormalize($data, $class, $format = null, array $context = array()) {
     // @todo Support denormalization for Entity Reference.
     return array();
   }
