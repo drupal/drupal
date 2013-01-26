@@ -12,7 +12,7 @@ namespace Drupal\Core\TypedData;
  *
  * This implementation requires parent typed data objects to implement the
  * ContextAwareInterface also, such that the context can be derived from the
- * parents.
+ * parent.
  *
  * Classes deriving from this base class have to declare $value
  * or override getValue() or setValue().
@@ -53,7 +53,7 @@ abstract class ContextAwareTypedData extends TypedData implements ContextAwareIn
   }
 
   /**
-   * Implements ContextAwareInterface::setContext().
+   * Implements \Drupal\Core\TypedData\ContextAwareInterface::setContext().
    */
   public function setContext($name = NULL, ContextAwareInterface $parent = NULL) {
     $this->parent = $parent;
@@ -61,30 +61,35 @@ abstract class ContextAwareTypedData extends TypedData implements ContextAwareIn
   }
 
   /**
-   * Implements ContextAwareInterface::getName().
+   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getName().
    */
   public function getName() {
     return $this->name;
   }
 
   /**
-   * Implements ContextAwareInterface::getRoot().
+   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getRoot().
    */
   public function getRoot() {
     if (isset($this->parent)) {
       return $this->parent->getRoot();
     }
+    // If no parent is set, this is the root of the data tree.
     return $this;
   }
 
   /**
-   * Implements ContextAwareInterface::getPropertyPath().
+   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getPropertyPath().
    */
   public function getPropertyPath() {
     if (isset($this->parent)) {
+      // The property path of this data object is the parent's path appended
+      // by this object's name.
       $prefix = $this->parent->getPropertyPath();
       return (strlen($prefix) ? $prefix . '.' : '') . $this->name;
     }
+    // If no parent is set, this is the root of the data tree. Thus the property
+    // path equals the name of this data object.
     elseif (isset($this->name)) {
       return $this->name;
     }
@@ -92,18 +97,11 @@ abstract class ContextAwareTypedData extends TypedData implements ContextAwareIn
   }
 
   /**
-   * Implements ContextAwareInterface::getParent().
+   * Implements \Drupal\Core\TypedData\ContextAwareInterface::getParent().
    *
    * @return \Drupal\Core\Entity\Field\FieldInterface
    */
   public function getParent() {
     return $this->parent;
-  }
-
-  /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate() {
-    // @todo: Implement validate() method.
   }
 }

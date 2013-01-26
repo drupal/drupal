@@ -446,6 +446,17 @@ function comment_views_data() {
     }
   }
 
+  // Entity translation field.
+  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
+    $data['comment']['translation_link'] = array(
+      'title' => t('Translation link'),
+      'help' => t('Provide a link to the translations overview for comments.'),
+      'field' => array(
+        'id' => 'translation_entity_link',
+      ),
+    );
+  }
+
   // last_comment_timestamp
   $data['comment_entity_statistics']['last_comment_timestamp'] = array(
     'title' => t('Last comment time'),

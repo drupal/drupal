@@ -42,6 +42,15 @@ class RegisterSerializationClassesPass implements CompilerPassInterface {
     if (!empty($encoders)) {
       $definition->replaceArgument(1, $this->sort($encoders));
     }
+
+    // Find all serialization formats known.
+    $formats = array();
+    foreach ($container->findTaggedServiceIds('encoder') as $id => $attributes) {
+      foreach ($attributes[0]['format'] as $name => $label) {
+        $formats[$name] = $label;
+      }
+    }
+    $container->setParameter('serializer.formats', $formats);
   }
 
   /**

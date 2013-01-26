@@ -45,3 +45,11 @@ router_test_8:
   pattern: '/router_test/test8'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test8'
+
+router_test_9:
+  pattern: '/router_test/test9'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test8'
+  requirements:
+    _permission: 'access test7'
+    _access_router_test: 'TRUE'

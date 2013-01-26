@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\TranslatableInterface.
+ * Contains \Drupal\Core\TypedData\TranslatableInterface.
  */
 
 namespace Drupal\Core\TypedData;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityFormControllerInterface.
+ * Contains \Drupal\Core\Entity\EntityFormControllerInterface.
  */
 
 namespace Drupal\Core\Entity;

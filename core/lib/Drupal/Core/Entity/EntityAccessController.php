@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Entity\EntityAccessController.
+ * Contains \Drupal\Core\Entity\EntityAccessController.
  */
 
 namespace Drupal\Core\Entity;
@@ -18,28 +18,28 @@ use Drupal\user\Plugin\Core\Entity\User;
 class EntityAccessController implements EntityAccessControllerInterface {
 
   /**
-   * Implements EntityAccessControllerInterface::viewAccess().
+   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::viewAccess().
    */
   public function viewAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     return FALSE;
   }
 
   /**
-   * Implements EntityAccessControllerInterface::createAccess().
+   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::createAccess().
    */
   public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     return FALSE;
   }
 
   /**
-   * Implements EntityAccessControllerInterface::updateAccess().
+   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::updateAccess().
    */
   public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     return FALSE;
   }
 
   /**
-   * Implements EntityAccessControllerInterface::deleteAccess().
+   * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::deleteAccess().
    */
   public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
     return FALSE;

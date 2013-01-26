@@ -27,8 +27,8 @@ function openid_menu() {
     'title' => 'OpenID identities',
     'page callback' => 'openid_user_identities',
     'page arguments' => array(1),
-    'access callback' => 'user_edit_access',
-    'access arguments' => array(1),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'update'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'openid.pages.inc',
   );
@@ -36,8 +36,8 @@ function openid_menu() {
     'title' => 'Delete OpenID',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('openid_user_delete_form', 1),
-    'access callback' => 'user_edit_access',
-    'access arguments' => array(1),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'update'),
     'file' => 'openid.pages.inc',
   );
   return $items;

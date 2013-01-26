@@ -15,26 +15,25 @@ use Drupal\Core\Entity\Field\FieldItemBase;
 class EmailItem extends FieldItemBase {
 
   /**
-   * Property definitions of the contained properties.
+   * Definitions of the contained properties.
    *
-   * @see self::getPropertyDefinitions()
+   * @see EmailItem::getPropertyDefinitions()
    *
    * @var array
    */
   static $propertyDefinitions;
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
+   * Implements ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
 
-    if (!isset(self::$propertyDefinitions)) {
-      self::$propertyDefinitions['value'] = array(
+    if (!isset(static::$propertyDefinitions)) {
+      static::$propertyDefinitions['value'] = array(
         'type' => 'email',
         'label' => t('E-mail value'),
       );
     }
-    return self::$propertyDefinitions;
+    return static::$propertyDefinitions;
   }
-
 }

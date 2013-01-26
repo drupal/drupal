@@ -22,6 +22,13 @@
 .js .dropbutton-widget {
   max-width: 100%;
 }
+
+@media screen and (max-width:600px) {
+  .js .dropbutton-wrapper {
+    width: 100%;
+  }
+}
+
 .js .dropbutton-widget {
   position: absolute;
 }
@@ -72,7 +79,7 @@
   text-indent: 110%;
   top: 0;
   white-space: nowrap;
-  width: 2em;
+  width: 2.08em;
 }
 .dropbutton-toggle button {
   background: none;

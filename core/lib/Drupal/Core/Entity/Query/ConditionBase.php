@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Query\ConditionBase.
+ * Contains \Drupal\Core\Entity\Query\ConditionBase.
  */
 
 namespace Drupal\Core\Entity\Query;
@@ -30,21 +30,21 @@ abstract class ConditionBase implements ConditionInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\ConditionInterface::getConjunction().
+   * Implements \Drupal\Core\Entity\Query\ConditionInterface::getConjunction().
    */
   public function getConjunction() {
     return $this->conjunction;
   }
 
   /**
-   * Implements Countable::count().
+   * Implements \Countable::count().
    */
   public function count() {
     return count($this->conditions) - 1;
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\ConditionInterface::compile().
+   * Implements \Drupal\Core\Entity\Query\ConditionInterface::compile().
    */
   public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL) {
     $this->conditions[] = array(
@@ -58,7 +58,7 @@ abstract class ConditionBase implements ConditionInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\ConditionInterface::conditions().
+   * Implements \Drupal\Core\Entity\Query\ConditionInterface::conditions().
    */
   public function &conditions() {
     return $this->conditions;

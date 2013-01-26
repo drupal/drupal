@@ -862,49 +862,6 @@ function user_register_access() {
 }
 
 /**
- * User view access callback.
- *
- * @param $account
- *   Can either be a full user object or a $uid.
- */
-function user_view_access($account) {
-  $uid = is_object($account) ? $account->uid : (int) $account;
-
-  // Never allow access to view the anonymous user account.
-  if ($uid) {
-    // Admins can view all, users can view own profiles at all times.
-    if ($GLOBALS['user']->uid == $uid || user_access('administer users')) {
-      return TRUE;
-    }
-    elseif (user_access('access user profiles')) {
-      // At this point, load the complete account object.
-      if (!is_object($account)) {
-        $account = user_load($uid);
-      }
-      return (is_object($account) && $account->status);
-    }
-  }
-  return FALSE;
-}
-
-/**
- * Access callback for user account editing.
- */
-function user_edit_access($account) {
-  return (($GLOBALS['user']->uid == $account->uid) || user_access('administer users')) && $account->uid > 0;
-}
-
-/**
- * Menu access callback; limit access to account cancellation pages.
- *
- * Limit access to users with the 'cancel account' permission or administrative
- * users, and prevent the anonymous user from cancelling the account.
- */
-function user_cancel_access($account) {
-  return ((($GLOBALS['user']->uid == $account->uid) && user_access('cancel account')) || user_access('administer users')) && $account->uid > 0;
-}
-
-/**
  * Implements hook_menu().
  */
 function user_menu() {
@@ -1079,7 +1036,7 @@ function user_menu() {
     'title arguments' => array(1),
     'page callback' => 'user_view_page',
     'page arguments' => array(1),
-    'access callback' => 'user_view_access',
+    'access callback' => 'entity_page_access',
     'access arguments' => array(1),
   );
 
@@ -1093,8 +1050,8 @@ function user_menu() {
     'title' => 'Cancel account',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_cancel_confirm_form', 1),
-    'access callback' => 'user_cancel_access',
-    'access arguments' => array(1),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'delete'),
     'file' => 'user.pages.inc',
   );
 
@@ -1102,8 +1059,8 @@ function user_menu() {
     'title' => 'Confirm account cancellation',
     'page callback' => 'user_cancel_confirm',
     'page arguments' => array(1, 4, 5),
-    'access callback' => 'user_cancel_access',
-    'access arguments' => array(1),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'delete'),
     'file' => 'user.pages.inc',
   );
 
@@ -1111,8 +1068,8 @@ function user_menu() {
     'title' => 'Edit',
     'page callback' => 'entity_get_form',
     'page arguments' => array(1, 'profile'),
-    'access callback' => 'user_edit_access',
-    'access arguments' => array(1),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(1, 'update'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'user.pages.inc',
   );
@@ -2715,7 +2672,7 @@ function user_rdf_mapping() {
  */
 function user_file_download_access($field, EntityInterface $entity, File $file) {
   if ($entity->entityType() == 'user') {
-    return user_view_access($entity);
+    return $entity->access('view');
   }
 }
 

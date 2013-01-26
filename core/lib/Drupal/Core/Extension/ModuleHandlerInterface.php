@@ -171,6 +171,21 @@ interface ModuleHandlerInterface {
   public function implementsHook($module, $hook);
 
   /**
+   * Invokes a hook in a particular module.
+   *
+   * @param string $module
+   *   The name of the module (without the .module extension).
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param ...
+   *   Arguments to pass to the hook implementation.
+   *
+   * @return mixed
+   *   The return value of the hook implementation.
+   */
+  public function invoke($module, $hook, $args = array());
+
+  /**
    * Invokes a hook in all enabled modules that implement it.
    *
    * @param string $hook

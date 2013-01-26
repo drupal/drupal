@@ -88,7 +88,11 @@ class CommentFieldsTest extends CommentTestBase {
     $this->assertTrue(module_exists('comment'), 'Comment module enabled.');
 
     // Create nodes of each type.
-    $book_node = $this->drupalCreateNode(array('type' => 'book'));
+    comment_add_default_comment_field('node', 'book');
+    $book_node = $this->drupalCreateNode(array(
+      'type' => 'book',
+      'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))
+    ));
 
     $this->drupalLogout();
 
@@ -98,22 +102,5 @@ class CommentFieldsTest extends CommentTestBase {
     $this->web_user = $this->drupalCreateUser(array('access content', 'access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($this->web_user);
     $this->postComment($book_node, $this->randomName(), $this->randomName());
->>>>>>> 8.x
-  }
-
-  /**
-   * Tests that comment module works correctly with plain text format.
-   */
-  function testCommentFormat() {
-    // Disable text processing for comments.
-    $this->drupalLogin($this->admin_user);
-    $instance = field_info_instance('comment', 'comment_body', 'comment');
-    $instance['settings']['text_processing'] = 0;
-    field_update_instance($instance);
-
-    // Post a comment without an explicit subject.
-    $this->drupalLogin($this->web_user);
-    $edit = array('comment_body[und][0][value]' => $this->randomName(8));
-    $this->drupalPost('node/' . $this->node->nid, $edit, t('Save'));
   }
 }

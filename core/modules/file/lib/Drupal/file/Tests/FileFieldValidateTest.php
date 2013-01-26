@@ -37,7 +37,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Try to post a new node without uploading a file.
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array("title" => $this->randomName());
-    $this->drupalPost('node/add/' . $type_name, $edit, t('Save'));
+    $this->drupalPost('node/add/' . $type_name, $edit, t('Save and publish'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), t('Node save failed when required file field was empty.'));
 
     // Create a new node with the uploaded file.
@@ -56,7 +56,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Try to post a new node without uploading a file in the multivalue field.
     $edit = array('title' => $this->randomName());
-    $this->drupalPost('node/add/' . $type_name, $edit, t('Save'));
+    $this->drupalPost('node/add/' . $type_name, $edit, t('Save and publish'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), t('Node save failed when required multiple value file field was empty.'));
 
     // Create a new node with the uploaded file into the multivalue field.

@@ -259,6 +259,17 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
+   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::invoke().
+   */
+  public function invoke($module, $hook, $args = array()) {
+    if (!$this->implementsHook($module, $hook)) {
+      return;
+    }
+    $function = $module . '_' . $hook;
+    return call_user_func_array($function, $args);
+  }
+
+  /**
    * Implements \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll().
    */
   public function invokeAll($hook, $args = array()) {

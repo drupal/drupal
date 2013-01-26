@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Type\EntityTranslation.
+ * Contains \Drupal\Core\Entity\Type\EntityTranslation.
  */
 
 namespace Drupal\Core\Entity\Field\Type;
@@ -15,17 +15,20 @@ use IteratorAggregate;
 use InvalidArgumentException;
 
 /**
- * Makes translated entity properties available via the Field API.
+ * Allows accessing and updating translated entity fields.
+ *
+ * Via this object translated entity fields may be read and updated in the same
+ * way as untranslatable entity fields on the entity object.
  */
 class EntityTranslation extends ContextAwareTypedData implements IteratorAggregate, AccessibleInterface, ComplexDataInterface {
 
   /**
-   * The array of translated properties, each being an instance of
-   * FieldInterface.
+   * The array of translated fields, each being an instance of
+   * \Drupal\Core\Entity\FieldInterface.
    *
    * @var array
    */
-  protected $properties = array();
+  protected $fields = array();
 
   /**
    * Whether the entity translation acts in strict mode.
@@ -57,22 +60,23 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   }
 
   /**
-   * Implements TypedDataInterface::getValue().
+   * Overrides \Drupal\Core\TypedData\TypedData::getValue().
    */
   public function getValue() {
-    // The value of the translation is the array of translated property objects.
-    return $this->properties;
+    // The plain value of the translation is the array of translated field
+    // objects.
+    return $this->fields;
   }
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides \Drupal\Core\TypedData\TypedData::setValue().
    */
   public function setValue($values) {
-    $this->properties = $values;
+    $this->fields = $values;
   }
 
   /**
-   * Implements TypedDataInterface::getString().
+   * Overrides \Drupal\Core\TypedData\TypedData::getString().
    */
   public function getString() {
     $strings = array();
@@ -83,25 +87,25 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   }
 
   /**
-   * Implements TypedDataInterface::get().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::get().
    */
   public function get($property_name) {
     $definitions = $this->getPropertyDefinitions();
     if (!isset($definitions[$property_name])) {
       throw new InvalidArgumentException(format_string('Field @name is unknown or not translatable.', array('@name' => $property_name)));
     }
-    return $this->properties[$property_name];
+    return $this->fields[$property_name];
   }
 
   /**
-   * Implements ComplexDataInterface::set().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
   public function set($property_name, $value) {
     $this->get($property_name)->setValue($value);
   }
 
   /**
-   * Implements ComplexDataInterface::getProperties().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
    */
   public function getProperties($include_computed = FALSE) {
     $properties = array();
@@ -114,28 +118,28 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   }
 
   /**
-   * Magic getter: Gets the translated property.
+   * Magic method: Gets a translated field.
    */
   public function __get($name) {
     return $this->get($name);
   }
 
   /**
-   * Magic getter: Sets the translated property.
+   * Magic method: Sets a translated field.
    */
   public function __set($name, $value) {
     $this->get($name)->setValue($value);
   }
 
   /**
-   * Implements IteratorAggregate::getIterator().
+   * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
     return new ArrayIterator($this->getProperties());
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinition().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
    */
   public function getPropertyDefinition($name) {
     $definitions = $this->getPropertyDefinitions();
@@ -148,7 +152,7 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
     $definitions = array();
@@ -161,14 +165,14 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
    */
   public function getPropertyValues() {
     return $this->getValue();
   }
 
   /**
-   * Implements ComplexDataInterface::setPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
    */
   public function setPropertyValues($values) {
     foreach ($values as $name => $value) {
@@ -177,7 +181,7 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   }
 
   /**
-   * Implements ComplexDataInterface::isEmpty().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
    */
   public function isEmpty() {
     foreach ($this->getProperties() as $property) {
@@ -189,22 +193,17 @@ class EntityTranslation extends ContextAwareTypedData implements IteratorAggrega
   }
 
   /**
-   * Implements AccessibleInterface::access().
+   * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
    */
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
     $method = $operation . 'Access';
+    // Determine the language code of this translation by cutting of the
+    // leading "@" from the property name to get the langcode.
     // @todo Add a way to set and get the langcode so that's more obvious what
     // we're doing here.
     $langcode = substr($this->getName(), 1);
     return drupal_container()->get('plugin.manager.entity')
       ->getAccessController($this->parent->entityType())
       ->$method($this->parent, $langcode, $account);
-  }
-
-  /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate($value = NULL) {
-    // @todo implement
   }
 }

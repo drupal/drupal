@@ -95,7 +95,7 @@ class PictureMapping extends ConfigEntityBase {
   }
 
   /**
-   * Implements EntityInterface::createDuplicate().
+   * Implements \Drupal\Core\Entity\EntityInterface::createDuplicate().
    */
   public function createDuplicate() {
     return entity_create('picture_mapping', array(

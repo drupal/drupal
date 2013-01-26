@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Field\FieldItemInterface.
+ * Contains \Drupal\Core\Entity\Field\FieldItemInterface.
  */
 
 namespace Drupal\Core\Entity\Field;
@@ -12,8 +12,10 @@ use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
- * Interface for entity field items, which are complex data objects
- * containing the values.
+ * Interface for entity field items.
+ *
+ * Entity field items are typed data objects containing the field values, i.e.
+ * implementing the ComplexDataInterface.
  *
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
@@ -24,7 +26,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 interface FieldItemInterface extends ComplexDataInterface, ContextAwareInterface, TypedDataInterface {
 
   /**
-   * Magic getter: Get the property value.
+   * Magic method: Gets a property value.
    *
    * @param $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.
@@ -38,7 +40,7 @@ interface FieldItemInterface extends ComplexDataInterface, ContextAwareInterface
   public function __get($property_name);
 
   /**
-   * Magic setter: Set the property value.
+   * Magic method: Sets a property value.
    *
    * @param $property_name
    *   The name of the property to set; e.g., 'title' or 'name'.
@@ -53,7 +55,7 @@ interface FieldItemInterface extends ComplexDataInterface, ContextAwareInterface
   public function __set($property_name, $value);
 
   /**
-   * Magic method for isset().
+   * Magic method: Determines whether a property is set.
    *
    * @param $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.
@@ -64,7 +66,7 @@ interface FieldItemInterface extends ComplexDataInterface, ContextAwareInterface
   public function __isset($property_name);
 
   /**
-   * Magic method for unset().
+   * Magic method: Unsets a property.
    *
    * @param $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.

@@ -19,6 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("User"),
  *   module = "user",
  *   controller_class = "Drupal\user\UserStorageController",
+ *   access_controller_class = "Drupal\user\UserAccessController",
  *   form_controller_class = {
  *     "profile" = "Drupal\user\ProfileFormController",
  *     "register" = "Drupal\user\RegisterFormController"

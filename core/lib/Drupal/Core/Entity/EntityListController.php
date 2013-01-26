@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityListController.
+ * Contains \Drupal\Core\Entity\EntityListController.
  */
 
 namespace Drupal\Core\Entity;
@@ -15,7 +15,7 @@ class EntityListController implements EntityListControllerInterface {
   /**
    * The entity storage controller class.
    *
-   * @var Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
   protected $storage;
 
@@ -40,7 +40,7 @@ class EntityListController implements EntityListControllerInterface {
    *
    * @param string $entity_type.
    *   The type of entity to be listed.
-   * @param Drupal\Core\Entity\EntityStorageControllerInterface $storage.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage.
    *   The entity storage controller class.
    */
   public function __construct($entity_type, EntityStorageControllerInterface $storage) {
@@ -50,21 +50,21 @@ class EntityListController implements EntityListControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityListControllerInterface::getStorageController().
+   * Implements \Drupal\Core\Entity\EntityListControllerInterface::getStorageController().
    */
   public function getStorageController() {
     return $this->storage;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityListControllerInterface::load().
+   * Implements \Drupal\Core\Entity\EntityListControllerInterface::load().
    */
   public function load() {
     return $this->storage->load();
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityListControllerInterface::getOperations().
+   * Implements \Drupal\Core\Entity\EntityListControllerInterface::getOperations().
    */
   public function getOperations(EntityInterface $entity) {
     $uri = $entity->uri();
@@ -101,7 +101,7 @@ class EntityListController implements EntityListControllerInterface {
   /**
    * Builds a row for an entity in the entity listing.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity for this row of the list.
    *
    * @return array
@@ -120,7 +120,7 @@ class EntityListController implements EntityListControllerInterface {
   /**
    * Builds a renderable list of operation links for the entity.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity on which the linked operations will be performed.
    *
    * @return array
@@ -140,7 +140,7 @@ class EntityListController implements EntityListControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityListControllerInterface::render().
+   * Implements \Drupal\Core\Entity\EntityListControllerInterface::render().
    *
    * Builds the entity list as renderable array for theme_table().
    *

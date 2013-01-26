@@ -17,7 +17,7 @@ class TextItem extends FieldItemBase {
   /**
    * Definitions of the contained properties.
    *
-   * @see self::getPropertyDefinitions()
+   * @see TextItem::getPropertyDefinitions()
    *
    * @var array
    */
@@ -28,16 +28,16 @@ class TextItem extends FieldItemBase {
    */
   public function getPropertyDefinitions() {
 
-    if (!isset(self::$propertyDefinitions)) {
-      self::$propertyDefinitions['value'] = array(
+    if (!isset(static::$propertyDefinitions)) {
+      static::$propertyDefinitions['value'] = array(
         'type' => 'string',
         'label' => t('Text value'),
       );
-      self::$propertyDefinitions['format'] = array(
+      static::$propertyDefinitions['format'] = array(
         'type' => 'string',
         'label' => t('Text format'),
       );
-      self::$propertyDefinitions['processed'] = array(
+      static::$propertyDefinitions['processed'] = array(
         'type' => 'string',
         'label' => t('Processed text'),
         'description' => t('The text value with the text format applied.'),
@@ -48,6 +48,6 @@ class TextItem extends FieldItemBase {
         ),
       );
     }
-    return self::$propertyDefinitions;
+    return static::$propertyDefinitions;
   }
 }

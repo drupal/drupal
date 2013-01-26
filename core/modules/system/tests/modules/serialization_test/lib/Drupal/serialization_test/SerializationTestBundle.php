@@ -21,6 +21,7 @@ class SerializationTestBundle extends Bundle {
    */
   public function build(ContainerBuilder $container) {
     $container->register('serializer.normalizer.serialization_test', 'Drupal\serialization_test\SerializationTestNormalizer')->addTag('normalizer');
-    $container->register('serializer.encoder.serialization_test', 'Drupal\serialization_test\SerializationTestEncoder')->addTag('encoder');
+    $container->register('serializer.encoder.serialization_test', 'Drupal\serialization_test\SerializationTestEncoder')
+      ->addTag('encoder', array('format' => array('serialization_test' => 'Serialization test')));
   }
 }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\Type\Language.
+ * Contains \Drupal\Core\TypedData\Type\Language.
  */
 
 namespace Drupal\Core\TypedData\Type;
@@ -14,7 +14,7 @@ use Drupal\Core\TypedData\ContextAwareTypedData;
  * Defines the 'language' data type.
  *
  * The plain value of a language is the language object, i.e. an instance of
- * Drupal\Core\Language\Language. For setting the value the language object or
+ * \Drupal\Core\Language\Language. For setting the value the language object or
  * the language code as string may be passed.
  *
  * Optionally, this class may be used as computed property, see the supported
@@ -34,7 +34,7 @@ class Language extends ContextAwareTypedData {
   protected $langcode;
 
   /**
-   * Implements TypedDataInterface::getValue().
+   * Overrides TypedData::getValue().
    */
   public function getValue() {
     $source = $this->getLanguageCodeSource();
@@ -54,7 +54,7 @@ class Language extends ContextAwareTypedData {
   }
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides TypedData::setValue().
    *
    * Both the langcode and the language object may be passed as value.
    */
@@ -66,7 +66,7 @@ class Language extends ContextAwareTypedData {
     elseif (isset($value) && !is_scalar($value)) {
       throw new InvalidArgumentException('Value is no valid langcode or language object.');
     }
-
+    // Now update the value in the source or the local langcode property.
     $source = $this->getLanguageCodeSource();
     if ($source) {
       $source->setValue($value);
@@ -77,17 +77,10 @@ class Language extends ContextAwareTypedData {
   }
 
   /**
-   * Implements TypedDataInterface::getString().
+   * Overrides TypedData::getString().
    */
   public function getString() {
     $language = $this->getValue();
     return $language ? $language->name : '';
-  }
-
-  /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate() {
-    // TODO: Implement validate() method.
   }
 }

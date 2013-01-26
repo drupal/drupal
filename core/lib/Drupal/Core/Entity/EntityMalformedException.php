@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityMalformedException.
+ * Contains \Drupal\Core\Entity\EntityMalformedException.
  */
 
 namespace Drupal\Core\Entity;

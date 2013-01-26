@@ -24,7 +24,7 @@ function comment_overview_bundles() {
 
   foreach (comment_get_comment_fields() as $field_name => $field_info) {
     foreach ($field_info['bundles'] as $entity_type => $field_bundles) {
-      $bundles = array_intersect_key(field_info_bundles($entity_type), array_flip($field_bundles));
+      $bundles = array_intersect_key(entity_get_bundles($entity_type), array_flip($field_bundles));
 
       foreach ($bundles as $bundle => $bundle_info) {
         if (!isset($rows[$field_name])) {

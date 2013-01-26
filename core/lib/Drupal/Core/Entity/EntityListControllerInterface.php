@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\EntityListControllerInterface.
+ * Contains \Drupal\Core\Entity\EntityListControllerInterface.
  */
 
 namespace Drupal\Core\Entity;
@@ -15,7 +15,7 @@ interface EntityListControllerInterface {
   /**
    * Gets the entity storage controller.
    *
-   * @return Drupal\Core\Entity\EntityStorageControllerInterface
+   * @return \Drupal\Core\Entity\EntityStorageControllerInterface
    *   The storage controller used by this list controller.
    */
   public function getStorageController();
@@ -34,7 +34,7 @@ interface EntityListControllerInterface {
   /**
    * Provides an array of information to build a list of operation links.
    *
-   * @param Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity the operations are for.
    *
    * @return array

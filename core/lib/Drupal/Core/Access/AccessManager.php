@@ -120,10 +120,15 @@ class AccessManager extends ContainerAware {
         $this->loadCheck($service_id);
       }
 
-      $access = $this->checks[$service_id]->access($route, $this->request);
-      if ($access === FALSE) {
+      $service_access = $this->checks[$service_id]->access($route, $this->request);
+      if ($service_access === FALSE) {
         // A check has denied access, no need to continue checking.
+        $access = FALSE;
         break;
+      }
+      elseif ($service_access === TRUE) {
+        // A check has explicitly granted access, so we need to remember that.
+        $access = TRUE;
       }
     }
 

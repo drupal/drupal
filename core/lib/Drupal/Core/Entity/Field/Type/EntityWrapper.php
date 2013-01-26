@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Field\Type\EntityWrapper.
+ * Contains \Drupal\Core\Entity\Field\Type\EntityWrapper.
  */
 
 namespace Drupal\Core\Entity\Field\Type;
@@ -61,7 +61,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements TypedDataInterface::getValue().
+   * Overrides \Drupal\Core\TypedData\TypedData::getValue().
    */
   public function getValue() {
     $source = $this->getIdSource();
@@ -79,7 +79,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides \Drupal\Core\TypedData\TypedData::setValue().
    *
    * Both the entity ID and the entity object may be passed as value.
    */
@@ -92,7 +92,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
     elseif (isset($value) && !(is_scalar($value) && !empty($this->definition['constraints']['entity type']))) {
       throw new InvalidArgumentException('Value is not a valid entity.');
     }
-
+    // Now update the value in the source or the local id property.
     $source = $this->getIdSource();
     if ($source) {
       $source->setValue($value);
@@ -103,7 +103,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements TypedDataInterface::getString().
+   * Overrides \Drupal\Core\TypedData\TypedData::getString().
    */
   public function getString() {
     if ($entity = $this->getValue()) {
@@ -113,14 +113,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate($value = NULL) {
-    // TODO: Implement validate() method.
-  }
-
-  /**
-   * Implements IteratorAggregate::getIterator().
+   * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
     if ($entity = $this->getValue()) {
@@ -130,7 +123,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements ComplexDataInterface::get().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::get().
    */
   public function get($property_name) {
     // @todo: Allow navigating through the tree without data as well.
@@ -140,14 +133,14 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements ComplexDataInterface::set().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
   public function set($property_name, $value) {
     $this->get($property_name)->setValue($value);
   }
 
   /**
-   * Implements ComplexDataInterface::getProperties().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
    */
   public function getProperties($include_computed = FALSE) {
     if ($entity = $this->getValue()) {
@@ -157,7 +150,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinition().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
    */
   public function getPropertyDefinition($name) {
     $definitions = $this->getPropertyDefinitions();
@@ -170,7 +163,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
     // @todo: Support getting definitions if multiple bundles are specified.
@@ -178,7 +171,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements ComplexDataInterface::getPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
    */
   public function getPropertyValues() {
     if ($entity = $this->getValue()) {
@@ -188,7 +181,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements ComplexDataInterface::setPropertyValues().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
    */
   public function setPropertyValues($values) {
     if ($entity = $this->getValue()) {
@@ -197,7 +190,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
   }
 
   /**
-   * Implements ComplexDataInterface::isEmpty().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
    */
   public function isEmpty() {
     return (bool) $this->getValue();

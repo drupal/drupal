@@ -623,31 +623,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
  * are executed when running Drupal.
  *
  * See also @link themeable the themeable group page. @endlink
- */
-
-/**
- * Invokes a hook in a particular module.
  *
- * @param $module
- *   The name of the module (without the .module extension).
- * @param $hook
- *   The name of the hook to invoke.
- * @param ...
- *   Arguments to pass to the hook implementation.
- *
- * @return
- *   The return value of the hook implementation.
- */
-function module_invoke($module, $hook) {
-  $args = func_get_args();
-  // Remove $module and $hook from the arguments.
-  unset($args[0], $args[1]);
-  if (module_hook($module, $hook)) {
-    return call_user_func_array($module . '_' . $hook, $args);
-  }
-}
-
-/**
  * @} End of "defgroup hooks".
  */
 

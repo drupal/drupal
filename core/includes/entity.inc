@@ -734,3 +734,18 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
 function entity_query($entity_type, $conjunction = 'AND') {
   return drupal_container()->get('entity.query')->get($entity_type, $conjunction);
 }
+
+/**
+ * Generic access callback for entity pages.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity for which access is being checked.
+ * @param string $operation
+ *   (optional) The operation being performed on the entity. Defaults to 'view'.
+ *
+ * @return bool
+ *   TRUE if the access is granted. FALSE if access is denied.
+ */
+function entity_page_access(EntityInterface $entity, $operation = 'view') {
+  return $entity->access($operation);
+}

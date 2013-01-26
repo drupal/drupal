@@ -71,7 +71,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Save a new version of the node without any changes.
     // Check that the file is still the same as the previous revision.
-    $this->drupalPost('node/' . $nid . '/edit', array('revision' => '1'), t('Save'));
+    $this->drupalPost('node/' . $nid . '/edit', array('revision' => '1'), t('Save and keep published'));
     $node = node_load($nid, TRUE);
     $node_file_r3 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r3 = $node->vid;

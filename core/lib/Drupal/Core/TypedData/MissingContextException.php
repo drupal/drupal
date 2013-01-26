@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\MissingContextException.
+ * Contains \Drupal\Core\TypedData\MissingContextException.
  */
 
 namespace Drupal\Core\TypedData;

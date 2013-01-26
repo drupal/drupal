@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Query\QueryFactory.
+ * Contains \Drupal\Core\Entity\Query\QueryFactory.
  */
 
 namespace Drupal\Core\Entity\Query;

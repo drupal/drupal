@@ -7,13 +7,13 @@
 
 namespace Drupal\openid\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use stdClass;
 
 /**
  * Test internal helper functions.
  */
-class OpenIDTest extends WebTestBase {
+class OpenIDTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.

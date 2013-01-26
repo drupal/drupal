@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Field\Type\LanguageItem.
+ * Contains \Drupal\Core\Entity\Field\Type\LanguageItem.
  */
 
 namespace Drupal\Core\Entity\Field\Type;
@@ -18,23 +18,23 @@ class LanguageItem extends FieldItemBase {
   /**
    * Definitions of the contained properties.
    *
-   * @see self::getPropertyDefinitions()
+   * @see LanguageItem::getPropertyDefinitions()
    *
    * @var array
    */
   static $propertyDefinitions;
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
 
-    if (!isset(self::$propertyDefinitions)) {
-      self::$propertyDefinitions['value'] = array(
+    if (!isset(static::$propertyDefinitions)) {
+      static::$propertyDefinitions['value'] = array(
         'type' => 'string',
         'label' => t('Language code'),
       );
-      self::$propertyDefinitions['language'] = array(
+      static::$propertyDefinitions['language'] = array(
         'type' => 'language',
         'label' => t('Language object'),
         // The language object is retrieved via the language code.
@@ -43,7 +43,7 @@ class LanguageItem extends FieldItemBase {
         'settings' => array('langcode source' => 'value'),
       );
     }
-    return self::$propertyDefinitions;
+    return static::$propertyDefinitions;
   }
 
   /**
@@ -51,7 +51,8 @@ class LanguageItem extends FieldItemBase {
    */
   public function setValue($values) {
     // Treat the values as property value of the object property, if no array
-    // is given.
+    // is given. That way we support setting the field by language code or
+    // object.
     if (!is_array($values)) {
       $values = array('language' => $values);
     }

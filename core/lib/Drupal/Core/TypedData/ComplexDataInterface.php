@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\ComplexDataInterface.
+ * Contains \Drupal\Core\TypedData\ComplexDataInterface.
  */
 
 namespace Drupal\Core\TypedData;
@@ -101,7 +101,7 @@ interface ComplexDataInterface extends Traversable  {
   public function getPropertyDefinition($name);
 
   /**
-   * Gets an array property definitions of contained properties.
+   * Gets an array of property definitions of contained properties.
    *
    * @param array $definition
    *   The definition of the container's property, e.g. the definition of an

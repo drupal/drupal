@@ -30,7 +30,7 @@ class TypedDataManager extends PluginManagerBase {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\PluginManagerInterface::createInstance().
+   * Implements \Drupal\Component\Plugin\PluginManagerInterface::createInstance().
    *
    * @param string $plugin_id
    *   The id of a plugin, i.e. the data type.
@@ -45,13 +45,14 @@ class TypedDataManager extends PluginManagerBase {
    *   ComplexDataInterface.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The instantiated typed data object.
    */
   public function createInstance($plugin_id, array $configuration, $name = NULL, $parent = NULL) {
     return $this->factory->createInstance($plugin_id, $configuration, $name, $parent);
   }
 
   /**
-   * Creates a new typed data object wrapping the passed value.
+   * Creates a new typed data object instance.
    *
    * @param array $definition
    *   The data definition array with the following array keys and values:
@@ -81,7 +82,7 @@ class TypedDataManager extends PluginManagerBase {
    *   - required: A boolean specifying whether a non-NULL value is mandatory.
    *   Further keys may be supported in certain usages, e.g. for further keys
    *   supported for entity field definitions see
-   *   Drupal\Core\Entity\StorageControllerInterface::getPropertyDefinitions().
+   *   \Drupal\Core\Entity\StorageControllerInterface::getPropertyDefinitions().
    * @param mixed $value
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type format as documented for the data type classes.
@@ -94,6 +95,7 @@ class TypedDataManager extends PluginManagerBase {
    *   ComplexDataInterface.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The instantiated typed data object.
    *
    * @see typed_data()
    * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
@@ -179,6 +181,8 @@ class TypedDataManager extends PluginManagerBase {
     // Make sure we have a prototype. Then, clone the prototype and set object
     // specific values, i.e. the value and the context.
     if (!isset($this->prototypes[$key])) {
+      // Create the initial prototype. For that we need to fetch the definition
+      // of the to be created property instance from the parent.
       if ($object instanceof ComplexDataInterface) {
         $definition = $object->getPropertyDefinition($property_name);
       }
@@ -192,16 +196,17 @@ class TypedDataManager extends PluginManagerBase {
       if (!$definition) {
         throw new InvalidArgumentException('Property ' . check_plain($property_name) . ' is unknown.');
       }
-
+      // Now create the prototype using the definition, but do not pass the
+      // given value as it will serve as prototype for any further instance.
       $this->prototypes[$key] = $this->create($definition, NULL, $property_name, $object);
     }
 
+    // Clone from the prototype, then update the parent relationship and set the
+    // data value if necessary.
     $property = clone $this->prototypes[$key];
-    // Update the parent relationship if necessary.
     if ($property instanceof ContextAwareInterface) {
       $property->setContext($property_name, $object);
     }
-    // Set the passed data value.
     if (isset($value)) {
       $property->setValue($value);
     }

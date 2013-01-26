@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\TypedData\Type\Boolean.
+ * Contains \Drupal\Core\TypedData\Type\Boolean.
  */
 
 namespace Drupal\Core\TypedData\Type;
@@ -25,16 +25,9 @@ class Boolean extends TypedData {
   protected $value;
 
   /**
-   * Implements TypedDataInterface::setValue().
+   * Overrides TypedData::setValue().
    */
   public function setValue($value) {
     $this->value = isset($value) ? (bool) $value : $value;
-  }
-
-  /**
-   * Implements TypedDataInterface::validate().
-   */
-  public function validate() {
-    // TODO: Implement validate() method.
   }
 }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\ContentEntityInterface.
+ * Contains \Drupal\Core\Entity\ContentEntityInterface.
  */
 
 namespace Drupal\Core\Entity;
