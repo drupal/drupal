@@ -266,13 +266,13 @@ function aggregator_menu() {
 }
 
 /**
- * Title callback: Returns a title for aggregatory category pages.
+ * Title callback: Returns a title for aggregator category pages.
  *
  * @param $category
  *   An aggregator category.
  *
  * @return
- *   An aggregator category title.
+ *   A string with the aggregator category title.
  */
 function _aggregator_category_title($category) {
   return $category['title'];
@@ -723,7 +723,7 @@ function theme_aggregator_block_item($variables) {
 }
 
 /**
- * Safely renders HTML content, as allowed.
+ * Renders the HTML content safely, as allowed.
  *
  * @param $value
  *   The content to be filtered.
@@ -739,7 +739,7 @@ function aggregator_filter_xss($value) {
  * Checks and sanitizes the aggregator configuration.
  *
  * Goes through all fetchers, parsers and processors and checks whether they
- * are available. If one is missing resets to standard configuration.
+ * are available. If one is missing, resets to standard configuration.
  *
  * @return
  *   TRUE if this function resets the configuration; FALSE if not.
@@ -775,7 +775,7 @@ function aggregator_sanitize_configuration() {
  *   Items count.
  *
  * @return
- *   Plural-formatted "@count items"
+ *   A string that is plural-formatted as "@count items".
  */
 function _aggregator_items($count) {
   return format_plural($count, '1 item', '@count items');

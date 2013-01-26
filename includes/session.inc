@@ -274,7 +274,7 @@ function drupal_session_initialize() {
 }
 
 /**
- * Forcefully starts a session, preserving already set session data.
+ * Starts a session forcefully, preserving already set session data.
  *
  * @ingroup php_wrappers
  */

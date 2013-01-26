@@ -1,6 +1,11 @@
 <?php
 
 /**
+* @file
+* Provides Unicode-related conversions and operations.
+*/
+
+/**
  * Indicates an error during check for PHP unicode support.
  */
 define('UNICODE_ERROR', -1);
@@ -18,8 +23,6 @@ define('UNICODE_MULTIBYTE', 1);
 
 /**
  * Matches Unicode characters that are word boundaries.
- *
- * @see http://unicode.org/glossary
  *
  * Characters with the following General_category (gc) property values are used
  * as word boundaries. While this does not fully conform to the Word Boundaries
@@ -39,6 +42,8 @@ define('UNICODE_MULTIBYTE', 1);
  * Note that the PCRE property matcher is not used because we wanted to be
  * compatible with Unicode 5.2.0 regardless of the PCRE version used (and any
  * bugs in PCRE property tables).
+ *
+ * @see http://unicode.org/glossary
  */
 define('PREG_CLASS_UNICODE_WORD_BOUNDARY',
   '\x{0}-\x{2F}\x{3A}-\x{40}\x{5B}-\x{60}\x{7B}-\x{A9}\x{AB}-\x{B1}\x{B4}' .
@@ -125,7 +130,7 @@ function _unicode_check() {
 }
 
 /**
- * Return Unicode library status and errors.
+ * Returns Unicode library status and errors.
  */
 function unicode_requirements() {
   // Ensure translations don't break during installation.
@@ -157,14 +162,14 @@ function unicode_requirements() {
 }
 
 /**
- * Prepare a new XML parser.
+ * Prepares a new XML parser.
  *
- * This is a wrapper around xml_parser_create() which extracts the encoding from
- * the XML data first and sets the output encoding to UTF-8. This function should
- * be used instead of xml_parser_create(), because PHP 4's XML parser doesn't
- * check the input encoding itself. "Starting from PHP 5, the input encoding is
- * automatically detected, so that the encoding parameter specifies only the
- * output encoding."
+ * This is a wrapper around xml_parser_create() which extracts the encoding
+ * from the XML data first and sets the output encoding to UTF-8. This function
+ * should be used instead of xml_parser_create(), because PHP 4's XML parser
+ * doesn't check the input encoding itself. "Starting from PHP 5, the input
+ * encoding is automatically detected, so that the encoding parameter specifies
+ * only the output encoding."
  *
  * This is also where unsupported encodings will be converted. Callers should
  * take this into account: $data might have been changed after the call.
@@ -213,7 +218,7 @@ function drupal_xml_parser_create(&$data) {
 }
 
 /**
- * Convert data to UTF-8
+ * Converts data to UTF-8.
  *
  * Requires the iconv, GNU recode or mbstring PHP extension.
  *
@@ -244,15 +249,15 @@ function drupal_convert_to_utf8($data, $encoding) {
 }
 
 /**
- * Truncate a UTF-8-encoded string safely to a number of bytes.
+ * Truncates a UTF-8-encoded string safely to a number of bytes.
  *
  * If the end position is in the middle of a UTF-8 sequence, it scans backwards
  * until the beginning of the byte sequence.
  *
  * Use this function whenever you want to chop off a string at an unsure
  * location. On the other hand, if you're sure that you're splitting on a
- * character boundary (e.g. after using strpos() or similar), you can safely use
- * substr() instead.
+ * character boundary (e.g. after using strpos() or similar), you can safely
+ * use substr() instead.
  *
  * @param $string
  *   The string to truncate.
@@ -306,7 +311,7 @@ function drupal_truncate_bytes($string, $len) {
  *   boundaries, giving you "See myverylongurl..." (assuming you had set
  *   $add_ellipses to TRUE).
  *
- * @return
+ * @return string
  *   The truncated string.
  */
 function truncate_utf8($string, $max_length, $wordsafe = FALSE, $add_ellipsis = FALSE, $min_wordsafe_length = 1) {
@@ -356,8 +361,7 @@ function truncate_utf8($string, $max_length, $wordsafe = FALSE, $add_ellipsis = 
 }
 
 /**
- * Encodes MIME/HTTP header values that contain non-ASCII, UTF-8 encoded
- * characters.
+ * Encodes MIME/HTTP header values that contain incorrectly encoded characters.
  *
  * For example, mime_header_encode('tést.txt') returns "=?UTF-8?B?dMOpc3QudHh0?=".
  *
@@ -369,6 +373,14 @@ function truncate_utf8($string, $max_length, $wordsafe = FALSE, $add_ellipsis = 
  *   each chunk starts and ends on a character boundary.
  * - Using \n as the chunk separator may cause problems on some systems and may
  *   have to be changed to \r\n or \r.
+ *
+ * @param $string
+ *   The header to encode.
+ *
+ * @return string
+ *   The mime-encoded header.
+ *
+ * @see mime_header_decode()
  */
 function mime_header_encode($string) {
   if (preg_match('/[^\x20-\x7E]/', $string)) {
@@ -388,7 +400,15 @@ function mime_header_encode($string) {
 }
 
 /**
- * Complement to mime_header_encode
+ * Decodes MIME/HTTP encoded header values.
+ *
+ * @param $header
+ *   The header to decode.
+ *
+ * @return string
+ *   The mime-decoded header.
+ *
+ * @see mime_header_encode()
  */
 function mime_header_decode($header) {
   // First step: encoded chunks followed by other encoded chunks (need to collapse whitespace)
@@ -398,7 +418,17 @@ function mime_header_decode($header) {
 }
 
 /**
- * Helper function to mime_header_decode
+ * Decodes encoded header data passed from mime_header_decode().
+ *
+ * Callback for preg_replace_callback() within mime_header_decode().
+ *
+ * @param $matches
+ *   The array of matches from preg_replace_callback().
+ *
+ * @return string
+ *   The mime-decoded string.
+ *
+ * @see mime_header_decode()
  */
 function _mime_header_decode($matches) {
   // Regexp groups:
@@ -415,9 +445,9 @@ function _mime_header_decode($matches) {
 /**
  * Decodes all HTML entities (including numerical ones) to regular UTF-8 bytes.
  *
- * Double-escaped entities will only be decoded once ("&amp;lt;" becomes "&lt;",
- * not "<"). Be careful when using this function, as decode_entities can revert
- * previous sanitization efforts (&lt;script&gt; will become <script>).
+ * Double-escaped entities will only be decoded once ("&amp;lt;" becomes "&lt;"
+ * , not "<"). Be careful when using this function, as decode_entities can
+ * revert previous sanitization efforts (&lt;script&gt; will become <script>).
  *
  * @param $text
  *   The text to decode entities in.
@@ -430,8 +460,15 @@ function decode_entities($text) {
 }
 
 /**
- * Count the amount of characters in a UTF-8 string. This is less than or
- * equal to the byte count.
+ * Counts the number of characters in a UTF-8 string.
+ *
+ * This is less than or equal to the byte count.
+ *
+ * @param $text
+ *   The string to run the operation on.
+ *
+ * @return integer
+ *   The length of the string.
  *
  * @ingroup php_wrappers
  */
@@ -448,6 +485,12 @@ function drupal_strlen($text) {
 
 /**
  * Uppercase a UTF-8 string.
+ *
+ * @param $text
+ *   The string to run the operation on.
+ *
+ * @return string
+ *   The string in uppercase.
  *
  * @ingroup php_wrappers
  */
@@ -468,6 +511,12 @@ function drupal_strtoupper($text) {
 /**
  * Lowercase a UTF-8 string.
  *
+ * @param $text
+ *   The string to run the operation on.
+ *
+ * @return string
+ *   The string in lowercase.
+ *
  * @ingroup php_wrappers
  */
 function drupal_strtolower($text) {
@@ -485,15 +534,28 @@ function drupal_strtolower($text) {
 }
 
 /**
- * Helper function for case conversion of Latin-1.
- * Used for flipping U+C0-U+DE to U+E0-U+FD and back.
+ * Flips U+C0-U+DE to U+E0-U+FD and back.
+ *
+ * @param $matches
+ *   An array of matches.
+ *
+ * @return array
+ *   The Latin-1 version of the array of matches.
+ *
+ * @see drupal_strtolower()
  */
 function _unicode_caseflip($matches) {
   return $matches[0][0] . chr(ord($matches[0][1]) ^ 32);
 }
 
 /**
- * Capitalize the first letter of a UTF-8 string.
+ * Capitalizes the first letter of a UTF-8 string.
+ *
+ * @param $text
+ *   The string to convert.
+ *
+ * @return
+ *   The string with the first letter as uppercase.
  *
  * @ingroup php_wrappers
  */
@@ -503,12 +565,21 @@ function drupal_ucfirst($text) {
 }
 
 /**
- * Cut off a piece of a string based on character indices and counts. Follows
- * the same behavior as PHP's own substr() function.
+ * Cuts off a piece of a string based on character indices and counts.
  *
- * Note that for cutting off a string at a known character/substring
- * location, the usage of PHP's normal strpos/substr is safe and
- * much faster.
+ * Follows the same behavior as PHP's own substr() function. Note that for
+ * cutting off a string at a known character/substring location, the usage of
+ * PHP's normal strpos/substr is safe and much faster.
+ *
+ * @param $text
+ *   The input string.
+ * @param $start
+ *   The position at which to start reading.
+ * @param $length
+ *   The number of characters to read.
+ *
+ * @return
+ *   The shortened string.
  *
  * @ingroup php_wrappers
  */

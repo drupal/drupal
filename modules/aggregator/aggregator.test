@@ -5,6 +5,9 @@
  * Tests for aggregator.module.
  */
 
+/**
+ * Defines a base class for testing the Aggregator module.
+ */
 class AggregatorTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('aggregator', 'aggregator_test');
@@ -13,10 +16,15 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create an aggregator feed (simulate form submission on admin/config/services/aggregator/add/feed).
+   * Creates an aggregator feed.
+   *
+   * This method simulates the form submission on path
+   * admin/config/services/aggregator/add/feed.
    *
    * @param $feed_url
-   *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
+   *   (optional) If given, feed will be created with this URL, otherwise
+   *   /rss.xml will be used. Defaults to NULL.
+   *
    * @return $feed
    *   Full feed object if possible.
    *
@@ -33,7 +41,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Delete an aggregator feed.
+   * Deletes an aggregator feed.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -44,10 +52,11 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Return a randomly generated feed edit array.
+   * Returns a randomly generated feed edit array.
    *
    * @param $feed_url
-   *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
+   *   (optional) If given, feed will be created with this URL, otherwise
+   *   /rss.xml will be used. Defaults to NULL.
    * @return
    *   A feed array.
    */
@@ -68,7 +77,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Return the count of the randomly created feed array.
+   * Returns the count of the randomly created feed array.
    *
    * @return
    *   Number of feed items on default feed created by createFeed().
@@ -80,10 +89,13 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Update feed items (simulate click to admin/config/services/aggregator/update/$fid).
+   * Updates the feed items.
+   *
+   * This method simulates a click to
+   * admin/config/services/aggregator/update/$fid.
    *
    * @param $feed
-   *   Feed object representing the feed.
+   *   Feed object representing the feed, passed by reference.
    * @param $expected_count
    *   Expected number of feed items.
    */
@@ -112,7 +124,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Confirm item removal from a feed.
+   * Confirms an item removal from a feed.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -123,7 +135,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Add and remove feed items and ensure that the count is zero.
+   * Adds and removes feed items and ensure that the count is zero.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -140,7 +152,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Pull feed categories from aggregator_category_feed table.
+   * Pulls feed categories from {aggregator_category_feed} table.
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -154,7 +166,11 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Pull categories from aggregator_category table.
+   * Pulls categories from {aggregator_category} table.
+   *
+   * @return
+   *   An associative array keyed by category ID and values are set to the
+   *   category names.
    */
   function getCategories() {
     $categories = array();
@@ -165,14 +181,14 @@ class AggregatorTestCase extends DrupalWebTestCase {
     return $categories;
   }
 
-
   /**
-   * Check if the feed name and URL is unique.
+   * Checks whether the feed name and URL are unique.
    *
    * @param $feed_name
    *   String containing the feed name to check.
    * @param $feed_url
    *   String containing the feed URL to check.
+   *
    * @return
    *   TRUE if feed is unique.
    */
@@ -182,10 +198,11 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a valid OPML file from an array of feeds.
+   * Creates a valid OPML file from an array of feeds.
    *
    * @param $feeds
    *   An array of feeds.
+   *
    * @return
    *   Path to valid OPML file.
    */
@@ -223,7 +240,7 @@ EOF;
   }
 
   /**
-   * Create an invalid OPML file.
+   * Creates an invalid OPML file.
    *
    * @return
    *   Path to invalid OPML file.
@@ -240,7 +257,7 @@ EOF;
   }
 
   /**
-   * Create a valid but empty OPML file.
+   * Creates a valid but empty OPML file.
    *
    * @return
    *   Path to empty OPML file.
@@ -275,7 +292,7 @@ EOF;
    * Creates sample article nodes.
    *
    * @param $count
-   *   (optional) The number of nodes to generate.
+   *   (optional) The number of nodes to generate. Defaults to five.
    */
   function createSampleNodes($count = 5) {
     $langcode = LANGUAGE_NONE;
@@ -290,7 +307,7 @@ EOF;
 }
 
 /**
- * Tests aggregator configuration settings.
+ * Tests functionality of the configuration settings in the Aggregator module.
  */
 class AggregatorConfigurationTestCase extends AggregatorTestCase {
   public static function getInfo() {
@@ -321,6 +338,9 @@ class AggregatorConfigurationTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests adding aggregator feeds.
+ */
 class AddFeedTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -331,7 +351,7 @@ class AddFeedTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Create a feed, ensure that it is unique, check the source, and delete the feed.
+   * Creates and ensures that a feed is unique, checks source, and deletes feed.
    */
   function testAddFeed() {
     $feed = $this->createFeed();
@@ -381,6 +401,9 @@ class AddFeedTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests the categorize feed functionality in the Aggregator module.
+ */
 class CategorizeFeedTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -391,7 +414,7 @@ class CategorizeFeedTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Create a feed and make sure you can add more than one category to it.
+   * Creates a feed and makes sure you can add more than one category to it.
    */
   function testCategorizeFeed() {
 
@@ -424,6 +447,9 @@ class CategorizeFeedTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests functionality of updating the feed in the Aggregator module.
+ */
 class UpdateFeedTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -434,7 +460,7 @@ class UpdateFeedTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Create a feed and attempt to update it.
+   * Creates a feed and attempts to update it.
    */
   function testUpdateFeed() {
     $remamining_fields = array('title', 'url', '');
@@ -466,6 +492,9 @@ class UpdateFeedTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests functionality for removing feeds in the Aggregator module.
+ */
 class RemoveFeedTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -476,7 +505,7 @@ class RemoveFeedTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Remove a feed and ensure that all it services are removed.
+   * Removes a feed and ensures that all of its services are removed.
    */
   function testRemoveFeed() {
     $feed = $this->createFeed();
@@ -494,6 +523,9 @@ class RemoveFeedTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests functionality of updating a feed item in the Aggregator module.
+ */
 class UpdateFeedItemTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -504,7 +536,7 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Test running "update items" from the 'admin/config/services/aggregator' page.
+   * Tests running "update items" from 'admin/config/services/aggregator' page.
    */
   function testUpdateFeedItem() {
     $this->createSampleNodes();
@@ -564,7 +596,7 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Test running "remove items" from the 'admin/config/services/aggregator' page.
+   * Tests running "remove items" from 'admin/config/services/aggregator' page.
    */
   function testRemoveFeedItem() {
     // Create a bunch of test feeds.
@@ -592,6 +624,9 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests categorization functionality in the Aggregator module.
+ */
 class CategorizeFeedItemTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -602,6 +637,8 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
   }
 
   /**
+   * Checks that children of a feed inherit a defined category.
+   *
    * If a feed has a category, make sure that the children inherit that
    * categorization.
    */
@@ -649,6 +686,9 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests importing feeds from OPML functionality for the Aggregator module.
+ */
 class ImportOPMLTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -659,7 +699,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Open OPML import form.
+   * Opens OPML import form.
    */
   function openImportForm() {
     db_delete('aggregator_category')->execute();
@@ -681,7 +721,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Submit form filled with invalid fields.
+   * Submits form filled with invalid fields.
    */
   function validateImportFormFields() {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -707,7 +747,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Submit form with invalid, empty and valid OPML files.
+   * Submits form with invalid, empty, and valid OPML files.
    */
   function submitImportForm() {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -766,6 +806,9 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $this->assertTrue($category, 'Categories are correct.');
   }
 
+  /**
+   * Tests the import of an OPML file.
+   */
   function testOPMLImport() {
     $this->openImportForm();
     $this->validateImportFormFields();
@@ -773,6 +816,9 @@ class ImportOPMLTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests functionality of the cron process in the Aggregator module.
+ */
 class AggregatorCronTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -783,7 +829,7 @@ class AggregatorCronTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Add feeds update them on cron.
+   * Adds feeds and updates them via cron process.
    */
   public function testCron() {
     // Create feed and test basic updating on cron.
@@ -819,6 +865,9 @@ class AggregatorCronTestCase extends AggregatorTestCase {
   }
 }
 
+/**
+ * Tests rendering functionality in the Aggregator module.
+ */
 class AggregatorRenderingTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
@@ -829,9 +878,9 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Add a feed block to the page and checks its links.
+   * Adds a feed block to the page and checks its links.
    *
-   * TODO: Test the category block as well.
+   * @todo Test the category block as well.
    */
   public function testBlockLinks() {
     // Create feed.
@@ -890,7 +939,7 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Create a feed and check that feed's page.
+   * Creates a feed and checks that feed's page.
    */
   public function testFeedPage() {
     // Increase the number of items published in the rss.xml feed so we have
@@ -913,7 +962,7 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
 }
 
 /**
- * Tests for feed parsing.
+ * Tests feed parsing in the Aggregator module.
  */
 class FeedParserTestCase extends AggregatorTestCase {
   public static function getInfo() {
@@ -933,7 +982,7 @@ class FeedParserTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Test a feed that uses the RSS 0.91 format.
+   * Tests a feed that uses the RSS 0.91 format.
    */
   function testRSS091Sample() {
     $feed = $this->createFeed($this->getRSS091Sample());
@@ -955,7 +1004,7 @@ class FeedParserTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Test a feed that uses the Atom format.
+   * Tests a feed that uses the Atom format.
    */
   function testAtomSample() {
     $feed = $this->createFeed($this->getAtomSample());
