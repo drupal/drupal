@@ -3032,6 +3032,7 @@ function system_update_7073() {
     'default' => '',
     'binary' => TRUE,
   ));
+  db_drop_unique_key('file_managed', 'uri');
   db_change_field('file_managed', 'uri', 'uri', array(
     'description' => 'The URI to access the file (either local or remote).',
     'type' => 'varchar',
@@ -3040,6 +3041,7 @@ function system_update_7073() {
     'default' => '',
     'binary' => TRUE,
   ));
+  db_add_unique_key('file_managed', 'uri', array('uri'));
 }
 
 /**
