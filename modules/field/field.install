@@ -460,5 +460,12 @@ function field_update_7002() {
 }
 
 /**
+ * Add the FieldInfo class to the class registry.
+ */
+function field_update_7003() {
+  // Empty update to force a rebuild of the registry.
+}
+
+/**
  * @} End of "addtogroup updates-7.x-extra".
  */

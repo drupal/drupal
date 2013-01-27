@@ -1144,6 +1144,16 @@ class FieldInfoTestCase extends FieldTestCase {
     $this->assertIdentical($instances, $expected, "field_info_instances('user') returns " . var_export($expected, TRUE) . '.');
     $instances = field_info_instances('user', 'user');
     $this->assertIdentical($instances, array(), "field_info_instances('user', 'user') returns an empty array.");
+
+    // Test that querying for invalid entity types does not add entries in the
+    // list returned by field_info_instances().
+    field_info_cache_clear();
+    field_info_instances('invalid_entity', 'invalid_bundle');
+    // Simulate new request by clearing static caches.
+    drupal_static_reset();
+    field_info_instances('invalid_entity', 'invalid_bundle');
+    $instances = field_info_instances();
+    $this->assertFalse(isset($instances['invalid_entity']), 'field_info_instances() does not contain entries for the invalid entity type that was queried before');
   }
 
   /**
@@ -1254,6 +1264,80 @@ class FieldInfoTestCase extends FieldTestCase {
   }
 
   /**
+   * Test field_info_field_map().
+   */
+  function testFieldMap() {
+    // We will overlook fields created by the 'standard' install profile.
+    $exclude = field_info_field_map();
+
+    // Create a new bundle for 'test_entity' entity type.
+    field_test_create_bundle('test_bundle_2');
+
+    // Create a couple fields.
+    $fields  = array(
+      array(
+        'field_name' => 'field_1',
+        'type' => 'test_field',
+      ),
+      array(
+        'field_name' => 'field_2',
+        'type' => 'hidden_test_field',
+      ),
+    );
+    foreach ($fields as $field) {
+      field_create_field($field);
+    }
+
+    // Create a couple instances.
+    $instances = array(
+      array(
+        'field_name' => 'field_1',
+        'entity_type' => 'test_entity',
+        'bundle' => 'test_bundle',
+      ),
+      array(
+        'field_name' => 'field_1',
+        'entity_type' => 'test_entity',
+        'bundle' => 'test_bundle_2',
+      ),
+      array(
+        'field_name' => 'field_2',
+        'entity_type' => 'test_entity',
+        'bundle' => 'test_bundle',
+      ),
+      array(
+        'field_name' => 'field_2',
+        'entity_type' => 'test_cacheable_entity',
+        'bundle' => 'test_bundle',
+      ),
+    );
+    foreach ($instances as $instance) {
+      field_create_instance($instance);
+    }
+
+    $expected = array(
+      'field_1' => array(
+        'type' => 'test_field',
+        'bundles' => array(
+          'test_entity' => array('test_bundle', 'test_bundle_2'),
+        ),
+      ),
+      'field_2' => array(
+        'type' => 'hidden_test_field',
+        'bundles' => array(
+          'test_entity' => array('test_bundle'),
+          'test_cacheable_entity' => array('test_bundle'),
+        ),
+      ),
+    );
+
+    // Check that the field map is correct.
+    $map = field_info_field_map();
+    $map = array_diff_key($map, $exclude);
+    $this->assertEqual($map, $expected);
+  }
+
+  /**
    * Test that the field_info settings convenience functions work.
    */
   function testSettingsInfo() {
@@ -1276,6 +1360,31 @@ class FieldInfoTestCase extends FieldTestCase {
     foreach ($info as $type => $data) {
       $this->assertIdentical(field_info_formatter_settings($type), $data['settings'], "field_info_formatter_settings returns {$type}'s formatter settings");
     }
+  }
+
+  /**
+   * Tests that the field info cache can be built correctly.
+   */
+  function testFieldInfoCache() {
+    // Create a test field and ensure it's in the array returned by
+    // field_info_fields().
+    $field_name = drupal_strtolower($this->randomName());
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'test_field',
+    );
+    field_create_field($field);
+    $fields = field_info_fields();
+    $this->assertTrue(isset($fields[$field_name]), 'The test field is initially found in the array returned by field_info_fields().');
+
+    // Now rebuild the field info cache, and set a variable which will cause
+    // the cache to be cleared while it's being rebuilt; see
+    // field_test_entity_info(). Ensure the test field is still in the returned
+    // array.
+    field_info_cache_clear();
+    variable_set('field_test_clear_info_cache_in_hook_entity_info', TRUE);
+    $fields = field_info_fields();
+    $this->assertTrue(isset($fields[$field_name]), 'The test field is found in the array returned by field_info_fields() even if its cache is cleared while being rebuilt.');
   }
 }
 
@@ -2176,6 +2285,41 @@ class FieldCrudTestCase extends FieldTestCase {
     // Read the field back.
     $field = field_read_field($field_definition['field_name']);
     $this->assertTrue($field_definition < $field, t('The field was properly read.'));
+  }
+
+  /**
+   * Tests reading field definitions.
+   */
+  function testReadFields() {
+    $field_definition = array(
+      'field_name' => 'field_1',
+      'type' => 'test_field',
+    );
+    field_create_field($field_definition);
+
+    // Check that 'single column' criteria works.
+    $fields = field_read_fields(array('field_name' => $field_definition['field_name']));
+    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
+
+    // Check that 'multi column' criteria works.
+    $fields = field_read_fields(array('field_name' => $field_definition['field_name'], 'type' => $field_definition['type']));
+    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
+    $fields = field_read_fields(array('field_name' => $field_definition['field_name'], 'type' => 'foo'));
+    $this->assertTrue(empty($fields), 'No field was found.');
+
+    // Create an instance of the field.
+    $instance_definition = array(
+      'field_name' => $field_definition['field_name'],
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+    );
+    field_create_instance($instance_definition);
+
+    // Check that criteria spanning over the field_config_instance table work.
+    $fields = field_read_fields(array('entity_type' => $instance_definition['entity_type'], 'bundle' => $instance_definition['bundle']));
+    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
+    $fields = field_read_fields(array('entity_type' => $instance_definition['entity_type'], 'field_name' => $instance_definition['field_name']));
+    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
   }
 
   /**

@@ -269,7 +269,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
    */
   function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
     // Reset the fields info.
-    _field_info_collate_fields(TRUE);
+    field_info_cache_clear();
     // Assert field settings.
     $field = field_info_field($field_name);
     $this->assertTrue($field['settings']['test_field_setting'] == $string, t('Field settings were found.'));
@@ -360,7 +360,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $this->fieldUIDeleteField($bundle_path1, $this->field_name, $this->field_label, $this->type);
 
     // Reset the fields info.
-    _field_info_collate_fields(TRUE);
+    field_info_cache_clear();
     // Check that the field instance was deleted.
     $this->assertNull(field_info_instance('node', $this->field_name, $this->type), t('Field instance was deleted.'));
     // Check that the field was not deleted
@@ -370,7 +370,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $this->fieldUIDeleteField($bundle_path2, $this->field_name, $this->field_label, $type_name2);
 
     // Reset the fields info.
-    _field_info_collate_fields(TRUE);
+    field_info_cache_clear();
     // Check that the field instance was deleted.
     $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), t('Field instance was deleted.'));
     // Check that the field was deleted too.

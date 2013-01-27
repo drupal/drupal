@@ -319,7 +319,11 @@ function field_read_field($field_name, $include_additional = array()) {
  * Reads in fields that match an array of conditions.
  *
  * @param array $params
- *   An array of conditions to match against.
+ *   An array of conditions to match against. Keys are columns from the
+ *   'field_config' table, values are conditions to match. Additionally,
+ *   conditions on the 'entity_type' and 'bundle' columns from the
+ *   'field_config_instance' table are supported (select fields having an
+ *   instance on a given bundle).
  * @param array $include_additional
  *   The default behavior of this function is to not return fields that
  *   are inactive or have been deleted. Setting
@@ -337,8 +341,21 @@ function field_read_fields($params = array(), $include_additional = array()) {
 
   // Turn the conditions into a query.
   foreach ($params as $key => $value) {
+    // Allow filtering on the 'entity_type' and 'bundle' columns of the
+    // field_config_instance table.
+    if ($key == 'entity_type' || $key == 'bundle') {
+      if (empty($fci_join)) {
+        $fci_join = $query->join('field_config_instance', 'fci', 'fc.id = fci.field_id');
+      }
+      $key = 'fci.' . $key;
+    }
+    else {
+      $key = 'fc.' . $key;
+    }
+
     $query->condition($key, $value);
   }
+
   if (!isset($include_additional['include_inactive']) || !$include_additional['include_inactive']) {
     $query
       ->condition('fc.active', 1)

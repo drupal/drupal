@@ -5,6 +5,7 @@ version = VERSION
 core = 7.x
 files[] = field.module
 files[] = field.attach.inc
+files[] = field.info.class.inc
 files[] = tests/field.test
 dependencies[] = field_sql_storage
 required = TRUE
