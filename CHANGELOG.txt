@@ -1,7 +1,7 @@
 
 Drupal 7.20, xxxx-xx-xx (development version)
 -----------------------
-- Refactored the Field module's caching behavior to obtain massive improvements
+- Refactored the Field module's caching behavior to obtain large improvements
   in memory usage for sites with many fields and instances (API addition:
   http://drupal.org/node/1880666).
 - Fixed entity argument not being passed to implementations of
