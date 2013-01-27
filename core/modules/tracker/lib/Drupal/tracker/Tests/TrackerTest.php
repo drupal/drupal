@@ -277,7 +277,9 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     $node = $this->drupalCreateNode(array(
-      'comment' => 2,
+      'comment' => array(
+        LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN))
+      ),
       'title' => $this->randomName(),
     ));
 
