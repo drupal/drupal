@@ -1,6 +1,8 @@
 
 Drupal 7.20, xxxx-xx-xx (development version)
 -----------------------
+- Fixed enforced dependencies errors updating to recent versions of Drupal 7 on
+  certain non-MySQL databases.
 - Refactored the Field module's caching behavior to obtain large improvements
   in memory usage for sites with many fields and instances (API addition:
   http://drupal.org/node/1880666).
