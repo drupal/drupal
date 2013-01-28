@@ -13,8 +13,10 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests the serializer style plugin.
  *
- * @see \Drupal\views\Plugin\display\Data
- * @see \Drupal\views\Plugin\style\Serialize
+ * @see \Drupal\rest\Plugin\views\display\RestExport
+ * @see \Drupal\rest\Plugin\views\style\Serializer
+ * @see \Drupal\rest\Plugin\views\row\DataEntityRow
+ * @see \Drupal\rest\Plugin\views\row\DataFieldRow
  */
 class StyleSerializerTest extends PluginTestBase {
 
@@ -174,11 +176,16 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Test a random aliases for fields, they should be replaced.
     $random_name = $this->randomName();
-    // randomString() might produce a " " at the end but the DataFieldRow plugin
-    // trims the values.
-    $random_string = trim($this->randomString());
-    $edit = array('row_options[aliases][name]' => $random_name, 'row_options[aliases][nothing]' => $random_string);
+    // Use # to produce an invalid character for the validation.
+    $invalid_random_name = '#' . $this->randomName();
+    $edit = array('row_options[aliases][name]' => $random_name, 'row_options[aliases][nothing]' => $invalid_random_name);
     $this->drupalPost($row_options, $edit, t('Apply'));
+    $this->assertText(t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
+
+    $random_name_custom = $this->randomName();
+    $edit = array('row_options[aliases][name]' => $random_name, 'row_options[aliases][nothing]' => $random_name_custom);
+    $this->drupalPost($row_options, $edit, t('Apply'));
+
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view('test_serializer_display_field');
@@ -191,7 +198,7 @@ class StyleSerializerTest extends PluginTestBase {
       foreach ($view->field as $id => $field) {
         // This will be the custom field.
         if ($field->field_alias == 'unknown') {
-          $expected_row[$random_string] = $field->render($row);
+          $expected_row[$random_name_custom] = $field->render($row);
         }
         // This will be the name field.
         else {

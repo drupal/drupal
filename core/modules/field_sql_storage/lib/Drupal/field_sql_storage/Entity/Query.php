@@ -46,6 +46,7 @@ class Query extends QueryBase {
    */
   public function execute() {
     $entity_type = $this->entityType;
+    // @todo change to a method call once http://drupal.org/node/1892462 is in.
     $entity_info = entity_get_info($entity_type);
     if (!isset($entity_info['base_table'])) {
       throw new QueryException("No base table, invalid query.");

@@ -730,6 +730,9 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
  * @param $conjunction
  *   AND if all conditions in the query need to apply, OR if any of them is
  *   enough. Optional, defaults to AND.
+ *
+ * @return \Drupal\Core\Entity\Query\QueryInterface
+ *   The query object that can query the given entity type.
  */
 function entity_query($entity_type, $conjunction = 'AND') {
   return drupal_container()->get('entity.query')->get($entity_type, $conjunction);
