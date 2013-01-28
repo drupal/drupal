@@ -19,7 +19,6 @@
 .password-strength {
   width: 17em;
   float: right;  /* LTR */
-  margin-top: 1.4em;
 }
 .password-strength-title {
   display: inline;
@@ -45,7 +44,6 @@ input.password-field {
 }
 div.password-confirm {
   float: right;  /* LTR */
-  margin-top: 1.5em;
   visibility: hidden;
   width: 17em;
 }
