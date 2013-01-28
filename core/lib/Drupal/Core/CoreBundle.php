@@ -155,9 +155,12 @@ class CoreBundle extends Bundle {
     $this->registerTwig($container);
     $this->registerRouting($container);
 
-    // Add the entity query factory.
+    // Add the entity query factories.
     $container->register('entity.query', 'Drupal\Core\Entity\Query\QueryFactory')
-      ->addArgument(new Reference('service_container'));
+      ->addArgument(new Reference('plugin.manager.entity'))
+      ->addMethodCall('setContainer', array(new Reference('service_container')));
+    $container->register('entity.query.config', 'Drupal\Core\Config\Entity\Query\QueryFactory')
+      ->addArgument(new Reference('config.storage'));
 
     $container->register('router.dumper', 'Drupal\Core\Routing\MatcherDumper')
       ->addArgument(new Reference('database'));
