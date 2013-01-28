@@ -39,7 +39,7 @@ function comment_field_info() {
  * Implements hook_field_instance_settings_form().
  */
 function comment_field_instance_settings_form($field, $instance) {
-  $settings = $instance['settings'];
+  $settings = $instance['settings']['comment'];
   $form['comment'] = array(
     '#type' => 'details',
     '#title' => t('Comment settings'),
@@ -57,7 +57,7 @@ function comment_field_instance_settings_form($field, $instance) {
   $form['comment']['comment'] = array(
     '#type' => 'select',
     '#title' => t('Default comment setting for new content'),
-    '#default_value' => empty($settings['comment']) ? COMMENT_OPEN : $settings['comment'],
+    '#default_value' => $settings['comment'],
     '#options' => array(
       COMMENT_OPEN => t('Open'),
       COMMENT_CLOSED => t('Closed'),
@@ -67,19 +67,19 @@ function comment_field_instance_settings_form($field, $instance) {
   $form['comment']['comment_default_mode'] = array(
     '#type' => 'checkbox',
     '#title' => t('Threading'),
-    '#default_value' => empty($settings['comment_default_mode']) ? COMMENT_MODE_THREADED : $settings['comment_default_mode'],
+    '#default_value' => $settings['comment_default_mode'],
     '#description' => t('Show comment replies in a threaded list.'),
   );
   $form['comment']['comment_default_per_page'] = array(
     '#type' => 'select',
     '#title' => t('Comments per page'),
-    '#default_value' => empty($settings['comment_default_per_page']) ? 50 : $settings['comment_default_per_page'],
+    '#default_value' => $settings['comment_default_per_page'],
     '#options' => _comment_per_page(),
   );
   $form['comment']['comment_anonymous'] = array(
     '#type' => 'select',
     '#title' => t('Anonymous commenting'),
-    '#default_value' => empty($settings['comment_anonymous']) ? COMMENT_ANONYMOUS_MAYNOT_CONTACT : $settings['comment_anonymous'],
+    '#default_value' => $settings['comment_anonymous'],
     '#options' => array(
       COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
       COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
@@ -90,17 +90,17 @@ function comment_field_instance_settings_form($field, $instance) {
   $form['comment']['comment_subject_field'] = array(
     '#type' => 'checkbox',
     '#title' => t('Allow comment title'),
-    '#default_value' => empty($settings['comment_subject_field']) ? 1 : $settings['comment_subject_field'],
+    '#default_value' => $settings['comment_subject_field'],
   );
   $form['comment']['comment_form_location'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show reply form on the same page as comments'),
-    '#default_value' => empty($settings['comment_form_location']) ? COMMENT_FORM_BELOW : $settings['comment_form_location'],
+    '#default_value' => $settings['comment_form_location'],
   );
   $form['comment']['comment_preview'] = array(
     '#type' => 'radios',
     '#title' => t('Preview comment'),
-    '#default_value' => empty($settings['comment_preview']) ? DRUPAL_OPTIONAL : $settings['comment_preview'],
+    '#default_value' => $settings['comment_preview'],
     '#options' => array(
       DRUPAL_DISABLED => t('Disabled'),
       DRUPAL_OPTIONAL => t('Optional'),
