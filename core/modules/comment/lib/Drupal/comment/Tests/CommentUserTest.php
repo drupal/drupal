@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\comment\Tests;
+
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\simpletest\WebTestBase;
 
@@ -24,14 +25,14 @@ class CommentUserTest extends WebTestBase {
   /**
    * An administrative user with permission to configure comment settings.
    *
-   * @var Drupal\user\User
+   * @var \Drupal\user\Plugin\Core\Entity\User
    */
   protected $admin_user;
 
   /**
    * A normal user with permission to post comments.
    *
-   * @var Drupal\user\User
+   * @var \Drupal\user\Plugin\Core\Entity\User
    */
   protected $web_user;
 
@@ -61,7 +62,7 @@ class CommentUserTest extends WebTestBase {
       'access content',
       'administer users',
       'access user profiles',
-     ));
+    ));
     $this->web_user = $this->drupalCreateUser(array(
       'access comments',
       'post comments',
@@ -91,8 +92,8 @@ class CommentUserTest extends WebTestBase {
   /**
    * Posts a comment.
    *
-   * @param Drupal\user\User|null $account
-   *   User to post comment on or NULL to post to the previusly loaded page.
+   * @param \Drupal\user\Plugin\Core\Entity\User|null $account
+   *   User to post comment on or NULL to post to the previously loaded page.
    * @param $comment
    *   Comment body.
    * @param $subject
@@ -165,7 +166,7 @@ class CommentUserTest extends WebTestBase {
   /**
    * Checks current page for specified comment.
    *
-   * @param Drupal\comment\Plugin\Core\Entity\comment $comment
+   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -191,7 +192,7 @@ class CommentUserTest extends WebTestBase {
   /**
    * Deletes a comment.
    *
-   * @param Drupal\comment\Comment $comment
+   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
    *   Comment to delete.
    */
   function deleteComment(Comment $comment) {
@@ -264,19 +265,19 @@ class CommentUserTest extends WebTestBase {
     $this->performCommentOperation($comment1, 'unpublish');
 
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertRaw('comments[' . $comment1->id . ']', 'Comment was unpublished.');
+    $this->assertRaw('comments[' . $comment1->id() . ']', 'Comment was unpublished.');
 
     // Publish comment.
     $this->performCommentOperation($comment1, 'publish', TRUE);
 
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $comment1->id . ']', 'Comment was published.');
+    $this->assertRaw('comments[' . $comment1->id() . ']', 'Comment was published.');
 
     // Delete comment.
     $this->performCommentOperation($comment1, 'delete');
 
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $comment1->id . ']', 'Comment was deleted.');
+    $this->assertNoRaw('comments[' . $comment1->id() . ']', 'Comment was deleted.');
 
     // Post another comment.
     $comment1 = $this->postComment($this->web_user, $this->randomName(), $this->randomName());
@@ -284,7 +285,7 @@ class CommentUserTest extends WebTestBase {
 
     // Check comment was found.
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $comment1->id . ']', 'Comment was published.');
+    $this->assertRaw('comments[' . $comment1->id() . ']', 'Comment was published.');
 
     $this->drupalLogout();
 
@@ -334,7 +335,7 @@ class CommentUserTest extends WebTestBase {
     $this->assertFieldByName('subject', '', 'Subject field found.');
     $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
 
-    $this->drupalGet('comment/reply/user/' . $this->web_user->uid . '/comment/' . $comment1->id);
+    $this->drupalGet('comment/reply/user/' . $this->web_user->uid . '/comment/' . $comment1->id());
     $this->assertText('You are not authorized to view comments', 'Error attempting to post reply.');
     $this->assertNoText($comment1->subject->value, 'Comment not displayed.');
   }

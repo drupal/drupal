@@ -93,16 +93,28 @@ class CommentInterfaceTest extends CommentTestBase {
     $reply_loaded = comment_load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
     $this->assertEqual($comment->id(), $reply_loaded->pid->value, 'Pid of a reply to a comment is set correctly.');
-    $this->assertEqual(rtrim($comment->thread->value, '/') . '.00/', $reply_loaded->thread->value, 'Thread of reply grows correctly.');
+    // Check the thread of reply grows correctly.
+    $this->assertEqual(rtrim($comment->thread->value, '/') . '.00/', $reply_loaded->thread->value);
 
-    // Second reply to comment #3 creating comment #4.
+    // Second reply to comment #2 creating comment #4.
+    $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $comment->id());
+    $this->assertText($comment->subject->value, 'Individual comment-reply subject found.');
+    $this->assertText($comment->comment_body->value, 'Individual comment-reply body found.');
+    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $reply_loaded = comment_load($reply->id());
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
+    // Check the thread of second reply grows correctly.
+    $this->assertEqual(rtrim($comment->thread->value, '/') . '.01/', $reply_loaded->thread->value);
+
+    // Reply to comment #4 creating comment #5.
     $this->drupalGet('comment/reply/node/' . $this->node->nid . '/comment/' . $reply_loaded->id());
     $this->assertText($reply_loaded->subject->value, 'Individual comment-reply subject found.');
     $this->assertText($reply_loaded->comment_body->value, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     $reply_loaded = comment_load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
-    $this->assertEqual(rtrim($comment->thread->value, '/') . '.01/', $reply_loaded->thread->value, 'Thread of second reply grows correctly.');
+    // Check the thread of reply to second reply grows correctly.
+    $this->assertEqual(rtrim($comment->thread->value, '/') . '.01.00/', $reply_loaded->thread->value);
 
     // Edit reply.
     $this->drupalGet('comment/' . $reply->id() . '/edit');
@@ -111,13 +123,13 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Correct link count
     $this->drupalGet('node');
-    $this->assertRaw('4 comments', 'Link to the 4 comments exist.');
+    $this->assertRaw('5 comments', 'Link to the 5 comments exist.');
 
     // Confirm a new comment is posted to the correct page.
     $this->setCommentsPerPage(2);
     $comment_new_page = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
     $this->assertTrue($this->commentExists($comment_new_page), 'Page one exists. %s');
-    $this->drupalGet('node/' . $this->node->nid, array('query' => array('page' => 1)));
+    $this->drupalGet('node/' . $this->node->nid, array('query' => array('page' => 2)));
     $this->assertTrue($this->commentExists($reply, TRUE), 'Page two exists. %s');
     $this->setCommentsPerPage(50);
 

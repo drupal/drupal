@@ -206,7 +206,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // indexing or constructing a search result excerpt.
         $values = field_get_items($entity, $field_name);
         if (is_array($values) && ($value = reset($values)) &&
-        !empty($value['comment']) && $value['comment'] == COMMENT_OPEN) {
+            !empty($value['comment']) && $value['comment'] == COMMENT_OPEN) {
           $comment_form_location = $instance['settings']['comment']['comment_form_location'];
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
@@ -260,7 +260,7 @@ function comment_entity_bundle_info() {
     $bundles['comment'][$field_name] = array(
       'label' => $field_name,
       'admin' => array(
-        'path' =>  'admin/structure/comments/%comment_field_name',
+        'path' => 'admin/structure/comments/%comment_field_name',
         'bundle argument' => 3,
         'real path' => 'admin/structure/comments/' . strtr($field_name, '_', '-'),
       ),
@@ -427,7 +427,7 @@ function comment_menu() {
     'access arguments' => array(3),
     'file' => 'comment.pages.inc',
   );
-    // Legacy redirect handler for links of form comment/reply/%nid
+  // Legacy redirect handler for links of form comment/reply/%nid
   if (module_exists('node')) {
     $items['comment/reply/%node'] = array(
       'title' => 'Add new comment',
@@ -448,7 +448,7 @@ function comment_menu() {
  * Loads the entity given and entity id and entity type
  *
  * @param array $args
- *   The menu args passed from the %map load argument
+ *   The menu args passed from the %map load argument.
  *
  * @return mixed
  *   Returns Drupal\entity\Entity or FALSE if not found.
@@ -463,7 +463,7 @@ function comment_entity_reply_load($entity_id, $args) {
  *
  * Checks the user has view access to the entity which the comment reply is
  * against.
-
+ *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity which the comment field is attached to.
  *
@@ -479,11 +479,9 @@ function comment_reply_access(\Drupal\Core\Entity\EntityInterface $entity) {
     switch ($function) {
       case 'user_access':
         return $entity->access('view');
-        break;
 
       case 'taxonomy_term_access':
         return user_access('access content');
-        break;
 
       default:
         return $function('view', $entity);
@@ -509,8 +507,7 @@ function comment_count_unpublished() {
 }
 
  /**
- * Creates a comment_body field instance for a given entity type, bundle and
- * field name.
+ * Creates a comment_body field instance.
  *
  * @param string $entity_type
  *   Entity type to which the comment field is attached.
@@ -518,7 +515,6 @@ function comment_count_unpublished() {
  *   Bundle of entity type to which comment field is attached
  * @param string $field_name
  *   Name of the comment field attached to the entity type and bundle.
- *
  */
 function _comment_body_field_create($entity_type, $bundle, $field_name) {
   // Create the field if needed.
@@ -2059,8 +2055,8 @@ function comment_file_download_access($field, EntityInterface $entity, File $fil
       // @see http://drupal.org/node/1696660
       $function = $entity->entity_type->value . '_access';
       if (function_exists($function)) {
-        $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-        return $function('view', $entity);
+        $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
+        return $function('view', $commented_entity);
       }
       // Return NULL as there is no entity access callback for this entity
       // type, we rely on other modules intervening.

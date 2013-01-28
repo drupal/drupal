@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\CommentStorageController.
+ * Contains \Drupal\comment\CommentStorageController.
  */
 
 namespace Drupal\comment;
@@ -15,7 +15,7 @@ use LogicException;
 /**
  * Defines the controller class for comments.
  *
- * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
+ * This extends the Drupal\Core\Entity\DatabaseStorageControllerNG class, adding
  * required special handling for comment entities.
  */
 class CommentStorageController extends DatabaseStorageControllerNG {
@@ -25,7 +25,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   protected $threadLock = '';
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::buildQuery().
+   * Overrides DatabaseStorageControllerNG::buildQuery().
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
@@ -37,7 +37,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
+   * Overrides DatabaseStorageControllerNG::attachLoad().
    */
   protected function attachLoad(&$records, $load_revision = FALSE) {
     // Set up standard comment properties.
@@ -48,7 +48,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
+   * Overrides DatabaseStorageControllerNG::preSave().
    *
    * @see comment_int_to_alphadecimal()
    * @see comment_alphadecimal_to_int()
@@ -148,7 +148,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
+   * Overrides DatabaseStorageControllerNG::postSave().
    */
   protected function postSave(EntityInterface $comment, $update) {
     $this->releaseThreadLock();
@@ -160,7 +160,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
+   * Overrides DatabaseStorageControllerNG::postDelete().
    */
   protected function postDelete($comments) {
     // Delete the comments' replies.
@@ -188,7 +188,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
    * - comment_count: The total number of approved/published comments on this
    *   entity.
    *
-   * @param Drupal\comment\Comment $comment
+   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
    *   The comment being saved.
    */
   protected function updateEntityStatistics($comment) {
@@ -266,7 +266,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\DataBaseStorageControllerNG::basePropertyDefinitions().
+   * Implements DatabaseStorageControllerNG::basePropertyDefinitions().
    */
   public function baseFieldDefinitions() {
     $properties['cid'] = array(
@@ -367,4 +367,5 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     );
     return $properties;
   }
+
 }

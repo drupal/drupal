@@ -25,21 +25,21 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * An administrative user with permission to configure comment settings.
    *
-   * @var Drupal\user\User
+   * @var \Drupal\user\Plugin\Core\Entity\User
    */
   protected $admin_user;
 
   /**
    * A normal user with permission to post comments.
    *
-   * @var Drupal\user\User
+   * @var \Drupal\user\Plugin\Core\Entity\User
    */
   protected $web_user;
 
   /**
    * A test node to which comments will be posted.
    *
-   * @var Drupal\node\Node
+   * @var \Drupal\node\Plugin\Core\Entity\Node
    */
   protected $node;
 
@@ -83,7 +83,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Posts a comment.
    *
-   * @param Drupal\node\Node|null $node
+   * @param \Drupal\node\Plugin\Core\Entity\Node|null $node
    *   Node to post comment on or NULL to post to the previusly loaded page.
    * @param $comment
    *   Comment body.
@@ -158,7 +158,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Checks current page for specified comment.
    *
-   * @param Drupal\comment\Plugin\Core\Entity\comment $comment
+   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -184,7 +184,7 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Deletes a comment.
    *
-   * @param Drupal\comment\Comment $comment
+   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
    *   Comment to delete.
    */
   function deleteComment(Comment $comment) {

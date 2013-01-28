@@ -423,6 +423,17 @@ function comment_views_data() {
     ),
   );
 
+  // Entity translation field.
+  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
+    $data['comment']['translation_link'] = array(
+      'title' => t('Translation link'),
+      'help' => t('Provide a link to the translations overview for comments.'),
+      'field' => array(
+        'id' => 'translation_entity_link',
+      ),
+    );
+  }
+
   $data['comment_entity_statistics']['table']['group']  = t('Comment Statistics');
 
   // Provide a relationship for each entity type except comment.
@@ -444,17 +455,6 @@ function comment_views_data() {
         ),
       );
     }
-  }
-
-  // Entity translation field.
-  if (drupal_container()->get('module_handler')->moduleExists('translation_entity')) {
-    $data['comment']['translation_link'] = array(
-      'title' => t('Translation link'),
-      'help' => t('Provide a link to the translations overview for comments.'),
-      'field' => array(
-        'id' => 'translation_entity_link',
-      ),
-    );
   }
 
   // last_comment_timestamp
@@ -489,7 +489,7 @@ function comment_views_data() {
   // comment_count
   $data['comment_entity_statistics']['comment_count'] = array(
     'title' => t('Comment count'),
-    'help' => t('The number of comments a node has.'),
+    'help' => t('The number of comments an entity has.'),
     'field' => array(
       'id' => 'numeric',
     ),
@@ -507,7 +507,7 @@ function comment_views_data() {
   // last_comment_timestamp
   $data['comment_entity_statistics']['last_updated'] = array(
     'title' => t('Updated/commented date'),
-    'help' => t('The most recent of last comment posted or node updated time.'),
+    'help' => t('The most recent of last comment posted or entity updated time.'),
     'field' => array(
       'id' => 'comment_ces_last_updated',
       'no group by' => TRUE,
@@ -538,7 +538,7 @@ function comment_views_data() {
   // last_comment_uid
   $data['comment_entity_statistics']['last_comment_uid'] = array(
     'title' => t('Last comment uid'),
-    'help' => t('The User ID of the author of the last comment of a node.'),
+    'help' => t('The User ID of the author of the last comment of an entity.'),
     'relationship' => array(
       'title' => t('Last comment author'),
       'base' => 'users',

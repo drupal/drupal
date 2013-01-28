@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\sort\StatisticsLastUpdated.
+ * Contains \Drupal\comment\Plugin\views\sort\StatisticsLastUpdated.
  */
 
 namespace Drupal\comment\Plugin\views\sort;
@@ -11,7 +11,7 @@ use Drupal\views\Plugin\views\sort\Date;
 use Drupal\Core\Annotation\Plugin;
 
 /**
- * Sort handler for the newer of last comment / node updated.
+ * Sort handler for the newer of last comment / entity updated.
  *
  * @ingroup views_sort_handlers
  *

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\field\NodeLink.
+ * Contains \Drupal\comment\Plugin\views\field\EntityLink.
  */
 
 namespace Drupal\comment\Plugin\views\field;

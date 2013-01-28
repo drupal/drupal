@@ -43,6 +43,7 @@ class TrackerAttributesTest extends WebTestBase {
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
     ));
+
     // Create comment field on article.
     comment_add_default_comment_field('node', 'article');
 
@@ -57,9 +58,9 @@ class TrackerAttributesTest extends WebTestBase {
    * markup on the tracker page for those nodes and their comments.
    */
   function testAttributesInTracker() {
-    // Create node as anonymous user.
+    // Creates node as anonymous user.
     $node_anon = $this->drupalCreateNode(array('type' => 'article', 'uid' => 0, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
-    // Create node as admin user.
+    // Creates node as admin user.
     $node_admin = $this->drupalCreateNode(array('type' => 'article', 'uid' => 1, 'comment' => array(LANGUAGE_NOT_SPECIFIED => array(array('comment' => COMMENT_OPEN)))));
 
     // Passes both the anonymously posted node and the administrator posted node

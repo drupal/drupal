@@ -77,10 +77,6 @@ function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, 
             drupal_goto($uri['path']);
           }
           // Display the parent comment.
-          $comment->entity_type->value = $entity->entityType();
-          $comment->field_name->value = $field_name;
-          field_attach_load('comment', array($comment->id() => $comment));
-          $comment->name->value = $comment->uid->value ? $comment->registered_name : $comment->name->value;
           $build['comment_parent'] = comment_view($comment);
         }
         else {
