@@ -16,11 +16,18 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Drupal\Core\ContentNegotiation;
 
 /**
  * Listener to process request controller information.
  */
 class RouteProcessorSubscriber implements EventSubscriberInterface {
+
+  protected $negotiation;
+
+  public function __construct(ContentNegotiation $negotiation) {
+    $this->negotiation = $negotiation;
+  }
 
   /**
    * Sets a default controller for a route if one was not specified.
@@ -31,7 +38,7 @@ class RouteProcessorSubscriber implements EventSubscriberInterface {
   public function onRequestSetController(GetResponseEvent $event) {
     $request = $event->getRequest();
 
-    if (!$request->attributes->has('_controller') && $request->attributes->has('_content')) {
+    if (!$request->attributes->has('_controller') && $this->negotiation->getContentType($request) === 'html') {
       $request->attributes->set('_controller', '\Drupal\Core\HtmlPageController::content');
     }
   }

@@ -199,6 +199,7 @@ class CoreBundle extends Bundle {
       ->addTag('route_filter');
 
     $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
+      ->addArgument(new Reference('content_negotiation'))
       ->addTag('event_subscriber');
     $container->register('router_listener', 'Symfony\Component\HttpKernel\EventListener\RouterListener')
       ->addArgument(new Reference('router'))
