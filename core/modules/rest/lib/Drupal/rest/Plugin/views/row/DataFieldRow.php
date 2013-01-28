@@ -82,8 +82,18 @@ class DataFieldRow extends RowPluginBase {
           '#type' => 'textfield',
           '#title' => $id,
           '#default_value' => isset($this->options['aliases'][$id]) ? $this->options['aliases'][$id] : '',
+          '#element_validate' => array(array($this, 'validateAliasName')),
         );
       }
+    }
+  }
+
+  /**
+   * Form element validation handler for \Drupal\rest\Plugin\views\row\DataFieldRow::buildOptionsForm().
+   */
+  public function validateAliasName($element, &$form_state) {
+    if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
+      form_error($element, t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
     }
   }
 
