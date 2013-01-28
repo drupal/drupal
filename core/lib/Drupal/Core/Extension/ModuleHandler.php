@@ -463,13 +463,6 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
       }
     }
-    // We can't use $this->alter() for the same reason as above.
-    foreach ($this->moduleList as $module => $filename) {
-      $function = $module . '_hook_info_alter';
-      if (function_exists($function)) {
-        $function($this->hookInfo);
-      }
-    }
     return $this->hookInfo;
   }
 
