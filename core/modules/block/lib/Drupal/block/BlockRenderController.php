@@ -53,7 +53,7 @@ class BlockRenderController implements EntityRenderControllerInterface {
         'id' => $entity->get('plugin'),
         'region' => $entity->get('region'),
         'module' => $entity->get('module'),
-        'subject' => $entity->label(),
+        'subject' => check_plain($entity->label()),
       ),
     );
   }
