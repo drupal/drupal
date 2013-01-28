@@ -72,7 +72,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[comment]' => TRUE,
       'settings[comment][comment][settings][language][langcode]' => LANGUAGE_NOT_SPECIFIED,
-      'settings[comment][comment][settings][language][language_show]' => TRUE,
+      'settings[comment][comment][settings][language][language_show]' => FALSE,
       'settings[comment][comment][translatable]' => TRUE,
       'settings[comment][comment][fields][comment_body]' => TRUE,
     );
@@ -84,7 +84,7 @@ class EntityTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[comment]' => TRUE,
       'settings[comment][comment][settings][language][langcode]' => 'current_interface',
-      'settings[comment][comment][settings][language][language_show]' => FALSE,
+      'settings[comment][comment][settings][language][language_show]' => TRUE,
       'settings[comment][comment][translatable]' => TRUE,
       'settings[comment][comment][fields][comment_body]' => TRUE,
     );

@@ -68,6 +68,17 @@ class CommentFieldsTest extends CommentTestBase {
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($this->admin_user);
 
+    // Make sure that comment module could not be disabled.
+    $this->drupalGet('admin/modules');
+    $this->assertText('Required by: Drupal (Field type(s) in use - see Field list)');
+
+    // Enable core content type module (book).
+    $edit = array();
+    $edit['modules[Core][book][enable]'] = 'book';
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->rebuildContainer();
+    $this->assertTrue(module_exists('book'), 'Book module enabled.');
+
     // Create nodes of each type.
     comment_add_default_comment_field('node', 'book');
     $book_node = $this->drupalCreateNode(array(
