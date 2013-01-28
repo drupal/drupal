@@ -10,8 +10,6 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Guzzle\Http\Exception\RequestException;
-
 /**
  * @file
  * API functions for installing Drupal.
@@ -1447,7 +1445,7 @@ function install_download_translation(&$install_state) {
 }
 
 /**
- * Attempts to get a file using a HTTP request and to store it locally.
+ * Attempts to get a file using drupal_http_request and to store it locally.
  *
  * @param string $uri
  *   The URI of the file to grab.
@@ -1469,18 +1467,14 @@ function install_retrieve_file($uri, $destination) {
   else {
     $path = $destination;
   }
-
-  try {
-    $request = drupal_container()->get('http_default_client')->get($uri, array('Accept' => 'text/plain'));
-    $data = $request->send()->getBody(TRUE);
-    if (empty($data)) {
-      return FALSE;
-    }
-  }
-  catch (RequestException $e) {
+  $result = drupal_http_request($uri);
+  if ($result->code != 200) {
     return FALSE;
   }
-  return file_put_contents($path, $data) !== FALSE;
+  if (file_put_contents($path, $result->data) === FALSE) {
+    return FALSE;
+  }
+  return TRUE;
 }
 
 /**
@@ -1490,17 +1484,12 @@ function install_retrieve_file($uri, $destination) {
  *  The URI to contact.
  *
  * @return string
- *   TRUE if the URI was contacted successfully, FALSE if not.
+ *   URI of the server if the localization server was contacted successfully.
+ *   FALSE if not.
  */
 function install_check_localization_server($uri) {
-  try {
-    $request = drupal_container()->get('http_default_client')->head($uri);
-    $response = $request->send();
-    return TRUE;
-  }
-  catch (RequestException $e) {
-    return FALSE;
-  }
+  $result = drupal_http_request($uri, array('method' => 'HEAD'));
+  return (!isset($result->error) && $result->code == 200);
 }
 
 /**
