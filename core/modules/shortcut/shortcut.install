@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the shortcut module.
  */
 
+use Drupal\Component\Uuid\Uuid;
+
 /**
  * Implements hook_uninstall().
  */
@@ -67,24 +69,30 @@ function shortcut_schema() {
  * Migrate shortcuts into configuration.
  */
 function shortcut_update_8000() {
+  $uuid = new Uuid();
   $result = db_query('SELECT * from {shortcut_set}');
+  $ids = array();
   foreach ($result as $set) {
     // Save a config object.
     if ($set->set_name == 'shortcut-set-1') {
       // Change default shortcut id.
       $set->set_name = 'default';
       // Update menu links.
-      $links = menu_load_links('shortcut-set-1');
-      foreach ($links as $link) {
-        $link['menu_name'] = 'shortcut-default';
-        menu_link_save($link);
-      }
+      db_update('menu_links')
+        ->fields(array(
+          'menu_name' => 'shortcut-default'
+        ))
+        ->condition('menu_name', 'shortcut-set-1')
+        ->execute();
     }
     config('shortcut.set.' . $set->set_name)
       ->set('id', $set->set_name)
       ->set('label', $set->title)
+      ->set('uuid', $uuid->generate())
       ->save();
+    $ids[] = $set->set_name;
   }
+  update_config_manifest_add('shortcut.set', $ids);
 }
 
 /**
