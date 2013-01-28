@@ -111,6 +111,12 @@ class LegacyUrlMatcher implements RequestMatcherInterface, RequestContextAwareIn
         require_once DRUPAL_ROOT . '/' . $router_item['include_file'];
       }
 
+      // Flag this as a legacy request.  We need to use this for subrequest
+      // handling so that we can treat older page callbacks and new routes
+      // differently.
+      // @todo Remove this line as soon as possible.
+      $ret['_legacy'] = TRUE;
+
       return $ret;
     }
 
