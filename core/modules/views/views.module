@@ -885,6 +885,9 @@ function views_hook_info() {
   $hooks['views_analyze'] = array(
     'group' => 'views',
   );
+  $hooks['views_data_alter'] = array(
+    'group' => 'views',
+  );
 
   return $hooks;
 }
