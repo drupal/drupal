@@ -145,7 +145,7 @@ function taxonomy_views_data() {
     'title' => t('Vocabulary'),
     'help' => t('Filter the results of "Taxonomy: Term" to a particular vocabulary.'),
     'filter' => array(
-      'id' => 'vocabulary_vid',
+      'id' => 'bundle',
     ),
   );
 
