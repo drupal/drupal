@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
+use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -130,34 +131,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 class EntityManager extends PluginManagerBase {
 
   /**
-   * The cache bin used for entity plugin definitions.
-   *
-   * @var string
-   */
-  protected $cacheBin = 'cache';
-
-  /**
-   * The cache key used for entity plugin definitions.
-   *
-   * @var string
-   */
-  protected $cacheKey = 'entity_info';
-
-  /**
-   * The cache expiration for entity plugin definitions.
-   *
-   * @var int
-   */
-  protected $cacheExpire = CacheBackendInterface::CACHE_PERMANENT;
-
-  /**
-   * The cache tags used for entity plugin definitions.
-   *
-   * @var array
-   */
-  protected $cacheTags = array('entity_info' => TRUE);
-
-  /**
    * Contains instantiated controllers keyed by controller type and entity type.
    *
    * @var array
@@ -197,36 +170,9 @@ class EntityManager extends PluginManagerBase {
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    $this->factory = new DefaultFactory($this);
+    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . language(LANGUAGE_TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
 
-    // Entity type plugins includes translated strings, so each language is
-    // cached separately.
-    $this->cacheKey .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
-  }
-
-  /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::getDefinition().
-   */
-  public function getDefinition($plugin_id) {
-    $definitions = $this->getDefinitions();
-    return isset($definitions[$plugin_id]) ? $definitions[$plugin_id] : NULL;
-  }
-
-  /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase::getDefinitions().
-   */
-  public function getDefinitions() {
-    // Because \Drupal\Core\Plugin\Discovery\CacheDecorator runs before
-    // definitions are processed and does not support cache tags, we perform our
-    // own caching.
-    if ($cache = cache($this->cacheBin)->get($this->cacheKey)) {
-      return $cache->data;
-    }
-    else {
-      $definitions = parent::getDefinitions();
-      cache($this->cacheBin)->set($this->cacheKey, $definitions, $this->cacheExpire, $this->cacheTags);
-      return $definitions;
-    }
+    $this->factory = new DefaultFactory($this->discovery);
   }
 
   /**

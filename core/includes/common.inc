@@ -6430,7 +6430,8 @@ function drupal_flush_all_caches() {
   drupal_static_reset();
 
   // Clear all non-drupal_static() static caches.
-  // None currently; kept if any static caches need to be reset in the future.
+  // @todo Rebuild the kernel/container.
+  drupal_container()->get('plugin.manager.entity')->clearCachedDefinitions();
 
   // Rebuild module and theme data.
   system_rebuild_module_data();
