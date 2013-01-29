@@ -92,4 +92,14 @@ class DisplayBag extends PluginBag {
     }
   }
 
+  /**
+   * Overrides \Drupal\Component\Plugin\PluginBag::remove().
+   */
+  public function remove($instance_id) {
+    $this->get($instance_id)->remove();
+
+    parent::remove($instance_id);
+  }
+
+
 }

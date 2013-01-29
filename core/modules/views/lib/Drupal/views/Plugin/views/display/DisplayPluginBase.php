@@ -2589,6 +2589,12 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
+   * Reacts on deleting a display.
+   */
+  public function remove() {
+  }
+
+  /**
    * Check if the provided identifier is unique.
    *
    * @param string $id
