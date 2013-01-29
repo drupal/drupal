@@ -125,7 +125,7 @@ function node_views_data() {
       'id' => 'standard',
     ),
     'filter' => array(
-      'id' => 'bundle',
+      'id' => 'node_type',
     ),
     'argument' => array(
       'id' => 'node_type',
