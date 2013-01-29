@@ -53,7 +53,10 @@ class FileStorage implements PhpStorageInterface {
    */
   public function save($name, $code) {
     $path = $this->getFullPath($name);
-    mkdir(dirname($path), 0700, TRUE);
+    $dir = dirname($path);
+    if (!file_exists($dir)) {
+      mkdir($dir, 0700, TRUE);
+    }
     return (bool) file_put_contents($path, $code);
   }
 
