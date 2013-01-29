@@ -114,13 +114,18 @@ class Condition extends ConditionBase {
       $candidates = array($parent);
     }
     foreach ($candidates as $key) {
-      if ($needs_matching && is_array($data[$key])) {
-        $new_parents = $parents;
-        $new_parents[] = $key;
-        if ($this->matchArray($condition, $data[$key], $needs_matching, $new_parents)) {
-          return TRUE;
+      if ($needs_matching) {
+        if (is_array($data[$key])) {
+          $new_parents = $parents;
+          $new_parents[] = $key;
+          if ($this->matchArray($condition, $data[$key], $needs_matching, $new_parents)) {
+            return TRUE;
+          }
         }
       }
+      // Only try to match a scalar if there are no remaining keys in
+      // $needs_matching as this indicates that we are looking for a specific
+      // subkey and a scalar can never match that.
       elseif ($this->match($condition, $data[$key])) {
         return TRUE;
       }
