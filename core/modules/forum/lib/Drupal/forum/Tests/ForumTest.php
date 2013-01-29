@@ -82,6 +82,7 @@ class ForumTest extends WebTestBase {
       'administer menu',
       'administer taxonomy',
       'create forum content',
+      'access comments',
     ));
     $this->edit_any_topics_user = $this->drupalCreateUser(array(
       'access administration pages',
@@ -95,6 +96,13 @@ class ForumTest extends WebTestBase {
       'delete own forum content',
     ));
     $this->web_user = $this->drupalCreateUser();
+    $this->post_comment_user = $this->drupalCreateUser(array(
+      'administer content types',
+      'create forum content',
+      'post comments',
+      'skip comment approval',
+      'access comments',
+    ));
   }
 
   /**
@@ -439,6 +447,35 @@ class ForumTest extends WebTestBase {
     $node = $this->createForumTopic($this->forum, FALSE);
     // Verify the user has access to all the forum nodes.
     $this->verifyForums($user, $node, $admin);
+  }
+
+  /**
+   * Tests a forum with a new post displays properly.
+   */
+  function testForumWithNewPost() {
+    // Login as the first user.
+    $this->drupalLogin($this->admin_user);
+    // Create a forum container.
+    $this->container = $this->createForum('container');
+    // Create a forum.
+    $this->forum = $this->createForum('forum');
+    // Create a topic.
+    $node = $this->createForumTopic($this->forum, FALSE);
+
+    // Login as a second user.
+    $this->drupalLogin($this->post_comment_user);
+    // Post a reply to the topic.
+    $edit = array();
+    $edit['subject'] = $this->randomName();
+    $edit['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
+    $this->drupalPost("node/$node->nid", $edit, t('Save'));
+    $this->assertResponse(200);
+
+    // Login as the first user.
+    $this->drupalLogin($this->admin_user);
+    // Check that forum renders properly.
+    $this->drupalGet("forum/{$this->forum['tid']}");
+    $this->assertResponse(200);
   }
 
   /**
