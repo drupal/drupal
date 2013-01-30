@@ -2108,7 +2108,9 @@ function hook_permission() {
  * specify how a particular render array is to be rendered as HTML (this is
  * usually the case if the theme function is assigned to the render array's
  * #theme property), or they return the HTML that should be returned by an
- * invocation of theme().
+ * invocation of theme(). See
+ * @link http://drupal.org/node/933976 Using the theme layer Drupal 7.x @endlink
+ * for more information on how to implement theme hooks.
  *
  * The following parameters are all optional.
  *
