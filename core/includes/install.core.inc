@@ -1229,18 +1229,18 @@ function install_select_profile_form($form, &$form_state, $install_state) {
     $names = array('standard' => $names['standard']) + $names;
   }
 
-  foreach ($names as $profile => $name) {
-    // The profile name and description are extracted for translation from the
-    // .info file, so we can use st() on them even though they are dynamic data
-    // at this point.
-    $form['profile'][$name] = array(
-      '#type' => 'radio',
-      '#value' => 'standard',
-      '#return_value' => $profile,
-      '#title' => st($name),
-      '#description' => isset($profiles[$profile]['description']) ? st($profiles[$profile]['description']) : '',
-      '#parents' => array('profile'),
-    );
+  // The profile name and description are extracted for translation from the
+  // .info file, so we can use st() on them even though they are dynamic data
+  // at this point.
+  $form['profile'] = array(
+    '#type' => 'radios',
+    '#title' => st('Select an installation profile'),
+    '#title_display' => 'invisible',
+    '#options' => array_map('st', $names),
+    '#default_value' => 'standard',
+  );
+  foreach (array_keys($names) as $profile) {
+    $form['profile'][$profile]['#description'] = isset($profiles[$profile]['description']) ? st($profiles[$profile]['description']) : '';
   }
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] =  array(
@@ -1403,6 +1403,8 @@ function install_select_language_form($form, &$form_state, $files = array()) {
   $browser_langcode = language_from_browser($browser_options);
   $form['langcode'] = array(
     '#type' => 'select',
+    '#title' => st('Choose language'),
+    '#title_display' => 'invisible',
     '#options' => $select_options,
     // Use the browser detected language as default or English if nothing found.
     '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
