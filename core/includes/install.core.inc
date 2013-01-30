@@ -1349,7 +1349,7 @@ function install_select_language(&$install_state) {
     // thow an error.
     else {
       if (count($files) == 1) {
-        $install_state['parameters']['langcode'] = array_shift(array_keys($files));
+        $install_state['parameters']['langcode'] = current(array_keys($files));
         return;
       }
       else {
