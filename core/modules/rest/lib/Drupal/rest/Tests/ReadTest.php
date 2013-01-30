@@ -42,9 +42,6 @@ class ReadTest extends RESTTestBase {
       // Create a user account that has the required permissions to delete
       // resources via the web API.
       $account = $this->drupalCreateUser(array('restful get entity:' . $entity_type));
-      // Reset cURL here because it is confused from our previously used cURL
-      // options.
-      unset($this->curlHandle);
       $this->drupalLogin($account);
 
       // Create an entity programmatically.
@@ -80,9 +77,6 @@ class ReadTest extends RESTTestBase {
     }
     // Try to read a resource which is not web API enabled.
     $account = $this->drupalCreateUser();
-    // Reset cURL here because it is confused from our previously used cURL
-    // options.
-    unset($this->curlHandle);
     $this->drupalLogin($account);
     $response = $this->httpRequest('entity/user/' . $account->id(), 'GET', NULL, 'application/vnd.drupal.ld+json');
     $this->assertResponse(404);

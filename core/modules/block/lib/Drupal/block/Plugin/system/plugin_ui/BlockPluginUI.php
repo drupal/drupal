@@ -141,7 +141,7 @@ class BlockPluginUI extends PluginUIBase {
     $plugin_definition = $this->getDefinition();
     list($plugin, $theme) = explode(':', $this->getPluginId());
     $row = array();
-    $row[] = $display_plugin_definition['subject'];
+    $row[] = check_plain($display_plugin_definition['subject']);
     $row[] = array('data' => array(
       '#type' => 'operations',
       '#links' => array(

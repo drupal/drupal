@@ -239,7 +239,7 @@
     <?php endif; ?>
 
     <?php if ($page['footer']): ?>
-      <div id="footer" class="clearfix">
+      <div id="footer" role="contentinfo" class="clearfix">
         <?php print render($page['footer']); ?>
       </div> <!-- /#footer -->
     <?php endif; ?>

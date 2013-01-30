@@ -21,7 +21,7 @@ class EntityTestTranslationUITest extends EntityTranslationUITest {
 
   public static function getInfo() {
     return array(
-      'name' => 'Entity Test Translation UI',
+      'name' => 'Entity Test translation UI',
       'description' => 'Tests the test entity translation UI with the test entity.',
       'group' => 'Entity Translation UI',
     );
@@ -40,7 +40,7 @@ class EntityTestTranslationUITest extends EntityTranslationUITest {
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
    */
   function getTranslatorPermissions() {
-    return array('administer entity_test content', "translate $this->entityType entities", 'edit original values');
+    return array_merge(parent::getTranslatorPermissions(), array('administer entity_test content'));
   }
 
   /**

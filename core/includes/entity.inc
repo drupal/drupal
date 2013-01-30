@@ -23,24 +23,15 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @see \Drupal\Core\Entity\EntityManager
  * @see hook_entity_info_alter()
+ *
+ * @deprecated Use \Drupal\Core\Entity\EntityManager::getDefinitions() directly.
  */
 function entity_get_info($entity_type = NULL) {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['entity_info'] = &drupal_static(__FUNCTION__);
-  }
-  $entity_info = &$drupal_static_fast['entity_info'];
-
-  if (empty($entity_info)) {
-    $entity_info = drupal_container()->get('plugin.manager.entity')->getDefinitions();
-  }
-
   if (empty($entity_type)) {
-    return $entity_info;
+    return drupal_container()->get('plugin.manager.entity')->getDefinitions();
   }
-  elseif (isset($entity_info[$entity_type])) {
-    return $entity_info[$entity_type];
+  else {
+    return drupal_container()->get('plugin.manager.entity')->getDefinition($entity_type);
   }
 }
 
@@ -48,11 +39,10 @@ function entity_get_info($entity_type = NULL) {
  * Resets the cached information about entity types.
  */
 function entity_info_cache_clear() {
-  drupal_static_reset('entity_get_info');
   drupal_static_reset('entity_get_view_modes');
   drupal_static_reset('entity_get_bundles');
   // Clear all languages.
-  cache()->deleteTags(array('entity_info' => TRUE));
+  drupal_container()->get('plugin.manager.entity')->clearCachedDefinitions();
 }
 
 /**

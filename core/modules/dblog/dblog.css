@@ -15,32 +15,23 @@
   padding: 3ex 0 0;
   vertical-align: top;
 }
-
-tr.dblog-user {
-  background: #ffd;
-}
-tr.dblog-user .active {
-  background: #eed;
-}
-tr.dblog-content {
+tr.dblog-user.odd .active {
   background: #ddf;
 }
-tr.dblog-content .active {
+tr.dblog-user.even .active {
   background: #cce;
 }
-tr.dblog-page-not-found,
-tr.dblog-access-denied {
-  background: #dfd;
-}
-tr.dblog-page-not-found .active,
-tr.dblog-access-denied .active {
-  background: #cec;
-}
-tr.dblog-error {
+tr.dblog-error.odd .active {
   background: #ffc9c9;
 }
-tr.dblog-error .active {
+tr.dblog-error.even .active {
   background: #eeb9b9;
+}
+tr.dblog-warning.odd .active {
+  background: #fffdca;
+}
+tr.dblog-warning.even .active {
+  background: #eeedbd;
 }
 table#admin-dblog td.icon {
   background: no-repeat center;

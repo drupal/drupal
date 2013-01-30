@@ -161,6 +161,9 @@ body,
   .one-sidebar #content {
     width: 75%;
   }
+  .no-sidebars #content {
+    width: 100%;
+  }
   .sidebar-first #content {
     margin-left: 25%;
     margin-right: 0;

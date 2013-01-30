@@ -563,12 +563,13 @@ function hook_node_create(\Drupal\node\Plugin\Core\Entity\Node $node) {
  * for all available nodes should be loaded in a single query where possible.
  *
  * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes NodeController and Drupal\Core\Entity\DatabaseStorageController.
- * After the node information is read from the database or the entity cache,
- * hook_load() is invoked on the node's content type module, then
- * field_attach_load_revision() or field_attach_load() is called, then
- * hook_entity_load() is invoked on all implementing modules, and finally
- * hook_node_load() is invoked on all implementing modules.
+ * via classes Drupal\node\NodeStorageController and
+ * Drupal\Core\Entity\DatabaseStorageController. After the node information is
+ * read from the database or the entity cache, hook_load() is invoked on the
+ * node's content type module, then field_attach_load_revision() or
+ * field_attach_load() is called, then hook_entity_load() is invoked on all
+ * implementing modules, and finally hook_node_load() is invoked on all
+ * implementing modules.
  *
  * @param $nodes
  *   An array of the nodes being loaded, keyed by nid.
@@ -1216,12 +1217,13 @@ function hook_insert(Drupal\node\Node $node) {
  * (use hook_node_load() to respond to all node loads).
  *
  * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes NodeController and Drupal\Core\Entity\DatabaseStorageController.
- * After the node information is read from the database or the entity cache,
- * hook_load() is invoked on the node's content type module, then
- * field_attach_node_revision() or field_attach_load() is called, then
- * hook_entity_load() is invoked on all implementing modules, and finally
- * hook_node_load() is invoked on all implementing modules.
+ * via classes Drupal\node\NodeStorageController and
+ * Drupal\Core\Entity\DatabaseStorageController. After the node information is
+ * read from the database or the entity cache, hook_load() is invoked on the
+ * node's content type module, then field_attach_node_revision() or
+ * field_attach_load() is called, then hook_entity_load() is invoked on all
+ * implementing modules, and finally hook_node_load() is invoked on all
+ * implementing modules.
  *
  * This hook should only be used to add information that is not in the node or
  * node revisions table, not to replace information that is in these tables

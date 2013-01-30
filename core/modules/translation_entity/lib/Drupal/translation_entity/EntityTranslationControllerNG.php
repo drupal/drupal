@@ -15,7 +15,14 @@ use Drupal\Core\Entity\EntityInterface;
 class EntityTranslationControllerNG extends EntityTranslationController {
 
   /**
-   * Overrides EntityTranslationController::removeTranslation().
+   * Overrides \Drupal\translation_entity\EntityTranslationController::getAccess().
+   */
+  public function getAccess(EntityInterface $entity, $op) {
+    return $entity->access($op);
+  }
+
+  /**
+   * Overrides \Drupal\translation_entity\EntityTranslationControllerInterface::removeTranslation().
    */
   public function removeTranslation(EntityInterface $entity, $langcode) {
     $translation = $entity->getTranslation($langcode);
@@ -23,4 +30,5 @@ class EntityTranslationControllerNG extends EntityTranslationController {
       $translation->$property_name = array();
     }
   }
+
 }

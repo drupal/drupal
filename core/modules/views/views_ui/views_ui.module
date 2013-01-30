@@ -495,7 +495,7 @@ function views_ui_views_plugins_display_alter(&$plugins) {
   foreach ($plugins as &$display) {
     $display['contextual links']['views_ui'] = array(
       'parent path' => 'admin/structure/views/view',
-      'argument properties' => array('name'),
+      'argument properties' => array('id'),
     );
   }
 }

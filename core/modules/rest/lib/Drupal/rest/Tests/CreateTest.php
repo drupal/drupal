@@ -53,7 +53,7 @@ class CreateTest extends RESTTestBase {
 
     // Get the new entity ID from the location header and try to read it from
     // the database.
-    $location_url = $this->responseHeaders['location'];
+    $location_url = $this->drupalGetHeader('location');
     $url_parts = explode('/', $location_url);
     $id = end($url_parts);
     $loaded_entity = entity_load($entity_type, $id);
@@ -68,16 +68,32 @@ class CreateTest extends RESTTestBase {
       $this->assertEqual($send_value, $actual_value, 'Created property ' . $property . ' expected: ' . $send_value . ', actual: ' . $actual_value);
     }
 
+    $loaded_entity->delete();
+    // Try to create an entity without the CSRF token.
+    $this->curlExec(array(
+      CURLOPT_HTTPGET => FALSE,
+      CURLOPT_POST => TRUE,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS => $serialized,
+      CURLOPT_URL => url('entity/' . $entity_type, array('absolute' => TRUE)),
+      CURLOPT_NOBODY => FALSE,
+      CURLOPT_HTTPHEADER => array('Content-Type: application/vnd.drupal.ld+json'),
+    ));
+    $this->assertResponse(403);
+    $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
+
     // Try to create an entity without proper permissions.
     $this->drupalLogout();
     $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(403);
+    $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
     // Try to create a resource which is not web API enabled.
     $this->enableService(FALSE);
     $this->drupalLogin($account);
     $this->httpRequest('entity/entity_test', 'POST', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(404);
+    $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
     // @todo Once EntityNG is implemented for other entity types add a security
     // test. It should not be possible for example to create a test entity on a

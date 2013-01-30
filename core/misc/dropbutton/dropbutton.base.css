@@ -22,12 +22,20 @@
 .js .dropbutton-widget {
   max-width: 100%;
 }
-
 @media screen and (max-width:600px) {
   .js .dropbutton-wrapper {
     width: 100%;
   }
 }
+
+/* Splitbuttons */
+.form-actions .dropbutton-wrapper {
+  float: left;
+}
+.js .form-actions .dropbutton-widget {
+  position: static;
+}
+
 
 .js .dropbutton-widget {
   position: absolute;
@@ -79,7 +87,7 @@
   text-indent: 110%;
   top: 0;
   white-space: nowrap;
-  width: 2.08em;
+  width: 2em;
 }
 .dropbutton-toggle button {
   background: none;

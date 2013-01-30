@@ -391,7 +391,7 @@ function toolbar_menu_navigation_links(&$tree) {
       'id' => 'toolbar-link-' . str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['link_path']),
       'class' => array(
         'icon',
-        'icon-' . strtolower(str_replace(' ', '-', $item['link']['title'])),
+        'icon-' . strtolower(str_replace(' ', '-', $item['link']['link_title'])),
       ),
     );
   }

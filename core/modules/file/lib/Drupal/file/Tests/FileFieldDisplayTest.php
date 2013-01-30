@@ -11,6 +11,7 @@ namespace Drupal\file\Tests;
  * Tests that formatters are working properly.
  */
 class FileFieldDisplayTest extends FileFieldTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'File field display tests',

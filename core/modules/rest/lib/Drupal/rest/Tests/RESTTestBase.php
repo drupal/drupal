@@ -15,13 +15,6 @@ use Drupal\simpletest\WebTestBase;
 abstract class RESTTestBase extends WebTestBase {
 
   /**
-   * Stores HTTP response headers from the last HTTP request.
-   *
-   * @var array
-   */
-  protected $responseHeaders;
-
-  /**
    * Helper function to issue a HTTP request with simpletest's cURL.
    *
    * @param string $url
@@ -34,6 +27,10 @@ abstract class RESTTestBase extends WebTestBase {
    *   The MIME type of the transmitted content.
    */
   protected function httpRequest($url, $method, $body = NULL, $format = 'application/ld+json') {
+    if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))) {
+      // GET the CSRF token first for writing requests.
+      $token = $this->drupalGet('rest/session/token');
+    }
     switch ($method) {
       case 'GET':
         // Set query if there are additional GET parameters.
@@ -53,7 +50,10 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => url($url, array('absolute' => TRUE)),
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array('Content-Type: ' . $format),
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: ' . $format,
+            'X-CSRF-Token: ' . $token,
+          ),
         );
         break;
 
@@ -64,7 +64,10 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => url($url, array('absolute' => TRUE)),
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array('Content-Type: ' . $format),
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: ' . $format,
+            'X-CSRF-Token: ' . $token,
+          ),
         );
         break;
 
@@ -75,7 +78,10 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_POSTFIELDS => $body,
           CURLOPT_URL => url($url, array('absolute' => TRUE)),
           CURLOPT_NOBODY => FALSE,
-          CURLOPT_HTTPHEADER => array('Content-Type: ' . $format),
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: ' . $format,
+            'X-CSRF-Token: ' . $token,
+          ),
         );
         break;
 
@@ -85,29 +91,21 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_CUSTOMREQUEST => 'DELETE',
           CURLOPT_URL => url($url, array('absolute' => TRUE)),
           CURLOPT_NOBODY => FALSE,
+          CURLOPT_HTTPHEADER => array('X-CSRF-Token: ' . $token),
         );
         break;
     }
-    // Include all HTTP headers in the response.
-    $curl_options[CURLOPT_HEADER] = TRUE;
 
     $response = $this->curlExec($curl_options);
-
-    list($header, $body) = explode("\r\n\r\n", $response, 2);
-    $header_lines = explode("\r\n", $header);
-    foreach ($header_lines as $line) {
-      $parts = explode(':', $line, 2);
-      // Store the header keys lower cased to be more robust. Headers are case
-      // insensitive according to RFC 2616.
-      $this->responseHeaders[strtolower($parts[0])] = isset($parts[1]) ? trim($parts[1]) : '';
-    }
+    $headers = $this->drupalGetHeaders();
+    $headers = implode("\n", $headers);
 
     $this->verbose($method . ' request to: ' . $url .
       '<hr />Code: ' . curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE) .
-      '<hr />Response headers: ' . $header .
-      '<hr />Response body: ' . $body);
+      '<hr />Response headers: ' . $headers .
+      '<hr />Response body: ' . $response);
 
-    return $body;
+    return $response;
   }
 
   /**
@@ -198,7 +196,20 @@ abstract class RESTTestBase extends WebTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertHeader($header, $value, $message = '', $group = 'Browser') {
-    $match = isset($this->responseHeaders[$header]) && $this->responseHeaders[$header] == $value;
-    return $this->assertTrue($match, $message ? $message : 'HTTP response header ' . $header . ' with value ' . $value . ' found.', $group);
+    $header_value = $this->drupalGetHeader($header);
+    return $this->assertTrue($header_value == $value, $message ? $message : 'HTTP response header ' . $header . ' with value ' . $value . ' found.', $group);
+  }
+
+  /**
+   * Overrides WebTestBase::drupalLogin().
+   */
+  protected function drupalLogin($user) {
+    if (isset($this->curlHandle)) {
+      // cURL quirk: when setting CURLOPT_CUSTOMREQUEST to anything other than
+      // POST in httpRequest() it has to be restored to POST here. Otherwise the
+      // POST request to login a user will not work.
+      curl_setopt($this->curlHandle, CURLOPT_CUSTOMREQUEST, 'POST');
+    }
+    parent::drupalLogin($user);
   }
 }

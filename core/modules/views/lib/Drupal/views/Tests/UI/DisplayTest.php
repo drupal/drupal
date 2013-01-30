@@ -19,6 +19,13 @@ class DisplayTest extends UITestBase {
    */
   public static $testViews = array('test_display');
 
+  /**
+   * Modules to enable
+   *
+   * @var array
+   */
+  public static $modules = array('contextual');
+
   public static function getInfo() {
     return array(
       'name' => 'Display tests',
@@ -209,7 +216,7 @@ class DisplayTest extends UITestBase {
 
     $expected = array(
       'parent path' => 'admin/structure/views/view',
-      'argument properties' => array('name'),
+      'argument properties' => array('id'),
     );
 
     // Test the expected views_ui array exists on each definition.
@@ -266,6 +273,17 @@ class DisplayTest extends UITestBase {
     $this->drupalGet($path);
 
     $this->assertLink(t('Custom URL'), 0, 'The link option has custom url as summary.');
+  }
+
+  /**
+   * Tests contextual links on Views page displays.
+   */
+  public function testPageContextualLinks() {
+    $this->drupalLogin($this->drupalCreateUser(array('administer views', 'access contextual links')));
+    $view = entity_load('view', 'test_display');
+    $view->enable();
+    $this->drupalGet('test-display');
+    $this->assertLinkByHref("admin/structure/views/view/{$view->id()}/edit/page_1");
   }
 
 }

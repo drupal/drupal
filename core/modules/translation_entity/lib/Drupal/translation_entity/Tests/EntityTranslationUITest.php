@@ -7,45 +7,14 @@
 
 namespace Drupal\translation_entity\Tests;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
-use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the Entity Translation UI.
  */
-abstract class EntityTranslationUITest extends WebTestBase {
-
-  /**
-   * The enabled languages.
-   *
-   * @var array
-   */
-  protected $langcodes;
-
-  /**
-   * The entity type being tested.
-   *
-   * @var string
-   */
-  protected $entityType;
-
-  /**
-   * The bundle being tested.
-   *
-   * @var string
-   */
-  protected $bundle;
-
-  /**
-   * The name of the field used to test translation.
-   *
-   * @var string
-   */
-  protected $fieldName;
+abstract class EntityTranslationUITest extends EntityTranslationTestBase {
 
   /**
    * Whether the behavior of the language selector should be tested.
@@ -53,92 +22,6 @@ abstract class EntityTranslationUITest extends WebTestBase {
    * @var boolean
    */
   protected $testLanguageSelector = TRUE;
-
-
-  /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
-   */
-  function setUp() {
-    parent::setUp();
-
-    $this->setupLanguages();
-    $this->setupBundle();
-    $this->enableTranslation();
-    $this->setupTranslator();
-    $this->setupTestFields();
-  }
-
-  /**
-   * Enables additional languages.
-   */
-  protected function setupLanguages() {
-    $this->langcodes = array('it', 'fr');
-    foreach ($this->langcodes as $langcode) {
-      language_save(new Language(array('langcode' => $langcode)));
-    }
-    array_unshift($this->langcodes, language_default()->langcode);
-  }
-
-  /**
-   * Creates or initializes the bundle date if needed.
-   */
-  protected function setupBundle() {
-    if (empty($this->bundle)) {
-      $this->bundle = $this->entityType;
-    }
-  }
-
-  /**
-   * Enables translation for the current entity type and bundle.
-   */
-  protected function enableTranslation() {
-    // Enable translation for the current entity type and ensure the change is
-    // picked up.
-    translation_entity_set_config($this->entityType, $this->bundle, 'enabled', TRUE);
-    drupal_static_reset();
-    entity_info_cache_clear();
-    menu_router_rebuild();
-  }
-
-  /**
-   * Returns an array of permissions needed for the translator.
-   */
-  abstract function getTranslatorPermissions();
-
-  /**
-   * Creates and activates a translator user.
-   */
-  protected function setupTranslator() {
-    $translator = $this->drupalCreateUser($this->getTranslatorPermissions());
-    $this->drupalLogin($translator);
-  }
-
-  /**
-   * Creates the test fields.
-   */
-  protected function setupTestFields() {
-    $this->fieldName = 'field_test_et_ui_test';
-
-    $field = array(
-      'field_name' => $this->fieldName,
-      'type' => 'text',
-      'cardinality' => 1,
-      'translatable' => TRUE,
-    );
-    field_create_field($field);
-
-    $instance = array(
-      'entity_type' => $this->entityType,
-      'field_name' => $this->fieldName,
-      'bundle' => $this->bundle,
-      'label' => 'Test translatable text-field',
-      'widget' => array(
-        'type' => 'text_textfield',
-        'weight' => 0,
-      ),
-    );
-    field_create_instance($instance);
-  }
 
   /**
    * Tests the basic translation UI.
@@ -163,8 +46,7 @@ abstract class EntityTranslationUITest extends WebTestBase {
     $langcode = 'it';
     $values[$langcode] = $this->getNewEntityValues($langcode);
 
-    $controller = translation_entity_controller($this->entityType);
-    $base_path = $controller->getBasePath($entity);
+    $base_path = $this->controller->getBasePath($entity);
     $path = $langcode . '/' . $base_path . '/translations/add/' . $default_langcode . '/' . $langcode;
     $this->drupalPost($path, $this->getEditValues($values, $langcode), t('Save'));
     if ($this->testLanguageSelector) {
@@ -200,7 +82,7 @@ abstract class EntityTranslationUITest extends WebTestBase {
     // Check that every translation has the correct "outdated" status.
     foreach ($this->langcodes as $enabled_langcode) {
       $prefix = $enabled_langcode != $default_langcode ? $enabled_langcode . '/' : '';
-      $path = $prefix . $controller->getEditPath($entity);
+      $path = $prefix . $this->controller->getEditPath($entity);
       $this->drupalGet($path);
       if ($enabled_langcode == $langcode) {
         $this->assertFieldByXPath('//input[@name="translation[retranslate]"]', FALSE, 'The retranslate flag is not checked by default.');
@@ -224,40 +106,6 @@ abstract class EntityTranslationUITest extends WebTestBase {
       $translations = $entity->getTranslationLanguages();
       $this->assertTrue(count($translations) == 2 && empty($translations[$enabled_langcode]), 'Translation successfully deleted.');
     }
-  }
-
-  /**
-   * Creates the entity to be translated.
-   *
-   * @param array $values
-   *   An array of initial values for the entity.
-   * @param string $langcode
-   *   The initial language code of the entity.
-   * @param string $bundle_name
-   *   (optional) The entity bundle, if the entity uses bundles. Defaults to
-   *   NULL. If left NULL, $this->bundle will be used.
-   *
-   * @return
-   *   The entity id.
-   */
-  protected function createEntity($values, $langcode, $bundle_name = NULL) {
-    $entity_values = $values;
-    $entity_values['langcode'] = $langcode;
-    $info = entity_get_info($this->entityType);
-    if (!empty($info['entity_keys']['bundle'])) {
-      $entity_values[$info['entity_keys']['bundle']] = $bundle_name ?: $this->bundle;
-    }
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController($this->entityType);
-    if (!($controller instanceof DatabaseStorageControllerNG)) {
-      foreach ($values as $property => $value) {
-        if (is_array($value)) {
-          $entity_values[$property] = array($langcode => $value);
-        }
-      }
-    }
-    $entity = entity_create($this->entityType, $entity_values);
-    $entity->save();
-    return $entity->id();
   }
 
   /**

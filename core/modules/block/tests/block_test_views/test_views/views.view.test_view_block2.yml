@@ -1,0 +1,56 @@
+base_field: id
+base_table: views_test_data
+core: 8.x
+description: ''
+disabled: '0'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: some
+        options:
+          items_per_page: '5'
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        name:
+          id: name
+          table: views_test_data
+          field: name
+      title: test_view_block2
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: ''
+    display_options:
+      field:
+        title:
+          link_to_node: '1'
+  block_2:
+    display_plugin: block
+    id: block_2
+    display_title: Block
+    position: ''
+    display_options:
+      field:
+        title:
+          link_to_node: '1'
+human_name: test_view_block2
+module: views
+id: test_view_block2
+tag: ''

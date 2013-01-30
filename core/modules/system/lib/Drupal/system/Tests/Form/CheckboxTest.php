@@ -33,7 +33,7 @@ class CheckboxTest extends WebTestBase {
     // Ensure that the checked state is determined and rendered correctly for
     // tricky combinations of default and return values.
     foreach (array(FALSE, NULL, TRUE, 0, '0', '', 1, '1', 'foobar', '1foobar') as $default_value) {
-      // Only values that can be used for array indeces are supported for
+      // Only values that can be used for array indices are supported for
       // #return_value, with the exception of integer 0, which is not supported.
       // @see form_process_checkbox().
       foreach (array('0', '', 1, '1', 'foobar', '1foobar') as $return_value) {

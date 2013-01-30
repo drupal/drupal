@@ -37,11 +37,7 @@ class FilePrivateTest extends FileFieldTestBase {
    * Tests file access for file uploaded to a private node.
    */
   function testPrivateFile() {
-    // Use 'page' instead of 'article', so that the 'article' image field does
-    // not conflict with this test. If in the future the 'page' type gets its
-    // own default file or image field, this test can be made more robust by
-    // using a custom node type.
-    $type_name = 'page';
+    $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array('uri_scheme' => 'private'));
 

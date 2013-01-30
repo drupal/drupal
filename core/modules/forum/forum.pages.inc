@@ -19,16 +19,46 @@
  */
 function forum_page($forum_term = NULL) {
   $config = config('forum.settings');
+  $vocabulary = entity_load('taxonomy_vocabulary', $config->get('vocabulary'));
+
   if (!isset($forum_term)) {
     // On the main page, display all the top-level forums.
     $forum_term = forum_forum_load(0);
+    // Set the page title to forum's vocabulary name.
+    drupal_set_title($vocabulary->label());
+  }
+
+  // Breadcrumb navigation.
+  $breadcrumb[] = l(t('Home'), NULL);
+  if ($forum_term->tid) {
+    // Parent of all forums is the vocabulary name.
+    $breadcrumb[] = l($vocabulary->label(), 'forum');
+  }
+  // Add all parent forums to breadcrumbs.
+  if ($forum_term->parents) {
+    foreach (array_reverse($forum_term->parents) as $parent) {
+      if ($parent->id() != $forum_term->tid) {
+        $breadcrumb[] = l($parent->label(), 'forum/' . $parent->id());
+      }
+    }
+  }
+  drupal_set_breadcrumb($breadcrumb);
+
+  if ($forum_term->tid && array_search($forum_term->tid, $config->get('containers')) === FALSE) {
+    // Add RSS feed for forums.
+    drupal_add_feed('taxonomy/term/' . $forum_term->id() . '/feed', 'RSS - ' . $forum_term->label());
+  }
+
+  if (empty($forum_term->forums) && empty($forum_term->parents)) {
+    // Root of empty forum.
+    drupal_set_title(t('No forums defined'));
   }
 
   $forum_per_page = $config->get('topics.page_limit');
-  $sortby = $config->get('topics.order');
+  $sort_by = $config->get('topics.order');
 
   if (empty($forum_term->container)) {
-    $topics = forum_get_topics($forum_term->tid, $sortby, $forum_per_page);
+    $topics = forum_get_topics($forum_term->tid, $sort_by, $forum_per_page);
   }
   else {
     $topics = '';
@@ -40,12 +70,9 @@ function forum_page($forum_term = NULL) {
     '#topics' => $topics,
     '#parents' => $forum_term->parents,
     '#tid' => $forum_term->tid,
-    '#sortby' => $sortby,
+    '#sortby' => $sort_by,
     '#forums_per_page' => $forum_per_page,
   );
   $build['#attached']['css'][] = drupal_get_path('module', 'forum') . '/forum.css';
-  // @todo Returning a render array causes template_preprocess_forums() to be
-  //   invoked too late and the breadcrumb is rendered before that callback
-  //   adjusted it.
-  return drupal_render($build);
+  return $build;
 }

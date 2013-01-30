@@ -122,7 +122,7 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     // WIP: This stuff doens't work yet: namespacing issues.
     // A list of suitable views to pick one as the subview.
-    $views = array('' => '<none>');
+    $views = array('' => '- None -');
     $all_views = views_get_all_views();
     foreach ($all_views as $view) {
       // Only get views that are suitable:

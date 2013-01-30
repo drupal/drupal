@@ -47,21 +47,6 @@ function hook_hook_info() {
 }
 
 /**
- * Alter information from hook_hook_info().
- *
- * @param $hooks
- *   Information gathered by module_hook_info() from other modules'
- *   implementations of hook_hook_info(). Alter this array directly.
- *   See hook_hook_info() for information on what this may contain.
- */
-function hook_hook_info_alter(&$hooks) {
-  // Our module wants to completely override the core tokens, so make
-  // sure the core token hooks are not found.
-  $hooks['token_info']['group'] = 'mytokens';
-  $hooks['tokens']['group'] = 'mytokens';
-}
-
-/**
  * Define administrative paths.
  *
  * Modules may specify whether or not the paths they define in hook_menu() are

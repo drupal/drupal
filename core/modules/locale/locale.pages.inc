@@ -183,7 +183,7 @@ function locale_translate_filter_form($form, &$form_state) {
       );
     }
     else {
-      $empty_option = isset($filter['options'][$filter['default']]) ? $filter['options'][$filter['default']] : '<none>';
+      $empty_option = isset($filter['options'][$filter['default']]) ? $filter['options'][$filter['default']] : '- None -';
       $form['filters']['status'][$key] = array(
         '#title' => $filter['title'],
         '#type' => 'select',
@@ -257,7 +257,7 @@ function locale_translate_edit_form($form, &$form_state) {
   drupal_static_reset('language_list');
   $languages = language_list();
 
-  $langname = isset($langcode) ? $languages[$langcode]->name : "<none>";
+  $langname = isset($langcode) ? $languages[$langcode]->name : "- None -";
 
   $path = drupal_get_path('module', 'locale');
   $form['#attached']['css'] = array(

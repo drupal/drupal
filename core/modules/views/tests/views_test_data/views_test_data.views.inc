@@ -20,3 +20,45 @@ function views_test_data_views_analyze(ViewExecutable $view) {
 
   return $ret;
 }
+
+/**
+ * Implements hook_views_data().
+ */
+function views_test_data_views_data() {
+  return state()->get('views_test_data_views_data');
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function views_test_data_views_data_alter(&$data) {
+
+}
+
+/**
+ * Implements hook_views_query_substitutions().
+ */
+function views_test_data_views_query_substitutions() {
+
+}
+
+/**
+ * Implements hook_views_form_substitutions().
+ */
+function views_test_data_views_form_substitutions() {
+
+}
+
+/**
+ * Implements hook_field_views_data().
+ */
+function views_test_data_field_views_data($field) {
+
+}
+
+/**
+ * Implements hook_field_views_data_alter().
+ */
+function views_test_data_field_views_data_alter(&$data, $field, $module) {
+
+}

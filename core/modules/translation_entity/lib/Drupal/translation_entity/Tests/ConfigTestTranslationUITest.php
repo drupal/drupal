@@ -29,19 +29,9 @@ class ConfigTestTranslationUITest extends EntityTranslationUITest {
     );
   }
 
-  /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
-   */
   function setUp() {
     $this->entityType = 'config_test';
     parent::setUp();
-  }
-
-  /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
-   */
-  function getTranslatorPermissions() {
-    return array("translate $this->entityType entities", 'edit original values');
   }
 
   /**

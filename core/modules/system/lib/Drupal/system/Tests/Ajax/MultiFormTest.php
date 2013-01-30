@@ -19,8 +19,6 @@ class MultiFormTest extends AjaxTestBase {
    */
   public static $modules = array('form_test');
 
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'AJAX multi form',
@@ -31,6 +29,8 @@ class MultiFormTest extends AjaxTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Page'));
 
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';

@@ -34,9 +34,6 @@ class UserTranslationUITest extends EntityTranslationUITest {
     );
   }
 
-  /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
-   */
   function setUp() {
     $this->entityType = 'user';
     $this->testLanguageSelector = FALSE;
@@ -48,7 +45,7 @@ class UserTranslationUITest extends EntityTranslationUITest {
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
    */
   function getTranslatorPermissions() {
-    return array('administer users', "translate $this->entityType entities", 'edit original values');
+    return array_merge(parent::getTranslatorPermissions(), array('administer users'));
   }
 
   /**
@@ -63,7 +60,7 @@ class UserTranslationUITest extends EntityTranslationUITest {
    * Tests translate link on user admin list.
    */
   function testTranslateLinkUserAdminPage() {
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer users', 'translate any entity'));
+    $this->admin_user = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer users')));
     $this->drupalLogin($this->admin_user);
 
     $uid = $this->createEntity(array('name' => $this->randomName()), $this->langcodes[0]);

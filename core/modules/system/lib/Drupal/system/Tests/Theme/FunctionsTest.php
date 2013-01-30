@@ -164,7 +164,7 @@ class FunctionsTest extends WebTestBase {
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
     $expected_links .= '<li class="a-link odd first"><a href="' . url('a/link') . '">' . check_plain('A <link>') . '</a></li>';
-    $expected_links .= '<li class="plain-text even"><span>' . check_plain('Plain "text"') . '</span></li>';
+    $expected_links .= '<li class="plain-text even">' . check_plain('Plain "text"') . '</li>';
     $expected_links .= '<li class="front-page odd last active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
     $expected_links .= '</ul>';
 
@@ -183,6 +183,22 @@ class FunctionsTest extends WebTestBase {
     // Verify that passing attributes for the heading works.
     $variables['heading'] = array('text' => 'Links heading', 'level' => 'h3', 'attributes' => array('id' => 'heading'));
     $expected_heading = '<h3 id="heading">Links heading</h3>';
+    $expected = $expected_heading . $expected_links;
+    $this->assertThemeOutput('links', $variables, $expected);
+
+    // Verify that passing attributes for the links work.
+    $variables['links']['a link']['attributes'] = array(
+      'class' => array('a/class'),
+    );
+    $variables['links']['plain text']['attributes'] = array(
+      'class' => array('a/class'),
+    );
+    $expected_links = '';
+    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<li class="a-link odd first"><a href="' . url('a/link') . '" class="a/class">' . check_plain('A <link>') . '</a></li>';
+    $expected_links .= '<li class="plain-text even"><span class="a/class">' . check_plain('Plain "text"') . '</span></li>';
+    $expected_links .= '<li class="front-page odd last active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);
   }

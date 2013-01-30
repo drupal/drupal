@@ -214,7 +214,8 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
     $form['shortcuts']['links'][$mlid]['name']['#markup'] = l($link['link_title'], $link['link_path']);
     $form['shortcuts']['links'][$mlid]['weight'] = array(
       '#type' => 'weight',
-      '#title' => t('Weight'),
+      '#title' => t('Weight for @title', array('@title' => $link['link_title'])),
+      '#title_display' => 'invisible',
       '#delta' => 50,
       '#default_value' => $link['weight'],
       '#attributes' => array('class' => array('shortcut-weight')),

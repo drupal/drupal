@@ -172,6 +172,10 @@ function field_test_create_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $l
  *   The loaded entity.
  */
 function field_test_entity_test_load($ftid, $ftvid = NULL) {
+  // Prevent this from being called as hook_entity_test_load().
+  if (is_array($ftid)) {
+    return;
+  }
   $ids = (isset($ftid) ? array($ftid) : array());
   $conditions = (isset($ftvid) ? array('ftvid' => $ftvid) : array());
   $test_entity = entity_load_multiple('test_entity', $ids, $conditions);

@@ -68,12 +68,12 @@ class EntityAccessTest extends WebTestBase  {
       'view' => TRUE,
     ), $entity);
 
-    // The custom user is not allowed to view test entities.
+    // The custom user is not allowed to perform any operation on test entities.
     $custom_user = $this->drupalCreateUser();
     $this->assertEntityAccess(array(
-      'create' => TRUE,
-      'update' => TRUE,
-      'delete' => TRUE,
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
       'view' => FALSE,
     ), $entity, $custom_user);
   }

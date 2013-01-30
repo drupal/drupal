@@ -16,6 +16,20 @@ use Drupal\translation_entity\EntityTranslationController;
 class TermTranslationController extends EntityTranslationController {
 
   /**
+   * Overrides EntityTranslationController::getAccess().
+   */
+  public function getAccess(EntityInterface $entity, $op) {
+    switch ($op) {
+      case 'create':
+      case 'update':
+        return taxonomy_term_access('edit', $entity);
+      case 'delete':
+        return taxonomy_term_access('delete', $entity);
+    }
+    return parent::getAccess($entity, $op);
+  }
+
+  /**
    * Overrides EntityTranslationController::entityFormAlter().
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {

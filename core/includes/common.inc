@@ -3882,7 +3882,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  *   jQuery.extend(true, {}, $settings_items[0], $settings_items[1], ...)
  * @endcode
  *
- * would. This means integer indeces are preserved just like string indeces are,
+ * would. This means integer indices are preserved just like string indices are,
  * rather than re-indexed as is common in PHP array merging.
  *
  * Example:
@@ -6430,7 +6430,8 @@ function drupal_flush_all_caches() {
   drupal_static_reset();
 
   // Clear all non-drupal_static() static caches.
-  // None currently; kept if any static caches need to be reset in the future.
+  // @todo Rebuild the kernel/container.
+  drupal_container()->get('plugin.manager.entity')->clearCachedDefinitions();
 
   // Rebuild module and theme data.
   system_rebuild_module_data();

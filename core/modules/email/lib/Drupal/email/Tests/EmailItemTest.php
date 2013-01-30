@@ -7,22 +7,21 @@
 
 namespace Drupal\email\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\email\Type\EmailItem;
-use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemInterface;
+use Drupal\field\Tests\FieldItemUnitTestBase;
 
 /**
  * Tests the new entity API for the email field type.
  */
-class EmailItemTest extends DrupalUnitTestBase {
+class EmailItemTest extends FieldItemUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('email', 'entity_test');
+  public static $modules = array('email');
 
   public static function getInfo() {
     return array(
@@ -34,7 +33,6 @@ class EmailItemTest extends DrupalUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->enableModules(array('system', 'entity', 'field', 'text', 'options', 'field_sql_storage', 'entity_test', 'email'));
 
     // Create an email field and instance for validation.
     $this->field = array(

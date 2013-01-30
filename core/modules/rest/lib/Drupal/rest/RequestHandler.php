@@ -32,6 +32,7 @@ class RequestHandler extends ContainerAware {
   public function handle(Request $request, $id = NULL) {
     $plugin = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getDefault('_plugin');
     $method = strtolower($request->getMethod());
+
     $resource = $this->container
       ->get('plugin.manager.rest')
       ->getInstance(array('id' => $plugin));
@@ -66,5 +67,15 @@ class RequestHandler extends ContainerAware {
       $response->headers->set('Content-Type', 'application/vnd.drupal.ld+json');
     }
     return $response;
+  }
+
+  /**
+   * Generates a CSRF protecting session token.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response object.
+   */
+  public function csrfToken() {
+    return new Response(drupal_get_token('rest'), 200, array('Content-Type' => 'text/plain'));
   }
 }

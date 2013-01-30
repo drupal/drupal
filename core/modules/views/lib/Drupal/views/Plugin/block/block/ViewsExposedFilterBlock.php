@@ -26,11 +26,11 @@ class ViewsExposedFilterBlock extends ViewsBlock {
    * Implements \Drupal\block\BlockBase::build().
    */
   public function build() {
-    $type = 'exp';
-    $output = $this->view->display_handler->viewSpecialBlocks($type);
+    $output = $this->view->display_handler->viewExposedFormBlocks();
     // Before returning the block output, convert it to a renderable array with
     // contextual links.
-    views_add_block_contextual_links($output, $this->view, $this->display_id, 'special_block_' . $type);
+    $this->addContextualLinks($output, 'exposed_filter');
+
     $this->view->destroy();
     return $output;
   }

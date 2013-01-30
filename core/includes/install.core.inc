@@ -10,8 +10,6 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Guzzle\Http\Exception\RequestException;
-
 /**
  * @file
  * API functions for installing Drupal.
@@ -1231,18 +1229,18 @@ function install_select_profile_form($form, &$form_state, $install_state) {
     $names = array('standard' => $names['standard']) + $names;
   }
 
-  foreach ($names as $profile => $name) {
-    // The profile name and description are extracted for translation from the
-    // .info file, so we can use st() on them even though they are dynamic data
-    // at this point.
-    $form['profile'][$name] = array(
-      '#type' => 'radio',
-      '#value' => 'standard',
-      '#return_value' => $profile,
-      '#title' => st($name),
-      '#description' => isset($profiles[$profile]['description']) ? st($profiles[$profile]['description']) : '',
-      '#parents' => array('profile'),
-    );
+  // The profile name and description are extracted for translation from the
+  // .info file, so we can use st() on them even though they are dynamic data
+  // at this point.
+  $form['profile'] = array(
+    '#type' => 'radios',
+    '#title' => st('Select an installation profile'),
+    '#title_display' => 'invisible',
+    '#options' => array_map('st', $names),
+    '#default_value' => 'standard',
+  );
+  foreach (array_keys($names) as $profile) {
+    $form['profile'][$profile]['#description'] = isset($profiles[$profile]['description']) ? st($profiles[$profile]['description']) : '';
   }
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] =  array(
@@ -1351,7 +1349,7 @@ function install_select_language(&$install_state) {
     // thow an error.
     else {
       if (count($files) == 1) {
-        $install_state['parameters']['langcode'] = array_shift(array_keys($files));
+        $install_state['parameters']['langcode'] = current(array_keys($files));
         return;
       }
       else {
@@ -1405,6 +1403,8 @@ function install_select_language_form($form, &$form_state, $files = array()) {
   $browser_langcode = language_from_browser($browser_options);
   $form['langcode'] = array(
     '#type' => 'select',
+    '#title' => st('Choose language'),
+    '#title_display' => 'invisible',
     '#options' => $select_options,
     // Use the browser detected language as default or English if nothing found.
     '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
@@ -1447,7 +1447,7 @@ function install_download_translation(&$install_state) {
 }
 
 /**
- * Attempts to get a file using a HTTP request and to store it locally.
+ * Attempts to get a file using drupal_http_request and to store it locally.
  *
  * @param string $uri
  *   The URI of the file to grab.
@@ -1469,18 +1469,14 @@ function install_retrieve_file($uri, $destination) {
   else {
     $path = $destination;
   }
-
-  try {
-    $request = drupal_container()->get('http_default_client')->get($uri, array('Accept' => 'text/plain'));
-    $data = $request->send()->getBody(TRUE);
-    if (empty($data)) {
-      return FALSE;
-    }
-  }
-  catch (RequestException $e) {
+  $result = drupal_http_request($uri);
+  if ($result->code != 200) {
     return FALSE;
   }
-  return file_put_contents($path, $data) !== FALSE;
+  if (file_put_contents($path, $result->data) === FALSE) {
+    return FALSE;
+  }
+  return TRUE;
 }
 
 /**
@@ -1490,17 +1486,12 @@ function install_retrieve_file($uri, $destination) {
  *  The URI to contact.
  *
  * @return string
- *   TRUE if the URI was contacted successfully, FALSE if not.
+ *   URI of the server if the localization server was contacted successfully.
+ *   FALSE if not.
  */
 function install_check_localization_server($uri) {
-  try {
-    $request = drupal_container()->get('http_default_client')->head($uri);
-    $response = $request->send();
-    return TRUE;
-  }
-  catch (RequestException $e) {
-    return FALSE;
-  }
+  $result = drupal_http_request($uri, array('method' => 'HEAD'));
+  return (!isset($result->error) && $result->code == 200);
 }
 
 /**

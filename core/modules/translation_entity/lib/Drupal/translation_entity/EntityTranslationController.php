@@ -99,9 +99,17 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
   /**
    * Implements EntityTranslationControllerInterface::getTranslationAccess().
    */
-  public function getTranslationAccess(EntityInterface $entity, $langcode) {
-    $entity_type = $entity->entityType();
-    return (user_access('translate any entity') || user_access("translate $entity_type entities")) && ($langcode != $entity->language()->langcode || user_access('edit original values'));
+  public function getTranslationAccess(EntityInterface $entity, $op) {
+    // @todo Move this logic into a translation access controller checking also
+    //   the translation language and the given account.
+    $info = $entity->entityInfo();
+    $translate_permission = TRUE;
+    // If no permission granularity is defined this entity type does not need an
+    // explicit translate permission.
+    if (!user_access('translate any entity') && !empty($info['permission_granularity'])) {
+      $translate_permission = user_access($info['permission_granularity'] == 'bundle' ? "translate {$entity->bundle()} {$entity->entityType()}" : "translate {$entity->entityType()}");
+    }
+    return $translate_permission && user_access("$op entity translations");
   }
 
   /**
@@ -203,6 +211,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
           '#value' => t('Delete translation'),
           '#weight' => $weight,
           '#submit' => array(array($this, 'entityFormDeleteTranslation')),
+          '#access' => $this->getTranslationAccess($entity, 'delete'),
         );
       }
 
@@ -220,7 +229,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
         '#collapsed' => TRUE,
         '#tree' => TRUE,
         '#weight' => 10,
-        '#access' => $this->getTranslationAccess($entity, $form_langcode),
+        '#access' => $this->getTranslationAccess($entity, $source_langcode ? 'create' : 'update'),
         '#multilingual' => TRUE,
       );
 
@@ -259,17 +268,11 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
   }
 
   /**
-   * Process callback: Determines which elements get clue in the form.
-   *
-   * @param array $element
-   *   Form API element.
-   *
-   * @return array
-   *   A processed element with the shared elements marked with a clue.
+   * Process callback: determines which elements get clue in the form.
    *
    * @see \Drupal\translation_entity\EntityTranslationController::entityFormAlter()
    */
-  public function entityFormSharedElements($element) {
+  public function entityFormSharedElements($element, $form_state, $form) {
     static $ignored_types;
 
     // @todo Find a more reliable way to determine if a form element concerns a
@@ -280,7 +283,7 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
 
     foreach (element_children($element) as $key) {
       if (!isset($element[$key]['#type'])) {
-        $this->entityFormSharedElements($element[$key]);
+        $this->entityFormSharedElements($element[$key], $form_state, $form);
       }
       else {
         // Ignore non-widget form elements.
@@ -289,7 +292,15 @@ class EntityTranslationController implements EntityTranslationControllerInterfac
         }
         // Elements are considered to be non multilingual by default.
         if (empty($element[$key]['#multilingual'])) {
-          $this->addTranslatabilityClue($element[$key]);
+          // If we are displaying a multilingual entity form we need to provide
+          // translatability clues, otherwise the shared form elements should be
+          // hidden.
+          if (empty($form_state['translation_entity']['translation_form'])) {
+            $this->addTranslatabilityClue($element[$key]);
+          }
+          else {
+            $element[$key]['#access'] = FALSE;
+          }
         }
       }
     }

@@ -13,7 +13,13 @@ namespace Drupal\system\Tests\Image;
  * @todo This test belongs to File module.
  */
 class FileMoveTest extends ToolkitTestBase {
-  protected $profile = 'standard';
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('image');
 
   public static function getInfo() {
     return array(
