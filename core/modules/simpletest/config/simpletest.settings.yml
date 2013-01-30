@@ -1,5 +1,4 @@
 clear_results: '1'
-die_on_fail: '0'
 httpauth:
   method: '1'
   password: ''
