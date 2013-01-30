@@ -99,5 +99,29 @@ function hook_block_view_NAME_alter(array &$build, \Drupal\block\BlockInterface 
 }
 
 /**
+ * Define access for a specific block instance.
+ *
+ * This hook is invoked by the access methods of the block plugin system and
+ * should be used to alter the block access rules defined by a module from
+ * another module.
+ *
+ * @param \Drupal\block\Plugin\Core\Entity\Block $block
+ *   The block instance.
+ *
+ * @return bool
+ *   TRUE will allow access whereas FALSE will deny access to the block.
+ *
+ * @see \Drupal\block\BlockBase::access()
+ * @see \Drupal\block\BlockBase::blockAccess()
+ */
+function hook_block_access(\Drupal\block\Plugin\Core\Entity\Block $block) {
+  // Example code that would prevent displaying the 'Powered by Drupal' block in
+  // a region different than the footer.
+  if ($block->get('plugin') == 'system_powered_by_block' && $block->get('region') != 'footer') {
+    return FALSE;
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
