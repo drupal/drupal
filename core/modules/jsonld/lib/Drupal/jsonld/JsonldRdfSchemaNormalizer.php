@@ -25,7 +25,7 @@ class JsonldRdfSchemaNormalizer extends JsonldNormalizerBase {
   /**
     * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
     */
-  public function normalize($data, $format = NULL) {
+  public function normalize($data, $format = NULL, array $context = array()) {
     $normalized = array();
     $graph = $data->getGraph();
 

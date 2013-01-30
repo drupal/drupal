@@ -9,7 +9,7 @@
     "symfony/http-foundation": "<2.4",
     "symfony/http-kernel": "<2.4",
     "symfony/routing": "<2.4",
-    "symfony/serializer": "<2.4",
+    "symfony/serializer": "2.2.0-BETA2",
     "symfony/validator": "<2.4",
     "symfony/yaml": "<2.4",
     "twig/twig": "1.*@stable",
