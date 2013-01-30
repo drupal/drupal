@@ -816,14 +816,6 @@ select.form-select:focus {
     float: none;
     padding: 0;
   }
-  div.password-confirm,
-  .password-strength {
-    float: none;
-  }
-  .confirm-parent,
-  .password-parent {
-    width: 100%;
-  }
 }
 
 /* Exceptions */

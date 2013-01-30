@@ -67,8 +67,9 @@ div.password-suggestions ul {
  * Password strength indicator on narrow viewport.
  */
 @media screen and (max-width: 600px) {
-  .password-strength {
-    margin-top: 0;
+  .password-strength,
+  div.password-confirm {
+    float: none;
     width: auto;
   }
   .password-indicator {
@@ -79,17 +80,12 @@ div.password-suggestions ul {
     margin-bottom: 0;
     width: 100%;
   }
-  div.password-confirm {
-    margin-top: 0;
-    width: auto;
-  }
   div.form-item div.password-suggestions {
     width: auto;
   }
   .confirm-parent,
   .password-parent {
     clear: none;
-    margin: 0;
     width: 100%;
   }
 }
