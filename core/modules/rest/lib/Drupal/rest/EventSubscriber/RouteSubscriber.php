@@ -60,8 +60,8 @@ class RouteSubscriber implements EventSubscriberInterface {
       foreach ($enabled as $key => $resource) {
         $plugin = $this->manager->getInstance(array('id' => $key));
 
-        // @todo Switch to ->addCollection() once http://drupal.org/node/1819018 is resolved.
         foreach ($plugin->routes() as $name => $route) {
+          $route->setRequirement('_access_rest_csrf',  'TRUE');
           $collection->add("rest.$name", $route);
         }
       }

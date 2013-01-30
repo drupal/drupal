@@ -28,5 +28,8 @@ class RestBundle extends Bundle {
       ->addArgument(new Reference('plugin.manager.rest'))
       ->addArgument(new Reference('config.factory'))
       ->addTag('event_subscriber');
+
+    $container->register('access_check.rest.csrf', 'Drupal\rest\Access\CSRFAccessCheck')
+      ->addTag('access_check');
   }
 }

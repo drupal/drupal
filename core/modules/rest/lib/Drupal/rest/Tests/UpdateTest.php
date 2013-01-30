@@ -89,9 +89,6 @@ class UpdateTest extends RESTTestBase {
 
     // Try to update a resource which is not web API enabled.
     $this->enableService(FALSE);
-    // Reset cURL here because it is confused from our previously used cURL
-    // options.
-    unset($this->curlHandle);
     $this->drupalLogin($account);
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(404);
@@ -162,9 +159,6 @@ class UpdateTest extends RESTTestBase {
 
     // Try to update a resource which is not web API enabled.
     $this->enableService(FALSE);
-    // Reset cURL here because it is confused from our previously used cURL
-    // options.
-    unset($this->curlHandle);
     $this->drupalLogin($account);
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PUT', $serialized, 'application/vnd.drupal.ld+json');
     $this->assertResponse(404);

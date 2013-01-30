@@ -40,9 +40,6 @@ class DeleteTest extends RESTTestBase {
       // Create a user account that has the required permissions to delete
       // resources via the web API.
       $account = $this->drupalCreateUser(array('restful delete entity:' . $entity_type));
-      // Reset cURL here because it is confused from our previously used cURL
-      // options.
-      unset($this->curlHandle);
       $this->drupalLogin($account);
 
       // Create an entity programmatically.
@@ -74,9 +71,6 @@ class DeleteTest extends RESTTestBase {
     // Try to delete a resource which is not web API enabled.
     $this->enableService(FALSE);
     $account = $this->drupalCreateUser();
-    // Reset cURL here because it is confused from our previously used cURL
-    // options.
-    unset($this->curlHandle);
     $this->drupalLogin($account);
     $this->httpRequest('entity/user/' . $account->id(), 'DELETE');
     $user = entity_load('user', $account->id(), TRUE);
