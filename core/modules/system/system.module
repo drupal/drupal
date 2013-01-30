@@ -576,7 +576,7 @@ function system_element_info() {
     '#theme_wrappers' => array('container'),
   );
   $types['actions'] = array(
-    '#process' => array('form_process_actions', 'form_process_container'),
+    '#process' => array('form_pre_render_actions_dropbutton', 'form_process_actions', 'form_process_container'),
     '#weight' => 100,
     '#theme_wrappers' => array('container'),
   );

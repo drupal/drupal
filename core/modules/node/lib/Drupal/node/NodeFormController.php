@@ -275,89 +275,6 @@ class NodeFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::actionsElement().
-   */
-  protected function actionsElement(array $form, array &$form_state) {
-    $element = parent::actionsElement($form, $form_state);
-    $node = $this->getEntity($form_state);
-
-    // Because some of the 'links' are actually submit buttons, we have to
-    // manually wrap each item in <li> and the whole list in <ul>. The
-    // <ul> is added with a #theme_wrappers function.
-    $element['operations'] = array(
-      '#type' => 'operations',
-      '#subtype' => 'node',
-      '#attached' => array (
-        'css' => array(
-          drupal_get_path('module', 'node') . '/node.admin.css',
-        ),
-      ),
-    );
-
-    $element['operations']['actions'] = array(
-      '#theme_wrappers' => array('dropbutton_list_wrapper')
-    );
-
-    // Depending on the state of the node (published or unpublished) and
-    // whether the current user has the permission to change the status, the
-    // labels and order of the buttons will vary.
-    if (user_access('administer nodes')) {
-      $element['operations']['actions']['publish'] = array(
-        '#type' => 'submit',
-        '#value' => t('Save and publish'),
-        '#submit' => array(array($this, 'publish'), array($this, 'submit'), array($this, 'save')),
-        '#validate' => array(array($this, 'validate')),
-        '#button_type' => $node->status ? 'primary' : '',
-        '#weight' => 0,
-        '#prefix' => '<li class="publish">',
-        '#suffix' => '</li>',
-      );
-      $element['operations']['actions']['unpublish'] = array(
-        '#type' => 'submit',
-        '#value' => t('Save as unpublished'),
-        '#submit' => array(array($this, 'unpublish'), array($this, 'submit'), array($this, 'save')),
-        '#validate' => array(array($this, 'validate')),
-        '#button_type' => empty($node->status) ? 'primary' : '',
-        '#weight' => $node->status ? 1 : -1,
-        '#prefix' => '<li class="unpublish">',
-        "#suffix" => '</li>',
-      );
-
-      if (!empty($node->nid)) {
-        if ($node->status) {
-          $publish_label = t('Save and keep published');
-          $unpublish_label = t('Save and unpublish');
-        }
-        else {
-          $publish_label = t('Save and publish');
-          $unpublish_label = t('Save and keep unpublished');
-        }
-        $element['operations']['actions']['publish']['#value'] = $publish_label;
-        $element['operations']['actions']['unpublish']['#value'] = $unpublish_label;
-      }
-    }
-    // The user has no permission to change the status of the node. Just
-    // show a save button without the 'publish' or 'unpublish' callback in
-    // the #submit definition.
-    else {
-      $element['operations']['actions']['save'] = array(
-        '#type' => 'submit',
-        '#value' => t('Save'),
-        '#submit' => array(array($this, 'submit'), array($this, 'save')),
-        '#validate' => array(array($this, 'validate')),
-        '#button_type' => 'primary',
-        '#weight' => 1,
-        '#prefix' => '<li class="save">',
-        "#suffix" => '</li>',
-      );
-    }
-
-    unset($element['submit']);
-
-    return $element;
-  }
-
-  /*
    * Overrides Drupal\Core\Entity\EntityFormController::actions().
    */
   protected function actions(array $form, array &$form_state) {
@@ -365,9 +282,63 @@ class NodeFormController extends EntityFormController {
     $node = $this->getEntity($form_state);
     $preview_mode = variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL);
 
+    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview']));
+
+    // If saving is an option, privileged users get dedicated form submit
+    // buttons to adjust the publishing status while saving in one go.
+    // @todo This adjustment makes it close to impossible for contributed
+    //   modules to integrate with "the Save operation" of this form. Modules
+    //   need a way to plug themselves into 1) the ::submit() step, and
+    //   2) the ::save() step, both decoupled from the pressed form button.
+    if ($element['submit']['#access'] && user_access('administer nodes')) {
+      // isNew | prev status » default   & publish label             & unpublish label
+      // 1     | 1           » publish   & Save and publish          & Save as unpublished
+      // 1     | 0           » unpublish & Save and publish          & Save as unpublished
+      // 0     | 1           » publish   & Save and keep published   & Save and unpublish
+      // 0     | 0           » unpublish & Save and keep unpublished & Save and publish
+
+      // Add a "Publish" button.
+      $element['publish'] = $element['submit'];
+      $element['publish']['#dropbutton'] = 'save';
+      if ($node->isNew()) {
+        $element['publish']['#value'] = t('Save and publish');
+      }
+      else {
+        $element['publish']['#value'] = $node->status ? t('Save and keep published') : t('Save and publish');
+      }
+      $element['publish']['#weight'] = 0;
+      array_unshift($element['publish']['#submit'], array($this, 'publish'));
+
+      // Add a "Unpublish" button.
+      $element['unpublish'] = $element['submit'];
+      $element['unpublish']['#dropbutton'] = 'save';
+      if ($node->isNew()) {
+        $element['unpublish']['#value'] = t('Save as unpublished');
+      }
+      else {
+        $element['unpublish']['#value'] = !$node->status ? t('Save and keep unpublished') : t('Save and unpublish');
+      }
+      $element['unpublish']['#weight'] = 10;
+      array_unshift($element['unpublish']['#submit'], array($this, 'unpublish'));
+
+      // If already published, the 'publish' button is primary.
+      if ($node->status) {
+        unset($element['unpublish']['#button_type']);
+      }
+      // Otherwise, the 'unpublish' button is primary and should come first.
+      else {
+        unset($element['publish']['#button_type']);
+        $element['unpublish']['#weight'] = -10;
+      }
+
+      // Remove the "Save" button.
+      $element['submit']['#access'] = FALSE;
+    }
+
     $element['preview'] = array(
       '#access' => $preview_mode != DRUPAL_DISABLED,
       '#value' => t('Preview'),
+      '#weight' => 20,
       '#validate' => array(
         array($this, 'validate'),
       ),
@@ -377,8 +348,8 @@ class NodeFormController extends EntityFormController {
       ),
     );
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview']));
     $element['delete']['#access'] = node_access('delete', $node);
+    $element['delete']['#weight'] = 100;
 
     return $element;
   }
@@ -473,7 +444,7 @@ class NodeFormController extends EntityFormController {
    */
   public function publish(array $form, array &$form_state) {
     $node = $this->getEntity($form_state);
-    $node->status = TRUE;
+    $node->status = 1;
     return $node;
   }
 
@@ -487,7 +458,7 @@ class NodeFormController extends EntityFormController {
    */
   public function unpublish(array $form, array &$form_state) {
     $node = $this->getEntity($form_state);
-    $node->status = FALSE;
+    $node->status = 0;
     return $node;
   }
 
