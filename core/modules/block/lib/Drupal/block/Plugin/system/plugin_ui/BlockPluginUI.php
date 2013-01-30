@@ -93,12 +93,14 @@ class BlockPluginUI extends PluginUIBase {
           '#links' => $values,
         );
       }
-      $form['left']['plugin_library'] = array(
-        '#theme' => 'table',
-        '#header' => $this->tableHeader(),
-        '#rows' => $rows,
-      );
     }
+    // Sort rows alphabetically.
+    sort($rows);
+    $form['left']['plugin_library'] = array(
+      '#theme' => 'table',
+      '#header' => $this->tableHeader(),
+      '#rows' => $rows,
+    );
     return $form;
   }
 
