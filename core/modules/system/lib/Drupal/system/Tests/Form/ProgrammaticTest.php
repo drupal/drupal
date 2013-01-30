@@ -87,7 +87,7 @@ class ProgrammaticTest extends WebTestBase {
       '%values' => print_r($values, TRUE),
       '%errors' => $valid_form ? t('None') : implode(' ', $errors),
     );
-    $this->assertTrue($valid_input == $valid_form, format_string('Input values: %values<br/>Validation handler errors: %errors', $args));
+    $this->assertTrue($valid_input == $valid_form, format_string('Input values: %values<br />Validation handler errors: %errors', $args));
 
     // We check submitted values only if we have a valid input.
     if ($valid_input) {

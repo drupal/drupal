@@ -22,7 +22,7 @@ abstract class DefaultNumberFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, array &$form_state) {
     $options = array(
-      ''  => t('<none>'),
+      ''  => t('- None -'),
       '.' => t('Decimal point'),
       ',' => t('Comma'),
       ' ' => t('Space'),

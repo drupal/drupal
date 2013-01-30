@@ -558,7 +558,7 @@ function image_image_style_load($styles) {
  * Gets an array of image styles suitable for using as select list options.
  *
  * @param $include_empty
- *   If TRUE a <none> option will be inserted in the options array.
+ *   If TRUE a '- None -' option will be inserted in the options array.
  * @return
  *   Array of image styles both key and value are set to style name.
  */
@@ -566,7 +566,7 @@ function image_style_options($include_empty = TRUE) {
   $styles = entity_load_multiple('image_style');
   $options = array();
   if ($include_empty && !empty($styles)) {
-    $options[''] = t('<none>');
+    $options[''] = t('- None -');
   }
   foreach ($styles as $name => $style) {
     $options[$name] = $style->label();
