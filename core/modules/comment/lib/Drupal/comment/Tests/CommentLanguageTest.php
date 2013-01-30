@@ -71,7 +71,7 @@ class CommentLanguageTest extends WebTestBase {
 
     // Create comment field on article.
     comment_add_default_comment_field('node', 'article');
-    
+
     // Make comment body translatable.
     $field = field_info_field('comment_body');
     $field['translatable'] = TRUE;
