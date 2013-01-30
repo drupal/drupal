@@ -136,6 +136,12 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
       $this->drupalGet($generate_url);
       $this->assertResponse(200, 'Image was generated at the URL.');
 
+      // Make sure that access is denied for existing style files if we do not
+      // have access.
+      state()->delete('image.test_file_download');
+      $this->drupalGet($generate_url);
+      $this->assertResponse(403, 'Confirmed that access is denied for the private image style.');
+
       // Repeat this with a different file that we do not have access to and
       // make sure that access is denied.
       $file_noaccess = array_shift($files);
