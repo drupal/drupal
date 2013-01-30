@@ -29,7 +29,7 @@ class PluginUIManager extends PluginManagerBase {
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'plugin_ui');
     $this->discovery = new CacheDecorator($this->discovery, 'plugin_ui');
-    $this->factory = new DefaultFactory($this);
+    $this->factory = new DefaultFactory($this->discovery);
   }
 
   /**

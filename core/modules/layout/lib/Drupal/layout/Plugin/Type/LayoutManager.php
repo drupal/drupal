@@ -31,6 +31,6 @@ class LayoutManager extends PluginManagerBase {
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
 
-    $this->factory = new ReflectionFactory($this);
+    $this->factory = new ReflectionFactory($this->discovery);
   }
 }
