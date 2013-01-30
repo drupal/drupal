@@ -7,26 +7,25 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\simpletest\WebTestBase;
-use Drupal\taxonomy\Type\TaxonomyTermReferenceItem;
-use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemInterface;
+use Drupal\field\Tests\FieldItemUnitTestBase;
 
 /**
  * Tests the new entity API for the taxonomy term reference field type.
  */
-class TaxonomyTermReferenceItemTest extends WebTestBase {
+class TaxonomyTermReferenceItemTest extends FieldItemUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('field', 'field_sql_storage', 'taxonomy', 'entity_test', 'options');
+  public static $modules = array('taxonomy', 'options');
 
   public static function getInfo() {
     return array(
-      'name' => 'Taxonomy reference API',
+      'name' => 'Taxonomy reference field item',
       'description' => 'Tests using entity fields of the taxonomy term reference field type.',
       'group' => 'Taxonomy',
     );
@@ -34,6 +33,9 @@ class TaxonomyTermReferenceItemTest extends WebTestBase {
 
   public function setUp() {
     parent::setUp();
+    $this->installSchema('taxonomy', 'taxonomy_term_data');
+    $this->installSchema('taxonomy', 'taxonomy_term_hierarchy');
+
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),

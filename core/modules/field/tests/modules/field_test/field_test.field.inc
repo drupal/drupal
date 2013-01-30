@@ -27,6 +27,7 @@ function field_test_field_info() {
       ),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
+      'field item class' => 'Drupal\field_test\Type\TestItem',
     ),
     'shape' => array(
       'label' => t('Shape'),
@@ -35,6 +36,7 @@ function field_test_field_info() {
       'instance_settings' => array(),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
+      'field item class' => 'Drupal\field_test\Type\ShapeItem',
     ),
     'hidden_test_field' => array(
       'no_ui' => TRUE,
@@ -44,6 +46,7 @@ function field_test_field_info() {
       'instance_settings' => array(),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
+      'field item class' => 'Drupal\field_test\Type\TestItem',
     ),
   );
 }
