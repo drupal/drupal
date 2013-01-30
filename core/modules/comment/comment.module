@@ -352,8 +352,8 @@ function comment_theme() {
  */
 function comment_menu() {
   $items['admin/structure/comments'] = array(
-    'title' => 'Comment bundles',
-    'description' => 'Manage fields and displays settings for comment bundles.',
+    'title' => 'Comment forms',
+    'description' => 'Manage fields and displays settings for comment forms.',
     'page callback' => 'comment_overview_bundles',
     'access arguments' => array('administer comments'),
     'file' => 'comment.admin.inc',
