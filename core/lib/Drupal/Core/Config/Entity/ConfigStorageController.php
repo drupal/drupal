@@ -470,11 +470,11 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     $entity->original = clone $entity;
 
     foreach ($old_config->get() as $property => $value) {
-      $entity->original->$property = $value;
+      $entity->original->set($property, $value);
     }
 
     foreach ($new_config->get() as $property => $value) {
-      $entity->$property = $value;
+      $entity->set($property, $value);
     }
 
     $entity->save();

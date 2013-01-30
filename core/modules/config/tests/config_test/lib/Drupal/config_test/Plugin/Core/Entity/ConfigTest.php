@@ -62,4 +62,25 @@ class ConfigTest extends ConfigEntityBase {
    */
   public $style;
 
+  /**
+   * A protected property of the configuration entity.
+   *
+   * @var string
+   */
+  protected $protected_property;
+
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::getExportProperties();
+   */
+  public function getExportProperties() {
+    $properties = parent::getExportProperties();
+    $protected_names = array(
+      'protected_property',
+    );
+    foreach ($protected_names as $name) {
+      $properties[$name] = $this->get($name);
+    }
+    return $properties;
+  }
+
 }
