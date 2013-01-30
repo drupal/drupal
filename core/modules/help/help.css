@@ -7,3 +7,14 @@
 .help-items-last {
   margin-right: 0; /* LTR */
 }
+
+/**
+ * Avoid text overlapping on a narrow viewport.
+ */
+@media screen and (max-width: 480px) {
+  .help-items {
+    float: none;
+    width: 100%;
+    margin: 0;
+  }
+}
