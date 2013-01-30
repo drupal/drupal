@@ -25,13 +25,6 @@ class CommentLanguageTest extends WebTestBase {
    */
   public static $modules = array('language', 'language_test', 'comment_test');
 
-  /**
-   * Use the standard profile.
-   *
-   * @todo Remove this dependency if possible.
-   */
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Comment language',
@@ -43,8 +36,10 @@ class CommentLanguageTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
+    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+
     // Create and login user.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'administer comments', 'create article content'));
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'administer comments', 'create article content', 'access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($admin_user);
 
     // Add language.

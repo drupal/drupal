@@ -11,6 +11,14 @@ namespace Drupal\file\Tests;
  * Tests file field widget.
  */
 class FileFieldWidgetTest extends FileFieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment');
+
   public static function getInfo() {
     return array(
       'name' => 'File field widget test',
@@ -23,11 +31,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests upload and remove buttons for a single-valued File field.
    */
   function testSingleValuedWidget() {
-    // Use 'page' instead of 'article', so that the 'article' image field does
-    // not conflict with this test. If in the future the 'page' type gets its
-    // own default file or image field, this test can be made more robust by
-    // using a custom node type.
-    $type_name = 'page';
+    $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
     $field = field_info_field($field_name);
@@ -83,11 +87,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests upload and remove buttons for multiple multi-valued File fields.
    */
   function testMultiValuedWidget() {
-    // Use 'page' instead of 'article', so that the 'article' image field does
-    // not conflict with this test. If in the future the 'page' type gets its
-    // own default file or image field, this test can be made more robust by
-    // using a custom node type.
-    $type_name = 'page';
+    $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $field_name2 = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array('cardinality' => 3));
@@ -204,11 +204,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests a file field with a "Private files" upload destination setting.
    */
   function testPrivateFileSetting() {
-    // Use 'page' instead of 'article', so that the 'article' image field does
-    // not conflict with this test. If in the future the 'page' type gets its
-    // own default file or image field, this test can be made more robust by
-    // using a custom node type.
-    $type_name = 'page';
+    $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name);
     $field = field_info_field($field_name);
@@ -245,11 +241,13 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   function testPrivateFileComment() {
     $user = $this->drupalCreateUser(array('access comments'));
 
-    // Remove access comments permission from anon user.
-    $edit = array(
-      DRUPAL_ANONYMOUS_RID . '[access comments]' => FALSE,
-    );
-    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
+    // Grant the admin user required comment permissions.
+    user_role_grant_permissions(key($this->admin_user->roles), array('administer comment fields'));
+
+    // Revoke access comments permission from anon user, grant post to
+    // authenticated.
+    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('post comments', 'skip comment approval'));
 
     // Create a new field.
     $edit = array(

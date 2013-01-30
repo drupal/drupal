@@ -11,6 +11,7 @@ namespace Drupal\file\Tests;
  * Tests that formatters are working properly.
  */
 class FileFieldRSSContentTest extends FileFieldTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'File field RSS content',

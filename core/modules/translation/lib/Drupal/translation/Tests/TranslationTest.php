@@ -20,9 +20,7 @@ class TranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('translation', 'translation_test');
-
-  protected $profile = 'standard';
+  public static $modules = array('translation', 'translation_test', 'block');
 
   protected $book;
 
@@ -36,6 +34,8 @@ class TranslationTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Setup users.
     $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate all content'));
@@ -460,11 +460,14 @@ class TranslationTest extends WebTestBase {
         $message = format_string('[%page_language] Language switch item not found for %translation_language language in the %type page area.', $args);
       }
 
+      // node uses the article tag.
+      $tag = $type == 'node' ? 'article' : 'div';
+
       if (!empty($translation->nid)) {
-        $xpath = '//div[contains(@class, :type)]//a[@href=:url]';
+        $xpath = '//' . $tag . '[contains(@class, :type)]//a[@href=:url]';
       }
       else {
-        $xpath = '//div[contains(@class, :type)]//span[contains(@class, "locale-untranslated")]';
+        $xpath = '//' . $tag . '[contains(@class, :type)]//span[contains(@class, "locale-untranslated")]';
       }
 
       $found = $this->findContentByXPath($xpath, array(':type' => $type, ':url' => $url), $translation_language->name);
