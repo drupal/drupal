@@ -100,6 +100,8 @@ function forum_menu() {
   );
   $items['forum/%forum_forum'] = array(
     'title' => 'Forums',
+    'title callback' => 'entity_page_label',
+    'title arguments' => array(1),
     'page callback' => 'forum_page',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -710,11 +712,11 @@ function forum_forum_load($tid = NULL) {
       return $cache[$tid] = FALSE;
     }
   }
-  // If $tid is 0, create an empty object to hold the child terms.
+  // If $tid is 0, create an empty entity to hold the child terms.
   elseif ($tid === 0) {
-    $forum_term = (object) array(
+    $forum_term = entity_create('taxonomy_term', array(
       'tid' => 0,
-    );
+    ));
   }
 
   // Determine if the requested term is a container.
@@ -989,32 +991,6 @@ function forum_preprocess_block(&$variables) {
  * @see forums.tpl.php
  */
 function template_preprocess_forums(&$variables) {
-  global $user;
-
-  $config = config('forum.settings');
-  $vid = $config->get('vocabulary');
-  $vocabulary = taxonomy_vocabulary_load($vid);
-  $title = !empty($vocabulary->name) ? $vocabulary->name : '';
-
-  // Breadcrumb navigation:
-  $breadcrumb[] = l(t('Home'), NULL);
-  if ($variables['tid']) {
-    $breadcrumb[] = l($vocabulary->name, 'forum');
-  }
-  if ($variables['parents']) {
-    $variables['parents'] = array_reverse($variables['parents']);
-    foreach ($variables['parents'] as $p) {
-      if ($p->tid == $variables['tid']) {
-        $title = $p->label();
-      }
-      else {
-        $breadcrumb[] = l($p->label(), 'forum/' . $p->tid);
-      }
-    }
-  }
-  drupal_set_breadcrumb($breadcrumb);
-  drupal_set_title($title);
-
   if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
     if (!empty($variables['forums'])) {
       $variables['forums'] = theme('forum_list', $variables);
@@ -1023,9 +999,8 @@ function template_preprocess_forums(&$variables) {
       $variables['forums'] = '';
     }
 
-    if ($variables['tid'] && !in_array($variables['tid'], $config->get('containers'))) {
+    if ($variables['tid'] && array_search($variables['tid'], config('forum.settings')->get('containers')) === FALSE) {
       $variables['topics'] = theme('forum_topic_list', $variables);
-      drupal_add_feed('taxonomy/term/' . $variables['tid'] . '/feed', 'RSS - ' . $title);
     }
     else {
       $variables['topics'] = '';
@@ -1049,7 +1024,6 @@ function template_preprocess_forums(&$variables) {
 
   }
   else {
-    drupal_set_title(t('No forums defined'));
     $variables['forums'] = '';
     $variables['topics'] = '';
   }

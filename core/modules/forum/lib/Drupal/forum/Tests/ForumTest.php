@@ -220,6 +220,15 @@ class ForumTest extends WebTestBase {
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
     $this->assertResponse(200);
+
+    // Test the root forum page title change.
+    $this->drupalGet('forum');
+    $this->assertTitle(t('Forums | Drupal'));
+    $vocabulary = entity_load('taxonomy_vocabulary', $this->forum['vid']);
+    $vocabulary->set('name', 'Discussions');
+    $vocabulary->save();
+    $this->drupalGet('forum');
+    $this->assertTitle(t('Discussions | Drupal'));
   }
 
   /**
@@ -267,7 +276,7 @@ class ForumTest extends WebTestBase {
 
     // Edit forum taxonomy.
     // Restoration of the settings fails and causes subsequent tests to fail.
-    $this->forumContainer = $this->editForumTaxonomy();
+    $this->forumContainer = $this->editForumVocabulary();
     // Create forum container.
     $this->forumContainer = $this->createForum('container');
     // Verify "edit container" link exists and functions correctly.
@@ -328,38 +337,36 @@ class ForumTest extends WebTestBase {
   /**
    * Edits the forum taxonomy.
    */
-  function editForumTaxonomy() {
+  function editForumVocabulary() {
     // Backup forum taxonomy.
     $vid = config('forum.settings')->get('vocabulary');
-    $original_settings = taxonomy_vocabulary_load($vid);
+    $original_vocabulary = entity_load('taxonomy_vocabulary', $vid);
 
-    // Generate a random name/description.
-    $title = $this->randomName(10);
-    $description = $this->randomName(100);
-
+    // Generate a random name and description.
     $edit = array(
-      'name' => $title,
-      'description' => $description,
+      'name' => $this->randomName(10),
+      'description' => $this->randomName(100),
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/structure/taxonomy/' . $original_settings->id() . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $original_vocabulary->id() . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
-    $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), 'Vocabulary was edited');
+    $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary was edited');
 
     // Grab the newly edited vocabulary.
-    $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')->resetCache();
-    $current_settings = taxonomy_vocabulary_load($vid);
+    $current_vocabulary = entity_load('taxonomy_vocabulary', $vid);
 
     // Make sure we actually edited the vocabulary properly.
-    $this->assertEqual($current_settings->name, $title, 'The name was updated');
-    $this->assertEqual($current_settings->description, $description, 'The description was updated');
+    $this->assertEqual($current_vocabulary->name, $edit['name'], 'The name was updated');
+    $this->assertEqual($current_vocabulary->description, $edit['description'], 'The description was updated');
 
-    // Restore the original vocabulary.
-    taxonomy_vocabulary_save($original_settings);
-    drupal_static_reset('taxonomy_vocabulary_load');
-    $current_settings = taxonomy_vocabulary_load($vid);
-    $this->assertEqual($current_settings->name, $original_settings->name, 'The original vocabulary settings were restored');
+    // Restore the original vocabulary's name and description.
+    $current_vocabulary->set('name', $original_vocabulary->name);
+    $current_vocabulary->set('description', $original_vocabulary->description);
+    $current_vocabulary->save();
+    // Reload vocabulary to make sure changes are saved.
+    $current_vocabulary = entity_load('taxonomy_vocabulary', $vid);
+    $this->assertEqual($current_vocabulary->name, $original_vocabulary->name, 'The original vocabulary settings were restored');
   }
 
   /**
