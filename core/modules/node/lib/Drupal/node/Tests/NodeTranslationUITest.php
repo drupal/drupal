@@ -34,9 +34,6 @@ class NodeTranslationUITest extends EntityTranslationUITest {
     );
   }
 
-  /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
-   */
   function setUp() {
     $this->entityType = 'node';
     $this->bundle = 'article';
@@ -56,7 +53,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
    */
   function getTranslatorPermissions() {
-    return array("edit any $this->bundle content", "translate $this->entityType entities", 'edit original values');
+    return array_merge(parent::getTranslatorPermissions(), array("edit any $this->bundle content"));
   }
 
   /**
@@ -80,7 +77,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
    * Tests field translation form.
    */
   function testFieldTranslationForm() {
-    $admin_user = $this->drupalCreateUser(array('translate any entity', 'access administration pages', 'bypass node access', 'administer node fields'));
+    $admin_user = $this->drupalCreateUser(array_merge($this->getTranslatorPermissions(), array('access administration pages', 'bypass node access', 'administer node fields')));
     $this->drupalLogin($admin_user);
 
     $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => 'en'));

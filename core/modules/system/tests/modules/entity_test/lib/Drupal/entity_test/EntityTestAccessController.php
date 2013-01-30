@@ -30,21 +30,21 @@ class EntityTestAccessController implements EntityAccessControllerInterface {
    * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::createAccess().
    */
   public function createAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return TRUE;
+    return user_access('administer entity_test content', $account);
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::updateAccess().
    */
   public function updateAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return TRUE;
+    return user_access('administer entity_test content', $account);
   }
 
   /**
    * Implements \Drupal\Core\Entity\EntityAccessControllerInterface::deleteAccess().
    */
   public function deleteAccess(EntityInterface $entity, $langcode = LANGUAGE_DEFAULT, User $account = NULL) {
-    return TRUE;
+    return user_access('administer entity_test content', $account);
   }
 
 }

@@ -34,9 +34,6 @@ class CommentTranslationUITest extends EntityTranslationUITest {
     );
   }
 
-  /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
-   */
   function setUp() {
     $this->entityType = 'comment';
     $this->nodeBundle = 'article';
@@ -58,7 +55,7 @@ class CommentTranslationUITest extends EntityTranslationUITest {
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
    */
   function getTranslatorPermissions() {
-    return array('post comments', 'administer comments', "translate $this->entityType entities", 'edit original values');
+    return array_merge(parent::getTranslatorPermissions(), array('post comments', 'administer comments'));
   }
 
   /**
@@ -100,7 +97,7 @@ class CommentTranslationUITest extends EntityTranslationUITest {
    */
   function testTranslateLinkCommentAdminPage() {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'page'));
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer comments', 'translate any entity'));
+    $this->admin_user = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer comments')));
     $this->drupalLogin($this->admin_user);
 
     $cid_translatable = $this->createEntity(array(), $this->langcodes[0], $this->nodeBundle);

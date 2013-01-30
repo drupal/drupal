@@ -41,9 +41,6 @@ class TermTranslationUITest extends EntityTranslationUITest {
     );
   }
 
-  /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
-   */
   function setUp() {
     $this->entityType = 'taxonomy_term';
     $this->bundle = 'tags';
@@ -73,7 +70,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
    */
   function getTranslatorPermissions() {
-    return array('administer taxonomy', "translate $this->entityType entities", 'edit original values');
+    return array_merge(parent::getTranslatorPermissions(), array('administer taxonomy'));
   }
 
   /**
@@ -102,7 +99,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
    * Tests translate link on vocabulary term list.
    */
   function testTranslateLinkVocabularyAdminPage() {
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer taxonomy', 'translate any entity'));
+    $this->admin_user = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer taxonomy')));
     $this->drupalLogin($this->admin_user);
 
     $translatable_tid = $this->createEntity(array(), $this->langcodes[0], $this->vocabulary->id());

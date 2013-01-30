@@ -132,17 +132,21 @@ interface EntityTranslationControllerInterface {
   public function getAccess(EntityInterface $entity, $op);
 
   /**
-   * Checks if a user is allowed to edit the given translation.
+   * Checks if the user can perform the given operation on translations of the
+   * wrapped entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity whose translation has to be accessed.
-   * @param string $langcode
-   *   The language code identifying the translation to be accessed.
+   * @param $op
+   *   The operation to be performed on the translation. Possible values are:
+   *   - "create"
+   *   - "update"
+   *   - "delete"
    *
    * @return boolean
    *   TRUE if the operation may be performed, FALSE otherwise.
    */
-  public function getTranslationAccess(EntityInterface $entity, $langcode);
+  public function getTranslationAccess(EntityInterface $entity, $op);
 
   /**
    * Retrieves the source language for the translation being created.

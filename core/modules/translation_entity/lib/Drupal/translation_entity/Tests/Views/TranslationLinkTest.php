@@ -8,7 +8,7 @@
 namespace Drupal\translation_entity\Tests\Views;
 
 use Drupal\views\Tests\ViewTestBase;
-use Drupal\translation_entity\Tests\EntityTranslationUITest;
+use Drupal\translation_entity\Tests\EntityTranslationTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @see \Drupal\translation_entity\Plugin\views\field\TranslationLink
  */
-class TranslationLinkTest extends EntityTranslationUITest {
+class TranslationLinkTest extends EntityTranslationTestBase {
 
   /**
    * Views used by this test.
@@ -50,27 +50,12 @@ class TranslationLinkTest extends EntityTranslationUITest {
   }
 
   /**
-   * Implements \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
-   */
-  function getTranslatorPermissions() {
-    return array("translate $this->entityType entities", 'edit original values');
-  }
-
-  /**
    * Tests the Entity translation overview link field handler.
    */
   public function testTranslationLink() {
     $this->drupalGet('test-entity-translations-link');
     $this->assertLinkByHref('user/1/translations');
     $this->assertNoLinkByHref('user/2/translations', 'The translations link is not present when translation_entity_translate_access() is FALSE.');
-  }
-
-  /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::testTranslationUI().
-   */
-  public function testTranslationUI() {
-    // @todo \Drupal\translation_entity\Tests\EntityTranslationUITest contains
-    //   essential helper methods that should be seprarated from test methods.
   }
 
 }

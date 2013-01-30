@@ -38,7 +38,8 @@ use Drupal\Core\Annotation\Translation;
  *   bundle_keys = {
  *     "bundle" = "vid"
  *   },
- *   menu_base_path = "taxonomy/term/%taxonomy_term"
+ *   menu_base_path = "taxonomy/term/%taxonomy_term",
+ *   permission_granularity = "bundle"
  * )
  */
 class Term extends Entity implements ContentEntityInterface {

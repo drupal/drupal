@@ -336,7 +336,7 @@ class NodeFormController extends EntityFormController {
     }
 
     $element['preview'] = array(
-      '#access' => $preview_mode != DRUPAL_DISABLED,
+      '#access' => $preview_mode != DRUPAL_DISABLED && (node_access('create', $node) || node_access('update', $node)),
       '#value' => t('Preview'),
       '#weight' => 20,
       '#validate' => array(
@@ -429,6 +429,9 @@ class NodeFormController extends EntityFormController {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function preview(array $form, array &$form_state) {
+    // @todo Remove this: we should not have explicit includes in autoloaded
+    //   classes.
+    module_load_include('inc', 'node', 'node.pages');
     drupal_set_title(t('Preview'), PASS_THROUGH);
     $form_state['node_preview'] = node_preview($this->getEntity($form_state));
     $form_state['rebuild'] = TRUE;

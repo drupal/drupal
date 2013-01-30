@@ -51,11 +51,13 @@ function translation_entity_overview(EntityInterface $entity) {
       $language_name = $language->name;
       $langcode = $language->langcode;
       $add_path = $base_path . '/translations/add/' . $original . '/' . $langcode;
+      $translate_path = $base_path . '/translations/edit/' . $langcode;
       $delete_path = $base_path . '/translations/delete/' . $langcode;
 
       if ($base_path) {
         $add_links = _translation_entity_get_switch_links($add_path);
         $edit_links = _translation_entity_get_switch_links($edit_path);
+        $translate_links = _translation_entity_get_switch_links($translate_path);
         $delete_links = _translation_entity_get_switch_links($delete_path);
       }
 
@@ -80,8 +82,17 @@ function translation_entity_overview(EntityInterface $entity) {
           $row_title = $is_original ? $label : t('n/a');
         }
 
-        if ($edit_path && $controller->getAccess($entity, 'update') && $controller->getTranslationAccess($entity, $langcode)) {
+        // If the user is allowed to edit the entity we point the edit link to
+        // the entity form, otherwise if we are not dealing with the original
+        // language we point the link to the translation form.
+        if ($edit_path && $controller->getAccess($entity, 'update')) {
           $links['edit'] = isset($edit_links->links[$langcode]['href']) ? $edit_links->links[$langcode] : array('href' => $edit_path, 'language' => $language);
+        }
+        elseif (!$is_original && $controller->getTranslationAccess($entity, 'update')) {
+          $links['edit'] = isset($translate_links->links[$langcode]['href']) ? $translate_links->links[$langcode] : array('href' => $translate_path, 'language' => $language);
+        }
+
+        if (isset($links['edit'])) {
           $links['edit']['title'] = t('edit');
         }
 
@@ -98,8 +109,10 @@ function translation_entity_overview(EntityInterface $entity) {
         }
         else {
           $source_name = isset($languages[$source]) ? $languages[$source]->name : t('n/a');
-          $links['delete'] = isset($delete_links->links[$langcode]['href']) ? $delete_links->links[$langcode] : array('href' => $delete_links, 'language' => $language);
-          $links['delete']['title'] = t('delete');
+          if ($controller->getTranslationAccess($entity, 'delete')) {
+            $links['delete'] = isset($delete_links->links[$langcode]['href']) ? $delete_links->links[$langcode] : array('href' => $delete_links, 'language' => $language);
+            $links['delete']['title'] = t('delete');
+          }
         }
       }
       else {
@@ -107,7 +120,7 @@ function translation_entity_overview(EntityInterface $entity) {
         $row_title = $source_name = t('n/a');
         $source = $entity->language()->langcode;
 
-        if ($source != $langcode && $controller->getAccess($entity, 'update')) {
+        if ($source != $langcode && $controller->getTranslationAccess($entity, 'create')) {
           if ($translatable) {
             $links['add'] = isset($add_links->links[$langcode]['href']) ? $add_links->links[$langcode] : array('href' => $add_path, 'language' => $language);
             $links['add']['title'] = t('add');
@@ -188,6 +201,30 @@ function translation_entity_add_page(EntityInterface $entity, Language $source =
   $form_state = entity_form_state_defaults($entity, $operation, $target->langcode);
   $form_state['translation_entity']['source'] = $source;
   $form_state['translation_entity']['target'] = $target;
+  $controller = translation_entity_controller($entity->entityType());
+  $form_state['translation_entity']['translation_form'] = !$controller->getAccess($entity, 'update');
+  $form_id = entity_form_id($entity);
+  return drupal_build_form($form_id, $form_state);
+}
+
+/**
+ * Page callback for the translation edit page.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity being translated.
+ * @param \Drupal\Core\Language\Language $language
+ *   (optional) The language of the translated values. Defaults to the current
+ *   content language.
+ *
+ * @return array
+ *   A processed form array ready to be rendered.
+ */
+function translation_entity_edit_page(EntityInterface $entity, Language $language = NULL) {
+  $language = !empty($language) ? $language : language(LANGUAGE_TYPE_CONTENT);
+  $info = $entity->entityInfo();
+  $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
+  $form_state = entity_form_state_defaults($entity, $operation, $language->langcode);
+  $form_state['translation_entity']['translation_form'] = TRUE;
   $form_id = entity_form_id($entity);
   return drupal_build_form($form_id, $form_state);
 }
@@ -256,7 +293,8 @@ function translation_entity_delete_confirm_submit(array $form, array &$form_stat
 
   // Remove any existing path alias for the removed translation.
   if (module_exists('path')) {
-    path_delete(array('source' => $controller->getViewPath($entity), 'langcode' => $language->langcode));
+    $conditions = array('source' => $controller->getViewPath($entity), 'langcode' => $language->langcode);
+    drupal_container()->get('path.crud')->delete($conditions);
   }
 
   $form_state['redirect'] = $controller->getBasePath($entity) . '/translations';

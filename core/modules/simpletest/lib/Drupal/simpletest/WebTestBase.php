@@ -462,12 +462,14 @@ abstract class WebTestBase extends TestBase {
    * @param array $permissions
    *   Array of permission names to assign to user. Note that the user always
    *   has the default permissions derived from the "authenticated users" role.
+   * @param $name
+   *   The user name.
    *
    * @return object|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  protected function drupalCreateUser(array $permissions = array()) {
+  protected function drupalCreateUser(array $permissions = array(), $name = NULL) {
     // Create a role with the given permission set, if any.
     $rid = FALSE;
     if ($permissions) {
@@ -479,7 +481,7 @@ abstract class WebTestBase extends TestBase {
 
     // Create a user assigned to that role.
     $edit = array();
-    $edit['name']   = $this->randomName();
+    $edit['name']   = !empty($name) ? $name : $this->randomName();
     $edit['mail']   = $edit['name'] . '@example.com';
     $edit['pass']   = user_password();
     $edit['status'] = 1;

@@ -39,7 +39,8 @@ use Drupal\Core\Annotation\Translation;
  *   },
  *   bundle_keys = {
  *     "bundle" = "type"
- *   }
+ *   },
+ *   permission_granularity = "bundle"
  * )
  */
 class Node extends Entity implements ContentEntityInterface {

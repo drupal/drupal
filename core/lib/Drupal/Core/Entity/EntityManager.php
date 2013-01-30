@@ -120,6 +120,11 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *   entity.
  * - menu_path_wildcard: (optional) A string identifying the menu loader in the
  *   router path.
+ * - permission_granularity: (optional) Specifies whether a module exposing
+ *   permissions for the current entity type should use entity-type level
+ *   granularity, bundle level granularity or just skip this entity. The allowed
+ *   values are respectively "entity_type", "bundle" or FALSE. Defaults to
+ *   "entity_type".
  *
  * The defaults for the plugin definition are provided in
  * \Drupal\Core\Entity\EntityManager::defaults.
@@ -159,6 +164,7 @@ class EntityManager extends PluginManagerBase {
     'access_controller_class' => 'Drupal\Core\Entity\EntityAccessController',
     'static_cache' => TRUE,
     'translation' => array(),
+    'permission_granularity' => 'entity_type',
   );
 
   /**

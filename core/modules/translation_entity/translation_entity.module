@@ -155,18 +155,37 @@ function translation_entity_menu() {
         'weight' => 2,
       ) + $item;
 
+      $items["$path/translations/overview"] = array(
+        'title' => 'Overview',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 0,
+      );
+
       // Add translation callback.
       // @todo Add the access callback instead of replacing it as soon as the
       // routing system supports multiple callbacks.
-      $add_path = "$path/translations/add/%language/%language";
       $language_position = $entity_position + 3;
       $args = array($entity_position, $language_position, $language_position + 1);
-      $items[$add_path] = array(
+      $items["$path/translations/add/%language/%language"] = array(
         'title' => 'Add',
         'page callback' => 'translation_entity_add_page',
         'page arguments' => $args,
         'access callback' => 'translation_entity_add_access',
         'access arguments' => $args,
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 1,
+      ) + $item;
+
+      // Edit translation callback.
+      $args = array($entity_position, $language_position);
+      $items["$path/translations/edit/%language"] = array(
+        'title' => 'Edit',
+        'page callback' => 'translation_entity_edit_page',
+        'page arguments' => $args,
+        'access callback' => 'translation_entity_edit_access',
+        'access arguments' => $args,
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 1,
       ) + $item;
 
       // Delete translation callback.
@@ -174,6 +193,8 @@ function translation_entity_menu() {
         'title' => 'Delete',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('translation_entity_delete_confirm', $entity_position, $language_position),
+        'access callback' => 'translation_entity_delete_access',
+        'access arguments' => $args,
       ) + $item;
     }
   }
@@ -257,7 +278,10 @@ function _translation_entity_menu_strip_loaders($path) {
  */
 function translation_entity_translate_access(EntityInterface $entity) {
   $entity_type = $entity->entityType();
-  return empty($entity->language()->locked) && language_multilingual() && translation_entity_enabled($entity_type, $entity->bundle()) && (user_access('translate any entity') || user_access("translate $entity_type entities"));
+  return empty($entity->language()->locked) &&
+    language_multilingual() &&
+    translation_entity_enabled($entity_type, $entity->bundle()) &&
+    (user_access('create entity translations') || user_access('update entity translations') || user_access('delete entity translations'));
 }
 
 /**
@@ -266,16 +290,50 @@ function translation_entity_translate_access(EntityInterface $entity) {
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity being translated.
  * @param \Drupal\Core\Language\Language $source
- *   The language of the values being translated.
+ *   (optional) The language of the values being translated. Defaults to the
+ *   entity language.
  * @param \Drupal\Core\Language\Language $target
- *   The language of the translated values.
+ *   (optional) The language of the translated values. Defaults to the current
+ *   content language.
  */
 function translation_entity_add_access(EntityInterface $entity, Language $source = NULL, Language $target = NULL) {
   $source = !empty($source) ? $source : $entity->language();
   $target = !empty($target) ? $target : language(LANGUAGE_TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
-  return $source->langcode != $target->langcode && isset($languages[$source->langcode]) && isset($languages[$target->langcode]) && !isset($translations[$target->langcode]) && translation_entity_access($entity, $target->langcode);
+  return $source->langcode != $target->langcode && isset($languages[$source->langcode]) && isset($languages[$target->langcode]) && !isset($translations[$target->langcode]) && translation_entity_access($entity, 'create');
+}
+
+/**
+ * Access callback for the translation edit page.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity being translated.
+ * @param \Drupal\Core\Language\Language $language
+ *   (optional) The language of the translated values. Defaults to the current
+ *   content language.
+ */
+function translation_entity_edit_access(EntityInterface $entity, Language $language = NULL) {
+  $language = !empty($language) ? $language : language(LANGUAGE_TYPE_CONTENT);
+  $translations = $entity->getTranslationLanguages();
+  $languages = language_list();
+  return isset($languages[$language->langcode]) && $language->langcode != $entity->language()->langcode && isset($translations[$language->langcode]) && translation_entity_access($entity, 'update');
+}
+
+/**
+ * Access callback for the translation delete page.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity being translated.
+ * @param \Drupal\Core\Language\Language $language
+ *   (optional) The language of the translated values. Defaults to the current
+ *   content language.
+ */
+function translation_entity_delete_access(EntityInterface $entity, Language $language = NULL) {
+  $language = !empty($language) ? $language : language(LANGUAGE_TYPE_CONTENT);
+  $translations = $entity->getTranslationLanguages();
+  $languages = language_list();
+  return isset($languages[$language->langcode]) && $language->langcode != $entity->language()->langcode && isset($translations[$language->langcode]) && translation_entity_access($entity, 'delete');
 }
 
 /**
@@ -454,14 +512,18 @@ function translation_entity_form_controller(array $form_state) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to be accessed.
- * @param string $langcode
- *   The language of the translation to be accessed.
+ * @param $op
+ *   The operation to be performed on the translation. Possible values are:
+ *   - "view"
+ *   - "update"
+ *   - "delete"
+ *   - "create"
  *
  * @return
  *   TRUE if the current user is allowed to view the translation.
  */
-function translation_entity_access(EntityInterface $entity, $langcode) {
-  return translation_entity_controller($entity->entityType())->getTranslationAccess($entity, $langcode) ;
+function translation_entity_access(EntityInterface $entity, $op) {
+  return translation_entity_controller($entity->entityType())->getTranslationAccess($entity, $op) ;
 }
 
 /**
@@ -469,27 +531,50 @@ function translation_entity_access(EntityInterface $entity, $langcode) {
  */
 function translation_entity_permission() {
   $permission = array(
-    'edit original values' => array(
-      'title' => t('Edit original values'),
-      'description' => t('Access the entity form in the original language.'),
-    ),
     'administer entity translation' => array(
-      'title' => t('Administer entity translation'),
+      'title' => t('Administer translation settings'),
       'description' => t('Configure translatability of entities and fields.'),
+    ),
+    'create entity translations' => array(
+      'title' => t('Create translations'),
+    ),
+    'update entity translations' => array(
+      'title' => t('Edit translations'),
+    ),
+    'delete entity translations' => array(
+      'title' => t('Delete translations'),
     ),
     'translate any entity' => array(
       'title' => t('Translate any entity'),
-      'description' => t('Translate field content for any fieldable entity.'),
     ),
   );
 
+  // Create a translate permission for each enabled entity type and (optionally)
+  // bundle.
   foreach (entity_get_info() as $entity_type => $info) {
-    if (translation_entity_enabled($entity_type)) {
-      $label = !empty($info['label']) ? t($info['label']) : $entity_type;
-      $permission["translate $entity_type entities"] = array(
-        'title' => t('Translate entities of type @type', array('@type' => $label)),
-        'description' => t('Translate field content for entities of type @type.', array('@type' => $label)),
-      );
+    if (!empty($info['permission_granularity'])) {
+      $t_args = array('@entity_label' => drupal_strtolower(t($info['label'])));
+
+      switch ($info['permission_granularity']) {
+        case 'bundle':
+          foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
+            if (translation_entity_enabled($entity_type, $bundle)) {
+              $t_args['%bundle_label'] = isset($info['bundles'][$bundle]['label']) ? $info['bundles'][$bundle]['label'] : $bundle;
+              $permission["translate $bundle $entity_type"] = array(
+                  'title' => t('Translate %bundle_label @entity_label', $t_args),
+              );
+            }
+          }
+          break;
+
+        case 'entity_type':
+          if (translation_entity_enabled($entity_type)) {
+            $permission["translate $entity_type"] = array(
+              'title' => t('Translate @entity_label', $t_args),
+            );
+          }
+          break;
+      }
     }
   }
 
