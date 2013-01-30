@@ -2646,20 +2646,21 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Render any special blocks provided for this display.
+   * Render the exposed form as block.
+   *
+   * @return string|NULL
+   *  The rendered exposed form as string or NULL otherwise.
    */
-  public function viewSpecialBlocks($type) {
-    if ($type == 'exp') {
-      // avoid interfering with the admin forms.
-      if (arg(0) == 'admin' && arg(1) == 'structure' && arg(2) == 'views') {
-        return;
-      }
-      $this->view->initHandlers();
+  public function viewExposedFormBlocks() {
+    // avoid interfering with the admin forms.
+    if (arg(0) == 'admin' && arg(1) == 'structure' && arg(2) == 'views') {
+      return;
+    }
+    $this->view->initHandlers();
 
-      if ($this->usesExposed() && $this->getOption('exposed_block')) {
-        $exposed_form = $this->getPlugin('exposed_form');
-        return $exposed_form->render_exposed_form(TRUE);
-      }
+    if ($this->usesExposed() && $this->getOption('exposed_block')) {
+      $exposed_form = $this->getPlugin('exposed_form');
+      return $exposed_form->render_exposed_form(TRUE);
     }
   }
 

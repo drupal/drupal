@@ -78,9 +78,35 @@ class ViewsBlock extends BlockBase {
     $this->entity->set('label', filter_xss_admin($this->view->getTitle()));
     // Before returning the block output, convert it to a renderable array
     // with contextual links.
-    views_add_block_contextual_links($output, $this->view, $this->displayID);
+    $this->addContextualLinks($output);
+
     $this->view->destroy();
     return $output;
+  }
+
+  /**
+   * Converts Views block content to a renderable array with contextual links.
+   *
+   * @param string|array $output
+   *   An string|array representing the block. This will be modified to be a
+   *   renderable array, containing the optional '#contextual_links' property (if
+   *   there are any contextual links associated with the block).
+   * @param string $block_type
+   *   The type of the block. If it's 'block' it's a regular views display,
+   *   but 'exposed_filter' exist as well.
+   */
+  protected function addContextualLinks(&$output, $block_type = 'block') {
+    // Do not add contextual links to an empty block.
+    if (!empty($output)) {
+      // Contextual links only work on blocks whose content is a renderable
+      // array, so if the block contains a string of already-rendered markup,
+      // convert it to an array.
+      if (is_string($output)) {
+        $output = array('#markup' => $output);
+      }
+      // Add the contextual links.
+      views_add_contextual_links($output, $block_type, $this->view, $this->displayID);
+    }
   }
 
 }
