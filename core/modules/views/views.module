@@ -1101,7 +1101,11 @@ function views_get_enabled_display_extenders() {
  * Return a list of all views and display IDs that have a particular
  * setting in their display's plugin settings.
  *
- * @return
+ * @param string $type
+ *   A flag from the display plugin definitions (e.g, 'uses_hook_menu').
+ *
+ * @return array
+ *   A list of arrays containing the $view and $display_id.
  * @code
  * array(
  *   array($view, $display_id),
@@ -1110,32 +1114,34 @@ function views_get_enabled_display_extenders() {
  * @endcode
  */
 function views_get_applicable_views($type) {
-  // @todo: Use a smarter flagging system so that we don't have to
-  // load every view for this.
+  $container = drupal_container();
+
+  // Get all display plugins which provides the type.
+  $display_plugins = $container->get('plugin.manager.views.display')->getDefinitions();
+  $ids = array();
+  foreach ($display_plugins as $id => $definition) {
+    if (!empty($definition[$type])) {
+      $ids[$id] = $id;
+    }
+  }
+
+  $entity_ids = $container->get('entity.query')->get('view')
+    ->condition('disabled', FALSE)
+    ->condition("display.*.display_plugin", $ids, 'IN')
+    ->execute();
+
   $result = array();
-  $views = views_get_all_views();
-
-  foreach ($views as $view) {
-    // Skip disabled views.
-    if (!$view->isEnabled()) {
-      continue;
-    }
-
-    $display = $view->get('display');
-    if (empty($display)) {
-      // Skip this view as it is broken.
-      continue;
-    }
-
+  foreach ($container->get('plugin.manager.entity')->getStorageController('view')->load($entity_ids) as $view) {
     // Check each display to see if it meets the criteria and is enabled.
     $executable = $view->get('executable');
-    $executable->setDisplay();
+    $executable->initDisplay();
     foreach ($executable->displayHandlers as $id => $handler) {
       if (!empty($handler->definition[$type]) && $handler->isEnabled()) {
         $result[] = array($executable, $id);
       }
     }
   }
+
   return $result;
 }
 
