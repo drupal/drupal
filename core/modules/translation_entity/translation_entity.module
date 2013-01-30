@@ -559,9 +559,9 @@ function translation_entity_permission() {
         case 'bundle':
           foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
             if (translation_entity_enabled($entity_type, $bundle)) {
-              $t_args['%bundle_label'] = isset($info['bundles'][$bundle]['label']) ? $info['bundles'][$bundle]['label'] : $bundle;
+              $t_args['%bundle_label'] = isset($bundle_info['label']) ? $bundle_info['label'] : $bundle;
               $permission["translate $bundle $entity_type"] = array(
-                  'title' => t('Translate %bundle_label @entity_label', $t_args),
+                'title' => t('Translate %bundle_label @entity_label', $t_args),
               );
             }
           }
