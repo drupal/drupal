@@ -2302,7 +2302,8 @@ function hook_theme_registry_alter(&$theme_registry) {
  * @return
  *   The machine-readable name of the theme that should be used for the current
  *   page request. The value returned from this function will only have an
- *   effect if it corresponds to a currently-active theme on the site.
+ *   effect if it corresponds to a currently-active theme on the site. Do not 
+ *   return a value if you do not wish to set a custom theme.
  */
 function hook_custom_theme() {
   // Allow the user to request a particular theme via a query parameter.
