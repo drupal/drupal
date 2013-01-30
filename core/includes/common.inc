@@ -3882,7 +3882,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  *   jQuery.extend(true, {}, $settings_items[0], $settings_items[1], ...)
  * @endcode
  *
- * would. This means integer indeces are preserved just like string indeces are,
+ * would. This means integer indices are preserved just like string indices are,
  * rather than re-indexed as is common in PHP array merging.
  *
  * Example:
