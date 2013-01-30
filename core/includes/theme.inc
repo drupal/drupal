@@ -269,7 +269,7 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
   // @todo Make twig the default engine and remove this. This is required
   // because (by design) the theme system doesn't allow modules to register more
   // than one type of extension. We need a temporary backwards compatibility
-  // layer to allow us to perform core-wide .tpl.php to .twig conversion.
+  // layer to allow us to perform core-wide .tpl.php to .html.twig conversion.
   include_once DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine';
 
   if (isset($registry_callback)) {
@@ -514,7 +514,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           // Add two render engines for modules.
           // @todo Remove and make twig the default engine.
           $render_engines = array(
-            '.twig' => 'twig',
+            '.html.twig' => 'twig',
             '.tpl.php' => 'phptemplate'
           );
 
@@ -1281,7 +1281,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // Escape the periods in the extension.
   $regex = '/' . str_replace('.', '\.', $extension) . '$/';
   // Get a listing of all template files in the path to search.
-  $files = file_scan_directory($path, $regex, array('key' => 'name'));
+  $files = file_scan_directory($path, $regex, array('key' => 'filename'));
 
   // Find templates that implement registered theme hooks and include that in
   // what is returned so that the registry knows that the theme has this
@@ -1291,12 +1291,8 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     if (strpos($file->uri, str_replace($subtheme_paths, '', $file->uri)) !== 0) {
       continue;
     }
-    // Chop off the remaining '.tpl' extension. $template already has the
-    // rightmost extension removed, but there might still be more, such as with
-    // .tpl.php, which still has .tpl in $template at this point.
-    if (($pos = strpos($template, '.tpl')) !== FALSE) {
-      $template = substr($template, 0, $pos);
-    }
+    // Remove the extension from the filename.
+    $template = str_replace($extension, '', $template);
     // Transform - in filenames to _ to match function naming scheme
     // for the purposes of searching.
     $hook = strtr($template, '-', '_');
@@ -1337,13 +1333,8 @@ function drupal_find_theme_templates($cache, $extension, $path) {
       if ($matches) {
         foreach ($matches as $match) {
           $file = $match;
-          // Chop off the remaining extensions if there are any. $template
-          // already has the rightmost extension removed, but there might still
-          // be more, such as with .tpl.php, which still has .tpl in $template
-          // at this point.
-          if (($pos = strpos($match, '.')) !== FALSE) {
-            $file = substr($match, 0, $pos);
-          }
+          // Remove the extension from the filename.
+          $file = str_replace($extension, '', $file);
           // Put the underscores back in for the hook name and register this
           // pattern.
           $arg_name = isset($info['variables']) ? 'variables' : 'render element';
