@@ -39,8 +39,8 @@ function book_render() {
  *   currently supported in book module:
  *   - html: Printer-friendly HTML.
  *   Other types may be supported in contributed modules.
- * @param $nid
- *   An integer representing the node id (nid) of the node to export
+ * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ *   The node to export.
  *
  * @return
  *   A string representing the node and its children in the book hierarchy in a
@@ -50,13 +50,13 @@ function book_render() {
  *
  * @see book_menu()
  */
-function book_export($type, $nid) {
+function book_export($type, Node $node) {
   $type = drupal_strtolower($type);
 
   $export_function = 'book_export_' . $type;
 
   if (function_exists($export_function)) {
-    print call_user_func($export_function, $nid);
+    print call_user_func($export_function, $node);
   }
   else {
     drupal_set_message(t('Unknown export format.'));
@@ -74,8 +74,8 @@ function book_export($type, $nid) {
  * look like level 3 sections, no matter their depth relative to the node
  * selected to be exported as printer-friendly HTML.
  *
- * @param $nid
- *   An integer representing the node id (nid) of the node to export.
+ * @param \Drupal\node\Plugin\Core\Entity\Node
+ *   The node to export.
  *
  * @return
  *   A string containing HTML representing the node and its children in
@@ -84,9 +84,8 @@ function book_export($type, $nid) {
  * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
  * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
  */
-function book_export_html($nid) {
+function book_export_html(Node $node) {
   if (user_access('access printer-friendly version')) {
-    $node = node_load($nid);
     if (isset($node->book)) {
       $tree = book_menu_subtree_data($node->book);
       $contents = book_export_traverse($tree, 'book_node_export');

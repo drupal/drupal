@@ -166,10 +166,11 @@ function book_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'book.pages.inc',
   );
-  $items['book/export/%/%'] = array(
+  $items['book/export/%/%node'] = array(
     'page callback' => 'book_export',
     'page arguments' => array(2, 3),
-    'access arguments' => array('access printer-friendly version'),
+    'access callback' => 'book_export_access',
+    'access arguments' => array(3),
     'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
   );
@@ -193,6 +194,16 @@ function book_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Access callback: Determines if the book export page is accessible.
+ *
+ * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ *   The node whose export page is to be viewed.
+ */
+function book_export_access(Node $node) {
+  return user_access('access printer-friendly version') && node_access('view', $node);
 }
 
 /**
