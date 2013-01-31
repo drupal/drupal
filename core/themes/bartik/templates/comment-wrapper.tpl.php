@@ -33,7 +33,7 @@
  */
 ?>
 <section id="comments" <?php print $attributes; ?>>
-  <?php if ($content['comments'] && $entity->entitytType() != 'node' || $entity->bundle() != 'forum'): ?>
+  <?php if ($content['comments'] && ($entity->entityType() != 'node' || $entity->bundle() != 'forum')): ?>
     <?php print render($title_prefix); ?>
     <h2 class="title"><?php print t('Comments'); ?></h2>
     <?php print render($title_suffix); ?>
