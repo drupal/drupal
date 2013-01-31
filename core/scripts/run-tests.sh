@@ -69,8 +69,8 @@ drupal_set_time_limit(0);
 simpletest_script_reporter_init();
 
 // Execute tests.
-for($test_run = 0; $test_run < $args['repeat']; $test_run++) {
-  simpletest_script_execute_batch(simpletest_script_get_test_list());
+for ($i = 0; $i < $args['repeat']; $i++) {
+  simpletest_script_execute_batch($test_list);
 }
 
 // Stop the timer.
@@ -152,9 +152,10 @@ All arguments are long options.
 
   --die-on-fail
 
-              Exit out of php execution immediately on fail. This allows user to
-              change settings.php to use simpletest created databases and debug
-              failure. This is often used with repeat to find random failures.
+              Exit test execution immediately upon any failed assertion. This
+              allows to access the test site by changing settings.php to use the
+              test database and configuration directories. Use in combination
+              with --repeat for debugging random test failures.
 
   <test1>[,<test2>[,<test3> ...]]
 
@@ -211,9 +212,6 @@ function simpletest_script_parse_args() {
 
   // Override with set values.
   $args['script'] = basename(array_shift($_SERVER['argv']));
-
-  // Provide a default for repeat argument.
-  $args['repeat'] = 1;
 
   $count = 0;
   while ($arg = array_shift($_SERVER['argv'])) {
@@ -368,7 +366,9 @@ function simpletest_script_execute_batch($test_classes) {
             $public_files = variable_get('file_public_path', conf_path() . '/files');
             $test_directory = $public_files . '/simpletest/' . substr($db_prefix, 10);
             echo 'Simpletest database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix '. $db_prefix . ' and config directories in '. $test_directory . "\n";
-            exit();
+            $args['keep-results'] = TRUE;
+            // Exit repeat loop immediately.
+            $args['repeat'] = -1;
           }
         }
         // Free-up space by removing any potentially created resources.
@@ -398,9 +398,9 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     // Override configuration according to command line parameters.
     $conf['simpletest.settings']['verbose'] = $args['verbose'];
     $conf['simpletest.settings']['clear_results'] = !$args['keep-results'];
-    $conf['simpletest.settings']['die_on_fail'] = $args['die-on-fail'];
 
     $test = new $test_class($test_id);
+    $test->dieOnFail = (bool) $args['die-on-fail'];
     $test->run();
     $info = $test->getInfo();
 

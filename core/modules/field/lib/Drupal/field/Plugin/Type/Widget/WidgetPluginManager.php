@@ -39,7 +39,7 @@ class WidgetPluginManager extends PluginManagerBase {
     $this->discovery = new AlterDecorator($this->discovery, 'field_widget_info');
     $this->discovery = new CacheDecorator($this->discovery, 'field_widget_types',  'field');
 
-    $this->factory = new WidgetFactory($this);
+    $this->factory = new WidgetFactory($this->discovery);
   }
 
   /**

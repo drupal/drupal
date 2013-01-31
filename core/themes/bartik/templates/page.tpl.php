@@ -89,9 +89,9 @@
 ?>
 <div id="page-wrapper"><div id="page">
 
-  <div id="header" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>" role="banner"><div class="section clearfix">
+  <header id="header" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>" role="banner"><div class="section clearfix">
     <?php if ($secondary_menu): ?>
-      <div id="secondary-menu" class="navigation" role="navigation">
+      <nav id="secondary-menu" class="navigation" role="navigation">
         <?php print theme('links__system_secondary_menu', array(
           'links' => $secondary_menu,
           'attributes' => array(
@@ -104,7 +104,7 @@
             'class' => array('element-invisible'),
           ),
         )); ?>
-      </div> <!-- /#secondary-menu -->
+      </nav> <!-- /#secondary-menu -->
     <?php endif; ?>
 
 
@@ -143,7 +143,7 @@
     <?php print render($page['header']); ?>
 
     <?php if ($main_menu): ?>
-      <div id="main-menu" class="navigation" role="navigation">
+      <nav id="main-menu" class="navigation" role="navigation">
         <?php print theme('links__system_main_menu', array(
           'links' => $main_menu,
           'attributes' => array(
@@ -156,12 +156,12 @@
             'class' => array('element-invisible'),
           ),
         )); ?>
-      </div> <!-- /#main-menu -->
+      </nav> <!-- /#main-menu -->
     <?php endif; ?>
 
 
 
-  </div></div> <!-- /.section, /#header -->
+  </div></header> <!-- /.section, /#header -->
 
   <?php if ($messages): ?>
     <div id="messages"><div class="section clearfix">
@@ -170,16 +170,16 @@
   <?php endif; ?>
 
   <?php if ($page['featured']): ?>
-    <div id="featured"><div class="section clearfix">
+    <aside id="featured"><div class="section clearfix">
       <?php print render($page['featured']); ?>
-    </div></div> <!-- /.section, /#featured -->
+    </div></aside> <!-- /.section, /#featured -->
   <?php endif; ?>
 
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
 
     <?php print $breadcrumb; ?>
 
-    <div id="content" class="column" role="main"><div class="section">
+    <main id="content" class="column" role="main"><section class="section">
       <?php if ($page['highlighted']): ?><div id="highlighted"><?php print render($page['highlighted']); ?></div><?php endif; ?>
       <a id="main-content"></a>
       <?php print render($title_prefix); ?>
@@ -190,9 +190,9 @@
       <?php endif; ?>
       <?php print render($title_suffix); ?>
       <?php if ($tabs): ?>
-        <div class="tabs">
+        <nav class="tabs" role="navigation">
           <?php print render($tabs); ?>
-        </div>
+        </nav>
       <?php endif; ?>
       <?php print render($page['help']); ?>
       <?php if ($action_links): ?>
@@ -203,31 +203,31 @@
       <?php print render($page['content']); ?>
       <?php print $feed_icons; ?>
 
-    </div></div> <!-- /.section, /#content -->
+    </section></main> <!-- /.section, /#content -->
 
     <?php if ($page['sidebar_first']): ?>
-      <div id="sidebar-first" class="column sidebar"><div class="section">
+      <div id="sidebar-first" class="column sidebar"><aside class="section">
         <?php print render($page['sidebar_first']); ?>
-      </div></div> <!-- /.section, /#sidebar-first -->
+      </aside></div> <!-- /.section, /#sidebar-first -->
     <?php endif; ?>
 
     <?php if ($page['sidebar_second']): ?>
-      <div id="sidebar-second" class="column sidebar"><div class="section">
+      <div id="sidebar-second" class="column sidebar"><aside class="section">
         <?php print render($page['sidebar_second']); ?>
-      </div></div> <!-- /.section, /#sidebar-second -->
+      </aside></div> <!-- /.section, /#sidebar-second -->
     <?php endif; ?>
 
   </div></div> <!-- /#main, /#main-wrapper -->
 
   <?php if ($page['triptych_first'] || $page['triptych_middle'] || $page['triptych_last']): ?>
-    <div id="triptych-wrapper"><div id="triptych" class="clearfix">
+    <div id="triptych-wrapper"><aside id="triptych" class="clearfix">
       <?php print render($page['triptych_first']); ?>
       <?php print render($page['triptych_middle']); ?>
       <?php print render($page['triptych_last']); ?>
-    </div></div> <!-- /#triptych, /#triptych-wrapper -->
+    </aside></div> <!-- /#triptych, /#triptych-wrapper -->
   <?php endif; ?>
 
-  <div id="footer-wrapper"><div class="section">
+  <div id="footer-wrapper"><footer class="section" role="contentinfo">
 
     <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn'] || $page['footer_fourthcolumn']): ?>
       <div id="footer-columns" class="clearfix">
@@ -244,6 +244,6 @@
       </div> <!-- /#footer -->
     <?php endif; ?>
 
-  </div></div> <!-- /.section, /#footer-wrapper -->
+  </footer></div> <!-- /.section, /#footer-wrapper -->
 
 </div></div> <!-- /#page, /#page-wrapper -->

@@ -144,11 +144,13 @@ abstract class TestBase {
   protected $originalSettings;
 
   /**
-   * TRUE if die on fail enabled.
+   * Whether to die in case any test assertion fails.
+   *
+   * @see run-tests.sh
    *
    * @var boolean
    */
-  protected $dieOnFail = FALSE;
+  public $dieOnFail = FALSE;
 
   /**
    * Constructor for Test.
@@ -174,7 +176,7 @@ abstract class TestBase {
    * Internal helper: stores the assert.
    *
    * @param $status
-   *   Can be 'pass', 'fail', 'exception'.
+   *   Can be 'pass', 'fail', 'exception', 'debug'.
    *   TRUE is a synonym for 'pass', FALSE for 'fail'.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
@@ -230,7 +232,7 @@ abstract class TestBase {
       return TRUE;
     }
     else {
-      if ($this->dieOnFail) {
+      if ($this->dieOnFail && ($status == 'fail' || $status == 'exception')) {
         exit(1);
       }
       return FALSE;
@@ -670,7 +672,6 @@ abstract class TestBase {
       }
       $this->verboseClassName = str_replace("\\", "_", $class);
     }
-    $this->dieOnFail = $simpletest_config->get('die_on_fail');
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
     $this->httpauth_method = (int) $simpletest_config->get('httpauth.method');

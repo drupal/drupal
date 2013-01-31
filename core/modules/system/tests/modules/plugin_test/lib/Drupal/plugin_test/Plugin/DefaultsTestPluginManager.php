@@ -24,7 +24,7 @@ class DefaultsTestPluginManager extends PluginManagerBase {
     // mock plugins for unit testing.
     $this->discovery = new StaticDiscovery();
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'ProcessDefinition'));
-    $this->factory = new DefaultFactory($this);
+    $this->factory = new DefaultFactory($this->discovery);
 
     // Specify default values.
     $this->defaults = array(

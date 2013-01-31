@@ -30,7 +30,7 @@ class ViewsPluginManager extends PluginManagerBase {
     $this->discovery = new AlterDecorator($this->discovery, 'views_plugins_' . $type);
     $this->discovery = new CacheDecorator($this->discovery, 'views:' . $type, 'views_info');
 
-    $this->factory = new DefaultFactory($this);
+    $this->factory = new DefaultFactory($this->discovery);
 
     $this->defaults += array(
       'parent' => 'parent',

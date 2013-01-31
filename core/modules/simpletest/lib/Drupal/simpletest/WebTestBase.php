@@ -464,7 +464,7 @@ abstract class WebTestBase extends TestBase {
    * @param array $permissions
    *   Array of permission names to assign to user. Note that the user always
    *   has the default permissions derived from the "authenticated users" role.
-   * @param $name
+   * @param string $name
    *   The user name.
    *
    * @return object|false

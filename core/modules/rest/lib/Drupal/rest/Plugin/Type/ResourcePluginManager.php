@@ -23,7 +23,7 @@ class ResourcePluginManager extends PluginManagerBase {
   public function __construct() {
     // Create resource plugin derivatives from declaratively defined resources.
     $this->discovery = new DerivativeDiscoveryDecorator(new AnnotatedClassDiscovery('rest', 'resource'));
-    $this->factory = new ReflectionFactory($this);
+    $this->factory = new ReflectionFactory($this->discovery);
   }
 
   /**
