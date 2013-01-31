@@ -317,3 +317,16 @@ function config_get_entity_type_by_name($name) {
   });
   return key($entities);
 }
+
+/*
+ * Returns the typed config manager service.
+ *
+ * Use the typed data manager service for creating typed configuration objects.
+ *
+ * @see Drupal\Core\TypedData\TypedDataManager::create()
+ *
+ * @return Drupal\Core\TypedData\TypedConfigManager
+ */
+function config_typed() {
+  return drupal_container()->get('config.typed');
+}

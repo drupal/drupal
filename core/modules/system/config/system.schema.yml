@@ -1,0 +1,104 @@
+# Basic scalar data types from typed data.
+boolean:
+  label: 'Boolean'
+  class: '\Drupal\Core\TypedData\Type\Boolean'
+email:
+  label: 'Email'
+  class: '\Drupal\Core\TypedData\Type\Email'
+integer:
+  label: 'Integer'
+  class: '\Drupal\Core\TypedData\Type\Integer'
+string:
+  label: 'String'
+  class: '\Drupal\Core\TypedData\Type\String'
+uri:
+  label: 'Uri'
+  class: '\Drupal\Core\TypedData\Type\Uri'
+
+# Basic data types for configuration.
+undefined:
+  label: 'Undefined'
+  class: '\Drupal\Core\Config\Schema\Property'
+mapping:
+  label: Mapping
+  class: '\Drupal\Core\Config\Schema\Mapping'
+sequence:
+  label: Sequence
+  class: '\Drupal\Core\Config\Schema\Sequence'
+
+# Default mapping for unknown types or types not found.
+default:
+  type: undefined
+  label: 'Unknown'
+
+# Simple extended data types:
+
+# Human readable string that must be plain text and editable with a text field.
+label:
+  type: string
+  label: 'Label'
+
+# Internal Drupal path
+path:
+  type: string
+  label: 'Path'
+
+# Human readable string that can contain multiple lines of text or HTML.
+text:
+  type: string
+  label: 'Text'
+
+# Complex extended data types:
+
+# Mail text with subject and body parts.
+mail:
+  type: mapping
+  label: "Mail"
+  mapping:
+    "subject":
+      type: text
+      label: "Subject"
+    "body":
+      type: text
+      label: "Body"
+
+# Schema for configuration files of system module:
+
+system.site:
+  type: mapping
+  label: 'Site information'
+  mapping:
+    "name":
+      label: "Site name"
+      type: label
+    "mail":
+      label: "Site mail"
+      type: email
+    "slogan":
+      label: "Site slogan"
+      type: text
+    "page":
+      type: mapping
+      mapping:
+        "403":
+          type: path
+        "404":
+          type: path
+        "front":
+          type: path
+          label: "Front page path"
+    "admin_compact_mode":
+      type: boolean
+    "weight_select_max":
+      type: integer
+
+system.maintenance:
+  type: mapping
+  label: 'Maintenance mode'
+  mapping:
+    "enabled":
+      type: boolean
+      label: "Put site into maintenance mode"
+    "message":
+      type: text
+      label: "Message to display when in maintenance mode"

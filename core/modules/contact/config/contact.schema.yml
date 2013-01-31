@@ -1,0 +1,35 @@
+# Configuration schema: contact.schema.yml
+
+# Schema for contact category (multiple)
+contact.category.*:
+  type: mapping
+  mapping:
+    "id":
+      type: string
+    "label":
+      type: string
+    "recipients":
+      type: sequence
+      sequence:
+        - type: email
+    "reply":
+      type: string
+    "weight":
+      type: integer
+
+# Module settings
+contact.settings:
+  type: mapping
+  mapping:
+    "default_category":
+      type: string
+      required: yes
+    "flood":
+      type: mapping
+      mapping:
+        "limit":
+          type: integer
+        "interval":
+          type: integer
+      "user_default_enabled":
+        type: boolean
