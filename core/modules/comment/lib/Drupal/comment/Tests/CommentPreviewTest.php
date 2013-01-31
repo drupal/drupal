@@ -70,7 +70,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertLink($test_signature);
 
     // Check that the user picture is displayed.
-    $this->assertFieldByXPath("//div[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
+    $this->assertFieldByXPath("//article[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
   }
 
   /**

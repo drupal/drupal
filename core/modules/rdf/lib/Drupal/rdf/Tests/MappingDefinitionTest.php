@@ -44,7 +44,7 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     // Ensure the default bundle mapping for node is used. These attributes come
     // from the node default bundle definition.
     $node_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
-    $node_meta = $this->xpath("//div[(@about='$url')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $node_meta = $this->xpath("//article[(@about='$url')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
     $this->assertTrue(!empty($node_title), 'Property dc:title is present in meta tag.');
     $this->assertTrue(!empty($node_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
@@ -64,7 +64,7 @@ class MappingDefinitionTest extends TaxonomyTestBase {
 
     // Ensure the mapping defined in rdf_module.test is used.
     $test_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
-    $test_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'foo:mapping_install1') and contains(@typeof, 'bar:mapping_install2')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $test_bundle_meta = $this->xpath("//article[(@about='$url') and contains(@typeof, 'foo:mapping_install1') and contains(@typeof, 'bar:mapping_install2')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
     $this->assertTrue(!empty($test_bundle_title), 'Property dc:title is present in meta tag.');
     $this->assertTrue(!empty($test_bundle_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }
@@ -85,7 +85,7 @@ class MappingDefinitionTest extends TaxonomyTestBase {
     // Ensure the default bundle mapping for node is used. These attributes come
     // from the node default bundle definition.
     $random_bundle_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
-    $random_bundle_meta = $this->xpath("//div[(@about='$url') and contains(@typeof, 'sioc:Item') and contains(@typeof, 'foaf:Document')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $random_bundle_meta = $this->xpath("//article[(@about='$url') and contains(@typeof, 'sioc:Item') and contains(@typeof, 'foaf:Document')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
     $this->assertTrue(!empty($random_bundle_title), 'Property dc:title is present in meta tag.');
     $this->assertTrue(!empty($random_bundle_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
   }

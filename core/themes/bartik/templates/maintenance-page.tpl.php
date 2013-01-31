@@ -13,9 +13,8 @@
  * @ingroup themeable
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->langcode; ?>" lang="<?php print $language->langcode; ?>" dir="<?php print $language->dir; ?>">
+<!DOCTYPE html>
+<html lang="<?php print $language->langcode; ?>" dir="<?php print $language->dir; ?>">
 <head>
   <?php print $head; ?>
   <title><?php print $head_title; ?></title>
@@ -30,7 +29,7 @@
 
   <div id="page-wrapper"><div id="page">
 
-    <div id="header"><div class="section clearfix">
+    <header id="header" role="banner"><div class="section clearfix">
       <?php if ($site_name || $site_slogan): ?>
         <div id="name-and-slogan"<?php if ($hide_site_name && $hide_site_slogan) { print ' class="element-invisible"'; } ?>>
           <?php if ($site_name): ?>
@@ -47,10 +46,10 @@
           <?php endif; ?>
         </div> <!-- /#name-and-slogan -->
       <?php endif; ?>
-    </div></div> <!-- /.section, /#header -->
+    </div></header> <!-- /.section, /#header -->
 
     <div id="main-wrapper"><div id="main" class="clearfix">
-      <div id="content" class="column"><div class="section">
+      <main id="content" class="column" role="main"><section class="section">
         <a id="main-content"></a>
         <?php if ($title): ?><h1 class="title" id="page-title"><?php print $title; ?></h1><?php endif; ?>
         <?php print $content; ?>
@@ -59,7 +58,7 @@
             <?php print $messages; ?>
           </div></div> <!-- /.section, /#messages -->
         <?php endif; ?>
-      </div></div> <!-- /.section, /#content -->
+      </section></main> <!-- /.section, /#content -->
     </div></div> <!-- /#main, /#main-wrapper -->
 
   </div></div> <!-- /#page, /#page-wrapper -->
