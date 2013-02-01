@@ -33,8 +33,8 @@ class FeedParserTest extends AggregatorTestBase {
   function testRSS091Sample() {
     $feed = $this->createFeed($this->getRSS091Sample());
     aggregator_refresh($feed);
-    $this->drupalGet('aggregator/sources/' . $feed->fid);
-    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->title)));
+    $this->drupalGet('aggregator/sources/' . $feed->id());
+    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->label())));
     $this->assertText('First example feed item title');
     $this->assertLinkByHref('http://example.com/example-turns-one');
     $this->assertText('First example feed item description.');
@@ -55,8 +55,8 @@ class FeedParserTest extends AggregatorTestBase {
   function testAtomSample() {
     $feed = $this->createFeed($this->getAtomSample());
     aggregator_refresh($feed);
-    $this->drupalGet('aggregator/sources/' . $feed->fid);
-    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->title)));
+    $this->drupalGet('aggregator/sources/' . $feed->id());
+    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->label())));
     $this->assertText('Atom-Powered Robots Run Amok');
     $this->assertLinkByHref('http://example.org/2003/12/13/atom03');
     $this->assertText('Some text.');
@@ -69,8 +69,8 @@ class FeedParserTest extends AggregatorTestBase {
   function testHtmlEntitiesSample() {
     $feed = $this->createFeed($this->getHtmlEntitiesSample());
     aggregator_refresh($feed);
-    $this->drupalGet('aggregator/sources/' . $feed->fid);
-    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->title)));
+    $this->drupalGet('aggregator/sources/' . $feed->id());
+    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->label())));
     $this->assertRaw("Quote&quot; Amp&amp;");
   }
 }

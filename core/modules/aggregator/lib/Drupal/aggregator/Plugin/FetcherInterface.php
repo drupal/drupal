@@ -7,6 +7,8 @@
 
 namespace Drupal\aggregator\Plugin;
 
+use Drupal\aggregator\Plugin\Core\Entity\Feed;
+
 /**
  * Defines an interface for aggregator fetcher implementations.
  *
@@ -21,14 +23,15 @@ interface FetcherInterface {
   /**
    * Downloads feed data.
    *
-   * @param $feed
-   *   A feed object representing the resource to be downloaded. $feed->url
-   *   contains the link to the feed. Download the data at the URL and expose it
+   * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   *   A feed object representing the resource to be downloaded.
+   *   $feed->url->value contains the link to the feed.
+   *   Download the data at the URL and expose it
    *   to other modules by attaching it to $feed->source_string.
    *
    * @return
    *   TRUE if fetching was successful, FALSE otherwise.
    */
-  public function fetch(&$feed);
+  public function fetch(Feed $feed);
 
 }

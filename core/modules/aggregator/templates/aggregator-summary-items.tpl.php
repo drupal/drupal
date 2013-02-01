@@ -8,8 +8,7 @@
  *
  * Available variables:
  * - $title: Title of the feed or category.
- * - $summary_list: Unordered list of linked feed items generated through
- *   theme_item_list().
+ * - $summary_list: Render array of unordered feed items list.
  * - $source_url: URL to the local source or category.
  *
  * @see template_preprocess()
@@ -19,7 +18,7 @@
  */
 ?>
 <h3><?php print $title; ?></h3>
-<?php print $summary_list; ?>
+<?php print render($summary_list); ?>
 <div class="links">
   <a href="<?php print $source_url; ?>"><?php print t('More'); ?></a>
 </div>

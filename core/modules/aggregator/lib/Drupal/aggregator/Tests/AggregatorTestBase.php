@@ -8,6 +8,7 @@
 namespace Drupal\aggregator\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\aggregator\Plugin\Core\Entity\Feed;
 
 /**
  * Defines a base class for testing the Aggregator module.
@@ -43,7 +44,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *   (optional) If given, feed will be created with this URL, otherwise
    *   /rss.xml will be used. Defaults to NULL.
    *
-   * @return $feed
+   * @return \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
    *   Full feed object if possible.
    *
    * @see getFeedEditArray()
@@ -53,20 +54,20 @@ abstract class AggregatorTestBase extends WebTestBase {
     $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
 
-    $feed = db_query("SELECT *  FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetch();
-    $this->assertTrue(!empty($feed), 'The feed found in database.');
-    return $feed;
+    $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetchField();
+    $this->assertTrue(!empty($fid), 'The feed found in database.');
+    return aggregator_feed_load($fid);
   }
 
   /**
    * Deletes an aggregator feed.
    *
-   * @param $feed
+   * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
    *   Feed object representing the feed.
    */
-  function deleteFeed($feed) {
-    $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->fid, array(), t('Delete'));
-    $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->title)), 'Feed deleted successfully.');
+  function deleteFeed(Feed $feed) {
+    $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->id(), array(), t('Delete'));
+    $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->label())), 'Feed deleted successfully.');
   }
 
   /**
@@ -96,6 +97,34 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
+   * Returns a randomly generated feed edit object.
+   *
+   * @param string $feed_url
+   *   (optional) If given, feed will be created with this URL, otherwise
+   *   /rss.xml will be used. Defaults to NULL.
+   * @param array $values
+   *   (optional) Default values to initialize object properties with.
+   *
+   * @return \Drupal\aggregator\Plugin\Core\Entity\Feed
+   *   A feed object.
+   */
+  function getFeedEditObject($feed_url = NULL, array $values = array()) {
+    $feed_name = $this->randomName(10);
+    if (!$feed_url) {
+      $feed_url = url('rss.xml', array(
+        'query' => array('feed' => $feed_name),
+        'absolute' => TRUE,
+      ));
+    }
+    $values += array(
+      'title' => $feed_name,
+      'url' => $feed_url,
+      'refresh' => '900',
+    );
+    return entity_create('aggregator_feed', $values);
+  }
+
+  /**
    * Returns the count of the randomly created feed array.
    *
    * @return
@@ -113,18 +142,18 @@ abstract class AggregatorTestBase extends WebTestBase {
    * This method simulates a click to
    * admin/config/services/aggregator/update/$fid.
    *
-   * @param $feed
-   *   Feed object representing the feed, passed by reference.
+   * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   *   Feed object representing the feed.
    * @param $expected_count
    *   Expected number of feed items.
    */
-  function updateFeedItems(&$feed, $expected_count) {
+  function updateFeedItems(Feed $feed, $expected_count) {
     // First, let's ensure we can get to the rss xml.
-    $this->drupalGet($feed->url);
-    $this->assertResponse(200, format_string('!url is reachable.', array('!url' => $feed->url)));
+    $this->drupalGet($feed->url->value);
+    $this->assertResponse(200, format_string('!url is reachable.', array('!url' => $feed->url->value)));
 
     // Attempt to access the update link directly without an access token.
-    $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
+    $this->drupalGet('admin/config/services/aggregator/update/' . $feed->id());
     $this->assertResponse(403);
 
     // Refresh the feed (simulated link click).
@@ -132,7 +161,7 @@ abstract class AggregatorTestBase extends WebTestBase {
     $this->clickLink('update items');
 
     // Ensure we have the right number of items.
-    $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid));
+    $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()));
     $items = array();
     $feed->items = array();
     foreach ($result as $item) {
@@ -145,40 +174,41 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Confirms an item removal from a feed.
    *
-   * @param $feed
+   * @param  \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
    *   Feed object representing the feed.
    */
-  function removeFeedItems($feed) {
-    $this->drupalPost('admin/config/services/aggregator/remove/' . $feed->fid, array(), t('Remove items'));
-    $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->title)), 'Feed items removed.');
+  function removeFeedItems(Feed $feed) {
+    $this->drupalPost('admin/config/services/aggregator/remove/' . $feed->id(), array(), t('Remove items'));
+    $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->label())), 'Feed items removed.');
   }
 
   /**
    * Adds and removes feed items and ensure that the count is zero.
    *
-   * @param $feed
+   * @param  \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
    *   Feed object representing the feed.
-   * @param $expected_count
+   * @param int $expected_count
    *   Expected number of feed items.
    */
-  function updateAndRemove($feed, $expected_count) {
+  function updateAndRemove(Feed $feed, $expected_count) {
     $this->updateFeedItems($feed, $expected_count);
-    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
+    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($count);
     $this->removeFeedItems($feed);
-    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
+    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($count == 0);
   }
 
   /**
    * Pulls feed categories from {aggregator_category_feed} table.
    *
-   * @param $feed
+   * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
    *   Feed object representing the feed.
    */
-  function getFeedCategories($feed) {
+  function getFeedCategories(Feed $feed) {
     // add the categories to the feed so we can use them
-    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $feed->fid));
+    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $feed->id()));
+
     foreach ($result as $category) {
       $feed->categories[] = $category->cid;
     }

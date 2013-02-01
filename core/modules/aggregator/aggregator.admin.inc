@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\aggregator\Plugin\FetcherManager;
+use Drupal\aggregator\Plugin\Core\Entity\Feed;
 
 /**
  * Page callback: Displays the aggregator administration page.
@@ -92,172 +93,31 @@ function aggregator_view() {
 }
 
 /**
- * Form constructor for adding and editing feed sources.
+ * Page callback: Presents the aggregator feed creation form.
  *
- * @param $feed
- *   (optional) If editing a feed, the feed to edit as a PHP stdClass value; if
- *   adding a new feed, NULL. Defaults to NULL.
+ * @return array
+ *   A form array as expected by drupal_render().
  *
- * @ingroup forms
  * @see aggregator_menu()
- * @see aggregator_form_feed_validate()
- * @see aggregator_form_feed_submit()
  */
-function aggregator_form_feed($form, &$form_state, stdClass $feed = NULL) {
-  $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
-  $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
-
-  $form['title'] = array('#type' => 'textfield',
-    '#title' => t('Title'),
-    '#default_value' => isset($feed->title) ? $feed->title : '',
-    '#maxlength' => 255,
-    '#description' => t('The name of the feed (or the name of the website providing the feed).'),
-    '#required' => TRUE,
-  );
-  $form['url'] = array(
-    '#type' => 'url',
-    '#title' => t('URL'),
-    '#default_value' => isset($feed->url) ? $feed->url : '',
-    '#maxlength' => NULL,
-    '#description' => t('The fully-qualified URL of the feed.'),
-    '#required' => TRUE,
-  );
-  $form['refresh'] = array('#type' => 'select',
-    '#title' => t('Update interval'),
-    '#default_value' => isset($feed->refresh) ? $feed->refresh : 3600,
-    '#options' => $period,
-    '#description' => t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
-  );
-  $form['block'] = array('#type' => 'select',
-    '#title' => t('News items in block'),
-    '#default_value' => isset($feed->block) ? $feed->block : 5,
-    '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)),
-    '#description' => t("Drupal can make a block with the most recent news items of this feed. You can <a href=\"@block-admin\">configure blocks</a> to be displayed in the sidebar of your page. This setting lets you configure the number of news items to show in this feed's block. If you choose '0' this feed's block will be disabled.", array('@block-admin' => url('admin/structure/block'))),
-  );
-
-  // Handling of categories.
-  $options = array();
-  $values = array();
-  $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = :fid ORDER BY title', array(':fid' => isset($feed->fid) ? $feed->fid : NULL));
-  foreach ($categories as $category) {
-    $options[$category->cid] = check_plain($category->title);
-    if ($category->fid) $values[] = $category->cid;
-  }
-
-  if ($options) {
-    $form['category'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Categorize news items'),
-      '#default_value' => $values,
-      '#options' => $options,
-      '#description' => t('New feed items are automatically filed in the checked categories.'),
-    );
-  }
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-  );
-  if (!empty($feed->fid)) {
-    $form['actions']['delete'] = array(
-      '#type' => 'submit',
-      '#value' => t('Delete'),
-    );
-    $form['fid'] = array(
-      '#type' => 'hidden',
-      '#value' => $feed->fid,
-    );
-  }
-
-  return $form;
-}
-
-/**
- * Form validation handler for aggregator_form_feed().
- *
- * @see aggregator_form_feed_submit()
- */
-function aggregator_form_feed_validate($form, &$form_state) {
-  if ($form_state['values']['op'] == t('Save')) {
-    // Check for duplicate titles.
-    if (isset($form_state['values']['fid'])) {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = :title OR url = :url) AND fid <> :fid", array(':title' => $form_state['values']['title'], ':url' => $form_state['values']['url'], ':fid' => $form_state['values']['fid']));
-    }
-    else {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = :title OR url = :url", array(':title' => $form_state['values']['title'], ':url' => $form_state['values']['url']));
-    }
-    foreach ($result as $feed) {
-      if (strcasecmp($feed->title, $form_state['values']['title']) == 0) {
-        form_set_error('title', t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $form_state['values']['title'])));
-      }
-      if (strcasecmp($feed->url, $form_state['values']['url']) == 0) {
-        form_set_error('url', t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $form_state['values']['url'])));
-      }
-    }
-  }
-}
-
-/**
- * Form submission handler for aggregator_form_feed().
- *
- * @see aggregator_form_feed_validate()
- *
- * @todo Add delete confirmation dialog.
- */
-function aggregator_form_feed_submit($form, &$form_state) {
-  // @todo Replicate this cache invalidation when these ops are separated.
-  // Invalidate the block cache to update aggregator feed-based derivatives.
-  if (module_exists('block')) {
-    drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
-  }
-  if ($form_state['values']['op'] == t('Delete')) {
-    $title = $form_state['values']['title'];
-    // Unset the title.
-    unset($form_state['values']['title']);
-  }
-  aggregator_save_feed($form_state['values']);
-  if (isset($form_state['values']['fid'])) {
-    if (isset($form_state['values']['title'])) {
-      drupal_set_message(t('The feed %feed has been updated.', array('%feed' => $form_state['values']['title'])));
-      if (arg(0) == 'admin') {
-        $form_state['redirect'] = 'admin/config/services/aggregator/';
-        return;
-      }
-      else {
-        $form_state['redirect'] = 'aggregator/sources/' . $form_state['values']['fid'];
-        return;
-      }
-    }
-    else {
-      watchdog('aggregator', 'Feed %feed deleted.', array('%feed' => $title));
-      drupal_set_message(t('The feed %feed has been deleted.', array('%feed' => $title)));
-      if (arg(0) == 'admin') {
-        $form_state['redirect'] = 'admin/config/services/aggregator/';
-        return;
-      }
-      else {
-        $form_state['redirect'] = 'aggregator/sources/';
-        return;
-      }
-    }
-  }
-  else {
-    watchdog('aggregator', 'Feed %feed added.', array('%feed' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/services/aggregator'));
-    drupal_set_message(t('The feed %feed has been added.', array('%feed' => $form_state['values']['title'])));
-  }
+function aggregator_feed_add() {
+  $feed = entity_create('aggregator_feed', array(
+    'refresh' => 3600,
+    'block' => 5,
+  ));
+  return entity_get_form($feed);
 }
 
 /**
  * Page callback: Deletes a feed.
  *
- * @param $feed
- *   An associative array describing the feed to be cleared.
+ * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+ *   A feed object describing the feed to be cleared.
  *
  * @see aggregator_admin_remove_feed_submit()
  * @see aggregator_menu()
  */
-function aggregator_admin_remove_feed($form, $form_state, $feed) {
+function aggregator_admin_remove_feed($form, $form_state, Feed $feed) {
   return confirm_form(
     array(
       'feed' => array(
@@ -265,7 +125,7 @@ function aggregator_admin_remove_feed($form, $form_state, $feed) {
         '#value' => $feed,
       ),
     ),
-    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $feed->title)),
+    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $feed->label())),
     'admin/config/services/aggregator',
     t('This action cannot be undone.'),
     t('Remove items'),
@@ -377,8 +237,6 @@ function aggregator_form_opml_submit($form, &$form_state) {
     return;
   }
 
-  $form_state['values']['op'] = t('Save');
-
   foreach ($feeds as $feed) {
     // Ensure URL is valid.
     if (!valid_url($feed['url'], TRUE)) {
@@ -399,9 +257,14 @@ function aggregator_form_opml_submit($form, &$form_state) {
       }
     }
 
-    $form_state['values']['title'] = $feed['title'];
-    $form_state['values']['url'] = $feed['url'];
-    drupal_form_submit('aggregator_form_feed', $form_state);
+    $new_feed = entity_create('aggregator_feed', array(
+      'title' => $feed['title'],
+      'url' => $feed['url'],
+      'refresh' => $form_state['values']['refresh'],
+      'block' => $form_state['values']['block'],
+    ));
+    $new_feed->categories = $form_state['values']['category'];
+    $new_feed->save();
   }
 
   $form_state['redirect'] = 'admin/config/services/aggregator';
@@ -443,17 +306,17 @@ function _aggregator_parse_opml($opml) {
 /**
  * Page callback: Refreshes a feed, then redirects to the overview page.
  *
- * @param $feed
+ * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
  *   An object describing the feed to be refreshed.
  *
  * @see aggregator_menu()
  */
-function aggregator_admin_refresh_feed($feed) {
+function aggregator_admin_refresh_feed(Feed $feed) {
   // @todo CSRF tokens are validated in page callbacks rather than access
   //   callbacks, because access callbacks are also invoked during menu link
   //   generation. Add token support to routing: http://drupal.org/node/755584.
   $token = drupal_container()->get('request')->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $feed->fid)) {
+  if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $feed->id())) {
     throw new AccessDeniedHttpException();
   }
 
@@ -590,7 +453,7 @@ function aggregator_admin_form_submit($form, &$form_state) {
  * Form constructor to add/edit/delete aggregator categories.
  *
  * @param $edit
- *   An associative array containing:
+ *   An object containing:
  *   - title: A string to use for the category title.
  *   - description: A string to use for the category description.
  *   - cid: The category ID.
@@ -600,22 +463,22 @@ function aggregator_admin_form_submit($form, &$form_state) {
  * @see aggregator_form_category_validate()
  * @see aggregator_form_category_submit()
  */
-function aggregator_form_category($form, &$form_state, $edit = array('title' => '', 'description' => '', 'cid' => NULL)) {
+function aggregator_form_category($form, &$form_state, $edit = NULL) {
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
-    '#default_value' => $edit['title'],
+    '#default_value' => isset($edit->title) ? $edit->title : '',
     '#maxlength' => 64,
     '#required' => TRUE,
   );
   $form['description'] = array('#type' => 'textarea',
     '#title' => t('Description'),
-    '#default_value' => $edit['description'],
+    '#default_value' => isset($edit->description) ? $edit->description : '',
   );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
-  if ($edit['cid']) {
+  if (!empty($edit->cid)) {
     $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
-    $form['cid'] = array('#type' => 'hidden', '#value' => $edit['cid']);
+    $form['cid'] = array('#type' => 'hidden', '#value' => $edit->cid);
   }
 
   return $form;

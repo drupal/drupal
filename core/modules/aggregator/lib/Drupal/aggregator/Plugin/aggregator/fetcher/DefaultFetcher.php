@@ -8,6 +8,7 @@
 namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
 use Drupal\aggregator\Plugin\FetcherInterface;
+use Drupal\aggregator\Plugin\Core\Entity\Feed;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Guzzle\Http\Exception\BadResponseException;
@@ -28,16 +29,16 @@ class DefaultFetcher implements FetcherInterface {
   /**
    * Implements Drupal\aggregator\Plugin\FetcherInterface::fetch().
    */
-  function fetch(&$feed) {
-    $request = drupal_container()->get('http_default_client')->get($feed->url);
+  function fetch(Feed $feed) {
+    $request = drupal_container()->get('http_default_client')->get($feed->url->value);
     $feed->source_string = FALSE;
 
     // Generate conditional GET headers.
-    if ($feed->etag) {
-      $request->addHeader('If-None-Match', $feed->etag);
+    if ($feed->etag->value) {
+      $request->addHeader('If-None-Match', $feed->etag->value);
     }
-    if ($feed->modified) {
-      $request->addHeader('If-Modified-Since', gmdate(DATE_RFC1123, $feed->modified));
+    if ($feed->modified->value) {
+      $request->addHeader('If-Modified-Since', gmdate(DATE_RFC1123, $feed->modified->value));
     }
 
     try {
@@ -51,8 +52,8 @@ class DefaultFetcher implements FetcherInterface {
     }
     catch (BadResponseException $e) {
       $response = $e->getResponse();
-      watchdog('aggregator', 'The feed from %site seems to be broken due to "%error".', array('%site' => $feed->title, '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()), WATCHDOG_WARNING);
-      drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->title, '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
+      watchdog('aggregator', 'The feed from %site seems to be broken due to "%error".', array('%site' => $feed->label(), '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()), WATCHDOG_WARNING);
+      drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->label(), '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
       return FALSE;
     }
   }

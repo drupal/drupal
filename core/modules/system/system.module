@@ -2282,6 +2282,12 @@ function system_data_type_info() {
       'class' => '\Drupal\Core\Entity\Field\Type\EntityReferenceItem',
       'list class' => '\Drupal\Core\Entity\Field\Type\Field',
     ),
+    'uri_field' => array(
+      'label' => t('URI field item'),
+      'description' => t('An entity field containing a URI'),
+      'class' => '\Drupal\Core\Entity\Field\Type\UriItem',
+      'list class' => '\Drupal\Core\Entity\Field\Type\Field',
+    ),
   );
 }
 

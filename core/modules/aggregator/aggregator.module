@@ -6,6 +6,7 @@
  */
 
 use Drupal\aggregator\Plugin\FetcherManager;
+use Drupal\aggregator\Plugin\Core\Entity\Feed;
 
 /**
  * Denotes that a feed's items should never expire.
@@ -51,17 +52,12 @@ function aggregator_help($path, $arg) {
  */
 function aggregator_theme() {
   return array(
-    'aggregator_wrapper' => array(
-      'variables' => array('content' => NULL),
-      'file' => 'aggregator.pages.inc',
-      'template' => 'aggregator-wrapper',
-    ),
     'aggregator_categorize_items' => array(
       'render element' => 'form',
       'file' => 'aggregator.pages.inc',
     ),
     'aggregator_feed_source' => array(
-      'variables' => array('feed' => NULL),
+      'variables' => array('aggregator_feed' => NULL, 'view_mode' => NULL),
       'file' => 'aggregator.pages.inc',
       'template' => 'aggregator-feed-source',
     ),
@@ -74,11 +70,11 @@ function aggregator_theme() {
       'template' => 'aggregator-summary-items',
     ),
     'aggregator_summary_item' => array(
-      'variables' => array('item' => NULL),
+      'variables' => array('aggregator_item' => NULL, 'view_mode' => NULL),
       'file' => 'aggregator.pages.inc',
     ),
     'aggregator_item' => array(
-      'variables' => array('item' => NULL),
+      'variables' => array('aggregator_item' => NULL, 'view_mode' => NULL),
       'file' => 'aggregator.pages.inc',
       'template' => 'aggregator-item',
     ),
@@ -107,8 +103,7 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/add/feed'] = array(
     'title' => 'Add feed',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_form_feed'),
+    'page callback' => 'aggregator_feed_add',
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'aggregator.admin.inc',
@@ -221,6 +216,8 @@ function aggregator_menu() {
     'file' => 'aggregator.admin.inc',
   );
   $items['aggregator/sources/%aggregator_feed'] = array(
+    'title callback' => 'entity_page_label',
+    'title arguments' => array(2),
     'page callback' => 'aggregator_page_source',
     'page arguments' => array(2),
     'access arguments' => array('access news feeds'),
@@ -241,8 +238,8 @@ function aggregator_menu() {
   );
   $items['aggregator/sources/%aggregator_feed/configure'] = array(
     'title' => 'Configure',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_form_feed', 2),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(2),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
@@ -250,8 +247,8 @@ function aggregator_menu() {
   );
   $items['admin/config/services/aggregator/edit/feed/%aggregator_feed'] = array(
     'title' => 'Edit feed',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_form_feed', 6),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(6),
     'access arguments' => array('administer news feeds'),
     'file' => 'aggregator.admin.inc',
   );
@@ -276,7 +273,7 @@ function aggregator_menu() {
  *   A string with the aggregator category title.
  */
 function _aggregator_category_title($category) {
-  return $category['title'];
+  return $category->title;
 }
 
 /**
@@ -310,17 +307,18 @@ function aggregator_permission() {
  * Queues news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
-  $result = db_query('SELECT * FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
+ $result = db_query('SELECT fid FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER
   ));
   $queue = queue('aggregator_feeds');
-  foreach ($result as $feed) {
+  foreach ($result->fetchCol() as $fid) {
+    $feed = aggregator_feed_load($fid);
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
       db_update('aggregator_feed')
         ->fields(array('queued' => REQUEST_TIME))
-        ->condition('fid', $feed->fid)
+        ->condition('fid', $feed->id())
         ->execute();
     }
   }
@@ -397,98 +395,18 @@ function aggregator_save_category($edit) {
 }
 
 /**
- * Adds/edits/deletes an aggregator feed.
- *
- * @param $edit
- *   An associative array describing the feed to be added/edited/deleted.
- *
- * @return
- *   The ID of the feed.
- */
-function aggregator_save_feed($edit) {
-  if (!empty($edit['fid'])) {
-    // An existing feed is being modified, delete the category listings.
-    db_delete('aggregator_category_feed')
-      ->condition('fid', $edit['fid'])
-      ->execute();
-  }
-  if (!empty($edit['fid']) && !empty($edit['title'])) {
-    db_update('aggregator_feed')
-      ->condition('fid', $edit['fid'])
-      ->fields(array(
-        'title' => $edit['title'],
-        'url' => $edit['url'],
-        'refresh' => $edit['refresh'],
-        'block' => $edit['block'],
-      ))
-      ->execute();
-  }
-  elseif (!empty($edit['fid'])) {
-    $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $edit['fid']))->fetchCol();
-    if ($iids) {
-      db_delete('aggregator_category_item')
-        ->condition('iid', $iids, 'IN')
-        ->execute();
-    }
-    db_delete('aggregator_feed')->
-      condition('fid', $edit['fid'])
-      ->execute();
-    db_delete('aggregator_item')
-      ->condition('fid', $edit['fid'])
-      ->execute();
-    // Make sure there is no active block for this feed.
-    if (module_exists('block')) {
-      foreach (entity_load_multiple_by_properties('block', array('plugin' => 'aggregator_feed_block:' . $edit['fid'])) as $block) {
-        $block->delete();
-      }
-    }
-  }
-  elseif (!empty($edit['title'])) {
-    $edit['fid'] = db_insert('aggregator_feed')
-      ->fields(array(
-        'title' => $edit['title'],
-        'url' => $edit['url'],
-        'refresh' => $edit['refresh'],
-        'block' => $edit['block'],
-        'link' => '',
-        'description' => '',
-        'image' => '',
-      ))
-      ->execute();
-
-  }
-  if (!empty($edit['title'])) {
-    // The feed is being saved, save the categories as well.
-    if (!empty($edit['category'])) {
-      foreach ($edit['category'] as $cid => $value) {
-        if ($value) {
-          db_insert('aggregator_category_feed')
-            ->fields(array(
-              'fid' => $edit['fid'],
-              'cid' => $cid,
-            ))
-            ->execute();
-        }
-      }
-    }
-  }
-
-  return $edit['fid'];
-}
-
-/**
  * Removes all items from a feed.
  *
- * @param $feed
+ * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
  *   An object describing the feed to be cleared.
  */
-function aggregator_remove($feed) {
+function aggregator_remove(Feed $feed) {
   _aggregator_get_variables();
   // Call hook_aggregator_remove() on all modules.
   module_invoke_all('aggregator_remove', $feed);
   // Reset feed.
   db_update('aggregator_feed')
-    ->condition('fid', $feed->fid)
+    ->condition('fid', $feed->id())
     ->fields(array(
       'checked' => 0,
       'hash' => '',
@@ -524,12 +442,12 @@ function _aggregator_get_variables() {
 /**
  * Checks a news feed for new items.
  *
- * @param $feed
+ * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
  *   An object describing the feed to be refreshed.
  */
-function aggregator_refresh($feed) {
+function aggregator_refresh(Feed $feed) {
   // Store feed URL to track changes.
-  $feed_url = $feed->url;
+  $feed_url = $feed->url->value;
 
   list($fetcher, $parser, $processors) = _aggregator_get_variables();
 
@@ -547,30 +465,23 @@ function aggregator_refresh($feed) {
   // data. If both are equal we say that feed is not updated.
   $hash = hash('sha256', $feed->source_string);
 
-  if ($success && ($feed->hash != $hash)) {
+  if ($success && ($feed->hash->value != $hash)) {
     // Parse the feed.
     if (module_invoke($parser, 'aggregator_parse', $feed)) {
+      if (empty($feed->link->value)) {
+        $feed->link->value = $feed->url->value;
+      }
+      $feed->hash->value = $hash;
       // Update feed with parsed data.
-      db_merge('aggregator_feed')
-        ->key(array('fid' => $feed->fid))
-        ->fields(array(
-          'url' => $feed->url,
-          'link' => empty($feed->link) ? $feed->url : $feed->link,
-          'description' => empty($feed->description) ? '' : $feed->description,
-          'image' => empty($feed->image) ? '' : $feed->image,
-          'hash' => $hash,
-          'etag' => empty($feed->etag) ? '' : $feed->etag,
-          'modified' => empty($feed->modified) ? 0 : $feed->modified,
-        ))
-        ->execute();
+      $feed->save();
 
       // Log if feed URL has changed.
-      if ($feed->url != $feed_url) {
-        watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->title, '%url' => $feed->url));
+      if ($feed->url->value != $feed_url) {
+        watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->url->value));
       }
 
-      watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->title));
-      drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed->title)));
+      watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->label()));
+      drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed->label())));
 
       // If there are items on the feed, let all enabled processors do their work on it.
       if (@count($feed->items)) {
@@ -581,13 +492,13 @@ function aggregator_refresh($feed) {
     }
   }
   else {
-    drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed->title)));
+    drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed->label())));
   }
 
   // Regardless of successful or not, indicate that this feed has been checked.
   db_update('aggregator_feed')
     ->fields(array('checked' => REQUEST_TIME, 'queued' => 0))
-    ->condition('fid', $feed->fid)
+    ->condition('fid', $feed->id())
     ->execute();
 
   // Expire old feed items.
@@ -599,19 +510,14 @@ function aggregator_refresh($feed) {
 /**
  * Loads an aggregator feed.
  *
- * @param $fid
+ * @param int $fid
  *   The feed id.
  *
- * @return
+ * @return \Drupal\aggregator\Plugin\Core\Entity\Feed
  *   An object describing the feed.
  */
 function aggregator_feed_load($fid) {
-  $feeds = &drupal_static(__FUNCTION__);
-  if (!isset($feeds[$fid])) {
-    $feeds[$fid] = db_query('SELECT * FROM {aggregator_feed} WHERE fid = :fid', array(':fid' => $fid))->fetchObject();
-  }
-
-  return $feeds[$fid];
+  return entity_load('aggregator_feed', $fid);
 }
 
 /**
@@ -626,7 +532,7 @@ function aggregator_feed_load($fid) {
 function aggregator_category_load($cid) {
   $categories = &drupal_static(__FUNCTION__);
   if (!isset($categories[$cid])) {
-    $categories[$cid] = db_query('SELECT * FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $cid))->fetchAssoc();
+    $categories[$cid] = db_query('SELECT * FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $cid))->fetchObject();
   }
 
   return $categories[$cid];

@@ -44,9 +44,10 @@ class CategorizeFeedItemTest extends AggregatorTestBase {
     db_insert('aggregator_category_feed')
       ->fields(array(
         'cid' => $category->cid,
-        'fid' => $feed->fid,
+        'fid' => $feed->id(),
       ))
       ->execute();
+
     $this->updateFeedItems($feed, $this->getDefaultFeedItemCount());
     $this->getFeedCategories($feed);
     $this->assertTrue(!empty($feed->categories), 'The category found in the feed.');

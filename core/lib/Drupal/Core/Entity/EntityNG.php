@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Component\Uuid\Uuid;
@@ -264,8 +265,11 @@ class EntityNG extends Entity {
    * Implements \Drupal\Core\TypedData\TranslatableInterface::language().
    */
   public function language() {
-    $language = $this->get('langcode')->language;
-    if (!$language) {
+    // Get the language code if the property exists.
+    if ($this->getPropertyDefinition('langcode')) {
+      $language = $this->get('langcode')->language;
+    }
+    if (!isset($language)) {
       // Make sure we return a proper language object.
       $language = new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
     }
