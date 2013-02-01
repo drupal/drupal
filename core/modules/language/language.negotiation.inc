@@ -1,5 +1,7 @@
 <?php
 
+use \Symfony\Component\HttpFoundation\Request;
+
 /**
  * @file
  * Language negotiation functions.
@@ -206,14 +208,19 @@ function language_from_user($languages) {
  * @param $languages
  *   An array of valid language objects.
  *
+ * @param \Symfony\Component\HttpFoundation\Request|null $request
+ *   (optional) The HttpRequest object representing the current request.
+ *   Defaults to NULL.
+ *
  * @return
  *   A valid language code on success, FALSE otherwise.
  */
-function language_from_user_admin($languages) {
+function language_from_user_admin(array $languages, Request $request = NULL) {
   // User preference (only for authenticated users).
   global $user;
 
-  if ($user->uid && !empty($user->preferred_admin_langcode) && isset($languages[$user->preferred_admin_langcode]) && path_is_admin(current_path())) {
+  $request_path = $request ? urldecode(trim($request->getPathInfo(), '/')) : _current_path();
+  if ($user->uid && !empty($user->preferred_admin_langcode) && isset($languages[$user->preferred_admin_langcode]) && path_is_admin($request_path)) {
     return $user->preferred_admin_langcode;
   }
 
@@ -257,31 +264,29 @@ function language_from_session($languages) {
  * @param $languages
  *   An array of valid language objects.
  *
- * @param $request
- *   The HttpRequest object representing the current request.
+ * @param \Symfony\Component\HttpFoundation\Request|null $request
+ *   (optional) The HttpRequest object representing the current request.
+ *   Defaults to NULL.
  *
  * @return
  *   A valid language code on success, FALSE otherwise.
  */
-function language_from_url($languages, $request) {
+function language_from_url($languages, Request $request = NULL) {
   $language_url = FALSE;
 
-  if (!language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_URL)) {
+  if (!language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_URL) || !$request) {
     return $language_url;
   }
 
   switch (config('language.negotiation')->get('url.source')) {
     case LANGUAGE_NEGOTIATION_URL_PREFIX:
 
-      $current_path = $request->attributes->get('system_path');
-      if (!isset($current_path)) {
-        $current_path = trim($request->getPathInfo(), '/');
-      }
+      $request_path = urldecode(trim($request->getPathInfo(), '/'));
 
-      list($language, $path) = language_url_split_prefix($current_path, $languages);
-      // Store the correct system path, i.e. minus the path prefix, in the
-      // request.
-      $request->attributes->set('system_path', $path);
+      list($language, $path) = language_url_split_prefix($request_path, $languages);
+      // Store the correct system path, i.e., the request path without the
+      // language prefix.
+      _language_resolved_path($path);
 
       if ($language !== FALSE) {
         $language_url = $language->langcode;

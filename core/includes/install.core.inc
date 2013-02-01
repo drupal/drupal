@@ -339,6 +339,9 @@ function install_begin_request(&$install_state) {
       ->addArgument(new Reference('config.storage'))
       ->addArgument(new Reference('event_dispatcher'));
 
+    // Register the 'language_manager' service.
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+
     // The install process cannot use the database lock backend since the database
     // is not fully up, so we use a null backend implementation during the
     // installation process. This will also speed up the installation process.

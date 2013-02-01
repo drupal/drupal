@@ -37,21 +37,21 @@ class DateUpgradePathTest extends UpgradePathTestBase {
     $expected_formats['short'] = array(
       'name' => 'Short',
       'pattern' => array(
-        'php' => 'Y/m/d - H:i',
+        'php' => 'm/d/Y - H:i',
       ),
       'locked' => '1',
     );
     $expected_formats['medium'] = array(
       'name' => 'Medium',
       'pattern' => array(
-        'php' => 'D, d/m/Y - H:i',
+        'php' => 'D, m/d/Y - H:i',
       ),
       'locked' => '1',
     );
     $expected_formats['long'] = array(
       'name' => 'Long',
       'pattern' => array(
-        'php' => 'l, Y,  F j - H:i',
+        'php' => 'l, j F, Y - H:i',
       ),
       'locked' => '1',
     );
@@ -76,43 +76,24 @@ class DateUpgradePathTest extends UpgradePathTestBase {
       $this->assertNull(update_variable_get('date_format_' . $type), format_string('Date format variable for @type was deleted.', array('@type' => $type)));
     }
 
-    $expected_locale_formats = array(
+    $expected_de_formats = array(
       array(
-        'langcode' => 'en',
-        'type' => 'long',
-        'format' => 'l, j F, Y - H:i',
-      ),
-      array(
-        'langcode' => 'en',
-        'type' => 'medium',
-        'format' => 'D, m/d/Y - H:i',
-      ),
-      array(
-        'langcode' => 'en',
-        'type' => 'short',
-        'format' => 'm/d/Y - H:i',
-      ),
-      array(
-        'langcode' => 'de',
         'type' => 'long',
         'format' => 'l, j. F, Y - H:i',
       ),
       array(
-        'langcode' => 'de',
         'type' => 'medium',
         'format' => 'D, d/m/Y - H:i',
       ),
       array(
-        'langcode' => 'de',
         'type' => 'short',
         'format' => 'd/m/Y - H:i',
       ),
     );
 
-    $config['en'] = config('locale.config.en.system.date');
-    $config['de'] = config('locale.config.de.system.date');
-    foreach ($expected_locale_formats as $locale_format) {
-      $format = $config[$locale_format['langcode']]->get('formats.' . $locale_format['type'] . '.pattern.php');
+    $config = config('locale.config.de.system.date');
+    foreach ($expected_de_formats as $locale_format) {
+      $format = $config->get('formats.' . $locale_format['type'] . '.pattern.php');
       $this->assertEqual($locale_format['format'], $format);
     }
   }

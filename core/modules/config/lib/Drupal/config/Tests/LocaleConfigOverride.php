@@ -33,10 +33,6 @@ class LocaleConfigOverride extends WebTestBase {
     $name = 'config_test.system';
     // Verify the default configuration values exist.
     $config = config($name);
-    $this->assertIdentical($config->get('foo'), 'bar');
-    // Spoof multilingual.
-    $GLOBALS['conf']['language_count'] = 2;
-    drupal_language_initialize();
     $this->assertIdentical($config->get('foo'), 'en bar');
   }
 }

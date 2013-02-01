@@ -98,7 +98,8 @@ class CoreBundle extends Bundle {
 
     $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
       ->addArgument(new Reference('database'))
-      ->addArgument(new Reference('keyvalue'));
+      ->addArgument(new Reference('state'))
+      ->addArgument(new Reference('language_manager'));
 
     $container->register('http_client_simpletest_subscriber', 'Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber');
     $container->register('http_default_client', 'Guzzle\Http\Client')
@@ -142,9 +143,10 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('service_container'))
       ->addArgument(new Reference('controller_resolver'));
-    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(new Reference('request'))
-      ->setScope('request');
+
+    // Register the 'language_manager' service.
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+
     $container->register('database.slave', 'Drupal\Core\Database\Connection')
       ->setFactoryClass('Drupal\Core\Database\Database')
       ->setFactoryMethod('getConnection')
@@ -244,6 +246,9 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('module_handler'))
       ->addTag('event_subscriber');
     $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
+      ->addTag('event_subscriber');
+    $container->register('language_request_subscriber', 'Drupal\Core\EventSubscriber\LanguageRequestSubscriber')
+      ->addArgument(new Reference('language_manager'))
       ->addTag('event_subscriber');
 
     $container->register('exception_controller', 'Drupal\Core\ExceptionController')

@@ -126,6 +126,13 @@ abstract class UpgradePathTestBase extends WebTestBase {
     drupal_save_session(FALSE);
     // Login as uid 1.
     $user = db_query('SELECT * FROM {users} WHERE uid = :uid', array(':uid' => 1))->fetchObject();
+    // Load roles for the user object.
+    $roles = array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID);
+    $result = db_query('SELECT rid, uid FROM {users_roles} WHERE uid = :uid', array(':uid' => 1));
+    foreach ($result as $record) {
+      $roles[$record->rid] = $record->rid;
+    }
+    $user->roles = $roles;
 
     // Generate and set a D8-compatible session cookie.
     $this->prepareD8Session();
@@ -288,6 +295,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
    * @see WebTestBase::drupalGet()
    */
   protected function getUpdatePhp() {
+    $this->rebuildContainer();
     $path = $GLOBALS['base_url'] . '/core/update.php';
     $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $path, CURLOPT_NOBODY => FALSE));
     // Ensure that any changes to variables in the other thread are picked up.

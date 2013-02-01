@@ -56,10 +56,12 @@ class LocaleUninstallTest extends WebTestBase {
       'default' => $this->langcode == 'fr',
     ));
     language_save($language);
-    // Reset statically cached language objects.
-    language(NULL, TRUE);
+    // Reset the language manager.
+    $language_manager = $this->container->get('language_manager');
+    $language_manager->reset();
+    $language_manager->init();
     // Check the UI language.
-    drupal_language_initialize();
+
     $this->assertEqual(language(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => language(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Enable multilingual workflow option for articles.
@@ -101,13 +103,11 @@ class LocaleUninstallTest extends WebTestBase {
     // Uninstall Locale.
     module_disable($locale_module);
     module_uninstall($locale_module);
+    $this->rebuildContainer();
 
     // Visit the front page.
     $this->drupalGet('');
-    // Reset statically cached language objects.
-    language(NULL, TRUE);
     // Check the init language logic.
-    drupal_language_initialize();
     $this->assertEqual(language(LANGUAGE_TYPE_INTERFACE)->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => language(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Check JavaScript files deletion.

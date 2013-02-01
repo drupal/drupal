@@ -77,22 +77,15 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
   /**
    * Decode language information embedded in the request path.
    *
-   * @todo Refactor this entire method to inline the relevant portions of
-   *   drupal_language_initialize(). See the inline comment for more details.
-   *
    * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestLanguageResolve(GetResponseEvent $event) {
-    // drupal_language_initialize() combines:
-    // - Determination of language from $request information (e.g., path).
-    // - Determination of language from other information (e.g., site default).
-    // - Population of determined language into drupal_container().
-    // - Removal of language code from _current_path().
-    // @todo Decouple the above, but for now, invoke it and update the path
-    //   prior to front page and alias resolution. When above is decoupled, also
-    //   add 'langcode' (determined from $request only) to $request->attributes.
-    drupal_language_initialize();
+    $request = $event->getRequest();
+    $path = _language_resolved_path();
+    if ($path !== NULL) {
+      $this->setPath($request, $path);
+    }
   }
 
   /**
