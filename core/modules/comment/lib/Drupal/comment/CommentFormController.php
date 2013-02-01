@@ -76,38 +76,23 @@ class CommentFormController extends EntityFormControllerNG {
     }
 
     // Add the author name field depending on the current user.
+    $form['author']['name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Your name'),
+      '#default_value' => $author,
+      '#required' => (!$user->uid && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
+      '#maxlength' => 60,
+      '#size' => 30,
+    );
     if ($is_admin) {
-      $form['author']['name'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Authored by'),
-        '#default_value' => $author,
-        '#maxlength' => 60,
-        '#size' => 30,
-        '#description' => t('Leave blank for %anonymous.', array('%anonymous' => config('user.settings')->get('anonymous'))),
-        '#autocomplete_path' => 'user/autocomplete',
-      );
+      $form['author']['name']['#title'] = t('Authored by');
+      $form['author']['name']['#description'] = t('Leave blank for %anonymous.', array('%anonymous' => config('user.settings')->get('anonymous')));
+      $form['author']['name']['#autocomplete_path'] = 'user/autocomplete';
     }
     elseif ($user->uid) {
-      $form['author']['_author'] = array(
-        '#type' => 'item',
-        '#title' => t('Your name'),
-        '#markup' => theme('username', array('account' => $user)),
-      );
-
-      $form['author']['name'] = array(
-        '#type' => 'value',
-        '#value' => $author,
-      );
-    }
-    else {
-      $form['author']['name'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Your name'),
-        '#default_value' => $author,
-        '#required' => (!$user->uid && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
-        '#maxlength' => 60,
-        '#size' => 30,
-      );
+      $form['author']['name']['#type'] = 'item';
+      $form['author']['name']['#value'] = $form['author']['name']['#default_value'];
+      $form['author']['name']['#markup'] = theme('username', array('account' => $user));
     }
 
     // Add author e-mail and homepage fields depending on the current user.
