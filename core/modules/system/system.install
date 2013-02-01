@@ -1454,6 +1454,7 @@ function system_update_last_removed() {
   return 7069;
 }
 
+//Do not copy @defgroup to other files. Use @addtogroup instead.
 /**
  * @defgroup config_upgrade Configuration system upgrade functions
  * @{
