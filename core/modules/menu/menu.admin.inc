@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\system\Plugin\Core\Entity\Menu;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Menu callback which shows an overview page of all the custom menus and their descriptions.
@@ -47,20 +48,35 @@ function menu_menu_edit(Menu $menu) {
 }
 
 /**
- * Form for editing an entire menu tree at once.
+ * Form constructor to edit an entire menu tree at once.
  *
  * Shows for one menu the menu links accessible to the current user and
  * relevant operations.
+ *
+ * This form constructor can be integrated as a section into another form. It
+ * relies on the following keys in $form_state:
+ * - menu: A loaded menu definition, as returned by menu_load().
+ * - menu_overview_form_parents: An array containing the parent keys to this
+ *   form.
+ * Forms integrating this section should call menu_overview_form_submit() from
+ * their form submit handler.
  */
-function menu_overview_form($form, &$form_state, $menu) {
+function menu_overview_form($form, &$form_state) {
   global $menu_admin;
+
+  // Ensure that menu_overview_form_submit() knows the parents of this form
+  // section.
+  $form['#tree'] = TRUE;
+  $form['#theme'] = 'menu_overview_form';
+  $form_state += array('menu_overview_form_parents' => array());
+
   $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/menu.admin.css');
   $sql = "
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, m.description_callback, m.description_arguments, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
     WHERE ml.menu_name = :menu
     ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
-  $result = db_query($sql, array(':menu' => $menu->id()), array('fetch' => PDO::FETCH_ASSOC));
+  $result = db_query($sql, array(':menu' => $form_state['menu']->id()), array('fetch' => PDO::FETCH_ASSOC));
   $links = array();
   foreach ($result as $item) {
     $links[] = $item;
@@ -74,20 +90,23 @@ function menu_overview_form($form, &$form_state, $menu) {
   menu_tree_check_access($tree, $node_links);
   $menu_admin = FALSE;
 
+  // Inline the "Add link" action so it displays right above the table of
+  // links. No access check needed, since this form has the same access
+  // restriction as adding menu items to the menu.
+  $form['inline_actions'] = array(
+    '#prefix' => '<ul class="action-links">',
+    '#suffix' => '</ul>',
+  );
+  $form['inline_actions']['add'] = array(
+    '#theme' => 'menu_local_action',
+    '#link' => array(
+      'href' => 'admin/structure/menu/manage/' . $form_state['menu']->id() . '/add',
+      'title' => t('Add link'),
+    ),
+  );
   $form = array_merge($form, _menu_overview_tree_form($tree, $delta));
-  $form['#menu'] =  $menu;
+  $form['#empty_text'] = t('There are no menu links yet. <a href="@link">Add link</a>.', array('@link' => url('admin/structure/menu/manage/' . $form_state['menu']->id() .'/add')));
 
-  if (element_children($form)) {
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save configuration'),
-      '#button_type' => 'primary',
-    );
-  }
-  else {
-    $form['#empty_text'] = t('There are no menu links yet. <a href="@link">Add link</a>.', array('@link' => url('admin/structure/menu/manage/'. $form['#menu']->id() .'/add')));
-  }
   return $form;
 }
 
@@ -183,15 +202,24 @@ function _menu_overview_tree_form($tree, $delta = 50) {
  *
  * @see menu_overview_form()
  */
-function menu_overview_form_submit($form, &$form_state) {
+function menu_overview_form_submit($complete_form, &$form_state) {
+  // Form API supports constructing and validating self-contained sections
+  // within forms, but does not allow to handle the form section's submission
+  // equally separated yet. Therefore, we use a $form_state key to point to
+  // the parents of the form section.
+  $parents = $form_state['menu_overview_form_parents'];
+  $input = NestedArray::getValue($form_state['input'], $parents);
+  $form = &NestedArray::getValue($complete_form, $parents);
+
   // When dealing with saving menu items, the order in which these items are
   // saved is critical. If a changed child item is saved before its parent,
   // the child item could be saved with an invalid path past its immediate
   // parent. To prevent this, save items in the form in the same order they
-  // are sent by $_POST, ensuring parents are saved first, then their children.
+  // are sent, ensuring parents are saved first, then their children.
   // See http://drupal.org/node/181126#comment-632270
-  $order = array_flip(array_keys($form_state['input'])); // Get the $_POST order.
-  $form = array_intersect_key(array_merge($order, $form), $form); // Update our original form with the new order.
+  $order = array_flip(array_keys($input));
+  // Update our original form with the new order.
+  $form = array_intersect_key(array_merge($order, $form), $form);
 
   $updated_items = array();
   $fields = array('weight', 'plid');
@@ -219,7 +247,6 @@ function menu_overview_form_submit($form, &$form_state) {
     $item['customized'] = 1;
     menu_link_save($item);
   }
-  drupal_set_message(t('Your configuration has been saved.'));
 }
 
 /**
@@ -272,6 +299,7 @@ function theme_menu_overview_form($variables) {
   if (empty($rows)) {
     $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '7'));
   }
+  $output .= drupal_render($form['inline_actions']);
   $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'menu-overview')));
   $output .= drupal_render_children($form);
   return $output;

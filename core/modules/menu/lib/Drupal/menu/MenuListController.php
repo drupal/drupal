@@ -47,13 +47,8 @@ class MenuListController extends ConfigEntityListController {
     $operations = parent::getOperations($entity);
     $uri = $entity->uri();
 
-    $operations['list'] = array(
-      'title' => t('list links'),
-      'href' => $uri['path'],
-      'options' => $uri['options'],
-      'weight' => 0,
-    );
     $operations['edit']['title'] = t('edit menu');
+    $operatuins['edit']['href'] = $uri['path'];
     $operations['add'] = array(
       'title' => t('add link'),
       'href' => $uri['path'] . '/add',

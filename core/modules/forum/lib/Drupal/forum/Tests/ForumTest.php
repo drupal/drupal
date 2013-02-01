@@ -271,7 +271,7 @@ class ForumTest extends WebTestBase {
 
     // Add forum to the Tools menu.
     $edit = array();
-    $this->drupalPost('admin/structure/menu/manage/tools', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/menu/manage/tools', $edit, t('Save'));
     $this->assertResponse(200);
 
     // Edit forum taxonomy.

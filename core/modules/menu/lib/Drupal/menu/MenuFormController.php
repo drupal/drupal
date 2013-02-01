@@ -21,6 +21,7 @@ class MenuFormController extends EntityFormController {
   public function form(array $form, array &$form_state, EntityInterface $menu) {
     $form = parent::form($form, $form_state, $menu);
     $system_menus = menu_list_system_menus();
+    $form_state['menu'] = &$menu;
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -50,6 +51,19 @@ class MenuFormController extends EntityFormController {
       '#title' => t('Description'),
       '#default_value' => $menu->description,
     );
+
+    // Add menu links administration form for existing menus.
+    if (!$menu->isNew() || isset($system_menus[$menu->id()])) {
+      // Form API supports constructing and validating self-contained sections
+      // within forms, but does not allow to handle the form section's submission
+      // equally separated yet. Therefore, we use a $form_state key to point to
+      // the parents of the form section.
+      // @see menu_overview_form_submit()
+      $form_state['menu_overview_form_parents'] = array('links');
+      $form['links'] = array();
+      $form['links'] = menu_overview_form($form['links'], $form_state);
+    }
+
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
@@ -71,6 +85,11 @@ class MenuFormController extends EntityFormController {
    */
   public function save(array $form, array &$form_state) {
     $menu = $this->getEntity($form_state);
+    $system_menus = menu_list_system_menus();
+
+    if (!$menu->isNew() || isset($system_menus[$menu->id()])) {
+      menu_overview_form_submit($form, $form_state);
+    }
 
     if ($menu->isNew()) {
       // Add 'menu-' to the menu name to help avoid name-space conflicts.
