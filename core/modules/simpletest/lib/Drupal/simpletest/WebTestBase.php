@@ -747,6 +747,7 @@ abstract class WebTestBase extends TestBase {
     // @see install.php, install.core.inc
     $connection_info = Database::getConnectionInfo();
     $this->root_user = (object) array(
+      'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
       'pass_raw' => $this->randomName(),
