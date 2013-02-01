@@ -250,11 +250,8 @@ class RenderTest extends WebTestBase {
     $element = array(
       '#type' => 'details',
       '#title' => $this->randomName(),
-      '#collapsible' => TRUE,
     );
-    $this->assertRenderedElement($element, '//details[contains(@class, :class)]', array(
-      ':class' => 'collapsible',
-    ));
+    $this->assertRenderedElement($element, '//details');
 
     $element['item'] = array(
       '#type' => 'item',

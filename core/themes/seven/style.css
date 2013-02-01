@@ -1453,7 +1453,7 @@ details.fieldset-no-legend {
   top: -1px;
 }
 
-.views-ui-dialog details.collapsible:not(.collapsed) {
+.views-ui-dialog details:not(.collapsed) {
   padding-top: 1.5em;
 }
 

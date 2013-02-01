@@ -828,7 +828,6 @@ function language_negotiation_configure_browser_form($form, &$form_state) {
   $form['new_mapping'] = array(
     '#type' => 'details',
     '#title' => t('Add a new mapping'),
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#tree' => TRUE,
   );

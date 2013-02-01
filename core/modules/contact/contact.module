@@ -335,7 +335,6 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
     '#type' => 'details',
     '#title' => t('Contact settings'),
     '#weight' => 5,
-    '#collapsible' => TRUE,
   );
   $account = $form_state['controller']->getEntity($form_state);
   $account_data = drupal_container()->get('user.data')->get('contact', $account->id(), 'enabled');

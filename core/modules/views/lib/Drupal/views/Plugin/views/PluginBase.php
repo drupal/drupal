@@ -309,7 +309,6 @@ abstract class PluginBase extends ComponentPluginBase {
     $form['global_tokens'] = array(
       '#type' => 'fieldset',
       '#title' => t('Available global token replacements'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
     $form['global_tokens']['list'] = array(

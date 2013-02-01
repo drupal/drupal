@@ -13,7 +13,6 @@ function design_test_form_details($form, &$form_state) {
     '#type' => 'details',
     '#title' => 'Collapsible details',
     '#description' => 'Details description',
-    '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#states' => array(
       'collapsed' => array(
@@ -26,7 +25,6 @@ function design_test_form_details($form, &$form_state) {
     '#type' => 'details',
     '#title' => 'Collapsed details',
     '#description' => 'Details description',
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
   $form['collapsed']['textfield'] = array(
@@ -48,35 +46,30 @@ function design_test_form_details($form, &$form_state) {
     '#type' => 'details',
     '#title' => 'Details',
     '#description' => 'Details description',
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
   $form['collapsed2']['collapsible'] = array(
     '#type' => 'details',
     '#title' => 'Collapsible details',
     '#description' => 'Details description',
-    '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
   $form['collapsed2']['collapsed'] = array(
     '#type' => 'details',
     '#title' => 'Collapsed details',
     '#description' => 'Details description',
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
   $form['collapsed2']['regular'] = array(
     '#type' => 'details',
     '#title' => 'Details',
     '#description' => 'Details description',
-    '#collapsible' => FALSE,
   );
 
   $form['regular'] = array(
     '#type' => 'details',
     '#title' => 'Details',
     '#description' => 'Details description',
-    '#collapsible' => FALSE,
   );
 
   #$form['#attributes'] = array('class' => array('search-form'));

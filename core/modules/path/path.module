@@ -122,7 +122,6 @@ function path_form_node_form_alter(&$form, $form_state) {
   $form['path'] = array(
     '#type' => 'details',
     '#title' => t('URL path settings'),
-    '#collapsible' => TRUE,
     '#collapsed' => empty($path['alias']),
     '#group' => 'advanced',
     '#attributes' => array(

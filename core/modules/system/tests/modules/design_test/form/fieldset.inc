@@ -19,7 +19,6 @@ function design_test_form_fieldset($form, &$form_state) {
     '#type' => 'details',
     '#title' => 'Collapsible details',
     '#description' => 'Details description',
-    '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
   $form['collapsible']['fieldset'] = array(
@@ -42,10 +41,6 @@ function design_test_form_fieldset($form, &$form_state) {
   $form['collapsed'] = $form['collapsible'];
   $form['collapsed']['#title'] = 'Collapsed details';
   $form['collapsed']['#collapsed'] = TRUE;
-
-  $form['uncollapsible'] = $form['collapsible'];
-  $form['uncollapsible']['#title'] = 'Uncollapsible details';
-  $form['uncollapsible']['#collapsible'] = FALSE;
 
   $form['nested'] = $form['regular'];
   $form['nested']['#title'] = 'Parent fieldset';

@@ -548,7 +548,6 @@ function system_element_info() {
     '#theme_wrappers' => array('fieldset'),
   );
   $types['details'] = array(
-    '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#value' => NULL,
     '#process' => array('form_process_group', 'ajax_process_form'),
@@ -1353,9 +1352,9 @@ function system_library_info() {
     ),
   );
 
-  // Drupal's collapsible details.
+  // Collapsible details.
   $libraries['drupal.collapse'] = array(
-    'title' => 'Drupal collapsible details',
+    'title' => 'Collapsible details',
     'version' => VERSION,
     'js' => array(
       'core/misc/collapse.js' => array('group' => JS_DEFAULT),
@@ -2611,7 +2610,6 @@ function system_user_timezone(&$form, &$form_state) {
     '#type' => 'details',
     '#title' => t('Locale settings'),
     '#weight' => 6,
-    '#collapsible' => TRUE,
   );
   $form['timezone']['timezone'] = array(
     '#type' => 'select',

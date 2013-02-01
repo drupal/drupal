@@ -1710,10 +1710,9 @@ function form_error(&$element, $message = '') {
  *   can also be used to set additional properties or implement special logic
  *   other than adding child elements: for example, for the 'details' element
  *   type, one of the functions in this array is form_process_details(), which
- *   adds the attributes and JavaScript needed to make the details collapsible
- *   if the #collapsible property is set. The #process functions are called in
- *   preorder traversal, meaning they are called for the parent element first,
- *   then for the child elements.
+ *   adds the attributes and JavaScript needed to make the details work in older
+ *   browsers. The #process functions are called in preorder traversal, meaning
+ *   they are called for the parent element first, then for the child elements.
  * - $element['#after_build']: An array of functions called after form_builder()
  *   is done with its processing of the element. These are called in postorder
  *   traversal, meaning they are called for the child elements first, then for
@@ -2817,8 +2816,8 @@ function form_get_options($element, $key) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #children, #collapsed, #collapsible,
- *     #description, #id, #title, #value.
+ *     Properties used: #attributes, #children, #collapsed, #description, #id,
+ *     #title, #value.
  *
  * @ingroup themeable
  */
@@ -2863,8 +2862,8 @@ function theme_fieldset($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #children, #collapsed, #collapsible,
- *     #description, #id, #title, #value.
+ *     Properties used: #attributes, #children, #collapsed, #description, #id,
+ *     #title, #value.
  *
  * @ingroup themeable
  */
@@ -3972,10 +3971,7 @@ function form_pre_render_details($element) {
   }
 
   // Collapsible details.
-  if (!empty($element['#collapsible'])) {
-    $element['#attached']['library'][] = array('system', 'drupal.collapse');
-    $element['#attributes']['class'][] = 'collapsible';
-  }
+  $element['#attached']['library'][] = array('system', 'drupal.collapse');
   if (empty($element['#collapsed'])) {
     $element['#attributes']['open'] = 'open';
   }

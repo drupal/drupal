@@ -174,7 +174,7 @@ Drupal.behaviors.collapse = {
     if (isDetailsSupported) {
       return;
     }
-    var $collapsibleDetails = $(context).find('details.collapsible').once('collapse');
+    var $collapsibleDetails = $(context).find('details').once('collapse');
     if ($collapsibleDetails.length) {
       for (var i = 0; i < $collapsibleDetails.length; i++) {
         CollapsibleDetails.instances.push(new CollapsibleDetails($collapsibleDetails[i], settings.collapsibleDetails));

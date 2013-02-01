@@ -199,7 +199,6 @@ class NodeFormController extends EntityFormController {
       '#type' => 'details',
       '#access' => user_access('administer nodes'),
       '#title' => t('Authoring information'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#group' => 'advanced',
       '#attributes' => array(
@@ -240,7 +239,6 @@ class NodeFormController extends EntityFormController {
       '#type' => 'details',
       '#access' => user_access('administer nodes'),
       '#title' => t('Promotion options'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#group' => 'advanced',
       '#attributes' => array(

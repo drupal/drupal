@@ -2016,7 +2016,6 @@ function node_form_block_form_alter(&$form, &$form_state) {
   $form['visibility']['node_type'] = array(
     '#type' => 'details',
     '#title' => t('Content types'),
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'visibility',
     '#weight' => 5,
@@ -2346,7 +2345,6 @@ function node_form_search_form_alter(&$form, $form_state) {
     $form['advanced'] = array(
       '#type' => 'details',
       '#title' => t('Advanced search'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#attributes' => array('class' => array('search-advanced')),
     );

@@ -145,8 +145,6 @@ function book_outline_form($form, &$form_state, Node $node) {
   $form['#id'] = 'book-outline';
   _book_add_form_elements($form, $form_state, $node);
 
-  $form['book']['#collapsible'] = FALSE;
-
   $form['update'] = array(
     '#type' => 'submit',
     '#value' => $node->book['original_bid'] ? t('Update book outline') : t('Add to book outline'),

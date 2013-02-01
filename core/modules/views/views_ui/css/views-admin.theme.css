@@ -390,7 +390,7 @@ td.group-title {
  * details need to be floated as well so that the margin above the details interacts with
  * the float edit option columns.
  */
-#edit-options .collapsible {
+#edit-options details {
   float: left;
   width: 100%;
 }
@@ -1061,7 +1061,7 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   float: left;
 }
 
-#edit-options-exception.collapsible {
+#edit-options-exception {
   float: right;
   width: 250px;
   margin-top: -2px;

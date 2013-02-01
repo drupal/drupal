@@ -291,7 +291,6 @@ abstract class HandlerBase extends PluginBase {
     $form['more'] = array(
       '#type' => 'details',
       '#title' => t('More'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#weight' => 150,
     );

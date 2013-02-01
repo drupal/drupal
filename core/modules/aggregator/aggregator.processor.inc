@@ -94,13 +94,12 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
     $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
     $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
 
-    // Only wrap into a collapsible details if there is a basic configuration.
+    // Only wrap into details if there is a basic configuration.
     if (isset($form['basic_conf'])) {
       $form['modules']['aggregator'] = array(
         '#type' => 'details',
         '#title' => t('Default processor settings'),
         '#description' => $info['description'],
-        '#collapsible' => TRUE,
         '#collapsed' => !in_array('aggregator', $aggregator_processors),
       );
     }

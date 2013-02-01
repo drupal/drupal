@@ -478,7 +478,6 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['columns']['third'] = array(
       '#type' => 'details',
       '#title' => t('Advanced'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#theme_wrappers' => array('details', 'container'),
       '#attributes' => array(

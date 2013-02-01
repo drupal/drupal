@@ -434,7 +434,6 @@ function _book_add_form_elements(&$form, &$form_state, Node $node) {
     '#type' => 'details',
     '#title' => t('Book outline'),
     '#weight' => 10,
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'advanced',
     '#attributes' => array(

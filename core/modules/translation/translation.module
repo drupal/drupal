@@ -215,7 +215,6 @@ function translation_form_node_form_alter(&$form, &$form_state) {
         '#type' => 'details',
         '#title' => t('Translation settings'),
         '#access' => translation_user_can_translate_node($node),
-        '#collapsible' => TRUE,
         '#collapsed' => !$node->translate,
         '#tree' => TRUE,
         '#weight' => 30,

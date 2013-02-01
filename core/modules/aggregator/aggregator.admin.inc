@@ -413,7 +413,6 @@ function aggregator_admin_form($form, $form_state) {
       '#type' => 'details',
       '#title' => t('Basic configuration'),
       '#description' => t('For most aggregation tasks, the default settings are fine.'),
-      '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       );
     $form['basic_conf'] += $basic_conf;

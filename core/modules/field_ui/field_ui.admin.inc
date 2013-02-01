@@ -933,7 +933,6 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   $element = array(
     '#type' => 'details',
     '#title' => t('Default value'),
-    '#collapsible' => FALSE,
     '#tree' => TRUE,
     '#description' => t('The default value for this field, used when creating new content.'),
     // Stick to an empty 'parents' on this form in order not to breaks widgets
