@@ -101,6 +101,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - Added Phone number field type to core.
 - Added local image input filter, to enable secure image posting.
 - Added Views and Views UI module to core.
+- Added Entity Reference field type to core.
 
 Drupal 7.0, 2011-01-05
 ----------------------
