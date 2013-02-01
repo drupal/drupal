@@ -80,7 +80,7 @@ Drupal.behaviors.toolbar = {
       // query application decide the orientation.
       changeOrientation((locked) ? 'vertical' : ((mql.wide.matches) ? 'horizontal' : 'vertical'), locked);
       // Render the main menu as a nested, collapsible accordion.
-      $toolbar.find('.administration.tray .toolbar-menu > .menu').toolbarMenu();
+      $toolbar.find('.toolbar-menu-administration > .menu').toolbarMenu();
       // Call setHeight on screen resize. Wrap it in debounce to prevent
       // setHeight from being called too frequently.
       var setHeight = Drupal.debounce(Drupal.toolbar.setHeight, 200);
@@ -152,7 +152,7 @@ Drupal.toolbar.toggleTray = function (event) {
       localStorage.removeItem('Drupal.toolbar.activeTab');
     }
     // Disable non-selected tabs and trays.
-    $toolbar.find('.bar a')
+    $toolbar.find('.bar .trigger')
       .not($tab)
       .removeClass('active')
       // Set aria-pressed to false.

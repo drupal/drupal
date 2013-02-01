@@ -39,12 +39,12 @@ html.js .toolbar {
 .toolbar .menu li {
   padding-top: 0;
 }
-.js .toolbar .bar li,
+.js .toolbar .bar .tab,
 .js .toolbar .menu li {
   display: block;
 }
-.js .toolbar .bar li,
-.js .toolbar .horizontal li  {
+.js .toolbar .bar .tab,
+.js .toolbar .horizontal .tab  {
   float: left; /* LTR */
 }
 .js .toolbar a {
@@ -62,13 +62,13 @@ html.js .toolbar {
   width: 100%;
 }
 @media only screen {
-  .js .toolbar .bar li,
+  .js .toolbar .bar .tab,
   .js .toolbar .tray li {
     float: none; /* LTR */
   }
 }
 @media only screen and (min-width: 16.5em) {
-  .js .toolbar .bar li,
+  .js .toolbar .bar .tab,
   .js .toolbar .horizontal li {
     float: left; /* LTR */
   }
