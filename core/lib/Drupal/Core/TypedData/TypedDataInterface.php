@@ -57,7 +57,20 @@ interface TypedDataInterface {
   public function getString();
 
   /**
+   * Gets a list of validation constraints.
+   *
+   * @return array
+   *   Array of constraints, each being an instance of
+   *   \Symfony\Component\Validator\Constraint.
+   */
+  public function getConstraints();
+
+  /**
    * Validates the currently set data value.
+   *
+   * @return \Symfony\Component\Validator\ConstraintViolationListInterface
+   *   A list of constraint violations. If the list is empty, validation
+   *   succeeded.
    */
   public function validate();
 }

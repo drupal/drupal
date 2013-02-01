@@ -23,11 +23,4 @@ class Boolean extends TypedData {
    * @var boolean
    */
   protected $value;
-
-  /**
-   * Overrides TypedData::setValue().
-   */
-  public function setValue($value) {
-    $this->value = isset($value) ? (bool) $value : $value;
-  }
 }

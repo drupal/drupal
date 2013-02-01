@@ -117,6 +117,14 @@ class Field extends ContextAwareTypedData implements IteratorAggregate, FieldInt
   }
 
   /**
+   * Overrides \Drupal\Core\TypedData\TypedData::getConstraints().
+   */
+  public function getConstraints() {
+    // Apply the constraints to the list items only.
+    return array();
+  }
+
+  /**
    * Implements \ArrayAccess::offsetExists().
    */
   public function offsetExists($offset) {

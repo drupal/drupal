@@ -32,21 +32,30 @@ class Duration extends TypedData {
    * Overrides TypedData::setValue().
    */
   public function setValue($value) {
-    if ($value instanceof DateInterval || !isset($value)) {
-      $this->value = $value;
+    // Catch any exceptions thrown due to invalid values being passed.
+    try {
+      if ($value instanceof DateInterval || !isset($value)) {
+        $this->value = $value;
+      }
+      // Treat integer values as time spans in seconds, even if supplied as PHP
+      // string.
+      elseif ((string) (int) $value === (string) $value) {
+        $this->value = new DateInterval('PT' . $value . 'S');
+      }
+      elseif (is_string($value)) {
+        // @todo: Add support for negative intervals on top of the DateInterval
+        // constructor.
+        $this->value = new DateInterval($value);
+      }
+      else {
+        // Unknown value given.
+        $this->value = $value;
+      }
     }
-    // Treat integer values as time spans in seconds, even if supplied as PHP
-    // string.
-    elseif ((string) (int) $value === (string) $value) {
-      $this->value = new DateInterval('PT' . $value . 'S');
-    }
-    elseif (is_string($value)) {
-      // @todo: Add support for negative intervals on top of the DateInterval
-      // constructor.
-      $this->value = new DateInterval($value);
-    }
-    else {
-      throw new InvalidArgumentException("Invalid duration format given.");
+    catch (\Exception $e) {
+      // An invalid value has been given. Setting any invalid value will let
+      // validation fail.
+      $this->value = $e;
     }
   }
 

@@ -2224,6 +2224,7 @@ function system_data_type_info() {
       'label' => t('Email'),
       'class' => '\Drupal\Core\TypedData\Type\Email',
       'primitive type' => Primitive::STRING,
+      'constraints' => array('Email' => array()),
     ),
     'binary' => array(
       'label' => t('Binary'),

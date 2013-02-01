@@ -35,7 +35,7 @@ class TaxonomyTermReferenceItem extends FieldItemBase {
       static::$propertyDefinitions['entity'] = array(
         'type' => 'entity',
         'constraints' => array(
-          'entity type' => 'taxonomy_term',
+          'EntityType' => 'taxonomy_term',
         ),
         'label' => t('Term'),
         'description' => t('The referenced taxonomy term'),

@@ -333,9 +333,9 @@ class EntityFieldTest extends WebTestBase  {
     $definition = array(
       'type' => 'entity',
       'constraints' => array(
-        'entity type' => $entity_type,
+        'EntityType' => $entity_type,
       ),
-      'label' => t('Test entity'),
+      'label' => 'Test entity',
     );
     $wrapped_entity = typed_data()->create($definition);
     $definitions = $wrapped_entity->getPropertyDefinitions($definition);
@@ -432,8 +432,7 @@ class EntityFieldTest extends WebTestBase  {
   }
 
   /**
-   * Tests working with entity properties based upon data structure and data
-   * list interfaces.
+   * Tests working with the entity based upon the TypedData API.
    */
   public function testDataStructureInterfaces() {
     // All entity variations have to have the same results.
@@ -454,14 +453,15 @@ class EntityFieldTest extends WebTestBase  {
     $entity_definition = array(
       'type' => 'entity',
       'constraints' => array(
-        'entity type' => $entity_type,
+        'EntityType' => $entity_type,
       ),
-      'label' => t('Test entity'),
+      'label' => 'Test entity',
     );
     $wrapped_entity = typed_data()->create($entity_definition, $entity);
 
-    // For the test we navigate through the tree of contained properties and get
-    // all contained strings, limited by a certain depth.
+    // Test using the whole tree of typed data by navigating through the tree of
+    // contained properties and getting all contained strings, limited by a
+    // certain depth.
     $strings = array();
     $this->getContainedStrings($wrapped_entity, 0, $strings);
 
@@ -501,6 +501,52 @@ class EntityFieldTest extends WebTestBase  {
         }
       }
     }
+  }
+
+  /**
+   * Tests validation constraints provided by the Entity API.
+   */
+  public function testEntityConstraintValidation() {
+    $entity = $this->createTestEntity('entity_test');
+    $entity->save();
+    $entity_definition = array(
+      'type' => 'entity',
+      'constraints' => array(
+        'EntityType' => 'entity_test',
+      ),
+      'label' => 'Test entity',
+    );
+    $wrapped_entity = typed_data()->create($entity_definition, $entity);
+
+    // Test validation the typed data object.
+    $violations = $wrapped_entity->validate();
+    $this->assertEqual($violations->count(), 0);
+
+    // Test validating an entity of the wrong type.
+    $node = $this->drupalCreateNode(array('type' => 'page'));
+    $wrapped_entity->setValue($node);
+    $violations = $wrapped_entity->validate();
+    $this->assertEqual($violations->count(), 1);
+
+    // Test bundle validation.
+    $entity_definition = array(
+      'type' => 'entity',
+      'constraints' => array(
+        'EntityType' => 'node',
+        'Bundle' => 'article',
+      ),
+      'label' => 'Test node',
+    );
+    $wrapped_entity = typed_data()->create($entity_definition, $node);
+
+    $violations = $wrapped_entity->validate();
+    $this->assertEqual($violations->count(), 1);
+
+    $node->type = 'article';
+    $node->save();
+    $wrapped_entity->setValue($node);
+    $violations = $wrapped_entity->validate();
+    $this->assertEqual($violations->count(), 0);
   }
 
   /**

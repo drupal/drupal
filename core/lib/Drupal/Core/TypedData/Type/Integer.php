@@ -23,11 +23,4 @@ class Integer extends TypedData {
    * @var integer
    */
   protected $value;
-
-  /**
-   * Overrides TypedData::setValue().
-   */
-  public function setValue($value) {
-    $this->value = isset($value) ? (int) $value : $value;
-  }
 }

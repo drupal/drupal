@@ -698,7 +698,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       }
     }
 
-    $bundle = !empty($constraints['bundle']) ? $constraints['bundle'] : FALSE;
+    $bundle = !empty($constraints['Bundle']) ? $constraints['Bundle'] : FALSE;
 
     // Add in per-bundle fields.
     if (!isset($this->fieldDefinitions[$bundle])) {

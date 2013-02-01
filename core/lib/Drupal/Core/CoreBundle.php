@@ -149,7 +149,10 @@ class CoreBundle extends Bundle {
       ->setFactoryClass('Drupal\Core\Database\Database')
       ->setFactoryMethod('getConnection')
       ->addArgument('slave');
-    $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager');
+    $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager')
+      ->addMethodCall('setValidationConstraintManager', array(new Reference('validation.constraint')));
+    $container->register('validation.constraint', 'Drupal\Core\Validation\ConstraintManager');
+
     // Add the user's storage for temporary, non-cache data.
     $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
     $container->register('user.tempstore', 'Drupal\user\TempStoreFactory')

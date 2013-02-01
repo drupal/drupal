@@ -70,9 +70,18 @@ abstract class TypedData implements TypedDataInterface {
   }
 
   /**
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getConstraints().
+   */
+  public function getConstraints() {
+    // @todo: Add the typed data manager as proper dependency.
+    return typed_data()->getConstraints($this->definition);
+  }
+
+  /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::validate().
    */
   public function validate() {
-    // TODO: Implement validate() method.
+    // @todo: Add the typed data manager as proper dependency.
+    return typed_data()->getValidator()->validate($this);
   }
 }

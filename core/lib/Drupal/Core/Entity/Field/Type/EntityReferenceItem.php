@@ -38,11 +38,14 @@ class EntityReferenceItem extends FieldItemBase {
         // @todo: Lookup the entity type's ID data type and use it here.
         'type' => 'integer',
         'label' => t('Entity ID'),
+        'constraints' => array(
+          'Range' => array('min' => 0),
+        ),
       );
       static::$propertyDefinitions[$target_type]['entity'] = array(
         'type' => 'entity',
         'constraints' => array(
-          'entity type' => $target_type,
+          'EntityType' => $target_type,
         ),
         'label' => t('Entity'),
         'description' => t('The referenced entity'),

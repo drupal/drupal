@@ -184,9 +184,9 @@ class Tables {
           $next_index_prefix = $relationship_specifier;
         }
         // Check for a valid relationship.
-        if (isset($propertyDefinitions[$relationship_specifier]['constraints']['entity type']) && isset($propertyDefinitions[$relationship_specifier]['settings']['id source'])) {
+        if (isset($propertyDefinitions[$relationship_specifier]['constraints']['EntityType']) && isset($propertyDefinitions[$relationship_specifier]['settings']['id source'])) {
           // If it is, use the entity type.
-          $entity_type = $propertyDefinitions[$relationship_specifier]['constraints']['entity type'];
+          $entity_type = $propertyDefinitions[$relationship_specifier]['constraints']['EntityType'];
           $entity_info = entity_get_info($entity_type);
           // Add the new entity base table using the table and sql column.
           $join_condition= '%alias.' . $entity_info['entity_keys']['id'] . " = $table.$sql_column";
@@ -196,7 +196,7 @@ class Tables {
           $index_prefix .= "$next_index_prefix.";
         }
         else {
-          throw new QueryException(format_string('Invalid specifier @next.', array('@next' => $next)));
+          throw new QueryException(format_string('Invalid specifier @next.', array('@next' => $relationship_specifier)));
         }
       }
     }

@@ -56,7 +56,7 @@ class TestItemTest extends FieldItemUnitTestBase {
   public function testTestItem() {
     // Verify entity creation.
     $entity = entity_create('entity_test', array());
-    $value = $this->randomName();
+    $value = rand(1, 10);
     $entity->field_test = $value;
     $entity->name->value = $this->randomName();
     $entity->save();
@@ -70,7 +70,7 @@ class TestItemTest extends FieldItemUnitTestBase {
     $this->assertEqual($entity->field_test[0]->value, $value);
 
     // Verify changing the field value.
-    $new_value = $this->randomName();
+    $new_value = rand(1, 10);
     $entity->field_test->value = $new_value;
     $this->assertEqual($entity->field_test->value, $new_value);
 

@@ -23,11 +23,4 @@ class Float extends TypedData {
    * @var float
    */
   protected $value;
-
-  /**
-   * Overrides TypedData::setValue().
-   */
-  public function setValue($value) {
-    $this->value = isset($value) ? (float) $value : $value;
-  }
 }

@@ -218,8 +218,8 @@ class EntityNG extends Entity {
   public function getPropertyDefinitions() {
     if (!isset($this->fieldDefinitions)) {
       $this->fieldDefinitions = drupal_container()->get('plugin.manager.entity')->getStorageController($this->entityType)->getFieldDefinitions(array(
-        'entity type' => $this->entityType,
-        'bundle' => $this->bundle,
+        'EntityType' => $this->entityType,
+        'Bundle' => $this->bundle,
       ));
     }
     return $this->fieldDefinitions;

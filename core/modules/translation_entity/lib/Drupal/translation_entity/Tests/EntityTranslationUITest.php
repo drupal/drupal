@@ -39,7 +39,7 @@ abstract class EntityTranslationUITest extends EntityTranslationTestBase {
       $stored_value = $this->getValue($translation, $property, $default_langcode);
       $value = is_array($value) ? $value[0]['value'] : $value;
       $message = format_string('@property correctly stored in the default language.', array('@property' => $property));
-      $this->assertIdentical($stored_value, $value, $message);
+      $this->assertEqual($stored_value, $value, $message);
     }
 
     // Add an entity translation.
