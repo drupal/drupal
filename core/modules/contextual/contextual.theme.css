@@ -6,58 +6,64 @@
 /**
  * Contextual links wrappers.
  */
+.contextual {
+  position: absolute;
+  right: 0; /* LTR */
+  top: 2px;
+  z-index: 999;
+}
 .contextual-region-active {
   outline: 1px dashed #d6d6d6;
   outline-offset: 1px;
-}
-.contextual {
-  right: 2px; /* LTR */
-  top: 2px;
 }
 
 /**
  * Contextual trigger.
  */
 .contextual .trigger {
-  background: transparent url(images/gear-select.png) no-repeat 2px 0;
+  background: transparent url("images/gear-select.png") no-repeat 2px 0;
   border: 1px solid transparent;
-  height: 18px;
+  border-radius: 4px 4px 0 0;
+  /* Override the .element-focusable height: auto */
+  height: 18px !important;
+  float: right; /* LTR */
   margin: 0;
-  outline: none;
   overflow: hidden;
   padding: 0 2px;
-  text-indent: 34px;
-  width: 28px;
+  position: relative;
+  width: 34px;
+  text-indent: -9999px;
+  z-index: 2;
 }
 .no-touch .contextual .trigger:hover,
-.contextual-active .trigger {
+.contextual-links-active .trigger {
   background-position: 2px -18px;
 }
-.contextual-active .trigger {
-  background-color: #ffffff;
+.contextual-links-active .trigger {
+  background-color: #fff;
   border-bottom: none;
   border-color: #d6d6d6;
-  border-radius: 4px 4px 0 0;
-  position: relative;
-  z-index: 1;
 }
 
 /**
  * Contextual links.
+ *
+ * The following selectors are heavy to discourage theme overriding.
  */
-.contextual .contextual-links {
+.contextual-region .contextual .contextual-links {
   background-color: #fff;
   border: 1px solid #d6d6d6;
   border-radius: 4px 0 4px 4px; /* LTR */
+  clear: both;
+  float: right; /* LTR */
   margin: 0;
   padding: 0.25em 0;
-  position: absolute;
-  right: 0; /* LTR */
-  text-align: left;
-  top: 18px;
+  position: relative;
+  text-align: left; /* LTR */
+  top: -1px;
   white-space: nowrap;
+  z-index: 1;
 }
-/* Reset the li to prevent accidential overrides by a theme. */
 .contextual-region .contextual .contextual-links li {
   background-color: #fff;
   border: none;
@@ -65,21 +71,22 @@
   list-style-image: none;
   margin: 0;
   padding: 0;
+  line-height: 100%;
 }
 .contextual-region .contextual .contextual-links a {
+  background-color: #fff;
+  /* This is an unforetunately necessary use of !important to prevent white
+   * links on a white background or some similar illegible combination. */
+  color: #333 !important;
   display: block;
   font-family: sans-serif;
   font-size: small;
   line-height: 0.8em;
   margin: 0.25em 0;
-  padding: 0.4em 0.8em 0.4em 0.6em; /* LTR */
+  padding: 0.4em 0.6em;
 }
 .contextual-region .contextual .contextual-links a,
-.no-touch .contextual-region .contextual .contextual-links a:hover,
-.contextual-region .contextual .contextual-links a:active,
-.contextual-region .contextual .contextual-links a:focus {
-  background-color: #fff;
-  color: #333;
+.contextual-region .contextual .contextual-links a:hover {
   text-decoration: none;
 }
 .no-touch .contextual-region .contextual .contextual-links li a:hover {

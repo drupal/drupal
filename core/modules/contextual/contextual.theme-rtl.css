@@ -3,17 +3,26 @@
  * RTL styling for contextual module.
  */
 
+/**
+ * Contextual links wrappers.
+ */
 .contextual {
-  left: 5px;
-  right: auto;
-}
-.contextual .contextual-links {
-  border-radius: 0 4px 4px 4px;
   left: 0;
   right: auto;
 }
 
-.contextual-region .contextual .contextual-links a {
- text-align: right;
- padding: 0.4em 0.6em 0.4em 0.8em;
+/**
+ * Contextual trigger.
+ */
+.contextual .trigger {
+  float: left;
+}
+
+/**
+ * Contextual links.
+ */
+.contextual .contextual-links {
+  border-radius: 0 4px 4px 4px;
+  float: left;
+  text-align: right;
 }
