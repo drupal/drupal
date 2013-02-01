@@ -31,7 +31,7 @@ class CommentRenderController extends EntityRenderController {
     // Pre-load associated users into cache to leverage multiple loading.
     $uids = array();
     foreach ($entities as $entity) {
-      $uids[] = $entity->uid->value;
+      $uids[] = $entity->uid->target_id;
     }
     user_load_multiple(array_unique($uids));
 
@@ -40,13 +40,13 @@ class CommentRenderController extends EntityRenderController {
     // Load all nodes of all comments at once.
     $nids = array();
     foreach ($entities as $entity) {
-      $nids[$entity->nid->value] = $entity->nid->value;
+      $nids[$entity->nid->target_id] = $entity->nid->target_id;
     }
     $nodes = node_load_multiple($nids);
 
     foreach ($entities as $entity) {
-      if (isset($nodes[$entity->nid->value])) {
-        $node = $nodes[$entity->nid->value];
+      if (isset($nodes[$entity->nid->target_id])) {
+        $node = $nodes[$entity->nid->target_id];
       }
       else {
         throw new \InvalidArgumentException(t('Invalid node for comment.'));

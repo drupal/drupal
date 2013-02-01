@@ -28,7 +28,7 @@ class FieldNewValue extends ContextAwareTypedData {
       }
       $field = $this->parent->getParent();
       $entity = $field->getParent();
-      $this->value = node_mark($entity->nid->value, $entity->changed->value);
+      $this->value = node_mark($entity->nid->target_id, $entity->changed->value);
     }
     return $this->value;
   }

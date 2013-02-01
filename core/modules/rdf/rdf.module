@@ -417,9 +417,9 @@ function rdf_comment_load($comments) {
     // isn't needed until rdf_preprocess_comment() is called, but set it here
     // to optimize performance for websites that implement an entity cache.
     $comment->rdf_data['date'] = rdf_rdfa_attributes($comment->rdf_mapping['created'], $comment->created->value);
-    $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid->value);
-    if ($comment->pid->value) {
-      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->value, array('fragment' => 'comment-' . $comment->pid->value));
+    $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid->target_id);
+    if ($comment->pid->target_id) {
+      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id, array('fragment' => 'comment-' . $comment->pid->target_id));
     }
   }
 }
@@ -746,7 +746,7 @@ function rdf_preprocess_comment(&$variables) {
     $variables['rdf_metadata_attributes'][] = $parent_node_attributes;
 
     // Adds the relation to parent comment, if it exists.
-    if ($comment->pid->value != 0) {
+    if ($comment->pid->target_id != 0) {
       $parent_comment_attributes['rel'] = $comment->rdf_mapping['pid']['predicates'];
       // The parent comment URI is precomputed as part of the rdf_data so that
       // it can be cached as part of the entity.

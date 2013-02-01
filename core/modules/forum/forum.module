@@ -486,7 +486,7 @@ function forum_taxonomy_term_delete(Term $term) {
  * comment_save() calls hook_comment_publish() for all published comments.
  */
 function forum_comment_publish($comment) {
-  _forum_update_forum_index($comment->nid->value);
+  _forum_update_forum_index($comment->nid->target_id);
 }
 
 /**
@@ -499,7 +499,7 @@ function forum_comment_update($comment) {
   // comment_save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
   if (!$comment->status->value) {
-    _forum_update_forum_index($comment->nid->value);
+    _forum_update_forum_index($comment->nid->target_id);
   }
 }
 
@@ -507,14 +507,14 @@ function forum_comment_update($comment) {
  * Implements hook_comment_unpublish().
  */
 function forum_comment_unpublish($comment) {
-  _forum_update_forum_index($comment->nid->value);
+  _forum_update_forum_index($comment->nid->target_id);
 }
 
 /**
  * Implements hook_comment_delete().
  */
 function forum_comment_delete($comment) {
-  _forum_update_forum_index($comment->nid->value);
+  _forum_update_forum_index($comment->nid->target_id);
 }
 
 /**

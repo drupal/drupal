@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Entity\Tests\EntityFieldTest.
+ * Definition of Drupal\system\Tests\Entity\EntityFieldTest.
  */
 
 namespace Drupal\system\Tests\Entity;
@@ -46,7 +46,7 @@ class EntityFieldTest extends WebTestBase  {
     // Pass in the value of the name field when creating. With the user
     // field we test setting a field after creation.
     $entity = entity_create($entity_type, array());
-    $entity->user_id->value = $this->entity_user->uid;
+    $entity->user_id->target_id = $this->entity_user->uid;
     $entity->name->value = $this->entity_name;
 
     // Set a value for the test field.
@@ -96,26 +96,26 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertTrue($entity->user_id instanceof FieldInterface, format_string('%entity_type: Field implements interface', array('%entity_type' => $entity_type)));
     $this->assertTrue($entity->user_id[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', array('%entity_type' => $entity_type)));
 
-    $this->assertEqual($this->entity_user->uid, $entity->user_id->value, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entity_user->uid, $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by entity.
     $new_user = $this->drupalCreateUser();
     $entity->user_id->entity = $new_user;
-    $this->assertEqual($new_user->uid, $entity->user_id->value, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($new_user->uid, $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($new_user->name, $entity->user_id->entity->name, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by id.
     $new_user = $this->drupalCreateUser();
-    $entity->user_id->value = $new_user->uid;
-    $this->assertEqual($new_user->uid, $entity->user_id->value, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
+    $entity->user_id->target_id = $new_user->uid;
+    $this->assertEqual($new_user->uid, $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($new_user->name, $entity->user_id->entity->name, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
 
     // Try unsetting a field.
     $entity->name->value = NULL;
-    $entity->user_id->value = NULL;
+    $entity->user_id->target_id = NULL;
     $this->assertNull($entity->name->value, format_string('%entity_type: Name field is not set.', array('%entity_type' => $entity_type)));
-    $this->assertNull($entity->user_id->value, format_string('%entity_type: User ID field is not set.', array('%entity_type' => $entity_type)));
+    $this->assertNull($entity->user_id->target_id, format_string('%entity_type: User ID field is not set.', array('%entity_type' => $entity_type)));
     $this->assertNull($entity->user_id->entity, format_string('%entity_type: User entity field is not set.', array('%entity_type' => $entity_type)));
 
     // Test using isset(), empty() and unset().
@@ -186,7 +186,7 @@ class EntityFieldTest extends WebTestBase  {
     $this->entity_name = $this->randomName();
     $name_item[0]['value'] = $this->entity_name;
     $this->entity_user = $this->drupalCreateUser();
-    $user_item[0]['value'] = $this->entity_user->uid;
+    $user_item[0]['target_id'] = $this->entity_user->uid;
     $this->entity_field_text = $this->randomName();
     $text_item[0]['value'] = $this->entity_field_text;
 
@@ -196,7 +196,7 @@ class EntityFieldTest extends WebTestBase  {
       'field_test_text' => $text_item,
     ));
     $this->assertEqual($this->entity_name, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->uid, $entity->user_id->value, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entity_user->uid, $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
 
@@ -208,7 +208,7 @@ class EntityFieldTest extends WebTestBase  {
 
     $this->assertTrue($entity->name !== $entity2->name, format_string('%entity_type: Copying properties results in a different field object.', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->name->value, $entity2->name->value, format_string('%entity_type: Name field copied.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($entity->user_id->value, $entity2->user_id->value, format_string('%entity_type: User id field copied.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->user_id->target_id, $entity2->user_id->target_id, format_string('%entity_type: User id field copied.', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->field_test_text->value, $entity2->field_test_text->value, format_string('%entity_type: Text field copied.', array('%entity_type' => $entity_type)));
 
     // Tests adding a value to a field item list.
@@ -259,14 +259,14 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertEqual($entity->name->value, 'foo', format_string('%entity_type: Field value has been set via setPropertyValue() on an entity.', array('%entity_type' => $entity_type)));
 
     // Make sure the user id can be set to zero.
-    $user_item[0]['value'] = 0;
+    $user_item[0]['target_id'] = 0;
     $entity = entity_create($entity_type, array(
       'name' => $name_item,
       'user_id' => $user_item,
       'field_test_text' => $text_item,
     ));
-    $this->assertNotNull($entity->user_id->value, format_string('%entity_type: User id is not NULL', array('%entity_type' => $entity_type)));
-    $this->assertIdentical($entity->user_id->value, 0, format_string('%entity_type: User id has been set to 0', array('%entity_type' => $entity_type)));
+    $this->assertNotNull($entity->user_id->target_id, format_string('%entity_type: User id is not NULL', array('%entity_type' => $entity_type)));
+    $this->assertIdentical($entity->user_id->target_id, 0, format_string('%entity_type: User id has been set to 0', array('%entity_type' => $entity_type)));
 
     // Test setting the ID with the value only.
     $entity = entity_create($entity_type, array(
@@ -274,8 +274,8 @@ class EntityFieldTest extends WebTestBase  {
       'user_id' => 0,
       'field_test_text' => $text_item,
     ));
-    $this->assertNotNull($entity->user_id->value, format_string('%entity_type: User id is not NULL', array('%entity_type' => $entity_type)));
-    $this->assertIdentical($entity->user_id->value, 0, format_string('%entity_type: User id has been set to 0', array('%entity_type' => $entity_type)));
+    $this->assertNotNull($entity->user_id->target_id, format_string('%entity_type: User id is not NULL', array('%entity_type' => $entity_type)));
+    $this->assertIdentical($entity->user_id->target_id, 0, format_string('%entity_type: User id has been set to 0', array('%entity_type' => $entity_type)));
   }
 
   /**
@@ -307,7 +307,7 @@ class EntityFieldTest extends WebTestBase  {
     $this->assertTrue(is_string($entity->uuid->value), format_string('%entity_type: UUID value can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(LANGUAGE_NOT_SPECIFIED, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(language_load(LANGUAGE_NOT_SPECIFIED), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->uid, $entity->user_id->value, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entity_user->uid, $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_user->name, $entity->user_id->entity->name, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
   }
@@ -340,7 +340,7 @@ class EntityFieldTest extends WebTestBase  {
     $wrapped_entity = typed_data()->create($definition);
     $definitions = $wrapped_entity->getPropertyDefinitions($definition);
     $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']['type'], 'entityreference_field', $entity_type .': User field found.');
+    $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
     $this->assertEqual($definitions['field_test_text']['type'], 'text_field', $entity_type .': Test-text-field field found.');
 
     // Test introspecting an entity object.
@@ -349,14 +349,14 @@ class EntityFieldTest extends WebTestBase  {
 
     $definitions = $entity->getPropertyDefinitions();
     $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']['type'], 'entityreference_field', $entity_type .': User field found.');
+    $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
     $this->assertEqual($definitions['field_test_text']['type'], 'text_field', $entity_type .': Test-text-field field found.');
 
     $name_properties = $entity->name->getPropertyDefinitions();
     $this->assertEqual($name_properties['value']['type'], 'string', $entity_type .': String value property of the name found.');
 
     $userref_properties = $entity->user_id->getPropertyDefinitions();
-    $this->assertEqual($userref_properties['value']['type'], 'integer', $entity_type .': Entity id property of the user found.');
+    $this->assertEqual($userref_properties['target_id']['type'], 'integer', $entity_type .': Entity id property of the user found.');
     $this->assertEqual($userref_properties['entity']['type'], 'entity', $entity_type .': Entity reference property of the user found.');
 
     $textfield_properties = $entity->field_test_text->getPropertyDefinitions();

@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\entity_reference\Plugin\views\style\EntityReference.
+ */
+
+namespace Drupal\entity_reference\Plugin\views\style;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+use Drupal\views\Plugin\views\style\StylePluginBase;
+
+/**
+ * EntityReference style plugin.
+ *
+ * @ingroup views_style_plugins
+ *
+ * @Plugin(
+ *   id = "entity_reference",
+ *   title = @Translation("Entity Reference list"),
+ *   help = @Translation("Returns results as a PHP array of labels and rendered rows."),
+ *   theme = "views_view_unformatted",
+ *   type = "entity_reference"
+ * )
+ */
+class EntityReference extends StylePluginBase {
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase::usesRowPlugin.
+   */
+  protected $usesRowPlugin = TRUE;
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase::usesFields.
+   */
+  protected $usesFields = TRUE;
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase::usesGrouping.
+   */
+  protected $usesGrouping = FALSE;
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase\StylePluginBase::defineOptions().
+   */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['search_fields'] = array('default' => NULL);
+
+    return $options;
+  }
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase\StylePluginBase::buildOptionsForm().
+   */
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
+
+    $options = $this->displayHandler->getFieldLabels(TRUE);
+    $form['search_fields'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Search fields'),
+      '#options' => $options,
+      '#required' => TRUE,
+      '#default_value' => $this->options['search_fields'],
+      '#description' => t('Select the field(s) that will be searched when using the autocomplete widget.'),
+      '#weight' => -3,
+    );
+  }
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase\StylePluginBase::render().
+   */
+  public function render() {
+    if (!empty($this->view->live_preview)) {
+      return parent::render();
+    }
+
+    // Group the rows according to the grouping field, if specified.
+    $sets = $this->render_grouping($this->view->result, $this->options['grouping']);
+
+    // Grab the alias of the 'id' field added by
+    // entity_reference_plugin_display.
+    $id_field_alias = $this->view->storage->get('base_field');
+
+    // @todo We don't display grouping info for now. Could be useful for select
+    // widget, though.
+    $results = array();
+    $this->view->row_index = 0;
+    foreach ($sets as $records) {
+      foreach ($records as $values) {
+        // Sanitize HTML, remove line breaks and extra whitespace.
+        $output = $this->row_plugin->render($values);
+        $output = drupal_render($output);
+        $results[$values->{$id_field_alias}] = filter_xss_admin(preg_replace('/\s\s+/', ' ', str_replace("\n", '', $output)));
+        $this->view->row_index++;
+      }
+    }
+    unset($this->view->row_index);
+    return $results;
+  }
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::preview().
+   */
+  public function preview() {
+    if (!empty($this->view->live_preview)) {
+      return '<pre>' . check_plain($this->view->render()) . '</pre>';
+    }
+
+    return $this->view->render();
+  }
+
+  /**
+   * Overrides \Drupal\views\Plugin\views\style\StylePluginBase\StylePluginBase::even_empty().
+   */
+  function even_empty() {
+    return TRUE;
+  }
+}

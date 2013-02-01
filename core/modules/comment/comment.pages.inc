@@ -59,7 +59,7 @@ function comment_reply(Node $node, $pid = NULL) {
         if ($comment->status->value == COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
-          if ($comment->nid->value != $node->nid) {
+          if ($comment->nid->target_id != $node->nid) {
             // Attempting to reply to a comment not belonging to the current nid.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
             drupal_goto("node/$node->nid");
@@ -121,7 +121,7 @@ function comment_approve($cid) {
     comment_save($comment);
 
     drupal_set_message(t('Comment approved.'));
-    drupal_goto('node/' . $comment->nid->value);
+    drupal_goto('node/' . $comment->nid->target_id);
   }
   throw new NotFoundHttpException();
 }

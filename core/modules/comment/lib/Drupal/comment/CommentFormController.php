@@ -37,8 +37,8 @@ class CommentFormController extends EntityFormControllerNG {
 
     // If not replying to a comment, use our dedicated page callback for new
     // comments on nodes.
-    if (!$comment->id() && !$comment->pid->value) {
-      $form['#action'] = url('comment/reply/' . $comment->nid->value);
+    if (!$comment->id() && !$comment->pid->target_id) {
+      $form['#action'] = url('comment/reply/' . $comment->nid->target_id);
     }
 
     if (isset($form_state['comment_preview'])) {
@@ -163,7 +163,7 @@ class CommentFormController extends EntityFormControllerNG {
     // Used for conditional validation of author fields.
     $form['is_anonymous'] = array(
       '#type' => 'value',
-      '#value' => ($comment->id() ? !$comment->uid->value : !$user->uid),
+      '#value' => ($comment->id() ? !$comment->uid->target_id : !$user->uid),
     );
 
     // Make the comment inherit the current content language unless specifically
@@ -175,7 +175,8 @@ class CommentFormController extends EntityFormControllerNG {
 
     // Add internal comment properties.
     foreach (array('cid', 'pid', 'nid', 'uid', 'node_type', 'langcode') as $key) {
-      $form[$key] = array('#type' => 'value', '#value' => $comment->$key->value);
+      $key_name = key($comment->$key->offsetGet(0)->getProperties());
+      $form[$key] = array('#type' => 'value', '#value' => $comment->$key->{$key_name});
     }
 
     return parent::form($form, $form_state, $comment);
@@ -275,7 +276,7 @@ class CommentFormController extends EntityFormControllerNG {
     // @todo Too fragile. Should be prepared and stored in comment_form()
     // already.
     if (!$comment->is_anonymous && !empty($comment->name->value) && ($account = user_load_by_name($comment->name->value))) {
-      $comment->uid->value = $account->uid;
+      $comment->uid->target_id = $account->uid;
     }
     // If the comment was posted by an anonymous user and no author name was
     // required, use "Anonymous" by default.

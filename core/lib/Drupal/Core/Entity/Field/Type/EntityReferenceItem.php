@@ -8,13 +8,12 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\Field\FieldItemBase;
-use InvalidArgumentException;
 
 /**
- * Defines the 'entityreference_field' entity field item.
+ * Defines the 'entity_reference' entity field item.
  *
- * Available settings (below the definition's 'settings' key) are:
- *   - entity type: (required) The entity type to reference.
+ * Required settings (below the definition's 'settings' key) are:
+ *  - target_type: The entity type to reference.
  */
 class EntityReferenceItem extends FieldItemBase {
 
@@ -32,32 +31,32 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function getPropertyDefinitions() {
     // Definitions vary by entity type, so key them by entity type.
-    $entity_type = $this->definition['settings']['entity type'];
+    $target_type = $this->definition['settings']['target_type'];
 
-    if (!isset(static::$propertyDefinitions[$entity_type])) {
-      static::$propertyDefinitions[$entity_type]['value'] = array(
+    if (!isset(self::$propertyDefinitions[$target_type])) {
+      static::$propertyDefinitions[$target_type]['target_id'] = array(
         // @todo: Lookup the entity type's ID data type and use it here.
         'type' => 'integer',
         'label' => t('Entity ID'),
       );
-      static::$propertyDefinitions[$entity_type]['entity'] = array(
+      static::$propertyDefinitions[$target_type]['entity'] = array(
         'type' => 'entity',
         'constraints' => array(
-          'entity type' => $entity_type,
+          'entity type' => $target_type,
         ),
         'label' => t('Entity'),
         'description' => t('The referenced entity'),
-        // The entity object is computed out of the entity id.
+        // The entity object is computed out of the entity ID.
         'computed' => TRUE,
         'read-only' => FALSE,
-        'settings' => array('id source' => 'value'),
+        'settings' => array('id source' => 'target_id'),
       );
     }
-    return static::$propertyDefinitions[$entity_type];
+    return static::$propertyDefinitions[$target_type];
   }
 
   /**
-   * Overrides FieldItemBase::setValue().
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::setValue().
    */
   public function setValue($values) {
     // Treat the values as property value of the entity field, if no array
@@ -68,8 +67,8 @@ class EntityReferenceItem extends FieldItemBase {
 
     // Entity is computed out of the ID, so we only need to update the ID. Only
     // set the entity field if no ID is given.
-    if (isset($values['value'])) {
-      $this->properties['value']->setValue($values['value']);
+    if (isset($values['target_id'])) {
+      $this->properties['target_id']->setValue($values['target_id']);
     }
     elseif (isset($values['entity'])) {
       $this->properties['entity']->setValue($values['entity']);
@@ -77,9 +76,17 @@ class EntityReferenceItem extends FieldItemBase {
     else {
       $this->properties['entity']->setValue(NULL);
     }
-    unset($values['entity'], $values['value']);
+    unset($values['entity'], $values['target_id']);
     if ($values) {
-      throw new InvalidArgumentException('Property ' . key($values) . ' is unknown.');
+      throw new \InvalidArgumentException('Property ' . key($values) . ' is unknown.');
     }
+  }
+
+  /**
+   * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
+   */
+  public function get($property_name) {
+    $property_name = ($property_name == 'value') ? 'target_id' : $property_name;
+    return parent::get($property_name);
   }
 }

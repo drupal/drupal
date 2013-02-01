@@ -1,0 +1,80 @@
+api_version: '3.0'
+base_field: nid
+base_table: node
+core: 8.x
+module: entity_reference_test
+id: test_entity_reference
+description: ''
+human_name: 'Entity reference'
+tag: ''
+disabled: false
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: perm
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        title:
+          id: title
+          table: node
+          field: title
+          label: ''
+          alter:
+            alter_text: '0'
+            make_link: '0'
+            absolute: '0'
+            trim: '0'
+            word_boundary: '0'
+            ellipsis: '0'
+            strip_tags: '0'
+            html: '0'
+          hide_empty: '0'
+          empty_zero: '0'
+          link_to_node: '1'
+      filters:
+        status:
+          value: '1'
+          table: node
+          field: status
+          id: status
+          expose:
+            operator: '0'
+          group: '1'
+      sorts:
+        created:
+          id: created
+          table: node
+          field: created
+          order: DESC
+  entity_reference_1:
+    display_plugin: entity_reference
+    id: entity_reference_1
+    display_title: EntityReference
+    position: ''
+    display_options:
+      style:
+        type: entity_reference
+        options:
+          grouping: {  }
+          search_fields:
+            title: title
+      pager:
+        type: none
+        options:
+          offset: '0'

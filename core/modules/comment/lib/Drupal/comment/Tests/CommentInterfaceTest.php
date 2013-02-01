@@ -67,7 +67,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Test changing the comment author to "Anonymous".
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->subject->value, array('name' => ''));
-    $this->assertTrue(empty($comment->name->value) && $comment->uid->value == 0, 'Comment author successfully changed to anonymous.');
+    $this->assertTrue(empty($comment->name->value) && $comment->uid->target_id == 0, 'Comment author successfully changed to anonymous.');
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomName();
@@ -79,7 +79,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->subject->value, array('name' => $this->web_user->name));
-    $this->assertTrue($comment->name->value == $this->web_user->name && $comment->uid->value == $this->web_user->uid, 'Comment author successfully changed to a registered user.');
+    $this->assertTrue($comment->name->value == $this->web_user->name && $comment->uid->target_id == $this->web_user->uid, 'Comment author successfully changed to a registered user.');
 
     $this->drupalLogout();
 
@@ -92,7 +92,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
     $reply_loaded = comment_load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
-    $this->assertEqual($comment->id(), $reply_loaded->pid->value, 'Pid of a reply to a comment is set correctly.');
+    $this->assertEqual($comment->id(), $reply_loaded->pid->target_id, 'Pid of a reply to a comment is set correctly.');
     $this->assertEqual(rtrim($comment->thread->value, '/') . '.00/', $reply_loaded->thread->value, 'Thread of reply grows correctly.');
 
     // Second reply to comment #3 creating comment #4.

@@ -36,7 +36,7 @@ class EntityTestFormController extends EntityFormControllerNG {
     $form['user_id'] = array(
       '#type' => 'textfield',
       '#title' => 'UID',
-      '#default_value' => $translation->user_id->value,
+      '#default_value' => $translation->user_id->target_id,
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => TRUE,

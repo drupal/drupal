@@ -94,7 +94,7 @@ class EntityUUIDTest extends WebTestBase {
           $this->assertNotEqual($entity_duplicate->id(), $entity->id());
           break;
         default:
-          $this->assertEqual($entity_duplicate->{$property}->value, $entity->{$property}->value);
+          $this->assertEqual($entity_duplicate->{$property}->getValue(), $entity->{$property}->getValue());
       }
     }
     $entity_duplicate->save();

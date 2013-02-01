@@ -78,8 +78,8 @@ class DefaultViewRecentComments extends ViewTestBase {
     // Create some comments and attach them to the created node.
     for ($i = 0; $i < $this->masterDisplayResults; $i++) {
       $comment = entity_create('comment', array('node_type' => 'comment_node_' . $this->node->type));
-      $comment->uid->value = 0;
-      $comment->nid->value = $this->node->nid;
+      $comment->uid->target_id = 0;
+      $comment->nid->target_id = $this->node->nid;
       $comment->subject->value = 'Test comment ' . $i;
       $comment->comment_body->value = 'Test body ' . $i;
       $comment->comment_body->format = 'full_html';
@@ -107,7 +107,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['nid'] = $comment->nid->value;
+      $expected_result[$key]['nid'] = $comment->nid->target_id;
       $expected_result[$key]['subject'] = $comment->subject->value;
       $expected_result[$key]['cid'] = $comment->id();
       $expected_result[$key]['changed'] = $comment->changed->value;
@@ -139,7 +139,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['nid'] = $comment->nid->value;
+      $expected_result[$key]['nid'] = $comment->nid->target_id;
       $expected_result[$key]['subject'] = $comment->subject->value;
       $expected_result[$key]['changed'] = $comment->changed->value;
       $expected_result[$key]['created'] = $comment->created->value;

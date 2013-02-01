@@ -180,7 +180,7 @@ class Comment extends EntityNG implements ContentEntityInterface {
   protected $values = array(
     'langcode' => array(LANGUAGE_DEFAULT => array(0 => array('value' => LANGUAGE_NOT_SPECIFIED))),
     'name' => array(LANGUAGE_DEFAULT => array(0 => array('value' => ''))),
-    'uid' => array(LANGUAGE_DEFAULT => array(0 => array('value' => 0))),
+    'uid' => array(LANGUAGE_DEFAULT => array(0 => array('target_id' => 0))),
   );
 
   /**

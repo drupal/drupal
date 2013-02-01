@@ -444,14 +444,14 @@ function options_field_widget_info() {
   return array(
     'options_select' => array(
       'label' => t('Select list'),
-      'field types' => array('list_integer', 'list_float', 'list_text'),
+      'field types' => array('list_integer', 'list_float', 'list_text', 'entity_reference'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),
     ),
     'options_buttons' => array(
       'label' => t('Check boxes/radio buttons'),
-      'field types' => array('list_integer', 'list_float', 'list_text', 'list_boolean'),
+      'field types' => array('list_integer', 'list_float', 'list_text', 'list_boolean', 'entity_reference'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),

@@ -95,7 +95,7 @@ class Tables {
       // field), a field API field (a configurable field).
       $specifier = $specifiers[$key];
       // First, check for field API fields by trying to retrieve the field specified.
-      // Normally it is a field name, but field_purge_batch() is passing in 
+      // Normally it is a field name, but field_purge_batch() is passing in
       // id:$field_id so check that first.
       if (substr($specifier, 0, 3) == 'id:') {
         $field = field_info_field_by_id(substr($specifier, 3));
@@ -125,9 +125,11 @@ class Tables {
           // also use the property definitions for column.
           if ($key < $count) {
             $relationship_specifier = $specifiers[$key + 1];
-            $propertyDefinitions = typed_data()
-              ->create(array('type' => $field['type'] . '_field'))
-              ->getPropertyDefinitions();
+
+            // Get the field definitions form a mocked entity.
+            $entity = entity_create($entity_type, array());
+            $propertyDefinitions = $entity->{$field['field_name']}->getPropertyDefinitions();
+
             // If the column is not yet known, ie. the
             // $node->field_image->entity case then use the id source as the
             // column.

@@ -945,7 +945,7 @@ function comment_links(Comment $comment, Node $node) {
       );
       $links['comment-reply'] = array(
         'title' => t('reply'),
-        'href' => "comment/reply/{$comment->nid->value}/{$comment->id()}",
+        'href' => "comment/reply/{$comment->nid->target_id}/{$comment->id()}",
         'html' => TRUE,
       );
       if ($comment->status->value == COMMENT_NOT_PUBLISHED) {
@@ -967,7 +967,7 @@ function comment_links(Comment $comment, Node $node) {
       }
       $links['comment-reply'] = array(
         'title' => t('reply'),
-        'href' => "comment/reply/{$comment->nid->value}/{$comment->id()}",
+        'href' => "comment/reply/{$comment->nid->target_id}/{$comment->id()}",
         'html' => TRUE,
       );
     }
@@ -1322,7 +1322,7 @@ function comment_user_cancel($edit, $account, $method) {
     case 'user_cancel_reassign':
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
       foreach ($comments as $comment) {
-        $comment->uid->value = 0;
+        $comment->uid->target_id = 0;
         comment_save($comment);
       }
       break;
@@ -1357,7 +1357,7 @@ function comment_access($op, Comment $comment) {
   global $user;
 
   if ($op == 'edit') {
-    return ($user->uid && $user->uid == $comment->uid->value && $comment->status->value == COMMENT_PUBLISHED && user_access('edit own comments')) || user_access('administer comments');
+    return ($user->uid && $user->uid == $comment->uid->target_id && $comment->status->value == COMMENT_PUBLISHED && user_access('edit own comments')) || user_access('administer comments');
   }
 }
 
@@ -1560,7 +1560,7 @@ function comment_preview(Comment $comment) {
     }
 
     if (!empty($account->uid)) {
-      $comment->uid->value = $account->uid;
+      $comment->uid->target_id = $account->uid;
       $comment->name->value = check_plain($account->name);
     }
     elseif (empty($comment->name->value)) {
@@ -1576,7 +1576,7 @@ function comment_preview(Comment $comment) {
     $preview_build['comment_preview'] = $comment_build;
   }
 
-  if ($comment->pid->value) {
+  if ($comment->pid->target_id) {
     $build = array();
     $comment = $comment->pid->entity;
     if ($comment && $comment->status->value == COMMENT_PUBLISHED) {
@@ -1665,7 +1665,7 @@ function template_preprocess_comment(&$variables) {
   $variables['permalink'] = l(t('Permalink'), $uri['path'], $uri['options']);
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 
-  if ($comment->pid->value) {
+  if ($comment->pid->target_id) {
     // Fetch and store the parent comment information for use in templates.
     $comment_parent = $comment->pid->entity;
     $account_parent = comment_prepare_author($comment);
@@ -1720,14 +1720,14 @@ function template_preprocess_comment(&$variables) {
   if ($variables['new']) {
     $variables['attributes']['class'][] = 'new';
   }
-  if (!$comment->uid->value) {
+  if (!$comment->uid->target_id) {
     $variables['attributes']['class'][] = 'by-anonymous';
   }
   else {
-    if ($comment->uid->value == $variables['node']->uid) {
+    if ($comment->uid->target_id == $variables['node']->uid) {
       $variables['attributes']['class'][] = 'by-node-author';
     }
-    if ($comment->uid->value == $variables['user']->uid) {
+    if ($comment->uid->target_id == $variables['user']->uid) {
       $variables['attributes']['class'][] = 'by-viewer';
     }
   }

@@ -881,7 +881,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   );
 
   // Add additional field instance settings from the field module.
-  $additions = module_invoke($field['module'], 'field_instance_settings_form', $field, $instance);
+  $additions = module_invoke($field['module'], 'field_instance_settings_form', $field, $instance, $form_state);
   if (is_array($additions)) {
     $form['instance']['settings'] = $additions;
     $form['instance']['settings']['#weight'] = 10;

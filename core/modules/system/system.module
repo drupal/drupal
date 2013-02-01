@@ -2275,7 +2275,7 @@ function system_data_type_info() {
       'class' => '\Drupal\Core\Entity\Field\Type\LanguageItem',
       'list class' => '\Drupal\Core\Entity\Field\Type\Field',
     ),
-    'entityreference_field' => array(
+    'entity_reference_field' => array(
       'label' => t('Entity reference field item'),
       'description' => t('An entity field containing an entity reference.'),
       'class' => '\Drupal\Core\Entity\Field\Type\EntityReferenceItem',

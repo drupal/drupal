@@ -124,7 +124,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
         'data' => array(
           '#type' => 'link',
           '#title' => $node_title,
-          '#href' => 'node/' . $comment->nid->value,
+          '#href' => 'node/' . $comment->nid->target_id,
         ),
       ),
       'changed' => format_date($comment->changed->value, 'short'),
@@ -293,7 +293,7 @@ function comment_confirm_delete($form, &$form_state, Comment $comment) {
   return confirm_form(
     $form,
     t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject->value)),
-    'node/' . $comment->nid->value,
+    'node/' . $comment->nid->target_id,
     t('Any replies to this comment will be lost. This action cannot be undone.'),
     t('Delete'),
     t('Cancel'),
@@ -312,5 +312,5 @@ function comment_confirm_delete_submit($form, &$form_state) {
   // Clear the cache so an anonymous user sees that his comment was deleted.
   cache_invalidate_tags(array('content' => TRUE));
 
-  $form_state['redirect'] = "node/{$comment->nid->value}";
+  $form_state['redirect'] = "node/{$comment->nid->target_id}";
 }

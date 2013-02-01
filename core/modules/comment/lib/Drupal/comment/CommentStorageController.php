@@ -91,10 +91,10 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           // is extended in a faulty manner.
           throw new LogicException('preSave is called again without calling postSave() or releaseThreadLock()');
         }
-        if ($comment->pid->value == 0) {
+        if ($comment->pid->target_id == 0) {
           // This is a comment with no parent comment (depth 0): we start
           // by retrieving the maximum thread level.
-          $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid->value))->fetchField();
+          $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid->target_id))->fetchField();
           // Strip the "/" from the end of the thread.
           $max = rtrim($max, '/');
           // We need to get the value at the correct depth.
@@ -114,7 +114,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           // Get the max value in *this* thread.
           $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
             ':thread' => $parent->thread->value . '.%',
-            ':nid' => $comment->nid->value,
+            ':nid' => $comment->nid->target_id,
           ))->fetchField();
 
           if ($max == '') {
@@ -137,7 +137,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
         // has the lock, just move to the next integer.
         do {
           $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
-        } while (!lock()->acquire("comment:{$comment->nid->value}:$thread"));
+        } while (!lock()->acquire("comment:{$comment->nid->target_id}:$thread"));
         $this->threadLock = $thread;
       }
       if (empty($comment->created->value)) {
@@ -148,7 +148,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       }
       // We test the value with '===' because we need to modify anonymous
       // users as well.
-      if ($comment->uid->value === $user->uid && isset($user->name)) {
+      if ($comment->uid->target_id === $user->uid && isset($user->name)) {
         $comment->name->value = $user->name;
       }
       // Add the values which aren't passed into the function.
@@ -163,7 +163,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
   protected function postSave(EntityInterface $comment, $update) {
     $this->releaseThreadLock();
     // Update the {node_comment_statistics} table prior to executing the hook.
-    $this->updateNodeStatistics($comment->nid->value);
+    $this->updateNodeStatistics($comment->nid->target_id);
     if ($comment->status->value == COMMENT_PUBLISHED) {
       module_invoke_all('comment_publish', $comment);
     }
@@ -181,7 +181,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     comment_delete_multiple($child_cids);
 
     foreach ($comments as $comment) {
-      $this->updateNodeStatistics($comment->nid->value);
+      $this->updateNodeStatistics($comment->nid->target_id);
     }
   }
 
@@ -274,14 +274,14 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     $properties['pid'] = array(
       'label' => t('Parent ID'),
       'description' => t('The parent comment ID if this is a reply to a comment.'),
-      'type' => 'entityreference_field',
-      'settings' => array('entity type' => 'comment'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'comment'),
     );
     $properties['nid'] = array(
       'label' => t('Node ID'),
       'description' => t('The ID of the node of which this comment is a reply.'),
-      'type' => 'entityreference_field',
-      'settings' => array('entity type' => 'node'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'node'),
       'required' => TRUE,
     );
     $properties['langcode'] = array(
@@ -297,8 +297,8 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     $properties['uid'] = array(
       'label' => t('User ID'),
       'description' => t('The user ID of the comment author.'),
-      'type' => 'entityreference_field',
-      'settings' => array('entity type' => 'user'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'user'),
     );
     $properties['name'] = array(
       'label' => t('Name'),

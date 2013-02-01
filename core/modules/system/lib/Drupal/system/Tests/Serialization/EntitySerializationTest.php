@@ -90,7 +90,7 @@ class EntitySerializationTest extends WebTestBase {
         array('value' => $this->values['name']),
       ),
       'user_id' => array(
-        array('value' => $this->values['user_id']),
+        array('target_id' => $this->values['user_id']),
       ),
       'field_test_text' => array(
         array(
@@ -138,7 +138,7 @@ class EntitySerializationTest extends WebTestBase {
       'langcode' => '<langcode><value>' . LANGUAGE_NOT_SPECIFIED . '</value></langcode>',
       'default_langcode' => '<default_langcode><value/></default_langcode>',
       'name' => '<name><value>' . $this->values['name'] . '</value></name>',
-      'user_id' => '<user_id><value>' . $this->values['user_id'] . '</value></user_id>',
+      'user_id' => '<user_id><target_id>' . $this->values['user_id'] . '</target_id></user_id>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
     );
     // Sort it in the same order as normalised.

@@ -131,13 +131,13 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'name':
-          $name = ($comment->uid->value == 0) ? config('user.settings')->get('anonymous') : $comment->name->value;
+          $name = ($comment->uid->target_id == 0) ? config('user.settings')->get('anonymous') : $comment->name->value;
           $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 
         case 'mail':
-          if ($comment->uid->value != 0) {
-            $account = user_load($comment->uid->value);
+          if ($comment->uid->target_id != 0) {
+            $account = user_load($comment->uid->target_id);
             $mail = $account->mail;
           }
           else {
@@ -175,8 +175,8 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'parent':
-          if (!empty($comment->pid->value)) {
-            $parent = comment_load($comment->pid->value);
+          if (!empty($comment->pid->target_id)) {
+            $parent = comment_load($comment->pid->target_id);
             $replacements[$original] = $sanitize ? filter_xss($parent->subject) : $parent->subject;
           }
           break;

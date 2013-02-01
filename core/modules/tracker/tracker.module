@@ -230,7 +230,7 @@ function tracker_comment_update($comment) {
   // comment_save() calls hook_comment_publish() for all published comments
   // so we need to handle all other values here.
   if ($comment->status->value != COMMENT_PUBLISHED) {
-    _tracker_remove($comment->nid->value, $comment->uid->value, $comment->changed->value);
+    _tracker_remove($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
   }
 }
 
@@ -241,21 +241,21 @@ function tracker_comment_update($comment) {
  * comment_save() calls hook_comment_publish() for all published comments.
  */
 function tracker_comment_publish($comment) {
-  _tracker_add($comment->nid->value, $comment->uid->value, $comment->changed->value);
+  _tracker_add($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
 }
 
 /**
  * Implements hook_comment_unpublish().
  */
 function tracker_comment_unpublish($comment) {
-  _tracker_remove($comment->nid->value, $comment->uid->value, $comment->changed->value);
+  _tracker_remove($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
 }
 
 /**
  * Implements hook_comment_delete().
  */
 function tracker_comment_delete($comment) {
-  _tracker_remove($comment->nid->value, $comment->uid->value, $comment->changed->value);
+  _tracker_remove($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
 }
 
 /**
