@@ -19,7 +19,7 @@ function toolbar_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying administrative links') . '</dt>';
-      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative links across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by clicking on its corresponding tab.', array('@shortcuts-help' => url('admin/help/shortcut'))) . '</dd>';
+      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative components across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by clicking on its corresponding tab.', array('@shortcuts-help' => url('admin/help/shortcut'))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -41,8 +41,19 @@ function toolbar_permission() {
  */
 function toolbar_theme($existing, $type, $theme, $path) {
   $items['toolbar'] = array(
-    'render element' => 'toolbar',
-    'template' => 'toolbar',
+    'render element' => 'element',
+  );
+  $items['toolbar_item'] = array(
+    'render element' => 'element',
+  );
+  $items['toolbar_tab_wrapper'] = array(
+    'render element' => 'element',
+  );
+  $items['toolbar_tray_wrapper'] = array(
+    'render element' => 'element',
+  );
+  $items['toolbar_tray_heading_wrapper'] = array(
+    'render element' => 'element',
   );
   return $items;
 }
@@ -59,6 +70,57 @@ function toolbar_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function toolbar_element_info() {
+  $elements = array();
+
+  $elements['toolbar'] = array(
+    '#pre_render' => array('toolbar_pre_render'),
+    '#theme' => 'toolbar',
+    '#attached' => array(
+      'library' => array(
+        array('toolbar', 'toolbar'),
+      ),
+    ),
+    // Metadata for the toolbar wrapping element.
+    '#attributes' => array(
+      // The id cannot be simply "toolbar" or it will clash with the simpletest
+      // tests listing which produces a checkbox with attribute id="toolbar"
+      'id' => 'toolbar-administration',
+      // The 'overlay-displace-top' class pushes the overlay down, so it appears
+      // below the toolbar.
+      'class' => array('toolbar', 'overlay-displace-top'),
+      'role' => 'navigation',
+    ),
+    // Metadata for the administration bar.
+    '#bar' => array(
+      '#heading' => t('Toolbar items'),
+      '#attributes' => array(
+        'id' => 'toolbar-bar',
+        'class' => array('bar', 'overlay-displace-top', 'clearfix'),
+      ),
+    ),
+  );
+
+  // A toolbar item is wrapped in markup for common styling.  The 'tray'
+  // property contains a renderable array. theme_toolbar_tab() is a light
+  // wrapper around the l() function. The contents of tray are rendered in
+  // theme_toolbar_tab().
+  $elements['toolbar_item'] = array(
+    '#pre_render' => array('toolbar_pre_render_item'),
+    '#theme' => 'toolbar_item',
+    '#theme_wrappers' => array('toolbar_tab_wrapper'),
+    'tab' => array(
+      '#type' => 'link',
+      '#title' => NULL,
+      '#href' => '',
+    ),
+  );
+  return $elements;
 }
 
 /**
@@ -130,60 +192,229 @@ function _toolbar_initialize_page_cache() {
  */
 function toolbar_page_build(&$page) {
   $page['page_top']['toolbar'] = array(
-    '#pre_render' => array('toolbar_pre_render'),
+    '#type' => 'toolbar',
     '#access' => user_access('access toolbar'),
   );
 }
 
 /**
- * Provides pre_render function for the toolbar.
+ * Builds the Toolbar as a structured array ready for drupal_render().
  *
  * Since building the toolbar takes some time, it is done just prior to
  * rendering to ensure that it is built only if it will be displayed.
  *
+ * @param array $element
+ *  A renderable array.
+ *
+ * @return
+ *  A renderable array.
+ *
  * @see toolbar_page_build().
  */
-function toolbar_pre_render($toolbar) {
-  $toolbar = array_merge($toolbar, toolbar_view());
-  return $toolbar;
+function toolbar_pre_render($element) {
+
+  // Get the configured breakpoints to switch from vertical to horizontal
+  // toolbar presentation.
+  $breakpoints = entity_load('breakpoint_group', 'module.toolbar.toolbar');
+  if (!empty($breakpoints)) {
+    $media_queries = array();
+    $media_queries['toolbar']['breakpoints'] = array_map(
+      function ($object) {
+        return $object->mediaQuery;
+      },
+      $breakpoints->breakpoints
+    );
+
+    $element['#attached']['js'][] = array(
+      'data' => $media_queries,
+      'type' => 'setting',
+    );
+  }
+
+  // Get toolbar items from all modules that implement hook_toolbar().
+  $items = module_invoke_all('toolbar');
+  // Allow for altering of hook_toolbar().
+  drupal_alter('toolbar', $items);
+  // Sort the children.
+  uasort($items, 'element_sort');
+
+  // Merge in the original toolbar values.
+  $element = array_merge($element, $items);
+
+  // Render the children.
+  $element['#children'] = drupal_render_children($element);
+
+  return $element;
+}
+
+/**
+ * Returns HTML that wraps the administration toolbar.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the tray. Properties used: #children, #attributes and #bar.
+ */
+function theme_toolbar(&$variables) {
+  if (!empty($variables['element']['#children'])) {
+    $element = $variables['element'];
+    $trays = '';
+    foreach (element_children($element) as $key) {
+      $trays .= drupal_render($element[$key]['tray']);
+    }
+    return '<nav' . new Attribute($element['#attributes']) . '>'
+      . '<div' . new Attribute($element['#bar']['#attributes']) . '>'
+      . '<h2 class="element-invisible">' . $element['#bar']['#heading'] . '</h2>'
+      . $element['#children'] . '</div>' . $trays . '</nav>';
+  }
+}
+
+/**
+ * Provides markup for associating a tray trigger with a tray element.
+ *
+ * A tray is a responsive container that wraps renderable content. Trays present
+ * content well on small and large screens alike.
+ *
+ * @param array $element
+ *   A renderable array.
+ *
+ * @return
+ *   A renderable array.
+ */
+function toolbar_pre_render_item($element) {
+
+  // Attributes are nested in the #options property passed to l().
+  // To make the return structure of toolbar_pre_render_item() uniform,
+  // attributes will always be returned in the #attributes property. These
+  // properties will be included in the #options parameter passed to l() in
+  // theme_toolbar_tab().
+  $element['#attributes'] = $element['tab']['#options']['attributes'];
+
+  // If tray content is present, markup the tray and its associated trigger.
+  if (!empty($element['tray'])) {
+
+    // Trays are associated with their trigger by a unique ID.
+    $id = drupal_html_id('toolbar-tray');
+    $element['tab']['#tray_id'] = $id;
+
+    // Provide attributes for a tray trigger.
+    $attributes = array(
+      'id' => 'toolbar-tab-' . $id,
+      'data-toolbar-tray' => $id,
+      'aria-owns' => $id,
+      'role' => 'button',
+      'aria-pressed' => 'false',
+    );
+    // Merge in module-provided attributes.
+    $element['tab'] += array('#attributes' => array());
+    $element['tab']['#attributes'] += $attributes;
+    $element['tab']['#attributes']['class'][] = 'trigger';
+
+    // Provide attributes for the tray theme wrapper.
+    $attributes = array(
+      'id' => $id,
+      'data-toolbar-tray' => $id,
+      'aria-owned-by' => 'toolbar-tab-' . $id,
+    );
+    // Merge in module-provided attributes.
+    if (!isset($element['tray']['#wrapper_attributes'])) {
+      $element['tray']['#wrapper_attributes'] = array();
+    }
+    $element['tray']['#wrapper_attributes'] += $attributes;
+    $element['tray']['#wrapper_attributes']['class'][] = 'tray';
+    $element['tray']['#wrapper_attributes']['class'][] = 'overlay-displace-top';
+
+    if (!isset($element['tray']['#theme_wrappers'])) {
+      $element['tray']['#theme_wrappers'] = array();
+    }
+    // Add the standard theme_wrapper for trays.
+    array_unshift($element['tray']['#theme_wrappers'], 'toolbar_tray_wrapper');
+    // If a #heading is provided for the tray, provided a #theme_wrapper
+    // function to append it.
+    if (!empty($element['tray']['#heading'])) {
+      array_unshift($element['tray']['#theme_wrappers'], 'toolbar_tray_heading_wrapper');
+    }
+  }
+
+  return $element;
 }
 
 /**
  * Implements template_preprocess_HOOK().
  */
-function template_preprocess_toolbar(&$variables) {
-  // Metadata for the toolbar wrapping element.
-  $variables['attributes'] = new Attribute(array(
-    // The id cannot be simply "toolbar" or it will clash with the simpletest
-    // tests listing which produces a checkbox with attribute id="toolbar"
-    'id' => 'toolbar-administration',
-    // The 'overlay-displace-top' class pushes the overlay down, so it appears
-    // below the toolbar.
-    'class' => array('toolbar', 'overlay-displace-top'),
-    'role' => 'navigation'
-  ));
+function template_preprocess_toolbar_tab_wrapper(&$variables) {
+  if (!isset($variables['element']['#wrapper_attributes'])) {
+    $variables['element']['#wrapper_attributes'] = array();
+  }
+  $variables['element']['#wrapper_attributes']['class'][] = 'tab';
+}
 
-  // Provide a convenience variable for the themed tabs.
-  $variables['toolbar']['tabs']['#attributes']['class'][] = 'overlay-displace-top';
-  $variables['tabs'] = $variables['toolbar']['tabs'];
+/**
+ * Returns HTML for a toolbar item.
+ *
+ * This theme function only renders the tab portion of the toolbar item. The
+ * tray portion will be rendered later.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the tray. Property used: tab.
+ *
+ * @see toolbar_pre_render_item().
+ * @see theme_toolbar().
+ */
+function theme_toolbar_item(&$variables) {
+  return drupal_render($variables['element']['tab']);
+}
 
-  // Place the tabs in a top-level variable so that attribute information
-  // can be associated with each one.
-  foreach ($variables['toolbar']['trays'] as $key => $tray) {
-    // Create tray heading text. Prefer the provided heading text if it exists.
-    $heading = isset($tray['#heading']) ? $tray['#heading'] : t('@group actions', array('@group' => $key));
+/**
+ * Returns HTML for wrapping a toolbar tab.
+ *
+ * Toolbar tabs have a common styling and placement with the toolbar's bar area.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the tray. Properties used: #children and #attributes.
+ */
+function theme_toolbar_tab_wrapper(&$variables) {
+  if (!empty($variables['element']['#children'])) {
+    $element = $variables['element'];
+    return '<div' . new Attribute($element['#wrapper_attributes']) . '>' . $element['#children'] . '</div>';
+  }
+}
 
-    $variables['trays'][$key] = array(
-      'heading' => $heading,
-      'content' => $variables['toolbar']['trays'][$key],
-      'attributes' => new Attribute(array(
-          'id' => 'toolbar-tray-' . $key,
-          'class' => array('tray', 'overlay-displace-top', $key),
-          'data-toolbar-tray' => $key,
-          'aria-owned-by' => 'toolbar-tab-' . $key,
-        )
-      ),
-    );
+/**
+ * Returns HTML for wrapping a toolbar tray.
+ *
+ * Used in combination with theme_toolbar_tab() to create an
+ * association between a link tag in the administration bar and a tray.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the tray. Properties used: #children, #toolbar_identifier and
+ *     #attributes.
+ */
+function theme_toolbar_tray_wrapper(&$variables) {
+  if (!empty($variables['element']['#children'])) {
+    $element = $variables['element'];
+    return '<div' . new Attribute($element['#wrapper_attributes']) . '><div class="lining clearfix">' . $element['#children'] . '</div></div>';
+  }
+}
+
+/**
+ * Returns HTML for prepending a heading to a toolbar tray.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties and children of
+ *     the tray. Properties used: #children and #heading.
+ */
+function theme_toolbar_tray_heading_wrapper(&$variables) {
+  if (!empty($variables['element']['#children'])) {
+    $element = $variables['element'];
+    return '<h3 class="element-invisible">' . $element['#heading'] . '</h3>' . $element['#children'];
   }
 }
 
@@ -211,16 +442,19 @@ function toolbar_toolbar() {
 
   // The 'Home' tab is a simple link, with no corresponding tray.
   $items['home'] = array(
+    '#type' => 'toolbar_item',
     'tab' => array(
-      'title' => t('Home'),
-      'href' => '<front>',
-      'html' => FALSE,
-      'attributes' => array(
-        'title' => t('Home page'),
-        'class' => array('icon', 'icon-home'),
+      '#type' => 'link',
+      '#title' => t('Home'),
+      '#href' => '<front>',
+      '#options' => array(
+        'attributes' => array(
+          'title' => t('Home page'),
+          'class' => array('icon', 'icon-home'),
+        ),
       ),
     ),
-    'weight' => -20,
+    '#weight' => -20,
   );
 
   // Retrieve the administration menu from the database.
@@ -230,14 +464,14 @@ function toolbar_toolbar() {
   toolbar_menu_navigation_links($tree);
 
   $menu = array(
+    '#heading' => t('Administration menu'),
     'toolbar_administration' => array(
       '#type' => 'container',
       '#attributes' => array(
-        'class' => array('toolbar-menu',),
+        'class' => array('toolbar-menu-administration'),
       ),
       'administration_menu' => menu_tree_output($tree),
     ),
-    '#heading' => t('Administration menu'),
   );
 
   // To conserve bandwidth, we only include the top-level links in the HTML.
@@ -247,107 +481,26 @@ function toolbar_toolbar() {
   // @see toolbar_subtrees_jsonp()
   $menu['toolbar_administration']['#attached']['js'][url('toolbar/subtrees/' . _toolbar_get_subtree_hash())] = array('type' => 'external');
 
+  // The administration element has a link that is themed to correspond to
+  // a toolbar tray. The tray contains the full administrative menu of the site.
   $items['administration'] = array(
+    '#type' => 'toolbar_item',
     'tab' => array(
-      'title' => t('Menu'),
-      'href' => 'admin',
-      'html' => FALSE,
-      'attributes' => array(
-        'title' => t('Admin menu'),
-        'class' => array('icon', 'icon-menu'),
+      '#type' => 'link',
+      '#title' => t('Menu'),
+      '#href' => 'admin',
+      '#options' => array(
+        'attributes' => array(
+          'title' => t('Admin menu'),
+          'class' => array('icon', 'icon-menu'),
+        ),
       ),
     ),
     'tray' => $menu,
-    'weight' => -15,
+    '#weight' => -15,
   );
 
   return $items;
-}
-
-/**
- * Builds the Toolbar as a structured array ready for drupal_render().
- *
- * @return
- *   A renderable arrray, with two children:
- *   - 'tabs': an array of links, rendered by theme('links').
- *   - 'trays': an array of render elements displayed when the corresponding tab
- *     is activated.
- */
-function toolbar_view() {
-
-  $build = array('#theme' => 'toolbar');
-  $build['#attached']['library'][] = array('toolbar', 'toolbar');
-
-  // Get the configured breakpoint to switch from vertical to horizontal
-  // toolbar presentation.
-  $breakpoints = entity_load('breakpoint_group', 'module.toolbar.toolbar');
-  if (!empty($breakpoints)) {
-    $media_queries = array();
-    $media_queries['toolbar']['breakpoints'] = array_map(
-      function($object) {return $object->mediaQuery;},
-      $breakpoints->breakpoints);
-
-    $build['#attached']['js'][] = array(
-      'data' => $media_queries,
-      'type' => 'setting',
-    );
-    // // Load the breakpoints for toolbar.
-    foreach ($breakpoints->breakpoints as $key => $breakpoint) {
-      $build['#attached']['js'][0]['data']['toolbar']['breakpoints'][$key] = $breakpoint->mediaQuery;
-    }
-  }
-
-  // Get toolbar items from all modules that implement hook_toolbar() or
-  // hook_toolbar_alter().
-  $toolbar_groups = module_invoke_all('toolbar');
-  drupal_alter('toolbar', $toolbar_groups);
-  uasort($toolbar_groups, 'drupal_sort_weight');
-
-  // Build the tabs and trays from the toolbar groups.
-  $build['trays'] = array();
-  $build['tabs'] = array(
-    '#theme' => 'links',
-    '#links' => array(),
-    '#attributes' => array(
-      'class' => array('bar', 'clearfix'),
-    ),
-    '#heading' => array('text' => t('Toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
-  );
-  $tab_defaults = array(
-    'title' => '',
-    'href' => '',
-    'html' => FALSE,
-    'attributes' => new Attribute(),
-  );
-
-  foreach ($toolbar_groups as $group => $items) {
-    if ($tab = $items['tab']) {
-      // Merge in the defaults.
-      $tab += $tab_defaults;
-    }
-    // Register a tray if one is associated with this tab.
-    if (!empty($items['tray'])) {
-      // Provide an id, a data attribute linking each tab to the corresponding
-      // tray and aria information.
-      $tab['attributes']['id'] = 'toolbar-tab-' . $group;
-      $tab['attributes']['data-toolbar-tray'] = $group;
-      $tab['attributes']['aria-owns'] = 'toolbar-tray-' . $group;
-      $tab['attributes']['role'] = 'button';
-      $tab['attributes']['aria-pressed'] = 'false';
-
-      if (array_key_exists($group, $build['trays'])) {
-        array_merge($build['trays'][$group], $items['tray']);
-      }
-      else {
-        // Assign the tray to the build.
-        $build['trays'][$group] = $items['tray'];
-      }
-    }
-    // Assign the tabs to the build.
-    $build['tabs']['#links'][$group] = $tab;
-  }
-
-  return $build;
 }
 
 /**

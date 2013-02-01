@@ -74,13 +74,13 @@ class UserAccountLinksTests extends WebTestBase {
 
     // Verify that the 'My account' link is enabled.
     $this->drupalGet('admin/structure/menu/manage/account');
-    $this->assertFieldChecked('edit-mlid2-hidden', "The 'My account' link is enabled by default.");
+    $this->assertFieldChecked('edit-links-mlid2-hidden', "The 'My account' link is enabled by default.");
 
     // Disable the 'My account' link.
     $edit = array(
-      'mlid:2[hidden]' => FALSE,
+      'links[mlid:2][hidden]' => FALSE,
     );
-    $this->drupalPost('admin/structure/menu/manage/account', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/menu/manage/account', $edit, t('Save'));
 
     // Get the homepage.
     $this->drupalGet('<front>');

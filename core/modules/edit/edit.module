@@ -47,26 +47,29 @@ function edit_toolbar() {
   }
 
   $tab['edit'] = array(
+    '#type' => 'toolbar_item',
     'tab' => array(
-      'title' => t('Edit'),
-      'href' => '',
-      'html' => FALSE,
-      'attributes' => array(
-        'class' => array('icon', 'icon-edit', 'edit-nothing-editable-hidden'),
+      '#type' => 'link',
+      '#title' => t('Edit'),
+      '#href' => '',
+      '#options' => array(
+        'html' => FALSE,
+        'attributes' => array(
+          'id' => 'toolbar-tab-edit',
+          'class' => array('icon', 'icon-edit', 'edit-nothing-editable-hidden'),
+        ),
       ),
     ),
-    'tray' => array(
-      '#attached' => array(
-        'library' => array(
-          array('edit', 'edit'),
-        ),
+    '#attached' => array(
+      'library' => array(
+        array('edit', 'edit'),
       ),
     ),
   );
 
   // Include the attachments and settings for all available editors.
   $attachments = drupal_container()->get('edit.editor.selector')->getAllEditorAttachments();
-  $tab['edit']['tray']['#attached'] = NestedArray::mergeDeep($tab['edit']['tray']['#attached'], $attachments);
+  $tab['edit']['#attached'] = NestedArray::mergeDeep($tab['edit']['#attached'], $attachments);
 
   return $tab;
 }

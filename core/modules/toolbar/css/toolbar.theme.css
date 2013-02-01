@@ -31,18 +31,20 @@
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3333);
   color: #dddddd;
 }
-.toolbar .bar a:hover {
+.toolbar .bar a {
+  color: #ffffff;
+}
+.toolbar .bar .tab > a {
+  font-weight: bold;
+}
+.toolbar .bar .tab > a:hover {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
   text-decoration: none;
 }
-.toolbar .bar a.active {
+.toolbar .bar .tab > a.active {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
-}
-.toolbar .bar a {
-  color: #ffffff;
-  font-weight: bold;
 }
 
 /**

@@ -608,13 +608,8 @@ function shortcut_preprocess_page(&$variables) {
  * Implements hook_toolbar().
  */
 function shortcut_toolbar() {
+  $items = array();
   $links = shortcut_renderable_links();
-  $links['#attached'] = array(
-    'css' => array(
-      drupal_get_path('module', 'shortcut') . '/shortcut.base.css',
-      drupal_get_path('module', 'shortcut') . '/shortcut.theme.css',
-    ),
-  );
   $shortcut_set = shortcut_current_displayed_set();
   $configure_link = NULL;
   if (shortcut_set_edit_access($shortcut_set)) {
@@ -625,26 +620,35 @@ function shortcut_toolbar() {
       '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
     );
   }
-
-  $links_tray = array(
-    '#heading' => t('User-defined shortcuts'),
-    'shortcuts' => $links,
-    'configure' => $configure_link,
-  );
-
-  $items['shortcuts'] = array(
-    'tab' => array(
-      'title' => t('Shortcuts'),
-      'href' => 'admin/config/user-interface/shortcut',
-      'html' => FALSE,
-      'attributes' => array(
-        'title' => t('Shortcuts'),
-        'class' => array('icon', 'icon-shortcut'),
+  if (!empty($links) || !empty($configure_link)) {
+    $items['shortcuts'] = array(
+      '#type' => 'toolbar_item',
+      'tab' => array(
+        '#type' => 'link',
+        '#title' => t('Shortcuts'),
+        '#href' => 'admin/config/user-interface/shortcut',
+        '#options' => array(
+          'attributes' => array(
+            'title' => t('Shortcuts'),
+            'class' => array('icon', 'icon-shortcut'),
+          ),
+        ),
       ),
-    ),
-    'tray' => $links_tray,
-    'weight' => -10,
-  );
+      'tray' => array(
+        '#heading' => t('User-defined shortcuts'),
+        'shortcuts' => $links,
+        'configure' => $configure_link,
+      ),
+      '#weight' => -10,
+      '#attached' => array(
+        'css' => array(
+          drupal_get_path('module', 'shortcut') . '/shortcut.base.css',
+          drupal_get_path('module', 'shortcut') . '/shortcut.theme.css',
+        ),
+      ),
+    );
+  }
+
   return $items;
 }
 

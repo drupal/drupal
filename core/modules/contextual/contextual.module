@@ -69,8 +69,6 @@ function contextual_element_info() {
     '#pre_render' => array('contextual_pre_render_links'),
     '#theme' => 'links__contextual',
     '#links' => array(),
-    '#prefix' => '<div class="contextual">',
-    '#suffix' => '</div>',
     '#attributes' => array('class' => array('contextual-links')),
     '#attached' => array(
       'library' => array(
