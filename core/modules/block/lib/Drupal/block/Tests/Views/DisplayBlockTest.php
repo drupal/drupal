@@ -137,4 +137,15 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertBlockAppears($block_4);
   }
 
+  /**
+   * Test the block form for a Views block.
+   */
+  public function testViewsBlockForm() {
+    $this->drupalLogin($this->drupalCreateUser(array('administer blocks')));
+    $default_theme = variable_get('theme_default', 'stark');
+    $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
+    $elements = $this->xpath('//input[@name="label"]');
+    $this->assertTrue(empty($elements), 'The label field is not found for Views blocks.');
+  }
+
 }
