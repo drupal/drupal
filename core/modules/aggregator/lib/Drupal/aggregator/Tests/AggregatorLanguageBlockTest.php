@@ -80,7 +80,7 @@ class AggregatorLanguageBlockTest extends AggregatorTestBase {
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet('admin/structure/block', array('language' => $langcode));
       $this->clickLink(t('Add block'));
-      $this->assertText($feed->title);
+      $this->assertText($feed->label());
     }
   }
 }
