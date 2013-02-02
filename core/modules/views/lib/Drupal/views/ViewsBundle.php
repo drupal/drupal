@@ -35,6 +35,8 @@ class ViewsBundle extends Bundle {
     $container->register('views.views_data', 'Drupal\views\ViewsDataCache')
       ->addArgument(new Reference('cache.views_info'))
       ->addArgument(new Reference('config.factory'));
+
+    $container->register('views.executable', 'Drupal\views\ViewExecutableFactory');
   }
 
 }

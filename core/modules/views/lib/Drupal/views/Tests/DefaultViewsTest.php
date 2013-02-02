@@ -123,7 +123,7 @@ class DefaultViewsTest extends WebTestBase {
     $views = $controller->load();
 
     foreach ($views as $name => $view_storage) {
-      $view = new ViewExecutable($view_storage);
+      $view = $view_storage->get('executable');
       $view->initDisplay();
       foreach ($view->storage->get('display') as $display_id => $display) {
         $view->setDisplay($display_id);

@@ -139,7 +139,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   public function get($property_name, $langcode = NULL) {
     // Ensure that an executable View is available.
     if ($property_name == 'executable' && !isset($this->{$property_name})) {
-      $this->set('executable', new ViewExecutable($this));
+      $this->set('executable', drupal_container()->get('views.executable')->get($this));
     }
 
     return parent::get($property_name, $langcode);
