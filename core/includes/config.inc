@@ -24,22 +24,16 @@ const CONFIG_IMPORT_LOCK = 'config_import';
  *   The name of the module or theme to install default configuration for.
  */
 function config_install_default_config($type, $name) {
+  // If this module defines any ConfigEntity types then create an empty
+  // manifest file for each of them.
+  foreach (config_get_module_config_entities($name) as $entity_info) {
+    config('manifest.' . $entity_info['config_prefix'])->save();
+  }
+
   $config_dir = drupal_get_path($type, $name) . '/config';
   if (is_dir($config_dir)) {
     $source_storage = new FileStorage($config_dir);
     $target_storage = drupal_container()->get('config.storage');
-
-    // If this module defines any ConfigEntity types, then create a manifest file
-    // for each of them with a listing of the objects it maintains.
-    foreach (config_get_module_config_entities($name) as $entity_type => $entity_info) {
-      $manifest_config = config('manifest.' . $entity_info['config_prefix']);
-      $manifest_data = array();
-      foreach ($source_storage->listAll($entity_info['config_prefix']) as $config_name) {
-        list(, , $id) = explode('.', $config_name);
-        $manifest_data[$id]['name'] = $config_name;
-      }
-      $manifest_config->setData($manifest_data)->save();
-    }
 
     $config_changes = array(
       'delete' => array(),
