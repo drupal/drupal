@@ -17,6 +17,7 @@ display:
           table: views
           validate:
             type: php
+          plugin_id: 'null'
       cache:
         type: none
       exposed_form:

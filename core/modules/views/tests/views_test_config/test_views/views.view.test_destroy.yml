@@ -36,18 +36,21 @@ display:
           id: created_day
           style_plugin: default_summary
           table: node
+          plugin_id: node_created_day
         created_fulldate:
           default_argument_type: fixed
           field: created_fulldate
           id: created_fulldate
           style_plugin: default_summary
           table: node
+          plugin_id: node_created_fulldate
         created_month:
           default_argument_type: fixed
           field: created_month
           id: created_month
           style_plugin: default_summary
           table: node
+          plugin_id: node_created_month
       cache:
         type: none
       empty:
@@ -56,11 +59,13 @@ display:
           field: area
           id: area
           table: views
+          plugin_id: text
         area_1:
           empty: '0'
           field: area
           id: area_1
           table: views
+          plugin_id: text
       exposed_form:
         type: basic
       fields:
@@ -68,49 +73,59 @@ display:
           field: created
           id: created
           table: node
+          plugin_id: date
         nid:
           field: nid
           id: nid
           table: node
+          plugin_id: node
         path:
           field: path
           id: path
           table: node
+          plugin_id: node_path
       filters:
         nid:
           field: nid
           id: nid
           table: node
+          plugin_id: numeric
         status:
           field: status
           id: status
           table: node
+          plugin_id: boolean
         title:
           field: title
           id: title
           table: node
+          plugin_id: string
       footer:
         area:
           empty: '0'
           field: area
           id: area
           table: views
+          plugin_id: text
         area_1:
           empty: '0'
           field: area
           id: area_1
           table: views
+          plugin_id: text
       header:
         area:
           empty: '0'
           field: area
           id: area
           table: views
+          plugin_id: text
         area_1:
           empty: '0'
           field: area
           id: area_1
           table: views
+          plugin_id: text
       pager:
         type: full
       query:
@@ -120,25 +135,30 @@ display:
           field: cid
           id: cid
           table: node
+          plugin_id: standard
         pid:
           field: pid
           id: pid
           table: comment
           relationship: cid
+          plugin_id: standard
         uid:
           field: uid
           id: uid
           table: comment
           relationship: cid
+          plugin_id: standard
       sorts:
         last_comment_name:
           field: last_comment_name
           id: last_comment_name
           table: node_comment_statistics
+          plugin_id: comment_ncs_last_comment_name
         last_comment_timestamp:
           field: last_comment_timestamp
           id: last_comment_timestamp
           table: node_comment_statistics
+          plugin_id: date
       style:
         type: default
       row:

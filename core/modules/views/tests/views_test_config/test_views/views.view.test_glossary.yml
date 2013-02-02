@@ -20,6 +20,7 @@ display:
           summary_options:
             items_per_page: '25'
           table: node
+          plugin_id: string
       cache:
         type: none
       exposed_form:
@@ -30,6 +31,7 @@ display:
           id: title
           label: ''
           table: node
+          plugin_id: node
       pager:
         type: full
       query:

@@ -20,6 +20,7 @@ display:
           id: title
           label: ''
           table: node
+          plugin_id: node
       filters:
         status:
           expose:
@@ -29,6 +30,7 @@ display:
           id: status
           table: node
           value: '1'
+          plugin_id: boolean
       pager:
         type: full
       query:

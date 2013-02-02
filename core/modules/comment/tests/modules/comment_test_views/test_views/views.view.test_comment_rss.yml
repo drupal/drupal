@@ -35,6 +35,7 @@ display:
           id: subject
           table: comment
           field: subject
+          plugin_id: comment
           label: ''
           alter:
             alter_text: '0'
@@ -61,4 +62,3 @@ human_name: test_comment_rss
 module: views
 id: test_comment_rss
 tag: ''
-uuid: 9b1b1e58-d41b-468a-9d04-4e6bde742c29

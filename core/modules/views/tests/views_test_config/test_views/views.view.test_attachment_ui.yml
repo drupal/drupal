@@ -24,6 +24,7 @@ display:
           id: id
           table: views_test_data
           field: id
+          plugin_id: numeric
     display_plugin: default
     display_title: Master
     id: default

@@ -33,31 +33,37 @@ display:
           id: uid
           table: node
           field: uid
+          plugin_id: standard
       fields:
         type:
           id: type
           table: node
           field: type
+          plugin_id: node_type
         title:
           id: title
           table: node
           field: title
+          plugin_id: node
         name:
           id: name
           table: users
           field: name
           relationship: uid
           label: Author
+          plugin_id: user_name
         comment_count:
           id: comment_count
           table: node_comment_statistics
           field: comment_count
           label: Replies
+          plugin_id: numeric
         last_comment_timestamp:
           id: last_comment_timestamp
           table: node_comment_statistics
           field: last_comment_timestamp
           label: 'Last Post'
+          plugin_id: comment_last_timestamp
         timestamp:
           id: timestamp
           table: history
@@ -65,6 +71,7 @@ display:
           label: ''
           link_to_node: 0
           comments: 1
+          plugin_id: node_history_user_timestamp
         new_comments:
           id: new_comments
           table: node
@@ -73,11 +80,13 @@ display:
           hide_empty: true
           suffix: ' new'
           link_to_comment: 1
+          plugin_id: node_new_comments
       sorts:
         last_comment_timestamp:
           id: last_comment_timestamp
           table: node_comment_statistics
           field: last_comment_timestamp
+          plugin_id: date
       arguments:
         uid_touch:
           id: uid_touch
@@ -91,6 +100,7 @@ display:
           summary:
             format: default_summary
           specify_validation: 1
+          plugin_id: argument_comment_user_uid
       filters:
         status:
           id: status
@@ -100,6 +110,7 @@ display:
           group: 0
           expose:
             operator: false
+          plugin_id: boolean
       style:
         type: table
         options:

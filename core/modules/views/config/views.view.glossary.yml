@@ -34,6 +34,7 @@ display:
           table: node
           field: title
           link_to_node: 1
+          plugin_id: node
         name:
           id: name
           table: users
@@ -41,12 +42,14 @@ display:
           label: Author
           link_to_user: 1
           relationship: uid
+          plugin_id: user_name
         changed:
           id: changed
           table: node
           field: changed
           label: 'Last update'
           date_format: long
+          plugin_id: date
       arguments:
         title:
           id: title
@@ -66,11 +69,13 @@ display:
           case: upper
           path_case: lower
           transform_dash: 0
+          plugin_id: string
       relationships:
         uid:
           id: uid
           table: node
           field: uid
+          plugin_id: standard
       style:
         type: table
         options:
@@ -143,6 +148,7 @@ display:
           case: upper
           path_case: lower
           transform_dash: 0
+          plugin_id: string
       displays:
         default: default
         page: page_1

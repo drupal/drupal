@@ -43,6 +43,7 @@ display:
           label: Username
           link_to_user: '1'
           format_username: '1'
+          plugin_id: user_name
         translation_link:
           id: translation_link
           table: users
@@ -58,6 +59,7 @@ display:
           empty_zero: '0'
           hide_alter_empty: '1'
           text: Translate
+          plugin_id: translation_entity_link
       filters:
         uid_raw:
           id: uid_raw
@@ -68,12 +70,14 @@ display:
             value: '0'
           group: '1'
           exposed: '0'
+          plugin_id: numeric
       sorts:
         created:
           id: created
           table: users
           field: created
           order: DESC
+          plugin_id: date
       title: People
       empty:
         area:
@@ -83,6 +87,7 @@ display:
           empty: '1'
           content: 'No people available.'
           format: filtered_html
+          plugin_id: text
   page_1:
     display_plugin: page
     id: page_1

@@ -80,6 +80,7 @@ display:
           overwrite_anonymous: '0'
           anonymous_text: ''
           format_username: '1'
+          plugin_id: user_name
         rid:
           id: rid
           table: users_roles
@@ -130,6 +131,7 @@ display:
           hide_alter_empty: '1'
           type: separator
           separator: ''
+          plugin_id: user_roles
       filters:
         status:
           value: '1'
@@ -139,6 +141,7 @@ display:
           expose:
             operator: '0'
           group: '1'
+          plugin_id: boolean
       sorts: {  }
       title: test_user_role
   page_1:

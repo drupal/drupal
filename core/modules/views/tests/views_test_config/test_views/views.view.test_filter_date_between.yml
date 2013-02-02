@@ -16,11 +16,13 @@ display:
           field: nid
           id: nid
           table: node
+          plugin_id: node
       filters:
         created:
           field: created
           id: created
           table: node
+          plugin_id: date
       pager:
         type: full
       query:
