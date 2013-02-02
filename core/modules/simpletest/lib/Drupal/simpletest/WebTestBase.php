@@ -829,6 +829,7 @@ abstract class WebTestBase extends TestBase {
       $class = get_parent_class($class);
     }
     if ($modules) {
+      $modules = array_unique($modules);
       $success = module_enable($modules, TRUE);
       $this->assertTrue($success, t('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
       $this->rebuildContainer();

@@ -101,7 +101,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       }
       $class = get_parent_class($class);
     }
-    $this->enableModules($modules, FALSE);
+    $this->enableModules(array_unique($modules), FALSE);
   }
 
   /**
