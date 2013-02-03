@@ -335,7 +335,6 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    * Test the comment-specific overrides of the entity handler.
    */
   public function testCommentHandler() {
-    comment_add_default_comment_field('node', 'article');
     // Build a fake field instance.
     $field = array(
       'translatable' => FALSE,

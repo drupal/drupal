@@ -54,7 +54,7 @@ function comment_overview_bundles() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => t('No comment bundles available.'),
+    '#empty' => t('No comment forms available.'),
   );
 
   return $build;

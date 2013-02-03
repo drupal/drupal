@@ -211,14 +211,14 @@ function comment_schema() {
         'status',
         'created',
         'cid',
-        'thread'
+        'thread',
       ),
       'comment_uid' => array('uid'),
       'comment_entity_langcode' => array(
         'entity_id',
         'entity_type',
         'field_name',
-        'langcode'
+        'langcode',
       ),
       'comment_created' => array('created'),
     ),
@@ -288,12 +288,12 @@ function comment_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The total number of comments on this node.',
+        'description' => 'The total number of comments on this entity.',
       ),
     ),
     'primary key' => array('entity_id', 'entity_type', 'field_name'),
     'indexes' => array(
-      'node_comment_timestamp' => array('last_comment_timestamp'),
+      'last_comment_timestamp' => array('last_comment_timestamp'),
       'comment_count' => array('comment_count'),
       'last_comment_uid' => array('last_comment_uid'),
     ),
@@ -314,17 +314,14 @@ function comment_schema() {
  * Implements hook_field_schema().
  */
 function comment_field_schema($field) {
-  $columns = array();
-  if ($field['type'] == 'comment') {
-    $columns += array(
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    );
-  }
+  $columns = array(
+    'comment' => array(
+      'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+  );
   return array(
     'columns' => $columns,
   );
@@ -453,9 +450,13 @@ function comment_update_8004() {
  */
 function comment_update_8005(&$sandbox) {
   // Remove the comment_node foreign key.
-  db_drop_index('comment', 'comment_node');
+  if (db_index_exists('comment', 'comment_node')) {
+    db_drop_index('comment', 'comment_node');
+  }
   // Remove the comment_nid_langcode index.
   db_drop_index('comment', 'comment_nid_langcode');
+  // Remove comment_num_new index to create new latter here.
+  db_drop_index('comment', 'comment_num_new');
   // Add the entity_type and field_name columns to comment.
   db_add_field('comment', 'entity_type', array(
     'type' => 'varchar',
@@ -478,14 +479,32 @@ function comment_update_8005(&$sandbox) {
     'default' => 0,
     'description' => 'The entity_id to which this comment is a reply.',
   ));
+  db_add_index('comment', 'comment_num_new', array(
+    'entity_id',
+    'entity_type',
+    'field_name',
+    'status',
+    'created',
+    'cid',
+    'thread'
+  ));
   // Add the comment_entity_langcode index.
   db_add_index('comment', 'comment_entity_langcode', array(
     'entity_id',
     'entity_type',
     'field_name',
-    'langcode'
+    'langcode',
   ));
+
   // Rename node_comment_statistics to comment_entity_statistics.
+  // Remove the statistics_node foreign key.
+  if (db_index_exists('node_comment_statistics', 'statistics_node')) {
+    db_drop_index('node_comment_statistics', 'statistics_node');
+  }
+  // We need to drop all indexes to make sure their constrains named properly.
+  db_drop_primary_key('node_comment_statistics');
+  db_drop_index('node_comment_statistics', 'node_comment_timestamp');
+
   db_rename_table('node_comment_statistics', 'comment_entity_statistics');
   // Remove the statistics_node foreign key from entity_comment_statistics.
   // Add the entity_type and field_name columns to comment_entity_statistics.
@@ -510,6 +529,9 @@ function comment_update_8005(&$sandbox) {
     'default' => 0,
     'description' => 'The entity_id to which this comment is a reply.',
   ));
+  // Add indexes.
+  db_add_index('comment_entity_statistics', 'last_comment_timestamp', array('last_comment_timestamp'));
+  db_add_primary_key('comment_entity_statistics', array('entity_id', 'entity_type', 'field_name'));
   $t = get_t();
   return $t('Updated database to reflect new comment structure');
 }
@@ -524,7 +546,7 @@ function comment_update_8006(&$sandbox) {
     // Add a default comment field for existing node comments.
     $field = array(
       'cardinality' => '1',
-      // We need one per node type to match the existing bundles.
+      // We need one per content type to match the existing bundles.
       'field_name' => 'comment_node_' . $node_type,
       'module' => 'comment',
       'settings' => array(),
@@ -547,31 +569,6 @@ function comment_update_8006(&$sandbox) {
       ),
       'deleted' => '0',
       'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'comment',
-          'settings' => array(),
-          'type' => 'comment_default',
-          'weight' => '1',
-        ),
-        'rss' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'teaser' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'search_index' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'search_result' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-      ),
       'entity_type' => 'node',
       'field_name' => 'comment_node_' . $node_type,
       'label' => 'Comment settings',
@@ -644,8 +641,8 @@ function comment_update_8007(&$sandbox) {
     ->fetchAllAssoc('nid');
 
   if (count($nodes) > 0) {
-    $insert = db_insert('field_data_comment_node_' . $sandbox['node_type'])->
-      fields(array(
+    $insert = db_insert('field_data_comment_node_' . $sandbox['node_type'])
+      ->fields(array(
         'entity_type',
         'bundle',
         'entity_id',
@@ -654,8 +651,8 @@ function comment_update_8007(&$sandbox) {
         'delta',
         'comment_node_' . $sandbox['node_type'] . '_comment',
       ));
-      $revision = db_insert('field_revision_comment_node_' . $sandbox['node_type'])->
-      fields(array(
+    $revision = db_insert('field_revision_comment_node_' . $sandbox['node_type'])
+      ->fields(array(
         'entity_type',
         'bundle',
         'entity_id',
@@ -666,10 +663,12 @@ function comment_update_8007(&$sandbox) {
       ));
 
     // Update the field name to match the node type.
-    db_update('comment')->fields(
-      array('field_name' => 'comment_node_' . $sandbox['node_type'])
-    )->condition('entity_id', array_keys($nodes))
-    ->execute();
+    db_update('comment')
+      ->fields(array(
+        'field_name' => 'comment_node_' . $sandbox['node_type'],
+      ))
+      ->condition('entity_id', array_keys($nodes))
+      ->execute();
     foreach ($nodes as $nid => $node) {
       $insert->values(array(
         'entity_type' => 'node',
@@ -718,7 +717,6 @@ function comment_update_8008(&$sandbox) {
   $t = get_t();
   return $t('Removed old fields.');
 }
-
 
 /**
  * @} End of "addtogroup updates-7.x-to-8.x".

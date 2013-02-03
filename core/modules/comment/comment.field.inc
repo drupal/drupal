@@ -16,7 +16,7 @@ function comment_field_info() {
   return array(
     'comment' => array(
       'label' => t('Comments'),
-      'default_widget' => 'comment_default',
+      'description' => t('This field manages configuration and presentation of comments on an entity'),
       'settings' => array(),
       'instance_settings' => array(
         'comment' => array(
@@ -29,7 +29,7 @@ function comment_field_info() {
           'comment_preview' => DRUPAL_OPTIONAL
         )
       ),
-      'description' => t('This field manages configuration and presentation of comments on an entity'),
+      'default_widget' => 'comment_default',
       'default_formatter' => 'comment_default'
     )
   );
