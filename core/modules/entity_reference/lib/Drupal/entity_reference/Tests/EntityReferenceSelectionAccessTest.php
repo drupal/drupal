@@ -335,6 +335,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    * Test the comment-specific overrides of the entity handler.
    */
   public function testCommentHandler() {
+    comment_add_default_comment_field('node', 'article');
     // Build a fake field instance.
     $field = array(
       'translatable' => FALSE,
@@ -379,7 +380,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     $comment_values = array(
       'published_published' => array(
-        'nid' => $nodes['published']->nid,
+        'entity_id' => $nodes['published']->nid,
+        'entity_type' => 'node',
+        'field_name' => 'comment',
         'uid' => 1,
         'cid' => NULL,
         'pid' => 0,
@@ -388,7 +391,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'language' => LANGUAGE_NOT_SPECIFIED,
       ),
       'published_unpublished' => array(
-        'nid' => $nodes['published']->nid,
+        'entity_id' => $nodes['published']->nid,
+        'entity_type' => 'node',
+        'field_name' => 'comment',
         'uid' => 1,
         'cid' => NULL,
         'pid' => 0,
@@ -397,7 +402,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'language' => LANGUAGE_NOT_SPECIFIED,
       ),
       'unpublished_published' => array(
-        'nid' => $nodes['unpublished']->nid,
+        'entity_id' => $nodes['unpublished']->nid,
+        'entity_type' => 'node',
+        'field_name' => 'comment',
         'uid' => 1,
         'cid' => NULL,
         'pid' => 0,
