@@ -143,7 +143,7 @@ function comment_approve($cid) {
     comment_save($comment);
 
     drupal_set_message(t('Comment approved.'));
-    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
     if ($entity) {
       $uri = $entity->uri();
       drupal_goto($uri['path']);
