@@ -31,11 +31,13 @@ display:
           table: node
           field: sticky
           order: DESC
+          plugin_id: standard
         created:
           id: created
           table: node
           field: created
           order: DESC
+          plugin_id: date
       arguments:
         term_node_tid_depth:
           id: term_node_tid_depth
@@ -54,6 +56,7 @@ display:
             type: taxonomy_term
           depth: '0'
           break_phrase: 1
+          plugin_id: taxonomy_index_tid_depth
         term_node_tid_depth_modifier:
           id: term_node_tid_depth_modifier
           table: node
@@ -64,6 +67,7 @@ display:
           summary:
             format: default_summary
           specify_validation: 1
+          plugin_id: taxonomy_index_tid_depth_modifier
       filters:
         status_extra:
           id: status_extra
@@ -72,6 +76,7 @@ display:
           group: 0
           expose:
             operator: false
+          plugin_id: node_status
       style:
         type: default
       row:

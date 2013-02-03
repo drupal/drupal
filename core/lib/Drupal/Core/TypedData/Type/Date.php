@@ -40,9 +40,6 @@ class Date extends TypedData {
     }
     else {
       $this->value = $value instanceOf DrupalDateTime ? $value : new DrupalDateTime($value);
-      if ($this->value->hasErrors()) {
-        throw new InvalidArgumentException("Invalid date format given.");
-      }
     }
   }
 }

@@ -2744,73 +2744,29 @@ function get_t() {
  * @see language()
  */
 function drupal_language_initialize() {
-  if (language_multilingual()) {
-    $types = language_types_get_all();
-    foreach ($types as $type) {
-      language($type);
-    }
-    // Allow modules to react on language system initialization in multilingual
-    // environments.
-    bootstrap_invoke_all('language_init');
-    // @todo D8: Remove after http://drupal.org/node/1859110.
-    drupal_container()->get('config.factory')->reset();
-  }
+  drupal_container()->get('language_manager')->init();
 }
 
 /**
  * Returns the language object for a given language type.
  *
- * The 'language_manager' service is only available within the scope of a kernel
- * request. When it's not available, we return a default language object,
- * regardless of the type passed in.
- *
  * @see Drupal\Core\Language\LanguageManager
  *
  * @param string $type
  *   The type of language object needed, e.g. LANGUAGE_TYPE_INTERFACE.
- * @param bool $reset
- *   TRUE to reset the statically cached language object for the type, or for
- *   all types if $type is NULL.
  */
-function language($type, $reset = FALSE) {
-  // We don't use drupal_static() here because resetting is not a simple case of
-  // drupal_static_reset().
-  static $languages = array();
-
-  // Reset the language manager's cache and our own.
-  if ($reset) {
-    if (drupal_container()->isScopeActive('request')) {
-      drupal_container()->get('language_manager')->reset($type);
-    }
-    if (!isset($type)) {
-      $languages = array();
-    }
-    elseif (isset($languages[$type])) {
-      unset($languages[$type]);
-    }
+function language($type) {
+  $container = drupal_container();
+  if (!$container) {
+    return language_default();
   }
-
-  // If no type is passed (most likely when resetting all types), return.
-  if (!isset($type)) {
-    return;
+  if (!$container->has('language_manager')) {
+    // This happens in rare situations when the container has not been built by
+    // a kernel and has no services, e.g., when t() is called during unit tests
+    // for assertions.
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
   }
-
-  // When the language_manager service exists (is both defined and the 'request'
-  // scope is active in the container), use it to get the language. Otherwise
-  // return the default language.
-  if (drupal_container()->isScopeActive('request')) {
-    $language_manager = drupal_container()->get('language_manager', Container::NULL_ON_INVALID_REFERENCE);
-  }
-
-  if (isset($language_manager)) {
-    return $language_manager->getLanguage($type);
-  }
-  else {
-    if (!isset($languages[$type])) {
-      $languages[$type] = language_default();
-    }
-    return $languages[$type];
-  }
+  return $container->get('language_manager')->getLanguage($type);
 }
 
 /**
@@ -3013,6 +2969,24 @@ function language_default() {
   ));
   $info['default'] = TRUE;
   return new Language($info);
+}
+
+/**
+ * Stores or retrieves the path derived during language negotiation.
+ *
+ * @param string $new_path
+ *   The altered path.
+ *
+ * @todo Replace this with a path processor in language module. See
+ *   http://drupal.org/node/1888424.
+ */
+function _language_resolved_path($new_path = NULL) {
+  $path = &drupal_static(__FUNCTION__, NULL);
+  if ($new_path === NULL) {
+    return $path;
+  }
+  $path = $new_path;
+  return $path;
 }
 
 /**

@@ -9,6 +9,7 @@ namespace Drupal\views\Tests;
 
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\views\ViewExecutable;
+use Drupal\views\ViewExecutableFactory;
 use Drupal\views\DisplayBag;
 use Drupal\views\Plugin\views\display\DefaultDisplay;
 use Drupal\views\Plugin\views\display\Page;
@@ -89,6 +90,16 @@ class ViewExecutableTest extends ViewUnitTestBase {
       'filter'
     ));
     comment_add_default_comment_field('node', 'page');
+  }
+
+  /**
+   * Tests the views.exectuable container service.
+   */
+  public function testFactoryService() {
+    $factory = $this->container->get('views.executable');
+    $this->assertTrue($factory instanceof ViewExecutableFactory, 'A ViewExecutableFactory instance was returned from the container.');
+    $view = entity_load('view', 'test_executable_displays');
+    $this->assertTrue($factory->get($view) instanceof ViewExecutable, 'A ViewExecutable instance was returned from the factory.');
   }
 
   /**

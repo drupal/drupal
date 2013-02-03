@@ -1,0 +1,6 @@
+name = Entity Reference
+description = Provides a field that can reference other entities.
+package = Core
+version = VERSION
+core = 8.x
+dependencies[] = field

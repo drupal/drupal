@@ -29,11 +29,11 @@ class RemoveFeedTest extends AggregatorTestBase {
     $this->deleteFeed($feed);
 
     // Check feed source.
-    $this->drupalGet('aggregator/sources/' . $feed->fid);
+    $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertResponse(404, 'Deleted feed source does not exists.');
 
     // Check database for feed.
-    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed->title, ':url' => $feed->url))->fetchField();
+    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed->label(), ':url' => $feed->url->value))->fetchField();
     $this->assertFalse($result, 'Feed not found in database');
   }
 }

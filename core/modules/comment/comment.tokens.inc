@@ -138,13 +138,13 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'name':
-          $name = ($comment->uid->value == 0) ? config('user.settings')->get('anonymous') : $comment->name->value;
+          $name = ($comment->uid->target_id == 0) ? config('user.settings')->get('anonymous') : $comment->name->value;
           $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 
         case 'mail':
-          if ($comment->uid->value != 0) {
-            $account = user_load($comment->uid->value);
+          if ($comment->uid->target_id != 0) {
+            $account = user_load($comment->uid->target_id);
             $mail = $account->mail;
           }
           else {
@@ -182,8 +182,8 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'parent':
-          if (!empty($comment->pid->value)) {
-            $parent = comment_load($comment->pid->value);
+          if (!empty($comment->pid->target_id)) {
+            $parent = entity_load('comment', $comment->pid->target_id);
             $replacements[$original] = $sanitize ? filter_xss($parent->subject->value) : $parent->subject->value;
           }
           break;
@@ -197,14 +197,14 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'entity':
-          $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+          $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
           $title = $entity->label();
           $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           break;
 
         case 'node':
           if ($comment->entity_type->value == 'node') {
-            $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+            $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
             $title = $entity->label();
             $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           }
@@ -217,12 +217,12 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
     // Chained token relationships.
     if ($entity_tokens = token_find_with_prefix($tokens, 'entity')) {
-      $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+      $entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
       $replacements += token_generate($comment->entity_type->value, $entity_tokens, array($comment->entity_type->value => $entity), $options);
     }
 
     if (($node_tokens = token_find_with_prefix($tokens, 'node')) && $comment->entity_type->value == 'node') {
-      $node = entity_load($comment->entity_type->value, $comment->entity_id->value);
+      $node = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
       $replacements += token_generate('node', $node_tokens, array('node' => $node), $options);
     }
 

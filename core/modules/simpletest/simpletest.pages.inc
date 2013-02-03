@@ -242,7 +242,6 @@ function simpletest_result_form($form, &$form_state, $test_id) {
       '#type' => 'details',
       '#title' => $info['name'],
       '#description' => $info['description'],
-      '#collapsible' => TRUE,
     );
     $form['result']['results'][$group]['summary'] = $summary;
     $group_summary = &$form['result']['results'][$group]['summary'];
@@ -455,7 +454,6 @@ function simpletest_settings_form($form, &$form_state) {
     '#type' => 'details',
     '#title' => t('HTTP authentication'),
     '#description' => t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
   $form['httpauth']['simpletest_httpauth_method'] = array(

@@ -234,7 +234,6 @@ abstract class Tasks {
     $form['advanced_options'] = array(
       '#type' => 'details',
       '#title' => st('Advanced options'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#description' => st("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider."),
       '#weight' => 10,

@@ -11,11 +11,30 @@ use InvalidArgumentException;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\HookDiscovery;
+use Drupal\Core\TypedData\Validation\MetadataFactory;
+use Drupal\Core\Validation\ConstraintManager;
+use Drupal\Core\Validation\DrupalTranslator;
+use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Manages data type plugins.
  */
 class TypedDataManager extends PluginManagerBase {
+
+  /**
+   * The validator used for validating typed data.
+   *
+   * @var \Symfony\Component\Validator\ValidatorInterface
+   */
+  protected $validator;
+
+  /**
+   * The validation constraint manager to use for instantiating constraints.
+   *
+   * @var \Drupal\Core\Validation\ConstraintManager
+   */
+  protected $constraintManager;
 
   /**
    * An array of typed data property prototypes.
@@ -76,9 +95,8 @@ class TypedDataManager extends PluginManagerBase {
    *   - list settings: An array of settings as required by the used
    *     'list class'. See the documentation of the list class for support or
    *     required settings.
-   *   - constraints: An array of type specific value constraints, e.g. for data
-   *     of type 'entity' the 'entity type' and 'bundle' may be specified. See
-   *     the documentation of the data type 'class' for supported constraints.
+   *   - constraints: An array of validation constraints. See
+   *     \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
    *   - required: A boolean specifying whether a non-NULL value is mandatory.
    *   Further keys may be supported in certain usages, e.g. for further keys
    *   supported for entity field definitions see
@@ -211,5 +229,143 @@ class TypedDataManager extends PluginManagerBase {
       $property->setValue($value);
     }
     return $property;
+  }
+
+  /**
+   * Sets the validator for validating typed data.
+   *
+   * @param \Symfony\Component\Validator\ValidatorInterface $validator
+   *   The validator object to set.
+   */
+  public function setValidator(ValidatorInterface $validator) {
+    $this->validator = $validator;
+  }
+
+  /**
+   * Gets the validator for validating typed data.
+   *
+   * @return \Symfony\Component\Validator\ValidatorInterface
+   *   The validator object.
+   */
+  public function getValidator() {
+    if (!isset($this->validator)) {
+      $this->validator = Validation::createValidatorBuilder()
+        ->setMetadataFactory(new MetadataFactory())
+        ->setTranslator(new DrupalTranslator())
+        ->getValidator();
+    }
+    return $this->validator;
+  }
+
+  /**
+   * Sets the validation constraint manager.
+   *
+   * The validation constraint manager is used to instantiate validation
+   * constraint plugins.
+   *
+   * @param \Drupal\Core\Validation\ConstraintManager
+   *   The constraint manager to set.
+   */
+  public function setValidationConstraintManager(ConstraintManager $constraintManager) {
+    $this->constraintManager = $constraintManager;
+  }
+
+  /**
+   * Gets the validation constraint manager.
+   *
+   * @return \Drupal\Core\Validation\ConstraintManager
+   *   The constraint manager.
+   */
+  public function getValidationConstraintManager() {
+    return $this->constraintManager;
+  }
+
+  /**
+   * Creates a validation constraint plugin.
+   *
+   * @param string $name
+   *   The name or plugin id of the constraint.
+   * @param mixed $options
+   *   The options to pass to the constraint class. Required and supported
+   *   options depend on the constraint class.
+   *
+   * @return \Symfony\Component\Validator\Constraint
+   *   A validation constraint plugin.
+   */
+  public function createValidationConstraint($name, $options) {
+    if (!is_array($options)) {
+      // Plugins need an array as configuration, so make sure we have one.
+      // The constraint classes support passing the options as part of the
+      // 'value' key also.
+      $options = array('value' => $options);
+    }
+    return $this->getValidationConstraintManager()->createInstance($name, $options);
+  }
+
+  /**
+   * Gets configured constraints from a data definition.
+   *
+   * Any constraints defined for the data type, i.e. below the 'constraint' key
+   * of the type's plugin definition, or constraints defined below the data
+   * definition's constraint' key are taken into account.
+   *
+   * Constraints are defined via an array, having constraint plugin IDs as key
+   * and constraint options as values, e.g.
+   * @code
+   * $constraints = array(
+   *   'Range' => array('min' => 5, 'max' => 10),
+   *   'NotBlank' => array(),
+   * );
+   * @endcode
+   * Options have to be specified using another array if the constraint has more
+   * than one or zero options. If it has exactly one option, the value should be
+   * specified without nesting it into another array:
+   * @code
+   * $constraints = array(
+   *   'EntityType' => 'node',
+   *   'Bundle' => 'article',
+   * );
+   * @endcode
+   *
+   * Note that the specified constraints must be compatible with the data type,
+   * e.g. for data of type 'entity' the 'EntityType' and 'Bundle' constraints
+   * may be specified.
+   *
+   * @see \Drupal\Core\Validation\ConstraintManager
+   *
+   * @param array $definition
+   *   A data definition array.
+   *
+   * @return array
+   *   Array of constraints, each being an instance of
+   *   \Symfony\Component\Validator\Constraint.
+   */
+  public function getConstraints($definition) {
+    $constraints = array();
+    // @todo: Figure out how to handle nested constraint structures as
+    // collections.
+    $type_definition = $this->getDefinition($definition['type']);
+    // Auto-generate a constraint for the primitive type if we have a mapping.
+    if (isset($type_definition['primitive type'])) {
+      $constraints[] = $this->getValidationConstraintManager()->
+        createInstance('PrimitiveType', array('type' => $type_definition['primitive type']));
+    }
+    // Add in constraints specified by the data type.
+    if (isset($type_definition['constraints'])) {
+      foreach ($type_definition['constraints'] as $name => $options) {
+        $constraints[] = $this->createValidationConstraint($name, $options);
+      }
+    }
+    // Add any constraints specified as part of the data definition.
+    if (isset($definition['constraints'])) {
+      foreach ($definition['constraints'] as $name => $options) {
+        $constraints[] = $this->createValidationConstraint($name, $options);
+      }
+    }
+    // Add the NotNull constraint for required data.
+    if (!empty($definition['required']) && empty($definition['constraints']['NotNull'])) {
+      $constraints[] = $this->createValidationConstraint('NotNull', array());
+    }
+    return $constraints;
   }
 }

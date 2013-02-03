@@ -5,6 +5,8 @@
  * Parser functions for the aggregator module.
  */
 
+use Drupal\aggregator\Plugin\Core\Entity\Feed;
+
 /**
  * Implements hook_aggregator_parse_info().
  */
@@ -18,7 +20,7 @@ function aggregator_aggregator_parse_info() {
 /**
  * Implements hook_aggregator_parse().
  */
-function aggregator_aggregator_parse($feed) {
+function aggregator_aggregator_parse(Feed $feed) {
   global $channel, $image;
 
   // Filter the input data.
@@ -35,9 +37,9 @@ function aggregator_aggregator_parse($feed) {
     }
 
     // Add parsed data to the feed object.
-    $feed->link = !empty($channel['link']) ? $channel['link'] : '';
-    $feed->description = !empty($channel['description']) ? $channel['description'] : '';
-    $feed->image = !empty($image['url']) ? $image['url'] : '';
+    $feed->link->value = !empty($channel['link']) ? $channel['link'] : '';
+    $feed->description->value = !empty($channel['description']) ? $channel['description'] : '';
+    $feed->image->value = !empty($image['url']) ? $image['url'] : '';
 
     // Clear the page and block caches.
     cache_invalidate_tags(array('content' => TRUE));
@@ -51,15 +53,15 @@ function aggregator_aggregator_parse($feed) {
 /**
  * Parses a feed and stores its items.
  *
- * @param $data
+ * @param string $data
  *   The feed data.
- * @param $feed
+ * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
  *   An object describing the feed to be parsed.
  *
  * @return
  *   FALSE on error, TRUE otherwise.
  */
-function aggregator_parse_feed(&$data, $feed) {
+function aggregator_parse_feed(&$data, Feed $feed) {
   global $items, $image, $channel;
 
   // Unset the global variables before we use them.
@@ -74,8 +76,8 @@ function aggregator_parse_feed(&$data, $feed) {
   xml_set_character_data_handler($xml_parser, 'aggregator_element_data');
 
   if (!xml_parse($xml_parser, $data, 1)) {
-    watchdog('aggregator', 'The feed from %site seems to be broken due to an error "%error" on line %line.', array('%site' => $feed->title, '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)), WATCHDOG_WARNING);
-    drupal_set_message(t('The feed from %site seems to be broken because of error "%error" on line %line.', array('%site' => $feed->title, '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
+    watchdog('aggregator', 'The feed from %site seems to be broken due to an error "%error" on line %line.', array('%site' => $feed->label(), '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)), WATCHDOG_WARNING);
+    drupal_set_message(t('The feed from %site seems to be broken because of error "%error" on line %line.', array('%site' => $feed->label(), '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
     return FALSE;
   }
   xml_parser_free($xml_parser);
@@ -111,7 +113,7 @@ function aggregator_parse_feed(&$data, $feed) {
       $item['link'] = $item['link'];
     }
     else {
-      $item['link'] = $feed->link;
+      $item['link'] = $feed->link->value;
     }
 
     // Atom feeds have an ID tag instead of a GUID tag.

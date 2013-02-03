@@ -23,11 +23,4 @@ class String extends TypedData {
    * @var string
    */
   protected $value;
-
-  /**
-   * Overrides TypedData::setValue().
-   */
-  public function setValue($value) {
-    $this->value = isset($value) ? (string) $value : $value;
-  }
 }

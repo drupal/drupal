@@ -31,7 +31,7 @@ class CommentRenderController extends EntityRenderController {
     // Pre-load associated users into cache to leverage multiple loading.
     $uids = array();
     foreach ($entities as $entity) {
-      $uids[] = $entity->uid->value;
+      $uids[] = $entity->uid->target_id;
     }
     user_load_multiple(array_unique($uids));
 
@@ -41,7 +41,7 @@ class CommentRenderController extends EntityRenderController {
     $comment_entity_ids = array();
     $comment_entities = array();
     foreach ($entities as $entity) {
-      $comment_entity_ids[$entity->entity_type->value][] = $entity->entity_id->value;
+      $comment_entity_ids[$entity->entity_type->value][] = $entity->entity_id->target_id;
     }
     // Load entities in bulk, this is more performant than using
     // $comment->entity_id->value as we can load them in bulk per-type.
@@ -50,8 +50,8 @@ class CommentRenderController extends EntityRenderController {
     }
 
     foreach ($entities as $entity) {
-      if (isset($comment_entities[$entity->entity_type->value][$entity->entity_id->value])) {
-        $comment_entity = $comment_entities[$entity->entity_type->value][$entity->entity_id->value];
+      if (isset($comment_entities[$entity->entity_type->value][$entity->entity_id->target_id])) {
+        $comment_entity = $comment_entities[$entity->entity_type->value][$entity->entity_id->target_id];
       }
       else {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));

@@ -29,6 +29,7 @@ display:
           id: title
           table: node
           field: title
+          plugin_id: node
           label: ''
           alter:
             alter_text: '0'
@@ -46,6 +47,7 @@ display:
           id: timestamp
           table: history
           field: timestamp
+          plugin_id: history_user_timestamp
           relationship: none
           group_type: group
           admin_label: ''
@@ -97,6 +99,7 @@ display:
           value: '1'
           table: node
           field: status
+          plugin_id: boolean
           id: status
           expose:
             operator: '0'
@@ -106,6 +109,7 @@ display:
           id: created
           table: node
           field: created
+          plugin_id: date
           order: DESC
   page_1:
     display_plugin: page
@@ -128,6 +132,7 @@ display:
           id: status
           table: node
           field: status
+          plugin_id: boolean
           relationship: none
           group_type: group
           admin_label: ''

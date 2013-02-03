@@ -47,15 +47,16 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
 
-    $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchObject();
+    $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchField();
+    $feed = aggregator_feed_load($fid);
 
     aggregator_refresh($feed);
-    $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
+    $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
 
     // Sleep for 3 second.
     sleep(3);
     db_update('aggregator_feed')
-      ->condition('fid', $feed->fid)
+      ->condition('fid', $feed->id())
       ->fields(array(
         'checked' => 0,
         'hash' => '',
@@ -65,7 +66,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
       ->execute();
     aggregator_refresh($feed);
 
-    $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
+    $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($before === $after, format_string('Publish timestamp of feed item was not updated (!before === !after)', array('!before' => $before, '!after' => $after)));
   }
 }

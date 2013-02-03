@@ -39,7 +39,7 @@ abstract class EntityTranslationUITest extends EntityTranslationTestBase {
       $stored_value = $this->getValue($translation, $property, $default_langcode);
       $value = is_array($value) ? $value[0]['value'] : $value;
       $message = format_string('@property correctly stored in the default language.', array('@property' => $property));
-      $this->assertIdentical($stored_value, $value, $message);
+      $this->assertEqual($stored_value, $value, $message);
     }
 
     // Add an entity translation.
@@ -159,11 +159,12 @@ abstract class EntityTranslationUITest extends EntityTranslationTestBase {
    *   The property value.
    */
   protected function getValue(ComplexDataInterface $translation, $property, $langcode) {
+    $key = $property == 'user_id' ? 'target_id' : 'value';
     if (($translation instanceof EntityInterface) && !($translation instanceof EntityNG)) {
-      return is_array($translation->$property) ? $translation->{$property}[$langcode][0]['value'] : $translation->$property;
+      return is_array($translation->$property) ? $translation->{$property}[$langcode][0][$key] : $translation->$property;
     }
     else {
-      return $translation->get($property)->value;
+      return $translation->get($property)->{$key};
     }
   }
 

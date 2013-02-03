@@ -37,18 +37,16 @@ class CategorizeFeedTest extends AggregatorTestBase {
     $categories = $this->getCategories();
 
     // Create a feed and assign 2 categories to it.
-    $feed = $this->getFeedEditArray();
-    $feed['block'] = 5;
+    $feed = $this->getFeedEditObject(NULL, array('block' => 5));
     foreach ($categories as $cid => $category) {
-      $feed['category'][$cid] = $cid;
+      $feed->categories[$cid] = $cid;
     }
 
-    // Use aggregator_save_feed() function to save the feed.
-    aggregator_save_feed($feed);
-    $db_feed = db_query("SELECT *  FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed['title'], ':url' => $feed['url']))->fetch();
+    $feed->save();
+    $db_fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed->label(), ':url' => $feed->url->value))->fetchField();
 
+    $db_feed = aggregator_feed_load($db_fid);
     // Assert the feed has two categories.
-    $this->getFeedCategories($db_feed);
     $this->assertEqual(count($db_feed->categories), 2, 'Feed has 2 categories');
   }
 }

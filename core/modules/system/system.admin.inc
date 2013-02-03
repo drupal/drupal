@@ -917,7 +917,6 @@ function system_modules($form, $form_state = array()) {
     $form['modules'][$package] += array(
       '#type' => 'details',
       '#title' => t($package),
-      '#collapsible' => TRUE,
       '#theme' => 'system_modules_details',
       '#header' => array(
         array('data' => t('<span class="element-invisible">Enabled</span>'), 'class' => array('checkbox')),

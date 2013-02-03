@@ -232,7 +232,7 @@ function tracker_comment_update($comment) {
   // comment_save() calls hook_comment_publish() for all published comments
   // so we need to handle all other values here.
   if ($comment->status->value != COMMENT_PUBLISHED && $comment->entity_type->value == 'node') {
-    _tracker_remove($comment->entity_id->value, $comment->uid->value, $comment->changed->value);
+    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
   }
 }
 
@@ -244,7 +244,7 @@ function tracker_comment_update($comment) {
  */
 function tracker_comment_publish($comment) {
   if ($comment->entity_type->value == 'node') {
-    _tracker_add($comment->entity_id->value, $comment->uid->value, $comment->changed->value);
+    _tracker_add($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
   }
 }
 
@@ -253,7 +253,7 @@ function tracker_comment_publish($comment) {
  */
 function tracker_comment_unpublish($comment) {
   if ($comment->entity_type->value == 'node') {
-    _tracker_remove($comment->entity_id->value, $comment->uid->value, $comment->changed->value);
+    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
   }
 }
 
@@ -262,7 +262,7 @@ function tracker_comment_unpublish($comment) {
  */
 function tracker_comment_delete($comment) {
   if ($comment->entity_type->value == 'node') {
-    _tracker_remove($comment->entity_id->value, $comment->uid->value, $comment->changed->value);
+    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
   }
 }
 

@@ -1989,14 +1989,17 @@ class ViewExecutable {
     // If the desired type is not found, use the original value directly.
     $handler_type = !empty($types[$type]['type']) ? $types[$type]['type'] : $type;
 
-    // @todo This variable is never used.
-    $handler = views_get_handler($table, $field, $handler_type);
-
     $fields[$id] = array(
       'id' => $id,
       'table' => $table,
       'field' => $field,
     ) + $options;
+
+    // Load the plugin ID if available.
+    $data = drupal_container()->get('views.views_data')->get($table);
+    if (isset($data[$field][$handler_type]['id'])) {
+      $fields[$id]['plugin_id'] = $data[$field][$handler_type]['id'];
+    }
 
     $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);
 

@@ -60,12 +60,14 @@ class ViewsBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockForm().
+   * Overrides \Drupal\block\BlockBase::form().
    */
-  public function blockForm($form, &$form_state) {
-    // Set the default subject to '' so the views internal title is used.
-    $form['settings']['title']['#default_value'] = '';
-    $form['settings']['title']['#access'] = FALSE;
+  public function form($form, &$form_state) {
+    $form = parent::form($form, $form_state);
+
+    // Set the default label to '' so the views internal title is used.
+    $form['label']['#default_value'] = '';
+    $form['label']['#access'] = FALSE;
     return $form;
   }
 

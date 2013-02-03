@@ -72,11 +72,11 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           // is extended in a faulty manner.
           throw new LogicException('preSave is called again without calling postSave() or releaseThreadLock()');
         }
-        if ($comment->pid->value == 0) {
+        if ($comment->pid->target_id == 0) {
           // This is a comment with no parent comment (depth 0): we start
           // by retrieving the maximum thread level.
           $query = db_select('comment', 'c')
-            ->condition('entity_id', $comment->entity_id->value)
+            ->condition('entity_id', $comment->entity_id->target_id)
             ->condition('field_name', $comment->field_name->value)
             ->condition('entity_type', $comment->entity_type->value);
           $query->addExpression('MAX(thread)', 'thread');
@@ -99,7 +99,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
           $prefix = $parent->thread->value . '.';
           // Get the max value in *this* thread.
           $query = db_select('comment', 'c')
-            ->condition('entity_id', $comment->entity_id->value)
+            ->condition('entity_id', $comment->entity_id->target_id)
             ->condition('field_name', $comment->field_name->value)
             ->condition('entity_type', $comment->entity_type->value)
             ->condition('thread', $parent->thread->value . '.%', 'LIKE');
@@ -127,7 +127,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
         // has the lock, just move to the next integer.
         do {
           $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
-        } while (!lock()->acquire("comment:{$comment->entity_id->value}:{$comment->entity_type->value}:$thread"));
+        } while (!lock()->acquire("comment:{$comment->entity_id->target_id}:{$comment->entity_type->value}:$thread"));
         $this->threadLock = $thread;
       }
       if (empty($comment->created->value)) {
@@ -138,7 +138,7 @@ class CommentStorageController extends DatabaseStorageControllerNG {
       }
       // We test the value with '===' because we need to modify anonymous
       // users as well.
-      if ($comment->uid->value === $user->uid && isset($user->name)) {
+      if ($comment->uid->target_id === $user->uid && isset($user->name)) {
         $comment->name->value = $user->name;
       }
       // Add the values which aren't passed into the function.
@@ -283,13 +283,14 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     $properties['pid'] = array(
       'label' => t('Parent ID'),
       'description' => t('The parent comment ID if this is a reply to a comment.'),
-      'type' => 'entityreference_field',
-      'settings' => array('entity type' => 'comment'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'comment'),
     );
     $properties['entity_id'] = array(
       'label' => t('Entity ID'),
       'description' => t('The ID of the entity of which this comment is a reply.'),
-      'type' => 'integer_field',
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'node'),
       'required' => TRUE,
     );
     $properties['langcode'] = array(
@@ -305,8 +306,8 @@ class CommentStorageController extends DatabaseStorageControllerNG {
     $properties['uid'] = array(
       'label' => t('User ID'),
       'description' => t('The user ID of the comment author.'),
-      'type' => 'entityreference_field',
-      'settings' => array('entity type' => 'user'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'user'),
     );
     $properties['name'] = array(
       'label' => t('Name'),

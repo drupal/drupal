@@ -36,6 +36,7 @@ display:
           id: title
           table: node
           field: title
+          plugin_id: node
           label: ''
           alter:
             alter_text: '0'
@@ -55,6 +56,7 @@ display:
           table: node
           field: status
           id: status
+          plugin_id: boolean
           expose:
             operator: '0'
           group: '1'
@@ -64,6 +66,7 @@ display:
           table: node
           field: created
           order: DESC
+          plugin_id: date
       title: test_get_attach_displays
   page_1:
     display_plugin: page

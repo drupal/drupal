@@ -408,7 +408,6 @@ abstract class FileTransfer {
     $form['advanced'] = array(
       '#type' => 'details',
       '#title' => t('Advanced settings'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
     $form['advanced']['hostname'] = array(

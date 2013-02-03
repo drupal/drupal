@@ -49,6 +49,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_node: '1'
+          plugin_id: node
       filters:
         status:
           value: '1'
@@ -58,12 +59,14 @@ display:
           expose:
             operator: '0'
           group: '1'
+          plugin_id: boolean
       sorts:
         created:
           id: created
           table: node
           field: created
           order: DESC
+          plugin_id: date
       title: test_redirect_view
   page_1:
     display_plugin: page

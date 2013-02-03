@@ -69,7 +69,7 @@ function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, 
         if ($comment->status->value == COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
-          if ($comment->entity_id->value != $entity->id() ||
+          if ($comment->entity_id->target_id != $entity->id() ||
               $comment->field_name->value != $field_name ||
               $comment->entity_type->value != $entity->entityType()) {
             // Attempting to reply to a comment not belonging to the current entity.

@@ -1025,13 +1025,6 @@ abstract class TestBase {
     // this second reset is guranteed to reset everything to nothing.
     drupal_static_reset();
 
-    // Reset static in language().
-    // Restoring drupal_container() makes language() return the proper languages
-    // already, but it contains an additional static that needs to be reset. The
-    // reset can happen before the container is restored, as it is unnecessary
-    // to reset the language_manager service.
-    language(NULL, TRUE);
-
     // Restore original in-memory configuration.
     $conf = $this->originalConf;
     new Settings($this->originalSettings);

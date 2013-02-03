@@ -318,7 +318,8 @@ class ViewStorageTest extends ViewUnitTestBase {
     $expected_items[$id1] = $expected_item = array(
       'id' => 'id',
       'table' => 'views_test_data',
-      'field' => 'id'
+      'field' => 'id',
+      'plugin_id' => 'numeric',
     );
     $this->assertEqual($item1, $expected_item);
 
@@ -332,7 +333,8 @@ class ViewStorageTest extends ViewUnitTestBase {
     $expected_items[$id2] = $expected_item = array(
       'id' => 'name',
       'table' => 'views_test_data',
-      'field' => 'name'
+      'field' => 'name',
+      'plugin_id' => 'standard',
     ) + $options;
     $this->assertEqual($item2, $expected_item);
 

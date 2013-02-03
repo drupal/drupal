@@ -14,11 +14,4 @@ namespace Drupal\Core\TypedData\Type;
  */
 class Email extends String {
 
-  /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::validate().
-   */
-  public function validate() {
-    // @todo Implement validate() method.
-  }
-
 }

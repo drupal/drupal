@@ -339,6 +339,9 @@ function install_begin_request(&$install_state) {
       ->addArgument(new Reference('config.storage'))
       ->addArgument(new Reference('event_dispatcher'));
 
+    // Register the 'language_manager' service.
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+
     // The install process cannot use the database lock backend since the database
     // is not fully up, so we use a null backend implementation during the
     // installation process. This will also speed up the installation process.
@@ -2186,7 +2189,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $form['site_information'] = array(
     '#type' => 'details',
     '#title' => st('Site information'),
-    '#collapsible' => FALSE,
   );
   $form['site_information']['site_name'] = array(
     '#type' => 'textfield',
@@ -2205,7 +2207,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $form['admin_account'] = array(
     '#type' => 'details',
     '#title' => st('Site maintenance account'),
-    '#collapsible' => FALSE,
   );
 
   $form['admin_account']['account']['#tree'] = TRUE;
@@ -2234,7 +2235,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $form['server_settings'] = array(
     '#type' => 'details',
     '#title' => st('Server settings'),
-    '#collapsible' => FALSE,
   );
 
   $countries = country_get_list();
@@ -2261,7 +2261,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $form['update_notifications'] = array(
     '#type' => 'details',
     '#title' => st('Update notifications'),
-    '#collapsible' => FALSE,
   );
   $form['update_notifications']['update_status_module'] = array(
     '#type' => 'checkboxes',

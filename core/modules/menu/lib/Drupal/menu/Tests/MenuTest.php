@@ -104,14 +104,14 @@ class MenuTest extends WebTestBase {
     $menu->save();
 
     // Assert the new menu.
-    $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
+    $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
     $this->assertRaw($label, 'Custom menu was added.');
 
     // Edit the menu.
     $new_label = $this->randomName(16);
     $menu->set('label', $new_label);
     $menu->save();
-    $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
+    $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
     $this->assertRaw($new_label, 'Custom menu was edited.');
   }
 
@@ -242,10 +242,10 @@ class MenuTest extends WebTestBase {
     $this->disableMenuLink($item1);
     $edit = array();
 
-    // Note in the UI the 'mlid:x[hidden]' form element maps to enabled, or
-    // NOT hidden.
-    $edit['mlid:' . $item1['mlid'] . '[hidden]'] = TRUE;
-    $this->drupalPost('admin/structure/menu/manage/' . $item1['menu_name'], $edit, t('Save configuration'));
+    // Note in the UI the 'links[mlid:x][hidden]' form element maps to enabled,
+    // or NOT hidden.
+    $edit['links[mlid:' . $item1['mlid'] . '][hidden]'] = TRUE;
+    $this->drupalPost('admin/structure/menu/manage/' . $item1['menu_name'], $edit, t('Save'));
 
     // Verify in the database.
     $this->assertMenuLink($item1['mlid'], array('hidden' => 0));

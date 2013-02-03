@@ -35,7 +35,7 @@ class LanguageDependencyInjectionTest extends WebTestBase {
     parent::setUp();
 
     // Ensure we are building a new Language object for each test.
-    language(NULL, TRUE);
+    $this->container->get('language_manager')->reset();
   }
 
 

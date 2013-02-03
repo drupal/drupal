@@ -50,26 +50,26 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     ));
     $this->drupalLogin($admin_user);
 
-    $block = $this->drupalPlaceBlock("aggregator_feed_block:{$feed->fid}", array('label' => 'feed-' . $feed->title), array('block_count' => 2));
+    $block = $this->drupalPlaceBlock("aggregator_feed_block:{$feed->id()}", array('label' => 'feed-' . $feed->label()), array('block_count' => 2));
 
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('node');
     $this->assertText($block->label(), 'Feed block is displayed on the page.');
 
     // Find the expected read_more link.
-    $href = 'aggregator/sources/' . $feed->fid;
+    $href = 'aggregator/sources/' . $feed->id();
     $links = $this->xpath('//a[@href = :href]', array(':href' => url($href)));
     $this->assert(isset($links[0]), format_string('Link to href %href found.', array('%href' => $href)));
 
     // Visit that page.
     $this->drupalGet($href);
-    $correct_titles = $this->xpath('//h1[normalize-space(text())=:title]', array(':title' => $feed->title));
+    $correct_titles = $this->xpath('//h1[normalize-space(text())=:title]', array(':title' => $feed->label()));
     $this->assertFalse(empty($correct_titles), 'Aggregator feed page is available and has the correct title.');
 
     // Set the number of news items to 0 to test that the block does not show
     // up.
     $feed->block = 0;
-    aggregator_save_feed((array) $feed);
+    $feed->save();
     // Check that the block is no longer displayed.
     $this->drupalGet('node');
     $this->assertNoText($block->label(), 'Feed block is not displayed on the page when number of items is set to 0.');
@@ -91,7 +91,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->updateFeedItems($feed, 30);
 
     // Check for the presence of a pager.
-    $this->drupalGet('aggregator/sources/' . $feed->fid);
+    $this->drupalGet('aggregator/sources/' . $feed->id());
     $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));
     $this->assertTrue(!empty($elements), 'Individual source page contains a pager.');
 

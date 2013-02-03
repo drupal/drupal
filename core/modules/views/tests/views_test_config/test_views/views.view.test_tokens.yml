@@ -19,16 +19,19 @@ display:
           id: age
           relationship: none
           table: views_test_data
+          plugin_id: numeric
         id:
           field: id
           id: id
           relationship: none
           table: views_test_data
+          plugin_id: numeric
         name:
           field: name
           id: name
           relationship: none
           table: views_test_data
+          plugin_id: string
       pager:
         type: full
         options:

@@ -749,6 +749,7 @@ abstract class WebTestBase extends TestBase {
     // @see install.php, install.core.inc
     $connection_info = Database::getConnectionInfo();
     $this->root_user = (object) array(
+      'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
       'pass_raw' => $this->randomName(),
@@ -830,6 +831,7 @@ abstract class WebTestBase extends TestBase {
       $class = get_parent_class($class);
     }
     if ($modules) {
+      $modules = array_unique($modules);
       $success = module_enable($modules, TRUE);
       $this->assertTrue($success, t('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
       $this->rebuildContainer();

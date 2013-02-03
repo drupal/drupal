@@ -125,8 +125,8 @@ interface EntityStorageControllerInterface {
    *   'bundle' key. For example:
    *   @code
    *   array(
-   *     'entity type' => 'node',
-   *     'bundle' => 'article',
+   *     'EntityType' => 'node',
+   *     'Bundle' => 'article',
    *   )
    *   @endcode
    *

@@ -46,8 +46,8 @@ class EntityTestStorageController extends DatabaseStorageControllerNG {
     $fields['user_id'] = array(
       'label' => t('User ID'),
       'description' => t('The ID of the associated user.'),
-      'type' => 'entityreference_field',
-      'settings' => array('entity type' => 'user'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'user'),
       'translatable' => TRUE,
     );
     return $fields;

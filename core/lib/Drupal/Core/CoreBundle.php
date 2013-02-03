@@ -60,6 +60,10 @@ class CoreBundle extends Bundle {
       ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
       ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
 
+    // Register the typed configuration data manager.
+    $container->register('config.typed', 'Drupal\Core\Config\TypedConfigManager')
+      ->addArgument(new Reference('config.storage'));
+
     // Register the service for the default database connection.
     $container->register('database', 'Drupal\Core\Database\Connection')
       ->setFactoryClass('Drupal\Core\Database\Database')
@@ -94,7 +98,8 @@ class CoreBundle extends Bundle {
 
     $container->register('path.alias_manager', 'Drupal\Core\Path\AliasManager')
       ->addArgument(new Reference('database'))
-      ->addArgument(new Reference('keyvalue'));
+      ->addArgument(new Reference('state'))
+      ->addArgument(new Reference('language_manager'));
 
     $container->register('http_client_simpletest_subscriber', 'Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber');
     $container->register('http_default_client', 'Guzzle\Http\Client')
@@ -138,14 +143,18 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('service_container'))
       ->addArgument(new Reference('controller_resolver'));
-    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(new Reference('request'))
-      ->setScope('request');
+
+    // Register the 'language_manager' service.
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+
     $container->register('database.slave', 'Drupal\Core\Database\Connection')
       ->setFactoryClass('Drupal\Core\Database\Database')
       ->setFactoryMethod('getConnection')
       ->addArgument('slave');
-    $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager');
+    $container->register('typed_data', 'Drupal\Core\TypedData\TypedDataManager')
+      ->addMethodCall('setValidationConstraintManager', array(new Reference('validation.constraint')));
+    $container->register('validation.constraint', 'Drupal\Core\Validation\ConstraintManager');
+
     // Add the user's storage for temporary, non-cache data.
     $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
     $container->register('user.tempstore', 'Drupal\user\TempStoreFactory')
@@ -237,6 +246,9 @@ class CoreBundle extends Bundle {
       ->addArgument(new Reference('module_handler'))
       ->addTag('event_subscriber');
     $container->register('config_global_override_subscriber', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber')
+      ->addTag('event_subscriber');
+    $container->register('language_request_subscriber', 'Drupal\Core\EventSubscriber\LanguageRequestSubscriber')
+      ->addArgument(new Reference('language_manager'))
       ->addTag('event_subscriber');
 
     $container->register('exception_controller', 'Drupal\Core\ExceptionController')

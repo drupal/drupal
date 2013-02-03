@@ -70,7 +70,6 @@ function update_script_selection_form($form, &$form_state) {
     '#tree' => TRUE,
     '#type' => 'details',
     '#collapsed' => TRUE,
-    '#collapsible' => TRUE,
   );
 
   // Ensure system.module's updates appear first.

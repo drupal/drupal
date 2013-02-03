@@ -163,6 +163,8 @@ function hook_cron() {
  *     primitive types in \Drupal\Core\TypedData\Primitive. If set, it must be
  *     a constant defined by \Drupal\Core\TypedData\Primitive such as
  *     \Drupal\Core\TypedData\Primitive::String.
+ *   - constraints: An array of validation constraints for this type. See
+ *     \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
  *
  * @see typed_data()
  * @see Drupal\Core\TypedData\TypedDataManager::create()
@@ -174,6 +176,7 @@ function hook_data_type_info() {
       'label' => t('Email'),
       'class' => '\Drupal\email\Type\Email',
       'primitive type' => \Drupal\Core\TypedData\Primitive::String,
+      'constraints' => array('Email' => array()),
     ),
   );
 }

@@ -31,6 +31,7 @@ display:
           table: entity_test
           field: id
           order: DESC
+          plugin_id: date
       title: 'Test serialize'
       arguments: {  }
   rest_export_1:

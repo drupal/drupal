@@ -92,7 +92,6 @@ function overlay_form_user_profile_form_alter(&$form, &$form_state) {
       '#type' => 'details',
       '#title' => t('Administrative overlay'),
       '#weight' => 4,
-      '#collapsible' => TRUE,
     );
     $form['overlay_control']['overlay'] = array(
       '#type' => 'checkbox',

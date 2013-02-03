@@ -109,7 +109,7 @@ class EntityQueryRelationshipTest extends WebTestBase  {
       $entity = entity_create('entity_test', array());
       $entity->name->value = $this->randomName();
       $index = $i ? 1 : 0;
-      $entity->user_id->value = $this->accounts[$index]->uid;
+      $entity->user_id->target_id = $this->accounts[$index]->uid;
       $entity->{$this->fieldName}->tid = $this->terms[$index]->tid;
       $entity->save();
       $this->entities[] = $entity;

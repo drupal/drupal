@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Field\Type;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\ContextAwareTypedData;
@@ -29,8 +30,8 @@ use InvalidArgumentException;
  * an 'entity type' constraint is specified.
  *
  * Supported constraints (below the definition's 'constraints' key) are:
- *  - entity type: The entity type.
- *  - bundle: The bundle or an array of possible bundles.
+ *  - EntityType: The entity type.
+ *  - Bundle: The bundle or an array of possible bundles.
  *
  * Supported settings (below the definition's 'settings' key) are:
  *  - id source: If used as computed property, the ID property used to load
@@ -57,7 +58,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    */
   public function __construct(array $definition, $name = NULL, ContextAwareInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-    $this->entityType = isset($this->definition['constraints']['entity type']) ? $this->definition['constraints']['entity type'] : NULL;
+    $this->entityType = isset($this->definition['constraints']['EntityType']) ? $this->definition['constraints']['EntityType'] : NULL;
   }
 
   /**
@@ -89,7 +90,7 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
       $this->entityType = $value->entityType();
       $value = $value->id();
     }
-    elseif (isset($value) && !(is_scalar($value) && !empty($this->definition['constraints']['entity type']))) {
+    elseif (isset($value) && !(is_scalar($value) && !empty($this->definition['constraints']['EntityType']))) {
       throw new InvalidArgumentException('Value is not a valid entity.');
     }
     // Now update the value in the source or the local id property.
@@ -116,7 +117,9 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    if ($entity = $this->getValue()) {
+    // @todo: Remove check for EntityNG once all entity types are converted.
+    $entity = $this->getValue();
+    if ($entity && $entity instanceof EntityNG) {
       return $entity->getIterator();
     }
     return new ArrayIterator(array());
@@ -193,6 +196,6 @@ class EntityWrapper extends ContextAwareTypedData implements IteratorAggregate, 
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty().
    */
   public function isEmpty() {
-    return (bool) $this->getValue();
+    return !$this->getValue();
   }
 }

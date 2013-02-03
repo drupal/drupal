@@ -40,7 +40,7 @@ class Binary extends TypedData {
     // If the value has been set by (absolute) stream resource URI, access the
     // resource now.
     if (!isset($this->handle) && isset($this->uri)) {
-      $this->handle = fopen($this->uri, 'rb');
+      $this->handle = is_readable($this->uri) ? fopen($this->uri, 'rb') : FALSE;
     }
     return $this->handle;
   }
@@ -55,16 +55,14 @@ class Binary extends TypedData {
       $this->handle = NULL;
       $this->uri = NULL;
     }
-    elseif (is_resource($value)) {
-      $this->handle = $value;
-    }
     elseif (is_string($value)) {
       // Note: For performance reasons we store the given URI and access the
       // resource upon request. See Binary::getValue()
       $this->uri = $value;
+      $this->handle = NULL;
     }
     else {
-      throw new InvalidArgumentException("Invalid value for binary data given.");
+      $this->handle = $value;
     }
   }
 

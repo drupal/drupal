@@ -25,7 +25,7 @@ class EntityTestMulStorageController extends EntityTestStorageController {
     $fields = parent::baseFieldDefinitions();
     $fields['default_langcode'] = array(
       'label' => t('Default language'),
-      'description' => t('Flag to inditcate whether this is the default language.'),
+      'description' => t('Flag to indicate whether this is the default language.'),
       'type' => 'boolean_field',
     );
     return $fields;

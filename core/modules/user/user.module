@@ -2708,29 +2708,30 @@ function user_toolbar() {
     );
   }
 
-  $user_tray = array(
-    '#heading' => t('User account actions'),
-    'content' => array(
-      '#theme' => 'links__toolbar_user',
-      '#links' => $links,
-      '#attributes' => array(
-        'class' => array('menu',),
-      ),
-    ),
-  );
-
   $items['user'] = array(
+    '#type' => 'toolbar_item',
     'tab' => array(
-      'title' => user_format_name($user),
-      'href' => 'user',
-      'html' => FALSE,
-      'attributes' => array(
-        'title' => t('My account'),
-        'class' => array('icon', 'icon-user'),
+      '#type' => 'link',
+      '#title' => user_format_name($user),
+      '#href' => 'user',
+      '#options' => array(
+        'attributes' => array(
+          'title' => t('My account'),
+          'class' => array('icon', 'icon-user'),
+        ),
       ),
     ),
-    'tray' => $user_tray,
-    'weight' => 100,
+    'tray' => array(
+      '#heading' => t('User account actions'),
+      'user_links' => array(
+        '#theme' => 'links__toolbar_user',
+        '#links' => $links,
+        '#attributes' => array(
+          'class' => array('menu'),
+        ),
+      ),
+    ),
+    '#weight' => 100,
   );
 
   return $items;

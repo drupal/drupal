@@ -28,6 +28,7 @@ display:
           id: nid
           link_to_node: '0'
           table: node
+          plugin_id: node
         type:
           alter:
             alter_text: '0'
@@ -43,6 +44,7 @@ display:
           id: type
           link_to_node: '0'
           table: node
+          plugin_id: node_type
       group_by: '1'
       pager:
         type: some

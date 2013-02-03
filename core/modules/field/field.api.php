@@ -1083,7 +1083,7 @@ function hook_field_attach_view_alter(&$output, $context) {
   // Append RDF term mappings on displayed taxonomy links.
   foreach (element_children($output) as $field_name) {
     $element = &$output[$field_name];
-    if ($element['#field_type'] == 'taxonomy_term_reference' && $element['#formatter'] == 'taxonomy_term_reference_link') {
+    if ($element['#field_type'] == 'entity_reference' && $element['#formatter'] == 'entity_reference_label') {
       foreach ($element['#items'] as $delta => $item) {
         $term = $item['taxonomy_term'];
         if (!empty($term->rdf_mapping['rdftype'])) {

@@ -31,6 +31,7 @@ display:
           id: nid
           table: node
           field: nid
+          plugin_id: node
           relationship: none
           group_type: group
           admin_label: ''
@@ -80,6 +81,7 @@ display:
           id: title
           table: node
           field: title
+          plugin_id: node
           label: ''
           alter:
             alter_text: '0'
@@ -97,6 +99,7 @@ display:
           id: nothing
           table: views
           field: nothing
+          plugin_id: custom
           relationship: none
           group_type: group
           admin_label: ''
@@ -146,6 +149,7 @@ display:
           table: views
           field: dropbutton
           relationship: none
+          plugin_id: dropbutton
           group_type: group
           admin_label: ''
           label: Dropbutton
@@ -200,6 +204,7 @@ display:
           table: node
           field: status
           id: status
+          plugin_id: boolean
           expose:
             operator: '0'
           group: '1'
@@ -209,6 +214,7 @@ display:
           table: node
           field: created
           order: DESC
+          plugin_id: date
       title: test_dropbutton
   page_1:
     display_plugin: page

@@ -44,7 +44,7 @@ Drupal.behaviors.verticalTabs = {
         });
         tab_list.append(vertical_tab.item);
         $this
-          .removeClass('collapsible collapsed')
+          .removeClass('collapsed')
           .attr('open', true)
           .addClass('vertical-tabs-pane')
           .data('verticalTab', vertical_tab);

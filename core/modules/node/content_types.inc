@@ -158,7 +158,6 @@ function node_type_form($form, &$form_state, $type = NULL) {
   $form['submission'] = array(
     '#type' => 'details',
     '#title' => t('Submission form settings'),
-    '#collapsible' => TRUE,
     '#group' => 'additional_settings',
   );
   $form['submission']['title_label'] = array(
@@ -193,7 +192,6 @@ function node_type_form($form, &$form_state, $type = NULL) {
   $form['workflow'] = array(
     '#type' => 'details',
     '#title' => t('Publishing options'),
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
   );
@@ -212,7 +210,6 @@ function node_type_form($form, &$form_state, $type = NULL) {
     $form['language'] = array(
       '#type' => 'details',
       '#title' => t('Language settings'),
-      '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#group' => 'additional_settings',
     );
@@ -232,7 +229,6 @@ function node_type_form($form, &$form_state, $type = NULL) {
   $form['display'] = array(
     '#type' => 'details',
     '#title' => t('Display settings'),
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
   );

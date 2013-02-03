@@ -881,7 +881,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   );
 
   // Add additional field instance settings from the field module.
-  $additions = module_invoke($field['module'], 'field_instance_settings_form', $field, $instance);
+  $additions = module_invoke($field['module'], 'field_instance_settings_form', $field, $instance, $form_state);
   if (is_array($additions)) {
     $form['instance']['settings'] = $additions;
     $form['instance']['settings']['#weight'] = 10;
@@ -933,7 +933,6 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   $element = array(
     '#type' => 'details',
     '#title' => t('Default value'),
-    '#collapsible' => FALSE,
     '#tree' => TRUE,
     '#description' => t('The default value for this field, used when creating new content.'),
     // Stick to an empty 'parents' on this form in order not to breaks widgets

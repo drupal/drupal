@@ -20,6 +20,7 @@ display:
           id: title
           label: ''
           table: node
+          plugin_id: node
       filter_groups:
         groups:
           1: AND
@@ -32,6 +33,7 @@ display:
           table: node
           value:
             value: '1'
+          plugin_id: numeric
         nid_1:
           field: nid
           group: '2'
@@ -39,6 +41,7 @@ display:
           table: node
           value:
             value: '2'
+          plugin_id: numeric
         status:
           expose:
             operator: '0'
@@ -47,6 +50,7 @@ display:
           id: status
           table: node
           value: '1'
+          plugin_id: boolean
       pager:
         options:
           items_per_page: '10'
@@ -59,6 +63,7 @@ display:
           id: created
           order: DESC
           table: node
+          plugin_id: date
       title: test_filter_groups
       style:
         type: default
@@ -85,6 +90,7 @@ display:
           table: node
           value:
             value: '1'
+          plugin_id: numeric
         nid_1:
           field: nid
           group: '2'
@@ -92,6 +98,7 @@ display:
           table: node
           value:
             value: '2'
+          plugin_id: numeric
         status:
           expose:
             operator: '0'
@@ -100,6 +107,7 @@ display:
           id: status
           table: node
           value: '1'
+          plugin_id: boolean
       path: test-filter-groups
     display_plugin: page
     display_title: Page

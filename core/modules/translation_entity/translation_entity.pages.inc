@@ -246,9 +246,10 @@ function translation_entity_prepare_translation(EntityInterface $entity, Languag
     $source_translation = $entity->getTranslation($source->langcode);
     $target_translation = $entity->getTranslation($target->langcode);
     foreach ($target_translation->getPropertyDefinitions() as $property_name => $definition) {
-      // @todo The value part should not be needed. Remove it as soon as things
-      //   do not break.
-      $target_translation->$property_name->value = $source_translation->$property_name->value;
+      // @todo The "key" part should not be needed. Remove it as soon as things
+      // do not break.
+      $key = key($entity->{$property_name}[0]->getProperties());
+      $target_translation->$property_name->{$key} = $source_translation->$property_name->{$key};
     }
   }
   else {

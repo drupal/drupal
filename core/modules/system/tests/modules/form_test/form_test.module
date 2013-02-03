@@ -824,7 +824,6 @@ function _form_test_vertical_tabs_form($form, &$form_state) {
   $form['tab1'] = array(
     '#type' => 'details',
     '#title' => t('Tab 1'),
-    '#collapsible' => TRUE,
     '#group' => 'vertical_tabs',
     '#access' => user_access('access vertical_tab_test tabs')
   );
@@ -835,7 +834,6 @@ function _form_test_vertical_tabs_form($form, &$form_state) {
   $form['tab2'] = array(
     '#type' => 'details',
     '#title' => t('Tab 2'),
-    '#collapsible' => TRUE,
     '#group' => 'vertical_tabs',
     '#access' => user_access('access vertical_tab_test tabs')
   );

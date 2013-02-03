@@ -58,11 +58,13 @@ function hook_field_settings_form($field, $instance, $has_data) {
  *   The field structure being configured.
  * @param $instance
  *   The instance structure being configured.
+ * @param array $form_state
+  *   The form state of the (entire) configuration form.
  *
  * @return
  *   The form definition for the field instance settings.
  */
-function hook_field_instance_settings_form($field, $instance) {
+function hook_field_instance_settings_form($field, $instance, $form_state) {
   $settings = $instance['settings'];
 
   $form['text_processing'] = array(

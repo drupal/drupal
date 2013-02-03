@@ -116,7 +116,6 @@ abstract class AreaPluginBase extends HandlerBase {
       $form['tokens'] = array(
         '#type' => 'details',
         '#title' => t('Replacement patterns'),
-        '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#id' => 'edit-options-token-help',
         '#states' => array(

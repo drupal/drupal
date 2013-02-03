@@ -12,13 +12,6 @@ namespace Drupal\system\Tests\Database;
  */
 class RegressionTest extends DatabaseTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node');
-
   public static function getInfo() {
     return array(
       'name' => 'Regression tests',
