@@ -82,7 +82,7 @@ class CommentRenderController extends EntityRenderController {
     parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
-      $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+      $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->target_id);
       $instance = field_info_instance($comment_entity->entityType(), $comment->field_name->value, $comment_entity->bundle());
       $is_threaded = isset($comment->divs)
         && $instance['settings']['comment']['comment_default_mode'] == COMMENT_MODE_THREADED;
