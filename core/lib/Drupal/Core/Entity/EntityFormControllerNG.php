@@ -73,7 +73,7 @@ class EntityFormControllerNG extends EntityFormController {
     // Copy top-level form values that are entity fields but not handled by
     // field API without changing existing entity fields that are not being
     // edited by this form. Values of fields handled by field API are copied
-    // by field_attach_submit() below.
+    // by field_attach_extract_form_values() below.
     $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $entity->bundle())) : $form_state['values'];
     $translation = $entity->getTranslation($this->getFormLangcode($form_state), FALSE);
     $definitions = $translation->getPropertyDefinitions();
@@ -92,7 +92,7 @@ class EntityFormControllerNG extends EntityFormController {
 
     // Invoke field API for copying field values.
     if ($info['fieldable']) {
-      field_attach_submit($entity->getBCEntity(), $form, $form_state);
+      field_attach_extract_form_values($entity->getBCEntity(), $form, $form_state);
     }
     return $entity;
   }

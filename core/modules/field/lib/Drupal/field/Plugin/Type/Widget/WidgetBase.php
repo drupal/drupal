@@ -306,9 +306,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   }
 
   /**
-   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::submit().
+   * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::extractFormValues().
    */
-  public function submit(EntityInterface $entity, $langcode, array &$items, array $form, array &$form_state) {
+  public function extractFormValues(EntityInterface $entity, $langcode, array &$items, array $form, array &$form_state) {
     $field_name = $this->field['field_name'];
 
     // Extract the values from $form_state['values'].

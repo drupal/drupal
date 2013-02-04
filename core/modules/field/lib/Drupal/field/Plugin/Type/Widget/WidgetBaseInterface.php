@@ -63,7 +63,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @param array $form_state
    *   The form state.
    */
-  public function submit(EntityInterface $entity, $langcode, array &$items, array $form, array &$form_state);
+  public function extractFormValues(EntityInterface $entity, $langcode, array &$items, array $form, array &$form_state);
 
   /**
    * Reports field-level validation errors against actual form elements.

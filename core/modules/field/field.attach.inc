@@ -727,8 +727,8 @@ function _field_invoke_widget_target() {
  * appear within the same $form element, or within the same '#parents' space.
  *
  * For each call to field_attach_form(), field values are processed by calling
- * field_attach_form_validate() and field_attach_submit() on the same $form
- * element.
+ * field_attach_form_validate() and field_attach_extract_form_values() on the
+ * same $form element.
  *
  * Sample resulting structure in $form:
  * @code
@@ -1096,7 +1096,7 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
 }
 
 /**
- * Performs necessary operations on field data submitted by a form.
+ * Populates an entity object with values from a form submission.
  *
  * Currently, this accounts for drag-and-drop reordering of field values, and
  * filtering of empty values.
@@ -1113,14 +1113,14 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
  *   An associative array of additional options. See field_invoke_method() for
  *   details.
  */
-function field_attach_submit(EntityInterface $entity, $form, &$form_state, array $options = array()) {
+function field_attach_extract_form_values(EntityInterface $entity, $form, &$form_state, array $options = array()) {
   // Extract field values from submitted values.
-  field_invoke_method('submit', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
+  field_invoke_method('extractFormValues', _field_invoke_widget_target(), $entity, $form, $form_state, $options);
 
   // Let other modules act on submitting the entity.
   // Avoid module_invoke_all() to let $form_state be taken by reference.
-  foreach (module_implements('field_attach_submit') as $module) {
-    $function = $module . '_field_attach_submit';
+  foreach (module_implements('field_attach_extract_form_values') as $module) {
+    $function = $module . 'field_attach_extract_form_values';
     $function($entity, $form, $form_state);
   }
 }

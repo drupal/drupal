@@ -83,10 +83,7 @@ class EditFieldForm {
   protected function buildEntity(array $form, array &$form_state) {
     $entity = clone $form_state['entity'];
 
-    // @todo field_attach_submit() only "submits" to the in-memory $entity
-    //   object, not to anywhere persistent. Consider renaming it to minimize
-    //   confusion: http://drupal.org/node/1846648.
-    field_attach_submit($entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
+    field_attach_extract_form_values($entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
 
     // @todo Refine automated log messages and abstract them to all entity
     //   types: http://drupal.org/node/1678002.

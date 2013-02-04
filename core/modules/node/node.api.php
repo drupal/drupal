@@ -820,8 +820,8 @@ function hook_node_validate(Drupal\node\Node $node, $form, &$form_state) {
  * object, but before the node is saved or previewed. It is a chance for modules
  * to adjust the node's properties from what they are simply after a copy from
  * $form_state['values']. This hook is intended for adjusting non-field-related
- * properties. See hook_field_attach_submit() for customizing field-related
- * properties.
+ * properties. See hook_field_attach_extract_form_values() for customizing
+ * field-related properties.
  *
  * @param Drupal\node\Node $node
  *   The node entity being updated in response to a form submission.

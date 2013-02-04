@@ -971,7 +971,7 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
 
     // Extract the 'default value'.
     $items = array();
-    $instance->getWidget()->submit($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+    $instance->getWidget()->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
     // Grab the field definition from $form_state.
     $field_state = field_form_get_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state);
@@ -1012,7 +1012,7 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
 
     // Extract field values.
     $items = array();
-    $instance->getWidget()->submit($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+    $instance->getWidget()->extractFormValues($entity, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
     $instance['default_value'] = $items ? $items : NULL;
   }
