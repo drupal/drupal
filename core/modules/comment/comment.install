@@ -579,20 +579,20 @@ function comment_update_8006(&$sandbox) {
         'rss' => array(
           'type' => 'hidden',
           'label' => 'hidden',
-         ),
-         'teaser' => array(
-           'type' => 'hidden',
-           'label' => 'hidden',
-         ),
-         'search_index' => array(
-           'type' => 'hidden',
-           'label' => 'hidden',
-         ),
-         'search_result' => array(
-           'type' => 'hidden',
-           'label' => 'hidden',
-         ),
-       ),
+        ),
+        'teaser' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'search_index' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'search_result' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+      ),
       'description' => '',
       'entity_type' => 'node',
       'field_name' => 'comment_node_' . $node_type,
