@@ -503,7 +503,7 @@ function field_ui_existing_field_options($entity_type, $bundle) {
  * Form constructor for the field settings edit page.
  *
  * @see field_ui_menu()
- * @see field_ui_settings_form_submit()
+ * @see field_ui_field_settings_form_submit()
  * @ingroups forms
  */
 function field_ui_field_settings_form($form, &$form_state, $instance) {
