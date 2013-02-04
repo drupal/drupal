@@ -568,6 +568,31 @@ function comment_update_8006(&$sandbox) {
         )
       ),
       'deleted' => '0',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'comment',
+          'settings' => array(),
+          'type' => 'comment_default',
+          'weight' => '1',
+        ),
+        'rss' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+         ),
+         'teaser' => array(
+           'type' => 'hidden',
+           'label' => 'hidden',
+         ),
+         'search_index' => array(
+           'type' => 'hidden',
+           'label' => 'hidden',
+         ),
+         'search_result' => array(
+           'type' => 'hidden',
+           'label' => 'hidden',
+         ),
+       ),
       'description' => '',
       'entity_type' => 'node',
       'field_name' => 'comment_node_' . $node_type,
