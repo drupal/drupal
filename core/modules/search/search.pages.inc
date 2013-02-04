@@ -2,11 +2,11 @@
 
 /**
  * @file
- * User page callbacks for the search module.
+ * User page callbacks for the Search module.
  */
 
 /**
- * Menu callback; presents the search form and/or search results.
+ * Page callback: Presents the search form and/or search results.
  *
  * @param $module
  *   Search module to use for the search.
@@ -72,12 +72,13 @@ function search_view($module = NULL, $keys = '') {
 }
 
 /**
- * Process variables for search-results.tpl.php.
+ * Prepocesses the variables for search-results.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $results: Search results array.
- * - $module: Module the search results came from (module implementing
- *   hook_search_info()).
+ * @param $variables
+ *   An array with the following elements:
+ *   - results: Search results array.
+ *   - module: Module the search results came from (module implementing
+ *     hook_search_info()).
  *
  * @see search-results.tpl.php
  */
@@ -94,11 +95,13 @@ function template_preprocess_search_results(&$variables) {
 }
 
 /**
- * Process variables for search-result.tpl.php.
+ * Preprocesses the variables for search-result.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $result
- * - $module
+ * @param $variables
+ *   An array with the following elements:
+ *   - result: Search results array.
+ *   - module: Module the search results came from (module implementing
+ *     hook_search_info()).
  *
  * @see search-result.tpl.php
  */
@@ -135,17 +138,23 @@ function template_preprocess_search_result(&$variables) {
 }
 
 /**
+ * Form validation handler for search_form().
+ *
  * As the search form collates keys from other modules hooked in via
- * hook_form_alter, the validation takes place in _submit.
+ * hook_form_alter, the validation takes place in search_form_submit().
  * search_form_validate() is used solely to set the 'processed_keys' form
  * value for the basic search form.
+ *
+ * @see search_form_submit()
  */
 function search_form_validate($form, &$form_state) {
   form_set_value($form['basic']['processed_keys'], trim($form_state['values']['keys']), $form_state);
 }
 
 /**
- * Process a search form submission.
+ * Form submission handler for search_form().
+ *
+ * @see search_form_validate()
  */
 function search_form_submit($form, &$form_state) {
   $keys = $form_state['values']['processed_keys'];

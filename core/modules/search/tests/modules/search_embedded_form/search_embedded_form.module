@@ -4,9 +4,9 @@
  * @file
  * Test module implementing a form that can be embedded in search results.
  *
- * Embedded form are important, for example, for ecommerce sites where each
- * search result may included an embedded form with buttons like "Add to cart"
- * for each individual product (node) listed in the search results.
+ * A sample use of an embedded form is an e-commerce site where each search
+ * result may include an embedded form with buttons like "Add to cart" for each
+ * individual product (node) listed in the search results.
  */
 
 /**
@@ -25,7 +25,7 @@ function search_embedded_form_menu() {
 }
 
 /**
- * Builds a form for embedding in search results for testing.
+ * Form constructor for embedding search results for testing.
  *
  * @see search_embedded_form_form_submit().
  */

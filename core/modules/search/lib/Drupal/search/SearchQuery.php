@@ -3,6 +3,8 @@
 /**
  * @file
  * Definition of Drupal\search\SearchQuery.
+ *
+ * Search query extender and helper functions.
  */
 
 namespace Drupal\search;
@@ -11,19 +13,14 @@ use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\StatementEmpty;
 
 /**
- * @file
- * Search query extender and helper functions.
- */
-
-/**
- * Do a query on the full-text search index for a word or words.
+ * Performs a query on the full-text search index for a word or words.
  *
  * This function is normally only called by each module that supports the
  * indexed search (and thus, implements hook_update_index()).
  *
  * Results are retrieved in two logical passes. However, the two passes are
- * joined together into a single query. And in the case of most simple
- * queries the second pass is not even used.
+ * joined together into a single query, and in the case of most simple queries
+ * the second pass is not even used.
  *
  * The first pass selects a set of all possible matches, which has the benefit
  * of also providing the exact result set for simple "AND" or "OR" searches.
@@ -43,7 +40,7 @@ class SearchQuery extends SelectExtender {
   protected $searchExpression;
 
   /**
-   * Type of search (search module).
+   * The type of search (search module).
    *
    * This maps to the value of the type column in search_index, and is equal
    * to the machine-readable name of the module that implements
@@ -63,7 +60,7 @@ class SearchQuery extends SelectExtender {
   /**
    * Indicates whether the first pass query requires complex conditions (LIKE).
    *
-   * @var boolean.
+   * @var bool
    */
   protected $simple = TRUE;
 
@@ -107,7 +104,7 @@ class SearchQuery extends SelectExtender {
   /**
    * Indicates whether the first pass query has been executed.
    *
-   * @var boolean
+   * @var bool
    */
   protected $executedFirstPass = FALSE;
 
@@ -138,7 +135,7 @@ class SearchQuery extends SelectExtender {
    * The maximum number of AND/OR combinations exceeded can be configured to
    * avoid Denial-of-Service attacks. Expressions beyond the limit are ignored.
    *
-   * @var boolean
+   * @var bool
    */
   protected $expressionsIgnored = FALSE;
 
@@ -411,6 +408,9 @@ class SearchQuery extends SelectExtender {
    * @param $multiply
    *   If set, the score is multiplied with that value. Search query ensures
    *   that the search scores are still normalized.
+   *
+   * @return object
+   *   The updated query object.
    */
   public function addScore($score, $arguments = array(), $multiply = FALSE) {
     if ($multiply) {

@@ -263,7 +263,7 @@ function search_get_info($all = FALSE) {
  * Returns information about the default search module.
  *
  * @return
- *    The search_get_info() array element for the default search module, if any.
+ *   The search_get_info() array element for the default search module, if any.
  */
 function search_get_default_module_info() {
   $info = search_get_info();
@@ -277,14 +277,22 @@ function search_get_default_module_info() {
 }
 
 /**
- * Access callback for search tabs.
+ * Access callback: Determines access for a search page.
+ *
+ * @param int $name
+ *   The name of a search module (e.g., 'node')
+ *
+ * @return bool
+ *   TRUE if a user has access to the search page; FALSE otherwise.
+ *
+ * @see search_menu()
  */
 function _search_menu_access($name) {
   return user_access('search content') && (!function_exists($name . '_search_access') || module_invoke($name, 'search_access'));
 }
 
 /**
- * Clears a part of or the entire search index.
+ * Clears either a part of, or the entire search index.
  *
  * @param $sid
  *   (optional) The ID of the item to remove from the search index. If
@@ -460,14 +468,14 @@ function search_simplify($text, $langcode = NULL) {
  * written in long strings of characters, though, not split up into words. So
  * in order to allow search matching, we split up CJK text into tokens
  * consisting of consecutive, overlapping sequences of characters whose length
- * is equal to the 'minimum_word_size' variable. This tokenizing is only done if
- * the 'overlap_cjk' variable is TRUE.
+ * is equal to the 'minimum_word_size' variable. This tokenizing is only done
+ * if the 'overlap_cjk' variable is TRUE.
  *
  * @param $matches
  *   This function is a callback for preg_replace_callback(), which is called
  *   from search_simplify(). So, $matches is an array of regular expression
- *   matches, which means that $matches[0] contains the matched text -- a string
- *   of CJK characters to tokenize.
+ *   matches, which means that $matches[0] contains the matched text -- a
+ *   string of CJK characters to tokenize.
  *
  * @return
  *   Tokenized text, starting and ending with a space character.
@@ -539,13 +547,13 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
 }
 
 /**
- * Update the full-text search index for a particular item.
+ * Updates the full-text search index for a particular item.
  *
  * @param $sid
  *   An ID number identifying this particular item (e.g., node ID).
  * @param $module
- *   The machine-readable name of the module that this item comes from (a module
- *   that implements hook_search_info()).
+ *   The machine-readable name of the module that this item comes from (a
+ *   module that implements hook_search_info()).
  * @param $text
  *   The content of this item. Must be a piece of HTML or plain text.
  * @param $langcode
@@ -882,13 +890,13 @@ function search_expression_extract($expression, $option) {
  *   The value to add for the option. If present, it will replace any previous
  *   value added for the option. Cannot contain any spaces or | characters, as
  *   these are used as delimiters. If you want to add a blank value $option: to
- *   the search expression, pass in an empty string or a string that is composed
- *   of only spaces. To clear a previously-stored option without adding a
- *   replacement, pass in NULL for $value or omit.
+ *   the search expression, pass in an empty string or a string that is
+ *   composed of only spaces. To clear a previously-stored option without
+ *   adding a replacement, pass in NULL for $value or omit.
  *
  * @return
- *   $expression, with any previous value for this option removed, and a new
- *   $option:$value pair added if $value was provided.
+ *   The search expression, with any previous value for this option removed, and
+ *   a new $option:$value pair added if $value was provided.
  */
 function search_expression_insert($expression, $option, $value = NULL) {
   // Remove any previous values stored with $option.
@@ -907,8 +915,8 @@ function search_expression_insert($expression, $option, $value = NULL) {
  * The Drupal search interface manages a global search mechanism.
  *
  * Modules may plug into this system to provide searches of different types of
- * data. Most of the system is handled by search.module, so this must be enabled
- * for all of the search features to work.
+ * data. Most of the system is handled by the Search module, so this must be
+ * enabled for all of the search features to work.
  *
  * There are three ways to interact with the search system:
  * - Specifically for searching nodes, you can implement
@@ -917,20 +925,20 @@ function search_expression_insert($expression, $option, $value = NULL) {
  *   everything displayed normally by hook_view() and hook_node_view(). This is
  *   usually sufficient. You should only use this mechanism if you want
  *   additional, non-visible data to be indexed.
- * - Implement hook_search_info(). This will create a search tab for your module
- *   on the /search page with a simple keyword search form. You will also need
- *   to implement hook_search_execute() to perform the search.
+ * - Implement hook_search_info(). This will create a search tab for your
+ *   module on the /search page with a simple keyword search form. You will
+ *   also need to implement hook_search_execute() to perform the search.
  * - Implement hook_update_index(). This allows your module to use Drupal's
  *   HTML indexing mechanism for searching full text efficiently.
  *
- * If your module needs to provide a more complicated search form, then you need
- * to implement it yourself without hook_search_info(). In that case, you should
- * define it as a local task (tab) under the /search page (e.g. /search/mymodule)
- * so that users can easily find it.
+ * If your module needs to provide a more complicated search form, then you
+ * need to implement it yourself without hook_search_info(). In that case, you
+ * should define it as a local task (tab) under the /search page (e.g.
+ * /search/mymodule) so that users can easily find it.
  */
 
 /**
- * Builds a search form.
+ * Form constructor for the search form.
  *
  * @param $action
  *   Form action. Defaults to "search/$path", where $path is the search path
@@ -942,11 +950,14 @@ function search_expression_insert($expression, $option, $value = NULL) {
  *   The search module to render the form for: a module that implements
  *   hook_search_info(). If not supplied, the default search module is used.
  * @param $prompt
- *   Label for the keywords field. Defaults to t('Enter your keywords') if NULL.
- *   Supply '' to omit.
+ *   Label for the keywords field. Defaults to t('Enter your keywords') if
+ *   NULL. Supply '' to omit.
  *
  * @return
  *   A Form API array for the search form.
+ *
+ * @see search_form_validate()
+ * @see search_form_submit()
  */
 function search_form($form, &$form_state, $action = '', $keys = '', $module = NULL, $prompt = NULL) {
   $module_info = FALSE;
@@ -992,10 +1003,14 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
 }
 
 /**
- * Form builder; Output a search form for the search block's search box.
+ * Form constructor for the search block's search box.
+ *
+ * @param $form_id
+ *   The unique string identifying the desired form.
+ *
+ * @see search_box_form_submit()
  *
  * @ingroup forms
- * @see search_box_form_submit()
  */
 function search_box($form, &$form_state, $form_id) {
   $form[$form_id] = array(
@@ -1014,7 +1029,7 @@ function search_box($form, &$form_state, $form_id) {
 }
 
 /**
- * Process a block search form submission.
+ * Form submission handler for search_box().
  */
 function search_box_form_submit($form, &$form_state) {
   // The search form relies on control of the redirect destination for its
@@ -1076,6 +1091,7 @@ function search_data($keys, $module, $conditions = NULL) {
 
 /**
  * Returns snippets from a piece of text, with certain keywords highlighted.
+ *
  * Used for formatting search results.
  *
  * @param $keys
@@ -1232,7 +1248,7 @@ function _search_excerpt_replace(&$text) {
 }
 
 /**
- * Find words in the original text that matched via search_simplify().
+ * Finds words in the original text that matched via search_simplify().
  *
  * This is called in search_excerpt() if an exact match is not found in the
  * text, so that we can find the derived form that matches.
