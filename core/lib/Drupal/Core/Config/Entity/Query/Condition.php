@@ -9,6 +9,7 @@ namespace Drupal\Core\Config\Entity\Query;
 
 use Drupal\Core\Entity\Query\ConditionBase;
 use Drupal\Core\Entity\Query\ConditionInterface;
+use Drupal\Core\Entity\Query\QueryException;
 
 /**
  * Defines the condition class for the config entity query.
@@ -110,7 +111,11 @@ class Condition extends ConditionBase {
     if ($parent === '*') {
       $candidates = array_keys($data);
     }
-    elseif (isset($data[$parent])) {
+    else {
+      // Avoid a notice when calling match() later.
+      if (!isset($data[$parent])) {
+        $data[$parent] = NULL;
+      }
       $candidates = array($parent);
     }
     foreach ($candidates as $key) {
@@ -169,6 +174,10 @@ class Condition extends ConditionBase {
           return substr($value, -strlen($condition['value'])) === (string) $condition['value'];
         case 'IS NOT NULL':
           return TRUE;
+        case 'IS NULL':
+          return FALSE;
+        default:
+          throw new QueryException('Invalid condition operator.');
       }
     }
     return $condition['operator'] === 'IS NULL';
