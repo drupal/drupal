@@ -67,7 +67,7 @@ class ViewExecutable {
    *
    * @var bool
    */
-  public $use_ajax = FALSE;
+  protected $ajaxEnabled = FALSE;
 
   /**
    * Where the results of a query will go.
@@ -533,12 +533,27 @@ class ViewExecutable {
   }
 
   /**
-   * Whether or not AJAX should be used. If AJAX is used, paging,
-   * tablesorting and exposed filters will be fetched via an AJAX call
-   * rather than a page refresh.
+   * Sets whether or not AJAX should be used.
+   *
+   * If AJAX is used, paging, tablesorting and exposed filters will be fetched
+   * via an AJAX call rather than a page refresh.
+   *
+   * @param bool $use_ajax
+   *   TRUE if AJAX should be used, FALSE otherwise.
    */
-  public function setUseAJAX($use_ajax) {
-    $this->use_ajax = $use_ajax;
+  public function setAjaxEnabled($ajax_enabled) {
+    $this->ajaxEnabled = (bool) $ajax_enabled;
+  }
+
+  /**
+   * Whether or not AJAX should be used.
+   *
+   * @see \Drupal\views\ViewExecutable::setAjaxEnabled().
+   *
+   * @return bool
+   */
+  public function ajaxEnabled() {
+    return $this->ajaxEnabled;
   }
 
   /**

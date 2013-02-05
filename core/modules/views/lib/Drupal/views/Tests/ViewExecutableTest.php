@@ -57,7 +57,6 @@ class ViewExecutableTest extends ViewUnitTestBase {
     'executed',
     'args',
     'build_info',
-    'use_ajax',
     'result',
     'attachment_before',
     'attachment_after',
@@ -201,10 +200,10 @@ class ViewExecutableTest extends ViewUnitTestBase {
   public function testPropertyMethods() {
     $view = views_get_view('test_executable_displays');
 
-    // Test the setUseAJAX() method.
-    $this->assertFalse($view->use_ajax);
-    $view->setUseAJAX(TRUE);
-    $this->assertTrue($view->use_ajax);
+    // Test the setAjaxEnabled() method.
+    $this->assertFalse($view->ajaxEnabled());
+    $view->setAjaxEnabled(TRUE);
+    $this->assertTrue($view->ajaxEnabled());
 
     $view->setDisplay();
     // There should be no pager set initially.

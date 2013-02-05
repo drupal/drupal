@@ -244,7 +244,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    * @return bool
    */
-  public function isAJAXEnabled() {
+  public function ajaxEnabled() {
     if ($this->usesAJAX()) {
       return $this->getOption('use_ajax');
     }
@@ -2488,7 +2488,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * overridden on an individual display.
    */
   public function preExecute() {
-    $this->view->setUseAJAX($this->isAJAXEnabled());
+    $this->view->setAjaxEnabled($this->ajaxEnabled());
     if ($this->usesMore() && !$this->useMoreAlways()) {
       $this->view->get_total_rows = TRUE;
     }

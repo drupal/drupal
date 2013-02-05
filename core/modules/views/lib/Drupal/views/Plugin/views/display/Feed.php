@@ -33,7 +33,7 @@ class Feed extends PathPluginBase {
    *
    * @var bool
    */
-  protected $usesAJAX = FALSE;
+  protected $ajaxEnabled = FALSE;
 
   /**
    * Whether the display allows the use of a pager or not.
