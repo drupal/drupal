@@ -5,8 +5,8 @@
  * Default theme implementation for displaying a single search result.
  *
  * This template renders a single search result and is collected into
- * search-results.tpl.php. This and the parent template are
- * dependent to one another sharing the markup for definition lists.
+ * search-results.tpl.php. This and the parent template are dependent on one
+ * another sharing the markup for definition lists.
  *
  * Available variables:
  * - $url: URL of the result.
@@ -15,8 +15,8 @@
  * - $info: String of all the meta information ready for print. Does not apply
  *   to user searches.
  * - $info_split: Contains same data as $info, split into a keyed array.
- * - $module: The machine-readable name of the module (tab) being searched, such
- *   as "node" or "user".
+ * - $module: The machine-readable name of the module (tab) being searched,
+ *   such as "node" or "user".
  * - $title_prefix (array): An array containing additional output populated by
  *   modules, intended to be displayed in front of the main title tag that
  *   appears in the template.
@@ -30,7 +30,7 @@
  *   on permission.
  * - $info_split['date']: Last update of the node. Short formatted.
  * - $info_split['comment']: Number of comments output as "% comments", %
- *   being the count. Depends on comment.module.
+ *   being the count. Depends on the Comment module.
  *
  * Other variables:
  * - $title_attributes: Array of HTML attributes for the title. It is

@@ -886,7 +886,8 @@ function hook_field_formatter_info_alter(array &$info) {
  */
 function hook_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$form, &$form_state, $langcode) {
   // Add a checkbox allowing a given field to be emptied.
-  // See hook_field_attach_submit() for the corresponding processing code.
+  // See hook_field_attach_extract_form_values() for the corresponding
+  // processing code.
   $form['empty_field_foo'] = array(
     '#type' => 'checkbox',
     '#title' => t("Empty the 'field_foo' field"),
@@ -932,7 +933,7 @@ function hook_field_attach_validate(\Drupal\Core\Entity\EntityInterface $entity,
 }
 
 /**
- * Act on field_attach_submit().
+ * Act on field_attach_extract_form_values().
  *
  * This hook is invoked after the field module has performed the operation.
  *
@@ -947,7 +948,7 @@ function hook_field_attach_validate(\Drupal\Core\Entity\EntityInterface $entity,
  * @param $form_state
  *   An associative array containing the current state of the form.
  */
-function hook_field_attach_submit(\Drupal\Core\Entity\EntityInterface $entity, $form, &$form_state) {
+function hook_field_attach_extract_form_values(\Drupal\Core\Entity\EntityInterface $entity, $form, &$form_state) {
   // Sample case of an 'Empty the field' checkbox added on the form, allowing
   // a given field to be emptied.
   $values = NestedArray::getValue($form_state['values'], $form['#parents']);

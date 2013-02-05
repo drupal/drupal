@@ -460,9 +460,9 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
   }
 
   /**
-   * Test field_attach_submit().
+   * Test field_attach_extract_form_values().
    */
-  function testFieldAttachSubmit() {
+  function testFieldAttachExtractFormValues() {
     $this->createFieldWithInstance('_2');
 
     $entity_type = 'test_entity';
@@ -510,9 +510,9 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $form_state['values'][$this->field_name][$langcode] = $values;
     $form_state['values'][$this->field_name_2][$langcode] = $values_2;
 
-    // Call field_attach_submit() for all fields.
+    // Call field_attach_extract_form_values() for all fields.
     $entity = clone($entity_init);
-    field_attach_submit($entity, $form, $form_state);
+    field_attach_extract_form_values($entity, $form, $form_state);
 
     asort($weights);
     asort($weights_2);
@@ -531,10 +531,10 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     }
     $this->assertIdentical($entity->{$this->field_name_2}[$langcode], $expected_values_2, 'Submit filters empty values');
 
-    // Call field_attach_submit() for a single field (the second field).
+    // Call field_attach_extract_form_values() for a single field (the second field).
     $options = array('field_name' => $this->field_name_2);
     $entity = clone($entity_init);
-    field_attach_submit($entity, $form, $form_state, $options);
+    field_attach_extract_form_values($entity, $form, $form_state, $options);
     $expected_values_2 = array();
     foreach ($weights_2 as $key => $value) {
       if ($key != 1) {

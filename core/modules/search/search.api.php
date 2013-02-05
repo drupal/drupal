@@ -13,28 +13,28 @@
 /**
  * Define a custom search type.
  *
- * This hook allows a module to tell search.module that it wishes to perform
- * searches on content it defines (custom node types, users, or comments for
- * example) when a site search is performed.
+ * This hook allows a module to tell the Search module that it wishes to
+ * perform searches on content it defines (custom node types, users, or
+ * comments for example) when a site search is performed.
  *
  * In order for the search to do anything, your module must also implement
- * hook_search_execute(), which is called when someone requests a search
- * on your module's type of content. If you want to have your content
- * indexed in the standard search index, your module should also implement
+ * hook_search_execute(), which is called when someone requests a search on
+ * your module's type of content. If you want to have your content indexed
+ * in the standard search index, your module should also implement
  * hook_update_index(). If your search type has settings, you can implement
  * hook_search_admin() to add them to the search settings page. You can use
  * hook_form_FORM_ID_alter(), with FORM_ID set to 'search_form', to add fields
  * to the search form (see node_form_search_form_alter() for an example).
- * You can use hook_search_access() to limit access to searching,
- * and hook_search_page() to override how search results are displayed.
+ * You can use hook_search_access() to limit access to searching, and
+ * hook_search_page() to override how search results are displayed.
  *
  * @return
  *   Array with optional keys:
- *   - 'title': Title for the tab on the search page for this module. Defaults
- *     to the module name if not given.
- *   - 'path': Path component after 'search/' for searching with this module.
+ *   - title: Title for the tab on the search page for this module. Defaults to
+ *     the module name if not given.
+ *   - path: Path component after 'search/' for searching with this module.
  *     Defaults to the module name if not given.
- *   - 'conditions_callback': Name of a callback function that is invoked by
+ *   - conditions_callback: Name of a callback function that is invoked by
  *     search_view() to get an array of additional search conditions to pass to
  *     search_data(). For example, a search module may get additional keywords,
  *     filters, or modifiers for the search from the query string. Sample
@@ -58,6 +58,7 @@ function hook_search_info() {
  * generated internally - for example based on a module's settings.
  *
  * @see hook_search_info()
+ *
  * @ingroup search
  */
 function sample_search_conditions_callback($keys) {
@@ -90,8 +91,8 @@ function hook_search_access() {
  * Take action when the search index is going to be rebuilt.
  *
  * Modules that use hook_update_index() should update their indexing
- * bookkeeping so that it starts from scratch the next time
- * hook_update_index() is called.
+ * bookkeeping so that it starts from scratch the next time hook_update_index()
+ * is called.
  *
  * @ingroup search
  */
@@ -111,8 +112,8 @@ function hook_search_reset() {
  *
  * @return
  *  An associative array with the key-value pairs:
- *  - 'remaining': The number of items left to index.
- *  - 'total': The total number of items to index.
+ *  - remaining: The number of items left to index.
+ *  - total: The total number of items to index.
  *
  * @ingroup search
  */
@@ -179,22 +180,23 @@ function hook_search_admin() {
  * index.
  *
  * @param $keys
- *   The search keywords as entered by the user.
+ *   The search keywords as entered by the user. Defaults to NULL.
  * @param $conditions
- *   An optional array of additional conditions, such as filters.
+ *   (optional) An array of additional conditions, such as filters. Defaults to
+ *   NULL.
  *
  * @return
- *   An array of search results. To use the default search result
- *   display, each item should have the following keys':
- *   - 'link': Required. The URL of the found item.
- *   - 'type': The type of item (such as the content type).
- *   - 'title': Required. The name of the item.
- *   - 'user': The author of the item.
- *   - 'date': A timestamp when the item was last modified.
- *   - 'extra': An array of optional extra information items.
- *   - 'snippet': An excerpt or preview to show with the result (can be
- *     generated with search_excerpt()).
- *   - 'language': Language code for the item (usually two characters).
+ *   An array of search results. To use the default search result display, each
+ *   item should have the following keys':
+ *   - link: (required) The URL of the found item.
+ *   - type: The type of item (such as the content type).
+ *   - title: (required) The name of the item.
+ *   - user: The author of the item.
+ *   - date: A timestamp when the item was last modified.
+ *   - extra: An array of optional extra information items.
+ *   - snippet: An excerpt or preview to show with the result (can be generated
+ *     with search_excerpt()).
+ *   - language: Language code for the item (usually two characters).
  *
  * @ingroup search
  */
@@ -261,22 +263,23 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
 /**
  * Override the rendering of search results.
  *
- * A module that implements hook_search_info() to define a type of search
- * may implement this hook in order to override the default theming of
- * its search results, which is otherwise themed using theme('search_results').
+ * A module that implements hook_search_info() to define a type of search may
+ * implement this hook in order to override the default theming of its search
+ * results, which is otherwise themed using theme('search_results').
  *
  * Note that by default, theme('search_results') and theme('search_result')
  * work together to create an ordered list (OL). So your hook_search_page()
  * implementation should probably do this as well.
  *
- * @see search-result.tpl.php, search-results.tpl.php
- *
  * @param $results
  *   An array of search results.
  *
  * @return
- *   A renderable array, which will render the formatted search results with
- *   a pager included.
+ *   A renderable array, which will render the formatted search results with a
+ *   pager included.
+ *
+ * @see search-result.tpl.php
+ * @see search-results.tpl.php
  */
 function hook_search_page($results) {
   $output['prefix']['#markup'] = '<ol class="search-results">';
@@ -296,8 +299,8 @@ function hook_search_page($results) {
 /**
  * Preprocess text for search.
  *
- * This hook is called to preprocess both the text added to the search index and
- * the keywords users have submitted for searching.
+ * This hook is called to preprocess both the text added to the search index
+ * and the keywords users have submitted for searching.
  *
  * Possible uses:
  * - Adding spaces between words of Chinese or Japanese text.
@@ -314,9 +317,9 @@ function hook_search_page($results) {
  *   The language code of the entity that has been found.
  *
  * @return
- *   The text after preprocessing. Note that if your module decides not to alter
- *   the text, it should return the original text. Also, after preprocessing,
- *   words in the text should be separated by a space.
+ *   The text after preprocessing. Note that if your module decides not to
+ *   alter the text, it should return the original text. Also, after
+ *   preprocessing, words in the text should be separated by a space.
  *
  * @ingroup search
  */
@@ -336,7 +339,7 @@ function hook_search_preprocess($text, $langcode = NULL) {
 /**
  * Update the search index for this module.
  *
- * This hook is called every cron run if search.module is enabled, your
+ * This hook is called every cron run if the Search module is enabled, your
  * module has implemented hook_search_info(), and your module has been set as
  * an active search module on the Search settings page
  * (admin/config/search/settings). It allows your module to add items to the
@@ -382,6 +385,7 @@ function hook_update_index() {
     search_index($node->nid, 'node', $text);
   }
 }
+
 /**
  * @} End of "addtogroup hooks".
  */

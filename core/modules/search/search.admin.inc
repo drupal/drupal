@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 
 /**
- * Menu callback: confirm wiping of the index.
+ * Menu callback: Confirms wiping of the index.
  */
 function search_reindex_confirm() {
   return confirm_form(array(), t('Are you sure you want to re-index the site?'),
@@ -16,7 +16,10 @@ function search_reindex_confirm() {
 }
 
 /**
- * Handler for wipe confirmation
+ * Form submission handler for search_reindex_confirm().
+ *
+ * @see search_reindex()
+ * @see search_reindex_confirm()
  */
 function search_reindex_confirm_submit(&$form, &$form_state) {
   if ($form['confirm']) {
@@ -39,13 +42,13 @@ function _search_get_module_names() {
 }
 
 /**
- * Menu callback: displays the search module settings page.
- *
- * @ingroup forms
+ * Form constructor for the Search module's settings page.
  *
  * @see search_admin_settings_validate()
  * @see search_admin_settings_submit()
  * @see search_admin_reindex_submit()
+ *
+ * @ingroup forms
  */
 function search_admin_settings($form, &$form_state) {
   $config = config('search.settings');
@@ -183,7 +186,7 @@ function search_admin_settings_submit($form, &$form_state) {
 }
 
 /**
- * Form submission handler for reindex button on search_admin_settings_form().
+ * Form submission handler for the reindex button on search_admin_settings().
  */
 function search_admin_reindex_submit($form, &$form_state) {
   // send the user to the confirmation page

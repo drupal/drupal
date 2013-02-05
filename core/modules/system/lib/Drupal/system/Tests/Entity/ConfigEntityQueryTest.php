@@ -321,6 +321,27 @@ class ConfigEntityQueryTest extends DrupalUnitTestBase {
       ->condition($and_condition_2)
       ->execute();
     $this->assertResults(array('1', '2', '4', '5'));
+
+    // Test the exists and notExists conditions.
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->exists('id')
+      ->execute();
+    $this->assertResults(array('1', '2', '3', '4', '5'));
+
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->exists('non-existent')
+      ->execute();
+    $this->assertResults(array());
+
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->notExists('id')
+      ->execute();
+    $this->assertResults(array());
+
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->notExists('non-existent')
+      ->execute();
+    $this->assertResults(array('1', '2', '3', '4', '5'));
   }
 
   /**

@@ -1450,7 +1450,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
  * Defines the critical hooks that force modules to always be loaded.
  */
 function bootstrap_hooks() {
-  return array('boot', 'exit', 'watchdog', 'language_init');
+  return array('boot', 'exit', 'watchdog');
 }
 
 /**
