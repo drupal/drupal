@@ -65,13 +65,6 @@ function session_test_menu() {
 }
 
 /**
- * Implements hook_boot().
- */
-function session_test_boot() {
-  header('X-Session-Empty: ' . intval(empty($_SESSION)));
-}
-
-/**
  * Page callback, prints the stored session value to the screen.
  */
 function _session_test_get() {

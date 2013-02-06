@@ -6442,8 +6442,8 @@ function drupal_flush_all_caches() {
   drupal_container()->get('module_handler')->loadAll();
 
   // Update the list of bootstrap modules.
-  // Allows developers to get new hook_boot() implementations registered without
-  // having to write a hook_update_N() function.
+  // Allows developers to get new bootstrap hooks implementations registered
+  // without having to write a hook_update_N() function.
   _system_update_bootstrap_status();
 
   // Rebuild the schema and cache a fully-built schema based on new module data.

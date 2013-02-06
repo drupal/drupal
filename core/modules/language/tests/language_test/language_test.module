@@ -6,18 +6,6 @@
  */
 
 /**
- * Implements hook_boot().
- *
- * For testing domain language negotiation, we fake it by setting
- * the HTTP_HOST here
- */
-function language_test_boot() {
-  if (state()->get('language_test.domain')) {
-    $_SERVER['HTTP_HOST'] = state()->get('language_test.domain');
-  }
-}
-
-/**
  * Implements hook_init().
  */
 function language_test_init() {

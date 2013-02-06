@@ -2293,8 +2293,7 @@ function menu_get_active_menu_names() {
  * Sets the active path, which determines which page is loaded.
  *
  * Note that this may not have the desired effect unless invoked very early
- * in the page load, such as during hook_boot(), or unless you do a subrequest
- * to generate your page output.
+ * in the page load or unless you do a subrequest to generate your page output.
  *
  * @param $path
  *   A Drupal path - not a path alias.
