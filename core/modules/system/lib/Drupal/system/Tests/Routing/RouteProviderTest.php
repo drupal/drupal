@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -317,6 +318,41 @@ class RouteProviderTest extends UnitTestBase {
     foreach ($routes as $route) {
       $this->assertEqual($route->getPattern(), '/path/two', 'Found path has correct pattern');
     }
+  }
+
+  /**
+   * Test RouteProvider::getRouteByName() and RouteProvider::getRoutesByNames().
+   */
+  protected function testRouteByName() {
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
+    $dumper->dump();
+
+    $route = $provider->getRouteByName('route_a');
+    $this->assertEqual($route->getPattern(), '/path/one', 'The right route pattern was found.');
+    $this->assertEqual($route->getRequirement('_method'), 'GET', 'The right route method was found.');
+    $route = $provider->getRouteByName('route_b');
+    $this->assertEqual($route->getPattern(), '/path/one', 'The right route pattern was found.');
+    $this->assertEqual($route->getRequirement('_method'), 'PUT', 'The right route method was found.');
+
+    $exception_thrown = FALSE;
+    try {
+      $provider->getRouteByName('invalid_name');
+    }
+    catch (RouteNotFoundException $e) {
+      $exception_thrown = TRUE;
+    }
+    $this->assertTrue($exception_thrown, 'Random route was not found.');
+
+    $routes = $provider->getRoutesByNames(array('route_c', 'route_d', $this->randomName()));
+    $this->assertEqual(count($routes), 2, 'Only two valid routes found.');
+    $this->assertEqual($routes['route_c']->getPattern(), '/path/two');
+    $this->assertEqual($routes['route_d']->getPattern(), '/path/three');
   }
 
 }

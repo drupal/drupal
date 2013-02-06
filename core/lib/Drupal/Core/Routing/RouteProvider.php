@@ -9,6 +9,7 @@ namespace Drupal\Core\Routing;
 
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -38,7 +39,7 @@ class RouteProvider implements RouteProviderInterface {
    *
    * @var array
    */
-  protected $routes;
+  protected $routes = array();
 
   /**
    * Constructs a new PathMatcher.
@@ -121,16 +122,19 @@ class RouteProvider implements RouteProviderInterface {
   }
 
   /**
-   * Find the route using the provided route name (and parameters)
+   * Find the route using the provided route name (and parameters).
    *
-   * @param string $name the route name to fetch
-   * @param array $parameters the parameters as they are passed to the
-   *      UrlGeneratorInterface::generate call
+   * @param string $name
+   *   The route name to fetch
+   * @param array $parameters
+   *   The parameters as they are passed to the UrlGeneratorInterface::generate
+   *   call.
    *
    * @return \Symfony\Component\Routing\Route
+   *   The found route.
    *
-   * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException if
-   *      there is no route with that name in this repository
+   * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+   *   Thrown if there is no route with that name in this repository.
    */
   public function getRouteByName($name, $parameters = array()) {
     $routes = $this->getRoutesByNames(array($name), $parameters);
@@ -142,28 +146,29 @@ class RouteProvider implements RouteProviderInterface {
   }
 
   /**
-   * Find many routes by their names using the provided list of names
+   * Find many routes by their names using the provided list of names.
    *
    * Note that this method may not throw an exception if some of the routes
    * are not found. It will just return the list of those routes it found.
    *
    * This method exists in order to allow performance optimizations. The
    * simple implementation could be to just repeatedly call
-   * $this->getRouteByName()
+   * $this->getRouteByName().
    *
-   * @param array $names the list of names to retrieve
-   * @param array $parameters the parameters as they are passed to the
-   *      UrlGeneratorInterface::generate call. (Only one array, not one for
-   *      each entry in $names.
+   * @param array $names
+   *   The list of names to retrieve.
+   * @param array $parameters
+   *   The parameters as they are passed to the UrlGeneratorInterface::generate
+   *   call. (Only one array, not one for each entry in $names).
    *
-   * @return \Symfony\Component\Routing\Route[] iterable thing with the keys
-   *      the names of the $names argument.
+   * @return \Symfony\Component\Routing\Route[]
+   *   Iterable thing with the keys the names of the $names argument.
    */
   public function getRoutesByNames($names, $parameters = array()) {
 
     $routes_to_load = array_diff($names, array_keys($this->routes));
 
-    $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN :names', array(':names' => $routes_to_load));
+    $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN (:names)', array(':names' => $routes_to_load));
     $routes = $result->fetchAllKeyed();
 
     $return = array();
@@ -171,8 +176,7 @@ class RouteProvider implements RouteProviderInterface {
       $this->routes[$name] = unserialize($route);
     }
 
-    return array_intersect_key($this->routes, $names);
-
+    return array_intersect_key($this->routes, array_flip($names));
   }
 
   /**
