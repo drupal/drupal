@@ -368,7 +368,7 @@ class CoreBundle extends Bundle {
         // This is saved / loaded via drupal_php_storage().
         // All files can be refreshed by clearing caches.
         // @todo ensure garbage collection of expired files.
-        'cache' => TRUE,
+        'cache' => settings()->get('twig_cache', TRUE),
         'base_template_class' => 'Drupal\Core\Template\TwigTemplate',
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1712444.
@@ -376,10 +376,8 @@ class CoreBundle extends Bundle {
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1806538.
         'strict_variables' => FALSE,
-        // @todo Maybe make debug mode dependent on "production mode" setting.
-        'debug' => TRUE,
-        // @todo Make auto reload mode dependent on "production mode" setting.
-        'auto_reload' => FALSE,
+        'debug' => settings()->get('twig_debug', FALSE),
+        'auto_reload' => settings()->get('twig_auto_reload', NULL),
       ))
       ->addMethodCall('addExtension', array(new Definition('Drupal\Core\Template\TwigExtension')))
       // @todo Figure out what to do about debugging functions.
