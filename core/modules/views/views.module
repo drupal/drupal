@@ -705,16 +705,6 @@ function views_invalidate_cache() {
 }
 
 /**
- * Access callback to determine if the user can import Views.
- *
- * View imports require an additional access check because they are PHP
- * code and PHP is more locked down than administer views.
- */
-function views_import_access() {
-  return user_access('administer views') && user_access('use PHP for settings');
-}
-
-/**
  * Determine if the logged in user has access to a view.
  *
  * This function should only be called from a menu hook or some other
