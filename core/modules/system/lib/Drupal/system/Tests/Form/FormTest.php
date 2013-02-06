@@ -353,6 +353,15 @@ class FormTest extends WebTestBase {
   }
 
   /**
+   * Tests a select element when #options is not set.
+   */
+  function testEmptySelect() {
+    $this->drupalGet('form-test/empty-select');
+    $this->assertFieldByXPath("//select[1]", NULL, 'Select element found.');
+    $this->assertNoFieldByXPath("//select[1]/option", NULL, 'No option element found.');
+  }
+
+  /**
    * Tests validation of #type 'number' and 'range' elements.
    */
   function testNumber() {

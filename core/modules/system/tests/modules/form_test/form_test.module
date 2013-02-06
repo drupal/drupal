@@ -142,6 +142,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_select'),
     'access callback' => TRUE,
   );
+  $items['form-test/empty-select'] = array(
+    'title' => 'Empty Select Element',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_empty_select'),
+    'access callback' => TRUE,
+  );
   $items['form-test/language_select'] = array(
     'title' => t('Language Select'),
     'page callback' => 'drupal_get_form',
@@ -1287,6 +1293,19 @@ function form_test_select($form, &$form_state) {
   );
 
   $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');
+  return $form;
+}
+
+/**
+ * Builds a form to test select elements when #options is not an array.
+ */
+function form_test_empty_select($form, &$form_state) {
+  $form['empty_select'] = array(
+    '#type' => 'select',
+    '#title' => t('Empty Select'),
+    '#multiple' => FALSE,
+    '#options' => NULL,
+  );
   return $form;
 }
 

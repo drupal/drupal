@@ -475,6 +475,7 @@ function system_element_info() {
     '#process' => array('form_process_select', 'ajax_process_form'),
     '#theme' => 'select',
     '#theme_wrappers' => array('form_element'),
+    '#options' => array(),
   );
   $types['language_select'] = array(
     '#input' => TRUE,

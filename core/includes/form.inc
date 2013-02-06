@@ -2730,6 +2730,9 @@ function theme_select($variables) {
  */
 function form_select_options($element, $choices = NULL) {
   if (!isset($choices)) {
+    if (empty($element['#options'])) {
+      return '';
+    }
     $choices = $element['#options'];
   }
   // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
