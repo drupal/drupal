@@ -743,3 +743,22 @@ function entity_query($entity_type, $conjunction = 'AND') {
 function entity_page_access(EntityInterface $entity, $operation = 'view') {
   return $entity->access($operation);
 }
+
+/**
+ * Generic access callback for create entity pages.
+ *
+ * Some entity types might have create access per bundle or something else.
+ * In that case you have to create a custom access callback.
+ *
+ * @param string $entity_type
+ *   The entity type.
+ *
+ * @return bool
+ *   TRUE if the access is granted. FALSE if access is denied.
+ */
+function entity_page_create_access($entity_type) {
+  $entity = drupal_container()->get('plugin.manager.entity')
+    ->getStorageController($entity_type)
+    ->create(array());
+  return $entity->access('create');
+}

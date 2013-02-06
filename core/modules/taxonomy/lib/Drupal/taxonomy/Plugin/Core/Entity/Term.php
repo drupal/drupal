@@ -22,6 +22,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "taxonomy",
  *   controller_class = "Drupal\taxonomy\TermStorageController",
  *   render_controller_class = "Drupal\taxonomy\TermRenderController",
+ *   access_controller_class = "Drupal\taxonomy\TermAccessController",
  *   form_controller_class = {
  *     "default" = "Drupal\taxonomy\TermFormController"
  *   },
