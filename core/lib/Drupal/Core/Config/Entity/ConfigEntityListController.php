@@ -20,7 +20,7 @@ class ConfigEntityListController extends EntityListController {
    */
   public function load() {
     $entities = parent::load();
-    uasort($entities, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
+    uasort($entities, array($this->entityInfo['class'], 'sort'));
     return $entities;
   }
 
