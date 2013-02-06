@@ -19,6 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Taxonomy vocabulary"),
  *   module = "taxonomy",
  *   controller_class = "Drupal\taxonomy\VocabularyStorageController",
+ *   access_controller_class = "Drupal\taxonomy\VocabularyAccessController",
  *   form_controller_class = {
  *     "default" = "Drupal\taxonomy\VocabularyFormController"
  *   },

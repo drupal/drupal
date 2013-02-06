@@ -27,7 +27,7 @@ class ViewStorageTest extends ViewUnitTestBase {
    * @var array
    */
   protected $config_properties = array(
-    'disabled',
+    'status',
     'module',
     'id',
     'description',
@@ -85,7 +85,6 @@ class ViewStorageTest extends ViewUnitTestBase {
     $this->loadTests();
     $this->createTests();
     $this->displayTests();
-    $this->statusTests();
 
     // Helper method tests
     $this->displayMethodTests();
@@ -102,7 +101,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     // expected properties.
     $this->assertTrue($view instanceof View, 'Single View instance loaded.');
     foreach ($this->config_properties as $property) {
-      $this->assertTrue($view->get($property), format_string('Property: @property loaded onto View.', array('@property' => $property)));
+      $this->assertTrue($view->get($property) !== NULL, format_string('Property: @property loaded onto View.', array('@property' => $property)));
     }
 
     // Check the displays have been loaded correctly from config display data.
@@ -152,7 +151,7 @@ class ViewStorageTest extends ViewUnitTestBase {
 
     // Test all properties except displays.
     foreach ($properties as $property) {
-      $this->assertTrue($created->get($property), format_string('Property: @property created on View.', array('@property' => $property)));
+      $this->assertTrue($created->get($property) !== NULL, format_string('Property: @property created on View.', array('@property' => $property)));
       $this->assertIdentical($values[$property], $created->get($property), format_string('Property value: @property matches configuration value.', array('@property' => $property)));
     }
 
@@ -185,32 +184,6 @@ class ViewStorageTest extends ViewUnitTestBase {
     $values = config('views.view.test_view_storage_new_new2')->get();
 
     $this->assertTrue(isset($values['display']['test']) && is_array($values['display']['test']), 'New display was saved.');
-  }
-
-  /**
-   * Tests statuses of configuration entities.
-   */
-  protected function statusTests() {
-    // Test a View can be enabled and disabled again (with a new view).
-    $view = entity_load('view', 'test_view_storage_new_new2');
-
-    // The view should already be disabled.
-    $view->enable();
-    $this->assertTrue($view->isEnabled(), 'A view has been enabled.');
-
-    // Check the saved values.
-    $view->save();
-    $config = config('views.view.test_view_storage_new_new2')->get();
-    $this->assertFalse($config['disabled'], 'The changed disabled property was saved.');
-
-    // Disable the view.
-    $view->disable();
-    $this->assertFalse($view->isEnabled(), 'A view has been disabled.');
-
-    // Check the saved values.
-    $view->save();
-    $config = config('views.view.test_view_storage_new_new2')->get();
-    $this->assertTrue($config['disabled'], 'The changed disabled property was saved.');
   }
 
   /**

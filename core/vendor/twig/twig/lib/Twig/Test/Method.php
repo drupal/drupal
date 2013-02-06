@@ -14,14 +14,19 @@
  *
  * @package    twig
  * @author     Fabien Potencier <fabien@symfony.com>
+ * @deprecated since 1.12 (to be removed in 2.0)
  */
-class Twig_Test_Method implements Twig_TestInterface
+class Twig_Test_Method extends Twig_Test
 {
     protected $extension;
     protected $method;
 
-    public function __construct(Twig_ExtensionInterface $extension, $method)
+    public function __construct(Twig_ExtensionInterface $extension, $method, array $options = array())
     {
+        $options['callable'] = array($extension, $method);
+
+        parent::__construct($options);
+
         $this->extension = $extension;
         $this->method = $method;
     }

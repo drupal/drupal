@@ -101,6 +101,6 @@ display:
         default: default
         page_1: page_1
 base_field: nid
-disabled: '0'
+status: '1'
 module: views
 langcode: und

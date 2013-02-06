@@ -65,7 +65,7 @@ class LinkEdit extends FieldPluginBase {
       $term = entity_create('taxonomy_term', array(
         'vid' => $values->{$this->aliases['vid']},
       ));
-      if (taxonomy_term_access('edit', $term)) {
+      if ($term->access('update')) {
         $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
         return l($text, 'taxonomy/term/'. $tid . '/edit', array('query' => drupal_get_destination()));
       }

@@ -52,7 +52,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
   /**
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
    */
-  function getTranslatorPermissions() {
+  protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array("edit any $this->bundle content"));
   }
 

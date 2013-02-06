@@ -67,7 +67,7 @@ class ViewExecutable {
    *
    * @var bool
    */
-  public $use_ajax = FALSE;
+  protected $ajaxEnabled = FALSE;
 
   /**
    * Where the results of a query will go.
@@ -533,12 +533,27 @@ class ViewExecutable {
   }
 
   /**
-   * Whether or not AJAX should be used. If AJAX is used, paging,
-   * tablesorting and exposed filters will be fetched via an AJAX call
-   * rather than a page refresh.
+   * Sets whether or not AJAX should be used.
+   *
+   * If AJAX is used, paging, tablesorting and exposed filters will be fetched
+   * via an AJAX call rather than a page refresh.
+   *
+   * @param bool $use_ajax
+   *   TRUE if AJAX should be used, FALSE otherwise.
    */
-  public function setUseAJAX($use_ajax) {
-    $this->use_ajax = $use_ajax;
+  public function setAjaxEnabled($ajax_enabled) {
+    $this->ajaxEnabled = (bool) $ajax_enabled;
+  }
+
+  /**
+   * Whether or not AJAX should be used.
+   *
+   * @see \Drupal\views\ViewExecutable::setAjaxEnabled().
+   *
+   * @return bool
+   */
+  public function ajaxEnabled() {
+    return $this->ajaxEnabled;
   }
 
   /**
@@ -1227,11 +1242,6 @@ class ViewExecutable {
     drupal_theme_initialize();
     $config = config('views.settings');
 
-    $start = microtime(TRUE);
-    if (!empty($this->live_preview) && $config->get('ui.show.additional_queries')) {
-      $this->startQueryCapture();
-    }
-
     $exposed_form = $this->display_handler->getPlugin('exposed_form');
     $exposed_form->pre_render($this->result);
 
@@ -1328,11 +1338,6 @@ class ViewExecutable {
     if (function_exists($function)) {
       $function($this, $this->display_handler->output, $cache);
     }
-
-    if (!empty($this->live_preview) && $config->get('ui.show.additional_queries')) {
-      $this->endQueryCapture();
-    }
-    $this->render_time = microtime(TRUE) - $start;
 
     return $this->display_handler->output;
   }
@@ -1485,7 +1490,7 @@ class ViewExecutable {
    */
   public function access($displays = NULL, $account = NULL) {
     // Noone should have access to disabled views.
-    if (!$this->storage->isEnabled()) {
+    if (!$this->storage->status()) {
       return FALSE;
     }
 
@@ -1699,61 +1704,6 @@ class ViewExecutable {
       }
     }
     return $breadcrumb;
-  }
-
-  /**
-   * Set up query capturing.
-   *
-   * db_query() stores the queries that it runs in global $queries,
-   * bit only if dev_query is set to true. In this case, we want
-   * to temporarily override that setting if it's not and we
-   * can do that without forcing a db rewrite by just manipulating
-   * $conf. This is kind of evil but it works.
-   */
-  public function startQueryCapture() {
-    global $conf, $queries;
-    if (empty($conf['dev_query'])) {
-      $this->fix_dev_query = TRUE;
-      $conf['dev_query'] = TRUE;
-    }
-
-    // Record the last query key used; anything already run isn't
-    // a query that we are interested in.
-    $this->last_query_key = NULL;
-
-    if (!empty($queries)) {
-      $keys = array_keys($queries);
-      $this->last_query_key = array_pop($keys);
-    }
-  }
-
-  /**
-   * Add the list of queries run during render to buildinfo.
-   *
-   * @see View::start_query_capture()
-   */
-  public function endQueryCapture() {
-    global $conf, $queries;
-    if (!empty($this->fix_dev_query)) {
-      $conf['dev_query'] = FALSE;
-    }
-
-    // make a copy of the array so we can manipulate it with array_splice.
-    $temp = $queries;
-
-    // Scroll through the queries until we get to our last query key.
-    // Unset anything in our temp array.
-    if (isset($this->last_query_key)) {
-      while (list($id, $query) = each($queries)) {
-        if ($id == $this->last_query_key) {
-          break;
-        }
-
-        unset($temp[$id]);
-      }
-    }
-
-    $this->additional_queries = $temp;
   }
 
   /**

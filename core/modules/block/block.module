@@ -365,19 +365,17 @@ function _block_rehash($theme = NULL) {
   $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
   foreach ($blocks as $block_id => $block) {
     $region = $block->get('region');
-    $status = $block->get('status');
+    $status = $block->status();
     // Disable blocks in invalid regions.
-    if (!empty($region) && $region != BLOCK_REGION_NONE && !isset($regions[$region]) && $status == 1) {
+    if (!empty($region) && $region != BLOCK_REGION_NONE && !isset($regions[$region]) && $status) {
       drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block_id, '%region' => $region)), 'warning');
       // Disabled modules are moved into the BLOCK_REGION_NONE later so no
       // need to move the block to another region.
-      $block->set('status', 0);
-      $block->save();
+      $block->disable()->save();
     }
-    // Set region to none if not enabled and make sure status is set.
-    if (empty($status)) {
+    // Set region to none if not enabled.
+    if (!$status) {
       $block->set('region', BLOCK_REGION_NONE);
-      $block->set('status', 0);
       $block->save();
     }
   }

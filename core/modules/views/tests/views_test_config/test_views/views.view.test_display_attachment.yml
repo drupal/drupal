@@ -2,7 +2,7 @@ base_field: id
 base_table: views_test_data
 core: 8.x
 description: ''
-disabled: '0'
+status: '1'
 display:
   default:
     display_plugin: default

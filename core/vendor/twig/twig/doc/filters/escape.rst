@@ -74,7 +74,7 @@ The ``escape`` filter supports the following escaping strategies:
         {% endautoescape %}
 
     When using a variable as the escaping strategy, you should disable
-    automatic escaping::
+    automatic escaping:
 
     .. code-block:: jinja
 
@@ -83,5 +83,11 @@ The ``escape`` filter supports the following escaping strategies:
         {% autoescape 'html' %}
             {{ var|escape(strategy)|raw }} {# won't be double-escaped #}
         {% endautoescape %}
+
+Arguments
+---------
+
+ * ``strategy``: The escaping strategy
+ * ``charset``:  The string charset
 
 .. _`htmlspecialchars`: http://php.net/htmlspecialchars

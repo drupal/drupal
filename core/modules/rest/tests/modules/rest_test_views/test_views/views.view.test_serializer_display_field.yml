@@ -91,6 +91,6 @@ display:
       row:
         type: data_field
 base_field: id
-disabled: '0'
+status: '1'
 module: rest
 langcode: und

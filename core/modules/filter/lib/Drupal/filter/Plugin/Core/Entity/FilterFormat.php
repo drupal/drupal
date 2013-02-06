@@ -23,7 +23,8 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "format",
  *     "label" = "name",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status"
  *   }
  * )
  */
@@ -57,13 +58,6 @@ class FilterFormat extends ConfigEntityBase {
    * @var string
    */
   public $uuid;
-
-  /**
-   * Whether the text format is enabled or disabled.
-   *
-   * @var bool
-   */
-  public $status = 1;
 
   /**
    * Weight of this format in the text format selector.

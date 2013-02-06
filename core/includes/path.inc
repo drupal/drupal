@@ -5,8 +5,8 @@
  * Functions to handle paths in Drupal.
  *
  * These functions are not loaded for cached pages, but modules that need
- * to use them in hook_boot() or hook exit() can make them available, by
- * executing "drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);".
+ * to use them in hook exit() can make them available, by executing
+ * "drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);".
  */
 
 /**
@@ -73,10 +73,7 @@ function drupal_match_path($path, $patterns) {
  * - http://example.com/path/alias (which is a path alias for node/306) returns
  *   "node/306" as opposed to the path alias.
  *
- * This function is not available in hook_boot() so use request_path() instead.
- * However, be careful when doing that because in the case of Example #3
- * request_path() will contain "path/alias". If "node/306" is needed, calling
- * drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL) makes this function available.
+ * This function is available only after DRUPAL_BOOTSTRAP_FULL.
  *
  * @return
  *   The current Drupal URL path.
@@ -88,7 +85,10 @@ function current_path() {
   // fallback code below, once the path alias logic has been figured out in
   // http://drupal.org/node/1269742.
   if (drupal_container()->isScopeActive('request')) {
-    return drupal_container()->get('request')->attributes->get('system_path');
+    $path = drupal_container()->get('request')->attributes->get('system_path');
+    if ($path !== NULL) {
+      return $path;
+    }
   }
   // If we are outside the request scope, fall back to using the path stored in
   // _current_path().

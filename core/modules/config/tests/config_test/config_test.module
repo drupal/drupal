@@ -6,6 +6,7 @@
  */
 
 use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
@@ -53,6 +54,18 @@ function config_test_menu() {
     'page arguments' => array('config_test_delete_form', 4),
     'access callback' => TRUE,
     'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/structure/config_test/manage/%config_test/enable'] = array(
+    'title' => 'Enable',
+    'page callback' => 'config_test_entity_enable',
+    'page arguments' => array(4),
+    'access callback' => TRUE,
+  );
+  $items['admin/structure/config_test/manage/%config_test/disable'] = array(
+    'title' => 'Disable',
+    'page callback' => 'config_test_entity_disable',
+    'page arguments' => array(4),
+    'access callback' => TRUE,
   );
   return $items;
 }
@@ -145,4 +158,30 @@ function config_test_config_test_create(ConfigTest $config_test) {
   if (state()->get('config_test.prepopulate')) {
     $config_test->set('foo', 'baz');
   }
+}
+
+/**
+ * Enables a ConfigTest object.
+ *
+ * @param Drupal\config_test\ConfigTest $config_test
+ *   The ConfigTest object to enable.
+ *
+ * @return \Symfony\Component\HttpFoundation\RedirectResponse.
+ */
+function config_test_entity_enable(ConfigTest $config_test) {
+  $config_test->enable()->save();
+  return new RedirectResponse(url('admin/structure/config_test', array('absolute' => TRUE)));
+}
+
+/**
+ * Disables a ConfigTest object.
+ *
+ * @param Drupal\config_test\ConfigTest $config_test
+ *   The ConfigTest object to disable.
+ *
+ * @return \Symfony\Component\HttpFoundation\RedirectResponse.
+ */
+function config_test_entity_disable(ConfigTest $config_test) {
+  $config_test->disable()->save();
+  return new RedirectResponse(url('admin/structure/config_test', array('absolute' => TRUE)));
 }

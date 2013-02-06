@@ -29,6 +29,12 @@ class ViewsDataTest extends ViewUnitTestBase {
     );
   }
 
+  protected function setUp() {
+    parent::setUp();
+
+    $this->viewsDataCache = $this->container->get('views.views_data');
+  }
+
   /**
    * Tests the views.views_data service.
    *
@@ -37,8 +43,6 @@ class ViewsDataTest extends ViewUnitTestBase {
   public function testViewsFetchData() {
     $table_name = 'views_test_data';
     $expected_data = $this->viewsData();
-
-    $this->viewsDataCache = drupal_container()->get('views.views_data');
 
     $data = $this->viewsDataCache->get($table_name);
     $this->assertEqual($data, $expected_data[$table_name], 'Make sure fetching views data by table works as expected.');
@@ -137,6 +141,34 @@ class ViewsDataTest extends ViewUnitTestBase {
         $item = "views_test_data.$item";
       });
       $this->assertEqual($expected_keys, array_keys($fields), format_string('Sub_type @sub_type is filtered as expected.', array('@sub_type' => $sub_type)));
+    }
+  }
+
+  /**
+   * Tests the fetchBaseTables() method.
+   */
+  public function testFetchBaseTables() {
+    // Enabled node module so there is more than 1 base table to test.
+    $this->enableModules(array('node'));
+    $data = $this->viewsDataCache->get();
+    $base_tables = $this->viewsDataCache->fetchBaseTables();
+
+    // Test the number of tables returned and their order.
+    $this->assertEqual(count($base_tables), 3, 'The correct amount of base tables were returned.');
+    $this->assertIdentical(array_keys($base_tables), array('node', 'node_revision', 'views_test_data'), 'The tables are sorted as expected.');
+
+    // Test the values returned for each base table.
+    $defaults = array(
+      'title' => '',
+      'help' => '',
+      'weight' => 0,
+    );
+    foreach ($base_tables as $base_table => $info) {
+      // Merge in default values as in fetchBaseTables().
+      $expected = $data[$base_table]['table']['base'] += $defaults;
+      foreach ($defaults as $key => $default) {
+        $this->assertEqual($info[$key], $expected[$key]);
+      }
     }
   }
 

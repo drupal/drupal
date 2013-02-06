@@ -1,3 +1,25 @@
+* 1.12.1 (2013-01-15)
+
+ * added support for object instances as the second argument of the constant function
+ * relaxed globals management to avoid a BC break
+ * added support for {{ some_string[:2] }}
+
+* 1.12.0 (2013-01-08)
+
+ * added verbatim as an alias for the raw tag to avoid confusion with the raw filter
+ * fixed registration of tests and functions as anonymous functions
+ * fixed globals management
+
+* 1.12.0-RC1 (2012-12-29)
+
+ * added an include function (does the same as the include tag but in a more flexible way)
+ * added the ability to use any PHP callable to define filters, functions, and tests
+ * added a syntax error when using a loop variable that is not defined
+ * added the ability to set default values for macro arguments
+ * added support for named arguments for filters, tests, and functions
+ * moved filters/functions/tests syntax errors to the parser
+ * added support for extended ternary operator syntaxes
+
 * 1.11.1 (2012-11-11)
 
  * fixed debug info line numbering (was off by 2)

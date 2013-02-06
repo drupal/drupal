@@ -284,6 +284,42 @@ $config_directories = array();
 $settings['update_free_access'] = FALSE;
 
 /**
+ * Twig debugging:
+ *
+ * When enabled, you can use the 'dump' function in Twig templates to output
+ * information about variables, and templates are automatically recompiled
+ * whenever the source code changes.
+ *
+ * @see http://drupal.org/node/1906392
+ *
+ * Not recommended in production environments (Default: FALSE).
+ */
+# $settings['twig_debug'] = TRUE;
+
+/**
+ * Twig auto-reload:
+ *
+ * Automatically recompile Twig templates whenever the source code changes. If
+ * you don't provide a value for twig_auto_reload, it will be determined based
+ * on the value of twig_debug.
+ *
+ * Not recommended in production environments (Default: NULL).
+ */
+# $settings['twig_auto_reload'] = TRUE;
+
+/**
+ * Twig cache:
+ *
+ * By default, Twig templates will be compiled and stored in the filesystem to
+ * increase performance. Disabling the Twig cache will recompile the templates
+ * from source each time they are used. In most cases the twig_auto_reload
+ * setting above should be enabled rather than disabling the Twig cache.
+ *
+ * Not recommended in production environments (Default: TRUE).
+ */
+# $settings['twig_cache'] = FALSE;
+
+/**
  * External access proxy settings:
  *
  * If your site must access the Internet via a web proxy then you can enter

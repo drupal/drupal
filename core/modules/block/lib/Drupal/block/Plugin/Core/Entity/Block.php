@@ -31,7 +31,8 @@ use Drupal\Component\Plugin\Exception\PluginException;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status"
  *   }
  * )
  */
@@ -99,13 +100,6 @@ class Block extends ConfigEntityBase {
    * @var string
    */
   protected $module;
-
-  /**
-   * The status of this block.
-   *
-   * @var bool
-   */
-  protected $status = TRUE;
 
   /**
    * The plugin instance ID.

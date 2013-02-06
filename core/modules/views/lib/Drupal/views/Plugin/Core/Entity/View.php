@@ -34,7 +34,8 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "human_name",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status"
  *   }
  * )
  */
@@ -103,16 +104,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   protected $base_field = 'nid';
 
   /**
-   * Returns whether the view's status is disabled or not.
-   *
-   * This value is used for exported view, to provide some default views which
-   * aren't enabled.
-   *
-   * @var bool
-   */
-  protected $disabled = FALSE;
-
-  /**
    * The UUID for this entity.
    *
    * @var string
@@ -151,6 +142,10 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   public function uri() {
     return array(
       'path' => 'admin/structure/views/view/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
     );
   }
 
@@ -161,29 +156,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     $duplicate = parent::createDuplicate();
     unset($duplicate->executable);
     return $duplicate;
-  }
-
-  /**
-   * Implements Drupal\views\ViewStorageInterface::enable().
-   */
-  public function enable() {
-    $this->disabled = FALSE;
-    $this->save();
-  }
-
-  /**
-   * Implements Drupal\views\ViewStorageInterface::disable().
-   */
-  public function disable() {
-    $this->disabled = TRUE;
-    $this->save();
-  }
-
-  /**
-   * Implements Drupal\views\ViewStorageInterface::isEnabled().
-   */
-  public function isEnabled() {
-    return !$this->disabled;
   }
 
   /**
@@ -364,7 +336,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       foreach ($this->display as $display) {
         if (!empty($display['display_options']['path'])) {
           $path = $display['display_options']['path'];
-          if ($this->isEnabled() && strpos($path, '%') === FALSE) {
+          if ($this->status() && strpos($path, '%') === FALSE) {
             $all_paths[] = l('/' . $path, $path);
           }
           else {
@@ -386,7 +358,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       'base_table',
       'core',
       'description',
-      'disabled',
+      'status',
       'display',
       'human_name',
       'module',

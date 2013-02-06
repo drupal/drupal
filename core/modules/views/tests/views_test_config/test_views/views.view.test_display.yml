@@ -1,7 +1,7 @@
 base_table: node
 core: '8'
 description: ''
-disabled: '1'
+status: '0'
 display:
   block_1:
     display_options:

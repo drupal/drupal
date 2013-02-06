@@ -1,4 +1,4 @@
-disabled: true
+status: '0'
 module: node
 id: archive
 description: 'A list of months that link to content for that month.'

@@ -33,9 +33,6 @@ class StatusExtraTest extends NodeTestBase {
    * Tests the status extra filter.
    */
   public function testStatusExtra() {
-    // @todo For whatever reason the menu has to be rebuilt or drupalGet will
-    // fail.
-    state()->set('menu_rebuild_needed', TRUE);
     $column_map = array('nid' => 'nid');
     $node_author = $this->drupalCreateUser(array('view own unpublished content'));
     $node_author_not_unpublished = $this->drupalCreateUser();

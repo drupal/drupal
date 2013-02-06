@@ -244,7 +244,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    * @return bool
    */
-  public function isAJAXEnabled() {
+  public function ajaxEnabled() {
     if ($this->usesAJAX()) {
       return $this->getOption('use_ajax');
     }
@@ -2407,35 +2407,20 @@ abstract class DisplayPluginBase extends PluginBase {
     }
   }
 
-
-  /**
-   * Legacy functions.
-   */
-
-  /**
-   * Render the header of the view.
-   */
-  public function renderHeader() {
-    $empty = empty($this->view->result);
-    return $this->renderArea('header', $empty);
-  }
-
-  /**
-   * Render the footer of the view.
-   */
-  public function renderFooter() {
-    $empty = empty($this->view->result);
-    return $this->renderArea('footer', $empty);
-  }
-
-  public function renderEmpty() {
-    return $this->renderArea('empty', TRUE);
-  }
-
   /**
    * If this display creates a page with a menu item, implement it here.
+   *
+   * @param array $callbacks
+   *   An array of already existing menu items provided by drupal.
+   *
+   * @return array
+   *   The menu router items registers for this display.
+   *
+   * @see hook_menu()
    */
-  public function hookMenu() { return array(); }
+  public function executeHookMenu($callbacks) {
+    return array();
+  }
 
   /**
    * Render this display.
@@ -2488,7 +2473,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * overridden on an individual display.
    */
   public function preExecute() {
-    $this->view->setUseAJAX($this->isAJAXEnabled());
+    $this->view->setAjaxEnabled($this->ajaxEnabled());
     if ($this->usesMore() && !$this->useMoreAlways()) {
       $this->view->get_total_rows = TRUE;
     }

@@ -67,17 +67,17 @@ class CompiledRoute extends SymfonyCompiledRoute {
    *   An array of tokens to use to generate URL for this route
    * @param array $pathVariables
    *   An array of path variables
-   * @param string|null $hostnameRegex
-   *   Hostname regex
-   * @param array $hostnameTokens
-   *   Hostname tokens
-   * @param array $hostnameVariables
-   *   An array of hostname variables
+   * @param string|null $hostRegex
+   *   Host regex
+   * @param array $hostTokens
+   *   Host tokens
+   * @param array $hostVariables
+   *   An array of host variables
    * @param array $variables
-   *   An array of variables (variables defined in the path and in the hostname patterns)
+   *   An array of variables (variables defined in the path and in the host patterns)
    */
-  public function __construct(Route $route, $fit, $pattern_outline, $num_parts, $staticPrefix, $regex, array $tokens, array $pathVariables, $hostnameRegex = null, array $hostnameTokens = array(), array $hostnameVariables = array(), array $variables = array()) {
-    parent::__construct($staticPrefix, $regex, $tokens, $pathVariables, $hostnameRegex, $hostnameTokens, $hostnameVariables, $variables);
+  public function __construct(Route $route, $fit, $pattern_outline, $num_parts, $staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = null, array $hostTokens = array(), array $hostVariables = array(), array $variables = array()) {
+    parent::__construct($staticPrefix, $regex, $tokens, $pathVariables, $hostRegex, $hostTokens, $hostVariables, $variables);
 
     $this->route = $route;
     $this->fit = $fit;

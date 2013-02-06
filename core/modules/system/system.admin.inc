@@ -2267,7 +2267,9 @@ function theme_status_report($variables) {
       'class' => 'error',
     ),
   );
-  $output = '<table class="system-status-report"><tbody>';
+  $output = '<table class="system-status-report"><thead><tr class="element-invisible">';
+  $output .= '<th>' . t('Status') . '</th><th>' . t('Component') . '</th><th>' . t('Details') . '</th>';
+  $output .= '</tr></thead><tbody>';
 
   foreach ($requirements as $requirement) {
     if (empty($requirement['#type'])) {

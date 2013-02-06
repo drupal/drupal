@@ -28,7 +28,8 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status"
  *   }
  * )
  */
@@ -81,6 +82,14 @@ class ConfigTest extends ConfigEntityBase {
       $properties[$name] = $this->get($name);
     }
     return $properties;
+  }
+
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
+   */
+  public static function sort($a, $b) {
+    state()->set('config_entity_sort', TRUE);
+    return parent::sort($a, $b);
   }
 
 }

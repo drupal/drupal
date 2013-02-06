@@ -1,4 +1,4 @@
-disabled: true
+status: '0'
 module: taxonomy
 id: taxonomy_term
 description: 'Customize the default taxonomy/term display.'

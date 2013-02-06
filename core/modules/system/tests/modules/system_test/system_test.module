@@ -218,13 +218,6 @@ function system_test_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_boot().
- */
-function system_test_boot() {
-  watchdog('system_test', 'hook_boot');
-}
-
-/**
  * Implements hook_init().
  */
 function system_test_init() {

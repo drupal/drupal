@@ -54,20 +54,29 @@ class ConfigEntityListTest extends WebTestBase {
     $uri = $entity->uri();
     $expected_operations = array(
       'edit' => array (
-        'title' => 'Edit',
-        'href' => 'admin/structure/config_test/manage/default/edit',
+        'title' => t('Edit'),
+        'href' => $uri['path'] . '/edit',
         'options' => $uri['options'],
         'weight' => 10,
       ),
+      'disable' => array(
+        'title' => t('Disable'),
+        'href' => $uri['path'] . '/disable',
+        'options' => $uri['options'],
+        'weight' => 20,
+      ),
       'delete' => array (
-        'title' => 'Delete',
-        'href' => 'admin/structure/config_test/manage/default/delete',
+        'title' => t('Delete'),
+        'href' => $uri['path'] . '/delete',
         'options' => $uri['options'],
         'weight' => 100,
       ),
     );
+
     $actual_operations = $controller->getOperations($entity);
-    $this->assertIdentical($expected_operations, $actual_operations, 'Return value from getOperations matches expected.');
+    // Sort the operations to normalize link order.
+    uasort($actual_operations, 'drupal_sort_weight');
+    $this->assertIdentical($expected_operations, $actual_operations);
 
     // Test buildHeader() method.
     $expected_items = array(
@@ -135,6 +144,9 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertResponse(200);
     $edit = array('label' => 'Antelope', 'id' => 'antelope');
     $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Ensure that the entity's sort method was called.
+    $this->assertTrue(state()->get('config_entity_sort'), 'ConfigTest::sort() was called.');
 
     // Confirm that the user is returned to the listing, and verify that the
     // text of the label and machine name appears in the list (versus elsewhere

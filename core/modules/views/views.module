@@ -705,16 +705,6 @@ function views_invalidate_cache() {
 }
 
 /**
- * Access callback to determine if the user can import Views.
- *
- * View imports require an additional access check because they are PHP
- * code and PHP is more locked down than administer views.
- */
-function views_import_access() {
-  return user_access('administer views') && user_access('use PHP for settings');
-}
-
-/**
  * Determine if the logged in user has access to a view.
  *
  * This function should only be called from a menu hook or some other
@@ -825,13 +815,6 @@ function &views_set_current_view($view = NULL) {
  */
 function &views_get_current_view() {
   return views_set_current_view();
-}
-
-/**
- * Include views .inc files as necessary.
- */
-function views_include($file) {
-  module_load_include('inc', 'views', 'includes/' . $file);
 }
 
 /**
@@ -947,59 +930,6 @@ function views_get_handler($table, $field, $type, $override = NULL) {
 /**
  * Fetch a list of all base tables available
  *
- * @return array
- *   A keyed array of in the form of 'base_table' => 'Description'.
- */
-function views_fetch_base_tables() {
-  static $base_tables = array();
-  if (empty($base_tables)) {
-    $tables = array();
-    $data = drupal_container()->get('views.views_data')->get();
-    foreach ($data as $table => $info) {
-      if (!empty($info['table']['base'])) {
-        $tables[$table] = array(
-          'title' => $info['table']['base']['title'],
-          'description' => !empty($info['table']['base']['help']) ? $info['table']['base']['help'] : '',
-          'weight' => !empty($info['table']['base']['weight']) ? $info['table']['base']['weight'] : 0,
-        );
-      }
-    }
-    uasort($tables, '_views_weight_sort');
-    $base_tables = $tables;
-  }
-
-  return $base_tables;
-}
-
-/**
- * Sorts a structured array by the 'weight' and then by 'title' element.
- *
- * Callback for uasort() in views_fetch_base_tables().
- *
- * @param array $a
- *   First item for comparison. The compared items should be associative arrays
- *   that include a 'weight' and title element.
- * @param array $b
- *   Second item for comparison.
- *
- * @return int
- *   -1 if the first item comes first, 1 if second and 0 if they have the same
- *   order.
- */
-function _views_weight_sort($a, $b) {
-  if ($a['weight'] != $b['weight']) {
-    return $a['weight'] < $b['weight'] ? -1 : 1;
-  }
-  if ($a['title'] != $b['title']) {
-    return $a['title'] < $b['title'] ? -1 : 1;
-  }
-
-  return 0;
-}
-
-/**
- * Fetch a list of all base tables available
- *
  * @param $type
  *   Either 'display', 'style' or 'row'
  * @param $key
@@ -1094,7 +1024,7 @@ function views_get_applicable_views($type) {
   }
 
   $entity_ids = $container->get('entity.query')->get('view')
-    ->condition('disabled', FALSE)
+    ->condition('status', TRUE)
     ->condition("display.*.display_plugin", $ids, 'IN')
     ->execute();
 
@@ -1227,7 +1157,7 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
  *   Returns TRUE if a view is enabled, FALSE otherwise.
  */
 function views_view_is_enabled(View $view) {
-  return $view->isEnabled();
+  return $view->status();
 }
 
 /**
@@ -1240,27 +1170,27 @@ function views_view_is_enabled(View $view) {
  *   Returns TRUE if a view is disabled, FALSE otherwise.
  */
 function views_view_is_disabled(View $view) {
-  return !$view->isEnabled();
+  return !$view->status();
 }
 
 /**
- * Enables a view.
+ * Enables and saves a view.
  *
  * @param Drupal\views\Plugin\Core\Entity\View $view
  *   The View object to disable.
  */
 function views_enable_view(View $view) {
-  $view->enable();
+  $view->enable()->save();
 }
 
 /**
- * Disables a view.
+ * Disables and saves a view.
  *
  * @param Drupal\views\Plugin\Core\Entity\View $view
  *   The View object to disable.
  */
 function views_disable_view(View $view) {
-  $view->disable();
+  $view->disable()->save();
 }
 
 /**

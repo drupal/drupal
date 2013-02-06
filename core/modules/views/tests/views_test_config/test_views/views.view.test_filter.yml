@@ -1,6 +1,6 @@
 base_table: views_test_data
 core: 8
-disabled: false
+status: true
 display:
   default:
     display_options:

@@ -15,6 +15,7 @@ function telephone_field_info() {
       'description' => t('This field stores a telephone number in the database.'),
       'default_widget' => 'telephone_default',
       'default_formatter' => 'telephone_link',
+      'field item class' => 'Drupal\telephone\Type\TelephoneItem',
     ),
   );
 }

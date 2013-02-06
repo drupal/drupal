@@ -250,7 +250,8 @@ class PagerTest extends PluginTestBase {
     }
     $view = views_get_view('test_pager_full');
     $this->executeView($view);
-    $view->use_ajax = TRUE; // force the value again here
+    // Force the value again here.
+    $view->setAjaxEnabled(TRUE);
     $view->pager = NULL;
     $output = $view->render();
     $output = drupal_render($output);

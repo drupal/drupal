@@ -271,7 +271,8 @@ function taxonomy_menu() {
   $items['admin/structure/taxonomy/add'] = array(
     'title' => 'Add vocabulary',
     'page callback' => 'taxonomy_vocabulary_add',
-    'access arguments' => array('administer taxonomy'),
+    'access callback' => 'entity_page_create_access',
+    'access arguments' => array('taxonomy_vocabulary'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'taxonomy.admin.inc',
   );
@@ -282,7 +283,8 @@ function taxonomy_menu() {
     'title arguments' => array(2),
     'page callback' => 'taxonomy_term_page',
     'page arguments' => array(2),
-    'access arguments' => array('access content'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(2, 'view'),
     'file' => 'taxonomy.pages.inc',
   );
   $items['taxonomy/term/%taxonomy_term/view'] = array(
@@ -295,8 +297,8 @@ function taxonomy_menu() {
     // Pass a NULL argument to ensure that additional path components are not
     // passed to taxonomy_term_form() as the vocabulary machine name argument.
     'page arguments' => array(2),
-    'access callback' => 'taxonomy_term_access',
-    'access arguments' => array('edit', 2),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(2, 'update'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'file' => 'taxonomy.admin.inc',
@@ -305,8 +307,8 @@ function taxonomy_menu() {
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_term_confirm_delete', 2),
-    'access callback' => 'taxonomy_term_access',
-    'access arguments' => array('delete', 2),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(2, 'delete'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 11,
     'file' => 'taxonomy.admin.inc',
@@ -317,7 +319,8 @@ function taxonomy_menu() {
     'title arguments' => array(2),
     'page callback' => 'taxonomy_term_feed',
     'page arguments' => array(2),
-    'access arguments' => array('access content'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(2, 'view'),
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
   );
@@ -335,7 +338,8 @@ function taxonomy_menu() {
     'title arguments' => array(3),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_overview_terms', 3),
-    'access arguments' => array('administer taxonomy'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(3, 'view'),
     'file' => 'taxonomy.admin.inc',
   );
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
@@ -347,7 +351,8 @@ function taxonomy_menu() {
     'title' => 'Edit',
     'page callback' => 'entity_get_form',
     'page arguments' => array(3),
-    'access arguments' => array('administer taxonomy'),
+    'access callback' => 'entity_page_access',
+    'access arguments' => array(3, 'update'),
     'type' => MENU_LOCAL_TASK,
     'weight' => -10,
     'file' => 'taxonomy.admin.inc',
@@ -357,7 +362,8 @@ function taxonomy_menu() {
     'title' => 'Add term',
     'page callback' => 'taxonomy_term_add',
     'page arguments' => array(3),
-    'access arguments' => array('administer taxonomy'),
+    'access callback' => 'entity_page_create_access',
+    'access arguments' => array('taxonomy_term'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'taxonomy.admin.inc',
   );
@@ -376,32 +382,6 @@ function taxonomy_admin_paths() {
     'taxonomy/term/*/translations/*' => TRUE,
   );
   return $paths;
-}
-
-/**
- * Access callback: Checks a user's permission for performing a taxonomy term
- * operation.
- *
- * @param $op
- *   The operation to be performed on the taxonomy term. Possible values are:
- *   - "edit"
- *   - "delete"
- * @param $term
- *   The $term object on which the operation is to be performed.
- *
- * @return
- *   TRUE if the operation may be performed, FALSE otherwise.
- *
- * @see taxonomy_menu()
- */
-function taxonomy_term_access($op, $term) {
-  if (!$term || !in_array($op, array('edit', 'delete'), TRUE)) {
-    // If there was no term to check against, or the $op was not one of the
-    // supported ones, we return access denied.
-    return FALSE;
-  }
-
-  return user_access("$op terms in {$term->bundle()}") || user_access('administer taxonomy');
 }
 
 /**

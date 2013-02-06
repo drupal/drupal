@@ -35,9 +35,9 @@ class DefaultWizardDeriver implements DerivativeInterface {
    * Implements Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinitions().
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
-    $base_tables = array_keys(views_fetch_base_tables());
-    $this->derivatives = array();
     $views_data = drupal_container()->get('views.views_data');
+    $base_tables = array_keys($views_data->fetchBaseTables());
+    $this->derivatives = array();
     foreach ($base_tables as $table) {
       $views_info = $views_data->get($table);
       if (empty($views_info['table']['wizard_id'])) {

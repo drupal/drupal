@@ -567,7 +567,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
     return MENU_NOT_FOUND;
   }
 
-  views_include('ajax');
+  module_load_include('inc', 'views', 'includes/ajax');
   $args = func_get_args();
   // Remove the known args
   array_splice($args, 0, 4);

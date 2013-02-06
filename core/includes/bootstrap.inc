@@ -156,19 +156,14 @@ const DRUPAL_BOOTSTRAP_VARIABLES = 4;
 const DRUPAL_BOOTSTRAP_SESSION = 5;
 
 /**
- * Seventh bootstrap phase: set up the page header.
- */
-const DRUPAL_BOOTSTRAP_PAGE_HEADER = 6;
-
-/**
  * Eighth bootstrap phase: load code for subsystems and modules.
  */
-const DRUPAL_BOOTSTRAP_CODE = 7;
+const DRUPAL_BOOTSTRAP_CODE = 6;
 
 /**
  * Final bootstrap phase: initialize language, path, theme, and modules.
  */
-const DRUPAL_BOOTSTRAP_FULL = 8;
+const DRUPAL_BOOTSTRAP_FULL = 7;
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -1359,8 +1354,8 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   $page_compression = $config->get('response.gzip') && extension_loaded('zlib');
   $return_compressed = $page_compression && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE;
 
-  // Get headers set in hook_boot(). Keys are lower-case.
-  $hook_boot_headers = drupal_get_http_header();
+  // Get headers. Keys are lower-case.
+  $boot_headers = drupal_get_http_header();
 
   // Headers generated in this function, that may be replaced or unset using
   // drupal_add_http_headers(). Keys are mixed-case.
@@ -1368,10 +1363,9 @@ function drupal_serve_page_from_cache(stdClass $cache) {
 
   foreach ($cache->data['headers'] as $name => $value) {
     // In the case of a 304 response, certain headers must be sent, and the
-    // remaining may not (see RFC 2616, section 10.3.5). Do not override
-    // headers set in hook_boot().
+    // remaining may not (see RFC 2616, section 10.3.5).
     $name_lower = strtolower($name);
-    if (in_array($name_lower, array('content-location', 'expires', 'cache-control', 'vary')) && !isset($hook_boot_headers[$name_lower])) {
+    if (in_array($name_lower, array('content-location', 'expires', 'cache-control', 'vary')) && !isset($boot_headers[$name_lower])) {
       drupal_add_http_header($name, $value);
       unset($cache->data['headers'][$name]);
     }
@@ -1380,9 +1374,8 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // If the client sent a session cookie, a cached copy will only be served
   // to that one particular client due to Vary: Cookie. Thus, do not set
   // max-age > 0, allowing the page to be cached by external proxies, when a
-  // session cookie is present unless the Vary header has been replaced or
-  // unset in hook_boot().
-  $max_age = !isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary']) ? $config->get('cache.page.max_age') : 0;
+  // session cookie is present unless the Vary header has been replaced.
+  $max_age = !isset($_COOKIE[session_name()]) || isset($boot_headers['vary']) ? $config->get('cache.page.max_age') : 0;
   $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
 
   // Entity tag should change if the output changes.
@@ -1422,7 +1415,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // response to reply to a subsequent request for a given URL without
   // revalidation. If a Vary header has been set in hook_boot(), it is assumed
   // that the module knows how to cache the page.
-  if (!isset($hook_boot_headers['vary']) && !settings()->get('omit_vary_cookie')) {
+  if (!isset($boot_headers['vary']) && !settings()->get('cache.page.omit_vary_cookie')) {
     header('Vary: Cookie');
   }
 
@@ -1450,7 +1443,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
  * Defines the critical hooks that force modules to always be loaded.
  */
 function bootstrap_hooks() {
-  return array('boot', 'exit', 'watchdog');
+  return array('exit', 'watchdog');
 }
 
 /**
@@ -2080,7 +2073,6 @@ function drupal_anonymous_user() {
  *   - DRUPAL_BOOTSTRAP_DATABASE: Initializes the database layer.
  *   - DRUPAL_BOOTSTRAP_VARIABLES: Initializes the variable system.
  *   - DRUPAL_BOOTSTRAP_SESSION: Initializes session handling.
- *   - DRUPAL_BOOTSTRAP_PAGE_HEADER: Sets up the page header.
  *   - DRUPAL_BOOTSTRAP_CODE: Loads code for subsystems and modules.
  *   - DRUPAL_BOOTSTRAP_FULL: Fully loads Drupal. Validates and fixes input
  *     data.
@@ -2100,7 +2092,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     DRUPAL_BOOTSTRAP_DATABASE,
     DRUPAL_BOOTSTRAP_VARIABLES,
     DRUPAL_BOOTSTRAP_SESSION,
-    DRUPAL_BOOTSTRAP_PAGE_HEADER,
     DRUPAL_BOOTSTRAP_CODE,
     DRUPAL_BOOTSTRAP_FULL,
   );
@@ -2153,10 +2144,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
         case DRUPAL_BOOTSTRAP_SESSION:
           require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
           drupal_session_initialize();
-          break;
-
-        case DRUPAL_BOOTSTRAP_PAGE_HEADER:
-          _drupal_bootstrap_page_header();
           break;
 
         case DRUPAL_BOOTSTRAP_CODE:
@@ -2353,8 +2340,7 @@ function _drupal_bootstrap_page_cache() {
   // If there is no session cookie and cache is enabled (or forced), try
   // to serve a cached page.
   if (!isset($_COOKIE[session_name()]) && $cache_enabled) {
-    // Make sure there is a user object because its timestamp will be
-    // checked, hook_boot might check for anonymous user etc.
+    // Make sure there is a user object because its timestamp will be checked.
     $user = drupal_anonymous_user();
     // Get the page from the cache.
     $cache = drupal_page_get_cache();
@@ -2365,11 +2351,7 @@ function _drupal_bootstrap_page_cache() {
       _current_path($cache->data['path']);
       drupal_set_title($cache->data['title'], PASS_THROUGH);
       date_default_timezone_set(drupal_get_user_timezone());
-      // If the skipping of the bootstrap hooks is not enforced, call
-      // hook_boot.
-      if (variable_get('page_cache_invoke_hooks', TRUE)) {
-        bootstrap_invoke_all('boot');
-      }
+
       drupal_serve_page_from_cache($cache);
       // If the skipping of the bootstrap hooks is not enforced, call
       // hook_exit.
@@ -2438,17 +2420,6 @@ function _drupal_bootstrap_variables() {
   // Load bootstrap modules.
   require_once DRUPAL_ROOT . '/core/includes/module.inc';
   drupal_container()->get('module_handler')->loadBootstrapModules();
-}
-
-/**
- * Invokes hook_boot(), initializes locking system, and sends HTTP headers.
- */
-function _drupal_bootstrap_page_header() {
-  bootstrap_invoke_all('boot');
-
-  if (!drupal_is_cli()) {
-    ob_start();
-  }
 }
 
 /**

@@ -25,6 +25,13 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['form-test/callback-builder'] = array(
+    'title' => 'Form callback builder test',
+    'page callback' => 'drupal_get_callback_form',
+    'page arguments' => array('form_test_callback_builder_form', '\Drupal\form_test\Callbacks::buildForm'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['form-test/validate-required'] = array(
     'title' => 'Form #required validation',
     'page callback' => 'drupal_get_form',
@@ -140,6 +147,12 @@ function form_test_menu() {
     'title' => t('Select'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_select'),
+    'access callback' => TRUE,
+  );
+  $items['form-test/empty-select'] = array(
+    'title' => 'Empty Select Element',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_empty_select'),
     'access callback' => TRUE,
   );
   $items['form-test/language_select'] = array(
@@ -1287,6 +1300,19 @@ function form_test_select($form, &$form_state) {
   );
 
   $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');
+  return $form;
+}
+
+/**
+ * Builds a form to test select elements when #options is not an array.
+ */
+function form_test_empty_select($form, &$form_state) {
+  $form['empty_select'] = array(
+    '#type' => 'select',
+    '#title' => t('Empty Select'),
+    '#multiple' => FALSE,
+    '#options' => NULL,
+  );
   return $form;
 }
 

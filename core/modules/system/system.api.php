@@ -1458,24 +1458,6 @@ function hook_forms($form_id, $args) {
 }
 
 /**
- * Perform setup tasks for all page requests.
- *
- * This hook is run at the beginning of the page request. It is typically
- * used to set up global parameters that are needed later in the request.
- *
- * Only use this hook if your code must run even for cached page views. This
- * hook is called before the theme, modules, or most include files are loaded
- * into memory. It happens while Drupal is still in bootstrap mode.
- *
- * @see hook_init()
- */
-function hook_boot() {
-  // We need user_access() in the shutdown function. Make sure it gets loaded.
-  drupal_load('module', 'user');
-  drupal_register_shutdown_function('devel_shutdown');
-}
-
-/**
  * Perform setup tasks for non-cached page requests.
  *
  * This hook is run at the beginning of the page request. It is typically
@@ -1485,7 +1467,6 @@ function hook_boot() {
  *
  * This hook is not run on cached pages.
  *
- * @see hook_boot()
  * @see hook_exit()
  *
  * Do not use this hook to add CSS/JS to pages, use hook_page_build() instead.

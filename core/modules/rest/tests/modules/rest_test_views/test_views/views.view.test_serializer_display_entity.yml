@@ -44,6 +44,6 @@ display:
         access: false
       path: test/serialize/entity
 base_field: id
-disabled: '0'
+status: '1'
 module: rest
 langcode: und

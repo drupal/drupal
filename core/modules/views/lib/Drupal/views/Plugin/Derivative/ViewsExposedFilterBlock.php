@@ -41,7 +41,7 @@ class ViewsExposedFilterBlock implements DerivativeInterface {
     // Check all Views for displays with an exposed filter block.
     foreach (views_get_all_views() as $view) {
       // Do not return results for disabled views.
-      if (!$view->isEnabled()) {
+      if (!$view->status()) {
         continue;
       }
       $executable = $view->get('executable');

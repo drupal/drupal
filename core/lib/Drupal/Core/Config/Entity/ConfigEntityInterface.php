@@ -32,4 +32,27 @@ interface ConfigEntityInterface extends EntityInterface {
    */
   public function setOriginalID($id);
 
+  /**
+   * Enables the configuration entity.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
+   *   The configuration entity.
+   */
+  public function enable();
+
+  /**
+   * Disables the configuration entity.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
+   *   The configuration entity.
+   */
+  public function disable();
+
+  /**
+   * Returns whether the configuration entity is enabled.
+   *
+   * @return bool
+   */
+  public function status();
+
 }

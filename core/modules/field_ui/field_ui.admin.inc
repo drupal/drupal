@@ -315,11 +315,7 @@ function field_ui_field_overview($entity_type, $bundle) {
 
   $field_overview = new FieldOverview($entity_type, $bundle);
 
-  $form_state = array();
-  $form_state['build_info']['callback'] = array($field_overview, 'form');
-  $form_state['build_info']['args'] = array($entity_type, $bundle);
-
-  return drupal_build_form('field_ui_field_overview_form', $form_state);
+  return drupal_get_callback_form('field_ui_field_overview_form', array($field_overview, 'form'), array($entity_type, $bundle));
 }
 
 /**
@@ -366,11 +362,7 @@ function field_ui_display_overview($entity_type, $bundle, $view_mode) {
 
   $display_overview = new DisplayOverview($entity_type, $bundle, $view_mode);
 
-  $form_state = array();
-  $form_state['build_info']['callback'] = array($display_overview, 'form');
-  $form_state['build_info']['args'] = array($entity_type, $bundle, $view_mode);
-
-  return drupal_build_form('field_ui_display_overview_form', $form_state);
+  return drupal_get_callback_form('field_ui_display_overview_form', array($display_overview, 'form'), array($entity_type, $bundle, $view_mode));
 }
 
 /**

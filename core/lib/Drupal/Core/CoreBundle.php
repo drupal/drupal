@@ -11,7 +11,9 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -118,8 +120,7 @@ class CoreBundle extends Bundle {
     // object and get reconstructed when the request object changes (e.g.,
     // during a subrequest).
     $container->addScope(new Scope('request'));
-    $container->register('request', 'Symfony\Component\HttpFoundation\Request')
-      ->setSynthetic(TRUE);
+    $container->register('request', 'Symfony\Component\HttpFoundation\Request');
 
     $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));
@@ -207,6 +208,12 @@ class CoreBundle extends Bundle {
     $container->register('mime_type_matcher', 'Drupal\Core\Routing\MimeTypeMatcher')
       ->addTag('route_filter');
 
+    $container->register('paramconverter_manager', 'Drupal\Core\ParamConverter\ParamConverterManager')
+      ->addTag('route_enhancer');
+    $container->register('paramconverter.entity', 'Drupal\Core\ParamConverter\EntityConverter')
+      ->addArgument(new Reference('plugin.manager.entity'))
+      ->addTag('paramconverter');
+
     $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
       ->addArgument(new Reference('content_negotiation'))
       ->addTag('event_subscriber');
@@ -287,6 +294,9 @@ class CoreBundle extends Bundle {
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());
+    // Add a compiler pass for upcasting of entity route parameters.
+    $container->addCompilerPass(new RegisterParamConvertersPass());
+    $container->addCompilerPass(new RegisterRouteEnhancersPass());
   }
 
   /**
@@ -358,7 +368,7 @@ class CoreBundle extends Bundle {
         // This is saved / loaded via drupal_php_storage().
         // All files can be refreshed by clearing caches.
         // @todo ensure garbage collection of expired files.
-        'cache' => TRUE,
+        'cache' => settings()->get('twig_cache', TRUE),
         'base_template_class' => 'Drupal\Core\Template\TwigTemplate',
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1712444.
@@ -366,10 +376,8 @@ class CoreBundle extends Bundle {
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1806538.
         'strict_variables' => FALSE,
-        // @todo Maybe make debug mode dependent on "production mode" setting.
-        'debug' => TRUE,
-        // @todo Make auto reload mode dependent on "production mode" setting.
-        'auto_reload' => FALSE,
+        'debug' => settings()->get('twig_debug', FALSE),
+        'auto_reload' => settings()->get('twig_auto_reload', NULL),
       ))
       ->addMethodCall('addExtension', array(new Definition('Drupal\Core\Template\TwigExtension')))
       // @todo Figure out what to do about debugging functions.

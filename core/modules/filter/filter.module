@@ -217,8 +217,7 @@ function filter_format_load($format_id) {
  *   The text format object to be disabled.
  */
 function filter_format_disable($format) {
-  $format->status = 0;
-  $format->save();
+  $format->disable()->save();
 
   // Allow modules to react on text format deletion.
   module_invoke_all('filter_format_disable', $format);
@@ -351,7 +350,7 @@ function filter_formats($account = NULL) {
       $filter_formats = entity_load_multiple('filter_format');
       $formats['all'] = array();
       foreach ($filter_formats as $format_name => $filter_format) {
-        if (!empty($filter_format->status)) {
+        if ($filter_format->status()) {
           $formats['all'][$format_name] = $filter_format;
         }
       }
@@ -776,7 +775,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
     if (in_array($filter_info[$name]['type'], $filter_types_to_skip)) {
       continue;
     }
-    if ($filter->status && isset($filter_info[$name]['prepare callback'])) {
+    if (!empty($filter->status) && isset($filter_info[$name]['prepare callback'])) {
       $function = $filter_info[$name]['prepare callback'];
       $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
     }
@@ -788,7 +787,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
     if (in_array($filter_info[$name]['type'], $filter_types_to_skip)) {
       continue;
     }
-    if ($filter->status && isset($filter_info[$name]['process callback'])) {
+    if (!empty($filter->status) && isset($filter_info[$name]['process callback'])) {
       $function = $filter_info[$name]['process callback'];
       $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
     }
@@ -1062,7 +1061,7 @@ function _filter_tips($format_id, $long = FALSE) {
     $filters = filter_list_format($format->format);
     $tips[$format->name] = array();
     foreach ($filters as $name => $filter) {
-      if ($filter->status && isset($filter_info[$name]['tips callback'])) {
+      if (!empty($filter->status) && isset($filter_info[$name]['tips callback'])) {
         $tip = $filter_info[$name]['tips callback']($filter, $format, $long);
         if (isset($tip)) {
           $tips[$format->name][$name] = array('tip' => $tip, 'id' => $name);

@@ -41,7 +41,7 @@ class ViewsBlock implements DerivativeInterface {
     // Check all Views for block displays.
     foreach (views_get_all_views() as $view) {
       // Do not return results for disabled views.
-      if (!$view->isEnabled()) {
+      if (!$view->status()) {
         continue;
       }
       $executable = $view->get('executable');
