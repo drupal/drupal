@@ -84,7 +84,6 @@ class FieldBooleanTest extends ViewUnitTestBase {
     $view->field['age']->options['type'] = 'test';
     $this->assertEqual(t('Test-False'), $view->field['age']->advanced_render($view->result[0]));
     $this->assertEqual(t('Test-True'), $view->field['age']->advanced_render($view->result[1]));
-
   }
 
 }
