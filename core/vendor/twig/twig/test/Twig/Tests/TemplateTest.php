@@ -62,6 +62,84 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider getGetAttributeWithSandbox
+     */
+    public function testGetAttributeWithSandbox($object, $item, $allowed, $useExt)
+    {
+        $twig = new Twig_Environment();
+        $policy = new Twig_Sandbox_SecurityPolicy(array(), array(), array(/*methid*/), array(/*peop*/), array());
+        $twig->addExtension(new Twig_Extension_Sandbox($policy, !$allowed));
+        $template = new Twig_TemplateTest($twig, $useExt);
+
+        try {
+            $template->getAttribute($object, $item, array(), 'any');
+
+            if (!$allowed) {
+                $this->fail();
+            }
+        } catch (Twig_Sandbox_SecurityError $e) {
+            if ($allowed) {
+                $this->fail();
+            }
+
+            $this->assertContains('is not allowed', $e->getMessage());
+        }
+    }
+
+    public function getGetAttributeWithSandbox()
+    {
+        $tests = array(
+            array(new Twig_TemplatePropertyObject(), 'defined', false, false),
+            array(new Twig_TemplatePropertyObject(), 'defined', true, false),
+            array(new Twig_TemplateMethodObject(), 'defined', false, false),
+            array(new Twig_TemplateMethodObject(), 'defined', true, false),
+        );
+
+        if (function_exists('twig_template_get_attributes')) {
+            foreach (array_slice($tests, 0) as $test) {
+                $test[3] = true;
+                $tests[] = $test;
+            }
+        }
+
+        return $tests;
+    }
+
+    /**
+     * @dataProvider getGetAttributeWithTemplateAsObject
+     */
+    public function testGetAttributeWithTemplateAsObject($useExt)
+    {
+        $template = new Twig_TemplateTest(new Twig_Environment(), $useExt);
+        $template1 = new Twig_TemplateTest(new Twig_Environment(), false);
+
+        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'string'));
+        $this->assertEquals('some_string', $template->getAttribute($template1, 'string'));
+
+        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'true'));
+        $this->assertEquals('1', $template->getAttribute($template1, 'true'));
+
+        $this->assertInstanceof('Twig_Markup', $template->getAttribute($template1, 'zero'));
+        $this->assertEquals('0', $template->getAttribute($template1, 'zero'));
+
+        $this->assertNotInstanceof('Twig_Markup', $template->getAttribute($template1, 'empty'));
+        $this->assertSame('', $template->getAttribute($template1, 'empty'));
+    }
+
+    public function getGetAttributeWithTemplateAsObject()
+    {
+        $bools = array(
+            array(false),
+        );
+
+        if (function_exists('twig_template_get_attributes')) {
+            $bools[] = array(true);
+        }
+
+        return $bools;
+    }
+
+    /**
      * @dataProvider getGetAttributeTests
      */
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type, $useExt = false)
@@ -120,6 +198,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             'zero'    => 0,
             'null'    => null,
             '1'       => 1,
+            'bar'     => true,
         );
 
         $objectArray         = new Twig_TemplateArrayAccessObject();
@@ -144,6 +223,7 @@ class Twig_Tests_TemplateTest extends PHPUnit_Framework_TestCase
             array(true,  1,         1),
             array(true,  1,         1.0),
             array(true,  null,      'null'),
+            array(true,  true,      'bar'),
         );
         $testObjects = array(
             // array(object, type of fetch)
@@ -243,6 +323,26 @@ class Twig_TemplateTest extends Twig_Template
         Twig_Template::clearCache();
     }
 
+    public function getZero()
+    {
+        return 0;
+    }
+
+    public function getEmpty()
+    {
+        return '';
+    }
+
+    public function getString()
+    {
+        return 'some_string';
+    }
+
+    public function getTrue()
+    {
+        return true;
+    }
+
     public function getTemplateName()
     {
     }
@@ -279,6 +379,7 @@ class Twig_TemplateArrayAccessObject implements ArrayAccess
         'zero'    => 0,
         'null'    => null,
         '1'       => 1,
+        'bar'     => true,
     );
 
     public function offsetExists($name)
@@ -308,6 +409,7 @@ class Twig_TemplateMagicPropertyObject
         'zero'    => 0,
         'null'    => null,
         '1'       => 1,
+        'bar'     => true,
     );
 
     protected $protected = 'protected';
@@ -328,6 +430,7 @@ class Twig_TemplatePropertyObject
     public $defined = 'defined';
     public $zero    = 0;
     public $null    = null;
+    public $bar     = true;
 
     protected $protected = 'protected';
 }
@@ -383,6 +486,11 @@ class Twig_TemplateMethodObject
     public function getNull()
     {
         return null;
+    }
+
+    public function isBar()
+    {
+        return true;
     }
 
     protected function getProtected()

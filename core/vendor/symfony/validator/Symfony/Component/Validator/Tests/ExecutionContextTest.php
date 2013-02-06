@@ -64,15 +64,6 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
         $this->context = null;
     }
 
-    public function deprecationErrorHandler($errorNumber, $message, $file, $line, $context)
-    {
-        if ($errorNumber & E_USER_DEPRECATED) {
-            return true;
-        }
-
-        return \PHPUnit_Util_ErrorHandler::handleError($errorNumber, $message, $file, $line);
-    }
-
     public function testInit()
     {
         $this->assertCount(0, $this->context->getViolations());
@@ -85,36 +76,30 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('GRAPHWALKER'));
 
         // BC
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->assertNull($this->context->getCurrentClass());
         $this->assertNull($this->context->getCurrentProperty());
         $this->assertSame('GRAPHWALKER', $this->context->getGraphWalker());
         $this->assertSame($this->metadataFactory, $this->context->getMetadataFactory());
-        restore_error_handler();
     }
 
     public function testInitWithClassMetadata()
     {
         // BC
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->metadata = new ClassMetadata(__NAMESPACE__ . '\ExecutionContextTest_TestClass');
         $this->context = new ExecutionContext($this->globalContext, $this->translator, self::TRANS_DOMAIN, $this->metadata, 'currentValue', 'Group', 'foo.bar');
 
         $this->assertSame(__NAMESPACE__ . '\ExecutionContextTest_TestClass', $this->context->getCurrentClass());
         $this->assertNull($this->context->getCurrentProperty());
-        restore_error_handler();
     }
 
     public function testInitWithPropertyMetadata()
     {
         // BC
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->metadata = new PropertyMetadata(__NAMESPACE__ . '\ExecutionContextTest_TestClass', 'myProperty');
         $this->context = new ExecutionContext($this->globalContext, $this->translator, self::TRANS_DOMAIN, $this->metadata, 'currentValue', 'Group', 'foo.bar');
 
         $this->assertSame(__NAMESPACE__ . '\ExecutionContextTest_TestClass', $this->context->getCurrentClass());
         $this->assertSame('myProperty', $this->context->getCurrentProperty());
-        restore_error_handler();
     }
 
     public function testClone()
@@ -214,9 +199,7 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Translated error'));
 
         // override preconfigured property path
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->context->addViolationAtPath('bar.baz', 'Error', array('foo' => 'bar'), 'invalid');
-        restore_error_handler();
 
         $this->assertEquals(new ConstraintViolationList(array(
             new ConstraintViolation(
@@ -237,9 +220,7 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
             ->with('Error', array())
             ->will($this->returnValue('Translated error'));
 
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->context->addViolationAtPath('bar.baz', 'Error');
-        restore_error_handler();
 
         $this->assertEquals(new ConstraintViolationList(array(
             new ConstraintViolation(
@@ -265,10 +246,8 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Translated choice error'));
 
         // passed null value should override preconfigured value "invalid"
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->context->addViolationAtPath('bar.baz', 'Error', array('foo' => 'bar'), null);
         $this->context->addViolationAtPath('bar.baz', 'Choice error', array('foo' => 'bar'), null, 3);
-        restore_error_handler();
 
         $this->assertEquals(new ConstraintViolationList(array(
             new ConstraintViolation(
@@ -299,9 +278,7 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Translated error'));
 
         // override preconfigured property path
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->context->addViolationAt('bam.baz', 'Error', array('foo' => 'bar'), 'invalid');
-        restore_error_handler();
 
         $this->assertEquals(new ConstraintViolationList(array(
             new ConstraintViolation(
@@ -322,9 +299,7 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
             ->with('Error', array())
             ->will($this->returnValue('Translated error'));
 
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->context->addViolationAt('bam.baz', 'Error');
-        restore_error_handler();
 
         $this->assertEquals(new ConstraintViolationList(array(
             new ConstraintViolation(
@@ -350,10 +325,8 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Translated choice error'));
 
         // passed null value should override preconfigured value "invalid"
-        set_error_handler(array($this, "deprecationErrorHandler"));
         $this->context->addViolationAt('bam.baz', 'Error', array('foo' => 'bar'), null);
         $this->context->addViolationAt('bam.baz', 'Choice error', array('foo' => 'bar'), null, 2);
-        restore_error_handler();
 
         $this->assertEquals(new ConstraintViolationList(array(
             new ConstraintViolation(

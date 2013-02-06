@@ -25,11 +25,11 @@ class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
         new PropertyMetadata(self::CLASSNAME, 'foobar');
     }
 
-    public function testGetPropertyValueFromPrivateProperty()
+    public function testGetValueFromPrivateProperty()
     {
         $entity = new Entity('foobar');
         $metadata = new PropertyMetadata(self::CLASSNAME, 'internal');
 
-        $this->assertEquals('foobar', $metadata->getPropertyValue($entity));
+        $this->assertEquals('foobar', $metadata->getValue($entity));
     }
 }

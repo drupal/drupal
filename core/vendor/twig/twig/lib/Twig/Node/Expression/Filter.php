@@ -9,7 +9,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Twig_Node_Expression_Filter extends Twig_Node_Expression
+class Twig_Node_Expression_Filter extends Twig_Node_Expression_Call
 {
     public function __construct(Twig_NodeInterface $node, Twig_Node_Expression_Constant $filterName, Twig_NodeInterface $arguments, $lineno, $tag = null)
     {
@@ -19,43 +19,18 @@ class Twig_Node_Expression_Filter extends Twig_Node_Expression
     public function compile(Twig_Compiler $compiler)
     {
         $name = $this->getNode('filter')->getAttribute('value');
+        $filter = $compiler->getEnvironment()->getFilter($name);
 
-        if (false === $filter = $compiler->getEnvironment()->getFilter($name)) {
-            $message = sprintf('The filter "%s" does not exist', $name);
-            if ($alternatives = $compiler->getEnvironment()->computeAlternatives($name, array_keys($compiler->getEnvironment()->getFilters()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
-
-            throw new Twig_Error_Syntax($message, $this->getLine(), $compiler->getFilename());
+        $this->setAttribute('name', $name);
+        $this->setAttribute('type', 'filter');
+        $this->setAttribute('thing', $filter);
+        $this->setAttribute('needs_environment', $filter->needsEnvironment());
+        $this->setAttribute('needs_context', $filter->needsContext());
+        $this->setAttribute('arguments', $filter->getArguments());
+        if ($filter instanceof Twig_FilterCallableInterface || $filter instanceof Twig_SimpleFilter) {
+            $this->setAttribute('callable', $filter->getCallable());
         }
 
-        $this->compileFilter($compiler, $filter);
-    }
-
-    protected function compileFilter(Twig_Compiler $compiler, Twig_FilterInterface $filter)
-    {
-        $compiler
-            ->raw($filter->compile().'(')
-            ->raw($filter->needsEnvironment() ? '$this->env, ' : '')
-            ->raw($filter->needsContext() ? '$context, ' : '')
-        ;
-
-        foreach ($filter->getArguments() as $argument) {
-            $compiler
-                ->string($argument)
-                ->raw(', ')
-            ;
-        }
-
-        $compiler->subcompile($this->getNode('node'));
-
-        foreach ($this->getNode('arguments') as $node) {
-            $compiler
-                ->raw(', ')
-                ->subcompile($node)
-            ;
-        }
-
-        $compiler->raw(')');
+        $this->compileCallable($compiler);
     }
 }

@@ -33,17 +33,6 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         parent::testCompile($node, $source, $environment);
     }
 
-    /**
-     * @covers Twig_Node_Expression_Filter::compile
-     * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage The function "cycl" does not exist. Did you mean "cycle" at line 1
-     */
-    public function testUnknownFunction()
-    {
-        $node = $this->createFunction('cycl', array());
-        $node->compile($this->getCompiler());
-    }
-
     public function getTests()
     {
         $environment = new Twig_Environment();
@@ -78,11 +67,33 @@ class Twig_Tests_Node_Expression_FunctionTest extends Twig_Test_NodeTestCase
         $node = $this->createFunction('foobar', array(new Twig_Node_Expression_Constant('bar', 1)));
         $tests[] = array($node, 'foobar($this->env, $context, "bar")', $environment);
 
+        // named arguments
+        $node = $this->createFunction('date', array(
+            'timezone' => new Twig_Node_Expression_Constant('America/Chicago', 1),
+            'date'     => new Twig_Node_Expression_Constant(0, 1),
+        ));
+        $tests[] = array($node, 'twig_date_converter($this->env, 0, "America/Chicago")');
+
+        // function as an anonymous function
+        if (version_compare(phpversion(), '5.3.0', '>=')) {
+            $node = $this->createFunction('anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
+            $tests[] = array($node, 'call_user_func_array($this->env->getFunction(\'anonymous\')->getCallable(), array("foo"))');
+        }
+
         return $tests;
     }
 
     protected function createFunction($name, array $arguments = array())
     {
         return new Twig_Node_Expression_Function($name, new Twig_Node($arguments), 1);
+    }
+
+    protected function getEnvironment()
+    {
+        if (version_compare(phpversion(), '5.3.0', '>=')) {
+            return include 'PHP53/FunctionInclude.php';
+        }
+
+        return parent::getEnvironment();
     }
 }

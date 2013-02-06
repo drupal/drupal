@@ -34,6 +34,12 @@ As syntactic sugar, you can also use the ``[]`` notation:
 
     {{ '1234'[1:2] }}
 
+    {# you can omit the first argument -- which is the same as 0 #}
+    {{ '1234'[:2] }} {# will display "12" #}
+
+    {# you can omit the last argument -- which will select everything till the end #}
+    {{ '1234'[2:] }} {# will display "34 #}
+
 The ``slice`` filter works as the `array_slice`_ PHP function for arrays and
 `substr`_ for strings.
 
@@ -51,6 +57,13 @@ up until the end of the variable.
 .. note::
 
     It also works with objects implementing the `Traversable`_ interface.
+
+Arguments
+---------
+
+ * ``start``:         The start of the slice
+ * ``length``:        The size of the slice
+ * ``preserve_keys``: Whether to preserve key or not (when the input is an array)
 
 .. _`Traversable`: http://php.net/manual/en/class.traversable.php
 .. _`array_slice`: http://php.net/array_slice

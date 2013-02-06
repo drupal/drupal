@@ -118,8 +118,7 @@ class CoreBundle extends Bundle {
     // object and get reconstructed when the request object changes (e.g.,
     // during a subrequest).
     $container->addScope(new Scope('request'));
-    $container->register('request', 'Symfony\Component\HttpFoundation\Request')
-      ->setSynthetic(TRUE);
+    $container->register('request', 'Symfony\Component\HttpFoundation\Request');
 
     $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));

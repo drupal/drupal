@@ -57,6 +57,7 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Coda 2* via the `other Twig syntax mode`_
 * *Komodo* and *Komodo Edit* via the Twig highlight/syntax check mode
 * *Notepad++* via the `Notepad++ Twig Highlighter`_
+* *Emacs* via `web-mode.el`_
 
 Variables
 ---------
@@ -189,6 +190,56 @@ progression of integers:
 
 Go to the :doc:`functions<functions/index>` page to learn more about the
 built-in functions.
+
+Named Arguments
+---------------
+
+.. versionadded:: 1.12
+    Support for named arguments was added in Twig 1.12.
+
+Arguments for filters and functions can also be passed as *named arguments*:
+
+.. code-block:: jinja
+
+    {% for i in range(low=1, high=10, step=2) %}
+        {{ i }},
+    {% endfor %}
+
+Using named arguments makes your templates more explicit about the meaning of
+the values you pass as arguments:
+
+.. code-block:: jinja
+
+    {{ data|convert_encoding('UTF-8', 'iso-2022-jp') }}
+
+    {# versus #}
+
+    {{ data|convert_encoding(from='iso-2022-jp', to='UTF-8') }}
+
+Named arguments also allow you to skip some arguments for which you don't want
+to change the default value::
+
+.. code-block:: jinja
+
+    {# the first argument is the date format, which defaults to the global date format if null is passed #}
+    {{ "now"|date(null, "Europe/Paris") }}
+
+    {# or skip the format value by using a named argument for the timezone #}
+    {{ "now"|date(timezone="Europe/Paris") }}
+
+You can also use both positional and named arguments in one call, which is not
+recommended as it can be confusing:
+
+.. code-block:: jinja
+
+    {# both work #}
+    {{ "now"|date('d/m/Y H:i', timezone="Europe/Paris") }}
+    {{ "now"|date(timezone="Europe/Paris", 'd/m/Y H:i') }}
+
+.. tip::
+
+    Each function and filter documentation page has a section where the names
+    of all arguments are listed when supported.
 
 Control Structure
 -----------------
@@ -438,10 +489,14 @@ expression:
 
     {{ '{{' }}
 
-For bigger sections it makes sense to mark a block :doc:`raw<tags/raw>`.
+For bigger sections it makes sense to mark a block
+:doc:`verbatim<tags/verbatim>`.
 
 Macros
 ------
+
+.. versionadded:: 1.12
+    Support for default argument values was added in Twig 1.12.
 
 Macros are comparable with functions in regular programming languages. They
 are useful to reuse often used HTML fragments to not repeat yourself.
@@ -477,6 +532,15 @@ current namespace via the :doc:`from<tags/from>` tag and optionally alias them:
         <dt>Password</dt>
         <dd>{{ input_field('password', '', 'password') }}</dd>
     </dl>
+
+A default value can also be defined for macro arguments when not provided in a
+macro call:
+
+.. code-block:: jinja
+
+    {% macro input(name, value = "", type = "text", size = 20) %}
+        <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+    {% endmacro %}
 
 Expressions
 -----------
@@ -659,6 +723,9 @@ tests.
 Other Operators
 ~~~~~~~~~~~~~~~
 
+.. versionadded:: 1.12.0
+    Support for the extended ternary operator was added in Twig 1.12.0.
+
 The following operators are very useful but don't fit into any of the other
 categories:
 
@@ -674,7 +741,15 @@ categories:
 
 * ``.``, ``[]``: Gets an attribute of an object.
 
-* ``?:``: The PHP ternary operator: ``{{ foo ? 'yes' : 'no' }}``
+* ``?:``: The ternary operator:
+
+  .. code-block:: jinja
+
+      {{ foo ? 'yes' : 'no' }}
+
+      {# as of Twig 1.12.0 #}
+      {{ foo ?: 'no' }} == {{ foo ? foo : 'no' }}
+      {{ foo ? 'yes' }} == {{ foo ? 'yes' : '' }}
 
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~
@@ -759,3 +834,4 @@ Extension<creating_extensions>` chapter.
 .. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
+.. _`web-mode.el`:                http://web-mode.org/

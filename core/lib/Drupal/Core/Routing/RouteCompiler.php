@@ -40,14 +40,14 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    * @return \Drupal\Core\Routing\CompiledRoute
    *   A CompiledRoute instance.
    */
-  public function compile(Route $route) {
+  public static function compile(Route $route) {
 
     $symfony_compiled = parent::compile($route);
 
     // The Drupal-specific compiled information.
-    $stripped_path = $this->getPathWithoutDefaults($route);
-    $fit = $this->getFit($stripped_path);
-    $pattern_outline = $this->getPatternOutline($stripped_path);
+    $stripped_path = static::getPathWithoutDefaults($route);
+    $fit = static::getFit($stripped_path);
+    $pattern_outline = static::getPatternOutline($stripped_path);
     $num_parts = count(explode('/', trim($pattern_outline, '/')));
 
     return new CompiledRoute(
@@ -60,9 +60,9 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
       $symfony_compiled->getRegex(),
       $symfony_compiled->getTokens(),
       $symfony_compiled->getPathVariables(),
-      $symfony_compiled->getHostnameRegex(),
-      $symfony_compiled->getHostnameTokens(),
-      $symfony_compiled->getHostnameVariables(),
+      $symfony_compiled->getHostRegex(),
+      $symfony_compiled->getHostTokens(),
+      $symfony_compiled->getHostVariables(),
       $symfony_compiled->getVariables()
       );
   }
@@ -79,7 +79,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    * @return string
    *   The path pattern outline.
    */
-  public function getPatternOutline($path) {
+  public static function getPatternOutline($path) {
     return preg_replace('#\{\w+\}#', '%', $path);
   }
 
@@ -92,7 +92,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    * @return int
    *   The fitness of the path, as an integer.
    */
-  public function getFit($path) {
+  public static function getFit($path) {
     $parts = explode('/', trim($path, '/'), static::MAX_PARTS);
     $number_parts = count($parts);
     // We store the highest index of parts here to save some work in the fit
@@ -124,7 +124,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    * @return string
    *   The path string, stripped of placeholders that have default values.
    */
-  protected function getPathWithoutDefaults(Route $route) {
+  protected static function getPathWithoutDefaults(Route $route) {
     $path = $route->getPattern();
     $defaults = $route->getDefaults();
 

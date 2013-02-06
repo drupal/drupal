@@ -29,9 +29,7 @@
       <constraint name="NotNull" />
 
       <!-- Constraint with single value -->
-      <constraint name="Range">
-         <option name="min">3</option>
-      </constraint>
+      <constraint name="Min">3</constraint>
 
       <!-- Constraint with multiple values -->
       <constraint name="Choice">
@@ -42,19 +40,14 @@
       <!-- Constraint with child constraints -->
       <constraint name="All">
         <constraint name="NotNull" />
-        <constraint name="Range">
-           <option name="min">3</option>
-        </constraint>
-
+        <constraint name="Min">3</constraint>
       </constraint>
 
       <!-- Option with child constraints -->
       <constraint name="All">
         <option name="constraints">
           <constraint name="NotNull" />
-          <constraint name="Range">
-             <option name="min">3</option>
-          </constraint>
+          <constraint name="Min">3</constraint>
         </option>
       </constraint>
 
@@ -63,14 +56,10 @@
         <option name="fields">
           <value key="foo">
             <constraint name="NotNull" />
-            <constraint name="Range">
-               <option name="min">3</option>
-            </constraint>
+            <constraint name="Min">3</constraint>
           </value>
           <value key="bar">
-            <constraint name="Range">
-               <option name="min">5</option>
-            </constraint>
+            <constraint name="Min">5</constraint>
           </value>
         </option>
       </constraint>

@@ -17,31 +17,26 @@ Symfony\Component\Validator\Tests\Fixtures\Entity:
       # Constraint without value
       - NotNull: ~
       # Constraint with single value
-      - Range:
-          min: 3
+      - Min: 3
       # Constraint with multiple values
       - Choice: [A, B]
       # Constraint with child constraints
       - All:
           - NotNull: ~
-          - Range:
-              min: 3
+          - Min: 3
       # Option with child constraints
       - All:
           constraints:
             - NotNull: ~
-            - Range:
-                min: 3
+            - Min: 3
       # Value with child constraints
       - Collection:
           fields:
             foo:
               - NotNull: ~
-              - Range:
-                  min: 3
+              - Min: 3
             bar:
-              - Range:
-                  min: 5
+              - Min: 5
       # Constraint with options
       - Choice: { choices: [A, B], message: Must be one of %choices% }
     dummy:
