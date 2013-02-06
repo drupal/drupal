@@ -2407,31 +2407,6 @@ abstract class DisplayPluginBase extends PluginBase {
     }
   }
 
-
-  /**
-   * Legacy functions.
-   */
-
-  /**
-   * Render the header of the view.
-   */
-  public function renderHeader() {
-    $empty = empty($this->view->result);
-    return $this->renderArea('header', $empty);
-  }
-
-  /**
-   * Render the footer of the view.
-   */
-  public function renderFooter() {
-    $empty = empty($this->view->result);
-    return $this->renderArea('footer', $empty);
-  }
-
-  public function renderEmpty() {
-    return $this->renderArea('empty', TRUE);
-  }
-
   /**
    * If this display creates a page with a menu item, implement it here.
    */
