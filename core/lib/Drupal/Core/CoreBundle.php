@@ -11,7 +11,9 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -206,6 +208,12 @@ class CoreBundle extends Bundle {
     $container->register('mime_type_matcher', 'Drupal\Core\Routing\MimeTypeMatcher')
       ->addTag('route_filter');
 
+    $container->register('paramconverter_manager', 'Drupal\Core\ParamConverter\ParamConverterManager')
+      ->addTag('route_enhancer');
+    $container->register('paramconverter.entity', 'Drupal\Core\ParamConverter\EntityConverter')
+      ->addArgument(new Reference('plugin.manager.entity'))
+      ->addTag('paramconverter');
+
     $container->register('router_processor_subscriber', 'Drupal\Core\EventSubscriber\RouteProcessorSubscriber')
       ->addArgument(new Reference('content_negotiation'))
       ->addTag('event_subscriber');
@@ -286,6 +294,9 @@ class CoreBundle extends Bundle {
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());
+    // Add a compiler pass for upcasting of entity route parameters.
+    $container->addCompilerPass(new RegisterParamConvertersPass());
+    $container->addCompilerPass(new RegisterRouteEnhancersPass());
   }
 
   /**

@@ -1,0 +1,36 @@
+paramconverter_test_user_node_foo:
+  pattern: '/paramconverter_test/test_user_node_foo/{user}/{node}/{foo}'
+  defaults:
+    _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
+  requirements:
+    _access: 'TRUE'
+
+paramconverter_test_node_user_user:
+  pattern: '/paramconverter_test/test_node_user_user/{node}/{foo}/{user}'
+  defaults:
+    _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
+  requirements:
+    _access: 'TRUE'
+  options:
+    converters:
+      foo: 'user'
+
+paramconverter_test_node_node_foo:
+  pattern: '/paramconverter_test/test_node_node_foo/{user}/{node}/{foo}'
+  defaults:
+    _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
+  requirements:
+    _access: 'TRUE'
+  options:
+    converters:
+      user: 'node'
+
+paramconverter_test_node_set_parent:
+  pattern: '/paramconverter_test/node/{node}/set/parent/{parent}'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _content: '\Drupal\paramconverter_test\TestControllers::testNodeSetParent'
+  options:
+    converters:
+      parent: 'node'
