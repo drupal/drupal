@@ -55,10 +55,7 @@ class BlockListController extends ConfigEntityListController {
     // If no theme was specified, use the current theme.
     $this->theme = $theme ?: $GLOBALS['theme_key'];
 
-    $form_state = array();
-    $form_state['build_info']['args'] = array();
-    $form_state['build_info']['callback'] = array($this, 'form');
-    return drupal_build_form('block_admin_display_form', $form_state);
+    return drupal_get_callback_form('block_admin_display_form', array($this, 'form'));
   }
 
   /**

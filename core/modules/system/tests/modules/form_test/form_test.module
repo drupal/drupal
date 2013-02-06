@@ -25,6 +25,13 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['form-test/callback-builder'] = array(
+    'title' => 'Form callback builder test',
+    'page callback' => 'drupal_get_callback_form',
+    'page arguments' => array('form_test_callback_builder_form', '\Drupal\form_test\Callbacks::buildForm'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['form-test/validate-required'] = array(
     'title' => 'Form #required validation',
     'page callback' => 'drupal_get_form',

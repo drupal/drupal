@@ -138,6 +138,28 @@ function drupal_get_form($form_id) {
 }
 
 /**
+ * Returns a renderable form array using a specific callback.
+ *
+ * When using drupal_get_form(), the $form_id or information from hook_forms()
+ * is used to determine the callback used to build the form. If the callback
+ * needs to be explicitly specified, or if it is a method, use this function.
+ *
+ * @param string $form_id
+ *   The unique string identifying the desired form.
+ * @param callable $callback
+ *   A callback to be used for building the form.
+ * @param array $args
+ *   (optional) An array of arguments to pass to the form callback. Defaults to
+ *   an empty array.
+ */
+function drupal_get_callback_form($form_id, $callback, array $args = array()) {
+  $form_state = array();
+  $form_state['build_info']['args'] = $args;
+  $form_state['build_info']['callback'] = $callback;
+  return drupal_build_form($form_id, $form_state);
+}
+
+/**
  * Builds and processes a form for a given form ID.
  *
  * The form may also be retrieved from the cache if the form was built in a

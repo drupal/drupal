@@ -8,7 +8,7 @@
 namespace Drupal\form_test;
 
 /**
- * Simple class for testing methods as element validation callbacks.
+ * Simple class for testing methods as Form API callbacks.
  */
 class Callbacks {
 
@@ -47,4 +47,13 @@ class Callbacks {
       form_set_error('');
     }
   }
+
+  /**
+   * Form constructor for the Form callback builder test form.
+   */
+  public static function buildForm($form, &$form_state) {
+    $form['element'] = array('#markup' => 'The Callbacks::buildForm() method was used for this form.');
+    return $form;
+  }
+
 }
