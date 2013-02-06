@@ -2409,8 +2409,18 @@ abstract class DisplayPluginBase extends PluginBase {
 
   /**
    * If this display creates a page with a menu item, implement it here.
+   *
+   * @param array $callbacks
+   *   An array of already existing menu items provided by drupal.
+   *
+   * @return array
+   *   The menu router items registers for this display.
+   *
+   * @see hook_menu()
    */
-  public function hookMenu() { return array(); }
+  public function executeHookMenu($callbacks) {
+    return array();
+  }
 
   /**
    * Render this display.

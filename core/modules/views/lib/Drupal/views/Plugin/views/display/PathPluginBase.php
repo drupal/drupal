@@ -33,7 +33,7 @@ abstract class PathPluginBase extends DisplayPluginBase {
   }
 
   /**
-   * Add this display's path information to Drupal's menu system.
+   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::executeHookMenu().
    */
   public function executeHookMenu($callbacks) {
     $items = array();
