@@ -76,6 +76,6 @@ display:
     display_options:
       path: test-redirect-view
 base_field: nid
-disabled: '0'
+status: '1'
 module: views
 langcode: und

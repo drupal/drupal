@@ -58,6 +58,13 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   protected $uuidKey = 'uuid';
 
   /**
+   * Name of the entity's status key or FALSE if a status is not supported.
+   *
+   * @var string|bool
+   */
+  protected $statusKey = 'status';
+
+  /**
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::__construct().
    *
    * Sets basic variables.
@@ -67,6 +74,13 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     $this->entityInfo = entity_get_info($entityType);
     $this->hookLoadArguments = array();
     $this->idKey = $this->entityInfo['entity_keys']['id'];
+
+    if (isset($this->entityInfo['entity_keys']['status'])) {
+      $this->statusKey = $this->entityInfo['entity_keys']['status'];
+    }
+    else {
+      $this->statusKey = FALSE;
+    }
   }
 
   /**
@@ -247,6 +261,11 @@ class ConfigStorageController implements EntityStorageControllerInterface {
     // Modules might need to add or change the data initially held by the new
     // entity object, for instance to fill-in default values.
     $this->invokeHook('create', $entity);
+
+    // Default status to enabled.
+    if (!empty($this->statusKey) && !isset($entity->{$this->statusKey})) {
+      $entity->{$this->statusKey} = TRUE;
+    }
 
     return $entity;
   }

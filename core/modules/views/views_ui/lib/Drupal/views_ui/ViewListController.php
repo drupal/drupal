@@ -7,13 +7,13 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Core\Entity\EntityListController;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityListController;
 
 /**
  * Provides a listing of Views.
  */
-class ViewListController extends EntityListController {
+class ViewListController extends ConfigEntityListController {
 
   /**
    * Overrides Drupal\Core\Entity\EntityListController::load();
@@ -24,7 +24,7 @@ class ViewListController extends EntityListController {
       'disabled' => array(),
     );
     foreach (parent::load() as $entity) {
-      if ($entity->isEnabled()) {
+      if ($entity->status()) {
         $entities['enabled'][] = $entity;
       }
       else {
@@ -49,7 +49,7 @@ class ViewListController extends EntityListController {
         ),
       ),
       'title' => t('Machine name: ') . $view->id(),
-      'class' => array($view->isEnabled() ? 'views-ui-list-enabled' : 'views-ui-list-disabled'),
+      'class' => array($view->status() ? 'views-ui-list-enabled' : 'views-ui-list-disabled'),
     );
   }
 
@@ -82,50 +82,14 @@ class ViewListController extends EntityListController {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityListController::getOperations();
+   * Implements \Drupal\Core\Entity\EntityListController::getOperations().
    */
   public function getOperations(EntityInterface $view) {
+    $definition = parent::getOperations($view);
+
     $uri = $view->uri();
     $path = $uri['path'];
 
-    $definition['edit'] = array(
-      'title' => t('Edit'),
-      'href' => "$path/edit",
-      'weight' => -5,
-    );
-    if (!$view->isEnabled()) {
-      $definition['enable'] = array(
-        'title' => t('Enable'),
-        'ajax' => TRUE,
-        'token' => TRUE,
-        'href' => "$path/enable",
-        'weight' => -10,
-      );
-    }
-    else {
-      $definition['disable'] = array(
-        'title' => t('Disable'),
-        'ajax' => TRUE,
-        'token' => TRUE,
-        'href' => "$path/disable",
-        'weight' => 0,
-      );
-    }
-    // This property doesn't exist yet.
-    if (!empty($view->overridden)) {
-      $definition['revert'] = array(
-        'title' => t('Revert'),
-        'href' => "$path/revert",
-        'weight' => 5,
-      );
-    }
-    else {
-      $definition['delete'] = array(
-        'title' => t('Delete'),
-        'href' => "$path/delete",
-        'weight' => 10,
-      );
-    }
     $definition['clone'] = array(
       'title' => t('Clone'),
       'href' => "$path/clone",

@@ -1,4 +1,4 @@
-disabled: true
+status: '0'
 module: comment
 id: comments_recent
 description: 'A block and a page with recent comments.'

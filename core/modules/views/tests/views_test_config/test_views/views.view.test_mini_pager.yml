@@ -79,6 +79,6 @@ display:
     display_options:
       path: test_mini_pager
 base_field: nid
-disabled: '0'
+status: '1'
 module: views
 langcode: und

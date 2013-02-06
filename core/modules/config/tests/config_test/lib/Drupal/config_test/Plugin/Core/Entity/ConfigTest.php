@@ -28,7 +28,8 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status"
  *   }
  * )
  */

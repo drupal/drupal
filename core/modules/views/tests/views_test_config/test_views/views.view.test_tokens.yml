@@ -55,5 +55,5 @@ display:
         options: {  }
       path: test_tokens
 base_field: id
-disabled: '0'
+status: '1'
 module: views

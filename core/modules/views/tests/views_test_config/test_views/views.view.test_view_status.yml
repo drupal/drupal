@@ -11,5 +11,5 @@ display:
     display_title: Master
     position: ''
 base_field: id
-disabled: '1'
+status: '0'
 module: views

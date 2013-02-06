@@ -1094,7 +1094,7 @@ function views_get_applicable_views($type) {
   }
 
   $entity_ids = $container->get('entity.query')->get('view')
-    ->condition('disabled', FALSE)
+    ->condition('status', TRUE)
     ->condition("display.*.display_plugin", $ids, 'IN')
     ->execute();
 
@@ -1227,7 +1227,7 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
  *   Returns TRUE if a view is enabled, FALSE otherwise.
  */
 function views_view_is_enabled(View $view) {
-  return $view->isEnabled();
+  return $view->status();
 }
 
 /**
@@ -1240,27 +1240,27 @@ function views_view_is_enabled(View $view) {
  *   Returns TRUE if a view is disabled, FALSE otherwise.
  */
 function views_view_is_disabled(View $view) {
-  return !$view->isEnabled();
+  return !$view->status();
 }
 
 /**
- * Enables a view.
+ * Enables and saves a view.
  *
  * @param Drupal\views\Plugin\Core\Entity\View $view
  *   The View object to disable.
  */
 function views_enable_view(View $view) {
-  $view->enable();
+  $view->enable()->save();
 }
 
 /**
- * Disables a view.
+ * Disables and saves a view.
  *
  * @param Drupal\views\Plugin\Core\Entity\View $view
  *   The View object to disable.
  */
 function views_disable_view(View $view) {
-  $view->disable();
+  $view->disable()->save();
 }
 
 /**

@@ -1,4 +1,4 @@
-disabled: true
+status: '0'
 module: node
 id: glossary
 description: 'A list of all content, by letter.'

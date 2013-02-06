@@ -1,4 +1,4 @@
-disabled: true
+status: '0'
 module: node
 id: tracker
 description: 'Shows all new activity on the system.'

@@ -1,4 +1,4 @@
-disabled: true
+status: '0'
 module: search
 id: backlinks
 description: 'A list of other content items which have a link to the content item.'

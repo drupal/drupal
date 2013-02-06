@@ -1047,23 +1047,23 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\views\ViewStorageInterface::enable().
+   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::enable().
    */
   public function enable() {
     return $this->__call(__FUNCTION__, func_get_args());
   }
 
   /**
-   * Implements \Drupal\views\ViewStorageInterface::disable().
+   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::disable().
    */
   public function disable() {
     return $this->__call(__FUNCTION__, func_get_args());
   }
 
   /**
-   * Implements \Drupal\views\ViewStorageInterface::isEnabled().
+   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::status().
    */
-  public function isEnabled() {
+  public function status() {
     return $this->__call(__FUNCTION__, func_get_args());
   }
 

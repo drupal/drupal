@@ -147,6 +147,6 @@ display:
     display_options:
       path: test_bulk_form
 base_field: nid
-disabled: '0'
+status: '1'
 module: views
 langcode: und

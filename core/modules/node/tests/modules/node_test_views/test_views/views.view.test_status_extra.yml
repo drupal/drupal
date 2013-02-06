@@ -132,6 +132,6 @@ display:
       id: page
       position: '0'
 base_field: nid
-disabled: '0'
+status: '1'
 module: views
 langcode: und

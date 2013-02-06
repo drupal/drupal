@@ -689,8 +689,9 @@ function views_ui_load($name) {
  *   redirect back to the listing page.
  */
 function views_ui_ajax_callback(ViewExecutable $view, $op) {
-  // Perform the operation.
+  // Perform the operation and save the view.
   $view->storage->$op();
+  $view->save();
 
   // If the request is via AJAX, return the rendered list as JSON.
   if (drupal_container()->get('request')->request->get('js')) {

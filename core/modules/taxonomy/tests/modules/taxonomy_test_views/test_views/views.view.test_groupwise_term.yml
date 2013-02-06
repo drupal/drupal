@@ -2,7 +2,7 @@ base_field: tid
 base_table: taxonomy_term_data
 core: 8.0-dev
 description: ''
-disabled: '0'
+status: '1'
 display:
   default:
     display_options:

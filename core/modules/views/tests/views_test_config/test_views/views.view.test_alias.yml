@@ -1,7 +1,7 @@
 base_table: users
 core: 8.0-dev
 description: ''
-disabled: '0'
+status: '1'
 display:
   default:
     display_options:

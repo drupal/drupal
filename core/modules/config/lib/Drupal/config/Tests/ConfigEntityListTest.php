@@ -54,20 +54,29 @@ class ConfigEntityListTest extends WebTestBase {
     $uri = $entity->uri();
     $expected_operations = array(
       'edit' => array (
-        'title' => 'Edit',
-        'href' => 'admin/structure/config_test/manage/default/edit',
+        'title' => t('Edit'),
+        'href' => $uri['path'] . '/edit',
         'options' => $uri['options'],
         'weight' => 10,
       ),
+      'disable' => array(
+        'title' => t('Disable'),
+        'href' => $uri['path'] . '/disable',
+        'options' => $uri['options'],
+        'weight' => 20,
+      ),
       'delete' => array (
-        'title' => 'Delete',
-        'href' => 'admin/structure/config_test/manage/default/delete',
+        'title' => t('Delete'),
+        'href' => $uri['path'] . '/delete',
         'options' => $uri['options'],
         'weight' => 100,
       ),
     );
+
     $actual_operations = $controller->getOperations($entity);
-    $this->assertIdentical($expected_operations, $actual_operations, 'Return value from getOperations matches expected.');
+    // Sort the operations to normalize link order.
+    uasort($actual_operations, 'drupal_sort_weight');
+    $this->assertIdentical($expected_operations, $actual_operations);
 
     // Test buildHeader() method.
     $expected_items = array(

@@ -2,7 +2,7 @@ base_table: views_test_data
 core: '8'
 module: views
 description: 'Storage Test View for testing.'
-disabled: true
+status: '0'
 display:
   default:
     display_options:

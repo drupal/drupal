@@ -1,3 +1,5 @@
 id: default
 label: Default
 protected_property: Default
+# Intentionally commented out to verify default status behavior.
+# status: 1
