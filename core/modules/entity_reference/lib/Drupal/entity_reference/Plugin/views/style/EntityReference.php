@@ -102,17 +102,6 @@ class EntityReference extends StylePluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::preview().
-   */
-  public function preview() {
-    if (!empty($this->view->live_preview)) {
-      return '<pre>' . check_plain($this->view->render()) . '</pre>';
-    }
-
-    return $this->view->render();
-  }
-
-  /**
    * Overrides \Drupal\views\Plugin\views\style\StylePluginBase\StylePluginBase::even_empty().
    */
   function even_empty() {
