@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\EntityReference\SelectionTest.
+ * Contains \Drupal\entity_reference\Tests\Views\SelectionTest.
  */
 
-namespace Drupal\views\Tests\EntityReference;
+namespace Drupal\entity_reference\Tests\Views;
 
 use Drupal\simpletest\WebTestBase;
 
