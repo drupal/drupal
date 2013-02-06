@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Tests\AggregatorLanguageBlockTest.
+ * Contains \Drupal\block\Tests\BlockLanguageCacheTest.
  */
 
-namespace Drupal\aggregator\Tests;
+namespace Drupal\block\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\aggregator\Tests\AggregatorTestBase;
 
 /**
  * Tests multilingual block definition caching.
  */
-class AggregatorLanguageBlockTest extends AggregatorTestBase {
+class BlockLanguageCacheTest extends AggregatorTestBase {
 
   /**
    * Modules to enable.
@@ -32,7 +33,7 @@ class AggregatorLanguageBlockTest extends AggregatorTestBase {
     return array(
       'name' => 'Multilingual blocks',
       'description' => 'Checks display of aggregator blocks with multiple languages.',
-      'group' => 'Aggregator',
+      'group' => 'Block',
     );
   }
 
