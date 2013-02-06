@@ -43,6 +43,13 @@ class TransliterationTest extends DrupalUnitTestBase {
     // This is a Canadian Aboriginal character like a triangle. See
     // http://www.unicode.org/charts/PDF/U1400.pdf
     $four_byte = html_entity_decode('&#x1411;', ENT_NOQUOTES, 'UTF-8');
+    // These are two Gothic alphabet letters. See
+    // http://en.wikipedia.org/wiki/Gothic_alphabet
+    // They are not in our tables, but should at least give us '?' (unknown).
+    $five_byte = html_entity_decode('&#x10330;&#x10338;', ENT_NOQUOTES, 'UTF-8');
+    // Five-byte characters do not work in MySQL, so make a printable version.
+    $five_byte_printable = '&#x10330;&#x10338;';
+
     $cases = array(
       // Each test case is (language code, input, output).
       // Test ASCII in English.
@@ -55,6 +62,8 @@ class TransliterationTest extends DrupalUnitTestBase {
       // directly from the data files.
       array('fr', $three_byte, 'c'),
       array('fr', $four_byte, 'wii'),
+      // Test 5-byte characters.
+      array('en', $five_byte, '??', $five_byte_printable),
       // Test a language with no overrides.
       array('en', $two_byte, 'A O U A O aouaohello'),
       // Test language overrides provided by core.
@@ -64,9 +73,10 @@ class TransliterationTest extends DrupalUnitTestBase {
       array('dk', $random, $random),
       array('kg', $three_byte, 'ts'),
       // Test the language override hook in the test module, which changes
-      // the transliteration of Ä to Z.
+      // the transliteration of Ä to Z and provides for the 5-byte characters.
       array('zz', $two_byte, 'Z O U A O aouaohello'),
       array('zz', $random, $random),
+      array('zz', $five_byte, 'ATh', $five_byte_printable),
       // Test strings in some other languages.
       // Turkish, provided by drupal.org user Kartagis.
       array('tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.'),
@@ -78,10 +88,11 @@ class TransliterationTest extends DrupalUnitTestBase {
 
     foreach($cases as $case) {
       list($langcode, $original, $expected) = $case;
+      $printable = (isset($case[3])) ? $case[3] : $original;
       $transliterator_class = new PHPTransliteration();
       $actual = $transliterator_class->transliterate($original, $langcode);
       $this->assertIdentical($actual, $expected, format_string('@original transliteration to @actual is identical to @expected for language @langcode in new class instance.', array(
-        '@original' => $original,
+        '@original' => $printable,
         '@langcode' => $langcode,
         '@expected' => $expected,
         '@actual' => $actual,
@@ -89,7 +100,7 @@ class TransliterationTest extends DrupalUnitTestBase {
 
       $actual = $transliterator_service->transliterate($original, $langcode);
       $this->assertIdentical($actual, $expected, format_string('@original transliteration to @actual is identical to @expected for language @langcode in service instance.', array(
-        '@original' => $original,
+        '@original' => $printable,
         '@langcode' => $langcode,
         '@expected' => $expected,
         '@actual' => $actual,
