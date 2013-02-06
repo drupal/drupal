@@ -1944,8 +1944,9 @@ function comment_unpublish_action(Comment $comment = NULL, $context = array()) {
  * @see comment_unpublish_by_keyword_action_submit()
  */
 function comment_unpublish_by_keyword_action(Comment $comment, $context) {
+  $build = comment_view($comment);
+  $text = drupal_render($build);
   foreach ($context['keywords'] as $keyword) {
-    $text = drupal_render($comment);
     if (strpos($text, $keyword) !== FALSE) {
       $comment->status->value = COMMENT_NOT_PUBLISHED;
       watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject->value));

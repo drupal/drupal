@@ -17,7 +17,7 @@ class CommentActionsTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = array('dblog');
+  public static $modules = array('dblog', 'action');
 
   public static function getInfo() {
     return array(
@@ -58,6 +58,28 @@ class CommentActionsTest extends CommentTestBase {
     $this->assertEqual(comment_load($comment->id())->status->value, COMMENT_PUBLISHED, 'Comment was published');
     $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
     $this->clearWatchdog();
+  }
+
+  /**
+   * Tests the unpublish comment by keyword action.
+   */
+  function testCommentUnpublishByKeyword() {
+    $this->drupalLogin($this->admin_user);
+    $keyword_1 = $this->randomName();
+    $keyword_2 = $this->randomName();
+    $aid = action_save('comment_unpublish_by_keyword_action', 'comment', array('keywords' => array($keyword_1, $keyword_2)), $this->randomName());
+
+    $this->assertTrue(action_load($aid), 'The action could be loaded.');
+
+    $comment = $this->postComment($this->node, $keyword_2, $this->randomName());
+
+    // Load the full comment so that status is available.
+    $comment = comment_load($comment->id());
+
+    $this->assertTrue($comment->status->value == COMMENT_PUBLISHED, 'The comment status was set to published.');
+
+    actions_do($aid, $comment, array());
+    $this->assertTrue($comment->status->value == COMMENT_NOT_PUBLISHED, 'The comment status was set to not published.');
   }
 
   /**
