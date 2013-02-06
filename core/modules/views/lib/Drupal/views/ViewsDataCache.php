@@ -204,6 +204,43 @@ class ViewsDataCache {
   }
 
   /**
+   * Fetches a list of all base tables available.
+   *
+   * @return array
+   *   An array of base table data keyed by table name. Each item contains the
+   *   following keys:
+   *     - title: The title label for the base table.
+   *     - help: The help text for the base table.
+   *     - weight: The weight of the base table.
+   */
+  public function fetchBaseTables() {
+    $tables = array();
+
+    foreach ($this->get() as $table => $info) {
+      if (!empty($info['table']['base'])) {
+        $tables[$table] = array(
+          'title' => $info['table']['base']['title'],
+          'help' => !empty($info['table']['base']['help']) ? $info['table']['base']['help'] : '',
+          'weight' => !empty($info['table']['base']['weight']) ? $info['table']['base']['weight'] : 0,
+        );
+      }
+    }
+
+    // Sorts by the 'weight' and then by 'title' element.
+    uasort($tables, function ($a, $b) {
+      if ($a['weight'] != $b['weight']) {
+        return $a['weight'] < $b['weight'] ? -1 : 1;
+      }
+      if ($a['title'] != $b['title']) {
+        return $a['title'] < $b['title'] ? -1 : 1;
+      }
+      return 0;
+    });
+
+    return $tables;
+  }
+
+  /**
    * Destructs the ViewDataCache object.
    */
   public function __destruct() {

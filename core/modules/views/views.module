@@ -947,59 +947,6 @@ function views_get_handler($table, $field, $type, $override = NULL) {
 /**
  * Fetch a list of all base tables available
  *
- * @return array
- *   A keyed array of in the form of 'base_table' => 'Description'.
- */
-function views_fetch_base_tables() {
-  static $base_tables = array();
-  if (empty($base_tables)) {
-    $tables = array();
-    $data = drupal_container()->get('views.views_data')->get();
-    foreach ($data as $table => $info) {
-      if (!empty($info['table']['base'])) {
-        $tables[$table] = array(
-          'title' => $info['table']['base']['title'],
-          'description' => !empty($info['table']['base']['help']) ? $info['table']['base']['help'] : '',
-          'weight' => !empty($info['table']['base']['weight']) ? $info['table']['base']['weight'] : 0,
-        );
-      }
-    }
-    uasort($tables, '_views_weight_sort');
-    $base_tables = $tables;
-  }
-
-  return $base_tables;
-}
-
-/**
- * Sorts a structured array by the 'weight' and then by 'title' element.
- *
- * Callback for uasort() in views_fetch_base_tables().
- *
- * @param array $a
- *   First item for comparison. The compared items should be associative arrays
- *   that include a 'weight' and title element.
- * @param array $b
- *   Second item for comparison.
- *
- * @return int
- *   -1 if the first item comes first, 1 if second and 0 if they have the same
- *   order.
- */
-function _views_weight_sort($a, $b) {
-  if ($a['weight'] != $b['weight']) {
-    return $a['weight'] < $b['weight'] ? -1 : 1;
-  }
-  if ($a['title'] != $b['title']) {
-    return $a['title'] < $b['title'] ? -1 : 1;
-  }
-
-  return 0;
-}
-
-/**
- * Fetch a list of all base tables available
- *
  * @param $type
  *   Either 'display', 'style' or 'row'
  * @param $key

@@ -305,7 +305,7 @@ function views_ui_library_info() {
  */
 function views_ui_edit_page_title(ViewUI $view) {
   module_load_include('inc', 'views_ui', 'admin');
-  $bases = views_fetch_base_tables();
+  $bases = drupal_container()->get('views.views_data')->fetchBaseTables();
   $name = $view->getHumanName();
   if (isset($bases[$view->get('base_table')])) {
     $name .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
