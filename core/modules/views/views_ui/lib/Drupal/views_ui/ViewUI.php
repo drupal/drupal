@@ -115,6 +115,15 @@ class ViewUI implements ViewStorageInterface {
   protected $executable;
 
   /**
+   * Stores a list of database queries run beside the main one from views.
+   *
+   * @var array
+   *
+   * @see \Drupal\Core\Database\Log
+   */
+  protected $additionalQueries;
+
+  /**
    * Constructs a View UI object.
    *
    * @param \Drupal\views\ViewStorageInterface $storage
@@ -579,6 +588,29 @@ class ViewUI implements ViewStorageInterface {
     views_ui_cache_set($this);
   }
 
+  /**
+   * Set up query capturing.
+   *
+   * \Drupal\Core\Database\Database stores the queries that it runs, if logging
+   * is enabled.
+   *
+   * @see ViewUI::endQueryCapture()
+   */
+  public function startQueryCapture() {
+    Database::startLog('views');
+  }
+
+  /**
+   * Add the list of queries run during render to buildinfo.
+   *
+   * @see ViewUI::startQueryCapture()
+   */
+  public function endQueryCapture() {
+    $queries = Database::getLog('views');
+
+    $this->additionalQueries = $queries;
+  }
+
   public function renderPreview($display_id, $args = array()) {
     // Save the current path so it can be restored before returning from this function.
     $old_q = current_path();
@@ -645,7 +677,24 @@ class ViewUI implements ViewStorageInterface {
       // @todo We'll want to add contextual links specific to editing the View, so
       //   the suppression may need to be moved deeper into the Preview pipeline.
       views_ui_contextual_links_suppress_push();
+
+      $show_additional_queries = $config->get('ui.show.additional_queries');
+
+      timer_start('views_ui.preview');
+
+      if ($show_additional_queries) {
+        $this->startQueryCapture();
+      }
+
+      // Execute/get the view preview.
       $preview = $this->executable->preview($display_id, $args);
+
+      if ($show_additional_queries) {
+        $this->endQueryCapture();
+      }
+
+      $this->render_time = timer_stop('views_ui.preview');
+
       views_ui_contextual_links_suppress_pop();
 
       // Reset variables.
@@ -658,12 +707,12 @@ class ViewUI implements ViewStorageInterface {
         // Get information from the preview for display.
         if (!empty($this->executable->build_info['query'])) {
           if ($show_query) {
-            $query = $this->executable->build_info['query'];
+            $query_string = $this->executable->build_info['query'];
             // Only the sql default class has a method getArguments.
             $quoted = array();
 
             if ($this->executable->query instanceof Sql) {
-              $quoted = $query->getArguments();
+              $quoted = $query_string->getArguments();
               $connection = Database::getConnection();
               foreach ($quoted as $key => $val) {
                 if (is_array($val)) {
@@ -674,14 +723,15 @@ class ViewUI implements ViewStorageInterface {
                 }
               }
             }
-            $rows['query'][] = array('<strong>' . t('Query') . '</strong>', '<pre>' . check_plain(strtr($query, $quoted)) . '</pre>');
-            if (!empty($this->executable->additional_queries)) {
+            $rows['query'][] = array('<strong>' . t('Query') . '</strong>', '<pre>' . check_plain(strtr($query_string, $quoted)) . '</pre>');
+            if (!empty($this->additionalQueries)) {
               $queries = '<strong>' . t('These queries were run during view rendering:') . '</strong>';
-              foreach ($this->executable->additional_queries as $query) {
+              foreach ($this->additionalQueries as $query) {
                 if ($queries) {
                   $queries .= "\n";
                 }
-                $queries .= t('[@time ms]', array('@time' => intval($query[1] * 100000) / 100)) . ' ' . $query[0];
+                $query_string = strtr($query['query'], $query['args']);
+                $queries .= t('[@time ms] @query', array('@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string));
               }
 
               $rows['query'][] = array('<strong>' . t('Other queries') . '</strong>', '<pre>' . $queries . '</pre>');
