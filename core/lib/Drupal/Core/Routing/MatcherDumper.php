@@ -144,25 +144,4 @@ class MatcherDumper implements MatcherDumperInterface {
     return $this->routes;
   }
 
-  /**
-   * Determines the fitness of the provided path.
-   *
-   * @param string $path
-   *   The path whose fitness we want.
-   *
-   * @return int
-   *   The fitness of the path, as an integer.
-   */
-  public function getFit($path) {
-    $fit = 0;
-
-    $parts = explode('/', $path, static::MAX_PARTS);
-    foreach ($parts as $k => $part) {
-      if (strpos($part, '{') === FALSE) {
-        $fit |=  1 << ($slashes - $k);
-      }
-    }
-
-    return $fit;
-  }
 }
