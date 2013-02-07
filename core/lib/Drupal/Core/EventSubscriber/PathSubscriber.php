@@ -81,10 +81,13 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
    *   The Event to process.
    */
   public function onKernelRequestLanguageResolve(GetResponseEvent $event) {
-    $request = $event->getRequest();
-    $path = _language_resolved_path();
-    if ($path !== NULL) {
-      $this->setPath($request, $path);
+    // We need to act only on the master request, otherwise subrequests will
+    // inherit the main request path and an infinite loop will be started.
+    if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+      $path = _language_resolved_path();
+      if ($path !== NULL) {
+        $this->setPath($event->getRequest(), $path);
+      }
     }
   }
 

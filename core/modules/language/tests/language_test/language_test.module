@@ -5,6 +5,9 @@
  * Mock module for language layer tests.
  */
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
 /**
  * Implements hook_init().
  */
@@ -93,4 +96,26 @@ function language_test_store_language_negotiation() {
  */
 function language_test_language_negotiation_method($languages) {
   return 'it';
+}
+
+/**
+ * Implements hook_menu().
+ */
+function language_test_menu() {
+  $items = array();
+
+  $items['language_test/subrequest'] = array(
+    'page callback' => 'language_test_subrequest',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback. Uses a subrequest to retrieve the 'user' page.
+ */
+function language_test_subrequest() {
+  return drupal_container()->get('http_kernel')->handle(Request::create('/user'), HttpKernelInterface::SUB_REQUEST);
 }
