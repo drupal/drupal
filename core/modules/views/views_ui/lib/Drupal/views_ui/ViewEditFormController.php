@@ -7,6 +7,9 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\views\ViewExecutable;
@@ -607,8 +610,15 @@ class ViewEditFormController extends ViewFormControllerBase {
 
   /**
    * Regenerate the current tab for AJAX updates.
+   *
+   * @param \Drupal\views_ui\ViewUI $view
+   *   The view to regenerate its tab.
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
+   *   The response object to add new commands to.
+   * @param string $display_id
+   *   The display ID of the tab to regenerate.
    */
-  public function rebuildCurrentTab(ViewUI $view, &$output, $display_id) {
+  public function rebuildCurrentTab(ViewUI $view, AjaxResponse $response, $display_id) {
     $view->displayID = $display_id;
     if (!$view->get('executable')->setDisplay('default')) {
       return;
@@ -617,12 +627,12 @@ class ViewEditFormController extends ViewFormControllerBase {
     // Regenerate the main display area.
     $build = $this->getDisplayTab($view);
     static::addMicroweights($build);
-    $output[] = ajax_command_html('#views-tab-' . $display_id, drupal_render($build));
+    $response->addCommand(new HtmlCommand('#views-tab-' . $display_id, drupal_render($build)));
 
     // Regenerate the top area so changes to display names and order will appear.
     $build = $this->renderDisplayTop($view);
     static::addMicroweights($build);
-    $output[] = ajax_command_replace('#views-display-top', drupal_render($build));
+    $response->addCommand(new ReplaceCommand('#views-display-top', drupal_render($build)));
   }
 
   /**

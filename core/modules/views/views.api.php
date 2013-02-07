@@ -594,25 +594,7 @@ function hook_views_ui_display_top_links_alter(array &$links, ViewExecutable $vi
   }
 }
 
-/**
- * Alter the commands used on a Views AJAX request.
- *
- * @param array $commands
- *   An array of ajax commands.
- * @param \Drupal\views\ViewExecutable $view
- *   The view which is requested.
- *
- * @see views_ajax()
- */
-function hook_views_ajax_data_alter(array &$commands, ViewExecutable $view) {
-  // Replace Views' method for scrolling to the top of the element with your
-  // custom scrolling method.
-  foreach ($commands as &$command) {
-    if ($command['method'] == 'viewsScrollTop') {
-      $command['method'] .= 'myScrollTop';
-    }
-  }
-}
+// @todo Describe how to alter a view ajax response with event listeners.
 
 /**
  * Allow modules to respond to the invalidation of the Views cache.
