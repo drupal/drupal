@@ -318,26 +318,19 @@ function hook_element_info_alter(&$type) {
 /**
  * Perform cleanup tasks.
  *
- * This hook is run at the end of each page request. It is often used for
- * page logging and specialized cleanup. This hook MUST NOT print anything
- * because by the time it runs the response is already sent to the browser.
+ * This hook is run at the end of each non-cached page request. It is often
+ * used for page logging and specialized cleanup. This hook MUST NOT print
+ * anything because by the time it runs the response is already sent to the
+ * browser.
  *
- * Only use this hook if your code must run even for cached page views.
- * If you have code which must run once on all non-cached pages, use
- * hook_init() instead. That is the usual case. If you implement this hook
- * and see an error like 'Call to undefined function', it is likely that
- * you are depending on the presence of a module which has not been loaded yet.
- * It is not loaded because Drupal is still in bootstrap mode.
+ * This hook is not run on cached pages.
  *
  * @param $destination
  *   If this hook is invoked as part of a drupal_goto() call, then this argument
  *   will be a fully-qualified URL that is the destination of the redirect.
  */
 function hook_exit($destination = NULL) {
-  db_update('counter')
-    ->expression('hits', 'hits + 1')
-    ->condition('type', 1)
-    ->execute();
+  watchdog('mymodule', 'Page was built for user %name.', array('%name' => user_format_name($GLOBALS['user'])), WATCHDOG_INFO);
 }
 
 /**

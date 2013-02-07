@@ -33,7 +33,7 @@ class HookExitTest extends WebTestBase {
    * Tests calling of hook_exit().
    */
   function testHookExit() {
-    // Test with cache disabled. Boot and exit should always fire.
+    // Test with cache disabled. Exit should always fire.
     $config = config('system.performance');
     $config->set('cache.page.enabled', 0);
     $config->save();
@@ -42,14 +42,18 @@ class HookExitTest extends WebTestBase {
     $calls = 1;
     $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_exit'))->fetchField(), $calls, 'hook_exit called with disabled cache.');
 
-    // Test with normal cache. Exit should be called.
+    // Test with normal cache. On the first call, exit should fire
+    // (since cache is empty), but on the second call it should not be fired.
     $config->set('cache.page.enabled', 1);
     $config->save();
     $this->drupalGet('');
     $calls++;
-    $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_exit'))->fetchField(), $calls, 'hook_exit called with normal cache.');
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_exit'))->fetchField(), $calls, 'hook_exit called with normal cache and no cached page.');
+    $this->assertTrue(cache('page')->get(url('', array('absolute' => TRUE))), 'Page has been cached.');
+    $this->drupalGet('');
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_exit'))->fetchField(), $calls, 'hook_exit not called with normal cache and a cached page.');
 
-    // Exit should not fire since the page is cached.
+    // Test with aggressive cache. Exit should not fire since page is cached.
     variable_set('page_cache_invoke_hooks', FALSE);
     $this->assertTrue(cache('page')->get(url('', array('absolute' => TRUE))), 'Page has been cached.');
     $this->drupalGet('');
