@@ -1410,6 +1410,7 @@ function views_ui_config_item_form($form, &$form_state) {
     ),
   );
   $executable = $view->get('executable');
+  $save_ui_cache = FALSE;
   if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -1471,7 +1472,7 @@ function views_ui_config_item_form($form, &$form_state) {
           // We want this relationship option to get saved even if the user
           // skips submitting the form.
           $executable->setItemOption($display_id, $type, $id, 'relationship', $rel);
-          views_ui_cache_set($view);
+          $save_ui_cache = TRUE;
         }
 
         $form['options']['relationship'] = array(
@@ -1516,6 +1517,10 @@ function views_ui_config_item_form($form, &$form_state) {
     // Only validate the override values, because this values are required for
     // the override selection.
     $form['buttons']['remove']['#limit_validation_errors'] = array(array('override'));
+  }
+
+  if ($save_ui_cache) {
+    views_ui_cache_set($view);
   }
 
   return $form;
