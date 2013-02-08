@@ -5,23 +5,37 @@
  */
 
 /**
- * This file was added automatically by CKEditor builder.
- * You may re-use it at any time at http://ckeditor.com/builder to build CKEditor again.
- * 
- * NOTE: 
+ * This is a Drupal-optimized build of CKEditor.
+ *
+ * At the time of writing, this build is identical to the "standard" build of
+ * CKEditor, includes all languages, and excludes the "placeholder" plugin.
+ *
+ * You may re-use it at any time at http://ckeditor.com/builder to build
+ * CKEditor again.
+ *
+ * NOTE:
  *    This file is not used by CKEditor, you may remove it.
  *    Changing this file will not change your CKEditor configuration.
  */
 
 var CKBUILDER_CONFIG = {
 	skin: 'moono',
-	preset: 'standard',
 	ignore: [
 		'dev',
 		'.gitignore',
 		'.gitattributes',
 		'README.md',
-		'.mailmap'
+		'.mailmap',
+		'config.js',
+		'contents.css',
+		/**
+		  * A bug requires us to include this file.
+		  *
+		  * Will be fixed at http://dev.ckeditor.com/ticket/9992#comment:4.
+		  *
+		'styles.js',
+		  */
+		'samples'
 	],
 	plugins : {
 		'about' : 1,
@@ -68,10 +82,15 @@ var CKBUILDER_CONFIG = {
 		'listblock' : 1,
 		'fakeobjects' : 1,
 		'justify' : 1,
-		'placeholder' : 1,
 		'showblocks' : 1,
 		'showborders' : 1,
-		'tableresize' : 1
+		'tableresize' : 1,
+		'sharedspace' : 1,
+		'widget' : 1,
+		'widgetblockquote' : 1,
+		'widgetcaption' : 1,
+		'widgettime' : 1,
+		'widgetvideo' : 1
 	},
 	languages : {
 		'af' : 1,
@@ -135,6 +154,6 @@ var CKBUILDER_CONFIG = {
 		'ug' : 1,
 		'uk' : 1,
 		'vi' : 1,
-		'cy' : 1,
+		'cy' : 1
 	}
 };
