@@ -60,7 +60,7 @@ Drupal.behaviors.editor = {
         if (event.isDefaultPrevented()) {
           return;
         }
-        Drupal.editorDetach(field, settings.editor.formats[activeFormatID]);
+        Drupal.editorDetach(field, settings.editor.formats[activeFormatID], 'serialize');
       });
     });
   },

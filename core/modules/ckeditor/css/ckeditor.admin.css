@@ -1,0 +1,188 @@
+/**
+ * @file
+ * Styles for configuration of CKEditor module.
+ *
+ * Many of these styles are adapted directly from the default CKEditor theme
+ * "moono".
+ */
+
+.ckeditor-toolbar-active {
+  border: 1px solid #b6b6b6;
+  padding: 6px 8px 2px;
+  box-shadow: 0 1px 0 white inset;
+  background: #cfd1cf;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(whiteSmoke), to(#cfd1cf));
+  background-image: -moz-linear-gradient(top, whiteSmoke, #cfd1cf);
+  background-image: -o-linear-gradient(top, whiteSmoke, #cfd1cf);
+  background-image: -ms-linear-gradient(top, whiteSmoke, #cfd1cf);
+  background-image: linear-gradient(top, whiteSmoke, #cfd1cf);
+  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#fff5f5f5', endColorstr='#ffcfd1cf');
+  margin: 5px 0;
+  overflow: nowrap;
+}
+.ckeditor-toolbar-active > ul {
+  clear: left; /* LTR */
+  float: left; /* LTR */
+}
+#ckeditor-button-description {
+  margin-bottom: 1em;
+}
+.ckeditor-toolbar-dividers {
+  float: right;
+}
+.ckeditor-toolbar-disabled ul.ckeditor-buttons {
+  border: 0;
+}
+.ckeditor-toolbar-disabled ul.ckeditor-buttons li {
+  margin: 2px;
+}
+.ckeditor-toolbar-disabled ul.ckeditor-buttons li a,
+ul.ckeditor-buttons {
+  border: 1px solid #a6a6a6;
+  border-bottom-color: #979797;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 0 2px rgba(255, 255, 255, .15) inset, 0 1px 0 rgba(255, 255, 255, .15) inset;
+}
+
+ul.ckeditor-buttons {
+  min-height: 26px;
+  min-width: 26px;
+  list-style: none;
+  padding: 0;
+  margin: 0 6px 5px 0;
+  border: 1px solid #a6a6a6;
+  border-bottom-color: #979797;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 0 2px rgba(255, 255, 255, .15) inset, 0 1px 0 rgba(255, 255, 255, .15) inset;
+}
+ul.ckeditor-buttons li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  float: left; /* LTR */
+}
+ul.ckeditor-buttons li a {
+  position: relative;
+  display: block;
+  height: 18px;
+  padding: 4px 6px;
+  cursor: move;
+  border: 0;
+  white-space: nowrap;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  color: #474747;
+  background: #e4e4e4;
+  background-image: -webkit-gradient(linear,left top,left bottom,from(white),to(#e4e4e4));
+  background-image: -moz-linear-gradient(top,white,#e4e4e4);
+  background-image: -webkit-linear-gradient(top,white,#e4e4e4);
+  background-image: -o-linear-gradient(top,white,#e4e4e4);
+  background-image: -ms-linear-gradient(top,white,#e4e4e4);
+  background-image: linear-gradient(top,white,#e4e4e4);
+  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0,startColorstr='#ffffffff',endColorstr='#ffe4e4e4');
+}
+ul.ckeditor-buttons li .cke-icon-only {
+  text-indent: -9999px;
+  width: 16px;
+}
+ul.ckeditor-buttons li a:focus {
+  z-index: 11; /* Ensure focused buttons show their outline on all sides. */
+}
+ul.ckeditor-buttons li:first-child a {
+  border-top-left-radius: 2px; /* LTR */
+  border-bottom-left-radius: 2px; /* LTR */
+}
+ul.ckeditor-buttons li:last-child a {
+  border-top-right-radius: 2px; /* LTR */
+  border-bottom-right-radius: 2px; /* LTR */
+}
+ul.ckeditor-buttons li.ckeditor-button-placeholder a {
+  background: #333;
+  opacity: 0.3;
+}
+ul.ckeditor-multiple-buttons {
+  padding: 1px 2px;
+  margin: 5px;
+  list-style: none;
+  float: left; /* LTR */
+}
+ul.ckeditor-multiple-buttons li {
+  display: inline-block;
+  float: left; /* LTR */
+  margin: 0;
+  padding: 0;
+}
+ul.ckeditor-multiple-buttons li a {
+  cursor: move;
+  display: inline-block;
+  height: 18px;
+  margin: 0;
+  padding: 2px 0;
+}
+ul.ckeditor-buttons li.ckeditor-group-button-separator,
+ul.ckeditor-multiple-buttons li.ckeditor-group-button-separator {
+  margin: -1px -3px -2px;
+}
+ul.ckeditor-buttons li.ckeditor-group-button-separator a,
+ul.ckeditor-multiple-buttons li.ckeditor-group-button-separator a {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAdCAMAAABG4xbVAAAAhFBMVEUAAACmpqampqampqb////l5eX////5+fmmpqatra2urq6vr6+1tbW2tra4uLi6urq8vLzb29ve3t7i4uLl5eXn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz+/v7qIQO+AAAACHRSTlMATVmAi8XM29MuWToAAABjSURBVBiVrc5BCoAwDETRMKhtRBduev9LKm1xjItWRBBE6Nt9QkIwOTcUzk0Imi8aoMssxbgoTHMtqsFMLta0vPh2N49HyfdelPg6k9uvX/a+Bmggt1qJRNzQFVgjEnkUZDoBmH57VSypjg4AAAAASUVORK5CYII=) no-repeat center center;
+  width: 13px;
+  padding: 0;
+  height: 29px;
+  position: relative;
+  z-index: 10;
+}
+ul.ckeditor-buttons li.ckeditor-button-separator a {
+  background: #e4e4e4;
+  background-image: -webkit-linear-gradient(#e4e4e4, #b4b4b4);
+  background-image: linear-gradient(#e4e4e4, #b4b4b4);
+  height: 24px;
+  margin: 1px 0 0;
+  padding: 0;
+  position: relative;
+  width: 1px;
+  z-index: 10;
+}
+ul.ckeditor-multiple-buttons li.ckeditor-button-separator a {
+  width: 2px;
+  padding: 0;
+  height: 26px;
+  margin: 0 10px;
+}
+.ckeditor-separator {
+  background-color: silver;
+  background-color: rgba(0, 0, 0, .2);
+  margin: 5px 0;
+  height: 18px;
+  width: 1px;
+  display: block;
+  -webkit-box-shadow: 1px 0 1px rgba(255, 255, 255, .5);
+  -moz-box-shadow: 1px 0 1px rgba(255,255,255,.5);
+  box-shadow: 1px 0 1px rgba(255, 255, 255, .5)
+}
+.ckeditor-button-arrow {
+  width: 0;
+  text-align: center;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 3px solid #333;
+  display: inline-block;
+  margin: 0 4px 2px;
+}
+
+.ckeditor-row-controls {
+  float: right; /* LTR */
+  font-size: 18px;
+  width: 40px;
+  text-align: right; /* LTR */
+}
+.ckeditor-row-controls a {
+  display: inline-block;
+  padding: 6px 2px;
+  height: 16px;
+  width: 16px;
+  line-height: 0.9;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}

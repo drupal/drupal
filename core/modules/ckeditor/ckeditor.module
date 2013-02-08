@@ -1,0 +1,115 @@
+<?php
+
+/**
+ * @file
+ * Provides integration with the CKEditor WYSIWYG editor.
+ */
+
+/**
+ * Implements hook_library_info().
+ */
+function ckeditor_library_info() {
+  $module_path = drupal_get_path('module', 'ckeditor');
+
+  $settings = array(
+    'ckeditor' => array(
+      'modulePath' => drupal_get_path('module', 'ckeditor'),
+    ),
+  );
+  $libraries['drupal.ckeditor'] = array(
+    'title' => 'Drupal behavior to enable CKEditor on textareas.',
+    'version' => VERSION,
+    'js' => array(
+      $module_path . '/js/ckeditor.js' => array(),
+      array('data' => $settings, 'type' => 'setting'),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal'),
+      array('ckeditor', 'ckeditor'),
+      array('editor', 'drupal.editor'),
+    ),
+  );
+  $libraries['drupal.ckeditor.admin'] = array(
+    'title' => 'Drupal behavior for drag-and-drop CKEditor toolbar builder UI.',
+    'version' => VERSION,
+    'js' => array(
+      $module_path . '/js/ckeditor.admin.js' => array(),
+    ),
+    'css' => array(
+      $module_path . '/css/ckeditor.admin.css' => array(),
+      'core/misc/ckeditor/skins/moono/editor.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'jquery.once'),
+      array('system', 'jquery.ui.sortable'),
+      array('system', 'jquery.ui.draggable'),
+    ),
+  );
+  $libraries['drupal.ckeditor.stylescombo.admin'] = array(
+    'title' => 'Only show the "stylescombo" plugin settings when its button is enabled.',
+    'version' => VERSION,
+    'js' => array(
+      $module_path . '/js/ckeditor.stylescombo.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+      array('system', 'drupal.vertical-tabs'),
+    ),
+  );
+  $libraries['ckeditor'] = array(
+    'title' => 'Loads the main CKEditor library.',
+    'version' => '4.0.1',
+    'js' => array(
+      'core/misc/ckeditor/ckeditor.js' => array(),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ckeditor_theme() {
+  return array(
+    'ckeditor_settings_toolbar' => array(
+      'file' => 'ckeditor.admin.inc',
+      'variables' => array('editor' => NULL, 'plugins' => NULL),
+    ),
+  );
+}
+
+/**
+ * Retrieves the default theme's CKEditor stylesheets defined in the .info file.
+ *
+ * Themes may specify iframe-specific CSS files for use with CKEditor by
+ * including a "ckeditor_stylesheets" key in the theme .info file.
+ *
+ * @code
+ * ckeditor_stylesheets[] = css/ckeditor-iframe.css
+ * @endcode
+ */
+function _ckeditor_theme_css($theme = NULL) {
+  $css = array();
+  if (!isset($theme)) {
+    $theme = variable_get('theme_default');
+  }
+  if ($theme_path = drupal_get_path('theme', $theme)) {
+    $info = system_get_info('theme', $theme);
+    if (isset($info['ckeditor_stylesheets'])) {
+      $css = $info['ckeditor_stylesheets'];
+      foreach ($css as $key => $path) {
+        $css[$key] = $theme_path . '/' . $path;
+      }
+    }
+    if (isset($info['base theme'])) {
+      $css = array_merge(_ckeditor_theme_css($info['base theme'], $css));
+    }
+  }
+  return $css;
+}

@@ -52,7 +52,7 @@ interface EditorInterface extends PluginInspectionInterface {
    * Validates the settings form for an editor.
    *
    * The contents of the editor settings are located in
-   * $form_state['values']['editor_settings']. Calls to form_error() should
+   * $form_state['values']['editor']['settings']. Calls to form_error() should
    * reflect this location in the settings form.
    *
    * @param array $form
@@ -65,7 +65,7 @@ interface EditorInterface extends PluginInspectionInterface {
   /**
    * Modifies any values in the form state to prepare them for saving.
    *
-   * Values in $form_state['values']['editor_settings'] are saved by Editor
+   * Values in $form_state['values']['editor']['settings'] are saved by Editor
    * module in editor_form_filter_admin_format_submit().
    *
    * @param array $form
