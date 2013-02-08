@@ -1119,21 +1119,21 @@ function user_menu_site_status_alter(&$menu_site_status, $path) {
 }
 
 /**
- * Implements hook_menu_link_alter().
+ * Implements hook_menu_link_presave().
  */
-function user_menu_link_alter(&$link) {
+function user_menu_link_presave($link) {
   // The path 'user' must be accessible for anonymous users, but only visible
   // for authenticated users. Authenticated users should see "My account", but
   // anonymous users should not see it at all. Therefore, invoke
-  // user_translated_menu_link_alter() to conditionally hide the link.
-  if ($link['link_path'] == 'user' && $link['module'] == 'system') {
-    $link['options']['alter'] = TRUE;
+  // user_menu_link_load() to conditionally hide the link.
+  if ($link->link_path == 'user' && $link->module == 'system') {
+    $link->options['alter'] = TRUE;
   }
 
   // Force the Logout link to appear on the top-level of 'account' menu by
   // default (i.e., unless it has been customized).
-  if ($link['link_path'] == 'user/logout' && $link['module'] == 'system' && empty($link['customized'])) {
-    $link['plid'] = 0;
+  if ($link->link_path == 'user/logout' && $link->module == 'system' && empty($link->customized)) {
+    $link->plid = 0;
   }
 }
 
@@ -1149,12 +1149,14 @@ function user_menu_breadcrumb_alter(&$active_trail, $item) {
 }
 
 /**
- * Implements hook_translated_menu_link_alter().
+ * Implements hook_menu_link_load().
  */
-function user_translated_menu_link_alter(&$link) {
+function user_menu_link_load($menu_links) {
   // Hide the "User account" link for anonymous users.
-  if ($link['link_path'] == 'user' && $link['module'] == 'system' && !$GLOBALS['user']->uid) {
-    $link['hidden'] = 1;
+  foreach ($menu_links as $link) {
+    if ($link['link_path'] == 'user' && $link['module'] == 'system' && !$GLOBALS['user']->uid) {
+      $link['hidden'] = 1;
+    }
   }
 }
 

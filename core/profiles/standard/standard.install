@@ -236,12 +236,12 @@ function standard_install() {
     ->execute();
 
   // Create a Home link in the main menu.
-  $item = array(
+  $menu_link = entity_create('menu_link', array(
     'link_title' => st('Home'),
     'link_path' => '<front>',
     'menu_name' => 'main',
-  );
-  menu_link_save($item);
+  ));
+  $menu_link->save();
 
   // Enable the Contact link in the footer menu.
   menu_link_maintain('system', 'enable', 'contact');
@@ -250,16 +250,22 @@ function standard_install() {
 
   // Populate the default shortcut set.
   $shortcut_set = shortcut_set_load('default');
-  $shortcut_set->links[] = array(
+  $menu_link = entity_create('menu_link', array(
     'link_path' => 'node/add',
     'link_title' => st('Add content'),
     'weight' => -20,
-  );
-  $shortcut_set->links[] = array(
+  ));
+  $menu_link->save();
+  $shortcut_set->links[$menu_link->uuid()] = $menu_link;
+
+  $menu_link = entity_create('menu_link', array(
     'link_path' => 'admin/content',
     'link_title' => st('Find content'),
     'weight' => -19,
-  );
+  ));
+  $menu_link->save();
+  $shortcut_set->links[$menu_link->uuid()] = $menu_link;
+
   $shortcut_set->save();
 
   // Enable the admin theme.

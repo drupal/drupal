@@ -2677,7 +2677,10 @@ function system_admin_menu_block($item) {
   }
 
   if (!isset($item['mlid'])) {
-    $item += db_query("SELECT mlid, menu_name FROM {menu_links} ml WHERE ml.router_path = :path AND module = 'system'", array(':path' => $item['path']))->fetchAssoc();
+    $menu_links = entity_load_multiple_by_properties('menu_link', array('router_path' => $item['path'], 'module' => 'system'));
+    $menu_link = reset($menu_links);
+    $item['mlid'] = $menu_link->id();
+    $item['menu_name'] = $menu_link->menu_name;
   }
 
   if (isset($cache[$item['mlid']])) {
@@ -2685,17 +2688,8 @@ function system_admin_menu_block($item) {
   }
 
   $content = array();
-  $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
-  $query->join('menu_router', 'm', 'm.path = ml.router_path');
-  $query
-    ->fields('ml')
-    // Weight should be taken from {menu_links}, not {menu_router}.
-    ->fields('m', array_diff(drupal_schema_fields_sql('menu_router'), array('weight')))
-    ->condition('ml.plid', $item['mlid'])
-    ->condition('ml.menu_name', $item['menu_name'])
-    ->condition('ml.hidden', 0);
-
-  foreach ($query->execute() as $link) {
+  $menu_links = entity_load_multiple_by_properties('menu_link', array('plid' => $item['mlid'], 'menu_name' => $item['menu_name'], 'hidden' => 0));
+  foreach ($menu_links as $link) {
     _menu_link_translate($link);
     if ($link['access']) {
       // The link description, either derived from 'description' in
@@ -3460,18 +3454,8 @@ function system_get_module_admin_tasks($module, $info) {
 
   if (!isset($links)) {
     $links = array();
-    $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
-    $query->join('menu_router', 'm', 'm.path = ml.router_path');
-    $query
-      ->fields('ml')
-      // Weight should be taken from {menu_links}, not {menu_router}.
-      ->fields('m', array_diff(drupal_schema_fields_sql('menu_router'), array('weight')))
-      ->condition('ml.link_path', 'admin/%', 'LIKE')
-      ->condition('ml.hidden', 0, '>=')
-      ->condition('ml.module', 'system')
-      ->condition('m.number_parts', 1, '>')
-      ->condition('m.page_callback', 'system_admin_menu_block_page', '<>');
-    foreach ($query->execute() as $link) {
+    $menu_links = entity_get_controller('menu_link')->loadModuleAdminTasks();
+    foreach ($menu_links as $link) {
       _menu_link_translate($link);
       if ($link['access']) {
         $links[$link['router_path']] = $link;
@@ -3523,6 +3507,7 @@ function system_get_module_admin_tasks($module, $info) {
       $item['title'] = t('Configure @module permissions', array('@module' => $info['name']));
       unset($item['description']);
       $item['localized_options']['fragment'] = 'module-' . $module;
+      $item = entity_create('menu_link', $item);
       $admin_tasks["admin/people/permissions#module-$module"] = $item;
     }
   }

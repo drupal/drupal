@@ -8,6 +8,8 @@
 use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\Core\Template\Attribute;
+use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\MenuLinkStorageController;
 
 /**
  * Implements hook_help().
@@ -558,7 +560,8 @@ function _book_update_outline(Node $node) {
     }
   }
 
-  if (menu_link_save($node->book)) {
+  $node->book = entity_create('menu_link', $node->book);
+  if ($node->book->save()) {
     if ($new) {
       // Insert new.
       db_insert('book')
@@ -926,7 +929,7 @@ function book_node_prepare(Node $node) {
  *   The depth limit for items in the parent select.
  */
 function _book_parent_depth_limit($book_link) {
-  return MENU_MAX_DEPTH - 1 - (($book_link['mlid'] && $book_link['has_children']) ? menu_link_children_relative_depth($book_link) : 0);
+  return MENU_MAX_DEPTH - 1 - (($book_link['mlid'] && $book_link['has_children']) ? entity_get_controller('menu_link')->findChildrenRelativeDepth($book_link) : 0);
 }
 
 /**

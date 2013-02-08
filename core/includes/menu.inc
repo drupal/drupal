@@ -5,8 +5,11 @@
  * API for the Drupal menu system.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\MenuLinkStorageController;
 
 /**
  * @defgroup menu Menu system
@@ -264,6 +267,9 @@ const MENU_MAX_PARTS = 9;
 
 /**
  * The maximum depth of a menu links tree - matches the number of p columns.
+ *
+ * @todo Move this constant to MenuLinkStorageController along with all the tree
+ * functionality.
  */
 const MENU_MAX_DEPTH = 9;
 
@@ -1260,20 +1266,15 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
             // Collect all the links set to be expanded, and then add all of
             // their children to the list as well.
             do {
-              $result = db_select('menu_links', NULL, array('fetch' => PDO::FETCH_ASSOC))
-                ->fields('menu_links', array('mlid'))
+              $query = entity_query('menu_link')
                 ->condition('menu_name', $menu_name)
                 ->condition('expanded', 1)
                 ->condition('has_children', 1)
                 ->condition('plid', $parents, 'IN')
-                ->condition('mlid', $parents, 'NOT IN')
-                ->execute();
-              $num_rows = FALSE;
-              foreach ($result as $item) {
-                $parents[$item['mlid']] = $item['mlid'];
-                $num_rows = TRUE;
-              }
-            } while ($num_rows);
+                ->condition('mlid', $parents, 'NOT IN');
+              $result = $query->execute();
+              $parents += $result;
+            } while (!empty($result));
           }
           $tree_parameters['expanded'] = $parents;
           $tree_parameters['active_trail'] = $active_trail;
@@ -1360,48 +1361,23 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
   }
 
   if (!isset($trees[$tree_cid])) {
-    // Select the links from the table, and recursively build the tree. We
-    // LEFT JOIN since there is no match in {menu_router} for an external
-    // link.
-    $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
-    $query->addTag('translatable');
-    $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
-    $query->fields('ml');
-    $query->fields('m', array(
-      'load_functions',
-      'to_arg_functions',
-      'access_callback',
-      'access_arguments',
-      'page_callback',
-      'page_arguments',
-      'tab_parent',
-      'tab_root',
-      'title',
-      'title_callback',
-      'title_arguments',
-      'theme_callback',
-      'theme_arguments',
-      'type',
-      'description',
-      'description_callback',
-      'description_arguments',
-    ));
+    $query = entity_query('menu_link');
     for ($i = 1; $i <= MENU_MAX_DEPTH; $i++) {
-      $query->orderBy('p' . $i, 'ASC');
+      $query->sort('p' . $i, 'ASC');
     }
-    $query->condition('ml.menu_name', $menu_name);
+    $query->condition('menu_name', $menu_name);
     if (!empty($parameters['expanded'])) {
-      $query->condition('ml.plid', $parameters['expanded'], 'IN');
+      $query->condition('plid', $parameters['expanded'], 'IN');
     }
     elseif (!empty($parameters['only_active_trail'])) {
-      $query->condition('ml.mlid', $parameters['active_trail'], 'IN');
+      $query->condition('mlid', $parameters['active_trail'], 'IN');
     }
     $min_depth = (isset($parameters['min_depth']) ? $parameters['min_depth'] : 1);
     if ($min_depth != 1) {
-      $query->condition('ml.depth', $min_depth, '>=');
+      $query->condition('depth', $min_depth, '>=');
     }
     if (isset($parameters['max_depth'])) {
-      $query->condition('ml.depth', $parameters['max_depth'], '<=');
+      $query->condition('depth', $parameters['max_depth'], '<=');
     }
     // Add custom query conditions, if any were passed.
     if (isset($parameters['conditions'])) {
@@ -1412,8 +1388,8 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
 
     // Build an ordered array of links using the query result object.
     $links = array();
-    foreach ($query->execute() as $item) {
-      $links[] = $item;
+    if ($result = $query->execute()) {
+      $links = menu_link_load_multiple($result);
     }
     $active_trail = (isset($parameters['active_trail']) ? $parameters['active_trail'] : array());
     $data['tree'] = menu_tree_data($links, $active_trail, $min_depth);
@@ -2450,18 +2426,11 @@ function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
     // Put the selected menu at the front of the list.
     array_unshift($menu_names, $selected_menu);
 
-    $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
-    $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
-    $query->fields('ml');
-    // Weight must be taken from {menu_links}, not {menu_router}.
-    $query->addField('ml', 'weight', 'link_weight');
-    $query->fields('m');
-    $query->condition('ml.link_path', $path_candidates, 'IN');
+    $menu_links = entity_load_multiple_by_properties('menu_link', array('link_path' => $path_candidates));
 
     // Sort candidates by link path and menu name.
     $candidates = array();
-    foreach ($query->execute() as $candidate) {
-      $candidate['weight'] = $candidate['link_weight'];
+    foreach ($menu_links as $candidate) {
       $candidates[$candidate['link_path']][$candidate['menu_name']] = $candidate;
       // Add any menus not already in the menu name search list.
       if (!in_array($candidate['menu_name'], $menu_names)) {
@@ -2581,38 +2550,6 @@ function menu_get_active_title() {
 }
 
 /**
- * Gets a translated, access-checked menu link that is ready for rendering.
- *
- * This function should never be called from within node_load() or any other
- * function used as a menu object load function since an infinite recursion may
- * occur.
- *
- * @param $mlid
- *   The mlid of the menu item.
- *
- * @return
- *   A menu link, with $item['access'] filled and link translated for
- *   rendering.
- */
-function menu_link_load($mlid) {
-  if (is_numeric($mlid)) {
-    $query = db_select('menu_links', 'ml');
-    $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
-    $query->fields('ml');
-    // Weight should be taken from {menu_links}, not {menu_router}.
-    $query->addField('ml', 'weight', 'link_weight');
-    $query->fields('m');
-    $query->condition('ml.mlid', $mlid);
-    if ($item = $query->execute()->fetchAssoc()) {
-      $item['weight'] = $item['link_weight'];
-      _menu_link_translate($item);
-      return $item;
-    }
-  }
-  return FALSE;
-}
-
-/**
  * Clears the cached cached data for a single named menu.
  */
 function menu_cache_clear($menu_name = 'tools') {
@@ -2636,6 +2573,8 @@ function menu_cache_clear_all() {
  * Resets the menu system static cache.
  */
 function menu_reset_static_cache() {
+  drupal_container()->get('plugin.manager.entity')
+    ->getStorageController('menu_link')->resetCache();
   drupal_static_reset('_menu_build_tree');
   drupal_static_reset('menu_tree');
   drupal_static_reset('menu_tree_all_data');
@@ -2733,156 +2672,117 @@ function menu_get_router() {
 }
 
 /**
- * Builds a link from a router item.
- */
-function _menu_link_build($item) {
-  // Suggested items are disabled by default.
-  if ($item['type'] == MENU_SUGGESTED_ITEM) {
-    $item['hidden'] = 1;
-  }
-  // Hide all items that are not visible in the tree.
-  elseif (!($item['type'] & MENU_VISIBLE_IN_TREE)) {
-    $item['hidden'] = -1;
-  }
-  // Note, we set this as 'system', so that we can be sure to distinguish all
-  // the menu links generated automatically from entries in {menu_router}.
-  $item['module'] = 'system';
-  $item += array(
-    'menu_name' => 'tools',
-    'link_title' => $item['title'],
-    'link_path' => $item['path'],
-    'hidden' => 0,
-    'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
-  );
-  return $item;
-}
-
-/**
  * Builds menu links for the items in the menu router.
+ *
+ * @todo This function should be removed/refactored.
  */
 function _menu_navigation_links_rebuild($menu) {
+  if (module_exists('menu_link')) {
+    $menu_link_controller = drupal_container()->get('plugin.manager.entity')
+      ->getStorageController('menu_link');
+  }
+  else {
+    // The Menu link module is not available at install time, so we need to
+    // hardcode the default storage controller.
+    $menu_link_controller = new MenuLinkStorageController('menu_link');
+  }
+
   // Add normal and suggested items as links.
-  $menu_links = array();
-  foreach ($menu as $path => $item) {
-    if ($item['_visible']) {
-      $menu_links[$path] = $item;
-      $sort[$path] = $item['_number_parts'];
+  $router_items = array();
+  foreach ($menu as $path => $router_item) {
+    if ($router_item['_visible']) {
+      $router_items[$path] = $router_item;
+      $sort[$path] = $router_item['_number_parts'];
     }
   }
-  if ($menu_links) {
-    // Keep an array of processed menu links, to allow menu_link_save() to
-    // check this for parents instead of querying the database.
+  if ($router_items) {
+    // Keep an array of processed menu links, to allow
+    // Drupal\menu_link\MenuLinkStorageController::save() to check this for
+    // parents instead of querying the database.
     $parent_candidates = array();
     // Make sure no child comes before its parent.
-    array_multisort($sort, SORT_NUMERIC, $menu_links);
+    array_multisort($sort, SORT_NUMERIC, $router_items);
 
-    foreach ($menu_links as $key => $item) {
+    foreach ($router_items as $key => $router_item) {
+      // For performance reasons, do a straight query now and convert to a menu
+      // link entity later.
+      // @todo revisit before release.
       $existing_item = db_select('menu_links')
         ->fields('menu_links')
-        ->condition('link_path', $item['path'])
+        ->condition('link_path', $router_item['path'])
         ->condition('module', 'system')
-        ->execute()->fetchAssoc();
+        ->execute()->fetchAll();
       if ($existing_item) {
-        $item['mlid'] = $existing_item['mlid'];
+        $existing_item = reset($existing_item);
+        $existing_item->options = unserialize($existing_item->options);
+
+        $router_item['mlid'] = $existing_item->mlid;
+        $router_item['uuid'] = $existing_item->uuid;
         // A change in hook_menu may move the link to a different menu
-        if (empty($item['menu_name']) || ($item['menu_name'] == $existing_item['menu_name'])) {
-          $item['menu_name'] = $existing_item['menu_name'];
-          $item['plid'] = $existing_item['plid'];
+        if (empty($router_item['menu_name']) || ($router_item['menu_name'] == $existing_item->menu_name)) {
+          $router_item['menu_name'] = $existing_item->menu_name;
+          $router_item['plid'] = $existing_item->plid;
         }
         else {
-          // It moved to a new menu. Let menu_link_save() try to find a new
-          // parent based on the path.
-          unset($item['plid']);
+          // It moved to a new menu.
+          // Let Drupal\menu_link\MenuLinkStorageController::save() try to find
+          // a new parent based on the path.
+          unset($router_item['plid']);
         }
-        $item['has_children'] = $existing_item['has_children'];
-        $item['updated'] = $existing_item['updated'];
-      }
-      if ($existing_item && $existing_item['customized']) {
-        $parent_candidates[$existing_item['mlid']] = $existing_item;
+        $router_item['has_children'] = $existing_item->has_children;
+        $router_item['updated'] = $existing_item->updated;
+
+        // Convert the existing item to a typed object.
+        $existing_item = $menu_link_controller->create(get_object_vars($existing_item));
       }
       else {
-        $item = _menu_link_build($item);
-        menu_link_save($item, $existing_item, $parent_candidates);
-        $parent_candidates[$item['mlid']] = $item;
-        unset($menu_links[$key]);
+        $existing_item = NULL;
+      }
+
+      if ($existing_item && $existing_item->customized) {
+        $parent_candidates[$existing_item->mlid] = $existing_item;
+      }
+      else {
+        $menu_link = MenuLink::buildFromRouterItem($router_item);
+        $menu_link->original = $existing_item;
+        $menu_link->parentCandidates = $parent_candidates;
+        $menu_link_controller->save($menu_link);
+        $parent_candidates[$menu_link->id()] = $menu_link;
+        unset($router_items[$key]);
       }
     }
   }
+
   $paths = array_keys($menu);
   // Updated and customized items whose router paths are gone need new ones.
-  $result = db_select('menu_links', NULL, array('fetch' => PDO::FETCH_ASSOC))
-    ->fields('menu_links', array(
-      'link_path',
-      'mlid',
-      'router_path',
-      'updated',
-    ))
-    ->condition(db_or()
-      ->condition('updated', 1)
-      ->condition(db_and()
-        ->condition('router_path', $paths, 'NOT IN')
-        ->condition('external', 0)
-        ->condition('customized', 1)
-      )
-    )
-    ->execute();
-  foreach ($result as $item) {
-    $router_path = _menu_find_router_path($item['link_path']);
-    if (!empty($router_path) && ($router_path != $item['router_path'] || $item['updated'])) {
+  $menu_links = $menu_link_controller->loadUpdatedCustomized($paths);
+  foreach ($menu_links as $menu_link) {
+    $router_path = _menu_find_router_path($menu_link->link_path);
+    if (!empty($router_path) && ($router_path != $menu_link->router_path || $menu_link->updated)) {
       // If the router path and the link path matches, it's surely a working
       // item, so we clear the updated flag.
-      $updated = $item['updated'] && $router_path != $item['link_path'];
-      db_update('menu_links')
-        ->fields(array(
-          'router_path' => $router_path,
-          'updated' => (int) $updated,
-        ))
-        ->condition('mlid', $item['mlid'])
-        ->execute();
+      $updated = $menu_link->updated && $router_path != $menu_link->link_path;
+
+      $menu_link->router_path = $router_path;
+      $menu_link->updated = (int) $updated;
+      $menu_link_controller->save($menu_link);
     }
   }
+
   // Find any item whose router path does not exist any more.
-  $result = db_select('menu_links')
-    ->fields('menu_links')
+  $query = entity_query('menu_link')
     ->condition('router_path', $paths, 'NOT IN')
     ->condition('external', 0)
     ->condition('updated', 0)
     ->condition('customized', 0)
-    ->orderBy('depth', 'DESC')
-    ->execute();
-  // Remove all such items. Starting from those with the greatest depth will
-  // minimize the amount of re-parenting done by menu_link_delete().
-  foreach ($result as $item) {
-    _menu_delete_item($item, TRUE);
-  }
-}
+    ->sort('depth', 'DESC');
+  $result = $query->execute();
 
-/**
- * Clones an array of menu links.
- *
- * @param $links
- *   An array of menu links to clone.
- * @param $menu_name
- *   (optional) The name of a menu that the links will be cloned for. If not
- *   set, the cloned links will be in the same menu as the original set of
- *   links that were passed in.
- *
- * @return
- *   An array of menu links with the same properties as the passed-in array,
- *   but with the link identifiers removed so that a new link will be created
- *   when any of them is passed in to menu_link_save().
- *
- * @see menu_link_save()
- */
-function menu_links_clone($links, $menu_name = NULL) {
-  foreach ($links as &$link) {
-    unset($link['mlid']);
-    unset($link['plid']);
-    if (isset($menu_name)) {
-      $link['menu_name'] = $menu_name;
-    }
+  // Remove all such items. Starting from those with the greatest depth will
+  // minimize the amount of re-parenting done by the menu link controller.
+  if (!empty($result)) {
+    menu_link_delete_multiple($result, TRUE);
   }
-  return $links;
 }
 
 /**
@@ -2895,18 +2795,19 @@ function menu_links_clone($links, $menu_name = NULL) {
  *   An array of menu links.
  */
 function menu_load_links($menu_name) {
-  $links = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC))
-    ->fields('ml')
-    ->condition('ml.menu_name', $menu_name)
+  $links = array();
+
+  $query = entity_query('menu_link')
+    ->condition('menu_name', $menu_name)
     // Order by weight so as to be helpful for menus that are only one level
     // deep.
-    ->orderBy('weight')
-    ->execute()
-    ->fetchAll();
+    ->sort('weight');
+  $result = $query->execute();
 
-  foreach ($links as &$link) {
-    $link['options'] = unserialize($link['options']);
+  if (!empty($result)) {
+    $links = menu_link_load_multiple($result);
   }
+
   return $links;
 }
 
@@ -2918,333 +2819,7 @@ function menu_load_links($menu_name) {
  */
 function menu_delete_links($menu_name) {
   $links = menu_load_links($menu_name);
-  foreach ($links as $link) {
-    // To speed up the deletion process, we reset some link properties that
-    // would trigger re-parenting logic in _menu_delete_item() and
-    // _menu_update_parental_status().
-    $link['has_children'] = FALSE;
-    $link['plid'] = 0;
-    _menu_delete_item($link);
-  }
-}
-
-/**
- * Delete one or several menu links.
- *
- * @param $mlid
- *   A valid menu link mlid or NULL. If NULL, $path is used.
- * @param $path
- *   The path to the menu items to be deleted. $mlid must be NULL.
- */
-function menu_link_delete($mlid, $path = NULL) {
-  if (isset($mlid)) {
-    _menu_delete_item(db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc());
-  }
-  else {
-    $result = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => $path));
-    foreach ($result as $link) {
-      _menu_delete_item($link);
-    }
-  }
-}
-
-/**
- * Deletes a single menu link.
- *
- * @param $item
- *   Item to be deleted.
- * @param $force
- *   Forces deletion. Internal use only, setting to TRUE is discouraged.
- *
- * @see menu_link_delete()
- */
-function _menu_delete_item($item, $force = FALSE) {
-  $item = is_object($item) ? get_object_vars($item) : $item;
-  if ($item && ($item['module'] != 'system' || $item['updated'] || $force)) {
-    // Children get re-attached to the item's parent.
-    if ($item['has_children']) {
-      $result = db_query("SELECT mlid FROM {menu_links} WHERE plid = :plid", array(':plid' => $item['mlid']));
-      foreach ($result as $m) {
-        $child = menu_link_load($m->mlid);
-        $child['plid'] = $item['plid'];
-        menu_link_save($child);
-      }
-    }
-
-    // Notify modules we are deleting the item.
-    module_invoke_all('menu_link_delete', $item);
-
-    db_delete('menu_links')->condition('mlid', $item['mlid'])->execute();
-
-    // Update the has_children status of the parent.
-    _menu_update_parental_status($item);
-    menu_cache_clear($item['menu_name']);
-    _menu_clear_page_cache();
-  }
-}
-
-/**
- * Saves a menu link.
- *
- * After calling this function, rebuild the menu cache using
- * menu_cache_clear_all().
- *
- * @param $item
- *   An associative array representing a menu link item, with elements:
- *   - link_path: (required) The path of the menu item, which should be
- *     normalized first by calling drupal_container()->get('path.alias_manager')->getSystemPath() on it.
- *   - link_title: (required) Title to appear in menu for the link.
- *   - menu_name: (optional) The machine name of the menu for the link.
- *     Defaults to 'tools'.
- *   - weight: (optional) Integer to determine position in menu. Default is 0.
- *   - expanded: (optional) Boolean that determines if the item is expanded.
- *   - options: (optional) An array of options, see l() for more.
- *   - mlid: (optional) Menu link identifier, the primary integer key for each
- *     menu link. Can be set to an existing value, or to 0 or NULL
- *     to insert a new link.
- *   - plid: (optional) The mlid of the parent.
- *   - router_path: (optional) The path of the relevant router item.
- * @param $existing_item
- *   Optional, the current record from the {menu_links} table as an array.
- * @param $parent_candidates
- *   Optional array of menu links keyed by mlid. Used by
- *   _menu_navigation_links_rebuild() only.
- *
- * @return
- *   The mlid of the saved menu link, or FALSE if the menu link could not be
- *   saved.
- */
-function menu_link_save(&$item, $existing_item = array(), $parent_candidates = array()) {
-  drupal_alter('menu_link', $item);
-
-  // This is the easiest way to handle the unique internal path '<front>',
-  // since a path marked as external does not need to match a router path.
-  $item['external'] = (url_is_external($item['link_path'])  || $item['link_path'] == '<front>') ? 1 : 0;
-  // Load defaults.
-  $item += array(
-    'menu_name' => 'tools',
-    'weight' => 0,
-    'link_title' => '',
-    'hidden' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'options' => array(),
-    'module' => 'menu',
-    'customized' => 0,
-    'updated' => 0,
-  );
-  if (isset($item['mlid'])) {
-    if (!$existing_item) {
-      $existing_item = db_query('SELECT * FROM {menu_links} WHERE mlid = :mlid', array('mlid' => $item['mlid']))->fetchAssoc();
-    }
-    if ($existing_item) {
-      $existing_item['options'] = unserialize($existing_item['options']);
-    }
-  }
-  else {
-    $existing_item = FALSE;
-  }
-
-  // Try to find a parent link. If found, assign it and derive its menu.
-  $parent = _menu_link_find_parent($item, $parent_candidates);
-  if (!empty($parent['mlid'])) {
-    $item['plid'] = $parent['mlid'];
-    $item['menu_name'] = $parent['menu_name'];
-  }
-  // If no corresponding parent link was found, move the link to the top-level.
-  else {
-    $item['plid'] = 0;
-  }
-  $menu_name = $item['menu_name'];
-
-  if (!$existing_item) {
-    $item['mlid'] = db_insert('menu_links')
-      ->fields(array(
-        'menu_name' => $item['menu_name'],
-        'plid' => $item['plid'],
-        'link_path' => $item['link_path'],
-        'hidden' => $item['hidden'],
-        'external' => $item['external'],
-        'has_children' => $item['has_children'],
-        'expanded' => $item['expanded'],
-        'weight' => $item['weight'],
-        'module' => $item['module'],
-        'link_title' => $item['link_title'],
-        'options' => serialize($item['options']),
-        'customized' => $item['customized'],
-        'updated' => $item['updated'],
-      ))
-      ->execute();
-  }
-
-  // Directly fill parents for top-level links.
-  if ($item['plid'] == 0) {
-    $item['p1'] = $item['mlid'];
-    for ($i = 2; $i <= MENU_MAX_DEPTH; $i++) {
-      $item["p$i"] = 0;
-    }
-    $item['depth'] = 1;
-  }
-  // Otherwise, ensure that this link's depth is not beyond the maximum depth
-  // and fill parents based on the parent link.
-  else {
-    if ($item['has_children'] && $existing_item) {
-      $limit = MENU_MAX_DEPTH - menu_link_children_relative_depth($existing_item) - 1;
-    }
-    else {
-      $limit = MENU_MAX_DEPTH - 1;
-    }
-    if ($parent['depth'] > $limit) {
-      return FALSE;
-    }
-    $item['depth'] = $parent['depth'] + 1;
-    _menu_link_parents_set($item, $parent);
-  }
-  // Need to check both plid and menu_name, since plid can be 0 in any menu.
-  if ($existing_item && ($item['plid'] != $existing_item['plid'] || $menu_name != $existing_item['menu_name'])) {
-    _menu_link_move_children($item, $existing_item);
-  }
-  // Find the router_path.
-  if (empty($item['router_path'])  || !$existing_item || ($existing_item['link_path'] != $item['link_path'])) {
-    if ($item['external']) {
-      $item['router_path'] = '';
-    }
-    else {
-      // Find the router path which will serve this path.
-      $item['parts'] = explode('/', $item['link_path'], MENU_MAX_PARTS);
-      $item['router_path'] = _menu_find_router_path($item['link_path']);
-    }
-  }
-  // If every value in $existing_item is the same in the $item, there is no
-  // reason to run the update queries or clear the caches. We use
-  // array_intersect_key() with the $item as the first parameter because
-  // $item may have additional keys left over from building a router entry.
-  // The intersect removes the extra keys, allowing a meaningful comparison.
-  if (!$existing_item || (array_intersect_key($item, $existing_item) != $existing_item)) {
-    db_update('menu_links')
-      ->fields(array(
-        'menu_name' => $item['menu_name'],
-        'plid' => $item['plid'],
-        'link_path' => $item['link_path'],
-        'router_path' => $item['router_path'],
-        'hidden' => $item['hidden'],
-        'external' => $item['external'],
-        'has_children' => $item['has_children'],
-        'expanded' => $item['expanded'],
-        'weight' => $item['weight'],
-        'depth' => $item['depth'],
-        'p1' => $item['p1'],
-        'p2' => $item['p2'],
-        'p3' => $item['p3'],
-        'p4' => $item['p4'],
-        'p5' => $item['p5'],
-        'p6' => $item['p6'],
-        'p7' => $item['p7'],
-        'p8' => $item['p8'],
-        'p9' => $item['p9'],
-        'module' => $item['module'],
-        'link_title' => $item['link_title'],
-        'options' => serialize($item['options']),
-        'customized' => $item['customized'],
-      ))
-      ->condition('mlid', $item['mlid'])
-      ->execute();
-    // Check the has_children status of the parent.
-    _menu_update_parental_status($item);
-    menu_cache_clear($menu_name);
-    if ($existing_item && $menu_name != $existing_item['menu_name']) {
-      menu_cache_clear($existing_item['menu_name']);
-    }
-    // Notify modules we have acted on a menu item.
-    $hook = 'menu_link_insert';
-    if ($existing_item) {
-      $hook = 'menu_link_update';
-    }
-    module_invoke_all($hook, $item);
-    // Now clear the cache.
-    _menu_clear_page_cache();
-  }
-  return $item['mlid'];
-}
-
-/**
- * Finds a possible parent for a given menu link.
- *
- * Because the parent of a given link might not exist anymore in the database,
- * we apply a set of heuristics to determine a proper parent:
- *
- *  - use the passed parent link if specified and existing.
- *  - else, use the first existing link down the previous link hierarchy
- *  - else, for system menu links (derived from hook_menu()), reparent
- *    based on the path hierarchy.
- *
- * @param $menu_link
- *   A menu link.
- * @param $parent_candidates
- *   An array of menu links keyed by mlid.
- *
- * @return
- *   A menu link structure of the possible parent or FALSE if no valid parent
- *   has been found.
- */
-function _menu_link_find_parent($menu_link, $parent_candidates = array()) {
-  $parent = FALSE;
-
-  // This item is explicitely top-level, skip the rest of the parenting.
-  if (isset($menu_link['plid']) && empty($menu_link['plid'])) {
-    return $parent;
-  }
-
-  // If we have a parent link ID, try to use that.
-  $candidates = array();
-  if (isset($menu_link['plid'])) {
-    $candidates[] = $menu_link['plid'];
-  }
-
-  // Else, if we have a link hierarchy try to find a valid parent in there.
-  if (!empty($menu_link['depth']) && $menu_link['depth'] > 1) {
-    for ($depth = $menu_link['depth'] - 1; $depth >= 1; $depth--) {
-      $candidates[] = $menu_link['p' . $depth];
-    }
-  }
-
-  foreach ($candidates as $mlid) {
-    if (isset($parent_candidates[$mlid])) {
-      $parent = $parent_candidates[$mlid];
-    }
-    else {
-      $parent = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc();
-    }
-    if ($parent) {
-      return $parent;
-    }
-  }
-
-  // If everything else failed, try to derive the parent from the path
-  // hierarchy. This only makes sense for links derived from menu router
-  // items (ie. from hook_menu()).
-  if ($menu_link['module'] == 'system') {
-    $query = db_select('menu_links');
-    $query->condition('module', 'system');
-    // We always respect the link's 'menu_name'; inheritance for router items is
-    // ensured in _menu_router_build().
-    $query->condition('menu_name', $menu_link['menu_name']);
-
-    // Find the parent - it must be unique.
-    $parent_path = $menu_link['link_path'];
-    do {
-      $parent = FALSE;
-      $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
-      $new_query = clone $query;
-      $new_query->condition('link_path', $parent_path);
-      // Only valid if we get a unique result.
-      if ($new_query->countQuery()->execute()->fetchField() == 1) {
-        $parent = $new_query->fields('menu_links')->execute()->fetchAssoc();
-      }
-    } while ($parent === FALSE && $parent_path);
-  }
-
-  return $parent;
+  menu_link_delete_multiple(array_keys($links), FALSE, TRUE);
 }
 
 /**
@@ -3317,188 +2892,6 @@ function _menu_find_router_path($link_path) {
     // at the end of $ancestors.
   }
   return $router_path;
-}
-
-/**
- * Inserts, updates, enables, disables, or deletes an uncustomized menu link.
- *
- * @param string $module
- *   The name of the module that owns the link.
- * @param string $op
- *   Operation to perform: insert, update, enable, disable, or delete.
- * @param string $link_path
- *   The path this link points to.
- * @param string $link_title
- *   (optional) Title of the link to insert or new title to update the link to.
- *   Unused for delete.
- *
- * @return integer|null
- *   The insert op returns the mlid of the new item. Others op return NULL.
- */
-function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
-  switch ($op) {
-    case 'insert':
-      $menu_link = array(
-        'link_title' => $link_title,
-        'link_path' => $link_path,
-        'module' => $module,
-      );
-      return menu_link_save($menu_link);
-
-    case 'update':
-      $result = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path AND module = :module AND customized = 0", array(':link_path' => $link_path, ':module' => $module))->fetchAll(PDO::FETCH_ASSOC);
-      foreach ($result as $link) {
-        $existing = $link;
-        if (isset($link_title)) {
-          $link['link_title'] = $link_title;
-        }
-        $link['options'] = unserialize($link['options']);
-        menu_link_save($link, $existing);
-      }
-      break;
-
-    case 'enable':
-    case 'disable':
-      $result = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path AND module = :module AND customized = 0", array(':link_path' => $link_path, ':module' => $module))->fetchAll(PDO::FETCH_ASSOC);
-      foreach ($result as $link) {
-        $existing = $link;
-        $link['hidden'] = ($op == 'disable' ? 1 : 0);
-        $link['customized'] = 1;
-        if (isset($link_title)) {
-          $link['link_title'] = $link_title;
-        }
-        $link['options'] = unserialize($link['options']);
-        menu_link_save($link, $existing);
-      }
-      break;
-
-    case 'delete':
-      menu_link_delete(NULL, $link_path);
-      break;
-  }
-}
-
-/**
- * Finds the depth of an item's children relative to its depth.
- *
- * For example, if the item has a depth of 2, and the maximum of any child in
- * the menu link tree is 5, the relative depth is 3.
- *
- * @param $item
- *   An array representing a menu link item.
- *
- * @return
- *   The relative depth, or zero.
- *
- */
-function menu_link_children_relative_depth($item) {
-  $query = db_select('menu_links');
-  $query->addField('menu_links', 'depth');
-  $query->condition('menu_name', $item['menu_name']);
-  $query->orderBy('depth', 'DESC');
-  $query->range(0, 1);
-
-  $i = 1;
-  $p = 'p1';
-  while ($i <= MENU_MAX_DEPTH && $item[$p]) {
-    $query->condition($p, $item[$p]);
-    $p = 'p' . ++$i;
-  }
-
-  $max_depth = $query->execute()->fetchField();
-
-  return ($max_depth > $item['depth']) ? $max_depth - $item['depth'] : 0;
-}
-
-/**
- * Updates the children of a menu link that is being moved.
- *
- * The menu name, parents (p1 - p6), and depth are updated for all children of
- * the link, and the has_children status of the previous parent is updated.
- */
-function _menu_link_move_children($item, $existing_item) {
-  $query = db_update('menu_links');
-
-  $query->fields(array('menu_name' => $item['menu_name']));
-
-  $p = 'p1';
-  $expressions = array();
-  for ($i = 1; $i <= $item['depth']; $p = 'p' . ++$i) {
-    $expressions[] = array($p, ":p_$i", array(":p_$i" => $item[$p]));
-  }
-  $j = $existing_item['depth'] + 1;
-  while ($i <= MENU_MAX_DEPTH && $j <= MENU_MAX_DEPTH) {
-    $expressions[] = array('p' . $i++, 'p' . $j++, array());
-  }
-  while ($i <= MENU_MAX_DEPTH) {
-    $expressions[] = array('p' . $i++, 0, array());
-  }
-
-  $shift = $item['depth'] - $existing_item['depth'];
-  if ($shift > 0) {
-    // The order of expressions must be reversed so the new values don't
-    // overwrite the old ones before they can be used because "Single-table
-    // UPDATE assignments are generally evaluated from left to right"
-    // see: http://dev.mysql.com/doc/refman/5.0/en/update.html
-    $expressions = array_reverse($expressions);
-  }
-  foreach ($expressions as $expression) {
-    $query->expression($expression[0], $expression[1], $expression[2]);
-  }
-
-  $query->expression('depth', 'depth + :depth', array(':depth' => $shift));
-  $query->condition('menu_name', $existing_item['menu_name']);
-  $p = 'p1';
-  for ($i = 1; $i <= MENU_MAX_DEPTH && $existing_item[$p]; $p = 'p' . ++$i) {
-    $query->condition($p, $existing_item[$p]);
-  }
-
-  $query->execute();
-
-  // Check the has_children status of the parent, while excluding this item.
-  _menu_update_parental_status($existing_item, TRUE);
-}
-
-/**
- * Checks and updates the 'has_children' status for the parent of a link.
- */
-function _menu_update_parental_status($item, $exclude = FALSE) {
-  // If plid == 0, there is nothing to update.
-  if ($item['plid']) {
-    // Check if at least one visible child exists in the table.
-    $query = db_select('menu_links');
-    $query->addField('menu_links', 'mlid');
-    $query->condition('menu_name', $item['menu_name']);
-    $query->condition('hidden', 0);
-    $query->condition('plid', $item['plid']);
-    $query->range(0, 1);
-    if ($exclude) {
-      $query->condition('mlid', $item['mlid'], '<>');
-    }
-    $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
-    db_update('menu_links')
-      ->fields(array('has_children' => $parent_has_children))
-      ->condition('mlid', $item['plid'])
-      ->execute();
-  }
-}
-
-/**
- * Sets the p1 through p9 values for a menu link being saved.
- */
-function _menu_link_parents_set(&$item, $parent) {
-  $i = 1;
-  while ($i < $item['depth']) {
-    $p = 'p' . $i++;
-    $item[$p] = $parent[$p];
-  }
-  $p = 'p' . $i++;
-  // The parent (p1 - p9) corresponding to the depth always equals the mlid.
-  $item[$p] = $item['mlid'];
-  while ($i <= MENU_MAX_DEPTH) {
-    $p = 'p' . $i++;
-    $item[$p] = 0;
-  }
 }
 
 /**

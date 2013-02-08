@@ -338,17 +338,6 @@ function shortcut_set_load($id) {
 }
 
 /**
- * Implements hook_shortcut_load().
- *
- * Loads menu links attached to each of shortcuts.
- */
-function shortcut_shortcut_load($entities) {
-  foreach ($entities as $id => $entity) {
-    $entity->set('links', menu_load_links('shortcut-' . $id));
-  }
-}
-
-/**
  * Resets the link weights in a shortcut set to match their current order.
  *
  * This function can be used, for example, when a new shortcut link is added to
@@ -361,9 +350,8 @@ function shortcut_shortcut_load($entities) {
  */
 function shortcut_set_reset_link_weights(&$shortcut_set) {
   $weight = -50;
-  foreach ($shortcut_set->links as &$link) {
-    $link['weight'] = $weight;
-    $weight++;
+  foreach ($shortcut_set->links as $menu_link) {
+    $menu_link->weight = ++$weight;
   }
 }
 
@@ -566,7 +554,7 @@ function shortcut_preprocess_page(&$variables) {
     $shortcut_set = shortcut_current_displayed_set();
 
     // Check if $link is already a shortcut and set $link_mode accordingly.
-    foreach ($shortcut_set->links as $shortcut) {
+    foreach ($shortcut_set->links as $uuid => $shortcut) {
       if ($link == $shortcut['link_path']) {
         $mlid = $shortcut['mlid'];
         break;

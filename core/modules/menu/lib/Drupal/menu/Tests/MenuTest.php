@@ -78,12 +78,12 @@ class MenuTest extends WebTestBase {
     $item = $this->getStandardMenuLink();
     $old_title = $item['link_title'];
     $this->modifyMenuLink($item);
-    $item = menu_link_load($item['mlid']);
+    $item = entity_load('menu_link', $item['mlid']);
     // Verify that a change to the description is saved.
     $description = $this->randomName(16);
     $item['options']['attributes']['title']  = $description;
     menu_link_save($item);
-    $saved_item = menu_link_load($item['mlid']);
+    $saved_item = entity_load('menu_link', $item['mlid']);
     $this->assertEqual($description, $saved_item['options']['attributes']['title'], 'Saving an existing link updates the description (title attribute)');
     $this->resetMenuLink($item, $old_title);
   }
@@ -180,7 +180,7 @@ class MenuTest extends WebTestBase {
     $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $label)), 'Custom menu was deleted');
     $this->assertFalse(menu_load($menu_name), 'Custom menu was deleted');
     // Test if all menu links associated to the menu were removed from database.
-    $result = db_query("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu_name", array(':menu_name' => $menu_name))->fetchField();
+    $result = entity_load_multiple_by_properties('menu_link', array('menu_name' => $menu_name));
     $this->assertFalse($result, 'All menu links associated to the custom menu were deleted.');
   }
 
@@ -282,7 +282,9 @@ class MenuTest extends WebTestBase {
    * @param string $link Link path.
    * @param string $menu_name Menu name.
    * @param string $weight Menu weight
-   * @return array Menu link created.
+   *
+   * @return \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+   *   A menu link entity.
    */
   function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'tools', $expanded = TRUE, $weight = '0') {
     // View add menu link page.
@@ -303,14 +305,14 @@ class MenuTest extends WebTestBase {
     // Add menu link.
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertResponse(200);
-    // Unlike most other modules, there is no confirmation message displayed.
-    $this->assertText($title, 'Menu link was added');
+    $this->assertText('The menu link has been saved.');
 
-    $item = db_query('SELECT * FROM {menu_links} WHERE link_title = :title', array(':title' => $title))->fetchAssoc();
-    $this->assertTrue(t('Menu link was found in database.'));
-    $this->assertMenuLink($item['mlid'], array('menu_name' => $menu_name, 'link_path' => $link, 'has_children' => 0, 'plid' => $plid));
+    $menu_links = entity_load_multiple_by_properties('menu_link', array('link_title' => $title));
+    $menu_link = reset($menu_links);
+    $this->assertTrue('Menu link was found in database.');
+    $this->assertMenuLink($menu_link->id(), array('menu_name' => $menu_name, 'link_path' => $link, 'has_children' => 0, 'plid' => $plid));
 
-    return $item;
+    return $menu_link;
   }
 
   /**
@@ -393,8 +395,7 @@ class MenuTest extends WebTestBase {
     $edit['link_title'] = $title;
     $this->drupalPost("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
     $this->assertResponse(200);
-    // Unlike most other modules, there is no confirmation message displayed.
-
+    $this->assertText('The menu link has been saved.');
     // Verify menu link.
     $this->drupalGet('admin/structure/menu/manage/' . $item['menu_name']);
     $this->assertText($title, 'Menu link was edited');
@@ -501,8 +502,8 @@ class MenuTest extends WebTestBase {
    */
   function assertMenuLink($mlid, array $expected_item) {
     // Retrieve menu link.
-    $item = db_query('SELECT * FROM {menu_links} WHERE mlid = :mlid', array(':mlid' => $mlid))->fetchAssoc();
-    $options = unserialize($item['options']);
+    $item = entity_load('menu_link', $mlid);
+    $options = $item->options;
     if (!empty($options['query'])) {
       $item['link_path'] .= '?' . drupal_http_build_query($options['query']);
     }
@@ -518,12 +519,21 @@ class MenuTest extends WebTestBase {
    * Get standard menu link.
    */
   private function getStandardMenuLink() {
-    // Retrieve menu link id of the Log out menu link, which will always be on the front page.
-    $mlid = db_query("SELECT mlid FROM {menu_links} WHERE module = 'system' AND router_path = 'user/logout'")->fetchField();
+    $mlid = 0;
+    // Retrieve menu link id of the Log out menu link, which will always be on
+    // the front page.
+    $query = entity_query('menu_link')
+      ->condition('module', 'system')
+      ->condition('router_path', 'user/logout');
+    $result = $query->execute();
+    if (!empty($result)) {
+      $mlid = reset($result);
+    }
+
     $this->assertTrue($mlid > 0, 'Standard menu link id was found');
     // Load menu link.
     // Use api function so that link is translated for rendering.
-    $item = menu_link_load($mlid);
+    $item = entity_load('menu_link', $mlid);
     $this->assertTrue((bool) $item, 'Standard menu link was loaded');
     return $item;
   }

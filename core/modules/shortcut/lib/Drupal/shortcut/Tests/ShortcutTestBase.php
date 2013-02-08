@@ -51,16 +51,20 @@ abstract class ShortcutTestBase extends WebTestBase {
 
       // Populate the default shortcut set.
       $shortcut_set = shortcut_set_load('default');
-      $shortcut_set->links[] = array(
+      $menu_link = entity_create('menu_link', array(
         'link_path' => 'node/add',
         'link_title' => st('Add content'),
         'weight' => -20,
-      );
-      $shortcut_set->links[] = array(
+      ));
+      $menu_link->save();
+      $shortcut_set->links[$menu_link->uuid()] = $menu_link;
+      $menu_item = entity_create('menu_link', array(
         'link_path' => 'admin/content',
         'link_title' => st('Find content'),
         'weight' => -19,
-      );
+      ));
+      $menu_item->save();
+      $shortcut_set->links[$menu_item->uuid()] = $menu_item;
       $shortcut_set->save();
     }
 
@@ -84,11 +88,13 @@ abstract class ShortcutTestBase extends WebTestBase {
     $set = entity_create('shortcut', array(
       'id' => isset($id) ? $id : strtolower($this->randomName()),
       'label' => empty($label) ? $this->randomString() : $label,
-      'links' => (!$default_links) ? array() : array(
-        $this->generateShortcutLink('node/add'),
-        $this->generateShortcutLink('admin/content'),
-      ),
     ));
+    if ($default_links) {
+      $menu_link = $this->generateShortcutLink('node/add');
+      $set->links[$menu_link->uuid()] = $menu_link;
+      $menu_link = $this->generateShortcutLink('admin/content');
+      $set->links[$menu_link->uuid()] = $menu_link;
+    }
     $set->save();
     return $set;
   }
@@ -97,10 +103,11 @@ abstract class ShortcutTestBase extends WebTestBase {
    * Creates a generic shortcut link.
    */
   function generateShortcutLink($path, $title = '') {
-    $link = array(
+    $link = entity_create('menu_link', array(
       'link_path' => $path,
       'link_title' => !empty($title) ? $title : $this->randomName(),
-    );
+    ));
+    $link->save();
 
     return $link;
   }
@@ -121,8 +128,8 @@ abstract class ShortcutTestBase extends WebTestBase {
    */
   function getShortcutInformation($set, $key) {
     $info = array();
-    foreach ($set->links as $link) {
-      $info[] = $link[$key];
+    foreach ($set->links as $uuid => $link) {
+      $info[] = $link->{$key};
     }
     return $info;
   }

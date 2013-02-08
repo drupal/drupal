@@ -511,8 +511,13 @@ function toolbar_toolbar() {
  */
 function toolbar_get_menu_tree() {
   $tree = array();
-  $admin_link = db_query('SELECT * FROM {menu_links} WHERE menu_name = :menu_name AND module = :module AND link_path = :path', array(':menu_name' => 'admin', ':module' => 'system', ':path' => 'admin'))->fetchAssoc();
-  if ($admin_link) {
+  $query = entity_query('menu_link')
+    ->condition('menu_name', 'admin')
+    ->condition('module', 'system')
+    ->condition('link_path', 'admin');
+  $result = $query->execute();
+  if (!empty($result)) {
+    $admin_link = menu_link_load(reset($result));
     $tree = menu_build_tree('admin', array(
       'expanded' => array($admin_link['mlid']),
       'min_depth' => $admin_link['depth'] + 1,

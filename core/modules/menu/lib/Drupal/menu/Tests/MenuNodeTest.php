@@ -105,12 +105,12 @@ class MenuNodeTest extends WebTestBase {
     $this->assertNoLink($node_title);
 
     // Add a menu link to the Administration menu.
-    $item = array(
+    $item = entity_create('menu_link', array(
       'link_path' => 'node/' . $node->nid,
       'link_title' => $this->randomName(16),
       'menu_name' => 'admin',
-    );
-    menu_link_save($item);
+    ));
+    $item->save();
 
     // Assert that disabled Administration menu is not shown on the
     // node/$nid/edit page.
@@ -127,12 +127,12 @@ class MenuNodeTest extends WebTestBase {
     // Create a second node.
     $child_node = $this->drupalCreateNode(array('type' => 'article'));
     // Assign a menu link to the second node, being a child of the first one.
-    $child_item = array(
+    $child_item = entity_create('menu_link', array(
       'link_path' => 'node/'. $child_node->nid,
       'link_title' => $this->randomName(16),
       'plid' => $item['mlid'],
-    );
-    menu_link_save($child_item);
+    ));
+    $child_item->save();
     // Edit the first node.
     $this->drupalGet('node/'. $node->nid .'/edit');
     // Assert that it is not possible to set the parent of the first node to itself or the second node.

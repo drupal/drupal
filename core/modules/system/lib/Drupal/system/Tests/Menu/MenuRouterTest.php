@@ -312,27 +312,30 @@ class MenuRouterTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
 
-    $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
-    $name = db_query($sql)->fetchField();
-    $this->assertEqual($name, 'original', 'Menu name is "original".');
+    $menu_links = entity_load_multiple_by_properties('menu_link', array('router_path' => 'menu_name_test'));
+    $menu_link = reset($menu_links);
+    $this->assertEqual($menu_link->menu_name, 'original', 'Menu name is "original".');
 
     // Change the menu_name parameter in menu_test.module, then force a menu
     // rebuild.
     menu_test_menu_name('changed');
     menu_router_rebuild();
 
-    $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
-    $name = db_query($sql)->fetchField();
-    $this->assertEqual($name, 'changed', 'Menu name was successfully changed after rebuild.');
+    $menu_links = entity_load_multiple_by_properties('menu_link', array('router_path' => 'menu_name_test'));
+    $menu_link = reset($menu_links);
+    $this->assertEqual($menu_link->menu_name, 'changed', 'Menu name was successfully changed after rebuild.');
   }
 
   /**
    * Tests for menu hierarchy.
    */
   function testMenuHierarchy() {
-    $parent_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent'))->fetchAssoc();
-    $child_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent/child'))->fetchAssoc();
-    $unattached_child_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent/child2/child'))->fetchAssoc();
+    $parent_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu-test/hierarchy/parent'));
+    $parent_link = reset($parent_links);
+    $child_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu-test/hierarchy/parent/child'));
+    $child_link = reset($child_links);
+    $unattached_child_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu-test/hierarchy/parent/child2/child'));
+    $unattached_child_link = reset($unattached_child_links);
 
     $this->assertEqual($child_link['plid'], $parent_link['mlid'], 'The parent of a directly attached child is correct.');
     $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], 'The parent of a non-directly attached child is correct.');
@@ -343,12 +346,16 @@ class MenuRouterTest extends WebTestBase {
    */
   function testMenuHidden() {
     // Verify links for one dynamic argument.
-    $links = db_select('menu_links', 'ml')
-      ->fields('ml')
-      ->condition('ml.router_path', 'menu-test/hidden/menu%', 'LIKE')
-      ->orderBy('ml.router_path')
-      ->execute()
-      ->fetchAllAssoc('router_path', PDO::FETCH_ASSOC);
+    $query = entity_query('menu_link')
+      ->condition('router_path', 'menu-test/hidden/menu', 'STARTS_WITH')
+      ->sort('router_path');
+    $result = $query->execute();
+    $menu_links = menu_link_load_multiple($result);
+
+    $links = array();
+    foreach ($menu_links as $menu_link) {
+      $links[$menu_link->router_path] = $menu_link;
+    }
 
     $parent = $links['menu-test/hidden/menu'];
     $depth = $parent['depth'] + 1;
@@ -391,12 +398,16 @@ class MenuRouterTest extends WebTestBase {
     $this->assertEqual($link['plid'], $plid, format_string('%path plid @link_plid is equal to @plid.', array('%path' => $link['router_path'], '@link_plid' => $link['plid'], '@plid' => $plid)));
 
     // Verify links for two dynamic arguments.
-    $links = db_select('menu_links', 'ml')
-      ->fields('ml')
-      ->condition('ml.router_path', 'menu-test/hidden/block%', 'LIKE')
-      ->orderBy('ml.router_path')
-      ->execute()
-      ->fetchAllAssoc('router_path', PDO::FETCH_ASSOC);
+    $query = entity_query('menu_link')
+      ->condition('router_path', 'menu-test/hidden/block', 'STARTS_WITH')
+      ->sort('router_path');
+    $result = $query->execute();
+    $menu_links = menu_link_load_multiple($result);
+
+    $links = array();
+    foreach ($menu_links as $menu_link) {
+      $links[$menu_link->router_path] = $menu_link;
+    }
 
     $parent = $links['menu-test/hidden/block'];
     $depth = $parent['depth'] + 1;
@@ -472,7 +483,7 @@ class MenuRouterTest extends WebTestBase {
    */
   function testMenuLinkOptions() {
     // Create a menu link with options.
-    $menu_link = array(
+    $menu_link = entity_create('menu_link', array(
       'link_title' => 'Menu link options test',
       'link_path' => 'test-page',
       'module' => 'menu_test',
@@ -484,7 +495,7 @@ class MenuRouterTest extends WebTestBase {
           'testparam' => 'testvalue',
         ),
       ),
-    );
+    ));
     menu_link_save($menu_link);
 
     // Load front page.

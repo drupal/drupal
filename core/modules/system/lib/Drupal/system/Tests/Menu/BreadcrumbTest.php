@@ -209,13 +209,13 @@ class BreadcrumbTest extends MenuTestBase {
       $node2 = $this->drupalCreateNode(array(
         'type' => $type,
         'title' => $title,
-        'menu' => array(
+        'menu' => entity_create('menu_link', array(
           'enabled' => 1,
           'link_title' => 'Parent ' . $title,
           'description' => '',
           'menu_name' => $menu,
           'plid' => 0,
-        ),
+        )),
       ));
       $nid2 = $node2->nid;
 
@@ -237,13 +237,13 @@ class BreadcrumbTest extends MenuTestBase {
       $node3 = $this->drupalCreateNode(array(
         'type' => $type,
         'title' => $title,
-        'menu' => array(
+        'menu' => entity_create('menu_link', array(
           'enabled' => 1,
           'link_title' => 'Child ' . $title,
           'description' => '',
           'menu_name' => $menu,
           'plid' => $node2->menu['mlid'],
-        ),
+        )),
       ));
       $nid3 = $node3->nid;
 
@@ -277,7 +277,8 @@ class BreadcrumbTest extends MenuTestBase {
       'link_path' => 'node',
     );
     $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
-    $link = db_query('SELECT * FROM {menu_links} WHERE link_title = :title', array(':title' => 'Root'))->fetchAssoc();
+    $menu_links = entity_load_multiple_by_properties('menu_link', array('link_title' => 'Root'));
+    $link = reset($menu_links);
 
     $edit = array(
       'menu[parent]' => $link['menu_name'] . ':' . $link['mlid'],
@@ -335,10 +336,8 @@ class BreadcrumbTest extends MenuTestBase {
         'parent' => "$menu:{$parent_mlid}",
       );
       $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
-      $tags[$name]['link'] = db_query('SELECT * FROM {menu_links} WHERE link_title = :title AND link_path = :href', array(
-        ':title' => $edit['link_title'],
-        ':href' => $edit['link_path'],
-      ))->fetchAssoc();
+      $menu_links = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
+      $tags[$name]['link'] = reset($menu_links);
       $tags[$name]['link']['link_path'] = $edit['link_path'];
       $parent_mlid = $tags[$name]['link']['mlid'];
     }
@@ -436,20 +435,16 @@ class BreadcrumbTest extends MenuTestBase {
       'link_path' => 'user',
     );
     $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
-    $link_user = db_query('SELECT * FROM {menu_links} WHERE link_title = :title AND link_path = :href', array(
-      ':title' => $edit['link_title'],
-      ':href' => $edit['link_path'],
-    ))->fetchAssoc();
+    $menu_links_user = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
+    $link_user = reset($menu_links_user);
 
     $edit = array(
       'link_title' => $this->admin_user->name . ' link',
       'link_path' => 'user/' . $this->admin_user->uid,
     );
     $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
-    $link_admin_user = db_query('SELECT * FROM {menu_links} WHERE link_title = :title AND link_path = :href', array(
-      ':title' => $edit['link_title'],
-      ':href' => $edit['link_path'],
-    ))->fetchAssoc();
+    $menu_links_admin_user = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
+    $link_admin_user = reset($menu_links_admin_user);
 
     // Verify expected breadcrumbs for the two separate links.
     $this->drupalLogout();
