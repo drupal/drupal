@@ -662,7 +662,7 @@ class ViewUI implements ViewStorageInterface {
       }
 
       // Make view links come back to preview.
-      $this->override_path = 'admin/structure/views/nojs/preview/' . $this->id() . '/' . $display_id;
+      $this->override_path = 'admin/structure/views/view/' . $this->id() . '/preview/' . $display_id;
 
       // Also override the current path so we get the pager.
       $original_path = current_path();

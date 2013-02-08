@@ -67,6 +67,11 @@ function field_ui_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'field_ui.admin.inc',
   );
+  $items['admin/reports/fields/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
 
   // Create tabs for all possible bundles.
   foreach (entity_get_info() as $entity_type => $entity_info) {

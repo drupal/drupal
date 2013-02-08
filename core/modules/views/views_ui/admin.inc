@@ -13,30 +13,12 @@ use Drupal\views\Ajax\ShowButtonsCommand;
 use Drupal\views\Ajax\DismissFormCommand;
 use Drupal\Core\Ajax\AjaxResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\views_ui\ViewUI;
 use Drupal\views_ui\ViewFormControllerBase;
 use Drupal\views\Analyzer;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\wizard\WizardException;
-
-/**
- * Returns the results of the live preview.
- */
-function views_ui_preview(ViewUI $view, $display_id) {
-  // Pass along any other arguments.
-  $args = func_get_args();
-  unset($args[0], $args[1]);
-  return $view->renderPreview($display_id, $args);
-}
-
-/**
- * Page callback to add a new view.
- */
-function views_ui_add_page() {
-  drupal_set_title(t('Add new view'));
-  $view = entity_create('view', array());
-  return entity_get_form($view, 'add');
-}
 
 /**
  * Converts a form element in the add view wizard to be AJAX-enabled.
@@ -322,22 +304,6 @@ function views_ui_edit_page(ViewUI $view, $display_id = NULL) {
 }
 
 /**
- * Page callback for rendering the preview form and the preview of the view.
- *
- * @param \Drupal\views_ui\ViewUI $view
- *   The view UI object to preview.
- * @param string $display_id
- *   The display ID to preview.
- *
- * @return array
- *   The form array of the full preview form.
- */
-function views_ui_build_preview(ViewUI $view, $display_id) {
-  $view->displayID = $display_id;
-  return entity_get_form($view, 'preview');
-}
-
-/**
  * Move form elements into details for presentation purposes.
  *
  * Many views forms use #tree = TRUE to keep their values in a hierarchy for
@@ -569,7 +535,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
 
   $form = views_ui_ajax_forms($key);
   if (empty($form)) {
-    return MENU_NOT_FOUND;
+    throw new NotFoundHttpException();
   }
 
   module_load_include('inc', 'views', 'includes/ajax');
@@ -730,7 +696,11 @@ function views_ui_edit_details_form_submit($form, &$form_state) {
       $view->set($key, $value);
     }
   }
-  $form_state['#page_title'] = views_ui_edit_page_title($view);
+  $bases = drupal_container()->get('views.views_data')->fetchBaseTables();
+  $form_state['#page_title'] = $view->getHumanName();
+  if (isset($bases[$view->get('base_table')])) {
+    $form_state['#page_title'] .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
+  }
   views_ui_cache_set($view);
 }
 
@@ -2076,29 +2046,6 @@ function views_ui_edit_display_form_change_theme($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
-/**
- * Page callback for views tag autocomplete
- */
-function views_ui_autocomplete_tag($string = NULL) {
-  $matches = array();
-  if (!isset($string)) {
-    $string = drupal_container()->get('request')->query->get('q');
-  }
-  // get matches from default views:
-  $views = views_get_all_views();
-  foreach ($views as $view) {
-    $tag = $view->get('tag');
-    if ($tag && strpos($tag, $string) === 0) {
-      $matches[$tag] = $tag;
-      if (count($matches) >= 10) {
-        break;
-      }
-    }
-  }
-
-  return new JsonResponse($matches);
-}
-
 function _views_sort_types($a, $b) {
   $a_group = drupal_strtolower($a['group']);
   $b_group = drupal_strtolower($b['group']);
@@ -2255,86 +2202,4 @@ function views_ui_form_button_was_clicked($element, &$form_state) {
     $form_state['triggering_element'] = $element;
   }
   return $element;
-}
-
-/**
- * List all instances of fields on any views.
- *
- * Therefore it builds up a table of each field which is used in any view.
- *
- * @see field_ui_fields_list()
- */
-function views_ui_field_list() {
-  $views = views_get_all_views();
-  $data = drupal_container()->get('views.views_data');
-
-  // Fetch all fieldapi fields which are used in views
-  // Therefore search in all views, displays and handler-types.
-  $fields = array();
-  $handler_types = ViewExecutable::viewsHandlerTypes();
-  foreach ($views as $view) {
-    $executable = $view->get('executable');
-    $executable->initDisplay();
-    foreach ($executable->displayHandlers as $display_id => $display) {
-      if ($executable->setDisplay($display_id)) {
-        foreach ($handler_types as $type => $info) {
-          foreach ($executable->getItems($type, $display_id) as $item) {
-            $table_data = $data->get($item['table']);
-            if (isset($table_data[$item['field']]) && isset($table_data[$item['field']][$type])
-              && $field_data = $table_data[$item['field']][$type]) {
-              // The final check that we have a fieldapi field now.
-              if (isset($field_data['field_name'])) {
-                $fields[$field_data['field_name']][$view->id()] = $view->id();
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  $header = array(t('Field name'), t('Used in'));
-  $rows = array();
-  foreach ($fields as $field_name => $views) {
-
-    $rows[$field_name]['data'][0] = check_plain($field_name);
-    foreach ($views as $view) {
-      $rows[$field_name]['data'][1][] = l($view, "admin/structure/views/view/$view");
-    }
-    $rows[$field_name]['data'][1] = implode(', ', $rows[$field_name]['data'][1]);
-  }
-
-  // Sort rows by field name.
-  ksort($rows);
-  $output = array(
-    '#theme' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-    '#empty' => t('No fields have been used in views yet.'),
-  );
-
-  return $output;
-}
-
-/**
- * Lists all plugins and what enabled Views use them.
- */
-function views_ui_plugin_list() {
-  $rows = views_plugin_list();
-  foreach ($rows as &$row) {
-    // Link each view name to the view itself.
-    foreach ($row['views'] as $row_name => $view) {
-      $row['views'][$row_name] = l($view, "admin/structure/views/view/$view");
-    }
-    $row['views'] = implode(', ', $row['views']);
-  }
-
-  // Sort rows by field name.
-  ksort($rows);
-  return array(
-    '#theme' => 'table',
-    '#header' => array(t('Type'), t('Name'), t('Provided by'), t('Used in')),
-    '#rows' => $rows,
-    '#empty' => t('There are no enabled views.'),
-  );
 }

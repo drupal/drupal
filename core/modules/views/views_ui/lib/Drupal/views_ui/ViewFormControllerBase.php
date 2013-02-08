@@ -18,6 +18,16 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 abstract class ViewFormControllerBase extends EntityFormController {
 
   /**
+   * Overrides \Drupal\Core\Entity\EntityFormController::init().
+   */
+  protected function init(array &$form_state, EntityInterface $entity) {
+    parent::init($form_state, $entity);
+
+    // @todo Remove the need for this.
+    form_load_include($form_state, 'inc', 'views_ui', 'admin');
+  }
+
+  /**
    * Overrides Drupal\Core\Entity\EntityFormController::prepareForm().
    */
   protected function prepareEntity(EntityInterface $view) {
