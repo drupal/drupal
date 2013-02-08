@@ -7,6 +7,11 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
+use Drupal\views\Ajax\ReplaceTitleCommand;
+use Drupal\views\Ajax\TriggerPreviewCommand;
+use Drupal\views\Ajax\ShowButtonsCommand;
+use Drupal\views\Ajax\DismissFormCommand;
+use Drupal\Core\Ajax\AjaxResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\views_ui\ViewUI;
 use Drupal\views_ui\ViewFormControllerBase;
@@ -603,7 +608,7 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
   // reset the drupal_add_js() static before rendering the second time.
   $drupal_add_js_original = drupal_add_js();
   $drupal_add_js = &drupal_static('drupal_add_js');
-  $output = views_ajax_form_wrapper($form_state['form_id'], $form_state);
+  $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
   if ($form_state['submitted'] && empty($form_state['rerender'])) {
     // Sometimes we need to re-generate the form for multi-step type operations.
     $object = NULL;
@@ -618,19 +623,19 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
       if (!$js) {
         return drupal_goto(views_ui_build_form_url($form_state));
       }
-      $output = views_ajax_form_wrapper($form_state['form_id'], $form_state);
+      $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
     }
     elseif (!$js) {
       // if nothing on the stack, non-js forms just go back to the main view editor.
       return drupal_goto("admin/structure/views/view/{$view->id()}/edit");
     }
     else {
-      $output = array();
-      $output[] = views_ajax_command_dismiss_form();
-      $output[] = views_ajax_command_show_buttons();
-      $output[] = views_ajax_command_trigger_preview();
+      $response = new AjaxResponse();
+      $response->addCommand(new DismissFormCommand());
+      $response->addCommand(new ShowButtonsCommand());
+      $response->addCommand(new TriggerPreviewCommand());
       if (!empty($form_state['#page_title'])) {
-        $output[] = views_ajax_command_replace_title($form_state['#page_title']);
+        $response->addCommand(new ReplaceTitleCommand($form_state['#page_title']));
       }
     }
     // If this form was for view-wide changes, there's no need to regenerate
@@ -638,11 +643,11 @@ function views_ui_ajax_form($js, $key, ViewUI $view, $display_id = '') {
     if ($display_id !== '') {
       drupal_container()->get('plugin.manager.entity')
         ->getFormController('view', 'edit')
-        ->rebuildCurrentTab($view, $output, $display_id);
+        ->rebuildCurrentTab($view, $response, $display_id);
     }
   }
 
-  return $js ? array('#type' => 'ajax', '#commands' => $output) : $output;
+  return $response;
 }
 
 /**
@@ -1405,6 +1410,7 @@ function views_ui_config_item_form($form, &$form_state) {
     ),
   );
   $executable = $view->get('executable');
+  $save_ui_cache = FALSE;
   if (!$executable->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -1466,7 +1472,7 @@ function views_ui_config_item_form($form, &$form_state) {
           // We want this relationship option to get saved even if the user
           // skips submitting the form.
           $executable->setItemOption($display_id, $type, $id, 'relationship', $rel);
-          views_ui_cache_set($view);
+          $save_ui_cache = TRUE;
         }
 
         $form['options']['relationship'] = array(
@@ -1511,6 +1517,10 @@ function views_ui_config_item_form($form, &$form_state) {
     // Only validate the override values, because this values are required for
     // the override selection.
     $form['buttons']['remove']['#limit_validation_errors'] = array(array('override'));
+  }
+
+  if ($save_ui_cache) {
+    views_ui_cache_set($view);
   }
 
   return $form;

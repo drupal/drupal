@@ -19,7 +19,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language');
+  public static $modules = array('language', 'language_test');
 
   public static function getInfo() {
     return array(
@@ -59,6 +59,10 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $non_existing = language_default();
     $non_existing->langcode = $this->randomName();
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
+
+    // Check that URL rewriting is not applied to subrequests.
+    $this->drupalGet('language_test/subrequest');
+    $this->assertText($this->web_user->name, 'Page correctly retrieved');
   }
 
   /**

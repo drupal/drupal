@@ -6,6 +6,12 @@
  */
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\views\Ajax\HighlightCommand;
+use Drupal\views\Ajax\SetFormCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\views\Ajax\ScrollTopCommand;
+use Drupal\views\Ajax\ViewAjaxResponse;
+use Drupal\Core\Ajax\AjaxResponse;
 
 /**
  * @defgroup views_ajax Views AJAX library
@@ -29,7 +35,7 @@ function views_ajax() {
     $pager_element = $request->request->get('pager_element');
     $pager_element = isset($pager_element) ? intval($pager_element) : NULL;
 
-    $commands = array();
+    $response = new ViewAjaxResponse();
 
     // Remove all of this stuff from the query of the request so it doesn't end
     // up in pagers and tablesort URLs.
@@ -68,158 +74,16 @@ function views_ajax() {
 
       // Override the display's pager_element with the one actually used.
       if (isset($pager_element)) {
-        $commands[] = views_ajax_command_scroll_top('.view-dom-id-' . $dom_id);
+        $response->addCommand(new ScrollTopCommand(".view-dom-id-$dom_id"));
         $view->displayHandlers->get($display_id)->setOption('pager_element', $pager_element);
       }
       // Reuse the same DOM id so it matches that in Drupal.settings.
       $view->dom_id = $dom_id;
 
-      $commands[] = ajax_command_replace('.view-dom-id-' . $dom_id, $view->preview($display_id, $args));
+      $response->addCommand(new ReplaceCommand(".view-dom-id-$dom_id", $view->preview($display_id, $args)));
     }
-    drupal_alter('views_ajax_data', $commands, $view);
-    return array('#type' => 'ajax', '#commands' => $commands);
+    return $response;
   }
-}
-
-/**
- * Creates a Drupal AJAX 'viewsSetForm' command.
- *
- * @param $output
- *   The form to display in the modal.
- * @param $title
- *   The title.
- * @param $url
- *   An optional URL.
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_set_form($output, $title, $url = NULL) {
-  $command = array(
-    'command' => 'viewsSetForm',
-    'output' => $output,
-    'title' => $title,
-  );
-  if (isset($url)) {
-    $command['url'] = $url;
-  }
-  return $command;
-}
-
-/**
- * Creates a Drupal AJAX 'viewsDismissForm' command.
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_dismiss_form() {
-  $command = array(
-    'command' => 'viewsDismissForm',
-  );
-  return $command;
-}
-
-/**
- * Creates a Drupal AJAX 'viewsHilite' command.
- *
- * @param $selector
- *   The selector to highlight
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_hilite($selector) {
-  return array(
-    'command' => 'viewsHilite',
-    'selector' => $selector,
-  );
-}
-
-/**
- * Creates a Drupal AJAX 'addTab' command.
- *
- * @param $id
- *   The DOM ID.
- * @param $title
- *   The title.
- * @param $body
- *   The body.
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_add_tab($id, $title, $body) {
-  $command = array(
-    'command' => 'viewsAddTab',
-    'id' => $id,
-    'title' => $title,
-    'body' => $body,
-  );
-  return $command;
-}
-
-/**
- * Scroll to top of the current view.
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_scroll_top($selector) {
-  $command = array(
-    'command' => 'viewsScrollTop',
-    'selector' => $selector,
-  );
-  return $command;
-}
-
-/**
- * Shows Save and Cancel buttons.
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_show_buttons() {
-  $command = array(
-    'command' => 'viewsShowButtons',
-  );
-  return $command;
-}
-
-/**
- * Trigger the Views live preview.
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_trigger_preview() {
-  $command = array(
-    'command' => 'viewsTriggerPreview',
-  );
-  return $command;
-}
-
-/**
- * Replace the page title.
- *
- * @return
- *   An array suitable for use with the ajax_render() function.
- */
-function views_ajax_command_replace_title($title) {
-  $command = array(
-    'command' => 'viewsReplaceTitle',
-    'title' => $title,
-    'siteName' => config('system.site')->get('name'),
-  );
-  return $command;
-}
-
-/**
- * Return an AJAX error.
- */
-function views_ajax_error($message) {
-  $commands = array();
-  $commands[] = views_ajax_command_set_form($message, t('Error'));
-  return $commands;
 }
 
 /**
@@ -249,7 +113,7 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
   if (!empty($form_state['ajax']) && (empty($form_state['executed']) || !empty($form_state['rerender']))) {
     // If the form didn't execute and we're using ajax, build up a
     // Ajax command list to execute.
-    $commands = array();
+    $response = new AjaxResponse();
 
     $display = '';
     if ($messages = theme('status_messages')) {
@@ -261,13 +125,13 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
 
     $url = empty($form_state['url']) ? url(current_path(), array('absolute' => TRUE)) : $form_state['url'];
 
-    $commands[] = views_ajax_command_set_form($display, $title, $url);
+    $response->addCommand(new SetFormCommand($display, $title, $url));
 
     if (!empty($form_state['#section'])) {
-      $commands[] = views_ajax_command_hilite('.' . drupal_clean_css_identifier($form_state['#section']));
+      $response->addCommand(new HighlightCommand('.' . drupal_clean_css_identifier($form_state['#section'])));
     }
 
-    return $commands;
+    return $response;
   }
 
   // These forms have the title built in, so set the title here:

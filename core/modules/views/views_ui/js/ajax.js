@@ -42,23 +42,9 @@
     $(Drupal.settings.views.ajax.popup).dialog('close');
   };
 
-  Drupal.ajax.prototype.commands.viewsHilite = function (ajax, response, status) {
+  Drupal.ajax.prototype.commands.viewsHighlight = function (ajax, response, status) {
     $('.hilited').removeClass('hilited');
     $(response.selector).addClass('hilited');
-  };
-
-  Drupal.ajax.prototype.commands.viewsAddTab = function (ajax, response, status) {
-    var id = '#views-tab-' + response.id;
-    $('#views-tabset').viewsAddTab(id, response.title, 0);
-    $(id).html(response.body).addClass('views-tab');
-
-    // Update the preview widget to preview the new tab.
-    var display_id = id.replace('#views-tab-', '');
-    $("#preview-display-id").append('<option selected="selected" value="' + display_id + '">' + response.title + '</option>');
-
-    Drupal.attachBehaviors(id);
-    var instance = $.viewsUi.tabs.instances[$('#views-tabset').get(0).UI_TABS_UUID];
-    $('#views-tabset').viewsClickTab(instance.$tabs.length);
   };
 
   Drupal.ajax.prototype.commands.viewsShowButtons = function (ajax, response, status) {

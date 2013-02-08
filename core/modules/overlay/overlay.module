@@ -171,9 +171,7 @@ function overlay_init() {
  * the supplemental regions of the overlay on the next page request.
  */
 function overlay_exit() {
-  // Check that we are in an overlay child page. Note that this should never
-  // return TRUE on a cached page view, since the child mode is not set until
-  // overlay_init() is called.
+  // Check that we are in an overlay child page.
   if (overlay_get_mode() == 'child') {
     // Load any markup that was stored earlier in the page request, via calls
     // to overlay_store_rendered_content(). If none was stored, this is not a

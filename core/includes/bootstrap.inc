@@ -1443,7 +1443,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
  * Defines the critical hooks that force modules to always be loaded.
  */
 function bootstrap_hooks() {
-  return array('exit', 'watchdog');
+  return array('watchdog');
 }
 
 /**
@@ -2353,11 +2353,6 @@ function _drupal_bootstrap_page_cache() {
       date_default_timezone_set(drupal_get_user_timezone());
 
       drupal_serve_page_from_cache($cache);
-      // If the skipping of the bootstrap hooks is not enforced, call
-      // hook_exit.
-      if (variable_get('page_cache_invoke_hooks', TRUE)) {
-        bootstrap_invoke_all('exit');
-      }
       // We are done.
       exit;
     }

@@ -10,7 +10,8 @@ use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\Core\Entity\EntityInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
  * Implements hook_menu().
@@ -696,8 +697,9 @@ function views_ui_ajax_callback(ViewExecutable $view, $op) {
   // If the request is via AJAX, return the rendered list as JSON.
   if (drupal_container()->get('request')->request->get('js')) {
     $list = views_ui_list_page();
-    $commands = array(ajax_command_replace('#views-entity-list', drupal_render($list)));
-    return new JsonResponse(ajax_render($commands));
+    $response = new AjaxResponse();
+    $response->addCommand(new ReplaceCommand('#views-entity-list', drupal_render($list)));
+    return $response;
   }
   // Otherwise, redirect back to the page.
   else {

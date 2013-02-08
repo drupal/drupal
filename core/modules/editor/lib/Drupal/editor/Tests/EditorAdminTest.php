@@ -56,9 +56,9 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue($roles_pos < $editor_pos && $editor_pos < $filters_pos, '"Text Editor" select appears in the correct location of the text format configuration UI.');
 
     // Verify the <select>.
-    $select = $this->xpath('//select[@name="editor"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor"]/option');
+    $select = $this->xpath('//select[@name="editor[editor]"]');
+    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
+    $options = $this->xpath('//select[@name="editor[editor]"]/option');
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 1, 'The Text Editor select is disabled.');
     $this->assertTrue(count($options) === 1, 'The Text Editor select has only one option.');
@@ -72,9 +72,9 @@ class EditorAdminTest extends WebTestBase {
     $this->drupalGet('admin/config/content/formats/filtered_html');
 
     // Verify the <select> when a text editor is available.
-    $select = $this->xpath('//select[@name="editor"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor"]/option');
+    $select = $this->xpath('//select[@name="editor[editor]"]');
+    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
+    $options = $this->xpath('//select[@name="editor[editor]"]/option');
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 0, 'The Text Editor select is not disabled.');
     $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
@@ -86,15 +86,15 @@ class EditorAdminTest extends WebTestBase {
 
     // Select the "Unicorn Editor" editor and click the "Configure" button.
     $edit = array(
-      'editor' => 'unicorn',
+      'editor[editor]' => 'unicorn',
     );
     $this->drupalPostAjax(NULL, $edit, 'editor_configure');
-    $unicorn_setting_foo = $this->xpath('//input[@name="editor_settings[foo]" and @type="text" and @value="bar"]');
+    $unicorn_setting_foo = $this->xpath('//input[@name="editor[settings][foo]" and @type="text" and @value="bar"]');
     $this->assertTrue(count($unicorn_setting_foo), "Unicorn Editor's settings form is present.");
-    $options = $this->xpath('//select[@name="editor"]/option');
+    $options = $this->xpath('//select[@name="editor[editor]"]/option');
 
     // Now configure the setting to another value.
-    $edit['editor_settings[foo]'] = 'baz';
+    $edit['editor[settings][foo]'] = 'baz';
     $this->drupalPost(NULL, $edit, t('Save configuration'));
 
     // Verify the editor configuration is saved correctly.
@@ -105,9 +105,9 @@ class EditorAdminTest extends WebTestBase {
     $this->assertIdentical($editor->settings['rainbows'], true, 'The text editor defaults added by hook_editor_settings_defaults() are retrieved correctly.');
     $this->assertIdentical($editor->settings['sparkles'], false, 'The text editor defaults modified by hook_editor_settings_defaults_alter() are retrieved correctly.');
     $this->drupalGet('admin/config/content/formats/filtered_html');
-    $select = $this->xpath('//select[@name="editor"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor"]/option');
+    $select = $this->xpath('//select[@name="editor[editor]"]');
+    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
+    $options = $this->xpath('//select[@name="editor[editor]"]/option');
     $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
     $this->assertTrue(count($select_is_disabled) === 0, 'The Text Editor select is not disabled.');
     $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
