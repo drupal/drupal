@@ -788,22 +788,25 @@ abstract class WebTestBase extends TestBase {
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
     $batch = array();
-    $variables = array(
-      'file_public_path' =>  $this->public_files_directory,
-      'file_private_path' =>  $this->private_files_directory,
-      'file_temporary_path' =>  $this->temp_files_directory,
-      'locale_translate_file_directory' =>  $this->translation_files_directory,
+    $variable_groups = array(
+      'system.file' => array(
+        'path.private' =>  $this->private_files_directory,
+        'path.temporary' =>  $this->temp_files_directory,
+      ),
+      'locale.settings' =>  array(
+        'translation.path' => $this->translation_files_directory,
+      ),
     );
-    foreach ($variables as $name => $value) {
-      $GLOBALS['conf'][$name] = $value;
+    foreach ($variable_groups as $config_base => $variables) {
+      foreach ($variables as $name => $value) {
+        NestedArray::setValue($GLOBALS['conf'], array_merge(array($config_base), explode('.', $name)), $value);
+      }
     }
+    $GLOBALS['conf']['file_public_path'] = $this->public_files_directory;
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     install_drupal($settings);
     $this->rebuildContainer();
-    foreach ($variables as $name => $value) {
-      variable_set($name, $value);
-    }
 
     // Restore the original Simpletest batch.
     $batch = &batch_get();
@@ -837,6 +840,17 @@ abstract class WebTestBase extends TestBase {
 
     // Reset/rebuild all data structures after enabling the modules.
     $this->resetAll();
+
+    // Now make sure that the file path configurations are saved. This is done
+    // after we install the modules to override default values.
+    foreach ($variable_groups as $config_base => $variables) {
+      $config = config($config_base);
+      foreach ($variables as $name => $value) {
+        $config->set($name, $value);
+      }
+      $config->save();
+    }
+    variable_set('file_public_path', $this->public_files_directory);
 
     // Use the test mail class instead of the default mail handler class.
     variable_set('mail_system', array('default-system' => 'Drupal\Core\Mail\VariableLog'));

@@ -67,6 +67,8 @@ class StreamWrapperTest extends WebTestBase {
    * Test the URI and target functions.
    */
   function testUriFunctions() {
+    $config = config('system.file');
+
     $instance = file_stream_wrapper_get_instance_by_uri($this->scheme . '://foo');
     $this->assertEqual($this->classname, get_class($instance), 'Got correct class type for dummy URI.');
 
@@ -81,9 +83,8 @@ class StreamWrapperTest extends WebTestBase {
     // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', 'Expected scheme was added.');
     $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath(), variable_get('file_public_path'), 'Expected default directory path was returned.');
-    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath(), variable_get('file_temporary_path'), 'Expected temporary directory path was returned.');
-
-    variable_set('file_default_scheme', 'private');
+    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath(), $config->get('path.temporary'), 'Expected temporary directory path was returned.');
+    $config->set('default_scheme', 'private')->save();
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', 'Got a valid URI from foo/bar.txt.');
   }
 

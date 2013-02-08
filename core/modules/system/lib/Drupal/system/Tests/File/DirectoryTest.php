@@ -51,7 +51,7 @@ class DirectoryTest extends FileTestBase {
     }
 
     // Test that the directory has the correct permissions.
-    $this->assertDirectoryPermissions($directory, variable_get('file_chmod_directory', 0775));
+    $this->assertDirectoryPermissions($directory, octdec(config('system.file')->get('chmod.directory')));
 
     // Remove .htaccess file to then test that it gets re-created.
     @drupal_unlink(file_default_scheme() . '://.htaccess');
@@ -122,10 +122,10 @@ class DirectoryTest extends FileTestBase {
    */
   function testFileDirectoryTemp() {
     // Start with an empty variable to ensure we have a clean slate.
-    variable_set('file_temporary_path', '');
+    $config = config('system.file');
+    $config->set('path.temporary', '')->save();
     $tmp_directory = file_directory_temp();
     $this->assertEqual(empty($tmp_directory), FALSE, 'file_directory_temp() returned a non-empty value.');
-    $setting = variable_get('file_temporary_path', '');
-    $this->assertEqual($setting, $tmp_directory, "The 'file_temporary_path' variable has the same value that file_directory_temp() returned.");
+    $this->assertEqual($config->get('path.temporary'), $tmp_directory);
   }
 }

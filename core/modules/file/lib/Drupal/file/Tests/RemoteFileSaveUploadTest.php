@@ -27,6 +27,6 @@ class RemoteFileSaveUploadTest extends SaveUploadTest {
 
   function setUp() {
     parent::setUp();
-    variable_set('file_default_scheme', 'dummy-remote');
+    config('system.file')->set('default_scheme', 'dummy-remote')->save();
   }
 }

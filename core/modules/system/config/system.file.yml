@@ -1,0 +1,9 @@
+allow_insecure_uploads: '0'
+# chmod variables should be a string in PHP Octal Notation.
+chmod:
+  directory: '0775'
+  file: '0664'
+default_scheme: 'public'
+path:
+  private: '0'
+  temporary: ''

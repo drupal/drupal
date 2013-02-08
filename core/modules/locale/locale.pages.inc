@@ -508,7 +508,7 @@ function locale_translate_settings($form, &$form_state) {
     '#default_value' => $config->get('translation.check_disabled_modules'),
   );
 
-  if ($directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations')) {
+  if ($directory =config('locale.settings')->get('translation.path')) {
     $description = t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href="@url">File system</a> configuration page.', array('%path' => $directory, '@url' => url('admin/config/media/file-system')));
   }
   else {

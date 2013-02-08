@@ -92,7 +92,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
     // Make the default scheme neither "public" nor "private" to verify the
     // functions work for other than the default scheme.
-    variable_set('file_default_scheme', 'temporary');
+    config('system.file')->set('default_scheme', 'temporary')->save();
 
     // Create the directories for the styles.
     $directory = $scheme . '://styles/' . $this->style_name;

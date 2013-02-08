@@ -1721,9 +1721,10 @@ function system_clear_page_cache_submit($form, &$form_state) {
  * Form builder; Configure the site file handling.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_settings_form_sumbit()
  */
 function system_file_system_settings() {
+  $config = config('system.file');
   $form['file_public_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Public file system path'),
@@ -1736,7 +1737,7 @@ function system_file_system_settings() {
   $form['file_private_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Private file system path'),
-    '#default_value' => variable_get('file_private_path', ''),
+    '#default_value' => $config->get('path.private'),
     '#maxlength' => 255,
     '#description' => t('An existing local file system path for storing private files. It should be writable by Drupal and not accessible over the web. See the online handbook for <a href="@handbook">more information about securing private files</a>.', array('@handbook' => 'http://drupal.org/documentation/modules/file')),
     '#after_build' => array('system_check_directory'),
@@ -1745,7 +1746,7 @@ function system_file_system_settings() {
   $form['file_temporary_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Temporary directory'),
-    '#default_value' => variable_get('file_temporary_path', file_directory_temp()),
+    '#default_value' => $config->get('path.temporary'),
     '#maxlength' => 255,
     '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
@@ -1760,13 +1761,32 @@ function system_file_system_settings() {
     $form['file_default_scheme'] = array(
       '#type' => 'radios',
       '#title' => t('Default download method'),
-      '#default_value' => variable_get('file_default_scheme', isset($options['public']) ? 'public' : key($options)),
+      '#default_value' => $config->get('default_scheme'),
       '#options' => $options,
       '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
     );
   }
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Save configuration values for file system.
+ *
+ * @ingroup forms
+ * @see system_file_system_settings()
+ */
+function system_file_system_settings_submit($form, &$form_state) {
+  $config = config('system.file')
+    ->set('path.private', $form_state['values']['file_private_path'])
+    ->set('path.temporary', $form_state['values']['file_temporary_path']);
+  variable_set('file_public_path', $form_state['values']['file_public_path']);
+
+
+  if(isset($form_state['values']['file_default_scheme'])) {
+    $config->set('default_scheme', $form_state['values']['file_default_scheme']);
+  }
+  $config->save();
 }
 
 /**

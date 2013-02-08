@@ -19,7 +19,7 @@ function file_field_info() {
       'settings' => array(
         'display_field' => 0,
         'display_default' => 0,
-        'uri_scheme' => variable_get('file_default_scheme', 'public'),
+        'uri_scheme' => file_default_scheme(),
       ),
       'instance_settings' => array(
         'file_extensions' => 'txt',

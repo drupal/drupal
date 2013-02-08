@@ -81,6 +81,11 @@ abstract class FileTestBase extends WebTestBase {
    *   Optional message.
    */
   function assertFilePermissions($filepath, $expected_mode, $message = NULL) {
+    // Configuration system stores default modes as strings.
+    if (is_string($expected_mode)) {
+      // Convert string to octal.
+      $expected_mode = octdec($expected_mode);
+    }
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $filepath);
 
@@ -116,6 +121,11 @@ abstract class FileTestBase extends WebTestBase {
    *   Optional message.
    */
   function assertDirectoryPermissions($directory, $expected_mode, $message = NULL) {
+    // Configuration system stores default modes as strings.
+    if (is_string($expected_mode)) {
+      // Convert string to octal.
+      $expected_mode = octdec($expected_mode);
+    }
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $directory);
 

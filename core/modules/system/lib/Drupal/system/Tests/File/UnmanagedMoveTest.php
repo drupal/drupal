@@ -23,6 +23,7 @@ class UnmanagedMoveTest extends FileTestBase {
    * Move a normal file.
    */
   function testNormal() {
+    $config = config('system.file');
     // Create a file for testing
     $uri = $this->createUri();
 
@@ -33,7 +34,7 @@ class UnmanagedMoveTest extends FileTestBase {
     $this->assertEqual($new_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($new_filepath), 'File exists at the new location.');
     $this->assertFalse(file_exists($uri), 'No file remains at the old location.');
-    $this->assertFilePermissions($new_filepath, variable_get('file_chmod_file', 0664));
+    $this->assertFilePermissions($new_filepath, octdec($config->get('chmod.file')));
 
     // Moving with rename.
     $desired_filepath = 'public://' . $this->randomName();
@@ -44,7 +45,7 @@ class UnmanagedMoveTest extends FileTestBase {
     $this->assertNotEqual($newer_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($newer_filepath), 'File exists at the new location.');
     $this->assertFalse(file_exists($new_filepath), 'No file remains at the old location.');
-    $this->assertFilePermissions($newer_filepath, variable_get('file_chmod_file', 0664));
+    $this->assertFilePermissions($newer_filepath, octdec($config->get('chmod.file')));
 
     // TODO: test moving to a directory (rather than full directory/file path)
     // TODO: test creating and moving normal files (rather than streams)

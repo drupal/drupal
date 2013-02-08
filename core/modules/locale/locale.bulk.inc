@@ -346,19 +346,19 @@ function locale_translate_get_interface_translation_files($projects = array(), $
   // containing a project name and language code: {project}.{langcode}.po or
   // {project}-{version}.{langcode}.po.
   // Only files of known projects and languages will be returned.
-  if ($directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations')) {
-    $result = file_scan_directory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', array('recurse' => FALSE));
+  $directory = config('locale.settings')->get('translation.path');
+  $result = file_scan_directory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', array('recurse' => FALSE));
 
-    foreach ($result as $filepath => $file) {
-      // Update the file object with project name and version from the file name.
-      $file = locale_translate_file_attach_properties($file);
-      if (in_array($file->project, $projects)) {
-        if (in_array($file->langcode, $langcodes)) {
-          $files[$file->uri] = $file;
-        }
+  foreach ($result as $file) {
+    // Update the file object with project name and version from the file name.
+    $file = locale_translate_file_attach_properties($file);
+    if (in_array($file->project, $projects)) {
+      if (in_array($file->langcode, $langcodes)) {
+        $files[$file->uri] = $file;
       }
     }
   }
+
   return $files;
 }
 

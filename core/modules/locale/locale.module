@@ -808,10 +808,10 @@ function locale_translate_english() {
  * Add interface translation directory setting to directories configuration.
  */
 function locale_form_system_file_system_settings_alter(&$form, $form_state) {
-  $form['locale_translate_file_directory'] = array(
+  $form['translation_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Interface translations directory'),
-    '#default_value' => variable_get('locale_translate_file_directory', conf_path() . '/files/translations'),
+    '#default_value' => config('locale.settings')->get('translation.path'),
     '#maxlength' => 255,
     '#description' => t('A local file system path where interface translation files will be stored.'),
     '#after_build' => array('system_check_directory'),
@@ -831,9 +831,13 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
  * should be ignored. The old translation status is no longer valid.
  */
 function locale_system_file_system_settings_submit(&$form, $form_state) {
-  if ($form['locale_translate_file_directory']['#default_value'] != $form_state['values']['locale_translate_file_directory']) {
+  if ($form['translation_path']['#default_value'] != $form_state['values']['translation_path']) {
     locale_translation_clear_status();
   }
+
+  config('locale.settings')
+    ->set('translation.path', $form_state['values']['translation_path'])
+    ->save();
 }
 
 /**

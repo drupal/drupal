@@ -315,7 +315,7 @@ function file_uri_target($uri) {
  *   'public', 'private' or any other file scheme defined as the default.
  */
 function file_default_scheme() {
-  return variable_get('file_default_scheme', 'public');
+  return config('system.file')->get('default_scheme');
 }
 
 /**
@@ -520,7 +520,8 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
  */
 function file_ensure_htaccess() {
   file_save_htaccess('public://', FALSE);
-  if (variable_get('file_private_path', FALSE)) {
+  $private_path = config('system.file')->get('path.private');
+  if (!empty($private_path)) {
     file_save_htaccess('private://', TRUE);
   }
   file_save_htaccess('temporary://', TRUE);
@@ -789,10 +790,9 @@ function file_unmanaged_move($source, $destination = NULL, $replace = FILE_EXIST
  * between 2 and 5 characters in length, internal to the file name, and not
  * included in $extensions.
  *
- * Function behavior is also controlled by the Drupal variable
- * 'allow_insecure_uploads'. If 'allow_insecure_uploads' evaluates to TRUE, no
- * alterations will be made, if it evaluates to FALSE, the filename is 'munged'.
- *
+ * Function behavior is also controlled by the configuration
+ * 'system.file:allow_insecure_uploads'. If it evaluates to TRUE, no alterations
+ * will be made, if it evaluates to FALSE, the filename is 'munged'. *
  * @param $filename
  *   File name to modify.
  * @param $extensions
@@ -801,14 +801,14 @@ function file_unmanaged_move($source, $destination = NULL, $replace = FILE_EXIST
  *   If TRUE, drupal_set_message() will be called to display a message if the
  *   file name was changed.
  *
- * @return
+ * @return string
  *   The potentially modified $filename.
  */
 function file_munge_filename($filename, $extensions, $alerts = TRUE) {
   $original = $filename;
 
   // Allow potentially insecure uploads for very savvy users and admin
-  if (!variable_get('allow_insecure_uploads', 0)) {
+  if (!config('system.file')->get('allow_insecure_uploads')) {
     // Remove any null bytes. See http://php.net/manual/en/security.filesystem.nullbytes.php
     $filename = str_replace(chr(0), '', $filename);
 
@@ -1144,7 +1144,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   // rename filename.php.foo and filename.php to filename.php.foo.txt and
   // filename.php.txt, respectively). Don't rename if 'allow_insecure_uploads'
   // evaluates to TRUE.
-  if (!variable_get('allow_insecure_uploads', 0) && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
+  if (!config('system.file')->get('allow_insecure_uploads') && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
     $file->filemime = 'text/plain';
     $file->uri .= '.txt';
     $file->filename .= '.txt';
@@ -1512,13 +1512,13 @@ function file_get_mimetype($uri, $mapping = NULL) {
 /**
  * Sets the permissions on a file or directory.
  *
- * This function will use the 'file_chmod_directory' and 'file_chmod_file'
- * variables for the default modes for directories and uploaded/generated
- * files. By default these will give everyone read access so that users
- * accessing the files with a user account without the webserver group (e.g.
- * via FTP) can read these files, and give group write permissions so webserver
- * group members (e.g. a vhost account) can alter files uploaded and owned by
- * the webserver.
+ * This function will use the system.file:chmod.directory and
+ * system.file:chmod.file configuration for the default modes for directories
+ * and uploaded/generated files. By default these will give everyone read access
+ * so that users accessing the files with a user account without the webserver
+ * group (e.g. via FTP) can read these files, and give group write permissions
+ * so webserver group members (e.g. a vhost account) can alter files uploaded
+ * and owned by the webserver.
  *
  * PHP's chmod does not support stream wrappers so we use our wrapper
  * implementation which interfaces with chmod() by default. Contrib wrappers
@@ -1530,18 +1530,27 @@ function file_get_mimetype($uri, $mapping = NULL) {
  *   Integer value for the permissions. Consult PHP chmod() documentation for
  *   more information.
  *
- * @return
+ * @return bool
  *   TRUE for success, FALSE in the event of an error.
  *
  * @ingroup php_wrappers
  */
 function drupal_chmod($uri, $mode = NULL) {
   if (!isset($mode)) {
+    // Configuration system stores default modes as strings. We use octdec() so
+    // that the octal permission numbers can be expressed as integers or strings
+    // and will be converted correctly in both cases.
     if (is_dir($uri)) {
-      $mode = variable_get('file_chmod_directory', 0775);
+      $mode = octdec(config('system.file')->get('chmod.directory'));
+      if (!$mode) {
+        $mode = 0775;
+      }
     }
     else {
-      $mode = variable_get('file_chmod_file', 0664);
+      $mode = octdec(config('system.file')->get('chmod.file'));
+      if (!$mode) {
+        $mode = 0664;
+      }
     }
   }
 
@@ -1718,7 +1727,11 @@ function drupal_basename($uri, $suffix = NULL) {
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
   if (!isset($mode)) {
-    $mode = variable_get('file_chmod_directory', 0775);
+    // Configuration system stores default mode as strings.
+    $mode = octdec(config('system.file')->get('chmod.directory'));
+    if (!$mode) {
+      $mode = 0775;
+    }
   }
 
   if (!isset($context)) {
@@ -1801,36 +1814,16 @@ function drupal_tempnam($directory, $prefix) {
 }
 
 /**
- * Gets the path of system-appropriate temporary directory.
+ * Gets and sets the path of the configured temporary directory.
+ *
+ * @return mixed|null
+ *   A string containing the path to the temporary directory.
  */
 function file_directory_temp() {
-  $temporary_directory = variable_get('file_temporary_path', NULL);
-
+  $config = config('system.file');
+  $temporary_directory = $config->get('path.temporary');
   if (empty($temporary_directory)) {
-    $directories = array();
-
-    // Has PHP been set with an upload_tmp_dir?
-    if (ini_get('upload_tmp_dir')) {
-      $directories[] = ini_get('upload_tmp_dir');
-    }
-
-    // Operating system specific dirs.
-    if (substr(PHP_OS, 0, 3) == 'WIN') {
-      $directories[] = 'c:\\windows\\temp';
-      $directories[] = 'c:\\winnt\\temp';
-    }
-    else {
-      $directories[] = '/tmp';
-    }
-    // PHP may be able to find an alternative tmp directory.
-    $directories[] = sys_get_temp_dir();
-
-    foreach ($directories as $directory) {
-      if (is_dir($directory) && is_writable($directory)) {
-        $temporary_directory = $directory;
-        break;
-      }
-    }
+    $temporary_directory = file_directory_os_temp();
 
     if (empty($temporary_directory)) {
       // If no directory has been found default to 'files/tmp'.
@@ -1843,10 +1836,43 @@ function file_directory_temp() {
       $temporary_directory = str_replace('\\', '/', $temporary_directory);
     }
     // Save the path of the discovered directory.
-    variable_set('file_temporary_path', $temporary_directory);
+    $config->set('path.temporary', $temporary_directory)->save();
   }
 
   return $temporary_directory;
+}
+
+/**
+ * Discovers a writable system-appropriate temporary directory.
+ *
+ * @return mixed
+ *   A string containing the path to the temporary directory.
+ */
+function file_directory_os_temp() {
+  $directories = array();
+
+  // Has PHP been set with an upload_tmp_dir?
+  if (ini_get('upload_tmp_dir')) {
+    $directories[] = ini_get('upload_tmp_dir');
+  }
+
+  // Operating system specific dirs.
+  if (substr(PHP_OS, 0, 3) == 'WIN') {
+    $directories[] = 'c:\\windows\\temp';
+    $directories[] = 'c:\\winnt\\temp';
+  }
+  else {
+    $directories[] = '/tmp';
+  }
+  // PHP may be able to find an alternative tmp directory.
+  $directories[] = sys_get_temp_dir();
+
+  foreach ($directories as $directory) {
+    if (is_dir($directory) && is_writable($directory)) {
+      return $directory;
+    }
+  }
+  return FALSE;
 }
 
 /**

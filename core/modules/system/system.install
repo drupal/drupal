@@ -303,28 +303,42 @@ function system_requirements($phase) {
       'description' => $description
     );
   }
-
-  // Test files directories.
-  // If we are installing Drupal, the settings.php file might not exist yet in
-  // the intended conf_path() directory, so don't require it. The conf_path()
-  // cache must also be reset in this case.
-  $require_settings = ($phase != 'install');
-  $reset_cache = !$require_settings;
-  $directories = array(
-    variable_get('file_public_path', conf_path($require_settings, $reset_cache) . '/files'),
-    // By default no private files directory is configured. For private files
-    // to be secure the admin needs to provide a path outside the webroot.
-    variable_get('file_private_path', FALSE),
-  );
-
-  // Do not check for the temporary files directory during installation
-  // unless it has been set in settings.php. In this case the user has
-  // no alternative but to fix the directory if it is not writable.
-  if ($phase == 'install') {
-    $directories[] = variable_get('file_temporary_path', FALSE);
+  if ($phase != 'install') {
+    $filesystem_config = config('system.file');
+    $directories = array(
+      variable_get('file_public_path', conf_path() . '/files'),
+      // By default no private files directory is configured. For private files
+      // to be secure the admin needs to provide a path outside the webroot.
+      $filesystem_config->get('path.private'),
+      file_directory_temp(),
+    );
   }
-  else {
-    $directories[] = variable_get('file_temporary_path', file_directory_temp());
+
+  // During an install we need to make assumptions about the file system
+  // unless overrides are provided in settings.php.
+  if ($phase == 'install') {
+    global $conf;
+    $directories = array();
+    if (!empty($conf['file_public_path'])) {
+      $directories[] = $conf['file_public_path'];
+    }
+    else {
+      // If we are installing Drupal, the settings.php file might not exist yet
+      // in the intended conf_path() directory, so don't require it. The
+      // conf_path() cache must also be reset in this case.
+      $directories[] = conf_path(FALSE, TRUE) . '/files';
+    }
+    if (!empty($conf['system.file']['path.private'])) {
+      $directories[] = $conf['system.file']['path.private'];
+    }
+    if (!empty($conf['system.file']['path.temporary'])) {
+      $directories[] = $conf['system.file']['path.temporary'];
+    }
+    else {
+      // If the temporary directory is not overridden use an appropriate
+      // temporary path for the system.
+      $directories[] = file_directory_os_temp();
+    }
   }
 
   // Check the config directory if it is defined in settings.php. If it isn't
@@ -2212,6 +2226,22 @@ function system_update_8046() {
     // This does not fire a hook just calls views.
     config_install_default_config('module', 'views');
   }
+}
+
+/**
+ * Moves site system settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8047() {
+  update_variables_to_config('system.file', array(
+    'allow_insecure_uploads' => 'allow_insecure_uploads',
+    'file_default_scheme' => 'default_scheme',
+    'file_chmod_directory' => 'chmod.directory',
+    'file_chmod_file' => 'chmod.file',
+    'file_private_path' => 'path.private',
+    'file_temporary_path' => 'path.temporary',
+  ));
 }
 
 /**

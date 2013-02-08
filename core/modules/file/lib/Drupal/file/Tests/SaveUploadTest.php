@@ -180,6 +180,7 @@ class SaveUploadTest extends FileManagedTestBase {
    * Test dangerous file handling.
    */
   function testHandleDangerousFile() {
+    $config = config('system.file');
     // Allow the .php extension and make sure it gets renamed to .txt for
     // safety. Also check to make sure its MIME type was changed.
     $edit = array(
@@ -201,7 +202,7 @@ class SaveUploadTest extends FileManagedTestBase {
 
     // Ensure dangerous files are not renamed when insecure uploads is TRUE.
     // Turn on insecure uploads.
-    variable_set('allow_insecure_uploads', 1);
+    $config->set('allow_insecure_uploads', 1)->save();
     // Reset the hook counters.
     file_test_reset();
 
@@ -215,7 +216,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(array('validate', 'insert'));
 
     // Turn off insecure uploads.
-    variable_set('allow_insecure_uploads', 0);
+    $config->set('allow_insecure_uploads', 0)->save();
   }
 
   /**
@@ -223,7 +224,7 @@ class SaveUploadTest extends FileManagedTestBase {
    */
   function testHandleFileMunge() {
     // Ensure insecure uploads are disabled for this test.
-    variable_set('allow_insecure_uploads', 0);
+    config('system.file')->set('allow_insecure_uploads', 0)->save();
     $this->image = file_move($this->image, $this->image->uri . '.foo.' . $this->image_extension);
 
     // Reset the hook counters to get rid of the 'move' we just called.

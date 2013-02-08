@@ -144,6 +144,15 @@ abstract class TestBase {
   protected $originalSettings;
 
   /**
+   * The public file directory for the test environment.
+   *
+   * This is set in TestBase::prepareEnvironment().
+   *
+   * @var string
+   */
+  protected $public_files_directory;
+
+  /**
    * Whether to die in case any test assertion fails.
    *
    * @see run-tests.sh
