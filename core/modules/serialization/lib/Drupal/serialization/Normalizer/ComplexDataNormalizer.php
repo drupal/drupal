@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Serialization\ComplexDataNormalizer.
+ * Contains \Drupal\serialization\Normalizer\ComplexDataNormalizer.
  */
 
-namespace Drupal\Core\Serialization;
+namespace Drupal\serialization\Normalizer;
 
-use Drupal\Core\Serialization\NormalizerBase;
 use Symfony\Component\Serializer\Exception\RuntimeException;
 
 /**

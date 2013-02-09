@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Serialization\XmlEncoder.
+ * Contains \Drupal\serialization\Encoder\XmlEncoder.
  */
 
-namespace Drupal\Core\Serialization;
+namespace Drupal\serialization\Encoder;
 
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;

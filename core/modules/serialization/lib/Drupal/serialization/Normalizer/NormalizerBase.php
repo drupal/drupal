@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Contains Drupal\Core\Serialization\NormalizerBase.
+ * Contains \Drupal\serialization\Normalizer\NormalizerBase.
  */
 
-namespace Drupal\Core\Serialization;
+namespace Drupal\serialization\Normalizer;
 
-use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\Serializer\Exception\RuntimeException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;

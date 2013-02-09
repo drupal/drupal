@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\serialization\RegisterSerializationClassesPass.
+ * Contains \Drupal\serialization\RegisterSerializationClassesCompilerPass.
  */
 
-namespace Drupal\Core\DependencyInjection\Compiler;
+namespace Drupal\serialization;
 
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 /**
  * Adds services tagged 'normalizer' and 'encoder' to the Serializer.
  */
-class RegisterSerializationClassesPass implements CompilerPassInterface {
+class RegisterSerializationClassesCompilerPass implements CompilerPassInterface {
 
   /**
    * Adds services to the Serializer.

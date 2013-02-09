@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Serialization\EntitySerializationTest.
+ * Contains \Drupal\serialization\Tests\EntitySerializationTest.
  */
 
-namespace Drupal\system\Tests\Serialization;
+namespace Drupal\serialization\Tests;
 
+use Drupal\serialization\Encoder\JsonEncoder;
+use Drupal\serialization\Normalizer\ComplexDataNormalizer;
+use Drupal\serialization\Normalizer\TypedDataNormalizer;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\Serializer\Serializer;
-use Drupal\Core\Serialization\JsonEncoder;
-use Drupal\Core\Serialization\ComplexDataNormalizer;
-use Drupal\Core\Serialization\TypedDataNormalizer;
 
 /**
  * Tests entity normalization and serialization of supported core formats.
@@ -23,7 +23,7 @@ class EntitySerializationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('entity_test', 'serialization');
 
   /**
    * The test values.

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\Core\Serialization\JsonEncoder.
+ * Contains \Drupal\serialization\Encoder\JsonEncoder.
  */
 
-namespace Drupal\Core\Serialization;
+namespace Drupal\serialization\Encoder;
 
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder as BaseJsonEncoder;

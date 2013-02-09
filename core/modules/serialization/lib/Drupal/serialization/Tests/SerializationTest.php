@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Serialization\SerializationTest.
+ * Contains \Drupal\serialization\Tests\SerializationTest.
  */
 
-namespace Drupal\system\Tests\Serialization;
+namespace Drupal\serialization\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
@@ -17,12 +17,12 @@ class SerializationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('serialization_test');
+  public static $modules = array('serialization', 'serialization_test');
 
   /**
    * The serializer service to test.
    *
-   * @var Symfony\Component\Serializer\SerializerInterface
+   * @var \Symfony\Component\Serializer\SerializerInterface
    */
   protected $serializer;
 

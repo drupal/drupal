@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\serialization_test\SerializationTestNormalizer.
+ * Contains \Drupal\serialization_test\SerializationTestNormalizer.
  */
 
 namespace Drupal\serialization_test;

@@ -2,14 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\serialization_test\SerializationTestBundle.
+ * Contains \Drupal\serialization_test\SerializationTestBundle.
  */
 
 namespace Drupal\serialization_test;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * SerializationTest dependency injection container.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\serialization_test\SerializationTestEncoder.
+ * Contains \Drupal\serialization_test\SerializationTestEncoder.
  */
 
 namespace Drupal\serialization_test;
@@ -19,15 +19,7 @@ class SerializationTestEncoder implements EncoderInterface {
   static protected $format = 'serialization_test';
 
   /**
-   * Encodes data into the requested format.
-   *
-   * @param mixed $data
-   *   Data to encode.
-   * @param string $format
-   *   Format name.
-   *
-   * @return string
-   *   A string representation of $data in the requested format.
+   * Implements \Symfony\Component\Serializer\Encoder\EncoderInterface::encode().
    */
   public function encode($data, $format, array $context = array()) {
     // @see Drupal\serialization_test\SerializationTestNormalizer::normalize().
@@ -35,13 +27,7 @@ class SerializationTestEncoder implements EncoderInterface {
   }
 
   /**
-   * Checks whether this encoder can encode to the requested format.
-   *
-   * @param string $format
-   *   The short name of the format.
-   *
-   * @return bool
-   *   Returns TRUE if this encoder can encode to the requested format.
+   * Implements \Symfony\Component\Serializer\Encoder\EncoderInterface::supportsEncoding().
    */
   public function supportsEncoding($format) {
     return static::$format === $format;
