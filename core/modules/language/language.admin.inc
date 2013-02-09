@@ -22,7 +22,6 @@ function language_admin_overview_form($form, &$form_state) {
     '#type' => 'table',
     '#header' => array(
       t('Name'),
-      t('Default'),
       t('Weight'),
       t('Operations'),
     ),
@@ -35,15 +34,6 @@ function language_admin_overview_form($form, &$form_state) {
     $form['languages'][$langcode]['#attributes']['class'][] = 'draggable';
     $form['languages'][$langcode]['name'] = array(
       '#markup' => check_plain($language->name),
-    );
-    $form['languages'][$langcode]['default'] = array(
-      '#type' => 'radio',
-      '#parents' => array('site_default'),
-      '#title' => t('Set @title as default', array('@title' => $language->name)),
-      '#title_display' => 'invisible',
-      '#return_value' => $langcode,
-      '#default_value' => ($langcode == $default->langcode ? $langcode : NULL),
-      '#id' => 'edit-site-default-' . $langcode,
     );
     $form['languages'][$langcode]['weight'] = array(
       '#type' => 'weight',
@@ -87,10 +77,8 @@ function language_admin_overview_form($form, &$form_state) {
  */
 function language_admin_overview_form_submit($form, &$form_state) {
   $languages = language_list();
-  $old_default = language_default();
 
   foreach ($languages as $langcode => $language) {
-    $language->default = ($form_state['values']['site_default'] == $langcode);
     $language->weight = $form_state['values']['languages'][$langcode]['weight'];
     language_save($language);
   }

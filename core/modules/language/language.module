@@ -24,13 +24,13 @@ function language_help($path, $arg) {
       return $output;
 
     case 'admin/config/regional/language':
-      return '<p>' . t('With multiple languages enabled, registered users may select their preferred language and authors can assign a specific language to content.') . '</p>';
+      return '<p>' . t('With multiple languages enabled, registered users may select their preferred language and authors can assign a specific language to content. The selection of what language is used to display page elements is made depending on the detection menthod settings in the <a href="@detection">Detection and Selection</a> tab.', array('@detection' => url('admin/config/regional/language/detection'))) . '</p>';
 
     case 'admin/config/regional/language/add':
       return '<p>' . t('Add a language to be supported by your site. If your desired language is not available, pick <em>Custom language...</em> at the end and provide a language code and other details manually.') . '</p>';
 
     case 'admin/config/regional/language/detection':
-      $output = '<p>' . t("Define how to decide which language is used to display page elements (primarily text provided by Drupal and modules, such as field labels and help text). This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used for that type of text. Define the order of evaluation of language detection methods on this page.") . '</p>';
+      $output = '<p>' . t('Define how to decide which language is used to display page elements (primarily text provided by Drupal and modules, such as field labels and help text). This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used for that type of text. Define the order of evaluation of language detection methods on this page. Default language can be changed at the <a href="@region-settings">Regional settings</a> page.', array('@region-settings' => url('admin/config/regional/settings'))) . '</p>';
       return $output;
 
     case 'admin/config/regional/language/detection/session':
@@ -876,4 +876,39 @@ function language_update_locked_weights() {
       ->condition('langcode', $language->langcode)
       ->execute();
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter for system_regional_settings().
+ *
+ * @see language_system_regional_settings_form_submit()
+ */
+function language_form_system_regional_settings_alter(&$form, &$form_state) {
+  $languages = language_list();
+  $default = language_default();
+  foreach ($languages as $key => $language) {
+    $language_options[$key] = $language->name;
+  }
+  $form['locale']['site_default_language'] = array(
+    '#type' => 'select',
+    '#title' => t('Default language'),
+    '#default_value' => $default->langcode,
+    '#options' => $language_options,
+    '#description' => t('It is not recommended to change the default language on a working site. <a href="@language-detection">Configure the Selected language</a> setting on the detection and selection page to change the fallback language for language selection.', array('@language-detection' => url('admin/config/regional/language/detection'))),
+    '#weight' => -1,
+  );
+  // Add submit handler to save default language.
+  $form['#submit'][] = 'language_system_regional_settings_form_submit';
+}
+
+/**
+ * Form submission handler for system_regional_settings().
+ *
+ * @see language_form_system_regional_settings_alter()
+ */
+function language_system_regional_settings_form_submit($form, &$form_state) {
+  $languages = language_list();
+  $language = $languages[$form_state['values']['site_default_language']];
+  $language->default = TRUE;
+  language_save($language);
 }

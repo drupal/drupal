@@ -36,7 +36,7 @@ class LanguageConfigurationTest extends WebTestBase {
     global $base_url;
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'administer site configuration'));
     $this->drupalLogin($admin_user);
 
     // Check if the Default English language has no path prefix.
@@ -59,17 +59,18 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', 'French has a path prefix.');
 
     // Check if we can change the default language.
-    $this->drupalGet('admin/config/regional/language');
-    $this->assertFieldChecked('edit-site-default-en', 'English is the default language.');
+    $this->drupalGet('admin/config/regional/settings');
+    $this->assertOptionSelected('edit-site-default-language', 'en', 'English is the default language.');
+
     // Change the default language.
     $edit = array(
-      'site_default' => 'fr',
+      'site_default_language' => 'fr',
     );
     $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-site-default-en', 'Default language updated.');
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertOptionSelected('edit-site-default-language', 'fr', 'Default language updated.');
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/settings', array('absolute' => TRUE)), 'Correct page redirection.');
 
-    // Check if a valid language prefix is added afrer changing the default
+    // Check if a valid language prefix is added after changing the default
     // language.
     $this->drupalGet('admin/config/regional/language/detection/url');
     $this->assertFieldByXPath('//input[@name="prefix[en]"]', 'en', 'A valid path prefix has been added to the previous default language.');

@@ -34,7 +34,7 @@ class LocaleContentTest extends WebTestBase {
    */
   function testMachineNameLTR() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'administer site configuration'));
 
     // Log in as admin.
     $this->drupalLogin($admin_user);
@@ -48,9 +48,10 @@ class LocaleContentTest extends WebTestBase {
     $edit['predefined_langcode'] = 'ar';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
-    $edit = array();
-    $edit['site_default'] = 'ar';
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $edit = array(
+      'site_default_language' => 'ar',
+    );
+    $this->drupalpost('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Verify that the machine name field is still LTR for a new content type.
     $this->drupalGet('admin/structure/types/add');

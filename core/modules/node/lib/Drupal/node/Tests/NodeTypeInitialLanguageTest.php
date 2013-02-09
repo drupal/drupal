@@ -30,7 +30,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer node fields', 'administer node display', 'administer languages'));
+    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer node fields', 'administer node display', 'administer languages', 'administer site configuration'));
     $this->drupalLogin($web_user);
   }
 
@@ -59,9 +59,9 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
     $edit = array(
-      'site_default' => 'hu',
+      'site_default_language' => 'hu',
     );
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalpost('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Tests the initial language after changing the site default language.
     // First unhide the language selector.

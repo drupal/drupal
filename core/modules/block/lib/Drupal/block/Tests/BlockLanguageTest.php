@@ -38,7 +38,7 @@ class BlockLanguageTest extends WebTestBase {
     parent::setUp();
 
     // Create a new user, allow him to manage the blocks and the languages.
-    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'administer languages'));
+    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'administer languages', 'administer site configuration'));
     $this->drupalLogin($this->adminUser);
 
     // Add predefined language.
@@ -69,9 +69,9 @@ class BlockLanguageTest extends WebTestBase {
 
     // Change the default language.
     $edit = array(
-      'site_default' => 'fr',
+      'site_default_language' => 'fr',
     );
-    $this->drupalpost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalpost('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Reset the static cache of the language list.
     drupal_static_reset('language_list');
