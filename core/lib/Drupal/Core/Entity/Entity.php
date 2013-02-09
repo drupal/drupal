@@ -161,19 +161,22 @@ class Entity implements IteratorAggregate, EntityInterface {
     elseif (isset($entity_info['uri_callback'])) {
       $uri_callback = $entity_info['uri_callback'];
     }
-    else {
-      return NULL;
-    }
 
-    // Invoke the callback to get the URI. If there is no callback, return NULL.
+    // Invoke the callback to get the URI. If there is no callback, use the
+    // default URI format.
     if (isset($uri_callback) && function_exists($uri_callback)) {
       $uri = $uri_callback($this);
-      // Pass the entity data to url() so that alter functions do not need to
-      // look up this entity again.
-      $uri['options']['entity_type'] = $this->entityType;
-      $uri['options']['entity'] = $this;
-      return $uri;
     }
+    else {
+      $uri = array(
+        'path' => 'entity/' . $this->entityType . '/' . $this->id(),
+      );
+    }
+    // Pass the entity data to url() so that alter functions do not need to
+    // look up this entity again.
+    $uri['options']['entity_type'] = $this->entityType;
+    $uri['options']['entity'] = $this;
+    return $uri;
   }
 
   /**
