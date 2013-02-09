@@ -61,6 +61,7 @@ Drupal.contextual.prototype.init = function() {
     .on('mouseenter.contextual', {highlight: true}, highlightRegion)
     .on('mouseleave.contextual', {highlight: false}, highlightRegion)
     .on('mouseleave.contextual', '.contextual', {show: false}, $.proxy(this.triggerLeaveHandler, this))
+    .on('click.contextual', '.contextual-links a', {highlight: false}, highlightRegion)
     .on('focus.contextual', '.contextual-links a, .contextual .trigger', {highlight: true}, highlightRegion)
     .on('blur.contextual', '.contextual-links a, .contextual .trigger', {highlight: false}, highlightRegion);
 };
