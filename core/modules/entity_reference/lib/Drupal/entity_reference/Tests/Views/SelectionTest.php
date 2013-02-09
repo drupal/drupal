@@ -18,9 +18,9 @@ class SelectionTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Entity Reference selection handler',
+      'name' => 'Entity Reference: Selection handler',
       'description' => 'Tests entity reference selection handler provided by Views.',
-      'group' => 'Views',
+      'group' => 'Views Modules',
     );
   }
 
