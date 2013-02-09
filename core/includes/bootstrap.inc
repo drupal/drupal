@@ -716,7 +716,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
   // Export these settings.php variables to the global namespace.
-  global $databases, $cookie_domain, $conf, $installed_profile, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
+  global $databases, $cookie_domain, $conf, $installed_profile, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
   $conf = array();
 
   // Make conf_path() available as local variable in settings.php.

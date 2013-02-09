@@ -392,11 +392,8 @@ function install_begin_request(&$install_state) {
   else {
     $task = NULL;
 
-    // Do not install over a configured settings.php. Check the 'db_url'
-    // variable in addition to 'databases', since previous versions of Drupal
-    // used that (and we do not want to allow installations on an existing site
-    // whose settings file has not yet been updated).
-    if (!empty($GLOBALS['databases']) || !empty($GLOBALS['db_url'])) {
+    // Do not install over a configured settings.php.
+    if (!empty($GLOBALS['databases'])) {
       throw new Exception(install_already_done_error());
     }
   }
