@@ -20,6 +20,39 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
+   * Test local directory handling functions.
+   */
+  function testFileCheckLocalDirectoryHandling() {
+    $directory = conf_path() . '/files';
+
+    // Check a new recursively created local directory for correct file system
+    // permissions.
+    $parent = $this->randomName();
+    $child = $this->randomName();
+
+    // Files directory already exists.
+    $this->assertTrue(is_dir($directory), t('Files directory already exists.'), 'File');
+    // Make files directory writable only.
+    $old_mode = fileperms($directory);
+
+    // Create the directories.
+    $parent_path = $directory . DIRECTORY_SEPARATOR . $parent;
+    $child_path = $parent_path . DIRECTORY_SEPARATOR . $child;
+    $this->assertTrue(drupal_mkdir($child_path, 0775, TRUE), t('No error reported when creating new local directories.'), 'File');
+
+    // Ensure new directories also exist.
+    $this->assertTrue(is_dir($parent_path), t('New parent directory actually exists.'), 'File');
+    $this->assertTrue(is_dir($child_path), t('New child directory actually exists.'), 'File');
+
+    // Check that new directory permissions were set properly.
+    $this->assertDirectoryPermissions($parent_path, 0775);
+    $this->assertDirectoryPermissions($child_path, 0775);
+
+    // Check that existing directory permissions were not modified.
+    $this->assertDirectoryPermissions($directory, $old_mode);
+  }
+
+  /**
    * Test directory handling functions.
    */
   function testFileCheckDirectoryHandling() {

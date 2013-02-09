@@ -131,6 +131,7 @@ abstract class FileTestBase extends WebTestBase {
 
     // Mask out all but the last three octets.
     $actual_mode = fileperms($directory) & 0777;
+    $expected_mode = $expected_mode & 0777;
 
     // PHP on Windows has limited support for file permissions. Usually each of
     // "user", "group" and "other" use one octal digit (3 bits) to represent the

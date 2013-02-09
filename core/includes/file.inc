@@ -501,8 +501,8 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
   if (!is_dir($directory)) {
     // Let mkdir() recursively create directories and use the default directory
     // permissions.
-    if (($options & FILE_CREATE_DIRECTORY) && @drupal_mkdir($directory, NULL, TRUE)) {
-      return drupal_chmod($directory);
+    if ($options & FILE_CREATE_DIRECTORY) {
+      return @drupal_mkdir($directory, NULL, TRUE);
     }
     return FALSE;
   }
@@ -1702,19 +1702,21 @@ function drupal_basename($uri, $suffix = NULL) {
 }
 
 /**
- * Creates a directory using Drupal's default mode.
+ * Creates a directory, optionally creating missing components in the path to
+ * the directory.
  *
- * PHP's mkdir() does not respect Drupal's default permissions mode. If a mode
- * is not provided, this function will make sure that Drupal's is used.
- *
- * Compatibility: normal paths and stream wrappers.
+ * When PHP's mkdir() creates a directory, the requested mode is affected by the
+ * process's umask. This function overrides the umask and sets the mode
+ * explicitly for all directory components created.
  *
  * @param $uri
  *   A URI or pathname.
  * @param $mode
- *   By default the Drupal mode is used.
+ *   Mode given to created directories. Defaults to the directory mode
+ *   configured in the Drupal installation. It must have a leading zero.
  * @param $recursive
- *   Default to FALSE.
+ *   Create directories recursively, defaults to FALSE. Cannot work with a mode
+ *   which denies writing or execution to the owner of the process.
  * @param $context
  *   Refer to http://php.net/manual/ref.stream.php
  *
@@ -1734,7 +1736,52 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
     }
   }
 
-  if (!isset($context)) {
+  // If the URI has a scheme, don't override the umask - schemes can handle this
+  // issue in their own implementation.
+  if (file_uri_scheme($uri)) {
+    return _drupal_mkdir_call($uri, $mode, $recursive, $context);
+  }
+
+  // If recursive, create each missing component of the parent directory
+  // individually and set the mode explicitly to override the umask.
+  if ($recursive) {
+    $components = explode(DIRECTORY_SEPARATOR, $uri);
+    array_pop($components);
+    $recursive_path = '';
+    foreach ($components as $component) {
+      $recursive_path .= $component;
+
+      if (!file_exists($recursive_path)) {
+        if (!_drupal_mkdir_call($recursive_path, $mode, FALSE, $context)) {
+          return FALSE;
+        }
+        // Not necessary to use drupal_chmod() as there is no scheme.
+        if (!chmod($recursive_path, $mode)) {
+          return FALSE;
+        }
+      }
+
+      $recursive_path .= DIRECTORY_SEPARATOR;
+    }
+  }
+
+  // Do not check if the top-level directory already exists, as this condition
+  // must cause this function to fail.
+  if (!_drupal_mkdir_call($uri, $mode, FALSE, $context)) {
+    return FALSE;
+  }
+  // Not necessary to use drupal_chmod() as there is no scheme.
+  return chmod($uri, $mode);
+}
+
+/**
+ * Helper function. Ensures we don't pass a NULL as a context resource to
+ * mkdir().
+ *
+ * @see drupal_mkdir()
+ */
+function _drupal_mkdir_call($uri, $mode, $recursive, $context) {
+  if (is_null($context)) {
     return mkdir($uri, $mode, $recursive);
   }
   else {
