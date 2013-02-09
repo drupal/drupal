@@ -640,9 +640,23 @@ function update_fix_d8_requirements() {
 
 /**
  * Installs a new module in Drupal 8 via hook_update_N().
+ *
+ * @param array $modules
+ *   List of modules to enable. Dependencies are not checked and must be
+ *   ensured by the caller.
+ * @param bool $update_schema_version
+ *   (optional) The schema version the module should be set to. Defaults to 0
+ *   which works well for completely new modules.
+ *
+ * @return array
+ *   List of the old schema versions keyed by the module names,
+ *   SCHEMA_UNINSTALLED if it was not installed before. Additional manual
+ *   installation steps like installing default configuration might be necessary
+ *   if the module was not installed before.
  */
-function update_module_enable(array $modules) {
+function update_module_enable(array $modules, $schema_version = 0) {
   $schema_store = drupal_container()->get('keyvalue')->get('system.schema');
+  $old_schema = array();
   foreach ($modules as $module) {
     // Check for initial schema and install it. The schema version of a newly
     // installed module is always 0. Using 8000 here would be inconsistent
@@ -666,9 +680,19 @@ function update_module_enable(array $modules) {
     config('system.module.disabled')
       ->clear($module)
       ->save();
-    // Change the schema version from SCHEMA_UNINSTALLED to 0, so any module
-    // updates since the module's inception are executed in a core upgrade.
-    $schema_store->set($module, 0);
+
+    $current_schema = $schema_store->get($module);
+    // Set the schema version if the module was not just disabled before.
+    if ($current_schema === NULL || $current_schema === SCHEMA_UNINSTALLED) {
+      // Change the schema version to the given value (defaults to 0), so any
+      // module updates since the module's inception are executed in a core
+      // upgrade.
+      $schema_store->set($module, $schema_version);
+      $old_schema[$module] = SCHEMA_UNINSTALLED;
+    }
+    else {
+      $old_schema[$module] = $current_schema;
+    }
 
     // system_list_reset() is in module.inc but that would only be available
     // once the variable bootstrap is done.
@@ -676,6 +700,7 @@ function update_module_enable(array $modules) {
     system_list_reset();
     //  @todo: figure out what to do about hook_install() and hook_enable().
   }
+  return $old_schema;
 }
 
 /**

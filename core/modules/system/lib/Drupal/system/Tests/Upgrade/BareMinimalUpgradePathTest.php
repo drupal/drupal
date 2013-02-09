@@ -87,6 +87,9 @@ class BareMinimalUpgradePathTest extends UpgradePathTestBase {
       return !empty($data->info['required']);
     });
     $this->assertEqual(array_diff_key($required, $enabled), array());
+
+    // Verify that image.module was correctly installed.
+    $this->assertEqual('thumbnail', config('image.style.thumbnail')->get('name'));
   }
 
 }
