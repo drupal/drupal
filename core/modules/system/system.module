@@ -2133,7 +2133,7 @@ function system_library_info() {
     ),
   );
   $libraries['drupal.system.modules'] = array(
-    'title' => 'System cron',
+    'title' => 'System modules',
     'version' => VERSION,
     'js' => array(
       drupal_get_path('module', 'system') . '/system.modules.js' => array(),

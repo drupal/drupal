@@ -815,6 +815,26 @@ function system_modules($form, $form_state = array()) {
     return system_modules_confirm_form($visible_files, $form_state['storage']);
   }
 
+  // JS-only table filters.
+  $form['filters'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('table-filter', 'js-show'),
+    ),
+  );
+  $form['filters']['text'] = array(
+    '#type' => 'search',
+    '#title' => t('Search'),
+    '#size' => 30,
+    '#placeholder' => t('Enter module name…'),
+    '#attributes' => array(
+      'class' => array('table-filter-text'),
+      'data-table' => '#system-modules',
+      'autocomplete' => 'off',
+      'title' => t('Enter a part of the module name or description to filter by.'),
+    ),
+  );
+
   $modules = array();
   $form['modules'] = array('#tree' => TRUE);
 
@@ -2363,11 +2383,11 @@ function theme_system_modules_details($variables) {
     $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
 
     // Add the module label and expand/collapse functionalty.
-    $col2 = '<label id="' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name">' . drupal_render($module['name']) . '</label>';
+    $col2 = '<label id="' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
     $row[] = array('class' => array('module'), 'data' => $col2);
 
     // Add the description, along with any modules it requires.
-    $description = '<span class="details"><span class="text">' . drupal_render($module['description']) . '</span></span>';
+    $description = '<span class="details"><span class="text table-filter-text-source">' . drupal_render($module['description']) . '</span></span>';
     if ($version || $requires || $required_by) {
       $description .= ' <div class="requirements">';
       if ($version) {
