@@ -566,6 +566,7 @@ Drupal.viewsUi.rearrangeFilterHandler.prototype.insertAddRemoveFilterGroupLinks 
   // Find each (visually hidden) button for removing a filter group and insert
   // a link next to it.
   var length = this.removeGroupButtons.length;
+  var i;
   for (i = 0; i < length; i++) {
     var $removeGroupButton = $(this.removeGroupButtons[i]);
     var buttonId = $removeGroupButton.attr('id');
@@ -766,6 +767,7 @@ Drupal.viewsUi.rearrangeFilterHandler.prototype.redrawOperatorLabels = function 
   "use strict";
 
   var $ = jQuery;
+  var i;
   for (i = 0; i < this.draggableRows.length; i++) {
     // Within the row, the operator labels are displayed inside the first table
     // cell (next to the filter name).
