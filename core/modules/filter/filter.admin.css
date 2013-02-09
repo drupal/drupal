@@ -32,7 +32,7 @@
 }
 .filter-help a {
   background: transparent url(../../misc/help.png) right center no-repeat; /* LTR */
-  padding: 0 20px;
+  padding: 0 20px 0 0; /* LTR */
 }
 
 .text-format-wrapper .description {
@@ -44,4 +44,11 @@
   margin-top: 0;
   padding-bottom: 0;
   padding-top: 0;
+}
+
+/**
+ * Improve filter tips position.
+ */
+.tips {
+  padding-left: 0; /* LTR */
 }

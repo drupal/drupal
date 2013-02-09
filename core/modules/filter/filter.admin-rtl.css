@@ -12,4 +12,12 @@
 }
 .filter-help a {
   background-position: left center;
+  padding: 0 0 0 20px;
+}
+
+/**
+ * Improve filter tips position.
+ */
+.tips {
+  padding-right: 0;
 }
