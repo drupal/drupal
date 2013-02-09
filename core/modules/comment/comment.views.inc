@@ -118,8 +118,8 @@ function comment_views_data() {
 
   // mail
   $data['comment']['mail'] = array(
-    'title' => t('Mail'),
-    'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
+    'title' => t('E-mail'),
+    'help' => t('E-mail of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
       'id' => 'standard',
      ),
@@ -240,7 +240,7 @@ function comment_views_data() {
 
   // status (approved or not)
   $data['comment']['status'] = array(
-    'title' => t('Approved'),
+    'title' => t('Approved status'),
     'help' => t('Whether the comment is approved (or still in the moderation queue).'),
     'field' => array(
       'id' => 'boolean',
@@ -250,7 +250,7 @@ function comment_views_data() {
     ),
     'filter' => array(
       'id' => 'boolean',
-      'label' => t('Approved comment'),
+      'label' => t('Approved comment status'),
       'type' => 'yes-no',
     ),
     'sort' => array(
@@ -258,46 +258,46 @@ function comment_views_data() {
     ),
   );
 
-  // link to view comment
+  // Link to view comment.
   $data['comment']['view_comment'] = array(
     'field' => array(
-      'title' => t('View link'),
+      'title' => t('Link to comment'),
       'help' => t('Provide a simple link to view the comment.'),
       'id' => 'comment_link',
     ),
   );
 
-  // link to edit comment
+  // Link to edit comment.
   $data['comment']['edit_comment'] = array(
     'field' => array(
-      'title' => t('Edit link'),
+      'title' => t('Link to edit comment'),
       'help' => t('Provide a simple link to edit the comment.'),
       'id' => 'comment_link_edit',
     ),
   );
 
-  // link to delete comment
+  // Link to delete comment.
   $data['comment']['delete_comment'] = array(
     'field' => array(
-      'title' => t('Delete link'),
+      'title' => t('Link to delete comment'),
       'help' => t('Provide a simple link to delete the comment.'),
       'id' => 'comment_link_delete',
     ),
   );
 
-  // link to approve comment
+  // Link to approve comment.
   $data['comment']['approve_comment'] = array(
     'field' => array(
-      'title' => t('Approve link'),
+      'title' => t('Link to approve comment'),
       'help' => t('Provide a simple link to approve the comment.'),
       'id' => 'comment_link_approve',
     ),
   );
 
-  // link to reply to comment
+  // Link to reply to comment.
   $data['comment']['replyto_comment'] = array(
     'field' => array(
-      'title' => t('Reply-to link'),
+      'title' => t('Link to reply-to comment'),
       'help' => t('Provide a simple link to reply to the comment.'),
       'id' => 'comment_link_reply',
     ),
@@ -470,7 +470,7 @@ function comment_views_data() {
     'title' => t('Last comment CID'),
     'help' => t('Display the last comment of a node'),
     'relationship' => array(
-      'title' => t('Last Comment'),
+      'title' => t('Last comment'),
       'help' => t('The last comment of a node.'),
       'group' => t('Comment'),
       'base' => 'comment',

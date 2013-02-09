@@ -116,8 +116,8 @@ function user_views_data() {
   // mail
   // Note that this field implements field level access control.
   $data['users']['mail'] = array(
-    'title' => t('E-mail'), // The item it appears as on the UI,
-    'help' => t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.'), // The help that appears on the UI,
+    'title' => t('E-mail'),
+    'help' => t('E-mail address for a given user. This field is normally not shown to users, so be cautious when using it.'),
     'field' => array(
       'id' => 'user_mail',
     ),
@@ -153,7 +153,7 @@ function user_views_data() {
   // link
   $data['users']['view_user'] = array(
     'field' => array(
-      'title' => t('Link'),
+      'title' => t('Link to user'),
       'help' => t('Provide a simple link to the user.'),
       'id' => 'user_link',
       'click sortable' => FALSE,
@@ -261,7 +261,7 @@ function user_views_data() {
 
   // active status
   $data['users']['status'] = array(
-    'title' => t('Active'), // The item it appears as on the UI,
+    'title' => t('Active status'),
     'help' => t('Whether a user is active or blocked.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
@@ -308,7 +308,7 @@ function user_views_data() {
 
   $data['users']['edit_node'] = array(
     'field' => array(
-      'title' => t('Edit link'),
+      'title' => t('Link to edit user'),
       'help' => t('Provide a simple link to edit the user.'),
       'id' => 'user_link_edit',
       'click sortable' => FALSE,
@@ -317,7 +317,7 @@ function user_views_data() {
 
   $data['users']['cancel_node'] = array(
     'field' => array(
-      'title' => t('Cancel link'),
+      'title' => t('Link to cancel user'),
       'help' => t('Provide a simple link to cancel the user.'),
       'id' => 'user_link_cancel',
       'click sortable' => FALSE,
