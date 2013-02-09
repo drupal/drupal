@@ -390,7 +390,12 @@ class ViewsUIController {
   public function getViewUI(ViewStorageInterface $view) {
     $view_ui = new ViewUI($view);
     if ($new_view = $this->tempStore->get($view_ui->id())) {
-      $new_view->set('disabled', $view_ui->get('disabled'));
+      if ($view_ui->status()) {
+        $new_view->enable();
+      }
+      else {
+        $new_view->disable();
+      }
     }
     else {
       $new_view = $view_ui;
