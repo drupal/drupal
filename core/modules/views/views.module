@@ -1054,16 +1054,22 @@ function views_get_all_views() {
  * Returns an array of all enabled views, as fully loaded $view objects.
  */
 function views_get_enabled_views() {
-  $views = views_get_all_views();
-  return array_filter($views, 'views_view_is_enabled');
+  $query = drupal_container()->get('entity.query')->get('view')
+    ->condition('status', TRUE)
+    ->execute();
+
+  return entity_load_multiple('view', $query);
 }
 
 /**
  * Returns an array of all disabled views, as fully loaded $view objects.
  */
 function views_get_disabled_views() {
-  $views = views_get_all_views();
-  return array_filter($views, 'views_view_is_disabled');
+  $query = drupal_container()->get('entity.query')->get('view')
+    ->condition('status', FALSE)
+    ->execute();
+
+  return entity_load_multiple('view', $query);
 }
 
 /**
