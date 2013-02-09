@@ -113,7 +113,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
       $comment[] = $image . ':';
       // Hash the image source in a custom test attribute, because it might
       // contain characters that confuse XPath.
-      $comment[] = '<img src="' . $image . '" testattribute="' . md5($image) . '" />';
+      $comment[] = '<img src="' . $image . '" testattribute="' . hash('sha256', $image) . '" />';
     }
     $edit = array(
       'comment_body[und][0][value]' => implode("\n", $comment),
@@ -121,7 +121,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     $this->drupalPost('node/' . $this->node->nid, $edit, t('Save'));
     foreach ($images as $image => $converted) {
       $found = FALSE;
-      foreach ($this->xpath('//img[@testattribute="' . md5($image) . '"]') as $element) {
+      foreach ($this->xpath('//img[@testattribute="' . hash('sha256', $image) . '"]') as $element) {
         $found = TRUE;
         if ($converted == $red_x_image) {
           $this->assertEqual((string) $element['src'], $red_x_image);
