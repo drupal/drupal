@@ -31,7 +31,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    *
    * @var bool
    */
-  public $status;
+  public $status = TRUE;
 
   /**
    * Overrides Entity::__construct().

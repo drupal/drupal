@@ -86,15 +86,21 @@ class ViewListController extends ConfigEntityListController {
    */
   public function getOperations(EntityInterface $view) {
     $definition = parent::getOperations($view);
-
     $uri = $view->uri();
-    $path = $uri['path'];
 
     $definition['clone'] = array(
       'title' => t('Clone'),
-      'href' => "$path/clone",
+      'href' => $uri['path'] . '/clone',
+      'options' => $uri['options'],
       'weight' => 15,
     );
+
+    // Add AJAX functionality to enable/disable operations.
+    foreach (array('enable', 'disable') as $op) {
+      if (isset($definition[$op])) {
+        $definition[$op]['ajax'] = TRUE;
+      }
+    }
 
     return $definition;
   }
