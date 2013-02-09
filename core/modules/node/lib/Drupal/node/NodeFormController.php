@@ -56,20 +56,6 @@ class NodeFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $node) {
-
-    // Visual representation of the node content form depends on following
-    // parameters:
-    // - the current user has access to view the administration theme.
-    // - the current path is an admin path.
-    // - the node/add / edit pages are configured to be represented in the
-    //   administration theme.
-    $container_type = 'vertical_tabs';
-    $request = drupal_container()->get('request');
-    $path = $request->attributes->get('system_path');
-    if (user_access('view the administration theme') && path_is_admin($path)) {
-      $container_type = 'container';
-    }
-
     $user_config = config('user.settings');
     // Some special stuff when previewing a node.
     if (isset($form_state['node_preview'])) {
@@ -124,43 +110,16 @@ class NodeFormController extends EntityFormController {
     );
 
     $form['advanced'] = array(
-      '#type' => $container_type,
+      '#type' => 'vertical_tabs',
       '#attributes' => array('class' => array('entity-meta')),
       '#weight' => 99,
     );
-    $form['meta'] = array (
-      '#type' => 'fieldset',
-      '#attributes' => array('class' => array('entity-meta-header')),
-      '#type' => 'container',
-      '#group' => 'advanced',
-      '#weight' => -100,
-      '#access' => $container_type == 'container',
-      // @todo Geez. Any .status is styled as OK icon? Really?
-      'published' => array(
-        '#type' => 'item',
-        '#wrapper_attributes' => array('class' => array('published')),
-        '#markup' => !empty($node->status) ? t('Published') : t('Not published'),
-        '#access' => !empty($node->nid),
-      ),
-      'changed' => array(
-        '#type' => 'item',
-        '#wrapper_attributes' => array('class' => array('changed', 'container-inline')),
-        '#title' => t('Last saved'),
-        '#markup' => !$node->isNew() ? format_date($node->changed, 'short') : t('Not saved yet'),
-      ),
-      'author' => array(
-        '#type' => 'item',
-        '#wrapper_attributes' => array('class' => array('author', 'container-inline')),
-        '#title' => t('Author'),
-        '#markup' => user_format_name(user_load($node->uid)),
-      ),
-    );
 
-    // Add a log field if the "Create new revision" option is checked, or if the
-    // current user has the ability to check that option.
+    // Add a log field if the "Create new revision" option is checked, or if
+    // the current user has the ability to check that option.
     $form['revision_information'] = array(
-      '#type' => $container_type == 'container' ? 'container' : 'details',
-      '#group' => $container_type == 'container' ? 'meta' : 'advanced',
+      '#type' => 'details',
+      '#group' => 'advanced',
       '#title' => t('Revision information'),
       // Collapsed by default when "Create new revision" is unchecked.
       '#collapsed' => !$node->isNewRevision(),

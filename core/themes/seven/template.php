@@ -111,3 +111,41 @@ function seven_tablesort_indicator($variables) {
 function seven_preprocess_install_page(&$variables) {
   drupal_add_js(drupal_get_path('theme', 'seven') . '/js/mobile.install.js');
 }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * Changes vertical tabs to container and adds meta information.
+ */
+function seven_form_node_form_alter(&$form, &$form_state) {
+  $node = $form_state['controller']->getEntity($form_state);
+
+  $form['advanced']['#type'] = 'container';
+  $form['meta'] = array (
+    '#type' => 'fieldset',
+    '#attributes' => array('class' => array('entity-meta-header')),
+    '#type' => 'container',
+    '#group' => 'advanced',
+    '#weight' => -100,
+    'published' => array(
+      '#type' => 'item',
+      '#wrapper_attributes' => array('class' => array('published')),
+      '#markup' => !empty($node->status) ? t('Published') : t('Not published'),
+      '#access' => !empty($node->nid),
+    ),
+    'changed' => array(
+      '#type' => 'item',
+      '#wrapper_attributes' => array('class' => array('changed', 'container-inline')),
+      '#title' => t('Last saved'),
+      '#markup' => !$node->isNew() ? format_date($node->changed, 'short') : t('Not saved yet'),
+    ),
+    'author' => array(
+      '#type' => 'item',
+      '#wrapper_attributes' => array('class' => array('author', 'container-inline')),
+      '#title' => t('Author'),
+      '#markup' => user_format_name(user_load($node->uid)),
+    ),
+  );
+  $form['revision_information']['#type'] = 'container';
+  $form['revision_information']['#group'] = 'meta';
+}
