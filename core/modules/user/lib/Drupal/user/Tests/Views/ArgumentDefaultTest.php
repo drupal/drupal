@@ -23,7 +23,7 @@ class ArgumentDefaultTest extends UserTestBase {
     return array(
       'name' => 'User: Argument default',
       'description' => 'Tests user argument default plugin.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

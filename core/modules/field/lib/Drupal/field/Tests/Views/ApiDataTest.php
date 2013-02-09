@@ -21,7 +21,7 @@ class ApiDataTest extends FieldTestBase {
     return array(
       'name' => 'Field: Views Data',
       'description' => 'Tests the Field Views data.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

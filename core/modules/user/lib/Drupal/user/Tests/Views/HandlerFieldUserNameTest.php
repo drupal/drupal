@@ -25,7 +25,7 @@ class HandlerFieldUserNameTest extends UserTestBase {
     return array(
       'name' => 'User: Name Field',
       'description' => 'Tests the handler of the user: name field.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

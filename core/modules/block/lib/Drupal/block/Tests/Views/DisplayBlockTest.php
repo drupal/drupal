@@ -36,7 +36,7 @@ class DisplayBlockTest extends ViewTestBase {
     return array(
       'name' => ' Display: Block',
       'description' => 'Tests the block display plugin.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

@@ -32,7 +32,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     return array(
       'name' => 'Field: Field handler',
       'description' => 'Tests the field itself of the Field integration.',
-      'group' => 'Views Modules'
+      'group' => 'Views module integration'
     );
   }
 

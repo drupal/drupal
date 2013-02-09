@@ -36,7 +36,7 @@ class TranslationLinkTest extends EntityTranslationTestBase {
     return array(
       'name' => 'Entity Translation: Link field',
       'description' => 'Tests the Entity translation overview link field handler.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

@@ -32,7 +32,7 @@ class FieldEntityTest extends ViewTestBase {
     return array(
       'name' => 'Field: Entity Api Integration',
       'description' => 'Tests the field plugin base integration with the entity system.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

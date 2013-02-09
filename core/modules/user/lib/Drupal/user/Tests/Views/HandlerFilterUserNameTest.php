@@ -58,7 +58,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     return array(
       'name' => 'User: Name Filter',
       'description' => 'Tests the handler of the user: name filter',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

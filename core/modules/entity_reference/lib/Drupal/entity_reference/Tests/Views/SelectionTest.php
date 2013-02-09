@@ -20,7 +20,7 @@ class SelectionTest extends WebTestBase {
     return array(
       'name' => 'Entity Reference: Selection handler',
       'description' => 'Tests entity reference selection handler provided by Views.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

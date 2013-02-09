@@ -25,7 +25,7 @@ class StatusExtraTest extends NodeTestBase {
     return array(
       'name' => 'Node: Status extra filter',
       'description' => 'Tests the node.status_extra filter handler.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

@@ -25,7 +25,7 @@ class FilterUserUIDTest extends CommentTestBase {
     return array(
       'name' => 'Comment: User UID Filter',
       'description' => 'Tests the user posted or commented filter handler.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

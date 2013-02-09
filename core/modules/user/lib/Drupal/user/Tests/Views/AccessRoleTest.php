@@ -27,7 +27,7 @@ class AccessRoleTest extends AccessTestBase {
     return array(
       'name' => 'User: Access role',
       'description' => 'Tests views role access plugin.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

@@ -25,7 +25,7 @@ class RowRssTest extends CommentTestBase {
     return array(
       'name' => 'Comment: Rss Row',
       'description' => 'Tests the comment rss row plugin.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

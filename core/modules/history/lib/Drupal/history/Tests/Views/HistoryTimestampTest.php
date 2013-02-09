@@ -35,7 +35,7 @@ class HistoryTimestampTest extends ViewTestBase {
     return array(
       'name' => 'History Integration',
       'description' => 'Tests the history timestamp handlers.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 
