@@ -865,9 +865,12 @@ function user_register_access() {
  * Implements hook_menu().
  */
 function user_menu() {
+  // @todo Remove once drupal_valid_path() is fixed to find and access check
+  //   paths managed by the new routing system: http://drupal.org/node/1793520.
   $items['user/autocomplete'] = array(
     'title' => 'User autocomplete',
-    'page callback' => 'user_autocomplete',
+    // _menu_router_build() denies access to paths without a page callback.
+    'page callback' => 'NOT_USED',
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
@@ -876,13 +879,15 @@ function user_menu() {
 
   $items['user/autocomplete/anonymous'] = array(
     'title' => 'User autocomplete including anonymous',
-    'page callback' => 'user_autocomplete',
+    // _menu_router_build() denies access to paths without a page callback.
+    'page callback' => 'NOT_USED',
     'page arguments' => array(TRUE),
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
     'file' => 'user.pages.inc',
   );
+
   // Registration and login pages.
   $items['user'] = array(
     'title' => 'User account',
