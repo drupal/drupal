@@ -877,7 +877,7 @@ function template_preprocess_views_view_rss(&$vars) {
   $vars['description'] = check_plain(decode_entities(strip_tags($style->get_description())));
 
   if ($view->display_handler->getOption('sitename_title')) {
-    $title = $config->id();
+    $title = $config->get('name');
     if ($slogan = $config->get('slogan')) {
       $title .= ' - ' . $slogan;
     }
