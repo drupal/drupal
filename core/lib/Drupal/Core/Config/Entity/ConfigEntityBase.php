@@ -99,15 +99,21 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::enable().
    */
   public function enable() {
-    $this->status = TRUE;
-    return $this;
+    return $this->setStatus(TRUE);
   }
 
   /**
    * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::disable().
    */
   public function disable() {
-    $this->status = FALSE;
+    return $this->setStatus(FALSE);
+  }
+
+  /**
+   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::setStatus().
+   */
+  public function setStatus(bool $status) {
+    $this->status = $status;
     return $this;
   }
 

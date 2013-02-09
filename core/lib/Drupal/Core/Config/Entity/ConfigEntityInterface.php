@@ -49,6 +49,17 @@ interface ConfigEntityInterface extends EntityInterface {
   public function disable();
 
   /**
+   * Sets the status of the configuration entity.
+   *
+   * @param bool $status
+   *   The status of the configuration entity.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
+   *   The class instance that this method is called on.
+   */
+  public function setStatus(bool $status);
+
+  /**
    * Returns whether the configuration entity is enabled.
    *
    * @return bool
