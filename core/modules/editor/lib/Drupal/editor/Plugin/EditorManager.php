@@ -78,7 +78,7 @@ class EditorManager extends PluginManagerBase {
     }
 
     // We have all JavaScript settings, allow other modules to alter them.
-    drupal_alter('editor_js_settings', $settings, $formats);
+    drupal_alter('editor_js_settings', $settings);
 
     if (empty($attachments['library']) && empty($settings)) {
       return array();

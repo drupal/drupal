@@ -87,9 +87,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
     // Case 3: a text editor available & associated (but associated only with
     // the 'Full HTML' text format).
     $unicorn_plugin = $this->editorManager->createInstance('unicorn');
-    $default_editor_settings = $unicorn_plugin->getDefaultSettings();
     $editor = entity_create('editor', array(
-      'name' => 'Full HTML',
       'format' => 'full_html',
       'editor' => 'unicorn',
     ));
@@ -112,6 +110,12 @@ class EditorManagerTest extends DrupalUnitTestBase {
       ),
     );
     $this->assertIdentical($expected, $this->editorManager->getAttachments(array('filtered_html', 'full_html')), 'Correct attachments when one text editor is enabled and retrieving attachments for multiple text formats.');
+
+    // Case 4: a text editor available associated, but now with its JS settings
+    // being altered via hook_editor_js_settings_alter().
+    state()->set('editor_test_js_settings_alter_enabled', TRUE);
+    $expected['js'][0]['data']['editor']['formats']['full_html']['editorSettings']['ponyModeEnabled'] = FALSE;
+    $this->assertIdentical($expected, $this->editorManager->getAttachments(array('filtered_html', 'full_html')), 'hook_editor_js_settings_alter() works correctly.');
   }
 
 }
