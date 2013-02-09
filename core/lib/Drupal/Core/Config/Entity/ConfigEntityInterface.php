@@ -57,7 +57,7 @@ interface ConfigEntityInterface extends EntityInterface {
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The class instance that this method is called on.
    */
-  public function setStatus(bool $status);
+  public function setStatus($status);
 
   /**
    * Returns whether the configuration entity is enabled.

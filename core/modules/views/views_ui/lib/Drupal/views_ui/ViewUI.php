@@ -147,6 +147,13 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
+   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::setStatus().
+   */
+  public function setStatus($status) {
+    return $this->storage->setStatus($status);
+  }
+
+  /**
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::set().
    */
   public function set($property_name, $value) {
