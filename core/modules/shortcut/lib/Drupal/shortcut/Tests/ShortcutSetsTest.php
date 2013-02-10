@@ -91,7 +91,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $set = $this->set;
     $old_mlids = $this->getShortcutInformation($set, 'mlid');
 
-    $set->links[] = $this->generateShortcutLink('admin', $this->randomName());
+    $menu_link = $this->generateShortcutLink('admin', $this->randomName());
+    $menu_link->save();
+    $set->links[$menu_link->uuid()] = $menu_link;
     $set->save();
     $saved_set = shortcut_set_load($set->id());
 

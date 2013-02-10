@@ -389,7 +389,7 @@ function aggregator_save_category($edit) {
       ->execute();
     $op = 'insert';
   }
-  if (isset($op)) {
+  if (isset($op) && module_exists('menu_link')) {
     menu_link_maintain('aggregator', $op, $link_path, $edit['title']);
   }
 }

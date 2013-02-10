@@ -25,5 +25,10 @@ class UserBundle extends Bundle {
     $container
       ->register('user.data', 'Drupal\user\UserData')
       ->addArgument(new Reference('database'));
+    $container->register('user.autocomplete_controller', 'Drupal\user\UserAutocompleteController')
+      ->addArgument(new Reference('user.autocomplete'));
+    $container->register('user.autocomplete', 'Drupal\user\UserAutocomplete')
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('config.factory'));
   }
 }

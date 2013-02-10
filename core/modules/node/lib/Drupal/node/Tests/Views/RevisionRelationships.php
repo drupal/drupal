@@ -38,7 +38,7 @@ class RevisionRelationships extends ViewTestBase {
     return array(
       'name' => 'Node: Revision integration',
       'description' => 'Tests the integration of node_revision table of node module',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

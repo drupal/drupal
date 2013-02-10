@@ -1306,7 +1306,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       // element type.
       $this->definition['element type'] = 'span';
     }
-    return views_trim_text($alter, $value);
+    return static::trimText($alter, $value);
   }
 
   /**
@@ -1632,6 +1632,53 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
 
   public function adminLabel($short = FALSE) {
     return $this->getField(parent::adminLabel($short));
+  }
+
+  /**
+   * Trims the field down to the specified length.
+   *
+   * @param array $alter
+   *   The alter array of options to use.
+   *     - max_length: Maximum lenght of the string, the rest gets truncated.
+   *     - word_boundary: Trim only on a word boundary.
+   *     - ellipsis: Show an ellipsis (...) at the end of the trimmed string.
+   *     - html: Take sure that the html is correct.
+   *
+   * @param string $value
+   *   The string which should be trimmed.
+   *
+   * @return string
+   *   The trimmed string.
+   */
+  public static function trimText($alter, $value) {
+    if (drupal_strlen($value) > $alter['max_length']) {
+      $value = drupal_substr($value, 0, $alter['max_length']);
+      if (!empty($alter['word_boundary'])) {
+        $regex = "(.*)\b.+";
+        if (function_exists('mb_ereg')) {
+          mb_regex_encoding('UTF-8');
+          $found = mb_ereg($regex, $value, $matches);
+        }
+        else {
+          $found = preg_match("/$regex/us", $value, $matches);
+        }
+        if ($found) {
+          $value = $matches[1];
+        }
+      }
+      // Remove scraps of HTML entities from the end of a strings
+      $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
+
+      if (!empty($alter['ellipsis'])) {
+        // @todo: What about changing this to a real ellipsis?
+        $value .= t('...');
+      }
+    }
+    if (!empty($alter['html'])) {
+      $value = _filter_htmlcorrector($value);
+    }
+
+    return $value;
   }
 
 }

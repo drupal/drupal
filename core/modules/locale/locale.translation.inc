@@ -256,7 +256,7 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
       'filename' => locale_translation_build_server_pattern($source, basename($source->server_pattern)),
       'uri' => locale_translation_build_server_pattern($source, $source->server_pattern),
     );
-    if (variable_get('locale_translate_file_directory', conf_path() . '/files/translations')) {
+    if (config('locale.settings')->get('translation.path')) {
       $files[LOCALE_TRANSLATION_LOCAL] = (object) array(
         'project' => $project->name,
         'langcode' => $langcode,

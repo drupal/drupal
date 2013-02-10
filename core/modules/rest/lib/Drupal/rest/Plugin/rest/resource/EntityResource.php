@@ -76,6 +76,8 @@ class EntityResource extends ResourceBase {
     }
     try {
       $entity->save();
+      watchdog('rest', 'Created entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
+
       $url = url(strtr($this->plugin_id, ':', '/') . '/' . $entity->id(), array('absolute' => TRUE));
       // 201 Created responses have an empty body.
       return new ResourceResponse(NULL, 201, array('Location' => $url));
@@ -114,6 +116,8 @@ class EntityResource extends ResourceBase {
     $entity->{$info['entity_keys']['id']} = $id;
     try {
       $entity->save();
+      watchdog('rest', 'Updated entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
+
       // Update responses have an empty body.
       return new ResourceResponse(NULL, 204);
     }
@@ -157,6 +161,8 @@ class EntityResource extends ResourceBase {
     }
     try {
       $original_entity->save();
+      watchdog('rest', 'Updated entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
+
       // Update responses have an empty body.
       return new ResourceResponse(NULL, 204);
     }
@@ -182,6 +188,8 @@ class EntityResource extends ResourceBase {
     if ($entity) {
       try {
         $entity->delete();
+        watchdog('rest', 'Deleted entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
+
         // Delete responses have an empty body.
         return new ResourceResponse(NULL, 204);
       }

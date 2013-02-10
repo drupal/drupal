@@ -23,7 +23,7 @@ class HandlerArgumentUserUidTest extends UserTestBase {
     return array(
       'name' => 'User: Uid Argument',
       'description' => 'Tests the handler of the user: uid Argument.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

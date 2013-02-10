@@ -303,28 +303,42 @@ function system_requirements($phase) {
       'description' => $description
     );
   }
-
-  // Test files directories.
-  // If we are installing Drupal, the settings.php file might not exist yet in
-  // the intended conf_path() directory, so don't require it. The conf_path()
-  // cache must also be reset in this case.
-  $require_settings = ($phase != 'install');
-  $reset_cache = !$require_settings;
-  $directories = array(
-    variable_get('file_public_path', conf_path($require_settings, $reset_cache) . '/files'),
-    // By default no private files directory is configured. For private files
-    // to be secure the admin needs to provide a path outside the webroot.
-    variable_get('file_private_path', FALSE),
-  );
-
-  // Do not check for the temporary files directory during installation
-  // unless it has been set in settings.php. In this case the user has
-  // no alternative but to fix the directory if it is not writable.
-  if ($phase == 'install') {
-    $directories[] = variable_get('file_temporary_path', FALSE);
+  if ($phase != 'install') {
+    $filesystem_config = config('system.file');
+    $directories = array(
+      variable_get('file_public_path', conf_path() . '/files'),
+      // By default no private files directory is configured. For private files
+      // to be secure the admin needs to provide a path outside the webroot.
+      $filesystem_config->get('path.private'),
+      file_directory_temp(),
+    );
   }
-  else {
-    $directories[] = variable_get('file_temporary_path', file_directory_temp());
+
+  // During an install we need to make assumptions about the file system
+  // unless overrides are provided in settings.php.
+  if ($phase == 'install') {
+    global $conf;
+    $directories = array();
+    if (!empty($conf['file_public_path'])) {
+      $directories[] = $conf['file_public_path'];
+    }
+    else {
+      // If we are installing Drupal, the settings.php file might not exist yet
+      // in the intended conf_path() directory, so don't require it. The
+      // conf_path() cache must also be reset in this case.
+      $directories[] = conf_path(FALSE, TRUE) . '/files';
+    }
+    if (!empty($conf['system.file']['path.private'])) {
+      $directories[] = $conf['system.file']['path.private'];
+    }
+    if (!empty($conf['system.file']['path.temporary'])) {
+      $directories[] = $conf['system.file']['path.temporary'];
+    }
+    else {
+      // If the temporary directory is not overridden use an appropriate
+      // temporary path for the system.
+      $directories[] = file_directory_os_temp();
+    }
   }
 
   // Check the config directory if it is defined in settings.php. If it isn't
@@ -948,192 +962,6 @@ function system_schema() {
       'tab_root_weight_title' => array(array('tab_root', 64), 'weight', 'title'),
     ),
     'primary key' => array('path'),
-  );
-
-  $schema['menu_links'] = array(
-    'description' => 'Contains the individual links within a menu.',
-    'fields' => array(
-     'menu_name' => array(
-        'description' => "The menu name. All links with the same menu name (such as 'tools') are part of the same menu.",
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'mlid' => array(
-        'description' => 'The menu link ID (mlid) is the integer primary key.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'plid' => array(
-        'description' => 'The parent link ID (plid) is the mlid of the link above in the hierarchy, or zero if the link is at the top level in its menu.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'link_path' => array(
-        'description' => 'The Drupal path or external path this link points to.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'router_path' => array(
-        'description' => 'For links corresponding to a Drupal path (external = 0), this connects the link to a {menu_router}.path for joins.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'link_title' => array(
-      'description' => 'The text displayed for the link, which may be modified by a title callback stored in {menu_router}.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'translatable' => TRUE,
-      ),
-      'options' => array(
-        'description' => 'A serialized array of options to be passed to the url() or l() function, such as a query string or HTML attributes.',
-        'type' => 'blob',
-        'not null' => FALSE,
-        'translatable' => TRUE,
-      ),
-      'module' => array(
-        'description' => 'The name of the module that generated this link.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'system',
-      ),
-      'hidden' => array(
-        'description' => 'A flag for whether the link should be rendered in menus. (1 = a disabled menu item that may be shown on admin screens, -1 = a menu callback, 0 = a normal, visible link)',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-      'external' => array(
-        'description' => 'A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-      'has_children' => array(
-        'description' => 'Flag indicating whether any links have this link as a parent (1 = children exist, 0 = no children).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-      'expanded' => array(
-        'description' => 'Flag for whether this link should be rendered as expanded in menus - expanded links always have their child links displayed, instead of only when the link is in the active trail (1 = expanded, 0 = not expanded)',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-      'weight' => array(
-        'description' => 'Link weight among links in the same menu at the same depth.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'depth' => array(
-        'description' => 'The depth relative to the top level. A link with plid == 0 will have depth == 1.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-      'customized' => array(
-        'description' => 'A flag to indicate that the user has manually created or edited the link (1 = customized, 0 = not customized).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-      'p1' => array(
-        'description' => 'The first mlid in the materialized path. If N = depth, then pN must equal the mlid. If depth > 1 then p(N-1) must equal the plid. All pX where X > depth must equal zero. The columns p1 .. p9 are also called the parents.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p2' => array(
-        'description' => 'The second mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p3' => array(
-        'description' => 'The third mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p4' => array(
-        'description' => 'The fourth mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p5' => array(
-        'description' => 'The fifth mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p6' => array(
-        'description' => 'The sixth mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p7' => array(
-        'description' => 'The seventh mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p8' => array(
-        'description' => 'The eighth mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'p9' => array(
-        'description' => 'The ninth mlid in the materialized path. See p1.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'updated' => array(
-        'description' => 'Flag that indicates that this link was generated during the update from Drupal 5.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'small',
-      ),
-    ),
-    'indexes' => array(
-      'path_menu' => array(array('link_path', 128), 'menu_name'),
-      'menu_plid_expand_child' => array('menu_name', 'plid', 'expanded', 'has_children'),
-      'menu_parents' => array('menu_name', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9'),
-      'router_path' => array(array('router_path', 128)),
-    ),
-    'primary key' => array('mlid'),
   );
 
   $schema['queue'] = array(
@@ -2212,6 +2040,58 @@ function system_update_8046() {
     // This does not fire a hook just calls views.
     config_install_default_config('module', 'views');
   }
+}
+
+/**
+ * Moves site system settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8047() {
+  update_variables_to_config('system.file', array(
+    'allow_insecure_uploads' => 'allow_insecure_uploads',
+    'file_default_scheme' => 'default_scheme',
+    'file_chmod_directory' => 'chmod.directory',
+    'file_chmod_file' => 'chmod.file',
+    'file_private_path' => 'path.private',
+    'file_temporary_path' => 'path.temporary',
+  ));
+}
+
+/**
+ * Enable the new Menu link module.
+ *
+ * Creates the langcode and UUID columns for menu links.
+ */
+function system_update_8048() {
+  // Enable the module without re-installing the schema.
+  update_module_enable(array('menu_link'));
+
+  // Add the langcode column if it doesn't exist.
+  if (!db_field_exists('menu_links', 'langcode')) {
+    $column = array(
+      'description' => 'The {language}.langcode of this entity.',
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => '',
+    );
+    db_add_field('menu_links', 'langcode', $column);
+  }
+
+  // Add the UUID column.
+  $column = array(
+    'description' => 'Unique Key: Universally unique identifier for this entity.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => FALSE,
+  );
+  $keys = array(
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
+  );
+  db_add_field('menu_links', 'uuid', $column, $keys);
 }
 
 /**

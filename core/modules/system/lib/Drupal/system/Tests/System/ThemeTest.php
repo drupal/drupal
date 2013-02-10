@@ -118,7 +118,6 @@ class ThemeTest extends WebTestBase {
       $elements = $this->xpath('//*[@id=:id]/img', array(':id' => 'logo'));
       $this->assertEqual((string) $elements[0]['src'], $expected['src']);
     }
-
     $unsupported_paths = array(
       // Stream wrapper URI to non-existing file.
       'public://whatever.png',

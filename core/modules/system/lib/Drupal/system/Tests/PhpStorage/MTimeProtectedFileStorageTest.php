@@ -38,7 +38,7 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
     $this->secret = $this->randomName();
     $conf['php_storage']['simpletest'] = array(
       'class' => $this->storageClass,
-      'directory' => DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php',
+      'directory' => DRUPAL_ROOT . '/' . $this->public_files_directory . '/php',
       'secret' => $this->secret,
     );
   }
@@ -62,7 +62,7 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
     $php = $this->storageFactory->get('simpletest');
     $name = 'simpletest.php';
     $php->save($name, '<?php');
-    $expected_root_directory = DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php/simpletest';
+    $expected_root_directory = DRUPAL_ROOT . '/' . $this->public_files_directory . '/php/simpletest';
     $expected_directory = $expected_root_directory . '/' . $name;
     $directory_mtime = filemtime($expected_directory);
     $expected_filename = $expected_directory . '/' . hash_hmac('sha256', $name, $this->secret . $directory_mtime) . '.php';

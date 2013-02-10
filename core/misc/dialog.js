@@ -30,7 +30,7 @@ Drupal.behaviors.dialog = {
 Drupal.dialog = function (element, options) {
 
   function openDialog (settings) {
-    settings = $.extend(settings, defaults);
+    settings = $.extend({}, drupalSettings.dialog, options, settings);
     // Trigger a global event to allow scripts to bind events to the dialog.
     $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
     $element.dialog(settings);
@@ -48,7 +48,6 @@ Drupal.dialog = function (element, options) {
 
   var undef;
   var $element = $(element);
-  var defaults = $.extend(options, drupalSettings.dialog);
   var dialog = {
     open: false,
     returnValue: undef,

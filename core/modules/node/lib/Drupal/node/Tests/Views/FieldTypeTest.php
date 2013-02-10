@@ -23,7 +23,7 @@ class FieldTypeTest extends NodeTestBase {
     return array(
       'name' => 'Node: Node Type field',
       'description' => 'Tests the Drupal\node\Plugin\views\field\Type handler.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

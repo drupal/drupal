@@ -23,7 +23,7 @@ class FilterUidRevisionTest extends NodeTestBase {
     return array(
       'name' => 'Node: User has revision Filter',
       'description' => 'Tests the node_uid_revision handler.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

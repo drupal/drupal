@@ -25,7 +25,7 @@ class HandlerFieldRoleTest extends UserTestBase {
     return array(
       'name' => 'User: Role Field',
       'description' => 'Tests the handler of the user: role field.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

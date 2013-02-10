@@ -16,6 +16,21 @@ use Drupal\Core\Entity\EntityInterface;
 class ShortcutStorageController extends ConfigStorageController {
 
   /**
+   * Overrides \Drupal\config\ConfigStorageController::attachLoad().
+   */
+  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
+    parent::attachLoad($queried_entities, $revision_id);
+
+    foreach ($queried_entities as $id => $entity) {
+      $links = menu_load_links('shortcut-' . $id);
+      foreach ($links as $menu_link) {
+        $entity->links[$menu_link->uuid()] = $menu_link;
+      }
+    }
+  }
+
+
+  /**
    * Overrides \Drupal\config\ConfigStorageController::save().
    */
   public function save(EntityInterface $entity) {
@@ -27,8 +42,22 @@ class ShortcutStorageController extends ConfigStorageController {
       // Size of menu_name is 32 so id could be 23 = 32 - strlen('shortcut-').
       $id = substr($entity->id(), 0, 23);
       $entity->set('id', $id);
-      $entity->set('links', menu_links_clone($default_set->links, $id));
+      $entity->set('links', $default_set->links);
+      foreach ($entity->links as $link) {
+        $link = $link->createDuplicate();
+        $link->menu_name = $id;
+        unset($link->mlid);
+        $link->save();
+      }
     }
+
+    // Just store the UUIDs.
+    if (isset($entity->links)) {
+      foreach ($entity->links as $uuid => $link) {
+        $entity->links[$uuid] = $uuid;
+      }
+    }
+
     return parent::save($entity);
   }
 
@@ -39,13 +68,14 @@ class ShortcutStorageController extends ConfigStorageController {
     // Process links in shortcut set.
     // If links were provided for the set, save them.
     if (isset($entity->links)) {
-      foreach ($entity->links as &$link) {
+      foreach ($entity->links as $uuid) {
+        $menu_link = entity_load_by_uuid('menu_link', $uuid);
         // Do not specifically associate these links with the shortcut module,
         // since other modules may make them editable via the menu system.
         // However, we do need to specify the correct menu name.
-        $link['menu_name'] = 'shortcut-' . $entity->id();
-        $link['plid'] = 0;
-        menu_link_save($link);
+        $menu_link->menu_name = 'shortcut-' . $entity->id();
+        $menu_link->plid = 0;
+        $menu_link->save();
       }
     }
 

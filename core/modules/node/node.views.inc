@@ -134,7 +134,7 @@ function node_views_data() {
 
   // published status
   $data['node']['status'] = array(
-    'title' => t('Published'),
+    'title' => t('Published status'),
     'help' => t('Whether or not the content is published.'),
     'field' => array(
       'id' => 'boolean',
@@ -144,7 +144,7 @@ function node_views_data() {
     ),
     'filter' => array(
       'id' => 'boolean',
-      'label' => t('Published'),
+      'label' => t('Published status'),
       'type' => 'yes-no',
       'use_equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
     ),
@@ -155,18 +155,18 @@ function node_views_data() {
 
   // published status + extra
   $data['node']['status_extra'] = array(
-    'title' => t('Published or admin'),
+    'title' => t('Published status or admin user'),
     'help' => t('Filters out unpublished content if the current user cannot view it.'),
     'filter' => array(
       'field' => 'status',
       'id' => 'node_status',
-      'label' => t('Published or admin'),
+      'label' => t('Published status or admin user'),
     ),
   );
 
   // promote status
   $data['node']['promote'] = array(
-    'title' => t('Promoted to front page'),
+    'title' => t('Promoted to front page status'),
     'help' => t('Whether or not the content is promoted to the front page.'),
     'field' => array(
       'id' => 'boolean',
@@ -176,7 +176,7 @@ function node_views_data() {
     ),
     'filter' => array(
       'id' => 'boolean',
-      'label' => t('Promoted to front page'),
+      'label' => t('Promoted to front page status'),
       'type' => 'yes-no',
     ),
     'sort' => array(
@@ -186,7 +186,7 @@ function node_views_data() {
 
   // sticky
   $data['node']['sticky'] = array(
-    'title' => t('Sticky'), // The item it appears as on the UI,
+    'title' => t('Sticky status'),
     'help' => t('Whether or not the content is sticky.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
@@ -197,7 +197,7 @@ function node_views_data() {
     ),
     'filter' => array(
       'id' => 'boolean',
-      'label' => t('Sticky'),
+      'label' => t('Sticky status'),
       'type' => 'yes-no',
     ),
     'sort' => array(
@@ -245,7 +245,7 @@ function node_views_data() {
 
   $data['views_entity_node']['view_node'] = array(
     'field' => array(
-      'title' => t('Link'),
+      'title' => t('Link to content'),
       'help' => t('Provide a simple link to the content.'),
       'id' => 'node_link',
     ),
@@ -253,7 +253,7 @@ function node_views_data() {
 
   $data['views_entity_node']['edit_node'] = array(
     'field' => array(
-      'title' => t('Edit link'),
+      'title' => t('Link to edit content'),
       'help' => t('Provide a simple link to edit the content.'),
       'id' => 'node_link_edit',
     ),
@@ -261,7 +261,7 @@ function node_views_data() {
 
   $data['views_entity_node']['delete_node'] = array(
     'field' => array(
-      'title' => t('Delete link'),
+      'title' => t('Link to delete content'),
       'help' => t('Provide a simple link to delete the content.'),
       'id' => 'node_link_delete',
     ),
@@ -390,7 +390,7 @@ function node_views_data() {
     'title' => t('Author uid'),
     'help' => t('The user authoring the content. If you need more fields than the uid add the content: author relationship'),
     'relationship' => array(
-      'title' => t('Author'),
+      'title' => t('Content author'),
       'help' => t('Relate content to the user who created it.'),
       'id' => 'standard',
       'base' => 'users',
@@ -448,7 +448,7 @@ function node_views_data() {
     ),
   );
 
-  // uid field for node revision
+  // UID field for node revision.
   $data['node_revision']['uid'] = array(
     'title' => t('User'),
     'help' => t('Relate a content revision to the user who created the revision.'),
@@ -593,7 +593,7 @@ function node_views_data() {
 
   $data['node_revision']['link_to_revision'] = array(
     'field' => array(
-      'title' => t('Link'),
+      'title' => t('Link to revision'),
       'help' => t('Provide a simple link to the revision.'),
       'id' => 'node_revision_link',
       'click sortable' => FALSE,
@@ -602,7 +602,7 @@ function node_views_data() {
 
   $data['node_revision']['revert_revision'] = array(
     'field' => array(
-      'title' => t('Revert link'),
+      'title' => t('Link to revert revision'),
       'help' => t('Provide a simple link to revert to the revision.'),
       'id' => 'node_revision_link_revert',
       'click sortable' => FALSE,
@@ -611,7 +611,7 @@ function node_views_data() {
 
   $data['node_revision']['delete_revision'] = array(
     'field' => array(
-      'title' => t('Delete link'),
+      'title' => t('Link to delete revision'),
       'help' => t('Provide a simple link to delete the content revision.'),
       'id' => 'node_revision_link_delete',
       'click sortable' => FALSE,

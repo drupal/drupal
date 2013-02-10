@@ -16,6 +16,8 @@ use Drupal\block\Plugin\Core\Entity\Block;
 use Drupal\system\Plugin\Core\Entity\Menu;
 use Drupal\system\Plugin\block\block\SystemMenuBlock;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\MenuLinkStorageController;
 
 /**
  * Maximum length of menu name as entered by the user. Database length is 32
@@ -110,9 +112,9 @@ function menu_menu() {
   // Not officially a local action, but displayed as such in
   // menu_overview_form().
   $items['admin/structure/menu/manage/%menu/add'] = array(
-    'title' => 'Add link',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_edit_item', 'add', NULL, 4),
+    'title' => 'Add menu link',
+    'page callback' => 'menu_link_add',
+    'page arguments' => array(4),
     'access arguments' => array('administer menu'),
     'file' => 'menu.admin.inc',
   );
@@ -131,21 +133,20 @@ function menu_menu() {
   );
   $items['admin/structure/menu/item/%menu_link/edit'] = array(
     'title' => 'Edit menu link',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_edit_item', 'edit', 4, NULL),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(4),
     'access arguments' => array('administer menu'),
-    'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/item/%menu_link/reset'] = array(
     'title' => 'Reset menu link',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_reset_item_confirm', 4),
+    'page arguments' => array('menu_link_reset_form', 4),
     'access arguments' => array('administer menu'),
     'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/item/%menu_link/delete'] = array(
     'title' => 'Delete menu link',
-    'page callback' => 'menu_item_delete_page',
+    'page callback' => 'menu_link_delete_page',
     'page arguments' => array(4),
     'access arguments' => array('administer menu'),
     'file' => 'menu.admin.inc',
@@ -195,23 +196,29 @@ function menu_theme() {
  */
 function menu_enable() {
   menu_router_rebuild();
-  $base_link = db_query("SELECT mlid AS plid, menu_name FROM {menu_links} WHERE link_path = 'admin/structure/menu' AND module = 'system'")->fetchAssoc();
-  $base_link['router_path'] = 'admin/structure/menu/manage/%';
-  $base_link['module'] = 'menu';
+  $system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/structure/menu', 'module' => 'system'));
+  $system_link = reset($system_link);
+
+  $base_link = entity_create('menu_link', array(
+    'menu_name' => $system_link->menu_name,
+    'router_path' => 'admin/structure/menu/manage/%',
+    'module' => 'menu',
+  ));
+
   $menus = entity_load_multiple('menu');
   foreach ($menus as $menu) {
-    // $link is passed by reference to menu_link_save(), so we make a copy of $base_link.
-    $link = $base_link;
-    $link['mlid'] = 0;
-    $link['link_title'] = $menu->label();
-    $link['link_path'] = 'admin/structure/menu/manage/' . $menu->id();
-    $menu_link = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND plid = :plid", array(
-      ':path' => $link['link_path'],
-      ':plid' => $link['plid']
-    ))
-    ->fetchField();
-    if (!$menu_link) {
-      menu_link_save($link);
+    $link = $base_link->createDuplicate();
+    $link->plid = $system_link->id();
+    $link->link_title = $menu->label();
+    $link->link_path = 'admin/structure/menu/manage/' . $menu->id();
+
+    $query = entity_query('menu_link')
+      ->condition('link_path', $link->link_path)
+      ->condition('plid', $link->plid);
+    $result = $query->execute();
+
+    if (empty($result)) {
+      $link->save();
     }
   }
   menu_cache_clear_all();
@@ -293,24 +300,26 @@ function menu_menu_delete(Menu $menu) {
 }
 
 /**
- * Return a list of menu items that are valid possible parents for the given menu item.
+ * Returns a list of menu links that are valid possible parents for the given
+ * menu link.
  *
- * @param $menus
+ * @param array $menus
  *   An array of menu names and titles, such as from menu_get_menus().
- * @param $item
- *   The menu item or the node type for which to generate a list of parents.
- *   If $item['mlid'] == 0 then the complete tree is returned.
- * @param $type
+ * @param \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+ *   The menu link for which to generate a list of parents.
+ *   If $menu_link->id() == 0 then the complete tree is returned.
+ * @param string $type
  *   The node type for which to generate a list of parents.
  *   If $item itself is a node type then $type is ignored.
- * @return
- *   An array of menu link titles keyed on the a string containing the menu name
- *   and mlid. The list excludes the given item and its children.
+ *
+ * @return array
+ *   An array of menu link titles keyed by a string containing the menu name and
+ *   mlid. The list excludes the given item and its children.
  *
  * @todo This has to be turned into a #process form element callback. The
  *   'override_parent_selector' variable is entirely superfluous.
  */
-function menu_parent_options($menus, $item, $type = '') {
+function menu_parent_options(array $menus, MenuLink $menu_link = NULL, $type = NULL) {
   // The menu_links table can be practically any size and we need a way to
   // allow contrib modules to provide more scalable pattern choosers.
   // hook_form_alter is too late in itself because all the possible parents are
@@ -319,14 +328,12 @@ function menu_parent_options($menus, $item, $type = '') {
     return array();
   }
 
-  $available_menus = array();
-  if (!is_array($item)) {
-    // If $item is not an array then it is a node type.
-    // Use it as $type and prepare a dummy menu item for _menu_get_options().
-    $type = $item;
-    $item = array('mlid' => 0);
+  if (!$menu_link) {
+    $menu_link = entity_create('menu_link', array('mlid' => 0));
   }
-  if (empty($type)) {
+
+  $available_menus = array();
+  if (!$type) {
     // If no node type is set, use all menus given to this function.
     $available_menus = $menus;
   }
@@ -338,7 +345,7 @@ function menu_parent_options($menus, $item, $type = '') {
     }
   }
 
-  return _menu_get_options($menus, $available_menus, $item);
+  return _menu_get_options($menus, $available_menus, $menu_link);
 }
 
 /**
@@ -403,26 +410,6 @@ function _menu_parents_recurse($tree, $menu_name, $indent, &$options, $exclude, 
 }
 
 /**
- * Reset a system-defined menu link.
- */
-function menu_reset_item($link) {
-  // To reset the link to its original values, we need to retrieve its
-  // definition from hook_menu(). Otherwise, for example, the link's menu would
-  // not be reset, because properties like the original 'menu_name' are not
-  // stored anywhere else. Since resetting a link happens rarely and this is a
-  // one-time operation, retrieving the full menu router does no harm.
-  $menu = menu_get_router();
-  $router_item = $menu[$link['router_path']];
-  $new_link = _menu_link_build($router_item);
-  // Merge existing menu link's ID and 'has_children' property.
-  foreach (array('mlid', 'has_children') as $key) {
-    $new_link[$key] = $link[$key];
-  }
-  menu_link_save($new_link);
-  return $new_link;
-}
-
-/**
  * Implements hook_block_view_alter().
  */
 function menu_block_view_alter(array &$build, Block $block) {
@@ -455,7 +442,7 @@ function menu_node_save(Node $node) {
   if (isset($node->menu)) {
     $link = &$node->menu;
     if (empty($link['enabled'])) {
-      if (!empty($link['mlid'])) {
+      if (!$link->isNew()) {
         menu_link_delete($link['mlid']);
       }
     }
@@ -482,9 +469,13 @@ function menu_node_save(Node $node) {
  */
 function menu_node_predelete(Node $node) {
   // Delete all menu module links that point to this node.
-  $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/' . $node->nid), array('fetch' => PDO::FETCH_ASSOC));
-  foreach ($result as $m) {
-    menu_link_delete($m['mlid']);
+  $query = entity_query('menu_link')
+    ->condition('link_path', 'node/' . $node->nid)
+    ->condition('module', 'menu');
+  $result = $query->execute();
+
+  if (!empty($result)) {
+    menu_link_delete_multiple($result);
   }
 }
 
@@ -495,42 +486,48 @@ function menu_node_prepare(Node $node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
     $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main:0'), ':');
-    $item = array();
+    $menu_link = FALSE;
     if (isset($node->nid)) {
       $mlid = FALSE;
       // Give priority to the default menu
       $type_menus = variable_get('menu_options_' . $node->type, array('main' => 'main'));
       if (in_array($menu_name, $type_menus)) {
-        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", 0, 1, array(
-          ':path' => 'node/' . $node->nid,
-          ':menu_name' => $menu_name,
-        ))->fetchField();
+        $query = entity_query('menu_link')
+          ->condition('link_path', 'node/' . $node->nid)
+          ->condition('menu_name', $menu_name)
+          ->condition('module', 'menu')
+          ->sort('mlid', 'ASC')
+          ->range(0, 1);
+        $result = $query->execute();
+
+        $mlid = (!empty($result)) ? reset($result) : FALSE;
       }
       // Check all allowed menus if a link does not exist in the default menu.
       if (!$mlid && !empty($type_menus)) {
-        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' AND menu_name IN (:type_menus) ORDER BY mlid ASC", 0, 1, array(
-          ':path' => 'node/' . $node->nid,
-          ':type_menus' => array_values($type_menus),
-        ))->fetchField();
+        $query = entity_query('menu_link')
+          ->condition('link_path', 'node/' . $node->nid)
+          ->condition('menu_name', array_values($type_menus), 'IN')
+          ->condition('module', 'menu')
+          ->sort('mlid', 'ASC')
+          ->range(0, 1);
+        $result = $query->execute();
+
+        $mlid = (!empty($result)) ? reset($result) : FALSE;
       }
       if ($mlid) {
-        $item = menu_link_load($mlid);
+        $menu_link = menu_link_load($mlid);
       }
     }
+
+    if (!$menu_link) {
+      $menu_link = entity_create('menu_link', array(
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => $menu_name,
+      ));
+    }
     // Set default values.
-    $node->menu = $item + array(
-      'link_title' => '',
-      'mlid' => 0,
-      'plid' => 0,
-      'menu_name' => $menu_name,
-      'weight' => 0,
-      'options' => array(),
-      'module' => 'menu',
-      'expanded' => 0,
-      'hidden' => 0,
-      'has_children' => 0,
-      'customized' => 0,
-    );
+    $node->menu = $menu_link;
   }
   // Find the depth limit for the parent select.
   if (!isset($node->menu['parent_depth_limit'])) {
@@ -542,7 +539,7 @@ function menu_node_prepare(Node $node) {
  * Find the depth limit for items in the parent select.
  */
 function _menu_parent_depth_limit($item) {
-  return MENU_MAX_DEPTH - 1 - (($item['mlid'] && $item['has_children']) ? menu_link_children_relative_depth($item) : 0);
+  return MENU_MAX_DEPTH - 1 - (($item['mlid'] && $item['has_children']) ? entity_get_controller('menu_link')->findChildrenRelativeDepth($item) : 0);
 }
 
 /**
@@ -558,10 +555,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
   $node = $form_state['controller']->getEntity($form_state);
   $link = $node->menu;
   $type = $node->type;
-  // menu_parent_options() is goofy and can actually handle either a menu link
-  // or a node type both as second argument. Pick based on whether there is
-  // a link already (menu_node_prepare() sets mlid default to 0).
-  $options = menu_parent_options(menu_get_menus(), $link['mlid'] ? $link : $type, $type);
+  $options = menu_parent_options(menu_get_menus(), $link, $type);
   // If no possible parent menu items were found, there is nothing to display.
   if (empty($options)) {
     return;
@@ -632,13 +626,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
   );
 
   // Get number of items in menu so the weight selector is sized appropriately.
-  $sql = "SELECT COUNT(*) FROM {menu_links} WHERE menu_name = :menu";
-  $result = db_query($sql, array(':menu' => $link['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
-  foreach ($result as $row) {
-    foreach ($row as $menu_items) {
-      $delta = $menu_items;
-    }
-  }
+  $delta = entity_get_controller('menu_link')->countMenuLinks($link->menu_name);
   if ($delta < 50) {
     // Old hardcoded value
     $delta = 50;
@@ -658,6 +646,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
  * @see menu_form_node_form_alter()
  */
 function menu_node_submit(Node $node, $form, $form_state) {
+  $node->menu = entity_create('menu_link', $form_state['values']['menu']);
   // Decompose the selected menu parent option into 'menu_name' and 'plid', if
   // the form used the default parent selection widget.
   if (!empty($form_state['values']['menu']['parent'])) {
@@ -693,7 +682,8 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   // all available menu items.
   // Otherwise it is not possible to dynamically add options to the list.
   // @todo Convert menu_parent_options() into a #process callback.
-  $options = menu_parent_options(menu_get_menus(), array('mlid' => 0));
+  $menu_link = entity_create('menu_link', array('mlid' => 0));
+  $options = menu_parent_options(menu_get_menus(), $menu_link);
   $form['menu']['menu_parent'] = array(
     '#type' => 'select',
     '#title' => t('Default parent item'),

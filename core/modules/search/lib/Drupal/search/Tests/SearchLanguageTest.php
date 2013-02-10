@@ -31,7 +31,7 @@ class SearchLanguageTest extends SearchTestBase {
     parent::setUp();
 
     // Create and login user.
-    $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages'));
+    $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages', 'administer site configuration'));
     $this->drupalLogin($test_user);
   }
 
@@ -57,12 +57,14 @@ class SearchLanguageTest extends SearchTestBase {
     $this->assertFieldByXPath('//input[@name="keys"]', 'language:fr', 'Language filter added to query.');
 
     // Change the default language and delete English.
-    $path = 'admin/config/regional/language';
+    $path = 'admin/config/regional/settings';
     $this->drupalGet($path);
-    $this->assertFieldChecked('edit-site-default-en', 'English is the default language.');
-    $edit = array('site_default' => 'fr');
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-site-default-en', 'Default language updated.');
+    $this->assertOptionSelected('edit-site-default-language', 'en', 'Default language updated.');
+    $edit = array(
+      'site_default_language' => 'fr',
+    );
+    $this->drupalpost($path, $edit, t('Save configuration'));
+    $this->assertNoOptionSelected('edit-site-default-language', 'en', 'Default language updated.');
     $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
   }
 }

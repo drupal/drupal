@@ -66,7 +66,7 @@ display:
     display_title: Master
     id: default
     position: '0'
-  feed:
+  feed_1:
     display_options:
       displays: {  }
       pager:
@@ -76,9 +76,10 @@ display:
         type: node_rss
       style:
         type: rss
+      sitename_title: '1'
     display_plugin: feed
     display_title: Feed
-    id: feed
+    id: feed_1
     position: '0'
   page:
     display_options:

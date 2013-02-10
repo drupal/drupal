@@ -46,7 +46,6 @@ function locale_test_locale_translation_projects_alter(&$projects) {
 
     // Completely replace the project data with a set of test projects.
     $base_url = url();
-    $files_url = variable_get('file_public_path', conf_path() . '/files');
     $projects = array (
       'drupal' => array (
         'name' => 'drupal',

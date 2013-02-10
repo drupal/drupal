@@ -23,7 +23,7 @@ class RelationshipRepresentativeNode extends TaxonomyTestBase {
     return array(
       'name' => 'Taxonomy: Representative Node Relationship',
       'description' => 'Tests the representative node relationship for terms.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

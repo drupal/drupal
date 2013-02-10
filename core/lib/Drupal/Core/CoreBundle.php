@@ -12,7 +12,6 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
-use Drupal\Core\DependencyInjection\Compiler\RegisterSerializationClassesPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -268,20 +267,6 @@ class CoreBundle extends Bundle {
     $container
       ->register('transliteration', 'Drupal\Core\Transliteration\PHPTransliteration');
 
-    // Add Serializer with arguments to be replaced in the compiler pass.
-    $container->register('serializer', 'Symfony\Component\Serializer\Serializer')
-      ->addArgument(array())
-      ->addArgument(array());
-
-    $container->register('serializer.normalizer.complex_data', 'Drupal\Core\Serialization\ComplexDataNormalizer')->addTag('normalizer');
-    $container->register('serializer.normalizer.list', 'Drupal\Core\Serialization\ListNormalizer')->addTag('normalizer');
-    $container->register('serializer.normalizer.typed_data', 'Drupal\Core\Serialization\TypedDataNormalizer')->addTag('normalizer');
-
-    $container->register('serializer.encoder.json', 'Drupal\Core\Serialization\JsonEncoder')
-      ->addTag('encoder', array('format' => array('json' => 'JSON')));
-    $container->register('serializer.encoder.xml', 'Drupal\Core\Serialization\XmlEncoder')
-      ->addTag('encoder', array('format' => array('xml' => 'XML')));
-
     $container->register('flood', 'Drupal\Core\Flood\DatabaseBackend')
       ->addArgument(new Reference('database'));
 
@@ -289,8 +274,6 @@ class CoreBundle extends Bundle {
     $container->addCompilerPass(new RegisterRouteFiltersPass());
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
-    // Add a compiler pass for adding Normalizers and Encoders to Serializer.
-    $container->addCompilerPass(new RegisterSerializationClassesPass());
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());

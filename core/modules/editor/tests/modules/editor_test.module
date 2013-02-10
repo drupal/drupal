@@ -25,3 +25,17 @@ function editor_test_editor_default_settings_alter(&$settings, $editor) {
     $settings['sparkles'] = FALSE;
   }
 }
+
+/**
+ * Implements hook_editor_js_settings_alter().
+ */
+function editor_test_editor_js_settings_alter(&$settings) {
+  // Allow tests to enable or disable this alter hook.
+  if (!state()->get('editor_test_js_settings_alter_enabled', FALSE)) {
+    return;
+  }
+
+  if (isset($settings['full_html'])) {
+    $settings['full_html']['editorSettings']['ponyModeEnabled'] = FALSE;
+  }
+}

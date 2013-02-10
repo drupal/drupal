@@ -32,7 +32,7 @@ class ContactFieldsTest extends ViewTestBase {
     return array(
       'name' => 'Contact: Field views data',
       'description' => 'Tests which checks that no fieldapi fields are added on contact.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

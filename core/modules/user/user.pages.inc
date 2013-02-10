@@ -12,39 +12,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Menu callback for user autocompletion.
- *
- * Like other autocomplete functions, this function inspects the 'q' query
- * parameter for the string to use to search for suggestions.
- *
- * @param bool $include_anonymous
- *   (optional) TRUE if the the name used to indicate anonymous users (e.g.
- *   "Anonymous") should be autocompleted. Defaults to FALSE.
- *
- * @return \Symfony\Component\HttpFoundation\JsonResponse
- *   A JSON response containing the autocomplete suggestions for existing users.
- */
-function user_autocomplete($include_anonymous = FALSE) {
-  $matches = array();
-  $query = drupal_container()->get('request')->query;
-  if ($string = $query->get('q')) {
-    if ($include_anonymous) {
-      $anonymous_name = config('user.settings')->get('anonymous');
-      // Allow autocompletion for the anonymous user.
-      if (stripos($anonymous_name, $string) !== FALSE) {
-        $matches[$anonymous_name] = check_plain($anonymous_name);
-      }
-    }
-    $result = db_select('users')->fields('users', array('name'))->condition('name', db_like($string) . '%', 'LIKE')->range(0, 10)->execute();
-    foreach ($result as $account) {
-      $matches[$account->name] = check_plain($account->name);
-    }
-  }
-
-  return new JsonResponse($matches);
-}
-
-/**
  * Form builder; Request a password reset.
  *
  * @ingroup forms

@@ -566,7 +566,8 @@ Drupal.ajax.prototype.commands = {
     // @todo Consider whether this is overloading title inappropriately, and
     //   if so, find another way to determine dialog eligibility.
     if (ajax.dialog && ('title' in response)) {
-      var dialog = Drupal.dialog(wrapper, {title: response.title});
+      var dialogOptions = $.extend({title: response.title}, ajax.dialog);
+      var dialog = Drupal.dialog(wrapper, dialogOptions);
       ajax.dialog.modal ? dialog.showModal() : dialog.show();
     }
 

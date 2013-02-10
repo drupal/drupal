@@ -14,6 +14,13 @@ use Drupal\views\Tests\ViewUnitTestBase;
  */
 class TagTest extends ViewUnitTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views', 'views_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Tag',
@@ -38,12 +45,16 @@ class TagTest extends ViewUnitTestBase {
     }
 
     // Make sure just ten results are returns.
-    $result = views_ui_autocomplete_tag('autocomplete_tag_test');
+    $controller = $this->container->get('views_ui.controller');
+    $request = $this->container->get('request');
+    $request->query->set('q', 'autocomplete_tag_test');
+    $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent());
     $this->assertEqual(count($matches), 10, 'Make sure the maximum amount of tag results is 10.');
 
     // Make sure that matching by a certain prefix works.
-    $result = views_ui_autocomplete_tag('autocomplete_tag_test_even');
+    $request->query->set('q', 'autocomplete_tag_test_even');
+    $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent());
     $this->assertEqual(count($matches), 8, 'Make sure that only a subset is returned.');
     foreach ($matches as $tag) {
@@ -51,7 +62,8 @@ class TagTest extends ViewUnitTestBase {
     }
 
     // Make sure an invalid result doesn't return anything.
-    $result = views_ui_autocomplete_tag($this->randomName());
+    $request->query->set('q', $this->randomName());
+    $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent());
     $this->assertEqual(count($matches), 0, "Make sure an invalid tag doesn't return anything.");
   }

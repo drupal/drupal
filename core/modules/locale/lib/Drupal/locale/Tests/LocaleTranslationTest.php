@@ -75,7 +75,7 @@ class LocaleTranslationTest extends WebTestBase {
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
     locale_reset();
-    $this->assertRaw('"edit-site-default-' . $langcode .'"', t('Language code found.'));
+    $this->assertRaw('"edit-languages-' . $langcode .'-weight"', t('Language code found.'));
     $this->assertText(t($name), t('Test language added.'));
     $this->drupalLogout();
 

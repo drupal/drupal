@@ -41,7 +41,7 @@ class DefaultViewsTest extends UITestBase {
 
     // Enable the front page view, and make sure it is now visible on the main
     // listing page.
-    $this->drupalGet('admin/structure/views/templates');
+    $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Enable'), '/frontpage/');
     $this->assertUrl('admin/structure/views');
     $this->assertLinkByHref($edit_href);
@@ -64,7 +64,7 @@ class DefaultViewsTest extends UITestBase {
 
     // Save another view in the UI.
     $this->drupalPost('admin/structure/views/nojs/display/archive/page_1/title', array(), t('Apply'));
-    $this->drupalPost('admin/structure/views/view/archive/page_1', array(), t('Save'));
+    $this->drupalPost('admin/structure/views/view/archive/edit/page_1', array(), t('Save'));
 
     // Check there is an enable link. i.e. The view has not been enabled after
     // editing.
@@ -107,7 +107,7 @@ class DefaultViewsTest extends UITestBase {
     // $this->assertNoLinkByHref($edit_href);
     // The easiest way to verify it appears on the disabled views listing page
     // is to try to click the "enable" link from there again.
-    $this->drupalGet('admin/structure/views/templates');
+    $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Enable'), '/frontpage/');
     $this->assertUrl('admin/structure/views');
     $this->assertLinkByHref($edit_href);

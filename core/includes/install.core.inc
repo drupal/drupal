@@ -392,11 +392,8 @@ function install_begin_request(&$install_state) {
   else {
     $task = NULL;
 
-    // Do not install over a configured settings.php. Check the 'db_url'
-    // variable in addition to 'databases', since previous versions of Drupal
-    // used that (and we do not want to allow installations on an existing site
-    // whose settings file has not yet been updated).
-    if (!empty($GLOBALS['databases']) || !empty($GLOBALS['db_url'])) {
+    // Do not install over a configured settings.php.
+    if (!empty($GLOBALS['databases'])) {
       throw new Exception(install_already_done_error());
     }
   }
@@ -1296,9 +1293,23 @@ function install_find_translations() {
  * @see file_scan_directory()
  */
 function install_find_translation_files($langcode = NULL) {
-  $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
-  $files = file_scan_directory($directory, '!drupal-\d+\.\d+\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
-  return $files;
+  return file_scan_directory(install_translation_directory(), '!drupal-\d+\.\d+\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
+}
+
+/**
+ * Get installation translations directory path.
+ *
+ * @return string
+ *   A string containing the installation translations directory path.
+ */
+function install_translation_directory() {
+  if (isset($GLOBALS['conf']['locale.settings']['translation.path'])) {
+    $directory = $GLOBALS['conf']['locale.settings']['translation.path'];
+  }
+  else {
+    $directory = conf_path() . '/files/translations';
+  }
+  return $directory;
 }
 
 /**
@@ -1862,8 +1873,9 @@ function install_check_translations($install_state) {
 
   $readable = FALSE;
   $writable = FALSE;
-  $files_directory = variable_get('file_public_path', conf_path() . '/files');
-  $translations_directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+  // @todo: Make this configurable.
+  $files_directory = conf_path() . '/files';
+  $translations_directory = conf_path() . '/files/translations';
   $translations_directory_exists = FALSE;
   $online = FALSE;
   $server_available = FALSE;

@@ -26,7 +26,8 @@ class LinksTest extends WebTestBase {
    */
   function createLinkHierarchy($module = 'menu_test') {
     // First remove all the menu links.
-    db_truncate('menu_links')->execute();
+    $menu_links = menu_link_load_multiple();
+    menu_link_delete_multiple(array_keys($menu_links), TRUE, TRUE);
 
     // Then create a simple link hierarchy:
     // - $parent
@@ -43,31 +44,36 @@ class LinksTest extends WebTestBase {
     $links['parent'] = $base_options + array(
       'link_path' => 'menu-test/parent',
     );
-    menu_link_save($links['parent']);
+    $links['parent'] = entity_create('menu_link', $links['parent']);
+    $links['parent']->save();
 
     $links['child-1'] = $base_options + array(
       'link_path' => 'menu-test/parent/child-1',
       'plid' => $links['parent']['mlid'],
     );
-    menu_link_save($links['child-1']);
+    $links['child-1'] = entity_create('menu_link', $links['child-1']);
+    $links['child-1']->save();
 
     $links['child-1-1'] = $base_options + array(
       'link_path' => 'menu-test/parent/child-1/child-1-1',
       'plid' => $links['child-1']['mlid'],
     );
-    menu_link_save($links['child-1-1']);
+    $links['child-1-1'] = entity_create('menu_link', $links['child-1-1']);
+    $links['child-1-1']->save();
 
     $links['child-1-2'] = $base_options + array(
       'link_path' => 'menu-test/parent/child-1/child-1-2',
       'plid' => $links['child-1']['mlid'],
     );
-    menu_link_save($links['child-1-2']);
+    $links['child-1-2'] = entity_create('menu_link', $links['child-1-2']);
+    $links['child-1-2']->save();
 
     $links['child-2'] = $base_options + array(
       'link_path' => 'menu-test/parent/child-2',
       'plid' => $links['parent']['mlid'],
     );
-    menu_link_save($links['child-2']);
+    $links['child-2'] = entity_create('menu_link', $links['child-2']);
+    $links['child-2']->save();
 
     return $links;
   }

@@ -23,7 +23,7 @@ class ArgumentValidateTest extends UserTestBase {
     return array(
       'name' => 'User: Argument validator',
       'description' => 'Tests user argument validator.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

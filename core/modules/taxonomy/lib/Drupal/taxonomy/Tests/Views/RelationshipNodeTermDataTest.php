@@ -23,7 +23,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
     return array(
       'name' => 'Taxonomy: Node term data Relationship',
       'description' => 'Tests the taxonomy term on node relationship handler.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

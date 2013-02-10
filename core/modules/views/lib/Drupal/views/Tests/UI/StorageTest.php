@@ -36,14 +36,13 @@ class StorageTest extends UITestBase {
     $view_name = 'test_view';
     $view = views_get_view($view_name);
 
-    $path = "admin/structure/views/nojs/edit-details/$view_name";
     $edit = array(
       'human_name' => $this->randomName(),
       'tag' => $this->randomName(),
       'description' => $this->randomName(30),
     );
 
-    $this->drupalPost($path, $edit, t('Apply'));
+    $this->drupalPost("admin/structure/views/nojs/edit-details/$view_name/default", $edit, t('Apply'));
     $this->drupalPost(NULL, array(), t('Save'));
 
     $view = views_get_view($view_name);

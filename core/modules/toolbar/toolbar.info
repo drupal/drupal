@@ -5,5 +5,6 @@ package = Core
 version = VERSION
 
 dependencies[] = breakpoint
+dependencies[] = menu_link
 
 configure = admin/structure/toolbar

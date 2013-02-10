@@ -50,7 +50,7 @@ class IntegrationTest extends ViewTestBase {
     return array(
       'name' => 'Statistics: Integration tests',
       'description' => 'Tests basic integration of views data from the statistics module.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

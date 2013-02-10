@@ -138,7 +138,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
     $set = entity_create('shortcut', array(
       'id' => $form_state['values']['id'],
       'label' => $form_state['values']['label'],
-      'links' => menu_links_clone($default_set->links),
+      'links' => $default_set->links,
     ));
     $set->save();
     $replacements = array(
@@ -209,7 +209,7 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
     'links' => array(),
   );
 
-  foreach ($shortcut_set->links as $link) {
+  foreach ($shortcut_set->links as $uuid => $link) {
     $mlid = $link['mlid'];
     $form['shortcuts']['links'][$mlid]['name']['#markup'] = l($link['link_title'], $link['link_path']);
     $form['shortcuts']['links'][$mlid]['weight'] = array(
@@ -362,10 +362,10 @@ function shortcut_link_edit($form, &$form_state, $shortcut_link) {
  */
 function _shortcut_link_form_elements($shortcut_link = NULL) {
   if (!isset($shortcut_link)) {
-    $shortcut_link = array(
+    $shortcut_link = entity_create('menu_link', array(
       'link_title' => '',
       'link_path' => ''
-    );
+    ));
   }
   else {
     $shortcut_link['link_path'] = ($shortcut_link['link_path'] == '<front>') ? '' : drupal_container()->get('path.alias_manager')->getPathAlias($shortcut_link['link_path']);
@@ -421,7 +421,10 @@ function shortcut_link_edit_submit($form, &$form_state) {
   }
   $form_state['values']['shortcut_link']['link_path'] = $shortcut_path;
 
-  $shortcut_link = array_merge($form_state['values']['original_shortcut_link'], $form_state['values']['shortcut_link']);
+  $shortcut_link = $form_state['values']['original_shortcut_link'];
+  foreach ($form_state['values']['shortcut_link'] as $key => $value) {
+   $shortcut_link[$key] = $value;
+  }
 
   menu_link_save($shortcut_link);
   $set_name = str_replace('shortcut-', '' , $shortcut_link['menu_name']);
@@ -460,9 +463,11 @@ function shortcut_admin_add_link($shortcut_link, &$shortcut_set) {
   if (empty($shortcut_link['link_path'])) {
     $shortcut_link['link_path'] = '<front>';
   }
+  $menu_link = entity_create('menu_link', $shortcut_link);
+  $menu_link->save();
 
   // Add the link to the end of the list.
-  $shortcut_set->links[] = $shortcut_link;
+  $shortcut_set->links[$menu_link->uuid()] = $menu_link;
   shortcut_set_reset_link_weights($shortcut_set);
 }
 

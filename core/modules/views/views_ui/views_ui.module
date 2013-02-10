@@ -6,10 +6,9 @@
  */
 
 use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 
@@ -19,177 +18,100 @@ use Drupal\Core\Ajax\ReplaceCommand;
 function views_ui_menu() {
   $items = array();
 
-  // Minor code reduction technique.
-  $base = array(
-    'access callback' => 'user_access',
-    'access arguments' => array('administer views'),
-    'file' => 'admin.inc',
-  );
-  // Set up the base for AJAX callbacks.
-  $ajax_base = array(
-    'page callback' => 'views_ui_ajax_callback',
-    'page arguments' => array(4, 5),
-    'type' => MENU_CALLBACK,
-  ) + $base;
-
   // Top-level Views module pages (not tied to a particular View).
   $items['admin/structure/views/add'] = array(
     'title' => 'Add new view',
-    'page callback' => 'views_ui_add_page',
+    'page callback' => 'NOT_USED',
     'type' => MENU_LOCAL_ACTION,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
 
   $items['admin/structure/views'] = array(
     'title' => 'Views',
     'description' => 'Manage customized lists of content.',
-    'page callback' => 'views_ui_list_page',
-  ) + $base;
+    'page callback' => 'NOT_USED',
+    'access arguments' => array('administer views'),
+  );
 
   $items['admin/structure/views/list'] = array(
     'title' => 'List',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $base;
-
-  $items['admin/structure/views/view/%views_ui_cache/clone'] = array(
-    'title callback' => 'views_ui_clone_title',
-    'title arguments' => array(4),
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(4, 'clone'),
-    'type' => MENU_CALLBACK,
-  ) + $base;
-
-  $items['admin/structure/views/view/%views_ui/enable'] = array(
-    'title' => 'Enable a view',
-  ) + $ajax_base;
-
-  $items['admin/structure/views/view/%views_ui/disable'] = array(
-    'title' => 'Disable a view',
-  ) + $ajax_base;
-
-  $items['admin/structure/views/view/%views_ui/delete'] = array(
-    'title' => 'Delete a view',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('views_ui_confirm_delete', 4),
-    'type' => MENU_CALLBACK,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
 
   $items['admin/structure/views/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('views_ui_admin_settings_basic'),
+    'page callback' => 'NOT_USED',
     'type' => MENU_LOCAL_TASK,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
   $items['admin/structure/views/settings/basic'] = array(
     'title' => 'Basic',
-    'page arguments' => array('views_ui_admin_settings_basic'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
   $items['admin/structure/views/settings/advanced'] = array(
     'title' => 'Advanced',
-    'page arguments' => array('views_ui_admin_settings_advanced'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
 
   // The primary Edit View page. Secondary tabs for each Display are added in
   // views_ui_menu_local_tasks_alter().
-  $items['admin/structure/views/view/%views_ui_cache'] = array(
-    'title callback' => 'views_ui_edit_page_title',
-    'title arguments' => array(4),
-    'page callback' => 'views_ui_edit_page',
-    'page arguments' => array(4),
-  ) + $base;
-  $items['admin/structure/views/view/%views_ui_cache/edit'] = array(
+  $items['admin/structure/views/view/%'] = array(
+    'page callback' => 'NOT_USED',
+    'access arguments' => array('administer views'),
+  );
+  $items['admin/structure/views/view/%/edit'] = array(
     'title' => 'Edit view',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => -10,
-    'theme callback' => 'ajax_base_page_theme',
-  ) + $base;
-  $items['admin/structure/views/view/%views_ui_cache/edit/%/ajax'] = array(
-    'page callback' => 'views_ui_ajax_get_form',
-    'page arguments' => array('views_ui_edit_form', 4, 6),
-    'delivery callback' => 'ajax_deliver',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  ) + $base;
-  $items['admin/structure/views/view/%views_ui_cache/preview/%'] = array(
-    'page callback' => 'views_ui_build_preview',
-    'page arguments' => array(4, 6),
+    'access arguments' => array('administer views'),
+  );
+  $items['admin/structure/views/view/%/preview/%'] = array(
+    'page callback' => 'NOT_USED',
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  ) + $base;
-  $items['admin/structure/views/view/%views_ui_cache/preview/%/ajax'] = array(
-    'page callback' => 'views_ui_build_preview',
-    'page arguments' => array(4, 6),
-    'delivery callback' => 'ajax_deliver',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
 
   // Additional pages for acting on a View.
 
-  $items['admin/structure/views/view/%views_ui_cache/break-lock'] = array(
+  $items['admin/structure/views/view/%/break-lock'] = array(
     'title' => 'Break lock',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('views_ui_break_lock_confirm', 4),
+    'page callback' => 'NOT_USED',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
 
   // NoJS/AJAX callbacks that can use the default Views AJAX form system.
-  $items['admin/structure/views/nojs/%/%views_ui_cache'] = array(
-    'page callback' => 'views_ui_ajax_form',
-    'page arguments' => array(FALSE, 4, 5),
-    'type' => MENU_CALLBACK,
-  ) + $base;
-  $items['admin/structure/views/ajax/%/%views_ui_cache'] = array(
-    'page callback' => 'views_ui_ajax_form',
-    'page arguments' => array(TRUE, 4, 5),
-    'delivery callback' => 'ajax_deliver',
-    'type' => MENU_CALLBACK,
-  ) + $base;
+  $items['admin/structure/views/nojs/%/%'] = array(
+    'page callback' => 'NOT_USED',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'access arguments' => array('administer views'),
+  );
 
-  $items['admin/structure/views/nojs/preview/%views_ui_cache/%'] = array(
-    'page callback' => 'views_ui_preview',
-    'page arguments' => array(5, 6),
-  ) + $base;
-  $items['admin/structure/views/ajax/preview/%views_ui_cache/%'] = array(
-    'page callback' => 'views_ui_preview',
-    'page arguments' => array(5, 6),
-    'delivery callback' => 'ajax_deliver',
-  ) + $base;
-
-  // Autocomplete callback for tagging a View.
-  // Views module uses admin/views/... instead of admin/structure/views/... for
-  // autocomplete paths, so be consistent with that.
-  // @todo Change to admin/structure/views/... when the change can be made to
-  //   Views module as well.
-  $items['admin/views/ajax/autocomplete/tag'] = array(
-    'page callback' => 'views_ui_autocomplete_tag',
-    'type' => MENU_CALLBACK,
-  ) + $base;
 
   // A page in the Reports section to show usage of fields in all views
-  $items['admin/reports/fields/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
   $items['admin/reports/fields/views-fields'] = array(
     'title' => 'Used in views',
     'description' => 'Overview of fields used in all views.',
-    'page callback' => 'views_ui_field_list',
+    'page callback' => 'NOT_USED',
     'type' => MENU_LOCAL_TASK,
     'weight' => 0,
-  ) + $base;
+    'access arguments' => array('administer views'),
+  );
 
   // A page in the Reports section to show usage of plugins in all views.
   $items['admin/reports/views-plugins'] = array(
     'title' => 'Views plugins',
     'description' => 'Overview of plugins used in all views.',
-    'page callback' => 'views_ui_plugin_list',
-  ) + $base;
+    'page callback' => 'NOT_USED',
+    'access arguments' => array('administer views'),
+  );
 
   return $items;
 }
@@ -302,61 +224,6 @@ function views_ui_library_info() {
 }
 
 /**
- * Page title callback for the Edit View page.
- */
-function views_ui_edit_page_title(ViewUI $view) {
-  module_load_include('inc', 'views_ui', 'admin');
-  $bases = drupal_container()->get('views.views_data')->fetchBaseTables();
-  $name = $view->getHumanName();
-  if (isset($bases[$view->get('base_table')])) {
-    $name .= ' (' . $bases[$view->get('base_table')]['title'] . ')';
-  }
-
-  return $name;
-}
-
-/**
- * Specialized menu callback to load a view and check its locked status.
- *
- * @param $name
- *   The machine name of the view.
- *
- * @return
- *   The view object, with a "locked" property indicating whether or not
- *   someone else is already editing the view.
- */
-function views_ui_cache_load($name) {
-  $views_temp_store = drupal_container()->get('user.tempstore')->get('views');
-  $view = $views_temp_store->get($name);
-  $storage = entity_load('view', $name);
-  $original_view = $storage ? new ViewUI($storage) : NULL;
-
-  if (empty($view)) {
-    $view = $original_view;
-    if (!empty($view)) {
-      // Check to see if someone else is already editing this view.
-      // Set a flag to indicate that this view is being edited.
-      // This flag will be used e.g. to determine whether strings
-      // should be localized.
-      $view->editing = TRUE;
-    }
-  }
-  else {
-    // Keep disabled/enabled status real.
-    if ($original_view) {
-      $view->set('disabled', $original_view->get('disabled'));
-    }
-  }
-
-  if (empty($view)) {
-    return FALSE;
-  }
-  $view->locked = $views_temp_store->getMetadata($view->id());
-
-  return $view;
-}
-
-/**
  * Specialized cache function to add a flag to our view, include an appropriate
  * include, and cache more easily.
  */
@@ -381,16 +248,6 @@ function views_ui_cache_set(ViewUI $view) {
   $executable->query = NULL;
   unset($executable->displayHandlers);
   drupal_container()->get('user.tempstore')->get('views')->set($view->id(), $view);
-}
-
-/**
- * Title callback for the views clone form.
- *
- * @param \Drupal\views\ViewExecutable $view
- *   The view to clone.
- */
-function views_ui_clone_title(ViewUI $view) {
-  return t('Clone of @human_name', array('@human_name' => $view->getHumanName()));
 }
 
 /**
@@ -558,50 +415,6 @@ function views_ui_contextual_links_suppress_pop() {
 }
 
 /**
- * Menu callback; handles AJAX form submissions similar to ajax_form_callback(), but can be used for uncached forms.
- *
- * ajax_form_callback(), the menu callback for the system/ajax path, requires
- * the form to be retrievable from the form cache, because it lacks a trusted
- * $form_id argument with which to call drupal_retrieve_form(). When AJAX is
- * wanted on a non-cacheable form, #ajax['path'] can be set to a path whose
- * menu router item's 'page callback' is this function, and whose
- * 'page arguments' is the form id, optionally followed by additional build
- * arguments, as expected by drupal_get_form().
- *
- * The same caution must be used when defining a hook_menu() entry with this
- * page callback as is used when defining a hook_menu() entry with the
- * 'drupal_get_form' page callback: a 'page arguments' must be specified with a
- * literal value as the first argument, because $form_id determines which form
- * builder function gets called, so must be safe from user tampering.
- *
- * @see drupal_get_form()
- * @see ajax_form_callback()
- * @see http://drupal.org/node/774876
- */
-function views_ui_ajax_get_form($form_id) {
-  // @see ajax_get_form()
-  $form_state = array(
-    'no_redirect' => TRUE,
-  );
-  $form_state['rebuild_info']['copy']['#build_id'] = TRUE;
-  $form_state['rebuild_info']['copy']['#action'] = TRUE;
-
-  // @see drupal_get_form()
-  $args = func_get_args();
-  array_shift($args);
-  $form_state['build_info']['args'] = $args;
-  $form = drupal_build_form($form_id, $form_state);
-
-  // @see ajax_form_callback()
-  if (!empty($form_state['triggering_element'])) {
-    $callback = $form_state['triggering_element']['#ajax']['callback'];
-  }
-  if (!empty($callback) && function_exists($callback)) {
-    return $callback($form, $form_state);
-  }
-}
-
-/**
  * This is part of a patch to address a jQueryUI bug.  The bug is responsible
  * for the inability to scroll a page when a modal dialog is active. If the content
  * of the dialog extends beyond the bottom of the viewport, the user is only able
@@ -678,37 +491,6 @@ function views_ui_load($name) {
 }
 
 /**
- * Page callback: Calls a method on a view and reloads the listing page.
- *
- * @param Drupal\views\ViewExectuable $view
- *   The config entity being acted upon.
- * @param string $op
- *   The operation to perform, e.g., 'enable' or 'disable'.
- *
- * @return mixed
- *   Either returns the listing page as JSON, or calls drupal_goto() to
- *   redirect back to the listing page.
- */
-function views_ui_ajax_callback(ViewExecutable $view, $op) {
-  // Perform the operation and save the view.
-  $view->storage->$op();
-  $view->save();
-
-  // If the request is via AJAX, return the rendered list as JSON.
-  if (drupal_container()->get('request')->request->get('js')) {
-    $list = views_ui_list_page();
-    $response = new AjaxResponse();
-    $response->addCommand(new ReplaceCommand('#views-entity-list', drupal_render($list)));
-    return $response;
-  }
-  // Otherwise, redirect back to the page.
-  else {
-    $entity_info = entity_get_info('view');
-    drupal_goto('admin/structure/views');
-  }
-}
-
-/**
  * Form constructor for the View deletion form.
  *
  * @param \Drupal\views\ViewExectuable $view
@@ -716,10 +498,10 @@ function views_ui_ajax_callback(ViewExecutable $view, $op) {
  *
  * @see views_ui_confirm_delete_submit()
  */
-function views_ui_confirm_delete($form, &$form_state, ViewExecutable $view) {
+function views_ui_confirm_delete($form, &$form_state, ViewStorageInterface $view) {
   $form['view'] = array('#type' => 'value', '#value' => $view);
   return confirm_form($form,
-    t('Are you sure you want to delete the %name view?', array('%name' => $view->storage->getHumanName())),
+    t('Are you sure you want to delete the %name view?', array('%name' => $view->getHumanName())),
     'admin/structure/views',
     t('This action cannot be undone.'),
     t('Delete'),
@@ -731,20 +513,6 @@ function views_ui_confirm_delete($form, &$form_state, ViewExecutable $view) {
  * Form submission handler for views_ui_confirm_delete().
  */
 function views_ui_confirm_delete_submit($form, &$form_state) {
-  $form_state['values']['view']->storage->delete();
+  $form_state['values']['view']->delete();
   $form_state['redirect'] = 'admin/structure/views';
-}
-
-/**
- * Page callback: Lists all of the views.
- *
- * @return array
- *   A render array for a page containing a list of views.
- *
- * @see views_ui_menu()
- */
-function views_ui_list_page() {
-  return drupal_container()->get('plugin.manager.entity')
-    ->getListController('view')
-    ->render();
 }

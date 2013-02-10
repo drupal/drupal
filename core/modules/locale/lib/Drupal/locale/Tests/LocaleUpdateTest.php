@@ -85,7 +85,7 @@ class LocaleUpdateTest extends WebTestBase {
   private function setTranslationsDirectory($path) {
     $this->tranlations_directory = $path;
     file_prepare_directory($path, FILE_CREATE_DIRECTORY);
-    variable_set('locale_translate_file_directory', $path);
+    config('locale.settings')->set('translation.path', $path)->save();
   }
 
   /**

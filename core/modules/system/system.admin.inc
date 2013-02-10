@@ -19,33 +19,39 @@ function system_admin_config_page() {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
   }
   $blocks = array();
-  if ($admin = db_query("SELECT menu_name, mlid FROM {menu_links} WHERE link_path = 'admin/config' AND module = 'system'")->fetchAssoc()) {
-    $result = db_query("
-      SELECT m.*, ml.*
-      FROM {menu_links} ml
-      INNER JOIN {menu_router} m ON ml.router_path = m.path
-      WHERE ml.link_path <> 'admin/help' AND menu_name = :menu_name AND ml.plid = :mlid AND hidden = 0", $admin, array('fetch' => PDO::FETCH_ASSOC));
-    foreach ($result as $item) {
-      _menu_link_translate($item);
-      if (!$item['access']) {
-        continue;
-      }
-      // The link description, either derived from 'description' in hook_menu()
-      // or customized via menu module is used as title attribute.
-      if (!empty($item['localized_options']['attributes']['title'])) {
-        $item['description'] = $item['localized_options']['attributes']['title'];
-        unset($item['localized_options']['attributes']['title']);
-      }
-      $block = $item;
-      $block['content'] = '';
-      $block['content'] .= theme('admin_block_content', array('content' => system_admin_menu_block($item)));
-      if (!empty($block['content'])) {
-        $block['show'] = TRUE;
-      }
+  if ($system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/config', 'module' => 'system'))) {
+    $system_link = reset($system_link);
+    $query = entity_query('menu_link')
+      ->condition('link_path', 'admin/help', '<>')
+      ->condition('menu_name', $system_link->menu_name)
+      ->condition('plid', $system_link->id())
+      ->condition('hidden', 0);
+    $result = $query->execute();
+    if (!empty($result)) {
+      $menu_links = menu_link_load_multiple($result);
 
-      // Prepare for sorting as in function _menu_tree_check_access().
-      // The weight is offset so it is always positive, with a uniform 5-digits.
-      $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
+      foreach ($menu_links as $item) {
+        _menu_link_translate($item);
+        if (!$item['access']) {
+          continue;
+        }
+        // The link description, either derived from 'description' in hook_menu()
+        // or customized via menu module is used as title attribute.
+        if (!empty($item['localized_options']['attributes']['title'])) {
+          $item['description'] = $item['localized_options']['attributes']['title'];
+          unset($item['localized_options']['attributes']['title']);
+        }
+        $block = $item;
+        $block['content'] = '';
+        $block['content'] .= theme('admin_block_content', array('content' => system_admin_menu_block($item)));
+        if (!empty($block['content'])) {
+          $block['show'] = TRUE;
+        }
+
+        // Prepare for sorting as in function _menu_tree_check_access().
+        // The weight is offset so it is always positive, with a uniform 5-digits.
+        $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
+      }
     }
   }
   if ($blocks) {
@@ -808,6 +814,26 @@ function system_modules($form, $form_state = array()) {
   if (!empty($form_state['storage'])) {
     return system_modules_confirm_form($visible_files, $form_state['storage']);
   }
+
+  // JS-only table filters.
+  $form['filters'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('table-filter', 'js-show'),
+    ),
+  );
+  $form['filters']['text'] = array(
+    '#type' => 'search',
+    '#title' => t('Search'),
+    '#size' => 30,
+    '#placeholder' => t('Enter module name…'),
+    '#attributes' => array(
+      'class' => array('table-filter-text'),
+      'data-table' => '#system-modules',
+      'autocomplete' => 'off',
+      'title' => t('Enter a part of the module name or description to filter by.'),
+    ),
+  );
 
   $modules = array();
   $form['modules'] = array('#tree' => TRUE);
@@ -1721,9 +1747,10 @@ function system_clear_page_cache_submit($form, &$form_state) {
  * Form builder; Configure the site file handling.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_settings_form_sumbit()
  */
 function system_file_system_settings() {
+  $config = config('system.file');
   $form['file_public_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Public file system path'),
@@ -1736,7 +1763,7 @@ function system_file_system_settings() {
   $form['file_private_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Private file system path'),
-    '#default_value' => variable_get('file_private_path', ''),
+    '#default_value' => $config->get('path.private'),
     '#maxlength' => 255,
     '#description' => t('An existing local file system path for storing private files. It should be writable by Drupal and not accessible over the web. See the online handbook for <a href="@handbook">more information about securing private files</a>.', array('@handbook' => 'http://drupal.org/documentation/modules/file')),
     '#after_build' => array('system_check_directory'),
@@ -1745,7 +1772,7 @@ function system_file_system_settings() {
   $form['file_temporary_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Temporary directory'),
-    '#default_value' => variable_get('file_temporary_path', file_directory_temp()),
+    '#default_value' => $config->get('path.temporary'),
     '#maxlength' => 255,
     '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
@@ -1760,13 +1787,32 @@ function system_file_system_settings() {
     $form['file_default_scheme'] = array(
       '#type' => 'radios',
       '#title' => t('Default download method'),
-      '#default_value' => variable_get('file_default_scheme', isset($options['public']) ? 'public' : key($options)),
+      '#default_value' => $config->get('default_scheme'),
       '#options' => $options,
       '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
     );
   }
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Save configuration values for file system.
+ *
+ * @ingroup forms
+ * @see system_file_system_settings()
+ */
+function system_file_system_settings_submit($form, &$form_state) {
+  $config = config('system.file')
+    ->set('path.private', $form_state['values']['file_private_path'])
+    ->set('path.temporary', $form_state['values']['file_temporary_path']);
+  variable_set('file_public_path', $form_state['values']['file_public_path']);
+
+
+  if(isset($form_state['values']['file_default_scheme'])) {
+    $config->set('default_scheme', $form_state['values']['file_default_scheme']);
+  }
+  $config->save();
 }
 
 /**
@@ -2337,11 +2383,11 @@ function theme_system_modules_details($variables) {
     $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
 
     // Add the module label and expand/collapse functionalty.
-    $col2 = '<label id="' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name">' . drupal_render($module['name']) . '</label>';
+    $col2 = '<label id="' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
     $row[] = array('class' => array('module'), 'data' => $col2);
 
     // Add the description, along with any modules it requires.
-    $description = '<span class="details"><span class="text">' . drupal_render($module['description']) . '</span></span>';
+    $description = '<span class="details"><span class="text table-filter-text-source">' . drupal_render($module['description']) . '</span></span>';
     if ($version || $requires || $required_by) {
       $description .= ' <div class="requirements">';
       if ($version) {

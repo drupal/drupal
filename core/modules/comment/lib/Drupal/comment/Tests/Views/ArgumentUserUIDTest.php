@@ -23,7 +23,7 @@ class ArgumentUserUIDTest extends CommentTestBase {
     return array(
       'name' => 'Comment: User UID Argument',
       'description' => 'Tests the user posted or commented argument handler.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

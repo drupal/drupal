@@ -243,6 +243,11 @@ Locale module
 Menu module
 - ?
 
+Menu Link module
+- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
+- Károly Négyesi 'chx' http://drupal.org/user/9446
+- @todo Anyone else from the menu system?
+
 Node module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - David Strauss 'David Strauss' http://drupal.org/user/93254

@@ -23,7 +23,7 @@ class RelationshipRepresentativeNode extends UserTestBase {
     return array(
       'name' => 'User: Representative Node Relationship',
       'description' => 'Tests the representative node relationship for users.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

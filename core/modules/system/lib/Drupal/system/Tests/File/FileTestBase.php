@@ -81,6 +81,11 @@ abstract class FileTestBase extends WebTestBase {
    *   Optional message.
    */
   function assertFilePermissions($filepath, $expected_mode, $message = NULL) {
+    // Configuration system stores default modes as strings.
+    if (is_string($expected_mode)) {
+      // Convert string to octal.
+      $expected_mode = octdec($expected_mode);
+    }
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $filepath);
 
@@ -116,11 +121,17 @@ abstract class FileTestBase extends WebTestBase {
    *   Optional message.
    */
   function assertDirectoryPermissions($directory, $expected_mode, $message = NULL) {
+    // Configuration system stores default modes as strings.
+    if (is_string($expected_mode)) {
+      // Convert string to octal.
+      $expected_mode = octdec($expected_mode);
+    }
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $directory);
 
     // Mask out all but the last three octets.
     $actual_mode = fileperms($directory) & 0777;
+    $expected_mode = $expected_mode & 0777;
 
     // PHP on Windows has limited support for file permissions. Usually each of
     // "user", "group" and "other" use one octal digit (3 bits) to represent the

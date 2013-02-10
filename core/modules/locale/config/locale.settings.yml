@@ -6,4 +6,4 @@ translation:
   overwrite_customized: false
   overwrite_not_customized: true
   update_interval_days: '0'
-
+  path: ''

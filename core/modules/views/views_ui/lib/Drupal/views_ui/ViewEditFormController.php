@@ -653,7 +653,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       '#links' => array(
         'edit-details' => array(
           'title' => t('edit view name/description'),
-          'href' => "admin/structure/views/nojs/edit-details/{$view->id()}",
+          'href' => "admin/structure/views/nojs/edit-details/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'analyze' => array(

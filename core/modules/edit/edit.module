@@ -60,6 +60,9 @@ function edit_toolbar() {
         ),
       ),
     ),
+    '#wrapper_attributes' => array(
+      'class' => array('edit-toolbar-tab'),
+    ),
     '#attached' => array(
       'library' => array(
         array('edit', 'edit'),

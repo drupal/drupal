@@ -37,6 +37,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
     parent::setUp();
 
     $this->enableModules(array('system'));
+    $this->enableModules(array('menu_link'));
   }
 
   function viewsData() {

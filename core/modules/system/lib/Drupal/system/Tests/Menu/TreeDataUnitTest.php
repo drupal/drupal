@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\simpletest\UnitTestBase;
 
 /**
@@ -16,13 +17,7 @@ class TreeDataUnitTest extends UnitTestBase {
   /**
    * Dummy link structure acceptable for menu_tree_data().
    */
-  var $links = array(
-    1 => array('mlid' => 1, 'depth' => 1),
-    2 => array('mlid' => 2, 'depth' => 1),
-    3 => array('mlid' => 3, 'depth' => 2),
-    4 => array('mlid' => 4, 'depth' => 3),
-    5 => array('mlid' => 5, 'depth' => 1),
-  );
+  protected $links = array();
 
   public static function getInfo() {
     return array(
@@ -35,7 +30,15 @@ class TreeDataUnitTest extends UnitTestBase {
   /**
    * Validate the generation of a proper menu tree hierarchy.
    */
-  function testMenuTreeData() {
+  public function testMenuTreeData() {
+    $this->links = array(
+      1 => new MenuLink(array('mlid' => 1, 'depth' => 1), 'menu_link'),
+      2 => new MenuLink(array('mlid' => 2, 'depth' => 1), 'menu_link'),
+      3 => new MenuLink(array('mlid' => 3, 'depth' => 2), 'menu_link'),
+      4 => new MenuLink(array('mlid' => 4, 'depth' => 3), 'menu_link'),
+      5 => new MenuLink(array('mlid' => 5, 'depth' => 1), 'menu_link'),
+    );
+
     $tree = menu_tree_data($this->links);
 
     // Validate that parent items #1, #2, and #5 exist on the root level.

@@ -67,7 +67,9 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
     $editor = entity_load('editor', 'filtered_html');
 
     // Case 1: no CKEditor plugins.
-    $this->assertIdentical(array('internal', 'stylescombo'), array_keys($this->manager->getDefinitions()), 'No CKEditor plugins found besides the built-in ones.');
+    $definitions = array_keys($this->manager->getDefinitions());
+    sort($definitions);
+    $this->assertIdentical(array('internal', 'stylescombo'), $definitions, 'No CKEditor plugins found besides the built-in ones.');
     $this->assertIdentical(array(), $this->manager->getEnabledPlugins($editor), 'Only built-in plugins are enabled.');
     $this->assertIdentical(array('internal' => NULL), $this->manager->getEnabledPlugins($editor, TRUE), 'Only the "internal" plugin is enabled.');
 

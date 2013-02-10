@@ -81,8 +81,8 @@
 .active .icon-edit:before {
   background-image: url("../images/icon-edit-active.png");
 }
-.toolbar .tray.edit.active {
-  z-index: 340;
+.js .toolbar .bar .edit-toolbar-tab.tab {
+  float: right;
 }
 .toolbar .icon-edit.edit-nothing-editable-hidden {
   display: none;

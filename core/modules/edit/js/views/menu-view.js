@@ -20,17 +20,9 @@ Drupal.edit.views.MenuView = Backbone.View.extend({
   initialize: function() {
     _.bindAll(this, 'stateChange');
     this.model.on('change:isViewing', this.stateChange);
-    // @todo
-    // Re-implement hook_toolbar and the corresponding JavaScript behaviors
-    // once https://drupal.org/node/1847198 is resolved. The toolbar tray is
-    // necessary when the page request is processed because its render element
-    // has an #attached property with the Edit module library code assigned to
-    // it. Currently a toolbar tab is not passed as a renderable array, so
-    // #attached properties are not processed. The toolbar tray DOM element is
-    // unnecessary right now, so it is removed.
-    this.$el.find('#toolbar-tray-edit').remove();
-    // Respond to clicks on other toolbar tabs. This temporary pending
-    // improvements to the toolbar module.
+    // Respond to clicks on other toolbar tabs. 
+    // @todo This temporary pending improvements to the toolbar module.
+    // @see https://drupal.org/node/1860434
     $('#toolbar-administration').on('click.edit', '.bar a:not(#toolbar-tab-edit)', _.bind(function (event) {
       this.model.set('isViewing', true);
     }, this));

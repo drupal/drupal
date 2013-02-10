@@ -204,6 +204,16 @@ tr .ajax-progress-throbber .throbber {
 }
 
 /**
+ * For anything you want to show on page load only when JS is enabled.
+ */
+.js-show {
+  display: none;
+}
+.js .js-show {
+  display: block;
+}
+
+/**
  * Hide elements from all users.
  *
  * Used for elements which should not be immediately displayed to any user. An
@@ -228,7 +238,6 @@ tr .ajax-progress-throbber .throbber {
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
   height: 1px;
-  width: 1px;
 }
 
 /**

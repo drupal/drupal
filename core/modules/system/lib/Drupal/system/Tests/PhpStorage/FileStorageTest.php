@@ -23,13 +23,14 @@ class FileStorageTest extends PhpStorageTestBase {
   function setUp() {
     global $conf;
     parent::setUp();
+    $dir_path = DRUPAL_ROOT . '/' . $this->public_files_directory . '/php';
     $conf['php_storage']['simpletest'] = array(
       'class' => 'Drupal\Component\PhpStorage\FileStorage',
-      'directory' => DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php',
+      'directory' => $dir_path,
     );
     $conf['php_storage']['readonly'] = array(
       'class' => 'Drupal\Component\PhpStorage\FileReadOnlyStorage',
-      'directory' => DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php',
+      'directory' => $dir_path,
       // Let this read from the bin where the other instance is writing.
       'bin' => 'simpletest',
     );

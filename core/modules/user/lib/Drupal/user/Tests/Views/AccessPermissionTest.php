@@ -27,7 +27,7 @@ class AccessPermissionTest extends AccessTestBase {
     return array(
       'name' => 'User: Access permission',
       'description' => 'Tests views permission access plugin.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

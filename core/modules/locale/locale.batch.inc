@@ -329,7 +329,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
             // files should be kept locally, they will be moved to the local
             // translations after successfull import. Otherwise the temporary
             // file is deleted after being imported.
-            if ($import_type == LOCALE_TRANSLATION_DOWNLOADED && variable_get('locale_translate_file_directory', conf_path() . '/files/translations') && isset($source_result->files[LOCALE_TRANSLATION_LOCAL])) {
+            if ($import_type == LOCALE_TRANSLATION_DOWNLOADED && config('locale.settings')->get('translation.path') && isset($source_result->files[LOCALE_TRANSLATION_LOCAL])) {
               if (file_unmanaged_move($file->uri, $source_result->files[LOCALE_TRANSLATION_LOCAL]->uri, FILE_EXISTS_REPLACE)) {
                 // The downloaded file is now moved to the local file location.
                 // From this point forward we can treat it as if we imported a
