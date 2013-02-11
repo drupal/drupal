@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\StringStorageInterface.
+ * Contains \Drupal\locale\StringStorageInterface.
  */
 
 namespace Drupal\locale;
@@ -30,14 +30,12 @@ interface StringStorageInterface {
    *   - 'pager limit': Use pager and set this limit value.
    *
    * @return array
-   *   Array of Drupal\locale\StringInterface objects matching the conditions.
+   *   Array of \Drupal\locale\StringInterface objects matching the conditions.
    */
   public function getStrings(array $conditions = array(), array $options = array());
 
   /**
    * Loads multiple string translation objects.
-   *
-   * @see Drupal\locale\StringStorageInterface::getStrings()
    *
    * @param array $conditions
    *   (optional) Array with conditions that will be used to filter the strings
@@ -47,14 +45,14 @@ interface StringStorageInterface {
    *   any of the options defined by getStrings().
    *
    * @return array
-   *   Array of Drupal\locale\StringInterface objects matching the conditions.
-  */
+   *   Array of \Drupal\locale\StringInterface objects matching the conditions.
+   *
+   * @see \Drupal\locale\StringStorageInterface::getStrings()
+   */
   public function getTranslations(array $conditions = array(), array $options = array());
 
   /**
    * Loads string location information.
-   *
-   * @see Drupal\locale\StringStorageInterface::getStrings()
    *
    * @param array $conditions
    *   (optional) Array with conditions to filter the locations that may be any
@@ -64,7 +62,9 @@ interface StringStorageInterface {
    *   - 'name', The location name.
    *
    * @return array
-   *   Array of location objects matching the conditions.
+   *   Array of \Drupal\locale\StringInterface objects matching the conditions.
+   *
+   * @see \Drupal\locale\StringStorageInterface::getStrings()
    */
   public function getLocations(array $conditions = array());
 
@@ -79,7 +79,7 @@ interface StringStorageInterface {
    *   (optional) Array with conditions that will be used to filter the strings
    *   returned and may include all of the conditions defined by getStrings().
    *
-   * @return Drupal\locale\SourceString|null
+   * @return \Drupal\locale\SourceString|null
    *   Minimal TranslationString object if found, NULL otherwise.
    */
   public function findString(array $conditions);
@@ -95,7 +95,7 @@ interface StringStorageInterface {
    *   (optional) Array with conditions that will be used to filter the strings
    *   returned and may include all of the conditions defined by getStrings().
    *
-   * @return Drupal\locale\TranslationString|null
+   * @return \Drupal\locale\TranslationString|null
    *   Minimal TranslationString object if found, NULL otherwise.
    */
   public function findTranslation(array $conditions);
@@ -103,13 +103,13 @@ interface StringStorageInterface {
   /**
    * Save string object to storage.
    *
-   * @param Drupal\locale\StringInterface $string
+   * @param \Drupal\locale\StringInterface $string
    *   The string object.
    *
-   * @return Drupal\locale\StringStorageInterface
+   * @return \Drupal\locale\StringStorageInterface
    *   The called object.
    *
-   * @throws Drupal\locale\StringStorageException
+   * @throws \Drupal\locale\StringStorageException
    *   In case of failures, an exception is thrown.
    */
   public function save($string);
@@ -117,13 +117,13 @@ interface StringStorageInterface {
   /**
    * Delete string from storage.
    *
-   * @param Drupal\locale\StringInterface $string
+   * @param \Drupal\locale\StringInterface $string
    *   The string object.
    *
-   * @return Drupal\locale\StringStorageInterface
+   * @return \Drupal\locale\StringStorageInterface
    *   The called object.
    *
-   * @throws Drupal\locale\StringStorageException
+   * @throws \Drupal\locale\StringStorageException
    *   In case of failures, an exception is thrown.
    */
   public function delete($string);
@@ -166,7 +166,7 @@ interface StringStorageInterface {
    * @param array $values
    *   (optional) Array with initial values. Defaults to empty array.
    *
-   * @return Drupal\locale\SourceString
+   * @return \Drupal\locale\SourceString
    *   New source string object.
    */
   public function createString($values = array());
@@ -177,7 +177,7 @@ interface StringStorageInterface {
    * @param array $values
    *   (optional) Array with initial values. Defaults to empty array.
    *
-   * @return Drupal\locale\TranslationString
+   * @return \Drupal\locale\TranslationString
    *   New string translation object.
    */
   public function createTranslation($values = array());
