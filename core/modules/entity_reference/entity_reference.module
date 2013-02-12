@@ -469,23 +469,28 @@ function entity_reference_autocomplete_access_callback($type, $field_name, $enti
 function entity_reference_autocomplete_callback($type, $field_name, $entity_type, $bundle_name, $entity_id = '') {
   $field = field_info_field($field_name);
   $instance = field_info_instance($entity_type, $field_name, $bundle_name);
+  $prefix = '';
 
   // Get the typed string, if exists from the URL.
   $tags_typed = drupal_container()->get('request')->query->get('q');
   $tags_typed = drupal_explode_tags($tags_typed);
   $string = drupal_strtolower(array_pop($tags_typed));
 
-  return entity_reference_autocomplete_callback_get_matches($type, $field, $instance, $entity_type, $entity_id, $string);
+  // The user entered a comma-separated list of entity labels, so we generate a
+  // prefix.
+  if ($type == 'tags' && !empty($string)) {
+    $prefix = count($tags_typed) ? drupal_implode_tags($tags_typed) . ', ' : '';
+  }
+
+  return entity_reference_autocomplete_callback_get_matches($field, $instance, $entity_type, $entity_id, $prefix, $string);
 }
 
 /**
  * Returns JSON data based on a given field, instance and search string.
  *
  * This function can be used by other modules that wish to pass a mocked
- * definition of the field on instance.
+ * definition of the field or instance.
  *
- * @param string $type
- *   The widget type (i.e. 'single' or 'tags').
  * @param array $field
  *   The field array definition.
  * @param array $instance
@@ -495,14 +500,16 @@ function entity_reference_autocomplete_callback($type, $field_name, $entity_type
  * @param string $entity_id
  *   (optional) The entity ID the entity reference field is attached to.
  *   Defaults to ''.
+ * @param string $prefix
+ *   (optional) A prefix for all the keys returned by this function.
  * @param string $string
- *   The label of the entity to query by.
+ *   (optional) The label of the entity to query by.
  *
  * @return \Symfony\Component\HttpFoundation\JsonResponse
  *
  * @see entity_reference_autocomplete_callback()
  */
-function entity_reference_autocomplete_callback_get_matches($type, $field, $instance, $entity_type, $entity_id = '', $string = '') {
+function entity_reference_autocomplete_callback_get_matches($field, $instance, $entity_type, $entity_id = '', $prefix = '', $string = '') {
   $target_type = $field['settings']['target_type'];
   $matches = array();
   $entity = NULL;
@@ -517,27 +524,12 @@ function entity_reference_autocomplete_callback_get_matches($type, $field, $inst
   }
   $handler = entity_reference_get_selection_handler($field, $instance, $entity);
 
-  if ($type == 'tags') {
-    // The user enters a comma-separated list of tags. We only autocomplete the
-    // last tag.
-    $tags_typed = drupal_explode_tags($string);
-    $tag_last = drupal_strtolower(array_pop($tags_typed));
-    if (!empty($tag_last)) {
-      $prefix = count($tags_typed) ? implode(', ', $tags_typed) . ', ' : '';
-    }
-  }
-  else {
-    // The user enters a single tag.
-    $prefix = '';
-    $tag_last = $string;
-  }
-
-  if (isset($tag_last)) {
+  if (isset($string)) {
     // Get an array of matching entities.
     $match_operator = !empty($instance['widget']['settings']['match_operator']) ? $instance['widget']['settings']['match_operator'] : 'CONTAINS';
-    $entity_labels = $handler->getReferencableEntities($tag_last, $match_operator, 10);
+    $entity_labels = $handler->getReferencableEntities($string, $match_operator, 10);
 
-    // Loop through the products and convert them into autocomplete output.
+    // Loop through the entities and convert them into autocomplete output.
     foreach ($entity_labels as $values) {
       foreach ($values as $entity_id => $label) {
         $key = "$label ($entity_id)";

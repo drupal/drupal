@@ -83,26 +83,32 @@ class EntityReferenceAutocompleteTest extends TaxonomyTestBase {
     taxonomy_term_save($third_term);
 
     // Set the path prefix to point to entity reference's autocomplete path.
-    $path_prefix = 'entity_reference/autocomplete/single/' . $this->field_name . '/node/article/NULL';
+    $path_prefix_single = 'entity_reference/autocomplete/single/' . $this->field_name . '/node/article/NULL';
+    $path_prefix_tags = 'entity_reference/autocomplete/tags/' . $this->field_name . '/node/article/NULL';
 
     // Try to autocomplete a term name that matches both terms.
     // We should get both terms in a JSON encoded string.
     $input = '10/';
-    $result = $this->drupalGet($path_prefix, array('query' => array('q' => $input)));
-    $data = drupal_json_decode($result);
+    $data = $this->drupalGetAJAX($path_prefix_single, array('query' => array('q' => $input)));
     $this->assertEqual(strip_tags($data[$first_term->name. ' (1)']), check_plain($first_term->name), 'Autocomplete returned the first matching term');
     $this->assertEqual(strip_tags($data[$second_term->name. ' (2)']), check_plain($second_term->name), 'Autocomplete returned the second matching term');
 
     // Try to autocomplete a term name that matches the first term.
     // We should only get the first term in a JSON encoded string.
     $input = '10/16';
-    $this->drupalGet($path_prefix, array('query' => array('q' => $input)));
+    $this->drupalGet($path_prefix_single, array('query' => array('q' => $input)));
     $target = array($first_term->name . ' (1)' => '<div class="reference-autocomplete">' . check_plain($first_term->name) . '</div>');
     $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns only the expected matching term.');
 
+    // Try to autocomplete a term name that matches the second term, and the
+    // first term is already typed in the autocomplete (tags) widget.
+    $input = $first_term->name . ' (1), 10/17';
+    $data = $this->drupalGetAJAX($path_prefix_tags, array('query' => array('q' => $input)));
+    $this->assertEqual(strip_tags($data[$first_term->name . ' (1), ' . $second_term->name . ' (2)']), check_plain($second_term->name), 'Autocomplete returned the second matching term');
+
     // Try to autocomplete a term name with both a comma and a slash.
     $input = '"term with, comma and / a';
-    $this->drupalGet($path_prefix, array('query' => array('q' => $input)));
+    $this->drupalGet($path_prefix_single, array('query' => array('q' => $input)));
     $n = $third_term->name;
     // Term names containing commas or quotes must be wrapped in quotes.
     if (strpos($third_term->name, ',') !== FALSE || strpos($third_term->name, '"') !== FALSE) {
