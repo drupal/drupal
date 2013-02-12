@@ -331,7 +331,7 @@ class MenuLinkStorageController extends DatabaseStorageController {
    */
   protected function updateParentalStatus(EntityInterface $entity, $exclude = FALSE) {
     // If plid == 0, there is nothing to update.
-    if ($entity->plid && ($parent_entity = $this->load(array($entity->plid)))) {
+    if ($entity->plid) {
       // Check if at least one visible child exists in the table.
       $query = entity_query($this->entityType);
       $query
@@ -345,9 +345,10 @@ class MenuLinkStorageController extends DatabaseStorageController {
       }
 
       $parent_has_children = ((bool) $query->execute()) ? 1 : 0;
-      $parent_entity = reset($parent_entity);
-      $parent_entity->has_children = $parent_has_children;
-      $parent_entity->save();
+      db_update('menu_links')
+        ->fields(array('has_children' => $parent_has_children))
+        ->condition('mlid', $entity->plid)
+        ->execute();
     }
   }
 
@@ -416,8 +417,6 @@ class MenuLinkStorageController extends DatabaseStorageController {
         $parent = FALSE;
         $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
 
-        // @todo Return to the previous method of cloning the entity query when
-        // http://drupal.org/node/1829942 is fixed.
         $query = entity_query($this->entityType);
         $query
           ->condition('mlid', $entity->id(), '<>')
@@ -427,10 +426,9 @@ class MenuLinkStorageController extends DatabaseStorageController {
           ->condition('menu_name', $entity->menu_name)
           ->condition('link_path', $parent_path);
 
-        $count_query = clone $query;
+        $result = $query->execute();
         // Only valid if we get a unique result.
-        if ($count_query->count()->execute() == 1) {
-          $result = $query->execute();
+        if (count($result) == 1) {
           $parent = $this->load($result);
           $parent = reset($parent);
         }
