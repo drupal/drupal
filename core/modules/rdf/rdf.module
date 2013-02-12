@@ -627,13 +627,15 @@ function rdf_preprocess_user(&$variables) {
         'resource' => url($uri['path'], $uri['options']),
       ),
     );
-    // Adds the markup for username.
+    // Adds the markup for username as language neutral literal, see
+    // rdf_preprocess_username().
     $username_meta = array(
       '#tag' => 'meta',
       '#attributes' => array(
         'about' => url($uri['path'], $uri['options']),
         'property' => $account->rdf_mapping['name']['predicates'],
         'content' => $account->name,
+        'lang' => '',
       )
     );
     drupal_add_html_head($account_holder_meta, 'rdf_user_account_holder');
