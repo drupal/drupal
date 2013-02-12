@@ -21,7 +21,6 @@ use Drupal\Core\Annotation\Translation;
  *   module = "file",
  *   controller_class = "Drupal\file\FileStorageController",
  *   base_table = "file_managed",
- *   static_cache = FALSE,
  *   entity_keys = {
  *     "id" = "fid",
  *     "label" = "filename",

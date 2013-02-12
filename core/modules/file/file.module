@@ -104,6 +104,8 @@ function file_entity_view_mode_info() {
  *
  * @param array $fids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
+ * @param $reset
+ *   Whether to reset the internal file_load_multiple() cache.
  *
  * @return array
  *   An array of file entities, indexed by fid.
@@ -113,8 +115,8 @@ function file_entity_view_mode_info() {
  * @see entity_load()
  * @see Drupal\Core\Entity\Query\EntityQueryInterface
  */
-function file_load_multiple(array $fids = NULL) {
-  return entity_load_multiple('file', $fids);
+function file_load_multiple(array $fids = NULL, $reset = FALSE) {
+  return entity_load_multiple('file', $fids, $reset);
 }
 
 /**
@@ -122,6 +124,8 @@ function file_load_multiple(array $fids = NULL) {
  *
  * @param $fid
  *   A file ID.
+ * @param $reset
+ *   Whether to reset the internal file_load_multiple() cache.
  *
  * @return Drupal\file\File
  *   A file entity or FALSE if the file was not found.
@@ -129,8 +133,8 @@ function file_load_multiple(array $fids = NULL) {
  * @see hook_file_load()
  * @see file_load_multiple()
  */
-function file_load($fid) {
-  $files = file_load_multiple(array($fid));
+function file_load($fid, $reset = FALSE) {
+  $files = file_load_multiple(array($fid), $reset);
   return reset($files);
 }
 

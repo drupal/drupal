@@ -78,7 +78,7 @@ class UserPictureTest extends WebTestBase {
     drupal_cron_run();
 
     // Verify that the image has been deleted.
-    $this->assertFalse(file_load($file->fid), 'File was removed from the database.');
+    $this->assertFalse(file_load($file->fid, TRUE), 'File was removed from the database.');
     // Clear out PHP's file stat cache so we see the current value.
     clearstatcache(TRUE, $file->uri);
     $this->assertFalse(is_file($file->uri), 'File was removed from the file system.');
@@ -122,6 +122,6 @@ class UserPictureTest extends WebTestBase {
 
     // Load actual user data from database.
     $account = user_load($this->web_user->uid, TRUE);
-    return file_load($account->user_picture[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    return file_load($account->user_picture[LANGUAGE_NOT_SPECIFIED][0]['fid'], TRUE);
   }
 }
