@@ -70,6 +70,28 @@ abstract class PluginTestBase extends UnitTestBase {
         'label' => 'Layout Foo',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
       ),
+      'user_name' => array(
+        'label' => 'User name',
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
+        'context' => array(
+          'user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User')
+        ),
+      ),
+      'string_context' => array(
+        'label' => 'String typed data',
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\TypedDataStringBlock',
+        'context' => array(
+          'string' => array('type' => 'string'),
+        ),
+      ),
+      'complex_context' => array(
+        'label' => 'Complex context',
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
+        'context' => array(
+          'user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User'),
+          'node' => array('class' => 'Drupal\node\Plugin\Core\Entity\Node'),
+        ),
+      ),
     );
     $this->defaultsTestPluginExpectedDefinitions = array(
       'test_block1' => array(
