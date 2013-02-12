@@ -29,15 +29,7 @@
     /**
      * Implements Create's _initialize() method.
      */
-    _initialize: function() {
-      // Sets the state to 'activating' upon clicking the element.
-      var that = this;
-      this.element.on("click.edit", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        that.options.activating();
-      });
-    },
+    _initialize: function() {},
 
     /**
      * Makes this PropertyEditor widget react to state changes.
@@ -49,15 +41,11 @@
         case 'candidate':
           if (from !== 'inactive') {
             this.disable();
-            if (from !== 'highlighted') {
-              this.element.removeClass('edit-belowoverlay');
-            }
           }
           break;
         case 'highlighted':
           break;
         case 'activating':
-          this.element.addClass('edit-belowoverlay');
           this.enable();
           break;
         case 'active':

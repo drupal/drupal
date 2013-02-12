@@ -16,6 +16,8 @@
  */
 .contextual .trigger {
   float: left;
+  right: 0;
+  left: 2px;
 }
 
 /**

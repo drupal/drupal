@@ -39,42 +39,23 @@ function edit_permission() {
 }
 
 /**
- * Implements hook_toolbar().
+ * Implements hook_contextual_links_view_alter().
+ *
+ * In-place editing builds upon contextual.module, but doesn't actually add its
+ * "Quick edit" contextual link in PHP (i.e. here) because:
+ *  - that would require to add a local task menu item in the menu system, which
+ *    doesn't make any sense, since there is no corresponding page;
+ *  - it should only work when JavaScript is enabled, because only then in-place
+ *    editing is possible.
  */
-function edit_toolbar() {
+function edit_contextual_links_view_alter(&$element, $items) {
   if (!user_access('access in-place editing')) {
     return;
   }
 
-  $tab['edit'] = array(
-    '#type' => 'toolbar_item',
-    'tab' => array(
-      '#type' => 'link',
-      '#title' => t('Edit'),
-      '#href' => '',
-      '#options' => array(
-        'html' => FALSE,
-        'attributes' => array(
-          'id' => 'toolbar-tab-edit',
-          'class' => array('icon', 'icon-edit', 'edit-nothing-editable-hidden'),
-        ),
-      ),
-    ),
-    '#wrapper_attributes' => array(
-      'class' => array('edit-toolbar-tab'),
-    ),
-    '#attached' => array(
-      'library' => array(
-        array('edit', 'edit'),
-      ),
-    ),
-  );
-
   // Include the attachments and settings for all available editors.
   $attachments = drupal_container()->get('edit.editor.selector')->getAllEditorAttachments();
-  $tab['edit']['#attached'] = NestedArray::mergeDeep($tab['edit']['#attached'], $attachments);
-
-  return $tab;
+  $element['#attached'] = NestedArray::mergeDeep($element['#attached'], $attachments);
 }
 
 /**
@@ -94,15 +75,12 @@ function edit_library_info() {
       // Core.
       $path . '/js/edit.js' => $options,
       $path . '/js/app.js' => $options,
-      // Routers.
-      $path . '/js/routers/edit-router.js' => $options,
       // Models.
       $path . '/js/models/edit-app-model.js' => $options,
       // Views.
       $path . '/js/views/propertyeditordecoration-view.js' => $options,
-      $path . '/js/views/menu-view.js' => $options,
+      $path . '/js/views/contextuallink-view.js' => $options,
       $path . '/js/views/modal-view.js' => $options,
-      $path . '/js/views/overlay-view.js' => $options,
       $path . '/js/views/toolbar-view.js' => $options,
       // Backbone.sync implementation on top of Drupal forms.
       $path . '/js/backbone.drupalform.js' => $options,
@@ -171,6 +149,16 @@ function edit_preprocess_field(&$variables) {
   $element = $variables['element'];
   $entity = $element['#object'];
   $variables['attributes']['data-edit-id'] = $entity->entityType() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node.tpl.php.
+ *
+ * @todo Move towards hook_preprocess_entity() once that's available.
+ */
+function edit_preprocess_node(&$variables) {
+  $node = $variables['elements']['#node'];
+  $variables['attributes']['data-edit-entity'] = 'node/' . $node->nid;
 }
 
 /**

@@ -19,6 +19,7 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
   events: {
     'mouseenter.edit' : 'onMouseEnter',
     'mouseleave.edit' : 'onMouseLeave',
+    'click': 'onClick',
     'tabIn.edit': 'onMouseEnter',
     'tabOut.edit': 'onMouseLeave'
   },
@@ -38,7 +39,12 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     this.editor = options.editor;
     this.toolbarId = options.toolbarId;
 
+    this.predicate = this.editor.options.property;
+
     this.$el.css('background-color', this._getBgColor(this.$el));
+
+    // Only start listening to events as soon as we're no longer in the 'inactive' state.
+    this.undelegateEvents();
   },
 
   /**
@@ -113,13 +119,27 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
     });
   },
 
+  /**
+   * Clicks: transition to 'activating' stage.
+   *
+   * @param event
+   */
+  onClick: function(event) {
+    var editableEntity = this.editor.options.widget;
+    editableEntity.setState('activating', this.predicate);
+    event.preventDefault();
+    event.stopPropagation();
+  },
+
   decorate: function () {
     this.$el.addClass('edit-animate-fast edit-candidate edit-editable');
+    this.delegateEvents();
   },
 
   undecorate: function () {
     this.$el
       .removeClass('edit-candidate edit-editable edit-highlighted edit-editing');
+    this.undelegateEvents();
   },
 
   startHighlight: function () {

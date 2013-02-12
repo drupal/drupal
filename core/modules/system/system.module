@@ -1999,7 +1999,7 @@ function system_library_info() {
     'website' => 'http://underscorejs.org/',
     'version' => '1.4.0',
     'js' => array(
-      'core/misc/underscore/underscore.js' => array('group' => JS_LIBRARY),
+      'core/misc/underscore/underscore.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
   );
 
@@ -2009,7 +2009,7 @@ function system_library_info() {
     'website' => 'http://backbonejs.org/',
     'version' => '0.9.2',
     'js' => array(
-      'core/misc/backbone/backbone.js' => array('group' => JS_LIBRARY),
+      'core/misc/backbone/backbone.js' => array('group' => JS_LIBRARY, 'weight' => -19),
     ),
     'dependencies' => array(
       array('system', 'underscore'),
