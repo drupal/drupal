@@ -17,7 +17,7 @@ class GetFilenameUnitTest extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Get filename test',
-      'description' => 'Test that drupal_get_filename() works correctly when the file is not found in the database.',
+      'description' => 'Test that drupal_get_filename() works correctly.',
       'group' => 'Bootstrap',
     );
   }
@@ -50,5 +50,8 @@ class GetFilenameUnitTest extends UnitTestBase {
     // will automatically check there for 'script' files, just as it does
     // for (e.g.) 'module' files in core/modules.
     $this->assertIdentical(drupal_get_filename('script', 'test'), 'core/scripts/test/test.script');
+
+    // Searching for an item that does not exist returns NULL.
+    $this->assertNull(drupal_get_filename('module', uniqid("", TRUE)), 'Searching for an item that does not exist returns NULL.');
   }
 }
