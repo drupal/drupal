@@ -88,8 +88,36 @@ class CommentTranslationUITest extends EntityTranslationUITest {
     // Comment subject is not translatable hence we use a fixed value.
     return array(
       'subject' => $this->subject,
-      'comment_body' => array(array('value' => $this->randomString(16))),
+      'comment_body' => array(array('value' => $this->randomName(16))),
     ) + parent::getNewEntityValues($langcode);
+  }
+
+  /**
+   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::assertPublishedStatus().
+   */
+  protected function assertPublishedStatus() {
+    parent::assertPublishedStatus();
+    $entity = entity_load($this->entityType, $this->entityId);
+    $user = $this->drupalCreateUser(array('access comments'));
+    $this->drupalLogin($user);
+    $languages = language_list();
+
+    // Check that simple users cannot see unpublished field translations.
+    $path = $this->controller->getViewPath($entity);
+    foreach ($this->langcodes as $index => $langcode) {
+      $translation = $this->getTranslation($entity, $langcode);
+      $value = $this->getValue($translation, 'comment_body', $langcode);
+      $this->drupalGet($path, array('language' => $languages[$langcode]));
+      if ($index > 0) {
+        $this->assertNoRaw($value, 'Unpublished field translation is not shown.');
+      }
+      else {
+        $this->assertRaw($value, 'Published field translation is shown.');
+      }
+    }
+
+    // Login as translator again to ensure subsequent tests do not break.
+    $this->drupalLogin($this->translator);
   }
 
   /**

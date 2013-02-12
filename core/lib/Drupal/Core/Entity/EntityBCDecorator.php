@@ -156,6 +156,13 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   }
 
   /**
+   * Implements the magic method for clone().
+   */
+  function __clone() {
+    $this->decorated = clone $this->decorated;
+  }
+
+  /**
    * Forwards the call to the decorated entity.
    */
   public function access($operation = 'view', \Drupal\user\Plugin\Core\Entity\User $account = NULL) {
