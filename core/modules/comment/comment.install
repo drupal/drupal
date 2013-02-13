@@ -330,6 +330,16 @@ function comment_field_schema($field) {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function comment_update_dependencies() {
+  $dependencies['comment'][8006] = array(
+    'field' => 8002,
+  );
+  return $dependencies;
+}
+
+/**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */
@@ -575,7 +585,6 @@ function comment_update_8006(&$sandbox) {
     // Add the comment field, setting the instance settings to match those for
     // the given node_type.
     $instance_settings = array(
-      'comment' => $default_value,
       // COMMENT_MODE_THREADED
       'comment_default_mode' => variable_get('comment_default_mode_' . $node_type, 1),
       'comment_default_per_page' => variable_get('comment_default_per_page_' . $node_type, 50),
@@ -591,31 +600,6 @@ function comment_update_8006(&$sandbox) {
       'bundle' => $node_type,
       'default_value' => array(array('comment' => $default_value)),
       'deleted' => '0',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'comment',
-          'settings' => array(),
-          'type' => 'comment_default',
-          'weight' => '1',
-        ),
-        'rss' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'teaser' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'search_index' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-        'search_result' => array(
-          'type' => 'hidden',
-          'label' => 'hidden',
-        ),
-      ),
       'description' => '',
       'entity_type' => 'node',
       'field_name' => $field['field_name'],
@@ -633,6 +617,37 @@ function comment_update_8006(&$sandbox) {
       ),
     );
     _update_7000_field_create_instance($field, $instance);
+
+    // Prepare defaults for the default and full view modes.
+    $formatter_settings = array(
+      'default_mode' => $instance_settings['comment_default_mode'],
+      'per_page' => $instance_settings['comment_default_per_page'],
+      'form_location' => $instance_settings['comment_form_location'],
+    );
+    $display_options_default = array(
+      'label' => 'hidden',
+      'type' => 'comment_default',
+      'weight' => 1,
+    );
+    entity_get_display('node', $node_type, 'default')
+      ->setComponent($field['field_name'], $display_options_default)
+      ->save();
+    entity_get_display('node', $node_type, 'full')
+      ->setComponent($field['field_name'], $display_options_default)
+      ->save();
+
+    // Update all other entity displays with custom settings.
+    $display_options = array(
+      'type' => 'hidden',
+      'label' => 'hidden',
+    );
+    foreach (entity_get_view_modes('node') as $view_mode => $view_mode_settings) {
+      if ($view_mode != 'full') {
+        entity_get_display('node', $node_type, $view_mode)
+          ->setComponent($field['field_name'], $display_options)
+          ->save();
+      }
+    }
 
     // Clean up old variables.
     variable_del('comment_' . $node_type);
