@@ -29,13 +29,6 @@
     _initialize: function() {
       var that = this;
 
-      // Sets the state to 'activated' upon clicking the element.
-      this.element.on("click.edit", function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        that.options.activated();
-      });
-
       // Sets the state to 'changed' whenever the content has changed.
       var before = jQuery.trim(this.element.text());
       this.element.on('keyup paste', function (event) {
@@ -68,6 +61,7 @@
         case 'highlighted':
           break;
         case 'activating':
+          this.options.activated();
           break;
         case 'active':
           // Sets the "contenteditable" attribute to "true".

@@ -53,7 +53,84 @@ class NodeTranslationUITest extends EntityTranslationUITest {
    * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array("edit any $this->bundle content"));
+    return array_merge(parent::getTranslatorPermissions(), array('administer nodes', "edit any $this->bundle content"));
+  }
+
+  /**
+   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getNewEntityValues().
+   */
+  protected function getNewEntityValues($langcode) {
+    // Node title is not translatable yet, hence we use a fixed value.
+    return array('title' => $this->title) + parent::getNewEntityValues($langcode);
+  }
+
+  /**
+   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getFormSubmitAction().
+   */
+  protected function getFormSubmitAction() {
+    return t('Save and keep unpublished');
+  }
+
+  /**
+   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::assertPublishedStatus().
+   */
+  protected function assertPublishedStatus() {
+    $entity = entity_load($this->entityType, $this->entityId, TRUE);
+    $path = $this->controller->getEditPath($entity);
+    $languages = language_list();
+
+    $actions = array(
+      array(t('Save and publish'), t('Save and keep published')),
+      array(t('Save and unpublish'), t('Save and keep unpublished')),
+    );
+
+    foreach ($actions as $index => $status_actions) {
+      // (Un)publish the node translations and check that the translation
+      // statuses are (un)published accordingly.
+      foreach ($this->langcodes as $langcode) {
+        if (!empty($status_actions)) {
+          $action = array_shift($status_actions);
+        }
+        $this->drupalPost($path, array(), $action, array('language' => $languages[$langcode]));
+      }
+      $entity = entity_load($this->entityType, $this->entityId, TRUE);
+      foreach ($this->langcodes as $langcode) {
+        // The node is created as unpulished thus we switch to the published
+        // status first.
+        $status = !$index;
+        $this->assertEqual($status, $entity->translation[$langcode]['status'], 'The translation has been correctly unpublished.');
+      }
+    }
+  }
+
+  /**
+   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::assertAuthoringInfo().
+   */
+  protected function assertAuthoringInfo() {
+    $entity = entity_load($this->entityType, $this->entityId, TRUE);
+    $path = $this->controller->getEditPath($entity);
+    $languages = language_list();
+    $values = array();
+
+    // Post different authoring information for each translation.
+    foreach ($this->langcodes as $index => $langcode) {
+      $user = $this->drupalCreateUser();
+      $values[$langcode] = array(
+        'uid' => $user->uid,
+        'created' => REQUEST_TIME - mt_rand(0, 1000),
+      );
+      $edit = array(
+        'name' => $user->name,
+        'date' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d H:i:s O'),
+      );
+      $this->drupalPost($path, $edit, $this->getFormSubmitAction(), array('language' => $languages[$langcode]));
+    }
+
+    $entity = entity_load($this->entityType, $this->entityId, TRUE);
+    foreach ($this->langcodes as $langcode) {
+      $this->assertEqual($entity->translation[$langcode]['uid'] == $values[$langcode]['uid'], 'Translation author correctly stored.');
+      $this->assertEqual($entity->translation[$langcode]['created'] == $values[$langcode]['created'], 'Translation date correctly stored.');
+    }
   }
 
   /**
@@ -92,14 +169,6 @@ class NodeTranslationUITest extends EntityTranslationUITest {
     // Visit translation page.
     $this->drupalGet('node/' . $article->nid . '/translations');
     $this->assertRaw('no translatable fields');
-  }
-
-  /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getNewEntityValues().
-   */
-  protected function getNewEntityValues($langcode) {
-    // Node title is not translatable yet, hence we use a fixed value.
-    return array('title' => $this->title) + parent::getNewEntityValues($langcode);
   }
 
   /**

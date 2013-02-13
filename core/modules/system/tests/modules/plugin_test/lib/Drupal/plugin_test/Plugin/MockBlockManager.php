@@ -66,6 +66,35 @@ class MockBlockManager extends PluginManagerBase {
       'derivative' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlockDeriver',
     ));
 
+    // A block plugin that requires context to function. This block requires a
+    // user object in order to return the user name from the getTitle() method.
+    $this->discovery->setDefinition('user_name', array(
+      'label' => t('User name'),
+      'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
+      'context' => array(
+        'user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User')
+      ),
+    ));
+
+    // A block plugin that requires a typed data string context to function.
+    $this->discovery->setDefinition('string_context', array(
+      'label' => t('String typed data'),
+      'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\TypedDataStringBlock',
+      'context' => array(
+        'string' => array('type' => 'string'),
+      ),
+    ));
+
+    // A complex context plugin that requires both a user and node for context.
+    $this->discovery->setDefinition('complex_context', array(
+      'label' => t('Complex context'),
+      'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
+      'context' => array(
+        'user' => array('class' => 'Drupal\user\Plugin\Core\Entity\User'),
+        'node' => array('class' => 'Drupal\node\Plugin\Core\Entity\Node'),
+      ),
+    ));
+
     // In addition to finding all of the plugins available for a type, a plugin
     // type must also be able to create instances of that plugin. For example, a
     // specific instance of a "Main menu" menu block, configured to show just

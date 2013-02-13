@@ -71,7 +71,7 @@ class DeleteTest extends FileManagedTestBase {
     drupal_cron_run();
 
     // system_cron() loads
-    $this->assertFileHooksCalled(array('load', 'delete'));
+    $this->assertFileHooksCalled(array('delete'));
     $this->assertFalse(file_exists($file->uri), t('File has been deleted after its last usage was removed.'));
     $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
   }

@@ -71,7 +71,7 @@ function translation_entity_overview(EntityInterface $entity) {
 
       if (isset($translations[$langcode])) {
         // Existing translation in the translation set: display status.
-        $source = isset($entity->source[$langcode]) ? $entity->source[$langcode] : '';
+        $source = isset($entity->translation[$langcode]['source']) ? $entity->translation[$langcode]['source'] : '';
         $is_original = $langcode == $original;
         $translation = $translations[$langcode];
         $label = $entity->label($langcode);
@@ -96,12 +96,10 @@ function translation_entity_overview(EntityInterface $entity) {
           $links['edit']['title'] = t('edit');
         }
 
-        // @todo Consider supporting the ability to track translation publishing
-        // status independently from entity status, as it may not exist.
-        $translation = $entity->getTranslation($langcode, FALSE);
-        $status = !isset($translation->status) || $translation->status ? t('Published') : t('Not published');
+        $translation = $entity->translation[$langcode];
+        $status = !empty($translation['status']) ? t('Published') : t('Not published');
         // @todo Add a theming function here.
-        $status = '<span class="status">' . $status . '</span>' . (!empty($entity->retranslate[$langcode]) ? ' <span class="marker">' . t('outdated') . '</span>' : '');
+        $status = '<span class="status">' . $status . '</span>' . (!empty($translation['outdated']) ? ' <span class="marker">' . t('outdated') . '</span>' : '');
 
         if ($is_original) {
           $language_name = t('<strong>@language_name</strong>', array('@language_name' => $language_name));
@@ -293,6 +291,7 @@ function translation_entity_delete_confirm_submit(array $form, array &$form_stat
   $entity->save();
 
   // Remove any existing path alias for the removed translation.
+  // @todo This should be taken care of by the Path module.
   if (module_exists('path')) {
     $conditions = array('source' => $controller->getViewPath($entity), 'langcode' => $language->langcode);
     drupal_container()->get('path.crud')->delete($conditions);

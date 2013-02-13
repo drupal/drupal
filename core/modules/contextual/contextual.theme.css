@@ -10,39 +10,39 @@
   position: absolute;
   right: 0; /* LTR */
   top: 2px;
-  z-index: 999;
-}
-.contextual-region-active {
-  outline: 1px dashed #d6d6d6;
-  outline-offset: 1px;
+  z-index: 500;
 }
 
 /**
  * Contextual trigger.
  */
 .contextual .trigger {
-  background: transparent url("images/gear-select.png") no-repeat 2px 0;
-  border: 1px solid transparent;
-  border-radius: 4px 4px 0 0;
+  background-attachment: scroll;
+  background-color: #fff;
+  background-image: url("../../misc/edit.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  border: 1px solid #ddd;
+  border-radius: 13px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
   /* Override the .element-focusable height: auto */
-  height: 18px !important;
+  height: 28px !important;
   float: right; /* LTR */
   margin: 0;
   overflow: hidden;
   padding: 0 2px;
   position: relative;
-  width: 34px;
+  right: 2px; /* LTR */
+  width: 28px;
   text-indent: -9999px;
   z-index: 2;
-}
-.no-touch .contextual .trigger:hover,
-.contextual-links-active .trigger {
-  background-position: 2px -18px;
+  cursor: pointer;
 }
 .contextual-links-active .trigger {
-  background-color: #fff;
-  border-bottom: none;
-  border-color: #d6d6d6;
+  border-bottom-color: transparent;
+  border-radius: 13px 13px 0 0;
+  box-shadow: none;
 }
 
 /**
@@ -52,7 +52,7 @@
  */
 .contextual-region .contextual .contextual-links {
   background-color: #fff;
-  border: 1px solid #d6d6d6;
+  border: 1px solid #ddd;
   border-radius: 4px 0 4px 4px; /* LTR */
   clear: both;
   float: right; /* LTR */
@@ -90,5 +90,7 @@
   text-decoration: none;
 }
 .no-touch .contextual-region .contextual .contextual-links li a:hover {
-  background-color: #bfdcee;
+  color: white;
+  background-image: -webkit-linear-gradient(rgb(78,159,234) 0%,rgb(65,126,210) 100%);
+  background-image: linear-gradient(rgb(78,159,234) 0%,rgb(65,126,210) 100%);
 }

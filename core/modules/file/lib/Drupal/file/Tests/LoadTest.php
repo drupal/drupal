@@ -82,7 +82,7 @@ class LoadTest extends FileManagedTestBase {
     // Load by fid.
     file_test_reset();
     $by_fid_files = file_load_multiple(array($file->fid));
-    $this->assertFileHookCalled('load');
+    $this->assertFileHooksCalled(array());
     $this->assertEqual(1, count($by_fid_files), t('file_load_multiple() returned an array of the correct size.'));
     $by_fid_file = reset($by_fid_files);
     $this->assertTrue($by_fid_file->file_test['loaded'], t('file_test_file_load() was able to modify the file during load.'));

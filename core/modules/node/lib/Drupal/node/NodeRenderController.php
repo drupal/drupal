@@ -88,11 +88,7 @@ class NodeRenderController extends EntityRenderController {
    */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
-    // Add contextual links for this node, except when the node is already being
-    // displayed on its own page. Modules may alter this behavior (for example,
-    // to restrict contextual links to certain view modes) by implementing
-    // hook_node_view_alter().
-    if (!empty($entity->nid) && !($view_mode == 'full' && node_is_page($entity))) {
+    if (!empty($entity->nid)) {
       $build['#contextual_links']['node'] = array('node', array($entity->nid));
     }
   }

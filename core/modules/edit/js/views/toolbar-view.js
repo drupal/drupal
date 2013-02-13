@@ -29,7 +29,7 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
     'click.edit button.label': 'onClickInfoLabel',
     'mouseleave.edit': 'onMouseLeave',
     'click.edit button.field-save': 'onClickSave',
-    'click.edit button.field-close': 'onClickClose'
+    'click.edit button.field-close': 'onClickClose',
   },
 
   /**
@@ -66,19 +66,26 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
   stateChange: function(from, to) {
     switch (to) {
       case 'inactive':
-        // Nothing happens in this stage.
+        if (from) {
+          this.remove();
+        }
         break;
       case 'candidate':
-        if (from !== 'inactive') {
+        if (from === 'inactive') {
+          this.render();
+        }
+        else {
+          // Remove all toolgroups; they're no longer necessary.
+          this.$el
+            .removeClass('edit-highlighted edit-editing')
+            .find('.edit-toolbar .edit-toolgroup').remove();
           if (from !== 'highlighted' && this.getEditUISetting('padding')) {
             this._unpad();
           }
-          this.remove();
         }
         break;
       case 'highlighted':
         // As soon as we highlight, make sure we have a toolbar in the DOM (with at least a title).
-        this.render();
         this.startHighlight();
         break;
       case 'activating':
@@ -275,6 +282,7 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
     }
 
     this.$el
+      .addClass('edit-highlighted')
       .find('.edit-toolbar')
       // Append the "info" toolgroup into the toolbar.
       .append(Drupal.theme('editToolgroup', {

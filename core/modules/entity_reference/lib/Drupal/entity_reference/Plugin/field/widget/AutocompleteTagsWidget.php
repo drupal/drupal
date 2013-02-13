@@ -28,7 +28,7 @@ use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
  *     "autocomplete_path" = "entity_reference/autocomplete/tags",
  *     "placeholder" = ""
  *   },
- *   multiple_values = FIELD_BEHAVIOR_CUSTOM
+ *   multiple_values = TRUE
  * )
  */
 class AutocompleteTagsWidget extends AutocompleteWidgetBase {

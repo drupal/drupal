@@ -283,13 +283,6 @@ function theme_toolbar(&$variables) {
  */
 function toolbar_pre_render_item($element) {
 
-  // Attributes are nested in the #options property passed to l().
-  // To make the return structure of toolbar_pre_render_item() uniform,
-  // attributes will always be returned in the #attributes property. These
-  // properties will be included in the #options parameter passed to l() in
-  // theme_toolbar_tab().
-  $element['#attributes'] = $element['tab']['#options']['attributes'];
-
   // If tray content is present, markup the tray and its associated trigger.
   if (!empty($element['tray'])) {
 

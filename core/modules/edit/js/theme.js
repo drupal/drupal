@@ -152,29 +152,4 @@ Drupal.theme.editFormContainer = function(settings) {
   return html;
 };
 
-/**
- * A region to post messages that a screen reading UA will announce.
- *
- * @return {String}
- *   A string representing a DOM fragment.
- */
-Drupal.theme.editMessageBox = function() {
-  return '<div id="edit-messages" class="element-invisible" role="region" aria-live="polite"></div>';
-};
-
-/**
- * Wrap message strings in p tags.
- *
- * @return {String}
- *   A string representing a DOM fragment.
- */
-Drupal.theme.editMessage = function() {
-  var messages = Array.prototype.slice.call(arguments);
-  var output = '';
-  for (var i = 0; i < messages.length; i++) {
-   output += '<p>' + messages[i] + '</p>';
-  }
-  return output;
-};
-
 })(jQuery, Drupal);

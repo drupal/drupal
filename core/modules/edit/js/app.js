@@ -47,20 +47,8 @@
         editableNs: 'createeditable'
       });
 
-      // Instantiate OverlayView.
-      var overlayView = new Drupal.edit.views.OverlayView({
-        el: (Drupal.theme('editOverlay', {})),
-        model: this.model
-      });
-
-      // Instantiate MenuView.
-      var editMenuView = new Drupal.edit.views.MenuView({
-        el: this.el,
-        model: this.model
-      });
-
       // When view/edit mode is toggled in the menu, update the editor widgets.
-      this.model.on('change:isViewing', this.appStateChange);
+      this.model.on('change:activeEntity', this.appStateChange);
     },
 
     /**
@@ -74,7 +62,7 @@
      */
     findEditableProperties: function($context) {
       var that = this;
-      var newState = (this.model.get('isViewing')) ? 'inactive' : 'candidate';
+      var activeEntity = this.model.get('activeEntity');
 
       this.domService.findSubjectElements($context).each(function() {
         var $element = $(this);
@@ -103,10 +91,17 @@
           .on('destroyedPropertyEditor.edit', function(event, editor) {
             that.undecorateEditor(editor);
             that.$entityElements = that.$entityElements.not($(this));
-
           })
-          // Transition the new PropertyEditor into the current state.
-          .createEditable('setState', newState);
+          // Transition the new PropertyEditor into the default state.
+          .createEditable('setState', 'inactive');
+
+        // If the new PropertyEditor is for the entity that's currently being
+        // edited, then transition it to the 'candidate' state.
+        // (This happens when a field was modified and is re-rendered.)
+        var entityOfProperty = $element.createEditable('option', 'model');
+        if (entityOfProperty.getSubjectUri() === activeEntity) {
+          $element.createEditable('setState', 'candidate');
+        }
 
         // Add this new EditableEntity widget element to the list.
         that.$entityElements = that.$entityElements.add($element);
@@ -116,26 +111,29 @@
     /**
      * Sets the state of PropertyEditor widgets when edit mode begins or ends.
      *
-     * Should be called whenever EditAppModel's "isViewing" changes.
+     * Should be called whenever EditAppModel's "activeEntity" changes.
      */
     appStateChange: function() {
       // @todo: BLOCKED_ON(Create.js, https://github.com/bergie/create/issues/133, https://github.com/bergie/create/issues/140)
       // We're currently setting the state on EditableEntity widgets instead of
       // PropertyEditor widgets, because of
       // https://github.com/bergie/create/issues/133.
-      var newState = (this.model.get('isViewing')) ? 'inactive' : 'candidate';
+
+      var activeEntity = this.model.get('activeEntity');
+      var $editableFieldsForEntity = $('[data-edit-id^="' + activeEntity + '/"]');
+
+      // First, change the status of all PropertyEditor widgets to 'inactive'.
       this.$entityElements.each(function() {
-        $(this).createEditable('setState', newState);
+        $(this).createEditable('setState', 'inactive', null, {reason: 'stop'});
       });
+
+      // Then, change the status of PropertyEditor widgets of the currently
+      // active entity to 'candidate'.
+      $editableFieldsForEntity.each(function() {
+        $(this).createEditable('setState', 'candidate');
+      });
+
       // Manage the page's tab indexes.
-      if (newState === 'candidate') {
-        this._manageDocumentFocus();
-        Drupal.edit.setMessage(Drupal.t('In place edit mode is active'), Drupal.t('Page navigation is limited to editable items.'), Drupal.t('Press escape to exit'));
-      }
-      else if (newState === 'inactive') {
-        this._releaseDocumentFocusManagement();
-        Drupal.edit.setMessage(Drupal.t('Edit mode is inactive.'), Drupal.t('Resume normal page navigation'));
-      }
     },
 
     /**
@@ -159,9 +157,9 @@
 
       // If the app is in view mode, then reject all state changes except for
       // those to 'inactive'.
-      if (this.model.get('isViewing')) {
-        if (to !== 'inactive') {
-          accept = false;
+      if (context && context.reason === 'stop') {
+        if (from === 'candidate' && to === 'inactive') {
+          accept = true;
         }
       }
       // Handling of edit mode state changes is more granular.
@@ -314,7 +312,6 @@
       // Keep track of the active editor in the global state.
       if (_.indexOf(this.activeEditorStates, to) !== -1 && this.model.get('activeEditor') !== editor) {
         this.model.set('activeEditor', editor);
-        Drupal.edit.setMessage(Drupal.t('An editor is active'));
       }
       else if (this.model.get('activeEditor') === editor && to === 'candidate') {
         // Discarded if it transitions from a changed state to 'candidate'.
@@ -387,142 +384,8 @@
       // Don't call .remove() on the decoration view, because that would remove
       // a potentially rerendered field.
       delete editor.decorationView;
-    },
-
-    /**
-     * Makes elements other than the editables unreachable via the tab key.
-     *
-     * @todo refactoring.
-     *
-     * This method is currently overloaded, handling elements of state modeling
-     * and application control. The state of the application is spread between
-     * this view, its model and aspects of the UI widgets in Create.js. In order
-     * to drive focus management from the application state (and have it
-     * influence that state of the application), we need to distall state out
-     * of Create.js components.
-     *
-     * This method introduces behaviors that support accessibility of the edit
-     * application. Although not yet integrated into the application properly,
-     * it does provide us with the opportunity to collect feedback from
-     * users who will interact with edit primarily through keyboard input. We
-     * want this feedback sooner than we can have a refactored application.
-     */
-    _manageDocumentFocus: function () {
-      var editablesSelector = '.edit-candidate.edit-editable';
-      var inputsSelector = 'a:visible, button:visible, input:visible, textarea:visible, select:visible';
-      var $editables = $(editablesSelector)
-        .attr({
-          'tabindex': 0,
-          'role': 'button'
-        });
-      // Instantiate a variable to hold the editable element in the set.
-      var $currentEditable;
-      // We're using simple function scope to manage 'this' for the internal
-      // handler, so save this as that.
-      var that = this;
-      // Turn on focus management.
-      $(document).on('keydown.edit', function (event) {
-        var activeEditor, editableEntity, predicate;
-        // Handle esc key press. Close any active editors.
-        if (event.keyCode === 27) {
-          event.preventDefault();
-          activeEditor = that.model.get('activeEditor');
-          if (activeEditor) {
-            editableEntity = activeEditor.options.widget;
-            predicate = activeEditor.options.property;
-            editableEntity.setState('candidate', predicate, { reason: 'overlay' });
-          }
-          else {
-            $(editablesSelector).trigger('tabOut.edit');
-            // This should move into the state management for the app model.
-            location.hash = "#view";
-            that.model.set('isViewing', true);
-          }
-          return;
-        }
-        // Handle enter or space key presses.
-        if (event.keyCode === 13 || event.keyCode === 32) {
-          if ($currentEditable && $currentEditable.is(editablesSelector)) {
-            $currentEditable.trigger('click');
-            // Squelch additional handlers.
-            event.preventDefault();
-            return;
-          }
-        }
-        // Handle tab key presses.
-        if (event.keyCode === 9) {
-          var context = '';
-          // Include the view mode toggle with the editables selector.
-          var selector = editablesSelector + ', #toolbar-tab-edit';
-          activeEditor = that.model.get('activeEditor');
-          var $confirmDialog = $('#edit_modal');
-          // If the edit modal is active, that is the tabbing context.
-          if ($confirmDialog.length) {
-            context = $confirmDialog;
-            selector = inputsSelector;
-            if (!$currentEditable || $currentEditable.is(editablesSelector)) {
-              $currentEditable = $(selector, context).eq(-1);
-            }
-          }
-          // If an editor is active, then the tabbing context is the editor and
-          // its toolbar.
-          else if (activeEditor) {
-            context = $(activeEditor.$formContainer).add(activeEditor.toolbarView.$el);
-            // Include the view mode toggle with the editables selector.
-            selector = inputsSelector;
-            if (!$currentEditable || $currentEditable.is(editablesSelector)) {
-              $currentEditable = $(selector, context).eq(-1);
-            }
-          }
-          // Otherwise the tabbing context is the list of editable predicates.
-          var $editables = $(selector, context);
-          if (!$currentEditable) {
-            $currentEditable = $editables.eq(-1);
-          }
-          var count = $editables.length - 1;
-          var index = $editables.index($currentEditable);
-          // Navigate backwards.
-          if (event.shiftKey) {
-            // Beginning of the set, loop to the end.
-            if (index === 0) {
-              index = count;
-            }
-            else {
-              index -= 1;
-            }
-          }
-          // Navigate forewards.
-          else {
-            // End of the set, loop to the start.
-            if (index === count) {
-              index = 0;
-            }
-            else {
-              index += 1;
-            }
-          }
-          // Tab out of the current editable.
-          $currentEditable.trigger('tabOut.edit');
-          // Update the current editable.
-          $currentEditable = $editables
-            .eq(index)
-            .focus()
-            .trigger('tabIn.edit');
-          // Squelch additional handlers.
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      });
-      // Set focus on the edit button initially.
-      $('#toolbar-tab-edit').focus();
-    },
-    /**
-     * Removes key management and edit accessibility features from the DOM.
-     */
-    _releaseDocumentFocusManagement: function () {
-      $(document).off('keydown.edit');
-      $('.edit-allowed.edit-field').removeAttr('tabindex role');
     }
+
   });
 
 })(jQuery, _, Backbone, Drupal, VIE);

@@ -7,6 +7,8 @@
 
 "use strict";
 
+var contextuals = [];
+
 /**
  * Attaches outline behavior for regions associated with contextual links.
  */
@@ -14,7 +16,14 @@ Drupal.behaviors.contextual = {
   attach: function (context) {
     $('ul.contextual-links', context).once('contextual', function () {
       var $this = $(this);
-      $this.data('drupal-contextual', new Drupal.contextual($this, $this.closest('.contextual-region')));
+      var contextual = new Drupal.contextual($this, $this.closest('.contextual-region'));
+      contextuals.push(contextual);
+      $this.data('drupal-contextual', contextual);
+    });
+
+    // Bind to edit mode changes.
+    $('body').once('contextual', function () {
+      $(document).on('drupalEditModeChanged.contextual', toggleEditMode);
     });
   }
 };
@@ -54,16 +63,33 @@ Drupal.contextual.prototype.init = function() {
     .attr('aria-pressed', false)
     .prependTo(this.$wrapper);
 
+  // The trigger behaviors are never detached or mutated.
+  this.$region
+    .on('click.contextual', '.contextual .trigger', $.proxy(this.triggerClickHandler, this))
+    .on('mouseleave.contextual', '.contextual', {show: false}, $.proxy(this.triggerLeaveHandler, this));
+  // Attach highlight behaviors.
+  this.attachHighlightBehaviors();
+};
+
+/**
+ * Attaches highlight-on-mouseenter behaviors.
+ */
+Drupal.contextual.prototype.attachHighlightBehaviors = function () {
   // Bind behaviors through delegation.
   var highlightRegion = $.proxy(this.highlightRegion, this);
   this.$region
-    .on('click.contextual', '.contextual .trigger', $.proxy(this.triggerClickHandler, this))
-    .on('mouseenter.contextual', {highlight: true}, highlightRegion)
-    .on('mouseleave.contextual', {highlight: false}, highlightRegion)
-    .on('mouseleave.contextual', '.contextual', {show: false}, $.proxy(this.triggerLeaveHandler, this))
-    .on('click.contextual', '.contextual-links a', {highlight: false}, highlightRegion)
-    .on('focus.contextual', '.contextual-links a, .contextual .trigger', {highlight: true}, highlightRegion)
-    .on('blur.contextual', '.contextual-links a, .contextual .trigger', {highlight: false}, highlightRegion);
+    .on('mouseenter.contextual.highlight', {highlight: true}, highlightRegion)
+    .on('mouseleave.contextual.highlight', {highlight: false}, highlightRegion)
+    .on('click.contextual.highlight', '.contextual-links a', {highlight: false}, highlightRegion)
+    .on('focus.contextual.highlight', '.contextual-links a, .contextual .trigger', {highlight: true}, highlightRegion)
+    .on('blur.contextual.highlight', '.contextual-links a, .contextual .trigger', {highlight: false}, highlightRegion);
+};
+
+/**
+ * Detaches unhighlight-on-mouseleave behaviors.
+ */
+Drupal.contextual.prototype.detachHighlightBehaviors = function () {
+  this.$region.off('.contextual.highlight');
 };
 
 /**
@@ -138,6 +164,16 @@ Drupal.contextual.prototype.showLinks = function(show) {
   }
 
 };
+
+/**
+ * Shows or hides all pencil icons and corresponding contextual regions.
+ */
+function toggleEditMode (event, data) {
+  for (var i = contextuals.length - 1; i >= 0; i--) {
+    contextuals[i][(data.status) ? 'detachHighlightBehaviors' : 'attachHighlightBehaviors']();
+    contextuals[i].$region.toggleClass('contextual-region-active', data.status);
+  }
+}
 
 /**
  * Wraps contextual links.

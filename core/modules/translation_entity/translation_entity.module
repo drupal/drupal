@@ -285,6 +285,22 @@ function translation_entity_translate_access(EntityInterface $entity) {
 }
 
 /**
+ * Checks whether the given user can view the specified translation.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity whose translation overview should be displayed.
+ * @param $langcode
+ *   The language code of the translation to be displayed.
+ * @param \Drupal\user\Plugin\Core\Entity\User $account
+ *   (optional) The account for which view access should be checked. Defaults to
+ *   the current user.
+ */
+function translation_entity_view_access(EntityInterface $entity, $langcode, $account = NULL) {
+  $entity_type = $entity->entityType();
+  return !empty($entity->translation[$langcode]['status']) || user_access('translate any entity', $account) || user_access("translate $entity_type entities", $account);
+}
+
+/**
  * Access callback for the translation addition page.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -585,7 +601,7 @@ function translation_entity_permission() {
  * Implements hook_form_alter().
  */
 function translation_entity_form_alter(array &$form, array &$form_state) {
-  if (($form_controller = translation_entity_form_controller($form_state)) && ($entity = $form_controller->getEntity($form_state)) && !$entity->isNew()) {
+  if (($form_controller = translation_entity_form_controller($form_state)) && ($entity = $form_controller->getEntity($form_state)) && !$entity->isNew() && translation_entity_enabled($entity->entityType(), $entity->bundle())) {
     $controller = translation_entity_controller($entity->entityType());
     $controller->entityFormAlter($form, $form_state, $entity);
 
@@ -617,6 +633,43 @@ function translation_entity_form_alter(array &$form, array &$form_state) {
 }
 
 /**
+ * Implements hook_field_language_alter().
+ *
+ * Performs language fallback for unaccessible translations.
+ */
+function translation_entity_field_language_alter(&$display_language, $context) {
+  $entity = $context['entity'];
+  $entity_type = $entity->entityType();
+
+  if (isset($entity->translation[$context['langcode']]) && translation_entity_enabled($entity_type, $entity->bundle()) && !translation_entity_view_access($entity, $context['langcode'])) {
+    $instances = field_info_instances($entity_type, $entity->bundle());
+    // Avoid altering the real entity.
+    $entity = clone($entity);
+    $entity_langcode = $entity->language()->langcode;
+
+    foreach ($entity->translation as $langcode => $translation) {
+      if ($langcode == $context['langcode'] || !translation_entity_view_access($entity, $langcode)) {
+        // Unset unaccessible field translations: if the field is untranslatable
+        // unsetting a language different from LANGUAGE_NOT_SPECIFIED has no
+        // effect.
+        foreach ($instances as $instance) {
+          // @todo BC entities have the same value accessibile both with the
+          //   entity language and with LANGUAGE_DEFAULT. We need need to unset
+          //   both until we remove the BC layer.
+          if ($langcode == $entity_langcode) {
+            unset($entity->{$instance['field_name']}[LANGUAGE_DEFAULT]);
+          }
+          unset($entity->{$instance['field_name']}[$langcode]);
+        }
+      }
+    }
+
+    // Find the new fallback values.
+    field_language_fallback($display_language, $entity, $context['langcode']);
+  }
+}
+
+/**
  * Implements hook_entity_load().
  */
 function translation_entity_entity_load(array $entities, $entity_type) {
@@ -631,7 +684,7 @@ function translation_entity_entity_load(array $entities, $entity_type) {
   }
 
   if (!empty($enabled_entities)) {
-    translation_entity_load_translation_data($enabled_entities, $entity_type);
+    translation_entity_load_translation_metadata($enabled_entities, $entity_type);
   }
 }
 
@@ -643,16 +696,18 @@ function translation_entity_entity_load(array $entities, $entity_type) {
  * @param string $entity_type
  *   The type of the entities.
  */
-function translation_entity_load_translation_data(array $entities, $entity_type) {
+function translation_entity_load_translation_metadata(array $entities, $entity_type) {
   $query = 'SELECT * FROM {translation_entity} te WHERE te.entity_type = :entity_type AND te.entity_id IN (:entity_id)';
   $result = db_query($query, array(':entity_type' => $entity_type, ':entity_id' => array_keys($entities)));
+  $exclude = array('entity_type', 'entity_id', 'langcode');
   foreach ($result as $record) {
     $entity = $entities[$record->entity_id];
     // @todo Declare these as entity (translation?) properties.
-    $entity->source[$record->langcode] = $record->source;
-    // @todo Rename to 'translate' when the column is removed from the node
-    //   schema.
-    $entity->retranslate[$record->langcode] = (boolean) $record->translate;
+    foreach ($record as $field_name => $value) {
+      if (!in_array($field_name, $exclude)) {
+        $entity->translation[$record->langcode][$field_name] = $value;
+      }
+    }
   }
 }
 
@@ -665,16 +720,32 @@ function translation_entity_entity_insert(EntityInterface $entity) {
     return;
   }
 
-  $entity_type = $entity->entityType();
-  $id = $entity->id();
-  $query = db_insert('translation_entity')
-    ->fields(array('entity_type', 'entity_id', 'langcode', 'source', 'translate'));
+  $fields = array('entity_type', 'entity_id', 'langcode', 'source', 'outdated', 'uid', 'status', 'created', 'changed');
+  $query = db_insert('translation_entity')->fields($fields);
 
   foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-    // @todo Declare these as entity (translation?) properties.
-    $source = (isset($entity->source[$langcode]) ? $entity->source[$langcode] : NULL) . '';
-    $retranslate = intval(!empty($entity->retranslate[$langcode]));
-    $query->values(array($entity_type, $id, $langcode, $source, $retranslate));
+    $translation = isset($entity->translation[$langcode]) ? $entity->translation[$langcode] : array();
+
+    $translation += array(
+      'source' => '',
+      'uid' => $GLOBALS['user']->uid,
+      'outdated' => FALSE,
+      'status' => TRUE,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
+    );
+
+    $translation['entity_type'] = $entity->entityType();
+    $translation['entity_id'] = $entity->id();
+    $translation['langcode'] = $langcode;
+
+    // Reorder values to match the schema.
+    $values = array();
+    foreach ($fields as $field_name) {
+      $value = is_bool($translation[$field_name]) ? intval($translation[$field_name]) : $translation[$field_name];
+      $values[$field_name] = $value;
+    }
+    $query->values($values);
   }
 
   $query->execute();
