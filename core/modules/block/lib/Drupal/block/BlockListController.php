@@ -9,11 +9,12 @@ namespace Drupal\block;
 
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\Core\Form\FormInterface;
 
 /**
  * Defines the block list controller.
  */
-class BlockListController extends ConfigEntityListController {
+class BlockListController extends ConfigEntityListController implements FormInterface {
 
   /**
    * The regions containing the blocks.
@@ -55,7 +56,7 @@ class BlockListController extends ConfigEntityListController {
     // If no theme was specified, use the current theme.
     $this->theme = $theme ?: $GLOBALS['theme_key'];
 
-    return drupal_get_callback_form('block_admin_display_form', array($this, 'form'));
+    return drupal_get_form($this);
   }
 
   /**
@@ -92,9 +93,18 @@ class BlockListController extends ConfigEntityListController {
   }
 
   /**
+   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   */
+  public function getFormID() {
+    return 'block_admin_display_form';
+  }
+
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::build().
+   *
    * Form constructor for the main block administration form.
    */
-  public function form($form, &$form_state) {
+  public function build(array $form, array &$form_state) {
     $entities = $this->load();
     $form['#attached']['css'][] = drupal_get_path('module', 'block') . '/block.admin.css';
     $form['#attached']['library'][] = array('system', 'drupal.tableheader');
@@ -175,15 +185,23 @@ class BlockListController extends ConfigEntityListController {
       '#type' => 'submit',
       '#value' => t('Save blocks'),
       '#button_type' => 'primary',
-      '#submit' => array(array($this, 'submit')),
     );
     return $form;
   }
 
   /**
+   * Implements \Drupal\Core\Form\FormInterface::validate().
+   */
+  public function validate(array &$form, array &$form_state) {
+    // No validation.
+  }
+
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::submit().
+   *
    * Form submission handler for the main block administration form.
    */
-  public function submit($form, &$form_state) {
+  public function submit(array &$form, array &$form_state) {
     $entities = entity_load_multiple('block', array_keys($form_state['values']['blocks']));
     foreach ($entities as $entity_id => $entity) {
       $entity->set('weight', $form_state['values']['blocks'][$entity_id]['weight']);

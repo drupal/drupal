@@ -48,12 +48,4 @@ class Callbacks {
     }
   }
 
-  /**
-   * Form constructor for the Form callback builder test form.
-   */
-  public static function buildForm($form, &$form_state) {
-    $form['element'] = array('#markup' => 'The Callbacks::buildForm() method was used for this form.');
-    return $form;
-  }
-
 }

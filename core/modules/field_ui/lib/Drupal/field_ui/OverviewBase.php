@@ -7,10 +7,12 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Core\Form\FormInterface;
+
 /**
  * Abstract base class for Field UI overview forms.
  */
-abstract class OverviewBase {
+abstract class OverviewBase implements FormInterface {
 
   /**
    * The name of the entity type.
@@ -59,43 +61,15 @@ abstract class OverviewBase {
   }
 
   /**
-   * Creates a field UI overview form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
-   *
-   * @return array
-   *   The array containing the complete form.
+   * Implements \Drupal\Core\Form\FormInterface::validate().
    */
-  public function form(array $form, array &$form_state) {
-    // Add the validate and submit behavior.
-    $form['#validate'] = array(array($this, 'validate'));
-    $form['#submit'] = array(array($this, 'submit'));
-    return $form;
+  public function validate(array &$form, array &$form_state) {
   }
 
   /**
-   * Validate handler for the field UI overview form.
-   *
-   * @param array $form
-   *   The root element or form.
-   * @param array $form_state
-   *   The state of the form.
+   * Implements \Drupal\Core\Form\FormInterface::submit().
    */
-  public function validate(array $form, array &$form_state) {
-  }
-
-  /**
-   * Submit handler for the field UI overview form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
-   */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array &$form, array &$form_state) {
   }
 
   /**

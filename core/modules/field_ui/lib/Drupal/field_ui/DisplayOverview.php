@@ -32,19 +32,16 @@ class DisplayOverview extends OverviewBase {
   }
 
   /**
-   * Overrides Drupal\field_ui\OverviewBase::form().
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
-   *
-   * @return array
-   *   The array containing the complete form.
+   * Implements \Drupal\Core\Form\FormInterface::getFormID().
    */
-  public function form(array $form, array &$form_state) {
-    $form = parent::form($form, $form_state);
+  public function getFormID() {
+    return 'field_ui_display_overview_form';
+  }
 
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::build().
+   */
+  public function build(array $form, array &$form_state) {
     // Gather type information.
     $instances = field_info_instances($this->entity_type, $this->bundle);
     $field_types = field_info_field_types();
@@ -410,14 +407,9 @@ class DisplayOverview extends OverviewBase {
   }
 
   /**
-   * Overrides Drupal\field_ui\OverviewBase::submit().
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * Overrides \Drupal\field_ui\OverviewBase::submit().
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array &$form, array &$form_state) {
     $form_values = $form_state['values'];
     $display = entity_get_display($this->entity_type, $this->bundle, $this->view_mode);
 
