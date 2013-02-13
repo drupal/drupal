@@ -121,18 +121,6 @@ function comment_instance_settings_translation_entity_process($element, $form_st
 }
 
 /**
- * Implements hook_field_formatter_info().
- */
-function comment_field_formatter_info() {
-  return array(
-    'comment_default' => array(
-      'label' => t('Comments'),
-      'field types' => array('comment'),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_widget_info_alter().
  *
  * @todo convert this to a WidgetPlugin annotation.
