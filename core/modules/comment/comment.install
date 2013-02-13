@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @file
  * Install, update and uninstall functions for the Comment module.
  */
+
 use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\Core\Entity\EntityInterface;
@@ -206,8 +208,8 @@ function comment_schema() {
       'comment_status_pid' => array('pid', 'status'),
       'comment_num_new' => array(
         'entity_id',
-        'entity_type',
-        'field_name',
+        array('entity_type', 32),
+        array('field_name', 32),
         'status',
         'created',
         'cid',
@@ -216,8 +218,8 @@ function comment_schema() {
       'comment_uid' => array('uid'),
       'comment_entity_langcode' => array(
         'entity_id',
-        'entity_type',
-        'field_name',
+        array('entity_type', 32),
+        array('field_name', 32),
         'langcode',
       ),
       'comment_created' => array('created'),
@@ -291,7 +293,7 @@ function comment_schema() {
         'description' => 'The total number of comments on this entity.',
       ),
     ),
-    'primary key' => array('entity_id', 'entity_type', 'field_name'),
+    'primary key' => array('entity_id', array('entity_type', 32), array('field_name', 32)),
     'indexes' => array(
       'last_comment_timestamp' => array('last_comment_timestamp'),
       'comment_count' => array('comment_count'),
@@ -449,14 +451,14 @@ function comment_update_8004() {
  * Updates the comment_node_statistics and comment tables to new structure.
  */
 function comment_update_8005(&$sandbox) {
-  // Remove the comment_node foreign key.
+  // Drop old indexes.
   if (db_index_exists('comment', 'comment_node')) {
+    // Drop the comment_node foreign key.
     db_drop_index('comment', 'comment_node');
   }
-  // Remove the comment_nid_langcode index.
-  db_drop_index('comment', 'comment_nid_langcode');
-  // Remove comment_num_new index to create new latter here.
   db_drop_index('comment', 'comment_num_new');
+  db_drop_index('comment', 'comment_nid_langcode');
+
   // Add the entity_type and field_name columns to comment.
   db_add_field('comment', 'entity_type', array(
     'type' => 'varchar',
@@ -481,8 +483,8 @@ function comment_update_8005(&$sandbox) {
   ));
   db_add_index('comment', 'comment_num_new', array(
     'entity_id',
-    'entity_type',
-    'field_name',
+    array('entity_type', 32),
+    array('field_name', 32),
     'status',
     'created',
     'cid',
@@ -491,22 +493,24 @@ function comment_update_8005(&$sandbox) {
   // Add the comment_entity_langcode index.
   db_add_index('comment', 'comment_entity_langcode', array(
     'entity_id',
-    'entity_type',
-    'field_name',
+    array('entity_type', 32),
+    array('field_name', 32),
     'langcode',
   ));
 
-  // Rename node_comment_statistics to comment_entity_statistics.
-  // Remove the statistics_node foreign key.
-  if (db_index_exists('node_comment_statistics', 'statistics_node')) {
-    db_drop_index('node_comment_statistics', 'statistics_node');
-  }
   // We need to drop all indexes to make sure their constrains named properly.
   db_drop_primary_key('node_comment_statistics');
+  if (db_index_exists('node_comment_statistics', 'statistics_node')) {
+    // Drop the statistics_node foreign key.
+    db_drop_index('node_comment_statistics', 'statistics_node');
+  }
   db_drop_index('node_comment_statistics', 'node_comment_timestamp');
+  db_drop_index('node_comment_statistics', 'comment_count');
+  db_drop_index('node_comment_statistics', 'last_comment_uid');
 
+  // Rename {node_comment_statistics} to {comment_entity_statistics}.
   db_rename_table('node_comment_statistics', 'comment_entity_statistics');
-  // Remove the statistics_node foreign key from entity_comment_statistics.
+
   // Add the entity_type and field_name columns to comment_entity_statistics.
   db_add_field('comment_entity_statistics', 'entity_type', array(
     'type' => 'varchar',
@@ -529,20 +533,29 @@ function comment_update_8005(&$sandbox) {
     'default' => 0,
     'description' => 'The entity_id to which this comment is a reply.',
   ));
+
   // Add indexes.
+  db_add_primary_key('comment_entity_statistics', array('entity_id', array('entity_type', 32), array('field_name',32)));
   db_add_index('comment_entity_statistics', 'last_comment_timestamp', array('last_comment_timestamp'));
-  db_add_primary_key('comment_entity_statistics', array('entity_id', 'entity_type', 'field_name'));
+  db_add_index('comment_entity_statistics', 'comment_count', array('comment_count'));
+  db_add_index('comment_entity_statistics', 'last_comment_uid', array('last_comment_uid'));
+
   $t = get_t();
   return $t('Updated database to reflect new comment structure');
 }
 
 /**
- * Adds new field_api fields.
+ * Adds comment fields for all node types.
+ *
+ * Field instance settings "comment_default_mode", "comment_default_per_page"
+ * and "comment_form_location" are preserved to allow migrate contrib modules.
  */
 function comment_update_8006(&$sandbox) {
   // Loop over defined node_types.
   $node_types = array_keys(_update_7000_node_get_types());
   foreach ($node_types as $node_type) {
+    // COMMENT_OPEN
+    $default_value = variable_get('comment_' . $node_type, 2);
     // Add a default comment field for existing node comments.
     $field = array(
       'cardinality' => '1',
@@ -554,19 +567,29 @@ function comment_update_8006(&$sandbox) {
       'type' => 'comment',
     );
     // Make sure field doesn't already exist.
-    if (!_update_7000_field_read_fields(array('field_name' => 'comment_node_' . $node_type))) {
+    if (!_update_7000_field_read_fields(array('field_name' => $field['field_name']))) {
       // Create the field.
       _update_7000_field_create_field($field);
     }
-    // Add the comment field, setting the instance settings to match those for the
-    // give node_type.
+
+    // Add the comment field, setting the instance settings to match those for
+    // the given node_type.
+    $instance_settings = array(
+      'comment' => $default_value,
+      // COMMENT_MODE_THREADED
+      'comment_default_mode' => variable_get('comment_default_mode_' . $node_type, 1),
+      'comment_default_per_page' => variable_get('comment_default_per_page_' . $node_type, 50),
+      // COMMENT_FORM_BELOW
+      'comment_form_location' => variable_get('comment_form_location' . $node_type, 1),
+      // COMMENT_ANONYMOUS_MAYNOT_CONTACT
+      'comment_anonymous' => variable_get('comment_anonymous_' . $node_type, 0),
+      'comment_subject_field' => variable_get('comment_subject_field_' . $node_type, 1),
+      // DRUPAL_OPTIONAL
+      'comment_preview' => variable_get('comment_preview_' . $node_type, 1),
+    );
     $instance = array(
       'bundle' => $node_type,
-      'default_value' => array(
-        0 => array(
-          'comment' => variable_get('comment_' . $node_type, 0),
-        )
-      ),
+      'default_value' => array(array('comment' => $default_value)),
       'deleted' => '0',
       'display' => array(
         'default' => array(
@@ -595,19 +618,11 @@ function comment_update_8006(&$sandbox) {
       ),
       'description' => '',
       'entity_type' => 'node',
-      'field_name' => 'comment_node_' . $node_type,
+      'field_name' => $field['field_name'],
       'label' => 'Comment settings',
       'required' => 1,
       'settings' => array(
-        'comment' => array(
-          'comment' => variable_get('comment_' . $node_type, 0),
-          'comment_default_mode' => variable_get('comment_default_mode_' . $node_type, 1),
-          'comment_default_per_page' => variable_get('comment_default_per_page_' . $node_type, 50),
-          'comment_anonymous' => variable_get('comment_anonymous_' . $node_type, 0),
-          'comment_subject_field' => variable_get('comment_subject_field_' . $node_type, 1),
-          'comment_form_location' => variable_get('comment_form_location_' . $node_type, 1),
-          'comment_preview' => variable_get('comment_preview_' . $node_type, 1)
-        )
+        'comment' => $instance_settings,
       ),
       'widget' => array(
         'active' => 0,
@@ -618,7 +633,7 @@ function comment_update_8006(&$sandbox) {
       ),
     );
     _update_7000_field_create_instance($field, $instance);
-    // Rename the comment bundle for this node type.
+
     // Clean up old variables.
     variable_del('comment_' . $node_type);
     variable_del('comment_default_mode_' . $node_type);
