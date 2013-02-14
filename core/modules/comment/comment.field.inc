@@ -20,12 +20,14 @@ function comment_field_info() {
       'settings' => array(),
       'instance_settings' => array(
         'comment' => array(
-          'comment' => COMMENT_OPEN,
+          // Save this settings to allow other modules to migrate their data.
+          // The "comment_default" formatter settings are used instead.
           'comment_default_mode' => COMMENT_MODE_THREADED,
           'comment_default_per_page' => 50,
+          'comment_form_location' => COMMENT_FORM_BELOW,
+          // Comment form settings per field bundle.
           'comment_anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
           'comment_subject_field' => 1,
-          'comment_form_location' => COMMENT_FORM_BELOW,
           'comment_preview' => DRUPAL_OPTIONAL
         )
       ),
@@ -42,7 +44,7 @@ function comment_field_instance_settings_form($field, $instance) {
   $settings = $instance['settings']['comment'];
   $form['comment'] = array(
     '#type' => 'details',
-    '#title' => t('Comment settings'),
+    '#title' => t('Comment form settings'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#field_name' => $field['field_name'],
@@ -52,16 +54,6 @@ function comment_field_instance_settings_form($field, $instance) {
     ),
     '#attached' => array(
       'library' => array(array('comment', 'drupal.comment')),
-    ),
-  );
-  $form['comment']['comment'] = array(
-    '#type' => 'select',
-    '#title' => t('Default comment setting for new content'),
-    '#default_value' => $settings['comment'],
-    '#options' => array(
-      COMMENT_OPEN => t('Open'),
-      COMMENT_CLOSED => t('Closed'),
-      COMMENT_HIDDEN => t('Hidden'),
     ),
   );
   $form['comment']['comment_default_mode'] = array(
@@ -129,160 +121,15 @@ function comment_instance_settings_translation_entity_process($element, $form_st
 }
 
 /**
- * Implements hook_field_formatter_info().
- */
-function comment_field_formatter_info() {
-  return array(
-    'comment_default' => array(
-      'label' => t('Comments'),
-      'field types' => array('comment'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_widget_info().
+ * Implements hook_field_widget_info_alter().
  *
- * @todo convert this to a WidgetPlugin.
+ * @todo convert this to a WidgetPlugin annotation.
  */
-function comment_field_widget_info() {
-  return array(
-    'comment_default' => array(
-      'label' => t('Comment'),
-      'field types' => array('comment'),
-      'settings' => array(),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-        'default value' => FIELD_BEHAVIOR_NONE,
-      ),
-    ),
+function comment_field_widget_info_alter(&$info) {
+  $info['comment_default']['behaviors'] = array(
+    'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+    'default value' => FIELD_BEHAVIOR_NONE,
   );
-}
-
-/**
- * Implements hook_field_widget_form().
- *
- * @todo convert this to a WidgetPlugin.
- */
-function comment_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $entity = $element['#entity'];
-  $settings = $instance['settings']['comment'];
-  $element += array(
-    '#type' => 'details',
-    '#access' => user_access('administer comments'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#group' => 'advanced',
-    '#attributes' => array(
-      'class' => array('comment-node-settings-form'),
-    ),
-    '#attached' => array(
-      'library' => array('comment', 'drupal.comment'),
-    ),
-    '#weight' => 30,
-  );
-  $values = reset($items);
-  if (empty($values)) {
-    $values = array(
-      // Default taken from instance settings.
-      'comment' => $settings['comment'],
-    );
-  }
-  $entity_id = $entity->id();
-  $comment_count = empty($entity->comment_statistics[$field['field_name']]->comment_count) ? 0 : $entity->comment_statistics[$field['field_name']]->comment_count;
-  $comment_settings = ($values['comment'] == COMMENT_HIDDEN && empty($comment_count)) ? COMMENT_CLOSED : $values['comment'];
-  $element['comment'] = array(
-    '#type' => 'radios',
-    '#title' => t('Comments'),
-    '#title_display' => 'invisible',
-    '#default_value' => $comment_settings,
-    '#options' => array(
-      COMMENT_OPEN => t('Open'),
-      COMMENT_CLOSED => t('Closed'),
-      COMMENT_HIDDEN => t('Hidden'),
-    ),
-    COMMENT_OPEN => array(
-      '#description' => t('Users with the "Post comments" permission can post comments.'),
-    ),
-    COMMENT_CLOSED => array(
-      '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
-    ),
-    COMMENT_HIDDEN => array(
-      '#description' => t('Comments are hidden from view.'),
-    ),
-  );
-  // If the node doesn't have any comments, the "hidden" option makes no
-  // sense, so don't even bother presenting it to the user.
-  if (empty($comment_count)) {
-    $element['comment'][COMMENT_HIDDEN]['#access'] = FALSE;
-    // Also adjust the description of the "closed" option.
-    $element['comment'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');
-  }
-  return array($element);
-}
-
-/**
- * Implements hook_field_formatter_view().
- */
-function comment_field_formatter_view(EntityInterface $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-
-  switch ($display['type']) {
-    case 'comment_default':
-      // We only ever have one value.
-      $values = reset($items);
-      if ($values['comment'] != COMMENT_HIDDEN) {
-        $additions = FALSE;
-        if ($values['comment'] && empty($entity->in_preview)) {
-          // Only attempt to render comments if the node has visible comments.
-          // Unpublished comments are not included in
-          // $node->entity_statistics[$field_name]->comment_count, so show
-          // comments unconditionally if the user is an administrator.
-          $comment_settings = $instance['settings']['comment'];
-          if (((!empty($entity->comment_statistics[$field['field_name']]->comment_count) && user_access('access comments')) || user_access('administer comments')) &&
-              !empty($entity->content['#view_mode']) &&
-              !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
-            // Comment threads aren't added to search results/indexes using the
-            // formatter, @see comment_node_update_index().
-            $mode = $comment_settings['comment_default_mode'];
-            $comments_per_page = $comment_settings['comment_default_per_page'];
-            if ($cids = comment_get_thread($entity, $field['field_name'], $mode, $comments_per_page)) {
-              $comments = comment_load_multiple($cids);
-              comment_prepare_thread($comments);
-              $build = comment_view_multiple($comments);
-              $build['pager']['#theme'] = 'pager';
-              $additions['comments'] = $build;
-            }
-          }
-
-          // Append comment form if needed.
-          if ($values['comment'] == COMMENT_OPEN && $comment_settings['comment_form_location'] == COMMENT_FORM_BELOW) {
-            // Only show the add comment form if the user has permission and the
-            // view mode is not search_result or search_index.
-            if (user_access('post comments') && !empty($entity->content['#view_mode']) &&
-              !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
-              $additions['comment_form'] = comment_add($entity, $field['field_name']);
-            }
-          }
-          if ($additions) {
-            $additions += array(
-              '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field['field_name'],
-              '#entity' => $entity,
-              '#display_mode' => $instance['settings']['comment']['comment_default_mode'],
-              'comments' => array(),
-              'comment_form' => array(),
-            );
-          }
-          if (!empty($additions)) {
-            $element[] = $additions;
-          }
-        }
-      }
-      break;
-
-  }
-
-  return $element;
 }
 
 /**

@@ -13,41 +13,70 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 function comment_overview_bundles() {
   $header = array(
-    t('Field name'),
-    t('Used in'),
-    array(
-      'data' => t('Operations'),
-      'colspan' => (module_exists('field_ui') ? '4' : '2')
-    )
+    'field_name' => t('Field name'),
+    'usage' => array(
+      'data' => t('Used in'),
+      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
+    ),
   );
+
+  $field_ui = module_exists('field_ui');
+  if ($field_ui) {
+    $header['operations'] = t('Operations');
+  }
+
+  $entity_bundles = entity_get_bundles();
+  $entity_types = drupal_container()->get('plugin.manager.entity')->getDefinitions();
   $rows = array();
 
-  foreach (comment_get_comment_fields() as $field_name => $field_info) {
+  foreach (comment_get_comment_fields() as $field_name => $field_info_map) {
+    $field_info = field_info_field($field_name);
+    // Initialize the row.
+    $rows[$field_name]['class'] = $field_info['locked'] ? array('field-disabled') : array('');
+    $rows[$field_name]['data']['field_name']['data'] = $field_info['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
+
+    $rows[$field_name]['data']['usage']['data'] = array(
+      '#theme' => 'item_list',
+      '#items' => array(),
+    );
     foreach ($field_info['bundles'] as $entity_type => $field_bundles) {
-      $bundles = array_intersect_key(entity_get_bundles($entity_type), array_flip($field_bundles));
-
-      foreach ($bundles as $bundle => $bundle_info) {
-        if (!isset($rows[$field_name])) {
-          $rows[$field_name]['class'] = $field_info['locked'] ? array('menu-disabled') : array('');
-          $rows[$field_name]['data']['label'] = $field_info['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
-        }
-
-        if (module_exists('field_ui') && $path = field_ui_bundle_admin_path($entity_type, $bundle)) {
-          $rows[$field_name]['data']['usage'][] = l($bundle_info['label'], $path . '/fields');
-        }
-        else {
-          $rows[$field_name]['data']['usage'][] = $bundle_info['label'];
-        }
-
-        if (module_exists('field_ui')) {
-          $name = strtr($field_name, '_', '-');
-          $rows[$field_name]['data']['fields'] = l(t('manage fields'), 'admin/structure/comments/' . $name . '/fields');
-          $rows[$field_name]['data']['display'] = l(t('manage display'), 'admin/structure/comments/' . $name . '/display');
+      $bundles = array();
+      foreach ($field_bundles as $bundle) {
+        if (isset($entity_bundles[$entity_type][$bundle])) {
+          // Add the current instance.
+          if ($field_ui && $path = field_ui_bundle_admin_path($entity_type, $bundle)) {
+            $bundles[] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
+          }
+          else {
+            $bundles[] = $entity_bundles[$entity_type][$bundle]['label'];
+          }
         }
       }
+      // Format used entity bundles.
+      $rows[$field_name]['data']['usage']['data']['#items'][] = t('@entity_type: !bundles', array(
+        '@entity_type' => $entity_types[$entity_type]['label'],
+        '!bundles' => implode(', ', $bundles),
+      ));
     }
 
-    $rows[$field_name]['data']['usage'] = implode(', ', $rows[$field_name]['data']['usage']);
+    if ($field_ui) {
+      // @todo Check proper permissions for operations.
+      $links['fields'] = array(
+        'title' => t('manage fields'),
+        'href' => 'admin/structure/comments/' . $field_name . '/fields',
+        'weight' => 5,
+      );
+      $links['display'] = array(
+        'title' => t('manage display'),
+        'href' => 'admin/structure/comments/' . $field_name . '/display',
+        'weight' => 10,
+      );
+
+      $rows[$field_name]['data']['operations']['data'] = array(
+        '#type' => 'operations',
+        '#links' => $links,
+      );
+    }
   }
 
   $build['overview'] = array(
@@ -73,7 +102,7 @@ function comment_overview_bundles() {
 function comment_admin($type = 'new') {
   $edit = $_POST;
 
-  if (isset($edit['operation']) && ($edit['operation'] == 'delete') && isset($edit['comments']) && $edit['comments']) {
+  if (isset($edit['operation']) && ($edit['operation'] == 'delete') && !empty($edit['comments'])) {
     return drupal_get_form('comment_multiple_delete_confirm');
   }
   else {

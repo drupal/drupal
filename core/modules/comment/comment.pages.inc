@@ -38,7 +38,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   - comment_form: The comment form as a renderable array.
  */
 function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, $pid = NULL) {
-  $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
   // Set the breadcrumb trail.
   // @todo - test behaviour when entities don't have uris.
   $uri = $entity->uri();
@@ -97,15 +96,17 @@ function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, 
     elseif (user_access('access content')) {
       // We make sure the field value isn't set so we don't end up with a redirect loop.
       $original = $entity->{$field_name};
-      unset($entity->{$field_name});
+      $entity->{$field_name} = array(
+        field_language($entity, $field_name) => array(array('comment' => COMMENT_HIDDEN)),
+      );
       $build['comment_entity'] = entity_view($entity, 'full');
       $entity->{$field_name} = $original;
     }
 
     // Should we show the reply box?
     $items = field_get_items($entity, $field_name);
-    $status = reset($items);
-    if (isset($status['comment']) && $status['comment'] != COMMENT_OPEN) {
+    $status = isset($items[0]['comment']) ? $items[0]['comment'] : COMMENT_OPEN;
+    if ($status != COMMENT_OPEN) {
       drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
       drupal_goto($uri['path']);
     }

@@ -262,7 +262,7 @@ function comment_entity_bundle_info() {
       'admin' => array(
         'path' => 'admin/structure/comments/%comment_field_name',
         'bundle argument' => 3,
-        'real path' => 'admin/structure/comments/' . strtr($field_name, '_', '-'),
+        'real path' => 'admin/structure/comments/' . $field_name,
       ),
     );
   }
@@ -279,9 +279,8 @@ function comment_entity_bundle_info() {
  *   The actual field name with hyphens returned to underscores.
  */
 function comment_field_name_load($arg) {
-  $field_name = strtr($arg, array('-' => '_'));
-  if (($field = field_info_field($field_name)) && $field['type'] == 'comment') {
-    return $field_name;
+  if (($field = field_info_field($arg)) && $field['type'] == 'comment') {
+    return $field['field_name'];
   }
 
   return FALSE;
@@ -863,7 +862,7 @@ function comment_get_thread(\Drupal\Core\Entity\EntityInterface $entity, $field_
     $query->condition('c.status', COMMENT_PUBLISHED);
     $count_query->condition('c.status', COMMENT_PUBLISHED);
   }
-  if ($mode === COMMENT_MODE_FLAT) {
+  if ($mode == COMMENT_MODE_FLAT) {
     $query->orderBy('c.cid', 'ASC');
   }
   else {
@@ -961,8 +960,8 @@ function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
 function comment_links(Comment $comment, \Drupal\Core\Entity\EntityInterface $entity, $field_name) {
   $links = array();
   $items = field_get_items($entity, $field_name);
-  $status = reset($items);
-  if ($status['comment'] == COMMENT_OPEN) {
+  $status = isset($items[0]['comment']) ? $items[0]['comment'] : COMMENT_OPEN;
+  if ($status == COMMENT_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment-delete'] = array(
         'title' => t('delete'),
@@ -1203,8 +1202,8 @@ function comment_node_update_index(Node $node, $langcode) {
       $mode = $instance['settings']['comment']['comment_default_mode'];
       $comments_per_page = $instance['settings']['comment']['comment_default_per_page'];
       if (($items = field_get_items($node, $field_name)) &&
-          ($item = reset($items)) &&
-          $item['comment'] && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
+          isset($items[0]['comment']) &&
+          $items[0]['comment'] && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = comment_load_multiple($cids);
         comment_prepare_thread($comments);
         $build = comment_view_multiple($comments);
@@ -1237,8 +1236,8 @@ function comment_node_search_result($node) {
   foreach ($comment_fields as $field_name => $info) {
     // Do not make a string if comments are hidden.
     if (user_access('access comments') && ($items = field_get_items($node, $field_name)) &&
-        ($item = reset($items)) && $item['comment'] != COMMENT_HIDDEN) {
-      if ($item['comment'] == COMMENT_OPEN) {
+        isset($items[0]['comment']) && $items[0]['comment'] != COMMENT_HIDDEN) {
+      if ($items[0]['comment'] == COMMENT_OPEN) {
         // At least one comment field is open.
         $open = TRUE;
       }
@@ -1563,7 +1562,9 @@ function comment_preview(Comment $comment) {
     // We temporarily disable rendering of this field to prevent infinite
     // loop.
     $values = $entity->{$comment->field_name->value};
-    unset($entity->{$comment->field_name->value});
+    $entity->{$comment->field_name->value} = array(
+      field_language($entity, $comment->field_name->value) => array(array('comment' => COMMENT_HIDDEN)),
+    );
     $build = entity_view($entity, 'full');
     $entity->{$comment->field_name->value} = $values;
   }
@@ -2102,10 +2103,10 @@ function comment_library_info() {
  * @see field_info_fields().
  */
 function comment_get_comment_fields($entity_type = NULL) {
-  return array_filter(field_info_fields(), function ($value) use($entity_type) {
+  return array_filter(field_info_field_map(), function ($value) use($entity_type) {
     if ($value['type']  == 'comment') {
       if (isset($entity_type)) {
-        return in_array($entity_type, array_keys($value['bundles']));
+        return isset($value['bundles'][$entity_type]);
       }
       return TRUE;
     }
@@ -2162,15 +2163,14 @@ function comment_mark(Comment $comment) {
  *   (optional) Field name to use for the comment field. Defaults to 'comment'.
  * @param string $default_value
  *   (optional) Default value, one of COMMENT_HIDDEN, COMMENT_OPEN,
- *   COMMENT_CLOSED. Defaults to COMMENT_HIDDEN.
+ *   COMMENT_CLOSED. Defaults to COMMENT_OPEN.
  */
-function comment_add_default_comment_field($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_HIDDEN) {
+function comment_add_default_comment_field($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_OPEN) {
   // Make sure field doesn't already exist.
   if (!field_info_field($field_name)) {
     // Add a default comment field for existing node comments.
     $field = array(
       'field_name' => $field_name,
-      'settings' => array(),
       'type' => 'comment',
     );
     // Create the field.
@@ -2179,10 +2179,17 @@ function comment_add_default_comment_field($entity_type, $bundle, $field_name = 
   // Make sure the instance doesn't already exist.
   if (!field_info_instance($entity_type, $field_name, $bundle)) {
     $instance = array(
-      'bundle' => $bundle,
-      'default_value' => array(array('comment' => $default_value)),
-      'deleted' => '0',
+      'label' => 'Comment settings',
       'description' => '',
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+      'required' => 1,
+      'default_value' => array(array('comment' => $default_value)),
+      'widget' => array(
+        'type' => 'comment_default',
+        'weight' => '50',
+      ),
       'display' => array(
         'default' => array(
           'label' => 'hidden',
@@ -2208,30 +2215,10 @@ function comment_add_default_comment_field($entity_type, $bundle, $field_name = 
           'label' => 'hidden',
         )
       ),
-      'entity_type' => $entity_type,
-      'field_name' => $field_name,
-      'label' => 'Comment settings',
-      'required' => 1,
-      'settings' => array(
-        'comment' => array(
-          'comment' => COMMENT_OPEN,
-          'comment_default_mode' => COMMENT_MODE_THREADED,
-          'comment_default_per_page' => 50,
-          'comment_anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
-          'comment_subject_field' => 1,
-          'comment_form_location' => COMMENT_FORM_BELOW,
-          'comment_preview' => DRUPAL_OPTIONAL
-        )
-      ),
-      'widget' => array(
-        'active' => 0,
-        'module' => 'comment',
-        'settings' => array(),
-        'type' => 'comment_default',
-        'weight' => '50',
-      ),
     );
     field_create_instance($instance);
+
+    // Set default to display comment list.
     entity_get_display($entity_type, $bundle, 'default')
       ->setComponent($field_name, array(
         'label' => 'hidden',

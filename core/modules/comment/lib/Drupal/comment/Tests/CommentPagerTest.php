@@ -64,7 +64,6 @@ class CommentPagerTest extends CommentTestBase {
     $this->assertFalse($this->commentExists($comments[1]), 'Comment 2 does not appear on page 3.');
 
     // Post a reply to the oldest comment and test again.
-    $replies = array();
     $oldest_comment = reset($comments);
     $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $oldest_comment->id());
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
