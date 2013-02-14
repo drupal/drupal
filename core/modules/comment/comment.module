@@ -2247,6 +2247,8 @@ function comment_field_create_instance($instance) {
 function comment_field_delete_instance($instance) {
   $field = field_info_field($instance['field_name']);
   if ($field['type'] == 'comment') {
+    // Delete all fields and displays attached to the bundle.
+    field_attach_delete_bundle('comment', $instance['field_name']);
     cache()->delete('comment_entity_info');
   }
 }
