@@ -2,6 +2,11 @@
   "name": "drupal/drupal",
   "description": "Drupal is an open source content management platform powering millions of websites and applications.",
   "license": "GPL-2.0+",
+  "repositories": [{
+    "type": "vcs",
+    "url": "https://github.com/msonnabaum/phpunit.git"
+  }
+  ],
   "require": {
     "symfony/class-loader": "2.2.0-BETA2",
     "symfony/dependency-injection": "2.2.0-BETA2",
@@ -17,7 +22,8 @@
     "guzzle/http": "3.1.0",
     "kriswallsmith/assetic": "1.1.0-alpha1",
     "symfony-cmf/routing": "dev-master#ea4a10",
-    "easyrdf/easyrdf": "0.8.0-beta.1"
+    "easyrdf/easyrdf": "0.8.0-beta.1",
+    "phpunit/phpunit": "3.7 as dev-3.7"
   },
   "minimum-stability": "dev"
 }

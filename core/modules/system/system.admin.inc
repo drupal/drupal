@@ -1749,7 +1749,7 @@ function system_clear_page_cache_submit($form, &$form_state) {
  * @ingroup forms
  * @see system_settings_form_sumbit()
  */
-function system_file_system_settings() {
+function system_file_system_settings($form, $form_state) {
   $config = config('system.file');
   $form['file_public_path'] = array(
     '#type' => 'textfield',
