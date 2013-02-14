@@ -83,14 +83,14 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   }
  * @endcode
  *
- * @param $module
+ * @param string $module
  *   A module name to invoke hook_mail() on. The {$module}_mail() hook will be
  *   called to complete the $message structure which will already contain common
  *   defaults.
- * @param $key
+ * @param string $key
  *   A key to identify the e-mail sent. The final e-mail id for e-mail altering
  *   will be {$module}_{$key}.
- * @param $to
+ * @param string $to
  *   The e-mail address or addresses where the message will be sent to. The
  *   formatting of this string will be validated with the
  *   @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
@@ -99,13 +99,13 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   - user@example.com, anotheruser@example.com
  *   - User <user@example.com>
  *   - User <user@example.com>, Another User <anotheruser@example.com>
- * @param $langcode
+ * @param string $langcode
  *   Language code to use to compose the e-mail.
- * @param $params
- *   (optional) parameters to build the e-mail.
- * @param $from
+ * @param array $params
+ *   (optional) Parameters to build the e-mail.
+ * @param string|null $from
  *   Sets From to this value, if given.
- * @param $send
+ * @param bool $send
  *   If TRUE, drupal_mail() will call drupal_mail_system()->mail() to deliver
  *   the message, and store the result in $message['result']. Modules
  *   implementing hook_mail_alter() may cancel sending by setting
