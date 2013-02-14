@@ -64,12 +64,11 @@ abstract class CommentTestBase extends WebTestBase {
       'access content',
      ));
     $this->web_user = $this->drupalCreateUser(array(
-      'access comments',
-      'post comments',
       'create article content',
       'edit own comments',
-      'post comments',
       'skip comment approval',
+      'post comments',
+      'access comments',
       'access content',
     ));
 
