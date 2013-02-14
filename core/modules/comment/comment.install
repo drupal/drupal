@@ -627,25 +627,35 @@ function comment_update_8006(&$sandbox) {
     $display_options_default = array(
       'label' => 'hidden',
       'type' => 'comment_default',
+      'settings' => array(),
       'weight' => 1,
     );
-    entity_get_display('node', $node_type, 'default')
-      ->setComponent($field['field_name'], $display_options_default)
+
+    // Assign display settings for the 'default' and 'full' view modes.
+    module_load_install('entity');
+
+    $display = _update_8000_entity_get_display('node', $node_type, 'default');
+    $display->set('content.' . $field['field_name'], $display_options_default)
       ->save();
-    entity_get_display('node', $node_type, 'full')
-      ->setComponent($field['field_name'], $display_options_default)
+    update_config_manifest_add('entity.display', array($display->get('id')));
+
+    $display = _update_8000_entity_get_display('node', $node_type, 'full');
+    $display->set('content.' . $field['field_name'], $display_options_default)
       ->save();
+    update_config_manifest_add('entity.display', array($display->get('id')));
 
     // Update all other entity displays with custom settings.
     $display_options = array(
       'type' => 'hidden',
       'label' => 'hidden',
+      'settings' => array(),
     );
     foreach (entity_get_view_modes('node') as $view_mode => $view_mode_settings) {
       if ($view_mode != 'full') {
-        entity_get_display('node', $node_type, $view_mode)
-          ->setComponent($field['field_name'], $display_options)
+        $display = _update_8000_entity_get_display('node', $node_type, $view_mode);
+        $display->set('content.' . $field['field_name'], $display_options)
           ->save();
+        update_config_manifest_add('entity.display', array($display->get('id')));
       }
     }
 
