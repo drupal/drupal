@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Utility\Color;
@@ -106,8 +107,9 @@ use Drupal\Core\Utility\Color;
  * is not needed (i.e., when initially rendering the form) and is often
  * used as a menu callback.
  *
- * @param $form_id
- *   The unique string identifying the desired form. If a function with that
+ * @param \Drupal\Core\Form\FormInterface|string $form_arg
+ *   A form object to use to build the form, or the unique string identifying
+ *   the desired form. If $form_arg is a string and a function with that
  *   name exists, it is called to build the form array. Modules that need to
  *   generate the same form (or very similar forms) using different $form_ids
  *   can implement hook_forms(), which maps different $form_id values to the
@@ -126,36 +128,23 @@ use Drupal\Core\Utility\Color;
  *
  * @see drupal_build_form()
  */
-function drupal_get_form($form_id) {
+function drupal_get_form($form_arg) {
   $form_state = array();
 
   $args = func_get_args();
-  // Remove $form_id from the arguments.
+  // Remove $form_arg from the arguments.
   array_shift($args);
   $form_state['build_info']['args'] = $args;
 
-  return drupal_build_form($form_id, $form_state);
-}
+  // Determine the form ID.
+  if (is_object($form_arg) && $form_arg instanceof FormInterface) {
+    $form_state['build_info']['callback_object'] = $form_arg;
+    $form_id = $form_arg->getFormID();
+  }
+  else {
+    $form_id = $form_arg;
+  }
 
-/**
- * Returns a renderable form array using a specific callback.
- *
- * When using drupal_get_form(), the $form_id or information from hook_forms()
- * is used to determine the callback used to build the form. If the callback
- * needs to be explicitly specified, or if it is a method, use this function.
- *
- * @param string $form_id
- *   The unique string identifying the desired form.
- * @param callable $callback
- *   A callback to be used for building the form.
- * @param array $args
- *   (optional) An array of arguments to pass to the form callback. Defaults to
- *   an empty array.
- */
-function drupal_get_callback_form($form_id, $callback, array $args = array()) {
-  $form_state = array();
-  $form_state['build_info']['args'] = $args;
-  $form_state['build_info']['callback'] = $callback;
   return drupal_build_form($form_id, $form_state);
 }
 
@@ -773,7 +762,13 @@ function drupal_retrieve_form($form_id, &$form_state) {
 
   // If an explicit form builder callback is defined we just use it, otherwise
   // we look for a function named after the $form_id.
-  $callback = !empty($form_state['build_info']['callback']) ? $form_state['build_info']['callback'] : $form_id;
+  $callback = $form_id;
+  if (!empty($form_state['build_info']['callback'])) {
+    $callback = $form_state['build_info']['callback'];
+  }
+  elseif (!empty($form_state['build_info']['callback_object'])) {
+    $callback = array($form_state['build_info']['callback_object'], 'build');
+  }
 
   // We first check to see if there is a valid form builder callback defined.
   // If there is, we simply pass the arguments on to it to get the form.
@@ -1081,8 +1076,11 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   if (!isset($form['#validate'])) {
     // Ensure that modules can rely on #validate being set.
     $form['#validate'] = array();
+    if (isset($form_state['build_info']['callback_object'])) {
+      $form['#validate'][] = array($form_state['build_info']['callback_object'], 'validate');
+    }
     // Check for a handler specific to $form_id.
-    if (function_exists($form_id . '_validate')) {
+    elseif (function_exists($form_id . '_validate')) {
       $form['#validate'][] = $form_id . '_validate';
     }
     // Otherwise check whether this is a shared form and whether there is a
@@ -1095,8 +1093,11 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   if (!isset($form['#submit'])) {
     // Ensure that modules can rely on #submit being set.
     $form['#submit'] = array();
+    if (isset($form_state['build_info']['callback_object'])) {
+      $form['#submit'][] = array($form_state['build_info']['callback_object'], 'submit');
+    }
     // Check for a handler specific to $form_id.
-    if (function_exists($form_id . '_submit')) {
+    elseif (function_exists($form_id . '_submit')) {
       $form['#submit'][] = $form_id . '_submit';
     }
     // Otherwise check whether this is a shared form and whether there is a

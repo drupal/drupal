@@ -6,6 +6,7 @@
  */
 
 use Drupal\form_test\Callbacks;
+use Drupal\form_test\FormTestObject;
 
 /**
  * Implements hook_menu().
@@ -25,10 +26,9 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['form-test/callback-builder'] = array(
-    'title' => 'Form callback builder test',
-    'page callback' => 'drupal_get_callback_form',
-    'page arguments' => array('form_test_callback_builder_form', '\Drupal\form_test\Callbacks::buildForm'),
+  $items['form-test/object-builder'] = array(
+    'title' => 'Form object builder test',
+    'page callback' => 'form_test_object_builder',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -366,6 +366,13 @@ function form_test_permission() {
     ),
   );
   return $perms;
+}
+
+/**
+ * Page callback: Displays a form built from an object.
+ */
+function form_test_object_builder() {
+  return drupal_get_form(new FormTestObject());
 }
 
 /**
