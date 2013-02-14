@@ -43,19 +43,16 @@ class FieldOverview extends OverviewBase {
   }
 
   /**
-   * Overrides Drupal\field_ui\OverviewBase::form().
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
-   *
-   * @return array
-   *   The array containing the complete form.
+   * Implements \Drupal\Core\Form\FormInterface::getFormID().
    */
-  public function form(array $form, array &$form_state) {
-    $form = parent::form($form, $form_state);
+  public function getFormID() {
+    return 'field_ui_field_overview_form';
+  }
 
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::build().
+   */
+  public function build(array $form, array &$form_state) {
     // When displaying the form, make sure the list of fields is up-to-date.
     if (empty($form_state['post'])) {
       field_info_cache_clear();
@@ -423,14 +420,9 @@ class FieldOverview extends OverviewBase {
   }
 
   /**
-   * Overrides Drupal\field_ui\OverviewBase::validate().
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * Overrides \Drupal\field_ui\OverviewBase::validate().
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array &$form, array &$form_state) {
     $this->validateAddNew($form, $form_state);
     $this->validateAddExisting($form, $form_state);
   }
@@ -532,14 +524,9 @@ class FieldOverview extends OverviewBase {
   }
 
   /**
-   * Overrides Drupal\field_ui\OverviewBase::submit().
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * Overrides \Drupal\field_ui\OverviewBase::submit().
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array &$form, array &$form_state) {
     $form_values = $form_state['values']['fields'];
 
     $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);

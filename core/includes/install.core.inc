@@ -356,6 +356,17 @@ function install_begin_request(&$install_state) {
     // Register a module handler for managing enabled modules.
     $container
       ->register('module_handler', 'Drupal\Core\Extension\ModuleHandler');
+
+    // Register the Guzzle HTTP client for fetching translation files from a
+    // remote translation server such as localization.drupal.org.
+    $container->register('http_default_client', 'Guzzle\Http\Client')
+      ->addArgument(NULL)
+      ->addArgument(array(
+        'curl.CURLOPT_TIMEOUT' => 30.0,
+        'curl.CURLOPT_MAXREDIRS' => 3,
+      ))
+      ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
+
     drupal_container($container);
   }
 
