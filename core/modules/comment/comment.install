@@ -21,7 +21,7 @@ function comment_uninstall() {
   variable_del('comment_block_count');
   // We cannot use comment_get_comment_fields because comment.module is
   // disabled.
-  $comment_fields = array_filter(field_info_fields(), function ($value) {
+  $comment_fields = array_filter(field_info_field_map(), function ($value) {
     if ($value['type']  == 'comment') {
       return TRUE;
     }
