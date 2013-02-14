@@ -1746,6 +1746,9 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
   // If recursive, create each missing component of the parent directory
   // individually and set the mode explicitly to override the umask.
   if ($recursive) {
+    // Ensure the path is using DIRECTORY_SEPARATOR.
+    $uri = str_replace('/', DIRECTORY_SEPARATOR, $uri);
+    // Determine the components of the path.
     $components = explode(DIRECTORY_SEPARATOR, $uri);
     array_pop($components);
     $recursive_path = '';
