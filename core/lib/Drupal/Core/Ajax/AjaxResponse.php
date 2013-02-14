@@ -55,8 +55,7 @@ class AjaxResponse extends JsonResponse {
    *   Response The current response.
    */
   public function prepare(Request $request) {
-
-    parent::setData($this->ajaxRender($request));
+    $this->setData($this->ajaxRender($request));
     return parent::prepare($request);
   }
 
