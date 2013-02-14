@@ -5,5 +5,5 @@ chmod:
   file: '0664'
 default_scheme: 'public'
 path:
-  private: '0'
+  private: ''
   temporary: ''
