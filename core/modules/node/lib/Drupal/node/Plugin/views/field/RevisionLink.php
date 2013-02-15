@@ -53,7 +53,7 @@ class RevisionLink extends Link {
     $this->options['alter']['path'] = $path;
     $this->options['alter']['query'] = drupal_get_destination();
 
-    return !empty($this->options['text']) ? $this->options['text'] : t('view');
+    return !empty($this->options['text']) ? $this->options['text'] : t('View');
   }
 
   /**

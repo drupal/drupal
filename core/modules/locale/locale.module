@@ -448,7 +448,7 @@ function locale_get_plural($count, $langcode = NULL) {
   if (!isset($plural_indexes[$langcode][$count])) {
     // Retrieve and statically cache the plural formulas for all languages.
     if (empty($plural_formulas)) {
-      $plural_formulas = variable_get('locale_translation_plurals', array());
+      $plural_formulas = state()->get('locale.translation.plurals') ?: array();
     }
     // If there is a plural formula for the language, evaluate it for the given
     // $count and statically cache the result for the combination of language
@@ -582,9 +582,10 @@ function locale_system_remove($components) {
  * file if necessary, and adds it to the page.
  */
 function locale_js_alter(&$javascript) {
+
   $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
-  $dir = 'public://' . variable_get('locale_js_directory', 'languages');
+  $dir = 'public://' . config('local.settings')->get('javascript.directory');
   $parsed = state()->get('system.javascript_parsed') ?: array();
   $files = $new_files = FALSE;
 
@@ -627,7 +628,7 @@ function locale_js_alter(&$javascript) {
   }
 
   // Add the translation JavaScript file to the page.
-  $locale_javascripts = variable_get('locale_translation_javascript', array());
+  $locale_javascripts = state()->get('translation.javascript') ?: array();
   if ($files && !empty($locale_javascripts[$language_interface->langcode])) {
     // Add the translation JavaScript file to the page.
     $file = $dir . '/' . $language_interface->langcode . '_' . $locale_javascripts[$language_interface->langcode] . '.js';
@@ -1200,6 +1201,7 @@ function _locale_invalidate_js($langcode = NULL) {
  *   The language, the translation file should be (re)created for.
  */
 function _locale_rebuild_js($langcode = NULL) {
+  $config = config('locale.settings');
   if (!isset($langcode)) {
     $language = language(LANGUAGE_TYPE_INTERFACE);
   }
@@ -1227,8 +1229,7 @@ function _locale_rebuild_js($langcode = NULL) {
   if (!empty($translations)) {
 
     $data = "Drupal.locale = { ";
-
-    $locale_plurals = variable_get('locale_translation_plurals', array());
+    $locale_plurals = state()->get('locale.translation.plurals') ?: array();
     if (!empty($locale_plurals[$language->langcode])) {
       $data .= "'pluralFormula': function (\$n) { return Number({$locale_plurals[$language->langcode]['formula']}); }, ";
     }
@@ -1239,10 +1240,10 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the filepath where JS translation files are stored.
   // There is (on purpose) no front end to edit that variable.
-  $dir = 'public://' . variable_get('locale_js_directory', 'languages');
+  $dir = 'public://' . $config->get('javascript.directory');
 
   // Delete old file, if we have no translations anymore, or a different file to be saved.
-  $locale_javascripts = variable_get('locale_translation_javascript', array());
+  $locale_javascripts = state()->get('locale.translation.javascript') ?: array();
   $changed_hash = !isset($locale_javascripts[$language->langcode]) || ($locale_javascripts[$language->langcode] != $data_hash);
   if (!empty($locale_javascripts[$language->langcode]) && (!$data || $changed_hash)) {
     file_unmanaged_delete($dir . '/' . $language->langcode . '_' . $locale_javascripts[$language->langcode] . '.js');
@@ -1286,7 +1287,7 @@ function _locale_rebuild_js($langcode = NULL) {
   // deleted). Act only if some operation was executed that changed the hash
   // code.
   if ($status && $changed_hash) {
-    variable_set('locale_translation_javascript', $locale_javascripts);
+    state()->set('locale.translation.javascript', $locale_javascripts);
   }
 
   // Log the operation and return success flag.

@@ -70,7 +70,7 @@ function translation_node_overview(Node $node) {
         $query = array('query' => array('translation' => $node->nid, 'target' => $langcode));
         if (!empty($links->links[$langcode]['href'])) {
           $options['add'] = array(
-            'title' => t('add translation'),
+            'title' => t('Add translation'),
           ) + $links->links[$langcode];
           $options['add'] = NestedArray::mergeDeep($options['add'], $query);
         }

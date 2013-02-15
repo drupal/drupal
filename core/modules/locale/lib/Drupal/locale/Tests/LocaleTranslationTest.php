@@ -215,6 +215,7 @@ class LocaleTranslationTest extends WebTestBase {
   function testJavaScriptTranslation() {
     $user = $this->drupalCreateUser(array('translate interface', 'administer languages', 'access administration pages'));
     $this->drupalLogin($user);
+    $config = config('locale.settings');
 
     $langcode = 'xx';
     // The English name for the language. This will be translated.
@@ -258,8 +259,8 @@ class LocaleTranslationTest extends WebTestBase {
     // Trigger JavaScript translation parsing and building.
     _locale_rebuild_js($langcode);
 
-    $locale_javascripts = variable_get('locale_translation_javascript', array());
-    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
+    $locale_javascripts = state()->get('locale.translation.javascript') ?: array();
+    $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('not found'))));
 
     // Test JavaScript translation rebuilding.

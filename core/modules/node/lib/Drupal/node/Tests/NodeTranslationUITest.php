@@ -168,7 +168,7 @@ class NodeTranslationUITest extends EntityTranslationUITest {
 
     // Visit translation page.
     $this->drupalGet('node/' . $article->nid . '/translations');
-    $this->assertRaw('no translatable fields');
+    $this->assertRaw('No translatable fields');
   }
 
   /**

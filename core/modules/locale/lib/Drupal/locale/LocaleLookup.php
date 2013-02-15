@@ -78,7 +78,7 @@ class LocaleLookup extends CacheArray {
     // the exact list of strings used on a page. From a performance
     // perspective that is a really bad idea, so we have no user
     // interface for this. Be careful when turning this option off!
-    if (variable_get('locale_cache_strings', 1)) {
+    if (config('locale.settings')->get('cache_strings')) {
       $this->persist($offset);
     }
     return $value;

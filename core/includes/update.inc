@@ -469,10 +469,12 @@ function update_prepare_d8_language() {
       $prefixes[$language->language] = $language->prefix;
       $domains[$language->language] = $language->domain;
     }
-    variable_set('locale_translation_plurals', $plurals);
-    variable_set('locale_translation_javascript', $javascript);
-    variable_set('locale_language_negotiation_url_prefixes', $prefixes);
-    variable_set('locale_language_negotiation_url_domains', $domains);
+    state()->set('locale.translation.plurals', $plurals);
+    state()->set('locale.translation.javascript', $javascript);
+    config('language.negotiation')
+      ->set('url.prefixes', $prefixes)
+      ->set('url.domains', $domains)
+      ->save();
 
     // Drop now unneeded columns.
     db_drop_field('languages', 'plurals');
