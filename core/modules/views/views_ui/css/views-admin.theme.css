@@ -1102,10 +1102,6 @@ div.messages {
 
 /* @group Buttons */
 
-.dropbutton,
-.dropbutton-wrapper input {
-  text-transform: lowercase;
-}
 .dropbutton-multiple {
   position: absolute;
 }
