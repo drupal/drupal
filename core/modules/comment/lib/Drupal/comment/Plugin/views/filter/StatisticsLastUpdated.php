@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_filter_handlers
  *
  * @Plugin(
- *   id = "ces_last_updated",
+ *   id = "comment_ces_last_updated",
  *   module = "comment"
  * )
  */
