@@ -5,7 +5,7 @@
  * User page callbacks for the Comment module.
  */
 
-use Drupal\core\Entity\Entity;
+use Drupal\core\Entity\EntityInterface;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -37,9 +37,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *     - comment_parent: If the comment is a reply to another comment.
  *   - comment_form: The comment form as a renderable array.
  */
-function comment_reply(Drupal\Core\Entity\EntityInterface $entity, $field_name, $pid = NULL) {
+function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
   // Set the breadcrumb trail.
-  // @todo - test behaviour when entities don't have uris.
   $uri = $entity->uri();
   drupal_set_breadcrumb(array(
     l(t('Home'), NULL),
@@ -162,10 +161,10 @@ function comment_approve($cid) {
  *   (optional) Some comments are replies to other comments. In those cases,
  *   $pid is the parent comment's comment ID. Defaults to NULL.
  *
- * @throw Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+ * @throw \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
  *   When there are no comment fields attached to the node.
  */
-function comment_node_redirect(\Drupal\node\Plugin\Core\Entity\Node $node, $pid = NULL) {
+function comment_node_redirect(Node $node, $pid = NULL) {
   $fields = comment_get_comment_fields('node');
   foreach ($fields as $field_name => $detail) {
     // Pick the first comment field found on the node.
