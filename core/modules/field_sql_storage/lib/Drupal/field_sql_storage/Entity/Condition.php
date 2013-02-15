@@ -56,6 +56,11 @@ class Condition extends ConditionBase {
     return $this->condition($field, NULL, 'IS NULL', $langcode);
   }
 
+  /**
+   * Translates the string operators to SQL equivalents.
+   *
+   * @param array $condition
+   */
   protected function translateCondition(&$condition) {
     switch ($condition['operator']) {
       case 'STARTS_WITH':

@@ -7,13 +7,52 @@
 
 namespace Drupal\field_sql_storage\Entity;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * The SQL storage entity query class.
  */
-class Query extends QueryBase {
+class Query extends QueryBase implements QueryInterface {
+
+  /**
+   * Contains the entity info for the entity type of that query.
+   *
+   * @var array
+   *
+   * @see \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityInfo;
+
+  /**
+   * The build sql select query.
+   *
+   * @var \Drupal\Core\Database\Query\SelectInterface
+   */
+  protected $sqlQuery;
+
+  /**
+   * An array of fields keyed by the field alias.
+   *
+   * Each entry correlates to the arguments of
+   * \Drupal\Core\Database\Query\SelectInterface::addField(), so the first one
+   * is the table alias, the second one the field and the last one optional the
+   * field alias.
+   *
+   * @var array
+   */
+  protected $sqlFields = array();
+
+  /**
+   * An array of strings added as to the group by, keyed by the string to avoid
+   * duplicates.
+   *
+   * @var array
+   */
+  protected $sqlGroupBy = array();
 
   /**
    * @var \Drupal\Core\Database\Connection
@@ -21,18 +60,31 @@ class Query extends QueryBase {
   protected $connection;
 
   /**
+   * Stores the entity manager used by the query.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a query object.
+   *
    * @param string $entity_type
    *   The entity type.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager storing the entity info.
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to run the query against.
    */
-  public function __construct($entity_type, $conjunction, $connection) {
-    parent::__construct($entity_type, $conjunction);
+  public function __construct($entity_type, EntityManager $entity_manager, $conjunction, Connection $connection) {
+    parent::__construct($entity_type, $conjunction, $connection);
+    $this->entityManager = $entity_manager;
     $this->connection = $connection;
   }
+
 
   /**
    * Implements Drupal\Core\Entity\Query\QueryInterface::conditionGroupFactory().
@@ -42,97 +94,137 @@ class Query extends QueryBase {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::execute().
+   * Implements \Drupal\Core\Entity\Query\QueryInterface::execute().
    */
   public function execute() {
+    return $this
+      ->prepare()
+      ->compile()
+      ->addSort()
+      ->finish()
+      ->result();
+  }
+
+  /**
+   * Prepares the basic query with proper metadata/tags and base fields.
+   *
+   * @throws \Drupal\Core\Entity\Query\QueryException
+   *   Thrown if the base table does not exists.
+   *
+   * @return \Drupal\field_sql_storage\Entity\Query
+   *   Returns the called object.
+   */
+  protected function prepare() {
     $entity_type = $this->entityType;
-    // @todo change to a method call once http://drupal.org/node/1892462 is in.
-    $entity_info = entity_get_info($entity_type);
-    if (!isset($entity_info['base_table'])) {
+    $this->entityInfo = $this->entityManager->getDefinition($entity_type);
+    if (!isset($this->entityInfo['base_table'])) {
       throw new QueryException("No base table, invalid query.");
     }
-    $base_table = $entity_info['base_table'];
+    $base_table = $this->entityInfo['base_table'];
     $simple_query = TRUE;
-    if (isset($entity_info['data_table'])) {
+    if (isset($this->entityInfo['data_table'])) {
       $simple_query = FALSE;
     }
-    $sqlQuery = $this->connection->select($base_table, 'base_table', array('conjunction' => $this->conjunction));
-    $sqlQuery->addMetaData('entity_type', $entity_type);
-    $id_field = $entity_info['entity_keys']['id'];
-    $fields[$id_field] = TRUE;
-    if (empty($entity_info['entity_keys']['revision'])) {
-      // Add the key field for fetchAllKeyed(). When there is no revision
-      // support, this is the entity key.
-      $sqlQuery->addField('base_table', $entity_info['entity_keys']['id']);
+    $this->sqlQuery = $this->connection->select($base_table, 'base_table', array('conjunction' => $this->conjunction));
+    $this->sqlQuery->addMetaData('entity_type', $entity_type);
+    $id_field = $this->entityInfo['entity_keys']['id'];
+    // Add the key field for fetchAllKeyed().
+    if (empty($this->entityInfo['entity_keys']['revision'])) {
+      // When there is no revision support, the key field is the entity key.
+      $this->sqlFields["base_table.$id_field"] = array('base_table', $id_field);
+      // Now add the value column for fetchAllKeyed(). This is always the
+      // entity id.
+      $this->sqlFields["base_table.$id_field" . '_1'] = array('base_table', $id_field);
     }
     else {
-      // Add the key field for fetchAllKeyed(). When there is revision
-      // support, this is the revision key.
-      $revision_field = $entity_info['entity_keys']['revision'];
-      $fields[$revision_field] = TRUE;
-      $sqlQuery->addField('base_table', $revision_field);
+      // When there is revision support, the key field is the revision key.
+      $revision_field = $this->entityInfo['entity_keys']['revision'];
+      $this->sqlFields["base_table.$revision_field"] = array('base_table', $revision_field);
+      // Now add the value column for fetchAllKeyed(). This is always the
+      // entity id.
+      $this->sqlFields["base_table.$id_field"] = array('base_table', $id_field);
     }
-    // Now add the value column for fetchAllKeyed(). This is always the
-    // entity id.
-    $sqlQuery->addField('base_table', $id_field);
     if ($this->accessCheck) {
-      $sqlQuery->addTag($entity_type . '_access');
+      $this->sqlQuery->addTag($entity_type . '_access');
     }
-    $sqlQuery->addTag('entity_query');
-    $sqlQuery->addTag('entity_query_' . $this->entityType);
+    $this->sqlQuery->addTag('entity_query');
+    $this->sqlQuery->addTag('entity_query_' . $this->entityType);
 
     // Add further tags added.
     if (isset($this->alterTags)) {
       foreach ($this->alterTags as $tag => $value) {
-        $sqlQuery->addTag($tag);
+        $this->sqlQuery->addTag($tag);
       }
     }
 
     // Add further metadata added.
     if (isset($this->alterMetaData)) {
       foreach ($this->alterMetaData as $key => $value) {
-        $sqlQuery->addMetaData($key, $value);
+        $this->sqlQuery->addMetaData($key, $value);
       }
     }
     // This now contains first the table containing entity properties and
     // last the entity base table. They might be the same.
-    $sqlQuery->addMetaData('age', $this->age);
-    $sqlQuery->addMetaData('simple_query', $simple_query);
-    $this->condition->compile($sqlQuery);
+    $this->sqlQuery->addMetaData('age', $this->age);
+    $this->sqlQuery->addMetaData('simple_query', $simple_query);
+    return $this;
+  }
+
+  /**
+   * Compiles the conditions.
+   *
+   * @return \Drupal\field_sql_storage\Entity\Query
+   *   Returns the called object.
+   */
+  protected function compile() {
+    $this->condition->compile($this->sqlQuery);
+    return $this;
+  }
+
+  /**
+   * Adds the sort to the build query.
+   *
+   * @return \Drupal\field_sql_storage\Entity\Query
+   *   Returns the called object.
+   */
+  protected function addSort() {
     if ($this->count) {
-      $this->sort = FALSE;
+      $this->sort = array();
     }
     // Gather the SQL field aliases first to make sure every field table
     // necessary is added. This might change whether the query is simple or
     // not. See below for more on simple queries.
     $sort = array();
     if ($this->sort) {
-      $tables = new Tables($sqlQuery);
-      foreach ($this->sort as $property => $data) {
-        $sort[$property] = isset($fields[$property]) ? $property : $tables->addField($property, 'LEFT', $data['langcode']);
+      foreach ($this->sort as $key => $data) {
+        $sort[$key] = $this->getSqlField($data['field'], $data['langcode']);
       }
     }
+    $simple_query = $this->isSimpleQuery();
     // If the query is set up for paging either via pager or by range or a
     // count is requested, then the correct amount of rows returned is
     // important. If the entity has a data table or multiple value fields are
     // involved then each revision might appear in several rows and this needs
     // a significantly more complex query.
-    $simple_query = (!$this->pager && !$this->range && !$this->count) || $sqlQuery->getMetaData('simple_query');
     if (!$simple_query) {
       // First, GROUP BY revision id (if it has been added) and entity id.
       // Now each group contains a single revision of an entity.
-      foreach (array_keys($fields) as $field) {
-        $sqlQuery->groupBy($field);
+      foreach ($this->sqlFields as $field) {
+        $group_by = "$field[0].$field[1]";
+        $this->sqlGroupBy[$group_by] = $group_by;
       }
     }
     // Now we know whether this is a simple query or not, actually do the
     // sorting.
-    foreach ($sort as $property => $sql_alias) {
-      $direction = $this->sort[$property]['direction'];
-      if ($simple_query || isset($fields[$property])) {
+    foreach ($sort as $key => $sql_alias) {
+      $direction = $this->sort[$key]['direction'];
+      if ($simple_query || isset($this->sqlGroupBy[$sql_alias])) {
         // Simple queries, and the grouped columns of complicated queries
         // can be ordered normally, without the aggregation function.
-        $sqlQuery->orderBy($sql_alias, $direction);
+        $this->sqlQuery->orderBy($sql_alias, $direction);
+        if (!isset($this->sqlFields[$sql_alias])) {
+          $this->sqlFields[$sql_alias] = explode('.', $sql_alias);
+        }
       }
       else {
         // Order based on the smallest element of each group if the
@@ -140,21 +232,80 @@ class Query extends QueryBase {
         // if the direction is descending.
         $function = $direction == 'ASC' ? 'min' : 'max';
         $expression = "$function($sql_alias)";
-        $sqlQuery->addExpression($expression, "order_by_{$property}_$direction");
-        $sqlQuery->orderBy($expression, $direction);
+        $this->sqlQuery->addExpression($expression);
+        $this->sqlQuery->orderBy($expression, $direction);
       }
     }
+    return $this;
+  }
+
+  /**
+   * Finish the query by adding fields, GROUP BY and range.
+   *
+   * @return \Drupal\field_sql_storage\Entity\Query
+   *   Returns the called object.
+   */
+  protected function finish() {
     $this->initializePager();
     if ($this->range) {
-      $sqlQuery->range($this->range['start'], $this->range['length']);
+      $this->sqlQuery->range($this->range['start'], $this->range['length']);
     }
+   foreach ($this->sqlGroupBy as $field) {
+      $this->sqlQuery->groupBy($field);
+    }
+    foreach ($this->sqlFields as $field) {
+      $this->sqlQuery->addField($field[0], $field[1], isset($field[2]) ? $field[2] : NULL);
+    }
+    return $this;
+  }
+
+  /**
+   * Executes the query and returns the result.
+   *
+   * @return int|array
+   *   Returns the query result as entity IDs.
+   */
+  protected function result() {
     if ($this->count) {
-      return $sqlQuery->countQuery()->execute()->fetchField();
+      return $this->sqlQuery->countQuery()->execute()->fetchField();
     }
     // Return a keyed array of results. The key is either the revision_id or
     // the entity_id depending on whether the entity type supports revisions.
     // The value is always the entity id.
-    return $sqlQuery->execute()->fetchAllKeyed();
+    return $this->sqlQuery->execute()->fetchAllKeyed();
+  }
+
+  protected function getSqlField($field, $langcode) {
+    if (!isset($this->tables)) {
+      $this->tables = new Tables($this->sqlQuery);
+    }
+    $base_property = "base_table.$field";
+    if (isset($this->sqlFields[$base_property])) {
+      return $base_property;
+    }
+    else {
+      return $this->tables->addField($field, 'LEFT', $langcode);
+    }
+  }
+
+  /**
+   * Returns whether the query requires GROUP BY and ORDER BY MIN/MAX.
+   *
+   * @return bool
+   */
+  protected function isSimpleQuery() {
+    return (!$this->pager && !$this->range && !$this->count) || $this->sqlQuery->getMetaData('simple_query');
+  }
+
+  /**
+   * Implements the magic __clone method.
+   *
+   * Reset fields and GROUP BY when cloning.
+   */
+  public function __clone() {
+    parent::__clone();
+    $this->sqlFields = array();
+    $this->sqlGroupBy = array();
   }
 
 }
