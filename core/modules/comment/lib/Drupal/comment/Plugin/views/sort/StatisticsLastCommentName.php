@@ -28,7 +28,7 @@ class StatisticsLastCommentName extends SortPluginBase {
     $definition = array(
       'table' => 'users',
       'field' => 'uid',
-      'left_table' => $this->tableAlias,
+      'left_table' => 'comment_entity_statistics',
       'left_field' => 'last_comment_uid',
     );
     $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);

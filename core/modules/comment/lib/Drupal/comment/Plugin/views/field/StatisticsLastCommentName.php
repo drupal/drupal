@@ -30,7 +30,7 @@ class StatisticsLastCommentName extends FieldPluginBase {
     $definition = array(
       'table' => 'users',
       'field' => 'uid',
-      'left_table' => $this->tableAlias,
+      'left_table' => 'comment_entity_statistics',
       'left_field' => 'last_comment_uid',
       'extra' => array(
         array(
@@ -43,7 +43,7 @@ class StatisticsLastCommentName extends FieldPluginBase {
     $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
     // nes_user alias so this can work with the sort handler, below.
-//    $this->user_table = $this->query->add_relationship(NULL, $join, 'users', $this->relationship);
+    // $this->user_table = $this->query->add_relationship('ces_users', $join, 'users', $this->relationship);
     $this->user_table = $this->query->ensure_table('ces_users', $this->relationship, $join);
 
     $this->field_alias = $this->query->add_field(NULL, "COALESCE($this->user_table.name, $this->tableAlias.$this->field)", $this->tableAlias . '_' . $this->field);
