@@ -139,6 +139,8 @@ class FilterAdminTest extends WebTestBase {
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
     $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->assertUrl('admin/config/content/formats');
+    $this->drupalGet('admin/config/content/formats/' . $filtered);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Allowed HTML tag added.');
 
     $result = db_query('SELECT * FROM {cache_filter}')->fetchObject();
@@ -155,6 +157,8 @@ class FilterAdminTest extends WebTestBase {
     $edit['filters[' . $second_filter . '][weight]'] = 1;
     $edit['filters[' . $first_filter . '][weight]'] = 2;
     $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertUrl('admin/config/content/formats');
+    $this->drupalGet('admin/config/content/formats/' . $filtered);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, 'Order saved successfully.');
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, 'Order saved successfully.');
 
@@ -180,18 +184,20 @@ class FilterAdminTest extends WebTestBase {
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
     $edit['filters[' . $first_filter . '][status]'] = TRUE;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), 'New filter created.');
 
     drupal_static_reset('filter_formats');
     $format = filter_format_load($edit['format']);
     $this->assertNotNull($format, 'Format found in database.');
-
+    $this->drupalGet('admin/config/content/formats/' . $format->format);
     $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', '', 'Role found.');
     $this->assertFieldByName('filters[' . $second_filter . '][status]', '', 'Line break filter found.');
     $this->assertFieldByName('filters[' . $first_filter . '][status]', '', 'Url filter found.');
 
     // Disable new filter.
     $this->drupalPost('admin/config/content/formats/' . $format->format . '/disable', array(), t('Disable'));
+    $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('Disabled text format %format.', array('%format' => $edit['name'])), 'Format successfully disabled.');
 
     // Allow authenticated users on full HTML.
@@ -200,6 +206,7 @@ class FilterAdminTest extends WebTestBase {
     $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 0;
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
+    $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully updated.');
 
     // Switch user.
@@ -244,13 +251,17 @@ class FilterAdminTest extends WebTestBase {
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
     $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->assertUrl('admin/config/content/formats');
+    $this->drupalGet('admin/config/content/formats/' . $filtered);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Changes reverted.');
 
     // Full HTML.
     $edit = array();
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = FALSE;
     $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
+    $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully reverted.');
+    $this->drupalGet('admin/config/content/formats/' . $full);
     $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'], 'Changes reverted.');
 
     // Filter order.
@@ -258,6 +269,8 @@ class FilterAdminTest extends WebTestBase {
     $edit['filters[' . $second_filter . '][weight]'] = 2;
     $edit['filters[' . $first_filter . '][weight]'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
+    $this->assertUrl('admin/config/content/formats');
+    $this->drupalGet('admin/config/content/formats/' . $filtered);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], 'Changes reverted.');
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], 'Changes reverted.');
   }

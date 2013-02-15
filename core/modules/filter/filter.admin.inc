@@ -370,6 +370,8 @@ function filter_admin_format_form_submit($form, &$form_state) {
       drupal_set_message(t('The text format %format has been updated.', array('%format' => $format->name)));
       break;
   }
+
+  $form_state['redirect'] = 'admin/config/content/formats';
 }
 
 /**
