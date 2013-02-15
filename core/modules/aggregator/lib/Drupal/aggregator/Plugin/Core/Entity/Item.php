@@ -57,6 +57,13 @@ class Item extends EntityNG implements ContentEntityInterface {
   public $title;
 
   /**
+   * The feed language code.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldInterface
+   */
+  public $langcode;
+
+  /**
    * Link to the feed item.
    *
    * @var \Drupal\Core\Entity\Field\FieldInterface

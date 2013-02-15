@@ -30,6 +30,14 @@ class FeedFormController extends EntityFormControllerNG {
       '#description' => t('The name of the feed (or the name of the website providing the feed).'),
       '#required' => TRUE,
     );
+
+    $form['langcode'] = array(
+      '#title' => t('Language'),
+      '#type' => 'language_select',
+      '#default_value' => $feed->language()->langcode,
+      '#languages' => LANGUAGE_ALL,
+    );
+
     $form['url'] = array(
       '#type' => 'url',
       '#title' => t('URL'),

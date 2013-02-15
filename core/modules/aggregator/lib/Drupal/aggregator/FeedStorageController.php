@@ -127,6 +127,11 @@ class FeedStorageController extends DatabaseStorageControllerNG {
       'description' => t('The title of the feed.'),
       'type' => 'string_field',
     );
+    $fields['langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t('The feed language code.'),
+      'type' => 'language_field',
+    );
     $fields['url'] = array(
       'label' => t('URL'),
       'description' => t('The URL to the feed.'),
