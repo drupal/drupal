@@ -275,13 +275,13 @@ function node_revision_overview($node) {
                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $links['revert'] = array(
-          'title' => t('revert'),
+          'title' => t('Revert'),
           'href' => "node/$node->nid/revisions/$revision->vid/revert",
         );
       }
       if ($delete_permission) {
         $links['delete'] = array(
-          'title' => t('delete'),
+          'title' => t('Delete'),
           'href' => "node/$node->nid/revisions/$revision->vid/delete",
         );
       }

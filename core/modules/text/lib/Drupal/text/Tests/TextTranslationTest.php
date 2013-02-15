@@ -81,7 +81,7 @@ class TextTranslationTest extends WebTestBase {
     $this->drupalPost('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->drupalGet("node/$node->nid/translate");
-    $this->clickLink(t('add translation'));
+    $this->clickLink(t('Add translation'));
     $this->assertFieldByXPath("//textarea[@name='body[$langcode][0][value]']", $body, 'The textfield widget is populated.');
   }
 
@@ -128,7 +128,7 @@ class TextTranslationTest extends WebTestBase {
     // Translate the article in french.
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet("node/$node->nid/translate");
-    $this->clickLink(t('add translation'));
+    $this->clickLink(t('Add translation'));
     $this->assertNoText($body[0], t('The body field with delta @delta is hidden.', array('@delta' => 0)));
     $this->assertText($body[1], t('The body field with delta @delta is shown.', array('@delta' => 1)));
   }

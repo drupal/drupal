@@ -556,21 +556,21 @@ function node_admin_nodes() {
     $operations = array();
     if (node_access('update', $node)) {
       $operations['edit'] = array(
-        'title' => t('edit'),
+        'title' => t('Edit'),
         'href' => 'node/' . $node->nid . '/edit',
         'query' => $destination,
       );
     }
     if (node_access('delete', $node)) {
       $operations['delete'] = array(
-        'title' => t('delete'),
+        'title' => t('Delete'),
         'href' => 'node/' . $node->nid . '/delete',
         'query' => $destination,
       );
     }
     if (module_invoke('translation_entity', 'enabled', 'node', $node->bundle())) {
       $operations['translate'] = array(
-        'title' => t('translate'),
+        'title' => t('Translate'),
         'href' => 'node/' . $node->nid . '/translations',
         'query' => $destination,
       );
