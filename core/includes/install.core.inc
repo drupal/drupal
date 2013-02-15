@@ -1026,6 +1026,11 @@ function install_settings_form($form, &$form_state, &$install_state) {
 function install_settings_form_validate($form, &$form_state) {
   $driver = $form_state['values']['driver'];
   $database = $form_state['values'][$driver];
+  $drivers = drupal_get_database_types();
+  $reflection = new \ReflectionClass($drivers[$driver]);
+  $install_namespace = $reflection->getNamespaceName();
+  // Cut the trailing \Install from namespace.
+  $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
   $database['driver'] = $driver;
 
   // TODO: remove when PIFR will be updated to use 'db_prefix' instead of

@@ -620,7 +620,13 @@ abstract class Connection extends PDO {
   public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
       $driver = $this->driver();
-      $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\{$class}";
+      if (!empty($this->connectionOptions['namespace'])) {
+        $driver_class  = $this->connectionOptions['namespace'] . '\\' . $class;
+      }
+      else {
+        // Fallback for Drupal 7 settings.php.
+        $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\{$class}";
+      }
       $this->driverClasses[$class] = class_exists($driver_class) ? $driver_class : $class;
     }
     return $this->driverClasses[$class];
