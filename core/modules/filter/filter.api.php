@@ -54,6 +54,15 @@
  *   Each value is an associative array describing the filter, with the
  *   following elements (all are optional except as noted):
  *   - title: (required) An administrative summary of what the filter does.
+ *   - type: (required) A classification of the filter's purpose. This is one
+ *     of the following:
+ *     - FILTER_TYPE_HTML_RESTRICTOR: HTML tag and attribute restricting
+ *       filters.
+ *     - FILTER_TYPE_MARKUP_LANGUAGE: Non-HTML markup language filters that
+ *       generate HTML.
+ *     - FILTER_TYPE_TRANSFORM_IRREVERSIBLE: Irreversible transformation
+ *       filters.
+ *     - FILTER_TYPE_TRANSFORM_REVERSIBLE: Reversible transformation filters.
  *   - description: Additional administrative information about the filter's
  *     behavior, if needed for clarification.
  *   - settings callback: The name of a function that returns configuration
@@ -81,6 +90,7 @@
 function hook_filter_info() {
   $filters['filter_html'] = array(
     'title' => t('Limit allowed HTML tags'),
+    'type' => FILTER_TYPE_HTML_RESTRICTOR,
     'description' => t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.'),
     'process callback' => '_filter_html',
     'settings callback' => '_filter_html_settings',
@@ -93,6 +103,7 @@ function hook_filter_info() {
   );
   $filters['filter_autop'] = array(
     'title' => t('Convert line breaks'),
+    'type' => FILTER_TYPE_MARKUP_LANGUAGE,
     'description' => t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt;) tags.'),
     'process callback' => '_filter_autop',
     'tips callback' => '_filter_autop_tips',
