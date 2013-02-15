@@ -3,11 +3,12 @@
  * Right-to-left styling for the Forum module.
  */
 
-#forum td.forum .icon {
+#forum .icon {
   float: right;
   margin: 0 0 0 9px;
 }
 #forum div.indent {
+  margin-left: 0;
   margin-right: 20px;
 }
 .forum-topic-navigation {
