@@ -275,13 +275,13 @@ function comment_entity_bundle_info() {
  * @param string $field_name
  *   The name of the field to load.
  *
- * @return array|false
- *   The field array as returned by field_info_field() or FALSE if $field_name
+ * @return string|false
+ *   The field name as returned by field_info_field() or FALSE if $field_name
  *   is not a comment field.
  */
 function comment_field_name_load($field_name) {
   if (($field = field_info_field($field_name)) && $field['type'] == 'comment') {
-    return $field;
+    return $field['field_name'];
   }
 
   return FALSE;
