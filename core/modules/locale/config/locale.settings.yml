@@ -1,9 +1,12 @@
+cache_strings: '1'
+javascript:
+  directory: 'languages'
 translation:
   use_source: 'remote_and_local'
-  check_disabled_modules: false
+  check_disabled_modules: '0'
   default_filename: '%project-%version.%language.po'
   default_server_pattern: 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po'
-  overwrite_customized: false
-  overwrite_not_customized: true
+  overwrite_customized: '0'
+  overwrite_not_customized: '1'
   update_interval_days: '0'
   path: ''
