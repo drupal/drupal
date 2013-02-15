@@ -272,14 +272,15 @@ function comment_entity_bundle_info() {
 /**
  * Menu callback for loading the actual name of a comment field.
  *
- * @param string $arg
- *   The field name with underscores as hyphens.
+ * @param string $field_name
+ *   The name of the field to load.
  *
- * @return string
- *   The actual field name with hyphens returned to underscores.
+ * @return string|false
+ *   The field name as returned by field_info_field() or FALSE if $field_name
+ *   is not a comment field.
  */
-function comment_field_name_load($arg) {
-  if (($field = field_info_field($arg)) && $field['type'] == 'comment') {
+function comment_field_name_load($field_name) {
+  if (($field = field_info_field($field_name)) && $field['type'] == 'comment') {
     return $field['field_name'];
   }
 
@@ -446,11 +447,13 @@ function comment_menu() {
  *
  * Loads the entity given and entity id and entity type
  *
+ * @param integer $entity_id
+ *   The entity ID.
  * @param array $args
  *   The menu args passed from the %map load argument.
  *
- * @return mixed
- *   Returns Drupal\entity\Entity or FALSE if not found.
+ * @return \Drupal\Core\Entity\EntityInterface|false
+ *   Returns an entity object or FALSE if not found.
  */
 function comment_entity_reply_load($entity_id, $args) {
   list(, ,$entity_type, $entity_id, $field_name) = $args;
@@ -469,7 +472,7 @@ function comment_entity_reply_load($entity_id, $args) {
  * @return bool
  *   TRUE or FALSE if the user has access
  */
-function comment_reply_access(\Drupal\Core\Entity\EntityInterface $entity) {
+function comment_reply_access(EntityInterface $entity) {
   $function = $entity->entityType() . '_access';
   // @todo replace this with entity access controls once generic access
   // controller lands.
@@ -659,7 +662,7 @@ function comment_get_recent($number = 10) {
  * @return
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
-function comment_new_page_count($num_comments, $new_replies, \Drupal\Core\Entity\EntityInterface $entity, $field_name = 'comment') {
+function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
   $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
   $mode = $instance['settings']['comment']['comment_default_mode'];
   $comments_per_page = $instance['settings']['comment']['comment_default_per_page'];
@@ -831,7 +834,7 @@ function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NU
  * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
  * to consider the trailing "/" so we use a substring only.
  */
-function comment_get_thread(\Drupal\Core\Entity\EntityInterface $entity, $field_name, $mode, $comments_per_page) {
+function comment_get_thread(EntityInterface $entity, $field_name, $mode, $comments_per_page) {
   $query = db_select('comment', 'c')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   $query->addField('c', 'cid');
@@ -862,7 +865,7 @@ function comment_get_thread(\Drupal\Core\Entity\EntityInterface $entity, $field_
     $query->condition('c.status', COMMENT_PUBLISHED);
     $count_query->condition('c.status', COMMENT_PUBLISHED);
   }
-  if ($mode == COMMENT_MODE_FLAT) {
+  if ($mode === COMMENT_MODE_FLAT) {
     $query->orderBy('c.cid', 'ASC');
   }
   else {
@@ -957,7 +960,7 @@ function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
  * @return
  *   A structured array of links.
  */
-function comment_links(Comment $comment, \Drupal\Core\Entity\EntityInterface $entity, $field_name) {
+function comment_links(Comment $comment, EntityInterface $entity, $field_name) {
   $links = array();
   $items = field_get_items($entity, $field_name);
   $status = isset($items[0]['comment']) ? $items[0]['comment'] : COMMENT_OPEN;
@@ -1055,8 +1058,10 @@ function comment_form_field_ui_field_edit_form_alter(&$form, $form_state) {
 
     // Hide required checkbox.
     $form['instance']['required']['#access'] = FALSE;
-    // Force cardinality to one.
+    // We only support posting one comment at the time so it doesn't make sense
+    // to let the site builder choose anything else.
     $form['field']['cardinality']['#options'] = drupal_map_assoc(array(1));
+    $form['field']['cardinality']['#access'] = FALSE;
   }
 }
 
@@ -2053,16 +2058,10 @@ function comment_rdf_mapping() {
 function comment_file_download_access($field, EntityInterface $entity, File $file) {
   if ($entity->entityType() == 'comment') {
     if (user_access('access comments') && $entity->status->value == COMMENT_PUBLISHED || user_access('administer comments')) {
-      // @todo replace this with entity access controls once generic access controller lands,
-      // @see http://drupal.org/node/1696660
-      $function = $entity->entity_type->value . '_access';
-      if (function_exists($function)) {
-        $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
-        return $function('view', $commented_entity);
+      $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
+      if ($commented_entity instanceof AccessibleInterface) {
+        return $commented_entity->access('view');
       }
-      // Return NULL as there is no entity access callback for this entity
-      // type, we rely on other modules intervening.
-      return;
     }
     return FALSE;
   }
