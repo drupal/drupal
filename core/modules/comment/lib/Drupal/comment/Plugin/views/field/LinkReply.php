@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\Core\Annotation\Plugin;
 
 /**
- * Field handler to present a link to delete a node.
+ * Field handler to present a link to reply to a comment.
  *
  * @ingroup views_field_handlers
  *
@@ -31,7 +31,7 @@ class LinkReply extends Link {
     $comment = $this->get_entity($values);
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "comment/reply/{$comment->entity_type}/{$comment->entity_id}/{$comment->field_name}/{$comment->id()}";
+    $this->options['alter']['path'] = "comment/reply/{$comment->entity_type->value}/{$comment->entity_id->value}/{$comment->field_name->value}/{$comment->id()}";
 
     return $text;
   }
