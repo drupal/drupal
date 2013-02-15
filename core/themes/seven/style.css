@@ -1552,7 +1552,6 @@ details.fieldset-no-legend {
   border-radius: 3px;
   text-decoration: none;
   padding: 6px 17px 6px 17px;
-  margin-left: 0;
 }
 .form-actions .button:focus,
 .form-actions .button:hover {

@@ -72,7 +72,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Translate the node into French.
     $this->drupalGet('node/' . $english_node->nid . '/translate');
-    $this->clickLink(t('add translation'));
+    $this->clickLink(t('Add translation'));
     $edit = array();
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();

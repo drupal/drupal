@@ -86,7 +86,7 @@ class EntityTranslationWorkflowsTest extends EntityTranslationTestBase {
     $this->assertWorkflows($this->administrator, $expected_status);
 
     // Check that translation permissions governate the associated operations.
-    $ops = array('create' => t('add'), 'update' => t('edit'), 'delete' => t('delete'));
+    $ops = array('create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete'));
     $translations_path = $this->controller->getBasePath($this->entity) . "/translations";
     foreach ($ops as $current_op => $label) {
       $user = $this->drupalCreateUser(array($this->getTranslatePermission(), "$current_op entity translations"));
@@ -135,7 +135,7 @@ class EntityTranslationWorkflowsTest extends EntityTranslationTestBase {
     // Check whether the user is allowed to create a translation.
     $add_translation_path = $translations_path . "/add/$default_langcode/$langcode";
     if ($expected_status['add_translation'] == 200) {
-      $this->clickLink('add');
+      $this->clickLink('Add');
       $this->assertUrl($add_translation_path, $options, 'The translation overview points to the translation form when creating translations.');
       // Check that the translation form does not contain shared elements for
       // translators.
@@ -155,13 +155,14 @@ class EntityTranslationWorkflowsTest extends EntityTranslationTestBase {
     if ($expected_status['edit_translation'] == 200) {
       $this->drupalGet($translations_path, $options);
       $editor = $expected_status['edit'] == 200;
-      $this->clickLink('edit', intval($editor));
 
       if ($editor) {
+        $this->clickLink('Edit', 2);
         // An editor should be pointed to the entity form in multilingual mode.
         $this->assertUrl($edit_path, $options, 'The translation overview points to the edit form for editors when editing translations.');
       }
       else {
+        $this->clickLink('Edit');
         // While a translator should be pointed to the translation form.
         $this->assertUrl($edit_translation_path, $options, 'The translation overview points to the translation form for translators when editing translations.');
         // Check that the translation form does not contain shared elements.

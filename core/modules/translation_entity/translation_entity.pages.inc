@@ -93,7 +93,7 @@ function translation_entity_overview(EntityInterface $entity) {
         }
 
         if (isset($links['edit'])) {
-          $links['edit']['title'] = t('edit');
+          $links['edit']['title'] = t('Edit');
         }
 
         $translation = $entity->translation[$langcode];
@@ -109,7 +109,7 @@ function translation_entity_overview(EntityInterface $entity) {
           $source_name = isset($languages[$source]) ? $languages[$source]->name : t('n/a');
           if ($controller->getTranslationAccess($entity, 'delete')) {
             $links['delete'] = isset($delete_links->links[$langcode]['href']) ? $delete_links->links[$langcode] : array('href' => $delete_links, 'language' => $language);
-            $links['delete']['title'] = t('delete');
+            $links['delete']['title'] = t('Delete');
           }
         }
       }
@@ -121,14 +121,14 @@ function translation_entity_overview(EntityInterface $entity) {
         if ($source != $langcode && $controller->getTranslationAccess($entity, 'create')) {
           if ($translatable) {
             $links['add'] = isset($add_links->links[$langcode]['href']) ? $add_links->links[$langcode] : array('href' => $add_path, 'language' => $language);
-            $links['add']['title'] = t('add');
+            $links['add']['title'] = t('Add');
           }
           elseif ($field_ui) {
             $entity_path = field_ui_bundle_admin_path($entity->entityType(), $entity->bundle());
             // Link directly to the fields tab to make it easier to find the
             // setting to enable translation on fields.
             $path = $entity_path . '/fields';
-            $links['nofields'] = array('title' => t('no translatable fields'), 'href' => $path, 'language' => $language);
+            $links['nofields'] = array('title' => t('No translatable fields'), 'href' => $path, 'language' => $language);
           }
         }
 

@@ -279,7 +279,7 @@ function locale_translate_edit_form($form, &$form_state) {
   if (isset($langcode)) {
     $strings = locale_translate_filter_load_strings();
 
-    $plural_formulas = variable_get('locale_translation_plurals', array());
+    $plural_formulas = state()->get('locale.translation.plurals') ?: array();
 
     foreach ($strings as $string) {
       // Cast into source string, will do for our purposes.

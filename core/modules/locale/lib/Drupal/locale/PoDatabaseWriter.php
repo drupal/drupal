@@ -154,7 +154,8 @@ class PoDatabaseWriter implements PoWriterInterface {
    */
   function setHeader(PoHeader $header) {
     $this->_header = $header;
-    $locale_plurals = variable_get('locale_translation_plurals', array());
+    $config = config('locale.settings');
+    $locale_plurals = state()->get('locale.translation.plurals') ?: array();
 
     // Check for options.
     $options = $this->getOptions();
@@ -178,7 +179,7 @@ class PoDatabaseWriter implements PoWriterInterface {
           'plurals' => $nplurals,
           'formula' => $formula,
         );
-        variable_set('locale_translation_plurals', $locale_plurals);
+        state()->set('locale.translation.plurals', $locale_plurals);
       }
     }
   }
