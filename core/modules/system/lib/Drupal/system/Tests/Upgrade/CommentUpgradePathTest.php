@@ -40,7 +40,6 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
 
     // Check that comments display on the node.
     $this->drupalGet('node/50');
-    $node = node_load(50);
     $this->assertText('Node title 50', 'Node 50 displayed after update.');
     $this->assertText('First test comment', 'Comment 1 displayed after update.');
     $this->assertText('Reply to first test comment', 'Comment 2 displayed after update.');
