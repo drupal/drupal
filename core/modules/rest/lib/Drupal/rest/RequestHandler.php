@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
  * Acts as intermediate request forwarder for resource plugins.
@@ -44,9 +45,16 @@ class RequestHandler extends ContainerAware {
     if (!empty($received)) {
       $definition = $resource->getDefinition();
       $class = $definition['serialization_class'];
-      // @todo Replace the format here with something we get from the HTTP
-      //   Content-type header. See http://drupal.org/node/1850704
-      $unserialized = $serializer->deserialize($received, $class, 'drupal_jsonld');
+      try {
+        // @todo Replace the format here with something we get from the HTTP
+        //   Content-type header. See http://drupal.org/node/1850704
+        $unserialized = $serializer->deserialize($received, $class, 'drupal_jsonld');
+      }
+      catch (UnexpectedValueException $e) {
+        $error['error'] = $e->getMessage();
+        $content = $serializer->serialize($error, 'drupal_jsonld');
+        return new Response($content, 400, array('Content-Type' => 'application/vnd.drupal.ld+json'));
+      }
     }
 
     // Invoke the operation on the resource plugin.
@@ -54,7 +62,12 @@ class RequestHandler extends ContainerAware {
       $response = $resource->{$method}($id, $unserialized, $request);
     }
     catch (HttpException $e) {
-      return new Response($e->getMessage(), $e->getStatusCode(), $e->getHeaders());
+      $error['error'] = $e->getMessage();
+      $content = $serializer->serialize($error, 'drupal_jsonld');
+      // Add the default content type, but only if the headers from the
+      // exception have not specified it already.
+      $headers = $e->getHeaders() + array('Content-Type' => 'application/vnd.drupal.ld+json');
+      return new Response($content, $e->getStatusCode(), $headers);
     }
 
     // Serialize the outgoing data for the response, if available.
