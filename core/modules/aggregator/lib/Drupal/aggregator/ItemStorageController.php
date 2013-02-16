@@ -87,6 +87,11 @@ class ItemStorageController extends DatabaseStorageControllerNG {
       'description' => t('The title of the feed item.'),
       'type' => 'string_field',
     );
+    $fields['langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t('The feed item language code.'),
+      'type' => 'language_field',
+    );
     $fields['link'] = array(
       'label' => t('Link'),
       'description' => t('The link of the feed item.'),

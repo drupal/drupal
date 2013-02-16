@@ -134,12 +134,18 @@ function drupal_get_database_types() {
   // contains a database.inc file. That allows us to drop in additional drivers
   // without modifying the installer.
   require_once DRUPAL_ROOT . '/core/includes/database.inc';
-  foreach (file_scan_directory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
+  // Allow any valid PHP identifier.
+  // @see http://www.php.net/manual/en/language.variables.basics.php.
+  $mask = '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/';
+  $files = file_scan_directory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, array('recurse' => FALSE));
+  if (is_dir(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database')) {
+    $files += file_scan_directory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, array('recurse' => FALSE));
+  }
+  foreach ($files as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {
       $drivers[$file->filename] = $file->uri;
     }
   }
-
   foreach ($drivers as $driver => $file) {
     $installer = db_installer_object($driver);
     if ($installer->installable()) {
@@ -954,5 +960,11 @@ function db_installer_object($driver) {
   // We cannot use Database::getConnection->getDriverClass() here, because
   // the connection object is not yet functional.
   $task_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Install\\Tasks";
-  return new $task_class();
+  if (class_exists($task_class)) {
+    return new $task_class();
+  }
+  else {
+    $task_class = "Drupal\\Driver\\Database\\{$driver}\\Install\\Tasks";
+    return new $task_class();
+  }
 }

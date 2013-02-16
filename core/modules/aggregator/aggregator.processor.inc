@@ -49,7 +49,7 @@ function aggregator_aggregator_process($feed) {
           $entry = reset($entry);
         }
         else {
-          $entry = entity_create('aggregator_item', array());
+          $entry = entity_create('aggregator_item', array('langcode' => $feed->language()->langcode));
         }
         if ($item['timestamp']) {
           $entry->timestamp->value = $item['timestamp'];

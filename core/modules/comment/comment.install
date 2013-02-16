@@ -687,7 +687,7 @@ function comment_update_8007(&$sandbox) {
     // We start with this node type.
     $sandbox['node_type'] = array_shift($sandbox['node_types']);
     $sandbox['#finished'] = 1;
-    $sandbox['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
+    $sandbox['max'] = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
   }
 
   // Set the initial values of comment fields for existing nodes. Note that
@@ -767,8 +767,10 @@ function comment_update_8007(&$sandbox) {
   }
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
-  $t = get_t();
-  return $t('Migrated existing node comment settings to field api.');
+  if ($sandbox['#finished'] === 1) {
+    $t = get_t();
+    return $t('Migrated existing node comment settings to field api.');
+  }
 }
 
 /**

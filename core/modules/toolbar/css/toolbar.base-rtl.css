@@ -5,7 +5,7 @@ html.js .toolbar {
   left: auto;
   right: 0;
 }
-.js .toolbar .bar li {
+.js .toolbar .bar .tab {
   float: right;
 }
 
@@ -17,13 +17,13 @@ html.js .toolbar {
   right: 0;
 }
 @media only screen {
-  .js .toolbar .bar li,
+  .js .toolbar .bar .tab,
   .js .toolbar .tray li {
     float: none;
   }
 }
 @media only screen and (min-width: 16.5em) {
-  .js .toolbar .bar li,
+  .js .toolbar .bar .tab,
   .js .toolbar .horizontal li {
     float: right;
   }

@@ -263,6 +263,36 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
+   * Tests updates with a hidden base theme.
+   */
+  function testUpdateHiddenBaseTheme() {
+    module_load_include('compare.inc', 'update');
+
+    // Enable the subtheme.
+    theme_enable(array('update_test_subtheme'));
+
+    // Add a project and initial state for base theme and subtheme.
+    $system_info = array(
+      // Hide the update_test_basetheme.
+      'update_test_basetheme' => array(
+        'project' => 'update_test_basetheme',
+        'hidden' => TRUE,
+      ),
+      // Show the update_test_subtheme.
+      'update_test_subtheme' => array(
+        'project' => 'update_test_subtheme',
+        'hidden' => FALSE,
+      ),
+    );
+    config('update_test.settings')->set('system_info', $system_info)->save();
+    $projects = update_get_projects();
+    $theme_data = system_rebuild_theme_data();
+    update_process_info_list($projects, $theme_data, 'theme', TRUE);
+
+    $this->assertTrue(!empty($projects['update_test_basetheme']), 'Valid base theme (update_test_basetheme) was found.');
+  }
+
+  /**
    * Makes sure that if we fetch from a broken URL, sane things happen.
    */
   function testUpdateBrokenFetchURL() {

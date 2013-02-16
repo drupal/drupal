@@ -133,6 +133,13 @@ function aggregator_schema() {
         'default' => '',
         'description' => 'Title of the feed.',
       ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this feed.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'url' => array(
         'type' => 'text',
         'not null' => TRUE,
@@ -232,6 +239,13 @@ function aggregator_schema() {
         'default' => '',
         'description' => 'Title of the feed item.',
       ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this feed item.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'link' => array(
         'type' => 'text',
         'not null' => TRUE,
@@ -292,4 +306,32 @@ function aggregrator_update_8000() {
     'aggregator_summary_items' => 'source.list_max',
     'aggregator_category_selector' => 'source.category_selector',
   ));
+}
+
+/**
+ * Adds the langcode field to {aggregator_item} and {aggregator_feed}.
+ */
+function aggregator_update_8001() {
+  // Add the field.
+  db_add_field('aggregator_feed', 'langcode', array(
+    'description' => 'The {language}.langcode of this feed.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  ));
+  db_add_field('aggregator_item', 'langcode', array(
+    'description' => 'The {language}.langcode of this feed item.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  ));
+  // Set langcode to LANGUAGE_DEFAULT.
+  db_update('aggregator_feed')
+    ->fields(array('langcode' => LANGUAGE_DEFAULT))
+    ->execute();
+  db_update('aggregator_item')
+    ->fields(array('langcode' => LANGUAGE_DEFAULT))
+    ->execute();
 }

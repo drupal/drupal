@@ -374,7 +374,13 @@ abstract class Database {
       throw new DriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
     }
 
-    $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
+    if (!empty(self::$databaseInfo[$key][$target]['namespace'])) {
+      $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
+    }
+    else {
+      // Fallback for Drupal 7 settings.php.
+      $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
+    }
     $new_connection = new $driver_class(self::$databaseInfo[$key][$target]);
     $new_connection->setTarget($target);
     $new_connection->setKey($key);

@@ -3166,6 +3166,7 @@ function drupal_classloader($class_loader = NULL) {
     $loader->registerNamespaces(array(
       'Drupal\Core' => DRUPAL_ROOT . '/core/lib',
       'Drupal\Component' => DRUPAL_ROOT . '/core/lib',
+      'Drupal\Driver' => DRUPAL_ROOT . '/drivers/lib',
     ));
 
     // Register namespaces and PEAR-like prefixes for vendor libraries managed
