@@ -14,13 +14,6 @@ class PageEditTest extends NodeTestBase {
   protected $web_user;
   protected $admin_user;
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node', 'contextual');
-
   public static function getInfo() {
     return array(
       'name' => 'Node edit',
@@ -32,8 +25,8 @@ class PageEditTest extends NodeTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('edit own page content', 'create page content', 'access contextual links'));
-    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'access contextual links'));
+    $this->web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
+    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes'));
   }
 
   /**
@@ -57,11 +50,14 @@ class PageEditTest extends NodeTestBase {
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
-    $edit_url = url("node/$node->nid/edit", array('absolute' => TRUE, 'query' => array('destination' => 'node/1')));
+    $edit_url = url("node/$node->nid/edit", array('absolute' => TRUE));
     $actual_url = $this->getURL();
     $this->assertEqual($edit_url, $actual_url, 'On edit page.');
 
     // Check that the title and body fields are displayed with the correct values.
+    $active = '<span class="element-invisible">' . t('(active tab)') . '</span>';
+    $link_text = t('!local-task-title!active', array('!local-task-title' => t('Edit'), '!active' => $active));
+    $this->assertText(strip_tags($link_text), 0, 'Edit tab found and marked active.');
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
 
