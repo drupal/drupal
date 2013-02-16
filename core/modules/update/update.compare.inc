@@ -80,16 +80,17 @@ function update_get_projects() {
 /**
  * Populates an array of project data.
  *
- * This iterates over a list of the installed modules or themes and groups them
- * by project and status. A few parts of this function assume that enabled
- * modules and themes are always processed first, and if disabled modules or
- * themes are being processed (there is a setting to control if disabled code
- * should be included or not in the 'Available updates' report), those are only
- * processed after $projects has been populated with information about the
- * enabled code. Modules and themes set as hidden are always ignored. This
- * function also records the latest change time on the .info files for each
- * module or theme, which is important data which is used when deciding if the
- * cached available update data should be invalidated.
+ * This iterates over a list of the installed modules or themes and groups
+ * them by project and status. A few parts of this function assume that
+ * enabled modules and themes are always processed first, and if disabled
+ * modules or themes are being processed (there is a setting to control if
+ * disabled code should be included in the Available updates report or not),
+ * those are only processed after $projects has been populated with
+ * information about the enabled code. 'Hidden' modules are always ignored.
+ * 'Hidden' themes are ignored only if they have no enabled sub-themes.
+ * This function also records the latest change time on the .info
+ * files for each module or theme, which is important data which is used when
+ * deciding if the cached available update data should be invalidated.
  *
  * @param $projects
  *   Reference to the array of project data of what's installed on this site.
@@ -108,19 +109,20 @@ function update_get_projects() {
  */
 function update_process_info_list(&$projects, $list, $project_type, $status, $additional_whitelist = array()) {
   foreach ($list as $file) {
-    // A disabled base theme of an enabled sub-theme still has all of its code
-    // run by the sub-theme, so we include it in our "enabled" projects list.
-    if ($status && !$file->status && !empty($file->sub_themes)) {
+    // A disabled or hidden base theme of an enabled sub-theme still has all
+    // of its code run by the sub-theme, so we include it in our "enabled"
+    // projects list.
+    if ($status && !empty($file->sub_themes)) {
       foreach ($file->sub_themes as $key => $name) {
         // Build a list of enabled sub-themes.
         if ($list[$key]->status) {
           $file->enabled_sub_themes[$key] = $name;
         }
       }
-      // If there are no enabled subthemes, we should ignore this base theme
-      // for the enabled case. If the site is trying to display disabled
-      // themes, we'll catch it then.
-      if (empty($file->enabled_sub_themes)) {
+      // If the theme is disabled and there are no enabled subthemes, we
+      // should ignore this base theme for the enabled case. If the site is
+      // trying to display disabled themes, we'll catch it then.
+      if (!$file->status && empty($file->enabled_sub_themes)) {
         continue;
       }
     }
@@ -134,8 +136,8 @@ function update_process_info_list(&$projects, $list, $project_type, $status, $ad
       continue;
     }
 
-    // Skip if it's a hidden module or theme.
-    if (!empty($file->info['hidden'])) {
+    // Skip if it's a hidden module or hidden theme without enabled sub-themes.
+    if (!empty($file->info['hidden']) && empty($file->enabled_sub_themes)) {
       continue;
     }
 

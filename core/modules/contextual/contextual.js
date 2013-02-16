@@ -57,8 +57,10 @@ Drupal.contextual.prototype.init = function() {
 
   // Create and append the contextual links trigger.
   var action = Drupal.t('Open');
+
+  var parentBlock = this.$region.find('h2').first().text();
   this.$trigger = $(Drupal.theme.contextualTrigger())
-    .text(Drupal.t('@action configuration options', {'@action': action}))
+    .text(Drupal.t('@action @parent configuration options', {'@action': action, '@parent': parentBlock}))
     // Set the aria-pressed state.
     .attr('aria-pressed', false)
     .prependTo(this.$wrapper);
@@ -151,8 +153,9 @@ Drupal.contextual.prototype.showLinks = function(show) {
   this.$wrapper.toggleClass('contextual-links-active', show);
   var isOpen = this.$wrapper.hasClass('contextual-links-active');
   var action = (isOpen) ? Drupal.t('Close') : Drupal.t('Open');
+  var parentBlock = this.$region.find('h2').first().text();
   this.$trigger
-    .text(Drupal.t('@action configuration options', {'@action': action}))
+    .text(Drupal.t('@action @parent configuration options', {'@action': action, '@parent': parentBlock}))
     // Set the aria-pressed state.
     .attr('aria-pressed', isOpen);
   // Mark the links as hidden if they are.

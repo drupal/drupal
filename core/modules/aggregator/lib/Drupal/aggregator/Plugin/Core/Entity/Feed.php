@@ -51,6 +51,13 @@ class Feed extends EntityNG implements ContentEntityInterface {
   public $title;
 
   /**
+   * The feed language code.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldInterface
+   */
+  public $langcode;
+
+  /**
    * URL to the feed.
    *
    * @var \Drupal\Core\Entity\Field\FieldInterface

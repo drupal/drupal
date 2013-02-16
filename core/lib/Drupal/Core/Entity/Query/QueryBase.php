@@ -12,7 +12,7 @@ use Drupal\Core\Database\Query\PagerSelectExtender;
 /**
  * The base entity query class.
  */
-abstract class QueryBase implements QueryInterface {
+abstract class QueryBase {
 
   /**
    * The entity type this query runs against.
@@ -22,7 +22,7 @@ abstract class QueryBase implements QueryInterface {
   protected $entityType;
 
   /**
-   * The sort data.
+   * The list of sorts.
    *
    * @var array
    */
@@ -38,9 +38,37 @@ abstract class QueryBase implements QueryInterface {
   /**
    * Conditions.
    *
-   * @var ConditionInterface
+   * @var \Drupal\Core\Entity\Query\ConditionInterface
    */
   protected $condition;
+
+  /**
+   * The list of aggregate expressions.
+   *
+   * @var array
+   */
+  protected $aggregate = array();
+
+  /**
+   * The list of columns to group on.
+   *
+   * @var array
+   */
+  protected $groupBy = array();
+
+  /**
+   * Aggregate Conditions
+   *
+   * @var \Drupal\Core\Entity\Query\ConditionAggregateInterface
+   */
+  protected $conditionAggregate;
+
+  /**
+   * The list of sorts over the aggregate results.
+   *
+   * @var array
+   */
+  protected $sortAggregate = array();
 
   /**
    * The query range.
@@ -48,6 +76,20 @@ abstract class QueryBase implements QueryInterface {
    * @var array
    */
   protected $range = array();
+
+  /**
+   * The query metadata for alter purposes.
+   *
+   * @var array
+   */
+  protected $alterMetaData;
+
+  /**
+   * The query tags.
+   *
+   * @var array
+   */
+  protected $alterTags;
 
   /**
    * Whether access check is requested or not. Defaults to TRUE.
@@ -81,6 +123,9 @@ abstract class QueryBase implements QueryInterface {
     $this->entityType = $entity_type;
     $this->conjunction = $conjunction;
     $this->condition = $this->conditionGroupFactory($conjunction);
+    if ($this instanceof QueryAggregateInterface) {
+      $this->conditionAggregate = $this->conditionAggregateGroupFactory($conjunction);
+    }
   }
 
   /**
@@ -142,8 +187,9 @@ abstract class QueryBase implements QueryInterface {
   /**
    * Implements \Drupal\Core\Entity\Query\QueryInterface::sort().
    */
-  public function sort($property, $direction = 'ASC', $langcode = NULL) {
-    $this->sort[$property] = array(
+  public function sort($field, $direction = 'ASC', $langcode = NULL) {
+    $this->sort[] = array(
+      'field' => $field,
       'direction' => $direction,
       'langcode' => $langcode,
     );
@@ -283,4 +329,77 @@ abstract class QueryBase implements QueryInterface {
   public function getMetaData($key) {
     return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
   }
+
+  /**
+   * Implements \Drupal\Core\Entity\Query\QueryAggregateInterface::aggregate()
+   */
+  public function aggregate($field, $function, $langcode = NULL, &$alias = NULL) {
+    if (!isset($alias)) {
+      $alias = $this->getAggregationAlias($field, $function);
+    }
+
+    $this->aggregate[$alias] = array(
+      'field' => $field,
+      'function' => $function,
+      'alias' => $alias,
+      'langcode' => $langcode,
+    );
+
+    return $this;
+  }
+
+  /**
+   * Implements \Drupal\Core\Entity\Query\QueryAggregateInterface::conditionAggregate().
+   */
+  public function conditionAggregate($field, $function = NULL, $value = NULL, $operator = '=', $langcode = NULL) {
+    $this->aggregate($field, $function, $langcode);
+    $this->conditionAggregate->condition($field, $function, $value, $operator, $langcode);
+
+    return $this;
+  }
+
+  /**
+   * Implements \Drupal\Core\Entity\Query\QueryAggregateInterface::sortAggregate().
+   */
+  public function sortAggregate($field, $function, $direction = 'ASC', $langcode = NULL) {
+    $alias = $this->getAggregationAlias($field, $function);
+
+    $this->sortAggregate[$alias] = array(
+      'field' => $field,
+      'function' => $function,
+      'direction' => $direction,
+      'langcode' => $langcode,
+    );
+    $this->aggregate($field, $function, $langcode, $alias);
+
+    return $this;
+  }
+
+  /**
+   * Implements \Drupal\Core\Entity\Query\QueryAggregateInterface::execute().
+   */
+  public function groupBy($field, $langcode = NULL) {
+    $this->groupBy[] = array(
+      'field' => $field,
+      'langcode' => $langcode,
+    );
+
+    return $this;
+  }
+
+  /**
+   * Generates an alias for a field and it's aggregated function.
+   *
+   * @param string $field
+   *   The field name used in the alias.
+   * @param string $function
+   *   The aggregation function used in the alias.
+   *
+   * @return string
+   *   The alias for the field.
+   */
+  protected function getAggregationAlias($field, $function) {
+    return strtolower($field . '_'. $function);
+  }
+
 }

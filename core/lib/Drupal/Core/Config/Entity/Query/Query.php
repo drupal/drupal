@@ -11,11 +11,12 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
+use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * Defines the entity query for configuration entities.
  */
-class Query extends QueryBase {
+class Query extends QueryBase implements QueryInterface {
 
   /**
    * Stores the entity manager.
@@ -93,10 +94,11 @@ class Query extends QueryBase {
     $result = $this->condition->compile($configs);
 
     // Apply sort settings.
-    foreach ($this->sort as $property => $sort) {
+    foreach ($this->sort as $sort) {
       $direction = $sort['direction'] == 'ASC' ? -1 : 1;
-      uasort($result, function($a, $b) use ($property, $direction) {
-        return ($a[$property] <= $b[$property]) ? $direction : -$direction;
+      $field = $sort['field'];
+      uasort($result, function($a, $b) use ($field, $direction) {
+        return ($a[$field] <= $b[$field]) ? $direction : -$direction;
       });
     }
 

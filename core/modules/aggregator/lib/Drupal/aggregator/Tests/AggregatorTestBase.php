@@ -43,14 +43,16 @@ abstract class AggregatorTestBase extends WebTestBase {
    * @param $feed_url
    *   (optional) If given, feed will be created with this URL, otherwise
    *   /rss.xml will be used. Defaults to NULL.
+   * @param array $edit
+   *   Array with additional form fields.
    *
    * @return \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
    *   Full feed object if possible.
    *
    * @see getFeedEditArray()
    */
-  function createFeed($feed_url = NULL) {
-    $edit = $this->getFeedEditArray($feed_url);
+  function createFeed($feed_url = NULL, array $edit = array()) {
+    $edit = $this->getFeedEditArray($feed_url, $edit);
     $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
 
@@ -76,11 +78,13 @@ abstract class AggregatorTestBase extends WebTestBase {
    * @param $feed_url
    *   (optional) If given, feed will be created with this URL, otherwise
    *   /rss.xml will be used. Defaults to NULL.
+   * @param array $edit
+   *   Array with additional form fields.
    *
    * @return
    *   A feed array.
    */
-  function getFeedEditArray($feed_url = NULL) {
+  function getFeedEditArray($feed_url = NULL, array $edit = array()) {
     $feed_name = $this->randomName(10);
     if (!$feed_url) {
       $feed_url = url('rss.xml', array(
@@ -88,7 +92,7 @@ abstract class AggregatorTestBase extends WebTestBase {
         'absolute' => TRUE,
       ));
     }
-    $edit = array(
+    $edit += array(
       'title' => $feed_name,
       'url' => $feed_url,
       'refresh' => '900',

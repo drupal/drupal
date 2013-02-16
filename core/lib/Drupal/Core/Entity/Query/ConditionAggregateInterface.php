@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\ConditionInterface.
+ * Contains \Drupal\Core\Entity\Query\ConditionAggregateInterface.
  */
 
 namespace Drupal\Core\Entity\Query;
 
 /**
- * Defines the entity query condition interface.
+ * Defines aggregated entity query conditions.
  */
-interface ConditionInterface {
+interface ConditionAggregateInterface extends \Countable {
 
   /**
    * Gets the current conjunction.
@@ -21,25 +21,19 @@ interface ConditionInterface {
   public function getConjunction();
 
   /**
-   * Implements \Countable::count().
-   *
-   * Returns the size of this conditional. The size of the conditional is the
-   * size of its conditional array minus one, because one element is the the
-   * conjunction.
-   */
-  public function count();
-
-  /**
    * Adds a condition.
    *
-   * @param string|\Drupal\Core\Entity\Query\ConditionInterface $field
+   * @param string|ConditionAggregateInterface $field
+   * @param string $function
    * @param mixed $value
    * @param string $operator
    * @param string $langcode
-   * @return ConditionInterface
+   *
+   * @return \Drupal\Core\Entity\Query\ConditionAggregateInterface
+   *   The called object.
    * @see \Drupal\Core\Entity\Query\QueryInterface::condition()
    */
-  public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL);
+  public function condition($field, $function = NULL, $value = NULL, $operator = NULL, $langcode = NULL);
 
   /**
    * Queries for the existence of a field.
@@ -49,16 +43,16 @@ interface ConditionInterface {
    * @return ConditionInterface
    * @see \Drupal\Core\Entity\Query\QueryInterface::exists()
    */
-  public function exists($field, $langcode = NULL);
+  public function exists($field, $function, $langcode = NULL);
 
   /**
-   * Queries for the existence of a field.
+   * Queries for the nonexistence of a field.
    *
    * @param string $field
    * @return ConditionInterface;
    * @see \Drupal\Core\Entity\Query\QueryInterface::notexists()
    */
-  public function notExists($field, $langcode = NULL);
+  public function notExists($field, $function, $langcode = NULL);
 
   /**
    * Gets a complete list of all conditions in this conditional clause.
@@ -77,4 +71,5 @@ interface ConditionInterface {
    *   The query object this conditional clause belongs to.
    */
   public function compile($query);
+
 }

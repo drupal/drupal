@@ -114,6 +114,7 @@ class CKEditorAdminTest extends WebTestBase {
     $this->assertIdentical($expected_settings, $editor->settings, 'The Editor config entity has the correct settings.');
 
     // Configure the Styles plugin, and ensure the updated settings are saved.
+    $this->drupalGet('admin/config/content/formats/filtered_html');
     $edit = array(
       'editor[settings][plugins][stylescombo][styles]' => "h1.title|Title\np.callout|Callout\n\n",
     );
@@ -126,6 +127,7 @@ class CKEditorAdminTest extends WebTestBase {
     // Change the buttons that appear on the toolbar (in JavaScript, this is
     // done via drag and drop, but here we can only emulate the end result of
     // that interaction). Test multiple toolbar rows and a divider within a row.
+    $this->drupalGet('admin/config/content/formats/filtered_html');
     $expected_settings['toolbar']['buttons'] = array(
       array('Undo', '|', 'Redo'),
       array('JustifyCenter'),
@@ -150,10 +152,12 @@ class CKEditorAdminTest extends WebTestBase {
     $this->assertIdentical($expected_settings, $editor->settings, 'The Editor config entity has the correct settings.');
 
     // Finally, check the "Ultra llama mode" checkbox.
+    $this->drupalGet('admin/config/content/formats/filtered_html');
     $edit = array(
       'editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]' => '1',
     );
     $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalGet('admin/config/content/formats/filtered_html');
     $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and @checked="checked"]');
     $this->assertTrue(count($ultra_llama_mode_checkbox) === 1, 'The "Ultra llama mode" checkbox exists and is checked.');
     $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = '1';
